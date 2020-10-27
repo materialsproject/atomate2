@@ -1,0 +1,27 @@
+#! /bin/bash
+
+# To enable this hook, copy this file to ".git/hooks/pre-commit".
+
+export PYTHONWARNINGS="ignore"
+
+black atomate2
+black tests
+
+status=0
+files=$(git diff --diff-filter=d --cached --name-only | grep -E 'atomate2.*\.(py)$' | sed '/test/d')
+files=`echo $files | tr '\n' ' '`
+pycodestyle atomate2 $files
+if [ $? -ne 0 ]; then
+  echo "Bad code style detected by pycodestyle. Fix before commit."
+  exit 1
+fi
+flake8 atomate2 $files --exclude '*test*'
+if [ $? -ne 0 ]; then
+  echo "Bad code style detected by flake8. Fix before commit."
+  exit 1
+fi
+#pydocstyle --match='(?!test_).*\.py' atomate2 $files
+#if [ $? -ne 0 ]; then
+#  echo "Bad doc style detected. Fix before commit."
+#  exit 1
+#fi
