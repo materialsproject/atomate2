@@ -35,8 +35,10 @@ if __name__ == "__main__":
             "monty>=2.0.6",
             "numpy",
             "pydantic",
-            "python-dotenv",
             "emmet",
+            "maggma",
+            "bson",
+            "pydash"
         ],
         extras_require={
             "docs": [
