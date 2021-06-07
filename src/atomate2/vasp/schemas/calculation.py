@@ -1,36 +1,43 @@
 """Core definitions of a VASP calculation documents."""
-import logging
-from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from __future__ import annotations
 
-from atomate2.common.models import AtomateModel
-from atomate2.settings import settings
-from emmet.core.vasp.calc_types import (
-    RunType,
-    CalcType,
-    TaskType,
-    calc_type,
-    run_type,
-    task_type,
-)
-from emmet.stubs import Lattice, Matrix3D, Structure, Vector3D
+import logging
+import typing
+
+from jobflow import Schema
+from jobflow.utils import ValueEnum
 from pydantic import Field
-from pydantic.datetime_parse import datetime
-from pymatgen.command_line.bader_caller import bader_analysis_from_path
-from pymatgen.io.vasp import BSVasprun, Chgcar, Locpot, Outcar, Vasprun, VolumetricData
+
+from atomate2.settings import settings
+
+if typing.TYPE_CHECKING:
+    from pathlib import Path
+    from typing import Any, Dict, List, Optional, Tuple, Union
+
+    from emmet.core.math import Matrix3D, Vector3D
+    from emmet.core.vasp.calc_types import (
+        CalcType,
+        RunType,
+        TaskType,
+        calc_type,
+        run_type,
+        task_type,
+    )
+    from pymatgen.core.lattice import Lattice
+    from pymatgen.core.structure import Structure
+    from pymatgen.io.vasp import Locpot, Outcar, Vasprun, VolumetricData
 
 logger = logging.getLogger(__name__)
 
 
-class Status(Enum):
+class Status(ValueEnum):
     """VASP calculation state."""
 
     SUCCESS = "successful"
     FAILED = "failed"
 
 
-class VaspObject(Enum):
+class VaspObject(ValueEnum):
     """Types of VASP data objects."""
 
     BANDSTRUCTURE = "bandstructure"
@@ -47,14 +54,14 @@ class VaspObject(Enum):
     PROCAR = "proj"
 
 
-class PotcarSpec(AtomateModel):
+class PotcarSpec(Schema):
     """Document defining a VASP POTCAR specification."""
 
     titel: str = Field(None, description="TITEL field from POTCAR header")
     hash: str = Field(None, description="md5 hash of POTCAR file")
 
 
-class VaspInputDoc(AtomateModel):
+class CalculationInput(Schema):
     """Document defining VASP calculation inputs."""
 
     incar: Dict[str, Any] = Field(
@@ -76,14 +83,18 @@ class VaspInputDoc(AtomateModel):
     )
 
     @classmethod
-    def from_vasprun(cls, vasprun: Vasprun) -> "VaspInputDoc":
+    def from_vasprun(cls, vasprun: Vasprun) -> CalculationInput:
         """
         Create a VASP input document from a Vasprun object.
 
-        Args:
-            vasprun: A vasprun object.
+        Parameters
+        ----------
+        vasprun
+            A vasprun object.
 
-        Returns:
+        Returns
+        -------
+        CalculationInput
             The input document.
         """
         kpoints_dict = vasprun.kpoints.as_dict()
@@ -104,7 +115,7 @@ class VaspInputDoc(AtomateModel):
         )
 
 
-class RunStatistics(AtomateModel):
+class RunStatistics(Schema):
     """Summary of the run statistics for a VASP calculation."""
 
     average_memory: float = Field(None, description="The average memory used in kb")
@@ -120,14 +131,18 @@ class RunStatistics(AtomateModel):
     cores: int = Field(None, description="The number of cores used by VASP")
 
     @classmethod
-    def from_outcar(cls, outcar: Outcar) -> "RunStatistics":
+    def from_outcar(cls, outcar: Outcar) -> RunStatistics:
         """
         Create a run statistics document from an Outcar object.
 
-        Args:
-            outcar: An Outcar object.
+        Parameters
+        ----------
+        outcar
+            An Outcar object.
 
-        Returns:
+        Returns
+        -------
+        RunStatistics
             The run statistics.
         """
         # rename these statistics
@@ -143,7 +158,7 @@ class RunStatistics(AtomateModel):
         return cls(**{v: outcar.run_stats.get(k, None) for k, v in mapping.items()})
 
 
-class VaspOutputDoc(AtomateModel):
+class CalculationOutput(Schema):
     """Document defining VASP calculation outputs."""
 
     energy: float = Field(
@@ -209,16 +224,21 @@ class VaspOutputDoc(AtomateModel):
     @classmethod
     def from_vasp_outputs(
         cls, vasprun: Vasprun, outcar: Outcar, locpot: Optional[Locpot] = None
-    ) -> "VaspOutputDoc":
+    ) -> CalculationOutput:
         """
         Create a VASP output document from VASP outputs.
 
-        Args:
-            vasprun: A Vasprun object.
-            outcar: An Outcar object.
-            locpot: A Locpot object.
+        Parameters
+        ----------
+        vasprun
+            A Vasprun object.
+        outcar
+            An Outcar object.
+        locpot
+            A Locpot object.
 
-        Returns:
+        Returns
+        -------
             The VASP calculation output document.
         """
         try:
@@ -277,7 +297,7 @@ class VaspOutputDoc(AtomateModel):
         )
 
 
-class VaspCalcDoc(AtomateModel):
+class Calculation(Schema):
     """Full VASP calculation inputs and outputs."""
 
     dir_name: str = Field(None, description="The directory for this VASP calculation")
@@ -287,11 +307,11 @@ class VaspCalcDoc(AtomateModel):
     has_vasp_completed: Status = Field(
         None, description="Whether VASP completed the calculation successfully"
     )
-    input: VaspInputDoc = Field(
+    input: CalculationInput = Field(
         None, description="VASP input settings for the calculation"
     )
-    output: VaspOutputDoc = Field(None, description="The VASP calculation output")
-    completed_at: datetime = Field(
+    output: CalculationOutput = Field(None, description="The VASP calculation output")
+    completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
     task_name: str = Field(
@@ -324,45 +344,64 @@ class VaspCalcDoc(AtomateModel):
         parse_dos: Union[str, bool] = "auto",
         parse_bandstructure: Union[str, bool] = "auto",
         average_locpot: bool = True,
-        run_bader: bool = settings.vasp_run_bader,
+        run_bader: bool = settings.VASP_RUN_BADER,
         store_volumetric_data: Optional[
             Tuple[str]
-        ] = settings.vasp_store_volumetric_data,
+        ] = settings.VASP_STORE_VOLUMETRIC_DATA,
         vasprun_kwargs: Optional[Dict] = None,
-    ) -> Tuple["VaspCalcDoc", Dict[VaspObject, Dict]]:
+    ) -> Tuple[Calculation, Dict[VaspObject, Dict]]:
         """
         Create a VASP calculation document from a directory and file paths.
 
-        Args:
-            dir_name: The directory containing the calculation outputs.
-            task_name: The task name.
-            vasprun_file: Path to the vasprun.xml file, relative to dir_name.
-            outcar_file: Path to the OUTCAR file, relative to dir_name.
-            volumetric_files: Path to volumetric files, relative to dir_name.
-            parse_dos: Whether to parse the DOS. Can be:
-                - "auto": Only parse DOS if there are no ionic steps (NSW = 0).
-                - True: Always parse DOS.
-                - False: Never parse DOS.
-            parse_bandstructure: How to parse the bandstructure. Can be:
-                - "auto": Parse the bandstructure with projections for NSCF calculations
-                  and decide automatically if it's line or uniform mode.
-                - "line": Parse the bandstructure as a line mode calculation with
-                  projections
-                - True: Parse the bandstructure as a uniform calculation with
-                  projections .
-                - False: Parse the band structure without projects and just store
-                  vbm, cbm, band_gap, is_metal and efermi rather than the full
-                  band structure object.
-            average_locpot: Whether to store the average of the LOCPOT along the
-                crystal axes.
-            run_bader: Whether to run bader on the charge density.
-            store_volumetric_data: Which volumetric files to store.
-            vasprun_kwargs: Additional keyword arguemnts that will be passed to
-                to the Vasprun init.
+        Parameters
+        ----------
+        dir_name
+            The directory containing the calculation outputs.
+        task_name
+            The task name.
+        vasprun_file
+            Path to the vasprun.xml file, relative to dir_name.
+        outcar_file
+            Path to the OUTCAR file, relative to dir_name.
+        volumetric_files
+            Path to volumetric files, relative to dir_name.
+        parse_dos
+            Whether to parse the DOS. Can be:
 
-        Returns:
+            - "auto": Only parse DOS if there are no ionic steps (NSW = 0).
+            - True: Always parse DOS.
+            - False: Never parse DOS.
+
+        parse_bandstructure
+            How to parse the bandstructure. Can be:
+
+            - "auto": Parse the bandstructure with projections for NSCF calculations
+              and decide automatically if it's line or uniform mode.
+            - "line": Parse the bandstructure as a line mode calculation with
+              projections
+            - True: Parse the bandstructure as a uniform calculation with
+              projections .
+            - False: Parse the band structure without projects and just store
+              vbm, cbm, band_gap, is_metal and efermi rather than the full
+              band structure object.
+
+        average_locpot
+            Whether to store the average of the LOCPOT along the crystal axes.
+        run_bader
+            Whether to run bader on the charge density.
+        store_volumetric_data
+            Which volumetric files to store.
+        vasprun_kwargs
+            Additional keyword arguments that will be passed to to the Vasprun init.
+
+        Returns
+        -------
+        Calculation
             A VASP calculation document.
         """
+        from pydantic.datetime_parse import datetime
+        from pymatgen.io.vasp import Outcar, Vasprun
+
         dir_name = Path(dir_name)
         vasprun_file = dir_name / vasprun_file
         outcar_file = dir_name / outcar_file
@@ -379,27 +418,31 @@ class VaspCalcDoc(AtomateModel):
 
         dos = _parse_dos(parse_dos, vasprun)
         if dos is not None:
-            vasp_objects[VaspObject.DOS] = dos
+            vasp_objects[VaspObject.DOS] = dos  # type: ignore
 
         bandstructure = _parse_bandstructure(parse_bandstructure, vasprun)
         if bandstructure is not None:
-            vasp_objects[VaspObject.BANDSTRUCTURE] = bandstructure
+            vasp_objects[VaspObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         bader = None
         if run_bader and "chgcar" in output_file_paths:
+            from pymatgen.command_line.bader_caller import bader_analysis_from_path
+
             suffix = "" if task_name == "standard" else f".{task_name}"
             bader = bader_analysis_from_path(dir_name, suffix=suffix)
 
         locpot = None
         if average_locpot:
             if VaspObject.LOCPOT in vasp_objects:
-                locpot = vasp_objects[VaspObject.LOCPOT]
+                locpot = vasp_objects[VaspObject.LOCPOT]  # type: ignore
             elif VaspObject.LOCPOT in output_file_paths:
-                locpot_file = dir_name / output_file_paths[VaspObject.LOCPOT]
-                locpot = Locpot.from_file(locpot_file)
+                from pymatgen.io.vasp import Locpot
 
-        input_doc = VaspInputDoc.from_vasprun(vasprun)
-        output_doc = VaspOutputDoc.from_vasp_outputs(vasprun, outcar, locpot=locpot)
+                locpot_file = output_file_paths[VaspObject.LOCPOT]  # type: ignore
+                locpot = Locpot.from_file(dir_name / locpot_file)
+
+        input_doc = CalculationInput.from_vasprun(vasprun)
+        output_doc = CalculationOutput.from_vasp_outputs(vasprun, outcar, locpot=locpot)
 
         has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
         return (
@@ -427,14 +470,18 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[VaspObject, str]
     """
     Get the output file paths.for VASP output files from the list of volumetric files.
 
-    Args:
-        volumetric_files: A list of volumetric files associated with the calculation.
+    Parameters
+    ----------
+    volumetric_files
+        A list of volumetric files associated with the calculation.
 
-    Returns:
+    Returns
+    -------
+    Dict[VaspObject, str]
         A mapping between the VASP object type and the file path.
     """
     output_file_paths = {}
-    for vasp_object in VaspObject:
+    for vasp_object in VaspObject:  # type: ignore
         for volumetric_file in volumetric_files:
             if vasp_object.name in volumetric_file:
                 output_file_paths[vasp_object] = volumetric_file
@@ -449,17 +496,23 @@ def _get_volumetric_data(
     """
     Load volumetric data files from a directory.
 
-    Args:
-        dir_name: The directory containing the files.
-        output_file_paths: A dictionary mapping the data type to file path relative to
-            dir_name.
-        store_volumetric_data: The volumetric data files to load. E.g.,
-            `("chgcar", "locpot")
+    Parameters
+    ----------
+    dir_name
+        The directory containing the files.
+    output_file_paths
+        A dictionary mapping the data type to file path relative to dir_name.
+    store_volumetric_data
+        The volumetric data files to load. E.g., `("chgcar", "locpot")
 
-    Returns:
-        A dictionary mapping the VASP object data type (VaspObject.LOCPOT,
-        VaspObject.CHGCAR, etc) to the volumetric data object.
+    Returns
+    -------
+    Dict[VaspObject, VolumetricData]
+        A dictionary mapping the VASP object data type (`VaspObject.LOCPOT`,
+        `VaspObject.CHGCAR`, etc) to the volumetric data object.
     """
+    from pymatgen.io.vasp import Chgcar
+
     if store_volumetric_data is None or len(store_volumetric_data) == 0:
         return {}
 
@@ -477,7 +530,7 @@ def _get_volumetric_data(
 
 
 def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dict]:
-    """Parse DOS. See VaspCalcDoc.from_vasp_files for supported arguments."""
+    """Parse DOS. See Calculation.from_vasp_files for supported arguments."""
     nsw = vasprun.incar.get("NSW", 0)
     dos = None
     if parse_mode is True or (parse_mode == "auto" and nsw < 1):
@@ -488,7 +541,9 @@ def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dict]
 def _parse_bandstructure(
     parse_mode: Union[str, bool], vasprun: Vasprun
 ) -> Optional[Dict[str, Any]]:
-    """Parse band structure. See VaspCalcDoc.from_vasp_files for supported arguments."""
+    """Parse band structure. See Calculation.from_vasp_files for supported arguments."""
+    from pymatgen.io.vasp import BSVasprun
+
     vasprun_file = vasprun.filename
 
     if parse_mode == "auto":

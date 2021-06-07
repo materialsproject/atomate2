@@ -1,0 +1,16 @@
+[run]
+include = src/*
+parallel = 1
+branch = 1
+
+[paths]
+source = src/
+
+[report]
+skip_covered = True
+show_missing = True
+exclude_lines =
+    \#\s*pragma: no cover
+    ^\s*assert False(,|$)
+    if typing.TYPE_CHECKING:
+    ^\s*@overload( |$)

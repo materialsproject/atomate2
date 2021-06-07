@@ -1,12 +1,12 @@
 import pytest
+from pymatgen.io.vasp import Outcar, Vasprun
 
-from atomate2.vasp.models.calculation import (
-    VaspCalcDoc,
-    VaspInputDoc,
-    VaspOutputDoc,
+from atomate2.vasp.schemas.calculation import (
+    Calculation,
+    CalculationInput,
+    CalculationOutput,
     RunStatistics,
 )
-from pymatgen.io.vasp import Vasprun, Outcar
 from tests.vasp.models.conftest import assert_models_equal, get_test_object
 
 
@@ -22,7 +22,7 @@ def test_vasp_input_doc(vasp_test_dir, object_name, task_name):
     test_object = get_test_object(object_name)
     vasprun_file = vasp_test_dir / test_object.folder / "outputs"
     vasprun_file /= test_object.task_files[task_name]["vasprun_file"]
-    test_doc = VaspInputDoc.from_vasprun(Vasprun(vasprun_file))
+    test_doc = CalculationInput.from_vasprun(Vasprun(vasprun_file))
     valid_doc = test_object.task_doc["calcs_reversed"][0]["input"]
     assert_models_equal(test_doc, valid_doc)
 
@@ -42,7 +42,7 @@ def test_vasp_output_doc(vasp_test_dir, object_name, task_name):
     outcar_file = folder / test_object.task_files[task_name]["outcar_file"]
     vasprun = Vasprun(vasprun_file)
     outcar = Outcar(outcar_file)
-    test_doc = VaspOutputDoc.from_vasp_outputs(vasprun, outcar)
+    test_doc = CalculationOutput.from_vasp_outputs(vasprun, outcar)
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]
     assert_models_equal(test_doc, valid_doc)
 
@@ -78,7 +78,7 @@ def test_vasp_calc_doc(vasp_test_dir, object_name, task_name):
     dir_name = vasp_test_dir / test_object.folder / "outputs"
     files = test_object.task_files[task_name]
 
-    test_doc, objects = VaspCalcDoc.from_vasp_files(dir_name, task_name, **files)
+    test_doc, objects = Calculation.from_vasp_files(dir_name, task_name, **files)
     valid_doc = test_object.task_doc["calcs_reversed"][0]
     assert_models_equal(test_doc, valid_doc)
     assert set(objects.keys()) == set(test_object.objects[task_name])

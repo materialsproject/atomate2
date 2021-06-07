@@ -1,35 +1,36 @@
 """Core definition of a VASP task document."""
 
+from __future__ import annotations
+
 import re
+import typing
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
-import numpy as np
-
-from atomate2.common.models import AtomateModel
-from atomate2.settings import settings
-from atomate2.utils.utils import get_uri
-from atomate2.vasp.models.calculation import (
-    PotcarSpec,
-    RunStatistics,
-    Status,
-    VaspCalcDoc,
-    VaspObject,
-)
 from emmet.core.structure import StructureMetadata
-from emmet.stubs import ComputedEntry, Matrix3D, Structure, Vector3D
-from monty.serialization import loadfn
+from jobflow import Schema
 from pydantic import Field
-from pymatgen.analysis.structure_analyzer import oxide_type
-from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
-__author__ = "Alex Ganose"
-__email__ = "aganose@lbl.gov"
-__version__ = "0.1.0"
+from atomate2.settings import settings
+
+if typing.TYPE_CHECKING:
+    from pathlib import Path
+    from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+
+    from emmet.core.math import Matrix3D, Vector3D
+    from pymatgen.core.structure import Structure
+    from pymatgen.entries.computed_entries import ComputedEntry, __version__
+    from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
+
+    from atomate2.vasp.schemas.calculation import (
+        Calculation,
+        PotcarSpec,
+        RunStatistics,
+        Status,
+        VaspObject,
+    )
 
 
-class AnalysisSummary(AtomateModel):
+class AnalysisSummary(Schema):
     """Calculation relaxation summary."""
 
     delta_volume: float = Field(None, description="Absolute change in volume")
@@ -41,16 +42,22 @@ class AnalysisSummary(AtomateModel):
     errors: List[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_vasp_calc_docs(cls, calc_docs: List[VaspCalcDoc]) -> "AnalysisSummary":
+    def from_vasp_calc_docs(cls, calc_docs: List[Calculation]) -> AnalysisSummary:
         """
         Create analysis summary from VASP calculation documents.
 
-        Args:
-            calc_docs: VASP calculation documents.
+        Parameters
+        ----------
+        calc_docs
+            VASP calculation documents.
 
-        Returns:
+        Returns
+        -------
+        AnalysisSummary
             The relaxation analysis.
         """
+        from atomate2.vasp.schemas.calculation import Status
+
         initial_vol = calc_docs[0].input.structure.lattice.volume
         final_vol = calc_docs[-1].output.structure.lattice.volume
         delta_vol = final_vol - initial_vol
@@ -58,9 +65,9 @@ class AnalysisSummary(AtomateModel):
         warnings = []
         errors = []
 
-        if abs(percent_delta_vol) > settings.vasp_volume_charge_warning_tol:
+        if abs(percent_delta_vol) > settings.VASP_VOLUME_CHANGE_WARNING_TOL:
             warnings.append(
-                f"Volume change > {settings.vasp_volume_charge_warning_tol * 100}%"
+                f"Volume change > {settings.VASP_VOLUME_CHANGE_WARNING_TOL * 100}%"
             )
 
         final_calc = calc_docs[-1]
@@ -84,8 +91,8 @@ class AnalysisSummary(AtomateModel):
         )
 
 
-class PseudoPotentialSummary(AtomateModel):
-    """A summary of psuedo-potential type and functional."""
+class PseudoPotentialSummary(Schema):
+    """A summary of pseudo-potential type and functional."""
 
     pot_type: str = Field(None, description="Pseudo-potential type, e.g. PAW")
     functional: str = Field(
@@ -96,7 +103,7 @@ class PseudoPotentialSummary(AtomateModel):
     )
 
 
-class InputSummary(AtomateModel):
+class InputSummary(Schema):
     """Summary of inputs for a VASP calculation."""
 
     structure: Structure = Field(None, description="The input structure object")
@@ -115,14 +122,18 @@ class InputSummary(AtomateModel):
     )
 
     @classmethod
-    def from_vasp_calc_doc(cls, calc_doc: VaspCalcDoc) -> "InputSummary":
+    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> InputSummary:
         """
         Create calculation input summary from a calculation document.
 
-        Args:
-            calc_doc: A VASP calculation document.
+        Parameters
+        ----------
+        calc_doc
+            A VASP calculation document.
 
-        Returns:
+        Returns
+        -------
+        InputSummary
             A summary of the input structure and parameters.
         """
         xc = calc_doc.input.incar.get("GGA")
@@ -131,7 +142,9 @@ class InputSummary(AtomateModel):
 
         pot_type, func = calc_doc.input.potcar_type[0].split("_")
         func = "lda" if len(pot_type) == 1 else "_".join(func)
-        pps = dict(pot_type=pot_type, functional=func, labels=calc_doc.input.potcar)
+        pps = PseudoPotentialSummary(
+            pot_type=pot_type, functional=func, labels=calc_doc.input.potcar
+        )
 
         return cls(
             structure=calc_doc.input.structure,
@@ -142,7 +155,7 @@ class InputSummary(AtomateModel):
         )
 
 
-class OutputSummary(AtomateModel):
+class OutputSummary(Schema):
     """Summary of the outputs for a VASP calculation."""
 
     structure: Structure = Field(None, description="The output structure object")
@@ -161,14 +174,18 @@ class OutputSummary(AtomateModel):
     )
 
     @classmethod
-    def from_vasp_calc_doc(cls, calc_doc: VaspCalcDoc) -> "OutputSummary":
+    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> OutputSummary:
         """
         Create a summary of VASP calculation outputs from a VASP calculation document.
 
-        Args:
-            calc_doc: A VASP calculation document.
+        Parameters
+        ----------
+        calc_doc
+            A VASP calculation document.
 
-        Returns:
+        Returns
+        -------
+        OutputSummary
             The calculation output summary.
         """
         return cls(
@@ -181,7 +198,7 @@ class OutputSummary(AtomateModel):
         )
 
 
-class VaspTaskDoc(AtomateModel, StructureMetadata):
+class TaskDocument(Schema, StructureMetadata):
     """Definition of VASP task document."""
 
     dir_name: str = Field(None, description="The directory for this VASP task")
@@ -207,7 +224,7 @@ class VaspTaskDoc(AtomateModel, StructureMetadata):
         None, description="Vasp objects associated with this task"
     )
     entry: ComputedEntry = Field(
-        None, description="Turn a task doc into a ComputedEntry"
+        None, description="The ComputedEntry from the task doc"
     )
     analysis: AnalysisSummary = Field(
         None, description="Summary of structural relaxation and forces"
@@ -226,7 +243,7 @@ class VaspTaskDoc(AtomateModel, StructureMetadata):
     icsd_id: str = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: List[VaspCalcDoc] = Field(
+    calcs_reversed: List[Calculation] = Field(
         None, description="The inputs and outputs for all VASP runs in this task."
     )
     transformations: Dict[str, Any] = Field(
@@ -244,7 +261,7 @@ class VaspTaskDoc(AtomateModel, StructureMetadata):
     )
     _schema: str = Field(
         __version__,
-        description="Version of the schema used to create the document",
+        description="Version of the atomate2 used to create the document",
         alias="schema",
     )
 
@@ -253,17 +270,20 @@ class VaspTaskDoc(AtomateModel, StructureMetadata):
         cls,
         dir_name: Union[Path, str],
         task_files: Dict[str, Dict[str, Any]],
-        store_additional_json: bool = settings.vasp_store_additional_json,
+        store_additional_json: bool = settings.VASP_STORE_ADDITIONAL_JSON,
         **vasp_calc_doc_kwargs,
-    ) -> "VaspTaskDoc":
+    ) -> TaskDocument:
         """
         Create a task document from VASP files.
 
-        Args:
-            dir_name: The path to the folder containing the calculation outputs.
-            task_files: The filenames of the calculation outputs for each VASP task,
-                given as a ordered dictionary of
-                ```python
+        Parameters
+        ----------
+        dir_name
+            The path to the folder containing the calculation outputs.
+        task_files
+            The filenames of the calculation outputs for each VASP task given as an
+            ordered dictionary of::
+
                 {
                     task_name: {
                         "vasprun_file": vasprun_filename,
@@ -272,20 +292,29 @@ class VaspTaskDoc(AtomateModel, StructureMetadata):
                     },
                     ...
                 }
-            store_additional_json: Whether to store additional json files found in the
-                calculation directory.
-            **vasp_calc_doc_kwargs: Additional parsing options that will be passed
-                to the `VaspCalcDoc.from_vasp_files` function.
 
-        Returns:
+        store_additional_json
+            Whether to store additional json files found in the calculation directory.
+        **vasp_calc_doc_kwargs
+            Additional parsing options that will be passed to the
+            :obj:`.Calculation.from_vasp_files` function.
+
+        Returns
+        -------
+        VaspTaskDoc
             A task document for the calculation.
         """
+        from pathlib import Path
+
+        from atomate2.utils.utils import get_uri
+        from atomate2.vasp.schemas.calculation import Calculation
+
         dir_name = Path(dir_name)
 
         calcs_reversed = []
         all_vasp_objects = []
         for task_name, files in task_files.items():
-            calc_doc, vasp_objects = VaspCalcDoc.from_vasp_files(
+            calc_doc, vasp_objects = Calculation.from_vasp_files(
                 dir_name, task_name, **files, **vasp_calc_doc_kwargs
             )
             calcs_reversed.append(calc_doc)
@@ -334,15 +363,28 @@ class VaspTaskDoc(AtomateModel, StructureMetadata):
 
     @staticmethod
     def get_entry(
-        calc_docs: List[VaspCalcDoc], task_id: Optional[str] = None
+        calc_docs: List[Calculation], task_id: Optional[str] = None
     ) -> ComputedEntry:
         """
         Get a computed entry from a list of VASP calculation documents.
 
-        Args:
-            calc_docs: A list of VASP calculation documents.
-            task_id: The task identifier.
+        Parameters
+        ----------
+        calc_docs
+            A list of VASP calculation documents.
+        task_id
+            The task identifier.
+
+        Returns
+        -------
+        ComputedEntry
+            A computed entry.
         """
+        from datetime import datetime
+
+        from pymatgen.analysis.structure_analyzer import oxide_type
+        from pymatgen.entries.computed_entries import ComputedEntry
+
         entry_dict = {
             "correction": 0.0,
             "entry_id": task_id,
@@ -365,6 +407,8 @@ def _parse_transformations(
     dir_name: Path,
 ) -> Tuple[Dict, Optional[int], Optional[List[str]], Optional[str]]:
     """Parse transformations.json file."""
+    from monty.serialization import loadfn
+
     transformations = {}
     filenames = tuple(dir_name.glob("transformations.json*"))
     icsd_id = None
@@ -398,12 +442,18 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
     Calculations done using custodian have a custodian.json file which tracks the jobs
     performed and any errors detected and fixed.
 
-    Args:
-        dir_name: Path to calculation directory.
+    Parameters
+    ----------
+    dir_name
+        Path to calculation directory.
 
-    Returns:
+    Returns
+    -------
+    Optional[dict]
         The information parsed from custodian.json file.
     """
+    from monty.serialization import loadfn
+
     filenames = tuple(dir_name.glob("custodian.json*"))
     if len(filenames) >= 1:
         return loadfn(filenames[0], cls=None)
@@ -419,12 +469,18 @@ def _parse_orig_inputs(
     Calculations using custodian generate a *.orig file for the inputs. This is useful
     to know how the calculation originally started.
 
-    Args:
-        dir_name: Path to calculation directory.
+    Parameters
+    ----------
+    dir_name
+        Path to calculation directory.
 
-    Returns:
+    Returns
+    -------
+    Dict[str, Union[Kpints, Poscar, Potcar, Incar]]
         The original POSCAR, KPOINTS, POTCAR, and INCAR data.
     """
+    from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
+
     orig_inputs = {}
     input_mapping = {
         "INCAR": Incar,
@@ -435,12 +491,14 @@ def _parse_orig_inputs(
     for filename in dir_name.glob("*.orig*"):
         for name, vasp_input in input_mapping.items():
             if f"{name}.orig" in str(filename):
-                orig_inputs[name.lower()] = vasp_input.from_file(filename).as_dict()
+                orig_inputs[name.lower()] = vasp_input.from_file(filename)
     return orig_inputs
 
 
 def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
     """Parse additional json files in the directory."""
+    from monty.serialization import loadfn
+
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
         key = filename.name.split(".")[0]
@@ -449,8 +507,10 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
     return additional_json
 
 
-def _get_max_force(calc_doc: VaspCalcDoc) -> Optional[float]:
+def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     """Get max force acting on atoms from a calculation document."""
+    import numpy as np
+
     forces = calc_doc.output.ionic_steps[-1].get("forces")
     structure = calc_doc.output.structure
     if forces:
@@ -462,8 +522,10 @@ def _get_max_force(calc_doc: VaspCalcDoc) -> Optional[float]:
     return None
 
 
-def _get_drift_warnings(calc_doc: VaspCalcDoc) -> List[str]:
+def _get_drift_warnings(calc_doc: Calculation) -> List[str]:
     """Get warnings of whether the drift on atoms is too large."""
+    import numpy as np
+
     warnings = []
     if calc_doc.input.parameters.get("NSW", 0) > 0:
         drift = calc_doc.output.outcar.get("drift", [[0, 0, 0]])
@@ -481,26 +543,30 @@ def _get_drift_warnings(calc_doc: VaspCalcDoc) -> List[str]:
     return warnings
 
 
-def _get_state(calc_docs: List[VaspCalcDoc], analysis: AnalysisSummary) -> Status:
+def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
+    from atomate2.vasp.schemas.calculation import Status
+
     all_calcs_completed = all(
         [c.has_vasp_completed == Status.SUCCESS for c in calc_docs]
     )
     if len(analysis.errors) == 0 and all_calcs_completed:
-        return Status.SUCCESS
-    return Status.FAILED
+        return Status.SUCCESS  # type: ignore
+    return Status.FAILED  # type: ignore
 
 
-def _get_run_stats(calc_docs: List[VaspCalcDoc]) -> Dict[str, RunStatistics]:
+def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
     """Get summary of runtime statistics for each calculation in this task."""
+    from atomate2.vasp.schemas.calculation import RunStatistics
+
     run_stats = {}
     total = dict(
-        average_memory=0,
-        max_memory=0,
-        elapsed_time=0,
-        system_time=0,
-        user_time=0,
-        total_time=0,
+        average_memory=0.0,
+        max_memory=0.0,
+        elapsed_time=0.0,
+        system_time=0.0,
+        user_time=0.0,
+        total_time=0.0,
         cores=0,
     )
     for calc_doc in calc_docs:

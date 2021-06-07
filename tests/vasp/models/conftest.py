@@ -1,7 +1,7 @@
 import pytest
 from pydantic import BaseModel
 
-from atomate2.vasp.models.calculation import VaspObject
+from atomate2.vasp.schemas.calculation import VaspObject
 
 
 def assert_models_equal(test_model, valid_model):
@@ -41,8 +41,6 @@ def assert_models_equal(test_model, valid_model):
 
 class ModelTestData:
     """Dummy class to be used to contain all test data information."""
-
-    pass
 
 
 class SiOptimizeDouble(ModelTestData):

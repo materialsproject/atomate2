@@ -1,73 +1,67 @@
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
-from atomate2 import __version__
+module_dir = Path(__file__).resolve().parent
 
-with open("README.md", "r") as file:
-    long_description = file.read()
+with open(module_dir / "README.md") as f:
+    long_description = f.read()
 
 if __name__ == "__main__":
     setup(
         name="atomate2",
-        version=__version__,
-        description="atomate has implementations of FireWorks workflows for "
-        "Materials Science",
+        use_scm_version=True,
+        setup_requires=["setuptools_scm"],
+        description="atomate2 is a library of materials science workflows",
         long_description=long_description,
         long_description_content_type="text/markdown",
-        url="https://github.com/hackingmaterials/amset",
-        author="Alex Ganose, Anubhav Jain",
-        author_email="aganose@lbl.gov, anubhavster@gmail.com",
+        url="https://github.com/hackingmaterials/atomate2",
+        author="Alex Ganose",
+        author_email="alexganose@gmail.com",
         license="modified BSD",
         keywords="high-throughput automated workflow dft vasp",
-        packages=find_packages(),
-        # package_data={
-        #     "amset": [
-        #         "defaults.yaml",
-        #         "plot/amset_base.mplstyle",
-        #         "plot/revtex.mplstyle",
-        #     ]
-        # },
+        package_dir={"": "src"},
+        package_data={"atomate2": ["py.typed"]},
+        packages=find_packages("src"),
         data_files=["LICENSE"],
         zip_safe=False,
+        include_package_data=True,
         install_requires=[
-            "FireWorks>=1.4.0",
             "pymatgen>=2019.11.11",
             "custodian>=2019.8.24",
-            "monty>=2.0.6",
-            "numpy",
             "pydantic",
-            "emmet",
-            "maggma",
-            "bson",
-            "pydash"
+            "monty",
+            "jobflow",
+            "numpy",
+            "emmet-core>=0.2.1",
         ],
         extras_require={
             "docs": [
-                "mkdocs==1.1.2",
-                "mkdocs-material==6.1.0",
-                "mkdocs-minify-plugin==0.3.0",
-                "mkdocs-macros-plugin==0.4.18",
-                "markdown-include==0.6.0",
-                "markdown-katex==202009.1026",
+                "sphinx==3.5.3",
+                "furo==2021.3.20b30",
+                "m2r2==0.2.7",
+                "ipython==7.24.1",
+                "nbsphinx==0.8.6",
+                "nbsphinx-link==1.3.0",
+                "FireWorks==1.9.7",
             ],
+            "tests": [
+                "pytest==6.2.4",
+                "pytest-cov==2.11.1",
+                "FireWorks==1.9.7",
+                "matplotlib==3.4.2",
+            ],
+            "dev": ["pre-commit>=2.12.1"],
+            "plotting": ["matplotlib"],
+            "jobs": ["jobs"],
             "rtransfer": ["paramiko>=2.4.2"],
-            "plotting": ["matplotlib>=1.5.2"],
             "phonons": ["phonopy>=1.10.8"],
-            "tests": ["pytest==6.1.1", "pytest-cov==2.10.1"],
-            "dev": [
-                "coverage==5.3",
-                "codacy-coverage==1.3.11",
-                "pycodestyle==2.6.0",
-                "mypy==0.790",
-                "pydocstyle==5.1.1",
-                "flake8==3.8.4",
-                "pylint==2.6.0",
-                "black==20.8b1",
-            ],
         },
         classifiers=[
             "programming language :: python :: 3",
-            "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Science/Research",
             "Intended Audience :: System Administrators",
@@ -76,5 +70,6 @@ if __name__ == "__main__":
             "Topic :: Other/Nonlisted Topic",
             "Topic :: Scientific/Engineering",
         ],
+        python_requires=">=3.7",
         tests_require=["pytest"],
     )
