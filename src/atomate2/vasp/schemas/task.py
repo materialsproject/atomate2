@@ -72,8 +72,6 @@ class AnalysisSummary(Schema):
             warnings.extend(_get_drift_warnings(final_calc))
             if not structure.is_valid():
                 errors.append("Bad structure (atoms are too close!)")
-        else:
-            print(final_calc.has_vasp_completed)
 
         return cls(
             delta_volume=delta_vol,
@@ -574,6 +572,3 @@ def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
         total["total_time"] += stats.total_time
     run_stats["overall"] = RunStatistics(**total)
     return run_stats
-
-
-TaskDocument.update_forward_refs()
