@@ -1,13 +1,27 @@
 import pytest
-from pymatgen.io.vasp import Outcar, Vasprun
 
-from atomate2.vasp.schemas.calculation import (
-    Calculation,
-    CalculationInput,
-    CalculationOutput,
-    RunStatistics,
-)
-from tests.vasp.models.conftest import assert_models_equal, get_test_object
+from tests.vasp.schemas.conftest import assert_schemas_equal, get_test_object
+
+
+def test_init():
+    from atomate2.vasp.schemas.calculation import (
+        Calculation,
+        CalculationInput,
+        CalculationOutput,
+        RunStatistics,
+    )
+
+    c = CalculationInput()
+    assert c is not None
+
+    c = CalculationOutput()
+    assert c is not None
+
+    c = RunStatistics()
+    assert c is not None
+
+    c = Calculation()
+    assert c is not None
 
 
 @pytest.mark.parametrize(
@@ -18,13 +32,17 @@ from tests.vasp.models.conftest import assert_models_equal, get_test_object
         pytest.param("SiNonSCFUniform", "standard", id="SiNonSCFUniform"),
     ],
 )
-def test_vasp_input_doc(vasp_test_dir, object_name, task_name):
+def test_calculation_input(vasp_test_dir, object_name, task_name):
+    from pymatgen.io.vasp import Vasprun
+
+    from atomate2.vasp.schemas.calculation import CalculationInput
+
     test_object = get_test_object(object_name)
     vasprun_file = vasp_test_dir / test_object.folder / "outputs"
     vasprun_file /= test_object.task_files[task_name]["vasprun_file"]
     test_doc = CalculationInput.from_vasprun(Vasprun(vasprun_file))
     valid_doc = test_object.task_doc["calcs_reversed"][0]["input"]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
 
 
 @pytest.mark.parametrize(
@@ -35,7 +53,11 @@ def test_vasp_input_doc(vasp_test_dir, object_name, task_name):
         pytest.param("SiNonSCFUniform", "standard", id="SiNonSCFUniform"),
     ],
 )
-def test_vasp_output_doc(vasp_test_dir, object_name, task_name):
+def test_calculation_output(vasp_test_dir, object_name, task_name):
+    from pymatgen.io.vasp import Outcar, Vasprun
+
+    from atomate2.vasp.schemas.calculation import CalculationOutput
+
     test_object = get_test_object(object_name)
     folder = vasp_test_dir / test_object.folder / "outputs"
     vasprun_file = folder / test_object.task_files[task_name]["vasprun_file"]
@@ -44,7 +66,7 @@ def test_vasp_output_doc(vasp_test_dir, object_name, task_name):
     outcar = Outcar(outcar_file)
     test_doc = CalculationOutput.from_vasp_outputs(vasprun, outcar)
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
 
 
 @pytest.mark.parametrize(
@@ -56,13 +78,17 @@ def test_vasp_output_doc(vasp_test_dir, object_name, task_name):
     ],
 )
 def test_run_statistics(vasp_test_dir, object_name, task_name):
+    from pymatgen.io.vasp import Outcar
+
+    from atomate2.vasp.schemas.calculation import RunStatistics
+
     test_object = get_test_object(object_name)
     folder = vasp_test_dir / test_object.folder / "outputs"
     outcar_file = folder / test_object.task_files[task_name]["outcar_file"]
     outcar = Outcar(outcar_file)
     test_doc = RunStatistics.from_outcar(outcar)
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]["run_stats"]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
 
 
 @pytest.mark.parametrize(
@@ -73,12 +99,14 @@ def test_run_statistics(vasp_test_dir, object_name, task_name):
         pytest.param("SiNonSCFUniform", "standard", id="SiNonSCFUniform"),
     ],
 )
-def test_vasp_calc_doc(vasp_test_dir, object_name, task_name):
+def test_calculation(vasp_test_dir, object_name, task_name):
+    from atomate2.vasp.schemas.calculation import Calculation
+
     test_object = get_test_object(object_name)
     dir_name = vasp_test_dir / test_object.folder / "outputs"
     files = test_object.task_files[task_name]
 
     test_doc, objects = Calculation.from_vasp_files(dir_name, task_name, **files)
     valid_doc = test_object.task_doc["calcs_reversed"][0]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
     assert set(objects.keys()) == set(test_object.objects[task_name])

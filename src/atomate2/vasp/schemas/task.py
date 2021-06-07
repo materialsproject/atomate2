@@ -1,33 +1,26 @@
 """Core definition of a VASP task document."""
 
-from __future__ import annotations
-
 import re
-import typing
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from jobflow import Schema
 from pydantic import Field
+from pymatgen.core.structure import Structure
+from pymatgen.entries.computed_entries import ComputedEntry, __version__
+from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
 from atomate2.settings import settings
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Any, Dict, List, Literal, Optional, Tuple, Union
-
-    from emmet.core.math import Matrix3D, Vector3D
-    from pymatgen.core.structure import Structure
-    from pymatgen.entries.computed_entries import ComputedEntry, __version__
-    from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
-
-    from atomate2.vasp.schemas.calculation import (
-        Calculation,
-        PotcarSpec,
-        RunStatistics,
-        Status,
-        VaspObject,
-    )
+from atomate2.vasp.schemas.calculation import (
+    Calculation,
+    PotcarSpec,
+    RunStatistics,
+    Status,
+    VaspObject,
+)
 
 
 class AnalysisSummary(Schema):
@@ -42,7 +35,7 @@ class AnalysisSummary(Schema):
     errors: List[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_vasp_calc_docs(cls, calc_docs: List[Calculation]) -> AnalysisSummary:
+    def from_vasp_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
         """
         Create analysis summary from VASP calculation documents.
 
@@ -122,7 +115,7 @@ class InputSummary(Schema):
     )
 
     @classmethod
-    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> InputSummary:
+    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
         """
         Create calculation input summary from a calculation document.
 
@@ -174,7 +167,7 @@ class OutputSummary(Schema):
     )
 
     @classmethod
-    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> OutputSummary:
+    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
         """
         Create a summary of VASP calculation outputs from a VASP calculation document.
 
@@ -233,7 +226,7 @@ class TaskDocument(Schema, StructureMetadata):
         None,
         description="Summary of runtime statistics for each calculation in this task",
     )
-    orig_inputs: Dict[Literal["incar", "poscar", "kpoints", "potcar"], Dict] = Field(
+    orig_inputs: Dict[str, Union[Kpoints, Incar, Poscar, Potcar]] = Field(
         None, description="Summary of the original VASP inputs writen by custodian"
     )
     task_id: str = Field(None, description="The task identifier for this document")
@@ -272,7 +265,7 @@ class TaskDocument(Schema, StructureMetadata):
         task_files: Dict[str, Dict[str, Any]],
         store_additional_json: bool = settings.VASP_STORE_ADDITIONAL_JSON,
         **vasp_calc_doc_kwargs,
-    ) -> TaskDocument:
+    ) -> "TaskDocument":
         """
         Create a task document from VASP files.
 
@@ -306,7 +299,7 @@ class TaskDocument(Schema, StructureMetadata):
         """
         from pathlib import Path
 
-        from atomate2.utils.utils import get_uri
+        from atomate2.utils.path import get_uri
         from atomate2.vasp.schemas.calculation import Calculation
 
         dir_name = Path(dir_name)
@@ -581,3 +574,6 @@ def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
         total["total_time"] += stats.total_time
     run_stats["overall"] = RunStatistics(**total)
     return run_stats
+
+
+TaskDocument.update_forward_refs()

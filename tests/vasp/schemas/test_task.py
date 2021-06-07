@@ -1,13 +1,6 @@
 import pytest
 
-from atomate2.vasp.schemas.calculation import Calculation
-from atomate2.vasp.schemas.task import (
-    AnalysisSummary,
-    InputSummary,
-    OutputSummary,
-    VaspTaskDoc,
-)
-from tests.vasp.models.conftest import assert_models_equal, get_test_object
+from tests.vasp.schemas.conftest import assert_schemas_equal, get_test_object
 
 
 @pytest.mark.parametrize(
@@ -19,6 +12,9 @@ from tests.vasp.models.conftest import assert_models_equal, get_test_object
     ],
 )
 def test_analysis_summary(vasp_test_dir, object_name):
+    from atomate2.vasp.schemas.calculation import Calculation
+    from atomate2.vasp.schemas.task import AnalysisSummary
+
     test_object = get_test_object(object_name)
     dir_name = vasp_test_dir / test_object.folder / "outputs"
 
@@ -29,7 +25,7 @@ def test_analysis_summary(vasp_test_dir, object_name):
 
     test_doc = AnalysisSummary.from_vasp_calc_docs(calcs_docs)
     valid_doc = test_object.task_doc["analysis"]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
 
 
 @pytest.mark.parametrize(
@@ -41,6 +37,9 @@ def test_analysis_summary(vasp_test_dir, object_name):
     ],
 )
 def test_input_summary(vasp_test_dir, object_name, task_name):
+    from atomate2.vasp.schemas.calculation import Calculation
+    from atomate2.vasp.schemas.task import InputSummary
+
     test_object = get_test_object(object_name)
     dir_name = vasp_test_dir / test_object.folder / "outputs"
 
@@ -49,7 +48,7 @@ def test_input_summary(vasp_test_dir, object_name, task_name):
 
     test_doc = InputSummary.from_vasp_calc_doc(calc_doc)
     valid_doc = test_object.task_doc["input"]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
 
 
 @pytest.mark.parametrize(
@@ -61,6 +60,9 @@ def test_input_summary(vasp_test_dir, object_name, task_name):
     ],
 )
 def test_output_summary(vasp_test_dir, object_name, task_name):
+    from atomate2.vasp.schemas.calculation import Calculation
+    from atomate2.vasp.schemas.task import OutputSummary
+
     test_object = get_test_object(object_name)
     dir_name = vasp_test_dir / test_object.folder / "outputs"
 
@@ -69,7 +71,7 @@ def test_output_summary(vasp_test_dir, object_name, task_name):
 
     test_doc = OutputSummary.from_vasp_calc_doc(calc_doc)
     valid_doc = test_object.task_doc["output"]
-    assert_models_equal(test_doc, valid_doc)
+    assert_schemas_equal(test_doc, valid_doc)
 
 
 @pytest.mark.parametrize(
@@ -81,7 +83,9 @@ def test_output_summary(vasp_test_dir, object_name, task_name):
     ],
 )
 def test_task_doc(vasp_test_dir, object_name):
+    from atomate2.vasp.schemas.task import TaskDocument
+
     test_object = get_test_object(object_name)
     dir_name = vasp_test_dir / test_object.folder / "outputs"
-    test_doc = VaspTaskDoc.from_task_files(dir_name, test_object.task_files)
-    assert_models_equal(test_doc, test_object.task_doc)
+    test_doc = TaskDocument.from_task_files(dir_name, test_object.task_files)
+    assert_schemas_equal(test_doc, test_object.task_doc)

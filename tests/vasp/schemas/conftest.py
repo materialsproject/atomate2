@@ -1,49 +1,48 @@
 import pytest
-from pydantic import BaseModel
-
-from atomate2.vasp.schemas.calculation import VaspObject
 
 
-def assert_models_equal(test_model, valid_model):
+def assert_schemas_equal(test_schema, valid_schema):
     """
-    Recursively test that all items in valid_model are present and equal in test_model.
+    Recursively test that all items in valid_schema are present and equal in test_schema.
 
-    While test_model can be a pydantic model or dictionary, the valid model must
+    While test_schema can be a pydantic schema or dictionary, the valid schema must
     be a (nested) dictionary. This function automatically handles accessing the
-    attributes of classes in the test_model.
+    attributes of classes in the test_schema.
 
     Args:
-        test_model: A pydantic model or dictionary of the model.
-        valid_model: A (nested) dictionary specifying the key and values that must be
-            present in test_model.
+        test_schema: A pydantic schema or dictionary of the schema.
+        valid_schema: A (nested) dictionary specifying the key and values that must be
+            present in test_schema.
     """
-    if isinstance(valid_model, dict):
-        for key, sub_valid_model in valid_model.items():
-            if isinstance(key, str) and hasattr(test_model, key):
-                sub_test_model = getattr(test_model, key)
-            elif not isinstance(test_model, BaseModel):
-                sub_test_model = test_model[key]
+    from pydantic import BaseModel
+
+    if isinstance(valid_schema, dict):
+        for key, sub_valid_schema in valid_schema.items():
+            if isinstance(key, str) and hasattr(test_schema, key):
+                sub_test_schema = getattr(test_schema, key)
+            elif not isinstance(test_schema, BaseModel):
+                sub_test_schema = test_schema[key]
             else:
                 raise ValueError(
-                    "{} does not have field: {}".format(type(test_model), key)
+                    "{} does not have field: {}".format(type(test_schema), key)
                 )
-            return assert_models_equal(sub_test_model, sub_valid_model)
+            return assert_schemas_equal(sub_test_schema, sub_valid_schema)
 
-    elif isinstance(valid_model, list):
-        for i, sub_valid_model in enumerate(valid_model):
-            return assert_models_equal(test_model[i], sub_valid_model)
+    elif isinstance(valid_schema, list):
+        for i, sub_valid_schema in enumerate(valid_schema):
+            return assert_schemas_equal(test_schema[i], sub_valid_schema)
 
-    elif isinstance(valid_model, float):
-        assert test_model == pytest.approx(valid_model)
+    elif isinstance(valid_schema, float):
+        assert test_schema == pytest.approx(valid_schema)
     else:
-        assert test_model == valid_model
+        assert test_schema == valid_schema
 
 
-class ModelTestData:
+class SchemaTestData:
     """Dummy class to be used to contain all test data information."""
 
 
-class SiOptimizeDouble(ModelTestData):
+class SiOptimizeDouble(SchemaTestData):
     folder = "Si_structure_optimization_double"
     task_files = {
         "relax1": {
@@ -99,7 +98,9 @@ class SiOptimizeDouble(ModelTestData):
     }
 
 
-class SiNonSCFUniform(ModelTestData):
+class SiNonSCFUniform(SchemaTestData):
+    from atomate2.vasp.schemas.calculation import VaspObject
+
     folder = "Si_nscf_uniform"
     task_files = {
         "standard": {
@@ -150,7 +151,9 @@ class SiNonSCFUniform(ModelTestData):
     }
 
 
-class SiStatic(ModelTestData):
+class SiStatic(SchemaTestData):
+    from atomate2.vasp.schemas.calculation import VaspObject
+
     folder = "Si_static"
     task_files = {
         "standard": {
@@ -201,9 +204,9 @@ class SiStatic(ModelTestData):
     }
 
 
-objects = {cls.__name__: cls for cls in ModelTestData.__subclasses__()}
+objects = {cls.__name__: cls for cls in SchemaTestData.__subclasses__()}
 
 
 def get_test_object(object_name):
-    """Get the model test data object from the class name."""
+    """Get the schema test data object from the class name."""
     return objects[object_name]

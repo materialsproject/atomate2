@@ -1,31 +1,26 @@
 """Core definitions of a VASP calculation documents."""
-from __future__ import annotations
 
 import logging
-import typing
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+from emmet.core.math import Matrix3D, Vector3D
+from emmet.core.vasp.calc_types import (
+    CalcType,
+    RunType,
+    TaskType,
+    calc_type,
+    run_type,
+    task_type,
+)
 from jobflow import Schema
 from jobflow.utils import ValueEnum
 from pydantic import Field
+from pymatgen.core.lattice import Lattice
+from pymatgen.core.structure import Structure
+from pymatgen.io.vasp import Locpot, Outcar, Vasprun, VolumetricData
 
 from atomate2.settings import settings
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Any, Dict, List, Optional, Tuple, Union
-
-    from emmet.core.math import Matrix3D, Vector3D
-    from emmet.core.vasp.calc_types import (
-        CalcType,
-        RunType,
-        TaskType,
-        calc_type,
-        run_type,
-        task_type,
-    )
-    from pymatgen.core.lattice import Lattice
-    from pymatgen.core.structure import Structure
-    from pymatgen.io.vasp import Locpot, Outcar, Vasprun, VolumetricData
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +78,7 @@ class CalculationInput(Schema):
     )
 
     @classmethod
-    def from_vasprun(cls, vasprun: Vasprun) -> CalculationInput:
+    def from_vasprun(cls, vasprun: Vasprun) -> "CalculationInput":
         """
         Create a VASP input document from a Vasprun object.
 
@@ -131,7 +126,7 @@ class RunStatistics(Schema):
     cores: int = Field(None, description="The number of cores used by VASP")
 
     @classmethod
-    def from_outcar(cls, outcar: Outcar) -> RunStatistics:
+    def from_outcar(cls, outcar: Outcar) -> "RunStatistics":
         """
         Create a run statistics document from an Outcar object.
 
@@ -224,7 +219,7 @@ class CalculationOutput(Schema):
     @classmethod
     def from_vasp_outputs(
         cls, vasprun: Vasprun, outcar: Outcar, locpot: Optional[Locpot] = None
-    ) -> CalculationOutput:
+    ) -> "CalculationOutput":
         """
         Create a VASP output document from VASP outputs.
 
@@ -349,7 +344,7 @@ class Calculation(Schema):
             Tuple[str]
         ] = settings.VASP_STORE_VOLUMETRIC_DATA,
         vasprun_kwargs: Optional[Dict] = None,
-    ) -> Tuple[Calculation, Dict[VaspObject, Dict]]:
+    ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """
         Create a VASP calculation document from a directory and file paths.
 
