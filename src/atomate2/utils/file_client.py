@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
     from pathlib import Path
     from typing import Any, Dict, List, Optional, Union
 
-    from paramiko import SSHClient
+    from paramiko import SFTPClient, SSHClient
 
 __all__ = ["FileClient"]
 
@@ -41,30 +41,81 @@ class FileClient:
 
     def __init__(
         self,
-        hosts: List[str] = None,
         key_filename: Union[str, Path] = "~/.ssh/id_rsa",
         config_filename: Union[str, Path] = "~/.ssh/config",
     ):
-        self.hosts = [] if hosts is None else hosts
         self.key_filename = key_filename
         self.config_filename = config_filename
 
         self.connections: Dict[str, Dict[str, Any]] = {}
-        self.connect()
 
-    def connect(self):
-        """Connect to all remote hosts."""
-        for host in self.hosts:
-            if "@" in host:
-                username, hostname = host.split("@", 1)
-            else:
-                username = None  # paramiko sets default username
-                hostname = host
+    def connect(self, host):
+        """
+        Connect to a remote host.
 
-            ssh = get_ssh_connection(
-                username, hostname, self.key_filename, self.config_filename
-            )
-            self.connections[host] = {"ssh": ssh, "sftp": ssh.open_sftp()}
+        Parameters
+        ----------
+        host
+            A remote host filesystem. Supports using hosts defined in the ssh
+            config file. The host can be specified as either "username@remote_host" or
+            just "remote_host" in which case the username will be inferred from the
+            current user.
+        """
+        if host in self.connections:
+            return
+
+        if "@" in host:
+            username, hostname = host.split("@", 1)
+        else:
+            username = None  # paramiko sets default username
+            hostname = host
+
+        ssh = get_ssh_connection(
+            username, hostname, self.key_filename, self.config_filename
+        )
+        self.connections[host] = {"ssh": ssh, "sftp": ssh.open_sftp()}
+
+    def get_ssh(self, host) -> SSHClient:
+        """
+        Get an SSH connection to a host.
+
+        Parameters
+        ----------
+        host
+            A remote host filesystem. Supports using hosts defined in the ssh
+            config file. The host can be specified as either "username@remote_host" or
+            just "remote_host" in which case the username will be inferred from the
+            current user.
+
+        Returns
+        -------
+        SSHClient
+            An ssh client to the host.
+        """
+        if host not in self.connections:
+            self.connect(host)
+        return self.connections[host]["ssh"]
+
+    def get_sftp(self, host) -> SFTPClient:
+        """
+        Get an SFTP connection to a host.
+
+        Parameters
+        ----------
+        host
+            A remote host filesystem. Supports using hosts defined in the ssh
+            config file. The host can be specified as either "username@remote_host" or
+            just "remote_host" in which case the username will be inferred from the
+            current user.
+
+        Returns
+        -------
+        SFTPClient
+            An sftp client to the host.
+        """
+        if host not in self.connections:
+            self.connect(host)
+        return self.connections[host]["sftp"]
 
     def exists(self, path: Union[str, Path], host: Optional[str] = None) -> bool:
         """
@@ -89,7 +140,7 @@ class FileClient:
         else:
             path = str(self.abspath(path, host=host))
             try:
-                self.connections[host]["sftp"].stat(path)
+                self.get_sftp(host).stat(path)
                 return True
             except FileNotFoundError:
                 return False
@@ -119,8 +170,7 @@ class FileClient:
 
             path = str(self.abspath(path, host=host))
             try:
-                attr = self.connections[host]["sftp"].lstat(path)
-                return stat.S_ISREG(attr.st_mode)
+                return stat.S_ISREG(self.get_sftp(host).lstat(path).st_mode)
             except FileNotFoundError:
                 return False
 
@@ -149,8 +199,7 @@ class FileClient:
 
             path = str(self.abspath(path, host=host))
             try:
-                attr = self.connections[host]["sftp"].lstat(path)
-                return stat.S_ISDIR(attr.st_mode)
+                return stat.S_ISDIR(self.get_sftp(host).lstat(path).st_mode)
             except FileNotFoundError:
                 return False
 
@@ -176,7 +225,7 @@ class FileClient:
             return list(Path(path).iterdir())
         else:
             path = str(self.abspath(path, host=host))
-            return [Path(p) for p in self.connections[host]["sftp"].listdir(path)]
+            return [Path(p) for p in self.get_sftp(host).listdir(path)]
 
     def copy(
         self,
@@ -209,15 +258,13 @@ class FileClient:
             shutil.copy2(src_filename, dest_filename)
         elif src_host is not None and dest_host is None:
             # copying from remote to local
-            sftp = self.connections[src_host]["sftp"]
-            sftp.get(str(src_filename), str(dest_filename))
+            self.get_sftp(src_host).get(str(src_filename), str(dest_filename))
         elif src_host is None and dest_host is not None:
             # copying from local to remote
-            sftp = self.connections[dest_host]["sftp"]
-            sftp.put(str(src_filename), str(dest_filename))
+            self.get_sftp(dest_host).put(str(src_filename), str(dest_filename))
         elif src_host == dest_host:
             # copying between the same remote machine.
-            ssh = self.connections[src_host]["ssh"]
+            ssh = self.get_ssh(src_host)
             _, _, stderr = ssh.exec_command(f"cp {src_filename} {dest_filename}")
             if len(stderr.readlines()) > 0:
                 warnings.warn(f"Copy command gave error: {stderr}")
@@ -242,8 +289,8 @@ class FileClient:
         if host is None:
             Path(path).unlink()
         else:
-            host = str(self.abspath(host, host=host))
-            self.connections[host]["sftp"].unlink(path)
+            path = str(self.abspath(host, host=host))
+            self.get_sftp(host).unlink(path)
 
     def rename(
         self,
@@ -268,7 +315,7 @@ class FileClient:
         else:
             old_path = str(self.abspath(old_path, host=host))
             new_path = str(self.abspath(new_path, host=host))
-            self.connections[host]["sftp"].rename(old_path, new_path)
+            self.get_sftp(host).rename(old_path, new_path)
 
     def abspath(self, path: Union[str, Path], host: Optional[str] = None) -> Path:
         """
@@ -291,7 +338,7 @@ class FileClient:
         if host is None:
             return Path(path).absolute()
         else:
-            ssh = self.connections[host]["ssh"]
+            ssh = self.get_ssh(host)
             _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
             return Path([o.split("\n")[0] for o in stdout][0])
 
@@ -317,7 +364,7 @@ class FileClient:
         if host is None:
             files = glob(str(path))
         else:
-            ssh = self.connections[host]["ssh"]
+            ssh = self.get_ssh(host)
             _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
             files = [o.split("\n")[0] for o in stdout]
 
@@ -369,7 +416,7 @@ class FileClient:
             shutil.copystat(path, path_gz)
             path.unlink()
         else:
-            ssh = self.connections[host]["ssh"]
+            ssh = self.get_ssh(host)
             _, stdout, _ = ssh.exec_command(f"gzip -f {str(path)}")
 
     def gunzip(
@@ -407,7 +454,7 @@ class FileClient:
                 f_out.writelines(f_in)
             path.unlink()
         else:
-            ssh = self.connections[host]["ssh"]
+            ssh = self.get_ssh(host)
             _, stdout, _ = ssh.exec_command(f"gunzip -f {str(path)}")
 
     def close(self):
@@ -415,6 +462,15 @@ class FileClient:
         for connection in self.connections.values():
             connection["ssh"].close()
             connection["sftp"].close()
+        self.connections = {}
+
+    def __enter__(self):
+        """Support for "with" context."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Support for "with" context."""
+        self.close()
 
 
 def get_ssh_connection(

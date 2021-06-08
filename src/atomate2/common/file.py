@@ -21,7 +21,8 @@ def copy_files(
     include_files: List[Union[str, Path]] = None,
     exclude_files: List[Union[str, Path]] = None,
     suffix: str = "",
-    allow_missing_files: bool = False,
+    allow_missing: bool = False,
+    file_client: Optional[FileClient] = None,
 ):
     """
     Copy files between source and destination folders.
@@ -45,31 +46,41 @@ def copy_files(
         Filenames to exclude. Supports glob file matching, e.g., "*.dat".
     suffix
         A suffix to add to copied files. For example ".original".
-    allow_missing_files
+    allow_missing
         Whether to error if a file in "include_files" is not present in the source
         directory.
+    file_client
+        A file client to use for performing file operations.
     """
     from pathlib import Path
 
     from atomate2.utils.file_client import FileClient
 
-    hosts = [] if src_host is None else [src_host]
-    fc = FileClient(hosts=hosts)
+    def _copy(fc):
+        nonlocal src_dir, dest_dir
 
-    src_dir = fc.abspath(src_dir, host=src_host)
-    if dest_dir is None:
-        dest_dir = Path.cwd()
+        src_dir = fc.abspath(src_dir, host=src_host)
+        if dest_dir is None:
+            dest_dir = Path.cwd()
 
-    files = find_and_filter_files(fc, src_dir, include_files, exclude_files, src_host)
+        files = find_and_filter_files(
+            fc, src_dir, include_files, exclude_files, src_host
+        )
 
-    for file in files:
-        from_file = src_dir / file
-        to_file = (dest_dir / file).with_suffix(suffix)
-        try:
-            fc.copy(from_file, to_file, src_host=src_host)
-        except FileNotFoundError:
-            if not allow_missing_files:
-                raise
+        for file in files:
+            from_file = src_dir / file
+            to_file = (dest_dir / file).with_suffix(suffix)
+            try:
+                fc.copy(from_file, to_file, src_host=src_host)
+            except FileNotFoundError:
+                if not allow_missing:
+                    raise
+
+    if file_client is None:
+        with FileClient() as file_client:
+            _copy(file_client)
+    else:
+        _copy(file_client)
 
 
 def delete_files(
@@ -77,7 +88,8 @@ def delete_files(
     host: str = None,
     include_files: List[Union[str, Path]] = None,
     exclude_files: List[Union[str, Path]] = None,
-    allow_missing_files: bool = False,
+    allow_missing: bool = False,
+    file_client: Optional[FileClient] = None,
 ):
     """
     Delete files in a directory.
@@ -97,36 +109,45 @@ def delete_files(
         in the directory will be deleted.
     exclude_files
         Filenames to exclude. Supports glob file matching, e.g., "*.dat".
-    allow_missing_files
+    allow_missing
         Whether to error if a file in "include_files" is not present in the directory.
+    file_client
+        A file client to use for performing file operations.
     """
     from pathlib import Path
 
     from atomate2.utils.file_client import FileClient
 
-    hosts = [] if host is None else [host]
-    fc = FileClient(hosts=hosts)
+    def _del(fc):
+        nonlocal directory
 
-    if directory is None:
-        directory = Path.cwd() if host is None else Path("~/")
-    directory = fc.abspath(directory, host=host)
+        if directory is None:
+            directory = Path.cwd() if host is None else Path("~/")
+        directory = fc.abspath(directory, host=host)
 
-    files = find_and_filter_files(fc, directory, include_files, exclude_files, host)
+        files = find_and_filter_files(fc, directory, include_files, exclude_files, host)
 
-    for file in files:
-        file = directory / file
-        try:
-            fc.remove(file, host=host)
-        except FileNotFoundError:
-            if not allow_missing_files:
-                raise
+        for file in files:
+            file = directory / file
+            try:
+                fc.remove(file, host=host)
+            except FileNotFoundError:
+                if not allow_missing:
+                    raise
+
+    if file_client is None:
+        with FileClient() as file_client:
+            _del(file_client)
+    else:
+        _del(file_client)
 
 
 def rename_files(
     filenames: Dict[Union[str, Path], Union[str, Path]],
     directory: Union[str, Path] = None,
     host: str = None,
-    allow_missing_files: bool = False,
+    allow_missing: bool = False,
+    file_client: Optional[FileClient] = None,
 ):
     """
     Delete files in a directory.
@@ -143,26 +164,34 @@ def rename_files(
         The hostname used to specify a remote filesystem. Can be given as either
         "username@remote_host" or just "remote_host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    allow_missing_files
+    allow_missing
         Whether to error if a file in "include_files" is not present in the directory.
+    file_client
+        A file client to use for performing file operations.
     """
     from pathlib import Path
 
     from atomate2.utils.file_client import FileClient
 
-    hosts = [] if host is None else [host]
-    fc = FileClient(hosts=hosts)
+    def _rename(fc):
+        nonlocal directory
 
-    if directory is None:
-        directory = Path.cwd() if host is None else Path("~/")
-    directory = fc.abspath(directory, host=host)
+        if directory is None:
+            directory = Path.cwd() if host is None else Path("~/")
+        directory = fc.abspath(directory, host=host)
 
-    for old_filename, new_filename in filenames.items():
-        try:
-            fc.rename(directory / old_filename, directory / new_filename, host=host)
-        except FileNotFoundError:
-            if not allow_missing_files:
-                raise
+        for old_filename, new_filename in filenames.items():
+            try:
+                fc.rename(directory / old_filename, directory / new_filename, host=host)
+            except FileNotFoundError:
+                if not allow_missing:
+                    raise
+
+    if file_client is None:
+        with FileClient() as file_client:
+            _rename(file_client)
+    else:
+        _rename(file_client)
 
 
 def gzip_files(
@@ -170,8 +199,9 @@ def gzip_files(
     host: str = None,
     include_files: List[Union[str, Path]] = None,
     exclude_files: List[Union[str, Path]] = None,
-    allow_missing_files: bool = False,
+    allow_missing: bool = False,
     force: bool = False,
+    file_client: Optional[FileClient] = None,
 ):
     """
     Gzip files in a directory.
@@ -191,32 +221,40 @@ def gzip_files(
         in the directory will be gzipped.
     exclude_files
         Filenames to exclude. Supports glob file matching, e.g., "*.dat".
-    allow_missing_files
+    allow_missing
         Whether to error if a file in "include_files" is not present in the directory.
     force
         Whether to overwrite files if they exist.
+    file_client
+        A file client to use for performing file operations.
     """
     from pathlib import Path
 
     from atomate2.utils.file_client import FileClient
 
-    hosts = [] if host is None else [host]
-    fc = FileClient(hosts=hosts)
+    def _gzip(fc):
+        nonlocal directory, exclude_files
 
-    if directory is None:
-        directory = Path.cwd() if host is None else Path("~/")
-    directory = fc.abspath(directory, host=host)
+        if directory is None:
+            directory = Path.cwd() if host is None else Path("~/")
+        directory = fc.abspath(directory, host=host)
 
-    exclude_files = [] if exclude_files is None else list(exclude_files)
-    exclude_files += ["*.gz", "*.GZ"]  # exclude files that are already gzipped
-    files = find_and_filter_files(fc, directory, include_files, exclude_files, host)
+        exclude_files = [] if exclude_files is None else list(exclude_files)
+        exclude_files += ["*.gz", "*.GZ"]  # exclude files that are already gzipped
+        files = find_and_filter_files(fc, directory, include_files, exclude_files, host)
 
-    for file in files:
-        try:
-            fc.gzip(directory / file, host=host, force=force)
-        except FileNotFoundError:
-            if not allow_missing_files:
-                raise
+        for file in files:
+            try:
+                fc.gzip(directory / file, host=host, force=force)
+            except FileNotFoundError:
+                if not allow_missing:
+                    raise
+
+    if file_client is None:
+        with FileClient() as file_client:
+            _gzip(file_client)
+    else:
+        _gzip(file_client)
 
 
 def gunzip_files(
@@ -224,8 +262,9 @@ def gunzip_files(
     host: str = None,
     include_files: List[Union[str, Path]] = None,
     exclude_files: List[Union[str, Path]] = None,
-    allow_missing_files: bool = False,
+    allow_missing: bool = False,
     force: bool = False,
+    file_client: Optional[FileClient] = None,
 ):
     """
     Gunzip files in a directory.
@@ -245,31 +284,39 @@ def gunzip_files(
         files in the directory will be gunzipped.
     exclude_files
         Filenames to exclude. Supports glob file matching, e.g., "*.dat".
-    allow_missing_files
+    allow_missing
         Whether to error if a file in "include_files" is not present in the directory.
     force
         Whether to overwrite files if they exist.
+    file_client
+        A file client to use for performing file operations.
     """
     from pathlib import Path
 
     from atomate2.utils.file_client import FileClient
 
-    hosts = [] if host is None else [host]
-    fc = FileClient(hosts=hosts)
+    def _gunzip(fc):
+        nonlocal directory, include_files
 
-    if directory is None:
-        directory = Path.cwd() if host is None else Path("~/")
-    directory = fc.abspath(directory, host=host)
+        if directory is None:
+            directory = Path.cwd() if host is None else Path("~/")
+        directory = fc.abspath(directory, host=host)
 
-    include_files = ["*.gz"] if include_files is None else include_files
-    files = find_and_filter_files(fc, directory, include_files, exclude_files, host)
+        include_files = ["*.gz"] if include_files is None else include_files
+        files = find_and_filter_files(fc, directory, include_files, exclude_files, host)
 
-    for file in files:
-        try:
-            fc.gunzip(directory / file, host=host, force=force)
-        except FileNotFoundError:
-            if not allow_missing_files:
-                raise
+        for file in files:
+            try:
+                fc.gunzip(directory / file, host=host, force=force)
+            except FileNotFoundError:
+                if not allow_missing:
+                    raise
+
+    if file_client is None:
+        with FileClient() as file_client:
+            _gunzip(file_client)
+    else:
+        _gunzip(file_client)
 
 
 def find_and_filter_files(
