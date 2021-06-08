@@ -4,8 +4,23 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from emmet.core.math import Matrix3D, Vector3D
-from emmet.core.vasp.calc_types import (
+from jobflow import Schema
+from jobflow.utils import ValueEnum
+from pydantic import Field
+from pymatgen.core.lattice import Lattice
+from pymatgen.core.structure import Structure
+from pymatgen.io.vasp import (
+    Locpot,
+    Outcar,
+    Potcar,
+    PotcarSingle,
+    Vasprun,
+    VolumetricData,
+)
+
+from atomate2.common.schemas.math import Matrix3D, Vector3D
+from atomate2.settings import settings
+from atomate2.vasp.schemas.calc_types import (
     CalcType,
     RunType,
     TaskType,
@@ -13,16 +28,18 @@ from emmet.core.vasp.calc_types import (
     run_type,
     task_type,
 )
-from jobflow import Schema
-from jobflow.utils import ValueEnum
-from pydantic import Field
-from pymatgen.core.lattice import Lattice
-from pymatgen.core.structure import Structure
-from pymatgen.io.vasp import Locpot, Outcar, Vasprun, VolumetricData
-
-from atomate2.settings import settings
 
 logger = logging.getLogger(__name__)
+
+__all__ = [
+    "Status",
+    "VaspObject",
+    "PotcarSpec",
+    "CalculationInput",
+    "CalculationOutput",
+    "RunStatistics",
+    "Calculation",
+]
 
 
 class Status(ValueEnum):
@@ -54,6 +71,41 @@ class PotcarSpec(Schema):
 
     titel: str = Field(None, description="TITEL field from POTCAR header")
     hash: str = Field(None, description="md5 hash of POTCAR file")
+
+    @classmethod
+    def from_potcar_single(cls, potcar_single: PotcarSingle) -> "PotcarSpec":
+        """
+        Get a PotcarSpec from a PotcarSingle.
+
+        Parameters
+        ----------
+        potcar_single
+            A potcar single object.
+
+        Returns
+        -------
+        PotcarSpec
+            A potcar spec.
+        """
+        hash = potcar_single.get_potcar_hash()
+        return cls(titel=potcar_single.symbol, hash=hash)
+
+    @classmethod
+    def from_potcar(cls, potcar: Potcar) -> List["PotcarSpec"]:
+        """
+        Get a list of PotcarSpecs from a Potcar.
+
+        Parameters
+        ----------
+        potcar
+            A potcar object.
+
+        Returns
+        -------
+        list[PotcarSpec]
+            A list of potcar specs.
+        """
+        return [cls.from_potcar_single(p) for p in potcar]
 
 
 class CalculationInput(Schema):

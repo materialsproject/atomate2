@@ -5,14 +5,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from emmet.core.math import Matrix3D, Vector3D
-from emmet.core.structure import StructureMetadata
 from jobflow import Schema
 from pydantic import Field
 from pymatgen.core.structure import Structure
 from pymatgen.entries.computed_entries import ComputedEntry, __version__
-from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
+from pymatgen.io.vasp import Incar, Kpoints, Poscar
 
+from atomate2.common.schemas.math import Matrix3D, Vector3D
+from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.settings import settings
 from atomate2.vasp.schemas.calculation import (
     Calculation,
@@ -21,6 +21,14 @@ from atomate2.vasp.schemas.calculation import (
     Status,
     VaspObject,
 )
+
+__all__ = [
+    "AnalysisSummary",
+    "PseudoPotentialSummary",
+    "InputSummary",
+    "OutputSummary",
+    "TaskDocument",
+]
 
 
 class AnalysisSummary(Schema):
@@ -58,7 +66,7 @@ class AnalysisSummary(Schema):
         warnings = []
         errors = []
 
-        if abs(percent_delta_vol) > settings.VASP_VOLUME_CHANGE_WARNING_TOL:
+        if abs(percent_delta_vol) > settings.VASP_VOLUME_CHANGE_WARNING_TOL * 100:
             warnings.append(
                 f"Volume change > {settings.VASP_VOLUME_CHANGE_WARNING_TOL * 100}%"
             )
@@ -189,7 +197,7 @@ class OutputSummary(Schema):
         )
 
 
-class TaskDocument(Schema, StructureMetadata):
+class TaskDocument(StructureMetadata):
     """Definition of VASP task document."""
 
     dir_name: str = Field(None, description="The directory for this VASP task")
@@ -224,7 +232,7 @@ class TaskDocument(Schema, StructureMetadata):
         None,
         description="Summary of runtime statistics for each calculation in this task",
     )
-    orig_inputs: Dict[str, Union[Kpoints, Incar, Poscar, Potcar]] = Field(
+    orig_inputs: Dict[str, Union[Kpoints, Incar, Poscar, List[PotcarSpec]]] = Field(
         None, description="Summary of the original VASP inputs writen by custodian"
     )
     task_id: str = Field(None, description="The task identifier for this document")
@@ -262,7 +270,7 @@ class TaskDocument(Schema, StructureMetadata):
         dir_name: Union[Path, str],
         task_files: Dict[str, Dict[str, Any]],
         store_additional_json: bool = settings.VASP_STORE_ADDITIONAL_JSON,
-        **vasp_calc_doc_kwargs,
+        **vasp_calculation_kwargs,
     ) -> "TaskDocument":
         """
         Create a task document from VASP files.
@@ -286,7 +294,7 @@ class TaskDocument(Schema, StructureMetadata):
 
         store_additional_json
             Whether to store additional json files found in the calculation directory.
-        **vasp_calc_doc_kwargs
+        **vasp_calculation_kwargs
             Additional parsing options that will be passed to the
             :obj:`.Calculation.from_vasp_files` function.
 
@@ -306,7 +314,7 @@ class TaskDocument(Schema, StructureMetadata):
         all_vasp_objects = []
         for task_name, files in task_files.items():
             calc_doc, vasp_objects = Calculation.from_vasp_files(
-                dir_name, task_name, **files, **vasp_calc_doc_kwargs
+                dir_name, task_name, **files, **vasp_calculation_kwargs
             )
             calcs_reversed.append(calc_doc)
             all_vasp_objects.append(vasp_objects)
@@ -315,6 +323,7 @@ class TaskDocument(Schema, StructureMetadata):
         transformations, icsd_id, tags, author = _parse_transformations(dir_name)
         custodian = _parse_custodian(dir_name)
         orig_inputs = _parse_orig_inputs(dir_name)
+        print(orig_inputs)
 
         additional_json = None
         if store_additional_json:
@@ -453,7 +462,7 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
 
 def _parse_orig_inputs(
     dir_name: Path,
-) -> Dict[str, Union[Kpoints, Poscar, Potcar, Incar]]:
+) -> Dict[str, Union[Kpoints, Poscar, PotcarSpec, Incar]]:
     """
     Parse original input files.
 
@@ -467,7 +476,7 @@ def _parse_orig_inputs(
 
     Returns
     -------
-    Dict[str, Union[Kpints, Poscar, Potcar, Incar]]
+    Dict[str, Union[Kpints, Poscar, PotcarSpec, Incar]]
         The original POSCAR, KPOINTS, POTCAR, and INCAR data.
     """
     from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
@@ -482,7 +491,14 @@ def _parse_orig_inputs(
     for filename in dir_name.glob("*.orig*"):
         for name, vasp_input in input_mapping.items():
             if f"{name}.orig" in str(filename):
-                orig_inputs[name.lower()] = vasp_input.from_file(filename)
+                if name == "POTCAR":
+                    # can't serialize POTCAR
+                    orig_inputs[name.lower()] = PotcarSpec.from_potcar(
+                        vasp_input.from_file(filename)
+                    )
+                else:
+                    orig_inputs[name.lower()] = vasp_input.from_file(filename)
+
     return orig_inputs
 
 
