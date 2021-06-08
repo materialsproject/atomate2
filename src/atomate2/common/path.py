@@ -1,4 +1,4 @@
-"""Utilities for dealing with paths."""
+"""Utilities for dealing with paths and files."""
 
 from __future__ import annotations
 

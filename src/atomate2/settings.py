@@ -29,6 +29,10 @@ class Settings(BaseSettings):
         ">>SCRATCH_DIR<<", description="Path to scratch directory (supports env_check)"
     )
 
+    SYMPREC: float = Field(
+        0.1, description="Symmetry precision for spglib symmetry finding"
+    )
+
     # VASP specific settings
     VASP_CMD: str = Field(
         "vasp_std", description="Command to run standard version of VASP"
