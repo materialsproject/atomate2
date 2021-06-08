@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 
 VOLUMETRIC_FILES = ("CHGCAR", "LOCPOT", "AECCAR0", "AECCAR1", "AECCAR2")
 
+__all__ = ["VaspDrone"]
+
 
 class VaspDrone(AbstractDrone):
     """
@@ -25,7 +27,7 @@ class VaspDrone(AbstractDrone):
 
     Parameters
     ----------
-    runs
+    task_names
         Naming scheme for multiple calculations in one folder e.g. ["relax1", "relax2"].
     additional_fields
         Dictionary of additional fields to add to output document.
@@ -35,12 +37,15 @@ class VaspDrone(AbstractDrone):
 
     def __init__(
         self,
-        runs=None,
-        additional_fields=None,
-        task_document_kwargs=None,
+        task_names: List[str] = None,
+        additional_fields: Dict[str, Any] = None,
+        task_document_kwargs: Dict[str, Any] = None,
     ):
         self.additional_fields = {} if additional_fields is None else additional_fields
-        self.runs = runs or ["precondition"] + ["relax" + str(i + 1) for i in range(9)]
+
+        self.task_names = task_names
+        if self.task_names is None:
+            self.task_names = ["precondition"] + [f"relax{i}" for i in range(9)]
 
         self.task_document_kwargs = task_document_kwargs
         if self.task_document_kwargs is None:
@@ -60,8 +65,12 @@ class VaspDrone(AbstractDrone):
         TaskDocument
             A VASP task document.
         """
+        from pathlib import Path
+
+        from atomate2.vasp.schemas.task import TaskDocument
+
         logger.info(f"Getting task doc for base dir :{path}")
-        task_files = find_vasp_files(self.runs, path)
+        task_files = find_vasp_files(self.task_names, path)
 
         if len(task_files) > 0:
             try:
@@ -108,10 +117,10 @@ class VaspDrone(AbstractDrone):
         from pathlib import Path
 
         parent, subdirs, _ = path
-        if set(self.runs).intersection(subdirs):
+        if set(self.task_names).intersection(subdirs):
             return [parent]
         if (
-            not any([parent.endswith(os.sep + r) for r in self.runs])
+            not any([parent.endswith(os.sep + r) for r in self.task_names])
             and len(list(Path(parent).glob("vasprun.xml*"))) > 0
         ):
             return [parent]
@@ -157,33 +166,45 @@ def find_vasp_files(
 
     """
     from collections import OrderedDict
+    from pathlib import Path
 
     path = Path(path)
     task_files = OrderedDict()
 
     def _get_task_files(files, suffix=""):
-        vasp_files = {"volumetric_files": []}
+        vasp_files = {}
+        vol_files = []
         for file in files:
-            if file.match(f"*vasprun{suffix}*"):
+            if file.match(f"*vasprun.xml{suffix}*"):
                 vasp_files["vasprun_file"] = file
             elif file.match(f"*OUTCAR{suffix}*"):
                 vasp_files["outcar_file"] = file
             elif any([file.match(f"*{f}{suffix}*") for f in volumetric_files]):
-                vasp_files["volumetric_files"].append(file)
+                vol_files.append(file)
+
+        if len(vol_files) > 0 or len(vasp_files) > 0:
+            # only add volumetric files if some were found or other vasp files
+            # were found
+            vasp_files["volumetric_files"] = vol_files
+
         return vasp_files
 
     for task_name in task_names:
-        subfiles = list(path.glob(f"{task_name}/*"))
-        if len(subfiles) > 0:
+        subfolder_match = list(path.glob(f"{task_name}/*"))
+        suffix_match = list(path.glob(f"*.{task_name}*"))
+        if len(subfolder_match) > 0:
             # subfolder match
-            task_files[task_name] = _get_task_files(subfiles)
-        else:
+            task_files[task_name] = _get_task_files(subfolder_match)
+        elif len(suffix_match) > 0:
             # try extension schema
-            subfiles = list(path.glob("*"))
-            task_files[task_name] = _get_task_files(subfiles, suffix=f".{task_name}")
+            task_files[task_name] = _get_task_files(
+                suffix_match, suffix=f".{task_name}"
+            )
 
     if len(task_files) == 0:
         # get any matching file from the root folder
-        task_files["standard"] = _get_task_files(list(path.glob("*")))
+        standard_files = _get_task_files(list(path.glob("*")))
+        if len(standard_files) > 0:
+            task_files["standard"] = standard_files
 
     return task_files

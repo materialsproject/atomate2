@@ -14,6 +14,8 @@ if typing.TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["parse_vasp_outputs"]
+
 
 def parse_vasp_outputs(
     calc_dir: Path = None,
