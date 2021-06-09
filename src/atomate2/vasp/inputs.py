@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import typing
 
+from custodian.cli.run_vasp import load_class
+
 if typing.TYPE_CHECKING:
     from typing import Optional
 
@@ -37,8 +39,6 @@ def write_vasp_input_set(
     from_prev
         Whether to initialize the input set from a previous calculation.
     """
-    from custodian.cli.run_vasp import load_class
-
     input_set_kwargs = {} if input_set_kwargs is None else input_set_kwargs
     write_input_kwargs = {} if write_input_kwargs is None else write_input_kwargs
 

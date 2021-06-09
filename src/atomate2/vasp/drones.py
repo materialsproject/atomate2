@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 import logging
+import os
 import typing
+from collections import OrderedDict
+from pathlib import Path
 
 from pymatgen.apps.borg.hive import AbstractDrone
 
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Any, Dict, List, Tuple
+from atomate2.vasp.schemas.task import TaskDocument
 
-    from atomate2.vasp.schemas.task import TaskDocument
+if typing.TYPE_CHECKING:
+    from typing import Any, Dict, List, Tuple, Union
 
 
 logger = logging.getLogger(__name__)
@@ -51,7 +53,7 @@ class VaspDrone(AbstractDrone):
         if self.task_document_kwargs is None:
             self.task_document_kwargs = {}
 
-    def assimilate(self, path: Path) -> TaskDocument:
+    def assimilate(self, path: Union[str, Path] = None) -> TaskDocument:
         """
         Parse VASP output files and return the output document.
 
@@ -65,9 +67,8 @@ class VaspDrone(AbstractDrone):
         TaskDocument
             A VASP task document.
         """
-        from pathlib import Path
-
-        from atomate2.vasp.schemas.task import TaskDocument
+        if path is None:
+            path = Path.cwd()
 
         logger.info(f"Getting task doc for base dir :{path}")
         task_files = find_vasp_files(self.task_names, path)
@@ -113,9 +114,6 @@ class VaspDrone(AbstractDrone):
         list[str]
             A list of paths to assimilate.
         """
-        import os
-        from pathlib import Path
-
         parent, subdirs, _ = path
         if set(self.task_names).intersection(subdirs):
             return [parent]
@@ -129,7 +127,7 @@ class VaspDrone(AbstractDrone):
 
 def find_vasp_files(
     task_names: List[str],
-    path: Path,
+    path: Union[str, Path],
     volumetric_files: Tuple[str, ...] = VOLUMETRIC_FILES,
 ) -> Dict[str, Any]:
     """
@@ -165,9 +163,6 @@ def find_vasp_files(
             }
 
     """
-    from collections import OrderedDict
-    from pathlib import Path
-
     path = Path(path)
     task_files = OrderedDict()
 

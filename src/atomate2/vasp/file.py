@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import re
 import typing
 
+from atomate2.common.file import copy_files, gunzip_files, rename_files
 from atomate2.utils.file_client import auto_fileclient
 
 if typing.TYPE_CHECKING:
@@ -47,8 +49,6 @@ def copy_vasp_outputs(
     file_client
         A file client to use for performing file operations.
     """
-    from atomate2.common.file import copy_files, gunzip_files, rename_files
-
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
 
     # copy required files
@@ -122,8 +122,6 @@ def get_largest_relax_extension(
     str
         The relax extension or an empty string if there were not multiple relaxations.
     """
-    import re
-
     relax_files = file_client.glob(Path(directory) / "*.relax*", host=host)
     if len(relax_files) == 0:
         return ""

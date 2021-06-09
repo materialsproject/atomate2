@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import typing
+from fnmatch import fnmatch
+from pathlib import Path
 
 from atomate2.utils.file_client import auto_fileclient
 
 if typing.TYPE_CHECKING:
-    from pathlib import Path
     from typing import Dict, List, Optional, Union
 
     from atomate2.utils.file_client import FileClient
@@ -54,8 +55,6 @@ def copy_files(
     file_client
         A file client to use for performing file operations.
     """
-    from pathlib import Path
-
     src_dir = file_client.abspath(src_dir, host=src_host)
     if dest_dir is None:
         dest_dir = Path.cwd()
@@ -106,8 +105,6 @@ def delete_files(
     file_client
         A file client to use for performing file operations.
     """
-    from pathlib import Path
-
     if directory is None:
         directory = Path.cwd() if host is None else Path("~/")
     directory = file_client.abspath(directory, host=host)
@@ -153,8 +150,6 @@ def rename_files(
     file_client
         A file client to use for performing file operations.
     """
-    from pathlib import Path
-
     if directory is None:
         directory = Path.cwd() if host is None else Path("~/")
     directory = file_client.abspath(directory, host=host)
@@ -204,8 +199,6 @@ def gzip_files(
     file_client
         A file client to use for performing file operations.
     """
-    from pathlib import Path
-
     if directory is None:
         directory = Path.cwd() if host is None else Path("~/")
     directory = file_client.abspath(directory, host=host)
@@ -259,8 +252,6 @@ def gunzip_files(
     file_client
         A file client to use for performing file operations.
     """
-    from pathlib import Path
-
     if directory is None:
         directory = Path.cwd() if host is None else Path("~/")
     directory = file_client.abspath(directory, host=host)
@@ -310,8 +301,6 @@ def find_and_filter_files(
     list[Path]
         A list of file paths.
     """
-    from fnmatch import fnmatch
-
     directory = file_client.abspath(directory, host=host)
     exclude_files = [] if exclude_files is None else exclude_files
 

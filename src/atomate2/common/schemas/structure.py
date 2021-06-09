@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import List, Optional, Type, TypeVar
 
-from jobflow import Schema
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pymatgen.core import Composition, Structure
 from pymatgen.core.periodic_table import Element
 
@@ -14,7 +13,7 @@ from atomate2.common.schemas.symmetry import SymmetryData
 T = TypeVar("T", bound="StructureMetadata")
 
 
-class StructureMetadata(Schema):
+class StructureMetadata(BaseModel):
     """Mix-in class for structure metadata."""
 
     # Structure metadata

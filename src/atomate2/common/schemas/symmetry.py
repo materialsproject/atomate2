@@ -2,9 +2,8 @@
 
 from typing import Any, Dict
 
-from jobflow import Schema
 from jobflow.utils import ValueEnum
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, spglib
 
@@ -23,7 +22,7 @@ class CrystalSystem(ValueEnum):
     cubic = "Cubic"
 
 
-class SymmetryData(Schema):
+class SymmetryData(BaseModel):
     """Symmetry data set for materials documents."""
 
     crystal_system: CrystalSystem = Field(

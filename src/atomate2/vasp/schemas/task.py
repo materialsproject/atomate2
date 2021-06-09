@@ -5,15 +5,18 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-from jobflow import Schema
-from pydantic import Field
+import numpy as np
+from monty.serialization import loadfn
+from pydantic import BaseModel, Field
+from pymatgen.analysis.structure_analyzer import oxide_type
 from pymatgen.core.structure import Structure
 from pymatgen.entries.computed_entries import ComputedEntry, __version__
-from pymatgen.io.vasp import Incar, Kpoints, Poscar
+from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.settings import settings
+from atomate2.utils.path import get_uri
 from atomate2.vasp.schemas.calculation import (
     Calculation,
     PotcarSpec,
@@ -33,7 +36,7 @@ __all__ = [
 T = TypeVar("T", bound="TaskDocument")
 
 
-class AnalysisSummary(Schema):
+class AnalysisSummary(BaseModel):
     """Calculation relaxation summary."""
 
     delta_volume: float = Field(None, description="Absolute change in volume")
@@ -92,7 +95,7 @@ class AnalysisSummary(Schema):
         )
 
 
-class PseudoPotentialSummary(Schema):
+class PseudoPotentialSummary(BaseModel):
     """A summary of pseudo-potential type and functional."""
 
     pot_type: str = Field(None, description="Pseudo-potential type, e.g. PAW")
@@ -104,7 +107,7 @@ class PseudoPotentialSummary(Schema):
     )
 
 
-class InputSummary(Schema):
+class InputSummary(BaseModel):
     """Summary of inputs for a VASP calculation."""
 
     structure: Structure = Field(None, description="The input structure object")
@@ -156,7 +159,7 @@ class InputSummary(Schema):
         )
 
 
-class OutputSummary(Schema):
+class OutputSummary(BaseModel):
     """Summary of the outputs for a VASP calculation."""
 
     structure: Structure = Field(None, description="The output structure object")
@@ -304,11 +307,6 @@ class TaskDocument(StructureMetadata):
         VaspTaskDoc
             A task document for the calculation.
         """
-        from pathlib import Path
-
-        from atomate2.utils.path import get_uri
-        from atomate2.vasp.schemas.calculation import Calculation
-
         dir_name = Path(dir_name)
 
         calcs_reversed = []
@@ -381,11 +379,6 @@ class TaskDocument(StructureMetadata):
         ComputedEntry
             A computed entry.
         """
-        from datetime import datetime
-
-        from pymatgen.analysis.structure_analyzer import oxide_type
-        from pymatgen.entries.computed_entries import ComputedEntry
-
         entry_dict = {
             "correction": 0.0,
             "entry_id": job_id,
@@ -408,8 +401,6 @@ def _parse_transformations(
     dir_name: Path,
 ) -> Tuple[Dict, Optional[int], Optional[List[str]], Optional[str]]:
     """Parse transformations.json file."""
-    from monty.serialization import loadfn
-
     transformations = {}
     filenames = tuple(dir_name.glob("transformations.json*"))
     icsd_id = None
@@ -453,8 +444,6 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
     Optional[dict]
         The information parsed from custodian.json file.
     """
-    from monty.serialization import loadfn
-
     filenames = tuple(dir_name.glob("custodian.json*"))
     if len(filenames) >= 1:
         return loadfn(filenames[0], cls=None)
@@ -480,8 +469,6 @@ def _parse_orig_inputs(
     Dict[str, Union[Kpints, Poscar, PotcarSpec, Incar]]
         The original POSCAR, KPOINTS, POTCAR, and INCAR data.
     """
-    from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
-
     orig_inputs = {}
     input_mapping = {
         "INCAR": Incar,
@@ -505,8 +492,6 @@ def _parse_orig_inputs(
 
 def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
     """Parse additional json files in the directory."""
-    from monty.serialization import loadfn
-
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
         key = filename.name.split(".")[0]
@@ -517,8 +502,6 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
 
 def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     """Get max force acting on atoms from a calculation document."""
-    import numpy as np
-
     forces = calc_doc.output.ionic_steps[-1].get("forces")
     structure = calc_doc.output.structure
     if forces:
@@ -532,8 +515,6 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
 
 def _get_drift_warnings(calc_doc: Calculation) -> List[str]:
     """Get warnings of whether the drift on atoms is too large."""
-    import numpy as np
-
     warnings = []
     if calc_doc.input.parameters.get("NSW", 0) > 0:
         drift = calc_doc.output.outcar.get("drift", [[0, 0, 0]])
@@ -553,8 +534,6 @@ def _get_drift_warnings(calc_doc: Calculation) -> List[str]:
 
 def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
-    from atomate2.vasp.schemas.calculation import Status
-
     all_calcs_completed = all(
         [c.has_vasp_completed == Status.SUCCESS for c in calc_docs]
     )
@@ -565,8 +544,6 @@ def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Statu
 
 def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
     """Get summary of runtime statistics for each calculation in this task."""
-    from atomate2.vasp.schemas.calculation import RunStatistics
-
     run_stats = {}
     total = dict(
         average_memory=0.0,

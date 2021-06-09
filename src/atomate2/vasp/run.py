@@ -9,8 +9,12 @@ Todo
 from __future__ import annotations
 
 import logging
+import shlex
+import subprocess
 import typing
+from os.path import expandvars
 
+from custodian import Custodian
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -24,6 +28,7 @@ from custodian.vasp.handlers import (
     VaspErrorHandler,
     WalltimeHandler,
 )
+from custodian.vasp.jobs import VaspJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from jobflow.utils import ValueEnum
 
@@ -35,8 +40,16 @@ if typing.TYPE_CHECKING:
 
     from custodian.custodian import ErrorHandler, Validator
 
+    from atomate2.vasp.schemas.task import TaskDocument
 
-__all__ = ["JobType", "run_vasp", "DEFAULT_HANDLERS", "DEFAULT_VALIDATORS"]
+
+__all__ = [
+    "JobType",
+    "run_vasp",
+    "DEFAULT_HANDLERS",
+    "DEFAULT_VALIDATORS",
+    "should_stop_children",
+]
 
 DEFAULT_HANDLERS = (
     VaspErrorHandler(),
@@ -87,7 +100,7 @@ def run_vasp(
     wall_time: Optional[int] = None,
     vasp_job_kwargs: Dict[str, Any] = None,
     custodian_kwargs: Dict[str, Any] = None,
-) -> Dict[str, Any]:
+):
     """
     Run VASP.
 
@@ -116,22 +129,7 @@ def run_vasp(
         Keyword arguments that are passed to :obj:`.VaspJob`.
     custodian_kwargs
         Keyword arguments that are passed to :obj:`.Custodian`.
-
-    Returns
-    -------
-    dict[str, Any]
-        Any output from the custodian.json file.
     """
-    import shlex
-    import subprocess
-    from os.path import expandvars
-    from pathlib import Path
-
-    from custodian import Custodian
-    from custodian.vasp.jobs import VaspJob
-    from monty.os.path import zpath
-    from monty.serialization import loadfn
-
     vasp_job_kwargs = {} if vasp_job_kwargs is None else vasp_job_kwargs
     custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
 
@@ -149,7 +147,8 @@ def run_vasp(
         logger.info(f"Running command: {vasp_cmd}")
         return_code = subprocess.call(vasp_cmd, shell=True)
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
-        return {}
+        return
+
     elif job_type == JobType.NORMAL:
         jobs = VaspJob(split_vasp_cmd, **vasp_job_kwargs)
     elif job_type == JobType.DOUBLE_RELAXATION:
@@ -174,7 +173,41 @@ def run_vasp(
     )
     c.run()
 
-    custodian_file = Path(zpath("custodian.json"))
-    if custodian_file.exists():
-        return loadfn(custodian_file)
-    return {}
+
+def should_stop_children(
+    task_document: TaskDocument,
+    handle_unsuccessful: Union[bool, str] = settings.VASP_HANDLE_UNSUCCESSFUL,
+) -> bool:
+    """
+    Parse VASP outputs and generate a :obj:`.Response`.
+
+    Parameters
+    ----------
+    task_document
+        A VASP task document.
+    handle_unsuccessful
+        This is a three-way toggle on what to do if your job looks OK, but is actually
+        unconverged (either electronic or ionic):
+
+        - `True`: Mark job as completed, but stop children.
+        - `False`: Do nothing, continue with workflow as normal.
+        - `"error"`: Throw an error.
+
+    Returns
+    -------
+    bool
+        Whether to stop child jobs.
+    """
+    if task_document.state == "successful":
+        return False
+
+    if isinstance(handle_unsuccessful, bool):
+        return handle_unsuccessful
+
+    if handle_unsuccessful == "error":
+        raise RuntimeError(
+            "Job was not successful (perhaps your job did not converge within the "
+            "limit of electronic/ionic iterations)!"
+        )
+
+    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")

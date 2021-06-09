@@ -23,7 +23,8 @@ class BaseVaspMaker(Maker):
     write_vasp_input_set_kwargs: dict = field(default_factory=dict)
     copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)
-    parse_vasp_output_kwargs: dict = field(default_factory=dict)
+    vasp_drone_kwargs: dict = field(default_factory=dict)
+    stop_children_kwargs: dict = field(default_factory=dict)
 
     @job
     def make(self, structure: Structure, prev_vasp_dir=None):

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import socket
 import typing
+from pathlib import Path
 
 if typing.TYPE_CHECKING:
-    from pathlib import Path
     from typing import Union
 
 __all__ = ["get_uri"]
@@ -27,9 +28,6 @@ def get_uri(dir_name: Union[str, Path]) -> str:
     str
         Full URI path, e.g., "fileserver.host.com:/full/path/of/dir_name".
     """
-    import socket
-    from pathlib import Path
-
     fullpath = Path(dir_name).absolute()
     hostname = socket.gethostname()
     try:

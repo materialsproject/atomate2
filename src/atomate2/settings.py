@@ -54,11 +54,6 @@ class Settings(BaseSettings):
         description="Whether vasp.powerups.add_common_powerups adds a small gap "
         "multiply task for static and NSCF calculations",
     )
-    VASP_ADD_MODIFY_INCAR: bool = Field(
-        False,
-        description="Whether vasp.powerups.add_common_powerups adds a modify incar "
-        "task",
-    )
     VASP_ADD_STABILITY_CHECK: bool = Field(
         False,
         description="Whether vasp.powerups.add_common_powerups adds a stability check "
@@ -68,11 +63,6 @@ class Settings(BaseSettings):
         False,
         description="Whether vasp.powerups.add_common_powerups adds structure metadata "
         "to a workflow",
-    )
-    VASP_HALF_KPOINTS_FIRST_RELAX: bool = Field(
-        False,
-        description="Whether to use only half the k-point density in the initial"
-        "relaxation of a structure optimization for faster performance",
     )
     VASP_RELAX_MAX_FORCE: float = Field(
         0.25,
@@ -84,13 +74,12 @@ class Settings(BaseSettings):
         description="Maximum volume change allowed in VASP relaxations before the "
         "calculation is tagged with a warning",
     )
-    VASP_DEFUSE_UNSUCCESSFUL: Union[str, bool] = Field(
+    VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
         "fizzle",
         description="Three-way toggle on what to do if the job looks OK but is actually"
-        "unconverged (either electronic or ionic). "
-        "True -> mark job as COMPLETED, but defuse children. "
-        "False --> do nothing, continue with workflow as normal. "
-        "'fizzle' --> throw an error (mark this job as FIZZLED)",
+        " unconverged (either electronic or ionic). True -> mark job as COMPLETED, but "
+        "stop children. False --> do nothing, continue with workflow as normal. 'error'"
+        " --> throw an error",
     )
     VASP_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"

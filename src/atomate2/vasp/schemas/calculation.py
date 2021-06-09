@@ -4,12 +4,14 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from jobflow import Schema
 from jobflow.utils import ValueEnum
-from pydantic import Field
+from pydantic import BaseModel, Field
+from pydantic.datetime_parse import datetime
+from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
 from pymatgen.io.vasp import (
+    BSVasprun,
     Locpot,
     Outcar,
     Potcar,
@@ -66,7 +68,7 @@ class VaspObject(ValueEnum):
     PROCAR = "proj"
 
 
-class PotcarSpec(Schema):
+class PotcarSpec(BaseModel):
     """Document defining a VASP POTCAR specification."""
 
     titel: str = Field(None, description="TITEL field from POTCAR header")
@@ -108,7 +110,7 @@ class PotcarSpec(Schema):
         return [cls.from_potcar_single(p) for p in potcar]
 
 
-class CalculationInput(Schema):
+class CalculationInput(BaseModel):
     """Document defining VASP calculation inputs."""
 
     incar: Dict[str, Any] = Field(
@@ -162,7 +164,7 @@ class CalculationInput(Schema):
         )
 
 
-class RunStatistics(Schema):
+class RunStatistics(BaseModel):
     """Summary of the run statistics for a VASP calculation."""
 
     average_memory: float = Field(None, description="The average memory used in kb")
@@ -205,7 +207,7 @@ class RunStatistics(Schema):
         return cls(**{v: outcar.run_stats.get(k, None) for k, v in mapping.items()})
 
 
-class CalculationOutput(Schema):
+class CalculationOutput(BaseModel):
     """Document defining VASP calculation outputs."""
 
     energy: float = Field(
@@ -344,7 +346,7 @@ class CalculationOutput(Schema):
         )
 
 
-class Calculation(Schema):
+class Calculation(BaseModel):
     """Full VASP calculation inputs and outputs."""
 
     dir_name: str = Field(None, description="The directory for this VASP calculation")
@@ -446,9 +448,6 @@ class Calculation(Schema):
         Calculation
             A VASP calculation document.
         """
-        from pydantic.datetime_parse import datetime
-        from pymatgen.io.vasp import Outcar, Vasprun
-
         dir_name = Path(dir_name)
         vasprun_file = dir_name / vasprun_file
         outcar_file = dir_name / outcar_file
@@ -473,8 +472,6 @@ class Calculation(Schema):
 
         bader = None
         if run_bader and "chgcar" in output_file_paths:
-            from pymatgen.command_line.bader_caller import bader_analysis_from_path
-
             suffix = "" if task_name == "standard" else f".{task_name}"
             bader = bader_analysis_from_path(dir_name, suffix=suffix)
 
@@ -483,8 +480,6 @@ class Calculation(Schema):
             if VaspObject.LOCPOT in vasp_objects:
                 locpot = vasp_objects[VaspObject.LOCPOT]  # type: ignore
             elif VaspObject.LOCPOT in output_file_paths:
-                from pymatgen.io.vasp import Locpot
-
                 locpot_file = output_file_paths[VaspObject.LOCPOT]  # type: ignore
                 locpot = Locpot.from_file(dir_name / locpot_file)
 
@@ -589,8 +584,6 @@ def _parse_bandstructure(
     parse_mode: Union[str, bool], vasprun: Vasprun
 ) -> Optional[Dict[str, Any]]:
     """Parse band structure. See Calculation.from_vasp_files for supported arguments."""
-    from pymatgen.io.vasp import BSVasprun
-
     vasprun_file = vasprun.filename
 
     if parse_mode == "auto":

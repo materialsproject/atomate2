@@ -1,12 +1,21 @@
 """Tools for remote file IO using paramiko."""
 
+
 from __future__ import annotations
 
+import shutil
+import stat
 import typing
 import warnings
+from functools import wraps
+from glob import glob
+from gzip import GzipFile
+from pathlib import Path
+
+import paramiko
+from monty.io import zopen
 
 if typing.TYPE_CHECKING:
-    from pathlib import Path
     from typing import Any, Callable, Dict, List, Optional, Union
 
     from paramiko import SFTPClient, SSHClient
@@ -133,8 +142,6 @@ class FileClient:
         bool
             Whether the file exists.
         """
-        from pathlib import Path
-
         if host is None:
             return Path(path).exists()
         else:
@@ -161,13 +168,9 @@ class FileClient:
         bool
             Whether the path is a file.
         """
-        from pathlib import Path
-
         if host is None:
             return Path(path).is_file()
         else:
-            import stat
-
             path = str(self.abspath(path, host=host))
             try:
                 return stat.S_ISREG(self.get_sftp(host).lstat(path).st_mode)
@@ -190,13 +193,9 @@ class FileClient:
         bool
             Whether the path is a directory.
         """
-        from pathlib import Path
-
         if host is None:
             return Path(path).is_dir()
         else:
-            import stat
-
             path = str(self.abspath(path, host=host))
             try:
                 return stat.S_ISDIR(self.get_sftp(host).lstat(path).st_mode)
@@ -219,8 +218,6 @@ class FileClient:
         list[Path]
             List of filenames and directories.
         """
-        from pathlib import Path
-
         if host is None:
             return list(Path(path).iterdir())
         else:
@@ -248,8 +245,6 @@ class FileClient:
         dest_host
             A remote file system host for the destination file.
         """
-        import shutil
-
         src_filename = self.abspath(src_filename, host=src_host)
         dest_filename = self.abspath(dest_filename, host=dest_host)
 
@@ -333,8 +328,6 @@ class FileClient:
         Path
             The absolute file path.
         """
-        from pathlib import Path
-
         if host is None:
             return Path(path).absolute()
         else:
@@ -358,9 +351,6 @@ class FileClient:
         list[Path]
             A list of globs files and directories.
         """
-        from glob import glob
-        from pathlib import Path
-
         if host is None:
             files = glob(str(path))
         else:
@@ -391,9 +381,6 @@ class FileClient:
         force
             Overwrite gzipped file if it already exists.
         """
-        import shutil
-        from gzip import GzipFile
-
         path = self.abspath(path, host=host)
         path_gz = path.with_suffix(".gz")
 
@@ -437,8 +424,6 @@ class FileClient:
         force
             Overwrite non-gzipped file if it already exists.
         """
-        from monty.io import zopen
-
         path = self.abspath(path, host=host)
         path_nongz = path.stem
 
@@ -500,10 +485,6 @@ def get_ssh_connection(
     SSHClient
         An ssh connection to the host.
     """
-    from pathlib import Path
-
-    import paramiko
-
     key_filename = Path(key_filename).expanduser()
     if not key_filename.exists():
         raise ValueError(f"Cannot locate private key file: {key_filename}")
@@ -545,8 +526,6 @@ def auto_fileclient(method: Optional[Callable] = None):
     """
 
     def decorator(func):
-        from functools import wraps
-
         @wraps(func)
         def gen_fileclient(*args, **kwargs):
             file_client = kwargs.get("file_client", None)
