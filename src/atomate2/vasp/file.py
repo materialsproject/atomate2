@@ -14,8 +14,6 @@ if typing.TYPE_CHECKING:
 
 __all__ = ["copy_vasp_outputs"]
 
-files_to_copy = ["INCAR", "POSCAR", "KPOINTS", "POTCAR", "OUTCAR", "vasprun.xml"]
-
 
 @auto_fileclient
 def copy_vasp_outputs(
@@ -89,7 +87,7 @@ def copy_vasp_outputs(
     # rename files to remove relax extension
     if relax_ext:
         all_files = optional_files + required_files
-        files = {k: k.replace(relax_ext + "*", "") for k in all_files}
+        files = {k.replace("*", ""): k.replace(relax_ext + "*", "") for k in all_files}
         rename_files(files, allow_missing=True, file_client=file_client)
 
     if contcar_to_poscar:
@@ -102,6 +100,28 @@ def get_largest_relax_extension(
     host: Optional[str] = None,
     file_client: FileClient = None,
 ) -> str:
+    """
+    Get the largest numbered relax extension of files in a directory.
+
+    For example, if listdir gives ["vasprun.xml.relax1.gz", "vasprun.xml.relax2.gz"],
+    this function will return ".relax2".
+
+    Parameters
+    ----------
+    directory
+        A directory to search.
+    host
+        The hostname used to specify a remote filesystem. Can be given as either
+        "username@remote_host" or just "remote_host" in which case the username will be
+        inferred from the current user. If ``None``, the local filesystem will be used.
+    file_client
+        A file client to use for performing file operations.
+
+    Returns
+    -------
+    str
+        The relax extension or an empty string if there were not multiple relaxations.
+    """
     import re
 
     relax_files = file_client.glob(Path(directory) / "*.relax*", host=host)
