@@ -7,11 +7,11 @@ import warnings
 
 if typing.TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any, Dict, List, Optional, Union
+    from typing import Any, Callable, Dict, List, Optional, Union
 
     from paramiko import SFTPClient, SSHClient
 
-__all__ = ["FileClient"]
+__all__ = ["FileClient", "auto_fileclient"]
 
 
 class FileClient:
@@ -526,3 +526,41 @@ def get_ssh_connection(
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(**config)
     return client
+
+
+def auto_fileclient(method: Optional[Callable] = None):
+    """
+    Automatically pass a FileClient to the function if not already present in kwargs.
+
+    This decorator should only be applied to functions with a ``file_client`` keyword
+    argument. If a custom file client is not supplied when the function is called, it
+    will automatically create a new FileClient, add it to the function arguments and
+    close the file client connects at the end of the function.
+
+    Parameters
+    ----------
+    method
+        A function to wrap. This should not be specified directly and is implied
+        by the decorator.
+    """
+
+    def decorator(func):
+        from functools import wraps
+
+        @wraps(func)
+        def gen_fileclient(*args, **kwargs):
+            file_client = kwargs.get("file_client", None)
+            if file_client is None:
+                with FileClient() as file_client:
+                    kwargs["file_client"] = file_client
+                    return func(*args, **kwargs)
+
+        return gen_fileclient
+
+    # See if we're being called as @auto_fileclient or @auto_fileclient().
+    if method is None:
+        # We're called with parens.
+        return decorator
+
+    # We're called as @auto_fileclient without parens.
+    return decorator(method)

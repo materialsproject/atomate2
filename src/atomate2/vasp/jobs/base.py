@@ -20,7 +20,7 @@ class BaseVaspMaker(Maker):
     name: str = "base vasp job"
     input_set: str = None
     input_set_kwargs: dict = field(default_factory=dict)
-    copy_vasp_files_kwargs: dict = field(default_factory=dict)
+    copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)
     vasp_output_kwargs: dict = field(default_factory=dict)
 
@@ -29,12 +29,11 @@ class BaseVaspMaker(Maker):
         """Make a VASP job."""
         from jobflow.utils.dict_mods import apply_mod
 
+        from atomate2.vasp.file import copy_vasp_outputs
         from atomate2.vasp.parse import parse_vasp_outputs
 
-        # from_prev = False
-        # if prev_vasp_dir is not None:
-        #     copy_vasp_files(prev_vasp_dir, **self.copy_vasp_kwargs)
-        #     from_prev = True
+        if prev_vasp_dir is not None:
+            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
         #
         # write_vasp_input_set(
         #     structure,
