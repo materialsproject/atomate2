@@ -37,10 +37,13 @@ def parse_vasp_outputs(
         - `"fizzle"`: Throw an error (mark this job as fizzled).
     vasp_drone_kwargs
         Additional keyword arguments to pass to the VaspDrone.
+
+    Returns
+    -------
+    Tuple[TaskDocument, bool]
+        The TaskDocument and whether to stop child jobs as a tuple.
     """
     from pathlib import Path
-
-    from jobflow import Response
 
     from atomate2.vasp.drones import VaspDrone
 
@@ -67,9 +70,4 @@ def parse_vasp_outputs(
             raise RuntimeError(
                 f"Unknown option for defuse_unsuccessful: {defuse_unsuccessful}"
             )
-
-    return Response(
-        stored_data={"task_id": task_doc.get("task_id", None)},
-        stop_children=stop_children,
-        output=task_doc,
-    )
+    return task_doc, stop_children

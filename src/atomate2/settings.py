@@ -21,30 +21,30 @@ class Settings(BaseSettings):
     """
 
     CONFIG_FILE: str = Field(
-        DEFAULT_CONFIG_FILE_PATH, description="File to load alternative defaults from"
+        DEFAULT_CONFIG_FILE_PATH, description="File to load alternative defaults from."
     )
 
     # general settings
     SCRATCH_DIR: str = Field(
-        ">>SCRATCH_DIR<<", description="Path to scratch directory (supports env_check)"
+        ">>SCRATCH_DIR<<", description="Path to scratch directory."
     )
 
     SYMPREC: float = Field(
-        0.1, description="Symmetry precision for spglib symmetry finding"
+        0.1, description="Symmetry precision for spglib symmetry finding."
     )
 
     # VASP specific settings
     VASP_CMD: str = Field(
-        "vasp_std", description="Command to run standard version of VASP"
+        "vasp_std", description="Command to run standard version of VASP."
     )
     VASP_GAMMA_CMD: str = Field(
-        "vasp_gam", description="Command to run gamma only version of VASP"
+        "vasp_gam", description="Command to run gamma only version of VASP."
     )
     VASP_NCL_CMD: str = Field(
-        "vasp_ncl", description="Command to run ncl version of VASP"
+        "vasp_ncl", description="Command to run ncl version of VASP."
     )
     VASP_VDW_KERNEL_DIRR: str = Field(
-        ">>vdw_kernel_dir<<", description="Path to VDW VASP kernel"
+        ">>vdw_kernel_dir<<", description="Path to VDW VASP kernel."
     )
     VASP_ADD_NAMEFILE: bool = Field(
         True, description="Whether vasp.powerups.add_common_powerups adds a namefile"

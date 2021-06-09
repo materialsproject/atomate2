@@ -85,7 +85,7 @@ class StructureMetadata(Schema):
 
         Returns
         -------
-        StructureMetadata
+        T
             A structure metadata model.
         """
         fields = (
@@ -139,7 +139,7 @@ class StructureMetadata(Schema):
 
         Returns
         -------
-        StructureMetadata
+        T
             A structure metadata model.
         """
         fields = (

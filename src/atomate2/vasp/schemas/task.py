@@ -3,7 +3,7 @@
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 from jobflow import Schema
 from pydantic import Field
@@ -29,6 +29,8 @@ __all__ = [
     "OutputSummary",
     "TaskDocument",
 ]
+
+T = TypeVar("T", bound="TaskDocument")
 
 
 class AnalysisSummary(Schema):
@@ -235,7 +237,6 @@ class TaskDocument(StructureMetadata):
     orig_inputs: Dict[str, Union[Kpoints, Incar, Poscar, List[PotcarSpec]]] = Field(
         None, description="Summary of the original VASP inputs writen by custodian"
     )
-    task_id: str = Field(None, description="The task identifier for this document")
     task_label: str = Field(None, description="A description of the task")
     tags: List[str] = Field(None, description="Metadata tags for this task document")
     author: str = Field(None, description="Author extracted from transformations")
@@ -266,12 +267,12 @@ class TaskDocument(StructureMetadata):
 
     @classmethod
     def from_task_files(
-        cls,
+        cls: Type[T],
         dir_name: Union[Path, str],
         task_files: Dict[str, Dict[str, Any]],
         store_additional_json: bool = settings.VASP_STORE_ADDITIONAL_JSON,
         **vasp_calculation_kwargs,
-    ) -> "TaskDocument":
+    ) -> T:
         """
         Create a task document from VASP files.
 
@@ -363,7 +364,7 @@ class TaskDocument(StructureMetadata):
 
     @staticmethod
     def get_entry(
-        calc_docs: List[Calculation], task_id: Optional[str] = None
+        calc_docs: List[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
         """
         Get a computed entry from a list of VASP calculation documents.
@@ -372,8 +373,8 @@ class TaskDocument(StructureMetadata):
         ----------
         calc_docs
             A list of VASP calculation documents.
-        task_id
-            The task identifier.
+        job_id
+            The job identifier.
 
         Returns
         -------
@@ -387,7 +388,7 @@ class TaskDocument(StructureMetadata):
 
         entry_dict = {
             "correction": 0.0,
-            "entry_id": task_id,
+            "entry_id": job_id,
             "composition": calc_docs[-1].output.structure.composition,
             "energy": calc_docs[-1].output.energy,
             "parameters": {
