@@ -322,7 +322,6 @@ class TaskDocument(StructureMetadata):
         transformations, icsd_id, tags, author = _parse_transformations(dir_name)
         custodian = _parse_custodian(dir_name)
         orig_inputs = _parse_orig_inputs(dir_name)
-        print(orig_inputs)
 
         additional_json = None
         if store_additional_json:
@@ -431,7 +430,7 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
     """
     Parse custodian.json file.
 
-    Calculations done using custodian have a custodian.json file which tracks the jobs
+    Calculations done using custodian have a custodian.json file which tracks the makers
     performed and any errors detected and fixed.
 
     Parameters

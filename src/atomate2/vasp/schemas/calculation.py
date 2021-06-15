@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from jobflow.utils import ValueEnum
+from monty.os.path import which
 from pydantic import BaseModel, Field
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
@@ -42,6 +43,9 @@ __all__ = [
     "RunStatistics",
     "Calculation",
 ]
+
+
+BADER_EXE_EXISTS = which("bader") or which("bader.exe")
 
 
 class Status(ValueEnum):
@@ -89,8 +93,8 @@ class PotcarSpec(BaseModel):
         PotcarSpec
             A potcar spec.
         """
-        hash = potcar_single.get_potcar_hash()
-        return cls(titel=potcar_single.symbol, hash=hash)
+        potcar_hash = potcar_single.get_potcar_hash()
+        return cls(titel=potcar_single.symbol, hash=potcar_hash)
 
     @classmethod
     def from_potcar(cls, potcar: Potcar) -> List["PotcarSpec"]:
@@ -390,10 +394,10 @@ class Calculation(BaseModel):
         vasprun_file: Union[Path, str],
         outcar_file: Union[Path, str],
         volumetric_files: List[str],
-        parse_dos: Union[str, bool] = "auto",
-        parse_bandstructure: Union[str, bool] = "auto",
+        parse_dos: Union[str, bool] = False,
+        parse_bandstructure: Union[str, bool] = False,
         average_locpot: bool = True,
-        run_bader: bool = settings.VASP_RUN_BADER,
+        run_bader: bool = settings.VASP_RUN_BADER and BADER_EXE_EXISTS,
         store_volumetric_data: Optional[
             Tuple[str]
         ] = settings.VASP_STORE_VOLUMETRIC_DATA,
