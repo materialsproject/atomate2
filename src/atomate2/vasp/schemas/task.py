@@ -16,6 +16,7 @@ from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.settings import settings
+from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 from atomate2.vasp.schemas.calculation import (
     Calculation,
@@ -207,7 +208,7 @@ class TaskDocument(StructureMetadata):
 
     dir_name: str = Field(None, description="The directory for this VASP task")
     last_updated: str = Field(
-        default_factory=datetime.utcnow,
+        default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
     completed_at: str = Field(
