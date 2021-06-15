@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 import typing
 
@@ -15,6 +16,8 @@ if typing.TYPE_CHECKING:
     from atomate2.utils.file_client import FileClient
 
 __all__ = ["copy_vasp_outputs"]
+
+logger = logging.getLogger(__name__)
 
 
 @auto_fileclient
@@ -49,6 +52,8 @@ def copy_vasp_outputs(
     file_client
         A file client to use for performing file operations.
     """
+    logger.info(f"Copying VASP inputs from {src_dir}")
+
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
 
     # copy required files
@@ -92,6 +97,8 @@ def copy_vasp_outputs(
 
     if contcar_to_poscar:
         rename_files({"CONTCAR": "POSCAR"}, file_client=file_client)
+
+    logger.info("Finished copying inputs")
 
 
 @auto_fileclient
