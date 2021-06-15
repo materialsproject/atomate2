@@ -33,6 +33,7 @@ def test_init():
     ],
 )
 def test_calculation_input(vasp_test_dir, object_name, task_name):
+    from monty.json import jsanitize
     from pymatgen.io.vasp import Vasprun
 
     from atomate2.vasp.schemas.calculation import CalculationInput
@@ -44,6 +45,9 @@ def test_calculation_input(vasp_test_dir, object_name, task_name):
     valid_doc = test_object.task_doc["calcs_reversed"][0]["input"]
     assert_schemas_equal(test_doc, valid_doc)
 
+    # test document can be jsanitized
+    jsanitize(test_doc, strict=True, allow_bson=True)
+
 
 @pytest.mark.parametrize(
     "object_name,task_name",
@@ -54,6 +58,7 @@ def test_calculation_input(vasp_test_dir, object_name, task_name):
     ],
 )
 def test_calculation_output(vasp_test_dir, object_name, task_name):
+    from monty.json import jsanitize
     from pymatgen.io.vasp import Outcar, Vasprun
 
     from atomate2.vasp.schemas.calculation import CalculationOutput
@@ -68,6 +73,9 @@ def test_calculation_output(vasp_test_dir, object_name, task_name):
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]
     assert_schemas_equal(test_doc, valid_doc)
 
+    # test document can be jsanitized
+    jsanitize(test_doc, strict=True, allow_bson=True)
+
 
 @pytest.mark.parametrize(
     "object_name,task_name",
@@ -78,6 +86,7 @@ def test_calculation_output(vasp_test_dir, object_name, task_name):
     ],
 )
 def test_run_statistics(vasp_test_dir, object_name, task_name):
+    from monty.json import jsanitize
     from pymatgen.io.vasp import Outcar
 
     from atomate2.vasp.schemas.calculation import RunStatistics
@@ -90,6 +99,9 @@ def test_run_statistics(vasp_test_dir, object_name, task_name):
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]["run_stats"]
     assert_schemas_equal(test_doc, valid_doc)
 
+    # test document can be jsanitized
+    jsanitize(test_doc, strict=True, allow_bson=True)
+
 
 @pytest.mark.parametrize(
     "object_name,task_name",
@@ -100,6 +112,8 @@ def test_run_statistics(vasp_test_dir, object_name, task_name):
     ],
 )
 def test_calculation(vasp_test_dir, object_name, task_name):
+    from monty.json import jsanitize
+
     from atomate2.vasp.schemas.calculation import Calculation
 
     test_object = get_test_object(object_name)
@@ -110,3 +124,6 @@ def test_calculation(vasp_test_dir, object_name, task_name):
     valid_doc = test_object.task_doc["calcs_reversed"][0]
     assert_schemas_equal(test_doc, valid_doc)
     assert set(objects.keys()) == set(test_object.objects[task_name])
+
+    # test document can be jsanitized
+    jsanitize(test_doc, strict=True, allow_bson=True)
