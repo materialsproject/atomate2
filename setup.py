@@ -53,7 +53,6 @@ if __name__ == "__main__":
             ],
             "dev": ["pre-commit>=2.12.1"],
             "plotting": ["matplotlib"],
-            "jobs": ["jobs"],
             "rtransfer": ["paramiko>=2.4.2"],
             "phonons": ["phonopy>=1.10.8"],
         },
