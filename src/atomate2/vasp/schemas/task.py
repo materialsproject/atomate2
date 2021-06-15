@@ -238,7 +238,7 @@ class TaskDocument(StructureMetadata):
         None,
         description="Summary of runtime statistics for each calculation in this task",
     )
-    orig_inputs: Dict[str, Union[Kpoints, Incar, Poscar, List[PotcarSpec]]] = Field(
+    orig_inputs: Dict[str, Union[Kpoints, dict, Poscar, List[PotcarSpec]]] = Field(
         None, description="Summary of the original VASP inputs writen by custodian"
     )
     task_label: str = Field(None, description="A description of the task")
