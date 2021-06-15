@@ -529,8 +529,8 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[VaspObject, str]
     output_file_paths = {}
     for vasp_object in VaspObject:  # type: ignore
         for volumetric_file in volumetric_files:
-            if vasp_object.name in volumetric_file:
-                output_file_paths[vasp_object] = volumetric_file
+            if vasp_object.name in str(volumetric_file):
+                output_file_paths[vasp_object] = str(volumetric_file)
     return output_file_paths
 
 
