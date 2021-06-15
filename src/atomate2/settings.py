@@ -101,7 +101,7 @@ class Settings(BaseSettings):
     class Config:
         """Pydantic config settings."""
 
-        env_prefix = "atomate"
+        env_prefix = "ATOMATE2"
 
     @root_validator(pre=True)
     def load_default_settings(cls, values):

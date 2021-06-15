@@ -104,7 +104,7 @@ def run_vasp(
     """
     Run VASP.
 
-    Supports running VASP with or without (JobType.DIRECT) custodian.
+    Supports running VASP with or without custodian (see :obj:`JobType`).
 
     Parameters
     ----------
@@ -181,7 +181,7 @@ def should_stop_children(
     handle_unsuccessful: Union[bool, str] = settings.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """
-    Parse VASP outputs and generate a :obj:`.Response`.
+    Parse VASP outputs and decide whether child jobs should continue.
 
     Parameters
     ----------
