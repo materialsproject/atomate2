@@ -33,7 +33,7 @@ class VaspDrone(AbstractDrone):
         Naming scheme for multiple calculations in one folder e.g. ["relax1", "relax2"].
     additional_fields
         Dictionary of additional fields to add to output document.
-    task_document_kwargs
+    **task_document_kwargs
         Additional keyword args passed to :obj:`.TaskDocument.from_task_files`.
     """
 
@@ -41,7 +41,7 @@ class VaspDrone(AbstractDrone):
         self,
         task_names: List[str] = None,
         additional_fields: Dict[str, Any] = None,
-        task_document_kwargs: Dict[str, Any] = None,
+        **task_document_kwargs,
     ):
         self.additional_fields = {} if additional_fields is None else additional_fields
 
@@ -50,8 +50,6 @@ class VaspDrone(AbstractDrone):
             self.task_names = ["precondition"] + [f"relax{i}" for i in range(9)]
 
         self.task_document_kwargs = task_document_kwargs
-        if self.task_document_kwargs is None:
-            self.task_document_kwargs = {}
 
     def assimilate(self, path: Union[str, Path] = None) -> TaskDocument:
         """
@@ -70,7 +68,7 @@ class VaspDrone(AbstractDrone):
         if path is None:
             path = Path.cwd()
 
-        logger.info(f"Getting task doc for base dir :{path}")
+        logger.info(f"Getting task doc in: {path}")
         task_files = find_vasp_files(self.task_names, path)
 
         if len(task_files) > 0:
