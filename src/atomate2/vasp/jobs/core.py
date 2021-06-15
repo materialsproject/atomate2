@@ -1,4 +1,4 @@
-"""Core makers for running VASP calculations."""
+"""Core jobs for running VASP calculations."""
 
 from __future__ import annotations
 
@@ -6,13 +6,13 @@ import logging
 import typing
 from dataclasses import dataclass, field
 
-from jobflow import Flow, Maker, Response, job
+from jobflow import Response, job
 from monty.shutil import gzip_dir
 
 from atomate2.vasp.drones import VaspDrone
 from atomate2.vasp.file import copy_vasp_outputs
 from atomate2.vasp.inputs import write_vasp_input_set
-from atomate2.vasp.makers.base import BaseVaspMaker
+from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
 
@@ -386,37 +386,3 @@ class HSEBSMaker(BaseVaspMaker):
             stored_data={"custodian": task_doc.custodian},
             output=task_doc,
         )
-
-
-@dataclass
-class DoubleRelaxMaker(Maker):
-    """Maker to perform a double VASP relaxation."""
-
-    name: str = "double relax"
-    relax_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
-
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
-        """
-        Create a flow with two chained relaxations.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure object.
-        prev_vasp_dir
-            A previous VASP calculation directory to copy output files from.
-
-        Returns
-        -------
-        Flow
-            A flow containing two relaxations.
-        """
-        relax1 = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-        relax1.name += " 1"
-
-        relax2 = self.relax_maker.make(
-            relax1.output.structure, prev_vasp_dir=relax1.output.dir_name
-        )
-        relax2.name += " 2"
-
-        return Flow([relax1, relax2], relax2.output, name=self.name)

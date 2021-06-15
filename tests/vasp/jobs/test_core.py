@@ -5,7 +5,7 @@ def test_static_maker(mock_vasp, clean_dir):
     from jobflow import run_locally
     from pymatgen.core import Structure
 
-    from atomate2.vasp.makers.core import StaticMaker
+    from atomate2.vasp.jobs.core import StaticMaker
 
     ref_paths = {"static": "Si_static"}
     fake_run_vasp_kwargs = {"static": {"incar_settings": ["NSW", "ISMEAR"]}}
