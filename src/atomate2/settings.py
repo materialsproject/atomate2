@@ -5,19 +5,19 @@ from typing import Optional, Tuple, Union
 
 from pydantic import BaseSettings, Field, root_validator
 
-DEFAULT_CONFIG_FILE_PATH = str(Path.home() / ".atomate.json")
+DEFAULT_CONFIG_FILE_PATH = str(Path.home() / ".atomate2.yaml")
 
 
 class Settings(BaseSettings):
     """
     Settings for atomate2.
 
-    The default way to modify these is to modify ~/.atomate.yaml. Alternatively,
-    the environment variable ATOMATE_CONFIG_FILE can be set to point to a yaml file with
+    The default way to modify these is to modify ~/.atomate2.yaml. Alternatively,
+    the environment variable ATOMATE2_CONFIG_FILE can be set to point to a yaml file with
     atomate2 settings.
 
     Lastly, the variables can be modified directly though environment variables by
-    using the "ATOMATE" prefix. E..g., ATOMATE_SCRATCH_DIR = path/to/scratch.
+    using the "ATOMATE2" prefix. E..g., ATOMATE2_SCRATCH_DIR = path/to/scratch.
     """
 
     CONFIG_FILE: str = Field(
@@ -101,7 +101,7 @@ class Settings(BaseSettings):
     class Config:
         """Pydantic config settings."""
 
-        env_prefix = "ATOMATE2"
+        env_prefix = "atomate2_"
 
     @root_validator(pre=True)
     def load_default_settings(cls, values):
