@@ -7,7 +7,12 @@ from dataclasses import dataclass, field
 
 from jobflow import Maker, job
 
+from atomate2.vasp.schemas.task import TaskDocument
+
 if typing.TYPE_CHECKING:
+    from pathlib import Path
+    from typing import Union
+
     from pymatgen.core import Structure
 
 __all__ = ["BaseVaspMaker"]
@@ -26,7 +31,7 @@ class BaseVaspMaker(Maker):
     vasp_drone_kwargs: dict = field(default_factory=dict)
     stop_children_kwargs: dict = field(default_factory=dict)
 
-    @job
-    def make(self, structure: Structure, prev_vasp_dir=None):
+    @job(output_schema=TaskDocument)
+    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
         """Make a VASP job."""
         raise NotImplementedError
