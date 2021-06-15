@@ -150,7 +150,7 @@ def run_vasp(
         return
 
     elif job_type == JobType.NORMAL:
-        jobs = VaspJob(split_vasp_cmd, **vasp_job_kwargs)
+        jobs = [VaspJob(split_vasp_cmd, **vasp_job_kwargs)]
     elif job_type == JobType.DOUBLE_RELAXATION:
         jobs = VaspJob.double_relaxation_run(split_vasp_cmd, **vasp_job_kwargs)
     elif job_type == JobType.METAGGA_OPT:
@@ -171,6 +171,8 @@ def run_vasp(
         scratch_dir=scratch_dir,
         **custodian_kwargs,
     )
+
+    logger.info("Running VASP using custodian.")
     c.run()
 
 
