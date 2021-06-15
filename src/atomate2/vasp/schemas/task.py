@@ -206,11 +206,11 @@ class TaskDocument(StructureMetadata):
     """Definition of VASP task document."""
 
     dir_name: str = Field(None, description="The directory for this VASP task")
-    last_updated: datetime = Field(
+    last_updated: str = Field(
         default_factory=datetime.utcnow,
         description="Timestamp for this task document was last updated",
     )
-    completed_at: datetime = Field(
+    completed_at: str = Field(
         None, description="Timestamp for when this task was completed"
     )
     input: InputSummary = Field(None, description="The input to the first calculation")
