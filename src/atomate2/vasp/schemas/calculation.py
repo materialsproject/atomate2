@@ -255,7 +255,7 @@ class CalculationOutput(BaseModel):
     ionic_steps: List[Dict[str, Any]] = Field(
         None, description="Energy, forces, and structure for each ionic step"
     )
-    locpot: Dict[int, float] = Field(
+    locpot: Dict[int, List[float]] = Field(
         None, description="Average of the local potential along the crystal axes"
     )
     outcar: Dict[str, Any] = Field(
@@ -314,7 +314,9 @@ class CalculationOutput(BaseModel):
 
         locpot_avg = None
         if locpot:
-            locpot_avg = {i: locpot.get_average_along_axis(i) for i in range(3)}
+            locpot_avg = {
+                i: locpot.get_average_along_axis(i).tolist() for i in range(3)
+            }
 
         # parse force constants
         phonon_output = {}
