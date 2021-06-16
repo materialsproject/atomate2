@@ -1,7 +1,6 @@
 """Core definition of a VASP task document."""
 
 import re
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
@@ -391,7 +390,7 @@ class TaskDocument(StructureMetadata):
             },
             "data": {
                 "oxide_type": oxide_type(calc_docs[-1].output.structure),
-                "last_updated": datetime.utcnow,
+                "last_updated": datetime_str(),
             },
         }
         return ComputedEntry.from_dict(entry_dict)
