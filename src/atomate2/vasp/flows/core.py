@@ -26,7 +26,7 @@ class DoubleRelaxMaker(Maker):
     Parameters
     ----------
     name
-        Name of the workflow.
+        Name of the flows produced by this maker.
     relax_maker
         Maker to use to generate the relaxations.
     """

@@ -32,7 +32,7 @@ class ElasticMaker(Maker):
     Parameters
     ----------
     name
-        The name of flow.
+        Name of the flows produced by this maker.
     order
         Order of the tensor expansion to be determined. Can be either 2 or 3.
     sym_reduce
