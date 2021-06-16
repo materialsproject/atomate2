@@ -341,7 +341,7 @@ def get_zfile(
     directory_listing: List[Path], base_name: str, allow_missing: bool = False
 ) -> Optional[Path]:
     """
-    Find gzipped or non-gzipped versions of file in a directory listing.
+    Find gzipped or non-gzipped versions of a file in a directory listing.
 
     Parameters
     ----------

@@ -54,7 +54,8 @@ def write_vasp_input_set(
     except (ModuleNotFoundError, AttributeError, ImportError):
         raise ImportError(f"Could not import input set {input_set} from {module}.")
 
-    if from_prev:
+    # TODO: Make from_prev a standard method in dictset
+    if from_prev and hasattr(vis_cls, "from_prev"):
         vis = vis_cls.from_prev(".", structure=structure, **input_set_kwargs)
     else:
         vis = vis_cls(structure, **input_set_kwargs)
