@@ -55,5 +55,5 @@ def strip_hostname(uri_path: Union[str, Path]) -> str:
     """
     dir_name = str(uri_path)
     if ":" in dir_name:
-        dir_name = dir_name.split(":", 1)[0]
+        dir_name = dir_name.split(":", 1)[1]
     return dir_name

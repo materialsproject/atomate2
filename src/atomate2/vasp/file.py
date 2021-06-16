@@ -53,7 +53,7 @@ def copy_vasp_outputs(
     file_client
         A file client to use for performing file operations.
     """
-    src_dir = strip_hostname(src_dir)
+    src_dir = strip_hostname(src_dir)  # TODO: Handle hostnames properly.
 
     logger.info(f"Copying VASP inputs from {src_dir}")
 
