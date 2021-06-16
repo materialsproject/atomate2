@@ -533,6 +533,8 @@ def auto_fileclient(method: Optional[Callable] = None):
                 with FileClient() as file_client:
                     kwargs["file_client"] = file_client
                     return func(*args, **kwargs)
+            else:
+                return func(*args, **kwargs)
 
         return gen_fileclient
 
