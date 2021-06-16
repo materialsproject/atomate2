@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import importlib
 import logging
-import typing
+from typing import Optional
 
-if typing.TYPE_CHECKING:
-    from typing import Optional
-
-    from pymatgen.core.structure import Structure
+from pymatgen.core.structure import Structure
 
 __all__ = ["write_vasp_input_set"]
 

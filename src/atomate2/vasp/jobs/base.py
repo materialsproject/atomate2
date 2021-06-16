@@ -2,18 +2,14 @@
 
 from __future__ import annotations
 
-import typing
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Union
 
 from jobflow import Maker, job
+from pymatgen.core import Structure
 
 from atomate2.vasp.schemas.task import TaskDocument
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Union
-
-    from pymatgen.core import Structure
 
 __all__ = ["BaseVaspMaker"]
 

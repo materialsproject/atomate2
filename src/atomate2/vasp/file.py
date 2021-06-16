@@ -4,17 +4,12 @@ from __future__ import annotations
 
 import logging
 import re
-import typing
 from pathlib import Path
+from typing import Optional, Sequence, Union
 
 from atomate2.common.file import copy_files, get_zfile, gunzip_files, rename_files
-from atomate2.utils.file_client import auto_fileclient
+from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-
-if typing.TYPE_CHECKING:
-    from typing import Optional, Sequence, Union
-
-    from atomate2.utils.file_client import FileClient
 
 __all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
 

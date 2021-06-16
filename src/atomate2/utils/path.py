@@ -3,11 +3,8 @@
 from __future__ import annotations
 
 import socket
-import typing
 from pathlib import Path
-
-if typing.TYPE_CHECKING:
-    from typing import Union
+from typing import Union
 
 __all__ = ["get_uri", "strip_hostname"]
 

@@ -1,9 +1,8 @@
 """Tools for calculating elastic tensors."""
 
-import typing
+from __future__ import annotations
 
-if typing.TYPE_CHECKING:
-    from typing import List, Tuple
+from typing import List, Tuple
 
 
 def get_default_strain_states(order: int) -> List[Tuple[int, int, int, int, int, int]]:

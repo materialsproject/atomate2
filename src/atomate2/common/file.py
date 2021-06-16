@@ -2,16 +2,11 @@
 
 from __future__ import annotations
 
-import typing
 from fnmatch import fnmatch
 from pathlib import Path
+from typing import Dict, List, Optional, Union
 
-from atomate2.utils.file_client import auto_fileclient
-
-if typing.TYPE_CHECKING:
-    from typing import Dict, List, Optional, Union
-
-    from atomate2.utils.file_client import FileClient
+from atomate2.utils.file_client import FileClient, auto_fileclient
 
 __all__ = [
     "copy_files",

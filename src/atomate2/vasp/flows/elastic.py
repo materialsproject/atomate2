@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-import typing
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Union
 
 from jobflow import Flow, Maker, OnMissing
+from pymatgen.core.structure import Structure
 
+from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.elastic import (
     ElasticRelaxMaker,
@@ -14,14 +17,6 @@ from atomate2.vasp.jobs.elastic import (
     generate_elastic_deformations,
     run_elastic_deformations,
 )
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Union
-
-    from pymatgen.core.structure import Structure
-
-    from atomate2.common.schemas.math import Matrix3D
 
 
 @dataclass
@@ -78,7 +73,7 @@ class ElasticMaker(Maker):
         )
         vasp_deformation_calcs = run_elastic_deformations(
             structure,
-            deformations.output["deformation"],
+            deformations.output["deformations"],
             symmetry_ops=deformations.output["symmetry_ops"],
             prev_vasp_dir=prev_vasp_dir,
             elastic_relax_maker=self.elastic_relax_maker,

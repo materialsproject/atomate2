@@ -11,10 +11,12 @@ from __future__ import annotations
 import logging
 import shlex
 import subprocess
-import typing
 from os.path import expandvars
+from pathlib import Path
+from typing import Any, Dict, Optional, Sequence, Union
 
 from custodian import Custodian
+from custodian.custodian import ErrorHandler, Validator
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -33,15 +35,7 @@ from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from jobflow.utils import ValueEnum
 
 from atomate2.settings import settings
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Any, Dict, Optional, Sequence, Union
-
-    from custodian.custodian import ErrorHandler, Validator
-
-    from atomate2.vasp.schemas.task import TaskDocument
-
+from atomate2.vasp.schemas.task import TaskDocument
 
 __all__ = [
     "JobType",

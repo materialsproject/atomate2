@@ -119,10 +119,9 @@ class ElasticDocument(BaseModel):
     )
 
     @classmethod
-    def from_strains_and_stresses(
+    def from_stresses(
         cls,
         structure: Structure,
-        strains: List[Strain],
         stresses: List[Stress],
         deformations: List[Deformation],
         fitting_method: str,
@@ -136,8 +135,6 @@ class ElasticDocument(BaseModel):
         ----------
         structure
             The structure for which strains and stresses were calculated.
-        strains
-            A list of strains.
         stresses
             A list of corresponding stresses.
         deformations
@@ -158,11 +155,9 @@ class ElasticDocument(BaseModel):
         if equilibrium_stress:
             eq_stress = -0.1 * Stress(equilibrium_stress)
 
+        strains = [d.green_lagrange_strain for d in deformations]
         stresses = [-0.1 * s for s in stresses]
-        pk_stresses = [
-            stress.piola_kirchoff_2(deformation)
-            for stress, deformation in zip(stresses, deformations)
-        ]
+        pk_stresses = [s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations)]
 
         if order > 2 or fitting_method == "finite_difference":
             # force finite diff if order > 2

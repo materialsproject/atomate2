@@ -5,20 +5,16 @@ from __future__ import annotations
 
 import shutil
 import stat
-import typing
 import warnings
 from functools import wraps
 from glob import glob
 from gzip import GzipFile
 from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import paramiko
 from monty.io import zopen
-
-if typing.TYPE_CHECKING:
-    from typing import Any, Callable, Dict, List, Optional, Union
-
-    from paramiko import SFTPClient, SSHClient
+from paramiko import SFTPClient, SSHClient
 
 __all__ = ["FileClient", "auto_fileclient"]
 

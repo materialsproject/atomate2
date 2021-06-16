@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import logging
-import typing
 from dataclasses import dataclass
+from pathlib import Path
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow import Flow, Response, job
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
 from pymatgen.core import SymmOp
+from pymatgen.core.structure import Structure
 from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import (
@@ -18,17 +20,10 @@ from pymatgen.transformations.standard_transformations import (
 
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.common.schemas.math import Matrix3D
 from atomate2.settings import settings
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import List, Optional, Tuple, Union
-
-    from pymatgen.core.structure import Structure
-
-    from atomate2.common.schemas.math import Matrix3D
 
 logger = logging.getLogger(__name__)
 
@@ -149,8 +144,8 @@ def generate_elastic_deformations(
     symmetry_operations = None
     if sym_reduce:
         deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
-        deformations = deformation_mapping.keys()
-        symmetry_operations = deformation_mapping.values()
+        deformations = list(deformation_mapping.keys())
+        symmetry_operations = list(deformation_mapping.values())
 
     return {"deformations": deformations, "symmetry_ops": symmetry_operations}
 
@@ -186,7 +181,7 @@ def run_elastic_deformations(
         elastic_relax_maker = ElasticRelaxMaker()
     if symmetry_ops is not None and len(symmetry_ops) != len(deformations):
         raise ValueError(
-            "Number of deformations and symmetry operations must be equal."
+            "Number of deformations and lists of symmetry operations must be equal."
         )
 
     relaxations = []
@@ -205,9 +200,8 @@ def run_elastic_deformations(
 
         # extract the outputs we want
         output = {
-            "strain": deformation.green_lagrange_strain.tolist(),
             "stress": relax_job.output.output.stress,
-            "deformation_matrix": deformation.tolist(),
+            "deformation": deformation.tolist(),
         }
 
         if symmetry_ops is not None:
@@ -222,7 +216,7 @@ def run_elastic_deformations(
 @job(output_schema=ElasticDocument)
 def fit_elastic_tensor(
     structure: Structure,
-    strain_data: List[dict],
+    deformation_data: List[dict],
     equilibrium_stress: Optional[Matrix3D] = None,
     order: int = 2,
     fitting_method: str = "finite_difference",
@@ -234,9 +228,9 @@ def fit_elastic_tensor(
     ----------
     structure
         A pymatgen structure.
-    strain_data
-        The strain data, as a list of dictionaries, each containing the keys
-        "stress", "strain", "deformation_matrix", and (optionally) "symmetry_ops".
+    deformation_data
+        The deformation data, as a list of dictionaries, each containing the keys
+        "stress", "deformation", and (optionally) "symmetry_ops".
     equilibrium_stress
         The equilibrium stress of the (relaxed) structure, if known.
     order
@@ -248,32 +242,29 @@ def fit_elastic_tensor(
         - "independent"
         - "pseudoinverse"
     """
-    stresses, strains, deformations = [], [], []
-    for data in strain_data:
+    stresses = []
+    deformations = []
+    for data in deformation_data:
 
-        # data could be none if the deformation calculation failed
-        if data is None:
+        # stress could be none if the deformation calculation failed
+        if data["stress"] is None:
             continue
 
-        strain = Stress(data["strain"])
         stress = Stress(data["stress"])
         deformation = Stress(data["deformation"])
 
         stresses.append(stress)
-        strains.append(strain)
         deformations.append(deformation)
 
         # add derived stresses and strains if symmetry operations are present
         for symmop in data.get("symmetry_ops", []):
             stresses.append(stress.transform(symmop))
-            strains.append(strain.transform(symmop))
             deformations.append(deformation.transform(symmop))
 
     logger.info("Analyzing stress/strain data")
 
-    elastic_doc = ElasticDocument.from_strains_and_stresses(
+    elastic_doc = ElasticDocument.from_stresses(
         structure,
-        strains,
         stresses,
         deformations,
         fitting_method,

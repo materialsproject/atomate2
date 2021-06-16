@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import logging
-import typing
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Union
 
 from jobflow import Response, job
 from monty.shutil import gzip_dir
+from pymatgen.core.structure import Structure
 
 from atomate2.vasp.drones import VaspDrone
 from atomate2.vasp.file import copy_vasp_outputs
@@ -15,12 +17,6 @@ from atomate2.vasp.inputs import write_vasp_input_set
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Union
-
-    from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 

@@ -4,17 +4,13 @@ from __future__ import annotations
 
 import logging
 import os
-import typing
 from collections import OrderedDict
 from pathlib import Path
+from typing import Any, Dict, List, Tuple, Union
 
 from pymatgen.apps.borg.hive import AbstractDrone
 
 from atomate2.vasp.schemas.task import TaskDocument
-
-if typing.TYPE_CHECKING:
-    from typing import Any, Dict, List, Tuple, Union
-
 
 logger = logging.getLogger(__name__)
 
