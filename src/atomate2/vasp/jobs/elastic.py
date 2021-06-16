@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import logging
 import typing
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
-from jobflow import Flow, Maker, Response, job
+from jobflow import Flow, Response, job
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
 from pymatgen.core import SymmOp
 from pymatgen.core.tensors import symmetry_reduce
@@ -31,99 +31,6 @@ if typing.TYPE_CHECKING:
     from atomate2.common.schemas.math import Matrix3D
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class GenerateElasticDeformationsMaker(Maker):
-    """
-    Maker to generate elastic deformations..
-
-    Parameters
-    ----------
-    name
-        The name of jobs produced by this maker.
-    order
-        Order of the tensor expansion to be determined. Can be either 2 or 3.
-    strain_states
-        List of Voigt-notation strains, e.g. ``[(1, 0, 0, 0, 0, 0), (0, 1, 0, 0, 0, 0),
-        etc]``.
-    strains_magnitudes
-        A list of strain magnitudes to multiply by for each strain state, e.g. ``[-0.01,
-        -0.005, 0.005, 0.01]``. Alternatively, a list of lists can be specified, where
-        each inner list corresponds to a specific strain state.
-    conventional
-        Whether to transform the structure into the conventional cell.
-    symprec
-        Symmetry precision.
-    symmetry_reduce
-        Whether to reduce the number of deformations using symmetry.
-    """
-
-    name: str = "generate deformations"
-    order: int = 2
-    strain_states: List[Tuple[int, int, int, int, int, int]] = None
-    strain_magnitudes: Union[List[float], List[List[float]]] = None
-    conventional: bool = False
-    symprec: float = settings.SYMPREC
-    symmetry_reduce: bool = True
-
-    @job
-    def make(self, structure: Structure):
-        """
-        Make a job to generate elastic deformations.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure object.
-
-        Returns
-        -------
-        Dict[str, Any]
-            A dictionary with the keys:
-
-            - "deformations": containing a list of deformations.
-            - "symmetry_ops": containing a list of symmetry operations or None if
-              symmetry_reduce is False.
-        """
-        if self.conventional:
-            sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
-            structure = sga.get_conventional_standard_structure()
-
-        strain_states = self.strain_states
-        strain_magnitudes = self.strain_magnitudes
-
-        if strain_states is None:
-            strain_states = get_default_strain_states(self.order)
-
-        if self.strain_magnitudes is None:
-            strain_magnitudes = np.linspace(-0.01, 0.01, 5 + (self.order - 2) * 2)
-
-        if np.array(strain_magnitudes).ndim == 1:
-            strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore
-
-        strains = []
-        for state, magnitudes in zip(strain_states, strain_magnitudes):
-            strains.extend([Strain.from_voigt(m * np.array(state)) for m in magnitudes])  # type: ignore
-
-        # remove zero strains
-        strains = [strain for strain in strains if (abs(strain) > 1e-10).any()]
-
-        if np.linalg.matrix_rank([strain.voigt for strain in strains]) < 6:
-            # TODO: check for sufficiency of input for nth order
-            raise ValueError("strain list is insufficient to fit an elastic tensor")
-
-        deformations = [s.get_deformation_matrix() for s in strains]
-
-        symmetry_operations = None
-        if self.symmetry_reduce:
-            deformation_mapping = symmetry_reduce(
-                deformations, structure, symprec=self.symprec
-            )
-            deformations = deformation_mapping.keys()
-            symmetry_operations = deformation_mapping.values()
-
-        return {"deformations": deformations, "symmetry_ops": symmetry_operations}
 
 
 @dataclass
@@ -171,80 +78,167 @@ class ElasticRelaxMaker(RelaxMaker):
         super().make.original(structure, prev_vasp_dir=prev_vasp_dir)
 
 
-@dataclass
-class RunElasticDeformationsMaker(Maker):
-    """Maker to run elastic deformations and extract the structural stress."""
+@job
+def generate_elastic_deformations(
+    structure: Structure,
+    order: int = 2,
+    strain_states: List[Tuple[int, int, int, int, int, int]] = None,
+    strain_magnitudes: Union[List[float], List[List[float]]] = None,
+    conventional: bool = False,
+    symprec: float = settings.SYMPREC,
+    sym_reduce: bool = True,
+):
+    """
+    Generate elastic deformations.
 
-    name: str = "run deformations"
-    elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
+    Parameters
+    ----------
+    structure
+        A pymatgen structure object.
+    order
+        Order of the tensor expansion to be determined. Can be either 2 or 3.
+    strain_states
+        List of Voigt-notation strains, e.g. ``[(1, 0, 0, 0, 0, 0), (0, 1, 0, 0, 0, 0),
+        etc]``.
+    strain_magnitudes
+        A list of strain magnitudes to multiply by for each strain state, e.g. ``[-0.01,
+        -0.005, 0.005, 0.01]``. Alternatively, a list of lists can be specified, where
+        each inner list corresponds to a specific strain state.
+    conventional
+        Whether to transform the structure into the conventional cell.
+    symprec
+        Symmetry precision.
+    sym_reduce
+        Whether to reduce the number of deformations using symmetry.
 
-    @job
-    def make(
-        self,
-        structure: Structure,
-        deformations: List[Deformation],
-        symmetry_ops: List[SymmOp] = None,
-        prev_vasp_dir: Union[str, Path] = None,
-    ):
-        """
-        Make a job to run the elastic deformations.
+    Returns
+    -------
+    Dict[str, Any]
+        A dictionary with the keys:
 
-        Note, this job will replace itself with N relaxation calculations, where N is
-        the number of deformations.
+        - "deformations": containing a list of deformations.
+        - "symmetry_ops": containing a list of symmetry operations or None if
+          symmetry_reduce is False.
+    """
+    if conventional:
+        sga = SpacegroupAnalyzer(structure, symprec=symprec)
+        structure = sga.get_conventional_standard_structure()
 
-        Parameters
-        ----------
-        structure
-            A pymatgen structure.
-        deformations
-            The deformations to apply.
-        symmetry_ops
-            A list of symmetry operations (must be same number as deformations).
-        prev_vasp_dir
-            A previous VASP directory to use for copying VASP outputs.
-        """
-        if symmetry_ops is not None and len(symmetry_ops) != len(deformations):
-            raise ValueError(
-                "Number of deformations and symmetry operations must be equal."
-            )
+    if strain_states is None:
+        strain_states = get_default_strain_states(order)
 
-        relaxations = []
-        outputs = []
-        for i, deformation in enumerate(deformations):
-            # deform the structure
-            dst = DeformStructureTransformation(deformation=deformation)
-            deformed_structure = dst.apply_transformation(structure)
+    if strain_magnitudes is None:
+        strain_magnitudes = np.linspace(-0.01, 0.01, 5 + (order - 2) * 2)
 
-            # create the job
-            relax_job = self.elastic_relax_maker.make(
-                deformed_structure, prev_vasp_dir=prev_vasp_dir
-            )
-            relax_job.name += f" {i}"
-            relaxations.append(relax_job)
+    if np.array(strain_magnitudes).ndim == 1:
+        strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore
 
-            # extract the outputs we want
-            output = {
-                "strain": deformation.green_lagrange_strain.tolist(),
-                "stress": relax_job.output.output.stress,
-                "deformation_matrix": deformation.tolist(),
-            }
+    strains = []
+    for state, magnitudes in zip(strain_states, strain_magnitudes):
+        strains.extend([Strain.from_voigt(m * np.array(state)) for m in magnitudes])  # type: ignore
 
-            if symmetry_ops is not None:
-                output["symmetry_ops"] = symmetry_ops[i]
+    # remove zero strains
+    strains = [strain for strain in strains if (abs(strain) > 1e-10).any()]
 
-            outputs.append(output)
+    if np.linalg.matrix_rank([strain.voigt for strain in strains]) < 6:
+        # TODO: check for sufficiency of input for nth order
+        raise ValueError("strain list is insufficient to fit an elastic tensor")
 
-        relax_flow = Flow(relaxations, outputs, name=self.name)
-        return Response(replace=relax_flow)
+    deformations = [s.get_deformation_matrix() for s in strains]
+
+    symmetry_operations = None
+    if sym_reduce:
+        deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
+        deformations = deformation_mapping.keys()
+        symmetry_operations = deformation_mapping.values()
+
+    return {"deformations": deformations, "symmetry_ops": symmetry_operations}
 
 
-@dataclass
-class FitElasticTensorMaker(Maker):
+@job
+def run_elastic_deformations(
+    structure: Structure,
+    deformations: List[Deformation],
+    symmetry_ops: List[SymmOp] = None,
+    prev_vasp_dir: Union[str, Path] = None,
+    elastic_relax_maker: BaseVaspMaker = None,
+):
+    """
+    Run elastic deformations.
+
+    Note, this job will replace itself with N relaxation calculations, where N is
+    the number of deformations.
+
+    Parameters
+    ----------
+    structure
+        A pymatgen structure.
+    deformations
+        The deformations to apply.
+    symmetry_ops
+        A list of symmetry operations (must be same number as deformations).
+    prev_vasp_dir
+        A previous VASP directory to use for copying VASP outputs.
+    elastic_relax_maker
+        A VaspMaker to use to generate the elastic relaxation jobs.
+    """
+    if elastic_relax_maker is None:
+        elastic_relax_maker = ElasticRelaxMaker()
+    if symmetry_ops is not None and len(symmetry_ops) != len(deformations):
+        raise ValueError(
+            "Number of deformations and symmetry operations must be equal."
+        )
+
+    relaxations = []
+    outputs = []
+    for i, deformation in enumerate(deformations):
+        # deform the structure
+        dst = DeformStructureTransformation(deformation=deformation)
+        deformed_structure = dst.apply_transformation(structure)
+
+        # create the job
+        relax_job = elastic_relax_maker.make(
+            deformed_structure, prev_vasp_dir=prev_vasp_dir
+        )
+        relax_job.name += f" {i}"
+        relaxations.append(relax_job)
+
+        # extract the outputs we want
+        output = {
+            "strain": deformation.green_lagrange_strain.tolist(),
+            "stress": relax_job.output.output.stress,
+            "deformation_matrix": deformation.tolist(),
+        }
+
+        if symmetry_ops is not None:
+            output["symmetry_ops"] = symmetry_ops[i]
+
+        outputs.append(output)
+
+    relax_flow = Flow(relaxations, outputs)
+    return Response(replace=relax_flow)
+
+
+@job(output_schema=ElasticDocument)
+def fit_elastic_tensor(
+    structure: Structure,
+    strain_data: List[dict],
+    equilibrium_stress: Optional[Matrix3D] = None,
+    order: int = 2,
+    fitting_method: str = "finite_difference",
+):
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.
 
     Parameters
     ----------
+    structure
+        A pymatgen structure.
+    strain_data
+        The strain data, as a list of dictionaries, each containing the keys
+        "stress", "strain", "deformation_matrix", and (optionally) "symmetry_ops".
+    equilibrium_stress
+        The equilibrium stress of the (relaxed) structure, if known.
     order
         Order of the tensor expansion to be fitted. Can be either 2 or 3.
     fitting_method
@@ -254,60 +248,36 @@ class FitElasticTensorMaker(Maker):
         - "independent"
         - "pseudoinverse"
     """
+    stresses, strains, deformations = [], [], []
+    for data in strain_data:
 
-    order: int = 2
-    fitting_method: str = "finite_difference"
+        # data could be none if the deformation calculation failed
+        if data is None:
+            continue
 
-    @job(output_schema=ElasticDocument)
-    def make(
-        self,
-        structure: Structure,
-        strain_data: List[dict],
-        equilibrium_stress: Optional[Matrix3D] = None,
-    ):
-        """
-        Make a job to fit the elastic tensor.
+        strain = Stress(data["strain"])
+        stress = Stress(data["stress"])
+        deformation = Stress(data["deformation"])
 
-        Parameters
-        ----------
-        structure
-            A pymatgen structure.
-        strain_data
-            The strain data, as a list of dictionaries, each containing the keys
-            "stress", "strain", "deformation_matrix", and (optionally) "symmetry_ops".
-        equilibrium_stress
-            The equilibrium stress of the (relaxed) structure, if known.
-        """
-        stresses, strains, deformations = [], [], []
-        for data in strain_data:
+        stresses.append(stress)
+        strains.append(strain)
+        deformations.append(deformation)
 
-            # data could be none if the deformation calculation failed
-            if data is None:
-                continue
+        # add derived stresses and strains if symmetry operations are present
+        for symmop in data.get("symmetry_ops", []):
+            stresses.append(stress.transform(symmop))
+            strains.append(strain.transform(symmop))
+            deformations.append(deformation.transform(symmop))
 
-            strain = Stress(data["strain"])
-            stress = Stress(data["stress"])
-            deformation = Stress(data["deformation"])
+    logger.info("Analyzing stress/strain data")
 
-            stresses.append(stress)
-            strains.append(strain)
-            deformations.append(deformation)
-
-            # add derived stresses and strains if symmetry operations are present
-            for symmop in data.get("symmetry_ops", []):
-                stresses.append(stress.transform(symmop))
-                strains.append(strain.transform(symmop))
-                deformations.append(deformation.transform(symmop))
-
-        logger.info("Analyzing stress/strain data")
-
-        elastic_doc = ElasticDocument.from_strains_and_stresses(
-            structure,
-            strains,
-            stresses,
-            deformations,
-            self.fitting_method,
-            self.order,
-            equilibrium_stress=equilibrium_stress,
-        )
-        return elastic_doc
+    elastic_doc = ElasticDocument.from_strains_and_stresses(
+        structure,
+        strains,
+        stresses,
+        deformations,
+        fitting_method,
+        order,
+        equilibrium_stress=equilibrium_stress,
+    )
+    return elastic_doc

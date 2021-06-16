@@ -7,10 +7,12 @@ from dataclasses import dataclass, field
 
 from jobflow import Flow, Maker
 
+from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.elastic import (
-    FitElasticTensorMaker,
-    GenerateElasticDeformationsMaker,
-    RunElasticDeformationsMaker,
+    ElasticRelaxMaker,
+    fit_elastic_tensor,
+    generate_elastic_deformations,
+    run_elastic_deformations,
 )
 
 if typing.TYPE_CHECKING:
@@ -27,15 +29,11 @@ class ElasticMaker(Maker):
     """Maker to calculate elastic constants."""
 
     name = "elastic"
-    generate_deformations_maker: GenerateElasticDeformationsMaker = field(
-        default_factory=GenerateElasticDeformationsMaker
-    )
-    run_deformations_maker: RunElasticDeformationsMaker = field(
-        default_factory=RunElasticDeformationsMaker
-    )
-    fit_tensor_maker: FitElasticTensorMaker = field(
-        default_factory=FitElasticTensorMaker
-    )
+    order: int = 2
+    sym_reduce: bool = True
+    elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
+    generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
+    fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
 
     def make(
         self,
@@ -55,17 +53,31 @@ class ElasticMaker(Maker):
         equilibrium_stress
             The equilibrium stress of the (relaxed) structure, if known.
         """
-        deformations = self.generate_deformations_maker.make(structure)
-        vasp_deformation_calcs = self.run_deformations_maker.make(
+        # make sure we don't overwrite settings in kwargs
+        if "order" not in self.generate_elastic_deformations_kwargs:
+            self.generate_elastic_deformations_kwargs["order"] = self.order
+
+        if "sym_reduce" not in self.generate_elastic_deformations_kwargs:
+            self.generate_elastic_deformations_kwargs["sym_reduce"] = self.sym_reduce
+
+        if "order" not in self.fit_elastic_tensor_kwargs:
+            self.fit_elastic_tensor_kwargs["order"] = self.order
+
+        deformations = generate_elastic_deformations(
+            structure, **self.generate_elastic_deformations_kwargs
+        )
+        vasp_deformation_calcs = run_elastic_deformations(
             structure,
             deformations.output["deformation"],
             symmetry_ops=deformations.output["symmetry_ops"],
             prev_vasp_dir=prev_vasp_dir,
+            elastic_relax_maker=self.elastic_relax_maker,
         )
-        fit_tensor = self.fit_tensor_maker.make(
+        fit_tensor = fit_elastic_tensor(
             structure,
             vasp_deformation_calcs.output,
             equilibrium_stress=equilibrium_stress,
+            **self.fit_elastic_tensor_kwargs
         )
 
         flow = Flow(
