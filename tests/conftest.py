@@ -43,6 +43,21 @@ def clean_dir(debug_mode):
         shutil.rmtree(newpath)
 
 
+@pytest.fixture
+def tmp_dir():
+    """Same as clean_dir but is fresh for every test"""
+    import os
+    import shutil
+    import tempfile
+
+    old_cwd = os.getcwd()
+    newpath = tempfile.mkdtemp()
+    os.chdir(newpath)
+    yield
+    os.chdir(old_cwd)
+    shutil.rmtree(newpath)
+
+
 @pytest.fixture(scope="session")
 def debug_mode():
     return False
