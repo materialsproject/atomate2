@@ -348,9 +348,6 @@ class HSEBSMaker(BaseVaspMaker):
         if "from_prev" not in self.write_vasp_input_set_kwargs:
             self.write_vasp_input_set_kwargs["from_prev"] = from_prev
 
-        if "lepsilon" not in self.input_set_kwargs:
-            self.input_set_kwargs["lepsilon"] = True
-
         # write vasp input files
         write_vasp_input_set(
             structure,
