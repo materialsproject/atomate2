@@ -5,7 +5,7 @@ from __future__ import annotations
 import typing
 from dataclasses import dataclass, field
 
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, OnMissing
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.elastic import (
@@ -26,7 +26,24 @@ if typing.TYPE_CHECKING:
 
 @dataclass
 class ElasticMaker(Maker):
-    """Maker to calculate elastic constants."""
+    """
+    Maker to calculate elastic constants.
+
+    Parameters
+    ----------
+    name
+        The name of flow.
+    order
+        Order of the tensor expansion to be determined. Can be either 2 or 3.
+    sym_reduce
+        Whether to reduce the number of deformations using symmetry.
+    elastic_relax_maker
+        Maker used to generate elastic relaxations.
+    generate_elastic_deformations_kwargs
+        Keyword arguments passed to :obj:`generate_elastic_deformations`.
+    fit_elastic_tensor_kwargs
+        Keyword arguments passed to :obj:`fit_elastic_tensor`.
+    """
 
     name = "elastic"
     order: int = 2
@@ -53,18 +70,11 @@ class ElasticMaker(Maker):
         equilibrium_stress
             The equilibrium stress of the (relaxed) structure, if known.
         """
-        # make sure we don't overwrite settings in kwargs
-        if "order" not in self.generate_elastic_deformations_kwargs:
-            self.generate_elastic_deformations_kwargs["order"] = self.order
-
-        if "sym_reduce" not in self.generate_elastic_deformations_kwargs:
-            self.generate_elastic_deformations_kwargs["sym_reduce"] = self.sym_reduce
-
-        if "order" not in self.fit_elastic_tensor_kwargs:
-            self.fit_elastic_tensor_kwargs["order"] = self.order
-
         deformations = generate_elastic_deformations(
-            structure, **self.generate_elastic_deformations_kwargs
+            structure,
+            order=self.order,
+            sym_reduce=self.sym_reduce,
+            **self.generate_elastic_deformations_kwargs
         )
         vasp_deformation_calcs = run_elastic_deformations(
             structure,
@@ -77,8 +87,12 @@ class ElasticMaker(Maker):
             structure,
             vasp_deformation_calcs.output,
             equilibrium_stress=equilibrium_stress,
+            order=self.order,
             **self.fit_elastic_tensor_kwargs
         )
+
+        # allow some of the deformations to fail
+        fit_tensor.config.on_missing_references = OnMissing.NONE
 
         flow = Flow(
             jobs=[deformations, vasp_deformation_calcs, fit_tensor],
