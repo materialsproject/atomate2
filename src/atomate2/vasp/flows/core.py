@@ -20,7 +20,16 @@ if typing.TYPE_CHECKING:
 
 @dataclass
 class DoubleRelaxMaker(Maker):
-    """Maker to perform a double VASP relaxation."""
+    """
+    Maker to perform a double VASP relaxation.
+
+    Parameters
+    ----------
+    name
+        Name of the workflow.
+    relax_maker
+        Maker to use to generate the relaxations.
+    """
 
     name: str = "double relax"
     relax_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
