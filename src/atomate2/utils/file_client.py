@@ -219,7 +219,9 @@ class FileClient:
             List of filenames and directories.
         """
         if host is None:
-            return list(Path(path).iterdir())
+            path = self.abspath(path, host=host)
+            return [p.relative_to(path) for p in Path(path).iterdir()]
+
         else:
             path = str(self.abspath(path, host=host))
             return [Path(p) for p in self.get_sftp(host).listdir(path)]
