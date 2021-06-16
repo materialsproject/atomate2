@@ -5,17 +5,17 @@ from __future__ import annotations
 import logging
 import re
 import typing
+from pathlib import Path
 
-from atomate2.common.file import copy_files, gunzip_files, rename_files
+from atomate2.common.file import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import auto_fileclient
 
 if typing.TYPE_CHECKING:
-    from pathlib import Path
     from typing import Optional, Sequence, Union
 
     from atomate2.utils.file_client import FileClient
 
-__all__ = ["copy_vasp_outputs"]
+__all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
 
 logger = logging.getLogger(__name__)
 
@@ -55,34 +55,31 @@ def copy_vasp_outputs(
     logger.info(f"Copying VASP inputs from {src_dir}")
 
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
+    directory_listing = file_client.listdir(src_dir, host=src_host)
 
-    # copy required files
-    required_files = ["INCAR", "OUTCAR", "CONTCAR", "vasprun.xml"]
-    required_files += additional_vasp_files
-    required_files = [f + relax_ext + "*" for f in required_files]  # allow for gzip
-    copy_files(
-        src_dir,
-        src_host=src_host,
-        include_files=required_files,
-        file_client=file_client,
-    )
+    # find required files
+    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml") + tuple(additional_vasp_files)
+    required_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
 
-    # copy optional files; do not fail if KPOINTS is missing, this might be KSPACING
-    optional_files = ["POTCAR", "POTCAR.spec", "KPOINTS"]
-    optional_files = [f + relax_ext + "*" for f in optional_files]  # allow for gzip
-    copy_files(
-        src_dir,
-        src_host=src_host,
-        include_files=optional_files,
-        allow_missing=True,
-        file_client=file_client,
-    )
+    # find optional files; do not fail if KPOINTS is missing, this might be KSPACING
+    # note: POTCAR files never have the relax extension, whereas KPOINTS files should
+    optional_files = []
+    for file in ["POTCAR", "POTCAR.spec", "KPOINTS" + relax_ext]:
+        found_file = get_zfile(directory_listing, file, allow_missing=True)
+        if found_file is not None:
+            optional_files.append(found_file)
 
-    # check at least one type of potcar file made it
-    if len(file_client.glob("POTCAR*")) == 0:
+    # check at least one type of POTCAR file is included
+    if len([f for f in optional_files if "POTCAR" in f.name]) == 0:
         raise FileNotFoundError("Could not find POTCAR file to copy.")
 
-    # gunzip any VASP files
+    copy_files(
+        src_dir,
+        src_host=src_host,
+        include_files=required_files + optional_files,
+        file_client=file_client,
+    )
+
     gunzip_files(
         include_files=required_files + optional_files,
         allow_missing=True,
@@ -92,8 +89,11 @@ def copy_vasp_outputs(
     # rename files to remove relax extension
     if relax_ext:
         all_files = optional_files + required_files
-        files = {k.replace("*", ""): k.replace(relax_ext + "*", "") for k in all_files}
-        rename_files(files, allow_missing=True, file_client=file_client)
+        files_to_rename = {
+            k.name.replace(".gz", ""): k.name.replace(relax_ext, "").replace(".gz", "")
+            for k in all_files
+        }
+        rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 
     if contcar_to_poscar:
         rename_files({"CONTCAR": "POSCAR"}, file_client=file_client)
