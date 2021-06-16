@@ -9,6 +9,7 @@ from pathlib import Path
 
 from atomate2.common.file import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import auto_fileclient
+from atomate2.utils.path import strip_hostname
 
 if typing.TYPE_CHECKING:
     from typing import Optional, Sequence, Union
@@ -52,6 +53,8 @@ def copy_vasp_outputs(
     file_client
         A file client to use for performing file operations.
     """
+    src_dir = strip_hostname(src_dir)
+
     logger.info(f"Copying VASP inputs from {src_dir}")
 
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)

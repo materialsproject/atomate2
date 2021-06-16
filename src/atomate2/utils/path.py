@@ -9,7 +9,7 @@ from pathlib import Path
 if typing.TYPE_CHECKING:
     from typing import Union
 
-__all__ = ["get_uri"]
+__all__ = ["get_uri", "strip_hostname"]
 
 
 def get_uri(dir_name: Union[str, Path]) -> str:
@@ -35,3 +35,25 @@ def get_uri(dir_name: Union[str, Path]) -> str:
     except socket.gaierror:
         pass
     return "{}:{}".format(hostname, fullpath)
+
+
+def strip_hostname(uri_path: Union[str, Path]) -> str:
+    """
+    Strop the hostname from a URI path.
+
+    For example, "fileserver.host.com:/full/path/of/dir_name" will be transformed to
+    "/full/path/of/dir_name".
+
+    Parameters
+    ----------
+    uri_path
+        A URI path.
+
+    Returns
+    -------
+        The path without the hostname information.
+    """
+    dir_name = str(uri_path)
+    if ":" in dir_name:
+        dir_name = dir_name.split(":", 1)[0]
+    return dir_name
