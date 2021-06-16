@@ -13,7 +13,14 @@ if typing.TYPE_CHECKING:
 
     from atomate2.utils.file_client import FileClient
 
-__all__ = ["copy_files", "delete_files", "rename_files", "gzip_files", "gunzip_files"]
+__all__ = [
+    "copy_files",
+    "delete_files",
+    "rename_files",
+    "gzip_files",
+    "gunzip_files",
+    "get_zfile",
+]
 
 
 @auto_fileclient
@@ -65,7 +72,7 @@ def copy_files(
 
     for file in files:
         from_file = src_dir / file
-        to_file = (dest_dir / file).with_suffix(suffix)
+        to_file = (dest_dir / file).with_suffix(file.suffix + suffix)
         try:
             file_client.copy(from_file, to_file, src_host=src_host)
         except FileNotFoundError:
@@ -328,3 +335,38 @@ def find_and_filter_files(
             filtered_files.append(file)
 
     return filtered_files
+
+
+def get_zfile(
+    directory_listing: List[Path], base_name: str, allow_missing: bool = False
+) -> Optional[Path]:
+    """
+    Find gzipped or non-gzipped versions of file in a directory listing.
+
+    Parameters
+    ----------
+    directory_listing
+        A list of files in a directory.
+    base_name
+        The base name of file file to find.
+    allow_missing
+        Whether to error if no version of the file (gzipped or un-gzipped) can be found.
+
+    Returns
+    -------
+    Path or None
+        A path to the matched file. If ``allow_missing=True`` and the file cannot be
+        found, then ``None`` will be returned.
+    """
+    for file in directory_listing:
+        if base_name == file.name:
+            return file
+        elif base_name + ".gz" == file.name:
+            return file
+        elif base_name + ".GZ" == file.name:
+            return file
+
+    if allow_missing:
+        return None
+
+    raise FileNotFoundError(f"Could not find {base_name} or {base_name}.gz file.")
