@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import List, Tuple
 
+__all__ = ["get_default_strain_states"]
+
 
 def get_default_strain_states(order: int) -> List[Tuple[int, int, int, int, int, int]]:
     """

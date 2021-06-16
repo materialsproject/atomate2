@@ -1,4 +1,4 @@
-""" Module to define various calculation types as Enums for VASP."""
+"""Module to define various calculation types as Enums for VASP."""
 
 from pathlib import Path
 from typing import Dict
@@ -10,8 +10,10 @@ from atomate2.vasp.schemas.calc_types.enums import CalcType, RunType, TaskType
 
 _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").resolve()))
 
+__all__ = ["run_type", "task_type", "calc_type"]
 
-def run_type(parameters: Dict) -> RunType:
+
+def run_type(vasp_parameters: Dict) -> RunType:
     """
     Determine run_type from the VASP parameters dict.
 
@@ -19,7 +21,7 @@ def run_type(parameters: Dict) -> RunType:
 
     Parameters
     ----------
-    parameters
+    vasp_parameters
         Dictionary of VASP parameters from vasprun.xml.
 
     Returns
@@ -27,16 +29,13 @@ def run_type(parameters: Dict) -> RunType:
     RunType
         The run type.
     """
-
-    if parameters.get("LDAU", False):
+    if vasp_parameters.get("LDAU", False):
         is_hubbard = "+U"
     else:
         is_hubbard = ""
 
     def _variant_equal(v1, v2) -> bool:
-        """
-        helper function to deal with strings
-        """
+        """Check two strings equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()
         else:
@@ -47,7 +46,7 @@ def run_type(parameters: Dict) -> RunType:
         for special_type, params in _RUN_TYPE_DATA[functional_class].items():
             if all(
                 [
-                    _variant_equal(parameters.get(param, None), value)
+                    _variant_equal(vasp_parameters.get(param, None), value)
                     for param, value in params.items()
                 ]
             ):
@@ -72,9 +71,7 @@ def task_type(
     TaskType
         The task type.
     """
-
-    calc_type = []
-
+    acalc_type = []
     incar = inputs.get("incar", {})
 
     if incar.get("ICHARG", 0) > 10:
@@ -88,42 +85,42 @@ def task_type(
             )
 
         if num_kpt_labels > 0:
-            calc_type.append("NSCF Line")
+            acalc_type.append("NSCF Line")
         else:
-            calc_type.append("NSCF Uniform")
+            acalc_type.append("NSCF Uniform")
 
     elif incar.get("LEPSILON", False):
         if incar.get("IBRION", 0) > 6:
-            calc_type.append("DFPT")
-        calc_type.append("Dielectric")
+            acalc_type.append("DFPT")
+        acalc_type.append("Dielectric")
 
     elif incar.get("IBRION", 0) > 6:
-        calc_type.append("DFPT")
+        acalc_type.append("DFPT")
 
     elif incar.get("LCHIMAG", False):
-        calc_type.append("NMR Nuclear Shielding")
+        acalc_type.append("NMR Nuclear Shielding")
 
     elif incar.get("LEFG", False):
-        calc_type.append("NMR Electric Field Gradient")
+        acalc_type.append("NMR Electric Field Gradient")
 
     elif incar.get("NSW", 1) == 0:
-        calc_type.append("Static")
+        acalc_type.append("Static")
 
     elif incar.get("ISIF", 2) == 3 and incar.get("IBRION", 0) > 0:
-        calc_type.append("Structure Optimization")
+        acalc_type.append("Structure Optimization")
 
     elif incar.get("ISIF", 3) == 2 and incar.get("IBRION", 0) > 0:
-        calc_type.append("Deformation")
+        acalc_type.append("Deformation")
 
-    if len(calc_type) == 0:
+    if len(acalc_type) == 0:
         return TaskType("Unrecognized")
 
-    return TaskType(" ".join(calc_type))
+    return TaskType(" ".join(acalc_type))
 
 
 def calc_type(
     inputs: Dict[Literal["incar", "poscar", "kpoints", "potcar"], Dict],
-    parameters: Dict,
+    vasp_parameters: Dict,
 ) -> CalcType:
     """
     Determine the calc type.
@@ -132,7 +129,7 @@ def calc_type(
     ----------
     inputs
         Inputs dict with an incar, kpoints, potcar, and poscar dictionaries.
-    parameters
+    vasp_parameters
         Dictionary of VASP parameters from vasprun.xml.
 
     Returns
@@ -140,6 +137,6 @@ def calc_type(
     CalcType
         The calculation type.
     """
-    rt = run_type(parameters).value
+    rt = run_type(vasp_parameters).value
     tt = task_type(inputs).value
     return CalcType(f"{rt} {tt}")

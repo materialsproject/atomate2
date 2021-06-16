@@ -18,6 +18,8 @@ from atomate2.vasp.jobs.elastic import (
     run_elastic_deformations,
 )
 
+__all__ = ["ElasticMaker"]
+
 
 @dataclass
 class ElasticMaker(Maker):

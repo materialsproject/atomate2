@@ -27,6 +27,13 @@ from atomate2.vasp.jobs.core import RelaxMaker
 
 logger = logging.getLogger(__name__)
 
+__all__ = [
+    "ElasticRelaxMaker",
+    "generate_elastic_deformations",
+    "run_elastic_deformations",
+    "fit_elastic_tensor",
+]
+
 
 @dataclass
 class ElasticRelaxMaker(RelaxMaker):

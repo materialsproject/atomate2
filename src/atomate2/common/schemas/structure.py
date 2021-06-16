@@ -10,6 +10,8 @@ from pymatgen.core.periodic_table import Element
 
 from atomate2.common.schemas.symmetry import SymmetryData
 
+__all__ = ["StructureMetadata"]
+
 T = TypeVar("T", bound="StructureMetadata")
 
 

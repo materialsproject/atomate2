@@ -1,5 +1,7 @@
 """Schemas for elastic tensor fitting and related properties."""
 
+from __future__ import annotations
+
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -13,6 +15,13 @@ from pymatgen.analysis.elasticity import (
 from pymatgen.core import Structure
 
 from atomate2.common.schemas.math import Matrix3D, MatrixVoigt
+
+__all__ = [
+    "DerivedProperties",
+    "FittingData",
+    "ElasticTensorDocument",
+    "ElasticDocument",
+]
 
 
 class DerivedProperties(BaseModel):

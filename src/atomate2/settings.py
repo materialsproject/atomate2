@@ -7,6 +7,8 @@ from pydantic import BaseSettings, Field, root_validator
 
 DEFAULT_CONFIG_FILE_PATH = str(Path.home() / ".atomate2.yaml")
 
+__all__ = ["Settings", "settings"]
+
 
 class Settings(BaseSettings):
     """

@@ -20,6 +20,8 @@ from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["StaticMaker", "RelaxMaker", "NonSCFMaker", "DFPTMaker", "HSEBSMaker"]
+
 
 @dataclass
 class StaticMaker(BaseVaspMaker):

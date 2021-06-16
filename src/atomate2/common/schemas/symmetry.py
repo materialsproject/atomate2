@@ -9,6 +9,8 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, spglib
 
 from atomate2.settings import settings
 
+__all__ = ["CrystalSystem", "SymmetryData"]
+
 
 class CrystalSystem(ValueEnum):
     """The crystal system of the lattice."""

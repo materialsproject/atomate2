@@ -12,6 +12,8 @@ from pymatgen.core.structure import Structure
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker
 
+__all__ = ["DoubleRelaxMaker"]
+
 
 @dataclass
 class DoubleRelaxMaker(Maker):
