@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class StaticMaker(BaseVaspMaker):
-    """Maker to create VASP static makers."""
+    """Maker to create VASP static jobs."""
 
     name: str = "static"
     input_set: str = "MPStaticSet"
@@ -74,7 +74,7 @@ class StaticMaker(BaseVaspMaker):
         task_doc = drone.assimilate()
         task_doc.task_label = self.name
 
-        # decide whether child makers should proceed
+        # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
@@ -89,7 +89,7 @@ class StaticMaker(BaseVaspMaker):
 
 @dataclass
 class RelaxMaker(BaseVaspMaker):
-    """Maker to create VASP relaxation makers."""
+    """Maker to create VASP relaxation jobs."""
 
     name: str = "relax"
     input_set: str = "MPRelaxSet"
@@ -136,7 +136,7 @@ class RelaxMaker(BaseVaspMaker):
         task_doc = drone.assimilate()
         task_doc.task_label = self.name
 
-        # decide whether child makers should proceed
+        # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
@@ -151,7 +151,7 @@ class RelaxMaker(BaseVaspMaker):
 
 @dataclass
 class NonSCFMaker(BaseVaspMaker):
-    """Maker to create non self consistent field VASP makers."""
+    """Maker to create non self consistent field VASP jobs."""
 
     name: str = "non-scf"
     input_set: str = "MPNonSCFSet"
@@ -218,7 +218,7 @@ class NonSCFMaker(BaseVaspMaker):
         task_doc = drone.assimilate()
         task_doc.task_label = self.name
 
-        # decide whether child makers should proceed
+        # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
@@ -233,7 +233,7 @@ class NonSCFMaker(BaseVaspMaker):
 
 @dataclass
 class DFPTMaker(BaseVaspMaker):
-    """Maker to create DFPT VASP makers."""
+    """Maker to create DFPT VASP jobs."""
 
     name: str = "dfpt"
     input_set: str = "MPStaticSet"
@@ -283,7 +283,7 @@ class DFPTMaker(BaseVaspMaker):
         task_doc = drone.assimilate()
         task_doc.task_label = self.name
 
-        # decide whether child makers should proceed
+        # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
@@ -298,7 +298,7 @@ class DFPTMaker(BaseVaspMaker):
 
 @dataclass
 class HSEBSMaker(BaseVaspMaker):
-    """Maker to create DFPT VASP makers."""
+    """Maker to create DFPT VASP jobs."""
 
     name: str = "hse band structure"
     input_set: str = "MPHSEBSSet"
@@ -375,7 +375,7 @@ class HSEBSMaker(BaseVaspMaker):
         task_doc = drone.assimilate()
         task_doc.task_label = self.name
 
-        # decide whether child makers should proceed
+        # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
