@@ -208,7 +208,7 @@ def run_elastic_deformations(
         # extract the outputs we want
         output = {
             "stress": relax_job.output.output.stress,
-            "deformation": deformation.tolist(),
+            "deformation": deformation,
         }
 
         if symmetry_ops is not None:
