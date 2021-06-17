@@ -77,7 +77,7 @@ class ElasticRelaxMaker(RelaxMaker):
         self.input_set_kwargs["user_kpoints_settings"] = kpoints_updates
 
         # calling make would create a new job, instead we call the undecorated function
-        super().make.original(structure, prev_vasp_dir=prev_vasp_dir)
+        super().make.original(self, structure, prev_vasp_dir=prev_vasp_dir)
 
 
 @job
