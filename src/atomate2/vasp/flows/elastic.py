@@ -58,6 +58,11 @@ class ElasticMaker(Maker):
         """
         Make flow to calculate the elastic constant.
 
+        .. Note::
+            It is heavily recommended to symmetrize the structure before passing it to
+            this flow. Otherwise, the symmetry reduction routines will not be as
+            effective at reducing the total number of deformations needed.
+
         Parameters
         ----------
         structure
