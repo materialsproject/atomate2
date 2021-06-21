@@ -9,7 +9,6 @@ from pymatgen.analysis.elasticity import (
     Deformation,
     ElasticTensor,
     ElasticTensorExpansion,
-    Strain,
     Stress,
 )
 from pymatgen.core import Structure
@@ -77,16 +76,16 @@ class DerivedProperties(BaseModel):
 class FittingData(BaseModel):
     """Data used to fit elastic tensors."""
 
-    cauchy_stresses: List[Stress] = Field(
+    cauchy_stresses: List[Matrix3D] = Field(
         None, description="The Cauchy stresses used to fit the elastic tensor."
     )
-    strains: List[Strain] = Field(
+    strains: List[Matrix3D] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
     pk_stresses: List[Matrix3D] = Field(
         None, description="The Piola–Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations: List[Deformation] = Field(
+    deformations: List[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."
     )
 
@@ -107,7 +106,7 @@ class ElasticDocument(BaseModel):
     elastic_tensor: ElasticTensorDocument = Field(
         None, description="Fitted elastic tensor."
     )
-    eq_stress: Stress = Field(
+    eq_stress: Matrix3D = Field(
         None, description="The equilibrium stress of the structure."
     )
     derived_properties: DerivedProperties = Field(
@@ -191,7 +190,7 @@ class ElasticDocument(BaseModel):
 
         return cls(
             structure=structure,
-            eq_stress=eq_stress,
+            eq_stress=eq_stress.tolist(),
             derived_properties=derived_properties,
             formula_pretty=structure.composition.reduced_formula,
             fitting_method=fitting_method,
@@ -200,9 +199,9 @@ class ElasticDocument(BaseModel):
                 raw=result.voigt.tolist(), ieee_format=ieee.voigt.tolist()
             ),
             fitting_data=FittingData(
-                cauchy_stresses=stresses,
-                strains=strains,
+                cauchy_stresses=[s.tolist() for s in stresses],
+                strains=[s.tolist() for s in strains],
                 pk_stresses=[p.tolist() for p in pk_stresses],
-                deformations=deformations,
+                deformations=[d.tolist() for d in deformations],
             ),
         )
