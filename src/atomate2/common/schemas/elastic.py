@@ -197,7 +197,7 @@ class ElasticDocument(BaseModel):
             fitting_method=fitting_method,
             order=order,
             elastic_tensor=ElasticTensorDocument(
-                raw=result.voigt, ieee_format=ieee.voigt
+                raw=result.voigt.tolist(), ieee_format=ieee.voigt.tolist()
             ),
             fitting_data=FittingData(
                 cauchy_stresses=stresses,
