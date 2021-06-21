@@ -83,7 +83,7 @@ class FittingData(BaseModel):
     strains: List[Strain] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: List[Stress] = Field(
+    pk_stresses: List[Matrix3D] = Field(
         None, description="The Piola–Kirchoff stresses used to fit the elastic tensor."
     )
     deformations: List[Deformation] = Field(
@@ -202,7 +202,7 @@ class ElasticDocument(BaseModel):
             fitting_data=FittingData(
                 cauchy_stresses=stresses,
                 strains=strains,
-                pk_stresses=pk_stresses,
+                pk_stresses=[p.tolist() for p in pk_stresses],
                 deformations=deformations,
             ),
         )
