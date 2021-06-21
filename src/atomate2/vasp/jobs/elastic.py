@@ -77,7 +77,7 @@ class ElasticRelaxMaker(RelaxMaker):
         self.input_set_kwargs["user_kpoints_settings"] = kpoints_updates
 
         # calling make would create a new job, instead we call the undecorated function
-        super().make.original(self, structure, prev_vasp_dir=prev_vasp_dir)
+        return super().make.original(self, structure, prev_vasp_dir=prev_vasp_dir)
 
 
 @job
@@ -151,6 +151,10 @@ def generate_elastic_deformations(
     symmetry_operations = None
     if sym_reduce:
         deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
+        logger.info(
+            f"Using symmetry to reduce number of deformations from {len(deformations)} "
+            f"to {len(list(deformation_mapping.keys()))}"
+        )
         deformations = list(deformation_mapping.keys())
         symmetry_operations = list(deformation_mapping.values())
 
@@ -202,7 +206,7 @@ def run_elastic_deformations(
         relax_job = elastic_relax_maker.make(
             deformed_structure, prev_vasp_dir=prev_vasp_dir
         )
-        relax_job.name += f" {i}"
+        relax_job.name += f" {i + 1}/{len(deformations)}"
         relaxations.append(relax_job)
 
         # extract the outputs we want
@@ -258,7 +262,7 @@ def fit_elastic_tensor(
             continue
 
         stress = Stress(data["stress"])
-        deformation = Stress(data["deformation"])
+        deformation = Deformation(data["deformation"])
 
         stresses.append(stress)
         deformations.append(deformation)
