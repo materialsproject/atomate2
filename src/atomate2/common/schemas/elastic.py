@@ -83,7 +83,7 @@ class FittingData(BaseModel):
     strains: List[Strain] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: List[Strain] = Field(
+    pk_stresses: List[Stress] = Field(
         None, description="The Piola–Kirchoff stresses used to fit the elastic tensor."
     )
     deformations: List[Deformation] = Field(
