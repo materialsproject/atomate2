@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import importlib
 import logging
-from typing import Optional
 
 from pymatgen.core.structure import Structure
+
+from atomate2.vasp.sets.core import VaspInputSetGenerator
 
 __all__ = ["write_vasp_input_set"]
 
@@ -15,10 +15,9 @@ logger = logging.getLogger(__name__)
 
 def write_vasp_input_set(
     structure: Structure,
-    input_set: str,
-    input_set_kwargs: Optional[dict] = None,
-    write_input_kwargs: Optional[dict] = None,
+    input_set_generator: VaspInputSetGenerator,
     from_prev: bool = False,
+    **kwargs
 ):
     """
     Write VASP input set.
@@ -27,35 +26,15 @@ def write_vasp_input_set(
     ----------
     structure
         A structure.
-    input_set
-        An input set, specified as a string. Can be an input set name from
-        ``pymatgen.io.vasp.sets`` (e.g., "MPStaticSet") or a full python import path
-        (e.g., "mypackage.mymodule.InputSet").
-    input_set_kwargs
-        Keyword arguments that will be passed to the input set constructor.
-    write_input_kwargs
-        Keyword arguments that will be passed to :obj:`.DictSet.write_input`.
+    input_set_generator
+        A VASP input set generator.
     from_prev
         Whether to initialize the input set from a previous calculation.
+    **kwargs
+        Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
     """
-    input_set_kwargs = {} if input_set_kwargs is None else input_set_kwargs
-    write_input_kwargs = {} if write_input_kwargs is None else write_input_kwargs
-
-    if "." in input_set:
-        module, input_set = input_set.rsplit(".", 1)
-    else:
-        module = "pymatgen.io.vasp.sets"
-
-    try:
-        vis_cls = getattr(importlib.import_module(module), input_set)
-    except (ModuleNotFoundError, AttributeError, ImportError):
-        raise ImportError(f"Could not import input set {input_set} from {module}.")
-
-    # TODO: Make from_prev a standard method in dictset
-    if from_prev and hasattr(vis_cls, "from_prev"):
-        vis = vis_cls.from_prev(".", structure=structure, **input_set_kwargs)
-    else:
-        vis = vis_cls(structure, **input_set_kwargs)
+    prev_dir = "." if from_prev else None
+    vis = input_set_generator.get_input_set(structure, prev_dir=prev_dir)
 
     logger.info("Writing VASP input set.")
-    vis.write_input(".", **write_input_kwargs)
+    vis.write_input(".", **kwargs)

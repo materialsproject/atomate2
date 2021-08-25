@@ -17,6 +17,7 @@ from atomate2.vasp.inputs import write_vasp_input_set
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
+from atomate2.vasp.sets.core import StaticSetGenerator, VaspInputSetGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +29,10 @@ class StaticMaker(BaseVaspMaker):
     """Maker to create VASP static jobs."""
 
     name: str = "static"
-    input_set: str = "MPStaticSet"
-    input_set_kwargs: dict = field(default_factory=dict)
-    write_vasp_input_set_kwargs: dict = field(default_factory=dict)
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=StaticSetGenerator
+    )
+    write_input_set_kwargs: dict = field(default_factory=dict)
     copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)
     vasp_drone_kwargs: dict = field(default_factory=dict)
@@ -53,15 +55,12 @@ class StaticMaker(BaseVaspMaker):
         if prev_vasp_dir is not None:
             copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
 
-        if "from_prev" not in self.write_vasp_input_set_kwargs:
-            self.write_vasp_input_set_kwargs["from_prev"] = from_prev
+        if "from_prev" not in self.write_input_set_kwargs:
+            self.write_input_set_kwargs["from_prev"] = from_prev
 
         # write vasp input files
         write_vasp_input_set(
-            structure,
-            self.input_set,
-            self.input_set_kwargs,
-            **self.write_vasp_input_set_kwargs
+            structure, self.input_set_generator, **self.write_input_set_kwargs
         )
 
         # run vasp

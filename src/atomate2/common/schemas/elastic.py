@@ -188,9 +188,11 @@ class ElasticDocument(BaseModel):
         property_dict = property_tensor.get_structure_property_dict(structure)
         derived_properties = DerivedProperties(**property_dict)
 
+        eq_stress = eq_stress.tolist() if eq_stress is not None else eq_stress
+
         return cls(
             structure=structure,
-            eq_stress=eq_stress.tolist(),
+            eq_stress=eq_stress,
             derived_properties=derived_properties,
             formula_pretty=structure.composition.reduced_formula,
             fitting_method=fitting_method,
