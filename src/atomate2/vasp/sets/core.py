@@ -177,7 +177,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
     Parameters
     ----------
     mode
-        Type of band structure more. Options are "line", "uniform", or "boltztrap".
+        Type of band structure mode. Options are "line", "uniform", or "boltztrap".
     dedos
         Energy difference used to set NEDOS, based on the total energy range.
     reciprocal_density

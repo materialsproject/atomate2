@@ -264,7 +264,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         self.validate_magmom = validate_magmom
         self.sort_structure = sort_structure
         self.force_gamma = force_gamma
-        self.symprec = symprec  # used k-point generation
+        self.symprec = symprec  # used in k-point generation
         self.vdw = None if vdw is None else vdw.lower()
         self.use_structure_charge = use_structure_charge
 
