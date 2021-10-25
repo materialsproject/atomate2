@@ -100,6 +100,11 @@ class Settings(BaseSettings):
         "Requires the bader command to be on the path.",
     )
 
+    # AMSET settings
+    AMSET_SETTINGS_UPDATE: dict = Field(
+        None, description="Additional settings applied to AMSET settings file."
+    )
+
     class Config:
         """Pydantic config settings."""
 
