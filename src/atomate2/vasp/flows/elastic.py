@@ -10,6 +10,7 @@ from jobflow import Flow, Maker, OnMissing
 from pymatgen.core.structure import Structure
 
 from atomate2.common.schemas.math import Matrix3D
+from atomate2.settings import settings
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.elastic import (
     ElasticRelaxMaker,
@@ -34,6 +35,8 @@ class ElasticMaker(Maker):
         Order of the tensor expansion to be determined. Can be either 2 or 3.
     sym_reduce
         Whether to reduce the number of deformations using symmetry.
+    symprec
+        Symmetry precision to use in the reduction of symmetry.
     elastic_relax_maker
         Maker used to generate elastic relaxations.
     generate_elastic_deformations_kwargs
@@ -45,6 +48,7 @@ class ElasticMaker(Maker):
     name = "elastic"
     order: int = 2
     sym_reduce: bool = True
+    symprec: float = settings.SYMPREC
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
@@ -76,6 +80,7 @@ class ElasticMaker(Maker):
             structure,
             order=self.order,
             sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
             **self.generate_elastic_deformations_kwargs
         )
         vasp_deformation_calcs = run_elastic_deformations(
@@ -90,6 +95,7 @@ class ElasticMaker(Maker):
             vasp_deformation_calcs.output,
             equilibrium_stress=equilibrium_stress,
             order=self.order,
+            symprec=self.symprec if self.sym_reduce else None,
             **self.fit_elastic_tensor_kwargs
         )
 

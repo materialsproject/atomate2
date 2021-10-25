@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -14,6 +15,7 @@ from pymatgen.analysis.elasticity import (
 from pymatgen.core import Structure
 
 from atomate2.common.schemas.math import Matrix3D, MatrixVoigt
+from atomate2.settings import settings
 
 __all__ = [
     "DerivedProperties",
@@ -21,6 +23,9 @@ __all__ = [
     "ElasticTensorDocument",
     "ElasticDocument",
 ]
+
+from pymatgen.core.tensors import TensorMapping
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 
 class DerivedProperties(BaseModel):
@@ -88,6 +93,10 @@ class FittingData(BaseModel):
     deformations: List[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."
     )
+    uuids: List[str] = Field(None, description="The uuids of the deformation jobs.")
+    job_dirs: List[str] = Field(
+        None, description="The directories where the deformation jobs were run."
+    )
 
 
 class ElasticTensorDocument(BaseModel):
@@ -132,9 +141,12 @@ class ElasticDocument(BaseModel):
         structure: Structure,
         stresses: List[Stress],
         deformations: List[Deformation],
-        fitting_method: str,
-        order: int,
+        uuids: List[str],
+        job_dirs: List[str],
+        fitting_method: str = settings.ELASTIC_FITTING_METHOD,
+        order: int = None,
         equilibrium_stress: Optional[Matrix3D] = None,
+        symprec: float = settings.SYMPREC,
     ):
         """
         Create an elastic document from strains and stresses.
@@ -147,6 +159,10 @@ class ElasticDocument(BaseModel):
             A list of corresponding stresses.
         deformations
             A list of corresponding deformations.
+        uuids
+            A list of uuids, one for each deformation calculation.
+        job_dirs
+            A list of job directories, one for each deformation calculation.
         fitting_method
             The method used to fit the elastic tensor. See pymatgen for more details on
             the methods themselves. The options are:
@@ -157,8 +173,15 @@ class ElasticDocument(BaseModel):
             Order of the tensor expansion to be fitted. Can be either 2 or 3.
         equilibrium_stress
             The stress on the equilibrium (relaxed) structure.
-
+        symprec
+            Symmetry precision for deriving symmetry equivalent deformations. If
+            ``symprec=None``, then no symmetry operations will be applied.
         """
+        if symprec is not None:
+            deformations, stresses, uuids, job_dirs = _expand_deformations(
+                structure, deformations, stresses, uuids, job_dirs, symprec
+            )
+
         eq_stress = None
         if equilibrium_stress:
             eq_stress = -0.1 * Stress(equilibrium_stress)
@@ -166,6 +189,9 @@ class ElasticDocument(BaseModel):
         strains = [d.green_lagrange_strain for d in deformations]
         stresses = [-0.1 * s for s in stresses]
         pk_stresses = [s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations)]
+
+        if order is None:
+            order = 2 if len(stresses) < 70 else 3  # TODO: Figure this out better
 
         if order > 2 or fitting_method == "finite_difference":
             # force finite diff if order > 2
@@ -205,5 +231,45 @@ class ElasticDocument(BaseModel):
                 strains=[s.tolist() for s in strains],
                 pk_stresses=[p.tolist() for p in pk_stresses],
                 deformations=[d.tolist() for d in deformations],
+                uuids=uuids,
+                job_dirs=job_dirs,
             ),
         )
+
+
+def _expand_deformations(structure, deformations, stresses, uuids, job_dirs, symprec):
+    """Use symmetry to expand deformations."""
+    sga = SpacegroupAnalyzer(structure, symprec=symprec)
+    symmops = sga.get_symmetry_operations(cartesian=True)
+
+    full_deformations = deepcopy(deformations)
+    full_stresses = deepcopy(stresses)
+    full_uuids = deepcopy(uuids)
+    full_job_dirs = deepcopy(job_dirs)
+
+    mapping = TensorMapping()
+    for i, deformation in enumerate(deformations):
+        mapping[deformation] = True
+
+        for symmop in symmops:
+            # rotate the deformation
+            rotated_deformation = deformation.transform(symmop)
+
+            # check if we have seen it before
+            if rotated_deformation in mapping:
+                continue
+
+            # check it is a valid deformation
+            if not Deformation(rotated_deformation).is_indepenent():
+                continue
+
+            # store the rotated deformation so we know we've seen it
+            mapping[rotated_deformation] = True
+
+            # expand the other properties
+            full_deformations.append(rotated_deformation)
+            full_stresses.append(stresses[i].transform(symmop))
+            full_uuids.append(uuids[i])
+            full_job_dirs.append(job_dirs[i])
+
+    return full_deformations, full_stresses, full_uuids, full_job_dirs

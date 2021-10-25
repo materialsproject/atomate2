@@ -1,3 +1,5 @@
+"""Module defining base VASP input set and generator."""
+
 import os
 import warnings
 from copy import deepcopy
@@ -252,7 +254,7 @@ class VaspInputSetGenerator(InputSetGenerator):
 
         self._config_dict = deepcopy(config_dict)
         self.user_incar_settings = user_incar_settings or {}
-        self.user_kpoints_settings = user_kpoints_settings or {}
+        self.user_kpoints_settings: Union[Dict, Kpoints] = user_kpoints_settings or {}
         self.user_potcar_settings = user_potcar_settings
         self.user_potcar_functional = user_potcar_functional
         self.auto_kspacing = auto_kspacing
@@ -313,7 +315,7 @@ class VaspInputSetGenerator(InputSetGenerator):
             for k, v in self.user_potcar_settings.items():
                 self._config_dict["POTCAR"][k] = v
 
-    def get_input_set(
+    def get_input_set(  # type: ignore
         self, structure: Structure = None, prev_dir: Union[str, Path] = None
     ) -> VaspInputSet:
         """
@@ -388,7 +390,7 @@ class VaspInputSetGenerator(InputSetGenerator):
 
     def get_nelect(self, structure: Structure) -> float:
         """
-        Gets the default number of electrons for a given structure.
+        Get the default number of electrons for a given structure.
 
         Parameters
         ----------
