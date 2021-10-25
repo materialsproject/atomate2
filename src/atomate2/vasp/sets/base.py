@@ -479,26 +479,26 @@ class VaspInputSetGenerator(InputSetGenerator):
         incar_settings = dict(self._config_dict["INCAR"])
 
         # apply user incar settings to SETTINGS not to INCAR
-        apply_incar_updates(incar_settings, self.user_incar_settings)
+        _apply_incar_updates(incar_settings, self.user_incar_settings)
 
         # generate incar
         incar = Incar()
         for k, v in incar_settings.items():
             if k == "MAGMOM":
-                incar[k] = get_magmoms(v, structure)
+                incar[k] = _get_magmoms(v, structure)
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
-                incar[k] = get_u_param(k, v, structure)
+                incar[k] = _get_u_param(k, v, structure)
             elif k.startswith("EDIFF") and k != "EDIFFG":
-                incar["EDIFF"] = get_ediff(k, v, structure, incar_settings)
+                incar["EDIFF"] = _get_ediff(k, v, structure, incar_settings)
             else:
                 incar[k] = v
-        set_u_params(incar, incar_settings, structure)
+        _set_u_params(incar, incar_settings, structure)
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
         skip = list(self.user_incar_settings.keys())
         skip += ["MAGMOM", "NUPDOWN", "LDAUU", "LDAUL", "LDAUJ", "LMAXMIX"]
-        apply_incar_updates(incar, previous_incar, skip=skip)
+        _apply_incar_updates(incar, previous_incar, skip=skip)
 
         if self.constrain_total_magmom:
             nupdown = sum([mag if abs(mag) > 0.6 else 0 for mag in incar["MAGMOM"]])
@@ -508,7 +508,7 @@ class VaspInputSetGenerator(InputSetGenerator):
             incar["NELECT"] = self.get_nelect(structure)
 
         # handle kspacing
-        set_kspacing(
+        _set_kspacing(
             incar,
             incar_settings,
             self.user_incar_settings,
@@ -518,7 +518,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         )
 
         # apply specified updates, be careful not to override user_incar_settings
-        apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings.keys())
+        _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings.keys())
 
         return incar
 
@@ -660,7 +660,8 @@ class VaspInputSetGenerator(InputSetGenerator):
         return kpoints
 
 
-def get_kspacing(bandgap):
+def _get_kspacing(bandgap: float) -> float:
+    """Get KSPACING based on a band gap."""
     if bandgap == 0:
         return 0.22
 
@@ -671,7 +672,8 @@ def get_kspacing(bandgap):
     return min(kspacing, 0.44)
 
 
-def get_magmoms(magmoms, structure):
+def _get_magmoms(magmoms, structure):
+    """Get the mamgoms."""
     mag = []
     for site in structure:
         if hasattr(site, "magmom"):
@@ -697,7 +699,8 @@ def get_magmoms(magmoms, structure):
     return mag
 
 
-def get_u_param(lda_param, lda_config, structure):
+def _get_u_param(lda_param, lda_config, structure):
+    """Get U parameters."""
     comp = structure.composition
     elements = sorted([el for el in comp.elements if comp[el] > 0], key=lambda e: e.X)
     most_electroneg = elements[-1].symbol
@@ -718,14 +721,16 @@ def get_u_param(lda_param, lda_config, structure):
         ]
 
 
-def get_ediff(param, value, structure, incar_settings):
+def _get_ediff(param, value, structure, incar_settings):
+    """Get EDIFF."""
     if "EDIFF" not in incar_settings and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
     else:
         return float(incar_settings["EDIFF"])
 
 
-def set_u_params(incar, incar_settings, structure):
+def _set_u_params(incar, incar_settings, structure):
+    """Modify INCAR for use with U parameters."""
     has_u = incar_settings.get("LDAU", False) and sum(incar["LDAUU"]) > 0
 
     if has_u:
@@ -746,7 +751,19 @@ def set_u_params(incar, incar_settings, structure):
                 del incar[key]
 
 
-def apply_incar_updates(incar, updates, skip=None):
+def _apply_incar_updates(incar, updates, skip=None):
+    """
+    Apply updates to an INCAR file.
+
+    Parameters
+    ----------
+    incar
+        An incar.
+    updates
+        Updates to apply.
+    skip
+        Keys to skip.
+    """
     skip = () if skip is None else skip
     for k, v in updates.items():
         if k in skip:
@@ -761,14 +778,17 @@ def apply_incar_updates(incar, updates, skip=None):
             incar[k] = v
 
 
-def set_kspacing(
+def _set_kspacing(
     incar, incar_settings, user_incar_settings, auto_kspacing, bandgap, kpoints
 ):
-    # if kpoints is not None then unset any KSPACING
-    # elif kspacing set in user_incar_settings then use that
-    # elif auto_kspacing then do that
-    # elif if kspacing is set in config use that.
+    """
+    Set KSPACING in an INCAR.
 
+    if kpoints is not None then unset any KSPACING
+    if kspacing set in user_incar_settings then use that
+    if auto_kspacing then do that
+    if kspacing is set in config use that.
+    """
     if kpoints is not None:
         # unset KSPACING as we are using a KPOINTS file
         incar.pop("KSPACING", None)
@@ -784,7 +804,7 @@ def set_kspacing(
     elif "KSPACING" in user_incar_settings:
         incar["KSPACING"] = user_incar_settings["KSPACING"]
     elif incar_settings.get("KSPACING") and auto_kspacing:
-        incar["KSPACING"] = get_kspacing(bandgap)
+        incar["KSPACING"] = _get_kspacing(bandgap)
 
         # be careful to not override user_incar_settings
         if bandgap == 0:
