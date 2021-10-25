@@ -58,7 +58,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    from pymatgen.io.vasp.sets import VaspInputSet
+    from atomate2.vasp.sets.base import VaspInputSet
 
     import atomate2.vasp.run
 
@@ -149,16 +149,43 @@ def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
     for p in incar_settings:
         if user.get(p, defaults.get(p)) != ref.get(p, defaults.get(p)):
-            raise ValueError(f"INCAR value of {p} is inconsistent")
+            raise ValueError(
+                f"INCAR value of {p} is inconsistent: "
+                f"{user.get(p, defaults.get(p))} != {ref.get(p, defaults.get(p))}"
+            )
 
 
 def check_kpoints(ref_path: Union[str, Path]):
-    from pymatgen.io.vasp import Kpoints
+    from pymatgen.io.vasp import Kpoints, Incar
 
-    user = Kpoints.from_file("KPOINTS")
-    ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
-    if user.style != ref.style or user.num_kpts != ref.num_kpts:
-        raise ValueError("KPOINTS files are inconsistent")
+    user_kpoints_exists = Path("KPOINTS").exists()
+    ref_kpoints_exists = Path(ref_path / "inputs" / "KPOINTS").exists()
+
+    if user_kpoints_exists and not ref_kpoints_exists:
+        raise ValueError(
+            "atomate2 generated a KPOINTS file but the reference calculation is using "
+            "KSPACING"
+        )
+    elif not user_kpoints_exists and ref_kpoints_exists:
+        raise ValueError(
+            "atomate2 is using KSPACING but the reference calculation is using "
+            "a KPOINTS file"
+        )
+    elif user_kpoints_exists and ref_kpoints_exists:
+        user = Kpoints.from_file("KPOINTS")
+        ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
+        if user.style != ref.style or user.num_kpts != ref.num_kpts:
+            raise ValueError("KPOINTS files are inconsistent")
+    else:
+        # check k-spacing
+        user = Incar.from_file("INCAR")
+        ref = Incar.from_file(ref_path / "inputs" / "INCAR")
+
+        if user.get("KSPACING", None) != ref.get("KSPACING", None):
+            raise ValueError(
+                "KSPACING is not inconsistent: "
+                f"{user.get('KSPACING', None)} != {ref.get('KSPACING', None)}"
+            )
 
 
 def check_poscar(ref_path: Union[str, Path]):

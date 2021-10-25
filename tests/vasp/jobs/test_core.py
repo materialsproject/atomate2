@@ -17,4 +17,6 @@ def test_static_maker(mock_vasp, clean_dir):
     job = StaticMaker().make(structure)
     responses = run_locally(job, create_folders=True)
 
-    assert isinstance(responses[job.uuid][1].output, TaskDocument)
+    print(responses)
+
+    assert isinstance(responses[job.uuid][0].output, TaskDocument)
