@@ -1,3 +1,5 @@
+"""Module defining functions to write amset inputs."""
+
 from typing import Dict
 
 from monty.serialization import dumpfn, loadfn

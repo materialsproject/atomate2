@@ -1,3 +1,5 @@
+"""Module defining functions to run amset."""
+
 import logging
 import warnings
 from typing import List, Tuple, Union
@@ -15,6 +17,19 @@ _CONVERGENCE_PROPERTIES = ("mobility.overall", "seebeck")
 
 
 def run_amset(**kwargs):
+    """
+    Run amset in the current directory.
+
+    Parameters
+    ----------
+    **kwargs
+        Keyword arguments that will get passed to ``Runner.from_director``.
+
+    Returns
+    -------
+    AmsetData, dict
+        A tuple of the amset data object and the usage statistics.
+    """
     warnings.simplefilter("ignore", MantissaNoDotYAML1_1Warning)
 
     if "directory" not in kwargs:

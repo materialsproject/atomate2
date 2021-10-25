@@ -1,3 +1,5 @@
+"""Module defining functions for manipulating amset files."""
+
 from __future__ import annotations
 
 import logging

@@ -1,3 +1,5 @@
+"""Module defining amset document schemas."""
+
 import logging
 import re
 from pathlib import Path

@@ -1,4 +1,4 @@
-"""This module defines an abstract interface for software inputs."""
+"""Module defining an abstract interface for software inputs."""
 
 import abc
 from pathlib import Path
@@ -52,8 +52,7 @@ class InputSet(MSONable):
     @property
     def is_valid(self) -> bool:
         """
-
-        Basic checks to verify the validity of an input set.
+        Verify the validity of an input set.
 
         Can be as simple or as complex as desired.
 
@@ -75,6 +74,4 @@ class InputSetGenerator(MSONable):
     @staticmethod
     @abc.abstractmethod
     def get_input_set(*args, **kwargs) -> InputSet:
-        """
-        Generate an InputSet object.
-        """
+        """Generate an InputSet object."""

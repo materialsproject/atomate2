@@ -58,9 +58,8 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    from atomate2.vasp.sets.base import VaspInputSet
-
     import atomate2.vasp.run
+    from atomate2.vasp.sets.base import VaspInputSet
 
     ref_paths = {}
     fake_run_vasp_kwargs = {}
@@ -156,7 +155,7 @@ def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
 
 
 def check_kpoints(ref_path: Union[str, Path]):
-    from pymatgen.io.vasp import Kpoints, Incar
+    from pymatgen.io.vasp import Incar, Kpoints
 
     user_kpoints_exists = Path("KPOINTS").exists()
     ref_kpoints_exists = Path(ref_path / "inputs" / "KPOINTS").exists()

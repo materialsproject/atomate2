@@ -1,4 +1,4 @@
-""" Module to define various calculation types as Enums for VASP."""
+"""Module to define various calculation types as Enums for VASP."""
 from itertools import product
 from pathlib import Path
 
@@ -35,7 +35,7 @@ _RUN_TYPES = (
 
 
 def get_enum_source(enum_name, doc, items):
-    """Get enum source"""
+    """Get enum source."""
     header = f"""
 class {enum_name}(ValueEnum):
     \"\"\" {doc} \"\"\"\n
