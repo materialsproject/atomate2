@@ -208,7 +208,7 @@ class RunStatistics(BaseModel):
             "Total CPU time used (sec)": "total_time",
             "cores": "cores",
         }
-        return cls(**{v: outcar.run_stats.get(k, None) for k, v in mapping.items()})
+        return cls(**{v: outcar.run_stats.get(k, 0) for k, v in mapping.items()})
 
 
 class CalculationOutput(BaseModel):
