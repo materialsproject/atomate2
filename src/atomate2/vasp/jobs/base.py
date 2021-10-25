@@ -22,7 +22,27 @@ __all__ = ["BaseVaspMaker"]
 
 @dataclass
 class BaseVaspMaker(Maker):
-    """Base VASP job maker."""
+    """
+    Base VASP job maker.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "base vasp job"
     input_set_generator: VaspInputSetGenerator = field(
