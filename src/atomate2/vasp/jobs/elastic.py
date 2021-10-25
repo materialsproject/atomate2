@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow import Flow, Response, job
+from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
 from pymatgen.core import SymmOp
 from pymatgen.core.structure import Structure
@@ -23,7 +24,8 @@ from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.settings import settings
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import RelaxMaker
+from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.elastic import ElasticDeformationSetGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +38,7 @@ __all__ = [
 
 
 @dataclass
-class ElasticRelaxMaker(RelaxMaker):
+class ElasticRelaxMaker(BaseVaspMaker):
     """
     Maker to perform an elastic relaxation.
 
@@ -44,40 +46,9 @@ class ElasticRelaxMaker(RelaxMaker):
     """
 
     name = "elastic relax"
-
-    @job
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
-        """
-        Make a job to perform a tight relaxation.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure.
-        prev_vasp_dir
-            A previous vasp calculation directory to use for copying outputs.
-        """
-        incar_updates = {
-            "IBRION": 2,
-            "ISIF": 2,
-            "ENCUT": 700,
-            "EDIFF": 1e-7,
-            "LAECHG": False,
-            "EDIFFG": -0.001,
-            "LREAL": False,
-            "ALGO": "Normal",
-        }
-        kpoints_updates = {"grid_density": 7000}
-
-        # make sure we don't override user settings
-        incar_updates.update(self.input_set_kwargs.get("user_incar_settings", {}))
-        kpoints_updates.update(self.input_set_kwargs.get("user_kpoints_settings", {}))
-
-        self.input_set_kwargs["user_incar_settings"] = incar_updates
-        self.input_set_kwargs["user_kpoints_settings"] = kpoints_updates
-
-        # calling make would create a new job, instead we call the undecorated function
-        return super().make.original(self, structure, prev_vasp_dir=prev_vasp_dir)
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=ElasticDeformationSetGenerator
+    )
 
 
 @job
@@ -200,7 +171,13 @@ def run_elastic_deformations(
     for i, deformation in enumerate(deformations):
         # deform the structure
         dst = DeformStructureTransformation(deformation=deformation)
-        deformed_structure = dst.apply_transformation(structure)
+        ts = TransformedStructure(structure, transformations=[dst])
+        deformed_structure = ts.final_structure
+
+        # write details of the transformation to the transformations.json file
+        # this file will automatically get added to the task document and allow
+        # the elastic builder to function
+        elastic_relax_maker.write_additional_data["transformations.json"] = ts
 
         # create the job
         relax_job = elastic_relax_maker.make(

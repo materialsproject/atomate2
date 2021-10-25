@@ -6,7 +6,7 @@ import logging
 
 from pymatgen.core.structure import Structure
 
-from atomate2.vasp.sets.core import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputSetGenerator
 
 __all__ = ["write_vasp_input_set"]
 

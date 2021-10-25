@@ -1,6 +1,7 @@
 """Core definition of a VASP task document."""
-
+import logging
 import re
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
@@ -9,9 +10,10 @@ from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.analysis.structure_analyzer import oxide_type
 from pymatgen.core.structure import Structure
-from pymatgen.entries.computed_entries import ComputedEntry, __version__
+from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
+from atomate2 import __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.settings import settings
@@ -33,7 +35,9 @@ __all__ = [
     "TaskDocument",
 ]
 
+logger = logging.getLogger(__name__)
 T = TypeVar("T", bound="TaskDocument")
+VOLUMETRIC_FILES = ("CHGCAR", "LOCPOT", "AECCAR0", "AECCAR1", "AECCAR2")
 
 
 class AnalysisSummary(BaseModel):
@@ -269,35 +273,27 @@ class TaskDocument(StructureMetadata):
     )
 
     @classmethod
-    def from_task_files(
+    def from_directory(
         cls: Type[T],
         dir_name: Union[Path, str],
-        task_files: Dict[str, Dict[str, Any]],
+        volumetric_files: Tuple[str, ...] = VOLUMETRIC_FILES,
         store_additional_json: bool = settings.VASP_STORE_ADDITIONAL_JSON,
+        additional_fields: Dict[str, Any] = None,
         **vasp_calculation_kwargs,
     ) -> T:
         """
-        Create a task document from VASP files.
+        Create a task document from a directory containing VASP files.
 
         Parameters
         ----------
         dir_name
             The path to the folder containing the calculation outputs.
-        task_files
-            The filenames of the calculation outputs for each VASP task given as an
-            ordered dictionary of::
-
-                {
-                    task_name: {
-                        "vasprun_file": vasprun_filename,
-                        "outcar_file": outcar_filename,
-                        "volumetric_files": [CHGCAR, LOCPOT, etc]
-                    },
-                    ...
-                }
-
         store_additional_json
             Whether to store additional json files found in the calculation directory.
+        volumetric_files
+            Volumetric files to search for.
+        additional_fields
+            Dictionary of additional fields to add to output document.
         **vasp_calculation_kwargs
             Additional parsing options that will be passed to the
             :obj:`.Calculation.from_vasp_files` function.
@@ -307,7 +303,14 @@ class TaskDocument(StructureMetadata):
         VaspTaskDoc
             A task document for the calculation.
         """
+        logger.info(f"Getting task doc in: {dir_name}")
+
+        additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
+        task_files = find_vasp_files(dir_name, volumetric_files=volumetric_files)
+
+        if len(task_files) == 0:
+            raise ValueError("No VASP files found!")
 
         calcs_reversed = []
         all_vasp_objects = []
@@ -336,7 +339,7 @@ class TaskDocument(StructureMetadata):
         if vasp_objects:
             included_objects = list(vasp_objects.keys())
 
-        return cls.from_structure(
+        doc = cls.from_structure(
             structure=calcs_reversed[-1].output.structure,
             include_structure=True,
             dir_name=dir_name,
@@ -358,6 +361,8 @@ class TaskDocument(StructureMetadata):
             vasp_objects=vasp_objects,
             included_objects=included_objects,
         )
+        doc.copy(update=additional_fields)
+        return doc
 
     @staticmethod
     def get_entry(
@@ -565,3 +570,81 @@ def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
         total["total_time"] += stats.total_time
     run_stats["overall"] = RunStatistics(**total)
     return run_stats
+
+
+def find_vasp_files(
+    path: Union[str, Path],
+    volumetric_files: Tuple[str, ...] = VOLUMETRIC_FILES,
+) -> Dict[str, Any]:
+    """
+    Find VASP files in a directory.
+
+    Only files in folders with names matching a task name (or alternatively files
+    with the task name as an extension, e.g., vasprun.relax1.xml) will be returned.
+
+    VASP files in the current directory will be given the task name "standard".
+
+    Parameters
+    ----------
+    path
+        Path to a directory to search.
+    volumetric_files
+        Volumetric files to search for.
+
+    Returns
+    -------
+    dict[str, Any]
+        The filenames of the calculation outputs for each VASP task, given as a ordered
+        dictionary of::
+
+            {
+                task_name: {
+                    "vasprun_file": vasprun_filename,
+                    "outcar_file": outcar_filename,
+                    "volumetric_files": [CHGCAR, LOCPOT, etc]
+                },
+                ...
+            }
+
+    """
+    task_names = ["precondition"] + [f"relax{i}" for i in range(9)]
+    path = Path(path)
+    task_files = OrderedDict()
+
+    def _get_task_files(files, suffix=""):
+        vasp_files = {}
+        vol_files = []
+        for file in files:
+            if file.match(f"*vasprun.xml{suffix}*"):
+                vasp_files["vasprun_file"] = file
+            elif file.match(f"*OUTCAR{suffix}*"):
+                vasp_files["outcar_file"] = file
+            elif any([file.match(f"*{f}{suffix}*") for f in volumetric_files]):
+                vol_files.append(file)
+
+        if len(vol_files) > 0 or len(vasp_files) > 0:
+            # only add volumetric files if some were found or other vasp files
+            # were found
+            vasp_files["volumetric_files"] = vol_files
+
+        return vasp_files
+
+    for task_name in task_names:
+        subfolder_match = list(path.glob(f"{task_name}/*"))
+        suffix_match = list(path.glob(f"*.{task_name}*"))
+        if len(subfolder_match) > 0:
+            # subfolder match
+            task_files[task_name] = _get_task_files(subfolder_match)
+        elif len(suffix_match) > 0:
+            # try extension schema
+            task_files[task_name] = _get_task_files(
+                suffix_match, suffix=f".{task_name}"
+            )
+
+    if len(task_files) == 0:
+        # get any matching file from the root folder
+        standard_files = _get_task_files(list(path.glob("*")))
+        if len(standard_files) > 0:
+            task_files["standard"] = standard_files
+
+    return task_files
