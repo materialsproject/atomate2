@@ -1,21 +1,18 @@
-import re
-
-from pathlib import Path
-
 import logging
-
-from typing import List, Union, Dict, Any, Tuple
-
-from pydantic import Field, BaseModel
+import re
+from pathlib import Path
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
-from atomate2 import __version__
-from atomate2.common.schemas.math import Vector3D, Matrix3D
-from atomate2.common.schemas.structure import StructureMetadata
-from atomate2.utils.datetime import datetime_str
 from monty.dev import requires
 from monty.serialization import loadfn
+from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+
+from atomate2 import __version__
+from atomate2.common.schemas.math import Matrix3D, Vector3D
+from atomate2.common.schemas.structure import StructureMetadata
+from atomate2.utils.datetime import datetime_str
 
 try:
     import amset
@@ -44,12 +41,12 @@ class TransportData(BaseModel):
     electronic_thermal_conductivity: List[List[Matrix3D]] = Field(
         None,
         description="Electronic thermal conductivity tensor in W/mK, given as "
-                    "(ndoping, ntemps, 3, 3)"
+        "(ndoping, ntemps, 3, 3)",
     )
     mobility: Dict[str, List[List[Matrix3D]]] = Field(
         None,
         description="Carrier mobility tensor in cm^2/Vs, given as "
-                    "{scattering_type: (ndoping, ntemps, 3, 3)}"
+        "{scattering_type: (ndoping, ntemps, 3, 3)}",
     )
 
 
@@ -65,15 +62,9 @@ class UsageStats(BaseModel):
     scattering: float = Field(
         None, description="Time taken for scattering routines (s)"
     )
-    transport: float = Field(
-        None, description="Time taken for transport routines (s)"
-    )
-    writing: float = Field(
-        None, description="Time taken for io routines (s)"
-    )
-    total: float = Field(
-        None, description="Total time taken for AMSET to run (s)"
-    )
+    transport: float = Field(None, description="Time taken for transport routines (s)")
+    writing: float = Field(None, description="Time taken for io routines (s)")
+    total: float = Field(None, description="Total time taken for AMSET to run (s)")
     max_memory: float = Field(None, description="Maximum memory usage (MB)")
 
 
@@ -92,28 +83,24 @@ class MeshData(BaseModel):
     ir_to_full_kpoint_mapping: List[int] = Field(
         None, description="Mapping from irreducible to full k-points"
     )
-    efermi: float = Field(
-        None, description="Intrinsic Fermi level from band structure"
-    )
+    efermi: float = Field(None, description="Intrinsic Fermi level from band structure")
     vb_idx: Dict[str, int] = Field(
         None, description="Index of highest valence band for each spin"
     )
-    num_electrons: float = Field(
-        None, description="Number of electrons in the system"
-    )
+    num_electrons: float = Field(None, description="Number of electrons in the system")
     velocities: Dict[str, List[List[Vector3D]]] = Field(
         None, description="Band velocities for each irreducible k-point."
     )
     scattering_rates: Dict[str, List[List[List[List[List[float]]]]]] = Field(
         None,
         description="Scattering rates in s^-1, given as "
-                    "{spin: (nscattering_types, ndoping, ntemps, nbands, nkpoints)}"
+        "{spin: (nscattering_types, ndoping, ntemps, nbands, nkpoints)}",
     )
     fd_cutoffs: Tuple[List[List[float]], List[List[float]]] = Field(
         None,
         description="Energy cutoffs within which the scattering rates are calculated"
-                    "given as (min_cutoff, max_cutoff) where each cutoff is given"
-                    "as (ndoping, ntemps)"
+        "given as (min_cutoff, max_cutoff) where each cutoff is given"
+        "as (ndoping, ntemps)",
     )
 
 
@@ -129,9 +116,7 @@ class AmsetTaskDocument(StructureMetadata):
         None, description="Timestamp for when this task was completed"
     )
     input: dict = Field(None, description="The input settings")
-    transport: TransportData = Field(
-        None, description="The transport results"
-    )
+    transport: TransportData = Field(None, description="The transport results")
     usage_stats: UsageStats = Field(None, description="Timing and memory usage")
     mesh: MeshData = Field(None, description="Full AMSET mesh data")
     converged: bool = Field(
@@ -145,9 +130,7 @@ class AmsetTaskDocument(StructureMetadata):
         None, description="The scattering types used in the calculation"
     )
     soc: bool = Field(None, description="Whether spin–orbit coupling was included")
-    structure: Structure = Field(
-        None, description="The structure used in this task"
-    )
+    structure: Structure = Field(None, description="The structure used in this task")
     _schema: str = Field(
         __version__,
         description="Version of atomate2 used to create the document",
@@ -235,6 +218,7 @@ def _get_structure() -> Structure:
 
     if len(vr_files) > 0:
         from pymatgen.io.vasp import BSVasprun
+
         return BSVasprun(str(vr_files[0])).get_band_structure().structure
     elif len(bs_files) > 0:
         return loadfn(bs_files[0])["band_structure"].structure

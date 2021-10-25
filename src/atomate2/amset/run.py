@@ -1,14 +1,12 @@
 import logging
-import numpy as np
-from pydash import get
-from typing import Tuple, Union, List
-
 import warnings
-from ruamel.yaml.error import MantissaNoDotYAML1_1Warning
+from typing import List, Tuple, Union
 
+import numpy as np
 from amset.core.run import Runner
-
 from monty.serialization import dumpfn
+from pydash import get
+from ruamel.yaml.error import MantissaNoDotYAML1_1Warning
 
 __all__ = ["run_amset", "check_converged"]
 
@@ -17,7 +15,7 @@ _CONVERGENCE_PROPERTIES = ("mobility.overall", "seebeck")
 
 
 def run_amset(**kwargs):
-    warnings.simplefilter('ignore', MantissaNoDotYAML1_1Warning)
+    warnings.simplefilter("ignore", MantissaNoDotYAML1_1Warning)
 
     if "directory" not in kwargs:
         kwargs["directory"] = "."

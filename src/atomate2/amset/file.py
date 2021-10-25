@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import logging
@@ -43,7 +42,7 @@ def copy_amset_files(
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
     # find required files
-    required_files = [get_zfile(directory_listing, r) for r in ("settings.yaml", )]
+    required_files = [get_zfile(directory_listing, r) for r in ("settings.yaml",)]
 
     # find optional files
     optional_files = []
@@ -53,7 +52,7 @@ def copy_amset_files(
         "band_structure_data.json",
         "wavefunction.h5",
         "deformation.h5",
-        "transport.json"
+        "transport.json",
     ):
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
@@ -81,8 +80,5 @@ def copy_amset_files(
         file_client=file_client,
     )
 
-    rename_files(
-        {"transport.json": "transport.prev.json"},
-        allow_missing=True
-    )
+    rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
     logger.info("Finished copying inputs")

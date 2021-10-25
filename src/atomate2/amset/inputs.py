@@ -1,7 +1,8 @@
 from typing import Dict
 
+from monty.serialization import dumpfn, loadfn
+
 from atomate2.settings import Settings
-from monty.serialization import loadfn, dumpfn
 
 __all__ = ["write_amset_settings"]
 

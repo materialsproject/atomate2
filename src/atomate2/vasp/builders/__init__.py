@@ -18,10 +18,9 @@ import warnings
 from datetime import datetime
 from itertools import chain
 
+from maggma.builders import Builder
 from monty.json import jsanitize
 from monty.serialization import loadfn
-from maggma.builders import Builder
-
 
 logger = logging.getLogger(__name__)
 
@@ -89,25 +88,42 @@ class ElasticBuilder(Builder):
         # Get only successful elastic deformation tasks with parent structure
         q = dict(self.query)
         q["state"] = "successful"
-        q.update({"task_label": {
-            "$regex": "[(elastic deformation)(structure optimization)]"}})
+        q.update(
+            {
+                "task_label": {
+                    "$regex": "[(elastic deformation)(structure optimization)]"
+                }
+            }
+        )
 
-        return_props = ['output', 'input', 'completed_at', 'transmuter',
-                        'task_id', 'task_label', 'formula_pretty', 'dir_name']
+        return_props = [
+            "output",
+            "input",
+            "completed_at",
+            "transmuter",
+            "task_id",
+            "task_label",
+            "formula_pretty",
+            "dir_name",
+        ]
 
-        formulas = self.tasks.distinct('formula_pretty', criteria=q)
+        formulas = self.tasks.distinct("formula_pretty", criteria=q)
 
         self.logger.info("Starting aggregation")
-        cmd_cursor = self.tasks.groupby("formula_pretty", criteria=q,
-                                        properties=return_props)
+        cmd_cursor = self.tasks.groupby(
+            "formula_pretty", criteria=q, properties=return_props
+        )
         self.logger.info("Aggregation complete")
         self.total = len(formulas)
 
         for n, doc in enumerate(cmd_cursor):
             # TODO: refactor for task sets without structure opt
-            logger.debug("Getting formula {}, {} of {}".format(
-                doc['_id']['formula_pretty'], n, len(formulas)))
-            yield doc['docs']
+            logger.debug(
+                "Getting formula {}, {} of {}".format(
+                    doc["_id"]["formula_pretty"], n, len(formulas)
+                )
+            )
+            yield doc["docs"]
 
     def process_item(self, item):
         """
@@ -124,7 +140,7 @@ class ElasticBuilder(Builder):
         tasks = item
         if not item:
             return all_docs
-        logger.debug("Processing formula {}".format(tasks[0]['formula_pretty']))
+        logger.debug("Processing formula {}".format(tasks[0]["formula_pretty"]))
 
         # Group tasks by optimization with corresponding lattice
         grouped = group_deformations_by_optimization_task(tasks)
@@ -132,7 +148,7 @@ class ElasticBuilder(Builder):
         for opt_task, defo_tasks in grouped:
             # Catch the warnings, just for convenience
             with warnings.catch_warnings():
-                warnings.simplefilter('ignore')
+                warnings.simplefilter("ignore")
                 elastic_doc = get_elastic_analysis(opt_task, defo_tasks)
                 if elastic_doc:
                     elastic_docs.append(elastic_doc)
@@ -151,4 +167,4 @@ class ElasticBuilder(Builder):
 
         self.logger.info("Updating {} elastic documents".format(len(items)))
 
-        self.elasticity.update(items, key='optimization_dir_name')
+        self.elasticity.update(items, key="optimization_dir_name")

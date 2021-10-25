@@ -1,16 +1,16 @@
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Dict, Union
 
-from typing import Union, Dict
+from jobflow import Maker, Response, job
+from monty.serialization import loadfn
+from monty.shutil import gzip_dir
 
 from atomate2.amset.file import copy_amset_files
 from atomate2.amset.inputs import write_amset_settings
-from atomate2.amset.run import run_amset, check_converged
+from atomate2.amset.run import check_converged, run_amset
 from atomate2.amset.schemas import AmsetTaskDocument
-from jobflow import Maker, job, Response
-from monty.serialization import loadfn
-from monty.shutil import gzip_dir
 
 __all__ = ["AmsetMaker"]
 
