@@ -28,6 +28,8 @@ from atomate2.settings import settings
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
+__all__ = ["VaspInputSet", "VaspInputSetGenerator"]
+
 
 class VaspInputSet(InputSet):
     """
@@ -436,7 +438,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         return structure, prev_incar, bandgap, vasprun, outcar
 
     def _get_structure(self, structure):
-        """Utility method to get the standardized structure."""
+        """Get the standardized structure."""
         if self.sort_structure:
             structure = structure.get_sorted_structure()
 
@@ -445,7 +447,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         return structure
 
     def _get_potcar(self, structure):
-        """Utility method to get the POTCAR."""
+        """Get the POTCAR."""
         elements = [a[0] for a in groupby([s.specie.symbol for s in structure])]
         potcar_symbols = [self._config_dict["POTCAR"].get(el, el) for el in elements]
         potcar = Potcar(potcar_symbols, functional=self.potcar_functional)
@@ -471,7 +473,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         incar_updates: Dict = None,
         bandgap: float = 0.0,
     ):
-        """Utility method to get the INCAR."""
+        """Get the INCAR."""
         previous_incar = {} if previous_incar is None else previous_incar
         incar_updates = {} if incar_updates is None else incar_updates
         incar_settings = dict(self._config_dict["INCAR"])
@@ -525,7 +527,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         structure: Structure,
         added_kpoints: List[Vector3D] = None,
     ) -> Union[Kpoints, None]:
-        """Utility method for getting the kpoints file."""
+        """Get the kpoints file."""
         # Return None if KSPACING is present in the INCAR and no other user k-points
         # settings have been specified, because this will cause VASP to generate the
         # kpoints automatically
