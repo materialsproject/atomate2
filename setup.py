@@ -36,7 +36,7 @@ if __name__ == "__main__":
             "emmet-core>=0.2.1",
         ],
         extras_require={
-            "amset": ["amset", "pydash"],
+            "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
                 "sphinx==3.5.3",
                 "furo==2021.3.20b30",

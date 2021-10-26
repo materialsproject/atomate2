@@ -134,9 +134,7 @@ class ElasticBuilder(Builder):
         elastic_docs = []
         for tasks in grouped:
             elastic_doc = get_elastic_document(tasks, self.symprec, self.fitting_method)
-
-            if elastic_doc is not None:
-                elastic_docs.append(elastic_doc)
+            elastic_docs.append(elastic_doc)
 
         return elastic_docs
 
@@ -179,6 +177,7 @@ def group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
     for task in tasks[1:]:
         orig_structure = get(task, "output.transformations.history.0.input_structure")
 
+        match = False
         for group in grouped_tasks:
             group_orig_structure = get(
                 group[0], "output.transformations.history.0.input_structure"
@@ -195,7 +194,12 @@ def group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
             )
             if lattice_match and coords_match:
                 group.append(task)
+                match = True
                 break
+
+        if not match:
+            # no match; start a new group
+            grouped_tasks.append([task])
 
     return grouped_tasks
 
@@ -234,10 +238,11 @@ def get_elastic_document(
     uuids = []
     job_dirs = []
     for doc in tasks:
-        deformations.append(
-            Deformation(get(doc, "output.transformations.history.0.deformation"))
-        )
-        stresses.append(Stress(get(doc, "output.output.stress")))
+        deformation = get(doc, "output.transformations.history.0.deformation")
+        stress = get(doc, "output.output.stress")
+
+        deformations.append(Deformation(deformation))
+        stresses.append(Stress(stress))
         uuids.append(doc["uuid"])
         job_dirs.append(doc["output"]["dir_name"])
 

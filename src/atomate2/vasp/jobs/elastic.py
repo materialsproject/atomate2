@@ -24,7 +24,7 @@ from atomate2.common.schemas.math import Matrix3D
 from atomate2.settings import settings
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputSetGenerator
-from atomate2.vasp.sets.elastic import ElasticDeformationSetGenerator
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +41,28 @@ class ElasticRelaxMaker(BaseVaspMaker):
     """
     Maker to perform an elastic relaxation.
 
-    This is a tight relaxation where only the atom positions are allowed to relax.
+    The input set is for a tight relaxation, where only the atomic positions are
+    allowed to relax (ISIF=2). Both the k-point mesh density and convergence parameters
+    are stricter than a normal relaxation.
     """
 
-    name = "elastic relax"
+    name: str = "elastic relax"
     input_set_generator: VaspInputSetGenerator = field(
-        default_factory=ElasticDeformationSetGenerator
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings={"grid_density": 7000},
+            user_incar_settings={
+                "IBRION": 2,
+                "ISIF": 2,
+                "ENCUT": 700,
+                "EDIFF": 1e-7,
+                "LAECHG": False,
+                "EDIFFG": -0.001,
+                "LREAL": False,
+                "ALGO": "Normal",
+                "NSW": 99,
+                "LCHARG": False,
+            },
+        )
     )
 
 
@@ -85,12 +101,8 @@ def generate_elastic_deformations(
 
     Returns
     -------
-    Dict[str, Any]
-        A dictionary with the keys:
-
-        - "deformations": containing a list of deformations.
-        - "symmetry_ops": containing a list of symmetry operations or None if
-          symmetry_reduce is False.
+    List[Deformation]
+        A list of deformations.
     """
     if conventional:
         sga = SpacegroupAnalyzer(structure, symprec=symprec)
@@ -208,7 +220,7 @@ def fit_elastic_tensor(
         A pymatgen structure.
     deformation_data
         The deformation data, as a list of dictionaries, each containing the keys
-        "stress", "deformation", and (optionally) "symmetry_ops".
+        "stress", "deformation".
     equilibrium_stress
         The equilibrium stress of the (relaxed) structure, if known.
     order

@@ -1,4 +1,4 @@
-"""Flows for calculating the elastic constant."""
+"""Flows for calculating elastic constants."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ class ElasticMaker(Maker):
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
     """
 
-    name = "elastic"
+    name: str = "elastic"
     order: int = 2
     sym_reduce: bool = True
     symprec: float = settings.SYMPREC
@@ -85,8 +85,7 @@ class ElasticMaker(Maker):
         )
         vasp_deformation_calcs = run_elastic_deformations(
             structure,
-            deformations.output["deformations"],
-            symmetry_ops=deformations.output["symmetry_ops"],
+            deformations.output,
             prev_vasp_dir=prev_vasp_dir,
             elastic_relax_maker=self.elastic_relax_maker,
         )

@@ -13,7 +13,7 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
 from atomate2.vasp.schemas.calculation import VaspObject
 
-__all__ = ["DoubleRelaxMaker"]
+__all__ = ["DoubleRelaxMaker", "BandStructureMaker"]
 
 
 @dataclass
@@ -59,13 +59,47 @@ class DoubleRelaxMaker(Maker):
         return Flow([relax1, relax2], relax2.output, name=self.name)
 
 
+@dataclass
 class BandStructureMaker(Maker):
+    """
+    Maker to generate VASP band structures.
+
+    This is a static calculation followed by two non-self-consistent field calculations,
+    one uniform and one line mode.
+
+    Parameters
+    ----------
+    name
+        Name of the flows produced by this maker.
+    bandstructure_type
+        The type of band structure to generate. Options are "line", "uniform" or "both".
+    static_maker
+        The maker to use for the static calculation.
+    nscf_maker
+        The maker to use for the non-self-consistent field calculations.
+    """
+
     name: str = "band structure"
     bandstructure_type: str = "both"
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     nscf_maker: NonSCFMaker = field(default_factory=NonSCFMaker)
 
     def make(self, structure, prev_vasp_dir=None):
+        """
+        Create a band structure flow.
+
+        Parameters
+        ----------
+        structure
+            A pymatgen structure object.
+        prev_vasp_dir
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A band structure flow.
+        """
         static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
         jobs = [static_job]
 
