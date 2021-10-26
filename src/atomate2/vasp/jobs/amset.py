@@ -30,6 +30,8 @@ __all__ = [
     "StaticDeformationMaker",
     "run_amset_deformations",
     "calculate_deformation_potentials",
+    "calculate_polar_phonon_frequency",
+    "generate_wavefunction_coefficients",
 ]
 
 
