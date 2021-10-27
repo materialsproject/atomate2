@@ -103,7 +103,8 @@ class VaspInputSet(InputSet):
         inputs.update(self.optional_files)
 
         if potcar_spec:
-            inputs["POTCAR"] = "\n".join(self.potcar.symbols)
+            inputs.pop("POTCAR")
+            inputs["POTCAR.spec"] = "\n".join(self.potcar.symbols)
 
         for k, v in inputs.items():
             if v is not None and (overwrite or not (directory / k).exists()):
