@@ -199,18 +199,22 @@ def check_poscar(ref_path: Union[str, Path]):
 def check_potcar(ref_path: Union[str, Path]):
     from pymatgen.io.vasp import Potcar
 
-    ref = Potcar.from_file(ref_path / "inputs" / "POTCAR")
+    if Path(ref_path / "inputs" / "POTCAR").exists():
+        ref = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
+    elif Path(ref_path / "inputs" / "POTCAR.spec").exists():
+        ref = Path(ref_path / "inputs" / "POTCAR.spec").read_text().split("\n")
+    else:
+        raise FileNotFoundError("no reference POTCAR or POTCAR.spec file found")
 
     if Path("POTCAR").exists():
-        user = Potcar.from_file("POTCAR")
-        if user.symbols != ref.symbols:
-            raise ValueError("POTCAR files are inconsistent")
+        user = Potcar.from_file("POTCAR").symbols
     elif Path("POTCAR.spec").exists():
-        user_spec = Path("POTCAR.spec").read_text().split("\n")
-        if user_spec != ref.symbols:
-            raise ValueError("POTCAR symbols are inconsistent")
+        user = Path("POTCAR.spec").read_text().split("\n")
     else:
         raise FileNotFoundError("no POTCAR or POTCAR.spec file found")
+
+    if user != ref:
+        raise ValueError("POTCAR files are inconsistent")
 
 
 def clear_vasp_inputs():
