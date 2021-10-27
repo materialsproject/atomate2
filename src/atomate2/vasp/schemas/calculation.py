@@ -172,17 +172,15 @@ class CalculationInput(BaseModel):
 class RunStatistics(BaseModel):
     """Summary of the run statistics for a VASP calculation."""
 
-    average_memory: float = Field(None, description="The average memory used in kb")
-    max_memory: float = Field(None, description="The maximum memory used in kb")
-    elapsed_time: float = Field(None, description="The real time elapsed in seconds")
-    system_time: float = Field(None, description="The system CPU time in seconds")
+    average_memory: float = Field(0, description="The average memory used in kb")
+    max_memory: float = Field(0, description="The maximum memory used in kb")
+    elapsed_time: float = Field(0, description="The real time elapsed in seconds")
+    system_time: float = Field(0, description="The system CPU time in seconds")
     user_time: float = Field(
-        None, description="The user CPU time spent by VASP in seconds"
+        0, description="The user CPU time spent by VASP in seconds"
     )
-    total_time: float = Field(
-        None, description="The total CPU time for this calculation"
-    )
-    cores: int = Field(None, description="The number of cores used by VASP")
+    total_time: float = Field(0, description="The total CPU time for this calculation")
+    cores: int = Field(0, description="The number of cores used by VASP")
 
     @classmethod
     def from_outcar(cls, outcar: Outcar) -> "RunStatistics":
@@ -209,7 +207,7 @@ class RunStatistics(BaseModel):
             "Total CPU time used (sec)": "total_time",
             "cores": "cores",
         }
-        return cls(**{v: outcar.run_stats.get(k, 0) for k, v in mapping.items()})
+        return cls(**{v: outcar.run_stats.get(k) or 0 for k, v in mapping.items()})
 
 
 class CalculationOutput(BaseModel):
