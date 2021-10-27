@@ -33,7 +33,7 @@ if __name__ == "__main__":
             "monty",
             "jobflow",
             "numpy",
-            "emmet-core>=0.2.1",
+            "click",
         ],
         extras_require={
             "amset": ["amset>=0.4.15", "pydash"],
@@ -72,4 +72,9 @@ if __name__ == "__main__":
         ],
         python_requires=">=3.7",
         tests_require=["pytest"],
+        entry_points={
+            "console_scripts": [
+                "atm = atomate2.cli:cli",
+            ]
+        },
     )

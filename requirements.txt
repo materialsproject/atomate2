@@ -1,7 +1,7 @@
 pydantic==1.8.2
-emmet-core==0.2.1
 pymatgen==2022.0.8
 custodian==2021.2.8
 monty==2021.5.9
 jobflow==0.0.2
 numpy==1.20.3
+click==8.0.3
