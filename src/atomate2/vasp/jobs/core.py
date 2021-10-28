@@ -84,7 +84,11 @@ class NonSCFMaker(BaseVaspMaker):
         if "parse_bandstructure" not in self.task_document_kwargs:
             self.task_document_kwargs["parse_bandstructure"] = mode
 
-        return super().make.original(structure, prev_vasp_dir)
+        # copy previous inputs
+        if "additional_vasp_files" not in self.copy_vasp_kwargs:
+            self.copy_vasp_kwargs["additional_vasp_files"] = ("CHGCAR",)
+
+        return super().make.original(self, structure, prev_vasp_dir)
 
 
 @dataclass
@@ -142,7 +146,7 @@ class HSEBSMaker(BaseVaspMaker):
         ):
             self.copy_vasp_kwargs["additional_vasp_files"] = ("CHGCAR",)
 
-        return super().make.original(structure, prev_vasp_dir)
+        return super().make.original(self, structure, prev_vasp_dir)
 
 
 @dataclass
@@ -150,23 +154,6 @@ class DielectricMaker(BaseVaspMaker):
     """Maker to create dielectric calculation VASP jobs."""
 
     name: str = "dielectric"
-    input_set_generator: StaticSetGenerator = field(default_factory=StaticSetGenerator)
-
-    @job(output_schema=TaskDocument)
-    def make(
-        self,
-        structure: Structure,
-        prev_vasp_dir: Union[str, Path] = None,
-    ):
-        """
-        Run a DFPT dielectric VASP job.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure object.
-        prev_vasp_dir
-            A previous VASP calculation directory to copy output files from.
-        """
-        self.input_set_generator.lepsilon = True
-        return super().make.original(structure, prev_vasp_dir)
+    input_set_generator: StaticSetGenerator = field(
+        default_factory=lambda: StaticSetGenerator(lepsilon=True)
+    )
