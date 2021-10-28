@@ -7,7 +7,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     from atomate2.vasp.schemas.task import TaskDocument
 
     # mapping from job name to directory containing test files
-    ref_paths = {"static": "Si_static"}
+    ref_paths = {"static": "Si_band_structure/static"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {"static": {"incar_settings": ["NSW", "ISMEAR"]}}
@@ -26,4 +26,4 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
-    assert pytest.approx(output1.output.energy, -10.85037078)
+    assert output1.output.energy == pytest.approx(-10.85037078)

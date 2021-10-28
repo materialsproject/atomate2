@@ -4,9 +4,9 @@ import pytest
 @pytest.mark.parametrize(
     "copy_kwargs,files",
     [
-        ({}, ("POSCAR", "INCAR", "KPOINTS", "POTCAR", "OUTCAR", "vasprun.xml")),
-        ({"contcar_to_poscar": False}, ("CONTCAR", "INCAR", "KPOINTS")),
-        ({"additional_vasp_files": ("PROCAR",)}, ("POSCAR", "INCAR", "PROCAR")),
+        ({}, ("POSCAR", "INCAR", "OUTCAR", "vasprun.xml")),
+        ({"contcar_to_poscar": False}, ("CONTCAR", "INCAR")),
+        ({"additional_vasp_files": ("CHGCAR",)}, ("POSCAR", "INCAR", "CHGCAR")),
     ],
 )
 def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
@@ -14,7 +14,7 @@ def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
 
     from atomate2.vasp.file import copy_vasp_outputs
 
-    path = vasp_test_dir / "Si_static" / "outputs"
+    path = vasp_test_dir / "Si_band_structure" / "static" / "outputs"
     copy_vasp_outputs(src_dir=path, **copy_kwargs)
 
     for file in files:
@@ -24,9 +24,9 @@ def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
 @pytest.mark.parametrize(
     "copy_kwargs,files",
     [
-        ({}, ("POSCAR", "INCAR", "KPOINTS", "POTCAR", "OUTCAR", "vasprun.xml")),
+        ({}, ("POSCAR", "INCAR", "KPOINTS", "OUTCAR", "vasprun.xml")),
         ({"contcar_to_poscar": False}, ("CONTCAR", "INCAR", "KPOINTS")),
-        ({"additional_vasp_files": ("PROCAR",)}, ("POSCAR", "INCAR", "PROCAR")),
+        ({"additional_vasp_files": ("vasp.out",)}, ("POSCAR", "INCAR", "vasp.out")),
     ],
 )
 def test_copy_vasp_outputs_double(vasp_test_dir, tmp_dir, copy_kwargs, files):
@@ -34,7 +34,7 @@ def test_copy_vasp_outputs_double(vasp_test_dir, tmp_dir, copy_kwargs, files):
 
     from atomate2.vasp.file import copy_vasp_outputs
 
-    path = vasp_test_dir / "Si_structure_optimization_double" / "outputs"
+    path = vasp_test_dir / "Si_old_double_relax" / "outputs"
     copy_vasp_outputs(src_dir=path, **copy_kwargs)
 
     for file in files:
@@ -44,10 +44,10 @@ def test_copy_vasp_outputs_double(vasp_test_dir, tmp_dir, copy_kwargs, files):
 def test_get_largest_relax_extension(vasp_test_dir):
     from atomate2.vasp.file import get_largest_relax_extension
 
-    path = vasp_test_dir / "Si_structure_optimization_double" / "outputs"
+    path = vasp_test_dir / "Si_old_double_relax" / "outputs"
     extension = get_largest_relax_extension(directory=path)
     assert extension == ".relax2"
 
-    path = vasp_test_dir / "Si_static" / "outputs"
+    path = vasp_test_dir / "Si_band_structure" / "static" / "outputs"
     extension = get_largest_relax_extension(directory=path)
     assert extension == ""

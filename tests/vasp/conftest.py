@@ -14,7 +14,11 @@ def vasp_test_dir(test_dir):
     return test_dir / "vasp"
 
 
-@pytest.fixture
+_REF_PATHS = {}
+_FAKE_RUN_VASP_KWARGS = {}
+
+
+@pytest.fixture(scope="function")
 def mock_vasp(monkeypatch, vasp_test_dir):
     """
     This fixture allows one to mock (fake) running VASP.
@@ -61,15 +65,12 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     import atomate2.vasp.run
     from atomate2.vasp.sets.base import VaspInputSet
 
-    ref_paths = {}
-    fake_run_vasp_kwargs = {}
-
     def mock_run_vasp():
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
-        ref_path = vasp_test_dir / ref_paths[name]
-        fake_run_vasp(ref_path, **fake_run_vasp_kwargs.get(name, {}))
+        ref_path = vasp_test_dir / _REF_PATHS[name]
+        fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
     write_input_orig = VaspInputSet.write_input
 
@@ -80,15 +81,19 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSet, "write_input", mock_write_input)
 
-    def _run(_ref_paths, _fake_run_vasp_kwargs=None):
-        if _fake_run_vasp_kwargs is None:
-            _fake_run_vasp_kwargs = {}
+    def _run(ref_paths, fake_run_vasp_kwargs=None):
+        if fake_run_vasp_kwargs is None:
+            fake_run_vasp_kwargs = {}
 
-        nonlocal ref_paths, fake_run_vasp_kwargs
-        ref_paths = _ref_paths
-        fake_run_vasp_kwargs = _fake_run_vasp_kwargs
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs)
+        print(ref_paths)
 
     yield _run
+
+    monkeypatch.undo()
+    _REF_PATHS.clear()
+    _FAKE_RUN_VASP_KWARGS.clear()
 
 
 def fake_run_vasp(
@@ -188,11 +193,21 @@ def check_kpoints(ref_path: Union[str, Path]):
 
 
 def check_poscar(ref_path: Union[str, Path]):
+    import numpy as np
     from pymatgen.io.vasp import Poscar
+    from pymatgen.util.coord import pbc_diff
 
     user = Poscar.from_file("POSCAR")
     ref = Poscar.from_file(ref_path / "inputs" / "POSCAR")
-    if user.natoms != ref.natoms or user.site_symbols != ref.site_symbols:
+
+    if (
+        user.natoms != ref.natoms
+        or user.site_symbols != ref.site_symbols
+        or np.any(
+            np.abs(pbc_diff(user.structure.frac_coords, ref.structure.frac_coords))
+            > 1e-3
+        )
+    ):
         raise ValueError("POSCAR files are inconsistent")
 
 

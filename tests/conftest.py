@@ -96,12 +96,10 @@ def log_to_stdout():
 
 
 @pytest.fixture(scope="function")
-def si_structure():
+def si_structure(test_dir):
     from pymatgen.core import Structure
 
-    return Structure(
-        [3, 0, 0, 0, 3, 0, 0, 0, 3], ["Si", "Si"], [[0, 0, 0], [0.5, 0.5, 0.5]]
-    )
+    return Structure.from_file(test_dir / "structures" / "Si.cif")
 
 
 def generate_vasp_test():

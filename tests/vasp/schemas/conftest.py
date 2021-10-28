@@ -43,7 +43,7 @@ class SchemaTestData:
 
 
 class SiOptimizeDouble(SchemaTestData):
-    folder = "Si_structure_optimization_double"
+    folder = "Si_old_double_relax"
     task_files = {
         "relax1": {
             "vasprun_file": "vasprun.xml.relax1.gz",
@@ -101,7 +101,7 @@ class SiOptimizeDouble(SchemaTestData):
 class SiNonSCFUniform(SchemaTestData):
     from atomate2.vasp.schemas.calculation import VaspObject
 
-    folder = "Si_nscf_uniform"
+    folder = "Si_band_structure/non-scf_uniform"
     task_files = {
         "standard": {
             "vasprun_file": "vasprun.xml.gz",
@@ -109,12 +109,12 @@ class SiNonSCFUniform(SchemaTestData):
             "volumetric_files": ["CHGCAR.gz"],
         }
     }
-    objects = {"standard": [VaspObject.DOS, VaspObject.BANDSTRUCTURE]}
+    objects = {"standard": []}
     task_doc = {
         "calcs_reversed": [
             {
                 "output": {
-                    "vbm": 5.614,
+                    "vbm": 5.6162,
                     "cbm": 6.2243,
                     "bandgap": 0.6103,
                     "is_gap_direct": False,
@@ -131,18 +131,18 @@ class SiNonSCFUniform(SchemaTestData):
                     "incar": {"NSW": 0},
                     "nkpoints": 220,
                     "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
-                    "structure": {"volume": 40.90250280144601},
+                    "structure": {"volume": 40.88829843008916},
                 },
             }
         ],
         "analysis": {"delta_volume": 0, "max_force": 0.5350159115036506},
         "input": {
-            "structure": {"volume": 40.90250280144601},
+            "structure": {"volume": 40.88829843008916},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 0},
         },
         "output": {
-            "structure": {"volume": 40.90250280144601},
+            "structure": {"volume": 40.88829843008916},
             "energy": -10.85064059,
             "bandgap": 0.6103,
         },
@@ -154,7 +154,7 @@ class SiNonSCFUniform(SchemaTestData):
 class SiStatic(SchemaTestData):
     from atomate2.vasp.schemas.calculation import VaspObject
 
-    folder = "Si_static"
+    folder = "Si_band_structure/static"
     task_files = {
         "standard": {
             "vasprun_file": "vasprun.xml.gz",
@@ -162,12 +162,12 @@ class SiStatic(SchemaTestData):
             "volumetric_files": ["CHGCAR.gz"],
         }
     }
-    objects = {"standard": [VaspObject.DOS, VaspObject.BANDSTRUCTURE]}
+    objects = {"standard": []}
     task_doc = {
         "calcs_reversed": [
             {
                 "output": {
-                    "vbm": 5.6138,
+                    "vbm": 6.2335,
                     "cbm": 6.2644,
                     "bandgap": 0.6506,
                     "is_gap_direct": False,
@@ -181,26 +181,26 @@ class SiStatic(SchemaTestData):
                     },
                 },
                 "input": {
-                    "incar": {"NSW": 0},
+                    "incar": {"NSW": 1},
                     "nkpoints": 29,
                     "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
-                    "structure": {"volume": 40.90250280144601},
+                    "structure": {"volume": 40.88829843008916},
                 },
             }
         ],
         "analysis": {"delta_volume": 0, "max_force": 0.0},
         "input": {
-            "structure": {"volume": 40.90250280144601},
+            "structure": {"volume": 40.88829843008916},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 0},
         },
         "output": {
-            "structure": {"volume": 40.90250280144601},
+            "structure": {"volume": 40.88829843008916},
             "energy": -10.84678256,
             "bandgap": 0.6506,
         },
         "custodian": [{"job": {"settings_override": None, "suffix": ""}}],
-        "included_objects": (VaspObject.DOS, VaspObject.BANDSTRUCTURE),
+        "included_objects": (),
     }
 
 
