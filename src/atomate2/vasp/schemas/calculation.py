@@ -596,7 +596,7 @@ def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dict]
     nsw = vasprun.incar.get("NSW", 0)
     dos = None
     if parse_mode is True or (parse_mode == "auto" and nsw < 1):
-        dos = vasprun.complete_dos.as_dict()
+        dos = vasprun.complete_dos
     return dos
 
 
@@ -621,12 +621,12 @@ def _parse_bandstructure(
 
         # only save the bandstructure if not moving ions
         if vasprun.incar.get("NSW", 0) <= 1:
-            return bs.as_dict()
+            return bs
 
     elif parse_mode:
         # legacy line/True behavior for bandstructure_mode
         bs_vrun = BSVasprun(vasprun_file, parse_projected_eigen=True)
         bs = bs_vrun.get_band_structure(line_mode=(parse_mode == "line"))
-        return bs.as_dict()
+        return bs
 
     return None
