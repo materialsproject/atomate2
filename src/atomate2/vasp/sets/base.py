@@ -6,7 +6,7 @@ from copy import deepcopy
 from itertools import groupby
 from math import pi
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import numpy as np
 from monty.io import zopen
@@ -22,7 +22,6 @@ from pymatgen.io.vasp.sets import (
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
-from atomate2.common.schemas.math import Vector3D
 from atomate2.common.sets import InputSet, InputSetGenerator
 from atomate2.settings import settings
 
@@ -342,16 +341,24 @@ class VaspInputSetGenerator(InputSetGenerator):
         structure, prev_incar, bandgap, vasprun, outcar = self._get_previous(
             structure, prev_dir
         )
-        updates = self.get_incar_updates(
+        incar_updates = self.get_incar_updates(
             structure,
             prev_incar=prev_incar,
             bandgap=bandgap,
             vasprun=vasprun,
             outcar=outcar,
         )
-        kpoints = self._get_kpoints(structure)
+        kpoints_updates = self.get_kpoints_updates(
+            structure,
+            prev_incar=prev_incar,
+            bandgap=bandgap,
+            vasprun=vasprun,
+            outcar=outcar,
+        )
+        kspacing = self._kspacing(incar_updates)
+        kpoints = self._get_kpoints(structure, kpoints_updates, kspacing)
         incar = self._get_incar(
-            structure, kpoints, prev_incar, updates, bandgap=bandgap
+            structure, kpoints, prev_incar, incar_updates, bandgap=bandgap
         )
         return VaspInputSet(
             incar=incar,
@@ -390,6 +397,39 @@ class VaspInputSetGenerator(InputSetGenerator):
             A dictionary of updates to apply.
         """
         raise NotImplementedError
+
+    def get_kpoints_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0.0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the kpoints configuration for this calculation type.
+
+        Note, these updates will be ignored if the user has set user_kpoint_settings.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply to the KPOINTS config.
+        """
+        return {}
 
     def get_nelect(self, structure: Structure) -> float:
         """
@@ -526,28 +566,29 @@ class VaspInputSetGenerator(InputSetGenerator):
     def _get_kpoints(
         self,
         structure: Structure,
-        added_kpoints: List[Vector3D] = None,
+        kpoints_updates: Optional[Dict[str, Any]],
+        kspacing: Optional[float],
     ) -> Union[Kpoints, None]:
         """Get the kpoints file."""
-        # Return None if KSPACING is present in the INCAR and no other user k-points
-        # settings have been specified, because this will cause VASP to generate the
-        # kpoints automatically
-        if not self.user_kpoints_settings and (
-            self.user_incar_settings.get("KSPACING", 0) is not None
-            or self._config_dict["INCAR"].get("KSPACING")
-        ):
-            return None
+        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
 
         # use user setting if set otherwise default to base config settings
-        if self.user_incar_settings != {}:
+        if self.user_kpoints_settings != {}:
             kconfig = deepcopy(self.user_kpoints_settings)
         else:
-            kconfig = deepcopy(self._config_dict.get("KPOINTS"))
+            # apply updates to k-points config
+            kconfig = deepcopy(self._config_dict.get("KPOINTS", {}))
+            kconfig.update(kpoints_updates)
+
+        # Return None if KSPACING is set and no other user k-points settings have been
+        # specified, because this will cause VASP to generate the kpoints automatically
+        if kspacing and not self.user_kpoints_settings:
+            return None
 
         if isinstance(kconfig, Kpoints):
             return kconfig
 
-        added_kpoints = [] if added_kpoints is None else added_kpoints
+        added_kpoints = kconfig.get("added_kpoints", [])
         if len(added_kpoints) > 0 and kconfig.get("length"):
             raise ValueError(
                 "added_kpoints only compatible with grid_density, reciprocal_density "
@@ -656,9 +697,20 @@ class VaspInputSetGenerator(InputSetGenerator):
                 "Invalid k-point generation algo. Supported Keys are 'grid_density' "
                 "for Kpoints.automatic_density generation, 'reciprocal_density' for "
                 "KPoints.automatic_density_by_vol generation, 'length' for "
-                "Kpoints.automatic generation, 'line_density' for line mode generation."
+                "Kpoints.automatic generation, 'line_density' for line mode generation,"
+                " 'added_kpoints' for specific k-points to include."
             )
         return kpoints
+
+    def _kspacing(self, incar_updates):
+        """Get KSPACING value based on the config dict, updates and user settings."""
+        if "KSPACING" in self.user_incar_settings:
+            return self.user_incar_settings["KSPACING"]
+        if "KSPACING" in incar_updates:
+            return incar_updates["KSPACING"]
+        if "KSPACING" in self._config_dict["INCAR"]:
+            return self._config_dict["INCAR"]["KSPACING"]
+        return None
 
 
 def _get_kspacing(bandgap: float) -> float:
@@ -771,10 +823,7 @@ def _apply_incar_updates(incar, updates, skip=None):
             continue
 
         if v is None:
-            try:
-                del incar[k]
-            except KeyError:
-                incar[k] = v
+            incar.pop(k, None)
         else:
             incar[k] = v
 

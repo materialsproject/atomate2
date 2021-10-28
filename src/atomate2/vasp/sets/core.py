@@ -1,15 +1,14 @@
 """Module defining core VASP input set generators."""
 
 from copy import deepcopy
-from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
 import numpy as np
 from pymatgen.core import Structure
-from pymatgen.io.vasp import Outcar, Poscar, Vasprun
+from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.vasp.sets.base import VaspInputSet, VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputSetGenerator
 
 __all__ = [
     "RelaxSetGenerator",
@@ -215,20 +214,44 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         if self.mode not in supported_modes:
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
-        self._config_dict["INCAR"].pop("KSPACING")
-        if mode == "line":
-            self._config_dict["KPOINTS"] = {"line_density": self.line_density}
+    def get_kpoints_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0.0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the kpoints configuration for a non-self consistent VASP job.
 
-        elif mode == "boltztrap":
-            self._config_dict["KPOINTS"] = {
-                "explicit": True,
-                "reciprocal_density": reciprocal_density,
-            }
+        Note, these updates will be ignored if the user has set user_kpoint_settings.
 
-        else:
-            self._config_dict["KPOINTS"] = {
-                "reciprocal_density": self.reciprocal_density
-            }
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply to the KPOINTS config.
+        """
+        if self.mode == "line":
+            return {"line_density": self.line_density}
+
+        elif self.mode == "boltztrap":
+            return {"explicit": True, "reciprocal_density": self.reciprocal_density}
+
+        return {"reciprocal_density": self.reciprocal_density}
 
     def get_incar_updates(
         self,
@@ -267,6 +290,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
             "NSW": 0,
             "ISYM": 0,
             "ICHARG": 11,
+            "KSPACING": None,
         }
 
         nedos = 2000
@@ -399,12 +423,53 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         if self.mode not in supported_modes:
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
-        self._config_dict["INCAR"].pop("KSPACING")
-        self._config_dict["KPOINTS"] = {"reciprocal_density": self.reciprocal_density}
+    def get_kpoints_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0.0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the kpoints configuration for a VASP HSE06 band structure job.
 
-        if mode == "line":
+        Note, these updates will be ignored if the user has set user_kpoint_settings.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply to the KPOINTS config.
+        """
+        kpoints: Dict[str, Any] = {"reciprocal_density": self.reciprocal_density}
+
+        if self.mode == "line":
             # add line_density on top of reciprocal density
-            self._config_dict["KPOINTS"]["line_density"] = self.line_density
+            kpoints["line_density"] = self.line_density
+
+        added_kpoints = deepcopy(self.added_kpoints)
+        if vasprun is not None and self.mode == "gap":
+            bs = vasprun.get_band_structure()
+            if not bs.is_metal():
+                added_kpoints.append(bs.get_vbm()["kpoint"].frac_coords)
+                added_kpoints.append(bs.get_cbm()["kpoint"].frac_coords)
+
+        kpoints["added_kpoints"] = added_kpoints
+
+        return kpoints
 
     def get_incar_updates(
         self,
@@ -443,53 +508,5 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             "LHFCALC": True,
             "LCHARG": False,
             "NELMIN": 5,
+            "KSPACING": None,
         }
-
-    def get_input_set(  # type: ignore
-        self, structure: Structure = None, prev_dir: Union[str, Path] = None
-    ):
-        """
-        Get a VASP input set.
-
-        Note, if both ``structure`` and ``prev_dir`` are set, then the structure
-        specified will be preferred over the final structure from the last VASP run.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_dir
-            A previous directory to generate the input set from.
-
-        Returns
-        -------
-        VaspInputSet
-            A VASP input set.
-        """
-        structure, prev_incar, bandgap, vasprun, outcar = self._get_previous(
-            structure, prev_dir
-        )
-        added_kpoints = deepcopy(self.added_kpoints)
-        if vasprun is not None and self.mode == "gap":
-            bs = vasprun.get_band_structure()
-            if not bs.is_metal():
-                added_kpoints.append(bs.get_vbm()["kpoint"].frac_coords)
-                added_kpoints.append(bs.get_cbm()["kpoint"].frac_coords)
-
-        updates = self.get_incar_updates(
-            structure,
-            prev_incar=prev_incar,
-            bandgap=bandgap,
-            vasprun=vasprun,
-            outcar=outcar,
-        )
-        kpoints = self._get_kpoints(structure, added_kpoints=added_kpoints)
-        incar = self._get_incar(
-            structure, kpoints, prev_incar, updates, bandgap=bandgap
-        )
-        return VaspInputSet(
-            incar=incar,
-            kpoints=kpoints,
-            poscar=Poscar(structure),
-            potcar=self._get_potcar(structure),
-        )
