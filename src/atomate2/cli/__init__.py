@@ -7,7 +7,7 @@ from atomate2.cli.dev import dev
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
 def cli():
-    """Command line interface for atomate2."""
+    """Command-line interface for atomate2."""
 
 
 cli.add_command(dev)

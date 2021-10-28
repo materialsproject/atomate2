@@ -142,7 +142,7 @@ def test_my_flow(mock_vasp, clean_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # !!! Insert code to generate flow/job below, i.e.:
-    job = MyMaker.make(structure)
+    job = MyMaker().make(structure)
 
     # Run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -150,7 +150,7 @@ def test_my_flow(mock_vasp, clean_dir):
     # !!! Insert additional validation on the outputs of the jobs; e.g.,
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
-    assert pytest.approx(output1.output.energy, -10.85037078)
+    assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
     print(test_function_str)
