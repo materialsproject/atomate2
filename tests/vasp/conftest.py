@@ -217,19 +217,19 @@ def check_potcar(ref_path: Union[str, Path]):
     if Path(ref_path / "inputs" / "POTCAR").exists():
         ref = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
     elif Path(ref_path / "inputs" / "POTCAR.spec").exists():
-        ref = Path(ref_path / "inputs" / "POTCAR.spec").read_text().split("\n")
+        ref = Path(ref_path / "inputs" / "POTCAR.spec").read_text().strip().split("\n")
     else:
         raise FileNotFoundError("no reference POTCAR or POTCAR.spec file found")
 
     if Path("POTCAR").exists():
         user = Potcar.from_file("POTCAR").symbols
     elif Path("POTCAR.spec").exists():
-        user = Path("POTCAR.spec").read_text().split("\n")
+        user = Path("POTCAR.spec").read_text().strip().split("\n")
     else:
         raise FileNotFoundError("no POTCAR or POTCAR.spec file found")
 
     if user != ref:
-        raise ValueError("POTCAR files are inconsistent")
+        raise ValueError(f"POTCAR files are inconsistent: {user} != {ref}")
 
 
 def clear_vasp_inputs():
