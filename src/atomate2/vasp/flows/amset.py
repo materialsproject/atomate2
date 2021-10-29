@@ -23,7 +23,7 @@ from atomate2.vasp.jobs.amset import (
     run_amset_deformations,
 )
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker
+from atomate2.vasp.jobs.core import DielectricMaker, HSEBSMaker, StaticMaker
 
 __all__ = ["VaspAmsetMaker", "DeformationPotentialMaker"]
 
@@ -120,15 +120,47 @@ class VaspAmsetMaker(Maker):
     ----------
     name
         Name of the flows produced by this maker.
-    symprec
-        Symmetry precision to use in the reduction of symmetry.
-    fit_elastic_tensor_kwargs
-        Keyword arguments passed to :obj:`fit_elastic_tensor`.
+    doping
+        Doping concentrations at which to calculate transport properties.
+    temperatures
+        Temperatures at which to calculate transport properties.
+    use_hse_gap
+        Whether to perform a HSE06 calculation to calculate the band gap for use in
+        AMSET. This can impact the results for small band gap materials.
+    static_maker
+        The maker to use for the initial static calculation.
+    dense_uniform_maker
+        The maker to use for dense uniform calculations.
+    dielectric_maker
+        The maker to use for calculating dielectric constants.
+    elastic_maker
+        The maker to use for calculating elastic constants.
+    deformation_potential_maker
+        The maker to use for calculating acoustic deformation potentials.
+    hse_gap_maker
+        The maker to use for calculating the band gap using HSE06. Note, this maker is
+        only used if ``use_hse_gap=True``.
+    amset_maker
+        The maker to use for running AMSET calculations.
     """
 
     name: str = "VASP amset"
-    doping: Tuple[float, ...] = (1e16, 1e17, 1e18, 1e19, 1e20, 1e21)
+    doping: Tuple[float, ...] = (
+        1e16,
+        1e17,
+        1e18,
+        1e19,
+        1e20,
+        1e21,
+        -1e16,
+        -1e17,
+        -1e18,
+        -1e19,
+        -1e20,
+        -1e21,
+    )
     temperatures: Tuple[float, ...] = (200, 300, 400, 500, 600, 700, 800, 900, 1000)
+    use_hse_gap: bool = True
     amset_settings: dict = field(default_factory=dict)
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=DenseUniformMaker)
@@ -137,6 +169,7 @@ class VaspAmsetMaker(Maker):
     deformation_potential_maker: DeformationPotentialMaker = field(
         default_factory=DeformationPotentialMaker
     )
+    hse_gap_maker: BaseVaspMaker = field(default_factory=HSEBSMaker)
     amset_maker: AmsetMaker = field(default_factory=AmsetMaker)
 
     def make(
@@ -204,6 +237,17 @@ class VaspAmsetMaker(Maker):
             high_freq_dielectric,
         )
 
+        jobs = [
+            static,
+            dense_bs,
+            elastic,
+            dielectric,
+            phonon_frequency,
+            wavefunction,
+            deformation,
+            static_dielectric,
+        ]
+
         # compile all property calculations and generate settings for AMSET
         # set doping and temperature but be careful not to override user selections
         settings = {
@@ -215,6 +259,17 @@ class VaspAmsetMaker(Maker):
             "static_dielectric": static_dielectric.output,
             "deformation": "deformation.h5",
         }
+
+        if self.use_hse_gap and "bandgap" not in self.amset_settings:
+            gap = self.hse_gap_maker.make(
+                dense_bs.output.structure,
+                prev_vasp_dir=dense_bs.output.dir_name,
+                mode="gap",
+            )
+            settings["bandgap"] = gap.output.output.bandgap
+            jobs.append(gap)
+
+        # apply the user settings
         settings.update(self.amset_settings)
 
         # amset transport properties
@@ -223,19 +278,6 @@ class VaspAmsetMaker(Maker):
             wavefunction_dir=wavefunction.output["dir_name"],
             deformation_dir=deformation.output["dir_name"],
         )
+        jobs.append(amset)
 
-        return Flow(
-            jobs=[
-                static,
-                dense_bs,
-                elastic,
-                dielectric,
-                phonon_frequency,
-                wavefunction,
-                deformation,
-                static_dielectric,
-                amset,
-            ],
-            output=amset.output,
-            name=self.name,
-        )
+        return Flow(jobs, output=amset.output, name=self.name)
