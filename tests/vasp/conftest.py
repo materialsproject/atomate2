@@ -87,7 +87,6 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
         _REF_PATHS.update(ref_paths)
         _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs)
-        print(ref_paths)
 
     yield _run
 

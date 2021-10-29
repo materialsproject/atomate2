@@ -91,3 +91,33 @@ def test_dielectric(mock_vasp, clean_dir, si_structure):
         [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
         atol=0.01,
     )
+
+
+def test_hse_relax(mock_vasp, clean_dir, si_structure):
+    from jobflow import run_locally
+
+    from atomate2.vasp.jobs.core import HSERelaxMaker
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"hse relax": "Si_hse_relax"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"hse relax": {"incar_settings": ["NSW", "ISMEAR"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate job
+    job = HSERelaxMaker().make(si_structure)
+    job.maker.input_set_generator.user_incar_settings["KSPACING"] = 0.4
+
+    # Run the job and ensure that it finished running successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # validation on the output of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, TaskDocument)
+    assert output1.output.energy == approx(-12.5326576)
+    assert len(output1.calcs_reversed[0].output.ionic_steps) == 3
+    assert output1.input.parameters["NSW"] > 1
