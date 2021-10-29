@@ -271,7 +271,7 @@ class CalculationOutput(BaseModel):
         description="Normal mode eigenvalues of phonon modes at Gamma. "
         "Note the unit changed between VASP 5 and 6.",
     )
-    normalmode_eigenvecs: List[Vector3D] = Field(
+    normalmode_eigenvecs: List[List[Vector3D]] = Field(
         None, description="Normal mode eigenvectors of phonon modes at Gamma"
     )
     run_stats: RunStatistics = Field(
