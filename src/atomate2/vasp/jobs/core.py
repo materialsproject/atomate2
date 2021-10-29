@@ -16,6 +16,7 @@ from atomate2.vasp.sets.base import VaspInputSetGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSERelaxSetGenerator,
+    HSEStaticSetGenerator,
     NonSCFSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
@@ -23,7 +24,15 @@ from atomate2.vasp.sets.core import (
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["StaticMaker", "RelaxMaker", "NonSCFMaker", "DielectricMaker", "HSEBSMaker"]
+__all__ = [
+    "StaticMaker",
+    "RelaxMaker",
+    "NonSCFMaker",
+    "DielectricMaker",
+    "HSEBSMaker",
+    "HSERelaxMaker",
+    "HSEStaticMaker",
+]
 
 
 @dataclass
@@ -94,11 +103,21 @@ class NonSCFMaker(BaseVaspMaker):
 
 @dataclass
 class HSERelaxMaker(BaseVaspMaker):
-    """Maker to create DFPT VASP jobs."""
+    """Maker to create HSE06 relaxation jobs."""
 
     name: str = "hse relax"
     input_set_generator: VaspInputSetGenerator = field(
         default_factory=HSERelaxSetGenerator
+    )
+
+
+@dataclass
+class HSEStaticMaker(BaseVaspMaker):
+    """Maker to create HSE06 static jobs."""
+
+    name: str = "hse static"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=HSEStaticSetGenerator
     )
 
 
@@ -141,6 +160,7 @@ class HSEBSMaker(BaseVaspMaker):
                 "directory from which to extract the VBM and CBM k-points. This "
                 "calculation will instead be a standard uniform calculation."
             )
+            mode = "uniform"
 
         if "parse_dos" not in self.task_document_kwargs:
             # parse DOS only for uniform band structure

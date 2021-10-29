@@ -10,7 +10,13 @@ from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
+from atomate2.vasp.jobs.core import (
+    HSEBSMaker,
+    HSEStaticMaker,
+    NonSCFMaker,
+    RelaxMaker,
+    StaticMaker,
+)
 from atomate2.vasp.schemas.calculation import VaspObject
 
 __all__ = ["DoubleRelaxMaker", "BandStructureMaker"]
@@ -75,14 +81,14 @@ class BandStructureMaker(Maker):
         The type of band structure to generate. Options are "line", "uniform" or "both".
     static_maker
         The maker to use for the static calculation.
-    nscf_maker
+    bs_maker
         The maker to use for the non-self-consistent field calculations.
     """
 
     name: str = "band structure"
     bandstructure_type: str = "both"
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
-    nscf_maker: NonSCFMaker = field(default_factory=NonSCFMaker)
+    bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
     def make(self, structure, prev_vasp_dir=None):
         """
@@ -105,7 +111,7 @@ class BandStructureMaker(Maker):
 
         outputs = {}
         if self.bandstructure_type in ("both", "uniform"):
-            uniform_job = self.nscf_maker.make(
+            uniform_job = self.bs_maker.make(
                 structure, prev_vasp_dir=static_job.output.dir_name, mode="uniform"
             )
             uniform_job.name += " uniform"
@@ -117,7 +123,7 @@ class BandStructureMaker(Maker):
             outputs.update(output)
 
         if self.bandstructure_type in ("both", "line"):
-            line_job = self.nscf_maker.make(
+            line_job = self.bs_maker.make(
                 structure, prev_vasp_dir=static_job.output.dir_name, mode="line"
             )
             line_job.name += " line"
@@ -134,3 +140,29 @@ class BandStructureMaker(Maker):
             )
 
         return Flow(jobs, outputs, name=self.name)
+
+
+@dataclass
+class HSEBandStructureMaker(BandStructureMaker):
+    """
+    Maker to generate VASP HSE band structures.
+
+    This is a HSE06 static calculation followed by one HSE06 uniform calculation and
+    one HSE06 line mode calculation.
+
+    Parameters
+    ----------
+    name
+        Name of the flows produced by this maker.
+    bandstructure_type
+        The type of band structure to generate. Options are "line", "uniform" or "both".
+    static_maker
+        The maker to use for the static calculation.
+    bs_maker
+        The maker to use for the line and uniform band structure calculations.
+    """
+
+    name: str = "hse band structure"
+    bandstructure_type: str = "both"
+    static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
+    bs_maker: BaseVaspMaker = field(default_factory=HSEBSMaker)

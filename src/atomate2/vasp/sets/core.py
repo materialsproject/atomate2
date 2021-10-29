@@ -1,7 +1,7 @@
 """Module defining core VASP input set generators."""
 
 from copy import deepcopy
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from pymatgen.core import Structure
@@ -16,6 +16,7 @@ __all__ = [
     "StaticSetGenerator",
     "NonSCFSetGenerator",
     "HSERelaxSetGenerator",
+    "HSEStaticSetGenerator",
     "HSEBSSetGenerator",
 ]
 
@@ -293,25 +294,18 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
             "KSPACING": None,
         }
 
-        nedos = 2000
-        if vasprun is not None:
-            # automatic setting of nedos using the energy range and the energy step
-            emax = max([eigs.max() for eigs in vasprun.eigenvalues.values()])
-            emin = min([eigs.min() for eigs in vasprun.eigenvalues.values()])
-            nedos = int((emax - emin) / self.dedos)
+        # turn off spin when magmom for every site is smaller than 0.02.
+        updates["ISPIN"] = _get_ispin(vasprun, outcar)
 
+        if vasprun is not None:
             # set nbands
             nbands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
             updates["NBANDS"] = nbands
 
-        if outcar is not None and outcar.magnetization is not None:
-            # Turn off spin when magmom for every site is smaller than 0.02.
-            site_magmom = np.array([i["tot"] for i in outcar.magnetization])
-            updates["ISPIN"] = 2 if np.any(np.abs(site_magmom) > 0.02) else 1
-        elif vasprun is not None:
-            updates["ISPIN"] = 2 if vasprun.is_spin else 1
-
         if self.mode == "uniform":
+            # automatic setting of nedos using the energy range and the energy step
+            nedos = _get_nedos(vasprun, self.dedos)
+
             # use tetrahedron method for DOS and optics calculations
             updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": nedos})
 
@@ -372,6 +366,52 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
         }
 
 
+class HSEStaticSetGenerator(VaspInputSetGenerator):
+    """Class to generate VASP HSE06 static input sets."""
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a VASP HSE06 static job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {
+            "NSW": 1,
+            "ALGO": "All",
+            "GGA": "PE",
+            "HFSCREEN": 0.2,
+            "LHFCALC": True,
+            "IBRION": 2,
+            "PRECFOCK": "Fast",
+            "ISMEAR": -5,
+            "LORBIT": 11,
+            "LCHARG": True,
+        }
+
+
 class HSEBSSetGenerator(VaspInputSetGenerator):
     """
     Class to generate VASP HSE06 band structure input sets.
@@ -384,7 +424,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     kpoints (e.g., corresponding to known VBM/CBM) to the uniform grid that have zero
     weight (e.g., for better gap estimate).
 
-    The "gap" mode behaves just like the "Uniform" mode, however, if starting from a
+    The "gap" mode behaves just like the "uniform" mode, however, if starting from a
     previous calculation, the VBM and CBM k-points will automatically be added to
     ``added_kpoints``.
 
@@ -395,10 +435,17 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     ----------
     mode
         Type of band structure mode. Options are "line", "uniform", or "gap".
+    dedos
+        Energy difference used to set NEDOS, based on the total energy range.
     reciprocal_density
         Density of k-mesh by reciprocal volume.
     line_density
         Line density for line mode band structure.
+    optics
+        Whether to add LOPTICS (used for calculating optical response).
+    nbands_factor
+        Multiplicative factor for NBANDS when starting from a previous calculation.
+        Choose a higher number if you are doing an LOPTICS calculation.
     added_kpoints
         A list of kpoints in fractional coordinates to add as zero-weighted points.
     **kwargs
@@ -408,15 +455,21 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     def __init__(
         self,
         mode: str = "gap",
-        reciprocal_density: int = 50,
-        line_density: int = 20,
+        dedos: float = 0.005,
+        reciprocal_density=50,
+        line_density=20,
+        optics: bool = False,
+        nbands_factor: float = 1.2,
         added_kpoints: List[Vector3D] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.mode = mode
-        self.reciprocal_density = reciprocal_density
+        self.mode = mode.lower()
+        self.dedos = dedos
         self.line_density = line_density
+        self.reciprocal_density = reciprocal_density
+        self.optics = optics
+        self.nbands_factor = nbands_factor
         self.added_kpoints = [] if added_kpoints is None else added_kpoints
 
         supported_modes = ("line", "uniform", "gap")
@@ -500,7 +553,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {
+        updates = {
             "NSW": 0,
             "ALGO": "All",
             "GGA": "PE",
@@ -510,3 +563,51 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             "NELMIN": 5,
             "KSPACING": None,
         }
+
+        # turn off spin when magmom for every site is smaller than 0.02.
+        updates["ISPIN"] = _get_ispin(vasprun, outcar)
+
+        if self.mode == "uniform" and len(self.added_kpoints) == 0:
+            # automatic setting of nedos using the energy range and the energy step
+            nedos = _get_nedos(vasprun, self.dedos)
+
+            # use tetrahedron method for DOS and optics calculations
+            updates.update({"ISMEAR": -5, "NEDOS": nedos})
+
+        else:
+            # if line mode or explicit k-points (gap) can't use ISMEAR=-5
+            # use small sigma to avoid partial occupancies for small band gap materials
+            updates.update({"ISMEAR": 0, "SIGMA": 0.01})
+
+        if vasprun is not None:
+            # set nbands
+            nbands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
+            updates["NBANDS"] = nbands
+
+        if self.optics:
+            updates["LOPTICS"] = True
+
+        updates["MAGMOM"] = None
+
+        return updates
+
+
+def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
+    """Automatic setting of nedos using the energy range and the energy step."""
+    if vasprun is None:
+        return 2000
+
+    emax = max([eigs.max() for eigs in vasprun.eigenvalues.values()])
+    emin = min([eigs.min() for eigs in vasprun.eigenvalues.values()])
+    return int((emax - emin) / dedos)
+
+
+def _get_ispin(vasprun: Optional[Vasprun], outcar: Optional[Outcar]):
+    """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
+    if outcar is not None and outcar.magnetization is not None:
+        # Turn off spin when magmom for every site is smaller than 0.02.
+        site_magmom = np.array([i["tot"] for i in outcar.magnetization])
+        return 2 if np.any(np.abs(site_magmom) > 0.02) else 1
+    elif vasprun is not None:
+        return 2 if vasprun.is_spin else 1
+    return 2
