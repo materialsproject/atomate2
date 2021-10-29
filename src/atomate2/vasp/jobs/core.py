@@ -15,6 +15,7 @@ from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.base import VaspInputSetGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
+    HSERelaxSetGenerator,
     NonSCFSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
@@ -92,8 +93,18 @@ class NonSCFMaker(BaseVaspMaker):
 
 
 @dataclass
-class HSEBSMaker(BaseVaspMaker):
+class HSERelaxMaker(BaseVaspMaker):
     """Maker to create DFPT VASP jobs."""
+
+    name: str = "hse relax"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=HSERelaxSetGenerator
+    )
+
+
+@dataclass
+class HSEBSMaker(BaseVaspMaker):
+    """Maker to create HSE06 band structure jobs."""
 
     name: str = "hse band structure"
     input_set_generator: VaspInputSetGenerator = field(
