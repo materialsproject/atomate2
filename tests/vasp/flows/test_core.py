@@ -79,9 +79,64 @@ def test_band_structure(mock_vasp, clean_dir, si_structure):
 
     assert static_output.output.energy == pytest.approx(-10.85037078)
     assert static_output.included_objects is None
-    assert set(uniform_output.vasp_objects) == set(
-        [VaspObject.BANDSTRUCTURE, VaspObject.DOS]
+    assert set(uniform_output.vasp_objects) == {
+        VaspObject.BANDSTRUCTURE,
+        VaspObject.DOS,
+    }
+
+    assert isinstance(
+        line_output.vasp_objects[VaspObject.BANDSTRUCTURE], BandStructureSymmLine
     )
+    assert isinstance(
+        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], BandStructure
+    )
+
+
+def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
+    from jobflow import run_locally
+    from pymatgen.electronic_structure.bandstructure import (
+        BandStructure,
+        BandStructureSymmLine,
+    )
+
+    from atomate2.vasp.flows.core import HSEBandStructureMaker
+    from atomate2.vasp.schemas.calculation import VaspObject
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "hse band structure line": "Si_hse_band_structure/hse_band_structure_line",
+        "hse band structure uniform": "Si_hse_band_structure/hse_band_structure_uniform",
+        "hse static": "Si_hse_band_structure/hse_static",
+    }
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "hse band structure line": {"incar_settings": ["NSW", "ISMEAR"]},
+        "hse band structure uniform": {"incar_settings": ["NSW", "ISMEAR"]},
+        "hse static": {"incar_settings": ["NSW", "ISMEAR"]},
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate flow
+    flow = HSEBandStructureMaker().make(si_structure)
+    flow.jobs[0].maker.input_set_generator.user_incar_settings["KSPACING"] = 0.4
+
+    # Run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # validation on the outputs
+    static_output = responses[flow.jobs[0].uuid][1].output
+    uniform_output = responses[flow.jobs[1].uuid][1].output
+    line_output = responses[flow.jobs[2].uuid][1].output
+
+    assert static_output.output.energy == pytest.approx(-12.52887403)
+    assert static_output.included_objects is None
+    assert set(uniform_output.vasp_objects) == {
+        VaspObject.BANDSTRUCTURE,
+        VaspObject.DOS,
+    }
 
     assert isinstance(
         line_output.vasp_objects[VaspObject.BANDSTRUCTURE], BandStructureSymmLine

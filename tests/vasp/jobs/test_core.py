@@ -121,3 +121,31 @@ def test_hse_relax(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == approx(-12.5326576)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 3
     assert output1.input.parameters["NSW"] > 1
+
+
+def test_static_maker(mock_vasp, clean_dir, si_structure):
+    from jobflow import run_locally
+
+    from atomate2.vasp.jobs.core import HSEStaticMaker
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"hse static": "Si_hse_band_structure/hse_static"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"hse static": {"incar_settings": ["NSW", "ISMEAR"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate job
+    job = HSEStaticMaker().make(si_structure)
+    job.maker.input_set_generator.user_incar_settings["KSPACING"] = 0.4
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # validation the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, TaskDocument)
+    assert output1.output.energy == approx(-12.52887403)
