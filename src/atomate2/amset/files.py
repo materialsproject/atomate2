@@ -4,13 +4,17 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional, Union
+from typing import Dict, Optional, Union
+
+from monty.serialization import dumpfn, loadfn
 
 from atomate2.common.file import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.settings import Settings
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
 __all__ = ["copy_amset_files"]
+
 
 logger = logging.getLogger(__name__)
 
@@ -84,3 +88,29 @@ def copy_amset_files(
 
     rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
     logger.info("Finished copying inputs")
+
+
+def write_amset_settings(settings_updates: Dict, from_prev: bool = False):
+    """
+    Write AMSET settings to file.
+
+    This function will also apply any settings specified in
+    :obj:`.Settings.AMSET_SETTINGS_UPDATE`.
+
+    Parameters
+    ----------
+    settings_updates
+        A dictionary of settings to write.
+    from_prev
+        Whether apply the settings on top of an existing settings.yaml file in the
+        current directory.
+    """
+    if from_prev:
+        settings = loadfn("settings.yaml")
+        settings.update(settings_updates)
+    else:
+        settings = settings_updates
+
+    settings.update(Settings.AMSET_SETTINGS_UPDATE)
+
+    dumpfn(settings, "settings.yaml")

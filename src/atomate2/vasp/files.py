@@ -7,11 +7,16 @@ import re
 from pathlib import Path
 from typing import Optional, Sequence, Union
 
+from pymatgen.core import Structure
+
 from atomate2.common.file import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.settings import settings
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+from atomate2.vasp.sets.base import VaspInputSetGenerator
 
 __all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
+
 
 logger = logging.getLogger(__name__)
 
@@ -134,3 +139,36 @@ def get_largest_relax_extension(
     numbers = [re.search(r".relax(\d+)", file.name).group(1) for file in relax_files]
     max_relax = max(numbers, key=lambda x: int(x))
     return f".relax{max_relax}"
+
+
+def write_vasp_input_set(
+    structure: Structure,
+    input_set_generator: VaspInputSetGenerator,
+    from_prev: bool = False,
+    apply_incar_updates: bool = True,
+    **kwargs,
+):
+    """
+    Write VASP input set.
+
+    Parameters
+    ----------
+    structure
+        A structure.
+    input_set_generator
+        A VASP input set generator.
+    from_prev
+        Whether to initialize the input set from a previous calculation.
+    apply_incar_updates
+        Whether to apply incar updates given in the ~/.atomate2.yaml settings file.
+    **kwargs
+        Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
+    """
+    prev_dir = "." if from_prev else None
+    vis = input_set_generator.get_input_set(structure, prev_dir=prev_dir)
+
+    if apply_incar_updates:
+        vis.incar.update(settings.VASP_INCAR_UPDATES)
+
+    logger.info("Writing VASP input set.")
+    vis.write_input(".", **kwargs)
