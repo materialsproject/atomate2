@@ -11,8 +11,7 @@ from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.core import Structure
 
-from atomate2.vasp.file import copy_vasp_outputs
-from atomate2.vasp.inputs import write_vasp_input_set
+from atomate2.vasp.file import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.base import VaspInputSetGenerator
@@ -32,13 +31,15 @@ class BaseVaspMaker(Maker):
     input_set_generator
         A generator used to make the input set.
     write_input_set_kwargs
-        Keyword arguments that will get passed to :obj:`write_vasp_input_set`.
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
     run_vasp_kwargs
-        Keyword arguments that will get passed to :obj:`run_vasp`.
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs
-        Keyword arguments that will get passed to :obj:`TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
     stop_children_kwargs
-        Keyword arguments that will get passed to :obj:`should_stop_children`.
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.

@@ -38,7 +38,7 @@ def get_enum_source(enum_name, doc, items):
     """Get enum source."""
     header = f"""
 class {enum_name}(ValueEnum):
-    \"\"\" {doc} \"\"\"\n
+    \"\"\"{doc}\"\"\"\n
 """
     items = [f'    {const} = "{val}"' for const, val in items.items()]
 

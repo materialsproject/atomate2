@@ -37,7 +37,27 @@ __all__ = [
 
 @dataclass
 class StaticMaker(BaseVaspMaker):
-    """Maker to create VASP static jobs."""
+    """
+    Maker to create VASP static jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "static"
     input_set_generator: VaspInputSetGenerator = field(
@@ -47,7 +67,27 @@ class StaticMaker(BaseVaspMaker):
 
 @dataclass
 class RelaxMaker(BaseVaspMaker):
-    """Maker to create VASP relaxation jobs."""
+    """
+    Maker to create VASP relaxation jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "relax"
     input_set_generator: VaspInputSetGenerator = field(
@@ -57,7 +97,27 @@ class RelaxMaker(BaseVaspMaker):
 
 @dataclass
 class NonSCFMaker(BaseVaspMaker):
-    """Maker to create non self consistent field VASP jobs."""
+    """
+    Maker to create non self consistent field VASP jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "non-scf"
     input_set_generator: VaspInputSetGenerator = field(
@@ -103,7 +163,27 @@ class NonSCFMaker(BaseVaspMaker):
 
 @dataclass
 class HSERelaxMaker(BaseVaspMaker):
-    """Maker to create HSE06 relaxation jobs."""
+    """
+    Maker to create HSE06 relaxation jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "hse relax"
     input_set_generator: VaspInputSetGenerator = field(
@@ -113,7 +193,27 @@ class HSERelaxMaker(BaseVaspMaker):
 
 @dataclass
 class HSEStaticMaker(BaseVaspMaker):
-    """Maker to create HSE06 static jobs."""
+    """
+    Maker to create HSE06 static jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "hse static"
     input_set_generator: VaspInputSetGenerator = field(
@@ -123,7 +223,27 @@ class HSEStaticMaker(BaseVaspMaker):
 
 @dataclass
 class HSEBSMaker(BaseVaspMaker):
-    """Maker to create HSE06 band structure jobs."""
+    """
+    Maker to create HSE06 band structure jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "hse band structure"
     input_set_generator: VaspInputSetGenerator = field(
@@ -182,7 +302,27 @@ class HSEBSMaker(BaseVaspMaker):
 
 @dataclass
 class DielectricMaker(BaseVaspMaker):
-    """Maker to create dielectric calculation VASP jobs."""
+    """
+    Maker to create dielectric calculation VASP jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "dielectric"
     input_set_generator: StaticSetGenerator = field(

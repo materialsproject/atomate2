@@ -19,7 +19,7 @@ from atomate2.vasp.jobs.core import (
 )
 from atomate2.vasp.schemas.calculation import VaspObject
 
-__all__ = ["DoubleRelaxMaker", "BandStructureMaker"]
+__all__ = ["DoubleRelaxMaker", "BandStructureMaker", "HSEBandStructureMaker"]
 
 
 @dataclass

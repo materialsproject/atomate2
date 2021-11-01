@@ -32,7 +32,7 @@ from atomate2.vasp.jobs.core import (
     StaticMaker,
 )
 
-__all__ = ["VaspAmsetMaker", "DeformationPotentialMaker"]
+__all__ = ["VaspAmsetMaker", "DeformationPotentialMaker", "HSEVaspAmsetMaker"]
 
 
 @dataclass
@@ -304,10 +304,18 @@ class HSEVaspAmsetMaker(VaspAmsetMaker):
     ----------
     name
         Name of the flows produced by this maker.
+    doping
+        Doping concentrations at which to calculate transport properties.
+    temperatures
+        Temperatures at which to calculate transport properties.
     static_maker
         The maker to use for the initial static calculation.
     dense_uniform_maker
         The maker to use for dense uniform calculations.
+    dielectric_maker
+        The maker to use for calculating dielectric constants.
+    elastic_maker
+        The maker to use for calculating elastic constants.
     deformation_potential_maker
         The maker to use for calculating acoustic deformation potentials.
     hse_gap_maker
@@ -315,8 +323,6 @@ class HSEVaspAmsetMaker(VaspAmsetMaker):
         only used if ``use_hse_gap=True``.
     amset_maker
         The maker to use for running AMSET calculations.
-    **kwargs
-        Other keyword arguments passed to the :obj:`VaspAmsetMaker` init.
     """
 
     name: str = "hse VASP amset"

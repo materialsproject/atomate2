@@ -44,7 +44,27 @@ __all__ = [
 
 @dataclass
 class DenseUniformMaker(BaseVaspMaker):
-    """Maker to perform a dense uniform non-self consistent field calculation."""
+    """
+    Maker to perform a dense uniform non-self consistent field calculation.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "dense uniform"
     input_set_generator: VaspInputSetGenerator = field(
@@ -62,6 +82,24 @@ class StaticDeformationMaker(BaseVaspMaker):
     The main difference to a normal static calculation is that this will write an
     explicit KPOINTS file, rather than using KSPACING. This is because all deformations
     ultimately need to be on exactly the same k-point mesh dimensions
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
     """
 
     name: str = "static deformation"
@@ -81,6 +119,24 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
     The main difference to a normal HSE06 static calculation is that this will write an
     explicit KPOINTS file, rather than using KSPACING. This is because all deformations
     ultimately need to be on exactly the same k-point mesh dimensions
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
     """
 
     name: str = "static deformation"
@@ -94,7 +150,27 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
 
 @dataclass
 class HSEDenseUniformMaker(BaseVaspMaker):
-    """Maker to perform a dense uniform non-self consistent field calculation."""
+    """
+    Maker to perform a dense uniform non-self consistent field calculation.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "dense uniform"
     input_set_generator: VaspInputSetGenerator = field(

@@ -44,6 +44,24 @@ class ElasticRelaxMaker(BaseVaspMaker):
     The input set is for a tight relaxation, where only the atomic positions are
     allowed to relax (ISIF=2). Both the k-point mesh density and convergence parameters
     are stricter than a normal relaxation.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
     """
 
     name: str = "elastic relax"
