@@ -23,11 +23,18 @@ from atomate2.settings import settings
 from atomate2.utils.file_client import FileClient
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputSetGenerator
-from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
+from atomate2.vasp.sets.core import (
+    HSEBSSetGenerator,
+    HSEStaticSetGenerator,
+    NonSCFSetGenerator,
+    StaticSetGenerator,
+)
 
 __all__ = [
     "DenseUniformMaker",
     "StaticDeformationMaker",
+    "HSEDenseUniformMaker",
+    "HSEStaticDeformationMaker",
     "run_amset_deformations",
     "calculate_deformation_potentials",
     "calculate_polar_phonon_frequency",
@@ -62,6 +69,38 @@ class StaticDeformationMaker(BaseVaspMaker):
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"reciprocal_density": 100},
             user_incar_settings={"KSPACING": None},
+        )
+    )
+
+
+@dataclass
+class HSEStaticDeformationMaker(BaseVaspMaker):
+    """
+    Maker to perform a HSE06 static calculations on structural deformations.
+
+    The main difference to a normal HSE06 static calculation is that this will write an
+    explicit KPOINTS file, rather than using KSPACING. This is because all deformations
+    ultimately need to be on exactly the same k-point mesh dimensions
+    """
+
+    name: str = "static deformation"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=lambda: HSEStaticSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 100},
+            user_incar_settings={"KSPACING": None},
+        )
+    )
+
+
+@dataclass
+class HSEDenseUniformMaker(BaseVaspMaker):
+    """Maker to perform a dense uniform non-self consistent field calculation."""
+
+    name: str = "dense uniform"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=lambda: HSEBSSetGenerator(
+            mode="uniform_dense",
+            zero_weighted_reciprocal_density=1000,
         )
     )
 

@@ -16,6 +16,8 @@ from atomate2.settings import settings
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.jobs.amset import (
     DenseUniformMaker,
+    HSEDenseUniformMaker,
+    HSEStaticDeformationMaker,
     StaticDeformationMaker,
     calculate_deformation_potentials,
     calculate_polar_phonon_frequency,
@@ -23,7 +25,12 @@ from atomate2.vasp.jobs.amset import (
     run_amset_deformations,
 )
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import DielectricMaker, HSEBSMaker, StaticMaker
+from atomate2.vasp.jobs.core import (
+    DielectricMaker,
+    HSEBSMaker,
+    HSEStaticMaker,
+    StaticMaker,
+)
 
 __all__ = ["VaspAmsetMaker", "DeformationPotentialMaker"]
 
@@ -281,3 +288,44 @@ class VaspAmsetMaker(Maker):
         jobs.append(amset)
 
         return Flow(jobs, output=amset.output, name=self.name)
+
+
+@dataclass
+class HSEVaspAmsetMaker(VaspAmsetMaker):
+    """
+    Maker to calculate transport properties using AMSET with HSE06 VASP inputs.
+
+    .. Note::
+        Dielectric and elastic constants are still calculated using PBEsol, whereas
+        electronic properties, deformation potentials, and wavefunctions are calculated
+        using HSE06.
+
+    Parameters
+    ----------
+    name
+        Name of the flows produced by this maker.
+    static_maker
+        The maker to use for the initial static calculation.
+    dense_uniform_maker
+        The maker to use for dense uniform calculations.
+    deformation_potential_maker
+        The maker to use for calculating acoustic deformation potentials.
+    hse_gap_maker
+        The maker to use for calculating the band gap using HSE06. Note, this maker is
+        only used if ``use_hse_gap=True``.
+    amset_maker
+        The maker to use for running AMSET calculations.
+    **kwargs
+        Other keyword arguments passed to the :obj:`VaspAmsetMaker` init.
+    """
+
+    name: str = "hse VASP amset"
+    use_hse_gap: bool = False
+    amset_settings: dict = field(default_factory=dict)
+    static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
+    dense_uniform_maker: BaseVaspMaker = field(default_factory=HSEDenseUniformMaker)
+    deformation_potential_maker: DeformationPotentialMaker = field(
+        default_factory=lambda: DeformationPotentialMaker(
+            static_deformation_maker=HSEStaticDeformationMaker()
+        )
+    )
