@@ -39,7 +39,9 @@ def vasp_test_data():
 
     outputs = loadfn("outputs.json")
 
-    task_labels = [o["output"].task_label for o in outputs]
+    task_labels = [
+        o["output"].task_label for o in outputs if isinstance(o, TaskDocument)
+    ]
 
     if len(task_labels) != len(set(task_labels)):
         raise ValueError("Not all jobs have unique names")
@@ -129,7 +131,7 @@ An example test using the generated test data is provided below. Be sure to upda
 this test with the particulars for your system. For more examples, see the existing
 tests in atomate2/tests/vasp/jobs.
 
-def test_my_flow(mock_vasp, clean_dir):
+def test_my_flow(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
 
     # mapping from job name to directory containing test files
@@ -141,13 +143,13 @@ def test_my_flow(mock_vasp, clean_dir):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Insert code to generate flow/job below, i.e.:
-    job = MyMaker().make(structure)
+    # !!! Generate job
+    job = MyMaker().make(si_structure)
 
-    # Run the flow or job and ensure that it finished running successfully
+    # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! Insert additional validation on the outputs of the jobs; e.g.,
+    # !!! validation on the outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == pytest.approx(-10.85037078)
