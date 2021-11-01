@@ -260,7 +260,7 @@ def _expand_deformations(structure, deformations, stresses, uuids, job_dirs, sym
                 continue
 
             # check it is a valid deformation
-            if not Deformation(rotated_deformation).is_indepenent():
+            if not Deformation(rotated_deformation).is_independent():
                 continue
 
             # store the rotated deformation so we know we've seen it
