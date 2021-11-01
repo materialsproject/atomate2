@@ -431,16 +431,22 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     The "line" mode is just like Uniform mode, but additionally adds k-points along
     symmetry lines with zero weight.
 
+    The "uniform_dense" mode employs are regular weighted k-point mesh, in addition
+    to a zero-weighted uniform mesh with higher density.
+
     Parameters
     ----------
     mode
-        Type of band structure mode. Options are "line", "uniform", or "gap".
+        Type of band structure mode. Options are "line", "uniform", "gap", or
+        "uniform_dense".
     dedos
         Energy difference used to set NEDOS, based on the total energy range.
     reciprocal_density
         Density of k-mesh by reciprocal volume.
     line_density
         Line density for line mode band structure.
+    zero_weighted_reciprocal_density
+        Density of uniform zero weighted k-point mesh.
     optics
         Whether to add LOPTICS (used for calculating optical response).
     nbands_factor
@@ -458,6 +464,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         dedos: float = 0.005,
         reciprocal_density=50,
         line_density=20,
+        zero_weighted_reciprocal_density=100,
         optics: bool = False,
         nbands_factor: float = 1.2,
         added_kpoints: List[Vector3D] = None,
@@ -471,8 +478,9 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         self.optics = optics
         self.nbands_factor = nbands_factor
         self.added_kpoints = [] if added_kpoints is None else added_kpoints
+        self.zero_weighted_reciprocal_density = zero_weighted_reciprocal_density
 
-        supported_modes = ("line", "uniform", "gap")
+        supported_modes = ("line", "uniform", "gap", "uniform_dense")
         if self.mode not in supported_modes:
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
@@ -511,7 +519,12 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
         if self.mode == "line":
             # add line_density on top of reciprocal density
-            kpoints["line_density"] = self.line_density
+            kpoints["zero_weighted_line_density"] = self.line_density
+
+        elif self.mode == "uniform_dense":
+            kpoints[
+                "zero_weighted_reciprocal_density"
+            ] = self.zero_weighted_reciprocal_density
 
         added_kpoints = deepcopy(self.added_kpoints)
         if vasprun is not None and self.mode == "gap":

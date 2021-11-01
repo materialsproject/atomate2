@@ -588,42 +588,85 @@ class VaspInputSetGenerator(InputSetGenerator):
         if isinstance(kconfig, Kpoints):
             return kconfig
 
-        added_kpoints = kconfig.get("added_kpoints", [])
-        if len(added_kpoints) > 0 and kconfig.get("length"):
-            raise ValueError(
-                "added_kpoints only compatible with grid_density, reciprocal_density "
-                "or line_density generation schemes."
-            )
-        elif len(added_kpoints) > 0:
-            # force explicit k-point generation if adding additional k-points.
-            kconfig["explicit"] = True
-
-        # If length is in kpoints settings use Kpoints.automatic
+        explicit = (
+            kconfig.get("explicit")
+            or len(kconfig.get("added_kpoints", [])) > 0
+            or "zero_weighted_reciprocal_density" in kconfig
+            or "zero_weighted_line_density" in kconfig
+        )
+        # handle length generation first as this doesn't support any additional options
         if kconfig.get("length"):
+            if explicit:
+                raise ValueError(
+                    "length option cannot be used with explicit k-point generation, "
+                    "added_kpoints, or zero weighted k-points."
+                )
+            # If length is in kpoints settings use Kpoints.automatic
             return Kpoints.automatic(kconfig["length"])
 
-        kpoints = None
-        # If grid_density is in kpoints settings use automatic_density
-        if kconfig.get("grid_density"):
-            kpoints = Kpoints.automatic_density(
-                structure, int(kconfig["grid_density"]), self.force_gamma
+        base_kpoints = None
+        if kconfig.get("line_density"):
+            # handle line density generation
+            kpath = HighSymmKpath(structure)
+            frac_k_points, k_points_labels = kpath.get_kpoints(
+                line_density=kconfig["line_density"], coords_are_cartesian=False
             )
-
-        # If reciprocal_density is in kpoints settings use automatic_density_by_vol
-        if kconfig.get("reciprocal_density"):
-            kpoints = Kpoints.automatic_density_by_vol(
-                structure, kconfig["reciprocal_density"], self.force_gamma
+            base_kpoints = Kpoints(
+                comment="Non SCF run along symmetry lines",
+                style=Kpoints.supported_modes.Reciprocal,
+                num_kpts=len(frac_k_points),
+                kpts=frac_k_points,
+                labels=k_points_labels,
+                kpts_weights=[1] * len(frac_k_points),
             )
+        elif kconfig.get("grid_density") or kconfig.get("reciprocal_density"):
+            # handle regular weighted k-point grid generation
+            if kconfig.get("grid_density"):
+                base_kpoints = Kpoints.automatic_density(
+                    structure, int(kconfig["grid_density"]), self.force_gamma
+                )
+            if kconfig.get("reciprocal_density"):
+                base_kpoints = Kpoints.automatic_density_by_vol(
+                    structure, kconfig["reciprocal_density"], self.force_gamma
+                )
+            if explicit:
+                sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
+                mesh = sga.get_ir_reciprocal_mesh(base_kpoints.kpts[0])
+                base_kpoints = Kpoints(
+                    comment="Uniform grid",
+                    style=Kpoints.supported_modes.Reciprocal,
+                    num_kpts=len(mesh),
+                    kpts=[i[0] for i in mesh],
+                    kpts_weights=[i[1] for i in mesh],
+                )
+            else:
+                # if not explicit that means no other options have been specified
+                # so we can return the k-points as is
+                return base_kpoints
 
-        # if reciprocal_density or grid_density is set with line_density we have a
-        # weighted uniform mesh and zero-weighted line-mode mesh
-        if kpoints is not None and kconfig.get("line_density", False):
-            kconfig["explicit"] = True
-
-        if kpoints is not None and kconfig.get("explicit"):
+        zero_weighted_kpoints = None
+        if kconfig.get("zero_weighted_line_density"):
+            # zero_weighted k-points along line mode path
+            kpath = HighSymmKpath(structure)
+            frac_k_points, k_points_labels = kpath.get_kpoints(
+                line_density=kconfig["zero_weighted_line_density"],
+                coords_are_cartesian=False,
+            )
+            zero_weighted_kpoints = Kpoints(
+                comment="Hybrid run along symmetry lines",
+                style=Kpoints.supported_modes.Reciprocal,
+                num_kpts=len(frac_k_points),
+                kpts=frac_k_points,
+                labels=k_points_labels,
+                kpts_weights=[0] * len(frac_k_points),
+            )
+        elif kconfig.get("zero_weighted_reciprocal_density"):
+            zero_weighted_kpoints = Kpoints.automatic_density_by_vol(
+                structure, kconfig["zero_weighted_reciprocal_density"], self.force_gamma
+            )
             sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
-            mesh = sga.get_ir_reciprocal_mesh(kpoints.kpts[0])
-            kpoints = Kpoints(
+            mesh = sga.get_ir_reciprocal_mesh(zero_weighted_kpoints.kpts[0])
+            zero_weighted_kpoints = Kpoints(
                 comment="Uniform grid",
                 style=Kpoints.supported_modes.Reciprocal,
                 num_kpts=len(mesh),
@@ -631,76 +674,44 @@ class VaspInputSetGenerator(InputSetGenerator):
                 kpts_weights=[i[1] for i in mesh],
             )
 
-        # If line_density is in kpoints settings generate line mode band structure
-        if kconfig.get("line_density"):
-            kpath = HighSymmKpath(structure)
-            frac_k_points, k_points_labels = kpath.get_kpoints(
-                line_density=kconfig["line_density"], coords_are_cartesian=False
-            )
-            if kpoints is None:
-                kpoints = Kpoints(
-                    comment="Non SCF run along symmetry lines",
-                    style=Kpoints.supported_modes.Reciprocal,
-                    num_kpts=len(frac_k_points),
-                    kpts=frac_k_points,
-                    labels=k_points_labels,
-                    kpts_weights=[1] * len(frac_k_points),
-                )
-            else:
-                # hybrid zero_weighted k-points
-                if kpoints.labels is None:
-                    labels = [""] * len(kpoints.kpts) + k_points_labels
-                else:
-                    labels = kpoints.labels + k_points_labels
-
-                weights = kpoints.kpts_weights + [0] * len(frac_k_points)
-                kpts = list(kpoints.kpts) + frac_k_points
-                kpoints = Kpoints(
-                    comment="Hybrid run along symmetry lines",
-                    style=Kpoints.supported_modes.Reciprocal,
-                    num_kpts=len(kpts),
-                    kpts=kpts,
-                    labels=labels,
-                    kpts_weights=weights,
-                )
-
-        # finally, add any additional k-points if specified
-        if added_kpoints and kpoints is None:
-            kpoints = Kpoints(
+        added_kpoints = None
+        if kconfig.get("added_kpoints"):
+            added_kpoints = Kpoints(
                 comment="Specified k-points only",
                 style=Kpoints.supported_modes.Reciprocal,
-                num_kpts=len(added_kpoints),
-                kpts=added_kpoints,
-                labels=["user-defined"] * len(added_kpoints),
-                kpts_weights=[1] * len(added_kpoints),
-            )
-        elif added_kpoints:
-            if kpoints.labels is None:
-                labels = [""] * len(kpoints.kpts)
-            else:
-                labels = kpoints.labels
-            labels += ["user-defined"] * len(added_kpoints)
-            weights = kpoints.kpts_weights + [0] * len(added_kpoints)
-            kpts = list(kpoints.kpts) + added_kpoints
-            comment = "High symmetry run" if kconfig.get("line_density") else "Uniform"
-            kpoints = Kpoints(
-                comment=comment,
-                style=Kpoints.supported_modes.Reciprocal,
-                num_kpts=len(kpts),
-                kpts=kpts,
-                labels=labels,
-                kpts_weights=weights,
+                num_kpts=len(kconfig.get("added_kpoints")),
+                kpts=kconfig.get("added_kpoints"),
+                labels=["user-defined"] * len(kconfig.get("added_kpoints")),
+                kpts_weights=[1] * len(kconfig.get("added_kpoints")),
             )
 
-        if kpoints is None:
+        if base_kpoints and not (added_kpoints or zero_weighted_kpoints):
+            return base_kpoints
+        elif added_kpoints and not (base_kpoints or zero_weighted_kpoints):
+            return added_kpoints
+
+        # do some sanity checking
+        if "line_density" in kconfig and zero_weighted_kpoints:
+            raise ValueError(
+                "Cannot combined line_density and zero weighted k-points options"
+            )
+        elif zero_weighted_kpoints and not base_kpoints:
+            raise ValueError(
+                "Zero weighted k-points must be used with reciprocal_density or "
+                "grid_density options"
+            )
+        elif not (base_kpoints or zero_weighted_kpoints or added_kpoints):
             raise ValueError(
                 "Invalid k-point generation algo. Supported Keys are 'grid_density' "
                 "for Kpoints.automatic_density generation, 'reciprocal_density' for "
                 "KPoints.automatic_density_by_vol generation, 'length' for "
                 "Kpoints.automatic generation, 'line_density' for line mode generation,"
-                " 'added_kpoints' for specific k-points to include."
+                " 'added_kpoints' for specific k-points to include, "
+                " 'zero_weighted_reciprocal_density' for a zero weighted uniform mesh,"
+                " or 'zero_weighted_line_density' for a zero weighted line mode mesh."
             )
-        return kpoints
+
+        return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
     def _kspacing(self, incar_updates):
         """Get KSPACING value based on the config dict, updates and user settings."""
@@ -867,3 +878,35 @@ def _set_kspacing(
         incar["KSPACING"] = incar_settings["KSPACING"]
 
     return incar
+
+
+def _combine_kpoints(*kpoints_objects: Kpoints):
+    """Combine k-points files together."""
+    labels = []
+    kpoints = []
+    weights = []
+
+    for kpoints_object in filter(None, kpoints_objects):
+        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+            raise ValueError(
+                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
+            )
+        if kpoints_object.labels is None:
+            labels.append([""] * len(kpoints_object.kpts))
+        else:
+            labels.append(kpoints_object.labels)
+
+        weights.append(kpoints_object.kpts_weights)
+        kpoints.append(kpoints_object.kpts)
+
+    labels = np.concatenate(labels).tolist()
+    weights = np.concatenate(weights).tolist()
+    kpoints = np.concatenate(kpoints)
+    return Kpoints(
+        comment="Combined k-points",
+        style=Kpoints.supported_modes.Reciprocal,
+        num_kpts=len(kpoints),
+        kpts=kpoints,
+        labels=labels,
+        kpts_weights=weights,
+    )
