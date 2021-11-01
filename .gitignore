@@ -53,3 +53,7 @@ amset.log
 examples/*/*.png
 examples/*/*transport*
 examples/*/*mesh*
+
+test-vasp
+docs_build
+docs/reference/atomate2.*
