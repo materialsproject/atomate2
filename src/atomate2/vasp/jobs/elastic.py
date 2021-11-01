@@ -192,8 +192,8 @@ def run_elastic_deformations(
         output = {
             "stress": relax_job.output.output.stress,
             "deformation": deformation,
-            "uuid": relax_job.uuid,
-            "job_dir": relax_job.dir_name,
+            "uuid": relax_job.output.uuid,
+            "job_dir": relax_job.output.dir_name,
         }
 
         outputs.append(output)
@@ -247,8 +247,8 @@ def fit_elastic_tensor(
 
         stresses.append(Stress(data["stress"]))
         deformations.append(Deformation(data["deformation"]))
-        uuids = data["uuid"]
-        job_dirs = data["job_dir"]
+        uuids.append(data["uuid"])
+        job_dirs.append(data["job_dir"])
 
     logger.info("Analyzing stress/strain data")
 
