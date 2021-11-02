@@ -12,7 +12,7 @@ import pytest
 def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
     from pathlib import Path
 
-    from atomate2.vasp.file import copy_vasp_outputs
+    from atomate2.vasp.files import copy_vasp_outputs
 
     path = vasp_test_dir / "Si_band_structure" / "static" / "outputs"
     copy_vasp_outputs(src_dir=path, **copy_kwargs)
@@ -32,7 +32,7 @@ def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
 def test_copy_vasp_outputs_double(vasp_test_dir, tmp_dir, copy_kwargs, files):
     from pathlib import Path
 
-    from atomate2.vasp.file import copy_vasp_outputs
+    from atomate2.vasp.files import copy_vasp_outputs
 
     path = vasp_test_dir / "Si_old_double_relax" / "outputs"
     copy_vasp_outputs(src_dir=path, **copy_kwargs)
@@ -42,7 +42,7 @@ def test_copy_vasp_outputs_double(vasp_test_dir, tmp_dir, copy_kwargs, files):
 
 
 def test_get_largest_relax_extension(vasp_test_dir):
-    from atomate2.vasp.file import get_largest_relax_extension
+    from atomate2.vasp.files import get_largest_relax_extension
 
     path = vasp_test_dir / "Si_old_double_relax" / "outputs"
     extension = get_largest_relax_extension(directory=path)
