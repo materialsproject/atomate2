@@ -93,3 +93,23 @@ def log_to_stdout():
     from atomate2.utils.log import initialize_logger
 
     initialize_logger()
+
+
+@pytest.fixture(scope="function")
+def si_structure(test_dir):
+    from pymatgen.core import Structure
+
+    return Structure.from_file(test_dir / "structures" / "Si.cif")
+
+
+def generate_vasp_test():
+    # trick is:
+    # 1. run the flow/job
+    # 2. using directory structure and job name construct input and output folders
+    #    this should also clean up the directory structure to remove POTCARs and large
+    #    files. This script should therefore have an option ("keep files") which will
+    #    allow you to keep particular large files. ALso, all this directory structure
+    #    work should be done in a copy. the raw data should remain there...
+    # 3. create python dict mapping
+    # 4. create example test function, with examples of how to customise what is checked
+    pass

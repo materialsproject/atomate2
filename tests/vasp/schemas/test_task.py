@@ -113,7 +113,7 @@ def test_task_doc(vasp_test_dir, object_name):
 
     test_object = get_test_object(object_name)
     dir_name = vasp_test_dir / test_object.folder / "outputs"
-    test_doc = TaskDocument.from_task_files(dir_name, test_object.task_files)
+    test_doc = TaskDocument.from_directory(dir_name)
     assert_schemas_equal(test_doc, test_object.task_doc)
 
     # test document can be jsanitized

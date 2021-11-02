@@ -1,8 +1,9 @@
 import logging
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import Sequence, Union
 
 import pytest
+from typing_extensions import Literal
 
 vfiles = ("incar", "kpoints", "potcar", "poscar")
 
@@ -14,7 +15,11 @@ def vasp_test_dir(test_dir):
     return test_dir / "vasp"
 
 
-@pytest.fixture
+_REF_PATHS = {}
+_FAKE_RUN_VASP_KWARGS = {}
+
+
+@pytest.fixture(scope="function")
 def mock_vasp(monkeypatch, vasp_test_dir):
     """
     This fixture allows one to mock (fake) running VASP.
@@ -58,38 +63,37 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    from pymatgen.io.vasp.sets import VaspInputSet
-
     import atomate2.vasp.run
-
-    ref_paths = {}
-    fake_run_vasp_kwargs = {}
+    from atomate2.vasp.sets.base import VaspInputSetGenerator
 
     def mock_run_vasp():
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
-        ref_path = vasp_test_dir / ref_paths[name]
-        fake_run_vasp(ref_path, **fake_run_vasp_kwargs.get(name, {}))
+        ref_path = vasp_test_dir / _REF_PATHS[name]
+        fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
-    write_input_orig = VaspInputSet.write_input
+    get_input_set_orig = VaspInputSetGenerator.get_input_set
 
-    def mock_write_input(self, *args, **kwargs):
+    def mock_get_input_set(self, *args, **kwargs):
         kwargs["potcar_spec"] = True
-        write_input_orig(self, *args, **kwargs)
+        return get_input_set_orig(self, *args, **kwargs)
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(VaspInputSet, "write_input", mock_write_input)
+    monkeypatch.setattr(VaspInputSetGenerator, "get_input_set", mock_get_input_set)
 
-    def _run(_ref_paths, _fake_run_vasp_kwargs=None):
-        if _fake_run_vasp_kwargs is None:
-            _fake_run_vasp_kwargs = {}
+    def _run(ref_paths, fake_run_vasp_kwargs=None):
+        if fake_run_vasp_kwargs is None:
+            fake_run_vasp_kwargs = {}
 
-        nonlocal ref_paths, fake_run_vasp_kwargs
-        ref_paths = _ref_paths
-        fake_run_vasp_kwargs = _fake_run_vasp_kwargs
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs)
 
     yield _run
+
+    monkeypatch.undo()
+    _REF_PATHS.clear()
+    _FAKE_RUN_VASP_KWARGS.clear()
 
 
 def fake_run_vasp(
@@ -149,42 +153,83 @@ def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
     for p in incar_settings:
         if user.get(p, defaults.get(p)) != ref.get(p, defaults.get(p)):
-            raise ValueError(f"INCAR value of {p} is inconsistent")
+            raise ValueError(
+                f"INCAR value of {p} is inconsistent: "
+                f"{user.get(p, defaults.get(p))} != {ref.get(p, defaults.get(p))}"
+            )
 
 
 def check_kpoints(ref_path: Union[str, Path]):
-    from pymatgen.io.vasp import Kpoints
+    from pymatgen.io.vasp import Incar, Kpoints
 
-    user = Kpoints.from_file("KPOINTS")
-    ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
-    if user.style != ref.style or user.num_kpts != ref.num_kpts:
-        raise ValueError("KPOINTS files are inconsistent")
+    user_kpoints_exists = Path("KPOINTS").exists()
+    ref_kpoints_exists = Path(ref_path / "inputs" / "KPOINTS").exists()
+
+    if user_kpoints_exists and not ref_kpoints_exists:
+        raise ValueError(
+            "atomate2 generated a KPOINTS file but the reference calculation is using "
+            "KSPACING"
+        )
+    elif not user_kpoints_exists and ref_kpoints_exists:
+        raise ValueError(
+            "atomate2 is using KSPACING but the reference calculation is using "
+            "a KPOINTS file"
+        )
+    elif user_kpoints_exists and ref_kpoints_exists:
+        user = Kpoints.from_file("KPOINTS")
+        ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
+        if user.style != ref.style or user.num_kpts != ref.num_kpts:
+            raise ValueError("KPOINTS files are inconsistent")
+    else:
+        # check k-spacing
+        user = Incar.from_file("INCAR")
+        ref = Incar.from_file(ref_path / "inputs" / "INCAR")
+
+        if user.get("KSPACING", None) != ref.get("KSPACING", None):
+            raise ValueError(
+                "KSPACING is not inconsistent: "
+                f"{user.get('KSPACING', None)} != {ref.get('KSPACING', None)}"
+            )
 
 
 def check_poscar(ref_path: Union[str, Path]):
+    import numpy as np
     from pymatgen.io.vasp import Poscar
+    from pymatgen.util.coord import pbc_diff
 
     user = Poscar.from_file("POSCAR")
     ref = Poscar.from_file(ref_path / "inputs" / "POSCAR")
-    if user.natoms != ref.natoms or user.site_symbols != ref.site_symbols:
+
+    if (
+        user.natoms != ref.natoms
+        or user.site_symbols != ref.site_symbols
+        or np.any(
+            np.abs(pbc_diff(user.structure.frac_coords, ref.structure.frac_coords))
+            > 1e-3
+        )
+    ):
         raise ValueError("POSCAR files are inconsistent")
 
 
 def check_potcar(ref_path: Union[str, Path]):
     from pymatgen.io.vasp import Potcar
 
-    ref = Potcar.from_file(ref_path / "inputs" / "POTCAR")
+    if Path(ref_path / "inputs" / "POTCAR").exists():
+        ref = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
+    elif Path(ref_path / "inputs" / "POTCAR.spec").exists():
+        ref = Path(ref_path / "inputs" / "POTCAR.spec").read_text().strip().split("\n")
+    else:
+        raise FileNotFoundError("no reference POTCAR or POTCAR.spec file found")
 
     if Path("POTCAR").exists():
-        user = Potcar.from_file("POTCAR")
-        if user.symbols != ref.symbols:
-            raise ValueError("POTCAR files are inconsistent")
+        user = Potcar.from_file("POTCAR").symbols
     elif Path("POTCAR.spec").exists():
-        user_spec = Path("POTCAR.spec").read_text().split("\n")
-        if user_spec != ref.symbols:
-            raise ValueError("POTCAR symbols are inconsistent")
+        user = Path("POTCAR.spec").read_text().strip().split("\n")
     else:
         raise FileNotFoundError("no POTCAR or POTCAR.spec file found")
+
+    if user != ref:
+        raise ValueError(f"POTCAR files are inconsistent: {user} != {ref}")
 
 
 def clear_vasp_inputs():

@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow import Flow, Response, job
+from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
-from pymatgen.core import SymmOp
 from pymatgen.core.structure import Structure
 from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -23,7 +23,8 @@ from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.settings import settings
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import RelaxMaker
+from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -36,48 +37,51 @@ __all__ = [
 
 
 @dataclass
-class ElasticRelaxMaker(RelaxMaker):
+class ElasticRelaxMaker(BaseVaspMaker):
     """
     Maker to perform an elastic relaxation.
 
-    This is a tight relaxation where only the atom positions are allowed to relax.
+    The input set is for a tight relaxation, where only the atomic positions are
+    allowed to relax (ISIF=2). Both the k-point mesh density and convergence parameters
+    are stricter than a normal relaxation.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
     """
 
-    name = "elastic relax"
-
-    @job
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
-        """
-        Make a job to perform a tight relaxation.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure.
-        prev_vasp_dir
-            A previous vasp calculation directory to use for copying outputs.
-        """
-        incar_updates = {
-            "IBRION": 2,
-            "ISIF": 2,
-            "ENCUT": 700,
-            "EDIFF": 1e-7,
-            "LAECHG": False,
-            "EDIFFG": -0.001,
-            "LREAL": False,
-            "ALGO": "Normal",
-        }
-        kpoints_updates = {"grid_density": 7000}
-
-        # make sure we don't override user settings
-        incar_updates.update(self.input_set_kwargs.get("user_incar_settings", {}))
-        kpoints_updates.update(self.input_set_kwargs.get("user_kpoints_settings", {}))
-
-        self.input_set_kwargs["user_incar_settings"] = incar_updates
-        self.input_set_kwargs["user_kpoints_settings"] = kpoints_updates
-
-        # calling make would create a new job, instead we call the undecorated function
-        return super().make.original(self, structure, prev_vasp_dir=prev_vasp_dir)
+    name: str = "elastic relax"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings={"grid_density": 7000},
+            user_incar_settings={
+                "IBRION": 2,
+                "ISIF": 2,
+                "ENCUT": 700,
+                "EDIFF": 1e-7,
+                "LAECHG": False,
+                "EDIFFG": -0.001,
+                "LREAL": False,
+                "ALGO": "Normal",
+                "NSW": 99,
+                "LCHARG": False,
+            },
+        )
+    )
 
 
 @job
@@ -115,12 +119,8 @@ def generate_elastic_deformations(
 
     Returns
     -------
-    Dict[str, Any]
-        A dictionary with the keys:
-
-        - "deformations": containing a list of deformations.
-        - "symmetry_ops": containing a list of symmetry operations or None if
-          symmetry_reduce is False.
+    List[Deformation]
+        A list of deformations.
     """
     if conventional:
         sga = SpacegroupAnalyzer(structure, symprec=symprec)
@@ -148,7 +148,6 @@ def generate_elastic_deformations(
 
     deformations = [s.get_deformation_matrix() for s in strains]
 
-    symmetry_operations = None
     if sym_reduce:
         deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
         logger.info(
@@ -156,16 +155,14 @@ def generate_elastic_deformations(
             f"to {len(list(deformation_mapping.keys()))}"
         )
         deformations = list(deformation_mapping.keys())
-        symmetry_operations = list(deformation_mapping.values())
 
-    return {"deformations": deformations, "symmetry_ops": symmetry_operations}
+    return deformations
 
 
 @job
 def run_elastic_deformations(
     structure: Structure,
     deformations: List[Deformation],
-    symmetry_ops: List[SymmOp] = None,
     prev_vasp_dir: Union[str, Path] = None,
     elastic_relax_maker: BaseVaspMaker = None,
 ):
@@ -181,8 +178,6 @@ def run_elastic_deformations(
         A pymatgen structure.
     deformations
         The deformations to apply.
-    symmetry_ops
-        A list of symmetry operations (must be same number as deformations).
     prev_vasp_dir
         A previous VASP directory to use for copying VASP outputs.
     elastic_relax_maker
@@ -190,17 +185,19 @@ def run_elastic_deformations(
     """
     if elastic_relax_maker is None:
         elastic_relax_maker = ElasticRelaxMaker()
-    if symmetry_ops is not None and len(symmetry_ops) != len(deformations):
-        raise ValueError(
-            "Number of deformations and lists of symmetry operations must be equal."
-        )
 
     relaxations = []
     outputs = []
     for i, deformation in enumerate(deformations):
         # deform the structure
         dst = DeformStructureTransformation(deformation=deformation)
-        deformed_structure = dst.apply_transformation(structure)
+        ts = TransformedStructure(structure, transformations=[dst])
+        deformed_structure = ts.final_structure
+
+        # write details of the transformation to the transformations.json file
+        # this file will automatically get added to the task document and allow
+        # the elastic builder to reconstruct the elastic document
+        elastic_relax_maker.write_additional_data["transformations.json"] = ts
 
         # create the job
         relax_job = elastic_relax_maker.make(
@@ -213,10 +210,9 @@ def run_elastic_deformations(
         output = {
             "stress": relax_job.output.output.stress,
             "deformation": deformation,
+            "uuid": relax_job.output.uuid,
+            "job_dir": relax_job.output.dir_name,
         }
-
-        if symmetry_ops is not None:
-            output["symmetry_ops"] = symmetry_ops[i]
 
         outputs.append(output)
 
@@ -230,7 +226,8 @@ def fit_elastic_tensor(
     deformation_data: List[dict],
     equilibrium_stress: Optional[Matrix3D] = None,
     order: int = 2,
-    fitting_method: str = "finite_difference",
+    fitting_method: str = settings.ELASTIC_FITTING_METHOD,
+    symprec: float = settings.SYMPREC,
 ):
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.
@@ -241,7 +238,7 @@ def fit_elastic_tensor(
         A pymatgen structure.
     deformation_data
         The deformation data, as a list of dictionaries, each containing the keys
-        "stress", "deformation", and (optionally) "symmetry_ops".
+        "stress", "deformation".
     equilibrium_stress
         The equilibrium stress of the (relaxed) structure, if known.
     order
@@ -252,25 +249,24 @@ def fit_elastic_tensor(
         - "finite_difference" (note this is required if fitting a 3rd order tensor)
         - "independent"
         - "pseudoinverse"
+    symprec
+        Symmetry precision for deriving symmetry equivalent deformations. If
+        ``symprec=None``, then no symmetry operations will be applied.
     """
     stresses = []
     deformations = []
+    uuids = []
+    job_dirs = []
     for data in deformation_data:
 
         # stress could be none if the deformation calculation failed
         if data["stress"] is None:
             continue
 
-        stress = Stress(data["stress"])
-        deformation = Deformation(data["deformation"])
-
-        stresses.append(stress)
-        deformations.append(deformation)
-
-        # add derived stresses and strains if symmetry operations are present
-        for symmop in data.get("symmetry_ops", []):
-            stresses.append(stress.transform(symmop))
-            deformations.append(deformation.transform(symmop))
+        stresses.append(Stress(data["stress"]))
+        deformations.append(Deformation(data["deformation"]))
+        uuids.append(data["uuid"])
+        job_dirs.append(data["job_dir"])
 
     logger.info("Analyzing stress/strain data")
 
@@ -278,8 +274,11 @@ def fit_elastic_tensor(
         structure,
         stresses,
         deformations,
-        fitting_method,
-        order,
+        uuids,
+        job_dirs,
+        fitting_method=fitting_method,
+        order=order,
         equilibrium_stress=equilibrium_stress,
+        symprec=symprec,
     )
     return elastic_doc

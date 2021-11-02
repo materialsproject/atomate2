@@ -423,7 +423,7 @@ class FileClient:
             Overwrite non-gzipped file if it already exists.
         """
         path = self.abspath(path, host=host)
-        path_nongz = path.stem
+        path_nongz = path.with_suffix("")
 
         if not str(path).lower().endswith("gz"):
             warnings.warn(f"{path} is not gzipped, skipping...")

@@ -45,8 +45,11 @@ class Settings(BaseSettings):
     VASP_NCL_CMD: str = Field(
         "vasp_ncl", description="Command to run ncl version of VASP."
     )
-    VASP_VDW_KERNEL_DIRR: str = Field(
+    VASP_VDW_KERNEL_DIR: str = Field(
         ">>vdw_kernel_dir<<", description="Path to VDW VASP kernel."
+    )
+    VASP_INCAR_UPDATES: dict = Field(
+        default_factory=dict, description="Updates to apply to VASP INCAR files."
     )
     VASP_ADD_NAMEFILE: bool = Field(
         True, description="Whether vasp.powerups.add_common_powerups adds a namefile"
@@ -98,6 +101,16 @@ class Settings(BaseSettings):
         False,
         description="Whether to run the Bader program when parsing VASP calculations."
         "Requires the bader command to be on the path.",
+    )
+
+    # Elastic constant settings
+    ELASTIC_FITTING_METHOD: str = Field(
+        "finite_difference", description="Elastic constant fitting method"
+    )
+
+    # AMSET settings
+    AMSET_SETTINGS_UPDATE: dict = Field(
+        None, description="Additional settings applied to AMSET settings file."
     )
 
     class Config:

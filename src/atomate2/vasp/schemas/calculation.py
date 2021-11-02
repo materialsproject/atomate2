@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import numpy as np
 from jobflow.utils import ValueEnum
 from monty.os.path import which
 from pydantic import BaseModel, Field
@@ -171,17 +172,15 @@ class CalculationInput(BaseModel):
 class RunStatistics(BaseModel):
     """Summary of the run statistics for a VASP calculation."""
 
-    average_memory: float = Field(None, description="The average memory used in kb")
-    max_memory: float = Field(None, description="The maximum memory used in kb")
-    elapsed_time: float = Field(None, description="The real time elapsed in seconds")
-    system_time: float = Field(None, description="The system CPU time in seconds")
+    average_memory: float = Field(0, description="The average memory used in kb")
+    max_memory: float = Field(0, description="The maximum memory used in kb")
+    elapsed_time: float = Field(0, description="The real time elapsed in seconds")
+    system_time: float = Field(0, description="The system CPU time in seconds")
     user_time: float = Field(
-        None, description="The user CPU time spent by VASP in seconds"
+        0, description="The user CPU time spent by VASP in seconds"
     )
-    total_time: float = Field(
-        None, description="The total CPU time for this calculation"
-    )
-    cores: int = Field(None, description="The number of cores used by VASP")
+    total_time: float = Field(0, description="The total CPU time for this calculation")
+    cores: int = Field(0, description="The number of cores used by VASP")
 
     @classmethod
     def from_outcar(cls, outcar: Outcar) -> "RunStatistics":
@@ -208,7 +207,7 @@ class RunStatistics(BaseModel):
             "Total CPU time used (sec)": "total_time",
             "cores": "cores",
         }
-        return cls(**{v: outcar.run_stats.get(k, None) for k, v in mapping.items()})
+        return cls(**{v: outcar.run_stats.get(k) or 0 for k, v in mapping.items()})
 
 
 class CalculationOutput(BaseModel):
@@ -264,10 +263,15 @@ class CalculationOutput(BaseModel):
     force_constants: List[List[Matrix3D]] = Field(
         None, description="Force constants between every pair of atoms in the structure"
     )
-    normalmode_eigenvals: List[float] = Field(
-        None, description="Normal mode eigenvalues of phonon modes at Gamma"
+    normalmode_frequencies: List[float] = Field(
+        None, description="Frequencies in THz of the normal modes at Gamma"
     )
-    normalmode_eigenvecs: List[Vector3D] = Field(
+    normalmode_eigenvals: List[float] = Field(
+        None,
+        description="Normal mode eigenvalues of phonon modes at Gamma. "
+        "Note the unit changed between VASP 5 and 6.",
+    )
+    normalmode_eigenvecs: List[List[Vector3D]] = Field(
         None, description="Normal mode eigenvectors of phonon modes at Gamma"
     )
     run_stats: RunStatistics = Field(
@@ -309,7 +313,7 @@ class CalculationOutput(BaseModel):
         except Exception:
             logger.warning("Error in parsing bandstructure")
             if vasprun.incar["IBRION"] == 1:
-                logger.warning("Vasp doesn't properly output efermi for IBRION == 1")
+                logger.warning("VASP doesn't properly output efermi for IBRION == 1")
             electronic_output = {}
 
         locpot_avg = None
@@ -321,8 +325,18 @@ class CalculationOutput(BaseModel):
         # parse force constants
         phonon_output = {}
         if hasattr(vasprun, "force_constants"):
+            # convert eigenvalues to frequency
+            eigs = -vasprun.normalmode_eigenvals
+            frequencies = np.sqrt(np.abs(eigs)) * np.sign(eigs)
+
+            # convert to THz in VASP 5 and lower; VASP 6 uses THz internally
+            major_version = int(vasprun.vasp_version.split(".")[0])
+            if major_version < 6:
+                frequencies *= 15.633302
+
             phonon_output = dict(
                 force_constants=vasprun.force_constants.tolist(),
+                normalmode_frequencies=frequencies.tolist(),
                 normalmode_eigenvals=vasprun.normalmode_eigenvals.tolist(),
                 normalmode_eigenvecs=vasprun.normalmode_eigenvecs.tolist(),
             )
@@ -582,7 +596,7 @@ def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dict]
     nsw = vasprun.incar.get("NSW", 0)
     dos = None
     if parse_mode is True or (parse_mode == "auto" and nsw < 1):
-        dos = vasprun.complete_dos.as_dict()
+        dos = vasprun.complete_dos
     return dos
 
 
@@ -607,12 +621,12 @@ def _parse_bandstructure(
 
         # only save the bandstructure if not moving ions
         if vasprun.incar.get("NSW", 0) <= 1:
-            return bs.as_dict()
+            return bs
 
     elif parse_mode:
         # legacy line/True behavior for bandstructure_mode
         bs_vrun = BSVasprun(vasprun_file, parse_projected_eigen=True)
         bs = bs_vrun.get_band_structure(line_mode=(parse_mode == "line"))
-        return bs.as_dict()
+        return bs
 
     return None

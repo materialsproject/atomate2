@@ -18,17 +18,17 @@ repos:
     - --remove-unused-variable
     - --ignore-init-module-imports
 - repo: https://github.com/psf/black
-  rev: 21.5b1
+  rev: 21.9b0
   hooks:
   - id: black
 - repo: https://github.com/asottile/blacken-docs
-  rev: v1.10.0
+  rev: v1.11.0
   hooks:
   - id: blacken-docs
     additional_dependencies: [black==21.5b0]
     exclude: README.md
 - repo: https://github.com/pycqa/isort
-  rev: 5.8.0
+  rev: 5.9.3
   hooks:
   - id: isort
     name: isort (python)
@@ -52,14 +52,14 @@ repos:
     - flake8-rst-docstrings==0.2.3
     - flake8-rst==0.8.0
 - repo: https://github.com/pre-commit/pygrep-hooks
-  rev: v1.8.0
+  rev: v1.9.0
   hooks:
   - id: python-use-type-annotations
   - id: rst-backticks
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.812
+  rev: v0.910-1
   hooks:
   - id: mypy
     files: ^src/
@@ -68,3 +68,5 @@ repos:
     - --ignore-missing-imports
     additional_dependencies:
     - tokenize-rt==4.1.0
+    - types-pkg_resources==0.1.2
+    - types-paramiko

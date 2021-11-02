@@ -7,158 +7,122 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
 
-from jobflow import Response, job
-from monty.shutil import gzip_dir
+from jobflow import job
 from pymatgen.core.structure import Structure
 
-from atomate2.vasp.drones import VaspDrone
-from atomate2.vasp.file import copy_vasp_outputs
-from atomate2.vasp.inputs import write_vasp_input_set
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
+from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.core import (
+    HSEBSSetGenerator,
+    HSERelaxSetGenerator,
+    HSEStaticSetGenerator,
+    NonSCFSetGenerator,
+    RelaxSetGenerator,
+    StaticSetGenerator,
+)
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["StaticMaker", "RelaxMaker", "NonSCFMaker", "DFPTMaker", "HSEBSMaker"]
+__all__ = [
+    "StaticMaker",
+    "RelaxMaker",
+    "NonSCFMaker",
+    "DielectricMaker",
+    "HSEBSMaker",
+    "HSERelaxMaker",
+    "HSEStaticMaker",
+]
 
 
 @dataclass
 class StaticMaker(BaseVaspMaker):
-    """Maker to create VASP static jobs."""
+    """
+    Maker to create VASP static jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "static"
-    input_set: str = "MPStaticSet"
-    input_set_kwargs: dict = field(default_factory=dict)
-    write_vasp_input_set_kwargs: dict = field(default_factory=dict)
-    copy_vasp_kwargs: dict = field(default_factory=dict)
-    run_vasp_kwargs: dict = field(default_factory=dict)
-    vasp_drone_kwargs: dict = field(default_factory=dict)
-    stop_children_kwargs: dict = field(default_factory=dict)
-
-    @job(output_schema=TaskDocument)
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
-        """
-        Run a static VASP calculation.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure object.
-        prev_vasp_dir
-            A previous VASP calculation directory to copy output files from.
-        """
-        # copy previous inputs
-        from_prev = prev_vasp_dir is not None
-        if prev_vasp_dir is not None:
-            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
-
-        if "from_prev" not in self.write_vasp_input_set_kwargs:
-            self.write_vasp_input_set_kwargs["from_prev"] = from_prev
-
-        # write vasp input files
-        write_vasp_input_set(
-            structure,
-            self.input_set,
-            self.input_set_kwargs,
-            **self.write_vasp_input_set_kwargs
-        )
-
-        # run vasp
-        run_vasp(**self.run_vasp_kwargs)
-
-        # parse vasp outputs
-        drone = VaspDrone(**self.vasp_drone_kwargs)
-        task_doc = drone.assimilate()
-        task_doc.task_label = self.name
-
-        # decide whether child jobs should proceed
-        stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
-
-        # gzip folder
-        gzip_dir(".")
-
-        return Response(
-            stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
-            output=task_doc,
-        )
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=StaticSetGenerator
+    )
 
 
 @dataclass
 class RelaxMaker(BaseVaspMaker):
-    """Maker to create VASP relaxation jobs."""
+    """
+    Maker to create VASP relaxation jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "relax"
-    input_set: str = "MPRelaxSet"
-    input_set_kwargs: dict = field(default_factory=dict)
-    write_vasp_input_set_kwargs: dict = field(default_factory=dict)
-    copy_vasp_kwargs: dict = field(default_factory=dict)
-    run_vasp_kwargs: dict = field(default_factory=dict)
-    vasp_drone_kwargs: dict = field(default_factory=dict)
-    stop_children_kwargs: dict = field(default_factory=dict)
-
-    @job(output_schema=TaskDocument)
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
-        """
-        Run an optimization VASP calculation.
-
-        Parameters
-        ----------
-        structure
-            A pymatgen structure object.
-        prev_vasp_dir
-            A previous VASP calculation directory to copy output files from.
-        """
-        # copy previous inputs
-        from_prev = prev_vasp_dir is not None
-        if prev_vasp_dir is not None:
-            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
-
-        if "from_prev" not in self.write_vasp_input_set_kwargs:
-            self.write_vasp_input_set_kwargs["from_prev"] = from_prev
-
-        # write vasp input files
-        write_vasp_input_set(
-            structure,
-            self.input_set,
-            self.input_set_kwargs,
-            **self.write_vasp_input_set_kwargs
-        )
-
-        # run vasp
-        run_vasp(**self.run_vasp_kwargs)
-
-        # parse vasp outputs
-        drone = VaspDrone(**self.vasp_drone_kwargs)
-        task_doc = drone.assimilate()
-        task_doc.task_label = self.name
-
-        # decide whether child jobs should proceed
-        stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
-
-        # gzip folder
-        gzip_dir(".")
-
-        return Response(
-            stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
-            output=task_doc,
-        )
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=RelaxSetGenerator
+    )
 
 
 @dataclass
 class NonSCFMaker(BaseVaspMaker):
-    """Maker to create non self consistent field VASP jobs."""
+    """
+    Maker to create non self consistent field VASP jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "non-scf"
-    input_set: str = "MPNonSCFSet"
-    input_set_kwargs: dict = field(default_factory=dict)
-    write_vasp_input_set_kwargs: dict = field(default_factory=dict)
-    copy_vasp_kwargs: dict = field(default_factory=dict)
-    run_vasp_kwargs: dict = field(default_factory=dict)
-    vasp_drone_kwargs: dict = field(default_factory=dict)
-    stop_children_kwargs: dict = field(default_factory=dict)
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=NonSCFSetGenerator
+    )
 
     @job(output_schema=TaskDocument)
     def make(
@@ -181,131 +145,110 @@ class NonSCFMaker(BaseVaspMaker):
             - "line": Full band structure along symmetry lines.
             - "uniform": Uniform mesh band structure.
         """
+        self.input_set_generator.mode = mode
+
+        if "parse_dos" not in self.task_document_kwargs:
+            # parse DOS only for uniform band structure
+            self.task_document_kwargs["parse_dos"] = mode == "uniform"
+
+        if "parse_bandstructure" not in self.task_document_kwargs:
+            self.task_document_kwargs["parse_bandstructure"] = mode
+
         # copy previous inputs
         if "additional_vasp_files" not in self.copy_vasp_kwargs:
             self.copy_vasp_kwargs["additional_vasp_files"] = ("CHGCAR",)
 
-        copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
-
-        if "from_prev" not in self.write_vasp_input_set_kwargs:
-            self.write_vasp_input_set_kwargs["from_prev"] = True
-
-        if "mode" not in self.input_set_kwargs:
-            self.input_set_kwargs["mode"] = mode
-
-        # write vasp input files
-        write_vasp_input_set(
-            structure,
-            self.input_set,
-            self.input_set_kwargs,
-            **self.write_vasp_input_set_kwargs
-        )
-
-        # run vasp
-        run_vasp(**self.run_vasp_kwargs)
-
-        if "parse_dos" not in self.vasp_drone_kwargs:
-            # parse DOS only for uniform band structure
-            self.vasp_drone_kwargs["parse_dos"] = mode == "uniform"
-
-        if "parse_bandstructure" not in self.vasp_drone_kwargs:
-            self.vasp_drone_kwargs["parse_bandstructure"] = mode
-
-        # parse vasp outputs
-        drone = VaspDrone(**self.vasp_drone_kwargs)
-        task_doc = drone.assimilate()
-        task_doc.task_label = self.name
-
-        # decide whether child jobs should proceed
-        stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
-
-        # gzip folder
-        gzip_dir(".")
-
-        return Response(
-            stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
-            output=task_doc,
-        )
+        return super().make.original(self, structure, prev_vasp_dir)
 
 
 @dataclass
-class DFPTMaker(BaseVaspMaker):
-    """Maker to create DFPT VASP jobs."""
+class HSERelaxMaker(BaseVaspMaker):
+    """
+    Maker to create HSE06 relaxation jobs.
 
-    name: str = "dfpt"
-    input_set: str = "MPStaticSet"
-    input_set_kwargs: dict = field(default_factory=dict)
-    write_vasp_input_set_kwargs: dict = field(default_factory=dict)
-    copy_vasp_kwargs: dict = field(default_factory=dict)
-    run_vasp_kwargs: dict = field(default_factory=dict)
-    vasp_drone_kwargs: dict = field(default_factory=dict)
-    stop_children_kwargs: dict = field(default_factory=dict)
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
-    @job(output_schema=TaskDocument)
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
-        """
-        Run a DFPT VASP job.
+    name: str = "hse relax"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=HSERelaxSetGenerator
+    )
 
-        Parameters
-        ----------
-        structure
-            A pymatgen structure object.
-        prev_vasp_dir
-            A previous VASP calculation directory to copy output files from.
-        """
-        # copy previous inputs
-        from_prev = prev_vasp_dir is not None
-        if prev_vasp_dir is not None:
-            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
 
-        if "from_prev" not in self.write_vasp_input_set_kwargs:
-            self.write_vasp_input_set_kwargs["from_prev"] = from_prev
+@dataclass
+class HSEStaticMaker(BaseVaspMaker):
+    """
+    Maker to create HSE06 static jobs.
 
-        if "lepsilon" not in self.input_set_kwargs:
-            self.input_set_kwargs["lepsilon"] = True
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
-        # write vasp input files
-        write_vasp_input_set(
-            structure,
-            self.input_set,
-            self.input_set_kwargs,
-            **self.write_vasp_input_set_kwargs
-        )
-
-        # run vasp
-        run_vasp(**self.run_vasp_kwargs)
-
-        # parse vasp outputs
-        drone = VaspDrone(**self.vasp_drone_kwargs)
-        task_doc = drone.assimilate()
-        task_doc.task_label = self.name
-
-        # decide whether child jobs should proceed
-        stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
-
-        # gzip folder
-        gzip_dir(".")
-
-        return Response(
-            stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
-            output=task_doc,
-        )
+    name: str = "hse static"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=HSEStaticSetGenerator
+    )
 
 
 @dataclass
 class HSEBSMaker(BaseVaspMaker):
-    """Maker to create DFPT VASP jobs."""
+    """
+    Maker to create HSE06 band structure jobs.
+
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
     name: str = "hse band structure"
-    input_set: str = "MPHSEBSSet"
-    input_set_kwargs: dict = field(default_factory=dict)
-    write_vasp_input_set_kwargs: dict = field(default_factory=dict)
-    copy_vasp_kwargs: dict = field(default_factory=dict)
-    run_vasp_kwargs: dict = field(default_factory=dict)
-    vasp_drone_kwargs: dict = field(default_factory=dict)
-    stop_children_kwargs: dict = field(default_factory=dict)
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=HSEBSSetGenerator
+    )
 
     @job(output_schema=TaskDocument)
     def make(
@@ -329,55 +272,59 @@ class HSEBSMaker(BaseVaspMaker):
             - "uniform": Uniform mesh band structure.
             - "gap": Get the energy at the CBM and VBM.
         """
+        self.input_set_generator.mode = mode
+
         if mode == "gap" and prev_vasp_dir is None:
             logger.warning(
                 "HSE band structure in 'gap' mode requires a previous VASP calculation "
                 "directory from which to extract the VBM and CBM k-points. This "
                 "calculation will instead be a standard uniform calculation."
             )
+            mode = "uniform"
+
+        if "parse_dos" not in self.task_document_kwargs:
+            # parse DOS only for uniform band structure
+            self.task_document_kwargs["parse_dos"] = mode == "uniform"
+
+        if "parse_bandstructure" not in self.task_document_kwargs:
+            parse_bandstructure = "uniform" if mode == "gap" else mode
+            self.task_document_kwargs["parse_bandstructure"] = parse_bandstructure
 
         # copy previous inputs
-        from_prev = prev_vasp_dir is not None
-        if prev_vasp_dir is not None:
-            if "additional_vasp_files" not in self.copy_vasp_kwargs:
-                self.copy_vasp_kwargs["additional_vasp_files"] = ("CHGCAR",)
-            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
+        if (
+            prev_vasp_dir is not None
+            and "additional_vasp_files" not in self.copy_vasp_kwargs
+        ):
+            self.copy_vasp_kwargs["additional_vasp_files"] = ("CHGCAR",)
 
-        if "from_prev" not in self.write_vasp_input_set_kwargs:
-            self.write_vasp_input_set_kwargs["from_prev"] = from_prev
+        return super().make.original(self, structure, prev_vasp_dir)
 
-        # write vasp input files
-        write_vasp_input_set(
-            structure,
-            self.input_set,
-            self.input_set_kwargs,
-            **self.write_vasp_input_set_kwargs
-        )
 
-        # run vasp
-        run_vasp(**self.run_vasp_kwargs)
+@dataclass
+class DielectricMaker(BaseVaspMaker):
+    """
+    Maker to create dielectric calculation VASP jobs.
 
-        if "parse_dos" not in self.vasp_drone_kwargs:
-            # parse DOS only for uniform band structure
-            self.vasp_drone_kwargs["parse_dos"] = mode == "uniform"
+    Parameters
+    ----------
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
 
-        if "parse_bandstructure" not in self.vasp_drone_kwargs:
-            parse_bandstructure = "uniform" if mode == "gap" else mode
-            self.vasp_drone_kwargs["parse_bandstructure"] = parse_bandstructure
-
-        # parse vasp outputs
-        drone = VaspDrone(**self.vasp_drone_kwargs)
-        task_doc = drone.assimilate()
-        task_doc.task_label = self.name
-
-        # decide whether child jobs should proceed
-        stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
-
-        # gzip folder
-        gzip_dir(".")
-
-        return Response(
-            stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
-            output=task_doc,
-        )
+    name: str = "dielectric"
+    input_set_generator: StaticSetGenerator = field(
+        default_factory=lambda: StaticSetGenerator(lepsilon=True)
+    )

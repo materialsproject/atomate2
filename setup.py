@@ -10,8 +10,8 @@ with open(module_dir / "README.md") as f:
 if __name__ == "__main__":
     setup(
         name="atomate2",
-        use_scm_version=True,
         setup_requires=["setuptools_scm"],
+        use_scm_version={"version_scheme": "python-simplified-semver"},
         description="atomate2 is a library of materials science workflows",
         long_description=long_description,
         long_description_content_type="text/markdown",
@@ -32,28 +32,32 @@ if __name__ == "__main__":
             "pydantic",
             "monty",
             "jobflow",
+            "PyYAML",
             "numpy",
-            "emmet-core>=0.2.1",
+            "click",
         ],
         extras_require={
+            ':python_version < "3.8"': [
+                "typing-extensions",
+            ],
+            "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
-                "sphinx==3.5.3",
-                "furo==2021.3.20b30",
-                "m2r2==0.2.7",
-                "ipython==7.24.1",
-                "nbsphinx==0.8.6",
-                "nbsphinx-link==1.3.0",
+                "sphinx==4.2.0",
+                "numpydoc==1.1.0",
+                "m2r2==0.3.1",
+                "ipython==7.28.0",
                 "FireWorks==1.9.7",
+                "pydata-sphinx-theme==0.7.1",
+                "autodoc_pydantic==1.5.0",
+                "sphinx_panels==0.6.0",
             ],
             "tests": [
-                "pytest==6.2.4",
-                "pytest-cov==2.11.1",
+                "pytest==6.2.5",
+                "pytest-cov==3.0.0",
                 "FireWorks==1.9.7",
-                "matplotlib==3.4.2",
+                # "amset==0.4.15",
             ],
             "dev": ["pre-commit>=2.12.1"],
-            "plotting": ["matplotlib"],
-            "rtransfer": ["paramiko>=2.4.2"],
             "phonons": ["phonopy>=1.10.8"],
         },
         classifiers=[
@@ -71,4 +75,9 @@ if __name__ == "__main__":
         ],
         python_requires=">=3.7",
         tests_require=["pytest"],
+        entry_points={
+            "console_scripts": [
+                "atm = atomate2.cli:cli",
+            ]
+        },
     )
