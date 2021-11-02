@@ -10,8 +10,8 @@ with open(module_dir / "README.md") as f:
 if __name__ == "__main__":
     setup(
         name="atomate2",
-        use_scm_version=True,
         setup_requires=["setuptools_scm"],
+        use_scm_version={"version_scheme": "python-simplified-semver"},
         description="atomate2 is a library of materials science workflows",
         long_description=long_description,
         long_description_content_type="text/markdown",
@@ -50,11 +50,9 @@ if __name__ == "__main__":
                 "pytest==6.2.5",
                 "pytest-cov==3.0.0",
                 "FireWorks==1.9.7",
-                "matplotlib==3.4.3",
+                "amset==0.4.15",
             ],
             "dev": ["pre-commit>=2.12.1"],
-            "plotting": ["matplotlib"],
-            "rtransfer": ["paramiko>=2.4.2"],
             "phonons": ["phonopy>=1.10.8"],
         },
         classifiers=[
