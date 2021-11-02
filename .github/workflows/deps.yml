@@ -3,7 +3,7 @@ name: Merge dependencies
 on:
   workflow_run:
     workflows:
-      - Run tests
+      - testing
     types:
       - completed
 
@@ -13,8 +13,7 @@ jobs:
     steps:
       - if: ${{ github.event.workflow_run.conclusion == 'success' }}
         name: Merge me!
-        uses: ridedott/merge-me-action@v2
+        uses: ridedott/merge-me-action@master
         with:
           GITHUB_LOGIN: dependabot
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAXIMUM_RETRIES: 2
