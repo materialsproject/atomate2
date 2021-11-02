@@ -1,11 +1,11 @@
 License
 =======
 
-``jobflow`` is developed under a modified BSD license, reproduced below:
+``atomate2`` is developed under a modified BSD license, reproduced below:
 
 .. code-block:: raw
 
-    jobflow Copyright (c) 2021, The Regents of the University of
+    atomate2 Copyright (c) 2021, The Regents of the University of
     California, through Lawrence Berkeley National Laboratory (subject
     to receipt of any required approvals from the U.S. Dept. of Energy).
     All rights reserved.
