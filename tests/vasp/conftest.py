@@ -64,7 +64,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     For examples, see the tests in tests/vasp/makers/core.py.
     """
     import atomate2.vasp.run
-    from atomate2.vasp.sets.base import VaspInputSet
+    from atomate2.vasp.sets.base import VaspInputSetGenerator
 
     def mock_run_vasp():
         from jobflow import CURRENT_JOB
@@ -73,14 +73,14 @@ def mock_vasp(monkeypatch, vasp_test_dir):
         ref_path = vasp_test_dir / _REF_PATHS[name]
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
-    write_input_orig = VaspInputSet.write_input
+    get_input_set_orig = VaspInputSetGenerator.get_input_set
 
-    def mock_write_input(self, *args, **kwargs):
+    def mock_get_input_set(self, *args, **kwargs):
         kwargs["potcar_spec"] = True
-        write_input_orig(self, *args, **kwargs)
+        return get_input_set_orig(self, *args, **kwargs)
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(VaspInputSet, "write_input", mock_write_input)
+    monkeypatch.setattr(VaspInputSetGenerator, "get_input_set", mock_get_input_set)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
         if fake_run_vasp_kwargs is None:

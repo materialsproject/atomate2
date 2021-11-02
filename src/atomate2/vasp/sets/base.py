@@ -6,7 +6,7 @@ from copy import deepcopy
 from itertools import groupby
 from math import pi
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 from monty.io import zopen
@@ -54,8 +54,8 @@ class VaspInputSet(InputSet):
         self,
         incar: Incar,
         poscar: Poscar,
-        potcar: Potcar,
-        kpoints: Kpoints,
+        potcar: Union[Potcar, List[str]],
+        kpoints: Optional[Kpoints] = None,
         optional_files: Optional[Dict] = None,
     ):
         self.incar = incar
@@ -82,12 +82,6 @@ class VaspInputSet(InputSet):
             Whether to create the directory if it does not already exist.
         overwrite
             Whether to overwrite an input file if it already exists.
-        potcar_spec
-            Instead of writing the POTCAR, write a "POTCAR.spec". This is intended to
-            help sharing an input set with people who might not have a license to
-            specific Potcar files. Given a "POTCAR.spec", the specific POTCAR file can
-            be re-generated using pymatgen with the "generate_potcar" function in the
-            pymatgen CLI.
         """
         directory = Path(directory)
         if make_dir and not directory.exists():
@@ -95,15 +89,15 @@ class VaspInputSet(InputSet):
 
         inputs = {
             "INCAR": self.incar,
-            "POTCAR": self.potcar,
             "KPOINTS": self.kpoints,
             "POSCAR": self.poscar,
         }
         inputs.update(self.optional_files)
 
-        if potcar_spec:
-            inputs.pop("POTCAR")
-            inputs["POTCAR.spec"] = "\n".join(self.potcar.symbols)
+        if isinstance(self.potcar, Potcar):
+            inputs["POTCAR"] = self.potcar
+        else:
+            inputs["POTCAR.spec"] = "\n".join(self.potcar)
 
         for k, v in inputs.items():
             if v is not None and (overwrite or not (directory / k).exists()):
@@ -318,7 +312,10 @@ class VaspInputSetGenerator(InputSetGenerator):
                 self._config_dict["POTCAR"][k] = v
 
     def get_input_set(  # type: ignore
-        self, structure: Structure = None, prev_dir: Union[str, Path] = None
+        self,
+        structure: Structure = None,
+        prev_dir: Union[str, Path] = None,
+        potcar_spec: bool = False,
     ) -> VaspInputSet:
         """
         Get a VASP input set.
@@ -332,6 +329,12 @@ class VaspInputSetGenerator(InputSetGenerator):
             A structure.
         prev_dir
             A previous directory to generate the input set from.
+        potcar_spec
+            Instead of generating a Potcar object, use a list of potcar symbols. This
+            will be written as a "POTCAR.spec" file. This is intended to help sharing an
+            input set with people who might not have a license to specific Potcar files.
+            Given a "POTCAR.spec", the specific POTCAR file can be re-generated using
+            pymatgen with the "generate_potcar" function in the pymatgen CLI.
 
         Returns
         -------
@@ -364,7 +367,7 @@ class VaspInputSetGenerator(InputSetGenerator):
             incar=incar,
             kpoints=kpoints,
             poscar=Poscar(structure),
-            potcar=self._get_potcar(structure),
+            potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
         )
 
     def get_incar_updates(
@@ -445,7 +448,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         float
             Number of electrons for the structure.
         """
-        potcar = self._get_potcar(structure)
+        potcar = self._get_potcar(structure, potcar_spec=False)
         nelec = {p.element: p.nelectrons for p in potcar}
         comp = structure.composition.element_composition
         nelect = sum([num_atoms * nelec[str(el)] for el, num_atoms in comp.items()])
@@ -487,10 +490,14 @@ class VaspInputSetGenerator(InputSetGenerator):
             get_valid_magmom_struct(structure, spin_mode="auto", inplace=True)
         return structure
 
-    def _get_potcar(self, structure):
+    def _get_potcar(self, structure, potcar_spec: bool = False):
         """Get the POTCAR."""
         elements = [a[0] for a in groupby([s.specie.symbol for s in structure])]
         potcar_symbols = [self._config_dict["POTCAR"].get(el, el) for el in elements]
+
+        if potcar_spec:
+            return potcar_symbols
+
         potcar = Potcar(potcar_symbols, functional=self.potcar_functional)
 
         # warn if the selected POTCARs do not correspond to the chosen potcar_functional
