@@ -36,6 +36,9 @@ if __name__ == "__main__":
             "click",
         ],
         extras_require={
+            ':python_version < "3.8"': [
+                "typing-extensions",
+            ],
             "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
                 "sphinx==4.2.0",

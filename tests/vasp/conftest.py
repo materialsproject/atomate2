@@ -1,8 +1,9 @@
 import logging
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import Sequence, Union
 
 import pytest
+from typing_extensions import Literal
 
 vfiles = ("incar", "kpoints", "potcar", "poscar")
 
