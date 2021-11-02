@@ -38,6 +38,7 @@ extensions = [
     "m2r2",
     "numpydoc",
     "sphinx_panels",
+    "sphinxcontrib.autodoc_pydantic",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -50,7 +51,7 @@ exclude_patterns = ["Thumbs.db", ".DS_Store", "test*.py"]
 
 # use type hints
 autodoc_typehints = "description"
-autoclass_content = "both"
+autoclass_content = "class"
 autodoc_member_order = "bysource"
 autodoc_inherit_docstrings = True
 python_use_unqualified_type_names = True
@@ -76,10 +77,8 @@ napoleon_use_param = True
 napoleon_use_rtype = True
 napoleon_use_ivar = True
 
-# sphinx-panels shouldn't add bootstrap css since the pydata-sphinx-theme
-# already loads it
+# sphinx-panels shouldn't add bootstrap css as the pydata-sphinx-theme already loads it
 panels_add_bootstrap_css = False
-
 
 # The suffix(es) of source filenames.
 source_suffix = [".rst", ".md"]
@@ -124,5 +123,6 @@ html_title = "atomate2"
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.8", None),
     "matplotlib": ("http://matplotlib.org", None),
+    "pymatgen": ("http://pymatgen.org", None),
     "monty": ("https://guide.materialsvirtuallab.org/monty/", None),
 }
