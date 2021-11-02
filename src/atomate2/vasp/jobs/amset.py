@@ -17,7 +17,7 @@ from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
 
-from atomate2.common.file import get_zfile
+from atomate2.common.files import get_zfile
 from atomate2.common.schemas.math import Vector3D
 from atomate2.settings import settings
 from atomate2.utils.file_client import FileClient

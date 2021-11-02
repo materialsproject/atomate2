@@ -11,7 +11,7 @@ from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.core import Structure
 
-from atomate2.vasp.file import copy_vasp_outputs, write_vasp_input_set
+from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.base import VaspInputSetGenerator

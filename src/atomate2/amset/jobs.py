@@ -9,8 +9,7 @@ from jobflow import Maker, Response, job
 from monty.serialization import loadfn
 from monty.shutil import gzip_dir
 
-from atomate2.amset.file import copy_amset_files
-from atomate2.amset.files import write_amset_settings
+from atomate2.amset.files import copy_amset_files, write_amset_settings
 from atomate2.amset.run import check_converged, run_amset
 from atomate2.amset.schemas import AmsetTaskDocument
 

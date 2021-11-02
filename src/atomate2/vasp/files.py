@@ -9,7 +9,7 @@ from typing import Optional, Sequence, Union
 
 from pymatgen.core import Structure
 
-from atomate2.common.file import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.settings import settings
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname

@@ -23,7 +23,7 @@ def vasp_test_data():
 
     from monty.serialization import loadfn
 
-    from atomate2.common.file import copy_files, delete_files, gunzip_files
+    from atomate2.common.files import copy_files, delete_files, gunzip_files
     from atomate2.utils.path import strip_hostname
     from atomate2.vasp.schemas.task import TaskDocument
 
