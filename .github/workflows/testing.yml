@@ -52,9 +52,6 @@ jobs:
       with:
         python-version:  ${{ matrix.python-version }}
 
-    - name: Setup Graphviz
-      uses: ts-graphviz/setup-graphviz@v1
-
     - uses: actions/cache@v2
       with:
         path: ~/.cache/pip
