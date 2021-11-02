@@ -95,16 +95,3 @@ jobs:
 
       - name: Build
         run: sphinx-build docs/src docs_build
-
-  merge-deps:
-    needs:
-      - lint
-      - test
-      - docs
-    runs-on: ubuntu-latest
-    steps:
-      - name: Merge me!
-        uses: ridedott/merge-me-action@master
-        with:
-          GITHUB_LOGIN: dependabot
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
