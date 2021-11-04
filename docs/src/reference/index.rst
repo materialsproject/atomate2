@@ -13,8 +13,8 @@ This section gives an overview of the API for atomate2.
    :toctree:
    :nosignatures:
 
-   vasp
    amset
-   utils
    common
    settings
+   utils
+   vasp

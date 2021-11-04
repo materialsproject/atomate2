@@ -1,33 +1,33 @@
-Install jobflow
-===============
+Installation
+============
 
-You can install jobflow with ``pip`` or from source.
+You can install atomate2 with ``pip`` or from source.
 
-Pip
----
+Install using pip
+-----------------
 
-You can install the basic functionality of jobflow using pip::
+You can install the basic functionality of atomate2 using pip::
 
-   pip install jobflow
+   pip install atomate2
 
-If you are planing to use jobflow with fireworks, you can install the optional fireworks
-components::
+If you are planing to use atomate2 with fireworks, you can install the optional
+fireworks components::
 
-   pip install jobflow[fireworks]
+   pip install atomate2[fireworks]
 
 We also maintain other dependency sets for different subsets of functionality::
 
-   pip install jobflow[vis]  # Install requirements for visualizing jobs and flows
+   pip install atomate2[amset]  # Install requirements for running AMSET calculations
 
 
 Install from source
 -------------------
 
-To install jobflow from source, clone the repository from `github
-<https://github.com/materialsproject/jobflow>`_::
+To install atomate2 from source, clone the repository from `github
+<https://github.com/materialsproject/atomate2>`_::
 
-    git clone https://github.com/materialsproject/jobflow.git
-    cd jobflow
+    git clone https://github.com/materialsproject/atomate2.git
+    cd atomate2
     pip install .
 
 You can also install fireworks dependencies::
@@ -39,8 +39,8 @@ Or do a developer install by using the ``-e`` flag::
     pip install -e .
 
 
-Test
-----
+Running unit tests
+------------------
 
 Unit tests can be run from the source folder using ``pytest``. First, the requirements
 to run tests must be installed::
@@ -54,7 +54,7 @@ And the tests run using::
 Building the documentation
 --------------------------
 
-The jobflow documentation can be built using the sphinx package. First, install the
+The atomate2 documentation can be built using the sphinx package. First, install the
 necessary requirement::
 
     pip install .[docs]

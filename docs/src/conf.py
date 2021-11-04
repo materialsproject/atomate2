@@ -9,7 +9,7 @@ import sys
 
 # import typing
 # typing.TYPE_CHECKING = True
-from jobflow import __version__
+from atomate2 import __version__
 
 sys.path.insert(0, os.path.abspath("../../"))
 
