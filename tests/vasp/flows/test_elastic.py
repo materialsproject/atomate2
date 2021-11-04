@@ -14,6 +14,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
         "elastic relax 4/6": "Si_elastic/elastic_relax_4_6",
         "elastic relax 5/6": "Si_elastic/elastic_relax_5_6",
         "elastic relax 6/6": "Si_elastic/elastic_relax_6_6",
+        "tight relax": "Si_elastic/tight_relax",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -24,6 +25,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
         "elastic relax 4/6": {"incar_settings": ["NSW", "ISMEAR"]},
         "elastic relax 5/6": {"incar_settings": ["NSW", "ISMEAR"]},
         "elastic relax 6/6": {"incar_settings": ["NSW", "ISMEAR"]},
+        "tight relax": {"incar_settings": ["NSW", "ISMEAR"]},
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
@@ -34,7 +36,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
     flow = ElasticMaker().make(si_prim)
     flow.update_maker_kwargs(
         {"_set": {"input_set_generator->user_kpoints_settings->grid_density": 100}},
-        name_filter="elastic relax",
+        name_filter="relax",
         dict_mod=True,
     )
 
@@ -47,12 +49,12 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
     assert np.allclose(
         elastic_output.elastic_tensor.ieee_format,
         [
-            [166.2222, 62.8196, 62.8196, 0.0, 0.0, 0.0],
-            [62.8196, 166.2222, 62.8196, 0.0, 0.0, 0.0],
-            [62.8196, 62.8196, 166.2222, 0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 34.5442, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 34.5442, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 34.5442],
+            [155.7923, 54.8871, 54.8871, 0.0, 0.0, 0.0],
+            [54.8871, 155.7923, 54.8871, 0.0, 0.0, 0.0],
+            [54.8871, 54.8871, 155.7923, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 31.5356, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 31.5356, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 31.5356],
         ],
         atol=1e-3,
     )
