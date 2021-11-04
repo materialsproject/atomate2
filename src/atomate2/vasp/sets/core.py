@@ -18,6 +18,7 @@ __all__ = [
     "HSERelaxSetGenerator",
     "HSEStaticSetGenerator",
     "HSEBSSetGenerator",
+    "HSETightRelaxSetGenerator",
 ]
 
 
@@ -363,6 +364,56 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
             "IBRION": 2,
             "PRECFOCK": "Fast",
             "ISIF": 3,
+        }
+
+
+class HSETightRelaxSetGenerator(VaspInputSetGenerator):
+    """Class to generate tight VASP HSE relaxation input sets."""
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a HSE tight relaxation job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {
+            "IBRION": 2,
+            "ISIF": 3,
+            "ENCUT": 700,
+            "EDIFF": 1e-7,
+            "LAECHG": False,
+            "EDIFFG": -0.001,
+            "LREAL": False,
+            "ALGO": "All",
+            "NSW": 99,
+            "LCHARG": False,
+            "GGA": "PE",
+            "HFSCREEN": 0.2,
+            "LHFCALC": True,
+            "PRECFOCK": "Fast",
         }
 
 

@@ -17,9 +17,11 @@ from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSERelaxSetGenerator,
     HSEStaticSetGenerator,
+    HSETightRelaxSetGenerator,
     NonSCFSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
+    TightRelaxSetGenerator,
 )
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,8 @@ __all__ = [
     "HSEBSMaker",
     "HSERelaxMaker",
     "HSEStaticMaker",
+    "TightRelaxMaker",
+    "HSETightRelaxMaker",
 ]
 
 
@@ -92,6 +96,36 @@ class RelaxMaker(BaseVaspMaker):
     name: str = "relax"
     input_set_generator: VaspInputSetGenerator = field(
         default_factory=RelaxSetGenerator
+    )
+
+
+@dataclass
+class TightRelaxMaker(BaseVaspMaker):
+    """
+    Maker to create tight VASP relaxation jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
+
+    name: str = "tight relax"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=TightRelaxSetGenerator
     )
 
 
@@ -188,6 +222,36 @@ class HSERelaxMaker(BaseVaspMaker):
     name: str = "hse relax"
     input_set_generator: VaspInputSetGenerator = field(
         default_factory=HSERelaxSetGenerator
+    )
+
+
+@dataclass
+class HSETightRelaxMaker(BaseVaspMaker):
+    """
+    Maker to create tight VASP relaxation jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    write_input_set_kwargs
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    run_vasp_kwargs
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
+
+    name: str = "hse tight relax"
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=HSETightRelaxSetGenerator
     )
 
 
@@ -304,6 +368,10 @@ class HSEBSMaker(BaseVaspMaker):
 class DielectricMaker(BaseVaspMaker):
     """
     Maker to create dielectric calculation VASP jobs.
+
+    .. Note::
+        The input structure should be well relaxed to avoid imaginary modes. For
+        example, using :obj:`TightRelaxMaker`.
 
     Parameters
     ----------
