@@ -80,6 +80,23 @@ napoleon_use_ivar = True
 # sphinx-panels shouldn't add bootstrap css as the pydata-sphinx-theme already loads it
 panels_add_bootstrap_css = False
 
+# control pydantic model docs
+autodoc_pydantic_model_show_json = False
+autodoc_pydantic_model_show_field_summary = False
+autodoc_pydantic_model_show_config = False
+autodoc_pydantic_model_show_config_summary = False
+autodoc_pydantic_model_show_validator_members = False
+autodoc_pydantic_model_member_order = "bysource"
+autodoc_pydantic_settings_show_json = False
+autodoc_pydantic_settings_show_field_summary = False
+autodoc_pydantic_settings_show_config = False
+autodoc_pydantic_settings_show_config_summary = False
+autodoc_pydantic_settings_show_validator_members = False
+autodoc_pydantic_settings_member_order = "bysource"
+autodoc_pydantic_field_list_validators = False
+
+autosummary_imported_members = False
+
 # The suffix(es) of source filenames.
 source_suffix = [".rst", ".md"]
 

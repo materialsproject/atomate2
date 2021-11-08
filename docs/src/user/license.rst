@@ -3,7 +3,7 @@ License
 
 ``atomate2`` is developed under a modified BSD license, reproduced below:
 
-.. code-block:: raw
+.. code-block::
 
     atomate2 Copyright (c) 2021, The Regents of the University of
     California, through Lawrence Berkeley National Laboratory (subject

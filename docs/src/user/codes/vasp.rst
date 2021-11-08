@@ -2,14 +2,46 @@
 VASP
 ====
 
+At present, most workflows in atomate2 use the Vienna *ab initio* simulation package
+(VASP) as the density functional theory code.
+
+By default, the input sets used in atomate2 differ from the input sets used in atomate1
+and are inconsistent with calculations performed in the Materials Project. The primary
+differences are:
+
+- Use of the PBEsol exchange–correlation functional instead of PBE.
+- Use of up-to-date pseudopotentials (PBE_54 instead of PBE_52).
+- Use of KSPACING for most calculations.
+
+.. warning::
+
+    The different input sets used in atomate2 mean total energies cannot be compared
+    against energies taken from the Materials Project.
+
 Configuration
 -------------
 
-List of settings.
+These workflows require VASP to be installed and on the path. Furthermore, the pymatgen
+package is used to write VASP input files such as POTCARs. Accordingly, pymatgen
+must be aware of where the pseudopotentials are installed. Please see the `pymatgen
+POTCAR setup guide <https://pymatgen.org/installation.html#potcar-setup>`_ for more
+details.
 
-setting vasp_cmd (also this can be set as an environment variable.
+All settings for controlling VASP execution can be set using the ``~/.atomate2.yaml``
+configuration file or using environment variables. For more details on configuring
+atomate2, see the :ref:`Configuration page <configuration>`.
 
-VASP defaults, PBEsol etc.
+The most important settings to consider are:
+
+- ``VASP_CMD``: The command used run the standard version of VASP. I.e., something like
+  ``mpi_run -n 16 vasp_std > vasp.out``.
+- ``VASP_GAMMA_CMD``: The command used to run the gamma-only version of VASP.
+- ``VASP_NCL_CMD``: The command used to run the the non-collinear version of VASP.
+- ``VASP_INCAR_UPDATES``: Updates to apply to VASP INCAR files. This allows you to
+  customise input sets on different machines, without having to change the submitted
+  workflows. For example, you can set certain parallelization parameters, such as
+  NCORE, KPAR etc.
+- ``VASP_VDW_KERNEL_DIR``: The path to the VASP Van der Waals kernel.
 
 List of VASP workflows
 ----------------------
@@ -111,9 +143,9 @@ See the Materials Project `documentation on elastic constants
 <https://docs.materialsproject.org/methodology/elasticity/>`_ for more details.
 
 .. Note::
-    It is strongly recommended to symmetrize the structure before passing running this
-    this workflow. Otherwise, the symmetry reduction routines will not be as
-    effective at reducing the number of deformations needed.
+    It is strongly recommended to symmetrize the structure before running this workflow.
+    Otherwise, the symmetry reduction routines will not be as effective at reducing the
+    number of deformations needed.
 
 Modifying input sets
 --------------------

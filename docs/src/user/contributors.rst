@@ -8,7 +8,7 @@ atomate2 was designed and developed by **Alex Ganose** |utf| |0000-0002-4486-332
    :width: 16
    :height: 16
    :alt: GitHub profile for computron
-.. |0000-0001-5893-9967| image:: _static/orcid.svg
+.. |0000-0001-5893-9967| image:: ../_static/orcid.svg
    :target: https://orcid.org/0000-0001-5893-9967
    :width: 16
    :height: 16
@@ -18,7 +18,7 @@ atomate2 was designed and developed by **Alex Ganose** |utf| |0000-0002-4486-332
    :width: 16
    :height: 16
    :alt: GitHub profile for utf
-.. |0000-0002-4486-3321| image:: _static/orcid.svg
+.. |0000-0002-4486-3321| image:: ../_static/orcid.svg
    :target: https://orcid.org/0000-0002-4486-3321
    :width: 16
    :height: 16

@@ -11,7 +11,8 @@ atomate2 documentation
 **Useful links**:
 `Source Repository <https://github.com/materialsproject/atomate2>`__ |
 `Issues & Ideas <https://github.com/materialsproject/atomate2/issues>`__ |
-`Q&A Support <https://matsci.com/c/atomate>`__
+`Q&A Support <https://matsci.org/c/atomate>`__
+
 
 :mod:`atomate2` is an open source library providing computational workflows for
 automating first principles calculations.
@@ -46,8 +47,7 @@ automating first principles calculations.
 
     +++
 
-    .. link-button:: <https://matsci.org/c/atomate>
-            :type: ref
+    .. link-button:: https://matsci.org/c/atomate
             :text: To the help forum
             :classes: btn-block btn-secondary stretched-link
 
@@ -79,7 +79,7 @@ automating first principles calculations.
 
     +++
 
-    .. link-button:: development
+    .. link-button:: dev
             :type: ref
             :text: To the development guide
             :classes: btn-block btn-secondary stretched-link

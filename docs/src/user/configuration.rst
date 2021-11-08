@@ -1,2 +1,6 @@
+.. _configuration:
+
 Configuration
 =============
+
+JobStore
