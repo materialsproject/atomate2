@@ -23,7 +23,7 @@ def run_amset(**kwargs):
     Parameters
     ----------
     **kwargs
-        Keyword arguments that will get passed to ``Runner.from_director``.
+        Keyword arguments that will get passed to ``Runner.from_directory``.
 
     Returns
     -------
@@ -50,7 +50,7 @@ def check_converged(
     """
     Check if all transport properties (averaged) are converged within the tol.
 
-    Properties
+    Parameters
     ----------
     new_transport
         The new transport data.

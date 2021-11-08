@@ -18,10 +18,10 @@ from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
 
+from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.common.schemas.math import Matrix3D
-from atomate2.settings import settings
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputSetGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
@@ -91,7 +91,7 @@ def generate_elastic_deformations(
     strain_states: List[Tuple[int, int, int, int, int, int]] = None,
     strain_magnitudes: Union[List[float], List[List[float]]] = None,
     conventional: bool = False,
-    symprec: float = settings.SYMPREC,
+    symprec: float = SETTINGS.SYMPREC,
     sym_reduce: bool = True,
 ):
     """
@@ -226,8 +226,8 @@ def fit_elastic_tensor(
     deformation_data: List[dict],
     equilibrium_stress: Optional[Matrix3D] = None,
     order: int = 2,
-    fitting_method: str = settings.ELASTIC_FITTING_METHOD,
-    symprec: float = settings.SYMPREC,
+    fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
+    symprec: float = SETTINGS.SYMPREC,
 ):
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.

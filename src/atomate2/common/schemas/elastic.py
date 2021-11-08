@@ -14,8 +14,8 @@ from pymatgen.analysis.elasticity import (
 )
 from pymatgen.core import Structure
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D, MatrixVoigt
-from atomate2.settings import settings
 
 __all__ = [
     "DerivedProperties",
@@ -143,10 +143,10 @@ class ElasticDocument(BaseModel):
         deformations: List[Deformation],
         uuids: List[str],
         job_dirs: List[str],
-        fitting_method: str = settings.ELASTIC_FITTING_METHOD,
+        fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
         order: int = None,
         equilibrium_stress: Optional[Matrix3D] = None,
-        symprec: float = settings.SYMPREC,
+        symprec: float = SETTINGS.SYMPREC,
     ):
         """
         Create an elastic document from strains and stresses.

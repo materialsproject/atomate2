@@ -5,12 +5,12 @@ from typing import Optional, Tuple, Union
 
 from pydantic import BaseSettings, Field, root_validator
 
-DEFAULT_CONFIG_FILE_PATH = str(Path.home() / ".atomate2.yaml")
+_DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
 
-__all__ = ["Settings", "settings"]
+__all__ = ["Atomate2Settings"]
 
 
-class Settings(BaseSettings):
+class Atomate2Settings(BaseSettings):
     """
     Settings for atomate2.
 
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     """
 
     CONFIG_FILE: str = Field(
-        DEFAULT_CONFIG_FILE_PATH, description="File to load alternative defaults from."
+        _DEFAULT_CONFIG_FILE_PATH, description="File to load alternative defaults from."
     )
 
     # general settings
@@ -82,9 +82,9 @@ class Settings(BaseSettings):
     VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
         "fizzle",
         description="Three-way toggle on what to do if the job looks OK but is actually"
-        " unconverged (either electronic or ionic). True -> mark job as COMPLETED, but "
-        "stop children. False --> do nothing, continue with workflow as normal. 'error'"
-        " --> throw an error",
+        " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
+        "stop children. - False: do nothing, continue with workflow as normal. 'error':"
+        " throw an error",
     )
     VASP_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
@@ -130,13 +130,11 @@ class Settings(BaseSettings):
         """
         from monty.serialization import loadfn
 
-        config_file_path: str = values.get("CONFIG_FILE", DEFAULT_CONFIG_FILE_PATH)
+        config_file_path: str = values.get("CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
 
         new_values = {}
         if Path(config_file_path).exists():
             new_values.update(loadfn(config_file_path))
 
+        new_values.update(values)
         return new_values
-
-
-settings = Settings()

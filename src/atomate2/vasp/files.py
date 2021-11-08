@@ -9,8 +9,8 @@ from typing import Optional, Sequence, Union
 
 from pymatgen.core import Structure
 
+from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
-from atomate2.settings import settings
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.sets.base import VaspInputSetGenerator
@@ -168,7 +168,7 @@ def write_vasp_input_set(
     vis = input_set_generator.get_input_set(structure, prev_dir=prev_dir)
 
     if apply_incar_updates:
-        vis.incar.update(settings.VASP_INCAR_UPDATES)
+        vis.incar.update(SETTINGS.VASP_INCAR_UPDATES)
 
     logger.info("Writing VASP input set.")
     vis.write_input(".", **kwargs)

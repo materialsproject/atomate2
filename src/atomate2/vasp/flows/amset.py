@@ -11,8 +11,8 @@ import numpy as np
 from jobflow import Flow, Maker, job
 from pymatgen.core.structure import Structure
 
+from atomate2 import SETTINGS
 from atomate2.amset.jobs import AmsetMaker
-from atomate2.settings import settings
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.jobs.amset import (
     DenseUniformMaker,
@@ -36,7 +36,7 @@ from atomate2.vasp.jobs.core import (
 
 __all__ = ["VaspAmsetMaker", "DeformationPotentialMaker", "HSEVaspAmsetMaker"]
 
-DEFAULT_DOPING = (
+_DEFAULT_DOPING = (
     1e16,
     1e17,
     1e18,
@@ -50,7 +50,7 @@ DEFAULT_DOPING = (
     -1e20,
     -1e21,
 )
-DEFAULT_TEMPERATURES = (200, 300, 400, 500, 600, 700, 800, 900, 1000)
+_DEFAULT_TEMPERATURES = (200, 300, 400, 500, 600, 700, 800, 900, 1000)
 
 
 @dataclass
@@ -77,7 +77,7 @@ class DeformationPotentialMaker(Maker):
     """
 
     name: str = "deformation potential"
-    symprec: float = settings.SYMPREC
+    symprec: float = SETTINGS.SYMPREC
     static_deformation_maker: BaseVaspMaker = field(
         default_factory=StaticDeformationMaker
     )
@@ -177,8 +177,8 @@ class VaspAmsetMaker(Maker):
     """
 
     name: str = "VASP amset"
-    doping: Tuple[float, ...] = DEFAULT_DOPING
-    temperatures: Tuple[float, ...] = DEFAULT_TEMPERATURES
+    doping: Tuple[float, ...] = _DEFAULT_DOPING
+    temperatures: Tuple[float, ...] = _DEFAULT_TEMPERATURES
     use_hse_gap: bool = True
     amset_settings: dict = field(default_factory=dict)
     relax_maker: Optional[BaseVaspMaker] = field(default_factory=TightRelaxMaker)
@@ -348,8 +348,8 @@ class HSEVaspAmsetMaker(Maker):
     """
 
     name: str = "hse VASP amset"
-    doping: Tuple[float, ...] = DEFAULT_DOPING
-    temperatures: Tuple[float, ...] = DEFAULT_TEMPERATURES
+    doping: Tuple[float, ...] = _DEFAULT_DOPING
+    temperatures: Tuple[float, ...] = _DEFAULT_TEMPERATURES
     amset_settings: dict = field(default_factory=dict)
     relax_maker: Optional[BaseVaspMaker] = field(default_factory=HSETightRelaxMaker)
     static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)

@@ -13,10 +13,9 @@ from pymatgen.core.structure import Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
-from atomate2 import __version__
+from atomate2 import SETTINGS, __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.structure import StructureMetadata
-from atomate2.settings import settings
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 from atomate2.vasp.schemas.calculation import (
@@ -36,8 +35,8 @@ __all__ = [
 ]
 
 logger = logging.getLogger(__name__)
-T = TypeVar("T", bound="TaskDocument")
-VOLUMETRIC_FILES = ("CHGCAR", "LOCPOT", "AECCAR0", "AECCAR1", "AECCAR2")
+_T = TypeVar("_T", bound="TaskDocument")
+_VOLUMETRIC_FILES = ("CHGCAR", "LOCPOT", "AECCAR0", "AECCAR1", "AECCAR2")
 
 
 class AnalysisSummary(BaseModel):
@@ -75,9 +74,9 @@ class AnalysisSummary(BaseModel):
         warnings = []
         errors = []
 
-        if abs(percent_delta_vol) > settings.VASP_VOLUME_CHANGE_WARNING_TOL * 100:
+        if abs(percent_delta_vol) > SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL * 100:
             warnings.append(
-                f"Volume change > {settings.VASP_VOLUME_CHANGE_WARNING_TOL * 100}%"
+                f"Volume change > {SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL * 100}%"
             )
 
         final_calc = calc_docs[-1]
@@ -274,13 +273,13 @@ class TaskDocument(StructureMetadata):
 
     @classmethod
     def from_directory(
-        cls: Type[T],
+        cls: Type[_T],
         dir_name: Union[Path, str],
-        volumetric_files: Tuple[str, ...] = VOLUMETRIC_FILES,
-        store_additional_json: bool = settings.VASP_STORE_ADDITIONAL_JSON,
+        volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
+        store_additional_json: bool = SETTINGS.VASP_STORE_ADDITIONAL_JSON,
         additional_fields: Dict[str, Any] = None,
         **vasp_calculation_kwargs,
-    ) -> T:
+    ) -> _T:
         """
         Create a task document from a directory containing VASP files.
 
@@ -307,7 +306,7 @@ class TaskDocument(StructureMetadata):
 
         additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
-        task_files = find_vasp_files(dir_name, volumetric_files=volumetric_files)
+        task_files = _find_vasp_files(dir_name, volumetric_files=volumetric_files)
 
         if len(task_files) == 0:
             raise ValueError("No VASP files found!")
@@ -572,9 +571,9 @@ def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
     return run_stats
 
 
-def find_vasp_files(
+def _find_vasp_files(
     path: Union[str, Path],
-    volumetric_files: Tuple[str, ...] = VOLUMETRIC_FILES,
+    volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
 ) -> Dict[str, Any]:
     """
     Find VASP files in a directory.

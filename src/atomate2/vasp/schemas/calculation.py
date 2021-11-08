@@ -22,8 +22,8 @@ from pymatgen.io.vasp import (
     VolumetricData,
 )
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D, Vector3D
-from atomate2.settings import settings
 from atomate2.vasp.schemas.calc_types import (
     CalcType,
     RunType,
@@ -46,7 +46,7 @@ __all__ = [
 ]
 
 
-BADER_EXE_EXISTS = which("bader") or which("bader.exe")
+_BADER_EXE_EXISTS = which("bader") or which("bader.exe")
 
 
 class Status(ValueEnum):
@@ -413,10 +413,10 @@ class Calculation(BaseModel):
         parse_dos: Union[str, bool] = False,
         parse_bandstructure: Union[str, bool] = False,
         average_locpot: bool = True,
-        run_bader: bool = settings.VASP_RUN_BADER and BADER_EXE_EXISTS,
+        run_bader: bool = SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS,
         store_volumetric_data: Optional[
             Tuple[str]
-        ] = settings.VASP_STORE_VOLUMETRIC_DATA,
+        ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
         vasprun_kwargs: Optional[Dict] = None,
     ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """

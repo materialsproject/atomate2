@@ -34,18 +34,16 @@ from custodian.vasp.jobs import VaspJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from jobflow.utils import ValueEnum
 
-from atomate2.settings import settings
+from atomate2 import SETTINGS
 from atomate2.vasp.schemas.task import TaskDocument
 
 __all__ = [
     "JobType",
     "run_vasp",
-    "DEFAULT_HANDLERS",
-    "DEFAULT_VALIDATORS",
     "should_stop_children",
 ]
 
-DEFAULT_HANDLERS = (
+_DEFAULT_HANDLERS = (
     VaspErrorHandler(),
     MeshSymmetryErrorHandler(),
     UnconvergedErrorHandler(),
@@ -57,7 +55,7 @@ DEFAULT_HANDLERS = (
     LargeSigmaHandler(),
     IncorrectSmearingHandler(),
 )
-DEFAULT_VALIDATORS = (VasprunXMLValidator(), VaspFilesValidator())
+_DEFAULT_VALIDATORS = (VasprunXMLValidator(), VaspFilesValidator())
 
 logger = logging.getLogger(__name__)
 
@@ -85,12 +83,12 @@ class JobType(ValueEnum):
 
 def run_vasp(
     job_type: Union[JobType, str] = JobType.NORMAL,
-    vasp_cmd: Union[str, Path] = settings.VASP_CMD,
-    vasp_gamma_cmd: Union[str, Path] = settings.VASP_GAMMA_CMD,
-    max_errors: int = settings.VASP_CUSTODIAN_MAX_ERRORS,
-    scratch_dir: str = settings.SCRATCH_DIR,
-    handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
-    validators: Sequence[Validator] = DEFAULT_VALIDATORS,
+    vasp_cmd: Union[str, Path] = SETTINGS.VASP_CMD,
+    vasp_gamma_cmd: Union[str, Path] = SETTINGS.VASP_GAMMA_CMD,
+    max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
+    scratch_dir: str = SETTINGS.SCRATCH_DIR,
+    handlers: Sequence[ErrorHandler] = _DEFAULT_HANDLERS,
+    validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     wall_time: Optional[int] = None,
     vasp_job_kwargs: Dict[str, Any] = None,
     custodian_kwargs: Dict[str, Any] = None,
@@ -172,7 +170,7 @@ def run_vasp(
 
 def should_stop_children(
     task_document: TaskDocument,
-    handle_unsuccessful: Union[bool, str] = settings.VASP_HANDLE_UNSUCCESSFUL,
+    handle_unsuccessful: Union[bool, str] = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """
     Parse VASP outputs and decide whether child jobs should continue.

@@ -17,9 +17,9 @@ from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
 
+from atomate2 import SETTINGS
 from atomate2.common.files import get_zfile
 from atomate2.common.schemas.math import Vector3D
-from atomate2.settings import settings
 from atomate2.utils.file_client import FileClient
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputSetGenerator
@@ -184,7 +184,7 @@ class HSEDenseUniformMaker(BaseVaspMaker):
 @job
 def run_amset_deformations(
     structure: Structure,
-    symprec: float = settings.SYMPREC,
+    symprec: float = SETTINGS.SYMPREC,
     prev_vasp_dir: Union[str, Path] = None,
     static_deformation_maker: BaseVaspMaker = None,
 ):
@@ -243,7 +243,7 @@ def run_amset_deformations(
 def calculate_deformation_potentials(
     bulk_dir: str,
     deformation_dirs: List[str],
-    symprec: float = settings.SYMPREC,
+    symprec: float = SETTINGS.SYMPREC,
     ibands: Tuple[List[int], List[int]] = None,
 ):
     """

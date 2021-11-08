@@ -4,7 +4,6 @@ import os
 import warnings
 from copy import deepcopy
 from itertools import groupby
-from math import pi
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -22,8 +21,8 @@ from pymatgen.io.vasp.sets import (
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
+from atomate2 import SETTINGS
 from atomate2.common.sets import InputSet, InputSetGenerator
-from atomate2.settings import settings
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
@@ -241,7 +240,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         use_structure_charge: bool = False,
         sort_structure: bool = True,
         force_gamma: bool = True,
-        symprec: float = settings.SYMPREC,
+        symprec: float = SETTINGS.SYMPREC,
         vdw: str = None,
         config_dict: Dict = None,
     ):
@@ -737,7 +736,7 @@ def _get_kspacing(bandgap: float) -> float:
         return 0.22
 
     rmin = 25.22 - 2.87 * bandgap  # Eq. 25
-    kspacing = 2 * pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
+    kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
 
     # cap kspacing at a max of 0.44, per internal benchmarking
     return min(kspacing, 0.44)

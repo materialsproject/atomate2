@@ -9,8 +9,8 @@ from maggma.core import Store
 from pydash import get
 from pymatgen.analysis.elasticity import Deformation, Stress
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.elastic import ElasticDocument
-from atomate2.settings import settings
 
 
 class ElasticBuilder(Builder):
@@ -38,8 +38,8 @@ class ElasticBuilder(Builder):
         tasks: Store,
         elasticity: Store,
         query: dict = None,
-        symprec: float = settings.SYMPREC,
-        fitting_method: str = settings.ELASTIC_FITTING_METHOD,
+        symprec: float = SETTINGS.SYMPREC,
+        fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
         structure_match_tol: float = 1e-5,
         **kwargs,
     ):
@@ -129,11 +129,13 @@ class ElasticBuilder(Builder):
             return []
 
         # group deformations by parent structure
-        grouped = group_deformations(tasks, self.structure_match_tol)
+        grouped = _group_deformations(tasks, self.structure_match_tol)
 
         elastic_docs = []
         for tasks in grouped:
-            elastic_doc = get_elastic_document(tasks, self.symprec, self.fitting_method)
+            elastic_doc = _get_elastic_document(
+                tasks, self.symprec, self.fitting_method
+            )
             elastic_docs.append(elastic_doc)
 
         return elastic_docs
@@ -156,7 +158,7 @@ class ElasticBuilder(Builder):
             self.logger.info("No items to update")
 
 
-def group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
+def _group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
     """
     Group deformation tasks by their parent structure.
 
@@ -204,7 +206,7 @@ def group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
     return grouped_tasks
 
 
-def get_elastic_document(
+def _get_elastic_document(
     tasks: List[dict],
     symprec: float,
     fitting_method: str,

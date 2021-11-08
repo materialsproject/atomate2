@@ -9,8 +9,9 @@ from typing import Optional, Union
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.core.structure import Structure
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D
-from atomate2.settings import settings
+from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.elastic import (
@@ -66,8 +67,10 @@ class ElasticMaker(Maker):
     name: str = "elastic"
     order: int = 2
     sym_reduce: bool = True
-    symprec: float = settings.SYMPREC
-    bulk_relax_maker: Optional[BaseVaspMaker] = field(default_factory=TightRelaxMaker)
+    symprec: float = SETTINGS.SYMPREC
+    bulk_relax_maker: Optional[BaseVaspMaker] = field(
+        default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
+    )
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)

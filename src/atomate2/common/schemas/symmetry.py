@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, spglib
 
-from atomate2.settings import settings
+from atomate2 import SETTINGS
 
 __all__ = ["CrystalSystem", "SymmetryData"]
 
@@ -57,7 +57,7 @@ class SymmetryData(BaseModel):
 
     @classmethod
     def from_structure(
-        cls, structure: Structure, symprec: float = settings.SYMPREC
+        cls, structure: Structure, symprec: float = SETTINGS.SYMPREC
     ) -> "SymmetryData":
         """
         Create a symmetry data model from a structure.

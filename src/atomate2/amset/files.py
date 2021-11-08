@@ -8,8 +8,8 @@ from typing import Dict, Optional, Union
 
 from monty.serialization import dumpfn, loadfn
 
+from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
-from atomate2.settings import Settings
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
@@ -95,7 +95,7 @@ def write_amset_settings(settings_updates: Dict, from_prev: bool = False):
     Write AMSET settings to file.
 
     This function will also apply any settings specified in
-    :obj:`.Settings.AMSET_SETTINGS_UPDATE`.
+    :obj:`.Atomate2Settings.AMSET_SETTINGS_UPDATE`.
 
     Parameters
     ----------
@@ -111,6 +111,6 @@ def write_amset_settings(settings_updates: Dict, from_prev: bool = False):
     else:
         settings = settings_updates
 
-    settings.update(Settings.AMSET_SETTINGS_UPDATE)
+    settings.update(SETTINGS.AMSET_SETTINGS_UPDATE)
 
     dumpfn(settings, "settings.yaml")

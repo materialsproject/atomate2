@@ -4,12 +4,12 @@ from jobflow import job
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-from atomate2.settings import settings
+from atomate2 import SETTINGS
 
 
 @job
 def symmetrize_structure(
-    structure: Structure, symprec: float = settings.SYMPREC
+    structure: Structure, symprec: float = SETTINGS.SYMPREC
 ) -> Structure:
     """
     Symmetrize a structure.
