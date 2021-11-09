@@ -148,11 +148,11 @@ organizes all these items.
    going to do next. Create a directories named ``logs``, and ``config`` so your
    directory structure looks like:
 
-    ::
+::
 
-        atomate2
-        ├── config
-        └── logs
+    atomate2
+    ├── config
+    └── logs
 
 .. _Create a conda environment:
 
@@ -295,7 +295,7 @@ The directory structure of ``<<INSTALL_DIR>>/config`` should now look like
 
     config
     ├── jobflow.yaml
-    ├── atomate2.yaml
+    └── atomate2.yaml
 
 The last thing we need to do to configure atomate2 is add the following lines to your
 .bashrc / .bash_profile file to set an environment variable telling atomate2 and jobflow
@@ -303,8 +303,8 @@ where to find the config files.
 
 .. code-block:: bash
 
-    export ATOMATE2_CONFIG_FILE=<<INSTALL_DIR>>/config/atomate2.yaml
-    export JOBFLOW_CONFIG_FILE=<<INSTALL_DIR>>/config/jobflow.yaml
+    export ATOMATE2_CONFIG_FILE="<<INSTALL_DIR>>/config/atomate2.yaml"
+    export JOBFLOW_CONFIG_FILE="<<INSTALL_DIR>>/config/jobflow.yaml"
 
 where ``<<INSTALL_DIR>>`` is your installation directory.
 
@@ -328,7 +328,7 @@ Materials Project API key
 -------------------------
 
 You can get an API key from the `Materials Project`_ by logging in and going to your
-`Dashboard`_. Add this also to your ``.pmgrc.yaml`` so that it looks like the following
+`Dashboard`_. Add this also to your ``~/.pmgrc.yaml`` so that it looks like the following
 
 .. code-block:: yaml
 
@@ -344,104 +344,111 @@ Run a test workflow
 ===================
 
 To make sure that everything is set up correctly and in place, we'll finally run a
-simple (but real) test workflow. Two methods to create workflows are (i) using atomate2's
-command line utility ``atwf`` or (ii) by creating workflows in Python. For the most
-part, we recommend using method (ii), the Python interface, since it is more powerful
-and also simple to use. However, in order to get started without any programming, we'll
-stick to method (i), the command line, using ``atwf`` to construct a workflow. Note that
-we'll discuss the Python interface more in the :ref:`running workflows tutorial` and
-provide details on writing custom workflows in the :ref:`creating workflows`.
-
-Ideally you set up a Materials Project API key in the `Configure pymatgen`_ section,
-otherwise you will need to provide a POSCAR for the structure you want to run. In
-addition, there are two different methods to use ``atwf`` - one using a library of
-preset functions for constructing workflows and another with a library of files for
-constructing workflows.
+simple (but real) test workflow. We will first define a python script to run the
+workflow. Next, we'll submit a job to run the script. Finally, we'll examine the
+database to check the job output. In this tutorial, we will be submitting an individual
+workflow manually. If you want to manage and execute many workflows simultaneously
+this can be achieved using the FireWorks package and is covered in
+:ref:`atomate2_FireWorks`.
 
 This particular workflow will only run a single calculation that optimizes a crystal
 structure (not very exciting). In the subsequent tutorials, we'll run more complex
 workflows.
 
-Add a workflow
---------------
-
-Below are 4 different options for adding a workflow to the database. You only need to execute one of the below commands; note that it doesn't matter at this point whether you are loading the workflow from a file or from a Python function.
-
-* Option 1 (you set up a Materials Project API key, and want to load the workflow using a file): ``atwf add -l vasp -s optimize_only.yaml -m mp-149 -c '{"vasp_cmd": ">>vasp_cmd<<", "db_file": ">>db_file<<"}'``
-* Option 2 (you set up a Materials Project API key, and want to load the workflow using a Python function): ``atwf add -l vasp -p wf_structure_optimization -m mp-149``
-* Option 3 (you will load the structure from a POSCAR file, and want to load the workflow using a file): ``atwf add -l vasp -s optimize_only.yaml POSCAR -c '{"vasp_cmd": ">>vasp_cmd<<", "db_file": ">>db_file<<"}'``
-* Option 4 (you will load the structure from a POSCAR file, and want to load the workflow using a Python function): ``atwf add -l vasp -p wf_structure_optimization POSCAR``
-
-All of these function specify (i) a type of workflow and (ii) the structure to feed into that workflow.
-
-* The ``-l vasp`` option states to use the ``vasp`` library of workflows.
-* The ``-s optimize_only.yaml`` sets the specification of the workflow using the ``optimize_only.yaml`` file in `this directory <https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/base/library/>`_. Alternatively, the ``-p wf_structure_optimization`` sets the workflow specification using the preset Python function located in `this module <https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/presets/core.py>`_. For now, it's probably best not to worry about the distinction but to know that both libraries of workflows are available to you.
-* The ``-c`` option is used in file-based workflows to make sure that one uses the ``vasp_cmd`` and ``db_file`` that are specified in ``my_fworker.yaml`` that you specified earlier. In the preset workflows, it is the default behavior to take these parameters from the ``my_fworker.yaml`` so this option is not needed.
-
-Verify the workflow
+Define the workflow
 -------------------
 
-These commands added a workflow for running a single structure optimization FireWork to your LaunchPad. You can verify that by using FireWorks' ``lpad`` utility:
+Workflows are written using the jobflow software. Essentially, individual stages of
+a workflow are simple python functions. Jobflow provides a way to connect jobs together
+in a natural way. For more details on connecting jobs together see:
+:ref:`connecting_vasp_jobs`.
 
-.. code-block:: bash
+Go to the directory where you would like your calculations to run (i.e., your scratch
+or work directory) and create a file called ``relax.py`` containing:
 
-    lpad get_wflows
+.. code-block:: python
 
-which should return:
+    from atomate2.vasp.jobs.core import RelaxMaker
+    from jobflow import run_locally
+    from pymatgen.core import Structure
 
-.. code-block:: bash
+    # construct an FCC silicon structure
+    si_structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
 
-    [
-        {
-            "state": "READY",
-            "name": "Si--1",
-            "created_on": "2015-12-30T18:00:00.000000",
-            "states_list": "REA"
-        },
-    ]
+    # make a relax job to optimise the structure
+    relax_job = RelaxMaker().make(si_structure)
 
-Note that the ``lpad`` command is from FireWorks and has many functions. As simple modifications to the above command, you can also try ``lpad get_wflows -d more`` (or if you are very curious, ``lpad get_wflows -d all``). You can use ``lpad get_wflows -h`` to see a list of all available modifications and ``lpad -h`` to see all possible commands.
+    # run the job
+    run_locally(relax_job)
 
-If this works, congrats! You've added a workflow (in this case, just a single calculation) to the FireWorks database.
+The ``run_locally`` function is a jobflow command that will execute the workflow on
+the current computing resource.
 
 Submit the workflow
 -------------------
 
-To launch this FireWork through queue, go to the directory where you would like your calculations to run (e.g. your scratch or work directories) and run the command
+Next, make a job submission script called ``job.sh`` containing:
 
 .. code-block:: bash
 
-    qlaunch rapidfire -m 1
+    conda activate atomate2
+    python relax.py
 
-There are lots of things to note here:
+The job submission script should include all the headers specific to your HPC resource.
+For example, if your machine uses the Grid Engine scheduler for submitting and running
+jobs, your script would look something like:
 
-* The ``-m 1`` means to keep a maximum of 1 job in the queue to prevent submitting too many jobs. As with all FireWorks commands, you can get more options using ``qlaunch rapidfire -h`` or simply ``qlaunch -h``.
-* The qlaunch mode specified above is the simplest and most general way to get started. It will end up creating a somewhat nested directory structure, but this will make more sense when there are many calculations to run.
-* One other option for qlaunch is "reservation mode", i.e., ``qlaunch -r rapidfire``. There are many nice things about this mode - you'll get pretty queue job names that represent your calculated composition and task type (these are really nice to see specifically which calculations are queued) and you'll have more options for tailoring specific queue parameters to specific jobs. In addition, reservation mode will automatically stop submitting jobs to the queue depending on how many jobs you have in the database so you don't need to use the ``-m 1`` parameter (this is usually desirable and nice, although in some cases it's better to submit to the queue first and add jobs to the database later which reservation mode doesn't support). However, reservation mode does add its own complications and we do not recommend starting with it (in many if not most cases, it's not worth switching at all). If you are interested by this option, consult the FireWorks documentation for more details.
-* If you want to run directly on your computing platform rather than through a queue, use ``rlaunch rapidfire`` instead of the ``qlaunch`` command (go through the FireWorks documentation to understand the details).
+.. code-block:: bash
 
-If all went well, you can check that the FireWork is in the queue by using the commands for your queue system (e.g. ``squeue`` or ``qstat``). When the job finally starts running, you will see the state of the workflow as running using the command ``lpad get_wflows -d more``.
+    #!/bin/bash -l
+    #$ -N relax_si
+    #$ -P my_project
+    #$ -l h_rt=1:00:00
+    #$ -l mem=4G
+    #$ -pe mpi 16
+    #$ -cwd
+
+    # ensure you load the modules to run VASP, e.g., module load vasp
+
+    conda activate atomate2
+    python relax.py
+
+Finally, submit the job to the queue using the normal scheduler command. For example
+on the Grid Engine scheduler, this would be using ``qsub job.sh``.
 
 Analyzing the results
 ---------------------
 
-Once this FireWorks is launched and is completed, you can use pymatgen-db to check that it was entered into your results database by running
+Once the job is finished, you can connect to the output database and check the job
+output.
 
-.. code-block:: bash
+.. code-block:: python
 
-    mgdb query -c <<INSTALL_DIR>>/config/db.json --props task_id formula_pretty output.energy_per_atom
+    from jobflow import SETTINGS
 
-This time, ``<<INSTALL_DIR>>`` can be relative. You should have seen the energy per atom you calculated for Si.
+    store = SETTINGS.JOB_STORE
 
-Note that the ``mgdb`` tools is only one way to see the results. You can connect to your MongoDB and explore the results using any MongoDB analysis tool. In later tools, we'll also demonstrate how various Python classes in atomate also help in retrieving and analyzing data. For now, the ``mgdb`` command is a simple way to get basic properties.
+    # connect to the job store
+    store.connect()
 
-You can also check that the workflow is marked as completed in your FireWorks database:
+    # query the job store
+    result = store.query_one(
+        query={"output.formula_pretty": "Si"}, properties=["output.output.energy_per_atom"]
+    )
+    print(result)
 
-.. code-block:: bash
+We query the database using the mongoDB query language. You can also connect to the
+database using graphical tools, such as Robo3T_ to explore your results.
 
-    lpad get_wflows -d more
+The outputs of VASP calculations always have the same set of keys. This structure is
+called a schema. You can see the VASP calculation scheme in the :obj:`.TaskDocument`
+section of the documentation.
 
-which will show the state of the workflow as COMPLETED.
+.. _Robo3T: https://robomongo.org
 
 Next steps
 ----------
@@ -450,76 +457,23 @@ That's it! You've completed the installation tutorial!
 
 See the following pages for more information on the topics we covered here:
 
-* To see how to run and customize the existing Workflows and FireWorks try the :ref:`running workflows tutorial` (suggested next step)
-* For submitting jobs to the queue in reservation mode see the `FireWorks advanced queue submission tutorial`_
-* For using pymatgen-db to query your database see the `pymatgen-db documentation`_
-
-
-.. _FireWorks advanced queue submission tutorial: https://materialsproject.github.io/fireworks/queue_tutorial_pt2.html
-.. _pymatgen-db documentation: https://materialsproject.github.io/pymatgen-db/
+* To see how to run and customize the existing Workflows in atomate2, try the
+  :ref:`running_workflows` tutorial (suggested next step).
+* To see how manage and execute many workflows at once, try the
+  :ref:`atomate2_FireWorks` tutorial.
 
 Troubleshooting and FAQ:
 ========================
 
-Q: I can't connect to my LaunchPad database
--------------------------------------------
+My job failed!
+--------------
 
-:A: Make sure the right LaunchPad file is getting selected
-
-  Adding the following line to your ``FW_config.yaml`` will cause the line to be printed every time that configuration is selected
-
-  ::
-
-    ECHO_TEST: Database at <<INSTALL_DIR>>/config/FW_config.yaml is getting selected.
-
-  Then running ``lpad version`` should give the following result if that configuration file is being chosen
-
-  ::
-
-    $ lpad version
-
-    Database at <<INSTALL_DIR>>/config/FW_config.yaml is getting selected.
-    FireWorks version: x.y.z
-    located in: <<INSTALL_DIR>>/atomate_env/lib/python3.6/site-packages/fireworks
-
-  If it's not being found, check that ``echo $FW_CONFIG_FILE`` returns the location of that file (you could use ``cat $FW_CONFIG_FILE`` to check the contents)
-
-:A: Double check all of the configuration settings in ``my_launchpad.yaml``
-
-:A: Have you had success connecting before? Is there a firewall blocking your connection?
-
-:A: You can try following the tutorials of FireWorks which will go through this process in a little more detail.
+Check the job error files in the launch directroy for any errors. Also check the job
+standard output for a full log of the workflow executation and to check for a Python
+traceback.
 
 
-Q: My job fizzled!
-------------------
+I honestly tried everything I can to solve my problem. I still need help!
+-------------------------------------------------------------------------
 
-:A: Check the ``*_structure_optimization.out`` and ``*_structure_optimization.error`` in the launch directory for any errors. Also check the ``FW.json`` to check for a Python traceback.
-
-
-Q: I made a mistake using reservation mode, how do I cancel my job?
--------------------------------------------------------------------
-
-:A: One drawback of using the reservation mode (the ``-r`` in ``qlaunch -r rapidfire``) is that you have to cancel your job in two places: the queue and the LaunchPad. To cancel the job in the queue, use whatever command you usually would (e.g. ``scancel`` or ``qdel``). To cancel or rerun the FireWork, run
-
-    .. code-block:: bash
-
-        lpad defuse_fws -i 1
-
-    or
-
-    .. code-block:: bash
-
-        lpad rerun_fws -i 1
-
-    where `-i 1` means to make perfom the operations on the FireWork at index 1. Run ``lpad -h`` to see all of the options.
-
-The non-reservation mode for qlaunching requires a little less maintenance with certain tradeoffs, which are detailed in the FireWorks documentation.
-
-Q: I honestly tried everything I can to solve my problem. I still need help!
-----------------------------------------------------------------------------
-
-:A: There is a support forum for atomate: https://discuss.matsci.org/c/atomate
-
-
-You can install atomate2 with ``pip`` or from source.
+There is a support forum for atomate2: https://discuss.matsci.org/c/atomate

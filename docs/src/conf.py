@@ -36,7 +36,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.autosummary",
     "m2r2",
-    "numpydoc",
+    # "numpydoc",
     "sphinx_panels",
     "sphinxcontrib.autodoc_pydantic",
 ]
@@ -141,5 +141,6 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3.8", None),
     "matplotlib": ("http://matplotlib.org", None),
     "pymatgen": ("http://pymatgen.org", None),
+    "jobflow": ("https://materialsproject.github.io/jobflow/", None),
     "monty": ("https://guide.materialsvirtuallab.org/monty/", None),
 }

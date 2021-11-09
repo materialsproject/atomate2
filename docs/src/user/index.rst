@@ -1,3 +1,5 @@
+.. _user:
+
 ==========
 User Guide
 ==========
@@ -8,9 +10,9 @@ This guide is an overview and explains the important features of atomate2.
    :maxdepth: 2
 
    Installation <install>
-   Configuration <configuration>
+   Running workflows <running-workflows>
+   Fireworks integration <fireworks>
    Codes <codes/index>
-   Tutorials <tutorials/index>
 
 .. toctree::
    :hidden:
