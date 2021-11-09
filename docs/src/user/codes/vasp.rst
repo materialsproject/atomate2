@@ -132,6 +132,12 @@ calculations:
    Band structure objects are automatically stored in the ``data`` store due to
    limitations on mongoDB collection sizes.
 
+Relax and Band Structure
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Perform a relaxation and then run the `Band Structure`_ workflow. By default, a
+`Double Relax`_ relaxation is performed.
+
 Elastic Constant
 ^^^^^^^^^^^^^^^^
 

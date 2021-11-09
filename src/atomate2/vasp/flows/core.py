@@ -19,7 +19,12 @@ from atomate2.vasp.jobs.core import (
 )
 from atomate2.vasp.schemas.calculation import VaspObject
 
-__all__ = ["DoubleRelaxMaker", "BandStructureMaker", "HSEBandStructureMaker"]
+__all__ = [
+    "DoubleRelaxMaker",
+    "BandStructureMaker",
+    "HSEBandStructureMaker",
+    "RelaxBandStructureMaker",
+]
 
 
 @dataclass
@@ -166,3 +171,50 @@ class HSEBandStructureMaker(BandStructureMaker):
     bandstructure_type: str = "both"
     static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
     bs_maker: BaseVaspMaker = field(default_factory=HSEBSMaker)
+
+
+@dataclass
+class RelaxBandStructureMaker(Maker):
+    """
+    Make to create a flow with a relaxation and then band structure calculations.
+
+    By default, this workflow generates relaxations using the :obj:`.DoubleRelaxMaker`.
+
+    Parameters
+    ----------
+    name
+        Name of the flows produced by this maker.
+    bandstructure_type
+        The type of band structure to generate. Options are "line", "uniform" or "both".
+    static_maker
+        The maker to use for the static calculation.
+    bs_maker
+        The maker to use for the line and uniform band structure calculations.
+    """
+
+    name: str = "relax and band structure"
+    relax_maker: BaseVaspMaker = field(default_factory=DoubleRelaxMaker)
+    band_structure_maker: BaseVaspMaker = field(default_factory=BandStructureMaker)
+
+    def make(self, structure, prev_vasp_dir=None):
+        """
+        Run a relaxation and then calculate the uniform and line mode band structures.
+
+        Parameters
+        ----------
+        structure
+            A pymatgen structure object.
+        prev_vasp_dir
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A relax and band structure flow.
+        """
+        relax_job = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        bs_flow = self.band_structure_maker.make(
+            relax_job.output.structure, prev_vasp_dir=relax_job.output.dir_name
+        )
+
+        return Flow([relax_job, bs_flow], bs_flow.output, name=self.name)

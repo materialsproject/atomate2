@@ -9,4 +9,5 @@ Name,Type,Maker
 `Double Relax`_,flow,:obj:`.DoubleRelaxMaker`
 `Band Structure`_,flow,:obj:`.BandStructureMaker`
 `HSE06 Band Structure`_,flow,:obj:`.HSEBandStructureMaker`
+`Relax and Band Structure`_,flow,:obj:`.RelaxBandStructureMaker`
 `Elastic Constant`_,flow,:obj:`.ElasticMaker`
