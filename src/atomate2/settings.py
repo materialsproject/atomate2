@@ -27,10 +27,6 @@ class Atomate2Settings(BaseSettings):
     )
 
     # general settings
-    SCRATCH_DIR: str = Field(
-        ">>SCRATCH_DIR<<", description="Path to scratch directory."
-    )
-
     SYMPREC: float = Field(
         0.1, description="Symmetry precision for spglib symmetry finding."
     )
@@ -45,29 +41,9 @@ class Atomate2Settings(BaseSettings):
     VASP_NCL_CMD: str = Field(
         "vasp_ncl", description="Command to run ncl version of VASP."
     )
-    VASP_VDW_KERNEL_DIR: str = Field(
-        ">>vdw_kernel_dir<<", description="Path to VDW VASP kernel."
-    )
+    VASP_VDW_KERNEL_DIR: str = Field(None, description="Path to VDW VASP kernel.")
     VASP_INCAR_UPDATES: dict = Field(
         default_factory=dict, description="Updates to apply to VASP INCAR files."
-    )
-    VASP_ADD_NAMEFILE: bool = Field(
-        True, description="Whether vasp.powerups.add_common_powerups adds a namefile"
-    )
-    VASP_ADD_SMALLGAP_KPOINT_MULTIPLY: bool = Field(
-        True,
-        description="Whether vasp.powerups.add_common_powerups adds a small gap "
-        "multiply task for static and NSCF calculations",
-    )
-    VASP_ADD_STABILITY_CHECK: bool = Field(
-        False,
-        description="Whether vasp.powerups.add_common_powerups adds a stability check "
-        "task for structure optimization calculations",
-    )
-    VASP_ADD_WF_METADATA: bool = Field(
-        False,
-        description="Whether vasp.powerups.add_common_powerups adds structure metadata "
-        "to a workflow",
     )
     VASP_RELAX_MAX_FORCE: float = Field(
         0.25,
@@ -93,7 +69,7 @@ class Atomate2Settings(BaseSettings):
         None, description="Store data from these files in database if present"
     )
     VASP_STORE_ADDITIONAL_JSON: bool = Field(
-        False,
+        True,
         description="Ingest any additional JSON data present into database when "
         "parsing VASP directories useful for storing duplicate of FW.json",
     )
