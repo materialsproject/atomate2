@@ -86,7 +86,7 @@ def run_vasp(
     vasp_cmd: Union[str, Path] = SETTINGS.VASP_CMD,
     vasp_gamma_cmd: Union[str, Path] = SETTINGS.VASP_GAMMA_CMD,
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
-    scratch_dir: str = SETTINGS.SCRATCH_DIR,
+    scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
     handlers: Sequence[ErrorHandler] = _DEFAULT_HANDLERS,
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     wall_time: Optional[int] = None,

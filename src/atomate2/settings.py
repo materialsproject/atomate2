@@ -30,6 +30,9 @@ class Atomate2Settings(BaseSettings):
     SYMPREC: float = Field(
         0.1, description="Symmetry precision for spglib symmetry finding."
     )
+    CUSTODIAN_SCRATCH_DIR: str = Field(
+        None, description="Path to scratch directory used by custodian."
+    )
 
     # VASP specific settings
     VASP_CMD: str = Field(
