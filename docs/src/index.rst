@@ -27,8 +27,7 @@ automating first principles calculations.
     User guide
     ^^^^^^^^^^
 
-    The user guide provides in-depth information on the
-    key concepts of *atomate2* with useful background information and tutorials.
+    The user guide provides in-depth information and tutorials for using *atomate2*.
 
     +++
 
@@ -38,12 +37,13 @@ automating first principles calculations.
             :classes: btn-block btn-secondary stretched-link
 
     ---
-    :img-top: _static/index_user_guide.svg
+    :img-top: _static/index_support.svg
 
     Support forum
     ^^^^^^^^^^^^^
 
-    Need help? Ask questions on the *atomate2* support forum.
+    You've read the user guide but still need help? Ask questions on the *atomate2*
+    support forum.
 
     +++
 
@@ -57,7 +57,7 @@ automating first principles calculations.
     API reference
     ^^^^^^^^^^^^^
 
-    The reference guide contains a detailed description of the atomate2 API. It assumes
+    The reference guide contains a detailed description of the *atomate2* API. It assumes
     that you have an understanding of the key concepts.
 
     +++
@@ -73,9 +73,9 @@ automating first principles calculations.
     Developer guide
     ^^^^^^^^^^^^^^^
 
-    Do you want to develop your own atomate2 workflows? Want to improve
+    Do you want to develop your own *atomate2* workflows? Want to improve
     existing functionalities? The contributing guidelines will guide
-    you through the process of improving and developing on atomate2.
+    you through the process of improving and developing on *atomate2*.
 
     +++
 
