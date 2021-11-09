@@ -9,7 +9,8 @@ def dev():
 
 
 @dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
-def vasp_test_data():
+@click.argument("test_dir")
+def vasp_test_data(test_dir):
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
@@ -29,7 +30,7 @@ def vasp_test_data():
 
     warnings.filterwarnings("ignore", module="pymatgen")
 
-    test_dir = Path("test_data")
+    test_dir = Path(test_dir)
 
     if test_dir.exists():
         click.echo("test_data folder already exists, refusing to overwrite it")
