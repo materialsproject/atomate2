@@ -462,7 +462,7 @@ See the following pages for more information on the topics we covered here:
 * To see how manage and execute many workflows at once, try the
   :ref:`atomate2_FireWorks` tutorial.
 
-Troubleshooting and FAQ:
+Troubleshooting and FAQ
 ========================
 
 My job failed!
