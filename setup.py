@@ -31,7 +31,7 @@ if __name__ == "__main__":
             "custodian>=2019.8.24",
             "pydantic",
             "monty",
-            "jobflow",
+            "jobflow>=0.1.3",
             "PyYAML",
             "numpy",
             "click",
