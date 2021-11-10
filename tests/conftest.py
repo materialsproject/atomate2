@@ -82,7 +82,7 @@ def memory_jobstore():
     from jobflow import JobStore
     from maggma.stores import MemoryStore
 
-    store = JobStore(MemoryStore())
+    store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
     store.connect()
 
     return store
@@ -102,14 +102,14 @@ def si_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "Si.cif")
 
 
-def generate_vasp_test():
-    # trick is:
-    # 1. run the flow/job
-    # 2. using directory structure and job name construct input and output folders
-    #    this should also clean up the directory structure to remove POTCARs and large
-    #    files. This script should therefore have an option ("keep files") which will
-    #    allow you to keep particular large files. ALso, all this directory structure
-    #    work should be done in a copy. the raw data should remain there...
-    # 3. create python dict mapping
-    # 4. create example test function, with examples of how to customise what is checked
-    pass
+@pytest.fixture(autouse=True)
+def mock_jobflow_settings(memory_jobstore):
+    """Mock the jobflow settings to use our specific jobstore (with data store)."""
+    from unittest import mock
+
+    from jobflow.settings import JobflowSettings
+
+    settings = JobflowSettings(JOB_STORE=memory_jobstore)
+
+    with mock.patch("jobflow.SETTINGS", settings):
+        yield
