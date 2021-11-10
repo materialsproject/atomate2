@@ -1,7 +1,5 @@
 """Core definition of Structure metadata."""
 
-from __future__ import annotations
-
 from typing import List, Optional, Type, TypeVar
 
 from pydantic import BaseModel, Field
@@ -77,11 +75,11 @@ class StructureMetadata(BaseModel):
 
         Parameters
         ----------
-        composition
+        composition : .Composition
             A pymatgen composition.
-        fields
+        fields : list of str or None
             Composition fields to include.
-        kwargs
+        **kwargs
             Keyword arguements that are passed to the model constructor.
 
         Returns
@@ -102,7 +100,7 @@ class StructureMetadata(BaseModel):
             if fields is None
             else fields
         )
-        elsyms = sorted(set([e.symbol for e in composition.elements]))
+        elsyms = sorted({e.symbol for e in composition.elements})
 
         data = {
             "elements": elsyms,
@@ -129,13 +127,13 @@ class StructureMetadata(BaseModel):
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure.
-        fields
+        fields : list of str or None
             Structure fields to include.
-        include_structure
+        include_structure : bool
             Whether to include the structure itself in the schema.
-        kwargs
+        **kwargs
             Keyword args that are passed to the Schema constructor.
 
         Returns
@@ -162,7 +160,7 @@ class StructureMetadata(BaseModel):
             else fields
         )
         comp = structure.composition
-        elsyms = sorted(set([e.symbol for e in comp.elements]))
+        elsyms = sorted({e.symbol for e in comp.elements})
         symmetry = SymmetryData.from_structure(structure)
 
         data = {

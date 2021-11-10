@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from fnmatch import fnmatch
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
@@ -20,41 +19,41 @@ __all__ = [
 
 @auto_fileclient
 def copy_files(
-    src_dir: Union[str, Path],
-    dest_dir: Union[str, Path] = None,
-    src_host: str = None,
-    include_files: List[Union[str, Path]] = None,
-    exclude_files: List[Union[str, Path]] = None,
+    src_dir: str | Path,
+    dest_dir: str | Path | None = None,
+    src_host: str | None = None,
+    include_files: list[str | Path] | None = None,
+    exclude_files: list[str | Path] | None = None,
     suffix: str = "",
     allow_missing: bool = False,
-    file_client: FileClient = None,
+    file_client: FileClient | None = None,
 ):
     r"""
     Copy files between source and destination folders.
 
     Parameters
     ----------
-    src_dir
+    src_dir : str or Path
         The source directory.
-    dest_dir
+    dest_dir : str or Path or None
         The destination directory.
-    src_host
+    src_host : str or None
         The source hostname used to specify a remote filesystem. Can be given as
         either "usernamehost" or just "host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    include_files
+    include_files : None or list of (str or .Path)
         Filenames to include as a list of str or Path objects given relative to
         ``src_dir``. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the source directory will be copied.
-    exclude_files
+    exclude_files : None or list of (str or .Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
-    suffix
+    suffix : str
         A suffix to add to copied files. For example ".original".
-    allow_missing
+    allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the source
         directory.
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
     """
     src_dir = file_client.abspath(src_dir, host=src_host)
@@ -77,34 +76,34 @@ def copy_files(
 
 @auto_fileclient
 def delete_files(
-    directory: Union[str, Path] = None,
-    host: str = None,
-    include_files: List[Union[str, Path]] = None,
-    exclude_files: List[Union[str, Path]] = None,
+    directory: str | Path | None = None,
+    host: str | None = None,
+    include_files: list[str | Path] | None = None,
+    exclude_files: list[str | Path] | None = None,
     allow_missing: bool = False,
-    file_client: FileClient = None,
+    file_client: FileClient | None = None,
 ):
     r"""
     Delete files in a directory.
 
     Parameters
     ----------
-    directory
+    directory : str or Path or None
         Directory in which to delete files. If ``None``, the current directory will be
         used (or home folder if specifying a remote host).
-    host
+    host : str or None
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    include_files
+    include_files : None or list of (str or Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the directory will be deleted.
-    exclude_files
+    exclude_files : None or list of (str or Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
-    allow_missing
+    allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
     """
     if directory is None:
@@ -126,30 +125,30 @@ def delete_files(
 
 @auto_fileclient
 def rename_files(
-    filenames: Dict[Union[str, Path], Union[str, Path]],
-    directory: Union[str, Path] = None,
-    host: str = None,
+    filenames: dict[str | Path, str | Path],
+    directory: str | Path | None = None,
+    host: str | None = None,
     allow_missing: bool = False,
-    file_client: Optional[FileClient] = None,
+    file_client: FileClient | None = None,
 ):
     """
     Delete files in a directory.
 
     Parameters
     ----------
-    filenames
+    filenames : dict
         Files to rename. Given as a dictionary of ``{old_name: new_name}``. File names
         should be given relative to ``directory``. Glob matches are not supported.
-    directory
+    directory : str or Path or None
         Directory in which to rename files. If ``None``, the current directory will be
         used (or home folder if specifying a remote host).
-    host
+    host : str or None
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    allow_missing
+    allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
     """
     if directory is None:
@@ -168,10 +167,10 @@ def rename_files(
 
 @auto_fileclient
 def gzip_files(
-    directory: Union[str, Path] = None,
-    host: str = None,
-    include_files: List[Union[str, Path]] = None,
-    exclude_files: List[Union[str, Path]] = None,
+    directory: str | Path | None = None,
+    host: str | None = None,
+    include_files: list[str | Path] | None = None,
+    exclude_files: list[str | Path] | None = None,
     allow_missing: bool = False,
     force: bool = False,
     file_client: FileClient = None,
@@ -181,24 +180,24 @@ def gzip_files(
 
     Parameters
     ----------
-    directory
+    directory : str or Path or None
         Directory in which to gzip files. If ``None``, the current directory will be
         used (or home folder if specifying a remote host).
-    host
+    host : str or None
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    include_files
+    include_files : None or list of (str or Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the directory will be gzipped.
-    exclude_files
+    exclude_files : None or list of (str or Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
-    allow_missing
+    allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
-    force
+    force : bool
         Whether to overwrite files if they exist.
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
     """
     if directory is None:
@@ -221,37 +220,37 @@ def gzip_files(
 
 @auto_fileclient
 def gunzip_files(
-    directory: Union[str, Path] = None,
-    host: str = None,
-    include_files: List[Union[str, Path]] = None,
-    exclude_files: List[Union[str, Path]] = None,
+    directory: str | Path | None = None,
+    host: str | None = None,
+    include_files: list[str | Path] | None = None,
+    exclude_files: list[str | Path] | None = None,
     allow_missing: bool = False,
     force: bool = False,
-    file_client: FileClient = None,
+    file_client: FileClient | None = None,
 ):
     r"""
     Gunzip files in a directory.
 
     Parameters
     ----------
-    directory
+    directory : str or Path or None
         Directory in which to gunzip files. If ``None``, the current directory will be
         used (or home folder if specifying a remote host).
-    host
+    host : str or None
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    include_files
+    include_files : None or list of (str or Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all gzipped
         files in the directory will be gunzipped.
-    exclude_files
+    exclude_files : None or list of (str or Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
-    allow_missing
+    allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
-    force
+    force : bool
         Whether to overwrite files if they exist.
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
     """
     if directory is None:
@@ -273,34 +272,34 @@ def gunzip_files(
 
 def find_and_filter_files(
     file_client: FileClient,
-    directory: Union[str, Path],
-    include_files: Optional[List[Union[str, Path]]],
-    exclude_files: Optional[List[Union[str, Path]]],
-    host: Optional[str],
-) -> List[Path]:
+    directory: str | Path,
+    include_files: list[str | Path] | None,
+    exclude_files: list[str | Path] | None,
+    host: str | None,
+) -> list[Path]:
     r"""
     Find and filter files.
 
     Parameters
     ----------
-    file_client
+    file_client : .FileClient
         A file client.
-    directory
+    directory : str or Path
         A directory in which to find files.
-    include_files
+    include_files : None or list of (str or Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the source directory will be returned.
-    exclude_files
+    exclude_files : None or list of (str or Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
-    host
+    host : str or None
         A hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
 
     Returns
     -------
-    list[Path]
+    list of Path
         A list of file paths.
     """
     directory = file_client.abspath(directory, host=host)
@@ -333,18 +332,18 @@ def find_and_filter_files(
 
 
 def get_zfile(
-    directory_listing: List[Path], base_name: str, allow_missing: bool = False
-) -> Optional[Path]:
+    directory_listing: list[Path], base_name: str, allow_missing: bool = False
+) -> Path | None:
     """
     Find gzipped or non-gzipped versions of a file in a directory listing.
 
     Parameters
     ----------
-    directory_listing
+    directory_listing : list of Path
         A list of files in a directory.
-    base_name
+    base_name : str
         The base name of file file to find.
-    allow_missing
+    allow_missing : bool
         Whether to error if no version of the file (gzipped or un-gzipped) can be found.
 
     Returns

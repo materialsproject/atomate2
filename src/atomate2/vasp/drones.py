@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from typing import List, Tuple, Union
 
 from pymatgen.apps.borg.hive import AbstractDrone
 
@@ -29,13 +28,13 @@ class VaspDrone(AbstractDrone):
     def __init__(self, **task_document_kwargs):
         self.task_document_kwargs = task_document_kwargs
 
-    def assimilate(self, path: Union[str, Path] = None) -> TaskDocument:
+    def assimilate(self, path: str | Path | None = None) -> TaskDocument:
         """
         Parse VASP output files and return the output document.
 
         Parameters
         ----------
-        path
+        path : str or Path or None
             Path to the directory containing vasprun.xml and OUTCAR files.
 
         Returns
@@ -55,7 +54,7 @@ class VaspDrone(AbstractDrone):
             raise
         return doc
 
-    def get_valid_paths(self, path: Tuple[str, List[str], List[str]]) -> List[str]:
+    def get_valid_paths(self, path: tuple[str, list[str], list[str]]) -> list[str]:
         """
         Get valid paths to assimilate.
 
@@ -69,13 +68,13 @@ class VaspDrone(AbstractDrone):
 
         Parameters
         ----------
-        path
+        path : tuple of (str, list of str, list of str)
             Input path as a tuple generated from ``os.walk``, i.e., (parent, subdirs,
             files).
 
         Returns
         -------
-        list[str]
+        list of str
             A list of paths to assimilate.
         """
         parent, subdirs, _ = path

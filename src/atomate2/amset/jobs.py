@@ -1,9 +1,10 @@
 """Module defining amset jobs."""
 
+from __future__ import annotations
+
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Union
 
 from jobflow import Maker, Response, job
 from monty.serialization import loadfn
@@ -25,13 +26,13 @@ class AmsetMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of jobs produced by this maker.
-    resubmit
+    resubmit : bool
         Whether to resubmit an new calculation with a denser interpolation factor if the
         transport results are not converged. Note, checking for convergence requires
         a previous AMSET directory.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments passed to :obj:`.AmsetTaskDocument.from_directory`.
     """
 
@@ -42,24 +43,24 @@ class AmsetMaker(Maker):
     @job(output_schema=AmsetTaskDocument)
     def make(
         self,
-        settings: Dict,
-        prev_amset_dir: Union[str, Path] = None,
-        wavefunction_dir: Union[str, Path] = None,
-        deformation_dir: Union[str, Path] = None,
+        settings: dict,
+        prev_amset_dir: str | Path = None,
+        wavefunction_dir: str | Path = None,
+        deformation_dir: str | Path = None,
     ):
         """
         Run an AMSET calculation.
 
         Parameters
         ----------
-        settings
+        settings : dict
             Amset settings.
-        prev_amset_dir
+        prev_amset_dir : str or Path
             A previous AMSET calculation directory to copy output files from. The
             previous directory is also used to check for transport convergence.
-        wavefunction_dir
+        wavefunction_dir : str or Path
             A directory containing a wavefunction.h5 file.
-        deformation_dir
+        deformation_dir : str or Path
             A directory containing a deformation.h5 file.
         """
         # copy previous inputs

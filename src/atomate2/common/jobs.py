@@ -16,14 +16,14 @@ def symmetrize_structure(
 
     Parameters
     ----------
-    structure
+    structure : .Structure
         A structure.
-    symprec
+    symprec : float
         The symmetry precision.
 
     Returns
     -------
-    Structure
+    .Structure
         A symmetrized structure
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)

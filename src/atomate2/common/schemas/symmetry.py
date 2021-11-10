@@ -64,9 +64,9 @@ class SymmetryData(BaseModel):
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure.
-        symprec
+        symprec : float
             The symmetry precision.
 
         Returns

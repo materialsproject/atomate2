@@ -450,7 +450,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         potcar = self._get_potcar(structure, potcar_spec=False)
         nelec = {p.element: p.nelectrons for p in potcar}
         comp = structure.composition.element_composition
-        nelect = sum([num_atoms * nelec[str(el)] for el, num_atoms in comp.items()])
+        nelect = sum(num_atoms * nelec[str(el)] for el, num_atoms in comp.items())
 
         if self.use_structure_charge:
             return nelect - self.structure.charge
@@ -548,7 +548,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         _apply_incar_updates(incar, previous_incar, skip=skip)
 
         if self.constrain_total_magmom:
-            nupdown = sum([mag if abs(mag) > 0.6 else 0 for mag in incar["MAGMOM"]])
+            nupdown = sum(mag if abs(mag) > 0.6 else 0 for mag in incar["MAGMOM"])
             incar["NUPDOWN"] = nupdown
 
         if self.use_structure_charge:
@@ -772,7 +772,7 @@ def _get_magmoms(magmoms, structure):
 def _get_u_param(lda_param, lda_config, structure):
     """Get U parameters."""
     comp = structure.composition
-    elements = sorted([el for el in comp.elements if comp[el] > 0], key=lambda e: e.X)
+    elements = sorted((el for el in comp.elements if comp[el] > 0), key=lambda e: e.X)
     most_electroneg = elements[-1].symbol
     poscar = Poscar(structure)
 

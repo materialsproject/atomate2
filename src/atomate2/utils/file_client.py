@@ -10,7 +10,7 @@ from functools import wraps
 from glob import glob
 from gzip import GzipFile
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable
 
 import paramiko
 from monty.io import zopen
@@ -33,34 +33,29 @@ class FileClient:
 
     Parameters
     ----------
-    hosts
-        A list of remote host filesystems. Supports using hosts defined in the ssh
-        config file. Hosts can be specified as either "username@remote_host" or just
-        "remote_host" in which case the username will be inferred from the current
-        user.
-    key_filename
+    key_filename : str or Path
         Path to private key file (for remote connections only).
-    config_filename
+    config_filename : str or Path
         Path to OpenSSH config file defining host connection settings.
     """
 
     def __init__(
         self,
-        key_filename: Union[str, Path] = "~/.ssh/id_rsa",
-        config_filename: Union[str, Path] = "~/.ssh/config",
+        key_filename: str | Path = "~/.ssh/id_rsa",
+        config_filename: str | Path = "~/.ssh/config",
     ):
         self.key_filename = key_filename
         self.config_filename = config_filename
 
-        self.connections: Dict[str, Dict[str, Any]] = {}
+        self.connections: dict[str, dict[str, Any]] = {}
 
-    def connect(self, host):
+    def connect(self, host: str):
         """
         Connect to a remote host.
 
         Parameters
         ----------
-        host
+        host : str
             A remote host filesystem. Supports using hosts defined in the ssh
             config file. The host can be specified as either "username@remote_host" or
             just "remote_host" in which case the username will be inferred from the
@@ -80,13 +75,13 @@ class FileClient:
         )
         self.connections[host] = {"ssh": ssh, "sftp": ssh.open_sftp()}
 
-    def get_ssh(self, host) -> SSHClient:
+    def get_ssh(self, host: str) -> SSHClient:
         """
         Get an SSH connection to a host.
 
         Parameters
         ----------
-        host
+        host : str
             A remote host filesystem. Supports using hosts defined in the ssh
             config file. The host can be specified as either "username@remote_host" or
             just "remote_host" in which case the username will be inferred from the
@@ -94,20 +89,20 @@ class FileClient:
 
         Returns
         -------
-        SSHClient
+        .SSHClient
             An ssh client to the host.
         """
         if host not in self.connections:
             self.connect(host)
         return self.connections[host]["ssh"]
 
-    def get_sftp(self, host) -> SFTPClient:
+    def get_sftp(self, host: str) -> SFTPClient:
         """
         Get an SFTP connection to a host.
 
         Parameters
         ----------
-        host
+        host : str
             A remote host filesystem. Supports using hosts defined in the ssh
             config file. The host can be specified as either "username@remote_host" or
             just "remote_host" in which case the username will be inferred from the
@@ -115,22 +110,22 @@ class FileClient:
 
         Returns
         -------
-        SFTPClient
+        .SFTPClient
             An sftp client to the host.
         """
         if host not in self.connections:
             self.connect(host)
         return self.connections[host]["sftp"]
 
-    def exists(self, path: Union[str, Path], host: Optional[str] = None) -> bool:
+    def exists(self, path: str | Path, host: str | None = None) -> bool:
         """
         Check whether a file exists.
 
         Parameters
         ----------
-        path
+        path : str or Path
             A path to check existence of.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
 
         Returns
@@ -148,15 +143,15 @@ class FileClient:
             except FileNotFoundError:
                 return False
 
-    def is_file(self, path: Union[str, Path], host: Optional[str] = None) -> bool:
+    def is_file(self, path: str | Path, host: str | None = None) -> bool:
         """
         Whether a path is a file.
 
         Parameters
         ----------
-        path
+        path : str or Path
             A path.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
 
         Returns
@@ -173,15 +168,15 @@ class FileClient:
             except FileNotFoundError:
                 return False
 
-    def is_dir(self, path: Union[str, Path], host: Optional[str] = None) -> bool:
+    def is_dir(self, path: str | Path, host: str | None = None) -> bool:
         """
         Whether a path is a directory.
 
         Parameters
         ----------
-        path
+        path : str or Path
             A path.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
 
         Returns
@@ -198,20 +193,20 @@ class FileClient:
             except FileNotFoundError:
                 return False
 
-    def listdir(self, path: Union[str, Path], host: Optional[str] = None) -> List[Path]:
+    def listdir(self, path: str | Path, host: str | None = None) -> list[Path]:
         """
         Get the directory listing.
 
         Parameters
         ----------
-        path
+        path : str or Path
             Full path to the directory.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
 
         Returns
         -------
-        list[Path]
+        list of Path
             List of filenames and directories.
         """
         if host is None:
@@ -224,23 +219,23 @@ class FileClient:
 
     def copy(
         self,
-        src_filename: Union[str, Path],
-        dest_filename: Union[str, Path],
-        src_host: Optional[str] = None,
-        dest_host: Optional[str] = None,
+        src_filename: str | Path,
+        dest_filename: str | Path,
+        src_host: str | None = None,
+        dest_host: str | None = None,
     ):
         """
         Copy a file from source to destination.
 
         Parameters
         ----------
-        src_filename
+        src_filename : str or Path
             Full path to source file.
-        dest_filename
+        dest_filename : str or Path
             Full path to destination file.
-        src_host
+        src_host : str or None
             A remote file system host for the source file.
-        dest_host
+        dest_host : str or None
             A remote file system host for the destination file.
         """
         src_filename = self.abspath(src_filename, host=src_host)
@@ -268,15 +263,15 @@ class FileClient:
                 "Copying between two different remote hosts is not supported."
             )
 
-    def remove(self, path: Union[str, Path], host: Optional[str] = None):
+    def remove(self, path: str | Path, host: str | None = None):
         """
         Remove a file (does not work on directories).
 
         Parameters
         ----------
-        path
+        path : str or Path
             Path to a file.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
         """
         if host is None:
@@ -287,20 +282,20 @@ class FileClient:
 
     def rename(
         self,
-        old_path: Union[str, Path],
-        new_path: Union[str, Path],
-        host: Optional[str] = None,
+        old_path: str | Path,
+        new_path: str | Path,
+        host: str | None = None,
     ):
         """
         Rename (move) a file.
 
         Parameters
         ----------
-        old_path
+        old_path : str or Path
             Path to an existing file.
-        new_path
+        new_path : str or Path
             Requested path to new file.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
         """
         if host is None:
@@ -310,15 +305,15 @@ class FileClient:
             new_path = str(self.abspath(new_path, host=host))
             self.get_sftp(host).rename(old_path, new_path)
 
-    def abspath(self, path: Union[str, Path], host: Optional[str] = None) -> Path:
+    def abspath(self, path: str | Path, host: str | None = None) -> Path:
         """
         Get the absolute path.
 
         Parameters
         ----------
-        path
+        path : str or Path
             A path to a file or directory.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
 
         Returns
@@ -333,15 +328,15 @@ class FileClient:
             _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
             return Path([o.split("\n")[0] for o in stdout][0])
 
-    def glob(self, path: Union[str, Path], host: Optional[str] = None) -> List[Path]:
+    def glob(self, path: str | Path, host: str | None = None) -> list[Path]:
         """
         Glob files and folders.
 
         Parameters
         ----------
-        path
+        path : str or Path
             A path to glob.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
 
         Returns
@@ -360,8 +355,8 @@ class FileClient:
 
     def gzip(
         self,
-        path: Union[str, Path],
-        host: Optional[str] = None,
+        path: str | Path,
+        host: str | None = None,
         compresslevel: int = 6,
         force: bool = False,
     ):
@@ -370,13 +365,13 @@ class FileClient:
 
         Parameters
         ----------
-        path
+        path : str or Path
             Path to a file to gzip.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
-        compresslevel
+        compresslevel : bool
             Level of compression, 1-9. 9 is default for GzipFile, 6 is default for gzip.
-        force
+        force : bool
             Overwrite gzipped file if it already exists.
         """
         path = self.abspath(path, host=host)
@@ -406,8 +401,8 @@ class FileClient:
 
     def gunzip(
         self,
-        path: Union[str, Path],
-        host: Optional[str] = None,
+        path: str | Path,
+        host: str | None = None,
         force: bool = False,
     ):
         """
@@ -415,11 +410,11 @@ class FileClient:
 
         Parameters
         ----------
-        path
+        path : str or Path
             Path to a file to gzip.
-        host
+        host : str or None
             A remote file system host on which to perform file operations.
-        force
+        force : bool
             Overwrite non-gzipped file if it already exists.
         """
         path = self.abspath(path, host=host)
@@ -457,10 +452,10 @@ class FileClient:
 
 
 def get_ssh_connection(
-    username: Optional[str],
+    username: str | None,
     hostname: str,
-    key_filename: Union[str, Path],
-    config_filename: Optional[Union[str, Path]] = None,
+    key_filename: str | Path,
+    config_filename: str | Path | None = None,
 ) -> SSHClient:
     """
     Connect to a remote host via paramiko.
@@ -469,25 +464,25 @@ def get_ssh_connection(
 
     Parameters
     ----------
-    username
+    username : str or None
         The username. If ``None``, the current logged in username will be used.
-    hostname
+    hostname : str
         The host name. Supports host aliases defined in the ssh config file.
-    key_filename
+    key_filename : str or Path
         Path to private key file.
-    config_filename
+    config_filename : str or Path or None
         Path to OpenSSH config file.
 
     Returns
     -------
-    SSHClient
+    .SSHClient
         An ssh connection to the host.
     """
     key_filename = Path(key_filename).expanduser()
     if not key_filename.exists():
         raise ValueError(f"Cannot locate private key file: {key_filename}")
 
-    config: Dict[str, Any] = {"hostname": hostname, "username": username}
+    config: dict[str, Any] = {"hostname": hostname, "username": username}
     config_filename = Path(config_filename).expanduser()
     if Path(config_filename).exists():
         # try reading ssh config file
@@ -507,7 +502,7 @@ def get_ssh_connection(
     return client
 
 
-def auto_fileclient(method: Optional[Callable] = None):
+def auto_fileclient(method: Callable | None = None):
     """
     Automatically pass a FileClient to the function if not already present in kwargs.
 
@@ -518,7 +513,7 @@ def auto_fileclient(method: Optional[Callable] = None):
 
     Parameters
     ----------
-    method
+    method : callable or None
         A function to wrap. This should not be specified directly and is implied
         by the decorator.
     """

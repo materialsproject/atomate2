@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Dict, Optional, Union
 
 from monty.serialization import dumpfn, loadfn
 
@@ -21,8 +20,8 @@ logger = logging.getLogger(__name__)
 
 @auto_fileclient
 def copy_amset_files(
-    src_dir: Union[Path, str],
-    src_host: Optional[str] = None,
+    src_dir: Path | str,
+    src_host: str | None = None,
     file_client: FileClient = None,
 ):
     """
@@ -32,14 +31,14 @@ def copy_amset_files(
 
     Parameters
     ----------
-    src_dir
+    src_dir : Path or str
         The source directory.
-    src_host
+    src_host : str or None
         The source hostname used to specify a remote filesystem. Can be given as
         either "username@remote_host" or just "remote_host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    file_client
+    file_client : FileClient
         A file client to use for performing file operations.
     """
     src_dir = strip_hostname(src_dir)  # TODO: Handle hostnames properly.
@@ -90,7 +89,7 @@ def copy_amset_files(
     logger.info("Finished copying inputs")
 
 
-def write_amset_settings(settings_updates: Dict, from_prev: bool = False):
+def write_amset_settings(settings_updates: dict, from_prev: bool = False):
     """
     Write AMSET settings to file.
 
@@ -99,9 +98,9 @@ def write_amset_settings(settings_updates: Dict, from_prev: bool = False):
 
     Parameters
     ----------
-    settings_updates
+    settings_updates : dict
         A dictionary of settings to write.
-    from_prev
+    from_prev : bool
         Whether apply the settings on top of an existing settings.yaml file in the
         current directory.
     """

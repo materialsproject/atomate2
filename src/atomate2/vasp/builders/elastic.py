@@ -1,7 +1,8 @@
 """Module defining elastic document builder."""
 
+from __future__ import annotations
+
 from itertools import chain
-from typing import List
 
 import numpy as np
 from maggma.builders import Builder
@@ -25,12 +26,24 @@ class ElasticBuilder(Builder):
 
     Parameters
     ----------
-    tasks
+    tasks : .Store
         Store of task documents.
-    elasticity
+    elasticity : .Store
         Store for final elastic documents.
-    query
+    query : dict
         Dictionary query to limit tasks to be analyzed.
+    sympec : float
+        Symmetry precision for desymmetrising deformations.
+    fitting_method : str
+        The method used to fit the elastic tensor. See pymatgen for more details on the
+        methods themselves. The options are:
+        - "finite_difference" (note this is required if fitting a 3rd order tensor)
+        - "independent"
+        - "pseudoinverse"
+    structure_match_tol : float
+        Numerical tolerance for structure equivalence.
+    **kwargs
+        Keyword arguments that will be passed to the Builder init.
     """
 
     def __init__(
@@ -67,7 +80,7 @@ class ElasticBuilder(Builder):
 
         Yields
         ------
-        list[dict]
+        list of dict
             A list of deformation tasks aggregated by formula and containing the
             required data to generate elasticity documents.
         """
@@ -106,7 +119,7 @@ class ElasticBuilder(Builder):
             )
             yield docs
 
-    def process_item(self, tasks: List[dict]) -> List[ElasticDocument]:
+    def process_item(self, tasks: list[dict]) -> list[ElasticDocument]:
         """
         Process deformation tasks into elasticity documents.
 
@@ -115,12 +128,12 @@ class ElasticBuilder(Builder):
 
         Parameters
         ----------
-        tasks
+        tasks : list of dict
             A list of deformation task, all with the same formula.
 
         Returns
         -------
-        list[ElasticDocument]
+        list of .ElasticDocument
             A list of elastic documents for each unique parent structure.
         """
         self.logger.debug(f"Processing {tasks[0]['output']['formula_pretty']}")
@@ -140,13 +153,13 @@ class ElasticBuilder(Builder):
 
         return elastic_docs
 
-    def update_targets(self, items: List[ElasticDocument]):
+    def update_targets(self, items: list[ElasticDocument]):
         """
         Insert new elastic documents into the elasticity store.
 
         Parameters
         ----------
-        items
+        items : list of .ElasticDocument
             A list of elasticity documents.
         """
         items = chain.from_iterable(filter(bool, items))  # type: ignore
@@ -158,20 +171,20 @@ class ElasticBuilder(Builder):
             self.logger.info("No items to update")
 
 
-def _group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
+def _group_deformations(tasks: list[dict], tol: float) -> list[list[dict]]:
     """
     Group deformation tasks by their parent structure.
 
     Parameters
     ----------
-    tasks
+    tasks : list of dict
         A list of deformation tasks.
-    tol
+    tol : float
         Numerical tolerance for structure equivalence.
 
     Returns
     -------
-    list[list[dict]]
+    list of list of dict
         The tasks grouped by their parent (undeformed structure).
     """
     grouped_tasks = [[tasks[0]]]
@@ -207,7 +220,7 @@ def _group_deformations(tasks: List[dict], tol: float) -> List[List[dict]]:
 
 
 def _get_elastic_document(
-    tasks: List[dict],
+    tasks: list[dict],
     symprec: float,
     fitting_method: str,
 ) -> ElasticDocument:
@@ -216,12 +229,12 @@ def _get_elastic_document(
 
     Parameters
     ----------
-    tasks
+    tasks : list of dict
         A list of deformation tasks.
-    symprec
+    symprec : float
         Symmetry precision for deriving symmetry equivalent deformations. If
         ``symprec=None``, then no symmetry operations will be applied.
-    fitting_method
+    fitting_method : str
         The method used to fit the elastic tensor. See pymatgen for more details on the
         methods themselves. The options are:
         - "finite_difference" (note this is required if fitting a 3rd order tensor)

@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Union
 
 from jobflow import job
 from pymatgen.core.structure import Structure
@@ -46,19 +45,21 @@ class StaticMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    name
+    name : str
         The job name.
-    input_set_generator
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    run_vasp_kwargs
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -76,19 +77,21 @@ class RelaxMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    name
+    name : str
         The job name.
-    input_set_generator
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    run_vasp_kwargs
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -106,19 +109,21 @@ class TightRelaxMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    name
+    name : str
         The job name.
-    input_set_generator
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    run_vasp_kwargs
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -136,19 +141,21 @@ class NonSCFMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -162,7 +169,7 @@ class NonSCFMaker(BaseVaspMaker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: Union[str, Path],
+        prev_vasp_dir: str | Path | None,
         mode: str = "uniform",
     ):
         """
@@ -170,11 +177,11 @@ class NonSCFMaker(BaseVaspMaker):
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
-        mode
+        mode : str
             Type of band structure calculation. Options are:
             - "line": Full band structure along symmetry lines.
             - "uniform": Uniform mesh band structure.
@@ -202,19 +209,21 @@ class HSERelaxMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -232,7 +241,7 @@ class HSETightRelaxMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    name
+    name : str
         The job name.
     input_set_generator
         A generator used to make the input set.
@@ -262,19 +271,21 @@ class HSEStaticMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -292,19 +303,21 @@ class HSEBSMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -318,7 +331,7 @@ class HSEBSMaker(BaseVaspMaker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: Union[str, Path] = None,
+        prev_vasp_dir: str | Path | None = None,
         mode="uniform",
     ):
         """
@@ -326,11 +339,11 @@ class HSEBSMaker(BaseVaspMaker):
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
-        mode
+        mode : str
             Type of band structure calculation. Options are:
             - "line": Full band structure along symmetry lines.
             - "uniform": Uniform mesh band structure.
@@ -375,19 +388,21 @@ class DielectricMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .StaticSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """

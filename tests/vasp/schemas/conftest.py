@@ -23,9 +23,7 @@ def assert_schemas_equal(test_schema, valid_schema):
             elif not isinstance(test_schema, BaseModel):
                 sub_test_schema = test_schema[key]
             else:
-                raise ValueError(
-                    "{} does not have field: {}".format(type(test_schema), key)
-                )
+                raise ValueError(f"{type(test_schema)} does not have field: {key}")
             return assert_schemas_equal(sub_test_schema, sub_valid_schema)
 
     elif isinstance(valid_schema, list):

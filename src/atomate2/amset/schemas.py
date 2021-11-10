@@ -152,11 +152,11 @@ class AmsetTaskDocument(StructureMetadata):
 
         Parameters
         ----------
-        dir_name
+        dir_name : path or str
             The path to the folder containing the calculation outputs.
-        additional_fields
+        additional_fields : dict
             Dictionary of additional fields to add to output document.
-        include_mesh
+        include_mesh : bool
             Whether to include the full AMSET mesh in the document.
 
         Returns

@@ -31,12 +31,12 @@ release = __version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
+    "numpydoc",
+    # "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.autosummary",
     "m2r2",
-    # "numpydoc",
     "sphinx_panels",
     "sphinxcontrib.autodoc_pydantic",
 ]
@@ -50,10 +50,10 @@ templates_path = ["_templates"]
 exclude_patterns = ["Thumbs.db", ".DS_Store", "test*.py"]
 
 # use type hints
-autodoc_typehints = "description"
+# autodoc_typehints = "description"
 autoclass_content = "class"
 autodoc_member_order = "bysource"
-autodoc_inherit_docstrings = True
+# autodoc_inherit_docstrings = True
 python_use_unqualified_type_names = True
 
 # autodoc_typehints_description_target = "documented"
@@ -69,13 +69,13 @@ autosummary_generate_overwrite = True
 numpydoc_class_members_toctree = False
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
-numpydoc_attributes_as_param_list = True
+numpydoc_attributes_as_param_list = False
 numpydoc_xref_param_type = True
 
 # better napolean support
-napoleon_use_param = True
-napoleon_use_rtype = True
-napoleon_use_ivar = True
+# napoleon_use_param = True
+# napoleon_use_rtype = True
+# napoleon_use_ivar = True
 
 # sphinx-panels shouldn't add bootstrap css as the pydata-sphinx-theme already loads it
 panels_add_bootstrap_css = False

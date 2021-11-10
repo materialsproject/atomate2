@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -47,19 +46,21 @@ class ElasticRelaxMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -88,8 +89,8 @@ class ElasticRelaxMaker(BaseVaspMaker):
 def generate_elastic_deformations(
     structure: Structure,
     order: int = 2,
-    strain_states: List[Tuple[int, int, int, int, int, int]] = None,
-    strain_magnitudes: Union[List[float], List[List[float]]] = None,
+    strain_states: list[tuple[int, int, int, int, int, int]] | None = None,
+    strain_magnitudes: list[float] | list[list[float]] | None = None,
     conventional: bool = False,
     symprec: float = SETTINGS.SYMPREC,
     sym_reduce: bool = True,
@@ -99,22 +100,22 @@ def generate_elastic_deformations(
 
     Parameters
     ----------
-    structure
+    structure : Structure
         A pymatgen structure object.
-    order
+    order : int
         Order of the tensor expansion to be determined. Can be either 2 or 3.
-    strain_states
+    strain_states : None or list of tuple of int
         List of Voigt-notation strains, e.g. ``[(1, 0, 0, 0, 0, 0), (0, 1, 0, 0, 0, 0),
         etc]``.
-    strain_magnitudes
+    strain_magnitudes : None or list of float or list of list of float
         A list of strain magnitudes to multiply by for each strain state, e.g. ``[-0.01,
         -0.005, 0.005, 0.01]``. Alternatively, a list of lists can be specified, where
         each inner list corresponds to a specific strain state.
-    conventional
+    conventional : bool
         Whether to transform the structure into the conventional cell.
-    symprec
+    symprec : float
         Symmetry precision.
-    sym_reduce
+    sym_reduce : bool
         Whether to reduce the number of deformations using symmetry.
 
     Returns
@@ -162,8 +163,8 @@ def generate_elastic_deformations(
 @job
 def run_elastic_deformations(
     structure: Structure,
-    deformations: List[Deformation],
-    prev_vasp_dir: Union[str, Path] = None,
+    deformations: list[Deformation],
+    prev_vasp_dir: str | Path | None = None,
     elastic_relax_maker: BaseVaspMaker = None,
 ):
     """
@@ -174,13 +175,13 @@ def run_elastic_deformations(
 
     Parameters
     ----------
-    structure
+    structure : Structure
         A pymatgen structure.
-    deformations
+    deformations : list of Deformation
         The deformations to apply.
-    prev_vasp_dir
+    prev_vasp_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
-    elastic_relax_maker
+    elastic_relax_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
     """
     if elastic_relax_maker is None:
@@ -223,8 +224,8 @@ def run_elastic_deformations(
 @job(output_schema=ElasticDocument)
 def fit_elastic_tensor(
     structure: Structure,
-    deformation_data: List[dict],
-    equilibrium_stress: Optional[Matrix3D] = None,
+    deformation_data: list[dict],
+    equilibrium_stress: Matrix3D | None = None,
     order: int = 2,
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
@@ -234,22 +235,22 @@ def fit_elastic_tensor(
 
     Parameters
     ----------
-    structure
+    structure : ~pymatgen.core.structure.Structure
         A pymatgen structure.
-    deformation_data
+    deformation_data : list of dict
         The deformation data, as a list of dictionaries, each containing the keys
         "stress", "deformation".
-    equilibrium_stress
+    equilibrium_stress : None or tuple of tuple of float
         The equilibrium stress of the (relaxed) structure, if known.
-    order
+    order : int
         Order of the tensor expansion to be fitted. Can be either 2 or 3.
-    fitting_method
+    fitting_method : str
         The method used to fit the elastic tensor. See pymatgen for more details on the
         methods themselves. The options are:
         - "finite_difference" (note this is required if fitting a 3rd order tensor)
         - "independent"
         - "pseudoinverse"
-    symprec
+    symprec : float
         Symmetry precision for deriving symmetry equivalent deformations. If
         ``symprec=None``, then no symmetry operations will be applied.
     """

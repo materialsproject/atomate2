@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import socket
 from pathlib import Path
-from typing import Union
 
 __all__ = ["get_uri", "strip_hostname"]
 
 
-def get_uri(dir_name: Union[str, Path]) -> str:
+def get_uri(dir_name: str | Path) -> str:
     """
     Return the URI path for a directory.
 
@@ -17,7 +16,7 @@ def get_uri(dir_name: Union[str, Path]) -> str:
 
     Parameters
     ----------
-    dir_name
+    dir_name : str or Path
         A directory name.
 
     Returns
@@ -31,10 +30,10 @@ def get_uri(dir_name: Union[str, Path]) -> str:
         hostname = socket.gethostbyaddr(hostname)[0]
     except socket.gaierror:
         pass
-    return "{}:{}".format(hostname, fullpath)
+    return f"{hostname}:{fullpath}"
 
 
-def strip_hostname(uri_path: Union[str, Path]) -> str:
+def strip_hostname(uri_path: str | Path) -> str:
     """
     Strop the hostname from a URI path.
 
@@ -43,11 +42,12 @@ def strip_hostname(uri_path: Union[str, Path]) -> str:
 
     Parameters
     ----------
-    uri_path
+    uri_path : str or Path
         A URI path.
 
     Returns
     -------
+    str
         The path without the hostname information.
     """
     dir_name = str(uri_path)

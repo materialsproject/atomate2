@@ -11,12 +11,12 @@ def initialize_logger(level: int = logging.INFO) -> logging.Logger:
 
     Parameters
     ----------
-    level
+    level : int
         The log level.
 
     Returns
     -------
-    Logger
+    .Logger
         A logging instance with customized formatter and handlers.
     """
     log = logging.getLogger("atomate2")

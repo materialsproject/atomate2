@@ -2,23 +2,21 @@
 
 from __future__ import annotations
 
-from typing import List, Tuple
-
 __all__ = ["get_default_strain_states"]
 
 
-def get_default_strain_states(order: int) -> List[Tuple[int, int, int, int, int, int]]:
+def get_default_strain_states(order: int) -> list[tuple[int, int, int, int, int, int]]:
     """
     Generate a list of strain-states for calculating 2nd or 3rd order elastic tensors.
 
     Parameters
     ----------
-    order
+    order : int
         Order of the tensor expansion to be calculated. Can be either 2 or 3.
 
     Returns
     -------
-    list[tuple[int, int, int, int, int, int]]
+    list of tuples of ints
         A list of strain states.
     """
     if order == 2:

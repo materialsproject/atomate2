@@ -661,8 +661,8 @@ def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
     if vasprun is None:
         return 2000
 
-    emax = max([eigs.max() for eigs in vasprun.eigenvalues.values()])
-    emin = min([eigs.min() for eigs in vasprun.eigenvalues.values()])
+    emax = max(eigs.max() for eigs in vasprun.eigenvalues.values())
+    emin = min(eigs.min() for eigs in vasprun.eigenvalues.values())
     return int((emax - emin) / dedos)
 
 

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Union
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
@@ -34,24 +33,24 @@ class DoubleRelaxMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    relax_maker
+    relax_maker : .BaseVaspMaker
         Maker to use to generate the relaxations.
     """
 
     name: str = "double relax"
     relax_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
-    def make(self, structure: Structure, prev_vasp_dir: Union[str, Path] = None):
+    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
         Create a flow with two chained relaxations.
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -80,13 +79,13 @@ class BandStructureMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    bandstructure_type
+    bandstructure_type : str
         The type of band structure to generate. Options are "line", "uniform" or "both".
-    static_maker
+    static_maker : .BaseVaspMaker
         The maker to use for the static calculation.
-    bs_maker
+    bs_maker : .BaseVaspMaker
         The maker to use for the non-self-consistent field calculations.
     """
 
@@ -95,15 +94,15 @@ class BandStructureMaker(Maker):
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
-    def make(self, structure, prev_vasp_dir=None):
+    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
         Create a band structure flow.
 
         Parameters
         ----------
-        structure
+        structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -157,13 +156,13 @@ class HSEBandStructureMaker(BandStructureMaker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    bandstructure_type
+    bandstructure_type : str
         The type of band structure to generate. Options are "line", "uniform" or "both".
-    static_maker
+    static_maker : .BaseVaspMaker
         The maker to use for the static calculation.
-    bs_maker
+    bs_maker : .BaseVaspMaker
         The maker to use for the line and uniform band structure calculations.
     """
 
@@ -182,13 +181,11 @@ class RelaxBandStructureMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    bandstructure_type
-        The type of band structure to generate. Options are "line", "uniform" or "both".
-    static_maker
+    relax_maker : .BaseVaspMaker
         The maker to use for the static calculation.
-    bs_maker
+    band_structure_maker : .BaseVaspMaker
         The maker to use for the line and uniform band structure calculations.
     """
 
@@ -196,15 +193,15 @@ class RelaxBandStructureMaker(Maker):
     relax_maker: BaseVaspMaker = field(default_factory=DoubleRelaxMaker)
     band_structure_maker: BaseVaspMaker = field(default_factory=BandStructureMaker)
 
-    def make(self, structure, prev_vasp_dir=None):
+    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
         Run a relaxation and then calculate the uniform and line mode band structures.
 
         Parameters
         ----------
-        structure
+        structure: .Structure
             A pymatgen structure object.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns

@@ -1,6 +1,8 @@
 """Powerups for performing common modifications on VASP jobs and flows."""
 
-from typing import Any, Dict, Optional, Type, Union
+from __future__ import annotations
+
+from typing import Any
 
 from jobflow import Flow, Job, Maker
 from pymatgen.io.vasp import Kpoints
@@ -9,24 +11,24 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 def update_user_incar_settings(
-    flow: Union[Job, Flow],
-    incar_updates: Dict[str, Any],
-    name_filter: Optional[str] = None,
-    class_filter: Optional[Type[Maker]] = BaseVaspMaker,
+    flow: Job | Flow,
+    incar_updates: dict[str, Any],
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
 ):
     """
     Update the user_incar_settings of any VaspInputSetGenerators in the flow.
 
     Parameters
     ----------
-    flow
+    flow : .Job or .Flow
         A job or flow.
-    incar_updates
+    incar_updates : dict
         The updates to apply. Existing keys in user_incar_settings will not be modified
         unless explicitly specified in ``incar_updates``.
-    name_filter
+    name_filter : str or None
         A filter for the name of the jobs.
-    class_filter
+    class_filter : Maker or None
         A filter for the VaspMaker class used to generate the flows. Note the class
         filter will match any subclasses.
     """
@@ -43,24 +45,24 @@ def update_user_incar_settings(
 
 
 def update_user_potcar_settings(
-    flow: Union[Job, Flow],
-    potcar_updates: Dict[str, Any],
-    name_filter: Optional[str] = None,
-    class_filter: Optional[Type[Maker]] = BaseVaspMaker,
+    flow: Job | Flow,
+    potcar_updates: dict[str, Any],
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
 ):
     """
     Update the user_potcar_settings of any VaspInputSetGenerators in the flow.
 
     Parameters
     ----------
-    flow
+    flow : .Job or .Flow
         A job or flow.
-    potcar_updates
+    potcar_updates : dict
         The updates to apply. Existing keys in user_potcar_settings will not be modified
         unless explicitly specified in ``potcar_updates``.
-    name_filter
+    name_filter : str or None
         A filter for the name of the jobs.
-    class_filter
+    class_filter : Maker or None
         A filter for the VaspMaker class used to generate the flows. Note the class
         filter will match any subclasses.
     """
@@ -77,25 +79,25 @@ def update_user_potcar_settings(
 
 
 def update_user_kpoints_settings(
-    flow: Union[Job, Flow],
-    kpoints_updates: Union[Dict[str, Any], Kpoints],
-    name_filter: Optional[str] = None,
-    class_filter: Optional[Type[Maker]] = BaseVaspMaker,
+    flow: Job | Flow,
+    kpoints_updates: dict[str, Any] | Kpoints,
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
 ):
     """
     Update the user_kpoints_settings of any VaspInputSetGenerators in the flow.
 
     Parameters
     ----------
-    flow
+    flow : .Job or .Flow
         A job or flow.
-    kpoints_updates
+    kpoints_updates : dict
         The updates to apply. Can be specified as a dictionary or as a Kpoints object.
         If a dictionary is supplied, existing keys in user_kpoints_settings will not be
         modified unless explicitly specified in ``kpoints_updates``.
-    name_filter
+    name_filter : str or None
         A filter for the name of the jobs.
-    class_filter
+    class_filter : Maker or None
         A filter for the VaspMaker class used to generate the flows. Note the class
         filter will match any subclasses.
     """

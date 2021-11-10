@@ -1,8 +1,9 @@
 """Module defining functions to run amset."""
 
+from __future__ import annotations
+
 import logging
 import warnings
-from typing import List, Tuple, Union
 
 import numpy as np
 from amset.core.run import Runner
@@ -44,7 +45,7 @@ def run_amset(**kwargs):
 def check_converged(
     new_transport: dict,
     old_transport: dict,
-    properties: Tuple[str, ...] = _CONVERGENCE_PROPERTIES,
+    properties: tuple[str, ...] = _CONVERGENCE_PROPERTIES,
     tolerance: float = 0.1,
 ) -> bool:
     """
@@ -52,15 +53,15 @@ def check_converged(
 
     Parameters
     ----------
-    new_transport
+    new_transport : dict
         The new transport data.
-    old_transport
+    old_transport : dict
         The old transport data.
-    properties
+    properties : tuple of str
         List of properties for which convergence is assessed. The calculation is only
         flagged as converged if all properties pass the convergence checks. Options are:
         "conductivity", "seebeck", "mobility.overall", "electronic thermal conductivity.
-    tolerance
+    tolerance : float
         Relative convergence tolerance. Default is ``0.1`` (i.e. 10 %).
 
     Returns
@@ -94,17 +95,17 @@ def check_converged(
     return converged
 
 
-def tensor_average(tensor: Union[List, np.ndarray]) -> Union[float, np.ndarray]:
+def tensor_average(tensor: list | np.ndarray) -> float | np.ndarray:
     """Calculate the average of the tensor eigenvalues.
 
     Parameters
     ----------
-    tensor
+    tensor : list or numpy array
         A tensor
 
     Returns
     -------
-    float or np.ndarray
+    float or numpy array
         The average of the eigenvalues.
     """
     return np.average(np.linalg.eigvalsh(tensor), axis=-1)

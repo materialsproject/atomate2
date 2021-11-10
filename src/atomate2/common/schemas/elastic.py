@@ -1,7 +1,5 @@
 """Schemas for elastic tensor fitting and related properties."""
 
-from __future__ import annotations
-
 from copy import deepcopy
 from typing import List, Optional
 
@@ -13,6 +11,8 @@ from pymatgen.analysis.elasticity import (
     Stress,
 )
 from pymatgen.core import Structure
+from pymatgen.core.tensors import TensorMapping
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D, MatrixVoigt
@@ -23,9 +23,6 @@ __all__ = [
     "ElasticTensorDocument",
     "ElasticDocument",
 ]
-
-from pymatgen.core.tensors import TensorMapping
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 
 class DerivedProperties(BaseModel):
@@ -144,7 +141,7 @@ class ElasticDocument(BaseModel):
         uuids: List[str],
         job_dirs: List[str],
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
-        order: int = None,
+        order: Optional[int] = None,
         equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
     ):
@@ -153,27 +150,27 @@ class ElasticDocument(BaseModel):
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             The structure for which strains and stresses were calculated.
-        stresses
+        stresses : list of Stress
             A list of corresponding stresses.
-        deformations
+        deformations : list of Deformation
             A list of corresponding deformations.
-        uuids
+        uuids: list of str
             A list of uuids, one for each deformation calculation.
-        job_dirs
+        job_dirs : list of str
             A list of job directories, one for each deformation calculation.
-        fitting_method
+        fitting_method : str
             The method used to fit the elastic tensor. See pymatgen for more details on
             the methods themselves. The options are:
             - "finite_difference" (note this is required if fitting a 3rd order tensor)
             - "independent"
             - "pseudoinverse"
-        order
+        order : int or None
             Order of the tensor expansion to be fitted. Can be either 2 or 3.
-        equilibrium_stress
+        equilibrium_stress : list of list of float
             The stress on the equilibrium (relaxed) structure.
-        symprec
+        symprec : float
             Symmetry precision for deriving symmetry equivalent deformations. If
             ``symprec=None``, then no symmetry operations will be applied.
         """

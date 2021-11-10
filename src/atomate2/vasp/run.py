@@ -12,8 +12,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from pathlib import Path
-from typing import Any, Dict, Optional, Sequence, Union
+from typing import Any, Sequence
 
 from custodian import Custodian
 from custodian.custodian import ErrorHandler, Validator
@@ -82,16 +81,16 @@ class JobType(ValueEnum):
 
 
 def run_vasp(
-    job_type: Union[JobType, str] = JobType.NORMAL,
-    vasp_cmd: Union[str, Path] = SETTINGS.VASP_CMD,
-    vasp_gamma_cmd: Union[str, Path] = SETTINGS.VASP_GAMMA_CMD,
+    job_type: JobType | str = JobType.NORMAL,
+    vasp_cmd: str = SETTINGS.VASP_CMD,
+    vasp_gamma_cmd: str = SETTINGS.VASP_GAMMA_CMD,
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
     handlers: Sequence[ErrorHandler] = _DEFAULT_HANDLERS,
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
-    wall_time: Optional[int] = None,
-    vasp_job_kwargs: Dict[str, Any] = None,
-    custodian_kwargs: Dict[str, Any] = None,
+    wall_time: int | None = None,
+    vasp_job_kwargs: dict[str, Any] = None,
+    custodian_kwargs: dict[str, Any] = None,
 ):
     """
     Run VASP.
@@ -100,26 +99,26 @@ def run_vasp(
 
     Parameters
     ----------
-    job_type
+    job_type : str or .JobType
         The job type.
-    vasp_cmd
+    vasp_cmd : str
         The command used to run the standard version of vasp.
-    vasp_gamma_cmd
+    vasp_gamma_cmd : str
         The command used to run the gamma version of vasp.
-    max_errors
+    max_errors : int
         The maximum number of errors allowed by custodian.
-    scratch_dir
+    scratch_dir : str
         The scratch directory used by custodian.
-    handlers
+    handlers : list of .ErrorHandler
         The error handlers used by custodian.
-    validators
+    validators : list of .Validator
         The validators handlers used by custodian.
-    wall_time
+    wall_time : int
         The maximum wall time. If set, a WallTimeHandler will be added to the list
         of handlers.
-    vasp_job_kwargs
+    vasp_job_kwargs : dict
         Keyword arguments that are passed to :obj:`.VaspJob`.
-    custodian_kwargs
+    custodian_kwargs : dict
         Keyword arguments that are passed to :obj:`.Custodian`.
     """
     vasp_job_kwargs = {} if vasp_job_kwargs is None else vasp_job_kwargs
@@ -170,16 +169,16 @@ def run_vasp(
 
 def should_stop_children(
     task_document: TaskDocument,
-    handle_unsuccessful: Union[bool, str] = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
+    handle_unsuccessful: bool | str = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """
     Parse VASP outputs and decide whether child jobs should continue.
 
     Parameters
     ----------
-    task_document
+    task_document : .TaskDocument
         A VASP task document.
-    handle_unsuccessful
+    handle_unsuccessful : bool or str
         This is a three-way toggle on what to do if your job looks OK, but is actually
         unconverged (either electronic or ionic):
 

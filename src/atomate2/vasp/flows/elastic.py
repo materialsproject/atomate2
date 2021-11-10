@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Union
 
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.core.structure import Structure
@@ -45,22 +44,22 @@ class ElasticMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    order
+    order : int
         Order of the tensor expansion to be determined. Can be either 2 or 3.
-    sym_reduce
+    sym_reduce : bool
         Whether to reduce the number of deformations using symmetry.
-    symprec
+    symprec : float
         Symmetry precision to use in the reduction of symmetry.
-    bulk_relax_maker
+    bulk_relax_maker : .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
-    elastic_relax_maker
+    elastic_relax_maker : .BaseVaspMaker
         Maker used to generate elastic relaxations.
-    generate_elastic_deformations_kwargs
+    generate_elastic_deformations_kwargs : dict
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
-    fit_elastic_tensor_kwargs
+    fit_elastic_tensor_kwargs : dict
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
     """
 
@@ -68,7 +67,7 @@ class ElasticMaker(Maker):
     order: int = 2
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
-    bulk_relax_maker: Optional[BaseVaspMaker] = field(
+    bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
     )
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
@@ -78,7 +77,7 @@ class ElasticMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: Union[str, Path] = None,
+        prev_vasp_dir: str | Path | None = None,
         equilibrium_stress: Matrix3D = None,
     ):
         """
@@ -86,11 +85,11 @@ class ElasticMaker(Maker):
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
-        equilibrium_stress
+        equilibrium_stress : tuple of tuple of float
             The equilibrium stress of the (relaxed) structure, if known.
         """
         jobs = []

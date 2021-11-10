@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Optional, Sequence, Union
+from typing import Sequence
 
 from pymatgen.core import Structure
 
@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 
 @auto_fileclient
 def copy_vasp_outputs(
-    src_dir: Union[Path, str],
-    src_host: Optional[str] = None,
+    src_dir: Path | str,
+    src_host: str | None = None,
     additional_vasp_files: Sequence[str] = tuple(),
     contcar_to_poscar: bool = True,
-    file_client: FileClient = None,
+    file_client: FileClient | None = None,
 ):
     """
     Copy VASP output files to the current directory.
@@ -39,18 +39,18 @@ def copy_vasp_outputs(
 
     Parameters
     ----------
-    src_dir
+    src_dir : str or Path
         The source directory.
-    src_host
+    src_host : str or None
         The source hostname used to specify a remote filesystem. Can be given as
         either "username@remote_host" or just "remote_host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    additional_vasp_files
+    additional_vasp_files : list of str
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
-    contcar_to_poscar
+    contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
     """
     src_dir = strip_hostname(src_dir)  # TODO: Handle hostnames properly.
@@ -106,9 +106,9 @@ def copy_vasp_outputs(
 
 @auto_fileclient
 def get_largest_relax_extension(
-    directory: Union[Path, str],
-    host: Optional[str] = None,
-    file_client: FileClient = None,
+    directory: Path | str,
+    host: str | None = None,
+    file_client: FileClient | None = None,
 ) -> str:
     """
     Get the largest numbered relax extension of files in a directory.
@@ -118,13 +118,13 @@ def get_largest_relax_extension(
 
     Parameters
     ----------
-    directory
+    directory : str or Path
         A directory to search.
-    host
+    host : str or None
         The hostname used to specify a remote filesystem. Can be given as either
         "username@remote_host" or just "remote_host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    file_client
+    file_client : .FileClient
         A file client to use for performing file operations.
 
     Returns
@@ -153,13 +153,13 @@ def write_vasp_input_set(
 
     Parameters
     ----------
-    structure
+    structure : .Structure
         A structure.
-    input_set_generator
+    input_set_generator : .VaspInputSetGenerator
         A VASP input set generator.
-    from_prev
+    from_prev : bool
         Whether to initialize the input set from a previous calculation.
-    apply_incar_updates
+    apply_incar_updates : bool
         Whether to apply incar updates given in the ~/.atomate2.yaml settings file.
     **kwargs
         Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.

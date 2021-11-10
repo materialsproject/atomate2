@@ -1,8 +1,9 @@
 """Module defining jobs for combining AMSET and VASP calculations."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Tuple, Union
 
 import numpy as np
 from amset.deformation.generation import get_deformations
@@ -49,19 +50,21 @@ class DenseUniformMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -85,19 +88,21 @@ class StaticDeformationMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -122,19 +127,21 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -155,19 +162,21 @@ class HSEDenseUniformMaker(BaseVaspMaker):
 
     Parameters
     ----------
-    input_set_generator
+    name : str
+        The job name.
+    input_set_generator : .VaspInputSetGenerator
         A generator used to make the input set.
-    write_input_set_kwargs
+    write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs
+    copy_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs
+    run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs
+    task_document_kwargs : dict
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs
+    stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
         {filename: data}.
     """
@@ -185,8 +194,8 @@ class HSEDenseUniformMaker(BaseVaspMaker):
 def run_amset_deformations(
     structure: Structure,
     symprec: float = SETTINGS.SYMPREC,
-    prev_vasp_dir: Union[str, Path] = None,
-    static_deformation_maker: BaseVaspMaker = None,
+    prev_vasp_dir: str | Path | None = None,
+    static_deformation_maker: BaseVaspMaker | None = None,
 ):
     """
     Run amset deformations.
@@ -196,14 +205,14 @@ def run_amset_deformations(
 
     Parameters
     ----------
-    structure
+    structure : .Structure
         A pymatgen structure.
-    symprec
+    symprec : float
         Symmetry precision used to reduce the number of deformations. Set to None for
         no symmetry reduction.
-    prev_vasp_dir
+    prev_vasp_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
-    static_deformation_maker
+    static_deformation_maker : .BaseVaspMaker or None
         A VaspMaker to use to generate the static deformation jobs.
 
     Returns
@@ -242,9 +251,9 @@ def run_amset_deformations(
 @job
 def calculate_deformation_potentials(
     bulk_dir: str,
-    deformation_dirs: List[str],
+    deformation_dirs: list[str],
     symprec: float = SETTINGS.SYMPREC,
-    ibands: Tuple[List[int], List[int]] = None,
+    ibands: tuple[list[int], list[int]] = None,
 ):
     """
     Generate the deformation.h5 (containing deformation potentials) using AMSET.
@@ -253,20 +262,20 @@ def calculate_deformation_potentials(
 
     Parameters
     ----------
-    bulk_dir
+    bulk_dir : str
         The folder containing the bulk calculation data.
-    deformation_dirs
+    deformation_dirs : list of str
         A list of folders for each deformation.
-    symprec
+    symprec : float
         The symmetry precision used to reduce the number of deformations. Set to None
         if no-symmetry reduction was applied.
-    ibands
+    ibands : tuple of list of int
         Which bands to include in the deformation.h5 file. Given as a tuple of one or
         two lists (one for each spin channel). The bands indices are zero indexed.
 
     Returns
     -------
-    dict[str, str]
+    dict
         A dictionary with the keys:
 
         - "dir_name": containing the directory where the deformation.h5 file was
@@ -298,27 +307,27 @@ def calculate_deformation_potentials(
 @job
 def calculate_polar_phonon_frequency(
     structure: Structure,
-    frequencies: List[float],
-    eigenvectors: List[Vector3D],
-    born_effective_charges: List[Vector3D],
+    frequencies: list[float],
+    eigenvectors: list[Vector3D],
+    born_effective_charges: list[Vector3D],
 ):
     """
     Calculate the polar phonon frequency using amset.
 
     Parameters
     ----------
-    structure
+    structure : .Structure
         A pymatgen structure.
-    frequencies
+    frequencies : list of float
         The phonon mode frequencies in THz.
-    eigenvectors
+    eigenvectors : list of list of float
         The phonon eigenvectors.
-    born_effective_charges
+    born_effective_charges : list of list of float
         The born effective charges.
 
     Returns
     -------
-    dict[str, any]
+    dict
         A dictionary with the keys:
 
         - "frequency" (float): The polar phonon frequency.
@@ -346,12 +355,12 @@ def generate_wavefunction_coefficients(dir_name: str):
 
     Parameters
     ----------
-    dir_name
+    dir_name : str
         Directory containing WAVECAR and vasprun.xml files (can be gzipped).
 
     Returns
     -------
-    dict[str, str]
+    dict
         A dictionary with the keys:
 
         - "dir_name" (str): containing the directory where the wavefunction.h5 file was
@@ -376,7 +385,7 @@ def generate_wavefunction_coefficients(dir_name: str):
     return {"dir_name": Path.cwd(), "log": result.output, "ibands": ibands}
 
 
-def _extract_ibands(log) -> Tuple[List[int], ...]:
+def _extract_ibands(log: str) -> tuple[list[int], ...]:
     """
     Extract ibands from an ``amset wave`` log.
 
@@ -385,16 +394,16 @@ def _extract_ibands(log) -> Tuple[List[int], ...]:
 
     Parameters
     ----------
-    log
+    log : str
         The log from ``amset wave``.
 
     Returns
     -------
-    tuple[list[int], ...]
+    tuple of list of int
         The bands included in the wavefunction.h5 file. Given as a tuple of one or two
         lists (one for each spin channel). The bands indices are zero indexed.
     """
-    result_splits = log.output.split("\n")
+    result_splits = log.split("\n")
     for i in range(len(result_splits)):
         if "Including bands" in result_splits[i]:
             # non-spin polarised result system

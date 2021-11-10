@@ -521,7 +521,7 @@ def _get_drift_warnings(calc_doc: Calculation) -> List[str]:
     warnings = []
     if calc_doc.input.parameters.get("NSW", 0) > 0:
         drift = calc_doc.output.outcar.get("drift", [[0, 0, 0]])
-        max_drift = max([np.linalg.norm(d) for d in drift])
+        max_drift = max(np.linalg.norm(d) for d in drift)
         ediffg = calc_doc.input.parameters.get("EDIFFG", None)
         if ediffg and float(ediffg) < 0:
             max_force = -float(ediffg)

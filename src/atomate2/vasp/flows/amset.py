@@ -5,7 +5,6 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow import Flow, Maker, job
@@ -64,16 +63,12 @@ class DeformationPotentialMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    symprec
+    symprec : float
         Symmetry precision to use in the reduction of symmetry.
-    elastic_relax_maker
+    elastic_relax_maker : .BaseVaspMaker
         Maker used to generate elastic relaxations.
-    generate_elastic_deformations_kwargs
-        Keyword arguments passed to :obj:`generate_elastic_deformations`.
-    fit_elastic_tensor_kwargs
-        Keyword arguments passed to :obj:`fit_elastic_tensor`.
     """
 
     name: str = "deformation potential"
@@ -85,19 +80,19 @@ class DeformationPotentialMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: Union[str, Path] = None,
-        ibands: Tuple[List[int], List[int]] = None,
+        prev_vasp_dir: str | Path | None = None,
+        ibands: tuple[list[int], list[int]] = None,
     ):
         """
         Make flow to calculate acoustic deformation potentials.
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
-        ibands
+        ibands : tuple of list of int
             Which bands to include in the deformation.h5 file. Given as a tuple of one
             or two lists (one for each spin channel). The bands indices are zero
             indexed.
@@ -147,41 +142,41 @@ class VaspAmsetMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    doping
+    doping : tuple of float
         Doping concentrations at which to calculate transport properties.
-    temperatures
+    temperatures : tuple of float
         Temperatures at which to calculate transport properties.
-    use_hse_gap
+    use_hse_gap : bool
         Whether to perform a HSE06 calculation to calculate the band gap for use in
         AMSET. This can impact the results for small band gap materials.
-    relax_maker
+    relax_maker : .BaseVaspMaker
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
-    static_maker
+    static_maker : .BaseVaspMaker
         The maker to use for the initial static calculation.
-    dense_uniform_maker
+    dense_uniform_maker : .BaseVaspMaker
         The maker to use for dense uniform calculations.
-    dielectric_maker
+    dielectric_maker : .BaseVaspMaker
         The maker to use for calculating dielectric constants.
-    elastic_maker
+    elastic_maker : .ElasticMaker
         The maker to use for calculating elastic constants.
-    deformation_potential_maker
+    deformation_potential_maker : .DeformationPotentialMaker
         The maker to use for calculating acoustic deformation potentials.
-    hse_gap_maker
+    hse_gap_maker : .BaseVaspMaker
         The maker to use for calculating the band gap using HSE06. Note, this maker is
         only used if ``use_hse_gap=True``.
-    amset_maker
+    amset_maker : .AmsetMaker
         The maker to use for running AMSET calculations.
     """
 
     name: str = "VASP amset"
-    doping: Tuple[float, ...] = _DEFAULT_DOPING
-    temperatures: Tuple[float, ...] = _DEFAULT_TEMPERATURES
+    doping: tuple[float, ...] = _DEFAULT_DOPING
+    temperatures: tuple[float, ...] = _DEFAULT_TEMPERATURES
     use_hse_gap: bool = True
     amset_settings: dict = field(default_factory=dict)
-    relax_maker: Optional[BaseVaspMaker] = field(default_factory=TightRelaxMaker)
+    relax_maker: BaseVaspMaker | None = field(default_factory=TightRelaxMaker)
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=DenseUniformMaker)
     dielectric_maker: BaseVaspMaker = field(default_factory=DielectricMaker)
@@ -195,16 +190,16 @@ class VaspAmsetMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: Union[str, Path] = None,
+        prev_vasp_dir: str | Path | None = None,
     ):
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
 
         Parameters
         ----------
-        structure
+        structure : .Structure
             A pymatgen structure.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
         jobs = []
@@ -324,34 +319,34 @@ class HSEVaspAmsetMaker(Maker):
 
     Parameters
     ----------
-    name
+    name : str
         Name of the flows produced by this maker.
-    doping
+    doping : tuple of float
         Doping concentrations at which to calculate transport properties.
-    temperatures
+    temperatures : tuple of float
         Temperatures at which to calculate transport properties.
-    relax_maker
+    relax_maker : .BaseVaspMaker
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
-    static_maker
+    static_maker : .BaseVaspMaker
         The maker to use for the initial static calculation.
-    dense_uniform_maker
+    dense_uniform_maker : .BaseVaspMaker
         The maker to use for dense uniform calculations.
-    dielectric_maker
+    dielectric_maker : .BaseVaspMaker
         The maker to use for calculating dielectric constants.
-    elastic_maker
+    elastic_maker : .ElasticMaker
         The maker to use for calculating elastic constants.
-    deformation_potential_maker
+    deformation_potential_maker : .DeformationPotentialMaker
         The maker to use for calculating acoustic deformation potentials.
-    amset_maker
+    amset_maker : .AmsetMaker
         The maker to use for running AMSET calculations.
     """
 
     name: str = "hse VASP amset"
-    doping: Tuple[float, ...] = _DEFAULT_DOPING
-    temperatures: Tuple[float, ...] = _DEFAULT_TEMPERATURES
+    doping: tuple[float, ...] = _DEFAULT_DOPING
+    temperatures: tuple[float, ...] = _DEFAULT_TEMPERATURES
     amset_settings: dict = field(default_factory=dict)
-    relax_maker: Optional[BaseVaspMaker] = field(default_factory=HSETightRelaxMaker)
+    relax_maker: BaseVaspMaker | None = field(default_factory=HSETightRelaxMaker)
     static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=HSEDenseUniformMaker)
     deformation_potential_maker: DeformationPotentialMaker = field(
@@ -366,16 +361,16 @@ class HSEVaspAmsetMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: Union[str, Path] = None,
+        prev_vasp_dir: str | Path | None = None,
     ):
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
 
         Parameters
         ----------
-        structure
+        structure : Structure
             A pymatgen structure.
-        prev_vasp_dir
+        prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
         jobs = []
