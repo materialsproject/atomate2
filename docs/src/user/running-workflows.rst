@@ -83,7 +83,7 @@ Create a Python script named ``mgo_bandstructure.py`` with the following content
     )
 
     # make a band structure flow to optimise the structure and obtain the band structure
-    bandstructure_flow = RelaxBandStructureMaker().make(si_structure)
+    bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 
     # run the job
     run_locally(bandstructure_flow)

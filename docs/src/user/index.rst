@@ -4,7 +4,11 @@
 User Guide
 ==========
 
-This guide is an overview and explains the important features of atomate2.
+.. mdinclude:: ../../../README.md
+   :start-line: 9
+
+Table of Contents
+-----------------
 
 .. toctree::
    :maxdepth: 2
