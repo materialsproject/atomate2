@@ -6,11 +6,9 @@ import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from jobflow import job
 from pymatgen.core.structure import Structure
 
-from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.schemas.task import TaskDocument
+from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
 from atomate2.vasp.sets.base import VaspInputSetGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
@@ -165,7 +163,7 @@ class NonSCFMaker(BaseVaspMaker):
         default_factory=NonSCFSetGenerator
     )
 
-    @job(output_schema=TaskDocument)
+    @vasp_job
     def make(
         self,
         structure: Structure,
@@ -327,7 +325,7 @@ class HSEBSMaker(BaseVaspMaker):
         default_factory=HSEBSSetGenerator
     )
 
-    @job(output_schema=TaskDocument)
+    @vasp_job
     def make(
         self,
         structure: Structure,

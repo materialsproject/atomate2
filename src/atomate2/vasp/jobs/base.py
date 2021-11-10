@@ -4,18 +4,72 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Callable
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.core import Structure
+from pymatgen.electronic_structure.bandstructure import (
+    BandStructure,
+    BandStructureSymmLine,
+)
+from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
+from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.base import VaspInputSetGenerator
 
-__all__ = ["BaseVaspMaker"]
+__all__ = ["BaseVaspMaker", "vasp_job"]
+
+
+_DATA_OBJECTS = [
+    BandStructure,
+    BandStructureSymmLine,
+    DOS,
+    Dos,
+    CompleteDos,
+    Locpot,
+    Chgcar,
+    Wavecar,
+]
+
+
+def vasp_job(method: Callable):
+    """
+    Decorate the ``make`` method of VASP job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    settings for all VASP jobs. For example, it ensures that large data objects
+    (band structures, density of states, LOCPOT, CHGCAR, etc) are all stored in the
+    atomate2 data store. It also configures the output schema to be a VASP
+    :obj:`.TaskDocument`.
+
+    Any makers that return VASP jobs (not flows) should decorate the ``make`` method
+    with @vasp_job. For example:
+
+    .. code-block:: python
+
+        class MyVaspMaker(BaseVaspMaker):
+            @vasp_job
+            def make(structure):
+                # code to run VASP job.
+                pass
+
+    Parameters
+    ----------
+    method : callable
+        A BaseVaspMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate VASP jobs.
+    """
+    return job(method, data=_DATA_OBJECTS, output_schema=TaskDocument)
 
 
 @dataclass
@@ -55,14 +109,14 @@ class BaseVaspMaker(Maker):
     stop_children_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
 
-    @job(output_schema=TaskDocument)
+    @vasp_job
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
         Run a VASP calculation.
 
         Parameters
         ----------
-        structure : .Structure
+        structure : Structure
             A pymatgen structure object.
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
