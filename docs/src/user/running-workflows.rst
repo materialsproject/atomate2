@@ -86,7 +86,7 @@ Create a Python script named ``mgo_bandstructure.py`` with the following content
     bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 
     # run the job
-    run_locally(bandstructure_flow)
+    run_locally(bandstructure_flow, create_folders=True)
 
 
 .. _Running the workflow:
@@ -132,43 +132,47 @@ code, either as a script or on the Python prompt.
 
     from jobflow import SETTINGS
     from pymatgen.electronic_structure.plotter import DosPlotter, BSPlotter
+    from pymatgen.electronic_structure.dos import CompleteDos
+    from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
 
-    store = jobflow.SETTINGS.JOB_STORE
+    store = SETTINGS.JOB_STORE
     store.connect()
 
     # get the uniform bandstructure from the database
     result = store.query_one(
-        query={"output.task_label": "band structure uniform"},
+        {"output.task_label": "non-scf uniform"},
         properties=["output.vasp_objects.dos"],
         load=True,  # DOS stored in the data store, so we need to explicitly load it
     )
-    dos = result["output"]["vasp_objects"]["dos"]
+    dos = CompleteDos.from_dict(result["output"]["vasp_objects"]["dos"])
 
     # plot the DOS
     dos_plotter = DosPlotter()
-    dos_plotter.add_dos(dos)
-    dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10))
+    dos_plotter.add_dos_dict(dos.get_element_dos())
+    dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10), img_format="pdf")
 
     # get the line mode bandstructure from the database
     result = store.query_one(
-        query={"output.task_label": "band structure line"},
+        {"output.task_label": "non-scf line"},
         properties=["output.vasp_objects.bandstructure"],
         load=True,  # BS stored in the data store, so we need to explicitly load it
     )
-    bandstructure = result["output"]["vasp_objects"]["bandstructure"]
+    bandstructure = BandStructureSymmLine.from_dict(
+        result["output"]["vasp_objects"]["bandstructure"]
+    )
 
     # plot the line mode band structure
     bs_plotter = BSPlotter(bandstructure)
-    bs_plotter.save_plot("MgO-bandstructure.pdf")
+    bs_plotter.save_plot("MgO-bandstructure.pdf", img_format="pdf")
 
 
 If you open the saved figures, you should see a plot of your DOS and bandstructure!
 
-.. figure:: _static/MgO-dos.png
+.. figure:: ../_static/MgO-dos.png
     :alt: MgO density of states
 
 
-.. figure:: _static/MgO-bandstructure.png
+.. figure:: ../_static/MgO-bandstructure.png
     :alt: MgO bandstructure
 
 

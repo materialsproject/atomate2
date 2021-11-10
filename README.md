@@ -39,8 +39,8 @@ It is easy to customise and compose any of the above workflows.
 
 Workflows in atomate2 written using the [jobflow] library. Workflows are generated using
 `Maker` objects, that have a consistent API for modifying input settings and chaining
-workflows together.  Below, we demonstrate how to run a band structure workflow as
-detailed in the [RelaxBandStructure] section of the documentation.  In total, 4 VASP
+workflows together.  Below, we demonstrate how to run a band structure workflow
+(see the [documentation][RelaxBandStructure] for more details). In total, 4 VASP
 calculations will be performed:
 
 1. A structural optimisation.
@@ -57,21 +57,21 @@ from pymatgen.core import Structure
 
 # construct a rock salt MgO structure
 mgo_structure = Structure(
-  lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
-  species=["Mg", "O"],
-  coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
 )
 
 # make a band structure flow to optimise the structure and obtain the band structure
 bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 
 # run the job
-run_locally(bandstructure_flow)
+run_locally(bandstructure_flow, create_folders=True)
 ```
 
-In this example, we run execute the workflow immediately. In most cases, you will want
-to perform calculations on many materials simulatenously. To achieve this, all atomate2
-workflows can be run using the [FireWorks] software. See the
+In this example, we run execute the workflow immediately. In many cases, you might want
+to perform calculations on several materials simulatenously. To achieve this, all
+atomate2 workflows can be run using the [FireWorks] software. See the
 [documentation][atomate2_fireworks] for more details.
 
 ## Installation

@@ -19,7 +19,7 @@ FireWorks libraries. Briefly:
 
 Running and writing your own workflows are covered in later tutorials. For now, these
 topics will be covered in enough depth to get you set up and to help you know where to
-troubleshoot if you are having problems.
+troubleshoot if you're having problems.
 
 Note that this installation tutorial is VASP-centric since almost all functionality
 currently in atomate2 pertains to VASP.
@@ -66,7 +66,7 @@ academic computing clusters as well as systems with a MOM-node style architectur
 VASP
 ----
 
-To get access to VASP on supercomputing resources typically requires that you are added
+To get access to VASP on supercomputing resources typically requires that you're added
 to a user group on the system you work on after your license is verified. Ensure that
 you have access to the VASP executable and that it is functional before starting this
 tutorial.
@@ -78,34 +78,30 @@ MongoDB_ is a NoSQL database that stores each database entry as a document, whic
 represented in the JSON format (the formatting is similar to a dictionary in Python).
 Atomate2 uses MongoDB to:
 
-* to create database of calculation results.
-* store the workflows that you want to run as well as their state details (through
+* Create a database of calculation results.
+* Store the workflows that you want to run as well as their state details (through
   FireWorks - optional).
 
-MongoDB must be running and available to accept connections whenever you are running
+MongoDB must be running and available to accept connections whenever you're running
 workflows. Thus, it is strongly recommended that you have a server to run MongoDB or
 (simpler) use a hosting service. Your options are:
 
-* use a commercial service to host your MongoDB instance. These are typically the
+- Use a commercial service to host your MongoDB instance. These are typically the
   easiest to use and offer high quality service but require payment for larger
-  databases. `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`_ offers free 500 MB
-  which is certainly enough to get started for small to medium size projects, and it is
-  easy to upgrade or migrate your database if you do exceed the free allocation.
-* contact your supercomputing center to see if they offer MongoDB hosting (e.g., NERSC
-  has this, Google "request NERSC MongoDB database")
-* self-host a MongoDB server
+  databases. `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`_ offers a free 500 MB
+  server which is certainly enough to get started for small to medium size projects, and
+  it is easy to upgrade or migrate your database if you exceed the free allocation.
+- Contact your supercomputing center to see if they offer MongoDB hosting (e.g., NERSC
+  has this, Google "request NERSC MongoDB database").
+- Self-host a MongoDB server.
 
-If you are just starting, we suggest the first (with a free plan) or second option
+If you're just starting, we suggest the first (with a free plan) or second option
 (if available to you). The third option will require you to open up network settings to
 accept outside connections properly which can sometimes be tricky.
 
-Next, create a new database and set up two new username/password combinations:
-
-- an admin user
-- a read-only user
-
-Keep a record of your credentials - we will configure jobflow to connect to them in a
-later step. Also make sure you note down the hostname and port for the MongoDB instance.
+Next, create a new database and set up an account with admin access. Keep a record of
+your credentials - we will configure jobflow to connect to them in a later step. Also
+make sure you note down the hostname and port for the MongoDB instance.
 
 .. note::
 
@@ -116,15 +112,15 @@ later step. Also make sure you note down the hostname and port for the MongoDB i
     centers (e.g., LLNL, PNNL, ARCHER) will run into issues. If you run into connection
     issues later in this tutorial, some options are:
 
-    * contact your computing center to review their security policy to allow connections
-      from your MongoDB server (best resolution)
-    * host your Mongo database on a machine that you are able to securely connect to,
-      e.g. on the supercomputing network itself (ask a system administrator for help)
-    * use a proxy service to forward connections from the MongoDB --> login node -->
+    - Contact your computing center to review their security policy to allow connections
+      from your MongoDB server (best resolution).
+    - Host your Mongo database on a machine that you're able to securely connect to,
+      e.g. on the supercomputing network itself (ask a system administrator for help).
+    - Use a proxy service to forward connections from the MongoDB --> login node -->
       compute node (you might try, for example, `the mongo-proxy tool
       <https://github.com/bakks/mongo-proxy>`_).
-    * set up an ssh tunnel to forward connections from allowed machines (the tunnel must
-      be kept alive at all times you are running workflows)
+    - Set up an ssh tunnel to forward connections from allowed machines (the tunnel must
+      be kept alive at all times you're running workflows).
 
 
 .. _MongoDB: https://docs.mongodb.com/manual/
@@ -234,7 +230,7 @@ jobflow.yaml
 ------------
 
 The ``jobflow.yaml`` file contains the credentials of the MongoDB server that will store
-calculation outputs. The ``jobflow.json`` file requires you to enter the basic database
+calculation outputs. The ``jobflow.yaml`` file requires you to enter the basic database
 information as well as what to call the main collection that results are kept in (e.g.
 ``ouputs``). Note that you should replace the whole ``<<PROPERTY>>`` definition with
 your own settings.
@@ -259,6 +255,40 @@ your own settings.
             username: <<USERNAME>>
             password: <<PASSWORD>>
             collection_name: outputs_blobs
+
+.. note::
+
+    If you're using a mongoDB hosted on Atlas (using the free plan linked above) the
+    connection format is slightly different. Instead your ``jobflow.yaml`` file should
+    contain the following.
+
+    .. code-block:: yaml
+
+        JOB_STORE:
+            docs_store:
+              type: MongoURIStore
+              uri: mongodb+srv://<<USERNAME>>:<<PASSWORD>>@<<HOST>>/<<DB_NAME>>?retryWrites=true&w=majority
+              collection_name: outputs
+            additional_stores:
+              data:
+                type: GridFSURIStore
+                uri: mongodb+srv://<<USERNAME>>:<<PASSWORD>>@<<HOST>>/<<DB_NAME>>?retryWrites=true&w=majority
+                collection_name: outputs_blobs
+
+    The URI key may be different based on the Atlas database you deployed. You can
+    see the template for the URI string by clicking on "Databases" (under "Deployment"
+    in the left hand menu) then "Connect" then "Connect your application". Select
+    Python as the driver and 3.12 as the version. The connection string should now be
+    displayed in the box.
+
+    Note that the username and password are not your login account details for Atlas.
+    Instead you must add a new database user by selecting "Database Access" (under
+    "Security" in the left hand menu) and then "Add a new database user".
+
+    Secondly, Atlas only allows connections from known IP addresses. You must therefore
+    add the IP address of your cluster (and any other computers you'll be connecting
+    from) by clicking "Network Access" (under "Security" in the left hand menu) and then
+    "Add IP address".
 
 Atomate2 uses two database collections, one for small documents (such as elastic
 tensors, structures, and energies) called the ``docs`` store and another for large
@@ -313,7 +343,7 @@ where ``<<INSTALL_DIR>>`` is your installation directory.
 Configure pymatgen
 ==================
 
-If you are planning to run VASP, the last configuration step is to configure pymatgen to
+If you're planning to run VASP, the last configuration step is to configure pymatgen to
 (required) find the pseudopotentials for VASP and (optional) set up your API key from
 the `Materials Project`_.
 
@@ -383,7 +413,7 @@ or work directory) and create a file called ``relax.py`` containing:
     relax_job = RelaxMaker().make(si_structure)
 
     # run the job
-    run_locally(relax_job)
+    run_locally(relax_job, create_folders=True)
 
 The ``run_locally`` function is a jobflow command that will execute the workflow on
 the current computing resource.
@@ -437,7 +467,7 @@ output.
 
     # query the job store
     result = store.query_one(
-        query={"output.formula_pretty": "Si"}, properties=["output.output.energy_per_atom"]
+        {"output.formula_pretty": "Si"}, properties=["output.output.energy_per_atom"]
     )
     print(result)
 
