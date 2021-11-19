@@ -384,6 +384,10 @@ class DielectricMaker(BaseVaspMaker):
         The input structure should be well relaxed to avoid imaginary modes. For
         example, using :obj:`TightRelaxMaker`.
 
+    .. Note::
+        If starting from a previous calculation, magnetism will be disabled if all
+        MAGMOMs are less than 0.02.
+
     Parameters
     ----------
     name : str
@@ -407,5 +411,5 @@ class DielectricMaker(BaseVaspMaker):
 
     name: str = "dielectric"
     input_set_generator: StaticSetGenerator = field(
-        default_factory=lambda: StaticSetGenerator(lepsilon=True)
+        default_factory=lambda: StaticSetGenerator(lepsilon=True, auto_ispin=True)
     )

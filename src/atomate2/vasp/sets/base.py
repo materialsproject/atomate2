@@ -224,6 +224,10 @@ class VaspInputSetGenerator(InputSetGenerator):
         optB86b and rVV10.
     symprec
         Tolerance for symmetry finding, used for line mode band structure k-points.
+    auto_ispin
+        If generating input set from a previous calculation, this controls whether
+        to disable magnetisation (ISPIN = 1) if the absoluate valuue of all magnetic
+        moments are less than 0.02.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -242,6 +246,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         force_gamma: bool = True,
         symprec: float = SETTINGS.SYMPREC,
         vdw: str = None,
+        auto_ispin: bool = False,
         config_dict: Dict = None,
     ):
         if config_dict is None:
@@ -260,6 +265,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         self.symprec = symprec  # used in k-point generation
         self.vdw = None if vdw is None else vdw.lower()
         self.use_structure_charge = use_structure_charge
+        self.auto_ispin = auto_ispin
 
         if self.user_incar_settings.get("KSPACING") and self.user_kpoints_settings:
             warnings.warn(
@@ -340,7 +346,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         VaspInputSet
             A VASP input set.
         """
-        structure, prev_incar, bandgap, vasprun, outcar = self._get_previous(
+        structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
             structure, prev_dir
         )
         incar_updates = self.get_incar_updates(
@@ -360,7 +366,12 @@ class VaspInputSetGenerator(InputSetGenerator):
         kspacing = self._kspacing(incar_updates)
         kpoints = self._get_kpoints(structure, kpoints_updates, kspacing)
         incar = self._get_incar(
-            structure, kpoints, prev_incar, incar_updates, bandgap=bandgap
+            structure,
+            kpoints,
+            prev_incar,
+            incar_updates,
+            bandgap=bandgap,
+            ispin=ispin,
         )
         return VaspInputSet(
             incar=incar,
@@ -469,6 +480,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         vasprun = None
         outcar = None
         bandgap = 0
+        ispin = None
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
             bs = vasprun.get_band_structure()
@@ -476,9 +488,14 @@ class VaspInputSetGenerator(InputSetGenerator):
             prev_structure = vasprun.final_structure
             bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
 
+            if self.auto_ispin:
+                # turn off spin when magmom for every site is smaller than 0.02.
+                ispin = _get_ispin(vasprun, outcar)
+
         structure = structure if structure is not None else prev_structure
         structure = self._get_structure(structure)
-        return structure, prev_incar, bandgap, vasprun, outcar
+
+        return structure, prev_incar, bandgap, ispin, vasprun, outcar
 
     def _get_structure(self, structure):
         """Get the standardized structure."""
@@ -519,6 +536,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         previous_incar: Dict = None,
         incar_updates: Dict = None,
         bandgap: float = 0.0,
+        ispin: int = None,
     ):
         """Get the INCAR."""
         previous_incar = {} if previous_incar is None else previous_incar
@@ -563,6 +581,10 @@ class VaspInputSetGenerator(InputSetGenerator):
             bandgap,
             kpoints,
         )
+
+        # handle auto ISPIN
+        if ispin is not None and "ISPIN" not in self.user_incar_settings:
+            incar["ISPIN"] = ispin
 
         # apply specified updates, be careful not to override user_incar_settings
         _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings.keys())
@@ -918,3 +940,14 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
         labels=labels,
         kpts_weights=weights,
     )
+
+
+def _get_ispin(vasprun: Optional[Vasprun], outcar: Optional[Outcar]):
+    """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
+    if outcar is not None and outcar.magnetization is not None:
+        # Turn off spin when magmom for every site is smaller than 0.02.
+        site_magmom = np.array([i["tot"] for i in outcar.magnetization])
+        return 2 if np.any(np.abs(site_magmom) > 0.02) else 1
+    elif vasprun is not None:
+        return 2 if vasprun.is_spin else 1
+    return 2
