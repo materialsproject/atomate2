@@ -6,6 +6,8 @@ import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from pymatgen.alchemy.materials import TransformedStructure
+from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
@@ -413,3 +415,109 @@ class DielectricMaker(BaseVaspMaker):
     input_set_generator: StaticSetGenerator = field(
         default_factory=lambda: StaticSetGenerator(lepsilon=True, auto_ispin=True)
     )
+
+
+@dataclass
+class TransmuterMaker(BaseVaspMaker):
+    """
+    A maker to apply transformations to a structure before writing the input sets.
+
+    Note that if a transformation yields many structures, only the last structure in the
+    list is used.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    transformations : list of str
+        The transformations to apply. Given as a list of names of transformation classes
+        as defined in the modules in pymatgen.transformations. For example,
+        ``['DeformStructureTransformation', 'SupercellTransformation']``.
+    transformation_params : list of dict or None
+        The parameters used to instantiate each transformation class. Given as a list of
+        dicts.
+    input_set_generator : StaticSetGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}.
+    """
+
+    name: str = "transmuter"
+    transformations: list[str] = field(default_factory=list)
+    transformation_params: list[dict] | None = None
+    input_set_generator: BaseVaspMaker = field(default_factory=StaticSetGenerator)
+
+    @vasp_job
+    def make(
+        self,
+        structure: Structure,
+        prev_vasp_dir: str | Path | None = None,
+    ):
+        """
+        Run a transmuter VASP job.
+
+        Parameters
+        ----------
+        structure : Structure
+            A pymatgen structure object.
+        prev_vasp_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+        """
+        transformations = _get_transformations(
+            self.transformations, self.transformation_params
+        )
+        ts = TransformedStructure(structure)
+        transmuter = StandardTransmuter([ts], transformations)
+        structure = transmuter.transformed_structures[-1].final_structure
+
+        if "transformations.json" not in self.write_additional_data:
+            tjson = transmuter.transformed_structures[-1]
+            self.write_additional_data["transformations.json"] = tjson
+
+        return super().make.original(self, structure, prev_vasp_dir)
+
+
+def _get_transformations(transformations: list[str], params: list[dict] | None):
+    """Get instantiated transformation objects from their names and parameters."""
+    params = [{}] * len(transformations) if params is None else params
+
+    if len(params) != len(transformations):
+        raise ValueError("Number of transformations and parameters must be the same.")
+
+    transformation_objects = []
+    for transformation, transformation_params in zip(transformations, params):
+        found = False
+        for m in (
+            "advanced_transformations",
+            "defect_transformations",
+            "site_transformations",
+            "standard_transformations",
+        ):
+            from importlib import import_module
+
+            mod = import_module(f"pymatgen.transformations.{m}")
+
+            try:
+                t_cls = getattr(mod, transformation)
+                found = True
+                continue
+            except AttributeError:
+                pass
+
+        if not found:
+            raise ValueError(f"Could not find transformation: {transformation}")
+
+        t_obj = t_cls(**transformation_params)
+        transformation_objects.append(t_obj)
+    return transformation_objects
