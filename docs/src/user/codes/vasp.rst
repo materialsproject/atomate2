@@ -78,6 +78,14 @@ Dielectric
 A VASP calculation to obtain dielectric properties. The static and high-frequency
 dielectric constants are obtained using density functional perturbation theory.
 
+Transmuter
+^^^^^^^^^^
+
+A generic calculation that transforms the structure (using one of the
+:obj:`pymatgen.transformations`) before writing the input sets. This can be used to
+perform many structure operations such as making a supercell or symmetrising the
+structure.
+
 HSE06 Static
 ^^^^^^^^^^^^
 

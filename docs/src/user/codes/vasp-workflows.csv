@@ -3,6 +3,7 @@ Name,Type,Maker
 `Relax`_,job,:obj:`.RelaxMaker`
 `Tight Relax`_,job,:obj:`.TightRelaxMaker`
 `Dielectric`_,job,:obj:`.DielectricMaker`
+`Transmuter`_,job,:obj:`.TransmuterMaker`
 `HSE06 Static`_,job,:obj:`.HSEStaticMaker`
 `HSE06 Relax`_,job,:obj:`.HSERelaxMaker`
 `HSE06 Tight Relax`_,job,:obj:`.HSETightRelaxMaker`
