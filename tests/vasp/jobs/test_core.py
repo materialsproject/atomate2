@@ -149,3 +149,43 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-12.52887403)
+
+
+def test_my_flow(mock_vasp, clean_dir, si_structure):
+    import numpy as np
+    from jobflow import run_locally
+
+    from atomate2.vasp.jobs.core import TransmuterMaker
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"transmuter": "Si_transmuter"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"transmuter": {"incar_settings": ["NSW", "ISMEAR"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate transmuter job
+    job = TransmuterMaker(
+        transformations=["SupercellTransformation"],
+        transformation_params=[{"scaling_matrix": ((1, 0, 0), (0, 1, 0), (0, 0, 2))}],
+    ).make(si_structure)
+    job.maker.input_set_generator.user_incar_settings["KSPACING"] = 0.5
+
+    # run the job and ensure that it finished running successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # validate outputs
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, TaskDocument)
+    assert output1.output.energy == approx(-21.33231747)
+    assert output1.transformations["history"][0]["scaling_matrix"] == [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 2],
+    ]
+    np.testing.assert_allclose(
+        output1.structure.lattice.abc, [3.866974, 3.866975, 7.733949]
+    )
