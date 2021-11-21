@@ -12,3 +12,5 @@ Name,Type,Maker
 `HSE06 Band Structure`_,flow,:obj:`.HSEBandStructureMaker`
 `Relax and Band Structure`_,flow,:obj:`.RelaxBandStructureMaker`
 `Elastic Constant`_,flow,:obj:`.ElasticMaker`
+`Optics`_,flow,:obj:`.OpticsMaker`
+`HSE06 Optics`_,flow,:obj:`.HSEOpticsMaker`

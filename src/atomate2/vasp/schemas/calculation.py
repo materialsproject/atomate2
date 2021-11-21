@@ -39,6 +39,7 @@ __all__ = [
     "Status",
     "VaspObject",
     "PotcarSpec",
+    "FrequencyDependentDielectric",
     "CalculationInput",
     "CalculationOutput",
     "RunStatistics",

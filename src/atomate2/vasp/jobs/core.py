@@ -35,6 +35,7 @@ __all__ = [
     "HSEStaticMaker",
     "TightRelaxMaker",
     "HSETightRelaxMaker",
+    "TransmuterMaker",
 ]
 
 

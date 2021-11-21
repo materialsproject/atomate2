@@ -24,6 +24,8 @@ __all__ = [
     "BandStructureMaker",
     "HSEBandStructureMaker",
     "RelaxBandStructureMaker",
+    "OpticsMaker",
+    "HSEOpticsMaker",
 ]
 
 

@@ -167,6 +167,29 @@ See the Materials Project `documentation on elastic constants
 
 .. _modifying_input_sets:
 
+Optics
+^^^^^^
+
+Calculate the frequency dependent dielectric response of a material.
+
+This workflow contains an initial static calculation, and then a non-self-consistent
+field calculation with LOPTICS set. The purpose of the static calculation is to
+determine i) if the material needs magnetism set, and ii) the total number of bands (the
+non-scf calculation contains 1.3 * number of bands in the static calculation) as often
+the highest bands are not properly converged in VASP.
+
+HSE Optics
+^^^^^^^^^^
+
+Calculate the frequency dependent dielectric response of a material using HSE06.
+
+This workflow contains an initial static calculation, and then a uniform band structure
+calculation with LOPTICS set. The purpose of the static calculation is to determine i)
+if the material needs magnetism set, and ii) the total number of bands (the uniform
+contains 1.3 * number of bands in the static calculation) as often the highest bands are
+not properly converged in VASP.
+
+
 Modifying input sets
 --------------------
 
