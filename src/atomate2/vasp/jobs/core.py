@@ -301,6 +301,13 @@ class HSEBSMaker(BaseVaspMaker):
     """
     Maker to create HSE06 band structure jobs.
 
+    .. warning::
+        The number of bands will automatically be adjusted based on the number of bands
+        in the previous calculation. Therefore, if starting from a previous structure
+        ensure you are starting from a static/relaxation calculation that has the same
+        number of atoms (i.e., not a smaller/larger cell), as otherwise the number of
+        bands may be set incorrectly.
+
     Parameters
     ----------
     name : str
