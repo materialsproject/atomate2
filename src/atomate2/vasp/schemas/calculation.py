@@ -210,6 +210,45 @@ class RunStatistics(BaseModel):
         return cls(**{v: outcar.run_stats.get(k) or 0 for k, v in mapping.items()})
 
 
+class FrequencyDependentDielectric(BaseModel):
+    """Frequency-dependent dielectric data."""
+
+    real: List[List[float]] = Field(
+        None,
+        description="Real part of the frequency dependent dielectric constant, given at"
+        " each energy as 6 components according to XX, YY, ZZ, XY, YZ, ZX",
+    )
+    imaginary: List[List[float]] = Field(
+        None,
+        description="Imaginary part of the frequency dependent dielectric constant, "
+        "given at each energy as 6 components according to XX, YY, ZZ, XY, "
+        "YZ, ZX",
+    )
+    energy: List[float] = Field(
+        None,
+        description="Energies at which the real and imaginary parts of the dielectric"
+        "constant are given",
+    )
+
+    @classmethod
+    def from_vasprun(cls, vasprun: Vasprun) -> "FrequencyDependentDielectric":
+        """
+        Create a frequency-dependent dielectric calculation document from a vasprun.
+
+        Parameters
+        ----------
+        vasprun : Vasprun
+            A vasprun object.
+
+        Returns
+        -------
+        FrequencyDependentDielectric
+            A frequency-dependent dielectric document.
+        """
+        energy, real, imag = vasprun.dielectric
+        return cls(real=real, imaginary=imag, energy=energy)
+
+
 class CalculationOutput(BaseModel):
     """Document defining VASP calculation outputs."""
 
@@ -250,6 +289,11 @@ class CalculationOutput(BaseModel):
     )
     epsilon_ionic: Matrix3D = Field(
         None, description="The ionic part of the dielectric constant"
+    )
+    frequency_dependent_dielectric: FrequencyDependentDielectric = Field(
+        None,
+        description="Frequency-dependent dielectric information from an LOPTICS "
+        "calculation",
     )
     ionic_steps: List[Dict[str, Any]] = Field(
         None, description="Energy, forces, and structure for each ionic step"
@@ -316,6 +360,12 @@ class CalculationOutput(BaseModel):
                 logger.warning("VASP doesn't properly output efermi for IBRION == 1")
             electronic_output = {}
 
+        freq_dependent_diel: Union[dict, FrequencyDependentDielectric] = {}
+        try:
+            freq_dependent_diel = FrequencyDependentDielectric.from_vasprun(vasprun)
+        except KeyError:
+            pass
+
         locpot_avg = None
         if locpot:
             locpot_avg = {
@@ -357,6 +407,7 @@ class CalculationOutput(BaseModel):
             epsilon_static=vasprun.epsilon_static or None,
             epsilon_static_wolfe=vasprun.epsilon_static_wolfe or None,
             epsilon_ionic=vasprun.epsilon_ionic or None,
+            frequency_dependent_dielectric=freq_dependent_diel,
             ionic_steps=vasprun.ionic_steps,
             locpot=locpot_avg,
             outcar=outcar_dict,

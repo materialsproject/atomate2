@@ -651,7 +651,8 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             updates["NBANDS"] = nbands
 
         if self.optics:
-            updates["LOPTICS"] = True
+            # LREAL not supported with LOPTICS
+            updates.update({"LOPTICS": True, "LREAL": False})
 
         updates["MAGMOM"] = None
 

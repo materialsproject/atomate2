@@ -248,8 +248,7 @@ class OpticsMaker(BaseVaspMaker):
     band_structure_maker: BaseVaspMaker = field(
         default_factory=lambda: NonSCFMaker(
             name="optics",
-            input_set_generator=NonSCFSetGenerator(loptics=True),
-            task_document_kwargs={"parse_dos": False, "parse_bandstructure": False},
+            input_set_generator=NonSCFSetGenerator(optics=True),
         )
     )
 
@@ -305,9 +304,8 @@ class HSEOpticsMaker(BaseVaspMaker):
     static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
     band_structure_maker: BaseVaspMaker = field(
         default_factory=lambda: HSEBSMaker(
-            name="optics",
+            name="hse optics",
             input_set_generator=HSEBSSetGenerator(optics=True, mode="uniform"),
-            task_document_kwargs={"parse_dos": False, "parse_bandstructure": False},
         )
     )
 
