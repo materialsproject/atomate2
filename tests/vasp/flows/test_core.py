@@ -22,17 +22,15 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Insert code to generate flow/job below, i.e.:
+    # generate flow
     flow = DoubleRelaxMaker().make(si_structure)
 
     # Run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    # !!! Insert additional validation on the outputs of the jobs; e.g.,
+    # validate output
     output1 = responses[flow.jobs[0].uuid][1].output
     output2 = responses[flow.jobs[1].uuid][1].output
-
-    print(output2.output.energy)
 
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == pytest.approx(-10.85083141)
@@ -144,3 +142,90 @@ def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
     assert isinstance(
         uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], BandStructure
     )
+
+
+def test_optics(mock_vasp, clean_dir, si_structure):
+    from jobflow import run_locally
+
+    from atomate2.vasp.flows.core import OpticsMaker
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"optics": "Si_optics/optics", "static": "Si_optics/static"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "optics": {"incar_settings": ["NSW", "ISMEAR"]},
+        "static": {"incar_settings": ["NSW", "ISMEAR"]},
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate flow
+    flow = OpticsMaker().make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # validation on the outputs
+    output1 = responses[flow.jobs[0].uuid][1].output
+    output2 = responses[flow.jobs[1].uuid][1].output
+    assert isinstance(output1, TaskDocument)
+    assert isinstance(output2, TaskDocument)
+    assert output1.output.energy == pytest.approx(-10.85037078)
+    assert output2.calcs_reversed[0].output.frequency_dependent_dielectric.real[0] == [
+        13.6062,
+        13.6063,
+        13.6062,
+        0.0,
+        0.0,
+        0.0,
+    ]
+
+
+def test_hse_optics(mock_vasp, clean_dir, si_structure):
+    from jobflow import run_locally
+
+    from atomate2.vasp.flows.core import HSEOpticsMaker
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "hse optics": "Si_hse_optics/hse_optics",
+        "hse static": "Si_hse_optics/hse_static",
+    }
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "hse_optics": {"incar_settings": ["NSW", "ISMEAR"]},
+        "hse_static": {"incar_settings": ["NSW", "ISMEAR"]},
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate flow
+    flow = HSEOpticsMaker().make(si_structure)
+    flow.update_maker_kwargs(
+        {"_set": {"input_set_generator->user_incar_settings->KSPACING": 0.5}},
+        dict_mod=True,
+    )
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # validation on the outputs
+    output1 = responses[flow.jobs[0].uuid][1].output
+    output2 = responses[flow.jobs[1].uuid][1].output
+    assert isinstance(output1, TaskDocument)
+    assert isinstance(output2, TaskDocument)
+    assert output1.output.energy == pytest.approx(-12.41767353)
+    assert output2.calcs_reversed[0].output.frequency_dependent_dielectric.real[0] == [
+        13.8738,
+        13.8738,
+        13.8738,
+        0.0,
+        0.0,
+        0.0,
+    ]

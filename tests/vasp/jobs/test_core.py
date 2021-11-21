@@ -151,7 +151,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == approx(-12.52887403)
 
 
-def test_my_flow(mock_vasp, clean_dir, si_structure):
+def test_transmuter(mock_vasp, clean_dir, si_structure):
     import numpy as np
     from jobflow import run_locally
 
