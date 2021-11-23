@@ -62,7 +62,10 @@ class ElasticRelaxMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "elastic relax"
@@ -197,14 +200,15 @@ def run_elastic_deformations(
 
         # write details of the transformation to the transformations.json file
         # this file will automatically get added to the task document and allow
-        # the elastic builder to reconstruct the elastic document
-        elastic_relax_maker.write_additional_data["transformations.json"] = ts
+        # the elastic builder to reconstruct the elastic document; note the ":" is
+        # automatically converted to a "." in the filename.
+        elastic_relax_maker.write_additional_data["transformations:json"] = ts
 
         # create the job
         relax_job = elastic_relax_maker.make(
             deformed_structure, prev_vasp_dir=prev_vasp_dir
         )
-        relax_job.name += f" {i + 1}/{len(deformations)}"
+        relax_job.append_name(f" {i + 1}/{len(deformations)}")
         relaxations.append(relax_job)
 
         # extract the outputs we want
