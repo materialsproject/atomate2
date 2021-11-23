@@ -95,7 +95,10 @@ class BaseVaspMaker(Maker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "base vasp job"
@@ -136,7 +139,7 @@ class BaseVaspMaker(Maker):
 
         # write any additional data
         for filename, data in self.write_additional_data.items():
-            dumpfn(data, filename)
+            dumpfn(data, filename.replace(":", "."))
 
         # run vasp
         run_vasp(**self.run_vasp_kwargs)

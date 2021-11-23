@@ -62,7 +62,10 @@ class StaticMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "static"
@@ -94,7 +97,10 @@ class RelaxMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "relax"
@@ -126,7 +132,10 @@ class TightRelaxMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "tight relax"
@@ -158,7 +167,10 @@ class NonSCFMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "non-scf"
@@ -226,7 +238,10 @@ class HSERelaxMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "hse relax"
@@ -254,9 +269,12 @@ class HSETightRelaxMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
     stop_children_kwargs
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data
+    write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "hse tight relax"
@@ -288,7 +306,10 @@ class HSEStaticMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "hse static"
@@ -327,7 +348,10 @@ class HSEBSMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "hse band structure"
@@ -416,7 +440,10 @@ class DielectricMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "dielectric"
@@ -458,13 +485,18 @@ class TransmuterMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "transmuter"
     transformations: list[str] = field(default_factory=list)
     transformation_params: list[dict] | None = None
-    input_set_generator: BaseVaspMaker = field(default_factory=StaticSetGenerator)
+    input_set_generator: VaspInputSetGenerator = field(
+        default_factory=StaticSetGenerator
+    )
 
     @vasp_job
     def make(
@@ -489,9 +521,10 @@ class TransmuterMaker(BaseVaspMaker):
         transmuter = StandardTransmuter([ts], transformations)
         structure = transmuter.transformed_structures[-1].final_structure
 
-        if "transformations.json" not in self.write_additional_data:
+        # to avoid mongoDB errors, ":" is automatically converted to "."
+        if "transformations:json" not in self.write_additional_data:
             tjson = transmuter.transformed_structures[-1]
-            self.write_additional_data["transformations.json"] = tjson
+            self.write_additional_data["transformations:json"] = tjson
 
         return super().make.original(self, structure, prev_vasp_dir)
 
