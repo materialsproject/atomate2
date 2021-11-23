@@ -125,6 +125,33 @@ Calculate the electronic band structure. This flow consists of three calculation
    Band structure objects are automatically stored in the ``data`` store due to
    limitations on mongoDB collection sizes.
 
+Uniform Band Structure
+^^^^^^^^^^^^^^^^^^^^^^
+
+Calculate a uniform electronic band structure. This flow consists of two calculations:
+
+1. A static calculation to generate the charge density.
+2. A non-self-consistent field calculation on a dense uniform mesh.
+
+.. Note::
+
+   Band structure objects are automatically stored in the ``data`` store due to
+   limitations on mongoDB collection sizes.
+
+Line-Mode Band Structure
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Calculate a line-mode electronic band structure. This flow consists of two calculations:
+
+1. A static calculation to generate the charge density.
+2. A non-self-consistent field calculation on a high-symmetry k-point path to generate
+   the line mode band structure.
+
+.. Note::
+
+   Band structure objects are automatically stored in the ``data`` store due to
+   limitations on mongoDB collection sizes.
+
 HSE06 Band Structure
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -134,6 +161,35 @@ calculations:
 1. A HSE06 static calculation to generate the charge density.
 2. A HSE06 calculation on a dense uniform mesh.
 3. A HSE06 calculation on the high-symmetry k-point path using zero weighted k-points.
+
+.. Note::
+
+   Band structure objects are automatically stored in the ``data`` store due to
+   limitations on mongoDB collection sizes.
+
+HSE06 Uniform Band Structure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Calculate a uniform electronic band structure using HSE06. This flow consists of two
+calculations:
+
+1. A HSE06 static calculation to generate the charge density.
+2. A HSE06 non-self-consistent field calculation on a dense uniform mesh.
+
+.. Note::
+
+   Band structure objects are automatically stored in the ``data`` store due to
+   limitations on mongoDB collection sizes.
+
+HSE06 Line-Mode Band Structure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Calculate a line-mode electronic band structure using HSE06. This flow consists of two
+calculations:
+
+1. A HSE06 static calculation to generate the charge density.
+2. A HSE06 non-self-consistent field calculation on a high-symmetry k-point path to
+   generate the line mode band structure.
 
 .. Note::
 
