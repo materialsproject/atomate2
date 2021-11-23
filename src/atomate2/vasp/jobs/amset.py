@@ -66,7 +66,10 @@ class DenseUniformMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "dense uniform"
@@ -104,7 +107,10 @@ class StaticDeformationMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "static deformation"
@@ -143,7 +149,10 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "static deformation"
@@ -178,7 +187,10 @@ class HSEDenseUniformMaker(BaseVaspMaker):
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
         Additional data to write to the current directory. Given as a dict of
-        {filename: data}.
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
     """
 
     name: str = "dense uniform"
@@ -238,7 +250,7 @@ def run_amset_deformations(
         static_job = static_deformation_maker.make(
             deformed_structure, prev_vasp_dir=prev_vasp_dir
         )
-        static_job.name += f" {i + 1}/{len(deformations)}"
+        static_job.append_name(f" {i + 1}/{len(deformations)}")
         statics.append(static_job)
 
         # extract the outputs we want (only the dir name)
