@@ -601,6 +601,7 @@ def _find_vasp_files(
                     "vasprun_file": vasprun_filename,
                     "outcar_file": outcar_filename,
                     "volumetric_files": [CHGCAR, LOCPOT, etc]
+                    "elph_poscars": [POSCAR.T=300, POSCAR.T=400, etc]
                 },
                 ...
             }
@@ -613,6 +614,7 @@ def _find_vasp_files(
     def _get_task_files(files, suffix=""):
         vasp_files = {}
         vol_files = []
+        elph_poscars = []
         for file in files:
             if file.match(f"*vasprun.xml{suffix}*"):
                 vasp_files["vasprun_file"] = file
@@ -620,11 +622,16 @@ def _find_vasp_files(
                 vasp_files["outcar_file"] = file
             elif any([file.match(f"*{f}{suffix}*") for f in volumetric_files]):
                 vol_files.append(file)
+            elif file.match(f"*POSCAR.T=*{suffix}*"):
+                elph_poscars.append(file)
 
-        if len(vol_files) > 0 or len(vasp_files) > 0:
-            # only add volumetric files if some were found or other vasp files
-            # were found
+        if len(vol_files) > 0:
+            # add volumetric files if some were found or other vasp files were found
             vasp_files["volumetric_files"] = vol_files
+
+        if len(elph_poscars) > 0:
+            # add elph displaced poscars if they were found or other vasp files found
+            vasp_files["elph_poscars"] = elph_poscars
 
         return vasp_files
 
