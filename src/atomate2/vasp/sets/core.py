@@ -154,7 +154,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         updates = {
-            "NSW": 1,
+            "NSW": 0,
             "ISMEAR": -5,
             "LCHARG": True,
             "LORBIT": 11,
