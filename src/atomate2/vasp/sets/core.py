@@ -1,7 +1,7 @@
 """Module defining core VASP input set generators."""
 
 from copy import deepcopy
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from pymatgen.core import Structure
@@ -19,6 +19,7 @@ __all__ = [
     "HSEStaticSetGenerator",
     "HSEBSSetGenerator",
     "HSETightRelaxSetGenerator",
+    "ElectronPhononSetGenerator",
 ]
 
 
@@ -123,6 +124,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
         super().__init__(**kwargs)
         self.lepsilon = lepsilon
         self.lcalcpol = lcalcpol
+        self._kwargs = kwargs  # required for proper monty serialization
 
     def get_incar_updates(
         self,
@@ -154,6 +156,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         updates = {
+            "IBRION": -1,
             "NSW": 1,
             "ISMEAR": -5,
             "LCHARG": True,
@@ -215,6 +218,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         self.reciprocal_density = reciprocal_density
         self.optics = optics
         self.nbands_factor = nbands_factor
+        self._kwargs = kwargs  # required for proper monty serialization
 
         supported_modes = ("line", "uniform", "boltztrap")
         if self.mode not in supported_modes:
@@ -535,6 +539,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         self.nbands_factor = nbands_factor
         self.added_kpoints = [] if added_kpoints is None else added_kpoints
         self.zero_weighted_reciprocal_density = zero_weighted_reciprocal_density
+        self._kwargs = kwargs  # required for proper monty serialization
 
         supported_modes = ("line", "uniform", "gap", "uniform_dense")
         if self.mode not in supported_modes:
@@ -657,6 +662,95 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         updates["MAGMOM"] = None
 
         return updates
+
+
+class ElectronPhononSetGenerator(VaspInputSetGenerator):
+    """
+    Class to generate VASP electron phonon input sets.
+
+    .. note::
+        Requires VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/Electron-
+        phonon_interactions_from_Monte-Carlo_sampling
+        for more details.
+
+    Parameters
+    ----------
+    temperatures : list of float
+        The temperatures for which the electron-phonon interactions are evaluated.
+    """
+
+    def __init__(
+        self,
+        temperatures: Tuple[float, ...] = (
+            0,
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+        ),
+        **kwargs,
+    ):
+        if "auto_ispin" not in kwargs:
+            # automatically disable magnetism if magnetic moments are less than 0.02
+            kwargs["auto_ispin"] = True
+
+        super().__init__(**kwargs)
+        self.temperatures = temperatures
+        self._kwargs = kwargs  # required for proper monty serialization
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a static VASP job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {
+            "NSW": 1,
+            "ISMEAR": 0,
+            "LORBIT": 11,
+            "ALGO": "Normal",
+            "IBRION": 6,
+            "ISIF": 2,
+            "ENCUT": 700,
+            "EDIFF": 1e-7,
+            "LAECHG": False,
+            "LREAL": False,
+            "LCHARG": False,
+            "PREC": "Accurate",
+            "PHON_NTLIST": len(self.temperatures),
+            "PHON_TLIST": self.temperatures,
+            "PHON_NSTRUCT": 0,
+            "PHON_LMC": True,
+        }
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
