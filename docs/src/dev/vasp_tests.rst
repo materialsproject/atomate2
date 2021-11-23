@@ -293,3 +293,7 @@ example, the full elastic workflow test is reproduced below.
 Note that the ``mock_vasp`` and ``clean_dir`` arguments to the test function are
 `pytest fixtures <https://docs.pytest.org/en/6.2.x/fixture.html>`_ and are essential
 for the test to run successfully.
+
+.. warning::
+    For ``mock_vasp`` to work correctly, all imports needed for the test must be
+    imported in the test function itself (rather than at the top of the file).
