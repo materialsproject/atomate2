@@ -37,7 +37,11 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
         min_supercell_length=3, temperatures=(0, 100), relax_maker=None
     ).make(si_structure)
     flow.update_maker_kwargs(
-        {"_set": {"input_set_generator->user_incar_settings->KSPACING": 0.5}},
+        {
+            "_set": {
+                "input_set_generator->user_kpoints_settings->reciprocal_density": 50
+            }
+        },
         name_filter="static",
         dict_mod=True,
     )
@@ -57,4 +61,7 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
     # validation on the outputs
     renorm_output = responses[flow.output.uuid][1].output
     assert isinstance(renorm_output, ElectronPhononRenormalisationDoc)
-    assert set(renorm_output.delta_band_gaps) == {-0.4901, -0.4897}
+    assert set(renorm_output.delta_band_gaps) == {
+        -0.488900000000001,
+        -0.48850000000000104,
+    }

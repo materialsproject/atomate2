@@ -87,7 +87,11 @@ class ElectronPhononMaker(Maker):
     uniform_maker: BaseVaspMaker = field(
         default_factory=lambda: UniformBandStructureMaker(
             static_maker=StaticMaker(
-                input_set_generator=StaticSetGenerator(auto_ispin=True)
+                input_set_generator=StaticSetGenerator(
+                    auto_ispin=True,
+                    user_incar_settings={"KSPACING": None},
+                    user_kpoints_settings={"reciprocal_density": 100},
+                )
             ),
         )
     )
