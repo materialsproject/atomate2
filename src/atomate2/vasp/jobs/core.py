@@ -464,11 +464,11 @@ class TransmuterMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    transformations : list of str
+    transformations : tuple of str
         The transformations to apply. Given as a list of names of transformation classes
         as defined in the modules in pymatgen.transformations. For example,
         ``['DeformStructureTransformation', 'SupercellTransformation']``.
-    transformation_params : list of dict or None
+    transformation_params : tuple of dict or None
         The parameters used to instantiate each transformation class. Given as a list of
         dicts.
     input_set_generator : StaticSetGenerator
@@ -492,8 +492,8 @@ class TransmuterMaker(BaseVaspMaker):
     """
 
     name: str = "transmuter"
-    transformations: list[str] = field(default_factory=list)
-    transformation_params: list[dict] | None = None
+    transformations: tuple[str, ...] = field(default_factory=tuple)
+    transformation_params: tuple[dict, ...] | None = None
     input_set_generator: VaspInputSetGenerator = field(
         default_factory=StaticSetGenerator
     )
@@ -529,9 +529,11 @@ class TransmuterMaker(BaseVaspMaker):
         return super().make.original(self, structure, prev_vasp_dir)
 
 
-def _get_transformations(transformations: list[str], params: list[dict] | None):
+def _get_transformations(
+    transformations: tuple[str, ...], params: tuple[dict, ...] | None
+):
     """Get instantiated transformation objects from their names and parameters."""
-    params = [{}] * len(transformations) if params is None else params
+    params = ({},) * len(transformations) if params is None else params
 
     if len(params) != len(transformations):
         raise ValueError("Number of transformations and parameters must be the same.")
