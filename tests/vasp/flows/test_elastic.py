@@ -21,12 +21,12 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        "elastic relax 1/6": {"incar_settings": ["NSW", "ISMEAR"]},
-        "elastic relax 2/6": {"incar_settings": ["NSW", "ISMEAR"]},
-        "elastic relax 3/6": {"incar_settings": ["NSW", "ISMEAR"]},
-        "elastic relax 4/6": {"incar_settings": ["NSW", "ISMEAR"]},
-        "elastic relax 5/6": {"incar_settings": ["NSW", "ISMEAR"]},
-        "elastic relax 6/6": {"incar_settings": ["NSW", "ISMEAR"]},
+        "elastic relax 1/6": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
+        "elastic relax 2/6": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
+        "elastic relax 3/6": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
+        "elastic relax 4/6": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
+        "elastic relax 5/6": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
+        "elastic relax 6/6": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
         "tight relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
         "tight relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
     }
