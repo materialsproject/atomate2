@@ -450,7 +450,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "NSW": 1,
+            "NSW": 0,
             "ALGO": "All",
             "GGA": "PE",
             "HFSCREEN": 0.2,
