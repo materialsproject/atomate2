@@ -677,6 +677,8 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
     ----------
     temperatures : list of float
         The temperatures for which the electron-phonon interactions are evaluated.
+    reciprocal_density
+        Density of k-mesh by reciprocal volume.
     """
 
     def __init__(
@@ -694,6 +696,7 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
             900,
             1000,
         ),
+        reciprocal_density: float = 100,
         **kwargs,
     ):
         if "auto_ispin" not in kwargs:
@@ -702,6 +705,7 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
 
         super().__init__(**kwargs)
         self.temperatures = temperatures
+        self.reciprocal_density = reciprocal_density
         self._kwargs = kwargs  # required for proper monty serialization
 
     def get_incar_updates(
@@ -746,11 +750,45 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
             "LREAL": False,
             "LCHARG": False,
             "PREC": "Accurate",
+            "KSPACING": None,
             "PHON_NTLIST": len(self.temperatures),
-            "PHON_TLIST": self.temperatures,
+            "PHON_TLIST": list(self.temperatures),  # has to be a list otherwise error
             "PHON_NSTRUCT": 0,
             "PHON_LMC": True,
         }
+
+    def get_kpoints_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0.0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the kpoints configuration for a non-self consistent VASP job.
+
+        Note, these updates will be ignored if the user has set user_kpoint_settings.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply to the KPOINTS config.
+        """
+        return {"reciprocal_density": self.reciprocal_density}
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):

@@ -12,7 +12,7 @@ from pymatgen.core import Structure
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import NonSCFMaker, StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.elph import (
     DEFAULT_ELPH_TEMPERATURES,
     DEFAULT_MIN_SUPERCELL_LENGTH,
@@ -20,7 +20,7 @@ from atomate2.vasp.jobs.elph import (
     calculate_electron_phonon_renormalisation,
     run_elph_displacements,
 )
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
 
 __all__ = ["ElectronPhononMaker"]
 
@@ -91,6 +91,11 @@ class ElectronPhononMaker(Maker):
                     auto_ispin=True,
                     user_incar_settings={"KSPACING": None},
                     user_kpoints_settings={"reciprocal_density": 100},
+                )
+            ),
+            bs_maker=NonSCFMaker(
+                input_set_generator=NonSCFSetGenerator(
+                    user_kpoints_settings={"reciprocal_density": 200},  # dense BS mesh
                 )
             ),
         )

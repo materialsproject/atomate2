@@ -208,7 +208,18 @@ class RunStatistics(BaseModel):
             "Total CPU time used (sec)": "total_time",
             "cores": "cores",
         }
-        return cls(**{v: outcar.run_stats.get(k) or 0 for k, v in mapping.items()})
+        run_stats = {}
+        for k, v in mapping.items():
+            stat = outcar.run_stats.get(k) or 0
+            try:
+                stat = float(stat)
+            except ValueError:
+                # sometimes the statistics are misformatted
+                stat = 0
+
+            run_stats[v] = stat
+
+        return cls(**run_stats)
 
 
 class FrequencyDependentDielectric(BaseModel):

@@ -76,7 +76,7 @@ INCAR:
   LMIXTAU: True
   LCHARG: True  # Output CHGCAR
   LAECHG: True  # Output AECCAR
-  LELF: True  # Output ELFCAR
+  LELF: False  # Don't output ELFCAR by default as it breaks KPAR
   LWAVE: False # Don't output WAVECAR
   LVTOT: True # Output LOCPOT
   MAGMOM:
