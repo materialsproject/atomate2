@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+import numpy as np
 from jobflow import Flow, Response, job
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.bandstructure import BandStructure
@@ -84,7 +85,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
     input_set_generator: ElectronPhononSetGenerator = field(
         default_factory=ElectronPhononSetGenerator
     )
-    transformations: tuple[str, ...] = ("CubicSupercellTransformation",)
+    transformations: tuple[str, ...] = ("SupercellTransformation",)
     transformation_params: tuple[dict, ...] = None
     temperatures: Tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
     min_supercell_length: float = DEFAULT_MIN_SUPERCELL_LENGTH
@@ -105,9 +106,11 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
         """
+        dim = np.array(structure.lattice.abc) / self.min_supercell_length
+        scaling_matrix = np.diag(dim.round().astype(int)).tolist()
         if self.transformation_params is None:
             # only overwrite transformation params if it is not set
-            self.transformation_params = ({"min_length": self.min_supercell_length},)
+            self.transformation_params = ({"scaling_matrix": scaling_matrix},)
 
         # update temperatures
         self.input_set_generator.temperatures = self.temperatures
