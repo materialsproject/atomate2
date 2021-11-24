@@ -236,7 +236,7 @@ this can be done is shown below for an example static calculation.
     
     # create a custom input generator set with user-defined defaults
     # also set the initial magnetic moment to 5.0 for Co (assuming
-    # it wasn't already in the user-defined config_dict)
+    # it wasn't already this value in the user-defined config_dict)
     my_custom_set = StaticSetGenerator(
         user_incar_settings={"MAGMOM": {"Co": 5.0}},
         config_dict=config_dict,
