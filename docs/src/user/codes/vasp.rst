@@ -230,18 +230,20 @@ this can be done is shown below for an example static calculation.
 
     from atomate2.vasp.sets.core import StaticSetGenerator
     from atomate2.vasp.jobs.core import StaticMaker
+    from atomate2.vasp.jobs.base import VaspInputSetGenerator
     from monty.serialization import loadfn
 
     # read in a custom config dictionary
     user_config_dict = loadfn("/path/to/my/CustomVaspSet.yaml")
     
-    # create a custom input generator set with user-defined defaults
-    # also set the initial magnetic moment to 5.0 for Co (assuming
-    # it wasn't already this value in the user-defined config_dict)
-    my_custom_set = StaticSetGenerator(
-        user_incar_settings={"MAGMOM": {"Co": 5.0}},
-        config_dict=config_dict,
+    # create a custom input set generator with user-defined defaults
+    # also change the NELM parmaeter to 120 if it wasn't already
+    # this value in the config_dict (for demonstration purposes)
+    vis_generator = VaspInputSetGenerator(
+        user_incar_settings={"NELM": 120},
+        config_dict=user_config_dict,
         )
+    my_custom_set = StaticSetGenerator(vis_generator)
 
     # initialise the static maker to use the custom input set generator
     static_maker = StaticMaker(input_set_generator=my_custom_set)

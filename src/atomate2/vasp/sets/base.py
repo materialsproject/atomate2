@@ -203,7 +203,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         when generating the input set from a previous VASP directory.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
-        expected MAGMOM for all species.
+        initial MAGMOM guess for all species.
     validate_magmom
         Ensure that missing magmom values are filled in with the default value of 1.0.
     use_structure_charge
