@@ -106,7 +106,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
         """
-        dim = np.array(structure.lattice.abc) / self.min_supercell_length
+        dim = self.min_supercell_length / np.array(structure.lattice.abc)
         scaling_matrix = np.diag(dim.round().astype(int)).tolist()
         if self.transformation_params is None:
             # only overwrite transformation params if it is not set
