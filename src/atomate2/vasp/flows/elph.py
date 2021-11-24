@@ -10,9 +10,19 @@ from typing import Tuple
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
+from atomate2.vasp.flows.core import (
+    DoubleRelaxMaker,
+    HSEUniformBandStructureMaker,
+    UniformBandStructureMaker,
+)
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import NonSCFMaker, StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import (
+    HSEBSMaker,
+    HSEStaticMaker,
+    NonSCFMaker,
+    StaticMaker,
+    TightRelaxMaker,
+)
 from atomate2.vasp.jobs.elph import (
     DEFAULT_ELPH_TEMPERATURES,
     DEFAULT_MIN_SUPERCELL_LENGTH,
@@ -20,7 +30,12 @@ from atomate2.vasp.jobs.elph import (
     calculate_electron_phonon_renormalisation,
     run_elph_displacements,
 )
-from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
+from atomate2.vasp.sets.core import (
+    HSEBSSetGenerator,
+    HSEStaticSetGenerator,
+    NonSCFSetGenerator,
+    StaticSetGenerator,
+)
 
 __all__ = ["ElectronPhononMaker"]
 
@@ -174,3 +189,78 @@ class ElectronPhononMaker(Maker):
 
         jobs.extend([static, elph, supercell_dos, displaced_doses, renorm])
         return Flow(jobs, renorm.output, name=self.name)
+
+
+@dataclass
+class HSEElectronPhononMaker(ElectronPhononMaker):
+    """
+    Maker to create electron phonon displaced structures and HSE gap renormalisation.
+
+    This workflow contains:
+
+    1. An initial PBEsol tight structure relaxation (optional if relax_maker set to
+       None).
+    2. A PBEsol static calculation to determine if the material is magnetic.
+    3. A PBEsol finite-difference calculation to generate the electron-phonon displaced
+       structures. This is performed after a supercell transformation is applied. The
+       goal is to find a cubicish supercell with lengths > 15 Å. The size of the
+       supercell can be modified using the ``min_supercell_length`` option.
+    4. A HSE06 uniform band structure calculation on each of the displaced structures
+       (comprising a static calculation and uniform non-self-consistent field
+       calculation).
+    5. A HSE06 uniform band structure calculation on the bulk undisplaced supercell
+       structure, this is used as the ground state for calculating the band gap
+       renormalisation.
+
+    .. note::
+        The only difference between this workflow and :obj:`ElectronPhononMaker` is that
+        the uniform electronic structures are obtained using HSE06 rather than PBEsol.
+        All other calculations (relaxations, phonon frequencies etc, are still obtained
+        using PBEsol).
+
+    .. warning::
+        It is not recommended to disable the tight relaxation unless you know what you
+        are doing. Accurate forces are required to obtained non-imaginary phonon
+        frequencies.
+
+    .. warning::
+        Currently no check is performed to ensure all phonon frequencies are real.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    temperatures : tuple of float
+        Temperatures at which electron-phonon interactions are calculated.
+    min_supercell_length : float
+        Minimum supercell length in A. See :obj:`.CubicSupercellTransformation` for more
+        details.
+    relax_maker : BaseVaspMaker
+        Maker to use for the initial structure relaxation.
+    static_maker : BaseVaspMaker
+        Maker to use for the static calculation on the relaxed structure.
+    elph_displacement_maker : SupercellElectronPhononDisplacedStructureMaker
+        Maker to use to generate the supercell and calculate electron phonon displaced
+        structures.
+    uniform_maker : BaseVaspMaker
+        Maker to use to run the density of states on the displaced structures and
+        bulk supercell structure.
+    """
+
+    name: str = "hse electron phonon"
+    uniform_maker: BaseVaspMaker = field(
+        default_factory=lambda: HSEUniformBandStructureMaker(
+            static_maker=HSEStaticMaker(
+                input_set_generator=HSEStaticSetGenerator(
+                    auto_ispin=True,
+                    user_incar_settings={"KSPACING": None},
+                    user_kpoints_settings={"reciprocal_density": 50},
+                )
+            ),
+            bs_maker=HSEBSMaker(
+                input_set_generator=HSEBSSetGenerator(
+                    user_kpoints_settings={"reciprocal_density": 200},  # dense BS mesh
+                )
+            ),
+        )
+    )

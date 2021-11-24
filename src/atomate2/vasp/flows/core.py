@@ -25,6 +25,8 @@ __all__ = [
     "UniformBandStructureMaker",
     "LineModeBandStructureMaker",
     "HSEBandStructureMaker",
+    "HSEUniformBandStructureMaker",
+    "HSELineModeBandStructureMaker",
     "RelaxBandStructureMaker",
     "OpticsMaker",
     "HSEOpticsMaker",
