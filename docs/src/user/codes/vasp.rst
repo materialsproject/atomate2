@@ -224,7 +224,7 @@ arguments (``config_dict``) that can be provided to the :obj:`.VaspInputSetGener
 the :obj:`.VaspInputSetGenerator` uses a base set of VASP input parameters from [BaseVaspSet.yaml](/src/atomate2/vasp/sets/BaseVaspSet.yaml), 
 which each ``Maker`` is built upon. If desired, the user can define a custom ``.yaml`` file 
 that contains a different base set of VASP settings to use (e.g. ``MPRelaxSet``). An example of how 
-this can be done is shown below for an example static calculation.
+this can be done is shown below for a reprsentative static calculation.
 
 .. code-block:: python
 
@@ -237,10 +237,10 @@ this can be done is shown below for an example static calculation.
     user_config_dict = loadfn("/path/to/my/CustomVaspSet.yaml")
     
     # create a custom input set generator with user-defined defaults
-    # also change the NELM parmaeter to 120 if it wasn't already
+    # also change the NELMIN parmaeter to 6 if it wasn't already
     # this value in the config_dict (for demonstration purposes)
     vis_generator = VaspInputSetGenerator(
-        user_incar_settings={"NELM": 120},
+        user_incar_settings={"NELMIN": 6},
         config_dict=user_config_dict,
         )
     my_custom_set = StaticSetGenerator(vis_generator)
