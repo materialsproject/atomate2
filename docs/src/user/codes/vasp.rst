@@ -18,7 +18,8 @@ differences are:
 .. warning::
 
     The different input sets used in atomate2 mean total energies cannot be compared
-    against energies taken from the Materials Project.
+    against energies taken from the Materials Project unless the default settings are 
+    modified accordingly.
 
 Configuration
 -------------
