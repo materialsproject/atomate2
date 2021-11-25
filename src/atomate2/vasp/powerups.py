@@ -45,7 +45,7 @@ def update_user_incar_settings(
     }
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
-        updated_flow.update_kwargs(
+        updated_flow = updated_flow.update_kwargs(
             {"_set": dict_mod_updates},
             name_filter=name_filter,
             class_filter=class_filter,
@@ -95,7 +95,7 @@ def update_user_potcar_settings(
     }
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
-        updated_flow.update_kwargs(
+        updated_flow = updated_flow.update_kwargs(
             {"_set": dict_mod_updates},
             name_filter=name_filter,
             class_filter=class_filter,
@@ -152,7 +152,7 @@ def update_user_kpoints_settings(
 
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
-        updated_flow.update_kwargs(
+        updated_flow = updated_flow.update_kwargs(
             {"_set": dict_mod_updates},
             name_filter=name_filter,
             class_filter=class_filter,
