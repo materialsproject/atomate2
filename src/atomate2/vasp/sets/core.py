@@ -204,6 +204,10 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         nbands_factor: float = 1.2,
         **kwargs,
     ):
+        if "auto_ispin" not in kwargs:
+            # automatically disable magnetism if magnetic moments are less than 0.02
+            kwargs["auto_ispin"] = True
+
         super().__init__(**kwargs)
         self.mode = mode.lower()
         self.dedos = dedos
@@ -294,9 +298,6 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
             "ICHARG": 11,
             "KSPACING": None,
         }
-
-        # turn off spin when magmom for every site is smaller than 0.02.
-        updates["ISPIN"] = _get_ispin(vasprun, outcar)
 
         if vasprun is not None:
             # set nbands
@@ -521,6 +522,10 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         added_kpoints: List[Vector3D] = None,
         **kwargs,
     ):
+        if "auto_ispin" not in kwargs:
+            # automatically disable magnetism if magnetic moments are less than 0.02
+            kwargs["auto_ispin"] = True
+
         super().__init__(**kwargs)
         self.mode = mode.lower()
         self.dedos = dedos
@@ -628,9 +633,6 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             "KSPACING": None,
         }
 
-        # turn off spin when magmom for every site is smaller than 0.02.
-        updates["ISPIN"] = _get_ispin(vasprun, outcar)
-
         if self.mode == "uniform" and len(self.added_kpoints) == 0:
             # automatic setting of nedos using the energy range and the energy step
             nedos = _get_nedos(vasprun, self.dedos)
@@ -649,7 +651,8 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             updates["NBANDS"] = nbands
 
         if self.optics:
-            updates["LOPTICS"] = True
+            # LREAL not supported with LOPTICS
+            updates.update({"LOPTICS": True, "LREAL": False})
 
         updates["MAGMOM"] = None
 
@@ -664,14 +667,3 @@ def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
     emax = max(eigs.max() for eigs in vasprun.eigenvalues.values())
     emin = min(eigs.min() for eigs in vasprun.eigenvalues.values())
     return int((emax - emin) / dedos)
-
-
-def _get_ispin(vasprun: Optional[Vasprun], outcar: Optional[Outcar]):
-    """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
-    if outcar is not None and outcar.magnetization is not None:
-        # Turn off spin when magmom for every site is smaller than 0.02.
-        site_magmom = np.array([i["tot"] for i in outcar.magnetization])
-        return 2 if np.any(np.abs(site_magmom) > 0.02) else 1
-    elif vasprun is not None:
-        return 2 if vasprun.is_spin else 1
-    return 2

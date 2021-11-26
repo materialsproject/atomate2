@@ -16,7 +16,7 @@ def get_default_strain_states(order: int) -> list[tuple[int, int, int, int, int,
 
     Returns
     -------
-    list of tuples of ints
+    list of tuple of int
         A list of strain states.
     """
     if order == 2:

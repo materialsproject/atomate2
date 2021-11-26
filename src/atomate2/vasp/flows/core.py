@@ -17,12 +17,15 @@ from atomate2.vasp.jobs.core import (
     StaticMaker,
 )
 from atomate2.vasp.schemas.calculation import VaspObject
+from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 
 __all__ = [
     "DoubleRelaxMaker",
     "BandStructureMaker",
     "HSEBandStructureMaker",
     "RelaxBandStructureMaker",
+    "OpticsMaker",
+    "HSEOpticsMaker",
 ]
 
 
@@ -215,3 +218,117 @@ class RelaxBandStructureMaker(Maker):
         )
 
         return Flow([relax_job, bs_flow], bs_flow.output, name=self.name)
+
+
+@dataclass
+class OpticsMaker(BaseVaspMaker):
+    """
+    Maker to create optical absorption calculation VASP jobs.
+
+    This workflow contains an initial static calculation, and then a non-self-consistent
+    field calculation with LOPTICS set. The purpose of the static calculation is
+    i) to determine if the material needs magnetism set, and ii) to determine the total
+    number of bands (the second calculation contains 1.3 * number of bands as the
+    initial static) as often the highest bands are not properly converged in VASP.
+
+    .. Note::
+        The magnetism will be disabled in the non-self-consistent field calculation if
+        all MAGMOMs are less than 0.02.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    static_maker : .BaseVaspMaker
+        The maker to use for the static calculation.
+    band_structure_maker : .BaseVaspMaker
+        The maker to use for the uniform optics calculation.
+    """
+
+    name: str = "static and optics"
+    static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+    band_structure_maker: BaseVaspMaker = field(
+        default_factory=lambda: NonSCFMaker(
+            name="optics",
+            input_set_generator=NonSCFSetGenerator(optics=True),
+        )
+    )
+
+    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+        """
+        Run a static and then a non-scf optics calculation.
+
+        Parameters
+        ----------
+        structure: .Structure
+            A pymatgen structure object.
+        prev_vasp_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A static and nscf with optics flow.
+        """
+        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        nscf_job = self.band_structure_maker.make(
+            static_job.output.structure, prev_vasp_dir=static_job.output.dir_name
+        )
+        return Flow([static_job, nscf_job], nscf_job.output, name=self.name)
+
+
+@dataclass
+class HSEOpticsMaker(BaseVaspMaker):
+    """
+    Maker to create HSE optical absorption calculation VASP jobs.
+
+    This workflow contains an initial HSE static calculation, and then a uniform band
+    structure calculation with LOPTICS set. The purpose of the static calculation is
+    i) to determine if the material needs magnetism set and ii) to determine the total
+    number of bands (the second calculation contains 1.3 * number of bands as the
+    initial static) as often the highest bands are not properly converged in VASP.
+
+    .. Note::
+        The magnetism will be disabled in the uniform optics calculation if all MAGMOMs
+        are less than 0.02.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    static_maker : .BaseVaspMaker
+        The maker to use for the static calculation.
+    band_structure_maker : .BaseVaspMaker
+        The maker to use for the uniform optics calculation.
+    """
+
+    name: str = "hse static and optics"
+    static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
+    band_structure_maker: BaseVaspMaker = field(
+        default_factory=lambda: HSEBSMaker(
+            name="hse optics",
+            input_set_generator=HSEBSSetGenerator(optics=True, mode="uniform"),
+        )
+    )
+
+    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+        """
+        Run a static and then a non-scf optics calculation.
+
+        Parameters
+        ----------
+        structure: .Structure
+            A pymatgen structure object.
+        prev_vasp_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A static and nscf with optics flow.
+        """
+        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        bs_job = self.band_structure_maker.make(
+            static_job.output.structure, prev_vasp_dir=static_job.output.dir_name
+        )
+        return Flow([static_job, bs_job], bs_job.output, name=self.name)
