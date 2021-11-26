@@ -19,6 +19,6 @@ LVTOT = True
 LWAVE = False
 MAGMOM = 2*-0.0
 NELM = 200
-NSW = 0
+NSW = 1
 PREC = Accurate
 SIGMA = 0.05
