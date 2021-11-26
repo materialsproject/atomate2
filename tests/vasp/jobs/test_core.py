@@ -54,7 +54,7 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-10.85083141)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 1
-    assert output1.input.parameters["NSW"] > 0
+    assert output1.input.parameters["NSW"] > 1
 
 
 def test_dielectric(mock_vasp, clean_dir, si_structure):
@@ -120,7 +120,7 @@ def test_hse_relax(mock_vasp, clean_dir, si_structure):
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-12.5326576)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 3
-    assert output1.input.parameters["NSW"] > 0
+    assert output1.input.parameters["NSW"] > 1
 
 
 def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
