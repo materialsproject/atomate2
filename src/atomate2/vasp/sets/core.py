@@ -167,7 +167,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
             # LPEAD=T: numerical evaluation of overlap integral prevents LRF_COMMUTATOR
             # errors and can lead to better expt. agreement but produces slightly
             # different results
-            updates.update({"IBRION": 8, "LEPSILON": True, "LPEAD": True})
+            updates.update({"IBRION": 8, "LEPSILON": True, "LPEAD": True, "NSW": 1})
 
         if self.lcalcpol:
             updates["LCALCPOL"] = True
@@ -455,7 +455,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "NSW": 1,
+            "NSW": 0,
             "ALGO": "All",
             "GGA": "PE",
             "HFSCREEN": 0.2,

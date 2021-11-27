@@ -123,7 +123,7 @@ def test_hse_relax(mock_vasp, clean_dir, si_structure):
     assert output1.input.parameters["NSW"] > 1
 
 
-def test_static_maker(mock_vasp, clean_dir, si_structure):
+def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
 
     from atomate2.vasp.jobs.core import HSEStaticMaker
