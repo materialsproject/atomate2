@@ -165,7 +165,7 @@ class SiStatic(SchemaTestData):
         "calcs_reversed": [
             {
                 "output": {
-                    "vbm": 6.2335,
+                    "vbm": 5.6163,
                     "cbm": 6.2644,
                     "bandgap": 0.6506,
                     "is_gap_direct": False,

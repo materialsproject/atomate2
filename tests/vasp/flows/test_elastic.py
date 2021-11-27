@@ -6,6 +6,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
     from atomate2.common.schemas.elastic import ElasticDocument
     from atomate2.vasp.flows.elastic import ElasticMaker
     from atomate2.vasp.powerups import update_user_kpoints_settings
+    from atomate2.vasp.powerups import update_user_incar_settings
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -37,7 +38,8 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
     # generate flow
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     flow = ElasticMaker().make(si_prim)
-    update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
+    flow = update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
+    flow = update_user_incar_settings(flow, {"KSPACING": None}, name_filter="relax")
 
     # Run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

@@ -20,6 +20,6 @@ LWAVE = False
 MAGMOM = 4*0.6
 NCORE = 4
 NELM = 200
-NSW = 1
+NSW = 0
 PREC = Accurate
 SIGMA = 0.05
