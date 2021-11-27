@@ -98,7 +98,6 @@ class TightRelaxSetGenerator(VaspInputSetGenerator):
             "LAECHG": False,
             "EDIFFG": -0.001,
             "LREAL": False,
-            "ALGO": "Normal",
             "NSW": 99,
             "LCHARG": False,
         }
@@ -743,7 +742,6 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
             "NSW": 1,
             "ISMEAR": 0,
             "LORBIT": 11,
-            "ALGO": "Normal",
             "IBRION": 6,
             "ISIF": 2,
             "ENCUT": 700,
