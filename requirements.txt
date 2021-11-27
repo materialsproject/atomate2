@@ -2,7 +2,7 @@ pydantic==1.8.2
 pymatgen==2022.0.16
 custodian==2021.2.8
 monty==2021.8.17
-jobflow==0.1.4
+jobflow==0.1.5
 numpy==1.21.4
 click==8.0.3
 PyYAML==6.0
