@@ -161,7 +161,6 @@ class StaticSetGenerator(VaspInputSetGenerator):
             "ISMEAR": -5,
             "LCHARG": True,
             "LORBIT": 11,
-            "ALGO": "Normal",
         }
         if self.lepsilon:
             # LPEAD=T: numerical evaluation of overlap integral prevents LRF_COMMUTATOR
@@ -369,6 +368,7 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
             "IBRION": 2,
             "PRECFOCK": "Fast",
             "ISIF": 3,
+            "LASPH": True,
         }
 
 
@@ -419,6 +419,7 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
             "HFSCREEN": 0.2,
             "LHFCALC": True,
             "PRECFOCK": "Fast",
+            "LASPH": True,
         }
 
 
@@ -465,6 +466,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
             "ISMEAR": -5,
             "LORBIT": 11,
             "LCHARG": True,
+            "LASPH": True,
         }
 
 
