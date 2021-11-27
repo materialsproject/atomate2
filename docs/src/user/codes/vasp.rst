@@ -342,7 +342,8 @@ can be done is shown below for a representative static calculation.
     # NELMIN parmaeter to 6 if it wasn't already this value in the config_dict (for
     # demonstration purposes)
     my_custom_set = StaticSetGenerator(
-        user_incar_settings={"NELMIN": 6}, config_dict=user_config_dict,
+        user_incar_settings={"NELMIN": 6},
+        config_dict=user_config_dict,
     )
 
     # initialise the static maker to use the custom input set generator
