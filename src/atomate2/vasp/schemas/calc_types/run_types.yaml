@@ -54,14 +54,18 @@ HF:
 METAGGA:
   M06L:
     METAGGA: M06L
-  MBJL:
-    METAGGA: MBJL
+  MBJ:
+    METAGGA: MBJ
   MS0:
     METAGGA: MS0
   MS1:
     METAGGA: MS1
   MS2:
     METAGGA: MS2
+  RSCAN:
+    METAGGA: RSCAN
+  R2SCAN:
+    METAGGA: R2SCAN
   RTPSS:
     METAGGA: RTPSS
   SCAN:
@@ -100,7 +104,7 @@ VDW:
     PARAM1: 0.1234
     PARAM2: 0.711357
     Zab_vdW: -1.8867
-  revPBE-vdW:
+  vdW-DF:
     AGGAC: 0.0
     GGA: RE
     LASPH: true
@@ -111,3 +115,7 @@ VDW:
     LASPH: true
     LUSE_VDW: true
     Zab_vdW: -1.8867
+  BEEF-vdW:
+    GGA: BF
+    Zab_vdW: -1.8867
+    LUSE_VDW: true
