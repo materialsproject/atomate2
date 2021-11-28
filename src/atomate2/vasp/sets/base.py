@@ -483,7 +483,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         ispin = None
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
-            bs = vasprun.get_band_structure()
+            bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
             prev_structure = vasprun.final_structure
             bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
