@@ -104,13 +104,13 @@ class ElectronPhononMaker(Maker):
             static_maker=StaticMaker(
                 input_set_generator=StaticSetGenerator(
                     auto_ispin=True,
-                    user_incar_settings={"KSPACING": None},
+                    user_incar_settings={"KSPACING": None, "EDIFF": 1e-5},
                     user_kpoints_settings={"reciprocal_density": 100},
                 )
             ),
             bs_maker=NonSCFMaker(
                 input_set_generator=NonSCFSetGenerator(
-                    user_kpoints_settings={"reciprocal_density": 200},  # dense BS mesh
+                    user_kpoints_settings={"reciprocal_density": 1000},  # dense BS mesh
                 )
             ),
         )
@@ -253,7 +253,7 @@ class HSEElectronPhononMaker(ElectronPhononMaker):
             static_maker=HSEStaticMaker(
                 input_set_generator=HSEStaticSetGenerator(
                     auto_ispin=True,
-                    user_incar_settings={"KSPACING": None},
+                    user_incar_settings={"KSPACING": None, "EDIFF": 1e-5},
                     user_kpoints_settings={"reciprocal_density": 50},
                 )
             ),

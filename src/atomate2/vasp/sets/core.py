@@ -319,7 +319,8 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
             updates.update({"ISMEAR": 0, "SIGMA": 0.01})
 
         if self.optics:
-            updates["LOPTICS"] = True
+            # LREAL not supported with LOPTICS = True
+            updates.update({"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5})
 
         updates["MAGMOM"] = None
 
@@ -658,7 +659,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
         if self.optics:
             # LREAL not supported with LOPTICS
-            updates.update({"LOPTICS": True, "LREAL": False})
+            updates.update({"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5})
 
         updates["MAGMOM"] = None
 

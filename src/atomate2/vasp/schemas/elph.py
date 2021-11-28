@@ -1,7 +1,7 @@
 """Schemas for electron-phonon renormalisation documents."""
 
 import logging
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -197,10 +197,9 @@ class ElectronPhononRenormalisationDoc(BaseModel):
         displacement_dirs = [displacement_dirs[i] for i in keep]
         displacement_uuids = [displacement_uuids[i] for i in keep]
 
-        cbm_band_indices = bulk_band_structure.get_cbm()["band_index"]
-        vbm_band_indices = bulk_band_structure.get_vbm()["band_index"]
-        bulk_cbm = bulk_band_structure.get_cbm()["energy"]
+        vbm_band_indices, cbm_band_indices = _get_band_edge_indices(bulk_band_structure)
         bulk_vbm = bulk_band_structure.get_vbm()["energy"]
+        bulk_cbm = bulk_band_structure.get_cbm()["energy"]
         bulk_band_gap = bulk_cbm - bulk_vbm
 
         displacement_cbms = _get_displacement_band_edges(
@@ -234,8 +233,8 @@ class ElectronPhononRenormalisationDoc(BaseModel):
                 bulk_structure=bulk_structure,
                 bulk_cbm=bulk_cbm,
                 bulk_vbm=bulk_vbm,
-                bulk_vbm_band_indices={str(s): i for s, i in vbm_band_indices.items()},
-                bulk_cbm_band_indices={str(s): i for s, i in cbm_band_indices.items()},
+                bulk_vbm_band_indices={s.name: i for s, i in vbm_band_indices.items()},
+                bulk_cbm_band_indices={s.name: i for s, i in cbm_band_indices.items()},
                 elph_uuid=elph_uuid,
                 elph_dir=elph_dir,
             ),
@@ -260,3 +259,43 @@ def _get_displacement_band_edges(
         band_edges.append(spin_edges)
 
     return np.array(band_edges)
+
+
+def _get_band_edge_indices(
+    band_structure: BandStructure,
+    tol: float = 0.005,
+) -> Tuple[Dict[Spin, List[int]], Dict[Spin, List[int]]]:
+    """
+    Get indices of degenerate band edge states, within a tolerance.
+
+    Parameters
+    ----------
+    band_structure : BandStructure
+        A band structure.
+    tol : float
+        Degeneracy tolerance in meV.
+    """
+    vbm_energy = band_structure.get_vbm()["energy"]
+    cbm_energy = band_structure.get_cbm()["energy"]
+
+    vbm_band_indices = {}
+    cbm_band_indices = {}
+    for spin, spin_energies in band_structure.bands.items():
+        vb_idxs = np.where(
+            np.any(
+                (spin_energies > vbm_energy - tol)
+                & (spin_energies < band_structure.efermi),
+                axis=1,
+            )
+        )[0]
+        cb_idxs = np.where(
+            np.any(
+                (spin_energies < cbm_energy + tol)
+                & (spin_energies > band_structure.efermi),
+                axis=1,
+            )
+        )[0]
+        vbm_band_indices[spin] = vb_idxs.tolist()
+        cbm_band_indices[spin] = cb_idxs.tolist()
+
+    return vbm_band_indices, cbm_band_indices
