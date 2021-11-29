@@ -101,7 +101,11 @@ class VaspInputSet(InputSet):
         for k, v in inputs.items():
             if v is not None and (overwrite or not (directory / k).exists()):
                 with zopen(directory / k, "wt") as f:
-                    f.write(v.__str__())
+                    if isinstance(v, Poscar):
+                        # write POSCAR with more signifcant figures
+                        f.write(v.get_string(significant_figures=16))
+                    else:
+                        f.write(v.__str__())
             elif not overwrite and (directory / k).exists():
                 raise FileExistsError(f"{directory / k} already exists.")
 
