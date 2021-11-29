@@ -672,8 +672,7 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
 
     .. note::
         Requires VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/Electron-
-        phonon_interactions_from_Monte-Carlo_sampling
-        for more details.
+        phonon_interactions_from_Monte-Carlo_sampling for more details.
 
     Parameters
     ----------
@@ -698,7 +697,7 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
             900,
             1000,
         ),
-        reciprocal_density: float = 100,
+        reciprocal_density: float = 50,
         **kwargs,
     ):
         if "auto_ispin" not in kwargs:
