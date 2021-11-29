@@ -42,10 +42,10 @@ if __name__ == "__main__":
             ],
             "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
-                "sphinx==4.3.0",
+                "sphinx==4.3.1",
                 "numpydoc==1.1.0",
                 "m2r2==0.3.1",
-                "ipython==7.29.0",
+                "ipython==7.30.0",
                 "FireWorks==1.9.7",
                 "pydata-sphinx-theme==0.7.2",
                 "autodoc_pydantic==1.5.1",
