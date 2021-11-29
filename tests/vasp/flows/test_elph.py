@@ -18,15 +18,17 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        "non-scf uniform T=0.0": {"incar_settings": ["NSW", "ISMEAR"]},
-        "non-scf uniform T=100.0": {"incar_settings": ["NSW", "ISMEAR"]},
-        "non-scf uniform bulk supercell": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static T=0.0": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static T=100.0": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static bulk supercell": {"incar_settings": ["NSW", "ISMEAR"]},
+        "non-scf uniform T=0.0": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]},
+        "non-scf uniform T=100.0": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]},
+        "non-scf uniform bulk supercell": {
+            "incar_settings": ["NSW", "ISMEAR", "IBRION"]
+        },
+        "static": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]},
+        "static T=0.0": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]},
+        "static T=100.0": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]},
+        "static bulk supercell": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]},
         "supercell electron phonon displacements": {
-            "incar_settings": ["NSW", "ISMEAR"]
+            "incar_settings": ["NSW", "ISMEAR", "IBRION"]
         },
     }
     # automatically use fake VASP and write POTCAR.spec during the test

@@ -167,6 +167,29 @@ class VaspInputSet(InputSet):
                 BadInputSetWarning,
             )
 
+        if self.incar.get("LHFCALC", False) is True and self.incar.get(
+            "ALGO", "Normal"
+        ) not in [
+            "Normal",
+            "All",
+            "Damped",
+        ]:
+            warnings.warn(
+                "Hybrid functionals only support Algo = All, Damped, or Normal.",
+                BadInputSetWarning,
+            )
+
+        if not self.incar.get("LASPH", False) and (
+            self.incar.get("METAGGA")
+            or self.incar.get("LHFCALC", False)
+            or self.incar.get("LDAU", False)
+            or self.incar.get("LUSE_VDW", False)
+        ):
+            warnings.warn(
+                "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT",
+                BadInputSetWarning,
+            )
+
         return True
 
 
@@ -567,6 +590,15 @@ class VaspInputSetGenerator(InputSetGenerator):
 
         if self.constrain_total_magmom:
             nupdown = sum(mag if abs(mag) > 0.6 else 0 for mag in incar["MAGMOM"])
+            if nupdown != round(nupdown):
+                warnings.warn(
+                    "constrain_total_magmom was set to True, but the sum of MAGMOM "
+                    "values is not an integer. NUPDOWN is meant to set the spin "
+                    "multiplet and should typically be an integer. You are likely "
+                    "better off changing the values of MAGMOM or simply setting "
+                    "NUPDOWN directly in your INCAR settings.",
+                    UserWarning,
+                )
             incar["NUPDOWN"] = nupdown
 
         if self.use_structure_charge:
@@ -588,6 +620,9 @@ class VaspInputSetGenerator(InputSetGenerator):
 
         # apply specified updates, be careful not to override user_incar_settings
         _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings.keys())
+
+        # Remove unused INCAR parameters
+        _remove_unused_incar_params(incar, skip=self.user_incar_settings.keys())
 
         return incar
 
@@ -773,18 +808,18 @@ def _get_magmoms(magmoms, structure):
         elif hasattr(site.specie, "spin"):
             mag.append(site.specie.spin)
         elif str(site.specie) in magmoms:
-            if site.specie.symbol == "Co":
+            if site.specie.symbol == "Co" and magmoms[str(site.specie)] <= 1.0:
                 warnings.warn(
-                    "Co without oxidation state is initialized low spin by default. If "
-                    "this is not desired, please set the spin on the magmom on the "
+                    "Co without an oxidation state is initialized as low spin by default in Atomate2. "
+                    "If this default behavior is not desired, please set the spin on the magmom on the "
                     "site directly to ensure correct initialization."
                 )
             mag.append(magmoms.get(str(site.specie)))
         else:
             if site.specie.symbol == "Co":
                 warnings.warn(
-                    "Co without oxidation state is initialized low spin by default. If "
-                    "this is not desired, please set the spin on the magmom on the "
+                    "Co without an oxidation state is initialized as low spin by default in Atomate2. "
+                    "If this default behavior is not desired, please set the spin on the magmom on the "
                     "site directly to ensure correct initialization."
                 )
             mag.append(magmoms.get(site.specie.symbol, 0.6))
@@ -867,6 +902,38 @@ def _apply_incar_updates(incar, updates, skip=None):
             incar.pop(k, None)
         else:
             incar[k] = v
+
+
+def _remove_unused_incar_params(incar, skip=None):
+    """
+    Remove INCAR parameters that are not actively used by VASP.
+
+    Parameters
+    ----------
+    incar
+        An incar.
+    skip
+        Keys to skip.
+    """
+    skip = () if skip is None else skip
+
+    # Turn off IBRION/ISIF/POTIM if NSW = 0
+    opt_flags = ["EDIFFG", "IBRION", "ISIF", "POTIM"]
+    if incar.get("NSW", 0) == 0:
+        for opt_flag in opt_flags:
+            if opt_flag not in skip:
+                incar.pop(opt_flag, None)
+
+    # Remove MAGMOMs if they aren't used
+    if incar.get("ISPIN", 1) == 1 and "MAGMOM" not in skip:
+        incar.pop("MAGMOM", None)
+
+    # Turn off +U flags if +U is not even used
+    ldau_flags = ["LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE"]
+    if incar.get("LDAU", False) is False:
+        for ldau_flag in ldau_flags:
+            if ldau_flag not in skip:
+                incar.pop(ldau_flag, None)
 
 
 def _set_kspacing(
