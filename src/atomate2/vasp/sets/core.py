@@ -1,6 +1,7 @@
 """Module defining core VASP input set generators."""
 
 from copy import deepcopy
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -23,6 +24,7 @@ __all__ = [
 ]
 
 
+@dataclass
 class RelaxSetGenerator(VaspInputSetGenerator):
     """Class to generate VASP relaxation input sets."""
 
@@ -58,6 +60,7 @@ class RelaxSetGenerator(VaspInputSetGenerator):
         return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2}
 
 
+@dataclass
 class TightRelaxSetGenerator(VaspInputSetGenerator):
     """Class to generate tight VASP relaxation input sets."""
 
@@ -103,6 +106,7 @@ class TightRelaxSetGenerator(VaspInputSetGenerator):
         }
 
 
+@dataclass
 class StaticSetGenerator(VaspInputSetGenerator):
     """
     Class to generate VASP static input sets.
@@ -119,11 +123,8 @@ class StaticSetGenerator(VaspInputSetGenerator):
         Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
     """
 
-    def __init__(self, lepsilon: bool = False, lcalcpol: bool = False, **kwargs):
-        super().__init__(**kwargs)
-        self.lepsilon = lepsilon
-        self.lcalcpol = lcalcpol
-        self._kwargs = kwargs  # required for proper monty serialization
+    lepsilon: bool = False
+    lcalcpol: bool = False
 
     def get_incar_updates(
         self,
@@ -172,6 +173,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
         return updates
 
 
+@dataclass
 class NonSCFSetGenerator(VaspInputSetGenerator):
     """
     Class to generate VASP non-self-consistent field input sets.
@@ -195,28 +197,17 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
     """
 
-    def __init__(
-        self,
-        mode: str = "line",
-        dedos: float = 0.005,
-        reciprocal_density=100,
-        line_density=20,
-        optics: bool = False,
-        nbands_factor: float = 1.2,
-        **kwargs,
-    ):
-        if "auto_ispin" not in kwargs:
-            # automatically disable magnetism if magnetic moments are less than 0.02
-            kwargs["auto_ispin"] = True
+    mode: str = "line"
+    dedos: float = 0.005
+    reciprocal_density: float = 100
+    line_density: float = 20
+    optics: bool = False
+    nbands_factor: float = 1.2
+    auto_ispin: bool = True
 
-        super().__init__(**kwargs)
-        self.mode = mode.lower()
-        self.dedos = dedos
-        self.line_density = line_density
-        self.reciprocal_density = reciprocal_density
-        self.optics = optics
-        self.nbands_factor = nbands_factor
-        self._kwargs = kwargs  # required for proper monty serialization
+    def __post_init__(self):
+        """Ensure mode is set correctly."""
+        self.mode = self.mode.lower()
 
         supported_modes = ("line", "uniform", "boltztrap")
         if self.mode not in supported_modes:
@@ -327,6 +318,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         return updates
 
 
+@dataclass
 class HSERelaxSetGenerator(VaspInputSetGenerator):
     """Class to generate VASP HSE06 relaxation input sets."""
 
@@ -372,6 +364,7 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
         }
 
 
+@dataclass
 class HSETightRelaxSetGenerator(VaspInputSetGenerator):
     """Class to generate tight VASP HSE relaxation input sets."""
 
@@ -423,6 +416,7 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
         }
 
 
+@dataclass
 class HSEStaticSetGenerator(VaspInputSetGenerator):
     """Class to generate VASP HSE06 static input sets."""
 
@@ -470,6 +464,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
         }
 
 
+@dataclass
 class HSEBSSetGenerator(VaspInputSetGenerator):
     """
     Class to generate VASP HSE06 band structure input sets.
@@ -516,33 +511,19 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
     """
 
-    def __init__(
-        self,
-        mode: str = "gap",
-        dedos: float = 0.005,
-        reciprocal_density=50,
-        line_density=20,
-        zero_weighted_reciprocal_density=100,
-        optics: bool = False,
-        nbands_factor: float = 1.2,
-        added_kpoints: List[Vector3D] = None,
-        **kwargs,
-    ):
-        if "auto_ispin" not in kwargs:
-            # automatically disable magnetism if magnetic moments are less than 0.02
-            kwargs["auto_ispin"] = True
+    mode: str = "gap"
+    dedos: float = 0.005
+    reciprocal_density: float = 50
+    line_density: float = 20
+    zero_weighted_reciprocal_density: float = 100
+    optics: bool = False
+    nbands_factor: float = 1.2
+    added_kpoints: List[Vector3D] = field(default_factory=list)
+    auto_ispin: bool = True
 
-        super().__init__(**kwargs)
-        self.mode = mode.lower()
-        self.dedos = dedos
-        self.line_density = line_density
-        self.reciprocal_density = reciprocal_density
-        self.optics = optics
-        self.nbands_factor = nbands_factor
-        self.added_kpoints = [] if added_kpoints is None else added_kpoints
-        self.zero_weighted_reciprocal_density = zero_weighted_reciprocal_density
-        self._kwargs = kwargs  # required for proper monty serialization
-
+    def __post_init__(self):
+        """Ensure mode is set correctly."""
+        self.mode = self.mode.lower()
         supported_modes = ("line", "uniform", "gap", "uniform_dense")
         if self.mode not in supported_modes:
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
@@ -666,6 +647,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         return updates
 
 
+@dataclass
 class ElectronPhononSetGenerator(VaspInputSetGenerator):
     """
     Class to generate VASP electron phonon input sets.
@@ -682,32 +664,21 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
         Density of k-mesh by reciprocal volume.
     """
 
-    def __init__(
-        self,
-        temperatures: Tuple[float, ...] = (
-            0,
-            100,
-            200,
-            300,
-            400,
-            500,
-            600,
-            700,
-            800,
-            900,
-            1000,
-        ),
-        reciprocal_density: float = 50,
-        **kwargs,
-    ):
-        if "auto_ispin" not in kwargs:
-            # automatically disable magnetism if magnetic moments are less than 0.02
-            kwargs["auto_ispin"] = True
-
-        super().__init__(**kwargs)
-        self.temperatures = temperatures
-        self.reciprocal_density = reciprocal_density
-        self._kwargs = kwargs  # required for proper monty serialization
+    temperatures: Tuple[float, ...] = (
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000,
+    )
+    reciprocal_density: float = 50
+    auto_ispin: bool = True
 
     def get_incar_updates(
         self,

@@ -3,6 +3,7 @@
 import os
 import warnings
 from copy import deepcopy
+from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
@@ -174,6 +175,7 @@ class VaspInputSet(InputSet):
         return True
 
 
+@dataclass
 class VaspInputSetGenerator(InputSetGenerator):
     """
     A class to generate VASP input sets.
@@ -236,40 +238,24 @@ class VaspInputSetGenerator(InputSetGenerator):
         The config dictionary to use containing the base input set settings.
     """
 
-    def __init__(
-        self,
-        user_incar_settings: Dict = None,
-        user_kpoints_settings: Union[Dict, Kpoints] = None,
-        user_potcar_settings: Dict = None,
-        user_potcar_functional: str = None,
-        auto_kspacing: bool = True,
-        constrain_total_magmom: bool = False,
-        validate_magmom: bool = True,
-        use_structure_charge: bool = False,
-        sort_structure: bool = True,
-        force_gamma: bool = True,
-        symprec: float = SETTINGS.SYMPREC,
-        vdw: str = None,
-        auto_ispin: bool = False,
-        config_dict: Dict = None,
-    ):
-        if config_dict is None:
-            config_dict = _BASE_VASP_SET
+    user_incar_settings: Dict = field(default_factory=dict)
+    user_kpoints_settings: Union[Dict, Kpoints] = field(default_factory=dict)
+    user_potcar_settings: Dict = field(default_factory=dict)
+    user_potcar_functional: str = None
+    auto_kspacing: bool = True
+    constrain_total_magmom: bool = False
+    validate_magmom: bool = True
+    use_structure_charge: bool = False
+    sort_structure: bool = True
+    force_gamma: bool = True
+    symprec: float = SETTINGS.SYMPREC
+    vdw: str = None
+    auto_ispin: bool = False
+    config_dict: Dict = field(default_factory=lambda: _BASE_VASP_SET)
 
-        self._config_dict = deepcopy(config_dict)
-        self.user_incar_settings = user_incar_settings or {}
-        self.user_kpoints_settings: Union[Dict, Kpoints] = user_kpoints_settings or {}
-        self.user_potcar_settings = user_potcar_settings
-        self.user_potcar_functional = user_potcar_functional
-        self.auto_kspacing = auto_kspacing
-        self.constrain_total_magmom = constrain_total_magmom
-        self.validate_magmom = validate_magmom
-        self.sort_structure = sort_structure
-        self.force_gamma = force_gamma
-        self.symprec = symprec  # used in k-point generation
-        self.vdw = None if vdw is None else vdw.lower()
-        self.use_structure_charge = use_structure_charge
-        self.auto_ispin = auto_ispin
+    def __post_init__(self):
+        """Post init formatting of arguments."""
+        self.vdw = None if self.vdw is None else self.vdw.lower()
 
         if self.user_incar_settings.get("KSPACING") and self.user_kpoints_settings:
             warnings.warn(
@@ -290,13 +276,16 @@ class VaspInputSetGenerator(InputSetGenerator):
                     "Invalid or unsupported van-der-Waals functional. Supported "
                     f"functionals are {vdw_par.keys()}"
                 )
-            self._config_dict["INCAR"].update(vdw_par[self.vdw])
+            self.config_dict["INCAR"].update(vdw_par[self.vdw])
 
         # read the POTCAR_FUNCTIONAL from the .yaml
-        self.potcar_functional = self._config_dict.get("POTCAR_FUNCTIONAL", "PS")
+        self.potcar_functional = self.config_dict.get("POTCAR_FUNCTIONAL", "PS")
 
         # warn if a user is overriding POTCAR_FUNCTIONAL
-        if user_potcar_functional and user_potcar_functional != self.potcar_functional:
+        if (
+            self.user_potcar_functional
+            and self.user_potcar_functional != self.potcar_functional
+        ):
             warnings.warn(
                 "Overriding the POTCAR functional is generally not recommended "
                 "as it can significantly affect the results of calculations and "
@@ -305,7 +294,7 @@ class VaspInputSetGenerator(InputSetGenerator):
                 "not be available in the selected functional.",
                 BadInputSetWarning,
             )
-            self.potcar_functional = user_potcar_functional
+            self.potcar_functional = self.user_potcar_functional
 
         if self.user_potcar_settings:
             warnings.warn(
@@ -318,7 +307,7 @@ class VaspInputSetGenerator(InputSetGenerator):
                 BadInputSetWarning,
             )
             for k, v in self.user_potcar_settings.items():
-                self._config_dict["POTCAR"][k] = v
+                self.config_dict["POTCAR"][k] = v
 
     def get_input_set(  # type: ignore
         self,
@@ -468,7 +457,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         nelect = sum(num_atoms * nelec[str(el)] for el, num_atoms in comp.items())
 
         if self.use_structure_charge:
-            return nelect - self.structure.charge
+            return nelect - structure.charge
 
         return nelect
 
@@ -513,7 +502,7 @@ class VaspInputSetGenerator(InputSetGenerator):
     def _get_potcar(self, structure, potcar_spec: bool = False):
         """Get the POTCAR."""
         elements = [a[0] for a in groupby([s.specie.symbol for s in structure])]
-        potcar_symbols = [self._config_dict["POTCAR"].get(el, el) for el in elements]
+        potcar_symbols = [self.config_dict["POTCAR"].get(el, el) for el in elements]
 
         if potcar_spec:
             return potcar_symbols
@@ -545,7 +534,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         """Get the INCAR."""
         previous_incar = {} if previous_incar is None else previous_incar
         incar_updates = {} if incar_updates is None else incar_updates
-        incar_settings = dict(self._config_dict["INCAR"])
+        incar_settings = dict(self.config_dict["INCAR"])
 
         # apply user incar settings to SETTINGS not to INCAR
         _apply_incar_updates(incar_settings, self.user_incar_settings)
@@ -609,7 +598,7 @@ class VaspInputSetGenerator(InputSetGenerator):
             kconfig = deepcopy(self.user_kpoints_settings)
         else:
             # apply updates to k-points config
-            kconfig = deepcopy(self._config_dict.get("KPOINTS", {}))
+            kconfig = deepcopy(self.config_dict.get("KPOINTS", {}))
             kconfig.update(kpoints_updates)
 
         # Return None if KSPACING is set and no other user k-points settings have been
@@ -751,8 +740,8 @@ class VaspInputSetGenerator(InputSetGenerator):
             return self.user_incar_settings["KSPACING"]
         if "KSPACING" in incar_updates:
             return incar_updates["KSPACING"]
-        if "KSPACING" in self._config_dict["INCAR"]:
-            return self._config_dict["INCAR"]["KSPACING"]
+        if "KSPACING" in self.config_dict["INCAR"]:
+            return self.config_dict["INCAR"]["KSPACING"]
         return None
 
 
