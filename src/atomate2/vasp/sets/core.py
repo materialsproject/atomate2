@@ -156,7 +156,6 @@ class StaticSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         updates = {
-            "IBRION": -1,
             "NSW": 0,
             "ISMEAR": -5,
             "LCHARG": True,
@@ -282,7 +281,6 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         updates: Dict[str, Any] = {
-            "IBRION": -1,
             "LCHARG": False,
             "LORBIT": 11,
             "LWAVE": False,
@@ -455,7 +453,6 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "LHFCALC": True,
-            "IBRION": 2,
             "PRECFOCK": "Fast",
             "ISMEAR": -5,
             "LORBIT": 11,

@@ -11,7 +11,9 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     ref_paths = {"static": "Si_band_structure/static"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"static": {"incar_settings": ["NSW", "ISMEAR"]}}
+    fake_run_vasp_kwargs = {
+        "static": {"incar_settings": ["NSW", "ISMEAR", "IBRION", "EDIFFG"]}
+    }
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -38,7 +40,7 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
     ref_paths = {"relax": "Si_double_relax/relax_1"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"relax": {"incar_settings": ["NSW", "ISMEAR"]}}
+    fake_run_vasp_kwargs = {"relax": {"incar_settings": ["NSW", "ISMEAR", "EDIFFG"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)

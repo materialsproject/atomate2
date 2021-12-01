@@ -1,10 +1,7 @@
 ALGO = Normal
 EDIFF = 1e-05
-EDIFFG = -0.02
 ENAUG = 1360
 ENCUT = 680
-IBRION = -1
-ISIF = 3
 ISMEAR = -5
 ISPIN = 2
 LAECHG = True
