@@ -135,7 +135,7 @@ def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
     ref_paths = {"hse static": "Si_hse_band_structure/hse_static"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"hse static": {"incar_settings": ["ISMEAR", "NSW", "LREAL"]}}
+    fake_run_vasp_kwargs = {"hse static": {"incar_settings": ["ISMEAR", "LREAL", "NSW"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
