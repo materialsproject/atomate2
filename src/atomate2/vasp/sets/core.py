@@ -207,6 +207,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
 
     def __post_init__(self):
         """Ensure mode is set correctly."""
+        super().__post_init__()
         self.mode = self.mode.lower()
 
         supported_modes = ("line", "uniform", "boltztrap")
@@ -522,6 +523,8 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
     def __post_init__(self):
         """Ensure mode is set correctly."""
+        super().__post_init__()
+
         self.mode = self.mode.lower()
         supported_modes = ("line", "uniform", "gap", "uniform_dense")
         if self.mode not in supported_modes:
