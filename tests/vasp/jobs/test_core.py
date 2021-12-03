@@ -12,7 +12,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        "static": {"incar_settings": ["NSW", "ISMEAR", "IBRION", "EDIFFG"]}
+        "static": {"incar_settings": ["EDIFFG", "IBRION", "ISMEAR", "LREAL", "NSW"]}
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
@@ -40,7 +40,7 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
     ref_paths = {"relax": "Si_double_relax/relax_1"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"relax": {"incar_settings": ["NSW", "ISMEAR", "EDIFFG"]}}
+    fake_run_vasp_kwargs = {"relax": {"incar_settings": ["EDIFFG", "ISMEAR", "NSW"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -69,7 +69,7 @@ def test_dielectric(mock_vasp, clean_dir, si_structure):
     ref_paths = {"dielectric": "Si_dielectric"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"dielectric": {"incar_settings": ["NSW", "IBRION"]}}
+    fake_run_vasp_kwargs = {"dielectric": {"incar_settings": ["IBRION", "NSW"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -105,7 +105,7 @@ def test_hse_relax(mock_vasp, clean_dir, si_structure):
     ref_paths = {"hse relax": "Si_hse_relax"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"hse relax": {"incar_settings": ["NSW", "ISMEAR"]}}
+    fake_run_vasp_kwargs = {"hse relax": {"incar_settings": ["ISMEAR", "NSW"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -135,7 +135,7 @@ def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
     ref_paths = {"hse static": "Si_hse_band_structure/hse_static"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"hse static": {"incar_settings": ["NSW", "ISMEAR"]}}
+    fake_run_vasp_kwargs = {"hse static": {"incar_settings": ["ISMEAR", "NSW", "LREAL"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -164,7 +164,7 @@ def test_transmuter(mock_vasp, clean_dir, si_structure):
     ref_paths = {"transmuter": "Si_transmuter"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"transmuter": {"incar_settings": ["NSW", "ISMEAR"]}}
+    fake_run_vasp_kwargs = {"transmuter": {"incar_settings": ["ISMEAR", "NSW"]}}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)

@@ -160,6 +160,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
             "ISMEAR": -5,
             "LCHARG": True,
             "LORBIT": 11,
+            "LREAL": False,
         }
         if self.lepsilon:
             # LPEAD=T: numerical evaluation of overlap integral prevents LRF_COMMUTATOR
@@ -458,6 +459,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
             "LORBIT": 11,
             "LCHARG": True,
             "LASPH": True,
+            "LREAL": False,
         }
 
 
