@@ -23,6 +23,7 @@ from atomate2.common.files import get_zfile
 from atomate2.common.schemas.math import Vector3D
 from atomate2.utils.file_client import FileClient
 from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.vasp.jobs.core import HSEBSMaker, NonSCFMaker
 from atomate2.vasp.sets.base import VaspInputSetGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
@@ -44,7 +45,7 @@ __all__ = [
 
 
 @dataclass
-class DenseUniformMaker(BaseVaspMaker):
+class DenseUniformMaker(NonSCFMaker):
     """
     Maker to perform a dense uniform non-self consistent field calculation.
 
@@ -165,7 +166,7 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
 
 
 @dataclass
-class HSEDenseUniformMaker(BaseVaspMaker):
+class HSEDenseUniformMaker(HSEBSMaker):
     """
     Maker to perform a dense uniform non-self consistent field calculation.
 
