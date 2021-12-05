@@ -199,7 +199,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
 
     mode: str = "line"
     dedos: float = 0.005
-    reciprocal_density: float = 100
+    reciprocal_density: int = 100
     line_density: float = 20
     optics: bool = False
     nbands_factor: float = 1.2
@@ -513,9 +513,9 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
     mode: str = "gap"
     dedos: float = 0.005
-    reciprocal_density: float = 50
+    reciprocal_density: int = 50
     line_density: float = 20
-    zero_weighted_reciprocal_density: float = 100
+    zero_weighted_reciprocal_density: int = 100
     optics: bool = False
     nbands_factor: float = 1.2
     added_kpoints: List[Vector3D] = field(default_factory=list)
@@ -679,7 +679,7 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
         900,
         1000,
     )
-    reciprocal_density: float = 50
+    reciprocal_density: int = 50
     auto_ispin: bool = True
 
     def get_incar_updates(
