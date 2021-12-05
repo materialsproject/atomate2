@@ -12,9 +12,9 @@ from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
 from atomate2.amset.jobs import AmsetMaker
+from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.jobs.amset import (
-    DenseUniformMaker,
     HSEDenseUniformMaker,
     HSEStaticDeformationMaker,
     StaticDeformationMaker,
@@ -178,7 +178,9 @@ class VaspAmsetMaker(Maker):
     amset_settings: dict = field(default_factory=dict)
     relax_maker: BaseVaspMaker | None = field(default_factory=TightRelaxMaker)
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
-    dense_uniform_maker: BaseVaspMaker = field(default_factory=DenseUniformMaker)
+    dense_uniform_maker: BaseVaspMaker = field(
+        default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
+    )
     dielectric_maker: BaseVaspMaker = field(default_factory=DielectricMaker)
     elastic_maker: ElasticMaker = field(default_factory=ElasticMaker)
     deformation_potential_maker: DeformationPotentialMaker = field(
