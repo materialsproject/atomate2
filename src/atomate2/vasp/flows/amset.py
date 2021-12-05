@@ -33,6 +33,7 @@ from atomate2.vasp.jobs.core import (
     StaticMaker,
     TightRelaxMaker,
 )
+from atomate2.vasp.sets.core import HSEBSSetGenerator
 
 __all__ = ["VaspAmsetMaker", "DeformationPotentialMaker", "HSEVaspAmsetMaker"]
 
@@ -190,7 +191,11 @@ class VaspAmsetMaker(Maker):
     deformation_potential_maker: DeformationPotentialMaker = field(
         default_factory=DeformationPotentialMaker
     )
-    hse_gap_maker: BaseVaspMaker = field(default_factory=HSEBSMaker)
+    hse_gap_maker: BaseVaspMaker = field(
+        default_factory=lambda: HSEBSMaker(
+            input_set_generator=HSEBSSetGenerator(user_incar_settings={"EDIFF": 1e-5})
+        )
+    )
     amset_maker: AmsetMaker = field(default_factory=AmsetMaker)
 
     def make(

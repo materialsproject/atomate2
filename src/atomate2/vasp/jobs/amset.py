@@ -389,8 +389,8 @@ def generate_wavefunction_coefficients(dir_name: str):
     """
     dir_name = strip_hostname(dir_name)  # TODO: Handle hostnames properly.
     files = FileClient().listdir(dir_name)
-    vasprun_file = get_zfile(files, "vasprun.xml")
-    wavecar_file = get_zfile(files, "WAVECAR")
+    vasprun_file = Path(dir_name) / get_zfile(files, "vasprun.xml")
+    wavecar_file = Path(dir_name) / get_zfile(files, "WAVECAR")
 
     args = [
         f"--wavecar={wavecar_file}",
