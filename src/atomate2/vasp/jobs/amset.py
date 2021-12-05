@@ -22,6 +22,7 @@ from atomate2 import SETTINGS
 from atomate2.common.files import get_zfile
 from atomate2.common.schemas.math import Vector3D
 from atomate2.utils.file_client import FileClient
+from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import HSEBSMaker, NonSCFMaker
 from atomate2.vasp.sets.base import VaspInputSetGenerator
@@ -303,6 +304,9 @@ def calculate_deformation_potentials(
     bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
     symprec_str = "N" if symprec is None else str(symprec)
 
+    # TODO: Handle hostnames properly
+    bulk_dir = strip_hostname(bulk_dir)
+    deformation_dirs = [strip_hostname(d) for d in deformation_dirs]
     args = [
         bulk_dir,
         *deformation_dirs,
@@ -383,6 +387,7 @@ def generate_wavefunction_coefficients(dir_name: str):
           file. Given as a tuple of one or two lists (one for each spin channel).
           The bands indices are zero indexed.
     """
+    dir_name = strip_hostname(dir_name)  # TODO: Handle hostnames properly.
     files = FileClient().listdir(dir_name)
     vasprun_file = get_zfile(files, "vasprun.xml")
     wavecar_file = get_zfile(files, "WAVECAR")

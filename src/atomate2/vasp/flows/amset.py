@@ -101,6 +101,7 @@ class DeformationPotentialMaker(Maker):
         bulk = self.static_deformation_maker.make(
             structure, prev_vasp_dir=prev_vasp_dir
         )
+        bulk.append_name("bulk ", prepend=True)
 
         # all deformation calculations need to be on the same k-point mesh, to achieve
         # this we override user_kpoints_settings with the desired k-points
@@ -183,7 +184,9 @@ class VaspAmsetMaker(Maker):
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=DenseUniformMaker)
     dielectric_maker: BaseVaspMaker = field(default_factory=DielectricMaker)
-    elastic_maker: ElasticMaker = field(default_factory=ElasticMaker)
+    elastic_maker: ElasticMaker = field(
+        default_factory=lambda: ElasticMaker(bulk_relax_maker=None)
+    )
     deformation_potential_maker: DeformationPotentialMaker = field(
         default_factory=DeformationPotentialMaker
     )
@@ -349,7 +352,9 @@ class HSEVaspAmsetMaker(Maker):
     doping: tuple[float, ...] = _DEFAULT_DOPING
     temperatures: tuple[float, ...] = _DEFAULT_TEMPERATURES
     amset_settings: dict = field(default_factory=dict)
-    relax_maker: BaseVaspMaker | None = field(default_factory=HSETightRelaxMaker)
+    relax_maker: BaseVaspMaker | None = field(
+        default_factory=lambda: DoubleRelaxMaker(relax_maker=HSETightRelaxMaker())
+    )
     static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=HSEDenseUniformMaker)
     deformation_potential_maker: DeformationPotentialMaker = field(
@@ -358,7 +363,9 @@ class HSEVaspAmsetMaker(Maker):
         )
     )
     dielectric_maker: BaseVaspMaker = field(default_factory=DielectricMaker)
-    elastic_maker: ElasticMaker = field(default_factory=ElasticMaker)
+    elastic_maker: ElasticMaker = field(
+        default_factory=lambda: ElasticMaker(bulk_relax_maker=None)
+    )
     amset_maker: AmsetMaker = field(default_factory=AmsetMaker)
 
     def make(
