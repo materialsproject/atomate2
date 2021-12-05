@@ -15,6 +15,7 @@ from atomate2.amset.jobs import AmsetMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.jobs.amset import (
+    DenseUniformMaker,
     HSEDenseUniformMaker,
     HSEStaticDeformationMaker,
     StaticDeformationMaker,
@@ -176,11 +177,11 @@ class VaspAmsetMaker(Maker):
     temperatures: tuple[float, ...] = _DEFAULT_TEMPERATURES
     use_hse_gap: bool = True
     amset_settings: dict = field(default_factory=dict)
-    relax_maker: BaseVaspMaker | None = field(default_factory=TightRelaxMaker)
-    static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
-    dense_uniform_maker: BaseVaspMaker = field(
+    relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
     )
+    static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+    dense_uniform_maker: BaseVaspMaker = field(default_factory=DenseUniformMaker)
     dielectric_maker: BaseVaspMaker = field(default_factory=DielectricMaker)
     elastic_maker: ElasticMaker = field(default_factory=ElasticMaker)
     deformation_potential_maker: DeformationPotentialMaker = field(
