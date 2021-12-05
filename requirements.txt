@@ -1,6 +1,6 @@
 pydantic==1.8.2
 pymatgen==2022.0.16
-custodian==2021.2.8
+custodian==2021.12.2
 monty==2021.12.1
 jobflow==0.1.5
 numpy==1.21.4
