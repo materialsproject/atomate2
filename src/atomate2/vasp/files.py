@@ -146,6 +146,7 @@ def write_vasp_input_set(
     input_set_generator: VaspInputSetGenerator,
     from_prev: bool = False,
     apply_incar_updates: bool = True,
+    clean_prev: bool = True,
     **kwargs,
 ):
     """
@@ -161,6 +162,8 @@ def write_vasp_input_set(
         Whether to initialize the input set from a previous calculation.
     apply_incar_updates : bool
         Whether to apply incar updates given in the ~/.atomate2.yaml settings file.
+    clean_prev : bool
+        Remove previous KPOINTS, INCAR, POSCAR, and POTCAR before writing the new inputs.
     **kwargs
         Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
     """
@@ -169,6 +172,12 @@ def write_vasp_input_set(
 
     if apply_incar_updates:
         vis.incar.update(SETTINGS.VASP_INCAR_UPDATES)
+
+    if clean_prev:
+        # remove previous inputs (prevents old KPOINTS file from overriding KSPACING)
+        for filename in ("POSCAR", "KPOINTS", "POTCAR", "INCAR"):
+            if Path(filename).exists():
+                Path(filename).unlink()
 
     logger.info("Writing VASP input set.")
     vis.write_input(".", **kwargs)
