@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -48,6 +47,7 @@ class AmsetMaker(Maker):
         prev_amset_dir: str | Path = None,
         wavefunction_dir: str | Path = None,
         deformation_dir: str | Path = None,
+        bandstructure_dir: str | Path = None,
     ):
         """
         Run an AMSET calculation.
@@ -63,11 +63,27 @@ class AmsetMaker(Maker):
             A directory containing a wavefunction.h5 file.
         deformation_dir : str or Path
             A directory containing a deformation.h5 file.
+        bandstructure_dir : str or Path
+            A directory containing the dense band structure file (vasprun.xml or
+            band_structure_data.json).
         """
         # copy previous inputs
         from_prev = prev_amset_dir is not None
         if prev_amset_dir is not None:
             copy_amset_files(prev_amset_dir)
+        else:
+            if bandstructure_dir is None:
+                raise ValueError(
+                    "Either prev_amset_dir or bandstructure_dir must be set"
+                )
+
+            copy_amset_files(bandstructure_dir)
+
+            if deformation_dir is not None:
+                copy_amset_files(deformation_dir)
+
+            if wavefunction_dir is not None:
+                copy_amset_files(wavefunction_dir)
 
         # write amset settings
         write_amset_settings(settings, from_prev=from_prev)
@@ -101,10 +117,8 @@ class AmsetMaker(Maker):
         # handle resubmission for non-converged calculations
         replace = None
         if self.resubmit and not converged:
-            new_settings = deepcopy(settings)
-            new_settings["interpolation_factor"] += 5
             replace = self.make(
-                new_settings,
+                {"interpolation_factor": settings["interpolation_factor"] + 5},
                 prev_amset_dir=task_doc.dir_name,
             )
 

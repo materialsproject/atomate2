@@ -285,12 +285,12 @@ class VaspAmsetMaker(Maker):
         # set doping and temperature but be careful not to override user selections
         settings = {
             "doping": self.doping,
-            "temperature": self.temperatures,
-            "phonon_frequency": phonon_frequency.output["frequency"],
+            "temperatures": self.temperatures,
+            "pop_frequency": phonon_frequency.output["frequency"],
             "elastic_constant": elastic.output.elastic_tensor.raw,
             "high_frequency_dielectric": high_freq_dielectric,
             "static_dielectric": static_dielectric.output,
-            "deformation": "deformation.h5",
+            "deformation_potential": "deformation.h5",
         }
 
         if self.use_hse_gap and "bandgap" not in self.amset_settings:
@@ -310,6 +310,7 @@ class VaspAmsetMaker(Maker):
             settings,
             wavefunction_dir=wavefunction.output["dir_name"],
             deformation_dir=deformation.output["dir_name"],
+            bandstructure_dir=dense_bs.output.dir_name,
         )
         jobs.append(amset)
 
@@ -463,12 +464,12 @@ class HSEVaspAmsetMaker(Maker):
         # set doping and temperature but be careful not to override user selections
         settings = {
             "doping": self.doping,
-            "temperature": self.temperatures,
-            "phonon_frequency": phonon_frequency.output["frequency"],
+            "temperatures": self.temperatures,
+            "pop_frequency": phonon_frequency.output["frequency"],
             "elastic_constant": elastic.output.elastic_tensor.raw,
             "high_frequency_dielectric": high_freq_dielectric,
             "static_dielectric": static_dielectric.output,
-            "deformation": "deformation.h5",
+            "deformation_potential": "deformation.h5",
         }
 
         # apply the user settings
@@ -479,6 +480,7 @@ class HSEVaspAmsetMaker(Maker):
             settings,
             wavefunction_dir=wavefunction.output["dir_name"],
             deformation_dir=deformation.output["dir_name"],
+            bandstructure_dir=dense_bs.output.dir_name,
         )
         jobs.append(amset)
 

@@ -46,13 +46,10 @@ def copy_amset_files(
     logger.info(f"Copying AMSET inputs from {src_dir}")
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
-    # find required files
-    required_files = [get_zfile(directory_listing, r) for r in ("settings.yaml",)]
-
     # find optional files
-    optional_files = []
-    found_vasprun = False
+    files = []
     for file in (
+        "settings.yaml",
         "vasprun.xml",
         "band_structure_data.json",
         "wavefunction.h5",
@@ -61,26 +58,17 @@ def copy_amset_files(
     ):
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
-            optional_files.append(found_file)
-
-            if "vasprun" in file or "band_structure_data" in file:
-                found_vasprun = True
-
-    # check at least one of vasprun or band_structure_data is found
-    if not found_vasprun:
-        raise FileNotFoundError(
-            "Could not find vasprun.xml or band_structure_data.json file to copy."
-        )
+            files.append(found_file)
 
     copy_files(
         src_dir,
         src_host=src_host,
-        include_files=required_files + optional_files,
+        include_files=files,
         file_client=file_client,
     )
 
     gunzip_files(
-        include_files=required_files + optional_files,
+        include_files=files,
         allow_missing=True,
         file_client=file_client,
     )
