@@ -77,7 +77,7 @@ class DenseUniformMaker(NonSCFMaker):
     name: str = "dense uniform"
     input_set_generator: VaspInputSetGenerator = field(
         default_factory=lambda: NonSCFSetGenerator(
-            mode="uniform", reciprocal_density=1000
+            mode="uniform", reciprocal_density=1000, user_incar_settings={"LWAVE": True}
         )
     )
 
@@ -200,6 +200,7 @@ class HSEDenseUniformMaker(HSEBSMaker):
         default_factory=lambda: HSEBSSetGenerator(
             mode="uniform_dense",
             zero_weighted_reciprocal_density=1000,
+            user_incar_settings={"LWAVE": True},
         )
     )
 
@@ -388,17 +389,22 @@ def generate_wavefunction_coefficients(dir_name: str):
           The bands indices are zero indexed.
     """
     dir_name = strip_hostname(dir_name)  # TODO: Handle hostnames properly.
-    files = FileClient().listdir(dir_name)
+    fc = FileClient()
+    files = fc.listdir(dir_name)
     vasprun_file = Path(dir_name) / get_zfile(files, "vasprun.xml")
     wavecar_file = Path(dir_name) / get_zfile(files, "WAVECAR")
 
-    args = [
-        f"--wavecar={wavecar_file}",
-        f"--vasprun={vasprun_file}",
-    ]
+    # wavecar can't be gzipped, so copy it to current directory and unzip it
+    fc.copy(wavecar_file, wavecar_file.name)
+    fc.gunzip(wavecar_file.name)
+
+    args = ["--wavecar=WAVECAR", f"--vasprun={vasprun_file}"]
     runner = CliRunner()
     result = runner.invoke(wave, args, catch_exceptions=False)
     ibands = _extract_ibands(result.output)
+
+    # remove WAVECAR from current directory
+    fc.remove("WAVECAR")
 
     return {"dir_name": Path.cwd(), "log": result.output, "ibands": ibands}
 
