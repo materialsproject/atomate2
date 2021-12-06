@@ -257,7 +257,7 @@ def run_amset_deformations(
         statics.append(static_job)
 
         # extract the outputs we want (only the dir name)
-        outputs.append(static_job.dir_name)
+        outputs.append(static_job.output.dir_name)
 
     static_flow = Flow(statics, outputs)
     return Response(replace=static_flow)
@@ -352,16 +352,15 @@ def calculate_polar_phonon_frequency(
         - "frequencies" (list[float]): A list of all phonon frequencies.
         - "weights" (list[float]): A list of weights for the frequencies.
     """
-    frequencies = np.array(frequencies)
-    eigenvectors = np.array(eigenvectors)
-    born_effective_charges = np.array(born_effective_charges)
-
     effective_frequency, weights = calculate_effective_phonon_frequency(
-        frequencies, eigenvectors, born_effective_charges, structure
+        np.array(frequencies),
+        np.array(eigenvectors),
+        np.array(born_effective_charges),
+        structure,
     )
     return {
         "frequency": effective_frequency,
-        "weights": weights,
+        "weights": weights.tolist(),
         "frequencies": frequencies,
     }
 

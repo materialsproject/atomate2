@@ -245,7 +245,7 @@ class VaspAmsetMaker(Maker):
         phonon_frequency = calculate_polar_phonon_frequency(
             dielectric.output.structure,
             dielectric.output.calcs_reversed[0].output.normalmode_frequencies,
-            dielectric.output.calcs_reversed[0].output.normalmode_eigenvectors,
+            dielectric.output.calcs_reversed[0].output.normalmode_eigenvecs,
             dielectric.output.calcs_reversed[0].output.outcar.born,
         )
 
@@ -263,8 +263,11 @@ class VaspAmsetMaker(Maker):
         # note: the naming of dielectric constants in VASP and pymatgen is wrong
         high_freq_dielectric = dielectric.output.calcs_reversed[0].output.epsilon_static
         static_dielectric = job(np.sum)(
-            dielectric.output.calcs_reversed[0].output.epsilon_ionic,
-            high_freq_dielectric,
+            [
+                dielectric.output.calcs_reversed[0].output.epsilon_ionic,
+                high_freq_dielectric,
+            ],
+            axis=0,
         )
 
         jobs += [
@@ -420,7 +423,7 @@ class HSEVaspAmsetMaker(Maker):
         phonon_frequency = calculate_polar_phonon_frequency(
             dielectric.output.structure,
             dielectric.output.calcs_reversed[0].output.normalmode_frequencies,
-            dielectric.output.calcs_reversed[0].output.normalmode_eigenvectors,
+            dielectric.output.calcs_reversed[0].output.normalmode_eigenvecs,
             dielectric.output.calcs_reversed[0].output.outcar.born,
         )
 
@@ -438,8 +441,11 @@ class HSEVaspAmsetMaker(Maker):
         # note: the naming of dielectric constants in VASP and pymatgen is wrong
         high_freq_dielectric = dielectric.output.calcs_reversed[0].output.epsilon_static
         static_dielectric = job(np.sum)(
-            dielectric.output.calcs_reversed[0].output.epsilon_ionic,
-            high_freq_dielectric,
+            [
+                dielectric.output.calcs_reversed[0].output.epsilon_ionic,
+                high_freq_dielectric,
+            ],
+            axis=0,
         )
 
         jobs += [
