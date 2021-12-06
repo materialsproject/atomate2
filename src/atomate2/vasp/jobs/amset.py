@@ -431,12 +431,12 @@ def _extract_ibands(log: str) -> tuple[list[int], ...]:
     for i in range(len(result_splits)):
         if "Including bands" in result_splits[i]:
             # non-spin polarised result system
-            min_band, max_band = result_splits[i].split(" ")[-1].split("-")
+            min_band, max_band = result_splits[i].split(" ")[-1].split("—")
             return (list(range(int(min_band) - 1, int(max_band))),)
 
         if "Including:" in result_splits[i]:
-            amin_band, amax_band = result_splits[i + 1].split(" ")[-1].split("-")
-            bmin_band, bmax_band = result_splits[i + 2].split(" ")[-1].split("-")
+            amin_band, amax_band = result_splits[i + 1].split(" ")[-1].split("—")
+            bmin_band, bmax_band = result_splits[i + 2].split(" ")[-1].split("—")
             aibands = list(range(int(amin_band) - 1, int(amax_band)))
             bibands = list(range(int(bmin_band) - 1, int(bmax_band)))
 
