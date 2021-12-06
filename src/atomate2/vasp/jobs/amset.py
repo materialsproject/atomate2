@@ -319,7 +319,7 @@ def calculate_deformation_potentials(
 
     # TODO: Store some information about the deformation potentials, e.g., values
     #   at CBM and VBM?
-    return {"dir_name": Path.cwd(), "log": result.output}
+    return {"dir_name": str(Path.cwd()), "log": result.output}
 
 
 @job
