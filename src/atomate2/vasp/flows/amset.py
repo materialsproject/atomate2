@@ -128,7 +128,7 @@ class DeformationPotentialMaker(Maker):
 
         return Flow(
             jobs=[bulk, vasp_deformation_calcs, deformation_potentials],
-            output=deformation_potentials.output["dir_name"],
+            output=deformation_potentials.output,
             name=self.name,
         )
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -97,4 +98,14 @@ class AmsetMaker(Maker):
         # gzip folder
         gzip_dir(".")
 
-        return Response(output=task_doc)
+        # handle resubmission for non-converged calculations
+        replace = None
+        if self.resubmit and not converged:
+            new_settings = deepcopy(settings)
+            new_settings["interpolation_factor"] += 5
+            replace = self.make(
+                new_settings,
+                prev_amset_dir=task_doc.dir_name,
+            )
+
+        return Response(output=task_doc, replace=replace)
