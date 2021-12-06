@@ -14,29 +14,10 @@ logger = logging.getLogger(__name__)
 _CONVERGENCE_PROPERTIES = ("mobility.overall", "seebeck")
 
 
-def run_amset(**kwargs):
-    """
-    Run amset in the current directory.
-
-    Parameters
-    ----------
-    **kwargs
-        Keyword arguments that will get passed to ``Runner.from_directory``.
-
-    Returns
-    -------
-    AmsetData, dict
-        A tuple of the amset data object and the usage statistics.
-    """
-    # warnings.simplefilter("ignore", MantissaNoDotYAML1_1Warning)
-    #
-    # if "directory" not in kwargs:
-    #     kwargs["directory"] = "."
-    # runner = Runner.from_directory(**kwargs)
-    # amset_data, usage_stats = runner.run(return_usage_stats=True)
-    # dumpfn(usage_stats, "timing.json.gz")
-    # return amset_data, usage_stats
-    #
+def run_amset():
+    """Run amset in the current directory."""
+    # Run AMSET using the command line as calling from python can cause issues
+    # with multiprocessing
     with open("std_out.log", "w") as f_std, open("std_err.log", "w") as f_err:
         subprocess.call(["amset", "run"], stdout=f_std, stderr=f_err)
 

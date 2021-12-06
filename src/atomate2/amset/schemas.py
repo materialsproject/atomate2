@@ -15,6 +15,7 @@ from atomate2 import __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
+from atomate2.utils.path import get_uri
 
 try:
     import amset
@@ -199,7 +200,7 @@ class AmsetTaskDocument(StructureMetadata):
         doc = cls.from_structure(
             structure=_get_structure(),
             include_structure=True,
-            dir_name=dir_name,
+            dir_name=get_uri(dir_name),
             completed_at=datetime_str(),
             input=settings,
             transport=transport,
