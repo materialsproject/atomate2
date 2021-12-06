@@ -40,7 +40,7 @@ class AmsetMaker(Maker):
     resubmit: bool = False
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=AmsetTaskDocument)
+    @job(output_schema=AmsetTaskDocument, data=["transport", "mesh"])
     def make(
         self,
         settings: dict,
@@ -109,7 +109,6 @@ class AmsetMaker(Maker):
         task_doc = AmsetTaskDocument.from_directory(
             Path.cwd(), **self.task_document_kwargs
         )
-        task_doc.task_label = self.name
         task_doc.converged = converged
 
         # gzip folder
