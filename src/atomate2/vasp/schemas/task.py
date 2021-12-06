@@ -200,8 +200,8 @@ class OutputSummary(BaseModel):
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
-            forces=calc_doc.output.ionic_steps[-1]["forces"],
-            stress=calc_doc.output.ionic_steps[-1]["stress"],
+            forces=calc_doc.output.ionic_steps[-1].get("forces", None),
+            stress=calc_doc.output.ionic_steps[-1].get("stress", None),
         )
 
 

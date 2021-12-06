@@ -406,7 +406,7 @@ def generate_wavefunction_coefficients(dir_name: str):
     # remove WAVECAR from current directory
     fc.remove("WAVECAR")
 
-    return {"dir_name": Path.cwd(), "log": result.output, "ibands": ibands}
+    return {"dir_name": str(Path.cwd()), "log": result.output, "ibands": ibands}
 
 
 def _extract_ibands(log: str) -> tuple[list[int], ...]:
