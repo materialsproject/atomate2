@@ -3,13 +3,10 @@
 from __future__ import annotations
 
 import logging
-import warnings
+import subprocess
 
 import numpy as np
-from amset.core.run import Runner
-from monty.serialization import dumpfn
 from pydash import get
-from ruamel.yaml.error import MantissaNoDotYAML1_1Warning
 
 __all__ = ["run_amset", "check_converged"]
 
@@ -31,15 +28,17 @@ def run_amset(**kwargs):
     AmsetData, dict
         A tuple of the amset data object and the usage statistics.
     """
-    warnings.simplefilter("ignore", MantissaNoDotYAML1_1Warning)
-
-    if "directory" not in kwargs:
-        kwargs["directory"] = "."
-    runner = Runner.from_directory(**kwargs)
-
-    amset_data, usage_stats = runner.run(return_usage_stats=True)
-    dumpfn(usage_stats, "timing.json.gz")
-    return amset_data, usage_stats
+    # warnings.simplefilter("ignore", MantissaNoDotYAML1_1Warning)
+    #
+    # if "directory" not in kwargs:
+    #     kwargs["directory"] = "."
+    # runner = Runner.from_directory(**kwargs)
+    # amset_data, usage_stats = runner.run(return_usage_stats=True)
+    # dumpfn(usage_stats, "timing.json.gz")
+    # return amset_data, usage_stats
+    #
+    with open("std_out.log", "w") as f_std, open("std_err.log", "w") as f_err:
+        subprocess.call(["amset", "run"], stdout=f_std, stderr=f_err)
 
 
 def check_converged(
