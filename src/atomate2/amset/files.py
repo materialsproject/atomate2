@@ -110,6 +110,7 @@ def write_amset_settings(settings_updates: dict, from_prev: bool = False):
     else:
         settings = settings_updates
 
-    settings.update(SETTINGS.AMSET_SETTINGS_UPDATE)
+    if SETTINGS.AMSET_SETTINGS_UPDATE is not None:
+        settings.update(SETTINGS.AMSET_SETTINGS_UPDATE)
 
     dumpfn(settings, "settings.yaml")
