@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from monty.serialization import dumpfn, loadfn
+from monty.serialization import loadfn
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
@@ -92,6 +92,8 @@ def write_amset_settings(settings_updates: dict, from_prev: bool = False):
         Whether apply the settings on top of an existing settings.yaml file in the
         current directory.
     """
+    from amset.io import write_settings
+
     if from_prev:
         settings = loadfn("settings.yaml")
         settings.update(settings_updates)
@@ -101,4 +103,4 @@ def write_amset_settings(settings_updates: dict, from_prev: bool = False):
     if SETTINGS.AMSET_SETTINGS_UPDATE is not None:
         settings.update(SETTINGS.AMSET_SETTINGS_UPDATE)
 
-    dumpfn(settings, "settings.yaml")
+    write_settings(settings, "settings.yaml")
