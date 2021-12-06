@@ -90,7 +90,7 @@ class AmsetMaker(Maker):
 
         # run amset
         logger.info("Running AMSET")
-        transport_data = run_amset()[0].transport
+        run_amset()
 
         converged = None
         if self.resubmit:
@@ -99,6 +99,7 @@ class AmsetMaker(Maker):
                 logger.info("No previous transport calculations found.")
                 converged = False
             else:
+                transport_data = loadfn(next(Path().glob("transport_*.json")))
                 converged = check_converged(transport_data, loadfn(prev_transport_file))
 
         if "include_mesh" not in self.task_document_kwargs:
