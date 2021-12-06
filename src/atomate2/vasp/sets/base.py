@@ -727,7 +727,7 @@ class VaspInputSetGenerator(InputSetGenerator):
                 style=Kpoints.supported_modes.Reciprocal,
                 num_kpts=len(mesh),
                 kpts=[i[0] for i in mesh],
-                kpts_weights=[i[1] for i in mesh],
+                kpts_weights=[0 for i in mesh],
             )
 
         added_kpoints = None
@@ -738,7 +738,7 @@ class VaspInputSetGenerator(InputSetGenerator):
                 num_kpts=len(kconfig.get("added_kpoints")),
                 kpts=kconfig.get("added_kpoints"),
                 labels=["user-defined"] * len(kconfig.get("added_kpoints")),
-                kpts_weights=[1] * len(kconfig.get("added_kpoints")),
+                kpts_weights=[0] * len(kconfig.get("added_kpoints")),
             )
 
         if base_kpoints and not (added_kpoints or zero_weighted_kpoints):
