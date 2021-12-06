@@ -246,7 +246,7 @@ class VaspAmsetMaker(Maker):
             dielectric.output.structure,
             dielectric.output.calcs_reversed[0].output.normalmode_frequencies,
             dielectric.output.calcs_reversed[0].output.normalmode_eigenvecs,
-            dielectric.output.calcs_reversed[0].output.outcar.born,
+            dielectric.output.calcs_reversed[0].output.outcar["born"],
         )
 
         # wavefunction coefficients
@@ -424,7 +424,7 @@ class HSEVaspAmsetMaker(Maker):
             dielectric.output.structure,
             dielectric.output.calcs_reversed[0].output.normalmode_frequencies,
             dielectric.output.calcs_reversed[0].output.normalmode_eigenvecs,
-            dielectric.output.calcs_reversed[0].output.outcar.born,
+            dielectric.output.calcs_reversed[0].output.outcar["born"],
         )
 
         # wavefunction coefficients
