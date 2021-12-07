@@ -12,6 +12,8 @@ from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
+from pymatgen.electronic_structure.bandstructure import BandStructure
+from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.vasp import (
     BSVasprun,
     Locpot,
@@ -509,6 +511,8 @@ class Calculation(BaseModel):
         parse_bandstructure: Union[str, bool] = False,
         average_locpot: bool = True,
         run_bader: bool = SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS,
+        strip_bandstructure_projections: bool = False,
+        strip_dos_projections: bool = False,
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
@@ -556,6 +560,12 @@ class Calculation(BaseModel):
             Whether to store the average of the LOCPOT along the crystal axes.
         run_bader
             Whether to run bader on the charge density.
+        strip_dos_projections : bool
+            Whether to strip the element and site projections from the density of states.
+            This can help reduce the size of DOS objects in systems with many atoms.
+        strip_bandstructure_projections : bool
+            Whether to strip the element and site projections from the band structure.
+            This can help reduce the size of DOS objects in systems with many atoms.
         store_volumetric_data
             Which volumetric files to store.
         vasprun_kwargs
@@ -583,10 +593,14 @@ class Calculation(BaseModel):
 
         dos = _parse_dos(parse_dos, vasprun)
         if dos is not None:
+            if strip_dos_projections:
+                dos = Dos(dos.efermi, dos.energies, dos.densities)
             vasp_objects[VaspObject.DOS] = dos  # type: ignore
 
         bandstructure = _parse_bandstructure(parse_bandstructure, vasprun)
         if bandstructure is not None:
+            if strip_bandstructure_projections:
+                bandstructure.projections = {}
             vasp_objects[VaspObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         bader = None
@@ -692,7 +706,7 @@ def _get_volumetric_data(
     return volumetric_data
 
 
-def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dict]:
+def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dos]:
     """Parse DOS. See Calculation.from_vasp_files for supported arguments."""
     nsw = vasprun.incar.get("NSW", 0)
     dos = None
@@ -703,7 +717,7 @@ def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dict]
 
 def _parse_bandstructure(
     parse_mode: Union[str, bool], vasprun: Vasprun
-) -> Optional[Dict[str, Any]]:
+) -> Optional[BandStructure]:
     """Parse band structure. See Calculation.from_vasp_files for supported arguments."""
     vasprun_file = vasprun.filename
 
