@@ -292,6 +292,7 @@ class VaspAmsetMaker(Maker):
             "static_dielectric": static_dielectric.output,
             "deformation_potential": "deformation.h5",
             "print_log": False,
+            "interpolation_factor": 5,
         }
 
         if self.use_hse_gap and "bandgap" not in self.amset_settings:
@@ -472,6 +473,7 @@ class HSEVaspAmsetMaker(Maker):
             "static_dielectric": static_dielectric.output,
             "deformation_potential": "deformation.h5",
             "print_log": False,
+            "interpolation_factor": 5,
         }
 
         # apply the user settings

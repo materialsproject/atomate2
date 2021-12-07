@@ -118,7 +118,7 @@ class AmsetMaker(Maker):
         replace = None
         if self.resubmit and not converged:
             replace = self.make(
-                {"interpolation_factor": settings["interpolation_factor"] + 5},
+                {"interpolation_factor": settings.get("interpolation_factor", 10) + 5},
                 prev_amset_dir=task_doc.dir_name,
             )
 
