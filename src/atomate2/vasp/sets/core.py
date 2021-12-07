@@ -198,7 +198,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
     """
 
     mode: str = "line"
-    dedos: float = 0.005
+    dedos: float = 0.02
     reciprocal_density: float = 100
     line_density: float = 20
     optics: bool = False
@@ -512,7 +512,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     """
 
     mode: str = "gap"
-    dedos: float = 0.005
+    dedos: float = 0.02
     reciprocal_density: float = 50
     line_density: float = 20
     zero_weighted_reciprocal_density: float = 100
@@ -714,7 +714,6 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
         return {
             "NSW": 1,
             "ISMEAR": 0,
-            "LORBIT": 11,
             "IBRION": 6,
             "ISIF": 2,
             "ENCUT": 700,
@@ -722,6 +721,8 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
             "LAECHG": False,
             "LREAL": False,
             "LCHARG": False,
+            "LVTOT": False,
+            "LVHAR": False,
             "PREC": "Accurate",
             "KSPACING": None,
             "PHON_NTLIST": len(self.temperatures),
