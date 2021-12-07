@@ -196,7 +196,7 @@ class VaspAmsetMaker(Maker):
             input_set_generator=HSEBSSetGenerator(user_incar_settings={"EDIFF": 1e-5})
         )
     )
-    amset_maker: AmsetMaker = field(default_factory=AmsetMaker)
+    amset_maker: AmsetMaker = field(default_factory=lambda: AmsetMaker(resubmit=True))
 
     def make(
         self,
@@ -376,7 +376,7 @@ class HSEVaspAmsetMaker(Maker):
     elastic_maker: ElasticMaker = field(
         default_factory=lambda: ElasticMaker(bulk_relax_maker=None)
     )
-    amset_maker: AmsetMaker = field(default_factory=AmsetMaker)
+    amset_maker: AmsetMaker = field(default_factory=lambda: AmsetMaker(resubmit=True))
 
     def make(
         self,
