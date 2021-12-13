@@ -44,7 +44,7 @@ if __name__ == "__main__":
             "docs": [
                 "sphinx==4.3.1",
                 "numpydoc==1.1.0",
-                "m2r2==0.3.1",
+                "m2r2==0.3.2",
                 "mistune==0.8.4",
                 "ipython==7.30.1",
                 "FireWorks==1.9.7",
