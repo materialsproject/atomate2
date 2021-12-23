@@ -88,6 +88,7 @@ VDW:
   optB88-vdW:
     AGGAC: 0.0
     GGA: BO
+    LASPH: true
     LUSE_VDW: true
     PARAM1: 0.1833333333
     PARAM2: 0.22
@@ -117,5 +118,6 @@ VDW:
     Zab_vdW: -1.8867
   BEEF-vdW:
     GGA: BF
-    Zab_vdW: -1.8867
+    LASPH: true
     LUSE_VDW: true
+    Zab_vdW: -1.8867
