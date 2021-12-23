@@ -663,7 +663,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         base_kpoints = None
         if kconfig.get("line_density"):
             # handle line density generation
-            kpath = HighSymmKpath(structure)
+            kpath = HighSymmKpath(structure, **kconfig.get("kpath_kwargs", {}))
             frac_k_points, k_points_labels = kpath.get_kpoints(
                 line_density=kconfig["line_density"], coords_are_cartesian=False
             )
