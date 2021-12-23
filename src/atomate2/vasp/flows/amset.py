@@ -293,6 +293,7 @@ class VaspAmsetMaker(Maker):
             "deformation_potential": "deformation.h5",
             "print_log": False,
             "interpolation_factor": 5,
+            "free_carrier_screening": True,
         }
 
         if self.use_hse_gap and "bandgap" not in self.amset_settings:
@@ -474,6 +475,7 @@ class HSEVaspAmsetMaker(Maker):
             "deformation_potential": "deformation.h5",
             "print_log": False,
             "interpolation_factor": 5,
+            "free_carrier_screening": True,
         }
 
         # apply the user settings
