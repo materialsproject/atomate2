@@ -1,4 +1,4 @@
-pydantic==1.8.2
+pydantic==1.9.0
 pymatgen==2022.0.17
 custodian==2021.12.2
 monty==2021.12.1
