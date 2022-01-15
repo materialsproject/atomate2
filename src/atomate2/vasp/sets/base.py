@@ -500,6 +500,11 @@ class VaspInputSetGenerator(InputSetGenerator):
         ispin = None
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
+
+            if vasprun.efermi is None:
+                # VASP doesn't output efermi in vasprun if IBRION = 1
+                vasprun.efermi = outcar.efermi
+
             bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
             prev_structure = vasprun.final_structure
