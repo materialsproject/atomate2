@@ -617,10 +617,13 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             "ALGO": "All",
             "GGA": "PE",
             "HFSCREEN": 0.2,
+            "PRECFOCK": "Fast",
             "LHFCALC": True,
             "LCHARG": False,
             "NELMIN": 5,
             "KSPACING": None,
+            "LORBIT": 11,
+            "LREAL": False,
         }
 
         if self.mode == "uniform" and len(self.added_kpoints) == 0:
