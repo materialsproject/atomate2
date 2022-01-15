@@ -13,6 +13,7 @@ from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 from pymatgen.core import Structure
+from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
 from pymatgen.io.vasp.sets import (
     BadInputSetWarning,
@@ -515,6 +516,13 @@ class VaspInputSetGenerator(InputSetGenerator):
 
     def _get_structure(self, structure):
         """Get the standardized structure."""
+        for site in structure:
+            if "magmom" in site.properties and isinstance(
+                site.properties["magmom"], Magmom
+            ):
+                # required to fix bug in get_valid_magmom_struct
+                site.properties["magmom"] = list(site.properties["magmom"])
+
         if self.sort_structure:
             structure = structure.get_sorted_structure()
 
