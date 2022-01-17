@@ -1,7 +1,8 @@
-from atomate2.common.schemas.molecule import MoleculeMetadata
 from pymatgen.core import Molecule
 from pymatgen.core.composition import Composition
 from pymatgen.core.periodic_table import Element
+
+from atomate2.common.schemas.molecule import MoleculeMetadata
 
 molecule = Molecule(
     species=["Mg", "O"],

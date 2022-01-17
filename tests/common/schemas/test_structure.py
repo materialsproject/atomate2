@@ -1,8 +1,9 @@
-from atomate2.common.schemas.structure import StructureMetadata
 from pymatgen.core import Structure
 from pymatgen.core.composition import Composition
 from pymatgen.core.periodic_table import Element
 from pytest import approx
+
+from atomate2.common.schemas.structure import StructureMetadata
 
 structure = Structure(
     lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
