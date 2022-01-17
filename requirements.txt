@@ -1,7 +1,7 @@
 pydantic==1.9.0
 pymatgen==2022.0.17
 custodian==2021.12.2
-monty==2021.12.1
+monty==2022.1.12.1
 jobflow==0.1.6
 numpy==1.21.5
 click==8.0.3
