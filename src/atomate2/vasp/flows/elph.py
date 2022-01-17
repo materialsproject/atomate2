@@ -105,12 +105,12 @@ class ElectronPhononMaker(Maker):
                 input_set_generator=StaticSetGenerator(
                     auto_ispin=True,
                     user_incar_settings={"KSPACING": None, "EDIFF": 1e-5},
-                    user_kpoints_settings={"reciprocal_density": 100},
+                    user_kpoints_settings={"reciprocal_density": 50},
                 ),
             ),
             bs_maker=NonSCFMaker(
                 input_set_generator=NonSCFSetGenerator(
-                    user_kpoints_settings={"reciprocal_density": 500},  # dense BS mesh
+                    reciprocal_density=100,  # dense BS mesh
                 ),
                 task_document_kwargs={
                     "strip_bandstructure_projections": True,
@@ -258,7 +258,7 @@ class HSEElectronPhononMaker(ElectronPhononMaker):
                 input_set_generator=HSEStaticSetGenerator(
                     auto_ispin=True,
                     user_incar_settings={"KSPACING": None, "EDIFF": 1e-5},
-                    user_kpoints_settings={"reciprocal_density": 50},
+                    user_kpoints_settings={"reciprocal_density": 64},
                 )
             ),
             bs_maker=HSEBSMaker(

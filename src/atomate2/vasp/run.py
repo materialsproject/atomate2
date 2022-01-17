@@ -146,7 +146,7 @@ def run_vasp(
         jobs = VaspJob.double_relaxation_run(split_vasp_cmd, **vasp_job_kwargs)
     elif job_type == JobType.METAGGA_OPT:
         jobs = VaspJob.metagga_opt_run(split_vasp_cmd, **vasp_job_kwargs)
-    elif job_type == JobType.METAGGA_OPT:
+    elif job_type == JobType.FULL_OPT:
         jobs = VaspJob.full_opt_run(split_vasp_cmd, **vasp_job_kwargs)
     else:
         raise ValueError(f"Unsupported job type: {job_type}")

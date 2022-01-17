@@ -42,14 +42,14 @@ if __name__ == "__main__":
             ],
             "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
-                "sphinx==4.3.2",
+                "sphinx==4.4.0",
                 "numpydoc==1.1.0",
                 "m2r2==0.3.2",
                 "mistune==0.8.4",
-                "ipython==7.30.1",
+                "ipython==8.0.0",
                 "FireWorks==1.9.8",
-                "pydata-sphinx-theme==0.7.2",
-                "autodoc_pydantic==1.5.1",
+                "pydata-sphinx-theme==0.8.0",
+                "autodoc_pydantic==1.6.0",
                 "sphinx_panels==0.6.0",
             ],
             "tests": [
