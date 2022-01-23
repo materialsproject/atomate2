@@ -93,7 +93,7 @@ class ElectronPhononMaker(Maker):
     temperatures: Tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
     min_supercell_length: float = DEFAULT_MIN_SUPERCELL_LENGTH
     relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(TightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker(relax_maker1=TightRelaxMaker())
     )
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     elph_displacement_maker: SupercellElectronPhononDisplacedStructureMaker = field(
