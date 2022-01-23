@@ -45,8 +45,8 @@ class DoubleRelaxMaker(Maker):
     relax_maker1 : .BaseVaspMaker
         Maker to use to generate the first relaxation.
     relax_maker2 : .BaseVaspMaker
-        Maker to use to generate the second relaxation. If nnot set,
-        then relax_maker2 == relax_maker1.
+        Maker to use to generate the second relaxation. If not set,
+        then relax_maker2 = relax_maker1.
     """
 
     name: str = "double relax"
