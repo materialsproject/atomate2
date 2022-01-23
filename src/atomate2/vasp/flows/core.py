@@ -42,12 +42,16 @@ class DoubleRelaxMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    relax_maker : .BaseVaspMaker
-        Maker to use to generate the relaxations.
+    relax_maker1 : .BaseVaspMaker
+        Maker to use to generate the first relaxation.
+    relax_maker2 : .BaseVaspMaker
+        Maker to use to generate the second relaxation. If nnot set,
+        then relax_maker2 == relax_maker1.
     """
 
     name: str = "double relax"
-    relax_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
+    relax_maker1: BaseVaspMaker = field(default_factory=RelaxMaker)
+    relax_maker2: BaseVaspMaker = relax_maker1
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -65,10 +69,10 @@ class DoubleRelaxMaker(Maker):
         Flow
             A flow containing two relaxations.
         """
-        relax1 = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        relax1 = self.relax_maker1.make(structure, prev_vasp_dir=prev_vasp_dir)
         relax1.name += " 1"
 
-        relax2 = self.relax_maker.make(
+        relax2 = self.relax_maker2.make(
             relax1.output.structure, prev_vasp_dir=relax1.output.dir_name
         )
         relax2.name += " 2"

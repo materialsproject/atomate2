@@ -1,5 +1,8 @@
 import pytest
 
+from atomate2.vasp.jobs.core import RelaxMaker
+from atomate2.vasp.sets.core import RelaxSetGenerator
+
 
 def test_double_relax(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
@@ -15,8 +18,8 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
-        "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
+        "relax 1": {"incar_settings": ["NSW", "ISMEAR", "LREAL"]},
+        "relax 2": {"incar_settings": ["NSW", "ISMEAR", "LREAL"]},
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
@@ -35,6 +38,18 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == pytest.approx(-10.85083141)
     assert output2.output.energy == pytest.approx(-10.84177648)
+
+    # Now try running with a different relax2 maker
+    flow = DoubleRelaxMaker(
+        relax_maker2=RelaxMaker(
+            input_set_generator=RelaxSetGenerator(user_incar_settings={"LREAL": False})
+        )
+    ).make(si_structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    output1 = responses[flow.jobs[0].uuid][1].output
+    output2 = responses[flow.jobs[1].uuid][1].output
+    assert output1.input.parameters["LREAL"] == "Auto"
+    assert output2.input.parameters["LREAL"] == False
 
 
 def test_band_structure(mock_vasp, clean_dir, si_structure):
