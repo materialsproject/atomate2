@@ -13,6 +13,7 @@ from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 from pymatgen.core import Structure
+from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
 from pymatgen.io.vasp.sets import (
     BadInputSetWarning,
@@ -499,6 +500,11 @@ class VaspInputSetGenerator(InputSetGenerator):
         ispin = None
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
+
+            if vasprun.efermi is None:
+                # VASP doesn't output efermi in vasprun if IBRION = 1
+                vasprun.efermi = outcar.efermi
+
             bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
             prev_structure = vasprun.final_structure
@@ -515,6 +521,13 @@ class VaspInputSetGenerator(InputSetGenerator):
 
     def _get_structure(self, structure):
         """Get the standardized structure."""
+        for site in structure:
+            if "magmom" in site.properties and isinstance(
+                site.properties["magmom"], Magmom
+            ):
+                # required to fix bug in get_valid_magmom_struct
+                site.properties["magmom"] = list(site.properties["magmom"])
+
         if self.sort_structure:
             structure = structure.get_sorted_structure()
 
@@ -663,7 +676,7 @@ class VaspInputSetGenerator(InputSetGenerator):
         base_kpoints = None
         if kconfig.get("line_density"):
             # handle line density generation
-            kpath = HighSymmKpath(structure)
+            kpath = HighSymmKpath(structure, **kconfig.get("kpath_kwargs", {}))
             frac_k_points, k_points_labels = kpath.get_kpoints(
                 line_density=kconfig["line_density"], coords_are_cartesian=False
             )

@@ -28,7 +28,7 @@ def get_uri(dir_name: str | Path) -> str:
     hostname = socket.gethostname()
     try:
         hostname = socket.gethostbyaddr(hostname)[0]
-    except socket.gaierror:
+    except (socket.gaierror, socket.herror):
         pass
     return f"{hostname}:{fullpath}"
 

@@ -107,7 +107,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
             A previous VASP calculation directory to copy output files from.
         """
         dim = self.min_supercell_length / np.array(structure.lattice.abc)
-        scaling_matrix = np.diag(dim.round().astype(int)).tolist()
+        scaling_matrix = np.diag(np.ceil(dim).astype(int)).tolist()
         if self.transformation_params is None:
             # only overwrite transformation params if it is not set
             self.transformation_params = ({"scaling_matrix": scaling_matrix},)
