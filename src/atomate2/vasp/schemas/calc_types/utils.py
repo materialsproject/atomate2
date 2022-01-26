@@ -1,10 +1,9 @@
 """Module to define various calculation types as Enums for VASP."""
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Literal
 
 from monty.serialization import loadfn
-from typing_extensions import Literal
 
 from atomate2.vasp.schemas.calc_types.enums import CalcType, RunType, TaskType
 

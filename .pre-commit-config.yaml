@@ -42,7 +42,7 @@ repos:
     args:
     - --max-line-length=125
     - --extend-ignore=E203,W503,F401,RST21
-    - --min-python-version=3.6.0
+    - --min-python-version=3.8.0
     - --docstring-convention=numpy
     - --rst-roles=class,func,ref,obj
     language_version: python3
