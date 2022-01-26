@@ -5,7 +5,6 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Tuple
 
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.core import Structure
@@ -90,7 +89,7 @@ class ElectronPhononMaker(Maker):
     """
 
     name: str = "electron phonon"
-    temperatures: Tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
+    temperatures: tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
     min_supercell_length: float = DEFAULT_MIN_SUPERCELL_LENGTH
     relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
