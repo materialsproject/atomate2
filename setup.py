@@ -40,7 +40,7 @@ if __name__ == "__main__":
             "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
                 "sphinx==4.4.0",
-                "numpydoc==1.1.0",
+                "numpydoc==1.2",
                 "m2r2==0.3.2",
                 "mistune==0.8.4",
                 "ipython==8.0.0",
