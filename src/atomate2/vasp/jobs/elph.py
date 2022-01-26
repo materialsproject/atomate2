@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -87,7 +86,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
     )
     transformations: tuple[str, ...] = ("SupercellTransformation",)
     transformation_params: tuple[dict, ...] = None
-    temperatures: Tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
+    temperatures: tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
     min_supercell_length: float = DEFAULT_MIN_SUPERCELL_LENGTH
 
     @vasp_job
@@ -120,8 +119,8 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
 
 @job
 def run_elph_displacements(
-    temperatures: List[float],
-    structures: List[Structure],
+    temperatures: list[float],
+    structures: list[Structure],
     vasp_maker: BaseVaspMaker,
     prev_vasp_dir: str | Path | None = None,
     original_structure: Structure = None,
@@ -153,7 +152,7 @@ def run_elph_displacements(
         )
 
     jobs = []
-    outputs: Dict[str, list] = {
+    outputs: dict[str, list] = {
         "temperatures": [],
         "band_structures": [],
         "structures": [],
@@ -193,11 +192,11 @@ def run_elph_displacements(
 
 @job(output_schema=ElectronPhononRenormalisationDoc)
 def calculate_electron_phonon_renormalisation(
-    temperatures: List[float],
-    displacement_band_structures: List[BandStructure],
-    displacement_structures: List[Structure],
-    displacement_uuids: List[str],
-    displacement_dirs: List[str],
+    temperatures: list[float],
+    displacement_band_structures: list[BandStructure],
+    displacement_structures: list[Structure],
+    displacement_uuids: list[str],
+    displacement_dirs: list[str],
     bulk_band_structure: BandStructure,
     bulk_structure: Structure,
     bulk_uuid: str,

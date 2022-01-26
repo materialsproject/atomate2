@@ -76,7 +76,7 @@ atomate2 workflows can be run using the [FireWorks] software. See the
 
 ## Installation
 
-Atomate2 is a Python 3.7+ library and can be installed using pip. Full installation
+Atomate2 is a Python 3.8+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
 ## Tutorials
@@ -110,6 +110,8 @@ Atomate2 is released under a modified BSD license; the full text can be found [h
 ## Acknowledgements
 
 Atomate2 was designed and developed by Alex Ganose.
+
+A full list of all contributors can be found [here][contributors].
 
 [maggma]: https://materialsproject.github.io/maggma/
 [pymatgen]: https://pymatgen.org

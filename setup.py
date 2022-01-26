@@ -37,16 +37,13 @@ if __name__ == "__main__":
             "click",
         ],
         extras_require={
-            ':python_version < "3.8"': [
-                "typing-extensions",
-            ],
             "amset": ["amset>=0.4.15", "pydash"],
             "docs": [
                 "sphinx==4.4.0",
-                "numpydoc==1.1.0",
+                "numpydoc==1.2",
                 "m2r2==0.3.2",
                 "mistune==0.8.4",
-                "ipython==8.0.0",
+                "ipython==8.0.1",
                 "FireWorks==1.9.8",
                 "pydata-sphinx-theme==0.8.0",
                 "autodoc_pydantic==1.6.0",
@@ -63,9 +60,9 @@ if __name__ == "__main__":
         },
         classifiers=[
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Science/Research",
             "Intended Audience :: System Administrators",
@@ -74,7 +71,7 @@ if __name__ == "__main__":
             "Topic :: Other/Nonlisted Topic",
             "Topic :: Scientific/Engineering",
         ],
-        python_requires=">=3.7",
+        python_requires=">=3.8",
         tests_require=["pytest"],
         entry_points={
             "console_scripts": [
