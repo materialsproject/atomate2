@@ -8,11 +8,11 @@ This version removed Python 3.7 support following numpy and pymatgen.
 
 New features:
 
-- Base schema for molecule task documents (@arosen) [#54]
+- Base schema for molecule task documents (@arosen93) [#54]
 
 Bug fixes:
 
-- Fix VASP relaxation using custodian "FULL_OPT" (@arosen) [#42]
+- Fix VASP relaxation using custodian "FULL_OPT" (@arosen93) [#42]
 - Fix supercell generation and input sets in electron-phonon workflow.
 - Fix ``HSEBSSetGenerator`` INCAR settings.
 - Fix issue with magnetism in SOC structures.
