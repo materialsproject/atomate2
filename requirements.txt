@@ -1,5 +1,5 @@
 pydantic==1.9.0
-pymatgen==2022.0.17
+pymatgen==2022.1.24
 custodian==2021.12.2
 monty==2022.1.19
 jobflow==0.1.6
