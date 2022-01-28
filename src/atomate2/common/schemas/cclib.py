@@ -313,7 +313,7 @@ def cclib_calculate(
     elif method == "mpa":
         m = MPA(cclib_obj)
     else:
-        raise ValueError("{method} is not supported.")
+        raise ValueError(f"{method} is not supported.")
 
     try:
         m.calculate()
