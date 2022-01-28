@@ -5,4 +5,5 @@ monty==2022.1.19
 jobflow==0.1.6
 click==8.0.3
 PyYAML==6.0
+cclib == 1.7.1
 numpy

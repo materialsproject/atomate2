@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import os
 import socket
 from pathlib import Path
+from typing import List, Union
 
 __all__ = ["get_uri", "strip_hostname"]
 
@@ -54,3 +56,35 @@ def strip_hostname(uri_path: str | Path) -> str:
     if ":" in dir_name:
         dir_name = dir_name.split(":", 1)[1]
     return dir_name
+
+
+def find_recent_logfile(
+    dir_name: Union[Path, str], logfile_extensions: Union[str, List[str]]
+):
+    """
+    Find the most recent logfile in a given directory.
+
+    Parameters
+    ----------
+    dir_name
+        The path to the directory to search
+    logfile_extensions
+        The extension (or list of possible extensions) of the logfile to search for.
+        For an exact match only, put in the full file name.
+
+    Returns
+    -------
+    logfile
+        The path to the most recent logfile with the desired extension
+    """
+    mod_time = 0.0
+    logfile = None
+    if type(logfile_extensions) == str:
+        logfile_extensions = [logfile_extensions]
+    for f in os.listdir(dir_name):
+        f_path = os.path.join(dir_name, f)
+        for ext in logfile_extensions:
+            if ext in f and os.path.getmtime(f_path) > mod_time:
+                mod_time = os.path.getmtime(f_path)
+                logfile = os.path.abspath(f_path)
+    return logfile
