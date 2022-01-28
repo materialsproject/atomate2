@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -45,13 +46,12 @@ class DoubleRelaxMaker(Maker):
     relax_maker1 : .BaseVaspMaker
         Maker to use to generate the first relaxation.
     relax_maker2 : .BaseVaspMaker
-        Maker to use to generate the second relaxation. If not set,
-        then relax_maker2 = relax_maker1.
+        Maker to use to generate the second relaxation.
     """
 
     name: str = "double relax"
     relax_maker1: BaseVaspMaker = field(default_factory=RelaxMaker)
-    relax_maker2: BaseVaspMaker = relax_maker1
+    relax_maker2: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -78,6 +78,20 @@ class DoubleRelaxMaker(Maker):
         relax2.name += " 2"
 
         return Flow([relax1, relax2], relax2.output, name=self.name)
+
+    @classmethod
+    def from_relax_maker(cls, relax_maker: BaseVaspMaker):
+        """
+        Instantiate the DoubleRelaxMaker with two relax makers of the same type.
+
+        Parameters
+        ----------
+        relax_maker : .BaseVaspMaker
+            Maker to use to generate the first and second relaxations.
+        """
+        return cls(
+            relax_maker1=deepcopy(relax_maker), relax_maker2=deepcopy(relax_maker)
+        )
 
 
 @dataclass

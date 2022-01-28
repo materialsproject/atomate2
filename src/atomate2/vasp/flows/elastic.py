@@ -68,7 +68,7 @@ class ElasticMaker(Maker):
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(relax_maker1=TightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
