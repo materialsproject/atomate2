@@ -180,7 +180,7 @@ class VaspAmsetMaker(Maker):
     use_hse_gap: bool = True
     amset_settings: dict = field(default_factory=dict)
     relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=DenseUniformMaker)
@@ -365,7 +365,7 @@ class HSEVaspAmsetMaker(Maker):
     temperatures: tuple[float, ...] = _DEFAULT_TEMPERATURES
     amset_settings: dict = field(default_factory=dict)
     relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(relax_maker=HSETightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(HSETightRelaxMaker())
     )
     static_maker: BaseVaspMaker = field(default_factory=HSEStaticMaker)
     dense_uniform_maker: BaseVaspMaker = field(default_factory=HSEDenseUniformMaker)
