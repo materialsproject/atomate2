@@ -39,7 +39,7 @@ class TaskDocument(MoleculeMetadata):
     Definition of a cclib-generated task document.
 
     This can be used as a general task document for molecular DFT codes.
-    For the list of support packages, see https://cclib.github.io
+    For the list of supported packages, see https://cclib.github.io
     """
 
     molecule: Molecule = Field(None, description="Final output molecule from the task")
