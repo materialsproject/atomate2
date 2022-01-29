@@ -15,6 +15,7 @@ def test_cclib_taskdoc(test_dir):
     # because they will evolve over time. We only check the ones we have
     # added and some important ones.
     doc = TaskDocument.from_logfile(p, ".log.gz").dict()
+    assert doc["energy"] == pytest.approx(-4091.763)
     assert doc["nsites"] == 2
     assert doc["charge"] == 0
     assert doc["spin_multiplicity"] == 3

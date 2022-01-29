@@ -43,6 +43,7 @@ class TaskDocument(MoleculeMetadata):
     """
 
     molecule: Molecule = Field(None, description="Final output molecule from the task")
+    energy: float = Field(None, description="Final total energy")
     dir_name: str = Field(None, description="Directory where the output is parsed")
     logfile: str = Field(
         None, description="Path to the log file used in the post-processing analysis"
@@ -154,6 +155,12 @@ class TaskDocument(MoleculeMetadata):
         if metadata.get("cpu_time", None):
             metadata["cpu_time"] = [str(m) for m in metadata["cpu_time"]]
 
+        # Get the final energy to store as its own key/value pair
+        if cclib_obj.scfenergies is not None:
+            energy = cclib_obj.scfenergies[-1]
+        else:
+            energy = None
+
         # Now we construct the input molecule. Note that this is not necessarily
         # the same as the initial molecule from the relaxation because the
         # DFT package may have re-oriented the system. We only try to store
@@ -242,6 +249,7 @@ class TaskDocument(MoleculeMetadata):
         doc = cls.from_molecule(
             molecule=final_molecule,
             include_molecule=True,
+            energy=energy,
             dir_name=get_uri(dir_name),
             logfile=get_uri(logfile),
             attributes=attributes,
