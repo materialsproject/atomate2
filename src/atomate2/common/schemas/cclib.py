@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Type, TypeVar, Union
 
+from monty.json import jsanitize
 from pydantic import Field
 from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
@@ -151,7 +152,7 @@ class TaskDocument(MoleculeMetadata):
             raise ValueError(f"Could not parse {logfile}")
 
         # Fetch all the attributes (i.e. all input/outputs from cclib)
-        attributes = cclib_obj.getattributes()
+        attributes = jsanitize(cclib_obj.getattributes())
 
         # Store charge and multiplicity since we use it frequently
         charge = cclib_obj.charge
@@ -160,7 +161,7 @@ class TaskDocument(MoleculeMetadata):
         # Let's move the metadata out of attributes for convenience and
         # store it separately
         attributes.pop("metadata")
-        metadata = cclib_obj.metadata
+        metadata = jsanitize(cclib_obj.metadata)
 
         # monty datetime bug workaround: https://github.com/materialsvirtuallab/monty/issues/275
         if metadata.get("wall_time", None):

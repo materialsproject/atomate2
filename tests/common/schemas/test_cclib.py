@@ -10,6 +10,7 @@ import atomate2.common.schemas.cclib as cclib_schemas
 
 @unittest.skipIf(not cclib_schemas.cclib_loaded, "cclib not loaded.")
 def test_cclib_taskdoc(test_dir):
+    from monty.json import MontyDecoder, jsanitize
 
     p = test_dir / "schemas"
 
@@ -92,3 +93,9 @@ def test_cclib_taskdoc(test_dir):
         p, ".log", additional_fields={"test": "hi"}
     )
     assert doc.dict()["test"] == "hi"
+
+    # test document can be jsanitized
+    d = jsanitize(doc, strict=True, enum_values=True)
+
+    # and decoded
+    MontyDecoder().process_decoded(d)
