@@ -14,6 +14,7 @@ def test_cclib_taskdoc(test_dir):
         import cclib
     except ModuleNotFoundError:
         warnings.warn("cclib not installed. Skipping test")
+        return
 
     p = test_dir / "schemas"
 
