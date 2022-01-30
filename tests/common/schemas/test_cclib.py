@@ -1,11 +1,13 @@
 import gzip
 import os
 import shutil
+import unittest
 
 import pytest
-from atomate2.common.schemas.cclib import TaskDocument
+import atomate2.common.schemas.cclib as cclib_schemas
 
 
+@unittest.skipIf(not cclib_schemas.cclib_loaded, "cclib not loaded.")
 def test_cclib_taskdoc(test_dir):
 
     p = test_dir / "schemas"
@@ -13,7 +15,7 @@ def test_cclib_taskdoc(test_dir):
     # Plain parsing of task doc. We do not check all cclib entries
     # because they will evolve over time. We only check the ones we have
     # added and some important ones.
-    doc = TaskDocument.from_logfile(p, ".log.gz").dict()
+    doc = cclib_schemas.TaskDocument.from_logfile(p, ".log.gz").dict()
     assert doc["energy"] == pytest.approx(-4091.763)
     assert doc["nsites"] == 2
     assert doc["charge"] == 0
@@ -46,21 +48,23 @@ def test_cclib_taskdoc(test_dir):
     with open(p / "test.txt", "w") as f:
         f.write("I am a dummy log file")
     with pytest.raises(Exception) as e:
-        doc = TaskDocument.from_logfile(p, [".log", ".txt"]).dict()
+        doc = cclib_schemas.TaskDocument.from_logfile(p, [".log", ".txt"]).dict()
     os.remove(p / "test.txt")
     assert "Could not parse" in str(e.value)
 
     # Test a population analysis
-    doc = TaskDocument.from_logfile(p, ".out", analysis="MBO").dict()
+    doc = cclib_schemas.TaskDocument.from_logfile(p, ".out", analysis="MBO").dict()
     assert doc["attributes"]["mbo"] is not None
 
     # Let's try with two analysis (also check case-insensitivity)
-    doc = TaskDocument.from_logfile(p, ".out", analysis=["mbo", "density"]).dict()
+    doc = cclib_schemas.TaskDocument.from_logfile(
+        p, ".out", analysis=["mbo", "density"]
+    ).dict()
     assert doc["attributes"]["mbo"] is not None
     assert doc["attributes"]["density"] is not None
 
     # Test a population analysis that will fail
-    doc = TaskDocument.from_logfile(p, ".log", analysis="MBO").dict()
+    doc = cclib_schemas.TaskDocument.from_logfile(p, ".log", analysis="MBO").dict()
     assert doc["attributes"]["mbo"] is None
 
     # Let's try a volumetric analysis
@@ -70,16 +74,20 @@ def test_cclib_taskdoc(test_dir):
         p / "psi_test.cube", "wb"
     ) as f_out:
         shutil.copyfileobj(f_in, f_out)
-    doc = TaskDocument.from_logfile(p, ".out", analysis=["Bader"]).dict()
+    doc = cclib_schemas.TaskDocument.from_logfile(p, ".out", analysis=["Bader"]).dict()
     os.remove(p / "psi_test.cube")
     assert doc["attributes"]["bader"] is not None
 
     # Make sure storing the trajectory works
-    doc = TaskDocument.from_logfile(p, ".log", store_trajectory=True).dict()
+    doc = cclib_schemas.TaskDocument.from_logfile(
+        p, ".log", store_trajectory=True
+    ).dict()
     assert len(doc["attributes"]["trajectory"]) == 7
     assert doc["attributes"]["trajectory"][0] == doc["attributes"]["molecule_initial"]
     assert doc["attributes"]["trajectory"][-1] == doc["attributes"]["molecule_final"]
 
     # Make sure additional fields can be stored
-    doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
+    doc = cclib_schemas.TaskDocument.from_logfile(
+        p, ".log", additional_fields={"test": "hi"}
+    )
     assert doc.dict()["test"] == "hi"

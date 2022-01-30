@@ -5,20 +5,6 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Type, TypeVar, Union
 
-from cclib.io import ccread
-from cclib.method import (
-    CSPA,
-    DDEC6,
-    LPA,
-    MBO,
-    MPA,
-    Bader,
-    Bickelhaupt,
-    Density,
-    Hirshfeld,
-    volume,
-)
-from cclib.parser.data import ccData
 from pydantic import Field
 from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
@@ -27,6 +13,29 @@ from atomate2 import __version__
 from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
+
+try:
+    import cclib
+
+    cclib_loaded = True
+except ModuleNotFoundError:
+    cclib_loaded = False
+
+if cclib_loaded:
+    from cclib.io import ccread
+    from cclib.method import (
+        CSPA,
+        DDEC6,
+        LPA,
+        MBO,
+        MPA,
+        Bader,
+        Bickelhaupt,
+        Density,
+        Hirshfeld,
+        volume,
+    )
+    from cclib.parser.data import ccData
 
 __all__ = ["TaskDocument"]
 
@@ -66,6 +75,11 @@ class TaskDocument(MoleculeMetadata):
         description="Version of atomate2 used to create the document",
         alias="schema",
     )
+
+    if not cclib_loaded:
+        raise ModuleNotFoundError(
+            "The cclib TaskDocument requires cclib to be installed."
+        )
 
     @classmethod
     def from_logfile(
