@@ -1,20 +1,12 @@
 import gzip
 import os
 import shutil
-import warnings
 
 import pytest
-
 from atomate2.common.schemas.cclib import TaskDocument
 
 
 def test_cclib_taskdoc(test_dir):
-
-    try:
-        import cclib
-    except ModuleNotFoundError:
-        warnings.warn("cclib not installed. Skipping test")
-        return
 
     p = test_dir / "schemas"
 
