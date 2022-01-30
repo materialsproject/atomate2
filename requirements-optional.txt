@@ -1,4 +1,1 @@
 cclib>=1.7.1
-amset==0.4.15
-phonopy>=1.10.8
-pydash
