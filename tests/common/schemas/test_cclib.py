@@ -82,5 +82,5 @@ def test_cclib_taskdoc(test_dir):
     assert doc["attributes"]["trajectory"][-1] == doc["attributes"]["molecule_final"]
 
     # Make sure additional fields can be stored
-    # doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
-    # assert doc["additional_fields"]["test"] == "hi"
+    doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
+    assert doc["test"] == "hi"

@@ -123,5 +123,5 @@ def test_task_doc(vasp_test_dir, object_name):
     MontyDecoder().process_decoded(d)
 
     # Test that additional_fields works
-    # test_doc = TaskDocument.from_directory(dir_name, additional_fields={"foo": "bar"})
-    # assert test_doc.dict()["additional_fields"] == {"foo": "bar"}
+    test_doc = TaskDocument.from_directory(dir_name, additional_fields={"foo": "bar"})
+    assert test_doc.dict()["foo"] == "bar"

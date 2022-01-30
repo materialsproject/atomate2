@@ -360,7 +360,7 @@ class TaskDocument(StructureMetadata):
             vasp_objects=vasp_objects,
             included_objects=included_objects,
         )
-        doc.copy(update=additional_fields)
+        doc = doc.copy(update=additional_fields)
         return doc
 
     @staticmethod
