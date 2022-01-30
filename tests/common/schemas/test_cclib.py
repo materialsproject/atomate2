@@ -4,6 +4,7 @@ import shutil
 import unittest
 
 import pytest
+
 import atomate2.common.schemas.cclib as cclib_schemas
 
 

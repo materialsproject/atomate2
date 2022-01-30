@@ -15,14 +15,13 @@ from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
 
 try:
-    import cclib
+    from cclib.io import ccread
 
     cclib_loaded = True
-except ModuleNotFoundError:
+except ImportError:
     cclib_loaded = False
 
 if cclib_loaded:
-    from cclib.io import ccread
     from cclib.method import (
         CSPA,
         DDEC6,
