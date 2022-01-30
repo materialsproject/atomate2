@@ -38,6 +38,7 @@ if __name__ == "__main__":
         ],
         extras_require={
             "amset": ["amset>=0.4.15", "pydash"],
+            "cclib": ["cclib>=1.7.1"],
             "docs": [
                 "sphinx==4.4.0",
                 "numpydoc==1.2",

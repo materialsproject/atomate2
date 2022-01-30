@@ -1,6 +1,7 @@
 import gzip
 import os
 import shutil
+import warnings
 
 import pytest
 
@@ -8,6 +9,11 @@ from atomate2.common.schemas.cclib import TaskDocument
 
 
 def test_cclib_taskdoc(test_dir):
+
+    try:
+        import cclib
+    except ImportError:
+        warnings.warn("cclib not installed. Skipping test")
 
     p = test_dir / "schemas"
 
@@ -83,4 +89,4 @@ def test_cclib_taskdoc(test_dir):
 
     # Make sure additional fields can be stored
     doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
-    assert doc["test"] == "hi"
+    assert doc.dict()["test"] == "hi"
