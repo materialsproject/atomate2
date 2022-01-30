@@ -83,6 +83,18 @@ def test_calculation_output(vasp_test_dir, object_name, task_name):
     MontyDecoder().process_decoded(d)
 
 
+def test_mag_calculation_output():
+    from pymatgen.io.vasp import Outcar, Vasprun
+
+    from atomate2.vasp.schemas.calculation import CalculationOutput
+
+    # Test magnetic properties
+    d = CalculationOutput.from_vasp_outputs(
+        Vasprun("vasprun.xml.gz"), Outcar("OUTCAR.gz")
+    )
+    assert d.dict()["mag_density"] == pytest.approx(0.19384725901794095)
+
+
 @pytest.mark.parametrize(
     "object_name,task_name",
     [
