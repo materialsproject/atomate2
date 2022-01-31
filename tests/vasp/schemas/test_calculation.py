@@ -75,7 +75,7 @@ def test_calculation_output(vasp_test_dir, object_name, task_name):
     test_doc = CalculationOutput.from_vasp_outputs(vasprun, outcar)
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]
     assert_schemas_equal(test_doc, valid_doc)
-    assert test_doc.efermi == vasprun.get_band_structure(efermi="smart")
+    assert test_doc.efermi == vasprun.get_band_structure(efermi="smart").efermi
 
     # test document can be jsanitized
     d = jsanitize(test_doc, strict=True, enum_values=True)
