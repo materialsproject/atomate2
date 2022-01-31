@@ -267,7 +267,7 @@ class TaskDocument(StructureMetadata):
     )
     _schema: str = Field(
         __version__,
-        description="Version of the atomate2 used to create the document",
+        description="Version of atomate2 used to create the document",
         alias="schema",
     )
 
@@ -309,7 +309,7 @@ class TaskDocument(StructureMetadata):
         task_files = _find_vasp_files(dir_name, volumetric_files=volumetric_files)
 
         if len(task_files) == 0:
-            raise ValueError("No VASP files found!")
+            raise FileNotFoundError("No VASP files found!")
 
         calcs_reversed = []
         all_vasp_objects = []
@@ -360,7 +360,7 @@ class TaskDocument(StructureMetadata):
             vasp_objects=vasp_objects,
             included_objects=included_objects,
         )
-        doc.copy(update=additional_fields)
+        doc = doc.copy(update=additional_fields)
         return doc
 
     @staticmethod

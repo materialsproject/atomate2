@@ -646,7 +646,7 @@ class Calculation(BaseModel):
 
 def _get_output_file_paths(volumetric_files: List[str]) -> Dict[VaspObject, str]:
     """
-    Get the output file paths.for VASP output files from the list of volumetric files.
+    Get the output file paths for VASP output files from the list of volumetric files.
 
     Parameters
     ----------
