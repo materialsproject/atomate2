@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Type, TypeVar, Union
 
+from monty.dev import requires
 from monty.json import jsanitize
 from pydantic import Field
 from pymatgen.core import Molecule
@@ -16,26 +17,9 @@ from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
 
 try:
-    from cclib.io import ccread
-
-    cclib_loaded = True
+    import cclib
 except ImportError:
-    cclib_loaded = False
-
-if cclib_loaded:
-    from cclib.method import (
-        CSPA,
-        DDEC6,
-        LPA,
-        MBO,
-        MPA,
-        Bader,
-        Bickelhaupt,
-        Density,
-        Hirshfeld,
-        volume,
-    )
-    from cclib.parser.data import ccData
+    cclib = None
 
 __all__ = ["TaskDocument"]
 
@@ -76,12 +60,8 @@ class TaskDocument(MoleculeMetadata):
         alias="schema",
     )
 
-    if not cclib_loaded:
-        raise ModuleNotFoundError(
-            "The cclib TaskDocument requires cclib to be installed."
-        )
-
     @classmethod
+    @requires(cclib, "The cclib TaskDocument requires cclib to be installed.")
     def from_logfile(
         cls: Type[_T],
         dir_name: Union[str, Path],
@@ -95,24 +75,25 @@ class TaskDocument(MoleculeMetadata):
         """
         Create a TaskDocument from a log file.
 
-        For a full description of each
-        field, see https://cclib.github.io/data.html.
+        For a full description of each field, see https://cclib.github.io/data.html.
 
         Parameters
         ----------
         dir_name
             The path to the folder containing the calculation outputs.
         logfile_extensions
-            Possible extensions of the log file (e.g. ".log", ".out", ".txt", ".chk"). Note that
-            only a partial match is needed. For instance, `.log` will match `.log.gz` and `.log.1.gz`.
-            If multiple files with this extension are found, the one with the most recent change time
-            will be used. For an exact match only, put in the full file name.
+            Possible extensions of the log file (e.g. ".log", ".out", ".txt", ".chk").
+            Note that only a partial match is needed. For instance, `.log` will match
+            `.log.gz` and `.log.1.gz`. If multiple files with this extension are found,
+            the one with the most recent change time will be used. For an exact match
+            only, put in the full file name.
         store_trajectory
-            Whether to store the molecule objects along the course of the relaxation trajectory.
+            Whether to store the molecule objects along the course of the relaxation
+            trajectory.
         store_input_orientation
-            Whether to store the molecule object as specified in the input file. Note that the initial
-            molecule object is already stored, but it may be re-oriented compared to the input file
-            if the code reorients the input geometry.
+            Whether to store the molecule object as specified in the input file. Note that
+            the initial molecule object is already stored, but it may be re-oriented
+            compared to the input file if the code reorients the input geometry.
         additional_fields
             Dictionary of additional fields to add to TaskDocument.
         analysis
@@ -120,15 +101,17 @@ class TaskDocument(MoleculeMetadata):
             ddec6, and hirshfeld, a cube file (.cube, .cub) must be in dir_name.
             Supports: cpsa, mpa, lpa, bickelhaupt, density, mbo, bader, ddec6, hirshfeld.
         proatom_dir
-            The path to the proatom directory if ddec6 or hirshfeld analysis are requested.
-            See https://cclib.github.io/methods.html for details. If None, the PROATOM_DIR
-            environment variable must point to the proatom directory.
+            The path to the proatom directory if ddec6 or hirshfeld analysis are
+            requested. See https://cclib.github.io/methods.html for details. If None, the
+            PROATOM_DIR environment variable must point to the proatom directory.
 
         Returns
         -------
         TaskDocument
             A TaskDocument object summarizing the inputs/outputs of the log file.
         """
+        from cclib.io import ccread
+
         logger.info(
             f"Searching for the most recent log file with extensions {logfile_extensions}"
         )
@@ -273,8 +256,9 @@ class TaskDocument(MoleculeMetadata):
         return doc
 
 
+@requires(cclib, "cclib_calculate requires cclib to be installed.")
 def cclib_calculate(
-    cclib_obj: ccData,
+    cclib_obj,
     method: str,
     cube_file: Union[Path, str],
     proatom_dir: Union[Path, str],
@@ -295,6 +279,19 @@ def cclib_calculate(
         The path to the proatom directory to use for the population analysis.
         Needed only for DDEC6 and Hirshfeld.
     """
+    from cclib.method import (
+        CSPA,
+        DDEC6,
+        LPA,
+        MBO,
+        MPA,
+        Bader,
+        Bickelhaupt,
+        Density,
+        Hirshfeld,
+        volume,
+    )
+
     method = method.lower()
     cube_methods = ["bader", "ddec6", "hirshfeld"]
 
@@ -342,9 +339,9 @@ def cclib_calculate(
     except AttributeError:
         return None
 
-    # The list of available attributes after a calculation.
-    # This is hardcoded for now until https://github.com/cclib/cclib/issues/1097 is resolved.
-    # Once it is, we can delete this and just do `return calc_attributes.getattributes()`.
+    # The list of available attributes after a calculation. This is hardcoded for now
+    # until https://github.com/cclib/cclib/issues/1097 is resolved. Once it is, we can
+    # delete this and just do `return calc_attributes.getattributes()`.
     avail_attributes = [
         "aoresults",
         "fragresults",
