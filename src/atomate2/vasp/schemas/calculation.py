@@ -382,6 +382,7 @@ class CalculationOutput(BaseModel):
             bandstructure = vasprun.get_band_structure(efermi="smart")
             bandgap_info = bandstructure.get_band_gap()
             electronic_output = dict(
+                efermi=bandstructure.efermi,
                 vbm=bandstructure.get_vbm()["energy"],
                 cbm=bandstructure.get_cbm()["energy"],
                 bandgap=bandgap_info["energy"],
