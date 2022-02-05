@@ -322,10 +322,10 @@ modification of several additional VASP settings, such as the k-points
 
 If a greater degree of flexibility is needed, the user can define a default set of input
 arguments (``config_dict``) that can be provided to the :obj:`.VaspInputSetGenerator`.
-By default, the :obj:`.VaspInputSetGenerator` uses a base setwof VASP input parameters
-from [BaseVaspSet.yaml](/src/atomate2/vasp/sets/BaseVaspSet.yaml), which each ``Maker`` is
+By default, the :obj:`.VaspInputSetGenerator` uses a base set of VASP input parameters
+from :obj:`.BaseVaspSet.yaml`, which each ``Maker`` is
 built upon. If desired, the user can define a custom ``.yaml`` file that contains a
-different base set of VASP settings to use (e.g. ``MPRelaxSet``). An example of how this
+different base set of VASP settings to use. An example of how this
 can be done is shown below for a representative static calculation.
 
 .. code-block:: python
@@ -335,12 +335,11 @@ can be done is shown below for a representative static calculation.
     from atomate2.vasp.jobs.base import VaspInputSetGenerator
     from monty.serialization import loadfn
 
-    # read in a custom config dictionary
+    # read in a custom config file
     user_config_dict = loadfn("/path/to/my/CustomVaspSet.yaml")
 
-    # create a custom static set generator with user-defined defaults also change the
-    # NELMIN parmaeter to 6 if it wasn't already this value in the config_dict (for
-    # demonstration purposes)
+    # create a custom static set generator with user-defined defaults. Also change the
+    # NELMIN parameter to 6 (for demonstration purposes)
     my_custom_set = StaticSetGenerator(
         user_incar_settings={"NELMIN": 6},
         config_dict=user_config_dict,

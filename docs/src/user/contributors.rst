@@ -24,7 +24,7 @@ Additional contributions have been provided by:
    :width: 16
    :height: 16
    :alt: GitHub commits from arosen93
-.. |0000-0002-4486-3321| image:: ../_static/orcid.svg
+.. |0000-0002-0141-7006| image:: ../_static/orcid.svg
    :target: https://orcid.org/0000-0002-0141-7006
    :width: 16
    :height: 16
