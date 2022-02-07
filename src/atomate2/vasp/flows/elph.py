@@ -110,6 +110,7 @@ class ElectronPhononMaker(Maker):
             bs_maker=NonSCFMaker(
                 input_set_generator=NonSCFSetGenerator(
                     reciprocal_density=100,  # dense BS mesh
+                    user_incar_settings={"LORBIT": 10},  # disable site projections
                 ),
                 task_document_kwargs={
                     "strip_bandstructure_projections": True,
@@ -262,6 +263,7 @@ class HSEElectronPhononMaker(ElectronPhononMaker):
             ),
             bs_maker=HSEBSMaker(
                 input_set_generator=HSEBSSetGenerator(
+                    user_incar_settings={"LORBIT": 10},  # disable site projections
                     user_kpoints_settings={"reciprocal_density": 200},  # dense BS mesh
                 ),
                 task_document_kwargs={
