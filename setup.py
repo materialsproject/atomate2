@@ -51,7 +51,7 @@ if __name__ == "__main__":
                 "sphinx_panels==0.6.0",
             ],
             "tests": [
-                "pytest==6.2.5",
+                "pytest==7.0.0",
                 "pytest-cov==3.0.0",
                 "FireWorks==1.9.8",
                 # "amset==0.4.15",
