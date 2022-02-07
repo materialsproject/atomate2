@@ -35,7 +35,7 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     output2 = responses[flow.jobs[1].uuid][1].output
 
     assert isinstance(output1, TaskDocument)
-    assert output1.output.energy == pytest.approx(-10.85083141)
+    assert output1.output.energy == pytest.approx(-10.85043620)
     assert output2.output.energy == pytest.approx(-10.84177648)
 
     # Now try with two identical but non-default makers
