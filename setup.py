@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 "m2r2==0.3.2",
                 "mistune==0.8.4",
                 "ipython==8.0.1",
-                "FireWorks==1.9.8",
+                "FireWorks==2.0.2",
                 "pydata-sphinx-theme==0.8.0",
                 "autodoc_pydantic==1.6.1",
                 "sphinx_panels==0.6.0",
@@ -53,7 +53,7 @@ if __name__ == "__main__":
             "tests": [
                 "pytest==6.2.5",
                 "pytest-cov==3.0.0",
-                "FireWorks==1.9.8",
+                "FireWorks==2.0.2",
                 # "amset==0.4.15",
             ],
             "dev": ["pre-commit>=2.12.1"],
