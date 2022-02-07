@@ -4,6 +4,7 @@
 docs/_build/*
 docs/_build/*/*
 docs/_build/*/*/*
+docs_build/*
 
 # C extensions
 *.so
