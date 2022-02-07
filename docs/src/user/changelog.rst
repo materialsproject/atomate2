@@ -17,7 +17,7 @@ Enhancements:
 Bug fixes:
 
 - Store band structure efermi in CalculationOutput (@arosen93) [#66]
-- Support for VASP6 and latest pymatgen (@arosen) [#75]
+- Support for VASP6 and latest pymatgen (@arosen93) [#75]
 - Fixed atomate2 version string.
 - Disabled orbital projections in the electron-phonon workflow.
 
