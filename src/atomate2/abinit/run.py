@@ -4,58 +4,51 @@ from __future__ import annotations
 
 import logging
 import subprocess
-from jobflow.utils import ValueEnum
-from custodian.custodian import Job
+import time
 
+from atomate2.abinit.utils.common import (
+    INPUT_FILE_NAME,
+    LOG_FILE_NAME,
+    STDERR_FILE_NAME,
+)
 
 __all__ = ["run_abinit"]
+
+
+SLEEP_TIME_STEP = 30
 
 
 logger = logging.getLogger(__name__)
 
 
-class JobType(ValueEnum):
-    """
-    Type of ABINIT job.
-
-    - ``DIRECT``: Run ABINIT without using custodian.
-    - ``NORMAL``: Normal custodian :obj:`.AbinitJob`.
-    """
-
-    DIRECT = "direct"
-    NORMAL = "normal"
-
-
-class AbinitJob(Job):
-    def setup(self):
-        pass
-
-    def run(self):
-        pass
-
-    def postprocess(self):
-        pass
-
-
 def run_abinit(
-    job_type: JobType | str = JobType.DIRECT,
-    abinit_cmd: str = 'abinit',
+    abinit_cmd: str = "abinit",
     mpirun_cmd: str = None,
-
+    log_file_path: str = LOG_FILE_NAME,
+    stderr_file_path: str = STDERR_FILE_NAME,
+    walltime: int = None,
 ):
-    """
-    Run ABINIT.
-    """
+    """Run ABINIT."""
+    start_time = time.process_time()
+    max_end_time = 0.0
+    if walltime is not None:
+        max_end_time = start_time + walltime
 
-    cmd = [abinit_cmd] if mpirun_cmd is None else [mpirun_cmd, abinit_cmd]
-
-    if job_type == JobType.DIRECT:
-        logger.info(f"Running command: {' '.join(cmd)}")
-        return_code = subprocess.call(cmd, shell=True)
-        logger.info(f"{' '.join(cmd)} finished running with returncode: {return_code}")
-        return
-
-    elif job_type == JobType.NORMAL:
-        raise NotImplementedError()
+    if mpirun_cmd is not None:
+        command = [mpirun_cmd, abinit_cmd, INPUT_FILE_NAME]
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        command = [abinit_cmd, INPUT_FILE_NAME]
+    with open(log_file_path, "w") as stdout, open(stderr_file_path, "w") as stderr:
+        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
+
+        if walltime is not None:
+            while True:
+                time.sleep(SLEEP_TIME_STEP)
+                if process.poll() is not None:
+                    break
+                current_time = time.process_time()
+                remaining_time = max_end_time - current_time
+                if remaining_time < 5 * SLEEP_TIME_STEP:
+                    process.terminate()
+
+        process.wait()
