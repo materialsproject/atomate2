@@ -10,15 +10,18 @@ import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 import jobflow
 import pseudo_dojo
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
+from abipy.flowtk.events import AbinitEvent
 from abipy.flowtk.utils import Directory, File, irdvars_for_ext
 from jobflow import Maker, Response, job
+from monty.inspect import all_subclasses
 from monty.json import MontyEncoder
+from monty.string import is_string
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 
@@ -50,6 +53,21 @@ logger = logging.getLogger(__name__)
 __all__ = ["BaseAbinitMaker"]
 
 
+def as_event_class(event_string):
+    """Convert event string into a subclass of AbinitEvent.
+
+    The string can be the class name or the YAML tag.
+    """
+    if is_string(event_string):
+        for c in all_subclasses(AbinitEvent):
+            if c.__name__ == event_string or c.yaml_tag == event_string:
+                return c
+        raise ValueError(f"Cannot find event class associated to {event_string}.")
+    raise ValueError(
+        f"Cannot convert event_string of type {type(event_string)}. Should be a string."
+    )
+
+
 @dataclass
 class BaseAbinitMaker(Maker):
     """
@@ -74,12 +92,18 @@ class BaseAbinitMaker(Maker):
     )
     walltime: Optional[int] = None
     input_generator: Optional[InputGenerator] = None
-    CRITICAL_EVENTS: List[events.AbinitCriticalWarning] = []
+    CRITICAL_EVENTS: Sequence[str] = ()
     # TODO: is this ok to only have namedtuple ?
     #  Do we use namedtuple or do we use dict instead or allow both ?
     #  Do we allow a list or even a single str ?
     dependencies: Optional[dict] = None
     extra_abivars: Optional[dict] = None
+
+    def __post_init__(self):
+        """Process post-init configuration."""
+        self.critical_events = [
+            as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
+        ]
 
     @job
     def make(
@@ -215,7 +239,7 @@ class BaseAbinitMaker(Maker):
                 # TODO: where do we define whether a given critical event allows for a restart ?
                 #  here we seem to assume that we can always restart because it is something unconverged
                 #  (be it e.g. scf or relaxation)
-                not_ok = self.report.filter_types(self.CRITICAL_EVENTS)
+                not_ok = self.report.filter_types(self.critical_events)
                 if not_ok:
                     self.history.log_unconverged()
                     num_restarts = (
@@ -372,10 +396,15 @@ class BaseAbinitMaker(Maker):
                 )
 
         else:
-            # TODO: add when it is a restart
-            raise NotImplementedError(
-                "resolve_deps with a restart not yet implemented."
-            )
+            # Just link everything from the indata folder of the previous run.
+            # Files needed for restart will be overwritten
+            prev_indata = os.path.join(self.restart_info.previous_dir, INDIR_NAME)
+            for f in os.listdir(prev_indata):
+                # if the target is already a link, link to the source to avoid many nested levels of linking
+                source = os.path.join(prev_indata, f)
+                if os.path.islink(source):
+                    source = os.readlink(source)
+                os.symlink(source, os.path.join(self.workdir, INDIR_NAME, f))
 
     def resolve_deps_per_job_type(self, prev_outputs, deps_list):
         """Resolve dependencies for specific job type."""

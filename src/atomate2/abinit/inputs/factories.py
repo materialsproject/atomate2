@@ -12,7 +12,7 @@ from pymatgen.util.serialization import pmg_serialize
 class InputGenerator(MSONable):
     """Base input generator object."""
 
-    factory_function: staticmethod[Any] = None
+    factory_function: Any = None
     # inputs = None
     structure_required = True
     gs_input_required = False
