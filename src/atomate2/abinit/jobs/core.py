@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Sequence
 
-from abipy.flowtk import events
 from abipy.flowtk.utils import irdvars_for_ext
 
 from atomate2.abinit.inputs.factories import NScfInputGenerator, ScfInputGenerator
@@ -31,9 +30,7 @@ class ScfMaker(BaseAbinitMaker):
     calc_type: str = "scf"
     name: str = "Scf calculation"
     input_generator: ScfInputGenerator = ScfInputGenerator()
-    CRITICAL_EVENTS = [
-        events.ScfConvergenceWarning,
-    ]
+    CRITICAL_EVENTS: Sequence[str] = ("ScfConvergenceWarning",)
 
     def resolve_restart_deps(self):
         """Resolve dpendencies to restart Scf calculations.
@@ -75,12 +72,19 @@ class NonScfMaker(BaseAbinitMaker):
     name: str = "non-Scf calculation"
 
     input_generator: NScfInputGenerator = NScfInputGenerator()
-    CRITICAL_EVENTS = [
-        events.NscfConvergenceWarning,
-    ]
+    CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
 
-    # Here I don't know how to set a default that is mutable (dict) so I use
-    # the default_factory of the dataclass field.
+    # Here there is no way to set a default that is mutable (dict) for the dependencies so I use
+    # the default_factory of the dataclass field with a dict subclass...
+    # One option could be to use some kind of frozen dict/mapping.
+    # - frozendict (https://marco-sulla.github.io/python-frozendict/) is one possibility
+    #   but is not part of the stdlib. A PEP was actually discussed (and rejected) to
+    #   add such a frozendict in the stdlib (https://www.python.org/dev/peps/pep-0416/).
+    # - there is an ongoing PEP being discussed for a frozenmap type in the collections module.
+    #   If this PEP (https://www.python.org/dev/peps/pep-0603/) is accepted in the future, we
+    #   may think to use this new frozenmap type.
+    # Another option would be to use a different structure, e.g. a tuple of tuples. In the current
+    # case, this would give : ("scf", ("DEN", )). This is essentially a user defined mapping of course...
     dependencies: Optional[dict] = field(default_factory=NonScfDeps)
 
     def resolve_restart_deps(self):
