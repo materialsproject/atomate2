@@ -2,6 +2,7 @@
 
 from abipy.abio.inputs import AbinitInput
 from pydantic import BaseModel, Field
+from pymatgen.core.structure import Structure
 
 from atomate2.abinit.utils.common import RestartInfo
 from atomate2.abinit.utils.history import JobHistory
@@ -23,4 +24,7 @@ class AbinitJobSummary(JobMetadata):
     history: JobHistory = Field(None, description="Job history.")
     abinit_input: AbinitInput = Field(
         None, description="AbinitInput object used to perform calculation."
+    )
+    structure: Structure = Field(
+        None, description="Final structure of the calculation."
     )

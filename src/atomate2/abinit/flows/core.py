@@ -1,14 +1,14 @@
 """Core abinit flow makers."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.jobs.core import NonScfMaker, ScfMaker
+from atomate2.abinit.jobs.core import NonScfMaker, RelaxMaker, ScfMaker
 
 
 @dataclass
@@ -53,9 +53,65 @@ class LineBandStructureMaker(Maker):
         """
         scf_job = self.scf_maker.make(structure, prev_outputs=prev_outputs)
         line_job = self.bs_maker.make(
-            structure=structure,
             prev_outputs=scf_job.output,
             previous_abinit_input=scf_job.output.abinit_input,
         )
         jobs = [scf_job, line_job]
         return Flow(jobs, line_job.output, name=self.name)
+
+
+@dataclass
+class RelaxFlowMaker(Maker):
+    """
+    Maker to generate a relaxation flow with abinit.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relaxation_makers : .BaseAbinitMaker
+        The maker or list of makers to use for the relaxation flow.
+    """
+
+    name: str = "relaxation"
+    relaxation_makers: Union[BaseAbinitMaker, List[BaseAbinitMaker]] = field(
+        default_factory=RelaxMaker
+    )
+
+    def make(
+        self, structure: Structure, prev_outputs: Optional[Union[str, Path]] = None
+    ):
+        """
+        Create a relaxation flow.
+
+        Parameters
+        ----------
+        structure : Structure
+            A pymatgen structure object.
+        prev_dirs : str or Path or None
+            One or more previous directories for the calculation.
+
+        Returns
+        -------
+        Flow
+            A relaxation flow.
+        """
+        if isinstance(self.relaxation_makers, BaseAbinitMaker):
+            relaxation_makers = [self.relaxation_makers]
+        else:
+            relaxation_makers = self.relaxation_makers
+        relax_job1 = relaxation_makers[0].make(structure=structure)
+        jobs = [relax_job1]
+        for rlx_maker in relaxation_makers[1:]:
+            rlx_job = rlx_maker.make(
+                structure=jobs[-1].output.structure, prev_outputs=jobs[-1].output
+            )
+            jobs.append(rlx_job)
+        return Flow(jobs, jobs[-1].output, name=self.name)
+
+    @classmethod
+    def ion_ioncell_relaxation(cls):
+        """Create a double relaxation (first one: ionic relaxation, second one: full relaxation)."""
+        ion_rlx_maker = RelaxMaker.ionic_relaxation()
+        ioncell_rlx_maker = RelaxMaker.full_relaxation()
+        return cls(relaxation_makers=[ion_rlx_maker, ioncell_rlx_maker])

@@ -268,6 +268,12 @@ class RestartError(InitializationError):
     ERROR_CODE = ErrorCode.RESTART
 
 
+class PostProcessError(AbiAtomateError):
+    """Exception raised if problems are encountered during the post processing of the abinit calculation."""
+
+    ERROR_CODE = ErrorCode.POSTPROCESS
+
+
 class RestartInfo(MSONable):
     """Object that contains the information about the restart of a job."""
 
