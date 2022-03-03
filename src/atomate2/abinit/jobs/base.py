@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional, Sequence, Union
 import jobflow
 import pseudo_dojo
 from abipy.abio.inputs import AbinitInput
+from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.events import AbinitEvent
 from abipy.flowtk.utils import Directory, File, irdvars_for_ext
@@ -42,6 +43,7 @@ from atomate2.abinit.utils.common import (
     TMPDATA_PREFIX,
     TMPDIR_NAME,
     InitializationError,
+    PostProcessError,
     RestartInfo,
     UnconvergedError,
 )
@@ -93,11 +95,11 @@ class BaseAbinitMaker(Maker):
     walltime: Optional[int] = None
     input_generator: Optional[InputGenerator] = None
     CRITICAL_EVENTS: Sequence[str] = ()
-    # TODO: is this ok to only have namedtuple ?
-    #  Do we use namedtuple or do we use dict instead or allow both ?
-    #  Do we allow a list or even a single str ?
     dependencies: Optional[dict] = None
     extra_abivars: Optional[dict] = None
+
+    # This is not part of the dataclass __init__ method (hence the purposely absence of annotation)
+    structure_fixed = True
 
     def __post_init__(self):
         """Process post-init configuration."""
@@ -125,9 +127,9 @@ class BaseAbinitMaker(Maker):
         prev_outputs : str or Path or None
             A previous ABINIT calculation directory.
         """
-        if structure is None and abinit_input is None:
+        if structure is None and abinit_input is None and previous_abinit_input is None:
             raise RuntimeError(
-                "At least one of structure and abinit_input should be defined."
+                "At least one of structure, abinit_input or previous_abinit_input should be defined."
             )
         # TODO: use an "initial_structure" and "final_structure" ?
         if prev_outputs is not None:
@@ -229,6 +231,7 @@ class BaseAbinitMaker(Maker):
             calc_type=self.calc_type,
             dir_name=os.getcwd(),
             abinit_input=self.abinit_input,
+            structure=self.get_final_structure(),
         )
         response = Response(output=output)
 
@@ -293,9 +296,13 @@ class BaseAbinitMaker(Maker):
             previous_dir=self.workdir, reset=reset, num_restarts=num_restarts
         )
 
+        print("Getting new job")
+        final_structure = self.get_final_structure()
+        print(f"Volume of new structure in the job : {final_structure.volume}")
         new_job = self.make(
-            structure=self.structure,
-            abinit_input=self.abinit_input,
+            structure=self.get_final_structure(),
+            # abinit_input=self.abinit_input,
+            previous_abinit_input=self.abinit_input,
             restart_info=self.restart_info,
             history=self.history,
         )
@@ -414,19 +421,19 @@ class BaseAbinitMaker(Maker):
                 # TODO: Do we need to keep this here as it is supposed to be passed using the jobflow db ?
                 #  this is related to the question on abinit_input AND strutured passed together in make.
                 #  Do we keep this thing with '@' ?
-                if dep.startswith("@structure"):
-                    self.abinit_input.set_structure(structure=prev_output.structure)
-                elif not dep.startswith("@"):
-                    source_dir = prev_output.dir_name
-                    self.abinit_input.set_vars(irdvars_for_ext(dep))
-                    if dep == "DDK":
-                        raise NotImplementedError
-                        # self.link_ddk(source_dir)
-                    elif dep == "1WF" or dep == "1DEN":
-                        raise NotImplementedError
-                        # self.link_1ext(dep, source_dir)
-                    else:
-                        self.link_ext(dep, source_dir)
+                # if dep.startswith("@structure"):
+                #     self.abinit_input.set_structure(structure=prev_output.structure)
+                # if not dep.startswith("@"):
+                source_dir = prev_output.dir_name
+                self.abinit_input.set_vars(irdvars_for_ext(dep))
+                if dep == "DDK":
+                    raise NotImplementedError
+                    # self.link_ddk(source_dir)
+                elif dep == "1WF" or dep == "1DEN":
+                    raise NotImplementedError
+                    # self.link_1ext(dep, source_dir)
+                else:
+                    self.link_ext(dep, source_dir)
 
     def link_ext(self, ext, source_dir, strict=True):
         """Link the required files from previous runs in the input data directory.
@@ -576,21 +583,25 @@ class BaseAbinitMaker(Maker):
                 "tmpdata_prefix": f'"{TMPDATA_PREFIX}"',
             }
         )
-        gen_args = []
+        # gen_args = []
         gen_kwargs: Dict[str, Any] = {"extra_abivars": extra_abivars}
-        if self.input_generator.structure_required:
-            gen_args.append(structure)
-            gen_kwargs.update({"pseudos": self.pseudos})
-        if self.input_generator.gs_input_required:
-            gen_args.append(previous_abinit_input)
-        if len(gen_args) != 1:
-            raise RuntimeError(
-                "Only one positional argument supported right now for input generation. "
-                "The positional argument is either a structure or a previous ground-state "
-                "input."
-            )
+
+        # if self.input_generator.structure_required:
+        #     gen_args.append(structure)
+        #     gen_kwargs.update({"pseudos": self.pseudos})
+        # if self.input_generator.gs_input_required:
+        #     gen_args.append(previous_abinit_input)
+        # if len(gen_args) != 1:
+        #     raise RuntimeError(
+        #         "Only one positional argument supported right now for input generation. "
+        #         "The positional argument is either a structure or a previous ground-state "
+        #         "input."
+        #     )
         self.abinit_input = self.input_generator.generate_abinit_input(
-            *gen_args, **gen_kwargs
+            structure=structure,
+            previous_abinit_input=previous_abinit_input,
+            pseudos=self.pseudos,
+            **gen_kwargs,
         )
 
     def run_abinit(self):
@@ -652,3 +663,90 @@ class BaseAbinitMaker(Maker):
                     raise e
 
         return dest
+
+    def out_to_in_tim(self, out_file, in_file):
+        """Link or copy output file from previous job to the input data directory of this job.
+
+        This will make a link or a copy of the output file to the input data directory of this job
+        and rename the file so that ABINIT can read it as an input data file.
+
+        Parameters
+        ----------
+        out_file : str
+            Output file to be linked or copied to the input data directory.
+
+        Returns
+        -------
+        str
+            The absolute path of the new file in the input data directory.
+        """
+        dest = os.path.join(self.indir.path, in_file)
+
+        if os.path.exists(dest) and not os.path.islink(dest):
+            logger.warning("Will overwrite %s with %s" % (dest, out_file))
+
+        if self.settings.COPY_DEPS:
+            shutil.copyfile(out_file, dest)
+        else:
+            # if dest already exists should be overwritten. see also resolve_deps and config_run
+            try:
+                os.symlink(out_file, dest)
+            except OSError as e:
+                if e.errno == errno.EEXIST:
+                    os.remove(dest)
+                    os.symlink(out_file, dest)
+                else:
+                    raise e
+
+        return dest
+
+    def get_final_structure(self):
+        """Get the final structure."""
+        # No need to get the structure from the output when it is fixed.
+        # This is the case for everything except relaxations and molecular dynamics calculations.
+        if self.structure_fixed:
+            return self.structure
+
+        # For relaxations and molecular dynamics, get the structure from the Gsr file.
+        try:
+            with self.open_gsr() as gsr:
+                return gsr.structure
+        except AttributeError:
+            msg = "Cannot find the GSR file with the final structure to restart from."
+            logger.error(msg)
+            raise PostProcessError(msg)
+
+    # TODO: use monty's lazyproperty here ?
+    @property
+    def gsr_path(self):
+        """Get the absolute path of the GSR file. Empty string if file is not present."""
+        # Lazy property to avoid multiple calls to has_abiext.
+        try:
+            return self._gsr_path
+        except AttributeError:
+            path = self.outdir.has_abiext("GSR")
+            if path:
+                self._gsr_path = path
+            return path
+
+    def open_gsr(self):
+        """Open the GSR.nc file.
+
+        This returns a GsrFile object or raises a PostProcessError exception if the file could not be found or
+        is not readable.
+        """
+        gsr_path = self.gsr_path
+        if not gsr_path:
+            msg = "No GSR file available for job {} in {}".format(
+                self.name, self.outdir
+            )
+            logger.critical(msg)
+            raise PostProcessError(msg)
+
+        # Open the GSR file.
+        try:
+            return GsrFile(gsr_path)
+        except Exception as exc:
+            msg = "Exception while reading GSR file at %s:\n%s" % (gsr_path, str(exc))
+            logger.critical(msg)
+            raise PostProcessError(msg)

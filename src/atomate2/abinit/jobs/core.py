@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import Optional, Sequence
 
 from abipy.flowtk.utils import irdvars_for_ext
 
-from atomate2.abinit.inputs.factories import NScfInputGenerator, ScfInputGenerator
+from atomate2.abinit.inputs.factories import (
+    NScfInputGenerator,
+    RelaxInputGenerator,
+    ScfInputGenerator,
+)
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.utils.common import RestartError
 
@@ -33,7 +38,7 @@ class ScfMaker(BaseAbinitMaker):
     CRITICAL_EVENTS: Sequence[str] = ("ScfConvergenceWarning",)
 
     def resolve_restart_deps(self):
-        """Resolve dpendencies to restart Scf calculations.
+        """Resolve dependencies to restart Scf calculations.
 
         Scf calculations can be restarted from either the WFK file or the DEN file.
         """
@@ -88,7 +93,7 @@ class NonScfMaker(BaseAbinitMaker):
     dependencies: Optional[dict] = field(default_factory=NonScfDeps)
 
     def resolve_restart_deps(self):
-        """Resolve dpendencies to restart Non-Scf calculations.
+        """Resolve dependencies to restart Non-Scf calculations.
 
         Non-Scf calculations can only be restarted from the WFK file .
         """
@@ -109,3 +114,97 @@ class NonScfMaker(BaseAbinitMaker):
             # Add the appropriate variable for restarting.
             irdvars = irdvars_for_ext(ext)
             self.abinit_input.set_vars(irdvars)
+
+
+@dataclass
+class RelaxMaker(BaseAbinitMaker):
+    """Maker to create relaxation calculations."""
+
+    calc_type: str = "relax"
+    name: str = "Relaxation calculation"
+
+    input_generator: RelaxInputGenerator = RelaxInputGenerator()
+    CRITICAL_EVENTS: Sequence[str] = ("RelaxConvergenceWarning",)
+
+    # This is not part of the dataclass __init__ method (hence the purposely absence of annotation)
+    structure_fixed = False
+
+    def resolve_restart_deps(self):
+        """Resolve dependencies to restart relaxation calculations."""
+        if self.restart_info.reset:
+            # remove non reset keys that may have been added in a previous restart
+            self.remove_restart_vars(["WFK", "DEN"])
+        else:
+            # for optcell > 0 it may fail to restart if paral_kgb == 0. Do not use DEN or WFK in this case
+            # FIXME fix when Matteo makes the restart possible for paral_kgb == 0
+            self.abinit_input.get("paral_kgb", 0)
+            self.abinit_input.get("optcell", 0)
+
+            # if optcell == 0 or paral_kgb == 1:
+            # TODO: see if this works in general (it works for silicon :D)
+            #  if not, why not switch by default to paral_kgb = 1 ?
+            if True:
+                restart_file = None
+
+                # Try to restart from the WFK file if possible.
+                # FIXME: This part has been disabled because WFK=IO is a mess if paral_kgb == 1
+                # This is also the reason why I wrote my own MPI-IO code for the GW part!
+                wfk_file = self.restart_info.prev_outdir.has_abiext("WFK")
+                irdvars = None
+                if False and wfk_file:
+                    irdvars = irdvars_for_ext("WFK")
+                    restart_file = self.out_to_in(wfk_file)
+
+                # Fallback to DEN file. Note that here we look for out_DEN instead of out_TIM?_DEN
+                # ********************************************************************************
+                # Note that it's possible to have an undetected error if we have multiple restarts
+                # and the last relax died badly. In this case indeed out_DEN is the file produced
+                # by the last run that has executed on_done.
+                # ********************************************************************************
+                if restart_file is None:
+                    out_den = self.restart_info.prev_outdir.path_in("out_DEN")
+                    if os.path.exists(out_den):
+                        irdvars = irdvars_for_ext("DEN")
+                        restart_file = self.out_to_in(out_den)
+
+                if restart_file is None:
+                    # Try to restart from the last TIM?_DEN file.
+                    # This should happen if the previous run didn't complete in clean way.
+                    # Find the last TIM?_DEN file.
+                    last_timden = self.restart_info.prev_outdir.find_last_timden_file()
+                    if last_timden is not None:
+                        if last_timden.path.endswith(".nc"):
+                            in_file_name = "in_DEN.nc"
+                        else:
+                            in_file_name = "in_DEN"
+                        restart_file = self.out_to_in_tim(
+                            last_timden.path, in_file_name
+                        )
+                        irdvars = irdvars_for_ext("DEN")
+
+                if restart_file is None:
+                    # Don't raise RestartError as the structure has been updated
+                    logger.warning(
+                        "Cannot find the WFK|DEN|TIM?_DEN file to restart from."
+                    )
+                else:
+                    # Add the appropriate variable for restarting.
+                    if irdvars is None:
+                        raise RuntimeError("irdvars not set.")
+                    self.abinit_input.set_vars(irdvars)
+                    logger.info("Will restart from %s", restart_file)
+
+    @classmethod
+    def ionic_relaxation(cls):
+        """Create an ionic relaxation maker."""
+        # TODO: add the possibility to tune the RelaxInputGenerator options in this class method.
+        return cls(
+            input_generator=RelaxInputGenerator(relax_cell=False),
+            name=cls.name + " (ions only)",
+        )
+
+    @classmethod
+    def full_relaxation(cls):
+        """Create a full relaxation maker."""
+        # TODO: add the possibility to tune the RelaxInputGenerator options in this class method.
+        return cls(input_generator=RelaxInputGenerator(relax_cell=True))
