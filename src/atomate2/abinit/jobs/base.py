@@ -632,6 +632,9 @@ class BaseAbinitMaker(Maker):
         This will make a link or a copy of the output file to the input data directory of this job
         and rename the file so that ABINIT can read it as an input data file.
 
+        Note that this method also handles WFQ files which are output with a WFQ extension but should be
+        read with a WFK extension.
+
         Parameters
         ----------
         out_file : str
@@ -643,6 +646,7 @@ class BaseAbinitMaker(Maker):
             The absolute path of the new file in the input data directory.
         """
         in_file = os.path.basename(out_file).replace("out", "in", 1)
+        in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
         dest = os.path.join(self.indir.path, in_file)
 
         if os.path.exists(dest) and not os.path.islink(dest):

@@ -134,6 +134,16 @@ class NScfInputGenerator(InputGenerator):
     input_structure_and_previous_abinit_input = False
 
 
+class NScfWfqInputGenerator(InputGenerator):
+    """Input generator for Non-Scf Wfq calculations."""
+
+    # TODO: implement
+    factory_function = None
+    # input_structure = False
+    # input_previous_abinit_input = True
+    # input_structure_and_previous_abinit_input = False
+
+
 class RelaxInputGenerator(InputGenerator):
     """Input generator for relaxation calculations."""
 

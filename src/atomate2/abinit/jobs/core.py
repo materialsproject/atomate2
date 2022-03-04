@@ -11,6 +11,7 @@ from abipy.flowtk.utils import irdvars_for_ext
 
 from atomate2.abinit.inputs.factories import (
     NScfInputGenerator,
+    NScfWfqInputGenerator,
     RelaxInputGenerator,
     ScfInputGenerator,
 )
@@ -92,19 +93,22 @@ class NonScfMaker(BaseAbinitMaker):
     # case, this would give : ("scf", ("DEN", )). This is essentially a user defined mapping of course...
     dependencies: Optional[dict] = field(default_factory=NonScfDeps)
 
+    # Non dataclass variables:
+    restart_extension = "WFK"
+
     def resolve_restart_deps(self):
         """Resolve dependencies to restart Non-Scf calculations.
 
-        Non-Scf calculations can only be restarted from the WFK file .
+        Non-Scf calculations can only be restarted from the WFK file (or WFQ file).
         """
         if self.restart_info.reset:
             # remove non reset keys that may have been added in a previous restart
-            self.remove_restart_vars(["WFK"])
+            self.remove_restart_vars(["WFQ", "WFK"])
         else:
-            ext = "WFK"
+            ext = self.restart_extension
             restart_file = self.restart_info.prev_outdir.has_abiext(ext)
             if not restart_file:
-                msg = "Cannot find the WFK file to restart from."
+                msg = f"Cannot find the {self.restart_extension} file to restart from."
                 logger.error(msg)
                 raise RestartError(msg)
 
@@ -112,8 +116,36 @@ class NonScfMaker(BaseAbinitMaker):
             self.out_to_in(restart_file)
 
             # Add the appropriate variable for restarting.
-            irdvars = irdvars_for_ext(ext)
+            # Note that the restart of both WFK and WFQ is activated by irdwfk (i.e. ird var for WFK extension)
+            irdvars = irdvars_for_ext("WFK")
             self.abinit_input.set_vars(irdvars)
+
+
+@dataclass
+class NonScfWfqMaker(NonScfMaker):
+    """Maker to create non SCF calculations for the WFQ."""
+
+    calc_type: str = "nscf_wfq"
+    name: str = "non-Scf calculation"
+
+    input_generator: NScfWfqInputGenerator = NScfWfqInputGenerator()
+    CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
+
+    # Here there is no way to set a default that is mutable (dict) for the dependencies so I use
+    # the default_factory of the dataclass field with a dict subclass...
+    # One option could be to use some kind of frozen dict/mapping.
+    # - frozendict (https://marco-sulla.github.io/python-frozendict/) is one possibility
+    #   but is not part of the stdlib. A PEP was actually discussed (and rejected) to
+    #   add such a frozendict in the stdlib (https://www.python.org/dev/peps/pep-0416/).
+    # - there is an ongoing PEP being discussed for a frozenmap type in the collections module.
+    #   If this PEP (https://www.python.org/dev/peps/pep-0603/) is accepted in the future, we
+    #   may think to use this new frozenmap type.
+    # Another option would be to use a different structure, e.g. a tuple of tuples. In the current
+    # case, this would give : ("scf", ("DEN", )). This is essentially a user defined mapping of course...
+    dependencies: Optional[dict] = field(default_factory=NonScfDeps)
+
+    # Non dataclass variables:
+    restart_extension = "WFQ"
 
 
 @dataclass
