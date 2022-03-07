@@ -68,7 +68,7 @@ class ElasticMaker(Maker):
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
@@ -108,7 +108,7 @@ class ElasticMaker(Maker):
             order=self.order,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
-            **self.generate_elastic_deformations_kwargs
+            **self.generate_elastic_deformations_kwargs,
         )
         vasp_deformation_calcs = run_elastic_deformations(
             structure,
@@ -122,7 +122,7 @@ class ElasticMaker(Maker):
             equilibrium_stress=equilibrium_stress,
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
-            **self.fit_elastic_tensor_kwargs
+            **self.fit_elastic_tensor_kwargs,
         )
 
         # allow some of the deformations to fail

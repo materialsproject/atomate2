@@ -307,6 +307,10 @@ class CalculationOutput(BaseModel):
     transition: str = Field(
         None, description="Band gap transition given by CBM and VBM k-points"
     )
+    mag_density: float = Field(
+        None,
+        description="The magnetization density, defined as total_mag/volume (units of A^-3)",
+    )
     epsilon_static: Matrix3D = Field(
         None, description="The high-frequency dielectric constant"
     )
@@ -382,6 +386,7 @@ class CalculationOutput(BaseModel):
             bandstructure = vasprun.get_band_structure(efermi="smart")
             bandgap_info = bandstructure.get_band_gap()
             electronic_output = dict(
+                efermi=bandstructure.efermi,
                 vbm=bandstructure.get_vbm()["energy"],
                 cbm=bandstructure.get_cbm()["energy"],
                 bandgap=bandgap_info["energy"],
@@ -431,6 +436,8 @@ class CalculationOutput(BaseModel):
         outcar_dict.pop("run_stats")
 
         structure = vasprun.final_structure
+        mag_density = outcar.total_mag / structure.volume if outcar.total_mag else None
+
         if len(outcar.magnetization) != 0:
             # patch calculated magnetic moments into final structure
             magmoms = [m["tot"] for m in outcar.magnetization]
@@ -448,6 +455,7 @@ class CalculationOutput(BaseModel):
             structure=structure,
             energy=vasprun.final_energy,
             energy_per_atom=vasprun.final_energy / len(structure),
+            mag_density=mag_density,
             epsilon_static=vasprun.epsilon_static or None,
             epsilon_static_wolfe=vasprun.epsilon_static_wolfe or None,
             epsilon_ionic=vasprun.epsilon_ionic or None,
@@ -645,7 +653,7 @@ class Calculation(BaseModel):
 
 def _get_output_file_paths(volumetric_files: List[str]) -> Dict[VaspObject, str]:
     """
-    Get the output file paths.for VASP output files from the list of volumetric files.
+    Get the output file paths for VASP output files from the list of volumetric files.
 
     Parameters
     ----------

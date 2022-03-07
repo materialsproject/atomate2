@@ -54,7 +54,7 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
-    assert output1.output.energy == approx(-10.85083141)
+    assert output1.output.energy == approx(-10.85043620)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 1
     assert output1.input.parameters["NSW"] > 1
 

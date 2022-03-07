@@ -5,7 +5,9 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
 
     from atomate2.vasp.flows.core import DoubleRelaxMaker
+    from atomate2.vasp.jobs.core import RelaxMaker
     from atomate2.vasp.schemas.task import TaskDocument
+    from atomate2.vasp.sets.core import RelaxSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -33,8 +35,45 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     output2 = responses[flow.jobs[1].uuid][1].output
 
     assert isinstance(output1, TaskDocument)
-    assert output1.output.energy == pytest.approx(-10.85083141)
+    assert output1.output.energy == pytest.approx(-10.85043620)
     assert output2.output.energy == pytest.approx(-10.84177648)
+
+    # Now try with two identical but non-default makers
+    ref_paths = {
+        "relax 1": "Si_double_relax_swaps/swap1/relax_1",
+        "relax 2": "Si_double_relax_swaps/swap1/relax_2",
+    }
+    fake_run_vasp_kwargs = {
+        "relax 1": {"incar_settings": ["LREAL"]},
+        "relax 2": {"incar_settings": ["LREAL"]},
+    }
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    my_custom_maker = RelaxMaker(
+        input_set_generator=RelaxSetGenerator(user_incar_settings={"LREAL": False})
+    )
+    flow = DoubleRelaxMaker(
+        relax_maker1=my_custom_maker, relax_maker2=my_custom_maker
+    ).make(si_structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    output1 = responses[flow.jobs[0].uuid][1].output
+    output2 = responses[flow.jobs[1].uuid][1].output
+
+    # Try the same as above but with the .from_relax_maker() class method
+    flow = DoubleRelaxMaker.from_relax_maker(my_custom_maker).make(si_structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # Try DoubleRelaxMaker with a non-default second maker only
+    ref_paths = {
+        "relax 1": "Si_double_relax_swaps/swap2/relax_1",
+        "relax 2": "Si_double_relax_swaps/swap2/relax_2",
+    }
+    fake_run_vasp_kwargs = {
+        "relax 1": {"incar_settings": ["LREAL"]},
+        "relax 2": {"incar_settings": ["LREAL"]},
+    }
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    flow = DoubleRelaxMaker(relax_maker2=my_custom_maker).make(si_structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
 
 
 def test_band_structure(mock_vasp, clean_dir, si_structure):

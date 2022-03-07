@@ -167,7 +167,7 @@ class ElectronPhononRenormalisationDoc(BaseModel):
                 "renormalisation"
             )
 
-        if len(set([b.is_spin_polarized for b in displacement_band_structures])) != 1:
+        if len({b.is_spin_polarized for b in displacement_band_structures}) != 1:
             raise ValueError(
                 "Some displacement bands structures are spin polarized and some are "
                 "spin paired. Cannot continue."

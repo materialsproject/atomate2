@@ -5,7 +5,6 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Tuple
 
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.core import Structure
@@ -90,10 +89,10 @@ class ElectronPhononMaker(Maker):
     """
 
     name: str = "electron phonon"
-    temperatures: Tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
+    temperatures: tuple[float, ...] = DEFAULT_ELPH_TEMPERATURES
     min_supercell_length: float = DEFAULT_MIN_SUPERCELL_LENGTH
     relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(relax_maker=TightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     elph_displacement_maker: SupercellElectronPhononDisplacedStructureMaker = field(
@@ -105,12 +104,13 @@ class ElectronPhononMaker(Maker):
                 input_set_generator=StaticSetGenerator(
                     auto_ispin=True,
                     user_incar_settings={"KSPACING": None, "EDIFF": 1e-5},
-                    user_kpoints_settings={"reciprocal_density": 100},
+                    user_kpoints_settings={"reciprocal_density": 50},
                 ),
             ),
             bs_maker=NonSCFMaker(
                 input_set_generator=NonSCFSetGenerator(
-                    user_kpoints_settings={"reciprocal_density": 500},  # dense BS mesh
+                    reciprocal_density=100,  # dense BS mesh
+                    user_incar_settings={"LORBIT": 10},  # disable site projections
                 ),
                 task_document_kwargs={
                     "strip_bandstructure_projections": True,
@@ -258,11 +258,12 @@ class HSEElectronPhononMaker(ElectronPhononMaker):
                 input_set_generator=HSEStaticSetGenerator(
                     auto_ispin=True,
                     user_incar_settings={"KSPACING": None, "EDIFF": 1e-5},
-                    user_kpoints_settings={"reciprocal_density": 50},
+                    user_kpoints_settings={"reciprocal_density": 64},
                 )
             ),
             bs_maker=HSEBSMaker(
                 input_set_generator=HSEBSSetGenerator(
+                    user_incar_settings={"LORBIT": 10},  # disable site projections
                     user_kpoints_settings={"reciprocal_density": 200},  # dense BS mesh
                 ),
                 task_document_kwargs={
