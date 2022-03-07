@@ -44,7 +44,7 @@ if __name__ == "__main__":
                 "numpydoc==1.2",
                 "m2r2==0.3.2",
                 "mistune==0.8.4",
-                "ipython==8.1.0",
+                "ipython==8.1.1",
                 "FireWorks==2.0.2",
                 "pydata-sphinx-theme==0.8.0",
                 "autodoc_pydantic==1.6.1",
