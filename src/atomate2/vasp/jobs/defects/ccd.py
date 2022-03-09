@@ -47,7 +47,7 @@ def run_ccd_cal(
 
     # add the static job for the reference structure
     static_maker.make(ref)
-    jobs.append(static_maker.make_static(ref))
+    jobs.append(static_maker.make(ref))
 
     # add all the distorted structures
     for _, d_struct in enumerate(distorted_structures):
@@ -60,8 +60,9 @@ def run_ccd_cal(
         job_dirs.append(static_job.output.dir_name)
 
     # TODO should construct some kind of CCD document class to deal with this
-    Flow(jobs, outputs)
-    return Response(output=outputs)
+    flow_ = Flow(jobs, outputs)
+    return Response(replace=flow_)
+    return outputs
 
 
 def get_dQ(ref: Structure, distorted: Structure) -> float:
