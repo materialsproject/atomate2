@@ -160,6 +160,8 @@ def write_vasp_input_set(
         A structure.
     input_set_generator : .VaspInputSetGenerator
         A VASP input set generator.
+    directory : str or Path
+        The directory to write the input files to.
     from_prev : bool
         Whether to initialize the input set from a previous calculation.
     apply_incar_updates : bool
