@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Union
 
 from pymatgen.core import Structure
 
@@ -144,8 +144,10 @@ def get_largest_relax_extension(
 def write_vasp_input_set(
     structure: Structure,
     input_set_generator: VaspInputSetGenerator,
+    directory: Union[str, Path] = ".",
     from_prev: bool = False,
     apply_incar_updates: bool = True,
+    potcar_spec: bool = False,
     clean_prev: bool = True,
     **kwargs,
 ):
@@ -168,7 +170,9 @@ def write_vasp_input_set(
         Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
     """
     prev_dir = "." if from_prev else None
-    vis = input_set_generator.get_input_set(structure, prev_dir=prev_dir)
+    vis = input_set_generator.get_input_set(
+        structure, prev_dir=prev_dir, potcar_spec=potcar_spec
+    )
 
     if apply_incar_updates:
         vis.incar.update(SETTINGS.VASP_INCAR_UPDATES)
@@ -180,4 +184,4 @@ def write_vasp_input_set(
                 Path(filename).unlink()
 
     logger.info("Writing VASP input set.")
-    vis.write_input(".", **kwargs)
+    vis.write_input(directory, potcar_spec=potcar_spec, **kwargs)
