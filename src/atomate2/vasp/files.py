@@ -160,10 +160,14 @@ def write_vasp_input_set(
         A structure.
     input_set_generator : .VaspInputSetGenerator
         A VASP input set generator.
+    directory : str or Path
+        The directory to write the input files to.
     from_prev : bool
         Whether to initialize the input set from a previous calculation.
     apply_incar_updates : bool
         Whether to apply incar updates given in the ~/.atomate2.yaml settings file.
+    potcar_spec : bool
+        Whether to use the POTCAR.spec file instead of the POTCAR file.
     clean_prev : bool
         Remove previous KPOINTS, INCAR, POSCAR, and POTCAR before writing the new inputs.
     **kwargs
