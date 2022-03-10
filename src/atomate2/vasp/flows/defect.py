@@ -64,11 +64,6 @@ class ConfigurationCoordinateMaker(Maker):
         relax1.append_name(" q1")
         relax2.append_name(" q2")
 
-        static1 = self.static_maker.make(relax1.output.structure)
-        static2 = self.static_maker.make(relax2.output.structure)
-        static1.append_name(" q1")
-        static2.append_name(" q2")
-
         dir1 = relax1.output.dir_name
         dir2 = relax2.output.dir_name
         struct1 = relax1.output.structure
@@ -97,7 +92,7 @@ class ConfigurationCoordinateMaker(Maker):
             deformations1.output, deformations2.output, struct1, struct2
         )
 
-        jobs = [relax1, relax2, static1, static2, deformations1, deformations2]
+        jobs = [relax1, relax2, deformations1, deformations2]
         return Flow(
             jobs=jobs, name=name, output=[deformations1.output, deformations2.output]
         )
