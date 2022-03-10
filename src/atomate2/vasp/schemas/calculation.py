@@ -356,7 +356,8 @@ class CalculationOutput(BaseModel):
         "PHON_LMC = True.",
     )
     dos_properties: Dict[str, Any] = Field(
-        None, description="Element- and orbital-projected band properties for the DOS"
+        None,
+        description="Element- and orbital-projected band properties (in eV) for the DOS. All properties are with respect to the Fermi level.",
     )
     run_stats: RunStatistics = Field(
         None, description="Summary of runtime statistics for this calculation"
