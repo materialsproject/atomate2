@@ -10,6 +10,8 @@ from jobflow import Flow, Response, job
 from pymatgen.core import Structure
 
 from atomate2.vasp.jobs.core import StaticMaker
+from atomate2.vasp.schemas.defect import CCDTaskDocument
+from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -56,3 +58,38 @@ def calculate_energy_curve(
 
     add_flow = Flow(jobs, outputs)
     return Response(output=outputs, replace=add_flow)
+
+
+@job(output_schema=CCDTaskDocument)
+def get_ccd_from_task_docs(
+    taskdocs1: Iterable[TaskDocument],
+    taskdocs2: Iterable[TaskDocument],
+    structure1: Structure,
+    structure2: Structure,
+):
+    """
+    Get the configuration coordinate diagram from the task documents.
+
+    Parameters
+    ----------
+    taskdocs1 : Iterable[TaskDocument]
+        task documents for the first charge state
+    taskdocs2 : Iterable[TaskDocument]
+        task documents for the second charge state
+    structure1 : pymatgen.core.structure.Structure
+        pymatgen structure corresponding to the ground (final) state
+    structure2 : pymatgen.core.structure.Structure
+        pymatgen structure corresponding to the excited (initial) state
+
+    Returns
+    -------
+    Response
+        Response object
+    """
+    ccd_doc = CCDTaskDocument.from_distorted_calcs(
+        taskdocs1,
+        taskdocs2,
+        structure1=structure1,
+        structure2=structure2,
+    )
+    return Response(output=ccd_doc)

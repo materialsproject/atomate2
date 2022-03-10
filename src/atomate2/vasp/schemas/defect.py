@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Callable, List, Tuple
+from typing import Any, Callable, Iterable, List, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -54,8 +54,8 @@ class CCDTaskDocument(BaseModel):
     @classmethod
     def from_distorted_calcs(
         cls,
-        distortion1_tasks: List[TaskDocument],
-        distortion2_tasks: List[TaskDocument],
+        distortion1_tasks: Iterable[TaskDocument],
+        distortion2_tasks: Iterable[TaskDocument],
         structure1: Structure,
         structure2: Structure,
     ):
@@ -76,10 +76,11 @@ class CCDTaskDocument(BaseModel):
         """
 
         def get_ent(task: TaskDocument):
-            d = task.entry.as_dict()
-            d["structure"] = task.structure
-            d["data"] = {"dir_name": task.dir_name}
-            return [ComputedStructureEntry(**d)]
+            return ComputedStructureEntry(
+                structure=task.structure,
+                energy=task.energy,
+                data={"dir_name": task.dir_name},
+            )
 
         entries1 = [get_ent(task) for task in distortion1_tasks]
         entries2 = [get_ent(task) for task in distortion2_tasks]

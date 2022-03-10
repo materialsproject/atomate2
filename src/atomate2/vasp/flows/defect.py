@@ -5,13 +5,12 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 
-from jobflow import Flow, Maker, job
+from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
-from atomate2.vasp.jobs.defect import calculate_energy_curve
-from atomate2.vasp.schemas.defect import CCDTaskDocument
+from atomate2.vasp.jobs.defect import calculate_energy_curve, get_ccd_from_task_docs
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
@@ -35,7 +34,6 @@ class ConfigurationCoordinateMaker(Maker):
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
 
-    @job(output_schema=CCDTaskDocument)
     def make(
         self,
         structure: Structure,
@@ -94,11 +92,9 @@ class ConfigurationCoordinateMaker(Maker):
 
         deformations1.append_name(" q1")
         deformations2.append_name(" q2")
-        CCDTaskDocument.from_distorted_calcs(
-            deformations1.output,
-            deformations2.output,
-            structure1=struct1,
-            structure2=struct2,
+
+        get_ccd_from_task_docs(
+            deformations1.output, deformations2.output, struct1, struct2
         )
 
         jobs = [relax1, relax2, static1, static2, deformations1, deformations2]
