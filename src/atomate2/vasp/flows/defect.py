@@ -88,11 +88,13 @@ class ConfigurationCoordinateMaker(Maker):
         deformations1.append_name(" q1")
         deformations2.append_name(" q2")
 
-        get_ccd_from_task_docs(
+        ccd_docs = get_ccd_from_task_docs(
             deformations1.output, deformations2.output, struct1, struct2
         )
 
-        jobs = [relax1, relax2, deformations1, deformations2]
+        jobs = [relax1, relax2, deformations1, deformations2, ccd_docs]
         return Flow(
-            jobs=jobs, name=name, output=[deformations1.output, deformations2.output]
+            jobs=jobs,
+            name=name,
+            output=ccd_docs.output,
         )
