@@ -12,8 +12,8 @@ from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
-from pymatgen.electronic_structure.core import OrbitalType
 from pymatgen.electronic_structure.bandstructure import BandStructure
+from pymatgen.electronic_structure.core import OrbitalType
 from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.vasp import (
     BSVasprun,
