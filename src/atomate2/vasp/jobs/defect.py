@@ -6,7 +6,6 @@ import logging
 from pathlib import Path
 from typing import Iterable
 
-import numpy as np
 from jobflow import Flow, Response, job
 from pymatgen.core import Structure
 
@@ -53,36 +52,7 @@ def calculate_energy_curve(
     for _, d_struct in enumerate(distorted_structures):
         static_job = static_maker.make(d_struct, prev_vasp_dir=prev_vasp_dir)
         jobs.append(static_job)
-        dQ = get_dQ(ref, d_struct)
-        outputs.append((dQ, static_job.output))
+        outputs.append(static_job.output)
 
     add_flow = Flow(jobs, outputs)
     return Response(output=outputs, replace=add_flow)
-
-
-def get_dQ(ref: Structure, distorted: Structure) -> float:
-    """
-    Calculate dQ from the initial and final structures.
-
-    Parameters
-    ----------
-    ground : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the ground (final) state
-    excited : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the excited (initial) state
-
-    Returns
-    -------
-    float
-        the dQ value (amu^{1/2} Angstrom)
-    """
-    return np.sqrt(
-        np.sum(
-            list(
-                map(
-                    lambda x: x[0].distance(x[1]) ** 2 * x[0].specie.atomic_mass,
-                    zip(ref, distorted),
-                )
-            )
-        )
-    )
