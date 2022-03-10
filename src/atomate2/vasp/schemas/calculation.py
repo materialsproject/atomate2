@@ -448,7 +448,7 @@ class CalculationOutput(BaseModel):
             structure.add_site_property("magmom", magmoms)
 
         # Parse DOS properties
-        if hasattr(vasprun, "complete_dos") and vasprun.incar.get("NEDOS", None):
+        if hasattr(vasprun, "complete_dos"):
             dosprop_dict = {}
             complete_dos = vasprun.complete_dos
             for el in structure.composition.elements:
