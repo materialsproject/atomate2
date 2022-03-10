@@ -468,7 +468,7 @@ class CalculationOutput(BaseModel):
                     ):
                         continue
                     dosprops = {
-                        "filling": complete_dos.get_band_center(
+                        "filling": complete_dos.get_band_filling(
                             band=orb_type, elements=[el]
                         ),
                         "center": complete_dos.get_band_center(
