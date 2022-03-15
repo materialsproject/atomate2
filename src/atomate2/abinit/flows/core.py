@@ -1,8 +1,7 @@
 """Core abinit flow makers."""
 
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Union
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
@@ -34,7 +33,9 @@ class LineBandStructureMaker(Maker):
     bs_maker: BaseAbinitMaker = NonScfMaker()
 
     def make(
-        self, structure: Structure, prev_outputs: Optional[Union[str, Path]] = None
+        self,
+        structure: Structure,
+        restart_from=None,
     ):
         """
         Create a line mode band structure flow.
@@ -43,7 +44,7 @@ class LineBandStructureMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_dirs : str or Path or None
+        restart_from : str or Path or None
             One or more previous directories for the calculation.
 
         Returns
@@ -51,10 +52,9 @@ class LineBandStructureMaker(Maker):
         Flow
             A line mode band structure flow.
         """
-        scf_job = self.scf_maker.make(structure, prev_outputs=prev_outputs)
+        scf_job = self.scf_maker.make(structure, restart_from=restart_from)
         line_job = self.bs_maker.make(
             prev_outputs=scf_job.output,
-            previous_abinit_input=scf_job.output.abinit_input,
         )
         jobs = [scf_job, line_job]
         return Flow(jobs, line_job.output, name=self.name)
@@ -78,9 +78,7 @@ class RelaxFlowMaker(Maker):
         default_factory=RelaxMaker
     )
 
-    def make(
-        self, structure: Structure, prev_outputs: Optional[Union[str, Path]] = None
-    ):
+    def make(self, structure: Structure, restart_from=None):
         """
         Create a relaxation flow.
 
@@ -100,11 +98,13 @@ class RelaxFlowMaker(Maker):
             relaxation_makers = [self.relaxation_makers]
         else:
             relaxation_makers = self.relaxation_makers
-        relax_job1 = relaxation_makers[0].make(structure=structure)
+        relax_job1 = relaxation_makers[0].make(
+            structure=structure, restart_from=restart_from
+        )
         jobs = [relax_job1]
         for rlx_maker in relaxation_makers[1:]:
             rlx_job = rlx_maker.make(
-                structure=jobs[-1].output.structure, prev_outputs=jobs[-1].output
+                structure=jobs[-1].output.structure, restart_from=jobs[-1].output
             )
             jobs.append(rlx_job)
         return Flow(jobs, jobs[-1].output, name=self.name)

@@ -277,9 +277,9 @@ class PostProcessError(AbiAtomateError):
 class RestartInfo(MSONable):
     """Object that contains the information about the restart of a job."""
 
-    def __init__(self, previous_dir, reset=False, num_restarts=0):
+    def __init__(self, previous_dir, num_restarts=0):
         self.previous_dir = previous_dir
-        self.reset = reset
+        # self.reset = reset
         self.num_restarts = num_restarts
 
     @pmg_serialize
@@ -287,7 +287,7 @@ class RestartInfo(MSONable):
         """Create dictionary representation of the error."""
         return dict(
             previous_dir=self.previous_dir,
-            reset=self.reset,
+            # reset=self.reset,
             num_restarts=self.num_restarts,
         )
 
@@ -296,7 +296,7 @@ class RestartInfo(MSONable):
         """Create instance of the error from its dictionary representation."""
         return cls(
             previous_dir=d["previous_dir"],
-            reset=d["reset"],
+            # reset=d["reset"],
             num_restarts=d["num_restarts"],
         )
 
