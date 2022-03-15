@@ -1,4 +1,7 @@
-"""Factory objects and tools to generate abinit inputs."""
+"""Factory objects and tools to generate abinit inputs.
+
+Note this module is meant to be removed (replaced by InputSetGenerator/InputSet).
+"""
 
 from typing import Any, Optional
 
@@ -138,10 +141,15 @@ class NScfWfqInputGenerator(InputGenerator):
     """Input generator for Non-Scf Wfq calculations."""
 
     # TODO: implement
-    factory_function = None
+    # factory_function = None
     # input_structure = False
     # input_previous_abinit_input = True
     # input_structure_and_previous_abinit_input = False
+
+    @staticmethod
+    def factory_function(*args):
+        """Create abinit input for Nscf Wfq calculation."""
+        print(args)
 
 
 class RelaxInputGenerator(InputGenerator):

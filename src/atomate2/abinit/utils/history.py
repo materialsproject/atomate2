@@ -2,10 +2,13 @@
 
 import collections
 import logging
+import os
 import traceback
 
 from monty.json import MontyDecoder, MSONable, jsanitize
 from pymatgen.util.serialization import pmg_serialize
+
+from atomate2.abinit.utils.common import OUTDIR_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -44,14 +47,63 @@ class JobHistory(collections.deque, MSONable):
         """Log corrections applied to the job."""
         self.append(JobEvent(JobEvent.CORRECTIONS, corrections))
 
-    def log_restart(self, restart_info, local_restart=False):
+    def log_restart(self):
         """Log that the job is restarted."""
         self.append(
             JobEvent(
                 JobEvent.RESTART,
-                details=dict(restart_info=restart_info, local_restart=local_restart),
             )
         )
+
+    def log_start(self, workdir):
+        """Log that the job has started."""
+        self.append(
+            JobEvent(
+                JobEvent.START,
+                details=dict(workdir=workdir),
+            )
+        )
+
+    def log_end(self, workdir):
+        """Log that the job has ended."""
+        self.append(
+            JobEvent(
+                JobEvent.END,
+                details=dict(workdir=workdir),
+            )
+        )
+
+    @property
+    def num_restarts(self):
+        """Get the number of restarts of the job."""
+        # TODO: what happens if a job starts but does not end (e.g. killed by walltime)
+        #  how should we could the number of restarts ? do we need both START and RESTART events ? One could assume
+        #  there is one "start" and the following are restarts.
+        return len(
+            self.get_events_by_types(JobEvent.RESTART)
+        )  # [event for event in self if event.event_type == JobEvent.RESTART])
+
+    @property
+    def prev_dir(self):
+        """Get the last run directory."""
+        return os.path.join(
+            self.get_events_by_types(JobEvent.END)[-1].details["workdir"]
+        )
+
+    @property
+    def prev_outdir(self):
+        """Get the output directory of the last run."""
+        return os.path.join(self.prev_dir, OUTDIR_NAME)
+
+    @property
+    def is_first_run(self):
+        """Determine if it is the first run of the job from the history."""
+        nstart = len(self.get_events_by_types(JobEvent.START))
+        if nstart == 0:
+            raise RuntimeError(
+                "Calling is_first_run when the start of the job has not been logged."
+            )
+        return nstart == 1
 
     def log_autoparal(self, optconf):
         """Log autoparal execution."""
@@ -130,6 +182,8 @@ class JobEvent(MSONable):
 
     INITIALIZED = "initialized"
     CORRECTIONS = "corrections"
+    START = "start"
+    END = "end"
     RESTART = "restart"
     AUTOPARAL = "autoparal"
     UNCONVERGED = "unconverged"
@@ -139,6 +193,7 @@ class JobEvent(MSONable):
     ABINIT_STOP = "abinit stop"
 
     def __init__(self, event_type, details=None):
+        # TODO: add when and where the JobEvent occurred ?
         """Construct JobEvent object."""
         self.event_type = event_type
         self.details = details

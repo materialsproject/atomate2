@@ -8,13 +8,11 @@ import logging
 import os
 import shutil
 import time
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Union
+from dataclasses import dataclass, field
+from typing import Any, ClassVar, Dict, List, Optional, Sequence, Union
 
 import jobflow
 import pseudo_dojo
-from abipy.abio.inputs import AbinitInput
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.events import AbinitEvent
@@ -26,9 +24,9 @@ from monty.string import is_string
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 
-from atomate2.abinit.inputs.factories import InputGenerator
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitJobSummary
+from atomate2.abinit.sets.base import AbinitInputSet, AbinitInputSetGenerator
 from atomate2.abinit.utils.common import (
     HISTORY_JSON,
     INDATA_PREFIX,
@@ -40,11 +38,9 @@ from atomate2.abinit.utils.common import (
     OUTDIR_NAME,
     OUTPUT_FILE_NAME,
     STDERR_FILE_NAME,
-    TMPDATA_PREFIX,
     TMPDIR_NAME,
     InitializationError,
     PostProcessError,
-    RestartInfo,
     UnconvergedError,
 )
 from atomate2.abinit.utils.history import JobHistory
@@ -93,29 +89,33 @@ class BaseAbinitMaker(Maker):
         )
     )
     walltime: Optional[int] = None
-    input_generator: Optional[InputGenerator] = None
+    input_set_generator: Optional[AbinitInputSetGenerator] = None
     CRITICAL_EVENTS: Sequence[str] = ()
     dependencies: Optional[dict] = None
-    extra_abivars: Optional[dict] = None
+    extra_abivars: dict = field(default_factory=dict)
 
-    # This is not part of the dataclass __init__ method (hence the purposely absence of annotation)
-    structure_fixed = True
+    # class variables
+    structure_fixed: ClassVar[bool] = True
+    DEFAULT_INPUT_SET_GENERATOR: ClassVar[AbinitInputSetGenerator] = NotImplemented
 
     def __post_init__(self):
         """Process post-init configuration."""
         self.critical_events = [
             as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
         ]
+        if self.input_set_generator is None:
+            self.input_set_generator = self.DEFAULT_INPUT_SET_GENERATOR
 
     @job
     def make(
         self,
         structure: Optional[Structure] = None,
         prev_outputs: Optional[Any] = None,
-        abinit_input: Optional[AbinitInput] = None,
-        previous_abinit_input: Optional[AbinitInput] = None,
-        restart_info=None,
-        history=None,
+        restart_from: Optional[Union[str, jobflow.Job]] = None,
+        # abinit_input_set: Optional[AbinitInputSet] = None,
+        # previous_abinit_input_set: Optional[AbinitInputSet] = None,
+        # restart_info=None,
+        history: Optional[JobHistory] = None,
     ) -> Union[jobflow.Flow, jobflow.Job]:
         """
         Return an ABINIT jobflow.Job.
@@ -124,25 +124,31 @@ class BaseAbinitMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_outputs : str or Path or None
-            A previous ABINIT calculation directory.
+        prev_outputs : TBD
+            TODO: make sure the following is ok
+            An absolute path as a string (previous directory), a list of absolute paths as strings
+            (list of previous directories), a string (previous job uuid), a list of strings (list of previous job
+            uuids), an OutputReference or a list of OutputReference objects,
+            a dict with keys being a type of previous output and values being one of the previous (absolute
+            path or list of absolute paths, uuid or list of uuids, ...), ...
+        restart_from : TBD
+            An absolute path as a string (previous directory), a string (previous job uuid), an OutputReference,
+            TODO: what else ? is an AbinitInputSet ok ?
+            TODO: I would say no, because we not only need the input but also the location where it previously ran.
         """
-        if structure is None and abinit_input is None and previous_abinit_input is None:
+        if structure is None and prev_outputs is None and restart_from is None:
             raise RuntimeError(
-                "At least one of structure, abinit_input or previous_abinit_input should be defined."
-            )
-        # TODO: use an "initial_structure" and "final_structure" ?
-        if prev_outputs is not None:
-            prev_outputs = (
-                prev_outputs if isinstance(prev_outputs, list) else [prev_outputs]
+                "At least one of structure, prev_outputs or restart_from should be defined."
             )
 
         self.setup_job(
             structure=structure,
             prev_outputs=prev_outputs,
-            abinit_input=abinit_input,
-            previous_abinit_input=previous_abinit_input,
-            restart_info=restart_info,
+            restart_from=restart_from,
+            # )
+            # abinit_input_set=abinit_input_set,
+            # previous_abinit_input_set=previous_abinit_input_set,
+            # restart_info=restart_info,
             history=history,
         )
         self.run_abinit()
@@ -153,10 +159,12 @@ class BaseAbinitMaker(Maker):
     def setup_job(
         self,
         structure: Optional[Structure] = None,
-        prev_outputs: Optional[str | Path] = None,
-        abinit_input: Optional[AbinitInput] = None,
-        previous_abinit_input: Optional[AbinitInput] = None,
-        restart_info: Optional[RestartInfo] = None,
+        prev_outputs: Optional[Any] = None,
+        restart_from=None,
+        # restart_info: Optional[RestartInfo] = None,
+        # ):
+        # previous_abinit_input_set: Optional[AbinitInputSet] = None,
+        # restart_info: Optional[RestartInfo] = None,
         history: Optional[JobHistory] = None,
     ):
         """Set up abinit job.
@@ -165,15 +173,26 @@ class BaseAbinitMaker(Maker):
         ----------
         structure
         prev_outputs
-        abinit_input
-        previous_abinit_input
-        restart_info
-        history
+        restart_from
         """
         self.start_time = time.time()
 
         self.structure = structure
-        self.restart_info = restart_info
+        # TODO: transform restart_from and prev_outputs here so that
+        #  they are in the format expected by the AbinitInputSet
+        self.restart_from = restart_from
+        # The previous outputs can be a single previous output, a list of previous outputs,
+        # a dict with values being previous outputs.
+        self.prev_outputs = prev_outputs
+        if isinstance(prev_outputs, AbinitJobSummary):
+            self.prev_outputs = [prev_outputs]
+        elif isinstance(prev_outputs, list):
+            self.prev_outputs = prev_outputs
+        elif prev_outputs is None:
+            self.prev_outputs = prev_outputs
+        else:
+            raise NotImplementedError()
+        # TODO: see if we keep this restart_info or if we just use the history
         self.history = history or JobHistory()
 
         # Set up logging
@@ -191,32 +210,40 @@ class BaseAbinitMaker(Maker):
         # Set up working directory and create input, output and tmp data directories
         self.set_workdir(workdir=os.getcwd())
 
+        # Log information about the start of the job
+        self.history.log_start(workdir=self.workdir)
+
         # Get abinit input
-        self.set_abinit_input(
-            structure=structure,
-            prev_outputs=prev_outputs,
-            abinit_input=abinit_input,
-            previous_abinit_input=previous_abinit_input,
+        self.abinit_input_set = self.get_abinit_input_set(
+            structure=self.structure,
+            prev_outputs=self.prev_outputs,
+            restart_from=self.restart_from,
         )
 
-        self.resolve_deps(prev_outputs=prev_outputs)
+        # TODO: see if we put the resolve_deps and resolve_restart_deps inside the abinit input set.
+        #  I think it would make sense. An abinit input set (and, more generally, any input set without previous
+        #  dependencies or previous vasp dir or previous "something") can write an input that can then directly
+        #  be run just after. It would be nice to have the same for input sets that depends on previous calculations.
+        self.resolve_deps(
+            restart_from=self.restart_from, prev_outputs=self.prev_outputs
+        )
 
         # if it's the restart of a previous job, perform specific job updates.
         # perform these updates before writing the input, but after creating the dirs.
-        if self.restart_info:
-            self.history.log_restart(self.restart_info)
-            self.resolve_restart_deps()
-
-        # TODO: currently just in testing (only Si)
-        #  transfer this in abipy
-        input_str = str(self.abinit_input)
-        input_str += (
-            '\npseudos "/home/davidwaroquiers/miniconda3/envs/'
-            "jobflow_abinit/lib/python3.8/site-packages/"
-            'pseudo_dojo/pseudos/ONCVPSP-PBE-PDv0.4/Si/Si.psp8"'
+        if restart_from is not None:
+            # TODO: do we need this ?
+            self.history.log_restart()
+            # "manual" restart from another previous job
+            if self.history.is_first_run:
+                if isinstance(restart_from, AbinitJobSummary):
+                    prev_dir = os.path.join(restart_from.dir_name)
+                    self.resolve_restart_deps(prev_dir)
+            # automatic restart when unconverged
+            else:
+                self.resolve_restart_deps(self.history.prev_dir)
+        self.abinit_input_set.write_input(
+            directory=self.workdir, make_dir=False, overwrite=False
         )
-
-        self.input_file.write(input_str)
 
     def job_analysis(self):
         """Perform analysis of abinit job."""
@@ -230,7 +257,7 @@ class BaseAbinitMaker(Maker):
         output = AbinitJobSummary(
             calc_type=self.calc_type,
             dir_name=os.getcwd(),
-            abinit_input=self.abinit_input,
+            abinit_input_set=self.abinit_input_set,
             structure=self.get_final_structure(),
         )
         response = Response(output=output)
@@ -238,6 +265,7 @@ class BaseAbinitMaker(Maker):
         if self.report is not None:
             # the calculation finished without errors
             if self.report.run_completed:
+                self.history.log_end(workdir=self.workdir)
                 # Check if the calculation converged.
                 # TODO: where do we define whether a given critical event allows for a restart ?
                 #  here we seem to assume that we can always restart because it is something unconverged
@@ -245,26 +273,31 @@ class BaseAbinitMaker(Maker):
                 not_ok = self.report.filter_types(self.critical_events)
                 if not_ok:
                     self.history.log_unconverged()
-                    num_restarts = (
-                        self.restart_info.num_restarts if self.restart_info else 0
-                    )
+                    num_restarts = self.history.num_restarts
+                    # num_restarts = (
+                    #     self.restart_info.num_restarts if self.restart_info else 0
+                    # )
                     if num_restarts < self.settings.MAX_RESTARTS:
-                        new_job = self.get_restart_job()
+                        new_job = self.get_restart_job(output=output)
                         response.replace = new_job
                     else:
+                        # TODO: check here if we should stop jobflow or children or if we should throw an error.
                         response.stop_jobflow = True
+                        # response.stop_children = True
                         unconverged_error = UnconvergedError(
                             self,
                             msg="Unconverged after {} restarts.".format(num_restarts),
-                            abinit_input=self.abinit_input,
-                            restart_info=self.restart_info,
+                            abinit_input=self.abinit_input_set.abinit_input,
+                            # restart_info=self.restart_info,
                             history=self.history,
                         )
                         response.stored_data = {"error": unconverged_error}
+                        raise unconverged_error
                 else:
                     # calculation converged
                     # everything is ok. conclude the job
                     # TODO: add convergence of custom parameters (this is used e.g. for dilatmx convergence)
+                    response.output.energy = self.get_final_energy()
                     stored_data = self.conclude_task()
                     response.stored_data = stored_data
         else:
@@ -275,7 +308,7 @@ class BaseAbinitMaker(Maker):
 
     def conclude_task(self):
         """Conclude the task."""
-        self.history.log_finalized(self.abinit_input)
+        self.history.log_finalized(self.abinit_input_set.abinit_input)
         stored_data = {
             "report": self.report.as_dict(),
             "finalized": True,
@@ -285,25 +318,17 @@ class BaseAbinitMaker(Maker):
             json.dump(self.history, f, cls=MontyEncoder, indent=4, sort_keys=True)
         return stored_data
 
-    def get_restart_job(self, reset=False):
+    def get_restart_job(self, output):
         """Get new job to restart abinit calculation."""
-        if self.restart_info:
-            num_restarts = self.restart_info.num_restarts + 1
-        else:
-            num_restarts = 0
+        logger.info(msg="Getting restart job.")
+        structure = None
+        if not self.structure_fixed:
+            logger.info(msg="Getting final structure to restart from.")
+            structure = self.get_final_structure()
 
-        self.restart_info = RestartInfo(
-            previous_dir=self.workdir, reset=reset, num_restarts=num_restarts
-        )
-
-        print("Getting new job")
-        final_structure = self.get_final_structure()
-        print(f"Volume of new structure in the job : {final_structure.volume}")
         new_job = self.make(
-            structure=self.get_final_structure(),
-            # abinit_input=self.abinit_input,
-            previous_abinit_input=self.abinit_input,
-            restart_info=self.restart_info,
+            structure=structure,
+            restart_from=output,
             history=self.history,
         )
 
@@ -373,13 +398,13 @@ class BaseAbinitMaker(Maker):
     def set_walltime(self):
         """Set the walltime."""
 
-    def resolve_deps(self, prev_outputs):
+    def resolve_deps(self, restart_from, prev_outputs):
         """Resolve the dependencies."""
         if not self.dependencies:
             return
 
-        if not self.restart_info:
-            prev_outputs_job_types = (
+        if restart_from is None:
+            prev_outputs_job_types = tuple(
                 [prev_output.calc_type for prev_output in prev_outputs]
                 if prev_outputs
                 else []
@@ -401,11 +426,10 @@ class BaseAbinitMaker(Maker):
                     ],
                     deps_list,
                 )
-
         else:
             # Just link everything from the indata folder of the previous run.
             # Files needed for restart will be overwritten
-            prev_indata = os.path.join(self.restart_info.previous_dir, INDIR_NAME)
+            prev_indata = os.path.join(restart_from.dir_name, INDIR_NAME)
             for f in os.listdir(prev_indata):
                 # if the target is already a link, link to the source to avoid many nested levels of linking
                 source = os.path.join(prev_indata, f)
@@ -419,13 +443,13 @@ class BaseAbinitMaker(Maker):
         for prev_output in prev_outputs:
             for dep in deps_list:
                 # TODO: Do we need to keep this here as it is supposed to be passed using the jobflow db ?
-                #  this is related to the question on abinit_input AND strutured passed together in make.
+                #  this is related to the question on abinit_input AND struture passed together in make.
                 #  Do we keep this thing with '@' ?
                 # if dep.startswith("@structure"):
                 #     self.abinit_input.set_structure(structure=prev_output.structure)
                 # if not dep.startswith("@"):
                 source_dir = prev_output.dir_name
-                self.abinit_input.set_vars(irdvars_for_ext(dep))
+                self.abinit_input_set.set_vars(irdvars_for_ext(dep))
                 if dep == "DDK":
                     raise NotImplementedError
                     # self.link_ddk(source_dir)
@@ -469,8 +493,7 @@ class BaseAbinitMaker(Maker):
                 msg = "{} is needed by this job but it does not exist".format(source)
                 logger.error(msg)
                 raise InitializationError(msg)
-            else:
-                return
+            return
 
         # Link path to dest if dest link does not exist.
         # else check that it points to the expected file.
@@ -484,17 +507,17 @@ class BaseAbinitMaker(Maker):
         else:
             # check links but only if we haven't performed the restart.
             # in this case, indeed we may have replaced the file pointer with the
-            # previous output file of the present task.
+            # previous output file of the present job.
             if (
                 not self.settings.COPY_DEPS
                 and os.path.realpath(dest) != source
-                and not self.restart_info
+                # and not self.restart_info
             ):
                 msg = "dest {} does not point to path {}".format(dest, source)
                 logger.error(msg)
                 raise InitializationError(msg)
 
-    def resolve_restart_deps(self):
+    def resolve_restart_deps(self, prev_dir):
         """Resolve dependencies for a job that is restarted."""
         # To be implemented for specific types of job (a relaxation is not restarted the same way
         # an scf is, or a non scf, or ...)
@@ -536,71 +559,87 @@ class BaseAbinitMaker(Maker):
         self.outdir.makedirs()
         self.tmpdir.makedirs()
 
-    def set_abinit_input(
+    def get_abinit_input_set(
         self,
         structure: Optional[Structure] = None,
-        prev_outputs: Optional[str | Path] = None,
-        abinit_input: Optional[AbinitInput] = None,
-        previous_abinit_input: Optional[AbinitInput] = None,
+        prev_outputs=None,
+        restart_from=None,
     ):
-        """Set up AbinitInput.
+        """Set up AbinitInputSet.
 
         Parameters
         ----------
         structure : Structure
             Structure of this job.
-        prev_outputs : list
-            List of previous outputs potentially needed to set up the AbinitInput of this job.
-        abinit_input : AbinitInput
-            Explicit AbinitInput.
-        previous_abinit_input : AbinitInput
-            Previous AbinitInput object needed for the initialization of the AbinitInput of this job.
+        prev_outputs : TBD
+            TBD
+        restart_from : TBD
+            restart from a directory, from a previous job, from a previous uuid, from a previous ...
         """
-        if abinit_input is not None:
-            # TODO: what if abinit_input AND structure are set ?
-            # Would that be ok to use for example for a restart of a relaxation ?
-            # Currently: raise an error if it is the case
-            # if structure is not None:
-            #     raise NotImplementedError('Both structure and abinit_input are not None.')
-            # # TODO: also, what if both abinit_input (in make) and the input_factory (in __init__) are set ?
-            # # Currently: raise an error
-            # if self.input_generator is not None:
-            #     raise NotImplementedError('Both input_factory and abinit_input are not None.')
-            self.abinit_input = abinit_input
-            return
+        # if prev_outputs is not None:
+        #     raise NotImplementedError('Deal with prev_outputs.')
+        # if isinstance(prev_outputs, AbinitJobSummary):
+        #     prev_outputs = [prev_outputs]
+        # elif prev_outputs is None:
+        #     pass
+        # else:
+        #     raise NotImplementedError()
 
-        if self.input_generator is None and abinit_input is None:
-            raise RuntimeError(
-                "Cannot create abinit input from structure without input generator."
+        gen_kwargs: Dict[str, Any] = {"extra_abivars": self.extra_abivars}
+
+        if restart_from is not None:
+            # TODO: depending on what restart_from is, do something
+            #  currently, only deal with a previous output reference
+            # TODO: if both restart_from and the input_set_generator are set, make an update of the parameters
+            #  requires to define what can be updated and how for each input_set_generator.
+            # if self.input_set_generator is not None:
+            #     raise NotImplementedError('Both input_set_generator and restart_from are not None.')
+            if isinstance(restart_from, AbinitInputSet):
+                raise NotImplementedError(
+                    "Currently, do not allow restarts from an AbinitInputSet."
+                )
+                # prev_input_set = restart_from
+                # if structure is not None:
+                #     # TODO: maybe in this case we have to check that both structures are the same and raise
+                #     #  only if they differ
+                #     raise NotImplementedError(
+                #         "Structure is not None and restart_from is an AbinitInputSet."
+                #     )
+            elif isinstance(restart_from, AbinitJobSummary):
+                prev_input_set = restart_from.abinit_input_set
+            else:
+                raise NotImplementedError(
+                    "Implement other restart_from options. "
+                    f"Here we try to restart from a {type(restart_from)}"
+                )
+            if self.history.is_first_run:
+                update_params = True
+            else:
+                update_params = False
+
+            # Here we assume that restart_from is an abinit input set to restart from.
+            # TODO: implement restart_from from a directory? Maybe from above ?
+            #  (I think we should not allow here to have a job uuid or an OutputReference).
+            return self.input_set_generator.get_input_set(
+                structure=structure,
+                restart_from=prev_input_set,
+                prev_outputs=prev_outputs,
+                update_params=update_params,
+                **gen_kwargs,
             )
 
-        # TODO: deal with previous inputs required (see below excerpt from abiflows)
-        extra_abivars = self.extra_abivars or {}
-        extra_abivars.update(
-            {
-                "indata_prefix": f'"{INDATA_PREFIX}"',
-                "outdata_prefix": f'"{OUTDATA_PREFIX}"',
-                "tmpdata_prefix": f'"{TMPDATA_PREFIX}"',
-            }
-        )
-        # gen_args = []
-        gen_kwargs: Dict[str, Any] = {"extra_abivars": extra_abivars}
+        if self.input_set_generator is None and restart_from is None:
+            raise RuntimeError(
+                "Cannot create abinit input set from structure without input set generator."
+            )
 
-        # if self.input_generator.structure_required:
-        #     gen_args.append(structure)
-        #     gen_kwargs.update({"pseudos": self.pseudos})
-        # if self.input_generator.gs_input_required:
-        #     gen_args.append(previous_abinit_input)
-        # if len(gen_args) != 1:
-        #     raise RuntimeError(
-        #         "Only one positional argument supported right now for input generation. "
-        #         "The positional argument is either a structure or a previous ground-state "
-        #         "input."
-        #     )
-        self.abinit_input = self.input_generator.generate_abinit_input(
+        # TODO: deal with prev_outputs
+        #  Should be slightly different than restart_from (cannot be "just" a list or dict of input sets or directories)
+        return self.input_set_generator.get_input_set(
             structure=structure,
-            previous_abinit_input=previous_abinit_input,
-            pseudos=self.pseudos,
+            restart_from=None,
+            prev_outputs=prev_outputs,
+            update_params=False,
             **gen_kwargs,
         )
 
@@ -623,7 +662,7 @@ class BaseAbinitMaker(Maker):
             exts = [exts]
 
         remove_vars = [v for e in exts for v in irdvars_for_ext(e).keys()]
-        self.abinit_input.remove_vars(remove_vars, strict=False)
+        self.abinit_input_set.remove_vars(remove_vars, strict=False)
         logger.info("Removing variables {} from input".format(remove_vars))
 
     def out_to_in(self, out_file):
@@ -709,14 +748,26 @@ class BaseAbinitMaker(Maker):
         # No need to get the structure from the output when it is fixed.
         # This is the case for everything except relaxations and molecular dynamics calculations.
         if self.structure_fixed:
-            return self.structure
+            # When restarts occur, the structure in make is None so we take it from the abinit_input here
+            # instead of from self.structure.
+            return self.abinit_input_set.abinit_input.structure
 
         # For relaxations and molecular dynamics, get the structure from the Gsr file.
         try:
             with self.open_gsr() as gsr:
                 return gsr.structure
         except AttributeError:
-            msg = "Cannot find the GSR file with the final structure to restart from."
+            msg = "Cannot find the GSR file with the final structure."
+            logger.error(msg)
+            raise PostProcessError(msg)
+
+    def get_final_energy(self):
+        """Get the final energy."""
+        try:
+            with self.open_gsr() as gsr:
+                return gsr.energy
+        except AttributeError:
+            msg = "Cannot find the GSR file with the final energy."
             logger.error(msg)
             raise PostProcessError(msg)
 
@@ -724,14 +775,18 @@ class BaseAbinitMaker(Maker):
     @property
     def gsr_path(self):
         """Get the absolute path of the GSR file. Empty string if file is not present."""
-        # Lazy property to avoid multiple calls to has_abiext.
-        try:
-            return self._gsr_path
-        except AttributeError:
-            path = self.outdir.has_abiext("GSR")
-            if path:
-                self._gsr_path = path
-            return path
+        return self.outdir.has_abiext("GSR")
+        # # Lazy property to avoid multiple calls to has_abiext.
+        # TODO: There is an issue here when using the lazy property as the _gsr_path is already set
+        #  One might unset it at the end of the execution of the job ?
+        #  In any case this poses a question about lazy properties (maybe even standard attributes ?)
+        # try:
+        #     return self._gsr_path
+        # except AttributeError:
+        #     path = self.outdir.has_abiext("GSR")
+        #     if path:
+        #         self._gsr_path = path
+        #     return path
 
     def open_gsr(self):
         """Open the GSR.nc file.

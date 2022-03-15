@@ -5,22 +5,22 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass, field
-from typing import Optional, Sequence
+from typing import ClassVar, Optional, Sequence
 
-from abipy.flowtk.utils import irdvars_for_ext
+from abipy.flowtk.utils import Directory, irdvars_for_ext
 
-from atomate2.abinit.inputs.factories import (
-    NScfInputGenerator,
-    NScfWfqInputGenerator,
-    RelaxInputGenerator,
-    ScfInputGenerator,
-)
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.utils.common import RestartError
+from atomate2.abinit.sets.core import (
+    NonSCFSetGenerator,
+    NonScfWfqInputGenerator,
+    RelaxSetGenerator,
+    StaticSetGenerator,
+)
+from atomate2.abinit.utils.common import OUTDIR_NAME, RestartError
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["ScfMaker", "NonScfMaker"]
+__all__ = ["ScfMaker", "NonScfMaker", "RelaxMaker"]
 
 
 @dataclass
@@ -35,21 +35,26 @@ class ScfMaker(BaseAbinitMaker):
 
     calc_type: str = "scf"
     name: str = "Scf calculation"
-    input_generator: ScfInputGenerator = ScfInputGenerator()
     CRITICAL_EVENTS: Sequence[str] = ("ScfConvergenceWarning",)
 
-    def resolve_restart_deps(self):
+    # non-dataclass variables
+    DEFAULT_INPUT_SET_GENERATOR: ClassVar[StaticSetGenerator] = StaticSetGenerator()
+
+    def resolve_restart_deps(self, prev_dir):
         """Resolve dependencies to restart Scf calculations.
 
         Scf calculations can be restarted from either the WFK file or the DEN file.
         """
-        # Prefer WFK over DEN files since we can reuse the wavefunctions.
-        if self.restart_info.reset:
-            # remove non reset keys that may have been added in a previous restart
-            self.remove_restart_vars(["WFK", "DEN"])
-        else:
+        # TODO: see here how to apply resets
+        # # Prefer WFK over DEN files since we can reuse the wavefunctions.
+        # if self.restart_from.reset:
+        #     remove non reset keys that may have been added in a previous restart
+        # self.remove_restart_vars(["WFK", "DEN"])
+        # else:
+        if True:
+            prev_outdir = Directory(os.path.join(prev_dir, OUTDIR_NAME))
             for ext in ("WFK", "DEN"):
-                restart_file = self.restart_info.prev_outdir.has_abiext(ext)
+                restart_file = prev_outdir.has_abiext(ext)
                 irdvars = irdvars_for_ext(ext)
                 if restart_file:
                     break
@@ -62,7 +67,7 @@ class ScfMaker(BaseAbinitMaker):
             self.out_to_in(restart_file)
 
             # Add the appropriate variable for restarting.
-            self.abinit_input.set_vars(irdvars)
+            self.abinit_input_set.set_vars(irdvars)
 
 
 class NonScfDeps(dict):
@@ -77,7 +82,7 @@ class NonScfMaker(BaseAbinitMaker):
     calc_type: str = "nscf"
     name: str = "non-Scf calculation"
 
-    input_generator: NScfInputGenerator = NScfInputGenerator()
+    input_set_generator: NonSCFSetGenerator = NonSCFSetGenerator()
     CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
 
     # Here there is no way to set a default that is mutable (dict) for the dependencies so I use
@@ -89,24 +94,28 @@ class NonScfMaker(BaseAbinitMaker):
     # - there is an ongoing PEP being discussed for a frozenmap type in the collections module.
     #   If this PEP (https://www.python.org/dev/peps/pep-0603/) is accepted in the future, we
     #   may think to use this new frozenmap type.
+    # Another option is to use a lambda function (see example in atomate2.vasp.sets.base.VaspInputSetGenerator
+    # for the config_dict).
     # Another option would be to use a different structure, e.g. a tuple of tuples. In the current
     # case, this would give : ("scf", ("DEN", )). This is essentially a user defined mapping of course...
     dependencies: Optional[dict] = field(default_factory=NonScfDeps)
 
-    # Non dataclass variables:
-    restart_extension = "WFK"
+    # non-dataclass variables
+    DEFAULT_INPUT_SET_GENERATOR: ClassVar[NonSCFSetGenerator] = NonSCFSetGenerator()
+    restart_extension: ClassVar[str] = "WFK"
 
-    def resolve_restart_deps(self):
+    def resolve_restart_deps(self, prev_dir):
         """Resolve dependencies to restart Non-Scf calculations.
 
         Non-Scf calculations can only be restarted from the WFK file (or WFQ file).
         """
-        if self.restart_info.reset:
-            # remove non reset keys that may have been added in a previous restart
-            self.remove_restart_vars(["WFQ", "WFK"])
-        else:
+        # if self.restart_info.reset:
+        #     # remove non reset keys that may have been added in a previous restart
+        #     self.remove_restart_vars(["WFQ", "WFK"])
+        if True:
             ext = self.restart_extension
-            restart_file = self.restart_info.prev_outdir.has_abiext(ext)
+            prev_outdir = Directory(os.path.join(prev_dir, OUTDIR_NAME))
+            restart_file = prev_outdir.has_abiext(ext)
             if not restart_file:
                 msg = f"Cannot find the {self.restart_extension} file to restart from."
                 logger.error(msg)
@@ -118,7 +127,7 @@ class NonScfMaker(BaseAbinitMaker):
             # Add the appropriate variable for restarting.
             # Note that the restart of both WFK and WFQ is activated by irdwfk (i.e. ird var for WFK extension)
             irdvars = irdvars_for_ext("WFK")
-            self.abinit_input.set_vars(irdvars)
+            self.abinit_input_set.set_vars(irdvars)
 
 
 @dataclass
@@ -128,7 +137,7 @@ class NonScfWfqMaker(NonScfMaker):
     calc_type: str = "nscf_wfq"
     name: str = "non-Scf calculation"
 
-    input_generator: NScfWfqInputGenerator = NScfWfqInputGenerator()
+    input_set_generator: NonScfWfqInputGenerator = NonScfWfqInputGenerator()
     CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
 
     # Here there is no way to set a default that is mutable (dict) for the dependencies so I use
@@ -143,6 +152,8 @@ class NonScfWfqMaker(NonScfMaker):
     # Another option would be to use a different structure, e.g. a tuple of tuples. In the current
     # case, this would give : ("scf", ("DEN", )). This is essentially a user defined mapping of course...
     dependencies: Optional[dict] = field(default_factory=NonScfDeps)
+
+    wfq_tolwfr: float = 1.0e-22
 
     # Non dataclass variables:
     restart_extension = "WFQ"
@@ -155,33 +166,35 @@ class RelaxMaker(BaseAbinitMaker):
     calc_type: str = "relax"
     name: str = "Relaxation calculation"
 
-    input_generator: RelaxInputGenerator = RelaxInputGenerator()
     CRITICAL_EVENTS: Sequence[str] = ("RelaxConvergenceWarning",)
 
-    # This is not part of the dataclass __init__ method (hence the purposely absence of annotation)
-    structure_fixed = False
+    # This is not part of the dataclass __init__ method
+    structure_fixed: ClassVar[bool] = False
+    # non-dataclass variables
+    DEFAULT_INPUT_SET_GENERATOR: ClassVar[RelaxSetGenerator] = RelaxSetGenerator()
 
-    def resolve_restart_deps(self):
+    def resolve_restart_deps(self, prev_dir):
         """Resolve dependencies to restart relaxation calculations."""
-        if self.restart_info.reset:
-            # remove non reset keys that may have been added in a previous restart
-            self.remove_restart_vars(["WFK", "DEN"])
-        else:
-            # for optcell > 0 it may fail to restart if paral_kgb == 0. Do not use DEN or WFK in this case
-            # FIXME fix when Matteo makes the restart possible for paral_kgb == 0
-            self.abinit_input.get("paral_kgb", 0)
-            self.abinit_input.get("optcell", 0)
-
-            # if optcell == 0 or paral_kgb == 1:
-            # TODO: see if this works in general (it works for silicon :D)
-            #  if not, why not switch by default to paral_kgb = 1 ?
+        # if self.restart_info.reset:
+        #     # remove non reset keys that may have been added in a previous restart
+        #     self.remove_restart_vars(["WFK", "DEN"])
+        if True:
+            # # for optcell > 0 it may fail to restart if paral_kgb == 0. Do not use DEN or WFK in this case
+            # # FIXME fix when Matteo makes the restart possible for paral_kgb == 0
+            # self.abinit_input.get("paral_kgb", 0)
+            # self.abinit_input.get("optcell", 0)
+            #
+            # # if optcell == 0 or paral_kgb == 1:
+            # # TODO: see if this works in general (it works for silicon :D)
+            # #  if not, why not switch by default to paral_kgb = 1 ?
             if True:
                 restart_file = None
 
                 # Try to restart from the WFK file if possible.
                 # FIXME: This part has been disabled because WFK=IO is a mess if paral_kgb == 1
                 # This is also the reason why I wrote my own MPI-IO code for the GW part!
-                wfk_file = self.restart_info.prev_outdir.has_abiext("WFK")
+                prev_outdir = Directory(os.path.join(prev_dir, OUTDIR_NAME))
+                wfk_file = prev_outdir.has_abiext("WFK")
                 irdvars = None
                 if False and wfk_file:
                     irdvars = irdvars_for_ext("WFK")
@@ -194,7 +207,7 @@ class RelaxMaker(BaseAbinitMaker):
                 # by the last run that has executed on_done.
                 # ********************************************************************************
                 if restart_file is None:
-                    out_den = self.restart_info.prev_outdir.path_in("out_DEN")
+                    out_den = prev_outdir.path_in("out_DEN")
                     if os.path.exists(out_den):
                         irdvars = irdvars_for_ext("DEN")
                         restart_file = self.out_to_in(out_den)
@@ -203,7 +216,7 @@ class RelaxMaker(BaseAbinitMaker):
                     # Try to restart from the last TIM?_DEN file.
                     # This should happen if the previous run didn't complete in clean way.
                     # Find the last TIM?_DEN file.
-                    last_timden = self.restart_info.prev_outdir.find_last_timden_file()
+                    last_timden = prev_outdir.find_last_timden_file()
                     if last_timden is not None:
                         if last_timden.path.endswith(".nc"):
                             in_file_name = "in_DEN.nc"
@@ -223,20 +236,22 @@ class RelaxMaker(BaseAbinitMaker):
                     # Add the appropriate variable for restarting.
                     if irdvars is None:
                         raise RuntimeError("irdvars not set.")
-                    self.abinit_input.set_vars(irdvars)
+                    self.abinit_input_set.set_vars(irdvars)
                     logger.info("Will restart from %s", restart_file)
 
     @classmethod
-    def ionic_relaxation(cls):
+    def ionic_relaxation(cls, *args, **kwargs):
         """Create an ionic relaxation maker."""
         # TODO: add the possibility to tune the RelaxInputGenerator options in this class method.
         return cls(
-            input_generator=RelaxInputGenerator(relax_cell=False),
+            input_set_generator=RelaxSetGenerator(relax_cell=False, *args, **kwargs),
             name=cls.name + " (ions only)",
         )
 
     @classmethod
-    def full_relaxation(cls):
+    def full_relaxation(cls, *args, **kwargs):
         """Create a full relaxation maker."""
         # TODO: add the possibility to tune the RelaxInputGenerator options in this class method.
-        return cls(input_generator=RelaxInputGenerator(relax_cell=True))
+        return cls(
+            input_set_generator=RelaxSetGenerator(relax_cell=True, *args, **kwargs)
+        )
