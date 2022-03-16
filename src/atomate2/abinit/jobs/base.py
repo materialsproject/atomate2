@@ -321,13 +321,12 @@ class BaseAbinitMaker(Maker):
     def get_restart_job(self, output):
         """Get new job to restart abinit calculation."""
         logger.info(msg="Getting restart job.")
-        structure = None
-        if not self.structure_fixed:
-            logger.info(msg="Getting final structure to restart from.")
-            structure = self.get_final_structure()
+        # if not self.structure_fixed:
+        #     logger.info(msg="Getting final structure to restart from.")
+        #     structure = self.get_final_structure()
 
         new_job = self.make(
-            structure=structure,
+            # structure=structure,
             restart_from=output,
             history=self.history,
         )
@@ -607,6 +606,12 @@ class BaseAbinitMaker(Maker):
                 #     )
             elif isinstance(restart_from, AbinitJobSummary):
                 prev_input_set = restart_from.abinit_input_set
+                if structure is not None:
+                    raise RuntimeError(
+                        "Should not provide structure when abinit Job summary is provided."
+                    )
+                # TODO: should we set the structure only if the abinit_input is a RELAX or MD ?
+                structure = restart_from.structure
             else:
                 raise NotImplementedError(
                     "Implement other restart_from options. "

@@ -78,7 +78,7 @@ class RelaxFlowMaker(Maker):
         default_factory=RelaxMaker
     )
 
-    def make(self, structure: Structure, restart_from=None):
+    def make(self, structure: Structure = None, restart_from=None):
         """
         Create a relaxation flow.
 
@@ -104,7 +104,8 @@ class RelaxFlowMaker(Maker):
         jobs = [relax_job1]
         for rlx_maker in relaxation_makers[1:]:
             rlx_job = rlx_maker.make(
-                structure=jobs[-1].output.structure, restart_from=jobs[-1].output
+                # structure=jobs[-1].output.structure, restart_from=jobs[-1].output
+                restart_from=jobs[-1].output
             )
             jobs.append(rlx_job)
         return Flow(jobs, jobs[-1].output, name=self.name)
