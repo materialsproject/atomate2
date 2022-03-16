@@ -41,7 +41,7 @@ The most important settings to consider are:
 - ``VASP_GAMMA_CMD``: The command used to run the gamma-only version of VASP.
 - ``VASP_NCL_CMD``: The command used to run the the non-collinear version of VASP.
 - ``VASP_INCAR_UPDATES``: Updates to apply to VASP INCAR files. This allows you to
-  customise input sets on different machines, without having to change the submitted
+  customise input sets on different machines, without having to change the submittedCancel changes
   workflows. For example, you can set certain parallelization parameters, such as
   NCORE, KPAR etc.
 - ``VASP_VDW_KERNEL_DIR``: The path to the VASP Van der Waals kernel.
@@ -56,7 +56,7 @@ List of VASP workflows
    :widths: 40, 20, 40
    :header-rows: 1
 
-Static
+Static :obj:`.StaticMaker`
 ^^^^^^
 
 A static VASP calculation (i.e., no relaxation).
