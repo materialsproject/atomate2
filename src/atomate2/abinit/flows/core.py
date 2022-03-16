@@ -108,7 +108,7 @@ class RelaxFlowMaker(Maker):
                 restart_from=jobs[-1].output
             )
             jobs.append(rlx_job)
-        return Flow(jobs, jobs[-1].output, name=self.name)
+        return Flow(jobs, output=[jobs[-1].output], name=self.name)
 
     @classmethod
     def ion_ioncell_relaxation(cls):
