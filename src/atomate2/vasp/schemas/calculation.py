@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow.utils import ValueEnum
-from monty.os.path import which
+from shutil import which
 from pydantic import BaseModel, Field
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
