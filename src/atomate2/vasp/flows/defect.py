@@ -16,7 +16,7 @@ from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_DISTORTIONS = (-0.15 - 0.1, 0.05, 0, 0.05, 0.1, 0.15, 1)
+DEFAULT_DISTORTIONS = (-1, -0.15 - 0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(use_structure_charge=True)
 
@@ -33,6 +33,7 @@ class ConfigurationCoordinateMaker(Maker):
     )
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
+    wswq: bool = False
 
     def make(
         self,
@@ -61,8 +62,8 @@ class ConfigurationCoordinateMaker(Maker):
 
         relax1 = self.relax_maker.make(struct1)
         relax2 = self.relax_maker.make(struct2)
-        relax1.append_name(" q1")
-        relax2.append_name(" q2")
+        relax1.append_name(f"q={charge_state1}")
+        relax2.append_name(f"q={charge_state2}")
 
         dir1 = relax1.output.dir_name
         dir2 = relax2.output.dir_name
@@ -75,6 +76,7 @@ class ConfigurationCoordinateMaker(Maker):
             distortions=self.distortions,
             static_maker=self.static_maker,
             prev_vasp_dir=dir1,
+            add_name=f" q={charge_state1}",
         )
 
         deformations2 = calculate_energy_curve(
@@ -83,14 +85,21 @@ class ConfigurationCoordinateMaker(Maker):
             distortions=self.distortions,
             static_maker=self.static_maker,
             prev_vasp_dir=dir2,
+            add_name=f" q={charge_state2}",
         )
 
-        deformations1.append_name(" q1")
-        deformations2.append_name(" q2")
+        deformations1.append_name(f" q={charge_state1}")
+        deformations2.append_name(f" q={charge_state2}")
 
         ccd_docs = get_ccd_from_task_docs(
             deformations1.output, deformations2.output, struct1, struct2
         )
+
+        # if self.wswq:
+        #     wswq1 = get_wswq_job_from_list(deformations1.output, struct1)
+        #     wswq1 = get_wswq_job_from_list(deformations1.output, struct1)
+        #     wswq1.append_name(f" q={charge_state1}")
+        #     wswq2.append_name(f" q={charge_state2}")
 
         jobs = [relax1, relax2, deformations1, deformations2, ccd_docs]
         return Flow(

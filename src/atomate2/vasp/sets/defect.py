@@ -49,8 +49,11 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
         return {
             "IBRION": 2,
             "ISIF": 2,
-            "EDIFFG": -0.005,
+            "EDIFFG": -0.05,
             "LREAL": False,
             "NSW": 99,
             "LCHARG": False,
+            "ENCUT": 700,
+            "LAECHG": False,
+            "NELMIN": 6,
         }

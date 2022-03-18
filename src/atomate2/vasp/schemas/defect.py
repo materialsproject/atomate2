@@ -14,11 +14,11 @@ from atomate2.vasp.schemas.task import TaskDocument
 logger = logging.getLogger(__name__)
 
 __all__ = [
-    "CCDTaskDocument",
+    "CCDDocument",
 ]
 
 
-class CCDTaskDocument(BaseModel):
+class CCDDocument(BaseModel):
     """Configuration-coordiante definition of configuration-coordinate diagram."""
 
     q1: int = Field(None, description="Charge state 1.")
@@ -54,13 +54,13 @@ class CCDTaskDocument(BaseModel):
     @classmethod
     def from_distorted_calcs(
         cls,
-        distortion1_tasks: Iterable[TaskDocument],
-        distortion2_tasks: Iterable[TaskDocument],
+        distortion1_calcs: Iterable[TaskDocument],
+        distortion2_calcs: Iterable[TaskDocument],
         structure1: Structure,
         structure2: Structure,
     ):
         """
-        Create a CCDTaskDocument from a list of distorted calculations.
+        Create a CCDDocument from a list of distorted calculations.
 
         Parameters
         ----------
@@ -68,22 +68,22 @@ class CCDTaskDocument(BaseModel):
             The structure of defect (supercell) in charge state (q1).
         structure2
             The structure of defect (supercell) in charge state (q2).
-        distortion1_tasks
+        distortion1_calcs
             List of distorted calculations for charge state 1.
-        distortion2_tasks
+        distortion2_calcs
             List of distorted calculations for charge state 2.
 
         """
 
         def get_ent(task: TaskDocument):
             return ComputedStructureEntry(
-                structure=task.structure,
-                energy=task.energy,
+                structure=task.output.structure,
+                energy=task.output.energy,
                 data={"dir_name": task.dir_name},
             )
 
-        entries1 = [get_ent(task) for task in distortion1_tasks]
-        entries2 = [get_ent(task) for task in distortion2_tasks]
+        entries1 = [get_ent(task) for task in distortion1_calcs]
+        entries2 = [get_ent(task) for task in distortion2_calcs]
 
         return cls.from_entries(entries1, entries2, structure1, structure2)
 
@@ -155,6 +155,23 @@ class CCDTaskDocument(BaseModel):
 
         return obj
 
+    def get_taskdocs(self):
+        """Get the distorted task documents."""
+
+        def remove_host_name(dir_name):
+            return dir_name.split(":")[-1]
+
+        return [
+            [
+                TaskDocument.from_directory(remove_host_name(dir_name))
+                for dir_name in self.distorted_calcs_dirs[0]
+            ],
+            [
+                TaskDocument.from_directory(remove_host_name(dir_name))
+                for dir_name in self.distorted_calcs_dirs[1]
+            ],
+        ]
+
 
 def sort_pos_dist(
     list_in: List[Any], s1: Any, s2: Any, dist: Callable
@@ -184,6 +201,8 @@ def sort_pos_dist(
     -------
     List[Any]
         The sorted list.
+    List[float]
+        The signed distances to the reference point (s1).
     """
     d1 = [dist(s, s1) for s in list_in]
     d2 = [dist(s, s2) for s in list_in]
