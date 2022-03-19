@@ -118,19 +118,19 @@ class WSWQMaker(Maker):
     """
 
     name: str = "store WSWQ"
-    copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)
+    # copy_vasp_kwargs: dict = field(default_factory=dict)
 
-    def __post_init__(self):
-        """Make sure the WAVECAR is copied."""
-        add_vasp_files = self.copy_vasp_kwargs.get("additional_vasp_files", set())
-        add_vasp_files.add("WAVECAR")
-        self.copy_vasp_kwargs["additional_vasp_files"] = add_vasp_files
+    # def __post_init__(self):
+    #     """Make sure the WAVECAR is copied."""
+    #     add_vasp_files = self.copy_vasp_kwargs.get("additional_vasp_files", [])
+    #     add_vasp_files.append("WAVECAR")
+    #     self.copy_vasp_kwargs["additional_vasp_files"] = add_vasp_files
 
     @job
     def make(self, ref_calc_dir: str | Path, distored_calc_dirs: List[str | Path]):
         """Run a post-processing VASP job."""
-        copy_vasp_outputs(ref_calc_dir, **self.copy_vasp_kwargs)
+        copy_vasp_outputs(ref_calc_dir, additional_vasp_files=["WAVECAR"])
         self.update_incar()
 
         d_dir_names = [strip_hostname(d) for d in distored_calc_dirs]
