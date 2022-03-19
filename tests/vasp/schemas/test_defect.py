@@ -50,10 +50,13 @@ def test_CCDDocument(vasp_test_dir):
     s0 = relaxed_0.output.structure
     s1 = relaxed_1.output.structure
 
+    # create the CCD document
     ccd_doc = CCDDocument.from_distorted_calcs(distored_0, distored_1, s0, s1)
+    # check that the middle entry has the lowest energy
     assert is_strict_minimum(2, ccd_doc.energies1)
     assert is_strict_minimum(2, ccd_doc.energies2)
 
     # check that you can recreate the task document from the ccd document
     tasks = ccd_doc.get_taskdocs()
-    len(tasks) == 2
+    assert len(tasks[0]) == 5
+    assert len(tasks[1]) == 5

@@ -11,6 +11,7 @@ from pymatgen.core.structure import Structure
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_energy_curve, get_ccd_from_task_docs
+from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
@@ -19,6 +20,9 @@ logger = logging.getLogger(__name__)
 DEFAULT_DISTORTIONS = (-1, -0.15 - 0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(use_structure_charge=True)
+DEFECT_STATIC_GENERATOR = StaticSetGenerator(
+    user_incar_settings={"ISMEAR": 0, "LWAVE": True, "SIGMA": 0.05}
+)
 
 
 @dataclass
@@ -31,7 +35,9 @@ class ConfigurationCoordinateMaker(Maker):
             input_set_generator=DEFECT_RELAX_GENERATOR,
         )
     )
-    static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+    static_maker: BaseVaspMaker = field(
+        default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
+    )
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
     wswq: bool = False
 
@@ -101,9 +107,8 @@ class ConfigurationCoordinateMaker(Maker):
         #     wswq1.append_name(f" q={charge_state1}")
         #     wswq2.append_name(f" q={charge_state2}")
 
-        jobs = [relax1, relax2, deformations1, deformations2, ccd_docs]
         return Flow(
-            jobs=jobs,
-            name=name,
+            jobs=[relax1, relax2, deformations1, deformations2, ccd_docs],
             output=ccd_docs.output,
+            name=name,
         )
