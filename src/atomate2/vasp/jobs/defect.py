@@ -16,6 +16,7 @@ from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import StaticMaker
+from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
@@ -116,7 +117,7 @@ class WSWQMaker(Maker):
     the make function here should only only store new data.
     """
 
-    name: str = "post-processing"
+    name: str = "store WSWQ"
     copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)
 
@@ -141,15 +142,17 @@ class WSWQMaker(Maker):
             wavecar_file = Path(dir_name) / get_zfile(files, "WAVECAR")
             fc.copy(wavecar_file, "WAVECAR.qqq")
             gunzip_files()
-            # run_vasp(**self.run_vasp_kwargs)
+            run_vasp(**self.run_vasp_kwargs)
             self.store_wswq(suffix=str(i))
 
     def store_wswq(self, suffix):
         """Store the WSWQ file in the database."""
         logger.info(f"Storing WSWQ file with suffix {suffix}")
+        fc = FileClient()
+        fc.copy(Path("WSWQ"), f"WSWQ.{suffix}")
 
     def update_incar(self):
         """Update the INCAR."""
         incar = Incar.from_file("INCAR")
-        incar.update({"ALGO": "None", "NSW": 0})
+        incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
         incar.write_file("INCAR")
