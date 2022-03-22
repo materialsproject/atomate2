@@ -19,7 +19,9 @@ from atomate2.vasp.jobs.core import StaticMaker
 from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.schemas.task import TaskDocument
+from pymatgen.io.vasp.outputs import WSWQ
 
+from icecream import ic
 logger = logging.getLogger(__name__)
 
 
@@ -128,20 +130,29 @@ class WSWQMaker(Maker):
     #     self.copy_vasp_kwargs["additional_vasp_files"] = add_vasp_files
 
     @job
-    def make(self, ref_calc_dir: str | Path, distored_calc_dirs: List[str | Path]):
+    def make(self, ref_calc_dir: str, distored_calc_dirs: List[str]):
         """Run a post-processing VASP job."""
+        ic(ref_calc_dir)
         copy_vasp_outputs(ref_calc_dir, additional_vasp_files=["WAVECAR"])
         self.update_incar()
 
         d_dir_names = [strip_hostname(d) for d in distored_calc_dirs]
         fc = FileClient()
-
+        
+        gunzip_files(allow_missing=True, force=True)
         for i, dir_name in enumerate(d_dir_names):
             # Copy a distorted WAVECAR to WAVECAR.qqq
             files = fc.listdir(dir_name)
             wavecar_file = Path(dir_name) / get_zfile(files, "WAVECAR")
-            fc.copy(wavecar_file, "WAVECAR.qqq")
-            gunzip_files()
+            # automatically gunzip the file if it is gzipped
+            zfile_name = wavecar_file.name
+            if zfile_name.endswith(".gz"):
+                fc.copy(wavecar_file, f"WAVECAR.{i}.gz")
+                fc.gunzip(f"WAVECAR.{i}.gz")
+                fc.rename(f"WAVECAR.{i}", f"WAVECAR.qqq")
+            else:
+                fc.copy(wavecar_file, "WAVECAR.qqq")
+            
             run_vasp(**self.run_vasp_kwargs)
             self.store_wswq(suffix=str(i))
 
@@ -150,6 +161,8 @@ class WSWQMaker(Maker):
         logger.info(f"Storing WSWQ file with suffix {suffix}")
         fc = FileClient()
         fc.copy(Path("WSWQ"), f"WSWQ.{suffix}")
+        wswq = WSWQ.from_file(f"WSWQ.{suffix}")
+        ic(wswq.nspin, wswq.nkpoints, wswq.nbands)
 
     def update_incar(self):
         """Update the INCAR."""
