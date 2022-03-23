@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any, Callable, Iterable, List, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
+from pymatgen.io.vasp.outputs import WSWQ
 
 from atomate2.vasp.schemas.task import TaskDocument
 
@@ -16,6 +18,142 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "CCDDocument",
 ]
+
+
+class WSWQDocument(BaseModel):
+    nspin: int = Field(None, description="Number of spins channels")
+    nkpoints: int = Field(None, description="Number of k-points")
+    nbands: int = Field(None, description="Number of bands")
+    data: List[List[List[List[complex]]]] = Field(
+        None,
+        description="2D array of of complex numbers representing the <W(0)|S|W(Q)>",
+    )
+    dir0: str = Field(
+        None, description="Directory where the W(0) wavefunction comes from"
+    )
+    uuid0: str = Field(None, description="UUID of the W(0) calculation")
+    dir1: str = Field(
+        None, description="Directory where the W(Q) wavefunction comes from"
+    )
+    uuid1: str = Field(None, description="UUID of the W(Q) calculation")
+
+    @classmethod
+    def from_file(cls, filename: str | Path, **kwargs) -> WSWQDocument:
+        """
+        Read the WSWQ file.
+
+        Parameters
+        ----------
+        filename : str
+            Path to the WSWQ file.
+        **kwargs : dict
+            Additional keyword arguments.
+
+        Returns
+        -------
+        WSWQDocument
+            WSWQDocument object.
+        """
+        fname = str(filename)
+        wswq = WSWQ.from_file(fname)
+        return cls.from_wswq(wswq, **kwargs)
+
+    @classmethod
+    def from_wswq(cls, wswq: WSWQ, **kwargs) -> WSWQDocument:
+        """
+        Read the WSWQ file.
+
+        Parameters
+        ----------
+        wswq : WSWQ
+            WSWQ object.
+        **kwargs : dict
+            Additional keyword arguments.
+
+        Returns
+        -------
+        WSWQDocument
+            WSWQDocument object.
+        """
+        return cls(
+            nspin=wswq.nspin,
+            nkpoints=wswq.nkpoints,
+            nbands=wswq.nbands,
+            data=wswq.data.tolist(),
+            **kwargs,
+        )
+
+    def to_wswq(self) -> WSWQ:
+        """
+        Convert to WSWQ object.
+
+        Returns
+        -------
+        WSWQ
+            WSWQ object.
+        """
+        return WSWQ(
+            nspin=self.nspin,
+            nkpoints=self.nkpoints,
+            nbands=self.nbands,
+            data=np.array(self.data),
+        )
+
+    # allow arbitrary model
+    class Config:
+        arbitrary_types_allowed = True
+
+
+class FintieDiffDocument(BaseModel):
+    """Collection of computed WSWQDocuments using a single ref WAVECAR and a list of distorted WAVECARs."""
+
+    wswq_documents: List[WSWQDocument]
+    dir_name: str = Field(
+        None, description="Directory where the WSWQ calculations are performed"
+    )
+    ref_dir: str = Field(
+        None, description="Directory where the reference W(0) wavefunction comes from"
+    )
+    ref_uuid: str = Field(None, description="UUID of the reference W(0) calculation")
+    distorted_dirs: List[str] = Field(
+        None,
+        description="List of directories where the distorted W(Q) wavefunctions come from",
+    )
+    distorted_uuids: List[str] = Field(
+        None, description="List of UUIDs of the distorted W(Q) calculations"
+    )
+
+    @classmethod
+    def from_directory(cls, directory: str | Path, **kwargs) -> FintieDiffDocument:
+        """
+        Read the FintieDiff file.
+
+        Parameters
+        ----------
+        directory : str | Path
+            Path to the FintieDiff directory.
+        ref_dir : str
+            Directory where the reference W(0) wavefunction comes from.
+        ref_uuid : str
+            UUID of the reference W(0) calculation.
+        distorted_dirs : List[str]
+            List of directories where the distorted W(Q) wavefunctions come from.
+        distorted_uuids : List[str]
+            List of UUIDs of the distorted W(Q) calculations.
+
+        Returns
+        -------
+        FintieDiffDocument
+            FintieDiffDocument object.
+        """
+        wswq_dir = Path(directory)
+        files = list(Path(wswq_dir).glob("WSWQ.[0-9]*"))
+        ordered_files = sorted(files, key=lambda x: int(x.name.split(".")[1]))
+        wswq_documents = []
+        for f in ordered_files:
+            wswq_documents.append(WSWQDocument.from_file(f))
+
+        return cls(wswq_documents=wswq_documents, dir_name=str(wswq_dir), **kwargs)
 
 
 class CCDDocument(BaseModel):
