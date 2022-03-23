@@ -68,8 +68,8 @@ class ConfigurationCoordinateMaker(Maker):
 
         relax1 = self.relax_maker.make(struct1)
         relax2 = self.relax_maker.make(struct2)
-        relax1.append_name(f"q={charge_state1}")
-        relax2.append_name(f"q={charge_state2}")
+        relax1.append_name(f" q={charge_state1}")
+        relax2.append_name(f" q={charge_state2}")
 
         dir1 = relax1.output.dir_name
         dir2 = relax2.output.dir_name
@@ -82,7 +82,7 @@ class ConfigurationCoordinateMaker(Maker):
             distortions=self.distortions,
             static_maker=self.static_maker,
             prev_vasp_dir=dir1,
-            add_name=f" q={charge_state1}",
+            add_name=f"q={charge_state1}",
         )
 
         deformations2 = calculate_energy_curve(
@@ -91,7 +91,7 @@ class ConfigurationCoordinateMaker(Maker):
             distortions=self.distortions,
             static_maker=self.static_maker,
             prev_vasp_dir=dir2,
-            add_name=f" q={charge_state2}",
+            add_name=f"q={charge_state2}",
         )
 
         deformations1.append_name(f" q={charge_state1}")

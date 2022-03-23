@@ -1,6 +1,8 @@
+from atomate2.vasp.schemas.defect import CCDDocument
+
+
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import run_locally
-    from maggma.stores import MongoStore
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
@@ -41,9 +43,13 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     responses = run_locally(
         flow,
         create_folders=True,
-        store=MongoStore(database="dev", collection_name="test"),
+        ensure_success=True,
     )
 
-    assert responses == 0
+    ccd: CCDDocument = responses[flow.jobs[-1].uuid][1].output
 
-    # # validation on the outputs
+    assert len(ccd.energies1) == 5
+    assert len(ccd.energies2) == 5
+    assert len(ccd.distortions1) == 5
+    assert len(ccd.distortions2) == 5
+    assert sum(len(row) for row in ccd.distorted_calcs_dirs) == 10
