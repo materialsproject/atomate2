@@ -80,6 +80,7 @@ class BaseAbinitMaker(Maker):
     """
 
     calc_type: str
+    input_set_generator: AbinitInputSetGenerator
     name: str = "base abinit job"
     pseudos: Union[
         List[str], PseudoTable
@@ -89,14 +90,12 @@ class BaseAbinitMaker(Maker):
         )
     )
     walltime: Optional[int] = None
-    input_set_generator: Optional[AbinitInputSetGenerator] = None
     CRITICAL_EVENTS: Sequence[str] = ()
     dependencies: Optional[dict] = None
     extra_abivars: dict = field(default_factory=dict)
 
     # class variables
     structure_fixed: ClassVar[bool] = True
-    DEFAULT_INPUT_SET_GENERATOR: ClassVar[AbinitInputSetGenerator] = NotImplemented
 
     def __post_init__(self):
         """Process post-init configuration."""
@@ -104,7 +103,7 @@ class BaseAbinitMaker(Maker):
             as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
         ]
         if self.input_set_generator is None:
-            self.input_set_generator = self.DEFAULT_INPUT_SET_GENERATOR
+            raise InitializationError("Input set generator is not set.")
 
     @job
     def make(

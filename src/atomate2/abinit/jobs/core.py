@@ -36,9 +36,7 @@ class ScfMaker(BaseAbinitMaker):
     calc_type: str = "scf"
     name: str = "Scf calculation"
     CRITICAL_EVENTS: Sequence[str] = ("ScfConvergenceWarning",)
-
-    # non-dataclass variables
-    DEFAULT_INPUT_SET_GENERATOR: ClassVar[StaticSetGenerator] = StaticSetGenerator()
+    input_set_generator: StaticSetGenerator = StaticSetGenerator()
 
     def resolve_restart_deps(self, prev_dir):
         """Resolve dependencies to restart Scf calculations.
@@ -101,7 +99,6 @@ class NonScfMaker(BaseAbinitMaker):
     dependencies: Optional[dict] = field(default_factory=NonScfDeps)
 
     # non-dataclass variables
-    DEFAULT_INPUT_SET_GENERATOR: ClassVar[NonSCFSetGenerator] = NonSCFSetGenerator()
     restart_extension: ClassVar[str] = "WFK"
 
     def resolve_restart_deps(self, prev_dir):
@@ -164,14 +161,13 @@ class RelaxMaker(BaseAbinitMaker):
     """Maker to create relaxation calculations."""
 
     calc_type: str = "relax"
+    input_set_generator: RelaxSetGenerator = RelaxSetGenerator()
     name: str = "Relaxation calculation"
 
     CRITICAL_EVENTS: Sequence[str] = ("RelaxConvergenceWarning",)
 
-    # This is not part of the dataclass __init__ method
-    structure_fixed: ClassVar[bool] = False
     # non-dataclass variables
-    DEFAULT_INPUT_SET_GENERATOR: ClassVar[RelaxSetGenerator] = RelaxSetGenerator()
+    structure_fixed: ClassVar[bool] = False
 
     def resolve_restart_deps(self, prev_dir):
         """Resolve dependencies to restart relaxation calculations."""
