@@ -104,7 +104,7 @@ class WSWQDocument(BaseModel):
         arbitrary_types_allowed = True
 
 
-class FintieDiffDocument(BaseModel):
+class FiniteDiffDocument(BaseModel):
     """Collection of computed WSWQDocuments using a single ref WAVECAR and a list of distorted WAVECARs."""
 
     wswq_documents: List[WSWQDocument]
@@ -114,17 +114,13 @@ class FintieDiffDocument(BaseModel):
     ref_dir: str = Field(
         None, description="Directory where the reference W(0) wavefunction comes from"
     )
-    ref_uuid: str = Field(None, description="UUID of the reference W(0) calculation")
     distorted_dirs: List[str] = Field(
         None,
         description="List of directories where the distorted W(Q) wavefunctions come from",
     )
-    distorted_uuids: List[str] = Field(
-        None, description="List of UUIDs of the distorted W(Q) calculations"
-    )
 
     @classmethod
-    def from_directory(cls, directory: str | Path, **kwargs) -> FintieDiffDocument:
+    def from_directory(cls, directory: str | Path, **kwargs) -> FiniteDiffDocument:
         """
         Read the FintieDiff file.
 
@@ -134,12 +130,8 @@ class FintieDiffDocument(BaseModel):
             Path to the FintieDiff directory.
         ref_dir : str
             Directory where the reference W(0) wavefunction comes from.
-        ref_uuid : str
-            UUID of the reference W(0) calculation.
         distorted_dirs : List[str]
             List of directories where the distorted W(Q) wavefunctions come from.
-        distorted_uuids : List[str]
-            List of UUIDs of the distorted W(Q) calculations.
 
         Returns
         -------

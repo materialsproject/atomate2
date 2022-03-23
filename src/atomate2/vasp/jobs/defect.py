@@ -18,7 +18,7 @@ from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import StaticMaker
 from atomate2.vasp.run import run_vasp
-from atomate2.vasp.schemas.defect import CCDDocument
+from atomate2.vasp.schemas.defect import CCDDocument, FiniteDiffDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
@@ -118,17 +118,10 @@ class WSWQMaker(Maker):
     the make function here should only only store new data.
     """
 
-    name: str = "store WSWQ"
+    name: str = "WSWQ"
     run_vasp_kwargs: dict = field(default_factory=dict)
-    # copy_vasp_kwargs: dict = field(default_factory=dict)
 
-    # def __post_init__(self):
-    #     """Make sure the WAVECAR is copied."""
-    #     add_vasp_files = self.copy_vasp_kwargs.get("additional_vasp_files", [])
-    #     add_vasp_files.append("WAVECAR")
-    #     self.copy_vasp_kwargs["additional_vasp_files"] = add_vasp_files
-
-    @job
+    @job(data="wswq_documents", output_schema=FiniteDiffDocument)
     def make(self, ref_calc_dir: str, distored_calc_dirs: List[str]):
         """Run a post-processing VASP job."""
         fc = FileClient()
@@ -159,6 +152,10 @@ class WSWQMaker(Maker):
 
             run_vasp(**self.run_vasp_kwargs)
             self.store_wswq(suffix=str(i))
+
+        cur_dir = Path.cwd()
+        fd_doc = FiniteDiffDocument.from_directory(cur_dir)
+        return fd_doc
 
     def store_wswq(self, suffix):
         """Store the WSWQ file in the database."""
