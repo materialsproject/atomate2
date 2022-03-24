@@ -22,14 +22,10 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
         "static q=1 3": "Si_CCD/static_q=1_3",
         "static q=1 4": "Si_CCD/static_q=1_4",
     }
-
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        k: {"incar_settings": ["NSW", "ISMEAR", "IBRION"]} for k in ref_paths.keys()
-    }
+    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
 
     # automatically use fake VASP and write POTCAR.spec during the test
-    mock_vasp(ref_paths)
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
         test_dir / "vasp" / "Si_CCD" / "relax_q=0" / "inputs" / "POSCAR"
