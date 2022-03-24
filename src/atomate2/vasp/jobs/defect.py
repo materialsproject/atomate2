@@ -3,22 +3,14 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable
 
-from jobflow import Flow, Maker, Response, job
+from jobflow import Flow, Response, job
 from pymatgen.core import Structure
-from pymatgen.io.vasp import Incar
-from pymatgen.io.vasp.outputs import WSWQ
 
-from atomate2.common.files import get_zfile, gunzip_files
-from atomate2.utils.file_client import FileClient
-from atomate2.utils.path import strip_hostname
-from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import StaticMaker
-from atomate2.vasp.run import run_vasp
-from atomate2.vasp.schemas.defect import CCDDocument, FiniteDiffDocument
+from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
@@ -104,71 +96,3 @@ def get_ccd_from_task_docs(
         structure2=structure2,
     )
     return Response(output=ccd_doc)
-
-
-@dataclass
-class WSWQMaker(Maker):
-    """
-    A maker to print and store WSWQ files.
-
-    Reads the WAVECAR file and computs the desired quantities.
-    This can be used in cases where data from the same calculation is used multiple times.
-
-    Since all of the standard outputs are presumably already stored in the database,
-    the make function here should only only store new data.
-    """
-
-    name: str = "WSWQ"
-    run_vasp_kwargs: dict = field(default_factory=dict)
-
-    @job(data="wswq_documents", output_schema=FiniteDiffDocument)
-    def make(self, ref_calc_dir: str, distored_calc_dirs: List[str]):
-        """Run a post-processing VASP job."""
-        fc = FileClient()
-        copy_vasp_outputs(
-            ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc
-        )
-        self.update_incar()
-
-        d_dir_names = [strip_hostname(d) for d in distored_calc_dirs]
-
-        gunzip_files(
-            allow_missing=True,
-            force=True,
-            include_files=["INCAR", "POSCAR", "WAVECAR", "POTCAR", "KPOINTS"],
-        )
-        for i, dir_name in enumerate(d_dir_names):
-            # Copy a distorted WAVECAR to WAVECAR.qqq
-            files = fc.listdir(dir_name)
-            wavecar_file = Path(dir_name) / get_zfile(files, "WAVECAR")
-            # automatically gunzip the file if it is gzipped
-            zfile_name = wavecar_file.name
-            if zfile_name.endswith(".gz"):
-                fc.copy(wavecar_file, f"WAVECAR.{i}.gz")
-                fc.gunzip(f"WAVECAR.{i}.gz")
-                fc.rename(f"WAVECAR.{i}", "WAVECAR.qqq")
-            else:
-                fc.copy(wavecar_file, "WAVECAR.qqq")
-
-            run_vasp(**self.run_vasp_kwargs)
-            self.store_wswq(suffix=str(i))
-
-        cur_dir = Path.cwd()
-        fd_doc = FiniteDiffDocument.from_directory(cur_dir)
-        return fd_doc
-
-    def store_wswq(self, suffix):
-        """Store the WSWQ file in the database."""
-        logger.info(f"Storing WSWQ file with suffix {suffix}")
-        fc = FileClient()
-        fc.copy(Path("WSWQ"), f"WSWQ.{suffix}")
-        wswq = WSWQ.from_file(f"WSWQ.{suffix}")
-        logger.debug(
-            f"Created WSWQ object: nspin={wswq.nspin}, nkpoints={wswq.kpoints}, nbands={wswq.nbands}"
-        )
-
-    def update_incar(self):
-        """Update the INCAR."""
-        incar = Incar.from_file("INCAR")
-        incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
-        incar.write_file("INCAR")

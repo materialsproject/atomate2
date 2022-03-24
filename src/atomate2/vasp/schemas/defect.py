@@ -99,7 +99,6 @@ class WSWQDocument(BaseModel):
             data=np.array(self.data),
         )
 
-    # allow arbitrary model
     class Config:
         arbitrary_types_allowed = True
 
