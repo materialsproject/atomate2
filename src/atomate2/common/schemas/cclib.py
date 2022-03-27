@@ -297,7 +297,7 @@ def cclib_calculate(
 
     if method in cube_methods and not cube_file:
         raise FileNotFoundError(
-            f"A cube file must be provied for {method}. Returning None."
+            f"A cube file must be provide for {method}. Returning None."
         )
     if method in ["ddec6", "hirshfeld"] and not proatom_dir:
         if "PROATOM_DIR" not in os.environ:
