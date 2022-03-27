@@ -3,7 +3,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 from monty.dev import requires
 from monty.json import jsanitize
@@ -262,7 +262,7 @@ def cclib_calculate(
     method: str,
     cube_file: Union[Path, str],
     proatom_dir: Union[Path, str],
-) -> Dict[str, Any]:
+) -> Optional[Dict[str, Any]]:
     """
     Run a cclib population analysis.
 
@@ -362,7 +362,7 @@ def cclib_calculate(
 
 def _get_homos_lumos(
     moenergies: List[List[float]], homo_indices: List[int]
-) -> Tuple[List[float], List[float], List[float]]:
+) -> Tuple[List[float], Optional[List[float]], Optional[List[float]]]:
     """
     Calculate the HOMO, LUMO, and HOMO-LUMO gap energies in eV.
 
