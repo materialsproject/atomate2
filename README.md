@@ -1,9 +1,9 @@
 # atomate2
 
-<a href="https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting"><img alt="code coverage" src="https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests"></a>
-<a href="https://codecov.io/gh/materialsproject/atomate2/"><img alt="code coverage" src="https://img.shields.io/codecov/c/gh/materialsproject/atomate2"></a>
-<a href="https://pypi.org/project/atomate2"><img alt="pypi version" src="https://img.shields.io/pypi/v/atomate2?color=blue"></a>
-<img alt="supported python versions" src="https://img.shields.io/pypi/pyversions/atomate2">
+[![code coverage](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
+[![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
+[![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
+![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
 
 **👉 [Full Documentation][docs] 👈**
 
@@ -70,7 +70,7 @@ run_locally(bandstructure_flow, create_folders=True)
 ```
 
 In this example, we run execute the workflow immediately. In many cases, you might want
-to perform calculations on several materials simulatenously. To achieve this, all
+to perform calculations on several materials simultaneously. To achieve this, all
 atomate2 workflows can be run using the [FireWorks] software. See the
 [documentation][atomate2_fireworks] for more details.
 
@@ -125,7 +125,6 @@ A full list of all contributors can be found [here][contributors].
 [changelog]: https://materialsproject.github.io/atomate2/user/changelog.html
 [installation]: https://materialsproject.github.io/atomate2/user/install.html
 [contributing]: https://materialsproject.github.io/atomate2/user/contributing.html
-[contributors]: https://materialsproject.github.io/atomate2/user/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
