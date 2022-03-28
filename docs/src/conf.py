@@ -72,7 +72,7 @@ numpydoc_show_inherited_class_members = False
 numpydoc_attributes_as_param_list = False
 numpydoc_xref_param_type = True
 
-# better napolean support
+# better napoleon support
 # napoleon_use_param = True
 # napoleon_use_rtype = True
 # napoleon_use_ivar = True
