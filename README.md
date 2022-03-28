@@ -125,6 +125,7 @@ A full list of all contributors can be found [here][contributors].
 [changelog]: https://materialsproject.github.io/atomate2/user/changelog.html
 [installation]: https://materialsproject.github.io/atomate2/user/install.html
 [contributing]: https://materialsproject.github.io/atomate2/user/contributing.html
+[contributors]: https://materialsproject.github.io/atomate2/user/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
