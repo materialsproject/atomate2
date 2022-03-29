@@ -17,7 +17,7 @@ from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_DISTORTIONS = (-1, -0.15 - 0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
+DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(use_structure_charge=True)
 DEFECT_STATIC_GENERATOR = StaticSetGenerator(
