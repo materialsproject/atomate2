@@ -157,8 +157,8 @@ Create a conda environment
 
 .. note::
 
-   Make sure to create a Python 3.7+ environment as recent versions of atomate2 only
-   support Python 3.7 and higher.
+   Make sure to create a Python 3.8+ environment as recent versions of atomate2 only
+   support Python 3.8 and higher.
 
 We highly recommended that you organize your installation of the atomate2 and the other
 Python codes using a conda virtual environment. Some of the main benefits are:
