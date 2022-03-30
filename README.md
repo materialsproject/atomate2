@@ -74,7 +74,7 @@ run_locally(bandstructure_flow, create_folders=True)
 Before the above code can run successfully, you'll need to
 
 - set `PMG_VASP_PSP_DIR` in `~/.pmgrc.yaml` to a directory with VASP POTCAR files,
-- tell atomate2 through `ATOMATE2_VASP_CMD=/path/to/vasp_std` where to find your VASP binary,
+- tell atomate2 where to find your VASP binary,
 - have a MongoDB instance ready to accept job output.
 
 See the [installation] steps for details how to set all of this up.
