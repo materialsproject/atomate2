@@ -310,8 +310,11 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
             updates.update({"ISMEAR": 0, "SIGMA": 0.01})
 
         if self.optics:
-            # LREAL not supported with LOPTICS = True
-            updates.update({"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5})
+            # LREAL not supported with LOPTICS = True; automatic NEDOS usually
+            # underestimates, so set it explicitly
+            updates.update(
+                {"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5, "NEDOS": 2000}
+            )
 
         updates["MAGMOM"] = None
 
@@ -361,6 +364,7 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
             "PRECFOCK": "Fast",
             "ISIF": 3,
             "LASPH": True,
+            "LDAU": False,
         }
 
 
@@ -413,6 +417,7 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
             "LHFCALC": True,
             "PRECFOCK": "Fast",
             "LASPH": True,
+            "LDAU": False,
         }
 
 
@@ -461,6 +466,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
             "LCHARG": True,
             "LASPH": True,
             "LREAL": False,
+            "LDAU": False,
         }
 
 
@@ -624,6 +630,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
             "KSPACING": None,
             "LORBIT": 11,
             "LREAL": False,
+            "LDAU": False,
         }
 
         if self.mode == "uniform" and len(self.added_kpoints) == 0:
@@ -682,7 +689,7 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
         900,
         1000,
     )
-    reciprocal_density: float = 50
+    reciprocal_density: float = 64
     auto_ispin: bool = True
 
     def get_incar_updates(
