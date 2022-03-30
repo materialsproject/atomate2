@@ -518,7 +518,7 @@ class Calculation(BaseModel):
         parse_dos: Union[str, bool] = False,
         parse_bandstructure: Union[str, bool] = False,
         average_locpot: bool = True,
-        run_bader: bool = SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS,
+        run_bader: bool = (SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS),
         strip_bandstructure_projections: bool = False,
         strip_dos_projections: bool = False,
         store_volumetric_data: Optional[
@@ -612,7 +612,7 @@ class Calculation(BaseModel):
             vasp_objects[VaspObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         bader = None
-        if run_bader and "chgcar" in output_file_paths:
+        if run_bader and VaspObject.CHGCAR in output_file_paths:
             suffix = "" if task_name == "standard" else f".{task_name}"
             bader = bader_analysis_from_path(dir_name, suffix=suffix)
 
