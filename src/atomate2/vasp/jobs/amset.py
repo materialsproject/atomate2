@@ -302,7 +302,6 @@ def calculate_deformation_potentials(
     # convert arguments into their command line equivalents
     # note, amset expects the band indices to be 1 indexed, whereas we store them
     # as zero indexed
-    bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
     symprec_str = "N" if symprec is None else str(symprec)
 
     # TODO: Handle hostnames properly
@@ -311,9 +310,12 @@ def calculate_deformation_potentials(
     args = [
         bulk_dir,
         *deformation_dirs,
-        f"--bands={bands_str}",
         f"--symprec={symprec_str}",
     ]
+    if ibands is not None:
+        bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
+        args.append(f"--bands={bands_str}")
+
     runner = CliRunner()
     result = runner.invoke(read, args, catch_exceptions=False)
 

@@ -2,11 +2,11 @@
 
 import logging
 from pathlib import Path
+from shutil import which
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow.utils import ValueEnum
-from monty.os.path import which
 from pydantic import BaseModel, Field
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
@@ -50,7 +50,7 @@ __all__ = [
 ]
 
 
-_BADER_EXE_EXISTS = which("bader") or which("bader.exe")
+_BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
 
 
 class Status(ValueEnum):
