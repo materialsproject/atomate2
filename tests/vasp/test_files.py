@@ -9,11 +9,14 @@ import pytest
         ({"additional_vasp_files": ("CHGCAR",)}, ("POSCAR", "INCAR", "CHGCAR")),
     ],
 )
-def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
+def test_copy_vasp_outputs_static(
+    vasp_test_dir, tmp_path, monkeypatch, copy_kwargs, files
+):
     from pathlib import Path
 
     from atomate2.vasp.files import copy_vasp_outputs
 
+    monkeypatch.chdir(tmp_path)
     path = vasp_test_dir / "Si_band_structure" / "static" / "outputs"
     copy_vasp_outputs(src_dir=path, **copy_kwargs)
 
@@ -29,11 +32,15 @@ def test_copy_vasp_outputs_static(vasp_test_dir, tmp_dir, copy_kwargs, files):
         ({"additional_vasp_files": ("vasp.out",)}, ("POSCAR", "INCAR", "vasp.out")),
     ],
 )
-def test_copy_vasp_outputs_double(vasp_test_dir, tmp_dir, copy_kwargs, files):
+def test_copy_vasp_outputs_double(
+    vasp_test_dir, tmp_path, monkeypatch, copy_kwargs, files
+):
+
     from pathlib import Path
 
     from atomate2.vasp.files import copy_vasp_outputs
 
+    monkeypatch.chdir(tmp_path)
     path = vasp_test_dir / "Si_old_double_relax" / "outputs"
     copy_vasp_outputs(src_dir=path, **copy_kwargs)
 
