@@ -1,5 +1,4 @@
 (running_workflows)=
-
 # Running Workflows
 
 ## Introduction
@@ -37,7 +36,6 @@ bandstructure of MgO. The workflow consists of 4 parts:
 
 ### Setup
 
-
 Make sure you have completed the installation tutorial. Next, create a folder on your
 HPC resource for this tutorial. It can be located anywhere that you can submit and run
 jobs. You'll keep all of the files for this tutorial there.
@@ -53,7 +51,7 @@ Workflows in atomate2 are composed of two objects:
   have multiple band structure `flows` in a single workflow.
 
 A list of all VASP workflows (which covers both jobs and flows) is given in the
-[List of VASP workflows section](vasp_workflows) of the documentation. Workflows are created
+[](vasp_workflows) section of the documentation. Workflows are created
 using `Maker` objects. These return the workflows that can be executed later.
 
 In this example, we will use the {obj}`RelaxBandStructureMaker` to construct our
@@ -81,7 +79,6 @@ run_locally(bandstructure_flow, create_folders=True)
 ```
 
 (Running the workflow)=
-
 ### Running the workflow
 
 Similar, to the installation tutorial, now create a job script to execute the workflow.
@@ -164,12 +161,12 @@ If you open the saved figures, you should see a plot of your DOS and bandstructu
 
 In this tutorial you learned how to run a band structure workflow and plot the outputs.
 
-To see what workflows can be run, see the [list of VASP workflows](vasp_workflows). They
+To see what workflows can be run, see the [](vasp_workflows). They
 can be set up and  run in the same way as in this tutorial.
 
 At this point, you might:
 
-* Learn how to chain workflows together: [Chaining workflows](connecting_vasp_jobs)
-* Learn how to customise VASP input settings: [Modifying input sets](modifying_input_sets)
-* Configure atomate2 with FireWorks to manage and execute many workflows at once:
-  [Using atomate2 with FireWorks](atomate2_FireWorks).
+- Learn how to chain workflows together: [](connecting_vasp_jobs).
+- Learn how to customise VASP input settings: [](modifying_input_sets).
+- Configure atomate2 with FireWorks to manage and execute many workflows at once:
+  [](atomate2_FireWorks).
