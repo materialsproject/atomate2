@@ -46,7 +46,6 @@ myst_enable_extensions = ["html_image", "substitution"]
 myst_heading_anchors = 2
 myst_substitutions = {"date": date.today().isoformat()}
 
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
