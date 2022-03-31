@@ -51,6 +51,8 @@ calculations will be performed:
    band structure).
 
 ```python
+# MgO_bandstructure.py
+
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -68,6 +70,14 @@ bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 # run the job
 run_locally(bandstructure_flow, create_folders=True)
 ```
+
+Before the above code can run successfully, you'll need to
+
+- set `PMG_VASP_PSP_DIR` in `~/.pmgrc.yaml` to a directory with VASP POTCAR files,
+- tell atomate2 where to find your VASP binary,
+- have a MongoDB instance ready to accept job output.
+
+See the [installation] steps for details how to set all of this up.
 
 In this example, we run execute the workflow immediately. In many cases, you might want
 to perform calculations on several materials simultaneously. To achieve this, all

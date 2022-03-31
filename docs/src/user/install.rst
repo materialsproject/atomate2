@@ -141,8 +141,8 @@ organizes all these items.
    name might simply be ``atomate2``.
 
 #. Now you should scaffold the rest of your ``<<INSTALL_DIR>>`` for the things we are
-   going to do next. Create a directories named ``logs``, and ``config`` so your
-   directory structure looks like:
+   going to do next. Run ``mkdir -p atomate2/{config,logs}`` to create a directories named
+   ``logs``, and ``config`` so your directory structure looks like:
 
 ::
 
@@ -157,8 +157,8 @@ Create a conda environment
 
 .. note::
 
-   Make sure to create a Python 3.7+ environment as recent versions of atomate2 only
-   support Python 3.7 and higher.
+   Make sure to create a Python 3.8+ environment as recent versions of atomate2 only
+   support Python 3.8 and higher.
 
 We highly recommended that you organize your installation of the atomate2 and the other
 Python codes using a conda virtual environment. Some of the main benefits are:
@@ -238,23 +238,23 @@ your own settings.
 .. code-block:: yaml
 
     JOB_STORE:
-        docs_store:
-          type: MongoStore
+      docs_store:
+        type: MongoStore
+        database: <<DB_NAME>>
+        host: <<HOSTNAME>>
+        port: <<PORT>>
+        username: <<USERNAME>>
+        password: <<PASSWORD>>
+        collection_name: outputs
+      additional_stores:
+        data:
+          type: GridFSStore
           database: <<DB_NAME>>
           host: <<HOSTNAME>>
           port: <<PORT>>
           username: <<USERNAME>>
           password: <<PASSWORD>>
-          collection_name: outputs
-        additional_stores:
-          data:
-            type: GridFSStore
-            database: <<DB_NAME>>
-            host: <<HOSTNAME>>
-            port: <<PORT>>
-            username: <<USERNAME>>
-            password: <<PASSWORD>>
-            collection_name: outputs_blobs
+          collection_name: outputs_blobs
 
 .. note::
 
@@ -265,15 +265,15 @@ your own settings.
     .. code-block:: yaml
 
         JOB_STORE:
-            docs_store:
-              type: MongoURIStore
+          docs_store:
+            type: MongoURIStore
+            uri: mongodb+srv://<<USERNAME>>:<<PASSWORD>>@<<HOST>>/<<DB_NAME>>?retryWrites=true&w=majority
+            collection_name: outputs
+          additional_stores:
+            data:
+              type: GridFSURIStore
               uri: mongodb+srv://<<USERNAME>>:<<PASSWORD>>@<<HOST>>/<<DB_NAME>>?retryWrites=true&w=majority
-              collection_name: outputs
-            additional_stores:
-              data:
-                type: GridFSURIStore
-                uri: mongodb+srv://<<USERNAME>>:<<PASSWORD>>@<<HOST>>/<<DB_NAME>>?retryWrites=true&w=majority
-                collection_name: outputs_blobs
+              collection_name: outputs_blobs
 
     The URI key may be different based on the Atlas database you deployed. You can
     see the template for the URI string by clicking on "Databases" (under "Deployment"
