@@ -222,7 +222,6 @@ See the Materials Project `documentation on elastic constants
     Otherwise, the symmetry reduction routines will not be as effective at reducing the
     number of deformations needed.
 
-.. _modifying_input_sets:
 
 Optics
 ^^^^^^
@@ -246,6 +245,8 @@ if the material needs magnetism set, and ii) the total number of bands (the unif
 contains 1.3 * number of bands in the static calculation) as often the highest bands are
 not properly converged in VASP.
 
+
+.. _modifying_input_sets:
 
 Modifying input sets
 --------------------

@@ -4,7 +4,8 @@
 User Guide
 ==========
 
-.. mdinclude:: ../../../README.md
+.. include:: ../../../README.md
+   :parser: myst_parser.sphinx_
    :start-line: 9
 
 Table of Contents

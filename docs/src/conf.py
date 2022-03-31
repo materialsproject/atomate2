@@ -31,15 +31,17 @@ release = __version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "myst_parser",
     "numpydoc",
     # "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.autosummary",
-    "m2r2",
     "sphinx_panels",
     "sphinxcontrib.autodoc_pydantic",
 ]
+
+myst_enable_extensions = ["html_image"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
