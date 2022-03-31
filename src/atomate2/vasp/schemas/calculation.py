@@ -14,7 +14,7 @@ from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
 from pymatgen.electronic_structure.bandstructure import BandStructure
 from pymatgen.electronic_structure.core import OrbitalType
-from pymatgen.electronic_structure.dos import Dos
+from pymatgen.electronic_structure.dos import CompleteDos, Dos
 from pymatgen.io.vasp import (
     BSVasprun,
     Locpot,
@@ -451,45 +451,7 @@ class CalculationOutput(BaseModel):
 
         # Parse DOS properties
         if hasattr(vasprun, "complete_dos"):
-            dosprop_dict = {}
-            complete_dos = vasprun.complete_dos
-            for el in structure.composition.elements:
-                el_name = el.name
-                dosprop_dict[el_name] = {}
-                for orb_type in [
-                    OrbitalType.s,
-                    OrbitalType.p,
-                    OrbitalType.d,
-                    OrbitalType.f,
-                ]:
-                    orb_name = orb_type.name
-                    if (
-                        (el.block == "s" and orb_name in ["p", "d", "f"])
-                        or (el.block == "p" and orb_name in ["d", "f"])
-                        or (el.block == "d" and orb_name == "f")
-                    ):
-                        continue
-                    dosprops = {
-                        "filling": complete_dos.get_band_filling(
-                            band=orb_type, elements=[el]
-                        ),
-                        "center": complete_dos.get_band_center(
-                            band=orb_type, elements=[el]
-                        ),
-                        "bandwidth": complete_dos.get_band_width(
-                            band=orb_type, elements=[el]
-                        ),
-                        "skewness": complete_dos.get_band_skewness(
-                            band=orb_type, elements=[el]
-                        ),
-                        "kurtosis": complete_dos.get_band_kurtosis(
-                            band=orb_type, elements=[el]
-                        ),
-                        "upper_edge": complete_dos.get_upper_band_edge(
-                            band=orb_type, elements=[el]
-                        ),
-                    }
-                    dosprop_dict[el_name][orb_name] = dosprops
+            dosprop_dict = _get_band_props(vasprun.complete_dos, structure)
 
         elph_structures: Dict[str, List[Any]] = {}
         if elph_poscars is not None:
@@ -804,3 +766,54 @@ def _parse_bandstructure(
         return bs
 
     return None
+
+
+def _get_band_props(complete_dos: CompleteDos, structure: Structure) -> Dict:
+    """Calculate band properties from a CompleteDos object and Structure.
+
+    Parameters
+    ----------
+    complete_dos
+        A CompleteDos object.
+    structure
+        a pymatgen Structure object.
+
+    Returns
+    -------
+    Dict
+        A dictionary of element and orbital-projected DOS properties.
+    """
+    dosprop_dict = {}
+    for el in structure.composition.elements:
+        el_name = el.name
+        dosprop_dict[el_name] = {}
+        for orb_type in [
+            OrbitalType.s,
+            OrbitalType.p,
+            OrbitalType.d,
+            OrbitalType.f,
+        ]:
+            orb_name = orb_type.name
+            if (
+                (el.block == "s" and orb_name in ["p", "d", "f"])
+                or (el.block == "p" and orb_name in ["d", "f"])
+                or (el.block == "d" and orb_name == "f")
+            ):
+                continue
+            dosprops = {
+                "filling": complete_dos.get_band_filling(band=orb_type, elements=[el]),
+                "center": complete_dos.get_band_center(band=orb_type, elements=[el]),
+                "bandwidth": complete_dos.get_band_width(band=orb_type, elements=[el]),
+                "skewness": complete_dos.get_band_skewness(
+                    band=orb_type, elements=[el]
+                ),
+                "kurtosis": complete_dos.get_band_kurtosis(
+                    band=orb_type, elements=[el]
+                ),
+                "upper_edge": complete_dos.get_upper_band_edge(
+                    band=orb_type, elements=[el]
+                ),
+            }
+            dosprop_dict[el_name][orb_name] = dosprops
+
+    return dosprop_dict
