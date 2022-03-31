@@ -452,6 +452,8 @@ class CalculationOutput(BaseModel):
         # Parse DOS properties
         if hasattr(vasprun, "complete_dos"):
             dosprop_dict = _get_band_props(vasprun.complete_dos, structure)
+        else:
+            dosprop_dict = {}
 
         elph_structures: Dict[str, List[Any]] = {}
         if elph_poscars is not None:
@@ -771,7 +773,8 @@ def _parse_bandstructure(
 def _get_band_props(
     complete_dos: CompleteDos, structure: Structure
 ) -> Dict[str, Dict[str, Any]]:
-    """Calculate band properties from a CompleteDos object and Structure.
+    """
+    Calculate band properties from a CompleteDos object and Structure.
 
     Parameters
     ----------
