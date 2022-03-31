@@ -768,7 +768,9 @@ def _parse_bandstructure(
     return None
 
 
-def _get_band_props(complete_dos: CompleteDos, structure: Structure) -> Dict[str,Any]:
+def _get_band_props(
+    complete_dos: CompleteDos, structure: Structure
+) -> Dict[str, Dict[str, Any]]:
     """Calculate band properties from a CompleteDos object and Structure.
 
     Parameters
