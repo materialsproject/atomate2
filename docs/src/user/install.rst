@@ -498,8 +498,8 @@ Troubleshooting and FAQ
 My job failed!
 --------------
 
-Check the job error files in the launch directroy for any errors. Also check the job
-standard output for a full log of the workflow executation and to check for a Python
+Check the job error files in the launch directory for any errors. Also check the job
+standard output for a full log of the workflow execution and to check for a Python
 traceback.
 
 

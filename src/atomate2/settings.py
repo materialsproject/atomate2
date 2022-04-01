@@ -39,10 +39,10 @@ class Atomate2Settings(BaseSettings):
         "vasp_std", description="Command to run standard version of VASP."
     )
     VASP_GAMMA_CMD: str = Field(
-        "vasp_gam", description="Command to run gamma only version of VASP."
+        "vasp_gam", description="Command to run gamma-only version of VASP."
     )
     VASP_NCL_CMD: str = Field(
-        "vasp_ncl", description="Command to run ncl version of VASP."
+        "vasp_ncl", description="Command to run non-collinear version of VASP."
     )
     VASP_VDW_KERNEL_DIR: str = Field(None, description="Path to VDW VASP kernel.")
     VASP_INCAR_UPDATES: dict = Field(
@@ -79,7 +79,7 @@ class Atomate2Settings(BaseSettings):
     VASP_RUN_BADER: bool = Field(
         False,
         description="Whether to run the Bader program when parsing VASP calculations."
-        "Requires the bader command to be on the path.",
+        "Requires the bader CLI to be on the path.",
     )
 
     # Elastic constant settings
