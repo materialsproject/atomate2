@@ -117,7 +117,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
         Whether to set LEPSILON (used for calculating the high-frequency dielectric
         tensor).
     lcalcpol
-        Whether to set LCALCPOL (used tfor calculating the electronic contribution to
+        Whether to set LCALCPOL (used for calculating the electronic contribution to
         the polarization)
     **kwargs
         Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
