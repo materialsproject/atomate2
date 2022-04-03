@@ -79,7 +79,7 @@ class Atomate2Settings(BaseSettings):
     VASP_RUN_BADER: bool = Field(
         False,
         description="Whether to run the Bader program when parsing VASP calculations."
-        "Requires the bader CLI to be on the path.",
+        "Requires the bader executable to be on the path.",
     )
 
     # Elastic constant settings
