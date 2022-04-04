@@ -19,7 +19,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Tag version
-        run: git tag {{ github.event.inputs.version }} --force
+        run: git tag ${{ github.event.inputs.version }} --force
 
 
       - name: Install pandoc
