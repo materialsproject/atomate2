@@ -1,4 +1,4 @@
-(installation tutorial)=
+(installation)=
 # Installation
 
 ## Introduction
