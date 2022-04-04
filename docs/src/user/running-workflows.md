@@ -51,11 +51,7 @@ Workflows in atomate2 are composed of two objects:
   have multiple band structure `flows` in a single workflow.
 
 A list of all VASP workflows (which covers both jobs and flows) is given in the
-<<<<<<< HEAD
-[](vasp_workflows) of the documentation. Workflows are created
-=======
 [](vasp_workflows) section of the documentation. Workflows are created
->>>>>>> 0d74f9d (Convert install doc to markdown)
 using `Maker` objects. These return the workflows that can be executed later.
 
 In this example, we will use the {obj}`RelaxBandStructureMaker` to construct our
