@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 (installation)=
-=======
-(installation tutorial)=
->>>>>>> 0d74f9d (Convert install doc to markdown)
 # Installation
 
 ## Introduction
