@@ -32,7 +32,7 @@ atomate2, see the [Installation page](installation).
 
 The most important settings to consider are:
 
-- `VASP_CMD`: The command used run the standard version of VASP. I.e., something like
+- `VASP_CMD`: The command used to run the standard version of VASP. I.e., something like
   `mpi_run -n 16 vasp_std > vasp.out`.
 - `VASP_GAMMA_CMD`: The command used to run the gamma-only version of VASP.
 - `VASP_NCL_CMD`: The command used to run the the non-collinear version of VASP.

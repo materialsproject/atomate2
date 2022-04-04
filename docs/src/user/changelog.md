@@ -68,7 +68,7 @@ Enhancements:
 Bug fixes:
 
 - Use PBEsol by default.
-- Increase number of signficant figures when writing POSCAR files.
+- Increase number of significant figures when writing POSCAR files.
 - Remove unused INCAR settings ([@arosen93](https://github.com/arosen93))
 - Add missing LASPH flags on vdW functionals ([@arosen93](https://github.com/arosen93), [#31](https://github.com/materialsproject/atomate2/pull/31))
 - Use `NSW=0` in static calculations ([@arosen93](https://github.com/arosen93), [#10](https://github.com/materialsproject/atomate2/pull/10))
