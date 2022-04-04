@@ -20,4 +20,4 @@ formats:
   - htmlzip
 
 sphinx:
-   configuration: docs/source/conf.py
+   configuration: docs/src/conf.py

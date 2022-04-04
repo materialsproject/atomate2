@@ -348,7 +348,7 @@ There are two options when chaining workflows:
    these outputs include INCAR settings, the band gap (used to automatically
    set KSPACING), and the magnetic moments. Some workflows will also use other outputs.
    For example, the Band Structure workflow will copy the CHGCAR file (charge
-   density) from the previous calculation. This can be achieve by setting both the
+   density) from the previous calculation. This can be achieved by setting both the
    `structure` and `prev_vasp_dir` arguments.
 
 These two examples are illustrated in the code below, where we chain a relaxation
