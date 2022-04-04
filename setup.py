@@ -42,13 +42,13 @@ if __name__ == "__main__":
             "docs": [
                 "sphinx==4.5.0",
                 "numpydoc==1.2.1",
-                "m2r2==0.3.2",
                 "mistune==0.8.4",
                 "ipython==8.2.0",
                 "FireWorks==2.0.2",
                 "pydata-sphinx-theme==0.8.1",
                 "autodoc_pydantic==1.6.1",
                 "sphinx_panels==0.6.0",
+                "myst-parser==0.17.0",
             ],
             "tests": [
                 "pytest==7.1.1",
