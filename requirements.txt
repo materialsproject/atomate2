@@ -1,8 +1,8 @@
 pydantic==1.9.0
-pymatgen==2022.2.10
+pymatgen==2022.3.29
 custodian==2022.2.13
-monty==2022.1.19
-jobflow==0.1.6
-click==8.0.4
+monty==2022.3.12
+jobflow==0.1.7
+click==8.1.2
 PyYAML==6.0
 numpy
