@@ -139,6 +139,8 @@ class CalculationInput(BaseModel):
     structure: Structure = Field(
         None, description="Input structure for the calculation"
     )
+    is_hubbard: bool = Field(False, description="Is this a Hubbard +U calculation")
+    hubbards: Dict = Field(None, description="The hubbard parameters used")
 
     @classmethod
     def from_vasprun(cls, vasprun: Vasprun) -> "CalculationInput":
@@ -170,6 +172,8 @@ class CalculationInput(BaseModel):
             potcar_type=[s.split(" ")[0] for s in vasprun.potcar_symbols],
             parameters=dict(vasprun.parameters),
             lattice_rec=vasprun.initial_structure.lattice.reciprocal_lattice,
+            is_hubbard=vasprun.is_hubbard,
+            hubbards=vasprun.hubbards,
         )
 
 

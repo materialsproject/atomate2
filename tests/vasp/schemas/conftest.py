@@ -77,6 +77,8 @@ class SiOptimizeDouble(SchemaTestData):
                     "nkpoints": 29,
                     "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
                     "structure": {"volume": 40.036816205493494},
+                    "is_hubbard": False,
+                    "hubbards": None,
                 },
             }
         ],
@@ -85,6 +87,8 @@ class SiOptimizeDouble(SchemaTestData):
             "structure": {"volume": 40.036816205493494},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 99},
+            "is_hubbard": False,
+            "hubbards": None,
         },
         "output": {
             "structure": {"volume": 40.90063538246923},
@@ -130,6 +134,8 @@ class SiNonSCFUniform(SchemaTestData):
                     "nkpoints": 220,
                     "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
                     "structure": {"volume": 40.88829843008916},
+                    "is_hubbard": False,
+                    "hubbards": None,
                 },
             }
         ],
@@ -138,6 +144,8 @@ class SiNonSCFUniform(SchemaTestData):
             "structure": {"volume": 40.88829843008916},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 0},
+            "is_hubbard": False,
+            "hubbards": None,
         },
         "output": {
             "structure": {"volume": 40.88829843008916},
@@ -191,6 +199,8 @@ class SiStatic(SchemaTestData):
             "structure": {"volume": 40.88829843008916},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 0},
+            "is_hubbard": False,
+            "hubbards": None,
         },
         "output": {
             "structure": {"volume": 40.88829843008916},
