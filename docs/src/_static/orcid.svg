@@ -1,17 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 256 256" style="enable-background:new 0 0 256 256;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#A6CE39;}
-	.st1{fill:#FFFFFF;}
-</style>
-<path class="st0" d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"/>
-<g>
-	<path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/>
-	<path class="st1" d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5
-		c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"/>
-	<path class="st1" d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1
-		C84.2,46.7,88.7,51.3,88.7,56.8z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(65.098039%,80.784314%,22.352941%);fill-opacity:1;" d="M 16 8 C 16 12.417969 12.417969 16 8 16 C 3.582031 16 0 12.417969 0 8 C 0 3.582031 3.582031 0 8 0 C 12.417969 0 16 3.582031 16 8 Z M 16 8 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 5.394531 11.636719 L 4.429688 11.636719 L 4.429688 4.945312 L 5.394531 4.945312 Z M 5.394531 11.636719 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 6.804688 4.945312 L 9.40625 4.945312 C 11.882812 4.945312 12.96875 6.710938 12.96875 8.292969 C 12.96875 10.011719 11.625 11.644531 9.417969 11.644531 L 6.804688 11.644531 Z M 7.769531 10.773438 L 9.300781 10.773438 C 11.480469 10.773438 11.980469 9.117188 11.980469 8.292969 C 11.980469 6.949219 11.125 5.8125 9.25 5.8125 L 7.769531 5.8125 Z M 7.769531 10.773438 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 5.542969 3.550781 C 5.542969 3.894531 5.261719 4.179688 4.914062 4.179688 C 4.5625 4.179688 4.28125 3.894531 4.28125 3.550781 C 4.28125 3.199219 4.5625 2.917969 4.914062 2.917969 C 5.261719 2.917969 5.542969 3.207031 5.542969 3.550781 Z M 5.542969 3.550781 "/>
 </g>
 </svg>

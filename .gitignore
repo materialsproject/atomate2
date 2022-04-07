@@ -58,3 +58,5 @@ examples/*/*mesh*
 test-vasp
 docs_build
 docs/src/reference/atomate2.*
+
+.vscode/

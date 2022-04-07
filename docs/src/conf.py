@@ -6,6 +6,7 @@
 
 import os
 import sys
+from datetime import date
 
 # import typing
 # typing.TYPE_CHECKING = True
@@ -31,15 +32,19 @@ release = __version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "myst_parser",
     "numpydoc",
     # "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.autosummary",
-    "m2r2",
     "sphinx_panels",
     "sphinxcontrib.autodoc_pydantic",
 ]
+
+myst_enable_extensions = ["html_image", "substitution"]
+myst_heading_anchors = 2
+myst_substitutions = {"date": date.today().isoformat()}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -72,7 +77,7 @@ numpydoc_show_inherited_class_members = False
 numpydoc_attributes_as_param_list = False
 numpydoc_xref_param_type = True
 
-# better napolean support
+# better napoleon support
 # napoleon_use_param = True
 # napoleon_use_rtype = True
 # napoleon_use_ivar = True

@@ -16,7 +16,7 @@ Reporting bugs, getting help, and discussion
 atomate2 is still in development, so at the moment we
 do not have a dedicated help forum. For the time being, please
 submit questions and bugs to the
-`GitHub issues page <https://github.com/materialsproject/atomate2/issues>`__.
+[GitHub issues page](https://github.com/materialsproject/atomate2/issues).
 
 If you are making a bug report, incorporate as many elements of the
 following as possible to ensure a timely response and avoid the
@@ -39,12 +39,10 @@ Contributing code modifications or additions through Github
 
 We use github to host code, to track issues and feature requests,
 as well as accept pull requests. We maintain a list of all
-contributors `here
-<https://materialsproject.github.io/atomate2/contributors.html>`__.
+contributors [here](https://materialsproject.github.io/atomate2/contributors.html).
 
 Pull requests are the best way to propose changes to the codebase.
-Follow the `Github flow
-<https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow>`__
+Follow the [Github flow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
 for more information on this procedure.
 
 The basic procedure for making a PR is:
@@ -59,14 +57,13 @@ How to Make a **Great** Pull Request
 
 We have a few tips for writing good PRs that are accepted into the main repo:
 
-- Use the Google Code style for all of your code. Find an example `here
-  <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`__.
+- Use the Google Code style for all of your code. Find an example [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
 - Your code should have (4) spaces instead of tabs.
 - If needed, update the documentation.
 - **Write tests** for new features! Good tests are 100%, absolutely necessary
-  for good code. We use the python ``unittest`` framework -- see some of the
-  other tests in this repo for examples, or review the `Hitchhiker's guide
-  to python <https://docs.python-guide.org/writing/tests/>`__ for some good
+  for good code. We use the python `unittest` framework -- see some of the
+  other tests in this repo for examples, or review the [Hitchhiker's guide
+  to python](https://docs.python-guide.org/writing/tests) for some good
   resources on writing good tests.
 - Understand your contributions will fall under the same license as this repo.
 

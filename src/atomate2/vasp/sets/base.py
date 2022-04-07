@@ -104,7 +104,7 @@ class VaspInputSet(InputSet):
             if v is not None and (overwrite or not (directory / k).exists()):
                 with zopen(directory / k, "wt") as f:
                     if isinstance(v, Poscar):
-                        # write POSCAR with more signifcant figures
+                        # write POSCAR with more significant figures
                         f.write(v.get_string(significant_figures=16))
                     else:
                         f.write(v.__str__())

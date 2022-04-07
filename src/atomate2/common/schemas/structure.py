@@ -80,7 +80,7 @@ class StructureMetadata(BaseModel):
         fields : list of str or None
             Composition fields to include.
         **kwargs
-            Keyword arguements that are passed to the model constructor.
+            Keyword arguments that are passed to the model constructor.
 
         Returns
         -------

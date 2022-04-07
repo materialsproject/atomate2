@@ -6,10 +6,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-from amset.deformation.generation import get_deformations
-from amset.tools.deformation import read
-from amset.tools.phonon_frequency import calculate_effective_phonon_frequency
-from amset.tools.wavefunction import wave
 from click.testing import CliRunner
 from jobflow import Flow, Response, job
 from pymatgen.core import Structure
@@ -235,6 +231,8 @@ def run_amset_deformations(
     List[str]
         The directory names of each deformation calculation.
     """
+    from amset.deformation.generation import get_deformations
+
     if static_deformation_maker is None:
         static_deformation_maker = StaticDeformationMaker()
 
@@ -297,12 +295,12 @@ def calculate_deformation_potentials(
           generated.
         - "log": The output log from ``amset deform read``.
     """
+    from amset.tools.deformation import read
     from click.testing import CliRunner
 
     # convert arguments into their command line equivalents
     # note, amset expects the band indices to be 1 indexed, whereas we store them
     # as zero indexed
-    bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
     symprec_str = "N" if symprec is None else str(symprec)
 
     # TODO: Handle hostnames properly
@@ -311,9 +309,12 @@ def calculate_deformation_potentials(
     args = [
         bulk_dir,
         *deformation_dirs,
-        f"--bands={bands_str}",
         f"--symprec={symprec_str}",
     ]
+    if ibands is not None:
+        bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
+        args.append(f"--bands={bands_str}")
+
     runner = CliRunner()
     result = runner.invoke(read, args, catch_exceptions=False)
 
@@ -352,6 +353,8 @@ def calculate_polar_phonon_frequency(
         - "frequencies" (list[float]): A list of all phonon frequencies.
         - "weights" (list[float]): A list of weights for the frequencies.
     """
+    from amset.tools.phonon_frequency import calculate_effective_phonon_frequency
+
     effective_frequency, weights = calculate_effective_phonon_frequency(
         np.array(frequencies),
         np.array(eigenvectors),
@@ -387,6 +390,8 @@ def generate_wavefunction_coefficients(dir_name: str):
           file. Given as a tuple of one or two lists (one for each spin channel).
           The bands indices are zero indexed.
     """
+    from amset.tools.wavefunction import wave
+
     dir_name = strip_hostname(dir_name)  # TODO: Handle hostnames properly.
     fc = FileClient()
     files = fc.listdir(dir_name)

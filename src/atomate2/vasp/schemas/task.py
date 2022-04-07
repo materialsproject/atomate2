@@ -127,6 +127,11 @@ class InputSummary(BaseModel):
     xc_override: str = Field(
         None, description="Exchange-correlation functional used if not the default"
     )
+    is_lasph: bool = Field(
+        None, description="Whether the calculation was run with aspherical corrections"
+    )
+    is_hubbard: bool = Field(False, description="Is this a Hubbard +U calculation")
+    hubbards: Dict = Field(None, description="The hubbard parameters used")
 
     @classmethod
     def from_vasp_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
@@ -152,12 +157,13 @@ class InputSummary(BaseModel):
         pps = PseudoPotentialSummary(
             pot_type=pot_type, functional=func, labels=calc_doc.input.potcar
         )
-
         return cls(
             structure=calc_doc.input.structure,
             parameters=calc_doc.input.parameters,
             pseudo_potentials=pps,
             potcar_spec=calc_doc.input.potcar_spec,
+            is_hubbard=calc_doc.input.is_hubbard,
+            hubbards=calc_doc.input.hubbards,
             xc_override=xc,
         )
 
@@ -241,7 +247,7 @@ class TaskDocument(StructureMetadata):
         description="Summary of runtime statistics for each calculation in this task",
     )
     orig_inputs: Dict[str, Union[Kpoints, dict, Poscar, List[PotcarSpec]]] = Field(
-        None, description="Summary of the original VASP inputs writen by custodian"
+        None, description="Summary of the original VASP inputs written by custodian"
     )
     task_label: str = Field(None, description="A description of the task")
     tags: List[str] = Field(None, description="Metadata tags for this task document")
@@ -394,6 +400,7 @@ class TaskDocument(StructureMetadata):
             },
             "data": {
                 "oxide_type": oxide_type(calc_docs[-1].output.structure),
+                "aspherical": calc_docs[-1].input.parameters.get("LASPH", False),
                 "last_updated": datetime_str(),
             },
         }
