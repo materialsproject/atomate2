@@ -1,6 +1,6 @@
 import numpy as np
 
-from atomate2.vasp.schemas.defect import CCDDocument, sort_pos_dist
+from atomate2.vasp.schemas.defect import CCDDocument, WSWQDocument, sort_pos_dist
 from atomate2.vasp.schemas.task import TaskDocument
 
 
@@ -60,3 +60,16 @@ def test_CCDDocument(vasp_test_dir):
     tasks = ccd_doc.get_taskdocs()
     assert len(tasks[0]) == 5
     assert len(tasks[1]) == 5
+
+
+def test_wswq(test_dir):
+    from pymatgen.io.vasp.outputs import WSWQ
+
+    schema_dir = test_dir / "schemas"
+    fn = schema_dir / "WSWQ.gz"
+    wswq = WSWQ.from_file(fn)
+    wswq_from_obj = WSWQDocument.from_wswq(wswq=wswq)
+    wswq_from_file = WSWQDocument.from_file(filename=fn)
+
+    assert wswq_from_obj.nbands == wswq.nbands
+    assert wswq_from_file.nbands == wswq.nbands
