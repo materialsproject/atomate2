@@ -33,7 +33,7 @@ class Atomate2Settings(BaseSettings):
     AUTO_ISPIN: bool = Field(
         False,
         description="If generating input set from a previous calculation, this controls"
-        " whether to disable magnetisation (ISPIN = 1) if the absoluate value"
+        " whether to disable magnetisation (ISPIN = 1) if the absolute value"
         " of all magnetic moments is less than 0.02.",
     )
     CUSTODIAN_SCRATCH_DIR: str = Field(
