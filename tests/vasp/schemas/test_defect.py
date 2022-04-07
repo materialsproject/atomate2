@@ -73,3 +73,6 @@ def test_wswq(test_dir):
 
     assert wswq_from_obj.nbands == wswq.nbands
     assert wswq_from_file.nbands == wswq.nbands
+
+    wswq_p = wswq_from_obj.to_wswq()
+    assert wswq_p.nbands == wswq.nbands
