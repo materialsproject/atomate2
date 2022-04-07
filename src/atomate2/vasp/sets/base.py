@@ -256,8 +256,8 @@ class VaspInputSetGenerator(InputSetGenerator):
         Tolerance for symmetry finding, used for line mode band structure k-points.
     auto_ispin
         If generating input set from a previous calculation, this controls whether
-        to disable magnetisation (ISPIN = 1) if the absoluate valuue of all magnetic
-        moments are less than 0.02.
+        to disable magnetisation (ISPIN = 1) if the absoluate value of all magnetic
+        moments is less than 0.02.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -274,7 +274,7 @@ class VaspInputSetGenerator(InputSetGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
-    auto_ispin: bool = False
+    auto_ispin: bool = SETTINGS.AUTO_ISPIN
     config_dict: Dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
