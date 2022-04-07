@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Union
 
 from pymatgen.core import Structure
 
@@ -144,8 +144,10 @@ def get_largest_relax_extension(
 def write_vasp_input_set(
     structure: Structure,
     input_set_generator: VaspInputSetGenerator,
+    directory: Union[str, Path] = ".",
     from_prev: bool = False,
     apply_incar_updates: bool = True,
+    potcar_spec: bool = False,
     clean_prev: bool = True,
     **kwargs,
 ):
@@ -158,17 +160,23 @@ def write_vasp_input_set(
         A structure.
     input_set_generator : .VaspInputSetGenerator
         A VASP input set generator.
+    directory : str or Path
+        The directory to write the input files to.
     from_prev : bool
         Whether to initialize the input set from a previous calculation.
     apply_incar_updates : bool
         Whether to apply incar updates given in the ~/.atomate2.yaml settings file.
+    potcar_spec : bool
+        Whether to use the POTCAR.spec file instead of the POTCAR file.
     clean_prev : bool
         Remove previous KPOINTS, INCAR, POSCAR, and POTCAR before writing the new inputs.
     **kwargs
         Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
     """
     prev_dir = "." if from_prev else None
-    vis = input_set_generator.get_input_set(structure, prev_dir=prev_dir)
+    vis = input_set_generator.get_input_set(
+        structure, prev_dir=prev_dir, potcar_spec=potcar_spec
+    )
 
     if apply_incar_updates:
         vis.incar.update(SETTINGS.VASP_INCAR_UPDATES)
@@ -180,4 +188,4 @@ def write_vasp_input_set(
                 Path(filename).unlink()
 
     logger.info("Writing VASP input set.")
-    vis.write_input(".", **kwargs)
+    vis.write_input(directory, potcar_spec=potcar_spec, **kwargs)

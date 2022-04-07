@@ -30,7 +30,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     The primary idea is that instead of running VASP to generate the output files,
     reference files will be copied into the directory instead. As we do not want to
     test whether VASP is giving the correct output rather that the calculation inputs
-    are generated correctly and that the ouputs are parsed properly, this should be
+    are generated correctly and that the outputs are parsed properly, this should be
     sufficient for our needs. An other potential issue is that the POTCAR files
     distribute with VASP are not present on the testing server due to licensing
     constraints. Accordingly, VaspInputSet.write_inputs will fail unless the

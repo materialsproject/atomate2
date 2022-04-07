@@ -251,6 +251,7 @@ def fit_elastic_tensor(
     fitting_method : str
         The method used to fit the elastic tensor. See pymatgen for more details on the
         methods themselves. The options are:
+
         - "finite_difference" (note this is required if fitting a 3rd order tensor)
         - "independent"
         - "pseudoinverse"

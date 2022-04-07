@@ -77,6 +77,8 @@ class SiOptimizeDouble(SchemaTestData):
                     "nkpoints": 29,
                     "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
                     "structure": {"volume": 40.036816205493494},
+                    "is_hubbard": False,
+                    "hubbards": None,
                 },
             }
         ],
@@ -85,6 +87,8 @@ class SiOptimizeDouble(SchemaTestData):
             "structure": {"volume": 40.036816205493494},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 99},
+            "is_hubbard": False,
+            "hubbards": None,
         },
         "output": {
             "structure": {"volume": 40.90063538246923},
@@ -130,6 +134,8 @@ class SiNonSCFUniform(SchemaTestData):
                     "nkpoints": 220,
                     "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
                     "structure": {"volume": 40.88829843008916},
+                    "is_hubbard": False,
+                    "hubbards": None,
                 },
             }
         ],
@@ -138,6 +144,8 @@ class SiNonSCFUniform(SchemaTestData):
             "structure": {"volume": 40.88829843008916},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 0},
+            "is_hubbard": False,
+            "hubbards": None,
         },
         "output": {
             "structure": {"volume": 40.88829843008916},
@@ -191,11 +199,33 @@ class SiStatic(SchemaTestData):
             "structure": {"volume": 40.88829843008916},
             "potcar_spec": [{"titel": "PAW_PBE Si 05Jan2001"}],
             "parameters": {"NSW": 0},
+            "is_hubbard": False,
+            "hubbards": None,
         },
         "output": {
             "structure": {"volume": 40.88829843008916},
             "energy": -10.84678256,
             "bandgap": 0.6506,
+            "dos_properties": {
+                "Si": {
+                    "s": {
+                        "filling": 0.624669545020562,
+                        "center": -2.5151284433409815,
+                        "bandwidth": 7.338662205126851,
+                        "skewness": 0.6261990748648925,
+                        "kurtosis": 2.0074877073276904,
+                        "upper_edge": -8.105469079999999,
+                    },
+                    "p": {
+                        "filling": 0.3911927710592045,
+                        "center": 3.339269798287516,
+                        "bandwidth": 5.999449671419663,
+                        "skewness": 0.0173776678056677,
+                        "kurtosis": 1.907790411890831,
+                        "upper_edge": -0.7536690799999999,
+                    },
+                }
+            },
         },
         "custodian": [{"job": {"settings_override": None, "suffix": ""}}],
         "included_objects": (),
