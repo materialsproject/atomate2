@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any, Callable, Iterable, List, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
+from pymatgen.io.vasp.outputs import WSWQ
 
 from atomate2.vasp.schemas.task import TaskDocument
 
@@ -26,10 +28,12 @@ class WSWQDocument(BaseModel):
         None,
         description="2D array of of complex numbers representing the <W(0)|S|W(Q)>",
     )
+
     dir0: str = Field(
         None, description="Directory where the W(0) wavefunction comes from"
     )
     uuid0: str = Field(None, description="UUID of the W(0) calculation")
+
     dir1: str = Field(
         None, description="Directory where the W(Q) wavefunction comes from"
     )
