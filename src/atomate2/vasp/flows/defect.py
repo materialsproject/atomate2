@@ -105,9 +105,6 @@ class ConfigurationCoordinateMaker(Maker):
             deformations1.output, deformations2.output, struct1, struct2
         )
 
-        if self.wswq:
-            raise NotImplementedError("WSWQ not implemented yet")
-
         return Flow(
             jobs=[relax1, relax2, deformations1, deformations2, ccd_job],
             output=ccd_job.output,
