@@ -12,8 +12,8 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     WSWQMaker,
-    calculate_energy_curve,
     get_ccd_from_task_docs,
+    spawn_energy_curve_calcs,
 )
 from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.sets.core import StaticSetGenerator
@@ -80,7 +80,7 @@ class ConfigurationCoordinateMaker(Maker):
         struct1 = relax1.output.structure
         struct2 = relax2.output.structure
 
-        deformations1 = calculate_energy_curve(
+        deformations1 = spawn_energy_curve_calcs(
             struct1,
             struct2,
             distortions=self.distortions,
@@ -89,7 +89,7 @@ class ConfigurationCoordinateMaker(Maker):
             add_name=f"q={charge_state1}",
         )
 
-        deformations2 = calculate_energy_curve(
+        deformations2 = spawn_energy_curve_calcs(
             struct2,
             struct1,
             distortions=self.distortions,
@@ -152,10 +152,10 @@ class NonRadMaker(ConfigurationCoordinateMaker):
         mid_index0 = len(self.distortions) // 2
         mid_index1 = len(self.distortions) // 2
         finite_diff_job1 = self.wswq_maker.make(
-            ref_calc_dir=dirs0[mid_index0], distorted_calc_dir=dirs0
+            ref_calc_dir=dirs0[mid_index0], distorted_calc_dirs=dirs0
         )
         finite_diff_job2 = self.wswq_maker.make(
-            ref_calc_dir=dirs1[mid_index1], distorted_calc_dir=dirs1
+            ref_calc_dir=dirs1[mid_index1], distorted_calc_dirs=dirs1
         )
 
         output = {
