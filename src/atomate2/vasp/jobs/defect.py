@@ -164,7 +164,7 @@ class WSWQMaker(Maker):
         fc.copy(Path("WSWQ"), f"WSWQ.{suffix}")
         wswq = WSWQ.from_file(f"WSWQ.{suffix}")
         logger.debug(
-            f"Created WSWQ object: nspin={wswq.nspin}, nkpoints={wswq.kpoints}, nbands={wswq.nbands}"
+            f"Created WSWQ object: nspin={wswq.nspin}, nkpoints={wswq.nkpoints}, nbands={wswq.nbands}"
         )
 
     def update_incar(self):
