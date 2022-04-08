@@ -151,7 +151,7 @@ class WSWQMaker(Maker):
                 fc.copy(wavecar_file, "WAVECAR.qqq")
 
             run_vasp(**self.run_vasp_kwargs)
-            # self.store_wswq(suffix=str(i))
+            self.store_wswq(suffix=str(i))
 
         cur_dir = Path.cwd()
         fd_doc = FiniteDiffDocument.from_directory(cur_dir)
