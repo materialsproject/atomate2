@@ -149,8 +149,8 @@ class NonRadMaker(ConfigurationCoordinateMaker):
 
         dirs0 = ccd.distorted_calcs_dirs[0]
         dirs1 = ccd.distorted_calcs_dirs[1]
-        mid_index0 = len(ccd.distorted_calcs_dirs[0]) // 2
-        mid_index1 = len(ccd.distorted_calcs_dirs[1]) // 2
+        mid_index0 = len(self.distortions) // 2
+        mid_index1 = len(self.distortions) // 2
         finite_diff_job1 = self.wswq_maker.make(
             ref_calc_dir=dirs0[mid_index0], distorted_calc_dir=dirs0
         )
