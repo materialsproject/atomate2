@@ -122,7 +122,7 @@ class WSWQMaker(Maker):
     run_vasp_kwargs: dict = field(default_factory=dict)
 
     @job(data=WSWQDocument, output_schema=FiniteDiffDocument)
-    def make(self, ref_calc_dir: str, distored_calc_dirs: List[str]):
+    def make(self, ref_calc_dir: str, distorted_calc_dirs: List[str]):
         """Run a post-processing VASP job."""
         fc = FileClient()
         copy_vasp_outputs(
@@ -130,7 +130,7 @@ class WSWQMaker(Maker):
         )
         self.update_incar()
 
-        d_dir_names = [strip_hostname(d) for d in distored_calc_dirs]
+        d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
 
         gunzip_files(
             allow_missing=True,
