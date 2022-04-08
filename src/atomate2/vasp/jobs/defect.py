@@ -10,7 +10,6 @@ from typing import Iterable, List
 from jobflow import Flow, Maker, Response, job
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
-from pymatgen.io.vasp.outputs import WSWQ
 
 from atomate2.common.files import get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient
@@ -162,10 +161,10 @@ class WSWQMaker(Maker):
         logger.info(f"Storing WSWQ file with suffix {suffix}")
         fc = FileClient()
         fc.copy(Path("WSWQ"), f"WSWQ.{suffix}")
-        wswq = WSWQ.from_file(f"WSWQ.{suffix}")
-        logger.debug(
-            f"Created WSWQ object: nspin={wswq.nspin}, nkpoints={wswq.nkpoints}, nbands={wswq.nbands}"
-        )
+        # wswq = WSWQ.from_file(f"WSWQ.{suffix}")
+        # logger.debug(
+        #     f"Created WSWQ object: nspin={wswq.nspin}, nkpoints={wswq.nkpoints}, nbands={wswq.nbands}"
+        # )
 
     def update_incar(self):
         """Update the INCAR."""
