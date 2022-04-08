@@ -10,7 +10,12 @@ from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
-from atomate2.vasp.jobs.defect import calculate_energy_curve, get_ccd_from_task_docs
+from atomate2.vasp.jobs.defect import (
+    WSWQMaker,
+    calculate_energy_curve,
+    get_ccd_from_task_docs,
+)
+from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
@@ -39,7 +44,6 @@ class ConfigurationCoordinateMaker(Maker):
         default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
     )
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
-    wswq: bool = False
 
     def make(
         self,
@@ -97,7 +101,7 @@ class ConfigurationCoordinateMaker(Maker):
         deformations1.append_name(f" q={charge_state1}")
         deformations2.append_name(f" q={charge_state2}")
 
-        ccd_docs = get_ccd_from_task_docs(
+        ccd_job = get_ccd_from_task_docs(
             deformations1.output, deformations2.output, struct1, struct2
         )
 
@@ -105,7 +109,62 @@ class ConfigurationCoordinateMaker(Maker):
             raise NotImplementedError("WSWQ not implemented yet")
 
         return Flow(
-            jobs=[relax1, relax2, deformations1, deformations2, ccd_docs],
-            output=ccd_docs.output,
+            jobs=[relax1, relax2, deformations1, deformations2, ccd_job],
+            output=ccd_job.output,
             name=name,
+        )
+
+
+@dataclass
+class NonRadMaker(ConfigurationCoordinateMaker):
+    """Class to generate workflows for the calculation of the non-radiative defect capture."""
+
+    wswq_maker: WSWQMaker = field(default_factory=lambda: WSWQMaker())
+
+    def make(
+        self,
+        structure: Structure,
+        charge_state1: int,
+        charge_state2: int,
+    ):
+        """Create the job for Non-Radiative defect capture.
+
+        Make a job for the calculation of the configuration coordinate diagram.
+        Also calculate the el-phon matrix elements for 1-D special phonon.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        charge_state1
+            The reference charge state of the defect.
+        charge_state2
+            The excited charge state of the defect
+
+        """
+        name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+        flow = super().make(
+            structure=structure,
+            charge_state1=charge_state1,
+            charge_state2=charge_state2,
+        )
+        ccd: CCDDocument = flow.output
+
+        dirs0 = ccd.distorted_calcs_dirs[0]
+        dirs1 = ccd.distorted_calcs_dirs[1]
+        mid_index0 = len(ccd.distorted_calcs_dirs[0]) // 2
+        mid_index1 = len(ccd.distorted_calcs_dirs[1]) // 2
+        finite_diff_job1 = self.wswq_maker.make(
+            ref_calc_dir=dirs0[mid_index0], distorted_calc_dir=dirs0
+        )
+        finite_diff_job2 = self.wswq_maker.make(
+            ref_calc_dir=dirs1[mid_index1], distorted_calc_dir=dirs1
+        )
+
+        output = {
+            charge_state1: finite_diff_job1.output,
+            charge_state2: finite_diff_job2.output,
+        }
+        return Flow(
+            jobs=[flow, finite_diff_job1, finite_diff_job2], output=output, name=name
         )
