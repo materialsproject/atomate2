@@ -4,18 +4,16 @@ from typing import Literal, Sequence, Union
 
 import pytest
 
-vfiles = ("incar", "kpoints", "potcar", "poscar")
-
 logger = logging.getLogger("atomate2")
+
+_VFILES = ("incar", "kpoints", "potcar", "poscar")
+_REF_PATHS = {}
+_FAKE_RUN_VASP_KWARGS = {}
 
 
 @pytest.fixture(scope="session")
 def vasp_test_dir(test_dir):
     return test_dir / "vasp"
-
-
-_REF_PATHS = {}
-_FAKE_RUN_VASP_KWARGS = {}
 
 
 @pytest.fixture(scope="function")
@@ -62,6 +60,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
+    import atomate2.vasp.jobs.base
     import atomate2.vasp.run
     from atomate2.vasp.sets.base import VaspInputSetGenerator
 
@@ -79,6 +78,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
         return get_input_set_orig(self, *args, **kwargs)
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
+    monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSetGenerator, "get_input_set", mock_get_input_set)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
@@ -98,7 +98,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 def fake_run_vasp(
     ref_path: Union[str, Path],
     incar_settings: Sequence[str] = tuple(),
-    check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = vfiles,
+    check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
 ):
     """
