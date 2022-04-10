@@ -63,39 +63,3 @@ def test_update_user_settings(powerup, attribute, settings):
         getattr(flow.jobs[1].function.__self__.input_set_generator, attribute)
         != settings
     )
-
-
-def test_use_auto_ispin():
-    from atomate2.vasp.flows.core import DoubleRelaxMaker
-    from atomate2.vasp.jobs.core import RelaxMaker
-    from atomate2.vasp.powerups import use_auto_ispin
-
-    # test job maker
-    rm = RelaxMaker()
-    rm = use_auto_ispin(rm)
-    assert rm.input_set_generator.auto_ispin is True
-
-    # test job
-    job = RelaxMaker().make(1)
-    job = use_auto_ispin(job)
-    assert job.function.__self__.input_set_generator.auto_ispin is True
-
-    # test flow maker
-    drm = DoubleRelaxMaker()
-    drm = use_auto_ispin(drm)
-    assert drm.relax_maker1.input_set_generator.auto_ispin is True
-    assert drm.relax_maker2.input_set_generator.auto_ispin is True
-
-    # test flow
-    drm = DoubleRelaxMaker()
-    flow = drm.make(1)
-    flow = use_auto_ispin(flow)
-    assert flow.jobs[0].function.__self__.input_set_generator.auto_ispin is True
-    assert flow.jobs[1].function.__self__.input_set_generator.auto_ispin is True
-
-    # test name filter
-    drm = DoubleRelaxMaker()
-    flow = drm.make(1)
-    flow = use_auto_ispin(flow, name_filter="relax 1")
-    assert flow.jobs[0].function.__self__.input_set_generator.auto_ispin is True
-    assert flow.jobs[1].function.__self__.input_set_generator.auto_ispin is False

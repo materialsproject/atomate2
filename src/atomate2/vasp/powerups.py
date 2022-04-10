@@ -234,3 +234,54 @@ def update_user_kpoints_settings(
             dict_mod=True,
         )
     return updated_flow
+
+
+def use_auto_ispin(
+    flow: Job | Flow | Maker,
+    value: bool = True,
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
+) -> Job | Flow | Maker:
+    """
+    Update the auto_ispin setting of any VaspInputSetGenerators in the flow.
+
+    Alternatively, if a Maker is supplied, the auto_ispin of the maker will be updated.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    value : bool
+        The value of auto_ispin to set.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the VaspMaker class used to generate the flows. Note the class
+        filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker but with auto_ispin set.
+    """
+    dict_mod_updates = {"input_set_generator->auto_ispin": value}
+
+    updated_flow = deepcopy(flow)
+    if isinstance(updated_flow, Maker):
+        updated_flow = updated_flow.update_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    else:
+        updated_flow.update_maker_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    return updated_flow
