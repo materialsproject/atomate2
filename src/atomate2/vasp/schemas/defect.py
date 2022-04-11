@@ -15,12 +15,12 @@ from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "CCDDocument",
-]
+__all__ = ["CCDDocument", "WSWQDocument", "FiniteDiffDocument"]
 
 
 class WSWQDocument(BaseModel):
+    """WSWQ document schema."""
+
     nspin: int = Field(None, description="Number of spins channels")
     nkpoints: int = Field(None, description="Number of k-points")
     nbands: int = Field(None, description="Number of bands")
