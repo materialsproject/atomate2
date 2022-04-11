@@ -153,7 +153,7 @@ class WSWQMaker(Maker):
             fc.copy(Path("WSWQ"), f"WSWQ.{i}")
         cur_dir = Path.cwd()
         fd_doc = FiniteDiffDocument.from_directory(cur_dir)
-        gzip_files()
+        gzip_files(cur_dir)
         return fd_doc
 
     def update_incar(self):
