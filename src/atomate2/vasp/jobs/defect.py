@@ -11,7 +11,7 @@ from jobflow import Flow, Maker, Response, job
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
 
-from atomate2.common.files import get_zfile, gunzip_files
+from atomate2.common.files import get_zfile, gunzip_files, gzip_files
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
@@ -153,7 +153,7 @@ class WSWQMaker(Maker):
             fc.copy(Path("WSWQ"), f"WSWQ.{i}")
         cur_dir = Path.cwd()
         fd_doc = FiniteDiffDocument.from_directory(cur_dir)
-        fc.gzip(cur_dir)
+        gzip_files()
         return fd_doc
 
     def update_incar(self):
