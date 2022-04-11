@@ -24,9 +24,10 @@ class WSWQDocument(BaseModel):
     nspin: int = Field(None, description="Number of spins channels")
     nkpoints: int = Field(None, description="Number of k-points")
     nbands: int = Field(None, description="Number of bands")
-    data: List[List[List[List[complex]]]] = Field(
+    data: List[List[List[List[float]]]] = Field(
         None,
-        description="2D array of of complex numbers representing the <W(0)|S|W(Q)>",
+        description="Array of of complex numbers representing the |<W(0)|S|W(Q)>|\n"
+        "Since complex numbers are not JSON serializable, we store the absolute values",
     )
 
     dir0: str = Field(
@@ -77,11 +78,13 @@ class WSWQDocument(BaseModel):
         WSWQDocument
             WSWQDocument object.
         """
+        # TODO make the pymatgen code automatically determine if the object is complex or absolute value
+        data = np.abs(wswq.data)
         return cls(
             nspin=wswq.nspin,
             nkpoints=wswq.nkpoints,
             nbands=wswq.nbands,
-            data=wswq.data.tolist(),
+            data=data.tolist(),
             **kwargs,
         )
 
@@ -100,10 +103,6 @@ class WSWQDocument(BaseModel):
             nbands=self.nbands,
             data=np.array(self.data),
         )
-
-    # allow arbitrary model
-    class Config:
-        arbitrary_types_allowed = True
 
 
 class FiniteDiffDocument(BaseModel):

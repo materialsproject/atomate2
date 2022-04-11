@@ -150,21 +150,11 @@ class WSWQMaker(Maker):
                 fc.copy(wavecar_file, "WAVECAR.qqq")
 
             run_vasp(**self.run_vasp_kwargs)
-            self.store_wswq(suffix=str(i))
-
+            fc.copy(Path("WSWQ"), f"WSWQ.{i}")
         cur_dir = Path.cwd()
         fd_doc = FiniteDiffDocument.from_directory(cur_dir)
+        fc.gzip(cur_dir)
         return fd_doc
-
-    def store_wswq(self, suffix):
-        """Store the WSWQ file in the database."""
-        logger.info(f"Storing WSWQ file with suffix {suffix}")
-        fc = FileClient()
-        fc.copy(Path("WSWQ"), f"WSWQ.{suffix}")
-        # wswq = WSWQ.from_file(f"WSWQ.{suffix}")
-        # logger.debug(
-        #     f"Created WSWQ object: nspin={wswq.nspin}, nkpoints={wswq.nkpoints}, nbands={wswq.nbands}"
-        # )
 
     def update_incar(self):
         """Update the INCAR."""
