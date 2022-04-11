@@ -106,7 +106,7 @@ def get_ccd_from_task_docs(
 
 
 @dataclass
-class WSWQMaker(Maker):
+class FiniteDiffMaker(Maker):
     """
     A maker to print and store WSWQ files.
 
@@ -117,7 +117,7 @@ class WSWQMaker(Maker):
     the make function here should only only store new data.
     """
 
-    name: str = "WSWQ"
+    name: str = "finite diff."
     run_vasp_kwargs: dict = field(default_factory=dict)
 
     @job(data=WSWQDocument, output_schema=FiniteDiffDocument)

@@ -11,7 +11,7 @@ from pymatgen.core.structure import Structure
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
-    WSWQMaker,
+    FiniteDiffMaker,
     get_ccd_from_task_docs,
     spawn_energy_curve_calcs,
 )
@@ -26,7 +26,11 @@ DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(use_structure_charge=True)
 DEFECT_STATIC_GENERATOR = StaticSetGenerator(
-    user_incar_settings={"ISMEAR": 0, "LWAVE": True, "SIGMA": 0.05}
+    user_incar_settings={
+        "ISMEAR": 0,
+        "LWAVE": True,
+        "SIGMA": 0.05,
+    }
 )
 
 
@@ -116,7 +120,7 @@ class ConfigurationCoordinateMaker(Maker):
 class NonRadMaker(ConfigurationCoordinateMaker):
     """Class to generate workflows for the calculation of the non-radiative defect capture."""
 
-    wswq_maker: WSWQMaker = field(default_factory=lambda: WSWQMaker())
+    wswq_maker: FiniteDiffMaker = field(default_factory=lambda: FiniteDiffMaker())
 
     def make(
         self,
@@ -157,6 +161,8 @@ class NonRadMaker(ConfigurationCoordinateMaker):
         finite_diff_job2 = self.wswq_maker.make(
             ref_calc_dir=dirs1[mid_index1], distorted_calc_dirs=dirs1
         )
+        finite_diff_job1.append_name(f" q={charge_state1}")
+        finite_diff_job2.append_name(f" q={charge_state2}")
 
         output = {
             charge_state1: finite_diff_job1.output,
