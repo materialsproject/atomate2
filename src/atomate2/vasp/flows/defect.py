@@ -110,7 +110,14 @@ class ConfigurationCoordinateMaker(Maker):
         )
 
         return Flow(
-            jobs=[relax1, relax2, deformations1, deformations2, ccd_job],
+            jobs=[
+                charged_structures,
+                relax1,
+                relax2,
+                deformations1,
+                deformations2,
+                ccd_job,
+            ],
             output=ccd_job.output,
             name=name,
         )
