@@ -179,7 +179,7 @@ If you open the saved figures, you should see a plot of your DOS and bandstructu
 Conclusion
 ==========
 
-In this tutorial you learned how run a band structure workflow and plot the outputs.
+In this tutorial you learned how to run a band structure workflow and plot the outputs.
 
 To see what workflows can be run, see the :ref:`vasp_workflows`. They can be set up and
 run in the same way as in this tutorial.

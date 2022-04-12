@@ -69,7 +69,7 @@ bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 run_locally(bandstructure_flow, create_folders=True)
 ```
 
-In this example, we run execute the workflow immediately. In many cases, you might want
+In this example, we run the workflow immediately. In many cases, you might want
 to perform calculations on several materials simultaneously. To achieve this, all
 atomate2 workflows can be run using the [FireWorks] software. See the
 [documentation][atomate2_fireworks] for more details.
