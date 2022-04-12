@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, Response, job
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -69,13 +69,13 @@ class ConfigurationCoordinateMaker(Maker):
 
         """
         name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
-        struct1: Structure = structure.copy()
-        struct1.set_charge(charge_state1)
-        struct2: Structure = structure.copy()
-        struct2.set_charge(charge_state2)
+        # need to wrap this up in a job so that references to undone calculations can be passed in
+        charged_structures = self._get_charged_structures(
+            structure, charge_state1, charge_state2
+        )
 
-        relax1 = self.relax_maker.make(struct1)
-        relax2 = self.relax_maker.make(struct2)
+        relax1 = self.relax_maker.make(charged_structures.output["struct1"])
+        relax2 = self.relax_maker.make(charged_structures.output["struct2"])
         relax1.append_name(f" q={charge_state1}")
         relax2.append_name(f" q={charge_state2}")
 
@@ -114,6 +114,14 @@ class ConfigurationCoordinateMaker(Maker):
             output=ccd_job.output,
             name=name,
         )
+
+    @job
+    def _get_charged_structures(self, structure, charge_state1, charge_state2):
+        struct1: Structure = structure.copy()
+        struct1.set_charge(charge_state1)
+        struct2: Structure = structure.copy()
+        struct2.set_charge(charge_state2)
+        return Response(output={"struct1": struct1, "struct2": struct2})
 
 
 @dataclass
