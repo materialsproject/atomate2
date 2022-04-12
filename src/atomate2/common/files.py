@@ -307,7 +307,7 @@ def find_and_filter_files(
 
     if include_files is None:
         files = file_client.listdir(directory, host=host)
-        files = [f for f in files if file_client.is_file(f, host=host)]
+        files = [f for f in files if file_client.is_file(directory / f, host=host)]
     else:
         files = []
         for file in include_files:

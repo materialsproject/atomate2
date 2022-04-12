@@ -375,7 +375,7 @@ class FileClient:
             Overwrite gzipped file if it already exists.
         """
         path = self.abspath(path, host=host)
-        path_gz = path.with_suffix(".gz")
+        path_gz = path.parent / (f"{path.name}.gz")
 
         if str(path).lower().endswith("gz"):
             warnings.warn(f"{path} is already gzipped, skipping...")
