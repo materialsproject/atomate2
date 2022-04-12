@@ -67,10 +67,14 @@ class ConfigurationCoordinateMaker(Maker):
         charge_state2
             The excited charge state of the defect
 
+        Returns
+        -------
+        Flow
+            The full workflow for the calculation of the configuration coordinate diagram.
         """
         name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
         # need to wrap this up in a job so that references to undone calculations can be passed in
-        charged_structures = self._get_charged_structures(
+        charged_structures = self.get_charged_structures(
             structure, charge_state1, charge_state2
         )
 
@@ -122,13 +126,35 @@ class ConfigurationCoordinateMaker(Maker):
             name=name,
         )
 
-    @job(name="charge structures")
-    def _get_charged_structures(self, structure, charge_state1, charge_state2):
-        struct1: Structure = structure.copy()
-        struct1.set_charge(charge_state1)
-        struct2: Structure = structure.copy()
-        struct2.set_charge(charge_state2)
-        return {"struct1": struct1, "struct2": struct2}
+
+@job
+def get_charged_structures(
+    structure: Structure, charge_state1: int, charge_state2: int
+):
+    """Adding charges to structure.
+
+    This needs to be a job so the results of other jobs can be passed in.
+
+    Parameters
+    ----------
+    structure
+        A structure.
+    charge_state1
+        one charge state of the defect
+    charge_state2
+        another charge state of the defect
+
+    Returns
+    -------
+    dict
+        A dictionary with the two structures with the charge states added.
+
+    """
+    struct1: Structure = structure.copy()
+    struct1.set_charge(charge_state1)
+    struct2: Structure = structure.copy()
+    struct2.set_charge(charge_state2)
+    return {"struct1": struct1, "struct2": struct2}
 
 
 @dataclass
