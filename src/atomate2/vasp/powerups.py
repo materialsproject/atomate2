@@ -16,7 +16,7 @@ def update_user_incar_settings(
     incar_updates: dict[str, Any],
     name_filter: str | None = None,
     class_filter: type[Maker] | None = BaseVaspMaker,
-):
+) -> Job | Flow | Maker:
     """
     Update the user_incar_settings of any VaspInputSetGenerators in the flow.
 
@@ -38,6 +38,11 @@ def update_user_incar_settings(
     class_filter : Maker or None
         A filter for the VaspMaker class used to generate the flows. Note the class
         filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated incar settings.
     """
     dict_mod_updates = {
         f"input_set_generator->user_incar_settings->{k}": v
@@ -66,7 +71,7 @@ def update_user_potcar_settings(
     potcar_updates: dict[str, Any],
     name_filter: str | None = None,
     class_filter: type[Maker] | None = BaseVaspMaker,
-):
+) -> Job | Flow | Maker:
     """
     Update the user_potcar_settings of any VaspInputSetGenerators in the flow.
 
@@ -88,10 +93,68 @@ def update_user_potcar_settings(
     class_filter : Maker or None
         A filter for the VaspMaker class used to generate the flows. Note the class
         filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated potcar settings.
     """
     dict_mod_updates = {
         f"input_set_generator->user_potcar_settings->{k}": v
         for k, v in potcar_updates.items()
+    }
+    updated_flow = deepcopy(flow)
+    if isinstance(updated_flow, Maker):
+        updated_flow = updated_flow.update_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    else:
+        updated_flow.update_maker_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    return updated_flow
+
+
+def update_user_potcar_functional(
+    flow: Job | Flow | Maker,
+    potcar_functional: str,
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
+) -> Job | Flow | Maker:
+    """
+    Update the user_potcar_functional of any VaspInputSetGenerators in the flow.
+
+    Alternatively, if a Maker is supplied, the user_potcar_functional of the maker will
+    be updated.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    potcar_functional : str
+        The new potcar functional to use.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the VaspMaker class used to generate the flows. Note the class
+        filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated potcar settings.
+    """
+    dict_mod_updates = {
+        "input_set_generator->user_potcar_functional": potcar_functional
     }
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
@@ -116,11 +179,11 @@ def update_user_kpoints_settings(
     kpoints_updates: dict[str, Any] | Kpoints,
     name_filter: str | None = None,
     class_filter: type[Maker] | None = BaseVaspMaker,
-):
+) -> Job | Flow | Maker:
     """
     Update the user_kpoints_settings of any VaspInputSetGenerators in the flow.
 
-    Alternatively, if a Maker is supplied, the user_potcar_settings of the maker will
+    Alternatively, if a Maker is supplied, the user_kpoints_settings of the maker will
     be updated.
 
     Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
@@ -139,6 +202,11 @@ def update_user_kpoints_settings(
     class_filter : Maker or None
         A filter for the VaspMaker class used to generate the flows. Note the class
         filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated kpoints settings.
     """
     if isinstance(kpoints_updates, Kpoints):
         dict_mod_updates = {
@@ -149,6 +217,57 @@ def update_user_kpoints_settings(
             f"input_set_generator->user_kpoints_settings->{k}": v
             for k, v in kpoints_updates.items()
         }
+
+    updated_flow = deepcopy(flow)
+    if isinstance(updated_flow, Maker):
+        updated_flow = updated_flow.update_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    else:
+        updated_flow.update_maker_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    return updated_flow
+
+
+def use_auto_ispin(
+    flow: Job | Flow | Maker,
+    value: bool = True,
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
+) -> Job | Flow | Maker:
+    """
+    Update the auto_ispin setting of any VaspInputSetGenerators in the flow.
+
+    Alternatively, if a Maker is supplied, the auto_ispin of the maker will be updated.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    value : bool
+        The value of auto_ispin to set.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the VaspMaker class used to generate the flows. Note the class
+        filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker but with auto_ispin set.
+    """
+    dict_mod_updates = {"input_set_generator->auto_ispin": value}
 
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
