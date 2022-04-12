@@ -74,7 +74,7 @@ class ConfigurationCoordinateMaker(Maker):
         """
         name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
         # need to wrap this up in a job so that references to undone calculations can be passed in
-        charged_structures = self.get_charged_structures(
+        charged_structures = get_charged_structures(
             structure, charge_state1, charge_state2
         )
 
