@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 
-from jobflow import Flow, Maker, Response, job
+from jobflow import Flow, Maker, job
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -122,13 +122,13 @@ class ConfigurationCoordinateMaker(Maker):
             name=name,
         )
 
-    @job
+    @job(name="charge structures")
     def _get_charged_structures(self, structure, charge_state1, charge_state2):
         struct1: Structure = structure.copy()
         struct1.set_charge(charge_state1)
         struct2: Structure = structure.copy()
         struct2.set_charge(charge_state2)
-        return Response(output={"struct1": struct1, "struct2": struct2})
+        return {"struct1": struct1, "struct2": struct2}
 
 
 @dataclass
