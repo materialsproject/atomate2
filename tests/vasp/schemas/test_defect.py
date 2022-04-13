@@ -37,15 +37,15 @@ def test_CCDDocument(vasp_test_dir):
     distored_0 = []
     distored_1 = []
     for i in range(5):
-        static_dir0 = vasp_test_dir / "Si_CCD" / f"static_q=0_{i}" / "outputs"
-        static_dir1 = vasp_test_dir / "Si_CCD" / f"static_q=1_{i}" / "outputs"
+        static_dir0 = vasp_test_dir / "Si_config_coord" / f"static_q=0_{i}" / "outputs"
+        static_dir1 = vasp_test_dir / "Si_config_coord" / f"static_q=1_{i}" / "outputs"
         distored_0.append(TaskDocument.from_directory(static_dir0))
         distored_1.append(TaskDocument.from_directory(static_dir1))
     relaxed_0 = TaskDocument.from_directory(
-        vasp_test_dir / "Si_CCD" / "relax_q=0" / "outputs"
+        vasp_test_dir / "Si_config_coord" / "relax_q=0" / "outputs"
     )
     relaxed_1 = TaskDocument.from_directory(
-        vasp_test_dir / "Si_CCD" / "relax_q=1" / "outputs"
+        vasp_test_dir / "Si_config_coord" / "relax_q=1" / "outputs"
     )
     s0 = relaxed_0.output.structure
     s1 = relaxed_1.output.structure

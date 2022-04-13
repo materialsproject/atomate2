@@ -186,7 +186,7 @@ def check_kpoints(ref_path: Union[str, Path]):
 
         if user.get("KSPACING", None) != ref.get("KSPACING", None):
             raise ValueError(
-                "KSPACING is not inconsistent: "
+                "KSPACING is not consistent: "
                 f"{user.get('KSPACING', None)} != {ref.get('KSPACING', None)}"
             )
 

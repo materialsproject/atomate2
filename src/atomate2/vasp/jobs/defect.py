@@ -117,7 +117,7 @@ class FiniteDiffMaker(Maker):
     the make function here should only only store new data.
     """
 
-    name: str = "finite diff."
+    name: str = "finite diff"
     run_vasp_kwargs: dict = field(default_factory=dict)
 
     @job(data=WSWQDocument, output_schema=FiniteDiffDocument)
