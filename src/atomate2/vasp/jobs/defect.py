@@ -17,7 +17,11 @@ from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import StaticMaker
 from atomate2.vasp.run import run_vasp
-from atomate2.vasp.schemas.defect import CCDDocument, FiniteDiffDocument, WSWQDocument
+from atomate2.vasp.schemas.defect import (
+    CCDDocument,
+    FiniteDifferenceDocument,
+    WSWQDocument,
+)
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
@@ -106,7 +110,7 @@ def get_ccd_from_task_docs(
 
 
 @dataclass
-class FiniteDiffMaker(Maker):
+class FiniteDifferenceMaker(Maker):
     """
     A maker to print and store WSWQ files.
 
@@ -120,7 +124,7 @@ class FiniteDiffMaker(Maker):
     name: str = "finite diff"
     run_vasp_kwargs: dict = field(default_factory=dict)
 
-    @job(data=WSWQDocument, output_schema=FiniteDiffDocument)
+    @job(data=WSWQDocument, output_schema=FiniteDifferenceDocument)
     def make(self, ref_calc_dir: str, distorted_calc_dirs: List[str]):
         """Run a post-processing VASP job."""
         fc = FileClient()
@@ -153,7 +157,7 @@ class FiniteDiffMaker(Maker):
             fc.copy(Path("WSWQ"), f"WSWQ.{i}")
 
         cur_dir = Path.cwd()
-        fd_doc = FiniteDiffDocument.from_directory(cur_dir)
+        fd_doc = FiniteDifferenceDocument.from_directory(cur_dir)
         gzip_files(cur_dir, force=True)
         return fd_doc
 

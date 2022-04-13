@@ -4,14 +4,15 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import Iterable
 
-from jobflow import Flow, Maker, job
+from jobflow import Flow, Maker, OutputReference, job
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
-    FiniteDiffMaker,
+    FiniteDifferenceMaker,
     get_ccd_from_task_docs,
     spawn_energy_curve_calcs,
 )
@@ -72,16 +73,24 @@ class ConfigurationCoordinateMaker(Maker):
         Flow
             The full workflow for the calculation of the configuration coordinate diagram.
         """
-        name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+        # use a more descriptive name when possible
+        if not any(
+            [
+                isinstance(obj_, OutputReference)
+                for obj_ in [structure, charge_state1, charge_state2]
+            ]
+        ):
+            name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+
         # need to wrap this up in a job so that references to undone calculations can be passed in
         charged_structures = get_charged_structures(
-            structure, charge_state1, charge_state2
+            structure, [charge_state1, charge_state2]
         )
 
-        relax1 = self.relax_maker.make(charged_structures.output["struct1"])
-        relax2 = self.relax_maker.make(charged_structures.output["struct2"])
-        relax1.append_name(f" q={charge_state1}")
-        relax2.append_name(f" q={charge_state2}")
+        relax1 = self.relax_maker.make(charged_structures.output[0])
+        relax2 = self.relax_maker.make(charged_structures.output[1])
+        relax1.append_name(" q1")
+        relax2.append_name(" q2")
 
         dir1 = relax1.output.dir_name
         dir2 = relax2.output.dir_name
@@ -94,7 +103,7 @@ class ConfigurationCoordinateMaker(Maker):
             distortions=self.distortions,
             static_maker=self.static_maker,
             prev_vasp_dir=dir1,
-            add_name=f"q={charge_state1}",
+            add_name="q1",
         )
 
         deformations2 = spawn_energy_curve_calcs(
@@ -103,11 +112,11 @@ class ConfigurationCoordinateMaker(Maker):
             distortions=self.distortions,
             static_maker=self.static_maker,
             prev_vasp_dir=dir2,
-            add_name=f"q={charge_state2}",
+            add_name="q2",
         )
 
-        deformations1.append_name(f" q={charge_state1}")
-        deformations2.append_name(f" q={charge_state2}")
+        deformations1.append_name(" q1")
+        deformations2.append_name(" q2")
 
         ccd_job = get_ccd_from_task_docs(
             deformations1.output, deformations2.output, struct1, struct2
@@ -128,9 +137,7 @@ class ConfigurationCoordinateMaker(Maker):
 
 
 @job
-def get_charged_structures(
-    structure: Structure, charge_state1: int, charge_state2: int
-):
+def get_charged_structures(structure: Structure, charges: Iterable):
     """Adding charges to structure.
 
     This needs to be a job so the results of other jobs can be passed in.
@@ -139,10 +146,8 @@ def get_charged_structures(
     ----------
     structure
         A structure.
-    charge_state1
-        one charge state of the defect
-    charge_state2
-        another charge state of the defect
+    charges
+        A list of charges on the structure
 
     Returns
     -------
@@ -150,18 +155,17 @@ def get_charged_structures(
         A dictionary with the two structures with the charge states added.
 
     """
-    struct1: Structure = structure.copy()
-    struct1.set_charge(charge_state1)
-    struct2: Structure = structure.copy()
-    struct2.set_charge(charge_state2)
-    return {"struct1": struct1, "struct2": struct2}
+    return [structure.copy().set_charge(q) for q in charges]
 
 
 @dataclass
-class NonRadMaker(ConfigurationCoordinateMaker):
+class NonRadiativeMaker(Maker):
     """Class to generate workflows for the calculation of the non-radiative defect capture."""
 
-    wswq_maker: FiniteDiffMaker = field(default_factory=lambda: FiniteDiffMaker())
+    ccd_maker: ConfigurationCoordinateMaker
+    wswq_maker: FiniteDifferenceMaker = field(
+        default_factory=lambda: FiniteDifferenceMaker()
+    )
 
     def make(
         self,
@@ -185,7 +189,7 @@ class NonRadMaker(ConfigurationCoordinateMaker):
 
         """
         name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
-        flow = super().make(
+        flow = self.ccd_maker.make(
             structure=structure,
             charge_state1=charge_state1,
             charge_state2=charge_state2,

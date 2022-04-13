@@ -15,7 +15,7 @@ from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["CCDDocument", "WSWQDocument", "FiniteDiffDocument"]
+__all__ = ["CCDDocument", "WSWQDocument", "FiniteDifferenceDocument"]
 
 
 class WSWQDocument(BaseModel):
@@ -105,7 +105,7 @@ class WSWQDocument(BaseModel):
         )
 
 
-class FiniteDiffDocument(BaseModel):
+class FiniteDifferenceDocument(BaseModel):
     """Collection of computed WSWQDocuments using a single ref WAVECAR and a list of distorted WAVECARs."""
 
     wswq_documents: List[WSWQDocument]
@@ -121,7 +121,9 @@ class FiniteDiffDocument(BaseModel):
     )
 
     @classmethod
-    def from_directory(cls, directory: str | Path, **kwargs) -> FiniteDiffDocument:
+    def from_directory(
+        cls, directory: str | Path, **kwargs
+    ) -> FiniteDifferenceDocument:
         """
         Read the FintieDiff file.
 
