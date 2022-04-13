@@ -79,7 +79,7 @@ Before the above code can run successfully, you'll need to
 
 See the [installation] steps for details how to set all of this up.
 
-In this example, we run execute the workflow immediately. In many cases, you might want
+In this example, we execute the workflow immediately. In many cases, you might want
 to perform calculations on several materials simultaneously. To achieve this, all
 atomate2 workflows can be run using the [FireWorks] software. See the
 [documentation][atomate2_fireworks] for more details.
