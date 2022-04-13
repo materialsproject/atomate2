@@ -116,7 +116,8 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         ensure_success=True,
     )
 
-    fdiff_doc1: FiniteDiffDocument = responses[flow.jobs[-1].uuid][1].output
-    # fdiff_doc1: FiniteDiffDocument = responses[flow.jobs[-2].uuid][1].output
+    fdiff_doc1: FiniteDiffDocument = responses[flow.jobs[-2].uuid][1].output
+    fdiff_doc2: FiniteDiffDocument = responses[flow.jobs[-1].uuid][1].output
 
     assert len(fdiff_doc1.wswq_documents) == 5
+    assert len(fdiff_doc2.wswq_documents) == 5
