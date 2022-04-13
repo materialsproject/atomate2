@@ -69,7 +69,7 @@ def copy_files(
 
     for file in files:
         from_file = src_dir / file
-        to_file = file.with_stem(f"{prefix}{file.stem}")
+        to_file = Path(file.anchor) / f"{prefix}{file.name}"
         to_file = (dest_dir / to_file).with_suffix(file.suffix + suffix)
         try:
             file_client.copy(from_file, to_file, src_host=src_host)
