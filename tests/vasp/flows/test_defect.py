@@ -1,4 +1,4 @@
-from atomate2.vasp.schemas.defect import FiniteDiffDocument
+from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
 
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
@@ -65,7 +65,7 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     from jobflow import run_locally
     from pymatgen.core import Structure
 
-    from atomate2.vasp.flows.defect import NonRadMaker
+    from atomate2.vasp.flows.defect import NonRadiativeMaker
     from atomate2.vasp.powerups import update_user_incar_settings
 
     # mapping from job name to directory containing test files
@@ -102,7 +102,7 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         return flow
 
     # generate flow
-    maker = NonRadMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
+    maker = NonRadiativeMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
     flow = maker.make(si_defect, charge_state1=0, charge_state2=1)
     flow = update_calc_settings(flow)
 
@@ -116,8 +116,8 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         ensure_success=True,
     )
 
-    fdiff_doc1: FiniteDiffDocument = responses[flow.jobs[-2].uuid][1].output
-    fdiff_doc2: FiniteDiffDocument = responses[flow.jobs[-1].uuid][1].output
+    fdiff_doc1: FiniteDifferenceDocument = responses[flow.jobs[-2].uuid][1].output
+    fdiff_doc2: FiniteDifferenceDocument = responses[flow.jobs[-1].uuid][1].output
 
     assert len(fdiff_doc1.wswq_documents) == 5
     assert len(fdiff_doc2.wswq_documents) == 5
