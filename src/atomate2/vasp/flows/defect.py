@@ -74,13 +74,15 @@ class ConfigurationCoordinateMaker(Maker):
             The full workflow for the calculation of the configuration coordinate diagram.
         """
         # use a more descriptive name when possible
-        if not any(
-            [
-                isinstance(obj_, OutputReference)
-                for obj_ in [structure, charge_state1, charge_state2]
-            ]
-        ):
-            name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+        if not isinstance(structure, OutputReference):
+            name = f"{self.name}: {structure.formula}"
+            if not (
+                isinstance(charge_state1, OutputReference)
+                or isinstance(charge_state2, OutputReference)
+            ):
+                name = (
+                    f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+                )
 
         # need to wrap this up in a job so that references to undone calculations can be passed in
         charged_structures = get_charged_structures(
