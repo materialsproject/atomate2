@@ -47,7 +47,7 @@ environment.
 
 Before you install, you need to make sure that your "worker" computer (where the
 simulations will be run, often a computing cluster) that will execute workflows can
-(i) run the base simulation packages (e.g., VASP, LAMMPs, FEFF, etc) and (ii) connect
+(i) run the base simulation packages (e.g., VASP, LAMMPS, FEFF, etc) and (ii) connect
 to a MongoDB database. For (i), make sure you have the appropriate licenses and
 compilation to run the simulation packages that are needed. For (ii), make sure your
 computing center doesn't have firewalls that prevent database access. Typically,
@@ -270,7 +270,7 @@ storage types are available (such as Amazon S3). For more information please rea
 ### atomate2.yaml
 
 The `atomate2.yaml` file controls all atomate2 settings. You can see the full list
-of available settings in the {obj}`.Atomate2Settings`. docs. For now, we will just
+of available settings in the {obj}`.Atomate2Settings` docs. For now, we will just
 configure the commands used to run VASP.
 
 Write the `atomate2.yaml` file with the following content,
@@ -441,7 +441,7 @@ See the following pages for more information on the topics we covered here:
 
 - To see how to run and customize the existing Workflows in atomate2, try the
   [](running_workflows) tutorial (suggested next step).
-- To see how manage and execute many workflows at once, try the
+- To see how to manage and execute many workflows at once, try the
   [](atomate2_FireWorks) tutorial.
 
 ## Troubleshooting and FAQ
