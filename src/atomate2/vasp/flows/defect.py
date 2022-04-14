@@ -130,7 +130,7 @@ class ConfigurationCoordinateMaker(Maker):
         deformations2.append_name(" q2")
 
         ccd_job = get_ccd_documents(
-            deformations1.output, deformations2.output, struct1, struct2
+            deformations1.output, deformations2.output, relax1.uuid, relax2.uuid
         )
 
         return Flow(
