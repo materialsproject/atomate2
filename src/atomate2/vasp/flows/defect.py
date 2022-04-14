@@ -89,8 +89,8 @@ class ConfigurationCoordinateMaker(Maker):
             structure, [charge_state1, charge_state2]
         )
 
-        relax1 = self.relax_maker.make(charged_structures.output[0])
-        relax2 = self.relax_maker.make(charged_structures.output[1])
+        relax1 = self.relax_maker.make(structure=charged_structures.output[0])
+        relax2 = self.relax_maker.make(structure=charged_structures.output[1])
         relax1.append_name(" q1")
         relax2.append_name(" q2")
 
@@ -157,7 +157,10 @@ def get_charged_structures(structure: Structure, charges: Iterable):
         A dictionary with the two structures with the charge states added.
 
     """
-    return [structure.copy().set_charge(q) for q in charges]
+    structs_out = [structure.copy() for _ in charges]
+    for i, q in enumerate(charges):
+        structs_out[i].set_charge(q)
+    return structs_out
 
 
 @dataclass
