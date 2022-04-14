@@ -11,7 +11,7 @@ from jobflow import Flow, Maker, Response, job
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
 
-from atomate2.common.files import get_zfile, gunzip_files, gzip_files
+from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
@@ -131,7 +131,11 @@ class FiniteDifferenceMaker(Maker):
         copy_vasp_outputs(
             ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc
         )
-        self.update_incar()
+
+        """Update the INCAR."""
+        incar = Incar.from_file("INCAR")
+        incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
+        incar.write_file("INCAR")
 
         d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
 
@@ -142,7 +146,7 @@ class FiniteDifferenceMaker(Maker):
         )
         for i, dir_name in enumerate(d_dir_names):
             # Copy a distorted WAVECAR to WAVECAR.qqq
-            copy_files(dir_name, include_files="WAVECAR*", prefix=f"qqq.")
+            copy_files(dir_name, include_files="WAVECAR*", prefix="qqq.")
             gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
             rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
@@ -153,9 +157,3 @@ class FiniteDifferenceMaker(Maker):
         fd_doc = FiniteDifferenceDocument.from_directory(cur_dir)
         gzip_files(cur_dir, force=True)
         return fd_doc
-
-    def update_incar(self):
-        """Update the INCAR."""
-        incar = Incar.from_file("INCAR")
-        incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
-        incar.write_file("INCAR")

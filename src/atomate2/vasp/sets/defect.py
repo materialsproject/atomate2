@@ -12,10 +12,7 @@ from atomate2.vasp.sets.base import VaspInputSetGenerator
 class AtomicRelaxSetGenerator(VaspInputSetGenerator):
     """Class to generate VASP atom-only relaxation input sets."""
 
-    def __post_init__(self):
-        """Initialize the class."""
-        super().__post_init__()
-        self.use_structure_charge = True
+    use_structure_charge = True
 
     def get_incar_updates(
         self,
