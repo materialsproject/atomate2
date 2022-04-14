@@ -77,9 +77,9 @@ def spawn_energy_curve_calcs(
         # outputs.append(static_job.output)
         task_doc: TaskDocument = static_job.output
         outputs.append(
-            CCDInput(
-                structure=task_doc.structure,
-                energy=task_doc.energy,
+            dict(
+                structure=task_doc.output.structure,
+                energy=task_doc.output.energy,
                 dir_name=task_doc.dir_name,
                 uuid=task_doc.uuid,
             )
@@ -116,14 +116,14 @@ def get_ccd_documents(
         Response object
     """
     ccd_doc = CCDDocument.from_task_outputs(
-        structures1=[i.structure for i in inputs1],
-        structures2=[i.structure for i in inputs2],
-        energies1=[i.energy for i in inputs1],
-        energies2=[i.energy for i in inputs2],
-        static_dirs1=[i.dir_name for i in inputs1],
-        static_dirs2=[i.dir_name for i in inputs2],
-        static_uuids1=[i.uuid for i in inputs1],
-        static_uuids2=[i.uuid for i in inputs2],
+        structures1=[i["structure"] for i in inputs1],
+        structures2=[i["structure"] for i in inputs2],
+        energies1=[i["energy"] for i in inputs1],
+        energies2=[i["energy"] for i in inputs2],
+        static_dirs1=[i["dir_name"] for i in inputs1],
+        static_dirs2=[i["dir_name"] for i in inputs2],
+        static_uuids1=[i["uuid"] for i in inputs1],
+        static_uuids2=[i["uuid"] for i in inputs2],
         relaxed_uuid1=relaxed_uuid1,
         relaxed_uuid2=relaxed_uuid2,
     )

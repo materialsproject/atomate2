@@ -74,7 +74,7 @@ def test_CCDDocument(vasp_test_dir):
     inputdict["relaxed_uuid1"] = static_dirs1[2]
     inputdict["relaxed_uuid2"] = static_dirs2[2]
 
-    ccd_doc = CCDDocument.from_struct_en(
+    ccd_doc = CCDDocument.from_task_outputs(
         **inputdict,
     )
 

@@ -225,7 +225,7 @@ class CCDDocument(BaseModel):
     ):
         """Create a CCDDocument from a lists of structures, energies from completed static calculations.
 
-        The directories and the UUIDs of the static calculations are also provided.
+        The directories and the UUIDs of the static calculations are also provided as separate lists and zipped together.
 
         Parameters
         ----------
@@ -233,11 +233,22 @@ class CCDDocument(BaseModel):
             The structure of defect (supercell) in charge state (q1).
         structure2
             The structure of defect (supercell) in charge state (q2).
-        distortion1_calcs
-            List of distorted calculations for charge state 1.
-        distortion2_calcs
-            List of distorted calculations for charge state 2.
-
+        energies1
+            The energies of the defect (supercell) in charge state (q1).
+        energies2
+            The energies of the defect (supercell) in charge state (q2).
+        static_dirs1
+            Directories of distorted calculations for the defect (supercell) in charge state (q1).
+        static_dirs2
+            Directories of distorted calculations for the defect (supercell) in charge state (q2).
+        static_uuids1
+            UUIDs of distorted calculations for the defect (supercell) in charge state (q1).
+        static_uuids2
+            UUIDs of distorted calculations for the defect (supercell) in charge state (q2).
+        relaxed_uuid1
+            UUID of relaxed calculation in charge state (q1).
+        relaxed_uuid2
+            UUID of relaxed calculation in charge state (q2).
         """
 
         def get_ent(struct, energy, dir_name, uuid):
