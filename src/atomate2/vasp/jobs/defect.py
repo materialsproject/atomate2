@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Iterable, List
 
 from jobflow import Flow, Maker, Response, job
+from pydantic import BaseModel
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
 
@@ -21,6 +22,15 @@ from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
+
+
+class CCDInput(BaseModel):
+    """Document model to help construct CCDDocument."""
+
+    structure: Structure
+    energy: float
+    dir_name: str
+    uuid: str
 
 
 @job
@@ -64,44 +74,60 @@ def spawn_energy_curve_calcs(
         suffix = f" {i+1}" if add_name == "" else f" {add_name} {i}"
         static_job.append_name(f"{suffix}")
         jobs.append(static_job)
-        outputs.append(static_job.output)
+        # outputs.append(static_job.output)
+        task_doc: TaskDocument = static_job.output
+        outputs.append(
+            CCDInput(
+                structure=task_doc.structure,
+                energy=task_doc.energy,
+                dir_name=task_doc.dir_name,
+                uuid=task_doc.uuid,
+            )
+        )
 
     add_flow = Flow(jobs, outputs)
     return Response(output=outputs, replace=add_flow)
 
 
 @job(output_schema=CCDDocument)
-def get_ccd_from_task_docs(
-    taskdocs1: Iterable[TaskDocument],
-    taskdocs2: Iterable[TaskDocument],
-    structure1: Structure,
-    structure2: Structure,
+def get_ccd_documents(
+    inputs1: Iterable[CCDInput],
+    inputs2: Iterable[CCDInput],
+    relaxed_uuid1: str,
+    relaxed_uuid2: str,
 ):
     """
     Get the configuration coordinate diagram from the task documents.
 
     Parameters
     ----------
-    taskdocs1 : Iterable[TaskDocument]
-        task documents for the first charge state
-    taskdocs2 : Iterable[TaskDocument]
-        task documents for the second charge state
-    structure1 : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the ground (final) state
-    structure2 : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the excited (initial) state
+    inputs1 : Iterable[CCDInput]
+        List of CCDInput objects
+    inputs2 : Iterable[CCDInput]
+        List of CCDInput objects
+    relaxed_uuid1 : str
+        UUID of the first relaxed structure
+    relaxed_uuid2 : str
+        UUID of the second relaxed structure
 
     Returns
     -------
     Response
         Response object
     """
-    ccd_doc = CCDDocument.from_distorted_calcs(
-        taskdocs1,
-        taskdocs2,
-        structure1=structure1,
-        structure2=structure2,
+    ccd_doc = CCDDocument.from_task_outputs(
+        structures1=[i.structure for i in inputs1],
+        structures2=[i.structure for i in inputs2],
+        energies1=[i.energy for i in inputs1],
+        energies2=[i.energy for i in inputs2],
+        static_dirs1=[i.dir_name for i in inputs1],
+        static_dirs2=[i.dir_name for i in inputs2],
+        static_uuids1=[i.uuid for i in inputs1],
+        static_uuids2=[i.uuid for i in inputs2],
+        relaxed_uuid1=relaxed_uuid1,
+        relaxed_uuid2=relaxed_uuid2,
     )
+
     return Response(output=ccd_doc)
 
 

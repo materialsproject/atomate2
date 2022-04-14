@@ -13,7 +13,7 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     FiniteDifferenceMaker,
-    get_ccd_from_task_docs,
+    get_ccd_documents,
     spawn_energy_curve_calcs,
 )
 from atomate2.vasp.schemas.defect import CCDDocument
@@ -123,7 +123,7 @@ class ConfigurationCoordinateMaker(Maker):
         deformations1.append_name(" q1")
         deformations2.append_name(" q2")
 
-        ccd_job = get_ccd_from_task_docs(
+        ccd_job = get_ccd_documents(
             deformations1.output, deformations2.output, struct1, struct2
         )
 
@@ -218,6 +218,7 @@ class NonRadiativeMaker(Maker):
         dirs1 = ccd.distorted_calcs_dirs[1]
         mid_index0 = len(self.ccd_maker.distortions) // 2
         mid_index1 = len(self.ccd_maker.distortions) // 2
+
         finite_diff_job1 = self.wswq_maker.make(
             ref_calc_dir=dirs0[mid_index0], distorted_calc_dirs=dirs0
         )

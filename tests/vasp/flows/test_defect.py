@@ -106,7 +106,6 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         return flow
 
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
-    # Check the NonRaditiveMaker
     non_rad_maker = NonRadiativeMaker(ccd_maker=ccd_maker)
 
     flow = non_rad_maker.make(si_defect, charge_state1=0, charge_state2=1)

@@ -179,22 +179,22 @@ class CCDDocument(BaseModel):
         None, description="The energies of the defect (supercell) in charge state (q2)."
     )
 
-    static_dirs1: List[List[str]] = Field(
+    static_dirs1: List[str] = Field(
         None,
         description="Directories of distorted calculations for the defect (supercell) in charge state (q1).",
     )
 
-    static_dirs2: List[List[str]] = Field(
+    static_dirs2: List[str] = Field(
         None,
         description="Directories of distorted calculations for the defect (supercell) in charge state (q2).",
     )
 
-    static_uuids1: List[List[str]] = Field(
+    static_uuids1: List[str] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in charge state (q1).",
     )
 
-    static_uuids2: List[List[str]] = Field(
+    static_uuids2: List[str] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in charge state (q2).",
     )
@@ -210,21 +210,22 @@ class CCDDocument(BaseModel):
     )
 
     @classmethod
-    def from_struct_en(
+    def from_task_outputs(
         cls,
         structures1: List[Structure],
         structures2: List[Structure],
         energies1: List[float],
         energies2: List[float],
-        dir_names1: List[str],
-        dir_names2: List[str],
+        static_dirs1: List[str],
+        static_dirs2: List[str],
         static_uuids1: List[str],
         static_uuids2: List[str],
         relaxed_uuid1: str,
         relaxed_uuid2: str,
     ):
-        """
-        Create a CCDDocument from a list of distorted calculations.
+        """Create a CCDDocument from a lists of structures, energies from completed static calculations.
+
+        The directories and the UUIDs of the static calculations are also provided.
 
         Parameters
         ----------
@@ -248,11 +249,11 @@ class CCDDocument(BaseModel):
 
         entries1 = [
             get_ent(s, e, d, u)
-            for s, e, d, u in zip(structures1, energies1, dir_names1, static_uuids1)
+            for s, e, d, u in zip(structures1, energies1, static_dirs1, static_uuids1)
         ]
         entries2 = [
             get_ent(s, e, d, u)
-            for s, e, d, u in zip(structures2, energies2, dir_names2, static_uuids2)
+            for s, e, d, u in zip(structures2, energies2, static_dirs2, static_uuids2)
         ]
 
         return cls.from_entries(entries1, entries2, relaxed_uuid1, relaxed_uuid2)
@@ -293,8 +294,11 @@ class CCDDocument(BaseModel):
             return get_dQ(e1.structure, e2.structure)
 
         # ensure the "dir_name" is provided for each entry
-        if any(e.data.get("dir_name", None) is None for e in entries1):
-            raise ValueError("dir_name must be provided for all entries.")
+        if any(e.data.get("dir_name", None) is None for e in entries1 + entries2):
+            raise ValueError("[dir_name] must be provided for all entries.")
+
+        if any(e.data.get("uuid", None) is None for e in entries1 + entries2):
+            raise ValueError("[uuid] must be provided for all entries.")
 
         ent_r1 = find_entry(entries1, relaxed_uuid1)
         ent_r2 = find_entry(entries2, relaxed_uuid2)
@@ -309,10 +313,8 @@ class CCDDocument(BaseModel):
         energies1 = [entry.energy for entry in s_entries1]
         energies2 = [entry.energy for entry in s_entries2]
 
-        dir_names = []
-        if ent_r1.data.get("dir_name") is not None:
-            dir_names.append([e.data["dir_name"] for e in s_entries1])
-            dir_names.append([e.data["dir_name"] for e in s_entries1])
+        sdirs1 = [e.data["dir_name"] for e in s_entries1]
+        sdirs2 = [e.data["dir_name"] for e in s_entries2]
 
         obj = cls(
             q1=ent_r1.structure.charge,
@@ -323,7 +325,8 @@ class CCDDocument(BaseModel):
             distortions2=distortions2,
             energies1=energies1,
             energies2=energies2,
-            distorted_calcs_dirs=dir_names,
+            static_dirs1=sdirs1,
+            static_dirs2=sdirs2,
             relaxed_calc_dir1=ent_r1.data["dir_name"],
             relaxed_calc_dir2=ent_r2.data["dir_name"],
         )
@@ -339,11 +342,11 @@ class CCDDocument(BaseModel):
         return [
             [
                 TaskDocument.from_directory(remove_host_name(dir_name))
-                for dir_name in self.distorted_calcs_dirs[0]
+                for dir_name in self.static_dirs1
             ],
             [
                 TaskDocument.from_directory(remove_host_name(dir_name))
-                for dir_name in self.distorted_calcs_dirs[1]
+                for dir_name in self.static_dirs2
             ],
         ]
 
