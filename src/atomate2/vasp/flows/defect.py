@@ -128,9 +128,13 @@ class ConfigurationCoordinateMaker(Maker):
 
         deformations1.append_name(" q1")
         deformations2.append_name(" q2")
+        # distortion index with smallest absolute value
+        min_abs_index = min(
+            range(len(self.distortions)), key=lambda i: abs(self.distortions[i])
+        )
 
         ccd_job = get_ccd_documents(
-            deformations1.output, deformations2.output, relax1.uuid, relax2.uuid
+            deformations1.output, deformations2.output, undistored_index=min_abs_index
         )
 
         return Flow(

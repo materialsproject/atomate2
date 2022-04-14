@@ -1,5 +1,6 @@
 from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
 from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
