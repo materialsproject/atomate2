@@ -65,7 +65,7 @@ def spawn_energy_curve_calcs(
     # add all the distorted structures
     for i, d_struct in enumerate(distorted_structures):
         static_job = static_maker.make(d_struct, prev_vasp_dir=prev_vasp_dir)
-        suffix = f"{i+1}" if add_name == "" else f" {add_name} {i}"
+        suffix = f" {i+1}" if add_name == "" else f" {add_name} {i}"
         static_job.append_name(f"{suffix}")
         jobs.append(static_job)
         outputs.append(static_job.output)
