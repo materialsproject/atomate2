@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Tuple
+from typing import Any, Callable, List, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -179,18 +179,49 @@ class CCDDocument(BaseModel):
         None, description="The energies of the defect (supercell) in charge state (q2)."
     )
 
-    distorted_calcs_dirs: List[List[str]] = Field(
+    static_dirs1: List[List[str]] = Field(
         None,
-        description="Directories of distorted calculations, stored as seperate lists for each charge state",
+        description="Directories of distorted calculations for the defect (supercell) in charge state (q1).",
+    )
+
+    static_dirs2: List[List[str]] = Field(
+        None,
+        description="Directories of distorted calculations for the defect (supercell) in charge state (q2).",
+    )
+
+    static_uuids1: List[List[str]] = Field(
+        None,
+        description="UUIDs of distorted calculations for the defect (supercell) in charge state (q1).",
+    )
+
+    static_uuids2: List[List[str]] = Field(
+        None,
+        description="UUIDs of distorted calculations for the defect (supercell) in charge state (q2).",
+    )
+
+    relaxed_calc_dir1: str = Field(
+        None,
+        description="Directory of relaxed calculation in charge state (q1).",
+    )
+
+    relaxed_calc_dir2: str = Field(
+        None,
+        description="Directory of relaxed calculation in charge state (q2).",
     )
 
     @classmethod
-    def from_distorted_calcs(
+    def from_struct_en(
         cls,
-        distortion1_calcs: Iterable[TaskDocument],
-        distortion2_calcs: Iterable[TaskDocument],
-        structure1: Structure,
-        structure2: Structure,
+        structures1: List[Structure],
+        structures2: List[Structure],
+        energies1: List[float],
+        energies2: List[float],
+        dir_names1: List[str],
+        dir_names2: List[str],
+        static_uuids1: List[str],
+        static_uuids2: List[str],
+        relaxed_uuid1: str,
+        relaxed_uuid2: str,
     ):
         """
         Create a CCDDocument from a list of distorted calculations.
@@ -208,25 +239,31 @@ class CCDDocument(BaseModel):
 
         """
 
-        def get_ent(task: TaskDocument):
+        def get_ent(struct, energy, dir_name, uuid):
             return ComputedStructureEntry(
-                structure=task.output.structure,
-                energy=task.output.energy,
-                data={"dir_name": task.dir_name},
+                structure=struct,
+                energy=energy,
+                data={"dir_name": dir_name, "uuid": uuid},
             )
 
-        entries1 = [get_ent(task) for task in distortion1_calcs]
-        entries2 = [get_ent(task) for task in distortion2_calcs]
+        entries1 = [
+            get_ent(s, e, d, u)
+            for s, e, d, u in zip(structures1, energies1, dir_names1, static_uuids1)
+        ]
+        entries2 = [
+            get_ent(s, e, d, u)
+            for s, e, d, u in zip(structures2, energies2, dir_names2, static_uuids2)
+        ]
 
-        return cls.from_entries(entries1, entries2, structure1, structure2)
+        return cls.from_entries(entries1, entries2, relaxed_uuid1, relaxed_uuid2)
 
     @classmethod
     def from_entries(
         cls,
         entries1: List[ComputedStructureEntry],
         entries2: List[ComputedStructureEntry],
-        structure1: Structure | None = None,
-        structure2: Structure | None = None,
+        relaxed_uuid1: str | None = None,
+        relaxed_uuid2: str | None = None,
     ):
         """
         Create a CCDTaskDocument from a list of distorted calculations.
@@ -234,57 +271,62 @@ class CCDDocument(BaseModel):
         Parameters
         ----------
         entries1
-            List of distorted calculations for charge state 1.
+            List of distorted calculations for charge state (q1).
         entries2
-            List of distorted calculations for charge state 2.
-        structure1
-            The structure of defect (supercell) in charge state (q1).
-        structure2
-            The structure of defect (supercell) in charge state (q2).
+            List of distorted calculations for charge state (q2)
+        relaxed_dir1
+            Directory of relaxed calculation in charge state (q1).
+        relaxed_dir2
+            Directory of relaxed calculation in charge state (q2).
 
         """
+
+        def find_entry(entries, uuid):
+            """Find the entry with the given given UUID."""
+            for entry in entries:
+                if entry.data["uuid"] == uuid:
+                    return entry
+            raise ValueError(f"Could not find entry with UUID: {uuid}")
 
         def dQ_entries(e1, e2):
             """Get the displacement between two entries."""
             return get_dQ(e1.structure, e2.structure)
 
-        # if the structures are not provided, use the structures with the lowest energy
-        if structure1 is None:
-            ent1 = min(entries1, key=lambda e: e.energy_per_atom)
-            structure1 = ent1.structure
-        else:
-            ent1 = min(entries1, key=lambda e: get_dQ(structure1, e.structure))
+        # ensure the "dir_name" is provided for each entry
+        if any(e.data.get("dir_name", None) is None for e in entries1):
+            raise ValueError("dir_name must be provided for all entries.")
 
-        if structure2 is None:
-            ent2 = min(entries2, key=lambda e: e.energy_per_atom)
-            structure2 = ent2.structure
-        else:
-            ent2 = min(entries2, key=lambda e: get_dQ(e.structure, structure2))
+        ent_r1 = find_entry(entries1, relaxed_uuid1)
+        ent_r2 = find_entry(entries2, relaxed_uuid2)
 
-        s_entries1, distortions1 = sort_pos_dist(entries1, ent1, ent2, dist=dQ_entries)
-        s_entries2, distortions2 = sort_pos_dist(entries2, ent1, ent2, dist=dQ_entries)
+        s_entries1, distortions1 = sort_pos_dist(
+            entries1, ent_r1, ent_r2, dist=dQ_entries
+        )
+        s_entries2, distortions2 = sort_pos_dist(
+            entries2, ent_r1, ent_r2, dist=dQ_entries
+        )
 
         energies1 = [entry.energy for entry in s_entries1]
         energies2 = [entry.energy for entry in s_entries2]
 
         dir_names = []
-        if ent1.data.get("dir_name") is not None:
+        if ent_r1.data.get("dir_name") is not None:
             dir_names.append([e.data["dir_name"] for e in s_entries1])
             dir_names.append([e.data["dir_name"] for e in s_entries1])
 
         obj = cls(
-            q1=structure1.charge,
-            q2=structure2.charge,
-            structure1=structure1,
-            structure2=structure2,
+            q1=ent_r1.structure.charge,
+            q2=ent_r2.structure.charge,
+            structure1=ent_r1.structure,
+            structure2=ent_r2.structure,
             distortions1=distortions1,
             distortions2=distortions2,
             energies1=energies1,
             energies2=energies2,
+            distorted_calcs_dirs=dir_names,
+            relaxed_calc_dir1=ent_r1.data["dir_name"],
+            relaxed_calc_dir2=ent_r2.data["dir_name"],
         )
-
-        if dir_names:
-            obj.distorted_calcs_dirs = dir_names
 
         return obj
 
@@ -377,3 +419,11 @@ def get_dQ(ref: Structure, distorted: Structure) -> float:
             )
         )
     )
+
+
+def find_entry_with_dir_name(entries, dir_name):
+    """Find the entry with the given dir_name."""
+    for entry in entries:
+        if entry.data["dir_name"] == dir_name:
+            return entry
+    raise ValueError(f"Could not find entry with dir_name {dir_name}")

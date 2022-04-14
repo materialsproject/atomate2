@@ -31,7 +31,10 @@ DEFECT_STATIC_GENERATOR = StaticSetGenerator(
         "ISMEAR": 0,
         "LWAVE": True,
         "SIGMA": 0.05,
-    }
+        "KSPACING": None,
+        "ENCUT": 500,
+    },
+    user_kpoints_settings={"reciprocal_density": 64},
 )
 
 
@@ -194,7 +197,16 @@ class NonRadiativeMaker(Maker):
             The excited charge state of the defect
 
         """
-        name = f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+        if not isinstance(structure, OutputReference):
+            name = f"{self.name}: {structure.formula}"
+            if not (
+                isinstance(charge_state1, OutputReference)
+                or isinstance(charge_state2, OutputReference)
+            ):
+                name = (
+                    f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
+                )
+
         flow = self.ccd_maker.make(
             structure=structure,
             charge_state1=charge_state1,
