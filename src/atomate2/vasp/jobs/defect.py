@@ -93,8 +93,7 @@ def spawn_energy_curve_calcs(
 def get_ccd_documents(
     inputs1: Iterable[CCDInput],
     inputs2: Iterable[CCDInput],
-    relaxed_uuid1: str,
-    relaxed_uuid2: str,
+    undistored_index: int,
 ):
     """
     Get the configuration coordinate diagram from the task documents.
@@ -105,16 +104,17 @@ def get_ccd_documents(
         List of CCDInput objects
     inputs2 : Iterable[CCDInput]
         List of CCDInput objects
-    relaxed_uuid1 : str
-        UUID of the first relaxed structure
-    relaxed_uuid2 : str
-        UUID of the second relaxed structure
+    undistored_index : int
+        Index of the undistorted structure in the list of distorted structures
 
     Returns
     -------
     Response
         Response object
     """
+    static_uuids1 = [i["uuid"] for i in inputs1]
+    static_uuids2 = [i["uuid"] for i in inputs2]
+
     ccd_doc = CCDDocument.from_task_outputs(
         structures1=[i["structure"] for i in inputs1],
         structures2=[i["structure"] for i in inputs2],
@@ -122,10 +122,10 @@ def get_ccd_documents(
         energies2=[i["energy"] for i in inputs2],
         static_dirs1=[i["dir_name"] for i in inputs1],
         static_dirs2=[i["dir_name"] for i in inputs2],
-        static_uuids1=[i["uuid"] for i in inputs1],
-        static_uuids2=[i["uuid"] for i in inputs2],
-        relaxed_uuid1=relaxed_uuid1,
-        relaxed_uuid2=relaxed_uuid2,
+        static_uuids1=static_uuids1,
+        static_uuids2=static_uuids2,
+        relaxed_uuid1=static_uuids1[undistored_index],
+        relaxed_uuid2=static_uuids2[undistored_index],
     )
 
     return Response(output=ccd_doc)
