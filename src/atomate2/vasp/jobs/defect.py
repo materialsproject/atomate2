@@ -142,16 +142,9 @@ class FiniteDifferenceMaker(Maker):
         )
         for i, dir_name in enumerate(d_dir_names):
             # Copy a distorted WAVECAR to WAVECAR.qqq
-            files = fc.listdir(dir_name)
-            wavecar_file = Path(dir_name) / get_zfile(files, "WAVECAR")
-            # automatically gunzip the file if it is gzipped
-            zfile_name = wavecar_file.name
-            if zfile_name.endswith(".gz"):
-                fc.copy(wavecar_file, f"WAVECAR.{i}.gz")
-                fc.gunzip(f"WAVECAR.{i}.gz")
-                fc.rename(f"WAVECAR.{i}", "WAVECAR.qqq")
-            else:
-                fc.copy(wavecar_file, "WAVECAR.qqq")
+            copy_files(dir_name, include_files="WAVECAR*", prefix=f"qqq.")
+            gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
+            rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
             run_vasp(**self.run_vasp_kwargs)
             fc.copy(Path("WSWQ"), f"WSWQ.{i}")
