@@ -220,8 +220,8 @@ class NonRadiativeMaker(Maker):
         )
         ccd: CCDDocument = flow.output
 
-        dirs0 = ccd.distorted_calcs_dirs[0]
-        dirs1 = ccd.distorted_calcs_dirs[1]
+        dirs0 = ccd.static_dirs1
+        dirs1 = ccd.static_dirs2
         mid_index0 = len(self.ccd_maker.distortions) // 2
         mid_index1 = len(self.ccd_maker.distortions) // 2
 
