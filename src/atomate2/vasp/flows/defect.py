@@ -168,6 +168,7 @@ class NonRadiativeMaker(Maker):
     """Class to generate workflows for the calculation of the non-radiative defect capture."""
 
     ccd_maker: ConfigurationCoordinateMaker
+    name: str = "non-radiative"
     wswq_maker: FiniteDifferenceMaker = field(
         default_factory=lambda: FiniteDifferenceMaker()
     )
@@ -203,16 +204,16 @@ class NonRadiativeMaker(Maker):
 
         dirs0 = ccd.distorted_calcs_dirs[0]
         dirs1 = ccd.distorted_calcs_dirs[1]
-        mid_index0 = len(self.distortions) // 2
-        mid_index1 = len(self.distortions) // 2
+        mid_index0 = len(self.ccd_maker.distortions) // 2
+        mid_index1 = len(self.ccd_maker.distortions) // 2
         finite_diff_job1 = self.wswq_maker.make(
             ref_calc_dir=dirs0[mid_index0], distorted_calc_dirs=dirs0
         )
         finite_diff_job2 = self.wswq_maker.make(
             ref_calc_dir=dirs1[mid_index1], distorted_calc_dirs=dirs1
         )
-        finite_diff_job1.append_name(f" q={charge_state1}")
-        finite_diff_job2.append_name(f" q={charge_state2}")
+        finite_diff_job1.append_name(" q1")
+        finite_diff_job2.append_name(" q2")
 
         output = {
             charge_state1: finite_diff_job1.output,

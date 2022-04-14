@@ -146,7 +146,7 @@ class FiniteDifferenceMaker(Maker):
         )
         for i, dir_name in enumerate(d_dir_names):
             # Copy a distorted WAVECAR to WAVECAR.qqq
-            copy_files(dir_name, include_files="WAVECAR*", prefix="qqq.")
+            copy_files(dir_name, include_files=["WAVECAR.gz"], prefix="qqq.")
             gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
             rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
