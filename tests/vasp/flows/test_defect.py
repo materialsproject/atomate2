@@ -39,15 +39,17 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     INCAR_UPDATES = {
         "KSPACING": 1,
     }
-
-    def update_calc_settings(flow):
-        flow = update_user_incar_settings(flow, incar_updates=INCAR_UPDATES)
-        return flow
+    static_set_gen = StaticSetGenerator(
+        user_incar_settings={
+            "KSPACING": 1,
+            "ENCUT": 500,
+        },
+    )
 
     # generate flow
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
     flow = ccd_maker.make(si_defect, charge_state1=0, charge_state2=1)
-    flow = update_calc_settings(flow)
+    flow = update_user_incar_settings(flow, incar_updates=INCAR_UPDATES)
 
     # run the flow and ensure that it finished running successfully
     responses = run_locally(

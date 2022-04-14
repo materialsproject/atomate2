@@ -24,17 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
+DEFECT_INCAR_SETTINGS = {
+    "ISMEAR": 0,
+    "LWAVE": True,
+    "SIGMA": 0.05,
+    "KSPACING": None,
+    "ENCUT": 500,
+}
+DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
 
-DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(use_structure_charge=True)
+DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(
+    use_structure_charge=True,
+    user_incar_settings=DEFECT_INCAR_SETTINGS,
+    user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
+)
 DEFECT_STATIC_GENERATOR = StaticSetGenerator(
-    user_incar_settings={
-        "ISMEAR": 0,
-        "LWAVE": True,
-        "SIGMA": 0.05,
-        "KSPACING": None,
-        "ENCUT": 500,
-    },
-    user_kpoints_settings={"reciprocal_density": 64},
+    user_incar_settings=DEFECT_INCAR_SETTINGS,
+    user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
 
 
