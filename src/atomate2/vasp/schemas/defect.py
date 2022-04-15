@@ -24,7 +24,7 @@ class WSWQDocument(BaseModel):
     nspin: int = Field(None, description="Number of spins channels")
     nkpoints: int = Field(None, description="Number of k-points")
     nbands: int = Field(None, description="Number of bands")
-    matrix_elements: List[List[List[List[float]]]] = Field(
+    data: List[List[List[List[float]]]] = Field(
         None,
         description="Array of of real numbers representing the matrix element |<W(0)|S|W(Q)>|\n"
         "Since complex numbers are not JSON serializable, we store the absolute values",
@@ -101,7 +101,7 @@ class WSWQDocument(BaseModel):
             nspin=self.nspin,
             nkpoints=self.nkpoints,
             nbands=self.nbands,
-            data=np.array(self.matrix_elements),
+            data=np.array(self.data),
         )
 
 

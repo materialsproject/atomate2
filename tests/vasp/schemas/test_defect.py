@@ -94,8 +94,7 @@ def test_CCDDocument(vasp_test_dir):
 def test_wswq(test_dir):
     from pymatgen.io.vasp.outputs import WSWQ
 
-    schema_dir = test_dir / "schemas"
-    fn = schema_dir / "WSWQ.gz"
+    fn = test_dir / "vasp" / "Si_config_coord" / "finite_diff_q1" / "outputs" / "WSWQ.0"
     wswq = WSWQ.from_file(fn)
     wswq_from_obj = WSWQDocument.from_wswq(wswq=wswq)
     wswq_from_file = WSWQDocument.from_file(filename=fn)
@@ -103,5 +102,6 @@ def test_wswq(test_dir):
     assert wswq_from_obj.nbands == wswq.nbands
     assert wswq_from_file.nbands == wswq.nbands
 
-    wswq_p = wswq_from_obj.to_wswq()
-    assert wswq_p.nbands == wswq.nbands
+    wswq_pmg = wswq_from_obj.to_wswq()
+    assert wswq_pmg.nbands == wswq.nbands
+    assert wswq_pmg.data.shape == (2, 4, 18, 18)

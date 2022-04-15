@@ -1,6 +1,5 @@
 from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
 from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
-from atomate2.vasp.sets.core import StaticSetGenerator
 
 
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
@@ -8,7 +7,6 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
-    from atomate2.vasp.powerups import update_user_incar_settings
     from atomate2.vasp.schemas.defect import CCDDocument
 
     # mapping from job name to directory containing test files
@@ -37,20 +35,10 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     si_defect = Structure.from_file(
         test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
     )
-    INCAR_UPDATES = {
-        "KSPACING": 1,
-    }
-    static_set_gen = StaticSetGenerator(
-        user_incar_settings={
-            "KSPACING": 1,
-            "ENCUT": 500,
-        },
-    )
 
     # generate flow
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
     flow = ccd_maker.make(si_defect, charge_state1=0, charge_state2=1)
-    flow = update_user_incar_settings(flow, incar_updates=INCAR_UPDATES)
 
     # run the flow and ensure that it finished running successfully
     responses = run_locally(
@@ -65,7 +53,6 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     assert len(ccd.energies2) == 5
     assert len(ccd.distortions1) == 5
     assert len(ccd.distortions2) == 5
-    assert sum(len(row) for row in ccd.distorted_calcs_dirs) == 10
 
 
 def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
@@ -73,7 +60,6 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.defect import NonRadiativeMaker
-    from atomate2.vasp.powerups import update_user_incar_settings
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -100,19 +86,11 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     si_defect = Structure.from_file(
         test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
     )
-    INCAR_UPDATES = {
-        "KSPACING": 1,
-    }
-
-    def update_calc_settings(flow):
-        flow = update_user_incar_settings(flow, incar_updates=INCAR_UPDATES)
-        return flow
 
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
     non_rad_maker = NonRadiativeMaker(ccd_maker=ccd_maker)
 
     flow = non_rad_maker.make(si_defect, charge_state1=0, charge_state2=1)
-    flow = update_calc_settings(flow)
 
     # run the flow and ensure that it finished running successfully
     responses = run_locally(
@@ -123,6 +101,10 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
     fdiff_doc1: FiniteDifferenceDocument = responses[flow.jobs[-2].uuid][1].output
     fdiff_doc2: FiniteDifferenceDocument = responses[flow.jobs[-1].uuid][1].output
+    wswq1 = fdiff_doc1.wswq_documents[0].to_wswq()
+    wswq2 = fdiff_doc2.wswq_documents[0].to_wswq()
 
     assert len(fdiff_doc1.wswq_documents) == 5
     assert len(fdiff_doc2.wswq_documents) == 5
+    assert wswq1.data.shape == (2, 4, 18, 18)
+    assert wswq2.data.shape == (2, 4, 18, 18)

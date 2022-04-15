@@ -61,6 +61,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     For examples, see the tests in tests/vasp/makers/core.py.
     """
     import atomate2.vasp.jobs.base
+    import atomate2.vasp.jobs.defect
     import atomate2.vasp.run
     from atomate2.vasp.sets.base import VaspInputSetGenerator
 
@@ -79,6 +80,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
+    monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSetGenerator, "get_input_set", mock_get_input_set)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
