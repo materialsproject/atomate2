@@ -2,7 +2,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from atomate2.vasp.schemas.defect import CCDDocument, WSWQDocument, sort_pos_dist
+from atomate2.vasp.schemas.defect import AbWSWQ, CCDDocument, sort_pos_dist
 from atomate2.vasp.schemas.task import TaskDocument
 
 
@@ -83,8 +83,6 @@ def test_CCDDocument(vasp_test_dir):
     # # check that the middle entry has the lowest energy
     assert is_strict_minimum(2, ccd_doc.energies1)
     assert is_strict_minimum(2, ccd_doc.energies2)
-    print(ccd_doc.static_dirs1)
-    print(ccd_doc.static_dirs2)
     # # check that you can recreate the task document from the ccd document
     tasks = ccd_doc.get_taskdocs()
     assert len(tasks[0]) == 5
@@ -96,12 +94,7 @@ def test_wswq(test_dir):
 
     fn = test_dir / "vasp" / "Si_config_coord" / "finite_diff_q1" / "outputs" / "WSWQ.0"
     wswq = WSWQ.from_file(fn)
-    wswq_from_obj = WSWQDocument.from_wswq(wswq=wswq)
-    wswq_from_file = WSWQDocument.from_file(filename=fn)
+    abwswq = AbWSWQ.from_file(filename=fn)
 
-    assert wswq_from_obj.nbands == wswq.nbands
-    assert wswq_from_file.nbands == wswq.nbands
-
-    wswq_pmg = wswq_from_obj.to_wswq()
-    assert wswq_pmg.nbands == wswq.nbands
-    assert wswq_pmg.data.shape == (2, 4, 18, 18)
+    assert abwswq.nbands == wswq.nbands
+    assert type(abwswq.data[0, 0, 0, 0]) == np.float64

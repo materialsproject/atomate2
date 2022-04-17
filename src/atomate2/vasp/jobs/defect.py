@@ -18,7 +18,7 @@ from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import StaticMaker
 from atomate2.vasp.run import run_vasp
-from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
+from atomate2.vasp.schemas.defect import AbWSWQ, CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
@@ -146,7 +146,7 @@ class FiniteDifferenceMaker(Maker):
     name: str = "finite diff"
     run_vasp_kwargs: dict = field(default_factory=dict)
 
-    @job(data=FiniteDifferenceDocument, output_schema=FiniteDifferenceDocument)
+    @job(data=AbWSWQ, output_schema=FiniteDifferenceDocument)
     def make(self, ref_calc_dir: str, distorted_calc_dirs: List[str]):
         """Run a post-processing VASP job."""
         fc = FileClient()

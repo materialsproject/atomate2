@@ -15,100 +15,22 @@ from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["CCDDocument", "WSWQDocument", "FiniteDifferenceDocument"]
+__all__ = ["CCDDocument", "AbWSWQ", "FiniteDifferenceDocument"]
 
 
-class WSWQDocument(BaseModel):
-    """WSWQ document schema."""
+class AbWSWQ(WSWQ):
+    """The WSWQ object but we only store the absolute value of the matrix elements."""
 
-    nspin: int = Field(None, description="Number of spins channels")
-    nkpoints: int = Field(None, description="Number of k-points")
-    nbands: int = Field(None, description="Number of bands")
-    data: List[List[List[List[float]]]] = Field(
-        None,
-        description="Array of of real numbers representing the matrix element |<W(0)|S|W(Q)>|\n"
-        "Since complex numbers are not JSON serializable, we store the absolute values",
-    )
-
-    dir0: str = Field(
-        None, description="Directory where the W(0) wavefunction comes from"
-    )
-    uuid0: str = Field(None, description="UUID of the W(0) calculation")
-
-    dir1: str = Field(
-        None, description="Directory where the W(Q) wavefunction comes from"
-    )
-    uuid1: str = Field(None, description="UUID of the W(Q) calculation")
-
-    @classmethod
-    def from_file(cls, filename: str | Path, **kwargs) -> WSWQDocument:
-        """
-        Read the WSWQ file.
-
-        Parameters
-        ----------
-        filename : str
-            Path to the WSWQ file.
-        **kwargs : dict
-            Additional keyword arguments.
-
-        Returns
-        -------
-        WSWQDocument
-            WSWQDocument object.
-        """
-        fname = str(filename)
-        wswq = WSWQ.from_file(fname)
-        return cls.from_wswq(wswq, **kwargs)
-
-    @classmethod
-    def from_wswq(cls, wswq: WSWQ, **kwargs) -> WSWQDocument:
-        """
-        Read the WSWQ file.
-
-        Parameters
-        ----------
-        wswq : WSWQ
-            WSWQ object.
-        **kwargs : dict
-            Additional keyword arguments.
-
-        Returns
-        -------
-        WSWQDocument
-            WSWQDocument object.
-        """
-        # TODO make the pymatgen code automatically determine if the object is complex or absolute value
-        data = np.abs(wswq.data)
-        return cls(
-            nspin=wswq.nspin,
-            nkpoints=wswq.nkpoints,
-            nbands=wswq.nbands,
-            data=data.tolist(),
-            **kwargs,
-        )
-
-    def to_wswq(self) -> WSWQ:
-        """
-        Convert to WSWQ object.
-
-        Returns
-        -------
-        WSWQ
-            WSWQ object.
-        """
-        return WSWQ(
-            nspin=self.nspin,
-            nkpoints=self.nkpoints,
-            nbands=self.nbands,
-            data=np.array(self.data),
-        )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data = np.abs(self.data)
 
 
 class FiniteDifferenceDocument(BaseModel):
-    """Collection of computed WSWQDocuments using a single ref WAVECAR and a list of distorted WAVECARs."""
+    """Collection of computed AbWSWQ objects using a single ref WAVECAR and a list of distorted WAVECARs."""
 
-    wswq_documents: List[WSWQDocument]
+    wswq_documents: List[AbWSWQ]
+
     dir_name: str = Field(
         None, description="Directory where the WSWQ calculations are performed"
     )
@@ -146,7 +68,7 @@ class FiniteDifferenceDocument(BaseModel):
         ordered_files = sorted(files, key=lambda x: int(x.name.split(".")[1]))
         wswq_documents = []
         for f in ordered_files:
-            wswq_documents.append(WSWQDocument.from_file(f))
+            wswq_documents.append(AbWSWQ.from_file(f))
 
         return cls(wswq_documents=wswq_documents, dir_name=str(wswq_dir), **kwargs)
 
