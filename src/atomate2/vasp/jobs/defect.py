@@ -146,7 +146,7 @@ class FiniteDifferenceMaker(Maker):
     name: str = "finite diff"
     run_vasp_kwargs: dict = field(default_factory=dict)
 
-    @job(data=AbWSWQ, output_schema=FiniteDifferenceDocument)
+    @job(data=[AbWSWQ], output_schema=FiniteDifferenceDocument)
     def make(self, ref_calc_dir: str, distorted_calc_dirs: List[str]):
         """Run a post-processing VASP job."""
         fc = FileClient()

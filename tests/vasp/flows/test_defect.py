@@ -116,6 +116,7 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     for q in store.additional_stores["data"].query(
         {"job_uuid": {"$in": [flow.jobs[-2].uuid, flow.jobs[-1].uuid]}}
     ):
+        assert q["data"] is not None
         wswq_p = AbWSWQ.from_dict(q["data"])
         assert wswq_p.data.shape == (2, 4, 18, 18)
     # assert store.additional_stores["data"].query_one().keys() == {"data"}
