@@ -46,7 +46,7 @@ if __name__ == "__main__":
                 "ipython==8.2.0",
                 "FireWorks==2.0.2",
                 "pydata-sphinx-theme==0.8.1",
-                "autodoc_pydantic==1.6.1",
+                "autodoc_pydantic==1.6.2",
                 "sphinx_panels==0.6.0",
                 "myst-parser==0.17.0",
             ],
