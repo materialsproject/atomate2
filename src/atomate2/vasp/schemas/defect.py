@@ -21,9 +21,9 @@ __all__ = ["CCDDocument", "AbWSWQ", "FiniteDifferenceDocument"]
 class AbWSWQ(WSWQ):
     """The WSWQ object but we only store the absolute value of the matrix elements."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.data = np.abs(self.data)
+    def __init__(self, nspin: int, nkpoints: int, nbands: int, data: np.ndarray):
+        data = np.abs(data, dtype=np.float64)
+        super().__init__(nspin, nkpoints, nbands, data)
 
 
 class FiniteDifferenceDocument(BaseModel):
