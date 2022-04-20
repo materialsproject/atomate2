@@ -2,7 +2,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from atomate2.vasp.schemas.defect import AbWSWQ, CCDDocument, sort_pos_dist
+from atomate2.vasp.schemas.defect import CCDDocument, sort_pos_dist
 from atomate2.vasp.schemas.task import TaskDocument
 
 
@@ -87,14 +87,3 @@ def test_CCDDocument(vasp_test_dir):
     tasks = ccd_doc.get_taskdocs()
     assert len(tasks[0]) == 5
     assert len(tasks[1]) == 5
-
-
-def test_wswq(test_dir):
-    from pymatgen.io.vasp.outputs import WSWQ
-
-    fn = test_dir / "vasp" / "Si_config_coord" / "finite_diff_q1" / "outputs" / "WSWQ.0"
-    wswq = WSWQ.from_file(fn)
-    abwswq = AbWSWQ.from_file(filename=fn)
-
-    assert abwswq.nbands == wswq.nbands
-    assert type(abwswq.data[0, 0, 0, 0]) == np.float64

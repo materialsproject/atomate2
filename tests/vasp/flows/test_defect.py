@@ -1,5 +1,7 @@
+import numpy as np
+
 from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
-from atomate2.vasp.schemas.defect import AbWSWQ, FiniteDifferenceDocument
+from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
 
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
@@ -59,6 +61,7 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
     from pymatgen.core import Structure
+    from pymatgen.io.vasp.outputs import WSWQ
 
     from atomate2.vasp.flows.defect import NonRadiativeMaker
 
@@ -106,17 +109,19 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
     fdiff_doc1: FiniteDifferenceDocument = responses[flow.jobs[-2].uuid][1].output
     fdiff_doc2: FiniteDifferenceDocument = responses[flow.jobs[-1].uuid][1].output
-    wswq1 = fdiff_doc1.wswq_documents[0]
-    wswq2 = fdiff_doc2.wswq_documents[0]
+    wswq1 = fdiff_doc1.wswqs[0]
+    wswq2 = fdiff_doc2.wswqs[0]
 
-    assert len(fdiff_doc1.wswq_documents) == 5
-    assert len(fdiff_doc2.wswq_documents) == 5
-    assert wswq1.data.shape == (2, 4, 18, 18)
-    assert wswq2.data.shape == (2, 4, 18, 18)
+    assert len(fdiff_doc1.wswqs) == 5
+    assert len(fdiff_doc2.wswqs) == 5
+    assert wswq1.me_real.shape == (2, 4, 18, 18)
+    assert wswq2.me_imag.shape == (2, 4, 18, 18)
     for q in store.additional_stores["data"].query(
         {"job_uuid": {"$in": [flow.jobs[-2].uuid, flow.jobs[-1].uuid]}}
     ):
         assert q["data"] is not None
-        wswq_p = AbWSWQ.from_dict(q["data"])
-        assert wswq_p.data.shape == (2, 4, 18, 18)
-    # assert store.additional_stores["data"].query_one().keys() == {"data"}
+        wswq_p = WSWQ.from_dict(q["data"])
+        wswq_p.me_real = np.array(wswq_p.me_real)
+        wswq_p.me_imag = np.array(wswq_p.me_imag)
+        assert wswq_p.me_real.shape == (2, 4, 18, 18)
+        assert wswq_p.me_imag.shape == (2, 4, 18, 18)

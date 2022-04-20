@@ -50,7 +50,7 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
             "LREAL": False,
             "NSW": 99,
             "LCHARG": False,
-            "ENCUT": 700,
+            "ENCUT": 500,
             "LAECHG": False,
             "NELMIN": 6,
         }

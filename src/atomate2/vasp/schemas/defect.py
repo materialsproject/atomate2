@@ -15,21 +15,13 @@ from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["CCDDocument", "AbWSWQ", "FiniteDifferenceDocument"]
-
-
-class AbWSWQ(WSWQ):
-    """The WSWQ object but we only store the absolute value of the matrix elements."""
-
-    def __init__(self, nspin: int, nkpoints: int, nbands: int, data: np.ndarray):
-        data = np.abs(data, dtype=np.float64)
-        super().__init__(nspin, nkpoints, nbands, data)
+__all__ = ["CCDDocument", "WSWQ", "FiniteDifferenceDocument"]
 
 
 class FiniteDifferenceDocument(BaseModel):
-    """Collection of computed AbWSWQ objects using a single ref WAVECAR and a list of distorted WAVECARs."""
+    """Collection of computed WSWQ objects using a single ref WAVECAR and a list of distorted WAVECARs."""
 
-    wswq_documents: List[AbWSWQ]
+    wswqs: List[WSWQ]
 
     dir_name: str = Field(
         None, description="Directory where the WSWQ calculations are performed"
@@ -68,9 +60,9 @@ class FiniteDifferenceDocument(BaseModel):
         ordered_files = sorted(files, key=lambda x: int(x.name.split(".")[1]))
         wswq_documents = []
         for f in ordered_files:
-            wswq_documents.append(AbWSWQ.from_file(f))
+            wswq_documents.append(WSWQ.from_file(f))
 
-        return cls(wswq_documents=wswq_documents, dir_name=str(wswq_dir), **kwargs)
+        return cls(wswqs=wswq_documents, dir_name=str(wswq_dir), **kwargs)
 
 
 class CCDDocument(BaseModel):
