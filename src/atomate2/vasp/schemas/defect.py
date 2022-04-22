@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, Callable, List, Tuple
+from typing import Any, Callable, List, Tuple, Type
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -187,12 +187,12 @@ class CCDDocument(BaseModel):
 
     @classmethod
     def from_entries(
-        cls,
+        cls: Type[CCDDocument],
         entries1: List[ComputedStructureEntry],
         entries2: List[ComputedStructureEntry],
         relaxed_uuid1: str | None = None,
         relaxed_uuid2: str | None = None,
-    ):
+    ) -> CCDDocument:
         """
         Create a CCDTaskDocument from a list of distorted calculations.
 
@@ -202,18 +202,18 @@ class CCDDocument(BaseModel):
             List of distorted calculations for charge state (q1).
         entries2
             List of distorted calculations for charge state (q2)
-        relaxed_dir1
-            Directory of relaxed calculation in charge state (q1).
-        relaxed_dir2
-            Directory of relaxed calculation in charge state (q2).
+        relaxed_uuid1
+            UUID of relaxed calculation in charge state (q1).
+        relaxed_uuid1
+            UUID of relaxed calculation in charge state (q2).
 
         """
 
-        def find_entry(entries, uuid):
+        def find_entry(entries, uuid) -> tuple[int, ComputedStructureEntry]:
             """Find the entry with the given given UUID."""
-            for entry in entries:
+            for itr, entry in enumerate(entries):
                 if entry.data["uuid"] == uuid:
-                    return entry
+                    return itr, entry
             raise ValueError(f"Could not find entry with UUID: {uuid}")
 
         def dQ_entries(e1, e2):
@@ -227,8 +227,8 @@ class CCDDocument(BaseModel):
         if any(e.data.get("uuid", None) is None for e in entries1 + entries2):
             raise ValueError("[uuid] must be provided for all entries.")
 
-        ent_r1 = find_entry(entries1, relaxed_uuid1)
-        ent_r2 = find_entry(entries2, relaxed_uuid2)
+        idx1, ent_r1 = find_entry(entries1, relaxed_uuid1)
+        idx2, ent_r2 = find_entry(entries2, relaxed_uuid2)
 
         s_entries1, distortions1 = sort_pos_dist(
             entries1, ent_r1, ent_r2, dist=dQ_entries
@@ -254,8 +254,8 @@ class CCDDocument(BaseModel):
             energies2=energies2,
             static_dirs1=sdirs1,
             static_dirs2=sdirs2,
-            relaxed_calc_dir1=ent_r1.data["dir_name"],
-            relaxed_calc_dir2=ent_r2.data["dir_name"],
+            relaxed_calc1=(idx1, ent_r1.data["dir_name"]),
+            relaxed_calc2=(idx2, ent_r2.data["dir_name"]),
         )
 
         return obj
