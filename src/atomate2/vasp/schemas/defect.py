@@ -113,14 +113,16 @@ class CCDDocument(BaseModel):
         description="UUIDs of distorted calculations for the defect (supercell) in charge state (q2).",
     )
 
-    relaxed_calc_dir1: str = Field(
+    relaxed_calc1: tuple[int, str | None] = Field(
         None,
-        description="Directory of relaxed calculation in charge state (q1).",
+        description="The (index, directory name) of the static calculation in `energies1` that corresponds to "
+        "the relaxed charge state (q1).",
     )
 
-    relaxed_calc_dir2: str = Field(
+    relaxed_calc2: tuple[int, str] = Field(
         None,
-        description="Directory of relaxed calculation in charge state (q2).",
+        description="The (index, directory name) of the static calculation in `energies1` that corresponds to "
+        "the relaxed charge state (q2).",
     )
 
     @classmethod
