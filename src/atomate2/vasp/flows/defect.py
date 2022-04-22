@@ -203,7 +203,6 @@ class NonRadiativeMaker(Maker):
     fdiff_maker: FiniteDifferenceMaker
         A maker to perform the calculation of the finite difference using wavefunction overlaps from VASP.
 
-
     """
 
     ccd_maker: ConfigurationCoordinateMaker
