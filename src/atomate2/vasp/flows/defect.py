@@ -183,7 +183,7 @@ class NonRadiativeMaker(Maker):
     ccd_maker: ConfigurationCoordinateMaker
     name: str = "non-radiative"
     wswq_maker: FiniteDifferenceMaker = field(
-        default_factory=lambda: FiniteDifferenceMaker()
+        default_factory=FiniteDifferenceMaker
     )
 
     def make(
