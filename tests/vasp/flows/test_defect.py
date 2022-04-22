@@ -34,6 +34,7 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
 
     # generate flow
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
+    assert ccd_maker.distortions == (-0.2, -0.1, 0, 0.1, 0.2)
     flow = ccd_maker.make(si_defect, charge_state1=0, charge_state2=1)
 
     # run the flow and ensure that it finished running successfully
@@ -49,8 +50,8 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     assert len(ccd.energies2) == 5
     assert len(ccd.distortions1) == 5
     assert len(ccd.distortions2) == 5
-    assert ccd.relaxed_calc1[0] == 2
-    assert ccd.relaxed_calc2[0] == 2
+    assert ccd.relaxed_index1[0] == 2
+    assert ccd.relaxed_index2[0] == 2
 
 
 def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
