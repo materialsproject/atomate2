@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Iterable
 
-from jobflow import Flow, Maker, OutputReference, job
+from jobflow import Flow, Job, Maker, OutputReference, job
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -112,8 +112,8 @@ class ConfigurationCoordinateMaker(Maker):
             structure, [charge_state1, charge_state2]
         )
 
-        relax1 = self.relax_maker.make(structure=charged_structures.output[0])
-        relax2 = self.relax_maker.make(structure=charged_structures.output[1])
+        relax1: Job = self.relax_maker.make(structure=charged_structures.output[0])
+        relax2: Job = self.relax_maker.make(structure=charged_structures.output[1])
         relax1.append_name(" q1")
         relax2.append_name(" q2")
 
@@ -129,6 +129,7 @@ class ConfigurationCoordinateMaker(Maker):
             static_maker=self.static_maker,
             prev_vasp_dir=dir1,
             add_name="q1",
+            add_info={"relaxed_uuid": relax1.uuid, "distorted_uuid": relax2.uuid},
         )
 
         deformations2 = spawn_energy_curve_calcs(
@@ -138,6 +139,7 @@ class ConfigurationCoordinateMaker(Maker):
             static_maker=self.static_maker,
             prev_vasp_dir=dir2,
             add_name="q2",
+            add_info={"relaxed_uuid": relax2.uuid, "distorted_uuid": relax1.uuid},
         )
 
         deformations1.append_name(" q1")
@@ -148,7 +150,7 @@ class ConfigurationCoordinateMaker(Maker):
         )
 
         ccd_job = get_ccd_documents(
-            deformations1.output, deformations2.output, undistored_index=min_abs_index
+            deformations1.output, deformations2.output, undistorted_index=min_abs_index
         )
 
         return Flow(
@@ -182,7 +184,6 @@ def get_charged_structures(structure: Structure, charges: Iterable):
     -------
     dict
         A dictionary with the two structures with the charge states added.
-
     """
     structs_out = [structure.copy() for _ in charges]
     for i, q in enumerate(charges):
@@ -202,7 +203,6 @@ class NonRadiativeMaker(Maker):
         A maker to perform the calculation of the configuration coordinate diagram.
     fdiff_maker: FiniteDifferenceMaker
         A maker to perform the calculation of the finite difference using wavefunction overlaps from VASP.
-
     """
 
     ccd_maker: ConfigurationCoordinateMaker
@@ -228,7 +228,6 @@ class NonRadiativeMaker(Maker):
             The reference charge state of the defect.
         charge_state2
             The excited charge state of the defect
-
         """
         if not isinstance(structure, OutputReference):
             name = f"{self.name}: {structure.formula}"

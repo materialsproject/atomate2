@@ -66,7 +66,7 @@ class FiniteDifferenceDocument(BaseModel):
 
 
 class CCDDocument(BaseModel):
-    """Configuration-coordiante definition of configuration-coordinate diagram."""
+    """Configuration-coordinate definition of configuration-coordinate diagram."""
 
     q1: int = Field(None, description="Charge state 1.")
     q2: int = Field(None, description="Charge state 2.")
@@ -113,7 +113,7 @@ class CCDDocument(BaseModel):
         description="UUIDs of distorted calculations for the defect (supercell) in charge state (q2).",
     )
 
-    relaxed_calc1: tuple[int, str | None] = Field(
+    relaxed_calc1: tuple[int, str] = Field(
         None,
         description="The (index, directory name) of the static calculation in `energies1` that corresponds to "
         "the relaxed charge state (q1).",

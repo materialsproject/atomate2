@@ -36,26 +36,31 @@ class CCDInput(BaseModel):
 
 @job
 def spawn_energy_curve_calcs(
-    ref: Structure,
-    distorted: Structure,
+    relaxed_structure: Structure,
+    distorted_structure: Structure,
     distortions: Iterable[float],
     static_maker: StaticMaker,
     prev_vasp_dir: str | Path | None = None,
     add_name: str = "",
+    add_info: dict | None = None,
 ):
-    """
-    Compute the total energy curve as you distort a reference structure to a distorted structure.
+    """Compute the total energy curve as you distort a reference structure to a distorted structure.
 
     Parameters
     ----------
-    ref : pymatgen.core.structure.Structure
+    relaxed_structure : pymatgen.core.structure.Structure
         pymatgen structure corresponding to the ground (final) state
-    distorted : pymatgen.core.structure.Structure
+    distorted_structure : pymatgen.core.structure.Structure
         pymatgen structure corresponding to the excited (initial) state
     static_maker : atomate2.vasp.jobs.core.StaticMaker
         StaticMaker object
     distortions : tuple
         list of distortions to apply
+    add_name : str
+        additional name to add to the flow name
+    add_info : dict
+        additional info to add to the to a info.json file for each static calculation.
+        This data can be used to reconstruct the provenance of the calculation.
 
     Returns
     -------
@@ -66,13 +71,27 @@ def spawn_energy_curve_calcs(
     outputs = []
 
     # add the static job for the reference structure
-    static_maker.make(ref)
+    static_maker.make(relaxed_structure)
 
-    distorted_structures = ref.interpolate(distorted, nimages=sorted(distortions))
+    distorted_structures = relaxed_structure.interpolate(
+        distorted_structure, nimages=sorted(distortions)
+    )
     # add all the distorted structures
     for i, d_struct in enumerate(distorted_structures):
         static_job = static_maker.make(d_struct, prev_vasp_dir=prev_vasp_dir)
-        suffix = f" {i+1}" if add_name == "" else f" {add_name} {i}"
+        suffix = f" {i+1}" if add_name == "" else f" {add_name} {i+1}"
+
+        # write some provenances data in info.json file
+        info = {
+            "relaxed_structure": relaxed_structure,
+            "distorted_structure": distorted_structure,
+        }
+        if add_info is not None:
+            info.update(add_info)
+        static_job.update_maker_kwargs(
+            {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
+        )
+
         static_job.append_name(f"{suffix}")
         jobs.append(static_job)
         # outputs.append(static_job.output)
@@ -94,7 +113,7 @@ def spawn_energy_curve_calcs(
 def get_ccd_documents(
     inputs1: Iterable[CCDInput],
     inputs2: Iterable[CCDInput],
-    undistored_index: int,
+    undistorted_index: int,
 ):
     """
     Get the configuration coordinate diagram from the task documents.
@@ -105,7 +124,7 @@ def get_ccd_documents(
         List of CCDInput objects
     inputs2 : Iterable[CCDInput]
         List of CCDInput objects
-    undistored_index : int
+    undistorted_index : int
         Index of the undistorted structure in the list of distorted structures
 
     Returns
@@ -125,8 +144,8 @@ def get_ccd_documents(
         static_dirs2=[i["dir_name"] for i in inputs2],
         static_uuids1=static_uuids1,
         static_uuids2=static_uuids2,
-        relaxed_uuid1=static_uuids1[undistored_index],
-        relaxed_uuid2=static_uuids2[undistored_index],
+        relaxed_uuid1=static_uuids1[undistorted_index],
+        relaxed_uuid2=static_uuids2[undistorted_index],
     )
 
     return Response(output=ccd_doc)

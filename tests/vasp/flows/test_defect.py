@@ -49,6 +49,8 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     assert len(ccd.energies2) == 5
     assert len(ccd.distortions1) == 5
     assert len(ccd.distortions2) == 5
+    assert ccd.relaxed_calc1[0] == 2
+    assert ccd.relaxed_calc2[0] == 2
 
 
 def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
