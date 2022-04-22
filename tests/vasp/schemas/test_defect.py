@@ -1,9 +1,3 @@
-# import numpy as np
-
-# from atomate2.vasp.schemas.defect import CCDDocument, sort_pos_dist
-# from atomate2.vasp.schemas.task import TaskDocument
-
-
 def test_sort_pos_dist():
     """
     Test the sorting algorithm with a list of 2D positions.
