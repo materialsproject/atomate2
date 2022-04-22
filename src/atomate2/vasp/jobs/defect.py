@@ -142,6 +142,13 @@ class FiniteDifferenceMaker(Maker):
 
     Since all of the standard outputs are presumably already stored in the database,
     the make function here should only only store new data.
+
+    Parameters
+    ----------
+    name : str
+        Name of the jobs created by this maker
+    run_vasp_kwargs : dict
+        kwargs to pass to run_vasp
     """
 
     name: str = "finite diff"

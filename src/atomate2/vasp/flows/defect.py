@@ -46,7 +46,21 @@ DEFECT_STATIC_GENERATOR = StaticSetGenerator(
 
 @dataclass
 class ConfigurationCoordinateMaker(Maker):
-    """Class to generate VASP input sets for the calculation of the configuration coordinate diagram."""
+    """Class to generate VASP input sets for the calculation of the configuration coordinate diagram.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow created by this maker.
+    relax_maker: .BaseVaspMaker or None
+        A maker to perform a atomic-position-only relaxation on the defect charge states.
+        If None, the defaults will be used.
+    static_maker: .BaseVaspMaker or None
+        A maker to perform the single-shot static calculation of the distorted structures.
+        If None, the defaults will be used.
+    distortions: tuple[float, ...]
+        The distortions to use in the calculation of the configuration coordinate diagram.
+    """
 
     name: str = "config. coordinate"
     relax_maker: BaseVaspMaker = field(
@@ -178,13 +192,23 @@ def get_charged_structures(structure: Structure, charges: Iterable):
 
 @dataclass
 class NonRadiativeMaker(Maker):
-    """Class to generate workflows for the calculation of the non-radiative defect capture."""
+    """Class to generate workflows for the calculation of the non-radiative defect capture.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow created by this maker.
+    ccd_maker: ConfigurationCoordinateMaker
+        A maker to perform the calculation of the configuration coordinate diagram.
+    fdiff_maker: FiniteDifferenceMaker
+        A maker to perform the calculation of the finite difference using wavefunction overlaps from VASP.
+
+
+    """
 
     ccd_maker: ConfigurationCoordinateMaker
     name: str = "non-radiative"
-    wswq_maker: FiniteDifferenceMaker = field(
-        default_factory=FiniteDifferenceMaker
-    )
+    fdiff_maker: FiniteDifferenceMaker = field(default_factory=FiniteDifferenceMaker)
 
     def make(
         self,
@@ -229,10 +253,10 @@ class NonRadiativeMaker(Maker):
         mid_index0 = len(self.ccd_maker.distortions) // 2
         mid_index1 = len(self.ccd_maker.distortions) // 2
 
-        finite_diff_job1 = self.wswq_maker.make(
+        finite_diff_job1 = self.fdiff_maker.make(
             ref_calc_dir=dirs0[mid_index0], distorted_calc_dirs=dirs0
         )
-        finite_diff_job2 = self.wswq_maker.make(
+        finite_diff_job2 = self.fdiff_maker.make(
             ref_calc_dir=dirs1[mid_index1], distorted_calc_dirs=dirs1
         )
         finite_diff_job1.append_name(" q1")
