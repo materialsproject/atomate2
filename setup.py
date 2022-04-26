@@ -27,7 +27,7 @@ if __name__ == "__main__":
         zip_safe=False,
         include_package_data=True,
         install_requires=[
-            "pymatgen>=2019.11.11",
+            "pymatgen>=2022.3.22",
             "custodian>=2019.8.24",
             "pydantic",
             "monty",
