@@ -72,9 +72,9 @@ def spawn_energy_curve_calcs(
 
     # add the static job for the reference structure
     static_maker.make(relaxed_structure)
-
+    s_distortions = sorted(distortions)
     distorted_structures = relaxed_structure.interpolate(
-        distorted_structure, nimages=sorted(distortions)
+        distorted_structure, nimages=s_distortions
     )
     # add all the distorted structures
     for i, d_struct in enumerate(distorted_structures):
@@ -85,6 +85,7 @@ def spawn_energy_curve_calcs(
         info = {
             "relaxed_structure": relaxed_structure,
             "distorted_structure": distorted_structure,
+            "distortion": s_distortions[i],
         }
         if add_info is not None:
             info.update(add_info)
