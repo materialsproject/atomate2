@@ -81,14 +81,14 @@ class FormationEnergyMaker(Maker):
         self.relax_maker.input_set_generator.user_incar_settings["LVHAR"] = True
         if sc_mat is None:
             sc_mat = get_sc_fromstruct(bulk_structure)
-        bulk_relax = self.relax_maker.make(bulk_structure)
+        bulk_relax: Job = self.relax_maker.make(bulk_structure)
         bulk_relax.name = "bulk relax"
         defect_calcs = []
         for i, defect in enumerate(defect_gen):
             defect_job = perform_defect_calculations(
                 defect,
                 sc_mat=sc_mat,
-                prv_vasp_dir=bulk_relax.outputs.outdir,
+                prv_vasp_dir=bulk_relax.output.outdir,
             )
             defect_calcs.append(defect_job)
 
