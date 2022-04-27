@@ -88,7 +88,7 @@ class FormationEnergyMaker(Maker):
             defect_job = perform_defect_calculations(
                 defect,
                 sc_mat=sc_mat,
-                prv_vasp_dir=bulk_relax.output.outdir,
+                prv_vasp_dir=bulk_relax.output.dir_name,
             )
             defect_calcs.append(defect_job)
 
