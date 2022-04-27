@@ -7,6 +7,9 @@ from dataclasses import dataclass, field
 from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
+from numpy.typing import NDArray
+from pymatgen.analysis.defect.core import get_sc_fromstruct
+from pymatgen.analysis.defect.generators import DefectGenerator
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -14,6 +17,7 @@ from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     FiniteDifferenceMaker,
     get_ccd_documents,
+    perform_defect_calculations,
     spawn_energy_curve_calcs,
 )
 from atomate2.vasp.schemas.defect import CCDDocument
@@ -22,26 +26,71 @@ from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
 
+################################################################################
+# Default settings                                                            ##
+################################################################################
 
 DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 DEFECT_INCAR_SETTINGS = {
     "ISMEAR": 0,
-    "LWAVE": True,
     "SIGMA": 0.05,
     "KSPACING": None,
     "ENCUT": 500,
 }
 DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
 
-DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(
+DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
-DEFECT_STATIC_GENERATOR = StaticSetGenerator(
+DEFECT_STATIC_GENERATOR: StaticSetGenerator = StaticSetGenerator(
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
+
+
+################################################################################
+# Formation Energy                                                            ##
+################################################################################
+
+
+@dataclass
+class FormationEnergyMaker(Maker):
+    """Class to generate VASP input sets for the calculation of the formation energy diagram.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow created by this maker.
+    relax_maker: .BaseVaspMaker or None
+        A maker to perform a atomic-position-only relaxation on the defect charge states.
+        If None, the defaults will be used.
+    """
+
+    name: str = "formation energy"
+    relax_maker: BaseVaspMaker = field(
+        default_factory=lambda: RelaxMaker(
+            input_set_generator=DEFECT_RELAX_GENERATOR,
+        )
+    )
+
+    def make(self, defect_gen: DefectGenerator, sc_mat: NDArray | None = None):
+        """Make a flow to calculate the formation energy diagram."""
+        bulk_structure = defect_gen.structure
+        self.relax_maker.input_set_generator.user_incar_settings["LVHAR"] = True
+        if sc_mat is None:
+            sc_mat = get_sc_fromstruct(bulk_structure)
+        bulk_relax = self.relax_maker.make(bulk_structure)
+        bulk_relax.name = "bulk relax"
+        defect_calcs = []
+        for i, defect in enumerate(defect_gen):
+            defect_job = perform_defect_calculations(
+                defect,
+                sc_mat=sc_mat,
+                prv_vasp_dir=bulk_relax.outputs.outdir,
+            )
+            defect_calcs.append(defect_job)
 
 
 @dataclass
@@ -96,6 +145,8 @@ class ConfigurationCoordinateMaker(Maker):
         Flow
             The full workflow for the calculation of the configuration coordinate diagram.
         """
+        # Make sure the static makers stores the wavecar
+        self.static_maker.input_set_generator.user_incar_settings["LWAVE"] = True
         # use a more descriptive name when possible
         if not isinstance(structure, OutputReference):
             name = f"{self.name}: {structure.formula}"

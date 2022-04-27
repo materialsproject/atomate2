@@ -6,3 +6,4 @@ jobflow==0.1.8
 click==8.1.2
 PyYAML==6.0
 numpy
+git+https://github.com/materialsproject/pymatgen-analysis-defects@dev#egg=pymatgen-analysis-defects

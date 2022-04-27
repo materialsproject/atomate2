@@ -8,7 +8,9 @@ from pathlib import Path
 from typing import Iterable, List
 
 from jobflow import Flow, Maker, Response, job
+from numpy.typing import NDArray
 from pydantic import BaseModel
+from pymatgen.analysis.defect.core import Defect
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
@@ -17,14 +19,72 @@ from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_f
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
-from atomate2.vasp.jobs.core import StaticMaker
+from atomate2.vasp.flows.defect import DEFECT_RELAX_GENERATOR
+from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_RELAX_MAKER = RelaxMaker(input_set_generator=DEFECT_RELAX_GENERATOR)
+DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": True})
 
+
+################################################################################
+# Formation Energy                                                          ####
+################################################################################
+
+
+@job
+def perform_defect_calculations(
+    defect: Defect,
+    relax_maker: RelaxMaker | None = None,
+    prev_vasp_dir: str | Path | None = None,
+    sc_mat: NDArray | None = None,
+    add_name: str = "",
+):
+    """Perform charge defect supercell calculations and save the Hartree potential.
+
+    Parameters
+    ----------
+    defect
+        A defect object representing the defect in a unit cell.
+    relax_maker
+        A RelaxMaker object to use for the atomic relaxation. If None, the default will be used (see DEFAULT_RELAX_MAKER).
+    prev_vasp_dir
+        The directory containing the previous VASP calculation.
+    sc_mat
+        The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
+    add_name
+        A string to add to the end of the calculation name.
+    """
+    jobs = []
+    outputs = []
+    sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
+    relax_maker = relax_maker or DEFAULT_RELAX_MAKER
+    for i in defect.get_charge_states():
+        suffix = f" q={i}" if add_name == "" else f" {add_name} q={i}"
+        charged_struct = sc_def_struct.copy()
+        charged_struct.set_charge(i)
+        charged_relax = relax_maker.make(charged_struct, prev_vasp_dir=prev_vasp_dir)
+        charged_relax.append_name(suffix)
+        jobs.append(charged_relax)
+        outputs.append(
+            {
+                "structure": charged_relax.output.structure,
+                "energy": charged_relax.output.energy,
+                "dir_name": charged_relax.dir_name,
+                "uuid": charged_relax.uuid,
+            }
+        )
+    add_flow = Flow(jobs, outputs)
+    return Response(output=outputs, replace=add_flow)
+
+
+################################################################################
+# Configuration-Coordinate-Diagram (CCD)                                    ####
+################################################################################
 class CCDInput(BaseModel):
     """Document model to help construct CCDDocument."""
 
@@ -93,9 +153,10 @@ def spawn_energy_curve_calcs(
             {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
         )
 
-        static_job.append_name(f"{suffix}")
+        static_job.append_name(suffix)
         jobs.append(static_job)
-        # outputs.append(static_job.output)
+
+        # only pass the information needed by CCDInput to the next job
         task_doc: TaskDocument = static_job.output
         outputs.append(
             dict(
