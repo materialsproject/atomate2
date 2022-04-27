@@ -19,13 +19,33 @@ from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_f
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
-from atomate2.vasp.flows.defect import DEFECT_RELAX_GENERATOR
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
+from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
+
+################################################################################
+# Default settings                                                            ##
+################################################################################
+
+DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
+DEFECT_INCAR_SETTINGS = {
+    "ISMEAR": 0,
+    "SIGMA": 0.05,
+    "KSPACING": None,
+    "ENCUT": 500,
+    "LVHAR": True,
+}
+DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
+
+DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
+    use_structure_charge=True,
+    user_incar_settings=DEFECT_INCAR_SETTINGS,
+    user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
+)
 
 DEFAULT_RELAX_MAKER = RelaxMaker(input_set_generator=DEFECT_RELAX_GENERATOR)
 DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": True})
