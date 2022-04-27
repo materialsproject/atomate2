@@ -92,6 +92,12 @@ class FormationEnergyMaker(Maker):
             )
             defect_calcs.append(defect_job)
 
+        return Flow(
+            jobs=[bulk_relax] + defect_calcs,
+            name=self.name,
+            output={"state": "finished"},
+        )
+
 
 @dataclass
 class ConfigurationCoordinateMaker(Maker):
