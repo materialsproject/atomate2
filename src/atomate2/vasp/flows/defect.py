@@ -8,6 +8,7 @@ from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
 from numpy.typing import NDArray
+from pydantic import Field
 from pymatgen.analysis.defect.core import get_sc_fromstruct
 from pymatgen.analysis.defect.generators import DefectGenerator
 from pymatgen.core.structure import Structure
@@ -74,13 +75,14 @@ class FormationEnergyMaker(Maker):
             input_set_generator=DEFECT_RELAX_GENERATOR,
         )
     )
+    cubic_sc_kwargs: dict = Field({})
 
     def make(self, defect_gen: DefectGenerator, sc_mat: NDArray | None = None):
         """Make a flow to calculate the formation energy diagram."""
         bulk_structure = defect_gen.structure
         self.relax_maker.input_set_generator.user_incar_settings["LVHAR"] = True
         if sc_mat is None:
-            sc_mat = get_sc_fromstruct(bulk_structure)
+            sc_mat = get_sc_fromstruct(bulk_structure, **self.cubic_sc_kwargs)
         bulk_relax: Job = self.relax_maker.make(bulk_structure * sc_mat)
         bulk_relax.name = "bulk relax"
         defect_calcs = []

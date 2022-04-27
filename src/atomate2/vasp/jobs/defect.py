@@ -90,11 +90,12 @@ def perform_defect_calculations(
         charged_relax = relax_maker.make(charged_struct, prev_vasp_dir=prev_vasp_dir)
         charged_relax.append_name(suffix)
         jobs.append(charged_relax)
+        charge_output: TaskDocument = charged_relax.output
         outputs.append(
             {
-                "structure": charged_relax.output.structure,
-                "energy": charged_relax.output.energy,
-                "dir_name": charged_relax.dir_name,
+                "structure": charge_output.structure,
+                "energy": charge_output.output.energy,
+                "dir_name": charge_output.dir_name,
                 "uuid": charged_relax.uuid,
             }
         )
