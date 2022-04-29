@@ -72,7 +72,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
         ref_path = vasp_test_dir / _REF_PATHS[name]
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
-    get_input_set_orig = atomate2.vasp.sets.base.VaspInputSetGenerator.get_input_set
+    get_input_set_orig = VaspInputSetGenerator.get_input_set
 
     def mock_get_input_set(self, *args, **kwargs):
         kwargs["potcar_spec"] = True
