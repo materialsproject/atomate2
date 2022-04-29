@@ -27,7 +27,7 @@ if __name__ == "__main__":
         zip_safe=False,
         include_package_data=True,
         install_requires=[
-            "pymatgen>=2019.11.11",
+            "pymatgen>=2022.3.22",
             "custodian>=2019.8.24",
             "pydantic",
             "monty",
@@ -51,7 +51,7 @@ if __name__ == "__main__":
                 "myst-parser==0.17.2",
             ],
             "tests": [
-                "pytest==7.1.1",
+                "pytest==7.1.2",
                 "pytest-cov==3.0.0",
                 "FireWorks==2.0.2",
                 # "amset==0.4.15",
