@@ -19,7 +19,7 @@ class Atomate2Settings(BaseSettings):
     atomate2 settings.
 
     Lastly, the variables can be modified directly through environment variables by
-    using the "ATOMATE2" prefix. E..g., ATOMATE2_SCRATCH_DIR = path/to/scratch.
+    using the "ATOMATE2" prefix. E.g. ATOMATE2_SCRATCH_DIR = path/to/scratch.
     """
 
     CONFIG_FILE: str = Field(

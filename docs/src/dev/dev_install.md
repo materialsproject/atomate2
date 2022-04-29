@@ -13,23 +13,22 @@ pip install atomate2
 If you are planing to use atomate2 with fireworks, you can install the optional
 fireworks components:
 
-```
+```bash
 pip install atomate2[fireworks]
 ```
 
 We also maintain other dependency sets for different subsets of functionality:
 
-```
+```bash
 pip install atomate2[amset]  # Install requirements for running AMSET calculations
 ```
 
 ## Install from source
 
-To install atomate2 from source, clone the repository from [github](
-(https://github.com/materialsproject/atomate2)
+To install atomate2 from source, clone the repository from [github](https://github.com/materialsproject/atomate2)
 
 ```bash
-git clone https://github.com/materialsproject/atomate2.git
+git clone https://github.com/materialsproject/atomate2
 cd atomate2
 pip install .
 ```

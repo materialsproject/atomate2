@@ -1,4 +1,5 @@
 (installation)=
+
 # Installation
 
 ## Introduction
@@ -7,11 +8,11 @@ This guide will get you up and running in an environment for running high-throug
 workflows with atomate2. atomate2 is built on the pymatgen, custodian, jobflow, and
 FireWorks libraries. Briefly:
 
-- [pymatgen][pymatgen] is used create input files and analyze the output of materials science codes.
-- [custodian][custodian] runs your simulation code (e.g., VASP) and performs error checking/handling
+- [pymatgen] is used create input files and analyze the output of materials science codes.
+- [custodian] runs your simulation code (e.g., VASP) and performs error checking/handling
   and checkpointing.
-- [jobflow][jobflow] is used to design computational workflows.
-- [FireWorks][FireWorks] (optional) is used to manage and execute workflows on HPC machines.
+- [jobflow] is used to design computational workflows.
+- [FireWorks] (optional) is used to manage and execute workflows on HPC machines.
 
 Running and writing your own workflows are covered in later tutorials. For now, these
 topics will be covered in enough depth to get you set up and to help you know where to
@@ -22,7 +23,7 @@ currently in atomate2 pertains to VASP.
 
 [pymatgen]: http://pymatgen.org
 [custodian]: https://materialsproject.github.io/custodian/
-[FireWorks]: https://materialsproject.github.io/fireworks/
+[fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
 
 ### Objectives
@@ -108,8 +109,7 @@ issues later in this tutorial, some options are:
   compute node (you might try, for example, [the mongo-proxy tool](https://github.com/bakks/mongo-proxy).
 - Set up an ssh tunnel to forward connections from allowed machines (the tunnel must
   be kept alive at all times you're running workflows).
- ```
-
+```
 
 ## Create a directory scaffold for atomate2
 
@@ -118,16 +118,16 @@ binaries and libraries. Thus, it is useful to create a directory structure that
 organizes all these items.
 
 1. Log in to the compute cluster and create a directory in a spot on disk that has
-   relatively fast access from compute nodes *and* that is only accessible by yourself
+   relatively fast access from compute nodes _and_ that is only accessible by yourself
    or your collaborators. Your environment and configuration files will go here,
    including database credentials. We will call this place `<<INSTALL_DIR>>`. A good
    name might simply be `atomate2`.
 
-#. Now you should scaffold the rest of your `<<INSTALL_DIR>>` for the things we are
-   going to do next. Run `mkdir -p atomate2/{config,logs}` to create a directories named
-   `logs`, and `config` so your directory structure looks like:
+2. Now you should scaffold the rest of your `<<INSTALL_DIR>>` for the things we are
+   going to do next. Run `mkdir -p atomate2/{config,logs}` to create directories named
+   `logs` and `config` so your directory structure looks like:
 
-```
+```text
 atomate2
 ├── config
 └── logs
@@ -307,7 +307,7 @@ where `<<INSTALL_DIR>>` is your installation directory.
 
 If you're planning to run VASP, the last configuration step is to configure pymatgen to
 (required) find the pseudopotentials for VASP and (optional) set up your API key from
-the [Materials Project][Materials Project].
+the [Materials Project].
 
 ### Pseudopotentials
 
@@ -317,7 +317,7 @@ and then return to this tutorial.
 
 ### Materials Project API key
 
-You can get an API key from the [Materials Project][Materials Project] by logging in and going to your
+You can get an API key from the [Materials Project] by logging in and going to your
 [Dashboard](https://materialsproject.org/dashboard). Add this also to
 your `~/.pmgrc.yaml` so that it looks like the following
 
@@ -326,7 +326,7 @@ PMG_VASP_PSP_DIR: <<INSTALL_DIR>>/pps
 PMG_MAPI_KEY: <<YOUR_API_KEY>>
 ```
 
-[Materials Project]: https://materialsproject.org/dashboard
+[materials project]: https://materialsproject.org/dashboard
 
 ## Run a test workflow
 
@@ -451,7 +451,6 @@ See the following pages for more information on the topics we covered here:
 Check the job error files in the launch directory for any errors. Also check the job
 standard output for a full log of the workflow execution and to check for a Python
 traceback.
-
 
 ### I honestly tried everything I can to solve my problem. I still need help!
 
