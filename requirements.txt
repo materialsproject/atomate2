@@ -3,6 +3,6 @@ pymatgen==2022.4.19
 custodian==2022.2.13
 monty==2022.3.12
 jobflow==0.1.8
-click==8.1.2
+click==8.1.3
 PyYAML==6.0
 numpy
