@@ -41,7 +41,7 @@ if __name__ == "__main__":
             "cclib": ["cclib"],
             "docs": [
                 "sphinx==4.5.0",
-                "numpydoc==1.2.1",
+                "numpydoc==1.3.1",
                 "mistune==0.8.4",
                 "ipython==8.2.0",
                 "FireWorks==2.0.2",
