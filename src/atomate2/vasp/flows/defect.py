@@ -94,7 +94,7 @@ class FormationEnergyMaker(Maker):
             )
             defect_calcs.append(defect_job)
             output[defect.name] = {"defect_obj": defect}
-            output[defect.name]["entries"] = [res for res in defect_job.output]
+            output[defect.name]["charge_states"] = [res for res in defect_job.output]
 
         return Flow(
             jobs=[bulk_relax] + defect_calcs,

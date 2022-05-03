@@ -80,7 +80,7 @@ def perform_defect_calculations(
         A string to add to the end of the calculation name.
     """
     jobs = []
-    outputs = []
+    outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     relax_maker = relax_maker or DEFAULT_RELAX_MAKER
     for i in defect.get_charge_states():
@@ -91,14 +91,12 @@ def perform_defect_calculations(
         charged_relax.append_name(suffix)
         jobs.append(charged_relax)
         charge_output: TaskDocument = charged_relax.output
-        outputs.append(
-            {
-                "structure": charge_output.structure,
-                "energy": charge_output.output.energy,
-                "dir_name": charge_output.dir_name,
-                "uuid": charged_relax.uuid,
-            }
-        )
+        outputs[i] = {
+            "structure": charge_output.structure,
+            "energy": charge_output.output.energy,
+            "dir_name": charge_output.dir_name,
+            "uuid": charged_relax.uuid,
+        }
     add_flow = Flow(jobs, outputs)
     return Response(output=outputs, replace=add_flow)
 
