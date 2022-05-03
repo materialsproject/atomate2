@@ -101,7 +101,7 @@ class FormationEnergyMaker(Maker):
         output = self.store_outputs(defect_res)
 
         return Flow(
-            jobs=[bulk_relax] + defect_calcs + [],
+            jobs=[bulk_relax] + defect_calcs + [output],
             name=self.name,
             output=output,
         )
