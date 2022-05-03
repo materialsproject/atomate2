@@ -84,7 +84,7 @@ class FormationEnergyMaker(Maker):
         bulk_relax: Job = self.relax_maker.make(bulk_structure * sc_mat)
         bulk_relax.name = "bulk relax"
         defect_calcs = []
-        output = dict()  # nested defect_name.charge_state
+        defect_res = dict()  # nested defect_name.charge_state
         defect: Defect
         for i, defect in enumerate(defect_gen):
             defect_job = perform_defect_calculations(
@@ -93,14 +93,23 @@ class FormationEnergyMaker(Maker):
                 prev_vasp_dir=bulk_relax.output.dir_name,
             )
             defect_calcs.append(defect_job)
-            output[defect.name] = {"defect_obj": defect}
-            output[defect.name]["charge_states"] = [res for res in defect_job.output]
+            defect_res[defect.name] = {"defect_obj": defect}
+            defect_res[defect.name]["charge_states"] = [
+                res for res in defect_job.output
+            ]
+
+        output = self.store_outputs(defect_res)
 
         return Flow(
-            jobs=[bulk_relax] + defect_calcs,
+            jobs=[bulk_relax] + defect_calcs + [],
             name=self.name,
             output=output,
         )
+
+    @job
+    def store_outputs(self, output) -> None:
+        """Store the outputs of the formation energy calculation."""
+        return output
 
 
 @dataclass
