@@ -18,6 +18,10 @@ logger = logging.getLogger(__name__)
 __all__ = ["CCDDocument", "WSWQ", "FiniteDifferenceDocument"]
 
 
+class DefectCalcSummary(BaseModel):
+    defect_entries: List[ComputedStructureEntry]
+
+
 class FiniteDifferenceDocument(BaseModel):
     """Collection of computed WSWQ objects using a single ref WAVECAR and a list of distorted WAVECARs."""
 

@@ -8,7 +8,7 @@ from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
 from numpy.typing import NDArray
-from pymatgen.analysis.defect.core import get_sc_fromstruct
+from pymatgen.analysis.defect.core import Defect, get_sc_fromstruct
 from pymatgen.analysis.defect.generators import DefectGenerator
 from pymatgen.core.structure import Structure
 
@@ -84,6 +84,8 @@ class FormationEnergyMaker(Maker):
         bulk_relax: Job = self.relax_maker.make(bulk_structure * sc_mat)
         bulk_relax.name = "bulk relax"
         defect_calcs = []
+        output = dict()  # nested defect_name.charge_state
+        defect: Defect
         for i, defect in enumerate(defect_gen):
             defect_job = perform_defect_calculations(
                 defect,
@@ -91,11 +93,13 @@ class FormationEnergyMaker(Maker):
                 prev_vasp_dir=bulk_relax.output.dir_name,
             )
             defect_calcs.append(defect_job)
+            output[defect.name] = {"defect_obj": defect}
+            output[defect.name]["entries"] = [res for res in defect_job.output]
 
         return Flow(
             jobs=[bulk_relax] + defect_calcs,
             name=self.name,
-            output={"state": "finished"},
+            output=output,
         )
 
 
