@@ -16,6 +16,7 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     FiniteDifferenceMaker,
+    collect_outputs,
     get_ccd_documents,
     perform_defect_calculations,
     spawn_energy_curve_calcs,
@@ -93,12 +94,13 @@ class FormationEnergyMaker(Maker):
                 prev_vasp_dir=bulk_relax.output.dir_name,
             )
             defect_calcs.append(defect_job)
-            output[defect.name] = defect_job.output
+            output[f"defect.name_{i}"] = defect_job.output
 
+        collected = collect_outputs(output)
         return Flow(
             jobs=[bulk_relax] + defect_calcs,
             name=self.name,
-            output=output,
+            output=collected,
         )
 
 

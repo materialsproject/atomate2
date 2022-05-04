@@ -91,19 +91,21 @@ def perform_defect_calculations(
         charged_relax.append_name(suffix)
         jobs.append(charged_relax)
         charge_output: TaskDocument = charged_relax.output
+
         outputs[i] = {
             "structure": charge_output.structure,
-            "energy": charge_output.output.energy,
+            "entry": charge_output.entry,
             "dir_name": charge_output.dir_name,
             "uuid": charged_relax.uuid,
         }
-    summary = get_summary(outputs)
+
+    summary = get_summary(defect, outputs)
     add_flow = Flow(jobs + [summary], outputs)
     return Response(output=summary, replace=add_flow)
 
 
 @job
-def get_summary(defect_res: dict):
+def get_summary(defect: Defect, entries: dict):
     """Get a summary of the calculations for all charge states of one defect.
 
     Parameters
@@ -111,7 +113,22 @@ def get_summary(defect_res: dict):
     defect_res
         A dictionary of defect calculations.
     """
-    return defect_res
+    results = {"defect": defect, "outputs": dict()}
+    for q, d in entries.items():
+        results["outputs"][q] = d
+    return results
+
+
+@job
+def collect_outputs(outputs: dict):
+    """Collect all the outputs from the defect calculations.
+
+    Parameters
+    ----------
+    defect_res
+        A dictionary of defect calculations.
+    """
+    return outputs
 
 
 ################################################################################
