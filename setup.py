@@ -40,15 +40,13 @@ if __name__ == "__main__":
             "amset": ["amset>=0.4.15", "pydash"],
             "cclib": ["cclib"],
             "docs": [
-                "sphinx==4.5.0",
                 "numpydoc==1.3.1",
                 "mistune==0.8.4",
                 "ipython==8.3.0",
                 "FireWorks==2.0.3",
-                "pydata-sphinx-theme==0.8.1",
                 "autodoc_pydantic==1.6.2",
-                "sphinx_panels==0.6.0",
                 "myst-parser==0.17.2",
+                "jupyter-book==0.12.3",
             ],
             "tests": [
                 "pytest==7.1.2",

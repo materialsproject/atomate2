@@ -1,4 +1,4 @@
-# Installation
+# Developer Installation
 
 You can install atomate2 with `pip` or from source.
 

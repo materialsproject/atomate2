@@ -36,13 +36,13 @@ currently in atomate2 pertains to VASP.
 Completing everything on this checklist should result in a fully functioning
 environment.
 
-1. [](#prerequisites)
-1. [](#create-a-directory-scaffold-for-atomate2)
-1. [](#create-a-conda-environment)
-1. [](#install-python-packages)
-1. [](#configure-calculation-output-database)
-1. [](#configure-pymatgen)
-1. [](#run-a-test-workflow)
+1. [Prerequisites](#prerequisites)
+1. [Create a directory scaffold](#create-a-directory-scaffold-for-atomate2)
+1. [Create a conda environment](#create-a-conda-environment)
+1. [Install Python packages](#install-python-packages)
+1. [Configure output database](#configure-calculation-output-database)
+1. [Configure pymatgen](#configure-pymatgen)
+1. [Run a test workflow](#run-a-test-workflow)
 
 ## Prerequisites
 
