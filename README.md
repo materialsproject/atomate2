@@ -73,9 +73,9 @@ run_locally(bandstructure_flow, create_folders=True)
 
 Before the above code can run successfully, you'll need to
 
-- set `PMG_VASP_PSP_DIR` in `~/.pmgrc.yaml` to a directory with VASP POTCAR files,
-- tell atomate2 where to find your VASP binary,
-- have a MongoDB instance ready to accept job output.
+- tell pymatgen where to [find your pseudopotential files](https://pymatgen.org/installation.html#potcar-setup)
+- tell atomate2 where to find your VASP binary
+- (optionally) prepare an external database to store the job output
 
 See the [installation] steps for details how to set all of this up.
 
