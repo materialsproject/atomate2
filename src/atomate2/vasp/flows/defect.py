@@ -17,6 +17,7 @@ from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     FiniteDifferenceMaker,
     get_ccd_documents,
+    get_summary,
     perform_defect_calculations,
     spawn_energy_curve_calcs,
 )
@@ -84,32 +85,23 @@ class FormationEnergyMaker(Maker):
         bulk_relax: Job = self.relax_maker.make(bulk_structure * sc_mat)
         bulk_relax.name = "bulk relax"
         defect_calcs = []
-        defect_res = dict()  # nested defect_name.charge_state
         defect: Defect
+        output = dict()
         for i, defect in enumerate(defect_gen):
             defect_job = perform_defect_calculations(
                 defect,
                 sc_mat=sc_mat,
                 prev_vasp_dir=bulk_relax.output.dir_name,
             )
-            defect_calcs.append(defect_job)
-            defect_res[defect.name] = {"defect_obj": defect}
-            defect_res[defect.name]["charge_states"] = [
-                res for res in defect_job.output
-            ]
-
-        output = self.store_outputs(defect_res)
+            summary_job = get_summary(defect_job.output)
+            defect_calcs.extend([defect_job, summary_job])
+            output[defect.name] = summary_job.output
 
         return Flow(
-            jobs=[bulk_relax] + defect_calcs + [output],
+            jobs=[bulk_relax] + defect_calcs,
             name=self.name,
             output=output,
         )
-
-    @job
-    def store_outputs(self, output) -> None:
-        """Store the outputs of the formation energy calculation."""
-        return output
 
 
 @dataclass

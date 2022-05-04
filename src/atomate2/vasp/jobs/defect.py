@@ -101,6 +101,18 @@ def perform_defect_calculations(
     return Response(output=outputs, replace=add_flow)
 
 
+@job
+def get_summary(defect_res: dict):
+    """Get a summary of the calculations for all charge states of one defect.
+
+    Parameters
+    ----------
+    defect_res
+        A dictionary of defect calculations.
+    """
+    return defect_res
+
+
 ################################################################################
 # Configuration-Coordinate-Diagram (CCD)                                    ####
 ################################################################################
