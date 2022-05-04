@@ -45,7 +45,6 @@ if __name__ == "__main__":
                 "ipython==8.3.0",
                 "FireWorks==2.0.3",
                 "autodoc_pydantic==1.6.2",
-                "myst-parser==0.17.2",
                 "jupyter-book==0.12.3",
             ],
             "tests": [
