@@ -98,7 +98,7 @@ class FormationEnergyMaker(Maker):
 
         collect = collect_outputs(output)
         return Flow(
-            jobs=[bulk_relax] + defect_calcs + [collect],
+            jobs=[bulk_relax] + defect_calcs + collect,
             name=self.name,
             output=collect.output,
         )

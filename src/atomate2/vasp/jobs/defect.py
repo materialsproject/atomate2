@@ -120,7 +120,7 @@ def get_summary(defect: Defect, entries: dict):
 
 
 @job
-def collect_outputs(outputs: dict):
+def collect_outputs(outputs: dict) -> dict:
     """Collect all the outputs from the defect calculations.
 
     Parameters
