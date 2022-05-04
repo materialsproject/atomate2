@@ -96,11 +96,11 @@ class FormationEnergyMaker(Maker):
             defect_calcs.append(defect_job)
             output[f"defect.name_{i}"] = defect_job.output
 
-        collected = collect_outputs(output)
+        collect = collect_outputs(output)
         return Flow(
-            jobs=[bulk_relax] + defect_calcs,
+            jobs=[bulk_relax] + defect_calcs + collect,
             name=self.name,
-            output=collected,
+            output=collect.output,
         )
 
 
