@@ -23,6 +23,7 @@ html:
   use_edit_page_button: true
   use_repository_button: true
   use_issues_button: true
+  search_bar_text: "Search the docs..."
   baseurl: https://materialsproject.github.io/atomate2/
 
 repository:
