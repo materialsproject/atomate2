@@ -97,8 +97,9 @@ def perform_defect_calculations(
             "dir_name": charge_output.dir_name,
             "uuid": charged_relax.uuid,
         }
-    add_flow = Flow(jobs, outputs)
-    return Response(output=outputs, detour=add_flow)
+    summary = get_summary(outputs)
+    add_flow = Flow(jobs + [summary], outputs)
+    return Response(output=summary, replace=add_flow)
 
 
 @job

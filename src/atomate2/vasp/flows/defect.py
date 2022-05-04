@@ -17,7 +17,6 @@ from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     FiniteDifferenceMaker,
     get_ccd_documents,
-    get_summary,
     perform_defect_calculations,
     spawn_energy_curve_calcs,
 )
@@ -93,9 +92,8 @@ class FormationEnergyMaker(Maker):
                 sc_mat=sc_mat,
                 prev_vasp_dir=bulk_relax.output.dir_name,
             )
-            summary_job = get_summary(defect_job.output)
-            defect_calcs.extend([defect_job, summary_job])
-            output[defect.name] = summary_job.output
+            defect_calcs.append(defect_job)
+            output[defect.name] = defect_job.output
 
         return Flow(
             jobs=[bulk_relax] + defect_calcs,
