@@ -51,8 +51,6 @@ calculations will be performed:
    band structure).
 
 ```python
-# MgO_bandstructure.py
-
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -67,7 +65,7 @@ mgo_structure = Structure(
 # make a band structure flow to optimise the structure and obtain the band structure
 bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 
-# run the job
+# run the flow
 run_locally(bandstructure_flow, create_folders=True)
 ```
 
