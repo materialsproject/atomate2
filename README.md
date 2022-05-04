@@ -29,9 +29,9 @@ software, but we are actively working on adding more codes.
 Some of the workflows available in atomate2 are:
 
 - electronic band structures
+- elastic, dielectric, and piezoelectric tensors
+- one-shot electron-phonon interactions
 - electronic transport using [AMSET]
-- full elastic tensor
-- dielectric tensor
 
 It is easy to customise and compose any of the above workflows.
 
