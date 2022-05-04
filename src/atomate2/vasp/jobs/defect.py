@@ -98,7 +98,7 @@ def perform_defect_calculations(
             "uuid": charged_relax.uuid,
         }
     add_flow = Flow(jobs, outputs)
-    return Response(output=outputs, replace=add_flow)
+    return Response(output=outputs, detour=add_flow)
 
 
 @job
