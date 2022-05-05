@@ -1,7 +1,7 @@
 #######################################################################################
 # Book settings
 title: "atomate2"
-author: Alex Ganose
+author: the Materials Project
 email: a.ganose@imperial.ac.uk
 description: >- # this means to ignore newlines until "baseurl:"
   Atomate2 documentation.
@@ -25,6 +25,7 @@ html:
   use_issues_button: true
   search_bar_text: "Search the docs..."
   baseurl: https://materialsproject.github.io/atomate2/
+  extra_navbar:
 
 repository:
   url: https://github.com/materialsproject/atomate2
@@ -40,16 +41,16 @@ launch_buttons:
 parse:
   myst_substitutions:
       sub3: My _global_ value!
-  myst_enable_extensions:  # default extensions to enable in the myst parser. See https://myst-parser.readthedocs.io/en/latest/using/syntax-optional.html
+  myst_enable_extensions:
     - amsmath
     - colon_fence
-    - deflist
+    # - deflist
     - dollarmath
     - html_admonition
     - html_image
     - linkify
-    - replacements
-    - smartquotes
+    # - replacements
+    # - smartquotes
     - substitution
 
 latex:

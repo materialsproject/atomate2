@@ -1,6 +1,6 @@
 # atomate2 documentation
 
-**Date**: {sub-ref}`today`  | **Version**: {{ env.config.version }}
+**Date**: {sub-ref}`today`
 
 **Useful links**:
 [Source Repository](https://github.com/materialsproject/atomate2) |
@@ -29,12 +29,12 @@ support forum](https://matsci.org/c/atomate)
 **[API reference](api/index)** 📖
 ^^^
 The [reference guide](api/index) contains a detailed description of the *atomate2* API. It
-assumes  that you have an understanding of the key concepts.
+assumes that you have an understanding of the key concepts.
 
 ---
-**[Developer guide](dev/index)** 👩‍💻
+**[Developer guide](dev/dev_install)** 👩‍💻
 ^^^
-Do you want to develop your own *atomate2* workflows or improve existing functionalities?
-The [developer guide](dev/index) will guide  you through the process.
+Do you want to develop your own workflows or improve existing functionalities?
+Check out the [developer guide](dev/dev_install).
 
 :::
