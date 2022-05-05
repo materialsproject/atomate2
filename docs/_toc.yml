@@ -8,7 +8,7 @@ parts:
   chapters:
   - file: user/index
   - file: user/install
-  - file: user/running-workflow
+  - file: user/running-workflows
   - file: user/fireworks
   - file: user/codes/index
     sections:
@@ -22,7 +22,7 @@ parts:
     - file: dev/vasp_tests
 - caption: About
   chapters:
-    - file: user/changelog
-    - file: user/contributors
-    - file: user/contributing
-    - file: user/license
+    - file: about/changelog
+    - file: about/contributors
+    - file: about/contributing
+    - file: about/license
