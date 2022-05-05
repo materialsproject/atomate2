@@ -75,7 +75,7 @@ documentation = "https://materialsproject.github.io/atomate2/"
 changelog = "https://github.com/hackingmaterials/atomate2/blob/main/docs/about/changelog.md"
 
 [tool.setuptools]
-package-data = {"atomate2" = ["py.typed"]}
+package-data = {"atomate2" = ["py.typed", "*.yaml", "*.json"]}
 
 [tool.versioningit.vcs]
 method = "git"
