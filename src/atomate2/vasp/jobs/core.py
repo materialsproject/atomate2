@@ -560,6 +560,7 @@ class MDMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
+    # TODO expose basic setting of INCAR parameters to user
     name: str = "molecular dynamics"
     input_set_generator: VaspInputSetGenerator = field(default_factory=MDSetGenerator)
 

@@ -193,3 +193,29 @@ def test_transmuter(mock_vasp, clean_dir, si_structure):
     np.testing.assert_allclose(
         output1.structure.lattice.abc, [3.866974, 3.866975, 7.733949]
     )
+
+
+def test_md(mock_vasp, clean_dir, si_structure):
+    from jobflow import run_locally
+
+    from atomate2.vasp.jobs.core import MDMaker
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"molecular dynamics": "Si_md"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"transmuter": {"incar_settings": ["ISMEAR", "NSW"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate transmuter job
+    job = MDMaker(
+        transformations=["SupercellTransformation"],
+        transformation_params=[{"scaling_matrix": ((1, 0, 0), (0, 1, 0), (0, 0, 2))}],
+    ).make(si_structure)
+    job.maker.input_set_generator.user_incar_settings["KSPACING"] = 0.5
+
+    # run the job and ensure that it finished running successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
