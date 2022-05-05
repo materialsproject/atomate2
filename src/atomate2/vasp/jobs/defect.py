@@ -1,4 +1,4 @@
-"""Definition of defect job maker."""
+"""Jobs for defect calculations."""
 
 from __future__ import annotations
 
@@ -44,22 +44,22 @@ def spawn_energy_curve_calcs(
     add_name: str = "",
     add_info: dict | None = None,
 ):
-    """Compute the total energy curve as you distort a reference structure to a distorted structure.
+    """Compute the total energy curve from a reference to distorted structure.
 
     Parameters
     ----------
     relaxed_structure : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the ground (final) state
+        pymatgen structure corresponding to the ground (final) state.
     distorted_structure : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the excited (initial) state
+        pymatgen structure corresponding to the excited (initial) state.
     static_maker : atomate2.vasp.jobs.core.StaticMaker
-        StaticMaker object
+        StaticMaker object.
     distortions : Iterable[float]
-        list of distortions, as a fraction of ΔQ, to apply
+        List of distortions, as a fraction of ΔQ, to apply.
     add_name : str
-        additional name to add to the flow name
+        Additional name to add to the flow name.
     add_info : dict
-        additional info to add to the to a info.json file for each static calculation.
+        Additional info to add to the to a info.json file for each static calculation.
         This data can be used to reconstruct the provenance of the calculation.
 
     Returns
@@ -122,16 +122,16 @@ def get_ccd_documents(
     Parameters
     ----------
     inputs1 : Iterable[CCDInput]
-        List of CCDInput objects
+        List of CCDInput objects.
     inputs2 : Iterable[CCDInput]
-        List of CCDInput objects
+        List of CCDInput objects.
     undistorted_index : int
-        Index of the undistorted structure in the list of distorted structures
+        Index of the undistorted structure in the list of distorted structures.
 
     Returns
     -------
     Response
-        Response object
+        Response object.
     """
     static_uuids1 = [i["uuid"] for i in inputs1]
     static_uuids2 = [i["uuid"] for i in inputs2]
@@ -166,9 +166,9 @@ class FiniteDifferenceMaker(Maker):
     Parameters
     ----------
     name : str
-        Name of the jobs created by this maker
+        Name of the jobs created by this maker.
     run_vasp_kwargs : dict
-        kwargs to pass to run_vasp
+        kwargs to pass to run_vasp.
     """
 
     name: str = "finite diff"
@@ -182,7 +182,7 @@ class FiniteDifferenceMaker(Maker):
             ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc
         )
 
-        """Update the INCAR."""
+        # update the INCAR
         incar = Incar.from_file("INCAR")
         incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
         incar.write_file("INCAR")
