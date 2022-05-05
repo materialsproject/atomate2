@@ -76,9 +76,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pandoc
-        run: sudo apt-get install pandoc
-
       - uses: actions/setup-python@v3
         with:
           python-version: '3.10'
@@ -90,4 +87,4 @@ jobs:
           pip install -e .[docs]
 
       - name: Build
-        run: sphinx-build docs/src docs_build
+        run: jupyter-book build docs --path-output docs_build

@@ -1,4 +1,4 @@
-# Installation
+# Developer Installation
 
 You can install atomate2 with `pip` or from source.
 
@@ -72,5 +72,5 @@ pip install .[docs]
 Next, the docs can be built to the `docs_build` directory:
 
 ```bash
-sphinx-build docs/src docs_build
+jupyter-book build docs --path-output docs_build
 ```
