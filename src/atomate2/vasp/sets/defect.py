@@ -44,7 +44,7 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "IBRION": 2,
+            "IBRION": 1,
             "ISIF": 2,
             "EDIFFG": -0.05,
             "LREAL": False,

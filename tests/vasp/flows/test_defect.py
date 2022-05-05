@@ -127,3 +127,59 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         wswq_p.me_imag = np.array(wswq_p.me_imag)
         assert wswq_p.me_real.shape == (2, 4, 18, 18)
         assert wswq_p.me_imag.shape == (2, 4, 18, 18)
+
+
+def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
+    from jobflow import JobStore, run_locally
+    from maggma.stores.mongolike import MemoryStore
+    from pymatgen.analysis.defect.generators import SubstitutionGenerator
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.flows.defect import FormationEnergyMaker
+    from atomate2.vasp.powerups import (
+        update_user_incar_settings,
+        update_user_kpoints_settings,
+    )
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "bulk relax": "GaN_Mg_defect/bulk_relax",
+        "Mg_Ga 0 q=-2": "GaN_Mg_defect/Mg_Ga_0_q=-2",
+        "Mg_Ga 0 q=-1": "GaN_Mg_defect/Mg_Ga_0_q=-1",
+        "Mg_Ga 0 q=0": "GaN_Mg_defect/Mg_Ga_0_q=0",
+        "Mg_Ga 0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
+    }
+    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    struct_GaN = Structure.from_file(test_dir / "structures" / "GaN.cif")
+    sub_gen = SubstitutionGenerator(structure=struct_GaN, substitutions={"Ga": ["Mg"]})
+
+    maker = FormationEnergyMaker()
+    flow = maker.make(sub_gen, sc_mat=[[2, 2, 0], [2, -2, 0], [0, 0, 1]])
+    flow = update_user_kpoints_settings(flow, {"reciprocal_density": 64})
+    flow = update_user_incar_settings(
+        flow,
+        {
+            "LREAL": "Auto",
+            "ALGO": "Normal",
+            "ENCUT": 500,
+            "GGA": None,
+            "NELMIN": 6,
+            "NCORE": 4,
+            "EDIFFG": -0.1,
+        },
+    )
+
+    # run the flow and ensure that it finished running successfully
+    docs_store = MemoryStore()
+    data_store = MemoryStore()
+    store = JobStore(docs_store, additional_stores={"data": data_store})
+    responses = run_locally(
+        flow,
+        create_folders=True,
+        ensure_success=True,
+        store=store,
+    )
