@@ -99,9 +99,12 @@ sphinx:
       - _static
     html_css_files:
       - custom.css
+      - github.css
     templates_path:
       - "_templates"
       - components
+
+    # pygments_style: github
 
     # autodoc options
     autosummary_imported_members: false

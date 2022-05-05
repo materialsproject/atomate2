@@ -78,7 +78,7 @@ bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 run_locally(bandstructure_flow, create_folders=True)
 ```
 
-(Running the workflow)=
+(running_the_workflow)=
 ### Running the workflow
 
 Similar, to the installation tutorial, now create a job script to execute the workflow.
