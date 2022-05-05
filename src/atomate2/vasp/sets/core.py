@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from pymatgen.core import Structure
+from pymatgen.core.periodic_table import Element
 from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.common.schemas.math import Vector3D
@@ -21,6 +22,7 @@ __all__ = [
     "HSEBSSetGenerator",
     "HSETightRelaxSetGenerator",
     "ElectronPhononSetGenerator",
+    "MDSetGenerator",
 ]
 
 
@@ -773,6 +775,86 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
             A dictionary of updates to apply to the KPOINTS config.
         """
         return {"reciprocal_density": self.reciprocal_density}
+
+
+@dataclass
+class MDSetGenerator(VaspInputSetGenerator):
+    """Class to generate VASP molecular dynamics input sets."""
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a molecular dynamics job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        # TODO is is copied and changed based on pymatgen.io.vasp.sets.MPMDSet,
+        #  dobule check and discuss with others
+        updates = {
+            # expect to be changed by user
+            "NSW": 1000,
+            "ISIF": 0,
+            "MDALGO": 0,
+            "SMASS": 0,
+            "TEBEG": 300,
+            "TEEND": 300,
+            "POTIM": 2,
+            # exepct to be fixed
+            "PREC": "Normal",
+            "IBRION": 0,
+            "LREAL": "Auto",
+            "NELM": 500,
+            "NELMIN": 4,
+            "ISYM": 0,
+            "NBLOCK": 1,
+            "KBLOCK": 100,
+            "LSCALU": False,
+            "LCHARG": False,
+            "LPLANE": False,
+            "LWAVE": True,
+            "LDAU": False,
+            # "ISMEAR": 0,
+            # "EDIFF_PER_ATOM": 0.00001, # TODO deprecated?
+            # "MAXMIX": 20,
+            # "BMIX": 1,
+            # "NSIM": 4,
+            # "ADDGRID": True,
+        }
+
+        # use VASP default ENCUT
+        update["ENCUT"] = None
+
+        if defaults["ISPIN"] == 1:
+            update["MAGMOM"] = None
+
+        # smaller steps for H containing structrue
+        if Element("H") in structure.species:
+            updates["POTIM"] = 0.5
+            # updates["NSW"] = defaults["NSW"] * 4  # TODO not a big deal
+
+        return updates
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
