@@ -587,8 +587,9 @@ class Calculation(BaseModel):
         run_bader
             Whether to run bader on the charge density.
         strip_dos_projections : bool
-            Whether to strip the element and site projections from the density of states.
-            This can help reduce the size of DOS objects in systems with many atoms.
+            Whether to strip the element and site projections from the density of
+            states. This can help reduce the size of DOS objects in systems with many
+            atoms.
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.

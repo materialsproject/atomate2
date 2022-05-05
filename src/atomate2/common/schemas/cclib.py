@@ -91,19 +91,21 @@ class TaskDocument(MoleculeMetadata):
             Whether to store the molecule objects along the course of the relaxation
             trajectory.
         store_input_orientation
-            Whether to store the molecule object as specified in the input file. Note that
-            the initial molecule object is already stored, but it may be re-oriented
-            compared to the input file if the code reorients the input geometry.
+            Whether to store the molecule object as specified in the input file. Note
+            that the initial molecule object is already stored, but it may be
+            re-oriented compared to the input file if the code reorients the input
+            geometry.
         additional_fields
             Dictionary of additional fields to add to TaskDocument.
         analysis
-            The name(s) of any cclib post-processing analysis to run. Note that for bader,
-            ddec6, and hirshfeld, a cube file (.cube, .cub) must be in dir_name.
-            Supports: cpsa, mpa, lpa, bickelhaupt, density, mbo, bader, ddec6, hirshfeld.
+            The name(s) of any cclib post-processing analysis to run. Note that for
+            bader, ddec6, and hirshfeld, a cube file (.cube, .cub) must be in dir_name.
+            Supports: cpsa, mpa, lpa, bickelhaupt, density, mbo, bader, ddec6,
+            hirshfeld.
         proatom_dir
             The path to the proatom directory if ddec6 or hirshfeld analysis are
-            requested. See https://cclib.github.io/methods.html for details. If None, the
-            PROATOM_DIR environment variable must point to the proatom directory.
+            requested. See https://cclib.github.io/methods.html for details. If None,
+            the PROATOM_DIR environment variable must point to the proatom directory.
 
         Returns
         -------
@@ -146,7 +148,7 @@ class TaskDocument(MoleculeMetadata):
         attributes.pop("metadata")
         metadata = jsanitize(cclib_obj.metadata)
 
-        # monty datetime bug workaround: https://github.com/materialsvirtuallab/monty/issues/275
+        # monty datetime bug workaround: github.com/materialsvirtuallab/monty/issues/275
         if metadata.get("wall_time", None):
             metadata["wall_time"] = [str(m) for m in metadata["wall_time"]]
         if metadata.get("cpu_time", None):

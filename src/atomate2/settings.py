@@ -15,8 +15,8 @@ class Atomate2Settings(BaseSettings):
     Settings for atomate2.
 
     The default way to modify these is to modify ~/.atomate2.yaml. Alternatively,
-    the environment variable ATOMATE2_CONFIG_FILE can be set to point to a yaml file with
-    atomate2 settings.
+    the environment variable ATOMATE2_CONFIG_FILE can be set to point to a yaml file
+    with atomate2 settings.
 
     Lastly, the variables can be modified directly through environment variables by
     using the "ATOMATE2" prefix. E.g. ATOMATE2_SCRATCH_DIR = path/to/scratch.
