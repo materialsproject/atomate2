@@ -189,11 +189,6 @@ class FiniteDifferenceMaker(Maker):
 
         d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
 
-        gunzip_files(
-            allow_missing=True,
-            force=True,
-            include_files=["INCAR", "POSCAR", "WAVECAR", "POTCAR", "KPOINTS"],
-        )
         for i, dir_name in enumerate(d_dir_names):
             # Copy a distorted WAVECAR to WAVECAR.qqq
             copy_files(dir_name, include_files=["WAVECAR.gz"], prefix="qqq.")
@@ -201,9 +196,10 @@ class FiniteDifferenceMaker(Maker):
             rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
             run_vasp(**self.run_vasp_kwargs)
-            fc.copy(Path("WSWQ"), f"WSWQ.{i}")
+            fc.copy("WSWQ", f"WSWQ.{i}")
 
-        cur_dir = Path.cwd()
-        fd_doc = FiniteDifferenceDocument.from_directory(cur_dir)
-        gzip_files(cur_dir, force=True)
+        fd_doc = FiniteDifferenceDocument.from_directory(
+            ".", ref_dir=ref_calc_dir, distorted_dirs=d_dir_names
+        )
+        gzip_files(".", force=True)
         return fd_doc
