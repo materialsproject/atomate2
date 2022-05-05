@@ -108,8 +108,8 @@ source = ["src/"]
 [tool.coverage.report]
 skip_covered = true
 show_missing = true
-exclude_lines = '''
-^\s*assert False(,|$)
-if typing.TYPE_CHECKING:
-^\s*@overload( |$)
-'''
+exclude_lines = [
+    '^\s*assert False(,|$)',
+    'if typing.TYPE_CHECKING:',
+    '^\s*@overload( |$)',
+]
