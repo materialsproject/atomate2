@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools >= 42", "versioningit ~= 1.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,6 +8,7 @@ description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
 keywords = ["high-throughput", "automated", "workflow", "dft", "vasp"]
 license = {text = "modified BSD"}
+authors = [{name = "Alex Ganose", email = "alexganose@gmail.com"}]
 dynamic = ["version"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -52,7 +53,7 @@ tests = [
     "pytest-cov==3.0.0",
     "FireWorks==2.0.3",
 ]
-strict_tests = [
+strict = [
     "pydantic==1.9.0",
     "pymatgen==2022.4.26",
     "custodian==2022.2.13",
@@ -67,15 +68,16 @@ strict_tests = [
 [project.scripts]
 atm = "atomate2.cli:cli"
 
+[project.urls]
+homepage = "https://materialsproject.github.io/atomate2/"
+repository = "https://github.com/hackingmaterials/atomate2"
+documentation = "https://materialsproject.github.io/atomate2/"
+changelog = "https://github.com/hackingmaterials/atomate2/blob/main/docs/about/changelog.md"
+
 [tool.setuptools]
 package-data = {"atomate2" = ["py.typed"]}
-#authors = ["Alex Ganose <alexganose@gmail.com>"]
-#homepage = "https://materialsproject.github.io/atomate2/"
-#repository = "https://github.com/hackingmaterials/atomate2"
-#documentation = "https://materialsproject.github.io/atomate2/"
 
-[tool.setuptools_scm]
-version_scheme = "python-simplified-semver"
+[tool.versioningit]
 
 [tool.isort]
 profile = "black"
