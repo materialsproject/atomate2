@@ -54,8 +54,8 @@ def spawn_energy_curve_calcs(
         pymatgen structure corresponding to the excited (initial) state
     static_maker : atomate2.vasp.jobs.core.StaticMaker
         StaticMaker object
-    distortions : tuple
-        list of distortions to apply
+    distortions : Iterable[float]
+        list of distortions, as a fraction of ΔQ, to apply
     add_name : str
         additional name to add to the flow name
     add_info : dict

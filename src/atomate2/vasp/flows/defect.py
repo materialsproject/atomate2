@@ -59,7 +59,7 @@ class ConfigurationCoordinateMaker(Maker):
         A maker to perform the single-shot static calculation of the distorted structures.
         If None, the defaults will be used.
     distortions: tuple[float, ...]
-        The distortions to use in the calculation of the configuration coordinate diagram.
+        The distortions, as a fraction of ΔQ, to use in the calculation of the configuration coordinate diagram.
     """
 
     name: str = "config. coordinate"
