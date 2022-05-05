@@ -34,13 +34,13 @@ jobs:
           pip install -e .[docs]
 
       - name: Build
-        run: sphinx-build docs/src docs_build
+        run: jupyter-book build docs --path-output docs_build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./docs_build
+          publish_dir: ./docs_build/_build/html
 
   deploy-pypi:
 

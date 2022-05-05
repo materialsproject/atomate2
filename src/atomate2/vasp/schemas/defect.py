@@ -40,7 +40,10 @@ class FiniteDifferenceDocument(BaseModel):
 
     @classmethod
     def from_directory(
-        cls, directory: str | Path, **kwargs
+        cls,
+        directory: str | Path,
+        ref_dir: str | Path | None = None,
+        distorted_dirs: List[str] | None = None,
     ) -> FiniteDifferenceDocument:
         """
         Read the FintieDiff file.
@@ -49,9 +52,9 @@ class FiniteDifferenceDocument(BaseModel):
         ----------
         directory : str | Path
             Path to the FintieDiff directory.
-        ref_dir : str
+        ref_dir : str | Path
             Directory where the reference W(0) wavefunction comes from.
-        distorted_dirs : List[str]
+        distorted_dirs : List[str | Path]
             List of directories where the distorted W(Q) wavefunctions come from.
 
         Returns
@@ -66,7 +69,12 @@ class FiniteDifferenceDocument(BaseModel):
         for f in ordered_files:
             wswq_documents.append(WSWQ.from_file(f))
 
-        return cls(wswqs=wswq_documents, dir_name=str(wswq_dir), **kwargs)
+        return cls(
+            wswqs=wswq_documents,
+            dir_name=str(wswq_dir),
+            ref_dir=str(ref_dir),
+            distorted_dirs=list(map(str, distorted_dirs)),
+        )
 
 
 class CCDDocument(BaseModel):
