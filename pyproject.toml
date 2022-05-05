@@ -77,7 +77,9 @@ changelog = "https://github.com/hackingmaterials/atomate2/blob/main/docs/about/c
 [tool.setuptools]
 package-data = {"atomate2" = ["py.typed"]}
 
-[tool.versioningit]
+[tool.versioningit.vcs]
+method = "git"
+default-tag = "0.0.1"
 
 [tool.isort]
 profile = "black"
