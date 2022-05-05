@@ -99,8 +99,8 @@ no_strict_optional = true
 
 [tool.coverage.run]
 include = "src/*"
-parallel = 1
-branch = 1
+parallel = true
+branch = true
 
 [tool.coverage.paths]
 source = "src/"
