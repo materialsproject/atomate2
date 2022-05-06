@@ -370,7 +370,7 @@ class CalculationOutput(BaseModel):
         description="Frequency-dependent dielectric information from an LOPTICS "
         "calculation",
     )
-    ionic_steps: List[Dict[str, Any]] = Field(
+    ionic_steps: List[IonicStep] = Field(
         None, description="Energy, forces, and structure for each ionic step"
     )
     locpot: Dict[int, List[float]] = Field(

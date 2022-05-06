@@ -206,8 +206,8 @@ class OutputSummary(BaseModel):
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
-            forces=calc_doc.output.ionic_steps[-1].get("forces", None),
-            stress=calc_doc.output.ionic_steps[-1].get("stress", None),
+            forces=calc_doc.output.ionic_steps[-1].forces,
+            stress=calc_doc.output.ionic_steps[-1].stress,
         )
 
 
@@ -512,7 +512,7 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
 
 def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     """Get max force acting on atoms from a calculation document."""
-    forces = calc_doc.output.ionic_steps[-1].get("forces")
+    forces: Optional[Union[np.ndarray, List]] = calc_doc.output.ionic_steps[-1].forces
     structure = calc_doc.output.structure
     if forces:
         forces = np.array(forces)
