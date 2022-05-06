@@ -781,6 +781,9 @@ class ElectronPhononSetGenerator(VaspInputSetGenerator):
 class MDSetGenerator(VaspInputSetGenerator):
     """Class to generate VASP molecular dynamics input sets."""
 
+    ensemble: str = "nvt"
+    auto_ispin: bool = True
+
     def get_incar_updates(
         self,
         structure: Structure,
@@ -810,51 +813,64 @@ class MDSetGenerator(VaspInputSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        # TODO is is copied and changed based on pymatgen.io.vasp.sets.MPMDSet,
+        updates = self._get_ensemble_defaults(self.ensemble)
+
+        # TODO params copied and changed based on pymatgen.io.vasp.sets.MPMDSet,
         #  dobule check and discuss with others
-        updates = {
-            # expect to be changed by user
-            "NSW": 1000,
-            "ISIF": 0,
-            "MDALGO": 0,
-            "SMASS": 0,
-            "TEBEG": 300,
-            "TEEND": 300,
-            "POTIM": 2,
-            # exepct to be fixed
-            "PREC": "Normal",
-            "IBRION": 0,
-            "LREAL": "Auto",
-            "NELM": 500,
-            "NELMIN": 4,
-            "ISYM": 0,
-            "NBLOCK": 1,
-            "KBLOCK": 100,
-            "LSCALU": False,
-            "LCHARG": False,
-            "LPLANE": False,
-            "LWAVE": True,
-            "LDAU": False,
-            # "ISMEAR": 0,
-            # "EDIFF_PER_ATOM": 0.00001, # TODO deprecated?
-            # "MAXMIX": 20,
-            # "BMIX": 1,
-            # "NSIM": 4,
-            # "ADDGRID": True,
-        }
+        updates.update(
+            {
+                "NSW": 1000,
+                "TEBEG": 300,
+                "TEEND": 300,
+                "POTIM": 2,
+                "ENCUT": None,  # None use VASP default ENCUT
+                "PREC": "Normal",
+                "IBRION": 0,
+                "LREAL": "Auto",
+                "NELM": 500,
+                "NELMIN": 4,
+                "ISYM": 0,
+                "NBLOCK": 1,
+                "KBLOCK": 100,
+                "LSCALU": False,
+                "LCHARG": False,
+                "LPLANE": False,
+                "LWAVE": True,
+                "LDAU": False,
+                # "ISMEAR": 0,
+                # "EDIFF_PER_ATOM": 0.00001, # TODO deprecated?
+                # "MAXMIX": 20,
+                # "BMIX": 1,
+                # "NSIM": 4,
+                # "ADDGRID": True,
+            }
+        )
 
-        # use VASP default ENCUT
-        update["ENCUT"] = None
-
-        if defaults["ISPIN"] == 1:
-            update["MAGMOM"] = None
-
-        # smaller steps for H containing structrue
         if Element("H") in structure.species:
             updates["POTIM"] = 0.5
-            # updates["NSW"] = defaults["NSW"] * 4  # TODO not a big deal
 
         return updates
+
+    def _get_ensemble_defaults(self, ensemble: str) -> Dict[str, Any]:
+        """
+        Get default params for the ensemble.
+        """
+
+        if ensemble.lower() == "nve":
+            defaults = {"MDALGO": 1, "ISIF": 0, "ANDERSEN_PROB": 0.0}
+        elif ensemble.lower() == "nvt":
+            defaults = {"MDALGO": 2, "ISIF": 2, "SMASS": 0}
+        elif ensemble.lower() == "npt":
+            defaults = {"MDALGO": 3, "ISIF": 3}
+        elif ensemble.lower() == "nph":
+            defaults = {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0}
+        else:
+            supported = ("nve", "nvt", "npt", "nph")
+            raise ValueError(
+                f"Expect `ensemble` to be one of {supported}; got {ensemble}."
+            )
+
+        return defaults
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
