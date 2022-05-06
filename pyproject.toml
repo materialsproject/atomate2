@@ -99,6 +99,15 @@ rst-roles = "class, func, ref, obj"
 ignore_missing_imports = true
 no_strict_optional = true
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:.*POTCAR.*:UserWarning",
+    "ignore:.*magmom.*:UserWarning",
+    "ignore:.*is not gzipped.*:UserWarning",
+    "ignore:.*input structure.*:UserWarning",
+    "ignore::DeprecationWarning",
+]
+
 [tool.coverage.run]
 include = ["src/*"]
 parallel = true
