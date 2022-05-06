@@ -30,17 +30,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .[docs]
+          pip install .[strict]
+          pip install .[docs]
 
       - name: Build
-        run: sphinx-build docs/src docs_build
+        run: jupyter-book build docs --path-output docs_build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./docs_build
+          publish_dir: ./docs_build/_build/html
 
   deploy-pypi:
 
@@ -59,8 +59,8 @@ jobs:
 
       - name: Build
         run: |
-          pip install setuptools setuptools_scm wheel
-          python setup.py sdist bdist_wheel
+          pip install build
+          python -m build
 
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -80,7 +80,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Write release info
-        run: awk 'BEGIN {p = 0} {a = 0 }; /^v\d*.\d*.\d*./ { p += 1; a = 1}; p + a == 1 { print } ' docs/src/user/changelog.rst | sed -e '1,1d' | sed  -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' > release_info.txt
+        run: awk 'BEGIN {p = 0} {a = 0 }; /^v\d*.\d*.\d*./ { p += 1; a = 1}; p + a == 1 { print } ' docs/about/changelog.md | sed -e '1,1d' | sed  -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' > release_info.txt
 
       - name: Release
         uses: actions/create-release@v1

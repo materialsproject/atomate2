@@ -47,6 +47,12 @@ class SymmetryData(BaseModel):
         None, title="Point Group Symbol", description="The point group for the lattice"
     )
 
+    hall: str = Field(
+        None,
+        title="Hall Space Group Symbol",
+        description="The Hall spacegroup symbol for the lattice",
+    )
+
     symprec: float = Field(
         None,
         title="Symmetry Finding Precision",

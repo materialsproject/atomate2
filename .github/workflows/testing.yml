@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install .[strict]
           pip install .[tests]
           pip install .[dev]
 
@@ -57,9 +57,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-optional.txt
-        pip install .[tests]
+          pip install .[strict]
+          pip install .[tests]
+          pip install .[docs]
 
     - name: Test
       run: pytest --cov=atomate2 --cov-report=xml
@@ -76,9 +76,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pandoc
-        run: sudo apt-get install pandoc
-
       - uses: actions/setup-python@v3
         with:
           python-version: '3.10'
@@ -86,8 +83,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .[docs]
+          pip install .[strict]
+          pip install .[docs]
 
       - name: Build
-        run: sphinx-build docs/src docs_build
+        run: jupyter-book build docs --path-output docs_build

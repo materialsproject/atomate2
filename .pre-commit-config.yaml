@@ -1,6 +1,7 @@
+exclude: '^src/atomate2/vasp/schemas/calc_types/'
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.1.0
+  rev: v4.2.0
   hooks:
   - id: check-yaml
   - id: fix-encoding-pragma
@@ -35,8 +36,11 @@ repos:
   rev: 3.9.2
   hooks:
   - id: flake8
+    entry: pflake8
     files: ^src/
     additional_dependencies:
+    - pyproject-flake8==v0.0.1a4
+    - flake8-bugbear==22.4.25
     - flake8-typing-imports==1.10.1
     - flake8-docstrings==1.6.0
     - flake8-rst-docstrings==0.2.3
@@ -49,7 +53,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.942
+  rev: v0.950
   hooks:
   - id: mypy
     files: ^src/
@@ -57,3 +61,9 @@ repos:
     - tokenize-rt==4.1.0
     - types-pkg_resources==0.1.2
     - types-paramiko
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.1.0
+  hooks:
+  - id: codespell
+    stages: [commit, commit-msg]
+    args: [--ignore-words-list, 'titel,statics,ba,nd,te']

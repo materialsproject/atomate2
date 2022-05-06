@@ -1,6 +1,31 @@
 Change log
 ==========
 
+v0.0.7
+------
+
+New features:
+
+- Include band-related features (e.g. band center, bandwidth, skewness, kurtosis) in
+  VASP schema ([@arosen93](https://github.com/arosen93), [#92](https://github.com/materialsproject/atomate2/pull/92))
+- Add `use_auto_ispin` and `update_user_potcar_functional` powerups
+
+Enhancements:
+
+- Add `is_hubbard` and `hubbards` to VASP task doc.
+- Migrate build system to pyproject.toml.
+- Migrate docs to jupyter-book.
+- Docs improvements ([@janosh](https://github.com/janosh), [@mjwen](https://github.com/mjwen))
+
+Bug fixes:
+
+- Fix HSE tags.
+- Fix running bader.
+- Make potcar_spec argument usable ([@jmmshn](https://github.com/jmmshn), [#83](https://github.com/materialsproject/atomate2/pull/83))
+- Replace monty which with shutil which ([@arosen93](https://github.com/arosen93), [#92](https://github.com/materialsproject/atomate2/pull/92))
+- Fix `calculate_deformation_potentials()` ([@janosh](https://github.com/janosh), [#94](https://github.com/materialsproject/atomate2/pull/94))
+- Fix gzipping of files with numerical suffixes ([@jmmshn](https://github.com/jmmshn), [#116](https://github.com/materialsproject/atomate2/pull/116))
+
 v0.0.6
 ------
 
@@ -21,7 +46,6 @@ Bug fixes:
 - Fixed atomate2 version string.
 - Disabled orbital projections in the electron-phonon workflow.
 
-
 v0.0.5
 ------
 
@@ -40,7 +64,6 @@ Bug fixes:
 - Fix bug with Fermi level and IBRION=1
 - Better handling of URI generation.
 - Tweak k-spacing formula to stop large band gaps giving negative values
-
 
 v0.0.4
 ------

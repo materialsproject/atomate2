@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from jobflow.utils import ValueEnum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Extra, Field
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.core.lattice import Lattice
@@ -47,6 +47,9 @@ __all__ = [
     "CalculationOutput",
     "RunStatistics",
     "Calculation",
+    "IonicStep",
+    "ElectronicStep",
+    "ElectronPhononDisplacedStructures",
 ]
 
 
@@ -281,6 +284,42 @@ class ElectronPhononDisplacedStructures(BaseModel):
     )
 
 
+class ElectronicStep(BaseModel, extra=Extra.allow):  # type: ignore
+    """Document defining the information at each electronic step.
+
+    Note, not all the information will be available at every step.
+    """
+
+    alphaZ: float = Field(None, description="The alpha Z term.")
+    ewald: float = Field(None, description="The ewald energy.")
+    hartreedc: float = Field(None, description="Negative Hartree energy.")
+    XCdc: float = Field(None, description="Negative exchange energy.")
+    pawpsdc: float = Field(
+        None, description="Negative potential energy with exchange-correlation energy."
+    )
+    pawaedc: float = Field(None, description="The PAW double counting term.")
+    eentropy: float = Field(None, description="The entropy (T * S).")
+    bandstr: float = Field(None, description="The band energy (from eigenvalues).")
+    atom: float = Field(None, description="The atomic energy.")
+    e_fr_energy: float = Field(None, description="The free energy.")
+    e_wo_entrp: float = Field(None, description="The energy without entropy.")
+    e_0_energy: float = Field(None, description="The internal energy.")
+
+
+class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
+    """Document defining the information at each ionic step."""
+
+    e_fr_energy: float = Field(None, description="The free energy.")
+    e_wo_entrp: float = Field(None, description="The energy without entropy.")
+    e_0_energy: float = Field(None, description="The internal energy.")
+    forces: List[Vector3D] = Field(None, description="The forces on each atom.")
+    stress: List[Vector3D] = Field(None, description="The stress on the lattice.")
+    electronic_steps: List[ElectronicStep] = Field(
+        None, description="The electronic convergence steps."
+    )
+    structure: Structure = Field(None, description="The structure at this step.")
+
+
 class CalculationOutput(BaseModel):
     """Document defining VASP calculation outputs."""
 
@@ -331,7 +370,7 @@ class CalculationOutput(BaseModel):
         description="Frequency-dependent dielectric information from an LOPTICS "
         "calculation",
     )
-    ionic_steps: List[Dict[str, Any]] = Field(
+    ionic_steps: List[IonicStep] = Field(
         None, description="Energy, forces, and structure for each ionic step"
     )
     locpot: Dict[int, List[float]] = Field(
@@ -587,8 +626,9 @@ class Calculation(BaseModel):
         run_bader
             Whether to run bader on the charge density.
         strip_dos_projections : bool
-            Whether to strip the element and site projections from the density of states.
-            This can help reduce the size of DOS objects in systems with many atoms.
+            Whether to strip the element and site projections from the density of
+            states. This can help reduce the size of DOS objects in systems with many
+            atoms.
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
