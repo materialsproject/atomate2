@@ -187,7 +187,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     )
 
     results = responses[flow.jobs[-1].uuid][1].output
-    res_defect = results["Mg_Ga-0"]["defect"]
+    res_defect = results["defect_calcs"]["Mg_Ga-0"]["defect"]
     assert isinstance(res_defect, Defect)
-    for q, r_dict in results["Mg_Ga-0"]["results"].items():
+    for q, r_dict in results["defect_calcs"]["Mg_Ga-0"]["results"].items():
         assert isinstance(r_dict["entry"], ComputedStructureEntry)

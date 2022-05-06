@@ -167,11 +167,13 @@ def spawn_defects_calcs(
     Response:
         The response containing the outputs of the defect calculations as a dictionary
     """
+    bulk_summary.sc_entry
+
     defect_calcs = []
-    output = dict()
+    output = dict(bulk_sc_entry=bulk_summary.sc_entry, defect_calcs=dict())
     name_counter: dict = defaultdict(lambda: 0)
 
-    for i, defect in enumerate(defect_gen):
+    for defect in defect_gen:
         defect_job = perform_defect_calcs(
             defect,
             sc_mat=sc_mat,
@@ -179,8 +181,9 @@ def spawn_defects_calcs(
             defect_index=f"{name_counter[defect.name]}",
         )
         defect_calcs.append(defect_job)
-        output[f"{defect.name}-{name_counter[defect.name]}"] = dict(
-            defect=defect, results=defect_job.output
+        output["defect_calcs"][f"{defect.name}-{name_counter[defect.name]}"] = dict(
+            defect=defect,
+            results=defect_job.output,
         )
         name_counter[defect.name] += 1
 
@@ -199,7 +202,7 @@ def perform_defect_calcs(
 
     Parameters
     ----------
-    defect
+    defectsss
         A defect object representing the defect in a unit cell.
     relax_maker
         A RelaxMaker object to use for the atomic relaxation. If None, the default will be used (see DEFAULT_RELAX_MAKER).
@@ -245,11 +248,12 @@ def perform_defect_calcs(
 
 
 @job
-def collect_defect_outputs(defect_calcs_output: dict) -> dict:
+def collect_defect_outputs(spawn_defects_output: dict) -> dict:
     """Collect all the outputs from the defect calculations.
 
     This job will combine the structure and entry fields to create a ComputerStructureEntry object.
     """
+    defect_calcs_output = spawn_defects_output["defect_calcs"]
     for k, v in defect_calcs_output.items():
         for qq, res in v["results"].items():
             structure = res.pop("structure")
@@ -257,7 +261,7 @@ def collect_defect_outputs(defect_calcs_output: dict) -> dict:
             entry_d = entry.as_dict()
             entry_d["structure"] = structure.as_dict()
             res["entry"] = ComputedStructureEntry.from_dict(entry_d)
-    return defect_calcs_output
+    return spawn_defects_output
 
 
 ################################################################################

@@ -96,11 +96,11 @@ class FormationEnergyMaker(Maker):
         )
 
         sc_mat = bulk_job.output.sc_mat
-        defect_calcs = spawn_defects_calcs(defect_gen, sc_mat, bulk_job.output)
-        collect_job = collect_defect_outputs(defect_calcs.output)
+        spawn_output = spawn_defects_calcs(defect_gen, sc_mat, bulk_job.output)
+        collect_job = collect_defect_outputs(spawn_output.output)
 
         return Flow(
-            jobs=[bulk_job, defect_calcs, collect_job],
+            jobs=[bulk_job, spawn_output, collect_job],
             name=self.name,
             output=collect_job.output,
         )
