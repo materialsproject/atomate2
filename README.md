@@ -130,10 +130,10 @@ A full list of all contributors can be found [here][contributors].
 [AMSET]: https://hackingmaterials.lbl.gov/amset/
 [help-forum]: https://matsci.org/c/atomate
 [issues]: https://github.com/materialsproject/atomate2/issues
-[changelog]: https://materialsproject.github.io/atomate2/user/changelog.html
+[changelog]: https://materialsproject.github.io/atomate2/about/changelog.html
 [installation]: https://materialsproject.github.io/atomate2/user/install.html
-[contributing]: https://materialsproject.github.io/atomate2/user/contributing.html
-[contributors]: https://materialsproject.github.io/atomate2/user/contributors.html
+[contributing]: https://materialsproject.github.io/atomate2/about/contributing.html
+[contributors]: https://materialsproject.github.io/atomate2/about/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
