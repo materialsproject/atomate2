@@ -47,7 +47,7 @@ pip install -e .
 
 ### Installing pre-commit
 
-If you're planning on contributing to the atomate2 source, you should also install 
+If you're planning on contributing to the atomate2 source, you should also install
 the developer requirements with:
 
 ```
