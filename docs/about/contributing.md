@@ -1,5 +1,4 @@
-Contributing to atomate2
-========================
+# Contributing to atomate2
 
 We love your input! We want to make contributing to as easy and
 transparent as possible, whether it's:
@@ -10,8 +9,7 @@ transparent as possible, whether it's:
 - Proposing or implementing new features
 - Becoming a maintainer
 
-Reporting bugs, getting help, and discussion
---------------------------------------------
+## Reporting bugs, getting help, and discussion
 
 atomate2 is still in development, so at the moment we
 do not have a dedicated help forum. For the time being, please
@@ -34,8 +32,7 @@ make quick and meaningful fixes. When we confirm your bug report,
 we'll move it to the GitHub issues where its progress can be
 further tracked.
 
-Contributing code modifications or additions through Github
------------------------------------------------------------
+## Contributing code modifications or additions through Github
 
 We use github to host code, to track issues and feature requests,
 as well as accept pull requests. We maintain a list of all
@@ -52,16 +49,15 @@ The basic procedure for making a PR is:
 - When you're finished, go to your fork and make a Pull Request. It will
   automatically update if you need to make further changes.
 
-How to Make a **Great** Pull Request
-------------------------------------
+## How to Make a Great Pull Request
 
 We have a few tips for writing good PRs that are accepted into the main repo:
 
-- Use the Google Code style for all of your code. Find an example [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
+- Use the Numpy Code style for all of your code. Find an example [here](hhttps://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy).
 - Your code should have (4) spaces instead of tabs.
 - If needed, update the documentation.
 - **Write tests** for new features! Good tests are 100%, absolutely necessary
-  for good code. We use the python `unittest` framework -- see some of the
+  for good code. We use the python `pytest` framework -- see some of the
   other tests in this repo for examples, or review the [Hitchhiker's guide
   to python](https://docs.python-guide.org/writing/tests) for some good
   resources on writing good tests.
