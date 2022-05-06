@@ -6,6 +6,15 @@ import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from custodian.vasp.handlers import (
+    FrozenJobErrorHandler,
+    IncorrectSmearingHandler,
+    LargeSigmaHandler,
+    MeshSymmetryErrorHandler,
+    PositiveEnergyErrorHandler,
+    StdErrHandler,
+    VaspErrorHandler,
+)
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.structure import Structure
@@ -562,6 +571,17 @@ class MDMaker(BaseVaspMaker):
 
     name: str = "molecular dynamics"
     input_set_generator: VaspInputSetGenerator = field(default_factory=MDSetGenerator)
+    run_vasp_kwargs: dict = {
+        "handlers": (
+            VaspErrorHandler(),
+            MeshSymmetryErrorHandler(),
+            PositiveEnergyErrorHandler(),
+            FrozenJobErrorHandler(),
+            StdErrHandler(),
+            LargeSigmaHandler(),
+            IncorrectSmearingHandler(),
+        )
+    }
 
 
 def _get_transformations(
