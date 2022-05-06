@@ -202,7 +202,7 @@ def perform_defect_calcs(
 
     Parameters
     ----------
-    defectsss
+    defect23
         A defect object representing the defect in a unit cell.
     relax_maker
         A RelaxMaker object to use for the atomic relaxation. If None, the default will be used (see DEFAULT_RELAX_MAKER).
