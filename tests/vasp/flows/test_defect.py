@@ -132,8 +132,10 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
+    from pymatgen.analysis.defect.core import Defect
     from pymatgen.analysis.defect.generators import SubstitutionGenerator
     from pymatgen.core import Structure
+    from pymatgen.entries.computed_entries import ComputedStructureEntry
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
     from atomate2.vasp.powerups import (
@@ -144,10 +146,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
         "bulk relax": "GaN_Mg_defect/bulk_relax",
-        "Mg_Ga 0 q=-2": "GaN_Mg_defect/Mg_Ga_0_q=-2",
-        "Mg_Ga 0 q=-1": "GaN_Mg_defect/Mg_Ga_0_q=-1",
-        "Mg_Ga 0 q=0": "GaN_Mg_defect/Mg_Ga_0_q=0",
-        "Mg_Ga 0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
+        "relax Mg_Ga-0 q=-2": "GaN_Mg_defect/Mg_Ga_0_q=-2",
+        "relax Mg_Ga-0 q=-1": "GaN_Mg_defect/Mg_Ga_0_q=-1",
+        "relax Mg_Ga-0 q=0": "GaN_Mg_defect/Mg_Ga_0_q=0",
+        "relax Mg_Ga-0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
     }
     fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
 
@@ -183,3 +185,9 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
         ensure_success=True,
         store=store,
     )
+
+    results = responses[flow.jobs[-1].uuid][1].output
+    res_defect = results["Mg_Ga-0"]["defect"]
+    assert isinstance(res_defect, Defect)
+    for q, r_dict in results["Mg_Ga-0"]["results"].items():
+        assert isinstance(r_dict["entry"], ComputedStructureEntry)

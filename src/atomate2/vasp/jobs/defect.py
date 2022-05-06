@@ -3,15 +3,23 @@
 from __future__ import annotations
 
 import logging
+from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable, List
 
+import numpy as np
 from jobflow import Flow, Maker, Response, job
 from numpy.typing import NDArray
 from pydantic import BaseModel
 from pymatgen.analysis.defect.core import Defect
+from pymatgen.analysis.defect.generators import DefectGenerator
+from pymatgen.analysis.defect.supercells import (
+    get_matched_structure_mapping,
+    get_sc_fromstruct,
+)
 from pymatgen.core import Structure
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
 
@@ -25,7 +33,7 @@ from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 ################################################################################
 # Default settings                                                            ##
@@ -56,14 +64,137 @@ DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": Tru
 ################################################################################
 
 
+class BulkSuperCellSummary(BaseModel):
+    """Document model containing information about the bulk supercell calculation."""
+
+    uc_structure: Structure
+    sc_entry: ComputedStructureEntry
+    sc_mat: List[List[float]]
+    dir_name: str
+    uuid: str
+
+
+@job(
+    name="bulk supercell",
+)
+def bulk_supercell_calculation(
+    uc_structure: Structure,
+    relax_maker: RelaxMaker,
+    sc_mat: NDArray | None = None,
+    bulk_info: BulkSuperCellSummary | None = None,
+) -> BulkSuperCellSummary:
+    """Bulk Supercell calculation.
+
+    Check if the information from a bulk supercell calculation has been provided.
+    If not, run a bulk supercell calculation.
+
+    Parameters
+    ----------
+    uc_structure : Structure
+        The unit cell structure.
+    relax_maker : RelaxMaker
+        The relax maker to use.
+    sc_mat : NDArray | None
+        The supercell matrix. if None, the code will attempt to create a nearly-cubic supercell.
+    bulk_info : BulkSuperCellSummary | None
+        The bulk supercell calculation summary. If information from a previous calculation is provided
+        the bulk supercell calculation will be skipped.
+
+    Returns
+    -------
+    dict:
+        The bulk supercell calculation summary.
+    """
+    if bulk_info is not None:
+        sc_structure = bulk_info.sc_entry.structure
+        (map_sc,) = get_matched_structure_mapping(
+            uc_structure, sc_structure
+        )  # TODO: this might need relaxing if too tight
+        summary_d = bulk_info.dict()
+        summary_d["sc_mat"] = map_sc.tolist()
+        summary = summary_d
+        return Response(output=summary)
+    else:
+        _logger.info("Bulk supercell calculation not found. Running...")
+        sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
+        sc_mat = np.array(sc_mat)
+        sc_structure = uc_structure * sc_mat
+        relax_job = relax_maker.make(sc_structure)
+        relax_job.name = "bulk relax"
+        relax_output: TaskDocument = relax_job.output
+
+        summary_d = dict(
+            uc_structure=uc_structure,
+            sc_entry=relax_output.entry,
+            sc_struct=relax_output.structure,
+            sc_mat=sc_mat.tolist(),
+            dir_name=relax_output.dir_name,
+            uuid=relax_job.uuid,
+        )
+
+        summary_job = create_summary(summary_d)  # This feels a little awkward
+        return Response(output=summary_job.output, replace=[relax_job, summary_job])
+
+
+@job(output_schema=BulkSuperCellSummary)
+def create_summary(d: dict) -> BulkSuperCellSummary:
+    """Create a summary from a bulk supercell calculation."""
+    entry = d["sc_entry"]
+    structure = d["sc_struct"]
+    entry_d = entry.as_dict()
+    entry_d["structure"] = structure.as_dict()
+    d["sc_entry"] = ComputedStructureEntry.from_dict(entry_d)
+    return BulkSuperCellSummary(**d)
+
+
 @job
-def perform_defect_calculations(
+def spawn_defects_calcs(
+    defect_gen: DefectGenerator, sc_mat: NDArray, bulk_summary: BulkSuperCellSummary
+) -> Response:
+    """Spawn defect calculations from the DefectGenerator.
+
+    Parameters
+    ----------
+    defect_gen : DefectGenerator
+        The defect generator to use.
+    sc_mat : NDArray
+        The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
+    bulk_summary : BulkSuperCellSummary
+        The bulk supercell calculation summary.
+
+    Returns
+    -------
+    Response:
+        The response containing the outputs of the defect calculations as a dictionary
+    """
+    defect_calcs = []
+    output = dict()
+    name_counter: dict = defaultdict(lambda: 0)
+
+    for i, defect in enumerate(defect_gen):
+        defect_job = perform_defect_calcs(
+            defect,
+            sc_mat=sc_mat,
+            prev_vasp_dir=bulk_summary.dir_name,
+            defect_index=f"{name_counter[defect.name]}",
+        )
+        defect_calcs.append(defect_job)
+        output[f"{defect.name}-{name_counter[defect.name]}"] = dict(
+            defect=defect, results=defect_job.output
+        )
+        name_counter[defect.name] += 1
+
+    return Response(output=output, replace=defect_calcs)
+
+
+@job
+def perform_defect_calcs(
     defect: Defect,
     relax_maker: RelaxMaker | None = None,
     prev_vasp_dir: str | Path | None = None,
     sc_mat: NDArray | None = None,
-    add_name: str = "",
-):
+    defect_index: str = "",
+) -> Response:
     """Perform charge defect supercell calculations and save the Hartree potential.
 
     Parameters
@@ -76,59 +207,57 @@ def perform_defect_calculations(
         The directory containing the previous VASP calculation.
     sc_mat
         The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
-    add_name
-        A string to add to the end of the calculation name.
+    defect_index
+        Additional index to give unique names to the defect calculations.
+
+    Returns
+    -------
+    Response
+        A response object containing the summary of the calculations for different charge states.
+
     """
     jobs = []
     outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     relax_maker = relax_maker or DEFAULT_RELAX_MAKER
-    for i in defect.get_charge_states():
-        suffix = f" q={i}" if add_name == "" else f" {add_name} q={i}"
+    for qq in defect.get_charge_states():
+        suffix = (
+            f" {defect.name} q={qq}"
+            if defect_index == ""
+            else f" {defect.name}-{defect_index} q={qq}"
+        )
         charged_struct = sc_def_struct.copy()
-        charged_struct.set_charge(i)
+        charged_struct.set_charge(qq)
         charged_relax = relax_maker.make(charged_struct, prev_vasp_dir=prev_vasp_dir)
         charged_relax.append_name(suffix)
         jobs.append(charged_relax)
         charge_output: TaskDocument = charged_relax.output
 
-        outputs[i] = {
+        outputs[qq] = {
             "structure": charge_output.structure,
             "entry": charge_output.entry,
             "dir_name": charge_output.dir_name,
             "uuid": charged_relax.uuid,
         }
 
-    summary = get_summary(defect, outputs)
-    add_flow = Flow(jobs + [summary], outputs)
-    return Response(output=summary, replace=add_flow)
+    add_flow = Flow(jobs, output=outputs)
+    return Response(output=outputs, replace=add_flow)
 
 
 @job
-def get_summary(defect: Defect, entries: dict):
-    """Get a summary of the calculations for all charge states of one defect.
-
-    Parameters
-    ----------
-    defect_res
-        A dictionary of defect calculations.
-    """
-    results = {"defect": defect, "outputs": dict()}
-    for q, d in entries.items():
-        results["outputs"][q] = d
-    return results
-
-
-@job
-def collect_outputs(outputs: dict) -> dict:
+def collect_defect_outputs(defect_calcs_output: dict) -> dict:
     """Collect all the outputs from the defect calculations.
 
-    Parameters
-    ----------
-    defect_res
-        A dictionary of defect calculations.
+    This job will combine the structure and entry fields to create a ComputerStructureEntry object.
     """
-    return outputs
+    for k, v in defect_calcs_output.items():
+        for qq, res in v["results"].items():
+            structure = res.pop("structure")
+            entry = res.pop("entry")
+            entry_d = entry.as_dict()
+            entry_d["structure"] = structure.as_dict()
+            res["entry"] = ComputedStructureEntry.from_dict(entry_d)
+    return defect_calcs_output
 
 
 ################################################################################

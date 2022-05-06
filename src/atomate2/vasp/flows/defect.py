@@ -8,17 +8,18 @@ from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
 from numpy.typing import NDArray
-from pymatgen.analysis.defect.core import Defect, get_sc_fromstruct
 from pymatgen.analysis.defect.generators import DefectGenerator
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
+    BulkSuperCellSummary,
     FiniteDifferenceMaker,
-    collect_outputs,
+    bulk_supercell_calculation,
+    collect_defect_outputs,
     get_ccd_documents,
-    perform_defect_calculations,
+    spawn_defects_calcs,
     spawn_energy_curve_calcs,
 )
 from atomate2.vasp.schemas.defect import CCDDocument
@@ -76,31 +77,32 @@ class FormationEnergyMaker(Maker):
         )
     )
 
-    def make(self, defect_gen: DefectGenerator, sc_mat: NDArray | None = None):
-        """Make a flow to calculate the formation energy diagram."""
-        bulk_structure = defect_gen.structure
+    def __post_init__(self):
+        """Post-initialization."""
         self.relax_maker.input_set_generator.user_incar_settings["LVHAR"] = True
-        if sc_mat is None:
-            sc_mat = get_sc_fromstruct(bulk_structure)
-        bulk_relax: Job = self.relax_maker.make(bulk_structure * sc_mat)
-        bulk_relax.name = "bulk relax"
-        defect_calcs = []
-        defect: Defect
-        output = dict()
-        for i, defect in enumerate(defect_gen):
-            defect_job = perform_defect_calculations(
-                defect,
-                sc_mat=sc_mat,
-                prev_vasp_dir=bulk_relax.output.dir_name,
-            )
-            defect_calcs.append(defect_job)
-            output[f"defect.name_{i}"] = defect_job.output
 
-        collect = collect_outputs(output)
+    def make(
+        self,
+        defect_gen: DefectGenerator,
+        bulk_sc_summary: BulkSuperCellSummary | None = None,
+        sc_mat: NDArray | None = None,
+    ):
+        """Make a flow to calculate the formation energy diagram."""
+        bulk_job = bulk_supercell_calculation(
+            uc_structure=defect_gen.structure,
+            relax_maker=self.relax_maker,
+            sc_mat=sc_mat,
+            bulk_info=bulk_sc_summary,
+        )
+
+        sc_mat = bulk_job.output.sc_mat
+        defect_calcs = spawn_defects_calcs(defect_gen, sc_mat, bulk_job.output)
+        collect_job = collect_defect_outputs(defect_calcs.output)
+
         return Flow(
-            jobs=[bulk_relax] + defect_calcs + [collect],
+            jobs=[bulk_job, defect_calcs, collect_job],
             name=self.name,
-            output=collect.output,
+            output=collect_job.output,
         )
 
 
