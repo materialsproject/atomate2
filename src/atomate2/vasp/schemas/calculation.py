@@ -313,7 +313,7 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
     e_wo_entrp: float = Field(None, description="The energy without entropy.")
     e_0_energy: float = Field(None, description="The internal energy.")
     forces: List[Vector3D] = Field(None, description="The forces on each atom.")
-    stress: List[Vector3D] = Field(None, description="The stress on the lattice.")
+    stress: Matrix3D = Field(None, description="The stress on the lattice.")
     electronic_steps: List[ElectronicStep] = Field(
         None, description="The electronic convergence steps."
     )
