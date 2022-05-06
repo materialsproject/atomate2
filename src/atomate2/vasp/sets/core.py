@@ -851,26 +851,53 @@ class MDSetGenerator(VaspInputSetGenerator):
 
         return updates
 
-    def _get_ensemble_defaults(self, ensemble: str) -> Dict[str, Any]:
+    @staticmethod
+    def _get_ensemble_defaults(ensemble: str) -> Dict[str, Any]:
         """
         Get default params for the ensemble.
         """
+        defaults = {
+            "nve": {"MDALGO": 1, "ISIF": 0, "ANDERSEN_PROB": 0.0},
+            "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
+            "npt": {"MDALGO": 3, "ISIF": 3},
+            "nph": {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0},
+        }
 
-        if ensemble.lower() == "nve":
-            defaults = {"MDALGO": 1, "ISIF": 0, "ANDERSEN_PROB": 0.0}
-        elif ensemble.lower() == "nvt":
-            defaults = {"MDALGO": 2, "ISIF": 2, "SMASS": 0}
-        elif ensemble.lower() == "npt":
-            defaults = {"MDALGO": 3, "ISIF": 3}
-        elif ensemble.lower() == "nph":
-            defaults = {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0}
-        else:
-            supported = ("nve", "nvt", "npt", "nph")
+        try:
+            return defaults[ensemble.lower()]
+        except KeyError:
+            supported = tuple(defaults.keys())
             raise ValueError(
                 f"Expect `ensemble` to be one of {supported}; got {ensemble}."
             )
 
-        return defaults
+    def _check_user_incar_settings(self):
+        """
+        Enuser user incar settings do make sense.
+        """
+        expected_settings = {
+            "nve": {"ISIF": [0, 1, 2]},
+            "nvt": {"ISIF": 2},
+            "npt": {"ISIF": 3},
+            "nph": {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0},
+        }
+
+        setting = expected_settings[self.ensemble.lower()]
+        for k, v in setting.items():
+            if k in self.user_incar_settings:
+                user_val = self.user_incar_settings[k]
+                if isinstance(v, list):
+                    if user_val not in v:
+                        raise ValueError(
+                            f"For {self.ensemble} ensemble, expect {k} to be one of "
+                            f"{v}; got {user_val}."
+                        )
+                else:
+                    if user_val != v:
+                        raise ValueError(
+                            f"For {self.ensemble} ensemble, expect {k} to be {v}; got "
+                            f"{user_val}."
+                        )
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
