@@ -253,8 +253,8 @@ def collect_defect_outputs(spawn_defects_output: dict) -> dict:
     This job will combine the structure and entry fields to create a ComputerStructureEntry object.
     """
     defect_calcs_output = spawn_defects_output["defect_calcs"]
-    for k, v in defect_calcs_output.items():
-        for qq, res in v["results"].items():
+    for v in defect_calcs_output.values():
+        for res in v["results"].values():
             structure = res.pop("structure")
             entry = res.pop("entry")
             entry_d = entry.as_dict()

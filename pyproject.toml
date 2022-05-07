@@ -87,8 +87,8 @@ default-tag = "0.0.1"
 profile = "black"
 
 [tool.flake8]
-max-line-length = 88
-max-doc-length = 88
+max-line-length = 125
+max-doc-length = 125
 select = "C, E, F, W, B, B950"
 extend-ignore = "E203, W503, E501, F401, RST21"
 min-python-version = "3.8.0"
