@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable, List
 
-from jobflow import Flow, Maker, Response, job
+from jobflow import Flow, Response, job
 from pydantic import BaseModel
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
@@ -152,10 +151,13 @@ def get_ccd_documents(
     return Response(output=ccd_doc)
 
 
-@dataclass
-class FiniteDifferenceMaker(Maker):
-    """
-    A maker to print and store WSWQ files.
+@job(data=WSWQ, output_schema=FiniteDifferenceDocument)
+def calculate_finitediff(
+    distorted_calc_dirs: List[str],
+    ref_calc_index: int,
+    run_vasp_kwargs: dict | None = None,
+):
+    """Run a post-processing VASP job for the finite difference overlap.
 
     Reads the WAVECAR file and computs the desired quantities.
     This can be used in cases where data from the same calculation is used multiple times.
@@ -165,41 +167,36 @@ class FiniteDifferenceMaker(Maker):
 
     Parameters
     ----------
-    name : str
-        Name of the jobs created by this maker
+    distorted_calc_dirs: List[str]
+        List of directories containing distorted calculations
+    ref_calc_index: int
+        Index of the reference (distortion=0) calculation
     run_vasp_kwargs : dict
-        kwargs to pass to run_vasp
+        kwargs to pass to run_vasp (should be copied from the static maker used for previous calculations)
     """
+    ref_calc_dir = distorted_calc_dirs[ref_calc_index]
+    run_vasp_kwargs = dict() if run_vasp_kwargs is None else run_vasp_kwargs
+    fc = FileClient()
+    copy_vasp_outputs(ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc)
 
-    name: str = "finite diff"
-    run_vasp_kwargs: dict = field(default_factory=dict)
+    """Update the INCAR for WSWQ calculation."""
+    incar = Incar.from_file("INCAR")
+    incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
+    incar.write_file("INCAR")
 
-    @job(data=WSWQ, output_schema=FiniteDifferenceDocument)
-    def make(self, ref_calc_dir: str, distorted_calc_dirs: List[str]):
-        """Run a post-processing VASP job."""
-        fc = FileClient()
-        copy_vasp_outputs(
-            ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc
-        )
+    d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
 
-        """Update the INCAR."""
-        incar = Incar.from_file("INCAR")
-        incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
-        incar.write_file("INCAR")
+    for i, dir_name in enumerate(d_dir_names):
+        # Copy a distorted WAVECAR to WAVECAR.qqq
+        copy_files(dir_name, include_files=["WAVECAR.gz"], prefix="qqq.")
+        gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
+        rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
-        d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
+        run_vasp(**run_vasp_kwargs)
+        fc.copy("WSWQ", f"WSWQ.{i}")
 
-        for i, dir_name in enumerate(d_dir_names):
-            # Copy a distorted WAVECAR to WAVECAR.qqq
-            copy_files(dir_name, include_files=["WAVECAR.gz"], prefix="qqq.")
-            gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
-            rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
-
-            run_vasp(**self.run_vasp_kwargs)
-            fc.copy("WSWQ", f"WSWQ.{i}")
-
-        fd_doc = FiniteDifferenceDocument.from_directory(
-            ".", ref_dir=ref_calc_dir, distorted_dirs=d_dir_names
-        )
-        gzip_files(".", force=True)
-        return fd_doc
+    fd_doc = FiniteDifferenceDocument.from_directory(
+        ".", ref_dir=ref_calc_dir, distorted_dirs=d_dir_names
+    )
+    gzip_files(".", force=True)
+    return fd_doc

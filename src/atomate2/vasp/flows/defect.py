@@ -12,7 +12,7 @@ from pymatgen.core.structure import Structure
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
-    FiniteDifferenceMaker,
+    calculate_finitediff,
     get_ccd_documents,
     spawn_energy_curve_calcs,
 )
@@ -207,7 +207,6 @@ class NonRadiativeMaker(Maker):
 
     ccd_maker: ConfigurationCoordinateMaker
     name: str = "non-radiative"
-    fdiff_maker: FiniteDifferenceMaker = field(default_factory=FiniteDifferenceMaker)
 
     def make(
         self,
@@ -246,19 +245,19 @@ class NonRadiativeMaker(Maker):
         )
         ccd: CCDDocument = flow.output
 
-        dirs0 = ccd.static_dirs1
-        dirs1 = ccd.static_dirs2
-        mid_index0 = len(self.ccd_maker.distortions) // 2
-        mid_index1 = len(self.ccd_maker.distortions) // 2
+        finite_diff_job1 = calculate_finitediff(
+            distorted_calc_dirs=ccd.static_dirs1,
+            ref_calc_index=ccd.relaxed_index1,
+            run_vasp_kwargs=self.ccd_maker.static_maker.run_vasp_kwargs,
+        )
+        finite_diff_job2 = calculate_finitediff(
+            distorted_calc_dirs=ccd.static_dirs2,
+            ref_calc_index=ccd.relaxed_index2,
+            run_vasp_kwargs=self.ccd_maker.static_maker.run_vasp_kwargs,
+        )
 
-        finite_diff_job1 = self.fdiff_maker.make(
-            ref_calc_dir=dirs0[mid_index0], distorted_calc_dirs=dirs0
-        )
-        finite_diff_job2 = self.fdiff_maker.make(
-            ref_calc_dir=dirs1[mid_index1], distorted_calc_dirs=dirs1
-        )
-        finite_diff_job1.append_name(" q1")
-        finite_diff_job2.append_name(" q2")
+        finite_diff_job1.name = "finite diff q1"
+        finite_diff_job2.name = "finite diff q2"
 
         output = {
             charge_state1: finite_diff_job1.output,
