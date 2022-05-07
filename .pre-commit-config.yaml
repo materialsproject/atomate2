@@ -1,3 +1,4 @@
+exclude: '^src/atomate2/vasp/schemas/calc_types/'
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.2.0
@@ -35,8 +36,11 @@ repos:
   rev: 3.9.2
   hooks:
   - id: flake8
+    entry: pflake8
     files: ^src/
     additional_dependencies:
+    - pyproject-flake8==v0.0.1a4
+    - flake8-bugbear==22.4.25
     - flake8-typing-imports==1.10.1
     - flake8-docstrings==1.6.0
     - flake8-rst-docstrings==0.2.3

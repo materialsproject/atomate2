@@ -169,7 +169,7 @@ def write_vasp_input_set(
     potcar_spec : bool
         Whether to use the POTCAR.spec file instead of the POTCAR file.
     clean_prev : bool
-        Remove previous KPOINTS, INCAR, POSCAR, and POTCAR before writing the new inputs.
+        Remove previous KPOINTS, INCAR, POSCAR, and POTCAR before writing new inputs.
     **kwargs
         Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
     """

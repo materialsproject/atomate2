@@ -45,6 +45,20 @@ Or do a developer install by using the ``-e`` flag:
 pip install -e .
 ```
 
+### Installing pre-commit
+
+If you're planning on contributing to the atomate2 source, you should also install
+the developer requirements with:
+
+```
+pip install -e .[dev]
+pre-commit install
+```
+
+The precommit command will ensure that changes to the source code match the
+atomate2 style guidelines by running code linters such as `black`, `isort`,
+and `mypy` automatically with each commit.
+
 ## Running unit tests
 
 Unit tests can be run from the source folder using `pytest`. First, the requirements

@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install .[strict]
           pip install .[tests]
           pip install .[dev]
 
@@ -57,9 +57,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-optional.txt
-        pip install .[tests]
+          pip install .[strict]
+          pip install .[tests]
+          pip install .[docs]
 
     - name: Test
       run: pytest --cov=atomate2 --cov-report=xml
@@ -83,8 +83,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .[docs]
+          pip install .[strict]
+          pip install .[docs]
 
       - name: Build
         run: jupyter-book build docs --path-output docs_build
