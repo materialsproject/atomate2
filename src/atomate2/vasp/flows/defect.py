@@ -201,8 +201,6 @@ class NonRadiativeMaker(Maker):
         The name of the flow created by this maker.
     ccd_maker: ConfigurationCoordinateMaker
         A maker to perform the calculation of the configuration coordinate diagram.
-    fdiff_maker: FiniteDifferenceMaker
-        A maker to perform the calculation of the finite difference using wavefunction overlaps from VASP.
     """
 
     ccd_maker: ConfigurationCoordinateMaker
