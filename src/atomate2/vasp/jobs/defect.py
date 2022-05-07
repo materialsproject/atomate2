@@ -1,4 +1,4 @@
-"""Definition of defect job maker."""
+"""Jobs for defect calculations."""
 
 from __future__ import annotations
 
@@ -43,22 +43,22 @@ def spawn_energy_curve_calcs(
     add_name: str = "",
     add_info: dict | None = None,
 ):
-    """Compute the total energy curve as you distort a reference structure to a distorted structure.
+    """Compute the total energy curve from a reference to distorted structure.
 
     Parameters
     ----------
     relaxed_structure : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the ground (final) state
+        pymatgen structure corresponding to the ground (final) state.
     distorted_structure : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the excited (initial) state
+        pymatgen structure corresponding to the excited (initial) state.
     static_maker : atomate2.vasp.jobs.core.StaticMaker
-        StaticMaker object
+        StaticMaker object.
     distortions : Iterable[float]
-        list of distortions, as a fraction of ΔQ, to apply
+        List of distortions, as a fraction of ΔQ, to apply.
     add_name : str
-        additional name to add to the flow name
+        Additional name to add to the flow name.
     add_info : dict
-        additional info to add to the to a info.json file for each static calculation.
+        Additional info to add to the to a info.json file for each static calculation.
         This data can be used to reconstruct the provenance of the calculation.
 
     Returns
@@ -121,16 +121,16 @@ def get_ccd_documents(
     Parameters
     ----------
     inputs1 : Iterable[CCDInput]
-        List of CCDInput objects
+        List of CCDInput objects.
     inputs2 : Iterable[CCDInput]
-        List of CCDInput objects
+        List of CCDInput objects.
     undistorted_index : int
-        Index of the undistorted structure in the list of distorted structures
+        Index of the undistorted structure in the list of distorted structures.
 
     Returns
     -------
     Response
-        Response object
+        Response object.
     """
     static_uuids1 = [i["uuid"] for i in inputs1]
     static_uuids2 = [i["uuid"] for i in inputs2]
@@ -168,11 +168,11 @@ def calculate_finitediff(
     Parameters
     ----------
     distorted_calc_dirs: List[str]
-        List of directories containing distorted calculations
+        List of directories containing distorted calculations.
     ref_calc_index: int
-        Index of the reference (distortion=0) calculation
+        Index of the reference (distortion=0) calculation.
     run_vasp_kwargs : dict
-        kwargs to pass to run_vasp (should be copied from the static maker used for previous calculations)
+        kwargs to pass to run_vasp (should be copied from the static maker used for previous calculations).
     """
     ref_calc_dir = distorted_calc_dirs[ref_calc_index]
     run_vasp_kwargs = dict() if run_vasp_kwargs is None else run_vasp_kwargs
