@@ -12,7 +12,7 @@ from pymatgen.core.structure import Structure
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
-    calculate_finitediff,
+    calculate_finite_diff,
     get_ccd_documents,
     spawn_energy_curve_calcs,
 )
@@ -243,12 +243,12 @@ class NonRadiativeMaker(Maker):
         )
         ccd: CCDDocument = flow.output
 
-        finite_diff_job1 = calculate_finitediff(
+        finite_diff_job1 = calculate_finite_diff(
             distorted_calc_dirs=ccd.static_dirs1,
             ref_calc_index=ccd.relaxed_index1,
             run_vasp_kwargs=self.ccd_maker.static_maker.run_vasp_kwargs,
         )
-        finite_diff_job2 = calculate_finitediff(
+        finite_diff_job2 = calculate_finite_diff(
             distorted_calc_dirs=ccd.static_dirs2,
             ref_calc_index=ccd.relaxed_index2,
             run_vasp_kwargs=self.ccd_maker.static_maker.run_vasp_kwargs,
