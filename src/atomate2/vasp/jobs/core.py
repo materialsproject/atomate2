@@ -570,7 +570,9 @@ class MDMaker(BaseVaspMaker):
     """
 
     name: str = "molecular dynamics"
+
     input_set_generator: VaspInputSetGenerator = field(default_factory=MDSetGenerator)
+
     run_vasp_kwargs: dict = field(
         default_factory=lambda: {
             "handlers": (
@@ -584,6 +586,11 @@ class MDMaker(BaseVaspMaker):
             )
         }
     )
+
+    task_document_kwargs = dict = field(
+        default_factory=lambda: {"vasp_calculation_kwargs": {"store_trajectory": True}}
+    )
+
     stop_children_kwargs: dict = field(
         default_factory=lambda: {"handle_unsuccessful": False}
     )
@@ -591,7 +598,7 @@ class MDMaker(BaseVaspMaker):
     #  see should_stop_children() for more. This boils down to (in calculation.py)
     #  change the below line:
     #  has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
-    #  This entire calling order is:
+    #  The calling stack is:
     #  should_stop_children() -> TaskDocument.state -> _get_state() (in task.py)
     #  ->  [c.has_vasp_completed == Status.SUCCESS for c in calc_docs]
 

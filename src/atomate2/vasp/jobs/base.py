@@ -34,6 +34,7 @@ _DATA_OBJECTS = [
     Locpot,
     Chgcar,
     Wavecar,
+    "trajectory",
     "force_constants",
     "normalmode_eigenvecs",
 ]

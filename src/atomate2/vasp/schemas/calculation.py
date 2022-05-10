@@ -320,6 +320,20 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
     structure: Structure = Field(None, description="The structure at this step.")
 
 
+class Trajectory(BaseModel):
+    """Document defining a trajectory, i.e. a sequence of ionic steps.
+
+    Note, this stores the same information as :obj:`.CalculationOutput.ionic_steps`.
+    An intended use case is for MD tasks with long trajectories; instead of storing
+    the info in :obj:`.CalculationOutput.ionic_steps` in the main job store,
+    one stores ionic steps and a Trajectory in an additional store.
+    """
+
+    ionic_steps: List[IonicStep] = Field(
+        None, description="Energy, forces, and structure for each ionic step"
+    )
+
+
 class CalculationOutput(BaseModel):
     """Document defining VASP calculation outputs."""
 
@@ -371,7 +385,7 @@ class CalculationOutput(BaseModel):
         "calculation",
     )
     ionic_steps: List[IonicStep] = Field(
-        None, description="Energy, forces, and structure for each ionic step"
+        None, description="Energy, forces, structure, etc. for each ionic step"
     )
     locpot: Dict[int, List[float]] = Field(
         None, description="Average of the local potential along the crystal axes"
@@ -407,6 +421,10 @@ class CalculationOutput(BaseModel):
         None, description="Summary of runtime statistics for this calculation"
     )
 
+    trajectory: Trajectory = Field(
+        None, description="Trajectory (ionic steps) of an MD run."
+    )
+
     @classmethod
     def from_vasp_outputs(
         cls,
@@ -414,6 +432,7 @@ class CalculationOutput(BaseModel):
         outcar: Outcar,
         locpot: Optional[Locpot] = None,
         elph_poscars: Optional[List[Path]] = None,
+        store_trajectory: bool = False,
     ) -> "CalculationOutput":
         """
         Create a VASP output document from VASP outputs.
@@ -426,6 +445,12 @@ class CalculationOutput(BaseModel):
             An Outcar object.
         locpot
             A Locpot object.
+        elph_poscars
+            Path to displaced electron-phonon coupling POSCAR files generated using
+            ``PHON_LMC = True``.
+        store_trajectory
+            Whether to store ionic steps as an :obj:`.Trajectory` object in the
+            additional store.
 
         Returns
         -------
@@ -507,6 +532,14 @@ class CalculationOutput(BaseModel):
                 elph_structures["temperatures"].append(temp)
                 elph_structures["structures"].append(Structure.from_file(elph_poscar))
 
+        if store_trajectory:
+            ionic_steps = None
+            trajectory = Trajectory(ionic_steps=vasprun.ionic_steps)
+            kwargs = {"trajectory": trajectory}
+        else:
+            ionic_steps = vasprun.ionic_steps
+            kwargs = {}
+
         return cls(
             structure=structure,
             energy=vasprun.final_energy,
@@ -518,12 +551,13 @@ class CalculationOutput(BaseModel):
             frequency_dependent_dielectric=freq_dependent_diel,
             elph_displaced_structures=elph_structures,
             dos_properties=dosprop_dict,
-            ionic_steps=vasprun.ionic_steps,
+            ionic_steps=ionic_steps,
             locpot=locpot_avg,
             outcar=outcar_dict,
             run_stats=RunStatistics.from_outcar(outcar),
             **electronic_output,
             **phonon_output,
+            **kwargs,
         )
 
 
@@ -581,6 +615,7 @@ class Calculation(BaseModel):
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
+        store_trajectory: bool = False,
         vasprun_kwargs: Optional[Dict] = None,
     ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """
@@ -634,8 +669,11 @@ class Calculation(BaseModel):
             This can help reduce the size of DOS objects in systems with many atoms.
         store_volumetric_data
             Which volumetric files to store.
+        store_trajectory
+            Whether to store ionic steps as an :obj:`.Trajectory` object in the
+            additional store.
         vasprun_kwargs
-            Additional keyword arguments that will be passed to to the Vasprun init.
+            Additional keyword arguments that will be passed to the Vasprun init.
 
         Returns
         -------
@@ -684,7 +722,11 @@ class Calculation(BaseModel):
 
         input_doc = CalculationInput.from_vasprun(vasprun)
         output_doc = CalculationOutput.from_vasp_outputs(
-            vasprun, outcar, locpot=locpot, elph_poscars=elph_poscars
+            vasprun,
+            outcar,
+            locpot=locpot,
+            elph_poscars=elph_poscars,
+            store_trajectory=store_trajectory,
         )
 
         has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
