@@ -16,6 +16,7 @@ _TASK_TYPES = [
     "Static",
     "Structure Optimization",
     "Deformation",
+    "MD",
     "Unrecognized",
 ]
 
