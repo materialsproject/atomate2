@@ -852,7 +852,7 @@ class MDSetGenerator(VaspInputSetGenerator):
         return updates
 
     @staticmethod
-    def _get_ensemble_defaults(ensemble: str) -> Dict[str, Any]:
+    def _get_ensemble_defaults(ensemble: str) -> dict[str, Any]:
         """
         Get default params for the ensemble.
         """
@@ -864,7 +864,8 @@ class MDSetGenerator(VaspInputSetGenerator):
         }
 
         try:
-            return defaults[ensemble.lower()]
+            settings: dict[str, Any] = defaults[ensemble.lower()]  # type: ignore
+            return settings
         except KeyError:
             supported = tuple(defaults.keys())
             raise ValueError(
