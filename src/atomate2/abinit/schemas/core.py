@@ -1,9 +1,15 @@
 """Core definitions of Abinit calculations documents."""
 
+from pathlib import Path
+from typing import Type, TypeVar, Union
+
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.sets.base import AbinitInputSet
+from atomate2.common.schemas.structure import StructureMetadata
+
+_T = TypeVar("_T", bound="AbinitTaskDocument")
 
 
 class JobMetadata(BaseModel):
@@ -27,3 +33,14 @@ class AbinitJobSummary(JobMetadata):
         None, description="Final structure of the calculation."
     )
     energy: float = Field(None, description="Final energy of the calculation.")
+
+
+class AbinitTaskDocument(StructureMetadata):
+    """Definition of task document about an Abinit Job."""
+
+    @classmethod
+    def from_directory(
+        cls: Type[_T],
+        dir_name: Union[Path, str],
+    ):
+        """Build AbinitTaskDocument from directory."""
