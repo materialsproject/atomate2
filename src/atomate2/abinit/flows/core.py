@@ -1,7 +1,8 @@
 """Core abinit flow makers."""
 
 from dataclasses import dataclass, field
-from typing import List, Union
+from pathlib import Path
+from typing import List, Optional, Union
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
@@ -29,13 +30,13 @@ class LineBandStructureMaker(Maker):
     """
 
     name: str = "line band structure"
-    scf_maker: BaseAbinitMaker = ScfMaker()
-    bs_maker: BaseAbinitMaker = NonScfMaker()
+    scf_maker: BaseAbinitMaker = field(default_factory=ScfMaker)
+    bs_maker: BaseAbinitMaker = field(default_factory=NonScfMaker)
 
     def make(
         self,
         structure: Structure,
-        restart_from=None,
+        restart_from: Optional[Union[str, Path]] = None,
     ):
         """
         Create a line mode band structure flow.
@@ -45,7 +46,7 @@ class LineBandStructureMaker(Maker):
         structure : Structure
             A pymatgen structure object.
         restart_from : str or Path or None
-            One or more previous directories for the calculation.
+            One previous directory to restart from.
 
         Returns
         -------
@@ -78,7 +79,11 @@ class RelaxFlowMaker(Maker):
         default_factory=RelaxMaker
     )
 
-    def make(self, structure: Structure = None, restart_from=None):
+    def make(
+        self,
+        structure: Optional[Structure] = None,
+        restart_from: Optional[Union[str, Path]] = None,
+    ):
         """
         Create a relaxation flow.
 
@@ -86,8 +91,8 @@ class RelaxFlowMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_dirs : str or Path or None
-            One or more previous directories for the calculation.
+        restart_from : str or Path or None
+            One previous directory to restart from.
 
         Returns
         -------

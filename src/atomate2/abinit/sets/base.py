@@ -7,19 +7,15 @@ from pathlib import Path
 from typing import Any, ClassVar, Iterable, List, Union
 
 import pseudo_dojo
-from abipy.abio.inputs import AbinitInput
-from monty.io import zopen
+from abipy.flowtk.utils import Directory
 from monty.json import MSONable
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
+from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.abinit.utils.common import (
-    INDATA_PREFIX,
-    INPUT_FILE_NAME,
-    OUTDATA_PREFIX,
-    TMPDATA_PREFIX,
-)
-from atomate2.common.sets import InputSet, InputSetGenerator
+from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, TMPDIR_NAME
+
+# from atomate2.common.sets import InputSet, InputSetGenerator
 
 __all__ = ["AbinitInputSet", "AbinitInputSetGenerator"]
 
@@ -44,43 +40,69 @@ class AbinitInputSet(InputSet):
         An AbinitInput object.
     """
 
-    def __init__(
-        self,
-        abinit_input: AbinitInput,
-    ):
-        self.abinit_input = abinit_input
-        # TODO: is this the place for this ? if we want to put the sets in abipy, do differently anyway (it's using
-        #  atomate2.abinit.common)
-        self.abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
-        self.abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
-        self.abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
+    # def __init__(
+    #     self,
+    #     abinit_input: AbinitInput,
+    # ):
+    #     self.abinit_input = abinit_input
+    #     # TODO: is this the place for this ? if we want to put the sets in abipy, do differently anyway (it's using
+    #     #  atomate2.abinit.common)
+    #     self.abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
+    #     self.abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
+    #     self.abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
 
     def write_input(
         self,
         directory: Union[str, Path],
         make_dir: bool = True,
         overwrite: bool = True,
+        zip_inputs: bool = False,
     ):
         """Write Abinit input files to a directory."""
-        directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        super().write_input(
+            directory=directory,
+            make_dir=make_dir,
+            overwrite=overwrite,
+            zip_inputs=zip_inputs,
+        )
+        # input_string = str(self.abinit_input)
+        # # TODO: deal with the pseudos ...
+        # pseudos_string = '\npseudos "'
+        # pseudos_string += ",\n         ".join(
+        #     [psp.filepath for psp in self.abinit_input.pseudos]
+        # )
+        # pseudos_string += '"'
+        # input_string += pseudos_string
+        # Set up workdir after other input files so that directories and symbolic links are not zipped
+        # in ase zip_inputs is True.
+        self.set_workdir(workdir=directory)
 
-        if not overwrite and (directory / INPUT_FILE_NAME).exists():
-            raise FileExistsError(f"{directory / INPUT_FILE_NAME} already exists.")
+    def set_workdir(self, workdir):
+        """Set up the working directory.
 
-        with zopen(directory / INPUT_FILE_NAME, "wt") as f:
+        This also sets up and creates standard input, output and temporary directories, as well as
+        standard file names for input and output.
+        """
+        workdir = os.path.abspath(workdir)
 
-            input_string = str(self.abinit_input)
-            # TODO: transfer and adapt pseudos management to abipy, this should be handled by AbinitInput.__str__()
-            pseudos_string = '\npseudos "'
-            pseudos_string += ",\n         ".join(
-                [psp.filepath for psp in self.abinit_input.pseudos]
-            )
-            pseudos_string += '"'
-            input_string += pseudos_string
+        # # Files required for the execution.
+        # input_file = File(os.path.join(workdir, INPUT_FILE_NAME))
+        # output_file = File(os.path.join(workdir, OUTPUT_FILE_NAME))
+        # log_file = File(os.path.join(workdir, LOG_FILE_NAME))
+        # stderr_file = File(os.path.join(workdir, STDERR_FILE_NAME))
+        #
+        # # This file is produce by Abinit if nprocs > 1 and MPI_ABORT.
+        # mpiabort_file = File(os.path.join(workdir, MPIABORTFILE))
 
-            f.write(input_string)
+        # Directories with input|output|temporary data.
+        indir = Directory(os.path.join(workdir, INDIR_NAME))
+        outdir = Directory(os.path.join(workdir, OUTDIR_NAME))
+        tmpdir = Directory(os.path.join(workdir, TMPDIR_NAME))
+
+        # Create dirs for input, output and tmp data.
+        indir.makedirs()
+        outdir.makedirs()
+        tmpdir.makedirs()
 
     def set_vars(self, *args, **kwargs) -> dict:
         """Set the values of abinit variables.
@@ -129,8 +151,103 @@ class AbinitInputSet(InputSet):
         return copy.deepcopy(self)
 
 
+# class AbinitInputSet(InputSet):
+#     """
+#     A class to represent a set of Abinit inputs.
+#
+#     Parameters
+#     ----------
+#     abinit_input
+#         An AbinitInput object.
+#     """
+#
+#     def __init__(
+#         self,
+#         abinit_input: AbinitInput,
+#     ):
+#         self.abinit_input = abinit_input
+#         # TODO: is this the place for this ? if we want to put the sets in abipy, do differently anyway (it's using
+#         #  atomate2.abinit.common)
+#         self.abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
+#         self.abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
+#         self.abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
+#
+#     def write_input(
+#         self,
+#         directory: Union[str, Path],
+#         make_dir: bool = True,
+#         overwrite: bool = True,
+#     ):
+#         """Write Abinit input files to a directory."""
+#         directory = Path(directory)
+#         if make_dir and not directory.exists():
+#             os.makedirs(directory)
+#
+#         if not overwrite and (directory / INPUT_FILE_NAME).exists():
+#             raise FileExistsError(f"{directory / INPUT_FILE_NAME} already exists.")
+#
+#         with zopen(directory / INPUT_FILE_NAME, "wt") as f:
+#
+#             input_string = str(self.abinit_input)
+#             # TODO: transfer and adapt pseudos management to abipy, this should be handled by AbinitInput.__str__()
+#             pseudos_string = '\npseudos "'
+#             pseudos_string += ",\n         ".join(
+#                 [psp.filepath for psp in self.abinit_input.pseudos]
+#             )
+#             pseudos_string += '"'
+#             input_string += pseudos_string
+#
+#             f.write(input_string)
+#
+#     def set_vars(self, *args, **kwargs) -> dict:
+#         """Set the values of abinit variables.
+#
+#         This sets the abinit variables in the abipy AbinitInput object.
+#
+#         One can pass a dictionary mapping the abinit variables to their values or
+#         the abinit variables as keyword arguments. A combination of the two
+#         options is also allowed.
+#
+#         Returns
+#         -------
+#         dict
+#             dictionary with the variables that have been added.
+#         """
+#         return self.abinit_input.set_vars(*args, **kwargs)
+#
+#     def remove_vars(self, keys: Union[Iterable[str], str], strict: bool = True) -> dict:
+#         """Remove the abinit variables listed in keys.
+#
+#         This removes the abinit variables from the abipy AbinitInput object.
+#
+#         Parameters
+#         ----------
+#         keys
+#             string or list of strings with the names of the abinit variables to be removed.
+#         strict
+#             whether to raise a KeyError if one of the abinit variables to be removed is not present.
+#
+#         Returns
+#         -------
+#         dict
+#             dictionary with the variables that have been removed.
+#         """
+#         return self.abinit_input.remove_vars(keys=keys, strict=strict)
+#
+#     def set_structure(self, structure: Any) -> Structure:
+#         """Set the structure for this input set.
+#
+#         This basically forwards the setting of the structure to the abipy AbinitInput object.
+#         """
+#         return self.abinit_input.set_structure(structure)
+#
+#     def deepcopy(self):
+#         """Deep copy of the input set."""
+#         return copy.deepcopy(self)
+
+
 @dataclass
-class AbinitInputSetGenerator(InputSetGenerator):
+class AbinitInputSetGenerator(InputGenerator):
     """A class to generate Abinit input sets."""
 
     # TODO: see how to deal with this
