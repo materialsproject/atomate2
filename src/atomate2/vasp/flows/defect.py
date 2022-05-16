@@ -10,6 +10,7 @@ from jobflow import Flow, Job, Maker, OutputReference, job
 from numpy.typing import NDArray
 from pymatgen.analysis.defect.generators import DefectGenerator
 from pymatgen.core.structure import Structure
+from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
@@ -39,7 +40,14 @@ DEFECT_INCAR_SETTINGS = {
     "KSPACING": None,
     "ENCUT": 500,
 }
-DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
+DEFECT_KPOINT_SETTINGS = Kpoints(
+    comment="special k-point",
+    num_kpts=1,
+    style=Kpoints_supported_modes.Reciprocal,
+    kpts=((0.25, 0.25, 0.25),),
+    kpts_shift=(0, 0, 0),
+    kpts_weights=[1],
+)
 
 DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
