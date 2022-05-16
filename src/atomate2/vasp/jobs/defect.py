@@ -20,6 +20,7 @@ from pymatgen.analysis.defect.supercells import (
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
+from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 from pymatgen.io.vasp.outputs import WSWQ
 
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
@@ -46,7 +47,14 @@ DEFECT_INCAR_SETTINGS = {
     "ENCUT": 500,
     "LVHAR": True,
 }
-DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
+DEFECT_KPOINT_SETTINGS = Kpoints(
+    comment="special k-point",
+    num_kpts=1,
+    style=Kpoints_supported_modes.Reciprocal,
+    kpts=((0.25, 0.25, 0.25),),
+    kpts_shift=(0, 0, 0),
+    kpts_weights=[1],
+)
 
 DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
