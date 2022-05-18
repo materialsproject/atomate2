@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import logging
 import tempfile
+import numpy as np
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
@@ -22,6 +23,7 @@ from pymatgen.io.phonopy import get_pmg_structure, get_phonopy_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.transformations.advanced_transformations import CubicSupercellTransformation
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -43,6 +45,7 @@ def get_phonon_object(displacement, min_length, structure, sym_reduce, symprec, 
     transformation = CubicSupercellTransformation(min_length=min_length)
     transformation.apply_transformation(structure=structure)
     supercell_matrix = transformation.transformation_matrix.tolist()
+
     cell = get_phonopy_structure(structure)
     if not conventional:
         phonon = Phonopy(cell,
@@ -54,18 +57,22 @@ def get_phonon_object(displacement, min_length, structure, sym_reduce, symprec, 
                          symprec=symprec,
                          is_symmetry=sym_reduce)
     else:
+        spa=SpacegroupAnalyzer(structure)
+        matrix=spa.get_conventional_to_primitive_transformation_matrix()
+
         phonon = Phonopy(cell,
                          supercell_matrix,
-                         primitive_matrix='auto',
+                         primitive_matrix=matrix,
                          factor=VaspToTHz,
                          symprec=symprec,
                          is_symmetry=sym_reduce)
+
     phonon.generate_displacements(distance=displacement)
     return phonon
 
 
 # check if this can also be replaced with something better
-def get_kpath(structure: Structure, conventional, **kpath_kwargs):
+def get_kpath(structure: Structure, **kpath_kwargs):
     """
     get high-symmetry points in k-space
     Args:
@@ -114,7 +121,7 @@ def generate_phonon_displacements(
         A list of diplacements.
     """
     # TODO: use functions from pymatgen instead?
-    phonon = get_phonon_object(displacement, min_length, structure, sym_reduce, symprec)
+    phonon = get_phonon_object(displacement, min_length, structure, sym_reduce, symprec, conventional=conventional)
     supercells = phonon.supercells_with_displacements
 
     displacements = []
@@ -131,10 +138,11 @@ def generate_frequencies_eigenvectors(
         symprec: float = SETTINGS.SYMPREC,
         sym_reduce: bool = True,
         displacement: float = 0.01,
-        min_length: float = 4.0,
+        min_length: float = 20,
         conventional: bool = False,
         npoints_band: int = 100,
         kpoint_density_dos: int = 7000,
+        tol_imaginary_modes: float= 1e-5
 ):
     """
     Compute phonon band structures and density of states.
@@ -147,7 +155,9 @@ def generate_frequencies_eigenvectors(
 
     phonon = get_phonon_object(conventional, displacement, min_length, structure, sym_reduce, symprec)
 
-    # do this file based even though force based would be better
+
+
+    # can we instead use forces from the previous calculations?
     forces_filenames = []
     # Vasprunxml is missing each time
     for displacement in displacement_data:
@@ -157,29 +167,29 @@ def generate_frequencies_eigenvectors(
     set_of_forces = parse_set_of_forces(num_atoms=get_pmg_structure(phonon.supercell).num_sites,
                                         forces_filenames=forces_filenames)
 
-    # produce force constants
-    # decompress_file(str((Path(born_data) / "vasprun.xml.gz").split(":")[1]))
-
     phonon.produce_force_constants(forces=set_of_forces)
     # for some reason server address will be included in the path?
     # deal with uncompressed files
-    borns, epsilon, atom_indices = get_born_vasprunxml(str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
-                                                       primitive_matrix=phonon.primitive_matrix,
-                                                       supercell_matrix=phonon.supercell_matrix)
-    # compress_file(str(zpath(Path(born_data) / "vasprun.xml")))
-    # get born charges from vasprun.xml
+    #phonon._force_constants ?
 
-    phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
+    #TODO: test this
+    if born_data is not None:
+        # Could also be the diret output of the born part?
+        borns, epsilon, atom_indices = get_born_vasprunxml(str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
+                                                           primitive_matrix=phonon.primitive_matrix,
+                                                           supercell_matrix=phonon.supercell_matrix)
+
+        phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
 
     # get phonon band structure
     tempfilename = tempfile.gettempprefix() + '.yaml'
-    kpath_dict, kpath_concrete = get_kpath(structure, conventional)
+    kpath_dict, kpath_concrete = get_kpath(structure)
     qpoints, connections = get_band_qpoints_and_path_connections(kpath_concrete, npoints=npoints_band)
 
     phonon.run_band_structure(qpoints, path_connections=connections)
     phonon.write_yaml_band_structure(
         filename=tempfilename)
-    bs_symm_line = get_ph_bs_symm_line(tempfilename, labels_dict=kpath_dict)
+    bs_symm_line = get_ph_bs_symm_line(tempfilename, labels_dict=kpath_dict, has_nac=born_data is not None)
 
     # get phonon density of states
     tempfilename = tempfile.gettempprefix() + '.yaml'
@@ -189,14 +199,25 @@ def generate_frequencies_eigenvectors(
     phonon.write_total_dos(filename=tempfilename)
     dos = get_ph_dos(tempfilename)
 
-    # get thermal properties
-    # TODO: add computation of thermal properties as well
 
 
-    # check if any imaginary modes exist and maybe add a percentage?
+    # we need the total energy of the structure as well!
 
-    # maybe, we can just give the folder and phonopy can create it?
-    # do something to generate a phonon document
+
+    # add a free energy document?
+    imaginary_modes=bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
+
+
+    zero_point_energy=dos.zero_point_energy(structure=structure)
+
+    # add tmin tmax tstep
+    temperature_range=np.linspace()
+    free_energy=[dos.helmholtz_free_energy(structure=structure, temperature=temperature) for temperature in temperature_range]
+
+
+    # transfer the force constants to compute Grüneisen parameters?
+
+
     phonon_doc = PhononBSDOSDoc(structure=structure, ph_bs=bs_symm_line, ph_dos=dos)
     print(phonon_doc)
     return phonon_doc
@@ -282,22 +303,23 @@ class PhononDisplacementMaker(BaseVaspMaker):
     """
 
     name: str = "phonon static"
+
+    #TODO: test these values!
+    # TODO: change smearing?
     input_set_generator: VaspInputSetGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 100},
+            user_kpoints_settings={"grid_density": 7000},
             user_incar_settings={
                 "IBRION": 2,
                 "ISIF": 3,
                 "ENCUT": 700,
                 "EDIFF": 1e-7,
                 "LAECHG": False,
-                "EDIFFG": -0.001,
                 "LREAL": False,
                 "ALGO": "Normal",
                 "NSW": 0,
                 "LCHARG": False,
                 "ISMEAR": 0,
-                "NPAR": 4,
             },
         )
     )

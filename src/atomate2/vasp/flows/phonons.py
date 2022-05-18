@@ -105,7 +105,7 @@ class PhononMaker(Maker):
 
         # convert to primitive cell
         sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
-        structure = sga.get_conventional_standard_structure()
+        structure = sga.get_primitive_standard_structure()
 
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
@@ -115,9 +115,9 @@ class PhononMaker(Maker):
         if self.conventional:
             sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
             structure = sga.get_conventional_standard_structure()
-        # generate the dispacements
+        # generate the displacements
         displacements = generate_phonon_displacements(structure=structure, symprec=self.symprec,
-                                                      symreduc=self.sym_reduce, displacement=self.displacement,
+                                                      sym_reduce=self.sym_reduce, displacement=self.displacement,
                                                       min_length=self.min_length,
                                                       conventional=self.conventional,
                                                       **self.generate_phonon_displacements_kwargs)
@@ -131,13 +131,14 @@ class PhononMaker(Maker):
 
         # Computation of BORN charges
         if self.born_maker is None:
-            self.born_maker = StaticSetGenerator(lepsilon=True, user_kpoints_settings={"grid_density": 100})
-        if self.born_maker.lepsilon:
+            self.born_maker = StaticSetGenerator(lepsilon=True)
+        if not self.born_maker.lepsilon:
             raise ValueError("born_maker must include lepsilon=True")
         born_job = StaticMaker(input_set_generator=self.born_maker).make(structure=structure)
         jobs.append(born_job)
 
         # Currently we access forces via filepathes to avoid large data transfer
+
         phonon_collect = generate_frequencies_eigenvectors(structure=structure,
                                                            displacement_data=vasp_displacement_calcs.output,
                                                            symprec=self.symprec, symreduc=self.sym_reduce,

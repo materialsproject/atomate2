@@ -32,6 +32,7 @@ class PhononBSDOSDoc(BaseModel):
         description="Phonon density of states object.",
     )
 
+
     #TODO: add imaginary modes?
 
     #TODO: add thermal properties?
