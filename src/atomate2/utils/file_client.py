@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import errno
+import os
 import shutil
 import stat
 import warnings
@@ -262,6 +264,30 @@ class FileClient:
             raise ValueError(
                 "Copying between two different remote hosts is not supported."
             )
+
+    def link(
+        self,
+        src_filename: str | Path,
+        dest_filename: str | Path,
+    ):
+        """
+        Link a file from source to destination.
+
+        Parameters
+        ----------
+        src_filename : str or Path
+            Full path to source file.
+        dest_filename : str or Path
+            Full path to destination file.
+        """
+        try:
+            os.symlink(src_filename, dest_filename)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                os.remove(dest_filename)
+                os.symlink(src_filename, dest_filename)
+            else:
+                raise e
 
     def remove(self, path: str | Path, host: str | None = None):
         """

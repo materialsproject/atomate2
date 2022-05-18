@@ -7,6 +7,7 @@ import pymatgen.io.abinit.abiobjects as aobj
 from abipy.abio.factories import ebands_from_gsinput, ion_ioncell_relax_input, scf_input
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
+from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import UNSET, AbinitInputSetGenerator
 
 __all__ = [
@@ -55,11 +56,14 @@ class ScfSetMixin:
             # TODO: how to take accuracy into account ?
             if value is None:
                 raise NotImplementedError("")
-            # abinit_input.set_vars(_find_ecut_pawecutdg(value, None, abinit_input.pseudos, accuracy))
+            # abinit_input.set_vars(_find_ecut_pawecutdg(
+            #     value, None, abinit_input.pseudos, accuracy
+            # ))
             abinit_input.set_vars({"ecut": value})
         else:
             raise RuntimeError(
-                f'Cannot apply "{param}" input set generator update to previous AbinitInput.'
+                f'Cannot apply "{param}" input set generator update to '
+                f"previous AbinitInput."
             )
 
 
@@ -76,8 +80,9 @@ class StaticSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
         if prev_outputs is not None:
             raise RuntimeError(
                 "Previous outputs not allowed for StaticSetGenerator. "
-                "To restart from a previous static or otherwise scf (e.g. relaxation) calculation, "
-                "use restart_from argument of get_input_set method instead."
+                "To restart from a previous static or otherwise scf "
+                "(e.g. relaxation) calculation, use restart_from argument of "
+                "get_input_set method instead."
             )
 
         return scf_input(
@@ -87,13 +92,14 @@ class StaticSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
         )
 
     def on_restart(self, abinit_input):
-        """Perform updates of AbinitInput when the calculation is restarted from a previous one.
+        """Perform updates of AbinitInput upon restart.
 
-        In this case, a static calculation can be started from a relaxation one. The relaxation-like variables
-        need to be removed from the AbinitInput.
+        In this case, a static calculation can be started from a relaxation one.
+        The relaxation-like variables need to be removed from the AbinitInput.
         """
-        # Always remove relaxation-like variables so that if we make the SCF job starting from a previous
-        # relaxation or molecular dynamics job, the structure will indeed be static.
+        # Always remove relaxation-like variables so that if we make the SCF job
+        # starting from a previous relaxation or molecular dynamics job, the
+        # structure will indeed be static.
         abinit_input.pop_vars(["ionmov", "optcell", "ntime"])
 
 
@@ -104,6 +110,8 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
     nband: Optional[int] = UNSET
     ndivsm: int = UNSET
     accuracy: str = UNSET
+
+    prev_output_exts: tuple = tuple(["DEN"])
 
     # class variables
     DEFAULT_PARAMS: ClassVar[dict] = {
@@ -118,7 +126,8 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
     ):
         """Get AbinitInput object for Non-SCF calculation."""
         if structure is not None:
-            # TODO: maybe just check that the structure is the same as the one in the previous_input_set ?
+            # TODO: maybe just check that the structure is the same as the one
+            #  in the previous_input_set ?
             raise RuntimeError(
                 "Structure should not be set in a non-SCF input set. "
                 "It should come directly from the previous (SCF) input set."
@@ -131,11 +140,14 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
             raise RuntimeError(
                 "Should have exactly one previous output (an SCF calculation)."
             )
-        previous_abinit_input = prev_outputs[0].abinit_input_set.abinit_input
+        prev_output = prev_outputs[0]
+        previous_abinit_input = load_abinit_input(prev_output.dirname)
         # if pseudos is not None:
-        #     # TODO: maybe just check that the pseudos are the same as the one in the previous_input_set ?
+        #     # TODO: maybe just check that the pseudos are the same as the one
+        #      in the previous_input_set ?
         #     raise RuntimeError('Pseudos should not be set in a non-SCF input set. '
-        #                        'It should come directly from the previous (SCF) input set.')
+        #                        'It should come directly from the previous (SCF) '
+        #                        'input set.')
 
         return ebands_from_gsinput(
             gsinput=previous_abinit_input,
@@ -185,8 +197,9 @@ class RelaxSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
         if prev_outputs is not None:
             raise RuntimeError(
                 "Previous outputs not allowed for RelaxSetGenerator. "
-                "To restart from a previous static or otherwise scf (e.g. relaxation) calculation, "
-                "use restart_from argument of get_input_set method instead."
+                "To restart from a previous static or otherwise scf "
+                "(e.g. relaxation) calculation, use restart_from argument of "
+                "get_input_set method instead."
             )
 
         try:
@@ -215,8 +228,6 @@ class RelaxSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
 
         relax_method.abivars.update(tolmxf=tolmxf)
 
-        print("KWARGS", kwargs)
-
         relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[0]
         relax_input.set_vars(relax_method.to_abivars())
 
@@ -234,133 +245,3 @@ class RelaxSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
             abinit_input.set_vars(relax_method.to_abivars())
         else:
             super().update_abinit_input(abinit_input, param, value)
-        #
-        # def update_abinit_input(self, abinit_input, param, value):
-        #     if param == 'ecut':
-        #         # Set the cutoff energies.
-        #         # TODO: make a check on pawecutdg ?
-        #         # TODO: how to take accuracy into account ?
-        #         if value is None:
-        #             raise NotImplementedError('')
-        #         # abinit_input.set_vars(_find_ecut_pawecutdg(value, None, abinit_input.pseudos, accuracy))
-        #         abinit_input.set_vars({'ecut': value})
-        #     else:
-        #         raise RuntimeError(f'Cannot apply "{param}" input set generator update to previous AbinitInput.')
-
-    #
-    #     previous_input_set = kwargs.get('previous_input_set', None)
-    #     if previous_input_set is not None:
-    #         previous_abinit_input = self.previous_input_set.abinit_input
-    #         # Here we check here that the previous abinit input is a proper GS input (and not e.g. a screening ...)
-    #         # Allow restarts from an scf, a relaxation or a molecular dynamics calculation.
-    #         allowed_previous_levels = {SCF, RELAX, MOLECULAR_DYNAMICS}
-    #         if (
-    #                 len(
-    #                     allowed_previous_levels.intersection(previous_abinit_input.runlevel)
-    #                 )
-    #                 == 0
-    #         ):
-    #             raise RuntimeError(
-    #                 "Previous abinit input is not a proper Ground-State calculation. "
-    #                 f'This is required for "{self.__class__.__name__}" input generator. '
-    #                 f'Allowed previous calculations are: {" ".join(allowed_previous_levels)}'
-    #             )
-    #         relax_input = previous_abinit_input.deepcopy()
-    #         relax_input.pop_irdvars()
-    #         # relax_input.
-    #         if structure is not None:
-    #             # Update with the new structure
-    #             # TODO: should we check something here about the structure in the
-    #             #  previous_abinit_input and the new one ?
-    #             #  e.g. at least that all the sites are the same ?
-    #             #  maybe that they are not too far from each other ?
-    #             relax_input.set_structure(structure=structure)
-    #     elif structure is not None:
-    #         relax_input = ion_ioncell_relax_input(
-    #             structure, pseudos=pseudos, accuracy=self.accuracy, **kwargs
-    #         )[0]
-    #     else:
-    #         raise RuntimeError("Both structure and previous_input_set are undefined.")
-    #
-    #     relax_input.set_vars(relax_method.to_abivars())
-
-    #         relax_input.set_vars(_stopping_criterion("relax", accuracy))
-
-
-# class RelaxInputGenerator(InputGenerator):
-#     """Input generator for relaxation calculations."""
-#
-#     input_structure = True
-#     input_previous_abinit_input = True
-#     input_structure_and_previous_abinit_input = True
-#     relax_cell = True
-#
-#     def factory_function(self, *args, pseudos=None, accuracy="normal", **kwargs):
-#         """Create abinit input for relaxation.
-#
-#         This is a flexible factory function allowing to generate an abinit input from a previous
-#         abinit input or from a structure or from a previous abinit input and a structure.
-#         """
-#         structure, previous_abinit_input = None, None
-#         if len(args) == 1:
-#             if isinstance(args[0], AbinitInput):
-#                 previous_abinit_input = args[0]
-#             elif isinstance(args[0], Structure):
-#                 structure = args[0]
-#             else:
-#                 raise RuntimeError()
-#         elif len(args) == 2:
-#             structure, previous_abinit_input = args
-#
-#         try:
-#             atom_constraints = kwargs.pop("atoms_constraints")
-#         except KeyError:
-#             atom_constraints = None
-#
-#         relax_cell = kwargs.get("relax_cell", self.relax_cell)
-#         if relax_cell:
-#             relax_method = aobj.RelaxationMethod.atoms_and_cell(
-#                 atoms_constraints=atom_constraints
-#             )
-#         else:
-#             relax_method = aobj.RelaxationMethod.atoms_only(
-#                 atoms_constraints=atom_constraints
-#             )
-#
-#         if previous_abinit_input is not None:
-#             # Here we check here that the previous abinit input is a proper GS input (and not e.g. a screening ...)
-#             # Allow restarts from an scf, a relaxation or a molecular dynamics calculation.
-#             allowed_previous_levels = {SCF, RELAX, MOLECULAR_DYNAMICS}
-#             if (
-#                 len(
-#                     allowed_previous_levels.intersection(previous_abinit_input.runlevel)
-#                 )
-#                 == 0
-#             ):
-#                 raise RuntimeError(
-#                     "Previous abinit input is not a proper Ground-State calculation. "
-#                     f'This is required for "{self.__class__.__name__}" input generator. '
-#                     f'Allowed previous calculations are: {" ".join(allowed_previous_levels)}'
-#                 )
-#             relax_input = previous_abinit_input.deepcopy()
-#             relax_input.pop_irdvars()
-#             if structure is not None:
-#                 # Update with the new structure
-#                 # TODO: should we check something here about the structure in the
-#                 #  previous_abinit_input and the new one ?
-#                 #  e.g. at least that all the sites are the same ?
-#                 #  maybe that they are not too far from each other ?
-#                 relax_input.set_structure(structure=structure)
-#         elif structure is not None:
-#             relax_input = ion_ioncell_relax_input(
-#                 structure, pseudos=pseudos, accuracy=accuracy, **kwargs
-#             )[0]
-#         else:
-#             raise RuntimeError(
-#                 "Both structure and previous_abinit_input are undefined."
-#             )
-#
-#         relax_input.set_vars(relax_method.to_abivars())
-#         relax_input.set_vars(_stopping_criterion("relax", accuracy))
-#
-#         return relax_input
