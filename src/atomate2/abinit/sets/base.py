@@ -1,21 +1,33 @@
 """Module defining base abinit input set and generator."""
 import copy
+import json
 import logging
 import os
+from collections import namedtuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, ClassVar, Iterable, List, Union
+from typing import Any, ClassVar, Iterable, List, Optional, Union
 
 import pseudo_dojo
-from abipy.flowtk.utils import Directory
+from abipy.abio.inputs import AbinitInput
+from abipy.flowtk.utils import Directory, irdvars_for_ext
+from monty.io import zopen
 from monty.json import MSONable
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, TMPDIR_NAME
-
-# from atomate2.common.sets import InputSet, InputSetGenerator
+from atomate2.abinit.files import ALL_ABIEXTS, fname2ext, load_abinit_input, out_to_in
+from atomate2.abinit.utils.common import (
+    INDATA_PREFIX,
+    INDIR_NAME,
+    INPUT_FILE_NAME,
+    OUTDATA_PREFIX,
+    OUTDIR_NAME,
+    TMPDATA_PREFIX,
+    TMPDIR_NAME,
+    InitializationError,
+)
 
 __all__ = ["AbinitInputSet", "AbinitInputSetGenerator"]
 
@@ -40,16 +52,13 @@ class AbinitInputSet(InputSet):
         An AbinitInput object.
     """
 
-    # def __init__(
-    #     self,
-    #     abinit_input: AbinitInput,
-    # ):
-    #     self.abinit_input = abinit_input
-    #     # TODO: is this the place for this ? if we want to put the sets in abipy, do differently anyway (it's using
-    #     #  atomate2.abinit.common)
-    #     self.abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
-    #     self.abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
-    #     self.abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
+    def __init__(
+        self,
+        abinit_input: AbinitInput,
+        input_files: Optional[Iterable[Union[str, Path]]] = None,
+    ):
+        self.input_files = input_files
+        super().__init__(inputs={INPUT_FILE_NAME: abinit_input})
 
     def write_input(
         self,
@@ -59,40 +68,76 @@ class AbinitInputSet(InputSet):
         zip_inputs: bool = False,
     ):
         """Write Abinit input files to a directory."""
+        # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
+        #  the abinit input set also sets up links to previous files, sets up the
+        #  indir, outdir and tmpdir, ...
+        self.inputs["abinit_input.json"] = json.dumps(self.abinit_input.as_dict())
         super().write_input(
             directory=directory,
             make_dir=make_dir,
             overwrite=overwrite,
             zip_inputs=zip_inputs,
         )
-        # input_string = str(self.abinit_input)
-        # # TODO: deal with the pseudos ...
-        # pseudos_string = '\npseudos "'
-        # pseudos_string += ",\n         ".join(
-        #     [psp.filepath for psp in self.abinit_input.pseudos]
-        # )
-        # pseudos_string += '"'
-        # input_string += pseudos_string
-        # Set up workdir after other input files so that directories and symbolic links are not zipped
-        # in ase zip_inputs is True.
-        self.set_workdir(workdir=directory)
+        del self.inputs["abinit_input.json"]
+        self.indir, self.outdir, self.tmpdir = self.set_workdir(workdir=directory)
 
-    def set_workdir(self, workdir):
+        if self.input_files:
+            out_to_in(
+                out_files=self.input_files, indir=self.indir.path, link_files=True
+            )
+
+        # TODO: currently a hack to write down the pseudos ...
+        #  transfer and adapt pseudos management to abipy, this should be handled
+        #  by AbinitInput.__str__()
+        with zopen(os.path.join(directory, INPUT_FILE_NAME), "wt") as f:
+            abinit_input = self[INPUT_FILE_NAME]
+            input_string = str(abinit_input)
+            pseudos_string = '\npseudos "'
+            pseudos_string += ",\n         ".join(
+                [psp.filepath for psp in abinit_input.pseudos]
+            )
+            pseudos_string += '"'
+            input_string += pseudos_string
+            f.write(input_string)
+
+        validation = True
+        if validation:
+            self.validate()
+
+    def validate(self):
+        # Check that all files in the input directory have their corresponding
+        # ird variables.
+        for filename in os.listdir(self.indir.path):
+            ext = fname2ext(filename)
+            if ext is None:
+                raise ValueError(
+                    f"'{filename}' file in input directory does not have a "
+                    f"valid abinit extension."
+                )
+            irdvars = irdvars_for_ext(ext)
+            for irdvar, irdval in irdvars.items():
+                if irdvar not in self.abinit_input:
+                    raise ValueError(
+                        f"'{irdvar}' ird variable not set for '{filename}' file."
+                    )
+                if self.abinit_input[irdvar] != irdval:
+                    raise ValueError(
+                        f"'{irdvar} {irdval}' ird variable is wrong for "
+                        f"'{filename}' file."
+                    )
+
+    @property
+    def abinit_input(self):
+        return self[INPUT_FILE_NAME]
+
+    @staticmethod
+    def set_workdir(workdir):
         """Set up the working directory.
 
-        This also sets up and creates standard input, output and temporary directories, as well as
-        standard file names for input and output.
+        This also sets up and creates standard input, output and temporary
+        directories, as well as standard file names for input and output.
         """
         workdir = os.path.abspath(workdir)
-
-        # # Files required for the execution.
-        # input_file = File(os.path.join(workdir, INPUT_FILE_NAME))
-        # output_file = File(os.path.join(workdir, OUTPUT_FILE_NAME))
-        # log_file = File(os.path.join(workdir, LOG_FILE_NAME))
-        # stderr_file = File(os.path.join(workdir, STDERR_FILE_NAME))
-        #
-        # # This file is produce by Abinit if nprocs > 1 and MPI_ABORT.
-        # mpiabort_file = File(os.path.join(workdir, MPIABORTFILE))
 
         # Directories with input|output|temporary data.
         indir = Directory(os.path.join(workdir, INDIR_NAME))
@@ -103,6 +148,8 @@ class AbinitInputSet(InputSet):
         indir.makedirs()
         outdir.makedirs()
         tmpdir.makedirs()
+
+        return indir, outdir, tmpdir
 
     def set_vars(self, *args, **kwargs) -> dict:
         """Set the values of abinit variables.
@@ -128,9 +175,11 @@ class AbinitInputSet(InputSet):
         Parameters
         ----------
         keys
-            string or list of strings with the names of the abinit variables to be removed.
+            string or list of strings with the names of the abinit variables
+            to be removed.
         strict
-            whether to raise a KeyError if one of the abinit variables to be removed is not present.
+            whether to raise a KeyError if one of the abinit variables to be
+            removed is not present.
 
         Returns
         -------
@@ -142,7 +191,8 @@ class AbinitInputSet(InputSet):
     def set_structure(self, structure: Any) -> Structure:
         """Set the structure for this input set.
 
-        This basically forwards the setting of the structure to the abipy AbinitInput object.
+        This basically forwards the setting of the structure to the abipy
+        AbinitInput object.
         """
         return self.abinit_input.set_structure(structure)
 
@@ -151,123 +201,13 @@ class AbinitInputSet(InputSet):
         return copy.deepcopy(self)
 
 
-# class AbinitInputSet(InputSet):
-#     """
-#     A class to represent a set of Abinit inputs.
-#
-#     Parameters
-#     ----------
-#     abinit_input
-#         An AbinitInput object.
-#     """
-#
-#     def __init__(
-#         self,
-#         abinit_input: AbinitInput,
-#     ):
-#         self.abinit_input = abinit_input
-#         # TODO: is this the place for this ? if we want to put the sets in abipy, do differently anyway (it's using
-#         #  atomate2.abinit.common)
-#         self.abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
-#         self.abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
-#         self.abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
-#
-#     def write_input(
-#         self,
-#         directory: Union[str, Path],
-#         make_dir: bool = True,
-#         overwrite: bool = True,
-#     ):
-#         """Write Abinit input files to a directory."""
-#         directory = Path(directory)
-#         if make_dir and not directory.exists():
-#             os.makedirs(directory)
-#
-#         if not overwrite and (directory / INPUT_FILE_NAME).exists():
-#             raise FileExistsError(f"{directory / INPUT_FILE_NAME} already exists.")
-#
-#         with zopen(directory / INPUT_FILE_NAME, "wt") as f:
-#
-#             input_string = str(self.abinit_input)
-#             # TODO: transfer and adapt pseudos management to abipy, this should be handled by AbinitInput.__str__()
-#             pseudos_string = '\npseudos "'
-#             pseudos_string += ",\n         ".join(
-#                 [psp.filepath for psp in self.abinit_input.pseudos]
-#             )
-#             pseudos_string += '"'
-#             input_string += pseudos_string
-#
-#             f.write(input_string)
-#
-#     def set_vars(self, *args, **kwargs) -> dict:
-#         """Set the values of abinit variables.
-#
-#         This sets the abinit variables in the abipy AbinitInput object.
-#
-#         One can pass a dictionary mapping the abinit variables to their values or
-#         the abinit variables as keyword arguments. A combination of the two
-#         options is also allowed.
-#
-#         Returns
-#         -------
-#         dict
-#             dictionary with the variables that have been added.
-#         """
-#         return self.abinit_input.set_vars(*args, **kwargs)
-#
-#     def remove_vars(self, keys: Union[Iterable[str], str], strict: bool = True) -> dict:
-#         """Remove the abinit variables listed in keys.
-#
-#         This removes the abinit variables from the abipy AbinitInput object.
-#
-#         Parameters
-#         ----------
-#         keys
-#             string or list of strings with the names of the abinit variables to be removed.
-#         strict
-#             whether to raise a KeyError if one of the abinit variables to be removed is not present.
-#
-#         Returns
-#         -------
-#         dict
-#             dictionary with the variables that have been removed.
-#         """
-#         return self.abinit_input.remove_vars(keys=keys, strict=strict)
-#
-#     def set_structure(self, structure: Any) -> Structure:
-#         """Set the structure for this input set.
-#
-#         This basically forwards the setting of the structure to the abipy AbinitInput object.
-#         """
-#         return self.abinit_input.set_structure(structure)
-#
-#     def deepcopy(self):
-#         """Deep copy of the input set."""
-#         return copy.deepcopy(self)
+PrevOutput = namedtuple("PrevOutput", "dirname exts")
 
 
 @dataclass
 class AbinitInputSetGenerator(InputGenerator):
     """A class to generate Abinit input sets."""
 
-    # TODO: see how to deal with this
-    #  could be one or several of:
-    #   - a str representing a pseudo table (e.g. "ONCVPSP-PBE-PDv0.4") [+standard or stringent ? how ?]
-    #     => the input set generator is easily serialized (not the whole table) and the pseudos objects
-    #        are generated on the fly.
-    #   - a str with a directory of where to find pseudos (how to distinguish from the previous one ?).
-    #     => the directory should have a specific tree structure (e.g. each atom has its own directory).
-    #   - a list of str corresponding to the explicit pseudos filepaths
-    #     => the user needs to know exactly where the pseudos are in the server in which the jobs will be executed
-    #   - a list of Pseudo objects
-    #     => in this case the Pseudo objects are serialized/deserialized.
-    #        one question might be that we may want to have
-    #           a) "file-like" Pseudo objects, for which the pseudos files have to be present and discoverable
-    #              somehow on the cluster, [this is the case currently I think]
-    #           b) "full" Pseudo objects, for which the pseudo files do not need to be present on the cluster
-    #              and they will be written at runtime. [is this something desirable ? means we have a lot of
-    #              data in the database for storing the pseudos for each job]
-    #
     pseudos: Union[
         List[str], PseudoTable
     ] = pseudo_dojo.OfficialDojoTable.from_djson_file(
@@ -277,6 +217,8 @@ class AbinitInputSetGenerator(InputGenerator):
     )
 
     extra_abivars: dict = field(default_factory=dict)
+
+    prev_output_exts: tuple = ("WFK", "DEN")
 
     # class variables
     DEFAULT_PARAMS: ClassVar[dict] = {}
@@ -288,7 +230,7 @@ class AbinitInputSetGenerator(InputGenerator):
         # Here we assume the most
         for cls in self.__class__.mro()[::-1]:
             try:
-                cls_params = getattr(cls, "DEFAULT_PARAMS")
+                cls_params = getattr(cls, "DEFAULT_PARAMS")  # noqa: B009
                 params.update(cls_params)
             except AttributeError:
                 pass
@@ -304,19 +246,18 @@ class AbinitInputSetGenerator(InputGenerator):
     ) -> AbinitInputSet:
         """Generate an AbinitInputSet object.
 
-        Here we assume that restart_from is either an input set to restart from, or a directory (cannot be a job uuid
-        or an OutputReference).
+        Here we assume that restart_from is a directory and prev_outputs is
+        a list of directories. We also assume there is an abinit_input.json file
+        in each of these directories containing the AbinitInput object used to
+        execute abinit.
         """
-        # TODO: Think about prev_outputs ? how do they enter the equation here ?
-        #  One example is for GW, when doing sigma, we might need to know the input set for the screening so that
-        #  we know which ecuteps, ecutsigx we can use ?
-        # if prev_outputs is not None:
-        #     raise NotImplementedError('get intput set with prev_outputs not yet implemented')
         pseudos = kwargs.get("pseudos", self.pseudos)
+        restart_from = self.check_format_prev_dirs(restart_from)
+        prev_outputs = self.check_format_prev_dirs(prev_outputs)
+
+        input_files = []
 
         if restart_from is None:
-            # Take parameters from the kwargs or, if not present, from the input set generator
-            # (default or explicitly set)
             logger.info("Getting parameters for the generation of the abinit input.")
             parameters = {
                 param: kwargs.get(
@@ -337,34 +278,35 @@ class AbinitInputSetGenerator(InputGenerator):
                 structure=structure,
                 pseudos=pseudos,
                 prev_outputs=prev_outputs,
-                # restart_from=None,
                 **parameters,
             )
             # Always reset the ird variables
-            # TODO: make sure this is ok. See if we add them here based on restart_from and prev_outputs ?
             abinit_input.pop_irdvars()
         else:
-            if not isinstance(restart_from, AbinitInputSet):
-                raise NotImplementedError(
-                    "Restarting only allowed from a previous AbinitInputSet currently"
-                )
-            abinit_input = restart_from.abinit_input.deepcopy()
-            # TODO: make sure this is ok
-            if structure is not None:
-                abinit_input.set_structure(structure)
-            # Always reset the ird variables
-            # TODO: see if we add them here based on restart_from and prev_outputs ?
-            abinit_input.pop_irdvars()
+            abinit_input = load_abinit_input(restart_from)
             if len(self.ALLOW_RESTART_FROM.intersection(abinit_input.runlevel)) == 0:
                 raise RuntimeError(
                     f"Restart is not allowed. "
                     f'For "{self.__class__.__name__}" input generator, the '
-                    f'allowed previous calculations for restart are: {" ".join(self.ALLOW_RESTART_FROM)}'
+                    f"allowed previous calculations for restart are: "
+                    f'{" ".join(self.ALLOW_RESTART_FROM)}'
                 )
+
+            # TODO: make sure this is ok
+            if structure is not None:
+                abinit_input.set_structure(structure)
+            # Always reset the ird variables
+            abinit_input.pop_irdvars()
+            # Files for restart (e.g. continue a not yet converged
+            # scf/nscf/relax calculation)
+            irdvars, files = self.resolve_deps(restart_from)
+            abinit_input.set_vars(irdvars)
+            input_files.extend(files)
 
             if update_params:
                 logger.info(
-                    "Getting parameters to update for the generation of the abinit input."
+                    "Getting parameters to update for the generation of the "
+                    "abinit input."
                 )
                 self.on_restart(abinit_input)
                 parameters = {}
@@ -387,15 +329,108 @@ class AbinitInputSetGenerator(InputGenerator):
                         continue
                     self.update_abinit_input(abinit_input, param, value)
 
+        # Files that are dependencies (e.g. band structure calculations
+        # need the density)
+        if prev_outputs:
+            irdvars, files = self.resolve_deps(prev_outputs)
+            abinit_input.set_vars(irdvars)
+            input_files.extend(files)
+
         extra_abivars = dict(self.extra_abivars)
         extra_abivars.update(kwargs.get("extra_abivars", {}))
-        # extra_abivars.update(kwargs.get('extra_abivars', {}))
 
         abinit_input.set_vars(**extra_abivars)
 
+        abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
+        abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
+        abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
+
         return AbinitInputSet(
             abinit_input=abinit_input,
+            input_files=input_files,
         )
+
+    def check_format_prev_dirs(self, prev_dirs):
+        """Check and format the prev_dirs (restart or dependency)."""
+        if prev_dirs is None:
+            return None
+        if isinstance(prev_dirs, (str, Path)):
+            prev_dirs = [PrevOutput(prev_dirs, tuple(self.prev_output_exts))]
+        elif isinstance(prev_dirs, (list, tuple)):
+            if len(prev_dirs) == 2 and isinstance(prev_dirs[0], (str, Path)):
+                if isinstance(prev_dirs[1], str) and prev_dirs[1] in ALL_ABIEXTS:
+                    prev_dirs = [(prev_dirs[0], (prev_dirs[1],))]
+                elif isinstance(prev_dirs[1], (list, tuple)):
+                    prev_dirs = [prev_dirs]
+            new_prev_dirs = []
+            for prev_dir in prev_dirs:
+                if isinstance(prev_dir, (str, Path)):
+                    new_prev_dirs.append(
+                        PrevOutput(prev_dir, tuple(self.prev_output_exts))
+                    )
+                elif isinstance(prev_dir, (list, tuple)):
+                    if len(prev_dir) != 2:
+                        raise ValueError(
+                            "Wrong schema for single previous directory dependency. "
+                            "Should be a list/tuple of directory and extension(s)."
+                        )
+                    if not isinstance(prev_dir[0], (str, Path)):
+                        raise ValueError(
+                            "Previous directory should be expressed as a str or Path."
+                        )
+                    if isinstance(prev_dir[1], str):
+                        exts = [prev_dir[1]]
+                    elif isinstance(prev_dir[1], (list, tuple)):
+                        exts = prev_dir[1]
+                    else:
+                        raise ValueError("")
+                    for ext in exts:
+                        if ext not in ALL_ABIEXTS:
+                            raise ValueError(
+                                f"'{ext}' is not a valid Abinit file extension."
+                            )
+                    new_prev_dirs.append(PrevOutput(prev_dir[0], tuple(exts)))
+                else:
+                    raise ValueError("Wrong type for previous directory dependency.")
+            prev_dirs = new_prev_dirs
+        else:
+            raise ValueError("Wrong type for previous directory dependency.")
+        return prev_dirs
+
+    def resolve_deps(self, prev_outputs):
+        """Resolve dependencies.
+
+        This method assumes that prev_outputs is in the correct format, i.e.
+        a list of PrevOutput named tuples.
+        """
+        input_files = []
+        deps_irdvars = {}
+        for prev_output in prev_outputs:
+            irdvars, inp_file = self.resolve_dep(prev_output=prev_output)
+            input_files.append(inp_file)
+            deps_irdvars.update(irdvars)
+
+        return deps_irdvars, input_files
+
+    @staticmethod
+    def resolve_dep(prev_output):
+        """Return irdvars and corresponding file for a given dependency.
+
+        This method assumes that prev_output is in the correct format,
+        i.e. a PrevOutput named tuple.
+        """
+        prev_outdir = Directory(os.path.join(prev_output.dirname, OUTDIR_NAME))
+
+        for ext in prev_output.exts:
+            restart_file = prev_outdir.has_abiext(ext)
+            irdvars = irdvars_for_ext(ext)
+            if restart_file:
+                break
+        else:
+            msg = f"Cannot find {' or '.join(prev_output.exts)} file to restart from."
+            logger.error(msg)
+            raise InitializationError(msg)
+        return irdvars, restart_file
 
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
@@ -406,8 +441,9 @@ class AbinitInputSetGenerator(InputGenerator):
     def update_abinit_input(self, abinit_input, param, value):
         """Update AbinitInput object."""
         raise RuntimeError(
-            f'Cannot apply "{param}" input set generator update to previous AbinitInput.'
+            f'Cannot apply "{param}" input set generator update to'
+            f"previous AbinitInput."
         )
 
     def on_restart(self, abinit_input):
-        """Perform updates of AbinitInput when the calculation is restarted from a previous one."""
+        """Perform updates of AbinitInput upon restart of a previous calculation."""

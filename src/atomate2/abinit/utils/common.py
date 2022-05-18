@@ -20,7 +20,7 @@ STDERR_FILE_NAME = "run.err"
 LOG_FILE_NAME = "run.log"
 OUTPUT_FILE_NAME = "run.abo"
 OUTNC_FILE_NAME = "out_OUT.nc"
-INPUT_FILE_NAME = "run.abi"
+INPUT_FILE_NAME: str = "run.abi"
 MPIABORTFILE = "__ABI_MPIABORTFILE__"
 DUMMY_FILENAME = "__DUMMY__"
 ELPHON_OUTPUT_FILE_NAME = "run.abo_elphon"
@@ -63,7 +63,8 @@ class AbiAtomateError(Exception):
 class AbinitRuntimeError(AbiAtomateError):
     """Exception raised for errors during Abinit calculation.
 
-    Contains the information about the errors and warning extracted from the output files.
+    Contains the information about the errors and warning extracted from
+    the output files.
     Initialized with a job, uses it to prepare a suitable error message.
     """
 
@@ -80,7 +81,8 @@ class AbinitRuntimeError(AbiAtomateError):
     ):
         """Construct AbinitRuntimeError object.
 
-        If the job has a report all the information will be extracted from it, otherwise the arguments will be used.
+        If the job has a report all the information will be extracted from it,
+        otherwise the arguments will be used.
 
         Parameters
         ----------
@@ -89,15 +91,20 @@ class AbinitRuntimeError(AbiAtomateError):
         msg
             the error message
         num_errors
-            number of errors in the abinit execution. Only used if job doesn't have a report.
+            number of errors in the abinit execution. Only used if job doesn't
+            have a report.
         num_warnings
-            number of warning in the abinit execution. Only used if job doesn't have a report.
+            number of warning in the abinit execution. Only used if job doesn't
+            have a report.
         errors
-            list of errors in the abinit execution. Only used if job doesn't have a report.
+            list of errors in the abinit execution. Only used if job doesn't
+            have a report.
         warnings
-            list of warnings in the abinit execution. Only used if job doesn't have a report.
+            list of warnings in the abinit execution. Only used if job doesn't
+            have a report.
         """
-        # This can handle both the cases of DECODE_MONTY=True and False (Since it has a from_dict method).
+        # This can handle both the cases of DECODE_MONTY=True and False
+        # (Since it has a from_dict method).
         super().__init__(msg)
         self.job = job
         if (
@@ -162,7 +169,7 @@ class AbinitRuntimeError(AbiAtomateError):
 
 
 class UnconvergedError(AbinitRuntimeError):
-    """Exception raised when a calculation didn't converge within the selected number of restarts."""
+    """Exception raised when a calculation didn't converge after the max restarts."""
 
     ERROR_CODE = ErrorCode.UNCONVERGED
 
@@ -180,7 +187,8 @@ class UnconvergedError(AbinitRuntimeError):
     ):
         """Construct UnconvergedError object.
 
-        If the job has a report all the information will be extracted from it, otherwise the arguments will be used.
+        If the job has a report all the information will be extracted from it,
+        otherwise the arguments will be used.
         It contains information that can be used to further restart the job.
 
         Parameters
@@ -190,13 +198,17 @@ class UnconvergedError(AbinitRuntimeError):
         msg
             the error message
         num_errors
-            number of errors in the abinit execution. Only used if job doesn't have a report.
+            number of errors in the abinit execution. Only used if job doesn't
+            have a report.
         num_warnings
-            number of warning in the abinit execution. Only used if job doesn't have a report.
+            number of warning in the abinit execution. Only used if job doesn't
+            have a report.
         errors
-            list of errors in the abinit execution. Only used if job doesn't have a report.
+            list of errors in the abinit execution. Only used if job doesn't
+            have a report.
         warnings
-            list of warnings in the abinit execution. Only used if job doesn't have a report.
+            list of warnings in the abinit execution. Only used if job doesn't
+            have a report.
         abinit_input
             the last AbinitInput used.
         restart_info
@@ -251,13 +263,13 @@ class UnconvergedError(AbinitRuntimeError):
 
 
 class WalltimeError(AbiAtomateError):
-    """Exception raised when the calculation didn't complete within the specified walltime."""
+    """Exception raised when the calculation didn't complete in time."""
 
     ERROR_CODE = ErrorCode.WALLTIME
 
 
 class InitializationError(AbiAtomateError):
-    """Exception raised if errors are present during the initialization of the job, before abinit is started."""
+    """Exception raised if errors are present during the initialization of the job."""
 
     ERROR_CODE = ErrorCode.INITIALIZATION
 
@@ -269,7 +281,7 @@ class RestartError(InitializationError):
 
 
 class PostProcessError(AbiAtomateError):
-    """Exception raised if problems are encountered during the post processing of the abinit calculation."""
+    """Exception raised if problems are encountered during the post processing."""
 
     ERROR_CODE = ErrorCode.POSTPROCESS
 
@@ -302,10 +314,10 @@ class RestartInfo(MSONable):
 
     @property
     def prev_outdir(self):
-        """Get the Directory object pointing to the output directory of the previous step."""
+        """Get the Directory pointing to the output directory of the previous step."""
         return Directory(os.path.join(self.previous_dir, OUTDIR_NAME))
 
     @property
     def prev_indir(self):
-        """Get the Directory object pointing to the input directory of the previous step."""
+        """Get the Directory pointing to the input directory of the previous step."""
         return Directory(os.path.join(self.previous_dir, INDIR_NAME))

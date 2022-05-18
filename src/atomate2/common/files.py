@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from fnmatch import fnmatch
 from pathlib import Path
 
@@ -28,6 +29,7 @@ def copy_files(
     prefix: str = "",
     allow_missing: bool = False,
     file_client: FileClient | None = None,
+    link_files: bool = False,
 ):
     r"""
     Copy files between source and destination folders.
@@ -58,6 +60,9 @@ def copy_files(
         directory.
     file_client : .FileClient
         A file client to use for performing file operations.
+    link_files : bool
+        Whether to link the files instead of copying them. This option will raise an
+        error if it is used in combination with a
     """
     src_dir = file_client.abspath(src_dir, host=src_host)
     if dest_dir is None:
@@ -72,7 +77,12 @@ def copy_files(
         to_file = Path(file.parent) / f"{prefix}{file.name}"
         to_file = (dest_dir / to_file).with_suffix(file.suffix + suffix)
         try:
-            file_client.copy(from_file, to_file, src_host=src_host)
+            if link_files:
+                if not os.path.exists(from_file):
+                    raise FileNotFoundError(f"No such file or directory: '{from_file}'")
+                file_client.link(from_file, to_file)
+            else:
+                file_client.copy(from_file, to_file, src_host=src_host)
         except FileNotFoundError:
             if not allow_missing:
                 raise
