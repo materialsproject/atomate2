@@ -5,18 +5,24 @@ import os
 from pathlib import Path
 from typing import Type, TypeVar, Union
 
+from abipy.abio.inputs import AbinitInput
+from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
-from abipy.flowtk.utils import File
+from abipy.flowtk.utils import Directory, File
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
+from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import AbinitInputSet
-from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, OUTPUT_FILE_NAME
+from atomate2.abinit.utils.common import (
+    LOG_FILE_NAME,
+    MPIABORTFILE,
+    OUTDIR_NAME,
+    OUTPUT_FILE_NAME,
+    PostProcessError,
+)
 from atomate2.common.schemas.structure import StructureMetadata
-
-# from abipy.flowtk.events import EventReport
-
 
 _T = TypeVar("_T", bound="AbinitTaskDocument")
 
@@ -64,6 +70,10 @@ class AbinitTaskDocument(StructureMetadata):
     event_report: events.EventReport = Field(
         None, description="Event report of this abinit job."
     )
+    task_label: str = Field(None, description="The label for this job/task.")
+    abinit_input: AbinitInput = Field(
+        None, description="AbinitInput used to perform calculation."
+    )
 
     @classmethod
     def from_directory(
@@ -72,6 +82,7 @@ class AbinitTaskDocument(StructureMetadata):
         source: str = "log",
         critical_events=None,
         run_number=1,
+        structure_fixed=True,
     ):
         """Build AbinitTaskDocument from directory."""
         # Files required for the job analysis.
@@ -96,71 +107,47 @@ class AbinitTaskDocument(StructureMetadata):
             msg = "%s exception while parsing event_report:\n%s" % (cls, exc)
             logger.critical(msg)
 
-        return cls(dir_name=dir_name, event_report=report, state=state)
+        abinit_input = load_abinit_input(dir_name)
+        if structure_fixed:
+            # Get the structure from the AbinitInput directly
+            structure = abinit_input.structure
+        else:
+            # For relaxations and molecular dynamics, get the final structure from
+            # the Gsr file.
+            structure = cls.get_final_structure(dir_name)
 
-    # def job_analysis(self):
-    #     """Perform analysis of abinit job."""
-    #     self.report = None
-    #     try:
-    #         self.report = self.get_event_report()
-    #     except Exception as exc:
-    #         msg = "%s exception while parsing event_report:\n%s" % (self, exc)
-    #         logger.critical(msg)
-    #
-    #     output = AbinitJobSummary(
-    #         calc_type=self.calc_type,
-    #         dir_name=os.getcwd(),
-    #         abinit_input_set=self.abinit_input_set,
-    #         structure=self.get_final_structure(),
-    #     )
-    #     response = Response(output=output)
-    #
-    #     if self.report is not None:
-    #         # the calculation finished without errors
-    #         if self.report.run_completed:
-    #             self.history.log_end(workdir=self.workdir)
-    #             # Check if the calculation converged.
-    #             # TODO: where do we define whether a given critical event
-    #             #  allows for a restart ?
-    #             #  here we seem to assume that we can always restart because it is
-    #             #  something unconverged (be it e.g. scf or relaxation)
-    #             not_ok = self.report.filter_types(self.critical_events)
-    #             if not_ok:
-    #                 self.history.log_unconverged()
-    #                 num_restarts = self.history.num_restarts
-    #                 # num_restarts = (
-    #                 #     self.restart_info.num_restarts if self.restart_info else 0
-    #                 # )
-    #                 if num_restarts < self.settings.MAX_RESTARTS:
-    #                     new_job = self.get_restart_job(output=output)
-    #                     response.replace = new_job
-    #                 else:
-    #                     # TODO: check here if we should stop jobflow or children or
-    #                     #  if we should throw an error.
-    #                     response.stop_jobflow = True
-    #                     # response.stop_children = True
-    #                     unconverged_error = UnconvergedError(
-    #                         self,
-    #                         msg="Unconverged after {} restarts.".format(num_restarts),
-    #                         abinit_input=self.abinit_input_set.abinit_input,
-    #                         # restart_info=self.restart_info,
-    #                         history=self.history,
-    #                     )
-    #                     response.stored_data = {"error": unconverged_error}
-    #                     raise unconverged_error
-    #             else:
-    #                 # calculation converged
-    #                 # everything is ok. conclude the job
-    #                 # TODO: add convergence of custom parameters (this is used e.g.
-    #                 #  for dilatmx convergence)
-    #                 response.output.energy = self.get_final_energy()
-    #                 stored_data = self.conclude_task()
-    #                 response.stored_data = stored_data
-    #     else:
-    #         # TODO: add possible fixes here ? (no errors from abinit)
-    #         raise NotImplementedError("")
-    #
-    #     return response
+        doc = cls.from_structure(
+            structure=structure,
+            include_structure=True,
+            dir_name=dir_name,
+            event_report=report,
+            state=state,
+            run_number=run_number,
+            abinit_input=abinit_input,
+        )
+        return doc
+
+    @staticmethod
+    def get_final_structure(dir_name):
+        """Get the final structure from the Gsr file."""
+        gsr_path = Directory(os.path.join(dir_name, OUTDIR_NAME)).has_abiext("GSR")
+        if not gsr_path:
+            msg = (
+                f"No GSR file available in directory "
+                f"{os.path.join(dir_name, OUTDIR_NAME)}."
+            )
+            logger.critical(msg)
+            raise PostProcessError(msg)
+
+        # Open the GSR file.
+        try:
+            gsr_file = GsrFile(gsr_path)
+        except Exception as exc:
+            msg = "Exception while reading GSR file at %s:\n%s" % (gsr_path, str(exc))
+            logger.critical(msg)
+            raise PostProcessError(msg)
+
+        return gsr_file.structure
 
     @staticmethod
     def get_event_report(ofile, mpiabort_file):

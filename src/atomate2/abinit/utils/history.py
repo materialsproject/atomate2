@@ -17,11 +17,12 @@ class JobHistory(collections.deque, MSONable):
     """History class for tracking the creation and actions performed during a job.
 
     The objects provided should be MSONable, thus dicts, lists or MSONable objects.
-    The expected items are dictionaries, transformations, corrections, autoparal, restart/reset
-    and initializations (when factories will be handled).
-    Possibly, the first item should contain information about the starting point of the job.
-    This object will be forwarded during job restarts and resets, in order to keep track of the
-    full history of the job.
+    The expected items are dictionaries, transformations, corrections, autoparal,
+    restart/reset and initializations (when factories will be handled).
+    Possibly, the first item should contain information about the starting point
+    of the job.
+    This object will be forwarded during job restarts and resets, in order to keep
+    track of the full history of the job.
     """
 
     @pmg_serialize
@@ -77,11 +78,16 @@ class JobHistory(collections.deque, MSONable):
     def num_restarts(self):
         """Get the number of restarts of the job."""
         # TODO: what happens if a job starts but does not end (e.g. killed by walltime)
-        #  how should we could the number of restarts ? do we need both START and RESTART events ? One could assume
-        #  there is one "start" and the following are restarts.
+        #  how should we count the number of restarts ? do we need both START and
+        #  RESTART events ? One could assume there is one "start" and the following
+        #  are restarts.
         return len(
             self.get_events_by_types(JobEvent.RESTART)
         )  # [event for event in self if event.event_type == JobEvent.RESTART])
+
+    @property
+    def run_number(self):
+        return len(self.get_events_by_types(JobEvent.START))
 
     @property
     def prev_dir(self):
@@ -167,7 +173,7 @@ class JobHistory(collections.deque, MSONable):
         return events
 
     def get_total_run_time(self):
-        """Get the total run time based summing the run times saved in the abinit stop event."""
+        """Get the total run time based summing the abinit stop event run times."""
         total_run_time = 0
         for te in self.get_events_by_types(JobEvent.ABINIT_STOP):
             run_time = te.details.get("run_time", None)
