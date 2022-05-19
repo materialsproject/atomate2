@@ -56,12 +56,12 @@ class JobHistory(collections.deque, MSONable):
             )
         )
 
-    def log_start(self, workdir):
+    def log_start(self, workdir, start_time):
         """Log that the job has started."""
         self.append(
             JobEvent(
                 JobEvent.START,
-                details=dict(workdir=workdir),
+                details=dict(workdir=workdir, start_time=start_time),
             )
         )
 
