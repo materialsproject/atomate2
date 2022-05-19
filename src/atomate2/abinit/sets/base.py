@@ -283,7 +283,9 @@ class AbinitInputSetGenerator(InputGenerator):
             # Always reset the ird variables
             abinit_input.pop_irdvars()
         else:
-            abinit_input = load_abinit_input(restart_from)
+            if len(restart_from) > 1:
+                raise RuntimeError("Restart from multiple jobs is not possible.")
+            abinit_input = load_abinit_input(restart_from[0].dirname)
             if len(self.ALLOW_RESTART_FROM.intersection(abinit_input.runlevel)) == 0:
                 raise RuntimeError(
                     f"Restart is not allowed. "
