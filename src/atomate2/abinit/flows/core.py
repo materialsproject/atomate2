@@ -117,7 +117,7 @@ class RelaxFlowMaker(Maker):
 
     @classmethod
     def ion_ioncell_relaxation(cls):
-        """Create a double relaxation (first one: ionic relaxation, second one: full relaxation)."""
+        """Create a double relaxation (ionic relaxation + full relaxation)."""
         ion_rlx_maker = RelaxMaker.ionic_relaxation()
         ioncell_rlx_maker = RelaxMaker.full_relaxation()
         return cls(relaxation_makers=[ion_rlx_maker, ioncell_rlx_maker])

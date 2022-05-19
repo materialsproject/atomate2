@@ -117,18 +117,30 @@ class BaseAbinitMaker(Maker):
         history : JobHistory
             A JobHistory object containing the history of this job.
         """
+        # Get the start time.
+        start_time = time.time()
+
         if structure is None and prev_outputs is None and restart_from is None:
             raise RuntimeError(
                 "At least one of structure, prev_outputs or "
                 "restart_from should be defined."
             )
 
-        time.time()
-
         structure = structure
-        history = history or JobHistory()
-        if restart_from is not None:
+        if history is None:
+            # Supposedly the first time the job is created
+            history = JobHistory()
+        elif restart_from is not None:
+            # We want to log the restart only if the restart_from is due to
+            # an automatic restart, not a restart from e.g. another scf or relax
+            # with different parameters.
             history.log_restart()
+
+        # Set up working directory
+        workdir = os.getcwd()
+
+        # Log information about the start of the job
+        history.log_start(workdir=workdir, start_time=start_time)
 
         # Set up logging
         self.set_logger()
@@ -142,12 +154,6 @@ class BaseAbinitMaker(Maker):
         # set walltime, if possible
         # TODO: see in set_walltime, where to put this walltime_command
         self.set_walltime()
-
-        # Set up working directory
-        workdir = os.getcwd()
-
-        # Log information about the start of the job
-        history.log_start(workdir=workdir)
 
         # Get abinit input
         abinit_input_set = self.get_abinit_input_set(
@@ -218,6 +224,8 @@ class BaseAbinitMaker(Maker):
         restart_from : TBD
             restart from a directory, from a previous job, from a previous uuid,
             from a previous ...
+        history : JobHistory
+            A JobHistory object containing the history of this job.
         """
         gen_kwargs: Dict[str, Any] = {"extra_abivars": self.extra_abivars}
 

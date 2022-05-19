@@ -220,6 +220,8 @@ class AbinitInputSetGenerator(InputGenerator):
 
     prev_output_exts: tuple = ("WFK", "DEN")
 
+    dependencies: Optional[dict] = None
+
     # class variables
     DEFAULT_PARAMS: ClassVar[dict] = {}
     ALLOW_RESTART_FROM: ClassVar[set] = set()
