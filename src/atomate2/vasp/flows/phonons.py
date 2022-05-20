@@ -141,7 +141,7 @@ class PhononMaker(Maker):
 
         phonon_collect = generate_frequencies_eigenvectors(structure=structure,
                                                            displacement_data=vasp_displacement_calcs.output,
-                                                           symprec=self.symprec, symreduc=self.sym_reduce,
+                                                           symprec=self.symprec, sym_reduce=self.sym_reduce,
                                                            displacement=self.displacement,
                                                            min_length=self.min_length,
                                                            conventional=self.conventional,
