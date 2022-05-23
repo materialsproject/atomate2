@@ -841,7 +841,6 @@ def _get_band_props(
             OrbitalType.s,
             OrbitalType.p,
             OrbitalType.d,
-            OrbitalType.f,
         ]:
             orb_name = orb_type.name
             if (
