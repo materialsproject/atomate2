@@ -32,9 +32,8 @@ class PhononBSDOSDoc(BaseModel):
         description="Phonon density of states object.",
     )
 
-    free_energy_dict: dict = Field(None, description="dict that includes temperatures and free energies")
+    free_energy_dict: dict = Field(None,
+                                   description="dict that includes temperatures and free energies in kJ/mol per formula unit")
 
     imaginary_modes: bool = Field(None, description="if true, structure has imaginay modes")
-    # TODO: add imaginary modes?
 
-    # TODO: add thermal properties?

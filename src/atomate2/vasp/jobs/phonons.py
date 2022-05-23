@@ -135,6 +135,7 @@ def generate_phonon_displacements(
 def generate_frequencies_eigenvectors(
         structure: Structure,
         displacement_data: list[dict],
+        total_energy: float,
         born_data: str | Path = None,
         symprec: float = SETTINGS.SYMPREC,
         sym_reduce: bool = True,
@@ -227,9 +228,9 @@ def generate_frequencies_eigenvectors(
                    temperature_range]
 
     # transfer the force constants to compute Grüneisen parameters?
-
+    formula_units = structure.composition.num_atoms / structure.composition.reduced_composition.num_atoms
     phonon_doc = PhononBSDOSDoc(structure=structure, ph_bs=bs_symm_line, ph_dos=dos,
-                                free_energy={"temp": temperature_range, "free_energy": free_energy},
+                                free_energy={"temp": temperature_range, "free_energy": free_energy, "total_energy": total_energy / formula_units},
                                 imaginary_modes=imaginary_modes)
 
     return phonon_doc

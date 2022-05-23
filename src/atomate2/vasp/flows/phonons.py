@@ -80,6 +80,8 @@ class PhononMaker(Maker):
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
+    # is the generaor here correct?
+    static_energy_maker: BaseVaspMaker | None = field(default_factory=StaticSetGenerator)
     generate_phonon_displacements_kwargs: dict = field(default_factory=dict)
     run_phonon_displacements_kwargs: dict = field(default_factory=dict)
     born_maker: BaseVaspMaker = field(default_factory=StaticSetGenerator)
@@ -115,6 +117,7 @@ class PhononMaker(Maker):
         if self.conventional:
             sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
             structure = sga.get_conventional_standard_structure()
+
         # generate the displacements
         displacements = generate_phonon_displacements(structure=structure, symprec=self.symprec,
                                                       sym_reduce=self.sym_reduce, displacement=self.displacement,
@@ -137,6 +140,12 @@ class PhononMaker(Maker):
         born_job = StaticMaker(input_set_generator=self.born_maker).make(structure=structure)
         jobs.append(born_job)
 
+        # Computation of BORN charges
+        if self.static_energy_maker is None:
+            self.static_energy_maker = StaticSetGenerator(lepsilon=True)
+        static_job = StaticMaker(input_set_generator=self.static_energy_maker).make(structure=structure)
+        jobs.append(static_job)
+
         # Currently we access forces via filepathes to avoid large data transfer
 
         phonon_collect = generate_frequencies_eigenvectors(structure=structure,
@@ -146,6 +155,7 @@ class PhononMaker(Maker):
                                                            min_length=self.min_length,
                                                            conventional=self.conventional,
                                                            born_data=born_job.output.dir_name,
+                                                           total_energy=static_job.output.output.energy,
                                                            **self.generate_frequencies_eigenvectors_kwargs)
         jobs.append(phonon_collect)
         # # create a flow including all jobs for a phonon computation
