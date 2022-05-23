@@ -90,7 +90,7 @@ def bulk_supercell_calculation(
     sc_mat: NDArray | None = None,
     bulk_info: BulkSuperCellSummary | None = None,
 ) -> BulkSuperCellSummary:
-    """Bulk Supercell calculation.
+    """Bulk Supercell calculation
 
     Check if the information from a bulk supercell calculation has been provided.
     If not, run a bulk supercell calculation.
