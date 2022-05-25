@@ -172,7 +172,7 @@ def calculate_finite_diff(
     ref_calc_index: int
         Index of the reference (distortion=0) calculation.
     run_vasp_kwargs : dict
-        kwargs to pass to run_vasp (should be copied from the static maker used for 
+        kwargs to pass to run_vasp (should be copied from the static maker used for
         previous calculations).
     """
     ref_calc_dir = distorted_calc_dirs[ref_calc_index]
