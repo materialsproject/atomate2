@@ -159,8 +159,8 @@ def calculate_finite_diff(
 ):
     """Run a post-processing VASP job for the finite difference overlap.
 
-    Reads the WAVECAR file and computs the desired quantities.
-    This can be used in cases where data from the same calculation is used multiple times.
+    Reads the WAVECAR file and computs the desired quantities. This can be used in
+    cases where data from the same calculation is used multiple times.
 
     Since all of the standard outputs are presumably already stored in the database,
     the make function here should only only store new data.
@@ -172,7 +172,8 @@ def calculate_finite_diff(
     ref_calc_index: int
         Index of the reference (distortion=0) calculation.
     run_vasp_kwargs : dict
-        kwargs to pass to run_vasp (should be copied from the static maker used for previous calculations).
+        kwargs to pass to run_vasp (should be copied from the static maker used for 
+        previous calculations).
     """
     ref_calc_dir = distorted_calc_dirs[ref_calc_index]
     run_vasp_kwargs = dict() if run_vasp_kwargs is None else run_vasp_kwargs

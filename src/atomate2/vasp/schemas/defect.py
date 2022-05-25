@@ -19,7 +19,11 @@ __all__ = ["CCDDocument", "WSWQ", "FiniteDifferenceDocument"]
 
 
 class FiniteDifferenceDocument(BaseModel):
-    """Collection of computed WSWQ objects using a single ref WAVECAR and a list of distorted WAVECARs."""
+    """Collection of computed wavefunction overlap objects.
+
+    Overlaps obtained using a single reference WAVECAR and a list of WAVECARs
+    from distorted structures.
+    """
 
     wswqs: List[WSWQ]
 
@@ -145,9 +149,10 @@ class CCDDocument(BaseModel):
         relaxed_uuid1: str,
         relaxed_uuid2: str,
     ):
-        """Create a CCDDocument from a lists of structures, energies from completed static calculations.
+        """Create a CCDDocument from a lists of structures and energies.
 
-        The directories and the UUIDs of the static calculations are also provided as separate lists and zipped together.
+        The directories and the UUIDs of the static calculations are also provided as
+        separate lists and zipped together.
 
         Parameters
         ----------
@@ -160,13 +165,17 @@ class CCDDocument(BaseModel):
         energies2
             The energies of the defect (supercell) in charge state (q2).
         static_dirs1
-            Directories of distorted calculations for the defect (supercell) in charge state (q1).
+            Directories of distorted calculations for the defect (supercell) in charge
+            state (q1).
         static_dirs2
-            Directories of distorted calculations for the defect (supercell) in charge state (q2).
+            Directories of distorted calculations for the defect (supercell) in charge
+            state (q2).
         static_uuids1
-            UUIDs of distorted calculations for the defect (supercell) in charge state (q1).
+            UUIDs of distorted calculations for the defect (supercell) in charge
+            state (q1).
         static_uuids2
-            UUIDs of distorted calculations for the defect (supercell) in charge state (q2).
+            UUIDs of distorted calculations for the defect (supercell) in charge
+            state (q2).
         relaxed_uuid1
             UUID of relaxed calculation in charge state (q1).
         relaxed_uuid2
@@ -291,11 +300,10 @@ def sort_pos_dist(
     Sort a list defined when we can only compute a positive-definite distance.
 
     Sometimes, we can only compute a positive-definite distance between two objects.
-    (Ex. Displacement between two structures).
-    In these cases, standard sorting algorithms will not work.
-    Here, we accept two reference points to give some sense of direction.
-    We then sort the list based on the distance between the reference points.
-    Note: this only works if the list falls on a line of some sort
+    (E.g., the displacement between two structures). In these cases, standard
+    sorting algorithms will not work. Here, we accept two reference points to give
+    some sense of direction. We then sort the list based on the distance between the
+    reference points. Note: this only works if the list falls on a line of some sort
 
     Parameters
     ----------
@@ -336,14 +344,14 @@ def get_dQ(ref: Structure, distorted: Structure) -> float:
     Parameters
     ----------
     ground : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the ground (final) state
+        A pymatgen structure corresponding to the ground (final) state.
     excited : pymatgen.core.structure.Structure
-        pymatgen structure corresponding to the excited (initial) state
+        A pymatgen structure corresponding to the excited (initial) state.
 
     Returns
     -------
     float
-        the dQ value (amu^{1/2} Angstrom)
+        The dQ value (amu^{1/2} Angstrom).
     """
     return np.sqrt(
         np.sum(
