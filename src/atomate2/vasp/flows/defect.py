@@ -116,20 +116,21 @@ class FormationEnergyMaker(Maker):
 
 @dataclass
 class ConfigurationCoordinateMaker(Maker):
-    """Class to generate VASP input sets for the calculation of the configuration coordinate diagram.
+    """Maker to generate a configuration coordinate diagram.
 
     Parameters
     ----------
     name: str
         The name of the flow created by this maker.
     relax_maker: .BaseVaspMaker or None
-        A maker to perform a atomic-position-only relaxation on the defect charge states.
-        If None, the defaults will be used.
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states.
     static_maker: .BaseVaspMaker or None
-        A maker to perform the single-shot static calculation of the distorted structures.
-        If None, the defaults will be used.
+        A maker to perform the single-shot static calculation of the distorted
+        structures.
     distortions: tuple[float, ...]
-        The distortions, as a fraction of ΔQ, to use in the calculation of the configuration coordinate diagram.
+        The distortions, as a fraction of ΔQ, to use in the calculation of the
+        configuration coordinate diagram.
     """
 
     name: str = "config. coordinate"
@@ -164,7 +165,8 @@ class ConfigurationCoordinateMaker(Maker):
         Returns
         -------
         Flow
-            The full workflow for the calculation of the configuration coordinate diagram.
+            The full workflow for the calculation of the configuration coordinate
+            diagram.
         """
         # Make sure the static makers stores the wavecar
         self.static_maker.input_set_generator.user_incar_settings["LWAVE"] = True
@@ -179,7 +181,8 @@ class ConfigurationCoordinateMaker(Maker):
                     f"{self.name}: {structure.formula}({charge_state1}-{charge_state2})"
                 )
 
-        # need to wrap this up in a job so that references to undone calculations can be passed in
+        # need to wrap this up in a job so that references to undone calculations can
+        # be passed in
         charged_structures = get_charged_structures(
             structure, [charge_state1, charge_state2]
         )
@@ -216,6 +219,7 @@ class ConfigurationCoordinateMaker(Maker):
 
         deformations1.append_name(" q1")
         deformations2.append_name(" q2")
+
         # distortion index with smallest absolute value
         min_abs_index = min(
             range(len(self.distortions)), key=lambda i: abs(self.distortions[i])
@@ -241,7 +245,7 @@ class ConfigurationCoordinateMaker(Maker):
 
 @job
 def get_charged_structures(structure: Structure, charges: Iterable):
-    """Adding charges to structure.
+    """Add charges to a structure.
 
     This needs to be a job so the results of other jobs can be passed in.
 
@@ -265,7 +269,7 @@ def get_charged_structures(structure: Structure, charges: Iterable):
 
 @dataclass
 class NonRadiativeMaker(Maker):
-    """Class to generate workflows for the calculation of the non-radiative defect capture.
+    """Maker to calculate non-radiative defect capture.
 
     Parameters
     ----------
