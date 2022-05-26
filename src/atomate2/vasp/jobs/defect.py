@@ -180,7 +180,7 @@ def calculate_finite_diff(
     fc = FileClient()
     copy_vasp_outputs(ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc)
 
-    """Update the INCAR for WSWQ calculation."""
+    # Update the INCAR for the WSWQ calculation
     incar = Incar.from_file("INCAR")
     incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
     incar.write_file("INCAR")
