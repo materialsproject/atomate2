@@ -71,7 +71,6 @@ class BaseAbinitMaker(Maker):
         The pseudopotentials to use.
     """
 
-    calc_type: str
     input_set_generator: AbinitInputSetGenerator
     name: str = "base abinit job"
     pseudos: Union[
@@ -230,16 +229,16 @@ class BaseAbinitMaker(Maker):
         gen_kwargs: Dict[str, Any] = {"extra_abivars": self.extra_abivars}
 
         if restart_from is not None:
-            if history.is_first_run:
-                update_params = True
-            else:
-                update_params = False
+            # if history.is_first_run:
+            #     update_params = True
+            # else:
+            #     update_params = False
 
             return self.input_set_generator.get_input_set(
                 structure=structure,
                 restart_from=restart_from,
                 prev_outputs=prev_outputs,
-                update_params=update_params,
+                # update_params=update_params,
                 **gen_kwargs,
             )
 
@@ -253,7 +252,7 @@ class BaseAbinitMaker(Maker):
             structure=structure,
             restart_from=None,
             prev_outputs=prev_outputs,
-            update_params=False,
+            # update_params=False,
             **gen_kwargs,
         )
 

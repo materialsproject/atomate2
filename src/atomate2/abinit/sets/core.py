@@ -1,6 +1,6 @@
 """Module defining core Abinit input set generators."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
 import pymatgen.io.abinit.abiobjects as aobj
@@ -8,68 +8,47 @@ from abipy.abio.factories import ebands_from_gsinput, ion_ioncell_relax_input, s
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
 from atomate2.abinit.files import load_abinit_input
-from atomate2.abinit.sets.base import UNSET, AbinitInputSetGenerator
+from atomate2.abinit.sets.base import AbinitInputSetGenerator
 
 __all__ = [
     "StaticSetGenerator",
     "NonSCFSetGenerator",
+    "RelaxSetGenerator",
 ]
 
 
-_DEFAULT_SCF_PARAMS = dict(
-    kppa=None,
-    ecut=None,
-    pawecutdg=None,
-    nband=None,
-    accuracy="normal",
-    spin_mode="polarized",
-    smearing="fermi_dirac:0.1 eV",
-    charge=0.0,
-    scf_algorithm=None,
-    shift_mode="Monkhorst-Pack",
-)
-
-
 @dataclass
-class ScfSetMixin:
+class StaticSetGenerator(AbinitInputSetGenerator):
+    """Class to generate Abinit static input sets."""
 
-    kppa: float = UNSET
-    ecut: float = UNSET
-    pawecutdg: float = UNSET
-    nband: int = UNSET
-    accuracy: str = UNSET
-    spin_mode: str = UNSET
-    smearing: str = UNSET
-    charge: float = UNSET
-    scf_algorithm: str = UNSET
-    shift_mode: str = UNSET
+    calc_type: str = "static"
+
+    kppa: Optional[float] = None
+    ecut: Optional[float] = None
+    pawecutdg: Optional[float] = None
+    nband: Optional[int] = None
+    accuracy: str = "normal"
+    spin_mode: str = "polarized"
+    smearing: str = "fermi_dirac:0.1 eV"
+    charge: float = 0.0
+    scf_algorithm: Optional[str] = None
+    shift_mode: str = "Monkhorst-Pack"
+
+    restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
 
     # class variables
-    DEFAULT_PARAMS: ClassVar[dict] = _DEFAULT_SCF_PARAMS
-    ALLOW_RESTART_FROM: ClassVar[set] = {SCF, RELAX, MOLECULAR_DYNAMICS}
-
-    def update_abinit_input(self, abinit_input, param, value):
-        """Update AbinitInput for the specific parameter and its value."""
-        if param == "ecut":
-            # Set the cutoff energies.
-            # TODO: make a check on pawecutdg ?
-            # TODO: how to take accuracy into account ?
-            if value is None:
-                raise NotImplementedError("")
-            # abinit_input.set_vars(_find_ecut_pawecutdg(
-            #     value, None, abinit_input.pseudos, accuracy
-            # ))
-            abinit_input.set_vars({"ecut": value})
-        else:
-            raise RuntimeError(
-                f'Cannot apply "{param}" input set generator update to '
-                f"previous AbinitInput."
-            )
-
-
-@dataclass
-class StaticSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
-    """Class to generate Abinit static input sets."""
+    params: ClassVar[tuple] = (
+        "kppa",
+        "ecut",
+        "pawecutdg",
+        "nband",
+        "accuracy",
+        "spin_mode",
+        "smearing",
+        "charge",
+        "scf_algorithm",
+        "shift_mode",
+    )
 
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
@@ -107,19 +86,21 @@ class StaticSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
 class NonSCFSetGenerator(AbinitInputSetGenerator):
     """Class to generate Abinit non-SCF input sets."""
 
-    nband: Optional[int] = UNSET
-    ndivsm: int = UNSET
-    accuracy: str = UNSET
+    calc_type: str = "nscf"
 
-    prev_output_exts: tuple = tuple(["DEN"])
+    nband: Optional[int] = None
+    ndivsm: int = 15
+    accuracy: str = "normal"
+
+    restart_from_deps: tuple = (f"{NSCF}:WFK",)
+    prev_outputs_deps: tuple = (f"{SCF}:DEN",)
 
     # class variables
-    DEFAULT_PARAMS: ClassVar[dict] = {
-        "nband": None,
-        "ndivsm": 15,
-        "accuracy": "normal",
-    }
-    ALLOW_RESTART_FROM: ClassVar[set] = {NSCF}
+    params: ClassVar[tuple] = (
+        "nband",
+        "ndivsm",
+        "accuracy",
+    )
 
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
@@ -141,7 +122,7 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
                 "Should have exactly one previous output (an SCF calculation)."
             )
         prev_output = prev_outputs[0]
-        previous_abinit_input = load_abinit_input(prev_output.dirname)
+        previous_abinit_input = load_abinit_input(prev_output)
         # if pseudos is not None:
         #     # TODO: maybe just check that the pseudos are the same as the one
         #      in the previous_input_set ?
@@ -159,20 +140,49 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
 class NonScfWfqInputGenerator(AbinitInputSetGenerator):
     """Input set generator for Non-Scf Wfq calculations."""
 
-    #
-    #     previous_input_set: AbinitInputSet = None
-    #     nband: Optional[int] = None
-    #     ndivsm: int = 15
-    #     accuracy: str = "normal"
-    #
-    #     # non-dataclass variables
-    #     # DEFAULT_PARAMS: tuple = field(
-    #     #     default=(
-    #     #         'previous_input_set',
-    #     #     ),
-    #     #     init=False, repr=False, compare=False
-    #     # )
-    #
+    calc_type: str = "nscf_wfq"
+
+    wfq_tol: dict = field(default_factory=lambda: {"tolwfr": 1.0e-18})
+
+    restart_from_deps: tuple = (f"{NSCF}:WFQ",)
+    prev_outputs_deps: tuple = (f"{SCF}:DEN",)
+
+    def get_abinit_input(
+        self, structure=None, pseudos=None, prev_outputs=None, qpt=None, **kwargs
+    ):
+        """Get AbinitInput object for Non-SCF Wfq calculation."""
+        if qpt is None:
+            raise RuntimeError(
+                "Should provide q-point at which non-SCF Wfq calculation "
+                "has to be done."
+            )
+        if structure is not None:
+            # TODO: maybe just check that the structure is the same as the one
+            #  in the previous_input_set ?
+            raise RuntimeError(
+                "Structure should not be set in a non-SCF Wfq input set. "
+                "It should come directly from a previous (SCF) input set."
+            )
+        if prev_outputs is None:
+            raise RuntimeError(
+                "No previous_outputs. Cannot perform non-SCF Wfq calculation."
+            )
+        if len(prev_outputs) != 1:
+            raise RuntimeError(
+                "Should have exactly one previous output (an SCF calculation)."
+            )
+        prev_output = prev_outputs[0]
+        wfq_input = load_abinit_input(prev_output)
+        wfq_input.set_vars(kptopt=3, nqpt=1, iscf=-2, qpt=qpt, **self.wfq_tol)
+        return wfq_input
+
+
+@dataclass
+class DdkInputGenerator(AbinitInputSetGenerator):
+    """Input set generator for Non-Scf Wfq calculations."""
+
+    calc_type: str = "ddk"
+
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
     ):
@@ -180,14 +190,29 @@ class NonScfWfqInputGenerator(AbinitInputSetGenerator):
 
 
 @dataclass
-class RelaxSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
+class RelaxSetGenerator(StaticSetGenerator):
     """Class to generate Abinit relaxation input sets."""
 
+    calc_type: str = "relaxation"
+
     relax_cell: bool = True
-    tolmxf: float = UNSET
+    tolmxf: float = 5.0e-5
 
     # class variables
-    DEFAULT_PARAMS: ClassVar[dict] = {"relax_cell": True, "tolmxf": 5.0e-5}
+    params: ClassVar[tuple] = (
+        "kppa",
+        "ecut",
+        "pawecutdg",
+        "nband",
+        "accuracy",
+        "spin_mode",
+        "smearing",
+        "charge",
+        "scf_algorithm",
+        "shift_mode",
+        "relax_cell",
+        "tolmxf",
+    )
 
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
@@ -232,16 +257,3 @@ class RelaxSetGenerator(ScfSetMixin, AbinitInputSetGenerator):
         relax_input.set_vars(relax_method.to_abivars())
 
         return relax_input
-
-    def update_abinit_input(self, abinit_input, param, value):
-        if param == "relax_cell":
-            if value:
-                relax_method = aobj.RelaxationMethod.atoms_and_cell(
-                    atoms_constraints=None
-                )
-            else:
-                relax_method = aobj.RelaxationMethod.atoms_only(atoms_constraints=None)
-            print(relax_method.to_abivars())
-            abinit_input.set_vars(relax_method.to_abivars())
-        else:
-            super().update_abinit_input(abinit_input, param, value)
