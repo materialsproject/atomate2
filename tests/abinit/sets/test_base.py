@@ -318,7 +318,7 @@ class TestAbinitInputSetGenerator:
         assert saisg1_copy.param_is_explicitly_set("param2")
         assert saisg1_copy.param_is_explicitly_set("param3")
         assert not saisg2.param_is_explicitly_set("param1")
-        assert not saisg2.param_is_explicitly_set("param2")
+        assert saisg2.param_is_explicitly_set("param2")
         assert not saisg2.param_is_explicitly_set("param3")
         assert not saisg2_copy.param_is_explicitly_set("param1")
         assert saisg2_copy.param_is_explicitly_set("param2")

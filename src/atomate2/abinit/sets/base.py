@@ -43,14 +43,6 @@ __all__ = ["AbinitInputSet", "AbinitInputSetGenerator"]
 logger = logging.getLogger(__name__)
 
 
-# class _UNSET(MSONable):
-#     def __eq__(self, other):
-#         return self.__class__ == other.__class__
-#
-#
-# UNSET = _UNSET()
-
-
 class AbinitInputSet(InputSet):
     """
     A class to represent a set of Abinit inputs.
@@ -89,7 +81,6 @@ class AbinitInputSet(InputSet):
         self.inputs["abinit_input.json"] = json.dumps(self.abinit_input.as_dict())
         if self.generator:
             gendict = self.generator.as_dict()
-            del gendict["_params_set"]
             self.inputs["abinit_input_set_generator.json"] = json.dumps(gendict)
         super().write_input(
             directory=directory,
@@ -253,7 +244,9 @@ class AbinitInputSetGenerator(InputGenerator):
     # AbinitInputSetGenerator. This is used internally when "joining" two
     # generators to know when to take the value of a parameter from the
     # current generator or from the previous one.
-    _params_set: set = field(default_factory=set, repr=False, hash=False, compare=False)
+    _params_set: set = field(
+        default_factory=set, init=False, repr=False, hash=False, compare=False
+    )
 
     # class variables
     params: ClassVar[tuple] = ()
@@ -319,7 +312,7 @@ class AbinitInputSetGenerator(InputGenerator):
         return params, extra_abivars
 
     def _get_generator(self, kwargs, extra_abivars):
-        generator = copy.deepcopy(self)
+        generator = copy.copy(self)
         for param in self.params:
             if param in kwargs:
                 generator.__setattr__(param, kwargs[param])
