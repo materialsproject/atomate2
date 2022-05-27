@@ -349,6 +349,17 @@ class AbinitInputSetGenerator(InputGenerator):
         a list of directories. We also assume there is an abinit_input.json file
         in each of these directories containing the AbinitInput object used to
         execute abinit.
+
+        Parameters
+        ----------
+        structure : Structure
+            Pymatgen Structure object.
+        restart_from : str or Path or list or tuple
+            Directory (as a str or Path) or list/tuple of 1 directory (as a str
+            or Path) to restart from.
+        prev_outputs : str or Path or list or tuple
+            Directory (as a str or Path) or list/tuple of directories (as a str
+            or Path) needed as dependencies for the AbinitInputSet generated.
         """
         pseudos = kwargs.get("pseudos", self.pseudos)
         restart_from = self.check_format_prev_dirs(restart_from)
