@@ -8,7 +8,6 @@ from abipy.abio.input_tags import SCF
 from abipy.abio.inputs import AbinitInput
 from monty.os import makedirs_p
 from monty.tempfile import ScratchDir
-from pymatgen.util.testing import PymatgenTest
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import AbinitInputSet, AbinitInputSetGenerator
@@ -35,7 +34,7 @@ class TestAbinitInputSet:
         abinit_input = load_abinit_input(
             os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
         )
-        with ScratchDir(".") as tmpdir:
+        with ScratchDir("."):
             ais = AbinitInputSet(abinit_input=abinit_input)
             ais.write_input("testdir")
             assert os.path.exists("testdir")
@@ -330,15 +329,14 @@ class TestAbinitInputSetGenerator:
         assert not saisg3_copy.param_is_explicitly_set("param2")
         assert saisg3_copy.param_is_explicitly_set("param3")
 
-    def test_get_input_set(self, mocker):
-        structure = PymatgenTest.get_structure("Si")
+    def test_get_input_set(self, mocker, si_structure):
         with ScratchDir(".") as tmpdir:
             saisg = SomeAbinitInputSetGenerator(
                 param1=2, extra_abivars={"ecut": 5.0, "nstep": 25}
             )
             spy = mocker.spy(saisg, "_get_generator")
             abinit_input_set = saisg.get_input_set(
-                structure=structure,
+                structure=si_structure,
                 param2=0.5,
                 extra_abivars={"nstep": 35, "tsmear": 0.04},
             )
@@ -360,7 +358,7 @@ class TestAbinitInputSetGenerator:
             out_wfk1.touch()
             spy.reset_mock()
             abinit_input_set = saisg.get_input_set(
-                structure=structure,
+                structure=si_structure,
                 restart_from=output1,
                 param2=5.5,
                 extra_abivars={"nstep": 5},
