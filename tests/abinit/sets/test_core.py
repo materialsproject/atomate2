@@ -83,7 +83,12 @@ class TestStaticSetGenerator:
                 structure=si_structure, smearing="marzari5:0.5 eV"
             )
             assert isinstance(input_set1, AbinitInputSet)
+            assert input_set1.abinit_input["occopt"] == 5
             input_set1.write_input("first_run")
+            dirlist = os.listdir("first_run")
+            assert len(dirlist) == 6
+            assert "abinit_input_set_generator.json" in dirlist
+            assert "abinit_input.json" in dirlist
             with open("first_run/run.abi", "r") as f:
                 runabi1_str = f.read()
             assert "ecut 8.5" in runabi1_str
