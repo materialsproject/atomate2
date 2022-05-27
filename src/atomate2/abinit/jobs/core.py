@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from typing import ClassVar, Optional, Sequence
+from dataclasses import dataclass
+from typing import ClassVar, Sequence
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.sets.core import (
@@ -45,11 +45,6 @@ class NonScfMaker(BaseAbinitMaker):
     input_set_generator: NonSCFSetGenerator = NonSCFSetGenerator()
     CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
 
-    dependencies: Optional[dict] = field(default_factory=lambda: {"scf": ["DEN"]})
-
-    # non-dataclass variables
-    restart_extension: ClassVar[str] = "WFK"
-
 
 @dataclass
 class NonScfWfqMaker(NonScfMaker):
@@ -60,8 +55,6 @@ class NonScfWfqMaker(NonScfMaker):
 
     input_set_generator: NonScfWfqInputGenerator = NonScfWfqInputGenerator()
     CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
-
-    dependencies: Optional[dict] = field(default_factory=lambda: {"scf": ["DEN"]})
 
     wfq_tolwfr: float = 1.0e-22
 

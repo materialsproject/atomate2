@@ -55,7 +55,7 @@ class LineBandStructureMaker(Maker):
         """
         scf_job = self.scf_maker.make(structure, restart_from=restart_from)
         line_job = self.bs_maker.make(
-            prev_outputs=scf_job.output,
+            prev_outputs=scf_job.output.dirname,
         )
         jobs = [scf_job, line_job]
         return Flow(jobs, line_job.output, name=self.name)
