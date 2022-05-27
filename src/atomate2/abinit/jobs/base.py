@@ -125,7 +125,6 @@ class BaseAbinitMaker(Maker):
                 "restart_from should be defined."
             )
 
-        structure = structure
         if history is None:
             # Supposedly the first time the job is created
             history = JobHistory()
@@ -159,7 +158,6 @@ class BaseAbinitMaker(Maker):
             structure=structure,
             prev_outputs=prev_outputs,
             restart_from=restart_from,
-            history=history,
         )
 
         abinit_input_set.write_input(directory=workdir, make_dir=True, overwrite=False)
@@ -210,7 +208,6 @@ class BaseAbinitMaker(Maker):
         structure: Optional[Structure] = None,
         prev_outputs=None,
         restart_from=None,
-        history=None,
     ):
         """Set up AbinitInputSet.
 
@@ -223,22 +220,14 @@ class BaseAbinitMaker(Maker):
         restart_from : TBD
             restart from a directory, from a previous job, from a previous uuid,
             from a previous ...
-        history : JobHistory
-            A JobHistory object containing the history of this job.
         """
         gen_kwargs: Dict[str, Any] = {"extra_abivars": self.extra_abivars}
 
         if restart_from is not None:
-            # if history.is_first_run:
-            #     update_params = True
-            # else:
-            #     update_params = False
-
             return self.input_set_generator.get_input_set(
                 structure=structure,
                 restart_from=restart_from,
                 prev_outputs=prev_outputs,
-                # update_params=update_params,
                 **gen_kwargs,
             )
 
@@ -252,7 +241,6 @@ class BaseAbinitMaker(Maker):
             structure=structure,
             restart_from=None,
             prev_outputs=prev_outputs,
-            # update_params=False,
             **gen_kwargs,
         )
 
@@ -316,247 +304,3 @@ class BaseAbinitMaker(Maker):
             stop_jobflow=False,
             stored_data=None,
         )
-
-    # def out_to_in(self, out_file):
-    #     """Link or copy output file from previous job.
-    #
-    #     This will make a link or a copy of the output file to the input data
-    #     directory of this job and rename the file so that ABINIT can read it
-    #     as an input data file.
-    #
-    #     Note that this method also handles WFQ files which are output with a
-    #     WFQ extension but should be read with a WFK extension.
-    #
-    #     Parameters
-    #     ----------
-    #     out_file : str
-    #         Output file to be linked or copied to the input data directory.
-    #
-    #     Returns
-    #     -------
-    #     str
-    #         The absolute path of the new file in the input data directory.
-    #     """
-    #     in_file = os.path.basename(out_file).replace("out", "in", 1)
-    #     in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
-    #     dest = os.path.join(self.indir.path, in_file)
-    #
-    #     if os.path.exists(dest) and not os.path.islink(dest):
-    #         logger.warning("Will overwrite %s with %s" % (dest, out_file))
-    #
-    #     # if rerunning in the same folder the file should be moved anyway
-    #     if self.settings.COPY_DEPS:
-    #         shutil.copyfile(out_file, dest)
-    #     else:
-    #         # if dest already exists should be overwritten. see also resolve_deps
-    #         # and config_run
-    #         try:
-    #             os.symlink(out_file, dest)
-    #         except OSError as e:
-    #             if e.errno == errno.EEXIST:
-    #                 os.remove(dest)
-    #                 os.symlink(out_file, dest)
-    #             else:
-    #                 raise e
-    #
-    #     return dest
-    #
-    # def out_to_in_tim(self, out_file, in_file):
-    #     """Link or copy output file from previous job.
-    #
-    #     This will make a link or a copy of the output file to the input data
-    #     directory of this job and rename the file so that ABINIT can read it
-    #     as an input data file.
-    #
-    #     Parameters
-    #     ----------
-    #     out_file : str
-    #         Output file to be linked or copied to the input data directory.
-    #
-    #     Returns
-    #     -------
-    #     str
-    #         The absolute path of the new file in the input data directory.
-    #     """
-    #     dest = os.path.join(self.indir.path, in_file)
-    #
-    #     if os.path.exists(dest) and not os.path.islink(dest):
-    #         logger.warning("Will overwrite %s with %s" % (dest, out_file))
-    #
-    #     if self.settings.COPY_DEPS:
-    #         shutil.copyfile(out_file, dest)
-    #     else:
-    #         # if dest already exists should be overwritten. see also resolve_deps
-    #         # and config_run
-    #         try:
-    #             os.symlink(out_file, dest)
-    #         except OSError as e:
-    #             if e.errno == errno.EEXIST:
-    #                 os.remove(dest)
-    #                 os.symlink(out_file, dest)
-    #             else:
-    #                 raise e
-    #
-    #     return dest
-    #
-    # def job_analysis(self):
-    #     """Perform analysis of abinit job."""
-    #     self.report = None
-    #     try:
-    #         self.report = self.get_event_report()
-    #     except Exception as exc:
-    #         msg = "%s exception while parsing event_report:\n%s" % (self, exc)
-    #         logger.critical(msg)
-    #
-    #     output = AbinitJobSummary(
-    #         calc_type=self.calc_type,
-    #         dir_name=os.getcwd(),
-    #         abinit_input_set=self.abinit_input_set,
-    #         structure=self.get_final_structure(),
-    #     )
-    #     response = Response(output=output)
-    #
-    #     if self.report is not None:
-    #         # the calculation finished without errors
-    #         if self.report.run_completed:
-    #             self.history.log_end(workdir=self.workdir)
-    #             # Check if the calculation converged.
-    #             # TODO: where do we define whether a given critical event
-    #             #  allows for a restart ?
-    #             #  here we seem to assume that we can always restart because it is
-    #             #  something unconverged (be it e.g. scf or relaxation)
-    #             not_ok = self.report.filter_types(self.critical_events)
-    #             if not_ok:
-    #                 self.history.log_unconverged()
-    #                 num_restarts = self.history.num_restarts
-    #                 # num_restarts = (
-    #                 #     self.restart_info.num_restarts if self.restart_info else 0
-    #                 # )
-    #                 if num_restarts < self.settings.MAX_RESTARTS:
-    #                     new_job = self.get_restart_job(output=output)
-    #                     response.replace = new_job
-    #                 else:
-    #                     # TODO: check here if we should stop jobflow or children or
-    #                     #  if we should throw an error.
-    #                     response.stop_jobflow = True
-    #                     # response.stop_children = True
-    #                     unconverged_error = UnconvergedError(
-    #                         self,
-    #                         msg="Unconverged after {} restarts.".format(num_restarts),
-    #                         abinit_input=self.abinit_input_set.abinit_input,
-    #                         # restart_info=self.restart_info,
-    #                         history=self.history,
-    #                     )
-    #                     response.stored_data = {"error": unconverged_error}
-    #                     raise unconverged_error
-    #             else:
-    #                 # calculation converged
-    #                 # everything is ok. conclude the job
-    #                 # TODO: add convergence of custom parameters (this is used
-    #                 #  e.g. for dilatmx convergence)
-    #                 response.output.energy = self.get_final_energy()
-    #                 stored_data = self.conclude_task()
-    #                 response.stored_data = stored_data
-    #     else:
-    #         # TODO: add possible fixes here ? (no errors from abinit)
-    #         raise NotImplementedError("")
-    #
-    #     return response
-    #
-    # def conclude_task(self):
-    #     """Conclude the task."""
-    #     self.history.log_finalized(self.abinit_input_set.abinit_input)
-    #     stored_data = {
-    #         "report": self.report.as_dict(),
-    #         "finalized": True,
-    #         "history": self.history.as_dict(),
-    #     }
-    #     with open(HISTORY_JSON, "w") as f:
-    #         json.dump(self.history, f, cls=MontyEncoder, indent=4, sort_keys=True)
-    #     return stored_data
-    #
-    #
-    # def resolve_deps_per_job_type(self, prev_outputs, deps_list):
-    #     """Resolve dependencies for specific job type."""
-    #     deps_list = deps_list if isinstance(deps_list, list) else [deps_list]
-    #     for prev_output in prev_outputs:
-    #         for dep in deps_list:
-    #             # TODO: Do we need to keep this here as it is supposed to be passed
-    #             #  using the jobflow db ?
-    #             #  this is related to the question on abinit_input AND structure
-    #             #  passed together in make.
-    #             #  Do we keep this thing with '@' ?
-    #             # if dep.startswith("@structure"):
-    #             #     self.abinit_input.set_structure(structure=prev_output.structure)
-    #             # if not dep.startswith("@"):
-    #             source_dir = prev_output.dir_name
-    #             self.abinit_input_set.set_vars(irdvars_for_ext(dep))
-    #             if dep == "DDK":
-    #                 raise NotImplementedError
-    #                 # self.link_ddk(source_dir)
-    #             elif dep == "1WF" or dep == "1DEN":
-    #                 raise NotImplementedError
-    #                 # self.link_1ext(dep, source_dir)
-    #             else:
-    #                 self.link_ext(dep, source_dir)
-    #
-    # def link_ext(self, ext, source_dir, strict=True):
-    #     """Link the required files from previous runs in the input data directory.
-    #
-    #     It will first try to link the fortran file and then the Netcdf file,
-    #     if the first is not found.
-    #
-    #     Parameters
-    #     ----------
-    #     ext : str
-    #         extension that should be linked.
-    #     source_dir : str
-    #         path to the source directory.
-    #     strict : bool
-    #         whether to raise an exception if the file is missing.
-    #
-    #     Returns
-    #     -------
-    #     str
-    #         The path to the generated link. None if strict=False and the
-    #         file could not be found.
-    #     """
-    #     source = os.path.join(source_dir, OUTDATA_PREFIX + "_" + ext)
-    #     logger.info("Need path {} with ext {}".format(source, ext))
-    #     dest = os.path.join(self.workdir, INDATA_PREFIX + "_" + ext)
-    #
-    #     if not os.path.exists(source):
-    #         # Try netcdf file. TODO: this case should be treated in a cleaner way.
-    #         source += ".nc"
-    #         if os.path.exists(source):
-    #             dest += ".nc"
-    #
-    #     if not os.path.exists(source):
-    #         if strict:
-    #             msg = "{} is needed by this job but it does not exist".format(source)
-    #             logger.error(msg)
-    #             raise InitializationError(msg)
-    #         return
-    #
-    #     # Link path to dest if dest link does not exist.
-    #     # else check that it points to the expected file.
-    #     logger.info("Linking path {} --> {}".format(source, dest))
-    #     if not os.path.exists(dest) or not strict:
-    #         if self.settings.COPY_DEPS:
-    #             shutil.copyfile(source, dest)
-    #         else:
-    #             os.symlink(source, dest)
-    #         return dest
-    #     else:
-    #         # check links but only if we haven't performed the restart.
-    #         # in this case, indeed we may have replaced the file pointer with the
-    #         # previous output file of the present job.
-    #         if (
-    #             not self.settings.COPY_DEPS
-    #             and os.path.realpath(dest) != source
-    #             # and not self.restart_info
-    #         ):
-    #             msg = "dest {} does not point to path {}".format(dest, source)
-    #             logger.error(msg)
-    #             raise InitializationError(msg)
-    #
