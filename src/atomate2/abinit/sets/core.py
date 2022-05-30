@@ -17,8 +17,8 @@ __all__ = [
 
 
 @dataclass
-class StaticSetGenerator(AbinitInputSetGenerator):
-    """Class to generate Abinit static input sets."""
+class GroundStateSetGenerator(AbinitInputSetGenerator):
+    """Common class for ground-state generators."""
 
     calc_type: str = "static"
 
@@ -48,6 +48,13 @@ class StaticSetGenerator(AbinitInputSetGenerator):
         "scf_algorithm",
         "shift_mode",
     )
+
+
+@dataclass
+class StaticSetGenerator(GroundStateSetGenerator):
+    """Class to generate Abinit static input sets."""
+
+    calc_type: str = "static"
 
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
@@ -189,7 +196,7 @@ class DdkInputGenerator(AbinitInputSetGenerator):
 
 
 @dataclass
-class RelaxSetGenerator(StaticSetGenerator):
+class RelaxSetGenerator(GroundStateSetGenerator):
     """Class to generate Abinit relaxation input sets."""
 
     calc_type: str = "relaxation"
@@ -239,34 +246,5 @@ class RelaxSetGenerator(StaticSetGenerator):
         ind = 1 if relax_cell else 0
         relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[ind]
         relax_input["tolmxf"] = tolmxf
-
-        # try:
-        #     atom_constraints = kwargs.pop("atoms_constraints")
-        # except KeyError:
-        #     atom_constraints = None
-        #
-        # try:
-        #     relax_cell = kwargs.pop("relax_cell")
-        # except KeyError:
-        #     relax_cell = self.relax_cell
-        #
-        # if relax_cell:
-        #     relax_method = aobj.RelaxationMethod.atoms_and_cell(
-        #         atoms_constraints=atom_constraints
-        #     )
-        # else:
-        #     relax_method = aobj.RelaxationMethod.atoms_only(
-        #         atoms_constraints=atom_constraints
-        #     )
-        #
-        # try:
-        #     tolmxf = kwargs.pop("tolmxf")
-        # except KeyError:
-        #     tolmxf = self.tolmxf
-        #
-        # relax_method.abivars.update(tolmxf=tolmxf)
-        #
-        # relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[0]
-        # relax_input.set_vars(relax_method.to_abivars())
 
         return relax_input
