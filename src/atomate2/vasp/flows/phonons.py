@@ -12,10 +12,13 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticMaker
-from atomate2.vasp.jobs.core import TightRelaxMaker
-from atomate2.vasp.jobs.phonons import PhononDisplacementMaker, generate_phonon_displacements, \
-    run_phonon_displacements, generate_frequencies_eigenvectors
+from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.phonons import (
+    PhononDisplacementMaker,
+    generate_frequencies_eigenvectors,
+    generate_phonon_displacements,
+    run_phonon_displacements,
+)
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 __all__ = ["PhononMaker"]
@@ -30,16 +33,18 @@ class PhononMaker(Maker):
     relaxation is performed to obtain a structure without forces on the atoms.
     Subsequently, supercells with one displaced atom are generated and accurate
     forces are computed for these structures. With the help of phonopy, these
-    forces are then converted into a dynamical matrix. To correct for polarization effects,
-    a correction of the dynamical matrix based on BORN charges can be performed.
-    Finally, phonon densities of states, phonon band structures and thermodynamic properties are computed.
+    forces are then converted into a dynamical matrix. To correct for polarization
+    effects, a correction of the dynamical matrix based on BORN charges can
+    be performed.     Finally, phonon densities of states, phonon band structures
+    and thermodynamic properties are computed.
 
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to
-        this flow. Otherwise, a different space group might be detected and too many displacement calculations
-        will be generated.
-        It is recommended to check the convergence parameters here and adjust them if necessary. The default might
-        not be strict enough for your specific case.
+        this flow. Otherwise, a different space group might be detected and too
+        many displacement calculations will be generated.
+        It is recommended to check the convergence parameters here and
+        adjust them if necessary. The default might not be strict enough
+        for your specific case.
 
     Parameters
     ----------
@@ -54,8 +59,9 @@ class PhononMaker(Maker):
     min_length: float
         min length of the supercell that will be build
     conventional: bool
-        if true, the supercell will be built from the conventional cell and all properties will be related
-         to the conventional cell
+        if true, the supercell will be built from the conventional
+        cell and all properties will be related
+        to the conventional cell
     bulk_relax_maker : .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation
@@ -80,18 +86,23 @@ class PhononMaker(Maker):
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    # is the generaor here correct?
-    static_energy_maker: BaseVaspMaker | None = field(default_factory=StaticSetGenerator)
+    static_energy_maker: BaseVaspMaker | None = field(
+        default_factory=StaticSetGenerator
+    )
     generate_phonon_displacements_kwargs: dict = field(default_factory=dict)
     run_phonon_displacements_kwargs: dict = field(default_factory=dict)
-    born_maker: BaseVaspMaker = field(default_factory=StaticSetGenerator)
-    phonon_displacement_maker: BaseVaspMaker = field(default_factory=PhononDisplacementMaker)
+    born_maker: BaseVaspMaker | None = field(
+        default_factory=lambda: StaticSetGenerator(lepsilon=True)
+    )
+    phonon_displacement_maker: BaseVaspMaker = field(
+        default_factory=PhononDisplacementMaker
+    )
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
 
     def make(
-            self,
-            structure: Structure,
-            prev_vasp_dir: str | Path | None = None,
+        self,
+        structure: Structure,
+        prev_vasp_dir: str | Path | None = None,
     ):
         """
         Make flow to calculate the elastic constant.
@@ -119,44 +130,68 @@ class PhononMaker(Maker):
             structure = sga.get_conventional_standard_structure()
 
         # generate the displacements
-        displacements = generate_phonon_displacements(structure=structure, symprec=self.symprec,
-                                                      sym_reduce=self.sym_reduce, displacement=self.displacement,
-                                                      min_length=self.min_length,
-                                                      conventional=self.conventional,
-                                                      **self.generate_phonon_displacements_kwargs)
+        displacements = generate_phonon_displacements(
+            structure=structure,
+            symprec=self.symprec,
+            sym_reduce=self.sym_reduce,
+            displacement=self.displacement,
+            min_length=self.min_length,
+            conventional=self.conventional,
+            **self.generate_phonon_displacements_kwargs,
+        )
         jobs.append(displacements)
 
         # perform the phonon displacement calculations
-        vasp_displacement_calcs = run_phonon_displacements(displacements.output,
-                                                           phonon_maker=self.phonon_displacement_maker,
-                                                           **self.run_phonon_displacements_kwargs)
+        vasp_displacement_calcs = run_phonon_displacements(
+            displacements.output,
+            phonon_maker=self.phonon_displacement_maker,
+            **self.run_phonon_displacements_kwargs,
+        )
         jobs.append(vasp_displacement_calcs)
 
         # Computation of BORN charges
-        if self.born_maker is None:
-            self.born_maker = StaticSetGenerator(lepsilon=True)
-        if not self.born_maker.lepsilon:
-            raise ValueError("born_maker must include lepsilon=True")
-        born_job = StaticMaker(input_set_generator=self.born_maker).make(structure=structure)
-        jobs.append(born_job)
+        if self.born_maker is not None:
+            born_job = StaticMaker(input_set_generator=self.born_maker).make(
+                structure=structure
+            )
+            jobs.append(born_job)
 
         # Computation of BORN charges
         if self.static_energy_maker is None:
-            self.static_energy_maker = StaticSetGenerator(lepsilon=True)
-        static_job = StaticMaker(input_set_generator=self.static_energy_maker).make(structure=structure)
+            self.static_energy_maker = StaticSetGenerator()
+        static_job = StaticMaker(input_set_generator=self.static_energy_maker).make(
+            structure=structure
+        )
         jobs.append(static_job)
 
         # Currently we access forces via filepathes to avoid large data transfer
 
-        phonon_collect = generate_frequencies_eigenvectors(structure=structure,
-                                                           displacement_data=vasp_displacement_calcs.output,
-                                                           symprec=self.symprec, sym_reduce=self.sym_reduce,
-                                                           displacement=self.displacement,
-                                                           min_length=self.min_length,
-                                                           conventional=self.conventional,
-                                                           born_data=born_job.output.dir_name,
-                                                           total_energy=static_job.output.output.energy,
-                                                           **self.generate_frequencies_eigenvectors_kwargs)
+        if self.born_maker is not None:
+            phonon_collect = generate_frequencies_eigenvectors(
+                structure=structure,
+                displacement_data=vasp_displacement_calcs.output,
+                symprec=self.symprec,
+                sym_reduce=self.sym_reduce,
+                displacement=self.displacement,
+                min_length=self.min_length,
+                conventional=self.conventional,
+                born_data=born_job.output.dir_name,
+                total_energy=static_job.output.output.energy,
+                **self.generate_frequencies_eigenvectors_kwargs,
+            )
+        else:
+            phonon_collect = generate_frequencies_eigenvectors(
+                structure=structure,
+                displacement_data=vasp_displacement_calcs.output,
+                symprec=self.symprec,
+                sym_reduce=self.sym_reduce,
+                displacement=self.displacement,
+                min_length=self.min_length,
+                conventional=self.conventional,
+                born_data=None,
+                total_energy=static_job.output.output.energy,
+                **self.generate_frequencies_eigenvectors_kwargs,
+            )
         jobs.append(phonon_collect)
         # # create a flow including all jobs for a phonon computation
         my_flow = Flow(jobs, phonon_collect.output)
