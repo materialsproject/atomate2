@@ -5,20 +5,29 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Iterable, Optional, Union
 
 from abipy.flowtk.utils import abi_extensions
 from monty.serialization import loadfn
+from pymatgen.core.structure import Structure
 
 from atomate2.abinit.utils.common import (
     INDATAFILE_PREFIX,
     INDIR_NAME,
     OUTDATAFILE_PREFIX,
 )
+
+# from atomate2.abinit.sets.base import AbinitInputSetGenerator
 from atomate2.common.files import copy_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
-__all__ = ["out_to_in", "fname2ext", "load_abinit_input", "load_generator"]
+__all__ = [
+    "out_to_in",
+    "fname2ext",
+    "load_abinit_input",
+    "load_generator",
+    "write_abinit_input_set",
+]
 
 
 logger = logging.getLogger(__name__)
@@ -123,3 +132,21 @@ def load_generator(dirpath, fname="abinit_input_set_generator.json"):
         )
     abinit_input_set_generator = loadfn(abinit_input_set_generator_file)
     return abinit_input_set_generator
+
+
+def write_abinit_input_set(
+    structure: Optional[Structure] = None,
+    input_set_generator=None,
+    prev_outputs=None,
+    restart_from=None,
+    directory: Union[str, Path] = ".",
+):
+    if input_set_generator is None:
+        raise RuntimeError("Cannot write abinit input set without generator.")
+    ais = input_set_generator.get_input_set(
+        structure=structure,
+        restart_from=restart_from,
+        prev_outputs=prev_outputs,
+    )
+
+    ais.write_input(directory=directory, make_dir=True, overwrite=False)

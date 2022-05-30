@@ -31,8 +31,9 @@ class ScfMaker(BaseAbinitMaker):
 
     calc_type: str = "scf"
     name: str = "Scf calculation"
-    CRITICAL_EVENTS: Sequence[str] = ("ScfConvergenceWarning",)
     input_set_generator: StaticSetGenerator = StaticSetGenerator()
+
+    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
 
 
 @dataclass
@@ -43,7 +44,9 @@ class NonScfMaker(BaseAbinitMaker):
     name: str = "non-Scf calculation"
 
     input_set_generator: NonSCFSetGenerator = NonSCFSetGenerator()
-    CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
+
+    # Non dataclass variables:
+    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
 
 
 @dataclass
@@ -54,11 +57,11 @@ class NonScfWfqMaker(NonScfMaker):
     name: str = "non-Scf calculation"
 
     input_set_generator: NonScfWfqInputGenerator = NonScfWfqInputGenerator()
-    CRITICAL_EVENTS: Sequence[str] = ("NscfConvergenceWarning",)
 
     wfq_tolwfr: float = 1.0e-22
 
     # Non dataclass variables:
+    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
     restart_extension = "WFQ"
 
 
@@ -70,9 +73,8 @@ class RelaxMaker(BaseAbinitMaker):
     input_set_generator: RelaxSetGenerator = RelaxSetGenerator()
     name: str = "Relaxation calculation"
 
-    CRITICAL_EVENTS: Sequence[str] = ("RelaxConvergenceWarning",)
-
     # non-dataclass variables
+    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("RelaxConvergenceWarning",)
     structure_fixed: ClassVar[bool] = False
 
     @classmethod
