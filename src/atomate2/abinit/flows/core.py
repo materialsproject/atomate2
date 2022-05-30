@@ -75,9 +75,7 @@ class RelaxFlowMaker(Maker):
     """
 
     name: str = "relaxation"
-    relaxation_makers: Union[BaseAbinitMaker, List[BaseAbinitMaker]] = field(
-        default_factory=RelaxMaker
-    )
+    relaxation_makers: Union[Maker, List[Maker]] = field(default_factory=RelaxMaker)
 
     def make(
         self,
@@ -99,7 +97,7 @@ class RelaxFlowMaker(Maker):
         Flow
             A relaxation flow.
         """
-        if isinstance(self.relaxation_makers, BaseAbinitMaker):
+        if isinstance(self.relaxation_makers, Maker):
             relaxation_makers = [self.relaxation_makers]
         else:
             relaxation_makers = self.relaxation_makers
@@ -113,7 +111,7 @@ class RelaxFlowMaker(Maker):
                 restart_from=jobs[-1].output
             )
             jobs.append(rlx_job)
-        return Flow(jobs, output=[jobs[-1].output], name=self.name)
+        return Flow(jobs, output=jobs[-1].output, name=self.name)
 
     @classmethod
     def ion_ioncell_relaxation(cls):
