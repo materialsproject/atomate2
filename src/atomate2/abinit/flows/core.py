@@ -13,6 +13,7 @@ from atomate2.abinit.jobs.core import NonScfMaker, RelaxMaker, ScfMaker
 
 @dataclass
 class LineBandStructureMaker(Maker):
+    # TODO: make this more similar to Vasp
     """
     Maker to generate line abinit band structure.
 

@@ -3,7 +3,6 @@
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
-import pymatgen.io.abinit.abiobjects as aobj
 from abipy.abio.factories import ebands_from_gsinput, ion_ioncell_relax_input, scf_input
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
@@ -226,34 +225,44 @@ class RelaxSetGenerator(StaticSetGenerator):
                 "(e.g. relaxation) calculation, use restart_from argument of "
                 "get_input_set method instead."
             )
-
-        try:
-            atom_constraints = kwargs.pop("atoms_constraints")
-        except KeyError:
-            atom_constraints = None
-
-        try:
-            relax_cell = kwargs.pop("relax_cell")
-        except KeyError:
-            relax_cell = self.relax_cell
-
-        if relax_cell:
-            relax_method = aobj.RelaxationMethod.atoms_and_cell(
-                atoms_constraints=atom_constraints
-            )
-        else:
-            relax_method = aobj.RelaxationMethod.atoms_only(
-                atoms_constraints=atom_constraints
-            )
+        if kwargs.get("atoms_constraints", None) is not None:
+            raise NotImplementedError("Atoms constraints not implemented.")
 
         try:
             tolmxf = kwargs.pop("tolmxf")
         except KeyError:
             tolmxf = self.tolmxf
+        ind = 1 if self.relax_cell else 0
+        relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[ind]
+        relax_input["tolmxf"] = tolmxf
 
-        relax_method.abivars.update(tolmxf=tolmxf)
-
-        relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[0]
-        relax_input.set_vars(relax_method.to_abivars())
+        # try:
+        #     atom_constraints = kwargs.pop("atoms_constraints")
+        # except KeyError:
+        #     atom_constraints = None
+        #
+        # try:
+        #     relax_cell = kwargs.pop("relax_cell")
+        # except KeyError:
+        #     relax_cell = self.relax_cell
+        #
+        # if relax_cell:
+        #     relax_method = aobj.RelaxationMethod.atoms_and_cell(
+        #         atoms_constraints=atom_constraints
+        #     )
+        # else:
+        #     relax_method = aobj.RelaxationMethod.atoms_only(
+        #         atoms_constraints=atom_constraints
+        #     )
+        #
+        # try:
+        #     tolmxf = kwargs.pop("tolmxf")
+        # except KeyError:
+        #     tolmxf = self.tolmxf
+        #
+        # relax_method.abivars.update(tolmxf=tolmxf)
+        #
+        # relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[0]
+        # relax_input.set_vars(relax_method.to_abivars())
 
         return relax_input

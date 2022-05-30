@@ -92,6 +92,27 @@ class Atomate2Settings(BaseSettings):
         None, description="Additional settings applied to AMSET settings file."
     )
 
+    # ABINIT settings
+    ABINIT_MPIRUN_CMD: str = Field("mpirun", description="Mpirun command.")
+    ABINIT_CMD: str = Field("abinit", description="Abinit command.")
+    ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
+    ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")
+    ABINIT_COPY_DEPS: bool = Field(
+        False,
+        description="Copy (True) or link file dependencies between jobs.",
+    )
+    ABINIT_AUTOPARAL: bool = Field(
+        False,
+        description="Use autoparal to determine optimal parallel configuration.",
+    )
+    ABINIT_ABIPY_MANAGER_FILE: str = Field(
+        None,
+        description="Config file for task manager of abipy.",
+    )
+    ABINIT_MAX_RESTARTS: int = Field(
+        5, description="Maximum number of restarts of a job."
+    )
+
     class Config:
         """Pydantic config settings."""
 
