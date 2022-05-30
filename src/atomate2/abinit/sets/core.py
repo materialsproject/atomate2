@@ -232,7 +232,11 @@ class RelaxSetGenerator(StaticSetGenerator):
             tolmxf = kwargs.pop("tolmxf")
         except KeyError:
             tolmxf = self.tolmxf
-        ind = 1 if self.relax_cell else 0
+        try:
+            relax_cell = kwargs.pop("relax_cell")
+        except KeyError:
+            relax_cell = self.relax_cell
+        ind = 1 if relax_cell else 0
         relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[ind]
         relax_input["tolmxf"] = tolmxf
 
