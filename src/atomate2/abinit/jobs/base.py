@@ -10,45 +10,25 @@ from dataclasses import dataclass
 from typing import Any, ClassVar, Optional, Sequence, Union
 
 import jobflow
-from abipy.flowtk.events import AbinitEvent
+
+# from abipy.flowtk.events import AbinitEvent
+from abipy.flowtk.events import as_event_class
 from jobflow import Maker, Response, job
-from monty.inspect import all_subclasses
 from monty.json import jsanitize
 from monty.serialization import dumpfn
-from monty.string import is_string
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
 from atomate2.abinit.sets.base import AbinitInputSetGenerator
-from atomate2.abinit.utils.common import (
-    LOG_FILE_NAME,
-    STDERR_FILE_NAME,
-    InitializationError,
-    UnconvergedError,
-)
+from atomate2.abinit.utils.common import InitializationError, UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
-from atomate2.abinit.utils.settings import AbinitAtomateSettings, get_abipy_manager
+from atomate2.settings import Atomate2Settings
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["BaseAbinitMaker"]
-
-
-def as_event_class(event_string):
-    """Convert event string into a subclass of AbinitEvent.
-
-    The string can be the class name or the YAML tag.
-    """
-    if is_string(event_string):
-        for c in all_subclasses(AbinitEvent):
-            if c.__name__ == event_string or c.yaml_tag == event_string:
-                return c
-        raise ValueError(f"Cannot find event class associated to {event_string}.")
-    raise ValueError(
-        f"Cannot convert event_string of type {type(event_string)}. Should be a string."
-    )
 
 
 ResponseArgs = namedtuple(
@@ -104,8 +84,10 @@ def setup_job(
     # Load the atomate settings for abinit to get configuration parameters
     # TODO: how to allow for tuned parameters on a per-job basis ?
     #  (similar to fw_spec-passed settings)
-    settings = AbinitAtomateSettings()
-    abipy_manager = get_abipy_manager(settings)
+    settings = Atomate2Settings()
+    abipy_manager = None  # Currently disabled as it is needed for autoparal,
+    # which is not yet supported
+    # abipy_manager = get_abipy_manager(settings)
 
     # set walltime, if possible
     # TODO: see in set_walltime, where to put this walltime_command
@@ -211,10 +193,8 @@ class BaseAbinitMaker(Maker):
 
         # Run abinit
         run_abinit(
-            abinit_cmd="abinit",
-            mpirun_cmd="mpirun",
-            log_file_path=LOG_FILE_NAME,
-            stderr_file_path=STDERR_FILE_NAME,
+            abinit_cmd=job_config.settings.ABINIT_CMD,
+            mpirun_cmd=job_config.settings.ABINIT_MPIRUN_CMD,
             wall_time=job_config.wall_time,
         )
 
@@ -231,7 +211,7 @@ class BaseAbinitMaker(Maker):
         response_args = self.get_response_args(
             task_document=task_doc,
             history=job_config.history,
-            max_restarts=job_config.settings.MAX_RESTARTS,
+            max_restarts=job_config.settings.ABINIT_MAX_RESTARTS,
         )
 
         dumpfn(jsanitize(task_doc.dict()), fn="task_document.json", indent=2)
@@ -245,59 +225,6 @@ class BaseAbinitMaker(Maker):
             stop_jobflow=response_args.stop_jobflow,
             stored_data=response_args.stored_data,
         )
-
-    # def set_walltime(self):
-    #     """Set the walltime."""
-
-    # def get_abinit_input_set(
-    #     self,
-    #     structure: Optional[Structure] = None,
-    #     prev_outputs=None,
-    #     restart_from=None,
-    # ):
-    #     """Set up AbinitInputSet.
-    #
-    #     Parameters
-    #     ----------
-    #     structure : Structure
-    #         Structure of this job.
-    #     prev_outputs : TBD
-    #         TBD
-    #     restart_from : TBD
-    #         restart from a directory, from a previous job, from a previous uuid,
-    #         from a previous ...
-    #     """
-    #     # gen_kwargs: Dict[str, Any] = {"extra_abivars": self.extra_abivars}
-    #
-    #     if restart_from is not None:
-    #         return self.input_set_generator.get_input_set(
-    #             structure=structure,
-    #             restart_from=restart_from,
-    #             prev_outputs=prev_outputs,
-    #             # **gen_kwargs,
-    #         )
-    #
-    #     if self.input_set_generator is None and restart_from is None:
-    #         raise RuntimeError(
-    #             "Cannot create abinit input set from structure without"
-    #             "input set generator."
-    #         )
-    #
-    #     return self.input_set_generator.get_input_set(
-    #         structure=structure,
-    #         restart_from=None,
-    #         prev_outputs=prev_outputs,
-    #         # **gen_kwargs,
-    #     )
-
-    # def run_abinit(self):
-    #     """Execute abinit."""
-    #     run_abinit(
-    #         abinit_cmd="abinit",
-    #         mpirun_cmd="mpirun",
-    #         log_file_path=LOG_FILE_NAME,
-    #         stderr_file_path=STDERR_FILE_NAME,
-    #     )
 
     def get_response_args(
         self,

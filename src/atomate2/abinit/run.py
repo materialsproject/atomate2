@@ -24,8 +24,6 @@ logger = logging.getLogger(__name__)
 def run_abinit(
     abinit_cmd: str = "abinit",
     mpirun_cmd: str = None,
-    log_file_path: str = LOG_FILE_NAME,
-    stderr_file_path: str = STDERR_FILE_NAME,
     wall_time: int = None,
 ):
     """Run ABINIT."""
@@ -38,7 +36,7 @@ def run_abinit(
         command = [mpirun_cmd, abinit_cmd, INPUT_FILE_NAME]
     else:
         command = [abinit_cmd, INPUT_FILE_NAME]
-    with open(log_file_path, "w") as stdout, open(stderr_file_path, "w") as stderr:
+    with open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
         process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
 
         if wall_time is not None:
