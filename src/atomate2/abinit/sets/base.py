@@ -311,11 +311,12 @@ class AbinitInputSetGenerator(InputGenerator):
         extra_abivars.update(kwargs.get("extra_abivars", {}))
         return params, extra_abivars
 
-    def _get_generator(self, kwargs, extra_abivars):
+    def _get_generator(self, gen_params, extra_abivars):
         generator = copy.copy(self)
+        generator._params_set = set()
         for param in self.params:
-            if param in kwargs:
-                generator.__setattr__(param, kwargs[param])
+            if param in gen_params:
+                generator.__setattr__(param, gen_params[param])
         generator.extra_abivars = extra_abivars
         return generator
 
@@ -449,7 +450,7 @@ class AbinitInputSetGenerator(InputGenerator):
         abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
 
         # Get the generator used with all parameters and extra variables combined.
-        generator = self._get_generator(kwargs, extra_abivars)
+        generator = self._get_generator(gen_params, extra_abivars)
 
         return AbinitInputSet(
             abinit_input=abinit_input,
