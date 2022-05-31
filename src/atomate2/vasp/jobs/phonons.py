@@ -4,13 +4,12 @@ import copy
 import logging
 import tempfile
 from dataclasses import dataclass, field
-from pathlib import Path
 
 import numpy as np
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
-from phonopy.interface.vasp import get_born_vasprunxml, parse_set_of_forces
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
+from phonopy.structure.symmetry import elaborate_borns_and_epsilon
 from phonopy.units import VaspToTHz
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
@@ -20,6 +19,7 @@ from pymatgen.io.phonopy import (
     get_pmg_structure,
 )
 from pymatgen.io.vasp import Kpoints
+from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.transformations.advanced_transformations import (
@@ -27,6 +27,7 @@ from pymatgen.transformations.advanced_transformations import (
 )
 
 from atomate2 import SETTINGS
+from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
 from atomate2.vasp.sets.base import VaspInputSetGenerator
@@ -147,7 +148,9 @@ def generate_frequencies_eigenvectors(
     structure: Structure,
     displacement_data: list[dict],
     total_energy: float,
-    born_data: str | Path = None,
+    # born_data: str | Path = None,
+    epsilon_static: Matrix3D = None,
+    born: Matrix3D = None,
     symprec: float = SETTINGS.SYMPREC,
     sym_reduce: bool = True,
     displacement: float = 0.01,
@@ -177,55 +180,77 @@ def generate_frequencies_eigenvectors(
         symprec=symprec,
         conventional=conventional,
     )
-
-    # can we instead use forces from the previous calculations?
-    forces_filenames = []
-    # Vasprunxml is missing each time
+    set_of_forces = []
     for displacement_datum in displacement_data:
-        # incompressed files should be handled as well
-        forces_filenames.append(
-            str(Path(displacement_datum["job_dir"]) / "vasprun.xml.gz").split(":")[1]
-        )
+        # old implementation based on files
+        # forces_filenames.append(
+        #    str(Path(displacement_datum["job_dir"]) / "vasprun.xml.gz").split(":")[1]
+        # )
+        set_of_forces.append(np.array(displacement_datum["forces"]))
 
-    set_of_forces = parse_set_of_forces(
-        num_atoms=get_pmg_structure(phonon.supercell).num_sites,
-        forces_filenames=forces_filenames,
-    )
+    # set_of_forces = parse_set_of_forces(
+    #    num_atoms=get_pmg_structure(phonon.supercell).num_sites,
+    #    forces_filenames=forces_filenames,
+    # )
 
+    # print(set_of_forces[0])
+    # print(displacement_data[0]["forces"])
     phonon.produce_force_constants(forces=set_of_forces)
-    # for some reason server address will be included in the path?
-    # deal with uncompressed files
-    # phonon._force_constants ?
+
     spa = SpacegroupAnalyzer(structure)
     matrix = spa.get_conventional_to_primitive_transformation_matrix()
 
-    if born_data is not None:
+    # via files instead?
+    # if born_data is not None:
+    #     if not conventional:
+    #         # Could also be the direct output of the born part?
+    #         borns, epsilon, atom_indices = get_born_vasprunxml(
+    #             str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
+    #             symprec=symprec,
+    #             primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+    #             supercell_matrix=phonon.supercell_matrix,
+    #         )
+    #
+    #     else:
+    #         borns, epsilon, atom_indices = get_born_vasprunxml(
+    #             str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
+    #             symprec=symprec,
+    #             primitive_matrix=matrix,
+    #             supercell_matrix=phonon.supercell_matrix,
+    #         )
+    #     print("From Phonopy")
+    #     print(borns)
+    #     print(epsilon)
+    #
+    #     print("From atomate2")
+    #     print(epsilon_static)
+    #     print(born)
+    if born is not None:
         if not conventional:
-            # Could also be the diret output of the born part?
-            borns, epsilon, atom_indices = get_born_vasprunxml(
-                str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
-                symprec=symprec,
-                primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-                supercell_matrix=phonon.supercell_matrix,
-            )
-
+            primitive = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
         else:
-            borns, epsilon, atom_indices = get_born_vasprunxml(
-                str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
-                symprec=symprec,
-                primitive_matrix=matrix,
-                supercell_matrix=phonon.supercell_matrix,
-            )
+            primitive = matrix
+        # use function from phonopy to symmetrize and extract correct born information
+        borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
+            ucell=get_phonopy_structure(structure),
+            borns=np.array(born),
+            epsilon=np.array(epsilon_static),
+            symprec=symprec,
+            primitive_matrix=primitive,
+            supercell_matrix=phonon.supercell_matrix,
+        )
 
-        if not np.allclose(
-            borns,
-            [[0.0000, 0.000, 0.000], [0.000, 0.000, 0.000], [0.000, 0.000, 0.000]],
-        ):
-            born_data = None
-            phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
+        # print(borns)
+        # print(epsilon)
+
+        # we should add a parameter so that this
+        # factor can be easily switched to other codes!
+
+        phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
 
     # get phonon band structure
     tempfilename = tempfile.gettempprefix() + ".yaml"
+    tempfilename = "band.yaml"
     kpath_dict, kpath_concrete = get_kpath(structure)
     qpoints, connections = get_band_qpoints_and_path_connections(
         kpath_concrete, npoints=npoints_band
@@ -234,9 +259,13 @@ def generate_frequencies_eigenvectors(
     phonon.run_band_structure(qpoints, path_connections=connections)
     phonon.write_yaml_band_structure(filename=tempfilename)
     bs_symm_line = get_ph_bs_symm_line(tempfilename, labels_dict=kpath_dict)
+    new_plotter = PhononBSPlotter(bs=bs_symm_line)
+    new_plotter.save_plot("band.eps", img_format="eps", units="THz")
+    # get plots
 
     # get phonon density of states
     tempfilename = tempfile.gettempprefix() + ".yaml"
+    tempfilename = "dos.yaml"
     kpoint = Kpoints.automatic_density(
         structure=structure, kppa=kpoint_density_dos, force_gamma=True
     )
@@ -244,8 +273,9 @@ def generate_frequencies_eigenvectors(
     phonon.run_total_dos()
     phonon.write_total_dos(filename=tempfilename)
     dos = get_ph_dos(tempfilename)
-
-    # we need the total energy of the structure as well!
+    new_plotter_dos = PhononDosPlotter()
+    new_plotter_dos.add_dos(label="total", dos=dos)
+    new_plotter_dos.save_plot(filename="dos.eps", img_format="eps", units="THz")
 
     # add a free energy document?
     imaginary_modes = bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
@@ -314,6 +344,7 @@ def run_phonon_displacements(
             "displacement_number": i,
             "uuid": phonon_job.output.uuid,
             "job_dir": phonon_job.output.dir_name,
+            "forces": phonon_job.output.output.forces,
         }
 
         outputs.append(output)

@@ -77,6 +77,8 @@ class PhononMaker(Maker):
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
     """
 
+    # TODO: add some unit conversion factors
+    #  to easily use other codes to compute phonons?
     name: str = "phonon"
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
@@ -114,6 +116,27 @@ class PhononMaker(Maker):
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
+        # TODO: check how magnetic structures are treated?
+        #  only ferromagnetic settings?
+        # Add keyword to remove magnetisation overall?
+        # TODO: does the convenional option really lead
+        #  to the correct primitive cell that agrees with kpath?
+        # TODO: add more flexibility, allow other codes
+        #  -> different conversion factors in phonopy needed
+        # TODO: check if there is a better way to access
+        #  born charges than via outcar["born"]?
+        # TODO: make sure all parameters are tight enough
+        #  for phonons! Cross-check with A.B. workflow
+        # TODO: add option to change kpath scheme
+        #  (if not possible yet)
+        # TODO: can we add some kind of convergence test?
+        # TODO: can we get rid of the dependency
+        #  on a phonopy function not part of the API?
+        # TODO: switch off charge creation for
+        #  static phonon runs -> too much data
+        # TODO: potentially improve supercell transformation -
+        #  does not always find cell with lattice parameters close to
+        # 90
         jobs = []
 
         # convert to primitive cell
@@ -175,7 +198,9 @@ class PhononMaker(Maker):
                 displacement=self.displacement,
                 min_length=self.min_length,
                 conventional=self.conventional,
-                born_data=born_job.output.dir_name,
+                # born_data=born_job.output.dir_name,
+                epsilon_static=born_job.output.calcs_reversed[0].output.epsilon_static,
+                born=born_job.output.calcs_reversed[0].output.outcar["born"],
                 total_energy=static_job.output.output.energy,
                 **self.generate_frequencies_eigenvectors_kwargs,
             )
@@ -188,10 +213,13 @@ class PhononMaker(Maker):
                 displacement=self.displacement,
                 min_length=self.min_length,
                 conventional=self.conventional,
-                born_data=None,
+                # born_data=None,
+                epsilon_static=None,
+                born=None,
                 total_energy=static_job.output.output.energy,
                 **self.generate_frequencies_eigenvectors_kwargs,
             )
+
         jobs.append(phonon_collect)
         # # create a flow including all jobs for a phonon computation
         my_flow = Flow(jobs, phonon_collect.output)
