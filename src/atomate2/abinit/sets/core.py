@@ -3,7 +3,12 @@
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
-from abipy.abio.factories import ebands_from_gsinput, ion_ioncell_relax_input, scf_input
+from abipy.abio.factories import (
+    dos_from_gsinput,
+    ebands_from_gsinput,
+    ion_ioncell_relax_input,
+    scf_input,
+)
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
 from atomate2.abinit.files import load_abinit_input
@@ -95,8 +100,30 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
     calc_type: str = "nscf"
 
     nband: Optional[int] = None
-    ndivsm: int = 15
     accuracy: str = "normal"
+
+    # TODO: how to switch between ndivsm and line_density determination of kpoints ?
+    #  One way could be to set the convention in the settings somehow ?
+    #  e.g. we could say that by default line_density is used (to do the same as vasp)
+    #  Then if the user tries to set ndivsm explicitly (either in the __init__ of the
+    #  generator or by setting the attribute after initialization), one should probably
+    #  raise an error saying that this parameter is only used when the other convention
+    #  is used. And vice versa of course ...
+    #  Same holds for reciprocal_density vs kppa.
+    ndivsm: int = 15
+    # TODO: if we want to use line_density, we should make a "converter" from
+    #  line_density to ndivsm (as ndivsm is the standard approach to perform Non Scf
+    #  calculations on a line band structure in abinit).
+    # line_density: float = 20
+
+    # TODO: how to switch between reciprocal_density and kppa determination of kpoints ?
+    kppa: float = 1000
+    # TODO: make a converter from kppa to reciprocal_density ?
+    #  or just use the vasp KPoints object generated using reciprocal_density
+    #  to set up the grid manually in abinit ?
+    # reciprocal_density: float = 100
+
+    mode: str = "line"
 
     restart_from_deps: tuple = (f"{NSCF}:WFK",)
     prev_outputs_deps: tuple = (f"{SCF}:DEN",)
@@ -105,8 +132,18 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
     params: ClassVar[tuple] = (
         "nband",
         "ndivsm",
+        "kppa",
         "accuracy",
     )
+
+    def __post_init__(self):
+        """Ensure mode is set correctly."""
+        super().__post_init__()
+        self.mode = self.mode.lower()
+
+        supported_modes = ("line", "uniform")
+        if self.mode not in supported_modes:
+            raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
@@ -129,17 +166,40 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
             )
         prev_output = prev_outputs[0]
         previous_abinit_input = load_abinit_input(prev_output)
-        # if pseudos is not None:
-        #     # TODO: maybe just check that the pseudos are the same as the one
-        #      in the previous_input_set ?
-        #     raise RuntimeError('Pseudos should not be set in a non-SCF input set. '
-        #                        'It should come directly from the previous (SCF) '
-        #                        'input set.')
 
-        return ebands_from_gsinput(
-            gsinput=previous_abinit_input,
-            **kwargs,
-        )
+        if self.mode == "line":
+            kwargs.pop("kppa")
+            return ebands_from_gsinput(
+                gsinput=previous_abinit_input,
+                **kwargs,
+            )
+        elif self.mode == "uniform":
+            # TODO: the dos_from_gsinput takes nband as an argument, but does nothing
+            #  with it ... do we update that in abipy ?
+            kppa = kwargs.pop("kppa")
+            kwargs.pop("ndivsm")
+            uniform_input = dos_from_gsinput(
+                gsinput=previous_abinit_input,
+                dos_kppa=kppa,
+                **kwargs,
+            )
+            nband = kwargs.get("nband")
+            if nband is None:
+                nband = (
+                    uniform_input.get(
+                        "nband",
+                        uniform_input.structure.num_valence_electrons(
+                            uniform_input.pseudos
+                        ),
+                    )
+                    + 10
+                )
+            uniform_input.set_vars(nband=nband)
+            return uniform_input
+        else:
+            raise RuntimeError(
+                f"'{self.mode}' is wrong mode for {self.__class__.__name__}."
+            )
 
 
 @dataclass

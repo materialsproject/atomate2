@@ -12,6 +12,76 @@ from atomate2.abinit.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
 
 
 @dataclass
+class BandStructureMaker(Maker):
+    """
+    Maker to generate abinit band structures.
+
+    This is a static calculation followed by two non-self-consistent field
+    calculations, one uniform and one line mode.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    scf_maker : .BaseAbinitMaker
+        The maker to use for the static calculation.
+    bs_maker : .BaseAbinitMaker
+        The maker to use for the non-self-consistent field calculations.
+    """
+
+    name: str = "band structure"
+    bandstructure_type: str = "both"
+    static_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
+    bs_maker: BaseAbinitMaker = field(default_factory=NonSCFMaker)
+
+    def make(
+        self,
+        structure: Structure,
+        restart_from: Optional[Union[str, Path]] = None,
+    ):
+        """
+        Create a band structure flow.
+
+        Parameters
+        ----------
+        structure : Structure
+            A pymatgen structure object.
+        restart_from : str or Path or None
+            One previous directory to restart from.
+
+        Returns
+        -------
+        Flow
+            A band structure flow.
+        """
+        if self.bandstructure_type not in ("both", "line", "uniform"):
+            raise ValueError(
+                f"Unrecognised bandstructure type {self.bandstructure_type}"
+            )
+
+        static_job = self.static_maker.make(structure, restart_from=restart_from)
+        jobs = [static_job]
+
+        if self.bandstructure_type in ("both", "uniform"):
+            uniform_job = self.bs_maker.make(
+                prev_outputs=static_job.output.dir_name,
+                mode="uniform",
+            )
+            uniform_job.name += " uniform"
+            jobs.append(uniform_job)
+
+        if self.bandstructure_type in ("both", "line"):
+            line_job = self.bs_maker.make(
+                prev_outputs=static_job.output.dir_name,
+                mode="line",
+            )
+            line_job.name += " line"
+            jobs.append(line_job)
+
+        return Flow(jobs, name=self.name)
+
+
+@dataclass
 class LineBandStructureMaker(Maker):
     # TODO: make this more similar to Vasp
     """

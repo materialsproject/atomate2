@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import ClassVar, Sequence
+from typing import ClassVar, List, Optional, Sequence, Union
+
+from jobflow import job
+from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.sets.core import (
@@ -13,6 +16,7 @@ from atomate2.abinit.sets.core import (
     RelaxSetGenerator,
     StaticSetGenerator,
 )
+from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +51,37 @@ class NonSCFMaker(BaseAbinitMaker):
 
     # Non dataclass variables:
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+
+    @job
+    def make(
+        self,
+        structure: Optional[Structure] = None,
+        prev_outputs: Optional[Union[str, List[str]]] = None,
+        restart_from: Optional[Union[str, List[str]]] = None,
+        history: Optional[JobHistory] = None,
+        mode: str = "line",
+    ):
+        """
+        Run a non-scf ABINIT job.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        mode : str
+            Type of band structure calculation. Options are:
+            - "line": Full band structure along symmetry lines.
+            - "uniform": Uniform mesh band structure.
+        """
+        self.input_set_generator.mode = mode
+
+        return super().make.original(
+            self,
+            structure=structure,
+            prev_outputs=prev_outputs,
+            restart_from=restart_from,
+            history=history,
+        )
 
 
 @dataclass
