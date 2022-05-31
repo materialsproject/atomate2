@@ -127,10 +127,11 @@ class BaseAbinitMaker(Maker):
     def from_params(
         cls,
         input_set_generator=None,
-        name=name,
+        name=None,
         wall_time=wall_time,
         **kwargs,
     ):
+        name = name or cls.name
         input_set_generator = input_set_generator or cls.input_set_generator
         ret = cls(
             input_set_generator=input_set_generator,
