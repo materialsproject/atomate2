@@ -285,7 +285,7 @@ class TestAbinitInputSetGenerator:
         assert params1 == {"param1": 1, "param2": 5.0, "param3": [1, 2, 3]}
         assert extra_abivars1 == {}
         saisg1_copy = saisg1._get_generator(
-            kwargs=kwargs1, extra_abivars=extra_abivars1
+            gen_params=params1, extra_abivars=extra_abivars1
         )
         saisg2 = SomeAbinitInputSetGenerator(extra_abivars={"extra_param1": 1})
         kwargs2 = {"param2": 10.0}
@@ -295,7 +295,7 @@ class TestAbinitInputSetGenerator:
         assert params2 == {"param1": 1, "param2": 10.0, "param3": [1, 2, 3]}
         assert extra_abivars2 == {"extra_param1": 1}
         saisg2_copy = saisg2._get_generator(
-            kwargs=kwargs2, extra_abivars=extra_abivars2
+            gen_params=params2, extra_abivars=extra_abivars2
         )
         saisg3 = SomeAbinitInputSetGenerator(
             param3=[4, 5], extra_abivars={"extra_param2": 11}
@@ -308,25 +308,25 @@ class TestAbinitInputSetGenerator:
         assert params3 == {"param1": 8, "param2": 10.0, "param3": [4, 5]}
         assert extra_abivars3 == {"extra_param1": 2, "extra_param2": 11}
         saisg3_copy = saisg3._get_generator(
-            kwargs=kwargs3, extra_abivars=extra_abivars3
+            gen_params=params3, extra_abivars=extra_abivars3
         )
         assert not saisg1.param_is_explicitly_set("param1")
         assert saisg1.param_is_explicitly_set("param2")
         assert saisg1.param_is_explicitly_set("param3")
-        assert not saisg1_copy.param_is_explicitly_set("param1")
+        assert saisg1_copy.param_is_explicitly_set("param1")
         assert saisg1_copy.param_is_explicitly_set("param2")
         assert saisg1_copy.param_is_explicitly_set("param3")
         assert not saisg2.param_is_explicitly_set("param1")
-        assert saisg2.param_is_explicitly_set("param2")
+        assert not saisg2.param_is_explicitly_set("param2")
         assert not saisg2.param_is_explicitly_set("param3")
-        assert not saisg2_copy.param_is_explicitly_set("param1")
+        assert saisg2_copy.param_is_explicitly_set("param1")
         assert saisg2_copy.param_is_explicitly_set("param2")
-        assert not saisg2_copy.param_is_explicitly_set("param3")
+        assert saisg2_copy.param_is_explicitly_set("param3")
         assert saisg3.param_is_explicitly_set("param1")
         assert not saisg3.param_is_explicitly_set("param2")
         assert saisg3.param_is_explicitly_set("param3")
         assert saisg3_copy.param_is_explicitly_set("param1")
-        assert not saisg3_copy.param_is_explicitly_set("param2")
+        assert saisg3_copy.param_is_explicitly_set("param2")
         assert saisg3_copy.param_is_explicitly_set("param3")
 
     def test_get_input_set(self, mocker, si_structure):
