@@ -109,14 +109,14 @@ class RelaxFlowMaker(Maker):
         for rlx_maker in relaxation_makers[1:]:
             rlx_job = rlx_maker.make(
                 # structure=jobs[-1].output.structure, restart_from=jobs[-1].output
-                restart_from=jobs[-1].output
+                restart_from=jobs[-1].output.dir_name
             )
             jobs.append(rlx_job)
         return Flow(jobs, output=jobs[-1].output, name=self.name)
 
     @classmethod
-    def ion_ioncell_relaxation(cls):
+    def ion_ioncell_relaxation(cls, *args, **kwargs):
         """Create a double relaxation (ionic relaxation + full relaxation)."""
-        ion_rlx_maker = RelaxMaker.ionic_relaxation()
+        ion_rlx_maker = RelaxMaker.ionic_relaxation(*args, **kwargs)
         ioncell_rlx_maker = RelaxMaker.full_relaxation()
         return cls(relaxation_makers=[ion_rlx_maker, ioncell_rlx_maker])
