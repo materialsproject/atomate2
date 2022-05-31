@@ -8,7 +8,7 @@ from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.jobs.core import NonScfMaker, RelaxMaker, ScfMaker
+from atomate2.abinit.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
 
 
 @dataclass
@@ -31,8 +31,8 @@ class LineBandStructureMaker(Maker):
     """
 
     name: str = "line band structure"
-    scf_maker: BaseAbinitMaker = field(default_factory=ScfMaker)
-    bs_maker: BaseAbinitMaker = field(default_factory=NonScfMaker)
+    scf_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
+    bs_maker: BaseAbinitMaker = field(default_factory=NonSCFMaker)
 
     def make(
         self,
@@ -56,7 +56,7 @@ class LineBandStructureMaker(Maker):
         """
         scf_job = self.scf_maker.make(structure, restart_from=restart_from)
         line_job = self.bs_maker.make(
-            prev_outputs=scf_job.output.dirname,
+            prev_outputs=scf_job.output.dir_name,
         )
         jobs = [scf_job, line_job]
         return Flow(jobs, line_job.output, name=self.name)
