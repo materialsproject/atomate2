@@ -149,13 +149,6 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
     ):
         """Get AbinitInput object for Non-SCF calculation."""
-        if structure is not None:
-            # TODO: maybe just check that the structure is the same as the one
-            #  in the previous_input_set ?
-            raise RuntimeError(
-                "Structure should not be set in a non-SCF input set. "
-                "It should come directly from the previous (SCF) input set."
-            )
         if prev_outputs is None:
             raise RuntimeError(
                 "No previous_outputs. Cannot perform non-SCF calculation."
@@ -166,6 +159,12 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
             )
         prev_output = prev_outputs[0]
         previous_abinit_input = load_abinit_input(prev_output)
+        if structure is not None:
+            if structure != previous_abinit_input.structure:
+                raise RuntimeError(
+                    "Structure is provided in non-SCF input set generator but "
+                    "is not the same as the one from the previous (SCF) input set."
+                )
 
         if self.mode == "line":
             kwargs.pop("kppa")
