@@ -7,7 +7,7 @@ import os
 import time
 from collections import namedtuple
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional, Sequence, Union
+from typing import Any, ClassVar, List, Optional, Sequence, Union
 
 import jobflow
 
@@ -213,6 +213,7 @@ class BaseAbinitMaker(Maker):
             task_document=task_doc,
             history=job_config.history,
             max_restarts=job_config.settings.ABINIT_MAX_RESTARTS,
+            prev_outputs=prev_outputs,
         )
 
         dumpfn(jsanitize(task_doc.dict()), fn="task_document.json", indent=2)
@@ -232,6 +233,7 @@ class BaseAbinitMaker(Maker):
         task_document: AbinitTaskDocument,
         history: JobHistory,
         max_restarts: int = 5,
+        prev_outputs: Optional[List[str]] = None,
     ):
         """Get new job to restart abinit calculation."""
         if task_document.state == Status.SUCCESS:
@@ -267,6 +269,7 @@ class BaseAbinitMaker(Maker):
         new_job = self.make(
             structure=task_document.structure,
             restart_from=task_document.dir_name,
+            prev_outputs=prev_outputs,
             history=history,
         )
 
