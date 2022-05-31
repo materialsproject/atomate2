@@ -16,11 +16,11 @@ from atomate2.abinit.sets.core import (
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["ScfMaker", "NonScfMaker", "RelaxMaker"]
+__all__ = ["StaticMaker", "NonSCFMaker", "RelaxMaker"]
 
 
 @dataclass
-class ScfMaker(BaseAbinitMaker):
+class StaticMaker(BaseAbinitMaker):
     """Maker to create ABINIT scf jobs.
 
     Parameters
@@ -37,7 +37,7 @@ class ScfMaker(BaseAbinitMaker):
 
 
 @dataclass
-class NonScfMaker(BaseAbinitMaker):
+class NonSCFMaker(BaseAbinitMaker):
     """Maker to create non SCF calculations."""
 
     calc_type: str = "nscf"
@@ -50,7 +50,7 @@ class NonScfMaker(BaseAbinitMaker):
 
 
 @dataclass
-class NonScfWfqMaker(NonScfMaker):
+class NonSCFWfqMaker(NonSCFMaker):
     """Maker to create non SCF calculations for the WFQ."""
 
     calc_type: str = "nscf_wfq"
