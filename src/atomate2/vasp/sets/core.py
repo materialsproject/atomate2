@@ -323,7 +323,14 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
 
 @dataclass
 class HSERelaxSetGenerator(VaspInputSetGenerator):
-    """Class to generate VASP HSE06 relaxation input sets."""
+    """Class to generate VASP HSE06 relaxation input sets.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+
+    """
 
     def get_incar_updates(
         self,
@@ -356,7 +363,7 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
         """
         return {
             "NSW": 99,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "LHFCALC": True,
@@ -370,7 +377,13 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
 
 @dataclass
 class HSETightRelaxSetGenerator(VaspInputSetGenerator):
-    """Class to generate tight VASP HSE relaxation input sets."""
+    """Class to generate tight VASP HSE relaxation input sets.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+    """
 
     def get_incar_updates(
         self,
@@ -409,7 +422,7 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
             "LAECHG": False,
             "EDIFFG": -0.001,
             "LREAL": False,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "NSW": 99,
             "LCHARG": False,
             "GGA": "PE",
@@ -423,7 +436,14 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
 
 @dataclass
 class HSEStaticSetGenerator(VaspInputSetGenerator):
-    """Class to generate VASP HSE06 static input sets."""
+    """Class to generate VASP HSE06 static input sets.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+
+    """
 
     def get_incar_updates(
         self,
@@ -456,7 +476,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
         """
         return {
             "NSW": 0,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "LHFCALC": True,
@@ -493,6 +513,11 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     The "uniform_dense" mode employs are regular weighted k-point mesh, in addition
     to a zero-weighted uniform mesh with higher density.
 
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+
     Parameters
     ----------
     mode
@@ -519,7 +544,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
     mode: str = "gap"
     dedos: float = 0.02
-    reciprocal_density: float = 50
+    reciprocal_density: float = 64
     line_density: float = 20
     zero_weighted_reciprocal_density: float = 100
     optics: bool = False
@@ -620,7 +645,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         """
         updates = {
             "NSW": 0,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "PRECFOCK": "Fast",
