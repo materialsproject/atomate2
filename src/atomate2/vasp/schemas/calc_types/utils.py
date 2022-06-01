@@ -72,7 +72,7 @@ def task_type(
     """
     acalc_type = []
     incar = inputs.get("incar", {})
-    kpts = inputs.get("kpoints", {})
+    kpts = inputs.get("kpoints") or {}  # kpoints can be None, then want a dict
 
     if incar.get("ICHARG", 0) > 10:
         try:
@@ -85,7 +85,7 @@ def task_type(
             acalc_type.append("NSCF Line")
         else:
             acalc_type.append("NSCF Uniform")
-    elif len(list(filter(None.__ne__, kpts.get("labels", [])))) > 0:
+    elif len([x for x in kpts.get("labels") or [] if x is not None]) > 0:
         acalc_type.append("SCF Line")
     elif incar.get("LEPSILON", False):
         if incar.get("IBRION", 0) > 6:
