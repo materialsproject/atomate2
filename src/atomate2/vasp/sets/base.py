@@ -24,11 +24,11 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
-from atomate2.common.sets import InputSet, InputSetGenerator
+from atomate2.common.sets import InputGenerator, InputSet
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
-__all__ = ["VaspInputSet", "VaspInputSetGenerator"]
+__all__ = ["VaspInputSet", "VaspInputGenerator"]
 
 
 class VaspInputSet(InputSet):
@@ -200,7 +200,7 @@ class VaspInputSet(InputSet):
 
 
 @dataclass
-class VaspInputSetGenerator(InputSetGenerator):
+class VaspInputGenerator(InputGenerator):
     """
     A class to generate VASP input sets.
 

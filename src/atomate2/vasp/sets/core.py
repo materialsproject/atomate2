@@ -9,7 +9,7 @@ from pymatgen.core import Structure
 from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = [
     "RelaxSetGenerator",
@@ -25,7 +25,7 @@ __all__ = [
 
 
 @dataclass
-class RelaxSetGenerator(VaspInputSetGenerator):
+class RelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP relaxation input sets."""
 
     def get_incar_updates(
@@ -61,7 +61,7 @@ class RelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class TightRelaxSetGenerator(VaspInputSetGenerator):
+class TightRelaxSetGenerator(VaspInputGenerator):
     """Class to generate tight VASP relaxation input sets."""
 
     def get_incar_updates(
@@ -107,7 +107,7 @@ class TightRelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class StaticSetGenerator(VaspInputSetGenerator):
+class StaticSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP static input sets.
 
@@ -120,7 +120,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
         Whether to set LCALCPOL (used for calculating the electronic contribution to
         the polarization)
     **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     lepsilon: bool = False
@@ -174,7 +174,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class NonSCFSetGenerator(VaspInputSetGenerator):
+class NonSCFSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP non-self-consistent field input sets.
 
@@ -194,7 +194,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         Multiplicative factor for NBANDS when starting from a previous calculation.
         Choose a higher number if you are doing an LOPTICS calculation.
     **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     mode: str = "line"
@@ -322,7 +322,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSERelaxSetGenerator(VaspInputSetGenerator):
+class HSERelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP HSE06 relaxation input sets.
 
     .. note::
@@ -376,7 +376,7 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSETightRelaxSetGenerator(VaspInputSetGenerator):
+class HSETightRelaxSetGenerator(VaspInputGenerator):
     """Class to generate tight VASP HSE relaxation input sets.
 
     .. note::
@@ -435,7 +435,7 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSEStaticSetGenerator(VaspInputSetGenerator):
+class HSEStaticSetGenerator(VaspInputGenerator):
     """Class to generate VASP HSE06 static input sets.
 
     .. note::
@@ -491,7 +491,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSEBSSetGenerator(VaspInputSetGenerator):
+class HSEBSSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP HSE06 band structure input sets.
 
@@ -539,7 +539,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     added_kpoints
         A list of kpoints in fractional coordinates to add as zero-weighted points.
     **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     mode: str = "gap"
@@ -685,7 +685,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class ElectronPhononSetGenerator(VaspInputSetGenerator):
+class ElectronPhononSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP electron phonon input sets.
 

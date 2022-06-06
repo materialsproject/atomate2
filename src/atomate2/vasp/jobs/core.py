@@ -11,7 +11,7 @@ from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSERelaxSetGenerator,
@@ -48,7 +48,7 @@ class StaticMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -69,9 +69,7 @@ class StaticMaker(BaseVaspMaker):
     """
 
     name: str = "static"
-    input_set_generator: VaspInputSetGenerator = field(
-        default_factory=StaticSetGenerator
-    )
+    input_set_generator: VaspInputGenerator = field(default_factory=StaticSetGenerator)
 
 
 @dataclass
@@ -83,7 +81,7 @@ class RelaxMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -104,9 +102,7 @@ class RelaxMaker(BaseVaspMaker):
     """
 
     name: str = "relax"
-    input_set_generator: VaspInputSetGenerator = field(
-        default_factory=RelaxSetGenerator
-    )
+    input_set_generator: VaspInputGenerator = field(default_factory=RelaxSetGenerator)
 
 
 @dataclass
@@ -118,7 +114,7 @@ class TightRelaxMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -139,7 +135,7 @@ class TightRelaxMaker(BaseVaspMaker):
     """
 
     name: str = "tight relax"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=TightRelaxSetGenerator
     )
 
@@ -153,7 +149,7 @@ class NonSCFMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -174,9 +170,7 @@ class NonSCFMaker(BaseVaspMaker):
     """
 
     name: str = "non-scf"
-    input_set_generator: VaspInputSetGenerator = field(
-        default_factory=NonSCFSetGenerator
-    )
+    input_set_generator: VaspInputGenerator = field(default_factory=NonSCFSetGenerator)
 
     @vasp_job
     def make(
@@ -224,7 +218,7 @@ class HSERelaxMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -245,7 +239,7 @@ class HSERelaxMaker(BaseVaspMaker):
     """
 
     name: str = "hse relax"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=HSERelaxSetGenerator
     )
 
@@ -278,7 +272,7 @@ class HSETightRelaxMaker(BaseVaspMaker):
     """
 
     name: str = "hse tight relax"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=HSETightRelaxSetGenerator
     )
 
@@ -292,7 +286,7 @@ class HSEStaticMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -313,7 +307,7 @@ class HSEStaticMaker(BaseVaspMaker):
     """
 
     name: str = "hse static"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=HSEStaticSetGenerator
     )
 
@@ -334,7 +328,7 @@ class HSEBSMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -355,9 +349,7 @@ class HSEBSMaker(BaseVaspMaker):
     """
 
     name: str = "hse band structure"
-    input_set_generator: VaspInputSetGenerator = field(
-        default_factory=HSEBSSetGenerator
-    )
+    input_set_generator: VaspInputGenerator = field(default_factory=HSEBSSetGenerator)
 
     @vasp_job
     def make(
@@ -494,9 +486,7 @@ class TransmuterMaker(BaseVaspMaker):
     name: str = "transmuter"
     transformations: tuple[str, ...] = field(default_factory=tuple)
     transformation_params: tuple[dict, ...] | None = None
-    input_set_generator: VaspInputSetGenerator = field(
-        default_factory=StaticSetGenerator
-    )
+    input_set_generator: VaspInputGenerator = field(default_factory=StaticSetGenerator)
 
     @vasp_job
     def make(
