@@ -14,6 +14,7 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.core import Magmom
+from pymatgen.io.core import InputSet, InputGenerator
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
 from pymatgen.io.vasp.sets import (
     BadInputSetWarning,
@@ -24,7 +25,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
-from atomate2.common.sets import InputGenerator, InputSet
+# from atomate2.common.sets import InputGenerator, InputSet
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
