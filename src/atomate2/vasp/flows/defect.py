@@ -79,9 +79,11 @@ class FormationEnergyMaker(Maker):
     """
 
     name: str = "formation energy"
+
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=DEFECT_RELAX_GENERATOR,
+            task_document_kwargs={"store_volumetric_data": ["LOCPOT"]},
         )
     )
 
