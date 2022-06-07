@@ -393,7 +393,7 @@ class HSEBSMaker(BaseVaspMaker):
 
         if "parse_dos" not in self.task_document_kwargs:
             # parse DOS only for uniform band structure
-            self.task_document_kwargs["parse_dos"] = mode == "uniform"
+            self.task_document_kwargs["parse_dos"] = "uniform" in mode
 
         if "parse_bandstructure" not in self.task_document_kwargs:
             parse_bandstructure = "uniform" if mode == "gap" else mode
