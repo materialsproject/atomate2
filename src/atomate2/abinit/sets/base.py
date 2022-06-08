@@ -8,12 +8,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, ClassVar, Iterable, List, Optional, Union
 
-import pseudo_dojo
 from abipy.abio.input_tags import ION_RELAX, IONCELL_RELAX, MOLECULAR_DYNAMICS, RELAX
 from abipy.abio.inputs import AbinitInput
 from abipy.electrons.gsr import GsrFile
+from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
-from monty.io import zopen
 from monty.json import MSONable
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
@@ -99,20 +98,6 @@ class AbinitInputSet(InputSet):
                 indir=self.indir.path,
                 link_files=self.link_files,
             )
-
-        # TODO: currently a hack to write down the pseudos ...
-        #  transfer and adapt pseudos management to abipy, this should be handled
-        #  by AbinitInput.__str__()
-        with zopen(os.path.join(directory, INPUT_FILE_NAME), "wt") as f:
-            abinit_input = self[INPUT_FILE_NAME]
-            input_string = str(abinit_input)
-            pseudos_string = '\npseudos "'
-            pseudos_string += ",\n         ".join(
-                [psp.filepath for psp in abinit_input.pseudos]
-            )
-            pseudos_string += '"'
-            input_string += pseudos_string
-            f.write(input_string)
 
         if self.validation:
             self.validate()
@@ -227,13 +212,7 @@ class AbinitInputSetGenerator(InputGenerator):
 
     calc_type: str = "abinit_calculation"
 
-    pseudos: Union[
-        List[str], PseudoTable
-    ] = pseudo_dojo.OfficialDojoTable.from_djson_file(
-        os.path.join(
-            pseudo_dojo.dojotable_absdir("ONCVPSP-PBE-PDv0.4"), "standard.djson"
-        )
-    )
+    pseudos: Union[str, List[str], PseudoTable] = "ONCVPSP-PBE-SR-PDv0.4:standard"
 
     extra_abivars: dict = field(default_factory=dict)
 
@@ -363,6 +342,23 @@ class AbinitInputSetGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         pseudos = kwargs.get("pseudos", self.pseudos)
+
+        # get the PseudoTable from the PseudoRepo
+        if isinstance(pseudos, str):
+            # in case a single path to a pseudopotential file has been passed
+            if os.path.isfile(pseudos):
+                pseudos = [pseudos]
+            else:
+                pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
+                repo = get_repo_from_name(pseudo_repo_name)
+                if not repo.is_installed():
+                    msg = (
+                        f"Pseudo repository {pseudo_repo_name} is not installed in {repo.dirpath}) "
+                        f"Use abips.py to install it."
+                    )
+                    raise RuntimeError(msg)
+                pseudos = repo.get_pseudos(table_name)
+
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
 
