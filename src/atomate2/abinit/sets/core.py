@@ -169,7 +169,7 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
         if self.mode == "line":
             kwargs.pop("kppa")
             return ebands_from_gsinput(
-                gsinput=previous_abinit_input,
+                gs_input=previous_abinit_input,
                 **kwargs,
             )
         elif self.mode == "uniform":
