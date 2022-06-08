@@ -49,7 +49,6 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
             "EDIFFG": -0.05,
             "LREAL": False,
             "NSW": 99,
-            "LCHARG": False,
             "ENCUT": 500,
             "LAECHG": False,
             "NELMIN": 6,
@@ -57,3 +56,5 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
             "NCORE": 4,
             "GGA": None,
         }
+
+        # TODO LCHARG should be False if but writing LOCPOT also requires CHGCAR for some reason
