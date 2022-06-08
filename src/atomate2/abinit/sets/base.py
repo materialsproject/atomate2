@@ -4,26 +4,20 @@ import json
 import logging
 import os
 from collections import namedtuple
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from pathlib import Path
-from typing import Any, ClassVar, Iterable, List, Optional, Union
+from typing import Any, Iterable, List, Optional, Union
 
 from abipy.abio.input_tags import ION_RELAX, IONCELL_RELAX, MOLECULAR_DYNAMICS, RELAX
 from abipy.abio.inputs import AbinitInput
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
-from monty.json import MSONable
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.abinit.files import (
-    fname2ext,
-    load_abinit_input,
-    load_generator,
-    out_to_in,
-)
+from atomate2.abinit.files import fname2ext, load_abinit_input, out_to_in
 from atomate2.abinit.utils.common import (
     INDATA_PREFIX,
     INDATAFILE_PREFIX,
@@ -58,12 +52,11 @@ class AbinitInputSet(InputSet):
         input_files: Optional[Iterable[Union[str, Path, dict]]] = None,
         link_files: bool = True,
         validation: bool = True,
-        generator: Optional[MSONable] = None,
     ):
         self.input_files = input_files
         self.link_files = link_files
         self.validation = validation
-        self.generator = generator
+        # self.generator = generator
         super().__init__(inputs={INPUT_FILE_NAME: abinit_input})
 
     def write_input(
@@ -78,9 +71,9 @@ class AbinitInputSet(InputSet):
         #  the abinit input set also sets up links to previous files, sets up the
         #  indir, outdir and tmpdir, ...
         self.inputs["abinit_input.json"] = json.dumps(self.abinit_input.as_dict())
-        if self.generator:
-            gendict = self.generator.as_dict()
-            self.inputs["abinit_input_set_generator.json"] = json.dumps(gendict)
+        # if self.generator:
+        #     gendict = self.generator.as_dict()
+        #     self.inputs["abinit_input_set_generator.json"] = json.dumps(gendict)
         super().write_input(
             directory=directory,
             make_dir=make_dir,
@@ -88,8 +81,8 @@ class AbinitInputSet(InputSet):
             zip_inputs=zip_inputs,
         )
         del self.inputs["abinit_input.json"]
-        if self.generator:
-            del self.inputs["abinit_input_set_generator.json"]
+        # if self.generator:
+        #     del self.inputs["abinit_input_set_generator.json"]
         self.indir, self.outdir, self.tmpdir = self.set_workdir(workdir=directory)
 
         if self.input_files:
@@ -203,6 +196,25 @@ class AbinitInputSet(InputSet):
         return copy.deepcopy(self)
 
 
+def as_pseudo_table(pseudos):
+    # get the PseudoTable from the PseudoRepo
+    if isinstance(pseudos, str):
+        # in case a single path to a pseudopotential file has been passed
+        if os.path.isfile(pseudos):
+            pseudos = [pseudos]
+        else:
+            pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
+            repo = get_repo_from_name(pseudo_repo_name)
+            if not repo.is_installed():
+                msg = (
+                    f"Pseudo repository {pseudo_repo_name} is not installed in {repo.dirpath}) "
+                    f"Use abips.py to install it."
+                )
+                raise RuntimeError(msg)
+            pseudos = repo.get_pseudos(table_name)
+    return pseudos
+
+
 PrevOutput = namedtuple("PrevOutput", "dirname exts")
 
 
@@ -219,102 +231,88 @@ class AbinitInputSetGenerator(InputGenerator):
     restart_from_deps: Optional[Union[str, tuple]] = None
     prev_outputs_deps: Optional[Union[str, tuple]] = None
 
-    # Register of parameters that have been explicitly set in this
-    # AbinitInputSetGenerator. This is used internally when "joining" two
-    # generators to know when to take the value of a parameter from the
-    # current generator or from the previous one.
-    _params_set: set = field(
-        default_factory=set, init=False, repr=False, hash=False, compare=False
-    )
-
-    # class variables
-    params: ClassVar[tuple] = ()
-    _tmpcls_params_set: ClassVar[set] = set()
-
-    def __new__(cls, *args, **kwargs):
-        """Set up the register of parameters explicitly set.
-
-        Note that due to how dataclasses are implemented, it is not possible
-        to perform this in an overridden __init__. A temporary class variable
-        is used to register the parameters that are explicitly set. This
-        temporary class variable is then set to the instance variable in
-        the __post_init__ method, together with the reset of the temporary
-        class variable.
-        """
-        for kwarg in kwargs:
-            if kwarg in cls.params:
-                cls._tmpcls_params_set.add(kwarg)
-        return super().__new__(cls)
-
-    def __post_init__(self):
-        """Post init setting of the parameters explicitly set.
-
-        The temporary class variable is also reset (see __new__).
-        """
-        self._params_set = set(self._tmpcls_params_set)
-        self.__class__._tmpcls_params_set = set()
-
-    def __setattr__(self, key, value):
-        """Set a given attribute and register that it is explicitly set."""
-        if key in self.params:
-            self._params_set.add(key)
-        super().__setattr__(key, value)
-
-    def _get_parameters(self, kwargs, prev_generator):
+    @classmethod
+    def from_prev_generator(cls, prev_input_generator, **kwargs):
+        # Get the calc_type (current input generator or user-specified through kwargs)
+        try:
+            calc_type = kwargs.pop("calc_type")
+        except KeyError:
+            calc_type = cls.calc_type
+        # Do not allow to change pseudopotentials
+        if "pseudos" in kwargs:
+            raise RuntimeError("Cannot change pseudos.")
+        pseudos = prev_input_generator.pseudos
+        # Get the additional abinit variables
+        extra_abivars = prev_input_generator.extra_abivars or {}
+        if "extra_abivars" in kwargs:
+            extra_mod = kwargs.pop("extra_abivars")
+            extra_abivars.update(extra_mod)
+            # Remove additional variables when their value is set to None
+            extra_abivars = {k: v for k, v in extra_abivars.items() if v is not None}
+        # Update the parameters
         params = {}
-        for param in self.params:
-            # If the parameter is in the kwargs, take the value from there.
+        for fld in fields(cls):
+            param = fld.name
+            if param in ["calc_type", "pseudos", "extra_abivars"]:
+                continue
             if param in kwargs:
                 val = kwargs[param]
             else:
-                # If there is no previous generator, take the value from this
-                # generator directly.
-                if prev_generator is None:
-                    val = self.__getattribute__(param)
-                else:
-                    # If the parameter is explicitly set in this generator,
-                    # use that value. Otherwise, take the value from the previous
-                    # generator.
-                    if param in self._params_set:
-                        val = self.__getattribute__(param)
-                    else:
-                        val = prev_generator.__getattribute__(param)
+                # TODO: deal with prev_input_generator that do not have the param (e.g.
+                #  current one is RelaxInputGenerator, previous one is Static, then
+                #  tolmxf is not defined in the previous one).
+                val = prev_input_generator.__getattribute__(param)
             params[param] = val
-        # Take extra_abivars from the previous generator if available.
-        extra_abivars = (
-            prev_generator.extra_abivars if prev_generator is not None else {}
+        return cls(
+            calc_type=calc_type, pseudos=pseudos, extra_abivars=extra_abivars, **params
         )
-        # Update extra_abivars from this generator.
-        extra_abivars.update(self.extra_abivars)
-        # Update extra_abivars from kwargs if applicable.
-        extra_abivars.update(kwargs.get("extra_abivars", {}))
-        return params, extra_abivars
 
-    def _get_generator(self, gen_params, extra_abivars):
-        generator = copy.copy(self)
-        generator._params_set = set()
-        for param in self.params:
-            if param in gen_params:
-                generator.__setattr__(param, gen_params[param])
-        generator.extra_abivars = extra_abivars
-        return generator
+    def _get_prev_abinit_input(self, restart_from):
+        if self.restart_from_deps is None:
+            raise RuntimeError(f"Restart not allowed for {self.__class__.__name__}")
+        if len(restart_from) > 1:
+            raise RuntimeError("Restart from multiple jobs is not possible.")
+        prev_abinit_input = load_abinit_input(restart_from[0])
+        allow_restart_from = set(self.restart_from_deps[0].split(":")[0].split("|"))
+        if len(allow_restart_from.intersection(prev_abinit_input.runlevel)) == 0:
+            raise RuntimeError(
+                f"Restart is not allowed. "
+                f'For "{self.__class__.__name__}" input generator, the '
+                f"allowed previous calculations for restart are: "
+                f'{" ".join(allow_restart_from)}'
+            )
+        return prev_abinit_input
 
-    def param_is_explicitly_set(self, param):
-        """Check if a given parameter has been explicitly set.
-
-        Parameters
-        ----------
-        param : str
-            Name of parameter.
-
-        Raises
-        ------
-        LookupError
-            If the parameter is not registered.
-        """
-        if param not in self.params:
-            raise LookupError(f'Parameter "{param}" is not registered.')
-        return param in self._params_set
+    def _get_restart_from_structure(self, restart_from, prev_abinit_input=None):
+        if prev_abinit_input is None:
+            prev_abinit_input = load_abinit_input(restart_from[0])
+        if (
+            len(
+                {RELAX, ION_RELAX, IONCELL_RELAX, MOLECULAR_DYNAMICS}.intersection(
+                    prev_abinit_input.runlevel
+                )
+            )
+            > 0
+        ):
+            gsr_path = Directory(os.path.join(restart_from[0], OUTDIR_NAME)).has_abiext(
+                "GSR"
+            )
+            if not gsr_path:
+                raise RuntimeError("Cannot extract structure from previous directory.")
+            try:
+                gsr_file = GsrFile(gsr_path)
+            except Exception as exc:
+                msg = "Exception while reading GSR file at %s:\n%s" % (
+                    gsr_path,
+                    str(exc),
+                )
+                raise RuntimeError(msg)
+            structure = gsr_file.structure
+            for prop in structure.site_properties:
+                structure.remove_site_property(prop)
+        else:
+            structure = prev_abinit_input.structure
+        return structure
 
     def get_input_set(  # type: ignore
         self,
@@ -341,73 +339,20 @@ class AbinitInputSetGenerator(InputGenerator):
             Directory (as a str or Path) or list/tuple of directories (as a str
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
+        # Get the pseudos as a PseudoTable
         pseudos = kwargs.get("pseudos", self.pseudos)
-
-        # get the PseudoTable from the PseudoRepo
-        if isinstance(pseudos, str):
-            # in case a single path to a pseudopotential file has been passed
-            if os.path.isfile(pseudos):
-                pseudos = [pseudos]
-            else:
-                pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
-                repo = get_repo_from_name(pseudo_repo_name)
-                if not repo.is_installed():
-                    msg = (
-                        f"Pseudo repository {pseudo_repo_name} is not installed in {repo.dirpath}) "
-                        f"Use abips.py to install it."
-                    )
-                    raise RuntimeError(msg)
-                pseudos = repo.get_pseudos(table_name)
+        pseudos = as_pseudo_table(pseudos)
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
 
-        prev_generator = None
         all_irdvars = {}
         input_files = []
         if restart_from is not None:
-            if self.restart_from_deps is None:
-                raise RuntimeError(f"Restart not allowed for {self.__class__.__name__}")
-            if len(restart_from) > 1:
-                raise RuntimeError("Restart from multiple jobs is not possible.")
-            prev_abinit_input = load_abinit_input(restart_from[0])
-            prev_generator = load_generator(restart_from[0])
-            allow_restart_from = set(self.restart_from_deps[0].split(":")[0].split("|"))
-            if len(allow_restart_from.intersection(prev_abinit_input.runlevel)) == 0:
-                raise RuntimeError(
-                    f"Restart is not allowed. "
-                    f'For "{self.__class__.__name__}" input generator, the '
-                    f"allowed previous calculations for restart are: "
-                    f'{" ".join(allow_restart_from)}'
-                )
-            if (
-                len(
-                    {RELAX, ION_RELAX, IONCELL_RELAX, MOLECULAR_DYNAMICS}.intersection(
-                        prev_abinit_input.runlevel
-                    )
-                )
-                > 0
-            ):
-                gsr_path = Directory(
-                    os.path.join(restart_from[0], OUTDIR_NAME)
-                ).has_abiext("GSR")
-                if not gsr_path:
-                    raise RuntimeError(
-                        "Cannot extract structure from previous directory."
-                    )
-                try:
-                    gsr_file = GsrFile(gsr_path)
-                except Exception as exc:
-                    msg = "Exception while reading GSR file at %s:\n%s" % (
-                        gsr_path,
-                        str(exc),
-                    )
-                    raise RuntimeError(msg)
-                structure = gsr_file.structure
-                for prop in structure.site_properties:
-                    structure.remove_site_property(prop)
-            else:
-                structure = prev_abinit_input.structure
+            prev_abinit_input = self._get_prev_abinit_input(restart_from)
+            structure = self._get_restart_from_structure(
+                restart_from, prev_abinit_input
+            )
             # Files for restart (e.g. continue a not yet converged
             # scf/nscf/relax calculation)
             irdvars, files = self.resolve_deps(
@@ -416,13 +361,10 @@ class AbinitInputSetGenerator(InputGenerator):
             all_irdvars.update(irdvars)
             input_files.extend(files)
 
-        gen_params, extra_abivars = self._get_parameters(kwargs, prev_generator)
-
         abinit_input = self.get_abinit_input(
             structure=structure,
             pseudos=pseudos,
             prev_outputs=prev_outputs,
-            **gen_params,
         )
         # Always reset the ird variables.
         abinit_input.pop_irdvars()
@@ -436,7 +378,7 @@ class AbinitInputSetGenerator(InputGenerator):
 
         # Set ird variables and extra variables.
         abinit_input.set_vars(all_irdvars)
-        abinit_input.set_vars(**extra_abivars)
+        abinit_input.set_vars(self.extra_abivars)
 
         if restart_from is not None:
             self.on_restart(abinit_input=abinit_input)
@@ -445,13 +387,12 @@ class AbinitInputSetGenerator(InputGenerator):
         abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
         abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
 
-        # Get the generator used with all parameters and extra variables combined.
-        generator = self._get_generator(gen_params, extra_abivars)
-
+        # TODO: where/how do we set up/pass down link_files and validation ?
         return AbinitInputSet(
             abinit_input=abinit_input,
             input_files=input_files,
-            generator=generator,
+            link_files=True,
+            validation=True,
         )
 
     def check_format_prev_dirs(self, prev_dirs):

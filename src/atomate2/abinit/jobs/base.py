@@ -126,21 +126,17 @@ class BaseAbinitMaker(Maker):
     @classmethod
     def from_params(
         cls,
-        input_set_generator=None,
         name=None,
         wall_time=wall_time,
         **kwargs,
     ):
         name = name or cls.name
-        input_set_generator = input_set_generator or cls.input_set_generator
-        ret = cls(
-            input_set_generator=input_set_generator,
-            name=name,
-            wall_time=wall_time,
-        )
+        maker = cls(name=name, wall_time=wall_time)
         for param, value in kwargs.items():
-            ret.input_set_generator.__setattr__(param, value)
-        return ret
+            # TODO: do we need/want to check that it is in the list
+            #  of params of the input set generator ?
+            maker.input_set_generator.__setattr__(param, value)
+        return maker
 
     def __post_init__(self):
         """Process post-init configuration."""
