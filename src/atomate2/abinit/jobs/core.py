@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import ClassVar, List, Optional, Sequence, Union
 
 from jobflow import job
@@ -35,7 +35,7 @@ class StaticMaker(BaseAbinitMaker):
 
     calc_type: str = "scf"
     name: str = "Scf calculation"
-    input_set_generator: StaticSetGenerator = StaticSetGenerator()
+    input_set_generator: StaticSetGenerator = field(default_factory=StaticSetGenerator)
 
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
 

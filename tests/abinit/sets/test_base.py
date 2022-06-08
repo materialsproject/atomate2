@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import ClassVar, List, Optional
+from typing import List, Optional
 
 import pytest
 from abipy.abio.input_tags import SCF
@@ -10,7 +10,11 @@ from monty.os import makedirs_p
 from monty.tempfile import ScratchDir
 
 from atomate2.abinit.files import load_abinit_input
-from atomate2.abinit.sets.base import AbinitInputSet, AbinitInputSetGenerator
+from atomate2.abinit.sets.base import (
+    AbinitInputSet,
+    AbinitInputSetGenerator,
+    as_pseudo_table,
+)
 from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, InitializationError
 
 
@@ -148,25 +152,49 @@ class SomeAbinitInputSetGenerator(AbinitInputSetGenerator):
     param1: int = 1
     param2: Optional[float] = None
     param3: List[int] = field(default_factory=list)
+    param4: str = "test_string"
 
     extra_abivars: dict = field(default_factory=dict)
 
     restart_from_deps: tuple = (f"{SCF}:WFK|DEN",)
 
-    # class variables
-    params: ClassVar[tuple] = (
-        "param1",
-        "param2",
-        "param3",
-    )
-
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
     ):
-        return AbinitInput(structure=structure, pseudos=AbinitInputSetGenerator.pseudos)
+        return AbinitInput(
+            structure=structure,
+            pseudos=as_pseudo_table(AbinitInputSetGenerator.pseudos),
+        )
 
 
 class TestAbinitInputSetGenerator:
+    def test_from_prev_generator(self):
+        saisg1 = SomeAbinitInputSetGenerator(
+            param1=2,
+            param3=[1, 2, 3],
+            extra_abivars={"ecut": 5.0, "nstep": 25, "fake": 1},
+        )
+        saisg2 = SomeAbinitInputSetGenerator.from_prev_generator(
+            prev_input_generator=saisg1,
+            param2=1.5,
+            param1=10,
+            extra_abivars={"ntime": 1, "nstep": None, "fake": 3},
+        )
+        assert saisg2.calc_type == "some_calc"
+        assert saisg2.param1 == 10
+        assert saisg2.param2 == 1.5
+        assert saisg2.param3 == [1, 2, 3]
+        assert saisg2.param4 == "test_string"
+        assert saisg2.extra_abivars == {"ecut": 5.0, "fake": 3, "ntime": 1}
+        saisg3 = SomeAbinitInputSetGenerator.from_prev_generator(
+            prev_input_generator=saisg1, calc_type="new_calc"
+        )
+        assert saisg3.calc_type == "new_calc"
+        with pytest.raises(RuntimeError, match=r"Cannot change pseudos."):
+            SomeAbinitInputSetGenerator.from_prev_generator(
+                prev_input_generator=saisg1, pseudos="some_pseudo"
+            )
+
     def test_check_format_prev_dirs(self):
         aisg = AbinitInputSetGenerator()
         prev_outputs = aisg.check_format_prev_dirs(None)
@@ -276,87 +304,22 @@ class TestAbinitInputSetGenerator:
                 assert str(den) in input_files
                 assert len(input_files) == 2
 
-    def test_restart_from_params(self):
-        saisg1 = SomeAbinitInputSetGenerator(param2=3.0, param3=[1, 2, 3])
-        kwargs1 = {"param2": 5.0}
-        params1, extra_abivars1 = saisg1._get_parameters(
-            kwargs=kwargs1, prev_generator=None
-        )
-        assert params1 == {"param1": 1, "param2": 5.0, "param3": [1, 2, 3]}
-        assert extra_abivars1 == {}
-        saisg1_copy = saisg1._get_generator(
-            gen_params=params1, extra_abivars=extra_abivars1
-        )
-        saisg2 = SomeAbinitInputSetGenerator(extra_abivars={"extra_param1": 1})
-        kwargs2 = {"param2": 10.0}
-        params2, extra_abivars2 = saisg2._get_parameters(
-            kwargs=kwargs2, prev_generator=saisg1_copy
-        )
-        assert params2 == {"param1": 1, "param2": 10.0, "param3": [1, 2, 3]}
-        assert extra_abivars2 == {"extra_param1": 1}
-        saisg2_copy = saisg2._get_generator(
-            gen_params=params2, extra_abivars=extra_abivars2
-        )
-        saisg3 = SomeAbinitInputSetGenerator(
-            param3=[4, 5], extra_abivars={"extra_param2": 11}
-        )
-        saisg3.param1 = 15
-        kwargs3 = {"extra_abivars": {"extra_param1": 2}, "param1": 8}
-        params3, extra_abivars3 = saisg3._get_parameters(
-            kwargs=kwargs3, prev_generator=saisg2_copy
-        )
-        assert params3 == {"param1": 8, "param2": 10.0, "param3": [4, 5]}
-        assert extra_abivars3 == {"extra_param1": 2, "extra_param2": 11}
-        saisg3_copy = saisg3._get_generator(
-            gen_params=params3, extra_abivars=extra_abivars3
-        )
-        assert not saisg1.param_is_explicitly_set("param1")
-        assert saisg1.param_is_explicitly_set("param2")
-        assert saisg1.param_is_explicitly_set("param3")
-        assert saisg1_copy.param_is_explicitly_set("param1")
-        assert saisg1_copy.param_is_explicitly_set("param2")
-        assert saisg1_copy.param_is_explicitly_set("param3")
-        assert not saisg2.param_is_explicitly_set("param1")
-        assert not saisg2.param_is_explicitly_set("param2")
-        assert not saisg2.param_is_explicitly_set("param3")
-        assert saisg2_copy.param_is_explicitly_set("param1")
-        assert saisg2_copy.param_is_explicitly_set("param2")
-        assert saisg2_copy.param_is_explicitly_set("param3")
-        assert saisg3.param_is_explicitly_set("param1")
-        assert not saisg3.param_is_explicitly_set("param2")
-        assert saisg3.param_is_explicitly_set("param3")
-        assert saisg3_copy.param_is_explicitly_set("param1")
-        assert saisg3_copy.param_is_explicitly_set("param2")
-        assert saisg3_copy.param_is_explicitly_set("param3")
-
     def test_get_input_set(self, mocker, si_structure):
         with ScratchDir(".") as tmpdir:
             saisg = SomeAbinitInputSetGenerator(
                 param1=2, extra_abivars={"ecut": 5.0, "nstep": 25}
             )
-            spy = mocker.spy(saisg, "_get_generator")
             abinit_input_set = saisg.get_input_set(
                 structure=si_structure,
                 param2=0.5,
                 extra_abivars={"nstep": 35, "tsmear": 0.04},
             )
-            assert spy.call_count == 1
-            returned_gen = spy.spy_return
-            assert returned_gen.param1 == 2
-            assert returned_gen.param2 == 0.5
-            assert returned_gen.param3 == []
-            assert returned_gen.extra_abivars == {
-                "ecut": 5.0,
-                "nstep": 35,
-                "tsmear": 0.04,
-            }
             abinit_input_set.write_input("output1")
             output1 = os.path.join(tmpdir, "output1")
 
             saisg.param3 = [1]
             out_wfk1 = Path(os.path.join(output1, OUTDIR_NAME, "out_WFK"))
             out_wfk1.touch()
-            spy.reset_mock()
             abinit_input_set = saisg.get_input_set(
                 structure=si_structure,
                 restart_from=output1,
@@ -368,13 +331,3 @@ class TestAbinitInputSetGenerator:
             in_wfk2 = os.path.join(output2, INDIR_NAME, "in_WFK")
             assert os.path.islink(in_wfk2)
             assert os.readlink(in_wfk2) == str(out_wfk1)
-            assert spy.call_count == 1
-            returned_gen = spy.spy_return
-            assert returned_gen.param1 == 2
-            assert returned_gen.param2 == 5.5
-            assert returned_gen.param3 == [1]
-            assert returned_gen.extra_abivars == {
-                "ecut": 5.0,
-                "nstep": 5,
-                "tsmear": 0.04,
-            }

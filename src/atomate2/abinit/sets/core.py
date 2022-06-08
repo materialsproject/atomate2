@@ -25,7 +25,7 @@ __all__ = [
 class GroundStateSetGenerator(AbinitInputSetGenerator):
     """Common class for ground-state generators."""
 
-    calc_type: str = "static"
+    calc_type: str = "ground_state"
 
     kppa: Optional[float] = None
     ecut: Optional[float] = None
@@ -39,20 +39,6 @@ class GroundStateSetGenerator(AbinitInputSetGenerator):
     shift_mode: str = "Monkhorst-Pack"
 
     restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
-
-    # class variables
-    params: ClassVar[tuple] = (
-        "kppa",
-        "ecut",
-        "pawecutdg",
-        "nband",
-        "accuracy",
-        "spin_mode",
-        "smearing",
-        "charge",
-        "scf_algorithm",
-        "shift_mode",
-    )
 
 
 @dataclass
@@ -78,7 +64,16 @@ class StaticSetGenerator(GroundStateSetGenerator):
         return scf_input(
             structure=structure,
             pseudos=pseudos,
-            **kwargs,
+            kppa=self.kppa,
+            ecut=self.ecut,
+            pawecutdg=self.pawecutdg,
+            nband=self.nband,
+            accuracy=self.accuracy,
+            spin_mode=self.spin_mode,
+            smearing=self.smearing,
+            charge=self.charge,
+            scf_algorithm=self.scf_algorithm,
+            shift_mode=self.shift_mode,
         )
 
     def on_restart(self, abinit_input):
@@ -138,7 +133,6 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
 
     def __post_init__(self):
         """Ensure mode is set correctly."""
-        super().__post_init__()
         self.mode = self.mode.lower()
 
         supported_modes = ("line", "uniform")
