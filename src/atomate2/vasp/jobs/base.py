@@ -20,7 +20,7 @@ from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.schemas.task import TaskDocument
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = ["BaseVaspMaker", "vasp_job"]
 
@@ -83,7 +83,7 @@ class BaseVaspMaker(Maker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -104,9 +104,7 @@ class BaseVaspMaker(Maker):
     """
 
     name: str = "base vasp job"
-    input_set_generator: VaspInputSetGenerator = field(
-        default_factory=VaspInputSetGenerator
-    )
+    input_set_generator: VaspInputGenerator = field(default_factory=VaspInputGenerator)
     write_input_set_kwargs: dict = field(default_factory=dict)
     copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)

@@ -5,11 +5,11 @@ from dataclasses import dataclass
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Outcar, Vasprun
 
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 
 @dataclass
-class AtomicRelaxSetGenerator(VaspInputSetGenerator):
+class AtomicRelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP atom-only relaxation input sets."""
 
     use_structure_charge: bool = True

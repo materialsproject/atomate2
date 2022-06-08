@@ -60,7 +60,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
