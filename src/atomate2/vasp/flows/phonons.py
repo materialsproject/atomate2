@@ -177,7 +177,12 @@ class PhononMaker(Maker):
             raise ValueError(
                 "You can only use other kpath schemes with the primitive standard structure"
             )
-        if self.kpath_scheme not in []:
+        if self.kpath_scheme not in [
+            "seekpath",
+            "hinuma",
+            "latimer_munro",
+            "all_pymatgen",
+        ]:
             raise ValueError("kpath scheme is not implemented")
 
         jobs = []
@@ -200,7 +205,7 @@ class PhononMaker(Maker):
         if self.min_length is not None:
             # currently also trying another algorithm
             # to arrive at the supercell (based on ase)
-            supercell_job = get_supercell_size(structure)
+            supercell_job = get_supercell_size(structure, self.min_length)
             jobs.append(supercell_job)
             self.supercell_matrix = supercell_job.output
 
