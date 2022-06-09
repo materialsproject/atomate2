@@ -106,7 +106,6 @@ class FormationEnergyMaker(Maker):
                 uc_structure=defect_gen.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=sc_mat,
-                bulk_info=bulk_sc_dir,
             )
             sc_mat = bulk_job.output.sc_mat
             spawn_output = spawn_defects_calcs(

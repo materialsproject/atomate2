@@ -92,9 +92,6 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix. if None, the code will attempt to create a nearly-cubic supercell.
-    bulk_info : BulkSuperCellSummary | None
-        The bulk supercell calculation summary. If information from a previous calculation is provided
-        the bulk supercell calculation will be skipped.
 
     Returns
     -------
