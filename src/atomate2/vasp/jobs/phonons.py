@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import logging
-import tempfile
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -22,11 +21,11 @@ from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
+from pymatgen.symmetry.kpath import KPathSeek
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
@@ -36,6 +35,8 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 logger = logging.getLogger(__name__)
 
 __all__ = [
+    "structure_to_primitive",
+    "structure_to_conventional",
     "generate_phonon_displacements",
     "run_phonon_displacements",
     "generate_frequencies_eigenvectors",
@@ -43,99 +44,80 @@ __all__ = [
 ]
 
 
-def get_phonon_object(
-    displacement, min_length, structure, sym_reduce, symprec, conventional
-):
+@job
+def structure_to_primitive(structure, symprec):
+    sga = SpacegroupAnalyzer(structure, symprec=symprec)
+    return sga.get_primitive_standard_structure()
+
+
+@job
+def structure_to_conventional(structure: Structure, symprec: float):
+    sga = SpacegroupAnalyzer(structure, symprec=symprec)
+    return sga.get_conventional_standard_structure()
+
+
+# TODO: maybe add  an alternative algorithm
+@job
+def get_supercell_size(structure: Structure, min_length: float):
     transformation = CubicSupercellTransformation(min_length=min_length)
     transformation.apply_transformation(structure=structure)
     supercell_matrix = transformation.transformation_matrix.tolist()
+    return supercell_matrix
+
+
+@job
+def get_phonon_object(
+    structure: Structure,
+    supercell_matrix: np.array,
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_standard_primitive: bool,
+    code: str,
+):
+    if code == "vasp":
+        factor = VaspToTHz
+    # TODO: add other codes?
 
     cell = get_phonopy_structure(structure)
-    if not conventional:
+    if use_standard_primitive:
         phonon = Phonopy(
             cell,
             supercell_matrix,
             primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-            factor=VaspToTHz,
+            factor=factor,
             symprec=symprec,
             is_symmetry=sym_reduce,
         )
     else:
-        spa = SpacegroupAnalyzer(structure)
-        matrix = spa.get_conventional_to_primitive_transformation_matrix()
-
         phonon = Phonopy(
             cell,
             supercell_matrix,
-            primitive_matrix=matrix,
-            factor=VaspToTHz,
+            primitive_matrix="auto",
+            factor=factor,
             symprec=symprec,
             is_symmetry=sym_reduce,
         )
-
     phonon.generate_displacements(distance=displacement)
     return phonon
 
 
-# check if this can also be replaced with something better
-def get_kpath(structure: Structure, **kpath_kwargs):
-    """
-    get high-symmetry points in k-space
-    Args:
-        structure: Structure Object
-    Returns:
-    """
-    highsymmkpath = HighSymmKpath(structure, **kpath_kwargs)
-    kpath = highsymmkpath.kpath
-    path = copy.deepcopy(kpath["path"])
-
-    for ilabelset, labelset in enumerate(kpath["path"]):
-        for ilabel, label in enumerate(labelset):
-            path[ilabelset][ilabel] = kpath["kpoints"][label]
-    return kpath["kpoints"], path
-
-
-# TODO: check all parameters again
 @job
-def generate_phonon_displacements(
-    structure: Structure,
-    displacement: float = 0.01,
-    min_length: float = 4.0,
-    conventional: bool = False,
-    symprec: float = SETTINGS.SYMPREC,
-    sym_reduce: bool = True,
-):
+def generate_phonon_displacements(phonopy_object):
     """
-    Generate elastic deformations.
+    Generate phonon displacements.
 
     Parameters
     ----------
-    structure : Structure
-        A pymatgen structure object.
-    displacement : float
-        The displacement to be applied to the structure.
-    min_length  : float
-        minimum supercell size.
-    symprec : float
-        The symprec to use for the spacegroup analyzer.
-    sym_reduce : bool
-        Whether to reduce the symmetry of the structure.
+    phonopy_object: Phonopy_object
 
     Returns
     -------
     List[Deformation]
-        A list of diplacements.
+        A list of displacements.
     """
-    # TODO: use functions from pymatgen instead?
-    phonon = get_phonon_object(
-        displacement=displacement,
-        min_length=min_length,
-        structure=structure,
-        sym_reduce=sym_reduce,
-        symprec=symprec,
-        conventional=conventional,
-    )
-    supercells = phonon.supercells_with_displacements
+
+    supercells = phonopy_object.supercells_with_displacements
 
     displacements = []
     for cell in supercells:
@@ -146,22 +128,21 @@ def generate_phonon_displacements(
 @job(output_schema=PhononBSDOSDoc)
 def generate_frequencies_eigenvectors(
     structure: Structure,
-    displacement_data: list[dict],
+    phonon,
+    displacement_data: dict[str, list],
     total_energy: float,
-    # born_data: str | Path = None,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
-    symprec: float = SETTINGS.SYMPREC,
-    sym_reduce: bool = True,
-    displacement: float = 0.01,
-    min_length: float = 20,
-    conventional: bool = False,
+    code: str = "vasp",
+    kpath_scheme="seekpath",
     npoints_band: int = 100,
     kpoint_density_dos: int = 7000,
     tol_imaginary_modes: float = 1e-5,
     tmin=0,
     tmax=500,
     tstep=10,
+    units="THz",
+    img_format="eps",
 ):
     """
     Compute phonon band structures and density of states.
@@ -170,115 +151,86 @@ def generate_frequencies_eigenvectors(
     ----------
 
     """
-    # get phonon object from phonopy with correct settings again
+    # TODO: move his part to another class?
+    def get_kpath(structure: Structure, kpath_scheme: str, **kpath_kwargs):
+        """
+        get high-symmetry points in k-space
+        Args:
+            structure: Structure Object
+        Returns:
+        """
 
-    phonon = get_phonon_object(
-        displacement=displacement,
-        min_length=min_length,
-        structure=structure,
-        sym_reduce=sym_reduce,
-        symprec=symprec,
-        conventional=conventional,
-    )
-    set_of_forces = []
-    for displacement_datum in displacement_data:
-        # old implementation based on files
-        # forces_filenames.append(
-        #    str(Path(displacement_datum["job_dir"]) / "vasprun.xml.gz").split(":")[1]
-        # )
-        set_of_forces.append(np.array(displacement_datum["forces"]))
+        if kpath_scheme in [
+            "setyawan_curtarolo",
+            "hinuma",
+            "latimer_munro",
+            "all_pymatgen",
+        ]:
+            if kpath_scheme == "all_pymatgen":
+                kpath_scheme = "all"
+            highsymmkpath = HighSymmKpath(
+                structure, path_type=kpath_scheme, **kpath_kwargs
+            )
+            kpath = highsymmkpath.kpath
+        elif kpath_scheme == "seekpath":
+            highsymmkpath = KPathSeek(structure, **kpath_kwargs)
+            kpath = highsymmkpath._kpath
 
-    # set_of_forces = parse_set_of_forces(
-    #    num_atoms=get_pmg_structure(phonon.supercell).num_sites,
-    #    forces_filenames=forces_filenames,
-    # )
+        path = copy.deepcopy(kpath["path"])
 
-    # print(set_of_forces[0])
-    # print(displacement_data[0]["forces"])
+        for ilabelset, labelset in enumerate(kpath["path"]):
+            for ilabel, label in enumerate(labelset):
+                path[ilabelset][ilabel] = kpath["kpoints"][label]
+        return kpath["kpoints"], path
+
+    set_of_forces = displacement_data["forces"]
     phonon.produce_force_constants(forces=set_of_forces)
 
-    spa = SpacegroupAnalyzer(structure)
-    matrix = spa.get_conventional_to_primitive_transformation_matrix()
-
-    # via files instead?
-    # if born_data is not None:
-    #     if not conventional:
-    #         # Could also be the direct output of the born part?
-    #         borns, epsilon, atom_indices = get_born_vasprunxml(
-    #             str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
-    #             symprec=symprec,
-    #             primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-    #             supercell_matrix=phonon.supercell_matrix,
-    #         )
-    #
-    #     else:
-    #         borns, epsilon, atom_indices = get_born_vasprunxml(
-    #             str(Path(born_data) / "vasprun.xml.gz").split(":")[1],
-    #             symprec=symprec,
-    #             primitive_matrix=matrix,
-    #             supercell_matrix=phonon.supercell_matrix,
-    #         )
-    #     print("From Phonopy")
-    #     print(borns)
-    #     print(epsilon)
-    #
-    #     print("From atomate2")
-    #     print(epsilon_static)
-    #     print(born)
     if born is not None:
-        if not conventional:
-            primitive = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-        else:
-            primitive = matrix
-        # use function from phonopy to symmetrize and extract correct born information
         borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
             ucell=get_phonopy_structure(structure),
             borns=np.array(born),
             epsilon=np.array(epsilon_static),
-            symprec=symprec,
-            primitive_matrix=primitive,
+            symprec=phonon.symprec,
+            primitive_matrix=phonon.primitive_matrix,
             supercell_matrix=phonon.supercell_matrix,
         )
-
-        # print(borns)
-        # print(epsilon)
-
-        # we should add a parameter so that this
-        # factor can be easily switched to other codes!
-
-        phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
+        if code == "vasp":
+            phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
 
     # get phonon band structure
-    tempfilename = tempfile.gettempprefix() + ".yaml"
-    tempfilename = "band.yaml"
-    kpath_dict, kpath_concrete = get_kpath(structure)
+    tempfilename = ""
+    kpath_dict, kpath_concrete = get_kpath(structure, kpath_scheme)
     qpoints, connections = get_band_qpoints_and_path_connections(
         kpath_concrete, npoints=npoints_band
     )
 
+    # add option to disable phonon bandstructure computation?
+    filename_band_yaml = "phonon_band_structure.yaml"
     phonon.run_band_structure(qpoints, path_connections=connections)
-    phonon.write_yaml_band_structure(filename=tempfilename)
-    bs_symm_line = get_ph_bs_symm_line(tempfilename, labels_dict=kpath_dict)
+    phonon.write_yaml_band_structure(filename=filename_band_yaml)
+    bs_symm_line = get_ph_bs_symm_line(filename_band_yaml, labels_dict=kpath_dict)
     new_plotter = PhononBSPlotter(bs=bs_symm_line)
-    new_plotter.save_plot("band.eps", img_format="eps", units="THz")
-    # get plots
+    new_plotter.save_plot(
+        "phonon_band_structure.eps", img_format=img_format, units=units
+    )
+    # add a free energy document?
+    imaginary_modes = bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
 
     # get phonon density of states
-    tempfilename = tempfile.gettempprefix() + ".yaml"
-    tempfilename = "dos.yaml"
+    filename_dos_yaml = "phonon_dos.yaml"
     kpoint = Kpoints.automatic_density(
         structure=structure, kppa=kpoint_density_dos, force_gamma=True
     )
     phonon.run_mesh(kpoint.kpts[0])
     phonon.run_total_dos()
-    phonon.write_total_dos(filename=tempfilename)
+    phonon.write_total_dos(filename=filename_dos_yaml)
     dos = get_ph_dos(tempfilename)
     new_plotter_dos = PhononDosPlotter()
     new_plotter_dos.add_dos(label="total", dos=dos)
-    new_plotter_dos.save_plot(filename="dos.eps", img_format="eps", units="THz")
-
-    # add a free energy document?
-    imaginary_modes = bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
+    new_plotter_dos.save_plot(
+        filename="phonon_dos.eps", img_format=img_format, units=units
+    )
 
     # add tmin tmax tstep
     temperature_range = np.arange(tmin, tmax, tstep)
@@ -292,6 +244,7 @@ def generate_frequencies_eigenvectors(
         structure.composition.num_atoms
         / structure.composition.reduced_composition.num_atoms
     )
+    # TODO: add more meta data here
     phonon_doc = PhononBSDOSDoc(
         structure=structure,
         ph_bs=bs_symm_line,
@@ -310,47 +263,53 @@ def generate_frequencies_eigenvectors(
 @job
 def run_phonon_displacements(
     displacements,
+    structure: Structure,
+    supercell_matrix,
     phonon_maker: BaseVaspMaker = None,
 ):
     """
-    Run elastic deformations.
-
-    Note, this job will replace itself with N relaxation calculations, where N is
-    the number of deformations.
+    Run phonon displacements.
+    Note, this job will replace itself with N displacement calculations
 
     Parameters
     ----------
-    structure : Structure
-        A pymatgen structure.
-    deformations : list of Deformation
-        The deformations to apply.
-    prev_vasp_dir : str or Path or None
-        A previous VASP directory to use for copying VASP outputs.
+    displacements
+    structure: original structure for meta data
+    supercell_matrix: supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
     """
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()
-    phonon_runs = []
-    outputs = []
+    phonon_jobs = []
+    outputs: dict[str, list] = {
+        "displacement_number": [],
+        "forces": [],
+        "uuids": [],
+        "dirs": [],
+    }
+
     for i, displacement in enumerate(displacements):
         phonon_job = phonon_maker.make(displacement)
         phonon_job.append_name(f" {i + 1}/{len(displacements)}")
-        phonon_runs.append(phonon_job)
 
-        # extract the outputs we want
-        # maybe add forces as well later on
-        output = {
+        # we will add some meta data
+        info = {
             "displacement_number": i,
-            "uuid": phonon_job.output.uuid,
-            "job_dir": phonon_job.output.dir_name,
-            "forces": phonon_job.output.output.forces,
+            "original_structure": structure,
+            "supercell_matrix": supercell_matrix,
         }
+        phonon_job.update_maker_kwargs(
+            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
+        )
+        phonon_jobs.append(phonon_job)
+        outputs["displacement_number"].append(i)
+        outputs["uuids"].append(phonon_job.output.uuid)
+        outputs["dirs"].append(phonon_job.output.dir_name)
+        outputs["forces"].append(phonon_job.output.forces)
 
-        outputs.append(output)
-
-    relax_flow = Flow(phonon_runs, outputs)
-    return Response(replace=relax_flow)
+    displacement_flow = Flow(phonon_jobs, outputs)
+    return Response(replace=displacement_flow)
 
 
 @dataclass
