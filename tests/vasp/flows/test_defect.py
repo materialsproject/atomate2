@@ -23,7 +23,10 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
         "finite diff q1": "Si_config_coord/finite_diff_q1",
         "finite diff q2": "Si_config_coord/finite_diff_q2",
     }
-    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
+    fake_run_vasp_kwargs = {
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar", "poscar"]}
+        for k in ref_paths
+    }
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -84,7 +87,10 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         "finite diff q1": "Si_config_coord/finite_diff_q1",
         "finite diff q2": "Si_config_coord/finite_diff_q2",
     }
-    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
+    fake_run_vasp_kwargs = {
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar", "poscar"]}
+        for k in ref_paths
+    }
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
@@ -151,7 +157,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
         "relax Mg_Ga-0 q=0": "GaN_Mg_defect/Mg_Ga_0_q=0",
         "relax Mg_Ga-0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
     }
-    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
+    fake_run_vasp_kwargs = {
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar", "poscar"]}
+        for k in ref_paths
+    }
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
