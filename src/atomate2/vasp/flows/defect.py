@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
@@ -15,7 +16,6 @@ from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
-    BulkSuperCellSummary,
     bulk_supercell_calculation,
     calculate_finite_diff,
     collect_defect_outputs,
@@ -54,6 +54,7 @@ DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
+
 DEFECT_STATIC_GENERATOR: StaticSetGenerator = StaticSetGenerator(
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
@@ -94,23 +95,40 @@ class FormationEnergyMaker(Maker):
     def make(
         self,
         defect_gen: DefectGenerator,
-        bulk_sc_summary: BulkSuperCellSummary | None = None,
+        bulk_sc_dir: str | Path | None = None,
         sc_mat: NDArray | None = None,
     ):
         """Make a flow to calculate the formation energy diagram."""
-        bulk_job = bulk_supercell_calculation(
-            uc_structure=defect_gen.structure,
-            relax_maker=self.relax_maker,
-            sc_mat=sc_mat,
-            bulk_info=bulk_sc_summary,
-        )
+        jobs = []
 
-        sc_mat = bulk_job.output.sc_mat
-        spawn_output = spawn_defects_calcs(defect_gen, sc_mat, bulk_job.output)
+        if bulk_sc_dir is None:
+            bulk_job = bulk_supercell_calculation(
+                uc_structure=defect_gen.structure,
+                relax_maker=self.relax_maker,
+                sc_mat=sc_mat,
+                bulk_info=bulk_sc_dir,
+            )
+            sc_mat = bulk_job.output.sc_mat
+            spawn_output = spawn_defects_calcs(
+                defect_gen=defect_gen,
+                sc_mat=sc_mat,
+                relax_maker=self.relax_maker,
+                bulk_sc_dir=bulk_job.output.dir_name,
+            )
+            jobs.extend([bulk_job, spawn_output])
+        else:
+            spawn_output = spawn_defects_calcs(
+                defect_gen=defect_gen,
+                sc_mat=sc_mat,
+                relax_maker=self.relax_maker,
+                bulk_sc_dir=bulk_sc_dir,
+            )
+
         collect_job = collect_defect_outputs(spawn_output.output)
+        jobs.append(collect_job)
 
         return Flow(
-            jobs=[bulk_job, spawn_output, collect_job],
+            jobs=jobs,
             name=self.name,
             output=collect_job.output,
         )

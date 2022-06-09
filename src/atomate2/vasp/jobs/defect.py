@@ -21,7 +21,7 @@ from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
-from pymatgen.io.vasp.outputs import WSWQ
+from pymatgen.io.vasp.outputs import WSWQ, Vasprun
 
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
 from atomate2.utils.file_client import FileClient
@@ -71,16 +71,6 @@ DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": Tru
 ################################################################################
 
 
-class BulkSuperCellSummary(BaseModel):
-    """Document model containing information about the bulk supercell calculation."""
-
-    uc_structure: Structure
-    sc_entry: ComputedStructureEntry
-    sc_mat: List[List[float]]
-    dir_name: str
-    uuid: str
-
-
 @job(
     name="bulk supercell",
 )
@@ -88,9 +78,9 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
-    bulk_info: BulkSuperCellSummary | None = None,
-) -> BulkSuperCellSummary:
+):
     """Bulk Supercell calculation.
+
     Check if the information from a bulk supercell calculation has been provided.
     If not, run a bulk supercell calculation.
 
@@ -111,51 +101,56 @@ def bulk_supercell_calculation(
     dict:
         The bulk supercell calculation summary.
     """
-    if bulk_info is not None:
-        sc_structure = bulk_info.sc_entry.structure
-        (map_sc,) = get_matched_structure_mapping(
-            uc_structure, sc_structure
-        )  # TODO: this might need relaxing if too tight
-        summary_d = bulk_info.dict()
-        summary_d["sc_mat"] = map_sc.tolist()
-        summary = summary_d
-        return Response(output=summary)
-    else:
-        _logger.info("Bulk supercell calculation not found. Running...")
-        sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
-        sc_mat = np.array(sc_mat)
-        sc_structure = uc_structure * sc_mat
-        relax_job = relax_maker.make(sc_structure)
-        relax_job.name = "bulk relax"
-        relax_output: TaskDocument = relax_job.output
+    _logger.info("Running bulk supercell calculation. Running...")
+    sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
+    sc_mat = np.array(sc_mat)
+    sc_structure = uc_structure * sc_mat
+    relax_job = relax_maker.make(sc_structure)
+    relax_job.name = "bulk relax"
+    relax_output: TaskDocument = relax_job.output
 
-        summary_d = dict(
-            uc_structure=uc_structure,
-            sc_entry=relax_output.entry,
-            sc_struct=relax_output.structure,
-            sc_mat=sc_mat.tolist(),
-            dir_name=relax_output.dir_name,
-            uuid=relax_job.uuid,
-        )
-
-        summary_job = create_summary(summary_d)  # This feels a little awkward
-        return Response(output=summary_job.output, replace=[relax_job, summary_job])
+    # Is this the best way to pass a subset of data through?
+    summary_d = dict(
+        uc_structure=uc_structure,
+        sc_entry=relax_output.entry,
+        sc_struct=relax_output.structure,
+        sc_mat=sc_mat.tolist(),
+        dir_name=relax_output.dir_name,
+        uuid=relax_job.uuid,
+    )
+    waiter = wait_for_dict(summary_d)
+    return Response(output=waiter.output, replace=[relax_job, waiter])
 
 
-@job(output_schema=BulkSuperCellSummary)
-def create_summary(d: dict) -> BulkSuperCellSummary:
-    """Create a summary from a bulk supercell calculation."""
-    entry = d["sc_entry"]
-    structure = d["sc_struct"]
-    entry_d = entry.as_dict()
-    entry_d["structure"] = structure.as_dict()
-    d["sc_entry"] = ComputedStructureEntry.from_dict(entry_d)
-    return BulkSuperCellSummary(**d)
+@job
+def wait_for_dict(d: dict):
+    """Wait for a dictionary to be populated.
+
+    Parameters
+    ----------
+    d : dict
+        The dictionary to wait for.
+    """
+    return d
+
+
+# @job
+# def create_summary(d: dict) -> BulkSuperCellSummary:
+#     """Create a summary from a bulk supercell calculation."""
+#     entry = d["sc_entry"]
+#     structure = d["sc_struct"]
+#     entry_d = entry.as_dict()
+#     entry_d["structure"] = structure.as_dict()
+#     d["sc_entry"] = ComputedStructureEntry.from_dict(entry_d)
+#     return BulkSuperCellSummary(**d)
 
 
 @job
 def spawn_defects_calcs(
-    defect_gen: DefectGenerator, sc_mat: NDArray, bulk_summary: BulkSuperCellSummary
+    defect_gen: DefectGenerator,
+    sc_mat: NDArray,
+    relax_maker: RelaxMaker,
+    bulk_sc_dir: str | Path | None,
 ) -> Response:
     """Spawn defect calculations from the DefectGenerator.
 
@@ -165,35 +160,44 @@ def spawn_defects_calcs(
         The defect generator to use.
     sc_mat : NDArray
         The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
-    bulk_summary : BulkSuperCellSummary
-        The bulk supercell calculation summary.
+    bulk_sc_dir : str | Path | None
+        The directory of the bulk supercell calculation.
+        If the directory name is "skip", we will not store the pristine supercell.
 
     Returns
     -------
     Response:
         The response containing the outputs of the defect calculations as a dictionary
     """
-    bulk_summary.sc_entry
+    if bulk_sc_dir is not None:
+        bulk_sc_dir = Path(bulk_sc_dir)
+        bulk_sc_entry = Vasprun(bulk_sc_dir / "vasprun.xml.gz").get_computed_entry(
+            inc_structure=True
+        )
+        # bulk_locpot = Locpot(bulk_sc_dir / "LOCPOT.gz")
+        (sc_mat,) = get_matched_structure_mapping(
+            defect_gen.structure, bulk_sc_entry.structure
+        )  # TODO: this might need relaxing if too tight
 
-    defect_calcs = []
-    output = dict(bulk_sc_entry=bulk_summary.sc_entry, defect_calcs=dict())
+    defect_q_jobs = []
+    output = dict()
     name_counter: dict = defaultdict(lambda: 0)
 
     for defect in defect_gen:
         defect_job = perform_defect_calcs(
             defect,
             sc_mat=sc_mat,
-            prev_vasp_dir=bulk_summary.dir_name,
+            relax_maker=relax_maker,
+            prev_vasp_dir=bulk_sc_dir,
             defect_index=f"{name_counter[defect.name]}",
         )
-        defect_calcs.append(defect_job)
-        output["defect_calcs"][f"{defect.name}-{name_counter[defect.name]}"] = dict(
+        defect_q_jobs.append(defect_job)
+        output[f"{defect.name}-{name_counter[defect.name]}"] = dict(
             defect=defect,
             results=defect_job.output,
         )
         name_counter[defect.name] += 1
-
-    return Response(output=output, replace=defect_calcs)
+    return Response(output=output, replace=defect_q_jobs)
 
 
 @job
