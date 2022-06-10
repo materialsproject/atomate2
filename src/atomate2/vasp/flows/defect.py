@@ -107,12 +107,11 @@ class FormationEnergyMaker(Maker):
                 relax_maker=self.relax_maker,
                 sc_mat=sc_mat,
             )
-            sc_mat = bulk_job.output.sc_mat
             spawn_output = spawn_defects_calcs(
                 defect_gen=defect_gen,
-                sc_mat=sc_mat,
+                sc_mat=bulk_job.output["sc_mat"],
                 relax_maker=self.relax_maker,
-                bulk_sc_dir=bulk_job.output.dir_name,
+                bulk_sc_dir=bulk_job.output["dir_name"],
             )
             jobs.extend([bulk_job, spawn_output])
         else:
