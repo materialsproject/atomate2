@@ -186,7 +186,7 @@ def spawn_defects_calcs(
             defect,
             sc_mat=sc_mat,
             relax_maker=relax_maker,
-            prev_vasp_dir=bulk_sc_dir,
+            prev_vasp_dir=str(bulk_sc_dir),
             defect_index=f"{name_counter[defect.name]}",
         )
         defect_q_jobs.append(defect_job)
