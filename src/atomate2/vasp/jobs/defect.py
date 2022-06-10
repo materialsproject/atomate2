@@ -167,6 +167,7 @@ def spawn_defects_calcs(
         The response containing the outputs of the defect calculations as a dictionary
     """
     if bulk_sc_dir is not None:
+        bulk_sc_dir = strip_hostname(bulk_sc_dir)
         bulk_sc_dir = Path(bulk_sc_dir)
         bulk_sc_entry = Vasprun(bulk_sc_dir / "vasprun.xml.gz").get_computed_entry(
             inc_structure=True
