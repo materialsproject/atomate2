@@ -173,7 +173,7 @@ def spawn_defects_calcs(
             inc_structure=True
         )
         # bulk_locpot = Locpot(bulk_sc_dir / "LOCPOT.gz")
-        (sc_mat,) = get_matched_structure_mapping(
+        (sc_mat, _) = get_matched_structure_mapping(
             defect_gen.structure, bulk_sc_entry.structure
         )  # TODO: this might need relaxing if too tight
 
