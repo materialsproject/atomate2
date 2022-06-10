@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 from jobflow import Flow, Response, job
-from phonopy import Phonopy
+from phonopy import Phonopy, load
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import elaborate_borns_and_epsilon
 from phonopy.units import VaspToTHz
@@ -127,7 +127,7 @@ def generate_phonon_displacements(
     """
     phonopy_object = get_phonon_object(
         structure=structure,
-        supercell_matrix=supercell_matrix,
+        supercell_matrix=np.array(supercell_matrix),
         displacement=displacement,
         sym_reduce=sym_reduce,
         symprec=symprec,
@@ -221,8 +221,6 @@ def generate_frequencies_eigenvectors(
 
     set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
-    phonon.produce_force_constants(forces=set_of_forces)
-
     if born is not None:
         if full_born:
             # TODO: if this is a good way when user provide data
@@ -237,9 +235,21 @@ def generate_frequencies_eigenvectors(
         else:
             borns = born
         if code == "vasp":
-            phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
+            phonon.nac_params = {
+                "born": borns,
+                "dielectric": epsilon,
+                "factor": 14.399652,
+            }
+    phonon.produce_force_constants(forces=set_of_forces)
 
+    # Currently, the setting of the born
+    # charges does not work without this! I am not sure why!
+    # I don't see it
+    # I think I am missing something in the code
+    phonon.save("phonopy.yaml")
+    phonon = load("phonopy.yaml")
     # get phonon band structure
+    # TODO: check if this is correct for every possible setting
     kpath_dict, kpath_concrete = get_kpath(structure, kpath_scheme)
     qpoints, connections = get_band_qpoints_and_path_connections(
         kpath_concrete, npoints=npoints_band
