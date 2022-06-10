@@ -17,7 +17,6 @@ from atomate2.vasp.jobs.phonons import (
     PhononDisplacementMaker,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
-    get_phonon_object,
     get_supercell_size,
     run_phonon_displacements,
     structure_to_conventional,
@@ -95,6 +94,9 @@ class PhononMaker(Maker):
         Instead of recomputing born charges and epsilon,
          these values can also be provided manually. born_maker has to
         be None
+    full_born: bool
+        reduced born file (only symmerically inequivalent atoms)
+         or full information on born
     epsilon_static_manual: Matrix3D
         Instead of recomputing born charges and epsilon,
          these values can also be provided manually. born_maker has to
@@ -128,6 +130,7 @@ class PhononMaker(Maker):
     run_phonon_displacements_kwargs: dict = field(default_factory=dict)
     born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
     born_manual: Matrix3D | None = None
+    full_born: bool = True
     epsilon_static_manual: Matrix3D | None = None
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
@@ -216,19 +219,16 @@ class PhononMaker(Maker):
             structure = bulk.output.structure
 
         # get a phonon object from phonopy
-        job_phonon = get_phonon_object(
+        displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=self.supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_standard_primitive=self.use_primitive_standard_structure,
+            kpath_scheme=self.kpath_scheme,
             code=self.code,
         )
-        jobs.append(job_phonon)
-        phonopy_object = job_phonon
-        # generate the displacements with the phonon object
-        displacements = generate_phonon_displacements(phonopy_object)
         jobs.append(displacements)
 
         # perform the phonon displacement calculations
@@ -252,30 +252,38 @@ class PhononMaker(Maker):
 
         if self.born_maker is not None:
             phonon_collect = generate_frequencies_eigenvectors(
+                supercell_matrix=self.supercell_matrix,
+                displacement=self.displacement,
+                sym_reduce=self.sym_reduce,
+                symprec=self.symprec,
+                use_standard_primitive=self.use_primitive_standard_structure,
+                kpath_scheme=self.kpath_scheme,
+                code=self.code,
                 structure=structure,
                 displacement_data=vasp_displacement_calcs.output,
-                symprec=self.symprec,
-                sym_reduce=self.sym_reduce,
-                displacement=self.displacement,
                 epsilon_static=born_job.output.calcs_reversed[0].output.epsilon_static,
                 # TODO: could "born" also be added to the
                 #  standard outputs? currently, this is vasp specific!
                 born=born_job.output.calcs_reversed[0].output.outcar["born"],
+                full_born=True,
                 total_energy=static_job.output.output.energy,
-                kpath_scheme=self.kpath_scheme,
                 **self.generate_frequencies_eigenvectors_kwargs,
             )
         else:
             phonon_collect = generate_frequencies_eigenvectors(
                 structure=structure,
-                displacement_data=vasp_displacement_calcs.output,
-                symprec=self.symprec,
-                sym_reduce=self.sym_reduce,
+                supercell_matrix=self.supercell_matrix,
                 displacement=self.displacement,
-                epsilon_static=self.epsilon_static_manual,
-                born=self.born_manuals,
-                total_energy=static_job.output.output.energy,
+                sym_reduce=self.sym_reduce,
+                symprec=self.symprec,
+                use_standard_primitive=self.use_primitive_standard_structure,
                 kpath_scheme=self.kpath_scheme,
+                code=self.code,
+                displacement_data=vasp_displacement_calcs.output,
+                epsilon_static=self.epsilon_static_manual,
+                born=self.born_manual,
+                full_born=self.full_born,
+                total_energy=static_job.output.output.energy,
                 **self.generate_frequencies_eigenvectors_kwargs,
             )
 

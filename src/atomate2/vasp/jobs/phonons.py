@@ -65,7 +65,6 @@ def get_supercell_size(structure: Structure, min_length: float):
     return supercell_matrix
 
 
-@job
 def get_phonon_object(
     structure: Structure,
     supercell_matrix: np.array,
@@ -73,6 +72,7 @@ def get_phonon_object(
     sym_reduce: bool,
     symprec: float,
     use_standard_primitive: bool,
+    kpath_scheme: str,
     code: str,
 ):
     if code == "vasp":
@@ -80,7 +80,7 @@ def get_phonon_object(
     # TODO: add other codes?
 
     cell = get_phonopy_structure(structure)
-    if use_standard_primitive:
+    if use_standard_primitive and kpath_scheme != "seekpath":
         phonon = Phonopy(
             cell,
             supercell_matrix,
@@ -103,7 +103,16 @@ def get_phonon_object(
 
 
 @job
-def generate_phonon_displacements(phonopy_object):
+def generate_phonon_displacements(
+    structure: Structure,
+    supercell_matrix: np.array,
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_standard_primitive: bool,
+    kpath_scheme: str,
+    code: str,
+):
     """
     Generate phonon displacements.
 
@@ -116,7 +125,16 @@ def generate_phonon_displacements(phonopy_object):
     List[Deformation]
         A list of displacements.
     """
-
+    phonopy_object = get_phonon_object(
+        structure=structure,
+        supercell_matrix=supercell_matrix,
+        displacement=displacement,
+        sym_reduce=sym_reduce,
+        symprec=symprec,
+        use_standard_primitive=use_standard_primitive,
+        kpath_scheme=kpath_scheme,
+        code=code,
+    )
     supercells = phonopy_object.supercells_with_displacements
 
     displacements = []
@@ -128,13 +146,18 @@ def generate_phonon_displacements(phonopy_object):
 @job(output_schema=PhononBSDOSDoc)
 def generate_frequencies_eigenvectors(
     structure: Structure,
-    phonon,
+    supercell_matrix: np.array,
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_standard_primitive: bool,
+    kpath_scheme: str,
+    code: str,
     displacement_data: dict[str, list],
     total_energy: float,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
-    code: str = "vasp",
-    kpath_scheme="seekpath",
+    full_born: bool = True,
     npoints_band: int = 100,
     kpoint_density_dos: int = 7000,
     tol_imaginary_modes: float = 1e-5,
@@ -183,23 +206,40 @@ def generate_frequencies_eigenvectors(
                 path[ilabelset][ilabel] = kpath["kpoints"][label]
         return kpath["kpoints"], path
 
-    set_of_forces = displacement_data["forces"]
+    # have to regenerate this object as I cannot make it a job output
+    # TODO: other way?
+    phonon = get_phonon_object(
+        structure=structure,
+        supercell_matrix=supercell_matrix,
+        displacement=displacement,
+        sym_reduce=sym_reduce,
+        symprec=symprec,
+        use_standard_primitive=use_standard_primitive,
+        kpath_scheme=kpath_scheme,
+        code=code,
+    )
+
+    set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
+
     phonon.produce_force_constants(forces=set_of_forces)
 
     if born is not None:
-        borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
-            ucell=get_phonopy_structure(structure),
-            borns=np.array(born),
-            epsilon=np.array(epsilon_static),
-            symprec=phonon.symprec,
-            primitive_matrix=phonon.primitive_matrix,
-            supercell_matrix=phonon.supercell_matrix,
-        )
+        if full_born:
+            # TODO: if this is a good way when user provide data
+            borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
+                ucell=get_phonopy_structure(structure),
+                borns=np.array(born),
+                epsilon=np.array(epsilon_static),
+                symprec=symprec,
+                primitive_matrix=phonon.primitive_matrix,
+                supercell_matrix=phonon.supercell_matrix,
+            )
+        else:
+            borns = born
         if code == "vasp":
             phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.400}
 
     # get phonon band structure
-    tempfilename = ""
     kpath_dict, kpath_concrete = get_kpath(structure, kpath_scheme)
     qpoints, connections = get_band_qpoints_and_path_connections(
         kpath_concrete, npoints=npoints_band
@@ -225,7 +265,7 @@ def generate_frequencies_eigenvectors(
     phonon.run_mesh(kpoint.kpts[0])
     phonon.run_total_dos()
     phonon.write_total_dos(filename=filename_dos_yaml)
-    dos = get_ph_dos(tempfilename)
+    dos = get_ph_dos(filename_dos_yaml)
     new_plotter_dos = PhononDosPlotter()
     new_plotter_dos.add_dos(label="total", dos=dos)
     new_plotter_dos.save_plot(
@@ -306,7 +346,7 @@ def run_phonon_displacements(
         outputs["displacement_number"].append(i)
         outputs["uuids"].append(phonon_job.output.uuid)
         outputs["dirs"].append(phonon_job.output.dir_name)
-        outputs["forces"].append(phonon_job.output.forces)
+        outputs["forces"].append(phonon_job.output.output.forces)
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)
