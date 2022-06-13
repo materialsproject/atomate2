@@ -121,6 +121,7 @@ class FormationEnergyMaker(Maker):
                 relax_maker=self.relax_maker,
                 bulk_sc_dir=bulk_sc_dir,
             )
+            jobs.append(spawn_output)
 
         collect_job = collect_defect_outputs(spawn_output.output)
         jobs.append(collect_job)

@@ -205,21 +205,25 @@ def perform_defect_calcs(
     prev_vasp_dir: str | Path | None = None,
     sc_mat: NDArray | None = None,
     defect_index: str = "",
+    add_info: dict | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations and save the Hartree potential.
 
     Parameters
     ----------
-    defect
+    defect:
         A defect object representing the defect in a unit cell.
-    relax_maker
+    relax_maker:
         A RelaxMaker object to use for the atomic relaxation. If None, the default will be used (see DEFAULT_RELAX_MAKER).
-    prev_vasp_dir
+    prev_vasp_dir:
         The directory containing the previous VASP calculation.
-    sc_mat
+    sc_mat:
         The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
-    defect_index
+    defect_index:
         Additional index to give unique names to the defect calculations.
+    add_info:
+        Additional information to store with the defect cell relaxation calculation.
+        By default only the defect object and charge state are stored.
 
     Returns
     -------
@@ -241,6 +245,17 @@ def perform_defect_calcs(
         charged_struct.set_charge(qq)
         charged_relax = relax_maker.make(charged_struct, prev_vasp_dir=prev_vasp_dir)
         charged_relax.append_name(suffix)
+
+        # write some provenances data in info.json file
+        info = {
+            "defect": defect,
+            "charge_state": qq,
+        }
+        if add_info is not None:
+            info.update(add_info)
+        charged_relax.update_maker_kwargs(
+            {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
+        )
         jobs.append(charged_relax)
         charge_output: TaskDocument = charged_relax.output
 
@@ -261,7 +276,7 @@ def collect_defect_outputs(spawn_defects_output: dict) -> dict:
 
     This job will combine the structure and entry fields to create a ComputerStructureEntry object.
     """
-    defect_calcs_output = spawn_defects_output["defect_calcs"]
+    defect_calcs_output = spawn_defects_output
     for v in defect_calcs_output.values():
         for res in v["results"].values():
             structure = res.pop("structure")
