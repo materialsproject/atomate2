@@ -95,6 +95,7 @@ class FormationEnergyMaker(Maker):
     def make(
         self,
         defect_gen: DefectGenerator,
+        dielectric: float | NDArray,
         bulk_sc_dir: str | Path | None = None,
         sc_mat: NDArray | None = None,
     ):
@@ -114,6 +115,7 @@ class FormationEnergyMaker(Maker):
                 bulk_sc_dir=bulk_job.output["dir_name"],
             )
             jobs.extend([bulk_job, spawn_output])
+            bulk_sc_dir = bulk_job.output["dir_name"]
         else:
             spawn_output = spawn_defects_calcs(
                 defect_gen=defect_gen,

@@ -17,11 +17,12 @@ from pymatgen.analysis.defect.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
+from pymatgen.analysis.defect.thermo import DefectEntry
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
-from pymatgen.io.vasp.outputs import WSWQ, Vasprun
+from pymatgen.io.vasp.outputs import WSWQ, Locpot, Vasprun
 
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
 from atomate2.utils.file_client import FileClient
@@ -265,26 +266,46 @@ def perform_defect_calcs(
             "dir_name": charge_output.dir_name,
             "uuid": charged_relax.uuid,
         }
+        outputs["defect"] = defect
 
     add_flow = Flow(jobs, output=outputs)
     return Response(output=outputs, replace=add_flow)
 
 
 @job
-def collect_defect_outputs(spawn_defects_output: dict) -> dict:
+def collect_defect_outputs(
+    defects_output: dict, bulk_sc_dir: str, dielectric: float | NDArray
+) -> dict:
     """Collect all the outputs from the defect calculations.
 
     This job will combine the structure and entry fields to create a ComputerStructureEntry object.
     """
-    defect_calcs_output = spawn_defects_output
-    for v in defect_calcs_output.values():
-        for res in v["results"].values():
-            structure = res.pop("structure")
-            entry = res.pop("entry")
-            entry_d = entry.as_dict()
-            entry_d["structure"] = structure.as_dict()
-            res["entry"] = ComputedStructureEntry.from_dict(entry_d)
-    return spawn_defects_output
+
+    def get_locpot_from_dir(dir_name: str) -> Locpot:
+        locpot_path = Path(strip_hostname(dir_name)) / "LOCPOT.gz"
+        return Locpot(locpot_path)
+
+    defect = defects_output.pop("defect")
+
+    defect_locpots = dict()
+    bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
+    defect_entries = []
+
+    for qq, v in defects_output.items():
+        defect_locpots[qq] = get_locpot_from_dir(v["dir_name"])
+        sc_dict = v["entry"].as_dict()
+        sc_dict["structure"] = v["structure"]
+        sc_entry = ComputedStructureEntry.from_dict(sc_dict)
+        def_ent = DefectEntry(
+            defect=defect, charge_state=qq, sc_entry=sc_entry, dielectric=dielectric
+        )
+        def_ent.get_freysoldt_correction(defect_locpots[qq], bulk_locpot)
+        defect_entries.append(def_ent)
+    output = dict(
+        defect=defect,
+        defect_entries=defect_entries,
+    )
+    return output
 
 
 ################################################################################
