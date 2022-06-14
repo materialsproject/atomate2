@@ -125,7 +125,9 @@ class FormationEnergyMaker(Maker):
             )
             jobs.append(spawn_output)
 
-        collect_job = collect_defect_outputs(spawn_output.output)
+        collect_job = collect_defect_outputs(
+            spawn_output.output, bulk_sc_dir, dielectric
+        )
         jobs.append(collect_job)
 
         return Flow(
