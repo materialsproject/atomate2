@@ -8,9 +8,7 @@ from dataclasses import dataclass, field, fields
 from pathlib import Path
 from typing import Any, Iterable, List, Optional, Union
 
-from abipy.abio.input_tags import ION_RELAX, IONCELL_RELAX, MOLECULAR_DYNAMICS, RELAX
 from abipy.abio.inputs import AbinitInput
-from abipy.electrons.gsr import GsrFile
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
 from pymatgen.core.structure import Structure
@@ -29,6 +27,7 @@ from atomate2.abinit.utils.common import (
     TMPDATA_PREFIX,
     TMPDIR_NAME,
     InitializationError,
+    get_final_structure,
 )
 
 __all__ = ["AbinitInputSet", "AbinitInputSetGenerator"]
@@ -56,7 +55,6 @@ class AbinitInputSet(InputSet):
         self.input_files = input_files
         self.link_files = link_files
         self.validation = validation
-        # self.generator = generator
         super().__init__(inputs={INPUT_FILE_NAME: abinit_input})
 
     def write_input(
@@ -71,9 +69,6 @@ class AbinitInputSet(InputSet):
         #  the abinit input set also sets up links to previous files, sets up the
         #  indir, outdir and tmpdir, ...
         self.inputs["abinit_input.json"] = json.dumps(self.abinit_input.as_dict())
-        # if self.generator:
-        #     gendict = self.generator.as_dict()
-        #     self.inputs["abinit_input_set_generator.json"] = json.dumps(gendict)
         super().write_input(
             directory=directory,
             make_dir=make_dir,
@@ -81,8 +76,6 @@ class AbinitInputSet(InputSet):
             zip_inputs=zip_inputs,
         )
         del self.inputs["abinit_input.json"]
-        # if self.generator:
-        #     del self.inputs["abinit_input_set_generator.json"]
         self.indir, self.outdir, self.tmpdir = self.set_workdir(workdir=directory)
 
         if self.input_files:
@@ -93,9 +86,9 @@ class AbinitInputSet(InputSet):
             )
 
         if self.validation:
-            self.validate()
+            self._validate()
 
-    def validate(self):
+    def _validate(self):
         # Check that all files in the input directory have their corresponding
         # ird variables.
         for filename in os.listdir(self.indir.path):
@@ -201,7 +194,7 @@ def as_pseudo_table(pseudos):
     if isinstance(pseudos, str):
         # in case a single path to a pseudopotential file has been passed
         if os.path.isfile(pseudos):
-            pseudos = [pseudos]
+            return PseudoTable(pseudos)
         else:
             pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
             repo = get_repo_from_name(pseudo_repo_name)
@@ -211,8 +204,14 @@ def as_pseudo_table(pseudos):
                     f"Use abips.py to install it."
                 )
                 raise RuntimeError(msg)
-            pseudos = repo.get_pseudos(table_name)
-    return pseudos
+            return repo.get_pseudos(table_name)
+    return PseudoTable(pseudos)
+
+
+def get_extra_abivars(extra_abivars, extra_mod):
+    extra_abivars.update(extra_mod)
+    # Remove additional variables when their value is set to None
+    return {k: v for k, v in extra_abivars.items() if v is not None}
 
 
 PrevOutput = namedtuple("PrevOutput", "dirname exts")
@@ -245,27 +244,54 @@ class AbinitInputSetGenerator(InputGenerator):
         # Get the additional abinit variables
         extra_abivars = prev_input_generator.extra_abivars or {}
         if "extra_abivars" in kwargs:
-            extra_mod = kwargs.pop("extra_abivars")
-            extra_abivars.update(extra_mod)
-            # Remove additional variables when their value is set to None
-            extra_abivars = {k: v for k, v in extra_abivars.items() if v is not None}
+            extra_abivars = get_extra_abivars(
+                extra_abivars=extra_abivars, extra_mod=kwargs.pop("extra_abivars")
+            )
         # Update the parameters
-        params = {}
-        for fld in fields(cls):
-            param = fld.name
-            if param in ["calc_type", "pseudos", "extra_abivars"]:
-                continue
-            if param in kwargs:
-                val = kwargs[param]
-            else:
-                # TODO: deal with prev_input_generator that do not have the param (e.g.
-                #  current one is RelaxInputGenerator, previous one is Static, then
-                #  tolmxf is not defined in the previous one).
-                val = prev_input_generator.__getattribute__(param)
-            params[param] = val
+        params = cls.get_params(
+            instance_or_class=cls, kwargs=kwargs, prev_gen=prev_input_generator
+        )
         return cls(
             calc_type=calc_type, pseudos=pseudos, extra_abivars=extra_abivars, **params
         )
+
+    @staticmethod
+    def get_params(instance_or_class, kwargs, prev_gen=None):
+        """Get the parameters to generate the AbinitInputSet.
+
+        It loops over all the generator's fields and gets the value of each parameter
+        from the keyword arguments if it is there, then from the previous generator
+        if it is provided and it has the attribute, then from the instance or class.
+
+        Parameters
+        ----------
+        instance_or_class
+        kwargs
+        prev_gen
+
+        Returns
+        -------
+
+        """
+        params = {}
+        for fld in fields(instance_or_class):
+            param = fld.name
+            if param in [
+                "calc_type",
+                "pseudos",
+                "extra_abivars",
+                "restart_from_deps",
+                "prev_outputs_deps",
+            ]:
+                continue
+            if param in kwargs:
+                val = kwargs[param]
+            elif prev_gen is not None and hasattr(prev_gen, param):
+                val = prev_gen.__getattribute__(param)
+            else:
+                val = instance_or_class.__getattribute__(param)
+            params[param] = val
+        return params
 
     def _get_prev_abinit_input(self, restart_from):
         if self.restart_from_deps is None:
@@ -282,37 +308,6 @@ class AbinitInputSetGenerator(InputGenerator):
                 f'{" ".join(allow_restart_from)}'
             )
         return prev_abinit_input
-
-    def _get_restart_from_structure(self, restart_from, prev_abinit_input=None):
-        if prev_abinit_input is None:
-            prev_abinit_input = load_abinit_input(restart_from[0])
-        if (
-            len(
-                {RELAX, ION_RELAX, IONCELL_RELAX, MOLECULAR_DYNAMICS}.intersection(
-                    prev_abinit_input.runlevel
-                )
-            )
-            > 0
-        ):
-            gsr_path = Directory(os.path.join(restart_from[0], OUTDIR_NAME)).has_abiext(
-                "GSR"
-            )
-            if not gsr_path:
-                raise RuntimeError("Cannot extract structure from previous directory.")
-            try:
-                gsr_file = GsrFile(gsr_path)
-            except Exception as exc:
-                msg = "Exception while reading GSR file at %s:\n%s" % (
-                    gsr_path,
-                    str(exc),
-                )
-                raise RuntimeError(msg)
-            structure = gsr_file.structure
-            for prop in structure.site_properties:
-                structure.remove_site_property(prop)
-        else:
-            structure = prev_abinit_input.structure
-        return structure
 
     def get_input_set(  # type: ignore
         self,
@@ -340,8 +335,16 @@ class AbinitInputSetGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
-        pseudos = kwargs.get("pseudos", self.pseudos)
+        pseudos = self.pseudos
+        if "pseudos" in kwargs:
+            pseudos = kwargs.pop("pseudos")
         pseudos = as_pseudo_table(pseudos)
+        extra_abivars = self.extra_abivars or {}
+        if "extra_abivars" in kwargs:
+            extra_mod = kwargs.pop("extra_abivars")
+            extra_abivars.update(extra_mod)
+            # Remove additional variables when their value is set to None
+            extra_abivars = {k: v for k, v in extra_abivars.items() if v is not None}
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
@@ -349,10 +352,7 @@ class AbinitInputSetGenerator(InputGenerator):
         all_irdvars = {}
         input_files = []
         if restart_from is not None:
-            prev_abinit_input = self._get_prev_abinit_input(restart_from)
-            structure = self._get_restart_from_structure(
-                restart_from, prev_abinit_input
-            )
+            structure = get_final_structure(restart_from[0])
             # Files for restart (e.g. continue a not yet converged
             # scf/nscf/relax calculation)
             irdvars, files = self.resolve_deps(
@@ -361,10 +361,13 @@ class AbinitInputSetGenerator(InputGenerator):
             all_irdvars.update(irdvars)
             input_files.extend(files)
 
+        params = self.get_params(instance_or_class=self, kwargs=kwargs, prev_gen=None)
+
         abinit_input = self.get_abinit_input(
             structure=structure,
             pseudos=pseudos,
             prev_outputs=prev_outputs,
+            **params,
         )
         # Always reset the ird variables.
         abinit_input.pop_irdvars()
@@ -378,7 +381,7 @@ class AbinitInputSetGenerator(InputGenerator):
 
         # Set ird variables and extra variables.
         abinit_input.set_vars(all_irdvars)
-        abinit_input.set_vars(self.extra_abivars)
+        abinit_input.set_vars(extra_abivars)
 
         if restart_from is not None:
             self.on_restart(abinit_input=abinit_input)
@@ -492,7 +495,7 @@ class AbinitInputSetGenerator(InputGenerator):
         return irdvars, inp_files
 
     def get_abinit_input(
-        self, structure=None, pseudos=None, prev_outputs=None, **kwargs
+        self, structure=None, pseudos=None, prev_outputs=None, **params
     ):
         """Get AbinitInput object."""
         raise NotImplementedError

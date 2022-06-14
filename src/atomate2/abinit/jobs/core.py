@@ -110,7 +110,7 @@ class RelaxMaker(BaseAbinitMaker):
 
     # non-dataclass variables
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("RelaxConvergenceWarning",)
-    structure_fixed: ClassVar[bool] = False
+    # structure_fixed: ClassVar[bool] = False
 
     @classmethod
     def ionic_relaxation(cls, *args, **kwargs):

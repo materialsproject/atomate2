@@ -191,5 +191,5 @@ class RelaxFlowMaker(Maker):
     def ion_ioncell_relaxation(cls, *args, **kwargs):
         """Create a double relaxation (ionic relaxation + full relaxation)."""
         ion_rlx_maker = RelaxMaker.ionic_relaxation(*args, **kwargs)
-        ioncell_rlx_maker = RelaxMaker.full_relaxation()
+        ioncell_rlx_maker = RelaxMaker.from_prev_maker(ion_rlx_maker, relax_cell=True)
         return cls(relaxation_makers=[ion_rlx_maker, ioncell_rlx_maker])

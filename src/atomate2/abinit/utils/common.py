@@ -1,8 +1,11 @@
 """Module with common file names and classes used for Abinit flows."""
 
+import logging
 import os
 
-from abipy.flowtk.utils import Directory
+from abipy.abio.outputs import AbinitOutputFile
+from abipy.flowtk import events
+from abipy.flowtk.utils import Directory, File
 from monty.json import MSONable
 from monty.serialization import MontyDecoder
 from pymatgen.util.serialization import pmg_serialize
@@ -27,11 +30,8 @@ ELPHON_OUTPUT_FILE_NAME = "run.abo_elphon"
 DDK_FILES_FILE_NAME = "ddk.files"
 HISTORY_JSON = "history.json"
 
-# # Prefixes for Abinit (input, output, temporary) files.
-#     Prefix = namedtuple("Prefix", "idata odata tdata")
-#     pj = os.path.join
-#
-#     prefix = Prefix(pj("indata", "in"), pj("outdata", "out"), pj("tmpdata", "tmp"))
+
+logger = logging.getLogger(__name__)
 
 
 class ErrorCode(object):
@@ -321,3 +321,73 @@ class RestartInfo(MSONable):
     def prev_indir(self):
         """Get the Directory pointing to the input directory of the previous step."""
         return Directory(os.path.join(self.previous_dir, INDIR_NAME))
+
+
+def get_final_structure(dir_name):
+    """Get the final/last structure of a calculation in a given directory."""
+    out_path = File(os.path.join(dir_name, OUTPUT_FILE_NAME))
+    if not out_path.exists:
+        raise RuntimeError("No run.abo file. Cannot get final structure")
+
+    ab_out = AbinitOutputFile.from_file(out_path.path)
+    return ab_out.final_structure
+
+
+def get_event_report(ofile, mpiabort_file):
+    """Get report from abinit calculation.
+
+    This analyzes the main output file for possible Errors or Warnings.
+    It will check the presence of an MPIABORTFILE if not output file is found.
+
+    Parameters
+    ----------
+    ofile : File
+        Output file to be parsed. Should be either the standard abinit
+        output or the log file (stdout).
+    mpiabort_file : File
+
+    Returns
+    -------
+    EventReport
+        Report of the abinit calculation or None if no output file exists.
+    """
+    parser = events.EventsParser()
+
+    if not ofile.exists:
+        if not mpiabort_file.exists:
+            return None
+        else:
+            # ABINIT abort file without log!
+            abort_report = parser.parse(mpiabort_file.path)
+            return abort_report
+
+    try:
+        report = parser.parse(ofile.path)
+
+        # Add events found in the ABI_MPIABORTFILE.
+        if mpiabort_file.exists:
+            logger.critical("Found ABI_MPIABORTFILE!")
+            abort_report = parser.parse(mpiabort_file.path)
+            if len(abort_report) == 0:
+                logger.warning("ABI_MPIABORTFILE but empty")
+            else:
+                if len(abort_report) != 1:
+                    logger.critical("Found more than one event in ABI_MPIABORTFILE")
+
+                # Add it to the initial report only if it differs
+                # from the last one found in the main log file.
+                last_abort_event = abort_report[-1]
+                if report and last_abort_event != report[-1]:
+                    report.append(last_abort_event)
+                else:
+                    report.append(last_abort_event)
+
+        return report
+
+    # except parser.Error as exc:
+    except Exception as exc:
+        # Return a report with an error entry with info on the exception.
+        logger.critical(
+            "{}: Exception while parsing ABINIT events:\n {}".format(ofile, str(exc))
+        )
+        return parser.report_exception(ofile.path, exc)
