@@ -282,7 +282,7 @@ def collect_defect_outputs(
 
     def get_locpot_from_dir(dir_name: str) -> Locpot:
         locpot_path = Path(strip_hostname(dir_name)) / "LOCPOT.gz"
-        return Locpot(locpot_path)
+        return Locpot.from_file(locpot_path)
 
     output = dict()
     for defect_name, def_out in defects_output.items():
