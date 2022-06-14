@@ -6,12 +6,10 @@ import logging
 import os
 import time
 from collections import namedtuple
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from typing import Any, ClassVar, List, Optional, Sequence, Union
 
 import jobflow
-
-# from abipy.flowtk.events import AbinitEvent
 from abipy.flowtk.events import as_event_class
 from jobflow import Maker, Response, job
 from monty.json import jsanitize
@@ -21,7 +19,7 @@ from pymatgen.core.structure import Structure
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
-from atomate2.abinit.sets.base import AbinitInputSetGenerator
+from atomate2.abinit.sets.base import AbinitInputSetGenerator, get_extra_abivars
 from atomate2.abinit.utils.common import InitializationError, UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 from atomate2.settings import Atomate2Settings
@@ -121,21 +119,107 @@ class BaseAbinitMaker(Maker):
 
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ()
-    structure_fixed: ClassVar[bool] = True
 
     @classmethod
     def from_params(
         cls,
         name=None,
         wall_time=wall_time,
-        **kwargs,
+        **params,
     ):
+        """Create maker from generator parameters.
+
+        Parameters
+        ----------
+        name
+        wall_time
+        params
+
+        Returns
+        -------
+
+        """
         name = name or cls.name
         maker = cls(name=name, wall_time=wall_time)
-        for param, value in kwargs.items():
-            # TODO: do we need/want to check that it is in the list
-            #  of params of the input set generator ?
+        allowed_params = [f.name for f in fields(maker.input_set_generator)]
+        for param, value in params.items():
+            if param not in allowed_params:
+                raise TypeError(
+                    f"{cls.__name__}.from_params() got an unexpected keyword argument '{param}'"
+                )
             maker.input_set_generator.__setattr__(param, value)
+        return maker
+
+    @classmethod
+    def from_prev_maker(
+        cls,
+        prev_maker,
+        name=None,
+        wall_time=wall_time,
+        input_set_generator=None,
+        **params,
+    ):
+        """Create maker from previous maker.
+
+        Parameters
+        ----------
+        name
+        wall_time
+        params
+
+        Returns
+        -------
+
+        """
+        # TODO: check that the params are allowed in the input_set_generator ?
+        #  Another solution is to make sure params is empty at the end ?
+        prev_gen = prev_maker.input_set_generator
+        # InputSetGenerator of the current maker
+        if input_set_generator is None:
+            # Subclasses must define an input_set_generator.
+            # The default input_set_generator is only initialized at instance creation.
+            input_set_generator = input_set_generator or cls().input_set_generator
+        # Deal with extra_abivars.
+        # First take extra_abivars from the input_set_generator of the current maker.
+        # Update with those from the input_set_generator of the previous maker.
+        # Update with the extra_abivars from the **params if provided.
+        extra_abivars = input_set_generator.extra_abivars
+        extra_abivars = get_extra_abivars(
+            extra_abivars=extra_abivars, extra_mod=prev_gen.extra_abivars
+        )
+        if "extra_abivars" in params:
+            extra_mod = params.pop("extra_abivars")
+            extra_abivars = get_extra_abivars(
+                extra_abivars=extra_abivars, extra_mod=extra_mod
+            )
+        input_set_generator.extra_abivars = extra_abivars
+        # Update the parameters for the input_set_generator.
+        # For each parameter, if it is in the params use that one.
+        # Otherwise, use the one from the input_set_generator of the previous maker.
+        # Otherwise, do not update (use the one from the current maker's
+        # input_set_generator).
+        for fld in fields(input_set_generator):
+            param = fld.name
+            # TODO: check the list here
+            #  extra_abivars is dealt with separately
+            #  pseudos should not change
+            #  what about calc_type, restart_from_deps and prev_outputs_deps ?
+            if param in [
+                "calc_type",
+                "pseudos",
+                "extra_abivars",
+                "restart_from_deps",
+                "prev_outputs_deps",
+            ]:
+                continue
+            if param in params:
+                input_set_generator.__setattr__(param, params.pop(param))
+            elif hasattr(prev_gen, param):
+                input_set_generator.__setattr__(param, prev_gen.__getattribute__(param))
+        name = name or cls.name
+        maker = cls(
+            input_set_generator=input_set_generator, name=name, wall_time=wall_time
+        )
         return maker
 
     def __post_init__(self):
@@ -201,7 +285,7 @@ class BaseAbinitMaker(Maker):
             job_config.workdir,
             critical_events=self.critical_events,
             run_number=run_number,
-            structure_fixed=self.structure_fixed,
+            # structure_fixed=self.structure_fixed,
         )
         task_doc.task_label = self.name
 

@@ -6,9 +6,8 @@ from pathlib import Path
 from typing import Type, TypeVar, Union
 
 from abipy.abio.inputs import AbinitInput
-from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
-from abipy.flowtk.utils import Directory, File
+from abipy.flowtk.utils import File
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
@@ -18,9 +17,9 @@ from atomate2.abinit.sets.base import AbinitInputSet
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
-    OUTDIR_NAME,
     OUTPUT_FILE_NAME,
-    PostProcessError,
+    get_event_report,
+    get_final_structure,
 )
 from atomate2.common.schemas.structure import StructureMetadata
 
@@ -35,6 +34,7 @@ class Status(ValueEnum):
     # TODO: merge this somewhere with vasp => common calculation schema ?
 
     SUCCESS = "successful"
+    UNCONVERGED = "unconverged"
     FAILED = "failed"
 
 
@@ -82,8 +82,8 @@ class AbinitTaskDocument(StructureMetadata):
         source: str = "log",
         critical_events=None,
         run_number=1,
-        structure_fixed=True,
-    ):
+        # structure_fixed=True,
+    ) -> _T:
         """Build AbinitTaskDocument from directory."""
         # Files required for the job analysis.
         # TODO: See if we can put the AbinitInputFile object here from
@@ -95,10 +95,13 @@ class AbinitTaskDocument(StructureMetadata):
         ofile = {"output": output_file, "log": log_file}[source]
 
         report = None
-        state = Status.FAILED
+        # TODO: How to detect which status it has here ?
+        #  UNCONVERGED would be for scf/nscf/relax when it's not yet converged
+        #  FAILED should be for
+        state = Status.UNCONVERGED
 
         try:
-            report = cls.get_event_report(ofile=ofile, mpiabort_file=mpiabort_file)
+            report = get_event_report(ofile=ofile, mpiabort_file=mpiabort_file)
             critical_events_report = report.filter_types(critical_events)
             if not critical_events_report:
                 state = Status.SUCCESS
@@ -108,13 +111,7 @@ class AbinitTaskDocument(StructureMetadata):
             logger.critical(msg)
 
         abinit_input = load_abinit_input(dir_name)
-        if structure_fixed:
-            # Get the structure from the AbinitInput directly
-            structure = abinit_input.structure
-        else:
-            # For relaxations and molecular dynamics, get the final structure from
-            # the Gsr file.
-            structure = cls.get_final_structure(dir_name)
+        structure = get_final_structure(dir_name=dir_name)
 
         doc = cls.from_structure(
             structure=structure,
@@ -126,87 +123,3 @@ class AbinitTaskDocument(StructureMetadata):
             abinit_input=abinit_input,
         )
         return doc
-
-    @staticmethod
-    def get_final_structure(dir_name):
-        """Get the final structure from the Gsr file."""
-        gsr_path = Directory(os.path.join(dir_name, OUTDIR_NAME)).has_abiext("GSR")
-        if not gsr_path:
-            msg = (
-                f"No GSR file available in directory "
-                f"{os.path.join(dir_name, OUTDIR_NAME)}."
-            )
-            logger.critical(msg)
-            raise PostProcessError(msg)
-
-        # Open the GSR file.
-        try:
-            gsr_file = GsrFile(gsr_path)
-        except Exception as exc:
-            msg = "Exception while reading GSR file at %s:\n%s" % (gsr_path, str(exc))
-            logger.critical(msg)
-            raise PostProcessError(msg)
-
-        return gsr_file.structure
-
-    @staticmethod
-    def get_event_report(ofile, mpiabort_file):
-        """Get report from abinit calculation.
-
-        This analyzes the main output file for possible Errors or Warnings.
-        It will check the presence of an MPIABORTFILE if not output file is found.
-
-        Parameters
-        ----------
-        ofile : File
-            Output file to be parsed. Should be either the standard abinit
-            output or the log file (stdout).
-        mpiabort_file : File
-
-        Returns
-        -------
-        EventReport
-            Report of the abinit calculation or None if no output file exists.
-        """
-        parser = events.EventsParser()
-
-        if not ofile.exists:
-            if not mpiabort_file.exists:
-                return None
-            else:
-                # ABINIT abort file without log!
-                abort_report = parser.parse(mpiabort_file.path)
-                return abort_report
-
-        try:
-            report = parser.parse(ofile.path)
-
-            # Add events found in the ABI_MPIABORTFILE.
-            if mpiabort_file.exists:
-                logger.critical("Found ABI_MPIABORTFILE!")
-                abort_report = parser.parse(mpiabort_file.path)
-                if len(abort_report) == 0:
-                    logger.warning("ABI_MPIABORTFILE but empty")
-                else:
-                    if len(abort_report) != 1:
-                        logger.critical("Found more than one event in ABI_MPIABORTFILE")
-
-                    # Add it to the initial report only if it differs
-                    # from the last one found in the main log file.
-                    last_abort_event = abort_report[-1]
-                    if report and last_abort_event != report[-1]:
-                        report.append(last_abort_event)
-                    else:
-                        report.append(last_abort_event)
-
-            return report
-
-        # except parser.Error as exc:
-        except Exception as exc:
-            # Return a report with an error entry with info on the exception.
-            logger.critical(
-                "{}: Exception while parsing ABINIT events:\n {}".format(
-                    ofile, str(exc)
-                )
-            )
-            return parser.report_exception(ofile.path, exc)

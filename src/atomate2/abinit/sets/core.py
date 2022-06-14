@@ -1,7 +1,7 @@
 """Module defining core Abinit input set generators."""
 
 from dataclasses import dataclass, field
-from typing import ClassVar, Optional
+from typing import Optional
 
 from abipy.abio.factories import (
     dos_from_gsinput,
@@ -48,7 +48,20 @@ class StaticSetGenerator(GroundStateSetGenerator):
     calc_type: str = "static"
 
     def get_abinit_input(
-        self, structure=None, pseudos=None, prev_outputs=None, **kwargs
+        self,
+        structure=None,
+        pseudos=None,
+        prev_outputs=None,
+        kppa=GroundStateSetGenerator.kppa,
+        ecut=GroundStateSetGenerator.ecut,
+        pawecutdg=GroundStateSetGenerator.pawecutdg,
+        nband=GroundStateSetGenerator.nband,
+        accuracy=GroundStateSetGenerator.accuracy,
+        spin_mode=GroundStateSetGenerator.spin_mode,
+        smearing=GroundStateSetGenerator.smearing,
+        charge=GroundStateSetGenerator.charge,
+        scf_algorithm=GroundStateSetGenerator.scf_algorithm,
+        shift_mode=GroundStateSetGenerator.shift_mode,
     ):
         """Get AbinitInput object for static calculation."""
         if structure is None:
@@ -64,16 +77,16 @@ class StaticSetGenerator(GroundStateSetGenerator):
         return scf_input(
             structure=structure,
             pseudos=pseudos,
-            kppa=self.kppa,
-            ecut=self.ecut,
-            pawecutdg=self.pawecutdg,
-            nband=self.nband,
-            accuracy=self.accuracy,
-            spin_mode=self.spin_mode,
-            smearing=self.smearing,
-            charge=self.charge,
-            scf_algorithm=self.scf_algorithm,
-            shift_mode=self.shift_mode,
+            kppa=kppa,
+            ecut=ecut,
+            pawecutdg=pawecutdg,
+            nband=nband,
+            accuracy=accuracy,
+            spin_mode=spin_mode,
+            smearing=smearing,
+            charge=charge,
+            scf_algorithm=scf_algorithm,
+            shift_mode=shift_mode,
         )
 
     def on_restart(self, abinit_input):
@@ -124,12 +137,12 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
     prev_outputs_deps: tuple = (f"{SCF}:DEN",)
 
     # class variables
-    params: ClassVar[tuple] = (
-        "nband",
-        "ndivsm",
-        "kppa",
-        "accuracy",
-    )
+    # params: ClassVar[tuple] = (
+    #     "nband",
+    #     "ndivsm",
+    #     "kppa",
+    #     "accuracy",
+    # )
 
     def __post_init__(self):
         """Ensure mode is set correctly."""
@@ -140,7 +153,15 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
     def get_abinit_input(
-        self, structure=None, pseudos=None, prev_outputs=None, **kwargs
+        self,
+        structure=None,
+        pseudos=None,
+        prev_outputs=None,
+        nband=nband,
+        accuracy=accuracy,
+        ndivsm=ndivsm,
+        kppa=kppa,
+        mode=mode,
     ):
         """Get AbinitInput object for Non-SCF calculation."""
         if prev_outputs is None:
@@ -160,34 +181,22 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
                     "is not the same as the one from the previous (SCF) input set."
                 )
 
-        if self.mode == "line":
-            kwargs.pop("kppa")
+        # params = self.get_params(instance_or_class=self, kwargs=kwargs, prev_gen=None)
+        if mode == "line":
             return ebands_from_gsinput(
                 gs_input=previous_abinit_input,
-                **kwargs,
+                nband=nband,
+                ndivsm=ndivsm,
+                accuracy=accuracy,
             )
-        elif self.mode == "uniform":
-            # TODO: the dos_from_gsinput takes nband as an argument, but does nothing
-            #  with it ... do we update that in abipy ?
-            kppa = kwargs.pop("kppa")
-            kwargs.pop("ndivsm")
+        elif mode == "uniform":
             uniform_input = dos_from_gsinput(
-                gsinput=previous_abinit_input,
+                gs_input=previous_abinit_input,
                 dos_kppa=kppa,
-                **kwargs,
+                nband=nband,
+                accuracy=accuracy,
+                pdos=False,
             )
-            nband = kwargs.get("nband")
-            if nband is None:
-                nband = (
-                    uniform_input.get(
-                        "nband",
-                        uniform_input.structure.num_valence_electrons(
-                            uniform_input.pseudos
-                        ),
-                    )
-                    + 10
-                )
-            uniform_input.set_vars(nband=nband)
             return uniform_input
         else:
             raise RuntimeError(
@@ -257,24 +266,40 @@ class RelaxSetGenerator(GroundStateSetGenerator):
     relax_cell: bool = True
     tolmxf: float = 5.0e-5
 
-    # class variables
-    params: ClassVar[tuple] = (
-        "kppa",
-        "ecut",
-        "pawecutdg",
-        "nband",
-        "accuracy",
-        "spin_mode",
-        "smearing",
-        "charge",
-        "scf_algorithm",
-        "shift_mode",
-        "relax_cell",
-        "tolmxf",
-    )
+    # # class variables
+    # params: ClassVar[tuple] = (
+    #     "kppa",
+    #     "ecut",
+    #     "pawecutdg",
+    #     "nband",
+    #     "accuracy",
+    #     "spin_mode",
+    #     "smearing",
+    #     "charge",
+    #     "scf_algorithm",
+    #     "shift_mode",
+    #     "relax_cell",
+    #     "tolmxf",
+    # )
 
     def get_abinit_input(
-        self, structure=None, pseudos=None, prev_outputs=None, **kwargs
+        self,
+        structure=None,
+        pseudos=None,
+        prev_outputs=None,
+        kppa=GroundStateSetGenerator.kppa,
+        ecut=GroundStateSetGenerator.ecut,
+        pawecutdg=GroundStateSetGenerator.pawecutdg,
+        nband=GroundStateSetGenerator.nband,
+        accuracy=GroundStateSetGenerator.accuracy,
+        spin_mode=GroundStateSetGenerator.spin_mode,
+        smearing=GroundStateSetGenerator.smearing,
+        charge=GroundStateSetGenerator.charge,
+        scf_algorithm=GroundStateSetGenerator.scf_algorithm,
+        shift_mode=GroundStateSetGenerator.shift_mode,
+        relax_cell=relax_cell,
+        tolmxf=tolmxf,
+        **kwargs,
     ):
         if structure is None:
             raise RuntimeError("Structure is mandatory for RelaxSet generation.")
@@ -288,16 +313,21 @@ class RelaxSetGenerator(GroundStateSetGenerator):
         if kwargs.get("atoms_constraints", None) is not None:
             raise NotImplementedError("Atoms constraints not implemented.")
 
-        try:
-            tolmxf = kwargs.pop("tolmxf")
-        except KeyError:
-            tolmxf = self.tolmxf
-        try:
-            relax_cell = kwargs.pop("relax_cell")
-        except KeyError:
-            relax_cell = self.relax_cell
         ind = 1 if relax_cell else 0
-        relax_input = ion_ioncell_relax_input(structure, pseudos=pseudos, **kwargs)[ind]
+        relax_input = ion_ioncell_relax_input(
+            structure,
+            pseudos=pseudos,
+            kppa=kppa,
+            nband=nband,
+            ecut=ecut,
+            pawecutdg=pawecutdg,
+            accuracy=accuracy,
+            spin_mode=spin_mode,
+            smearing=smearing,
+            charge=charge,
+            scf_algorithm=scf_algorithm,
+            shift_mode=shift_mode,
+        )[ind]
         relax_input["tolmxf"] = tolmxf
 
         return relax_input
