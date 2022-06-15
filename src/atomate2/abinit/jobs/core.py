@@ -97,7 +97,6 @@ class NonSCFWfqMaker(NonSCFMaker):
 
     # Non dataclass variables:
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
-    restart_extension = "WFQ"
 
 
 @dataclass

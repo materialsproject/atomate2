@@ -11,8 +11,8 @@ from monty.tempfile import ScratchDir
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import (
+    AbinitInputGenerator,
     AbinitInputSet,
-    AbinitInputSetGenerator,
     as_pseudo_table,
 )
 from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, InitializationError
@@ -146,7 +146,7 @@ class TestAbinitInputSet:
 
 
 @dataclass
-class SomeAbinitInputSetGenerator(AbinitInputSetGenerator):
+class SomeAbinitInputSetGenerator(AbinitInputGenerator):
     calc_type: str = "some_calc"
 
     param1: int = 1
@@ -163,7 +163,7 @@ class SomeAbinitInputSetGenerator(AbinitInputSetGenerator):
     ):
         return AbinitInput(
             structure=structure,
-            pseudos=as_pseudo_table(AbinitInputSetGenerator.pseudos),
+            pseudos=as_pseudo_table(AbinitInputGenerator.pseudos),
         )
 
 
@@ -196,7 +196,7 @@ class TestAbinitInputSetGenerator:
             )
 
     def test_check_format_prev_dirs(self):
-        aisg = AbinitInputSetGenerator()
+        aisg = AbinitInputGenerator()
         prev_outputs = aisg.check_format_prev_dirs(None)
         assert prev_outputs is None
         prev_outputs = aisg.check_format_prev_dirs("/some/path")
@@ -219,7 +219,7 @@ class TestAbinitInputSetGenerator:
         assert prev_outputs == ["/some/path", "/some/other/path"]
 
     def test_resolve_dep(self):
-        aisg = AbinitInputSetGenerator()
+        aisg = AbinitInputGenerator()
         with ScratchDir(".") as tmpdir:
             prev_output_dir = os.path.join(tmpdir, "prev_output")
             prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
@@ -282,7 +282,7 @@ class TestAbinitInputSetGenerator:
             assert restart_file == [os.path.join(prev_outdata, "out_DEN")]
 
     def test_resolve_deps(self):
-        aisg = AbinitInputSetGenerator()
+        aisg = AbinitInputGenerator()
         with ScratchDir(".") as tmpdir1:
             prev_output_dir1 = os.path.join(tmpdir1, "prev_output")
             prev_outdata1 = os.path.join(prev_output_dir1, OUTDIR_NAME)

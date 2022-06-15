@@ -6,11 +6,11 @@ from abipy.abio.input_tags import SCF
 from abipy.abio.inputs import AbinitInput
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.sets.base import AbinitInputSetGenerator, as_pseudo_table
+from atomate2.abinit.sets.base import AbinitInputGenerator, as_pseudo_table
 
 
 @dataclass
-class SomeAISG1(AbinitInputSetGenerator):
+class SomeAISG1(AbinitInputGenerator):
     calc_type: str = "some_calc1"
 
     param1: int = 1
@@ -27,12 +27,12 @@ class SomeAISG1(AbinitInputSetGenerator):
     ):
         return AbinitInput(
             structure=structure,
-            pseudos=as_pseudo_table(AbinitInputSetGenerator.pseudos),
+            pseudos=as_pseudo_table(AbinitInputGenerator.pseudos),
         )
 
 
 @dataclass
-class SomeAISG2(AbinitInputSetGenerator):
+class SomeAISG2(AbinitInputGenerator):
     calc_type: str = "some_calc2"
 
     param1: int = 2
@@ -50,7 +50,7 @@ class SomeAISG2(AbinitInputSetGenerator):
     ):
         return AbinitInput(
             structure=structure,
-            pseudos=as_pseudo_table(AbinitInputSetGenerator.pseudos),
+            pseudos=as_pseudo_table(AbinitInputGenerator.pseudos),
         )
 
 
