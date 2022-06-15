@@ -29,12 +29,6 @@ logger = logging.getLogger(__name__)
 __all__ = ["BaseAbinitMaker"]
 
 
-ResponseArgs = namedtuple(
-    "ResponseArgs",
-    ["detour", "addition", "replace", "stop_children", "stop_jobflow", "stored_data"],
-)
-
-
 JobSetupVars = namedtuple(
     "JobSetupVars",
     ["start_time", "history", "workdir", "abipy_manager", "wall_time"],
@@ -288,26 +282,16 @@ class BaseAbinitMaker(Maker):
         )
         task_doc.task_label = self.name
 
-        response_args = self.get_response_args(
+        dumpfn(jsanitize(task_doc.dict()), fn="task_document.json", indent=2)
+
+        return self.get_response(
             task_document=task_doc,
             history=config.history,
             max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
             prev_outputs=prev_outputs,
         )
 
-        dumpfn(jsanitize(task_doc.dict()), fn="task_document.json", indent=2)
-
-        return Response(
-            output=task_doc,
-            detour=response_args.detour,
-            addition=response_args.addition,
-            replace=response_args.replace,
-            stop_children=response_args.stop_children,
-            stop_jobflow=response_args.stop_jobflow,
-            stored_data=response_args.stored_data,
-        )
-
-    def get_response_args(
+    def get_response(
         self,
         task_document: AbinitTaskDocument,
         history: JobHistory,
@@ -316,7 +300,8 @@ class BaseAbinitMaker(Maker):
     ):
         """Get new job to restart abinit calculation."""
         if task_document.state == Status.SUCCESS:
-            return ResponseArgs(
+            return Response(
+                output=task_document,
                 detour=None,
                 addition=None,
                 replace=None,
@@ -334,7 +319,8 @@ class BaseAbinitMaker(Maker):
                 abinit_input=task_document.abinit_input,
                 history=history,
             )
-            return ResponseArgs(
+            return Response(
+                output=task_document,
                 detour=None,
                 addition=None,
                 replace=None,
@@ -352,7 +338,8 @@ class BaseAbinitMaker(Maker):
             history=history,
         )
 
-        return ResponseArgs(
+        return Response(
+            output=task_document,
             detour=None,
             addition=None,
             replace=new_job,
