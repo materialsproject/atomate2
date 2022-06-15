@@ -273,7 +273,7 @@ class BaseAbinitMaker(Maker):
         )
 
         # Run abinit
-        run_abinit(
+        run_status = run_abinit(
             abinit_cmd=job_config.settings.ABINIT_CMD,
             mpirun_cmd=job_config.settings.ABINIT_MPIRUN_CMD,
             wall_time=job_config.wall_time,
@@ -286,7 +286,7 @@ class BaseAbinitMaker(Maker):
             job_config.workdir,
             critical_events=self.critical_events,
             run_number=run_number,
-            # structure_fixed=self.structure_fixed,
+            run_status=run_status,
         )
         task_doc.task_label = self.name
 
