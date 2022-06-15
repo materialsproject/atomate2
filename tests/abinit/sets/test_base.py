@@ -75,12 +75,19 @@ class TestAbinitInputSet:
             in_den = os.path.join("testdir", "indata", "in_DEN")
             assert os.path.islink(in_den)
             assert os.readlink(in_den) == str(out_den)
-            abinit_input["irdden"] = 1
+
+        with ScratchDir(".") as tmpdir:
+            prev_output_dir = os.path.join(tmpdir, "prev_output")
+            prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
+            makedirs_p(prev_outdata)
+            out_den = Path(os.path.join(prev_outdata, "out_DEN"))
+            out_den.touch()
             ais = AbinitInputSet(
                 abinit_input=abinit_input,
                 input_files=[out_den],
                 link_files=False,
             )
+            abinit_input["irdden"] = 1
             ais.write_input("testdir")
             assert os.path.exists(in_den)
             assert os.path.isfile(in_den)

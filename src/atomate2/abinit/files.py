@@ -16,7 +16,6 @@ from atomate2.abinit.utils.common import (
     INDIR_NAME,
     OUTDATAFILE_PREFIX,
 )
-from atomate2.common.files import copy_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
 __all__ = [
@@ -77,6 +76,9 @@ def out_to_in(
     """
     if isinstance(out_files, (Path, str, dict)):
         out_files = [out_files]
+
+    dest_dir = file_client.abspath(indir, host=None)
+
     for out_file in out_files:
 
         if isinstance(out_file, dict):
@@ -86,30 +88,18 @@ def out_to_in(
                 )
             out_file, in_file = list(out_file.items())[0]
             out_file = str(out_file)
-            src_dir = os.path.dirname(out_file)
-            out_file = os.path.basename(out_file)
         else:
             out_file = str(out_file)
-            src_dir = os.path.dirname(out_file)
-            out_file = os.path.basename(out_file)
-            in_file = out_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
+            in_file = os.path.basename(out_file)
+            in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
             in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
+        src_file = file_client.abspath(out_file, host=src_host)
+        dest_file = os.path.join(dest_dir, in_file)
 
-        # Copy or link previous output files to the input directory and rename them
-        copy_files(
-            src_dir=src_dir,
-            dest_dir=indir,
-            src_host=src_host,
-            include_files=[out_file],
-            file_client=file_client,
-            link_files=link_files,
-        )
-        rename_files(
-            filenames={out_file: in_file},
-            directory=indir,
-            allow_missing=False,
-            file_client=file_client,
-        )
+        if link_files and src_host is None:
+            file_client.link(src_file, dest_file)
+        else:
+            file_client.copy(src_file, dest_file, src_host=src_host)
 
 
 def load_abinit_input(dirpath, fname="abinit_input.json"):
