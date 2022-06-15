@@ -70,25 +70,15 @@ class TestAbinitInputSet:
             makedirs_p(prev_outdata)
             out_den = Path(os.path.join(prev_outdata, "out_DEN"))
             out_den.touch()
-            ais = AbinitInputSet(
-                abinit_input=abinit_input, input_files=[out_den], validation=False
-            )
+            ais = AbinitInputSet(abinit_input=abinit_input, input_files=[out_den])
             ais.write_input("testdir")
             in_den = os.path.join("testdir", "indata", "in_DEN")
             assert os.path.islink(in_den)
             assert os.readlink(in_den) == str(out_den)
-            with pytest.raises(
-                ValueError, match=r"'irdden' ird variable not set for 'in_DEN' file."
-            ):
-                ais = AbinitInputSet(
-                    abinit_input=abinit_input, input_files=[out_den], validation=True
-                )
-                ais.write_input("testdir")
             abinit_input["irdden"] = 1
             ais = AbinitInputSet(
                 abinit_input=abinit_input,
                 input_files=[out_den],
-                validation=True,
                 link_files=False,
             )
             ais.write_input("testdir")
@@ -98,35 +88,7 @@ class TestAbinitInputSet:
             with open("testdir/run.abi", "r") as f:
                 abistr = f.read()
                 assert "irdden 1" in abistr
-            abinit_input["irdden"] = 2
-            with pytest.raises(
-                ValueError,
-                match=r"'irdden 2' ird variable is wrong for 'in_DEN' file. "
-                r"Should be 'irdden 1'.",
-            ):
-                ais = AbinitInputSet(
-                    abinit_input=abinit_input, input_files=[out_den], validation=True
-                )
-                ais.write_input("testdir")
             del abinit_input["irdden"]
-
-        with ScratchDir(".") as tmpdir:
-            prev_output_dir = os.path.join(tmpdir, "prev_output")
-            prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
-            makedirs_p(prev_outdata)
-            with pytest.raises(
-                ValueError,
-                match=r"'fake_WRONGEXT' file in input directory "
-                r"does not have a valid abinit extension.",
-            ):
-                wrontext_file = Path(os.path.join(prev_outdata, "fake_WRONGEXT"))
-                wrontext_file.touch()
-                ais = AbinitInputSet(
-                    abinit_input=abinit_input,
-                    input_files=[wrontext_file],
-                    validation=True,
-                )
-                ais.write_input("testdir")
 
         with ScratchDir(".") as tmpdir:
             prev_output_dir = os.path.join(tmpdir, "prev_output")
@@ -140,7 +102,6 @@ class TestAbinitInputSet:
             ais = AbinitInputSet(
                 abinit_input=abinit_input,
                 input_files=[{str(out_den): "in_DEN"}],
-                validation=True,
             )
             ais.write_input("testdir")
             in_den = os.path.join("testdir", INDIR_NAME, "in_DEN")

@@ -16,7 +16,7 @@ from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.abinit.files import fname2ext, load_abinit_input, out_to_in
+from atomate2.abinit.files import load_abinit_input, out_to_in
 from atomate2.abinit.utils.common import (
     INDATA_PREFIX,
     INDATAFILE_PREFIX,
@@ -51,11 +51,9 @@ class AbinitInputSet(InputSet):
         abinit_input: AbinitInput,
         input_files: Optional[Iterable[Union[str, Path, dict]]] = None,
         link_files: bool = True,
-        validation: bool = True,
     ):
         self.input_files = input_files
         self.link_files = link_files
-        self.validation = validation
         super().__init__(
             inputs={
                 INPUT_FILE_NAME: abinit_input,
@@ -92,31 +90,6 @@ class AbinitInputSet(InputSet):
                 indir=self.indir.path,
                 link_files=self.link_files,
             )
-
-        if self.validation:
-            self._validate()
-
-    def _validate(self):
-        # Check that all files in the input directory have their corresponding
-        # ird variables.
-        for filename in os.listdir(self.indir.path):
-            ext = fname2ext(filename)
-            if ext is None:
-                raise ValueError(
-                    f"'{filename}' file in input directory does not have a "
-                    f"valid abinit extension."
-                )
-            irdvars = irdvars_for_ext(ext)
-            for irdvar, irdval in irdvars.items():
-                if irdvar not in self.abinit_input:
-                    raise ValueError(
-                        f"'{irdvar}' ird variable not set for '{filename}' file."
-                    )
-                if self.abinit_input[irdvar] != irdval:
-                    raise ValueError(
-                        f"'{irdvar} {self.abinit_input[irdvar]}' ird variable is wrong for "
-                        f"'{filename}' file. Should be '{irdvar} {irdval}'."
-                    )
 
     @property
     def abinit_input(self):
@@ -405,12 +378,11 @@ class AbinitInputGenerator(InputGenerator):
         abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
         abinit_input["tmpdata_prefix"] = (f'"{TMPDATA_PREFIX}"',)
 
-        # TODO: where/how do we set up/pass down link_files and validation ?
+        # TODO: where/how do we set up/pass down link_files ?
         return AbinitInputSet(
             abinit_input=abinit_input,
             input_files=input_files,
             link_files=True,
-            validation=True,
         )
 
     def check_format_prev_dirs(self, prev_dirs):

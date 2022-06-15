@@ -16,13 +16,13 @@ from monty.json import jsanitize
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Structure
 
+from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
 from atomate2.abinit.sets.base import AbinitInputGenerator, get_extra_abivars
 from atomate2.abinit.utils.common import InitializationError, UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
-from atomate2.settings import Atomate2Settings
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ ResponseArgs = namedtuple(
 
 JobSetupVars = namedtuple(
     "JobSetupVars",
-    ["start_time", "history", "workdir", "settings", "abipy_manager", "wall_time"],
+    ["start_time", "history", "workdir", "abipy_manager", "wall_time"],
 )
 
 
@@ -82,10 +82,9 @@ def setup_job(
     # Load the atomate settings for abinit to get configuration parameters
     # TODO: how to allow for tuned parameters on a per-job basis ?
     #  (similar to fw_spec-passed settings)
-    settings = Atomate2Settings()
     abipy_manager = None  # Currently disabled as it is needed for autoparal,
     # which is not yet supported
-    # abipy_manager = get_abipy_manager(settings)
+    # abipy_manager = get_abipy_manager(SETTINGS)
 
     # set walltime, if possible
     # TODO: see in set_walltime, where to put this walltime_command
@@ -94,7 +93,6 @@ def setup_job(
         start_time=start_time,
         history=history,
         workdir=workdir,
-        settings=settings,
         abipy_manager=abipy_manager,
         wall_time=wall_time,
     )
@@ -274,8 +272,8 @@ class BaseAbinitMaker(Maker):
 
         # Run abinit
         run_status = run_abinit(
-            abinit_cmd=job_config.settings.ABINIT_CMD,
-            mpirun_cmd=job_config.settings.ABINIT_MPIRUN_CMD,
+            abinit_cmd=SETTINGS.ABINIT_CMD,
+            mpirun_cmd=SETTINGS.ABINIT_MPIRUN_CMD,
             wall_time=job_config.wall_time,
             start_time=job_config.start_time,
         )
@@ -293,7 +291,7 @@ class BaseAbinitMaker(Maker):
         response_args = self.get_response_args(
             task_document=task_doc,
             history=job_config.history,
-            max_restarts=job_config.settings.ABINIT_MAX_RESTARTS,
+            max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
             prev_outputs=prev_outputs,
         )
 
