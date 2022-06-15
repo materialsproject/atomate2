@@ -302,12 +302,6 @@ class BaseAbinitMaker(Maker):
         if task_document.state == Status.SUCCESS:
             return Response(
                 output=task_document,
-                detour=None,
-                addition=None,
-                replace=None,
-                stop_children=False,
-                stop_jobflow=False,
-                stored_data=None,
             )
 
         if history.run_number > max_restarts:
@@ -321,9 +315,6 @@ class BaseAbinitMaker(Maker):
             )
             return Response(
                 output=task_document,
-                detour=None,
-                addition=None,
-                replace=None,
                 stop_children=True,
                 stop_jobflow=True,
                 stored_data={"error": unconverged_error},
@@ -340,10 +331,5 @@ class BaseAbinitMaker(Maker):
 
         return Response(
             output=task_document,
-            detour=None,
-            addition=None,
             replace=new_job,
-            stop_children=False,
-            stop_jobflow=False,
-            stored_data=None,
         )
