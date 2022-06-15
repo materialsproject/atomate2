@@ -19,10 +19,14 @@ from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, Initialization
 
 
 class TestAbinitInputSet:
-    def test_init(self):
-        abinit_input = "FakeAbinitInput"
+    def test_init(self, abinit_test_dir):
+        abinit_input = load_abinit_input(
+            os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
+        )
         ais = AbinitInputSet(abinit_input=abinit_input)
-        assert ais.inputs == {"run.abi": abinit_input}
+        assert set(ais.inputs.keys()) == {"run.abi", "abinit_input.json"}
+        assert ais.inputs["run.abi"] == abinit_input
+        assert '"@class": "AbinitInput"' in ais.inputs["abinit_input.json"]
         assert ais.input_files is None
         assert ais.link_files is True
         ais = AbinitInputSet(
@@ -30,7 +34,6 @@ class TestAbinitInputSet:
             input_files=["/some/input/file", "/some/other/input/file"],
             link_files=False,
         )
-        assert ais.inputs == {"run.abi": abinit_input}
         assert ais.input_files == ["/some/input/file", "/some/other/input/file"]
         assert ais.link_files is False
 
@@ -203,16 +206,6 @@ class TestAbinitInputSetGenerator:
         assert prev_outputs == ["/some/path"]
         prev_outputs = aisg.check_format_prev_dirs(Path("/some/path"))
         assert prev_outputs == ["/some/path"]
-        with pytest.raises(
-            RuntimeError,
-            match=r"Previous directories should be provided as a list "
-            "or tuple of str or a single str.",
-        ):
-            aisg.check_format_prev_dirs(3.5)
-        with pytest.raises(
-            RuntimeError, match=r"Previous directory should be a str or a Path."
-        ):
-            aisg.check_format_prev_dirs(["/some/path", 3.5])
         prev_outputs = aisg.check_format_prev_dirs(
             ["/some/path", Path("/some/other/path")]
         )

@@ -46,6 +46,8 @@ def run_abinit(
 
     command.append(INPUT_FILE_NAME)
 
+    status = "completed"
+
     with open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
         process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
 
@@ -58,5 +60,7 @@ def run_abinit(
                 remaining_time = max_end_time - current_time
                 if remaining_time < 5 * SLEEP_TIME_STEP:
                     process.terminate()
+                    status = "killed"
 
         process.wait()
+    return status

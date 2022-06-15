@@ -82,7 +82,7 @@ class AbinitTaskDocument(StructureMetadata):
         source: str = "log",
         critical_events=None,
         run_number=1,
-        # structure_fixed=True,
+        run_status=None,
     ) -> _T:
         """Build AbinitTaskDocument from directory."""
         # Files required for the job analysis.

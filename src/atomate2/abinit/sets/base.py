@@ -11,6 +11,7 @@ from typing import Any, Iterable, List, Optional, Union
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
+from monty.json import MontyEncoder
 from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
@@ -55,7 +56,14 @@ class AbinitInputSet(InputSet):
         self.input_files = input_files
         self.link_files = link_files
         self.validation = validation
-        super().__init__(inputs={INPUT_FILE_NAME: abinit_input})
+        super().__init__(
+            inputs={
+                INPUT_FILE_NAME: abinit_input,
+                "abinit_input.json": json.dumps(
+                    abinit_input.as_dict(), cls=MontyEncoder
+                ),
+            }
+        )
 
     def write_input(
         self,
@@ -366,6 +374,10 @@ class AbinitInputGenerator(InputGenerator):
             params = self.get_params(
                 instance_or_class=self, kwargs=kwargs, prev_gen=None
             )
+            if prev_outputs is not None and not self.prev_outputs_deps:
+                raise RuntimeError(
+                    f"Previous outputs not allowed for {self.__class__.__name__}."
+                )
             abinit_input = self.get_abinit_input(
                 structure=structure,
                 pseudos=pseudos,
@@ -407,14 +419,6 @@ class AbinitInputGenerator(InputGenerator):
             return None
         if isinstance(prev_dirs, (str, Path)):
             return [str(prev_dirs)]
-        if not isinstance(prev_dirs, (list, tuple)):
-            raise RuntimeError(
-                "Previous directories should be provided as a list "
-                "or tuple of str or a single str."
-            )
-        for prev_dir in prev_dirs:
-            if not isinstance(prev_dir, (str, Path)):
-                raise RuntimeError("Previous directory should be a str or a Path.")
         return [str(prev_dir) for prev_dir in prev_dirs]
 
     def resolve_deps(self, prev_dirs, deps, check_runlevel=True):
