@@ -17,7 +17,7 @@ from atomate2.abinit.utils.common import (
     OUTDATAFILE_PREFIX,
 )
 
-# from atomate2.abinit.sets.base import AbinitInputSetGenerator
+# from atomate2.abinit.sets.base import AbinitInputGenerator
 from atomate2.common.files import copy_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
@@ -128,7 +128,7 @@ def load_generator(dirpath, fname="abinit_input_set_generator.json"):
     abinit_input_set_generator_file = os.path.join(dirpath, f"{fname}")
     if not os.path.exists(abinit_input_set_generator_file):
         raise NotImplementedError(
-            f"Cannot load AbinitInputSetGenerator from directory without {fname} file."
+            f"Cannot load AbinitInputGenerator from directory without {fname} file."
         )
     abinit_input_set_generator = loadfn(abinit_input_set_generator_file)
     return abinit_input_set_generator

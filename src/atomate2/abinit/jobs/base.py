@@ -19,7 +19,7 @@ from pymatgen.core.structure import Structure
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
-from atomate2.abinit.sets.base import AbinitInputSetGenerator, get_extra_abivars
+from atomate2.abinit.sets.base import AbinitInputGenerator, get_extra_abivars
 from atomate2.abinit.utils.common import InitializationError, UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 from atomate2.settings import Atomate2Settings
@@ -113,7 +113,7 @@ class BaseAbinitMaker(Maker):
         The pseudopotentials to use.
     """
 
-    input_set_generator: AbinitInputSetGenerator
+    input_set_generator: AbinitInputGenerator
     name: str = "base abinit job"
     wall_time: Optional[int] = None
 

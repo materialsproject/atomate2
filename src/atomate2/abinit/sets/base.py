@@ -30,7 +30,7 @@ from atomate2.abinit.utils.common import (
     get_final_structure,
 )
 
-__all__ = ["AbinitInputSet", "AbinitInputSetGenerator"]
+__all__ = ["AbinitInputSet", "AbinitInputGenerator"]
 
 logger = logging.getLogger(__name__)
 
@@ -218,7 +218,7 @@ PrevOutput = namedtuple("PrevOutput", "dirname exts")
 
 
 @dataclass
-class AbinitInputSetGenerator(InputGenerator):
+class AbinitInputGenerator(InputGenerator):
     """A class to generate Abinit input sets."""
 
     calc_type: str = "abinit_calculation"

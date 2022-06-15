@@ -12,7 +12,7 @@ from abipy.abio.factories import (
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
 from atomate2.abinit.files import load_abinit_input
-from atomate2.abinit.sets.base import AbinitInputSetGenerator
+from atomate2.abinit.sets.base import AbinitInputGenerator
 
 __all__ = [
     "StaticSetGenerator",
@@ -22,7 +22,7 @@ __all__ = [
 
 
 @dataclass
-class GroundStateSetGenerator(AbinitInputSetGenerator):
+class GroundStateSetGenerator(AbinitInputGenerator):
     """Common class for ground-state generators."""
 
     calc_type: str = "ground_state"
@@ -102,7 +102,7 @@ class StaticSetGenerator(GroundStateSetGenerator):
 
 
 @dataclass
-class NonSCFSetGenerator(AbinitInputSetGenerator):
+class NonSCFSetGenerator(AbinitInputGenerator):
     """Class to generate Abinit non-SCF input sets."""
 
     calc_type: str = "nscf"
@@ -205,7 +205,7 @@ class NonSCFSetGenerator(AbinitInputSetGenerator):
 
 
 @dataclass
-class NonScfWfqInputGenerator(AbinitInputSetGenerator):
+class NonScfWfqInputGenerator(AbinitInputGenerator):
     """Input set generator for Non-Scf Wfq calculations."""
 
     calc_type: str = "nscf_wfq"
@@ -246,7 +246,7 @@ class NonScfWfqInputGenerator(AbinitInputSetGenerator):
 
 
 @dataclass
-class DdkInputGenerator(AbinitInputSetGenerator):
+class DdkInputGenerator(AbinitInputGenerator):
     """Input set generator for Non-Scf Wfq calculations."""
 
     calc_type: str = "ddk"
