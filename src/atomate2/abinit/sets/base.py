@@ -171,6 +171,19 @@ class AbinitInputSet(InputSet):
 
 
 def as_pseudo_table(pseudos):
+    """Get the pseudos as a PseudoTable object.
+
+    Parameters
+    ----------
+    pseudos
+        Pseudopotentials as a list of pseudopotentials files, a single
+        pseudopotential file, a string representing a pseudo repository.
+
+    Returns
+    -------
+    PseudoTable
+        Table of pseudopotentials.
+    """
     # get the PseudoTable from the PseudoRepo
     if isinstance(pseudos, str):
         # in case a single path to a pseudopotential file has been passed
@@ -190,6 +203,21 @@ def as_pseudo_table(pseudos):
 
 
 def get_extra_abivars(extra_abivars, extra_mod):
+    """Update and get extra_abivars.
+
+    Parameters
+    ----------
+    extra_abivars
+        Current additional abinit variables.
+    extra_mod
+        Modifications to the additional abinit variables. To remove one
+        of the additional variables, set the variable to None.
+
+    Returns
+    -------
+    dict
+        The updated additional abinit variables.
+    """
     extra_abivars.update(extra_mod)
     # Remove additional variables when their value is set to None
     return {k: v for k, v in extra_abivars.items() if v is not None}
