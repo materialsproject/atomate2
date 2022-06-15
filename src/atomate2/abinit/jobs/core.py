@@ -93,8 +93,6 @@ class NonSCFWfqMaker(NonSCFMaker):
 
     input_set_generator: NonScfWfqInputGenerator = NonScfWfqInputGenerator()
 
-    wfq_tolwfr: float = 1.0e-22
-
     # Non dataclass variables:
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
 
