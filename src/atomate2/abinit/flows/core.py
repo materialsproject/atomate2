@@ -1,6 +1,5 @@
 """Core abinit flow makers."""
 
-import copy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Union
@@ -64,8 +63,7 @@ class BandStructureMaker(Maker):
         jobs = [static_job]
 
         if self.bandstructure_type in ("both", "uniform"):
-            uniform_maker = copy.deepcopy(self.bs_maker)
-            uniform_job = uniform_maker.make(
+            uniform_job = self.bs_maker.make(
                 prev_outputs=static_job.output.dir_name,
                 mode="uniform",
             )
@@ -73,8 +71,7 @@ class BandStructureMaker(Maker):
             jobs.append(uniform_job)
 
         if self.bandstructure_type in ("both", "line"):
-            line_maker = copy.deepcopy(self.bs_maker)
-            line_job = line_maker.make(
+            line_job = self.bs_maker.make(
                 prev_outputs=static_job.output.dir_name,
                 mode="line",
             )
