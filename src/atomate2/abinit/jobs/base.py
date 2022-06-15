@@ -253,7 +253,7 @@ class BaseAbinitMaker(Maker):
             A JobHistory object containing the history of this job.
         """
         # Setup job and get general job configuration
-        job_config = setup_job(
+        config = setup_job(
             structure=structure,
             prev_outputs=prev_outputs,
             restart_from=restart_from,
@@ -267,21 +267,21 @@ class BaseAbinitMaker(Maker):
             input_set_generator=self.input_set_generator,
             prev_outputs=prev_outputs,
             restart_from=restart_from,
-            directory=job_config.workdir,
+            directory=config.workdir,
         )
 
         # Run abinit
         run_status = run_abinit(
             abinit_cmd=SETTINGS.ABINIT_CMD,
             mpirun_cmd=SETTINGS.ABINIT_MPIRUN_CMD,
-            wall_time=job_config.wall_time,
-            start_time=job_config.start_time,
+            wall_time=config.wall_time,
+            start_time=config.start_time,
         )
 
         # parse Abinit outputs
-        run_number = job_config.history.run_number
+        run_number = config.history.run_number
         task_doc = AbinitTaskDocument.from_directory(
-            job_config.workdir,
+            config.workdir,
             critical_events=self.critical_events,
             run_number=run_number,
             run_status=run_status,
@@ -290,7 +290,7 @@ class BaseAbinitMaker(Maker):
 
         response_args = self.get_response_args(
             task_document=task_doc,
-            history=job_config.history,
+            history=config.history,
             max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
             prev_outputs=prev_outputs,
         )
