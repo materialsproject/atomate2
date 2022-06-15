@@ -13,6 +13,7 @@ from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import AbinitInputGenerator
+from atomate2.abinit.utils.common import get_final_structure
 
 __all__ = [
     "StaticSetGenerator",
@@ -136,14 +137,6 @@ class NonSCFSetGenerator(AbinitInputGenerator):
     restart_from_deps: tuple = (f"{NSCF}:WFK",)
     prev_outputs_deps: tuple = (f"{SCF}:DEN",)
 
-    # class variables
-    # params: ClassVar[tuple] = (
-    #     "nband",
-    #     "ndivsm",
-    #     "kppa",
-    #     "accuracy",
-    # )
-
     def __post_init__(self):
         """Ensure mode is set correctly."""
         self.mode = self.mode.lower()
@@ -174,14 +167,20 @@ class NonSCFSetGenerator(AbinitInputGenerator):
             )
         prev_output = prev_outputs[0]
         previous_abinit_input = load_abinit_input(prev_output)
+        previous_structure = get_final_structure(prev_output)
+        # TODO: the structure in the previous abinit input may be slightly different
+        #  from the one in the previous output (if abinit symmetrizes the structure)
+        #  Should we set the structure in the previous_abinit_input ? Or should we
+        #  assume that abinit will make the same symmetrization ?
+        #  Or should we always symmetrize the structure before ?
+        #  Or should we always set tolsym to 1.0e-8 ?
+        previous_abinit_input.set_structure(previous_structure)
         if structure is not None:
-            if structure != previous_abinit_input.structure:
+            if structure != previous_structure:
                 raise RuntimeError(
                     "Structure is provided in non-SCF input set generator but "
                     "is not the same as the one from the previous (SCF) input set."
                 )
-
-        # params = self.get_params(instance_or_class=self, kwargs=kwargs, prev_gen=None)
         if mode == "line":
             return ebands_from_gsinput(
                 gs_input=previous_abinit_input,

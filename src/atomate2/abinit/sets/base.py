@@ -353,6 +353,8 @@ class AbinitInputGenerator(InputGenerator):
         input_files = []
         if restart_from is not None:
             structure = get_final_structure(restart_from[0])
+            abinit_input = load_abinit_input(restart_from[0])
+            abinit_input.set_structure(structure=structure)
             # Files for restart (e.g. continue a not yet converged
             # scf/nscf/relax calculation)
             irdvars, files = self.resolve_deps(
@@ -360,15 +362,16 @@ class AbinitInputGenerator(InputGenerator):
             )
             all_irdvars.update(irdvars)
             input_files.extend(files)
-
-        params = self.get_params(instance_or_class=self, kwargs=kwargs, prev_gen=None)
-
-        abinit_input = self.get_abinit_input(
-            structure=structure,
-            pseudos=pseudos,
-            prev_outputs=prev_outputs,
-            **params,
-        )
+        else:
+            params = self.get_params(
+                instance_or_class=self, kwargs=kwargs, prev_gen=None
+            )
+            abinit_input = self.get_abinit_input(
+                structure=structure,
+                pseudos=pseudos,
+                prev_outputs=prev_outputs,
+                **params,
+            )
         # Always reset the ird variables.
         abinit_input.pop_irdvars()
 
