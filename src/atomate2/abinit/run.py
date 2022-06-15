@@ -8,6 +8,7 @@ import time
 
 from abipy.flowtk.qutils import time2slurm
 
+from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import (
     INPUT_FILE_NAME,
     LOG_FILE_NAME,
@@ -24,12 +25,14 @@ logger = logging.getLogger(__name__)
 
 
 def run_abinit(
-    abinit_cmd: str = "abinit",
+    abinit_cmd: str = None,
     mpirun_cmd: str = None,
     wall_time: int = None,
     start_time: float = None,
 ):
     """Run ABINIT."""
+    abinit_cmd = abinit_cmd or SETTINGS.ABINIT_CMD
+    mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
     start_time = start_time or time.time()
     if mpirun_cmd is not None:
         command = [mpirun_cmd, abinit_cmd]
