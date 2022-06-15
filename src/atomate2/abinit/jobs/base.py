@@ -277,6 +277,7 @@ class BaseAbinitMaker(Maker):
             abinit_cmd=job_config.settings.ABINIT_CMD,
             mpirun_cmd=job_config.settings.ABINIT_MPIRUN_CMD,
             wall_time=job_config.wall_time,
+            start_time=job_config.start_time,
         )
 
         # parse Abinit outputs
