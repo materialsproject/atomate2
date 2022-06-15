@@ -6,7 +6,7 @@ import logging
 import os
 import time
 from collections import namedtuple
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from typing import Any, ClassVar, List, Optional, Sequence, Union
 
 import jobflow
@@ -99,15 +99,20 @@ class BaseAbinitMaker(Maker):
 
     Parameters
     ----------
+    input_set_generator : AbinitInputGenerator
+        Input generator to be used.
     name : str
         The job name.
-    pseudos : list of str, PseudoTable
-        The pseudopotentials to use.
+    wall_time : int
+        The wall time for the job.
+    run_abinit_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_abinit`.
     """
 
     input_set_generator: AbinitInputGenerator
     name: str = "base abinit job"
     wall_time: Optional[int] = None
+    run_abinit_kwargs: dict = field(default_factory=dict)
 
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ()
@@ -266,10 +271,9 @@ class BaseAbinitMaker(Maker):
 
         # Run abinit
         run_status = run_abinit(
-            abinit_cmd=SETTINGS.ABINIT_CMD,
-            mpirun_cmd=SETTINGS.ABINIT_MPIRUN_CMD,
             wall_time=config.wall_time,
             start_time=config.start_time,
+            **self.run_abinit_kwargs,
         )
 
         # parse Abinit outputs
