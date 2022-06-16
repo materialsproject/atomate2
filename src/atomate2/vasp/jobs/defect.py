@@ -266,7 +266,6 @@ def perform_defect_calcs(
             "dir_name": charge_output.dir_name,
             "uuid": charged_relax.uuid,
         }
-    outputs["defect"] = defect
     add_flow = Flow(jobs, output=outputs)
     return Response(output=outputs, replace=add_flow)
 
@@ -284,26 +283,36 @@ def collect_defect_outputs(
         locpot_path = Path(strip_hostname(dir_name)) / "LOCPOT.gz"
         return Locpot.from_file(locpot_path)
 
+    print("===========================================")
+    print(defects_output)
+    print("===========================================")
     output = dict()
+    bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
     for defect_name, def_out in defects_output.items():
         defect = def_out.pop("defect")
         defect_locpots = dict()
-        bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
         defect_entries = []
+        fnv_plots = dict()
 
-        for qq, v in def_out.items():
-            defect_locpots[qq] = get_locpot_from_dir(v["dir_name"])
+        for qq, v in def_out["results"].items():
+            print(v)
+            print("===========================================")
+            if not isinstance(v, dict): continue
+            defect_locpots[int(qq)] = get_locpot_from_dir(v["dir_name"])
             sc_dict = v["entry"].as_dict()
             sc_dict["structure"] = v["structure"]
             sc_entry = ComputedStructureEntry.from_dict(sc_dict)
             def_ent = DefectEntry(
-                defect=defect, charge_state=qq, sc_entry=sc_entry, dielectric=dielectric
+                defect=defect, charge_state=int(qq), sc_entry=sc_entry, dielectric=dielectric
             )
-            def_ent.get_freysoldt_correction(defect_locpots[qq], bulk_locpot)
+            plot_data = def_ent.get_freysoldt_correction(defect_locpots[int(qq)], bulk_locpot)
             defect_entries.append(def_ent)
+            fnv_plots[int(qq)] = plot_data
+
         output[defect_name] = dict(
             defect=defect,
             defect_entries=defect_entries,
+            fnv_plots=fnv_plots
         )
     return output
 
