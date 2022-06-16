@@ -120,8 +120,7 @@ class AbinitInputSet(InputSet):
     def set_workdir(workdir):
         """Set up the working directory.
 
-        This also sets up and creates standard input, output and temporary
-        directories, as well as standard file names for input and output.
+        This also sets up and creates standard input, output and temporary directories.
         """
         workdir = os.path.abspath(workdir)
 

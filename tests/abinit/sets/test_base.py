@@ -46,6 +46,19 @@ class TestAbinitInputSet:
         assert ais.link_files is False
         assert ais.validate() is False
 
+    def test_set_workdir(self):
+        with ScratchDir(".") as tmp:
+            indir, outdir, tmpdir = AbinitInputSet.set_workdir("someworkdir")
+            indata = os.path.join("someworkdir", "indata")
+            outdata = os.path.join("someworkdir", "outdata")
+            tmpdata = os.path.join("someworkdir", "tmpdata")
+            assert os.path.exists(indata)
+            assert os.path.exists(outdata)
+            assert os.path.exists(tmpdata)
+            assert indir.path == os.path.join(tmp, indata)
+            assert outdir.path == os.path.join(tmp, outdata)
+            assert tmpdir.path == os.path.join(tmp, tmpdata)
+
     def test_write_input(self, abinit_test_dir):
         abinit_input = load_abinit_input(
             os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
@@ -132,6 +145,41 @@ class TestAbinitInputSet:
             in_den = os.path.join("testdir", INDIR_NAME, "in_DEN")
             assert os.path.islink(in_den)
             assert os.readlink(in_den) == str(out_den)
+
+    def test_set_remove_vars(self, abinit_test_dir):
+        abinit_input = load_abinit_input(
+            os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
+        )
+        ais = AbinitInputSet(abinit_input=abinit_input)
+        assert "ntime" not in ais.abinit_input
+        assert ais.abinit_input["nband"] == 5
+        ais.set_vars(nband=10, ntime=5)
+        assert ais.abinit_input["nband"] == 10
+        assert ais.abinit_input["ntime"] == 5
+        assert "occopt" in ais.abinit_input
+        ais.remove_vars("occopt")
+        assert "occopt" not in ais.abinit_input
+        ais.remove_vars(["nband", "ntime"])
+        assert "nband" not in ais.abinit_input
+        assert "ntime" not in ais.abinit_input
+
+    def test_runlevel(self, abinit_test_dir):
+        abinit_input = load_abinit_input(
+            os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
+        )
+        ais = AbinitInputSet(abinit_input=abinit_input)
+        assert ais.runlevel() == abinit_input.runlevel
+
+    def test_set_structure(self, abinit_test_dir):
+        abinit_input = load_abinit_input(
+            os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
+        )
+        ais = AbinitInputSet(abinit_input=abinit_input)
+        struct = abinit_input.structure
+        newstruct = struct.copy()
+        newstruct.scale_lattice(newstruct.volume * 1.2)
+        ais.set_structure(newstruct)
+        assert ais.abinit_input.structure == newstruct
 
 
 @dataclass
