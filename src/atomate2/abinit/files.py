@@ -134,6 +134,7 @@ def write_abinit_input_set(
         restart_from=restart_from,
         prev_outputs=prev_outputs,
     )
-    ais.validate()
+    if not ais.validate():
+        raise RuntimeError("AbinitInputSet is not valid.")
 
     ais.write_input(directory=directory, make_dir=True, overwrite=False)
