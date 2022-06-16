@@ -39,7 +39,7 @@ class GroundStateSetGenerator(AbinitInputGenerator):
     scf_algorithm: Optional[str] = None
     shift_mode: str = "Monkhorst-Pack"
 
-    restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
+    restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:DEN",)
 
 
 @dataclass
@@ -264,22 +264,6 @@ class RelaxSetGenerator(GroundStateSetGenerator):
 
     relax_cell: bool = True
     tolmxf: float = 5.0e-5
-
-    # # class variables
-    # params: ClassVar[tuple] = (
-    #     "kppa",
-    #     "ecut",
-    #     "pawecutdg",
-    #     "nband",
-    #     "accuracy",
-    #     "spin_mode",
-    #     "smearing",
-    #     "charge",
-    #     "scf_algorithm",
-    #     "shift_mode",
-    #     "relax_cell",
-    #     "tolmxf",
-    # )
 
     def get_abinit_input(
         self,
