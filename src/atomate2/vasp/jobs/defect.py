@@ -284,13 +284,26 @@ def collect_defect_outputs(
         locpot_path = Path(strip_hostname(dir_name)) / "LOCPOT.gz"
         return Locpot.from_file(locpot_path)
 
-    output = dict()
+    def parse_bulk_dir(dir_name: str) -> dict:
+        vbm_path = Path(strip_hostname(dir_name)) / "vasprun.xml.gz"
+        vasp_run = Vasprun(vbm_path)
+        vbm = vasp_run.get_band_structure().get_vbm()
+        entry = vbm.get_computed_entry()
+        return dict(entry=entry, vbm=vbm)
+
+    bulk_data = parse_bulk_dir(bulk_sc_dir)
+    output = dict(
+        defects_output=defects_output,
+        bulk_entry=bulk_data["entry"],
+        bulk_vbm=bulk_data["vbm"],
+    )
+    # first loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
     for defect_name, def_out in defects_output.items():
         defect = def_out.pop("defect")
         defect_locpots = dict()
         bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
         defect_entries = []
-
+        # then loop over the different charge states
         for qq, v in def_out.items():
             defect_locpots[qq] = get_locpot_from_dir(v["dir_name"])
             sc_dict = v["entry"].as_dict()
