@@ -5,24 +5,19 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Iterable, Tuple, Union
 
 from abipy.flowtk.utils import abi_extensions
 from monty.serialization import loadfn
 from pymatgen.core.structure import Structure
 
-from atomate2.abinit.utils.common import (
-    INDATAFILE_PREFIX,
-    INDIR_NAME,
-    OUTDATAFILE_PREFIX,
-)
+from atomate2.abinit.utils.common import INDIR_NAME
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
 __all__ = [
     "out_to_in",
     "fname2ext",
     "load_abinit_input",
-    "load_generator",
     "write_abinit_input_set",
 ]
 
@@ -49,53 +44,38 @@ def fname2ext(filepath):
 
 @auto_fileclient
 def out_to_in(
-    out_files: Union[Path, str, dict, Iterable[Union[Path, str, dict]]],
+    out_files: Iterable[Tuple[str, str]],
     src_host: str | None = None,
     indir: Path | str = INDIR_NAME,
     file_client: FileClient | None = None,
     link_files: bool = True,
 ):
     """
-    Copy or link an abinit output file to the Abinit input directory.
+    Copy or link abinit output files to the Abinit input directory.
 
     Parameters
     ----------
-    out_files : str or Path or list
-        The abinit output files to be copied or linked.
+    out_files : list of tuples
+        The list of (abinit output filepath, abinit input filename) to be copied
+        or linked.
     src_host : str or None
         The source hostname used to specify a remote filesystem. Can be given as
         either "username@remote_host" or just "remote_host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    indir : Path or str or None
+    indir : Path or str
         The input directory for Abinit input files.
     file_client : .FileClient
         A file client to use for performing file operations.
     link_files : bool
         Whether to link the files instead of copying them.
     """
-    if isinstance(out_files, (Path, str, dict)):
-        out_files = [out_files]
-
     dest_dir = file_client.abspath(indir, host=None)
 
-    for out_file in out_files:
+    for out_filepath, in_file in out_files:
 
-        if isinstance(out_file, dict):
-            if len(out_file) != 1:
-                raise RuntimeError(
-                    "Should have exactly one out file to in file mapping."
-                )
-            out_file, in_file = list(out_file.items())[0]
-            out_file = str(out_file)
-        else:
-            out_file = str(out_file)
-            in_file = os.path.basename(out_file)
-            in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
-            in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
-        src_file = file_client.abspath(out_file, host=src_host)
+        src_file = file_client.abspath(out_filepath, host=src_host)
         dest_file = os.path.join(dest_dir, in_file)
-
         if link_files and src_host is None:
             file_client.link(src_file, dest_file)
         else:
@@ -103,6 +83,20 @@ def out_to_in(
 
 
 def load_abinit_input(dirpath, fname="abinit_input.json"):
+    """Load the AbinitInput object from a given directory.
+
+    Parameters
+    ----------
+    dirpath
+        Directory to load the AbinitInput from.
+    fname
+        Name of the json file containing the AbinitInput.
+
+    Returns
+    -------
+    AbinitInput
+        The AbinitInput object.
+    """
     abinit_input_file = os.path.join(dirpath, f"{fname}")
     if not os.path.exists(abinit_input_file):
         raise NotImplementedError(
@@ -112,16 +106,6 @@ def load_abinit_input(dirpath, fname="abinit_input.json"):
     return abinit_input
 
 
-def load_generator(dirpath, fname="abinit_input_set_generator.json"):
-    abinit_input_set_generator_file = os.path.join(dirpath, f"{fname}")
-    if not os.path.exists(abinit_input_set_generator_file):
-        raise NotImplementedError(
-            f"Cannot load AbinitInputGenerator from directory without {fname} file."
-        )
-    abinit_input_set_generator = loadfn(abinit_input_set_generator_file)
-    return abinit_input_set_generator
-
-
 def write_abinit_input_set(
     structure: Structure,
     input_set_generator,
@@ -129,10 +113,27 @@ def write_abinit_input_set(
     restart_from=None,
     directory: Union[str, Path] = ".",
 ):
+    """Write the abinit inputs for a given structure using a given generator.
+
+    Parameters
+    ----------
+    structure
+        The structure for which the abinit inputs have to be written.
+    input_set_generator
+        The input generator used to write the abinit inputs.
+    prev_outputs
+        The list of previous directories needed for the calculation.
+    restart_from
+        The previous directory of the same calculation (in case of a restart).
+        Note that this should be provided as a list of one directory.
+    directory
+        Directory in which to write the abinit inputs.
+    """
     ais = input_set_generator.get_input_set(
         structure=structure,
         restart_from=restart_from,
         prev_outputs=prev_outputs,
     )
+    ais.validate()
 
     ais.write_input(directory=directory, make_dir=True, overwrite=False)

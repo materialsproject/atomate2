@@ -9,6 +9,7 @@ from abipy.abio.inputs import AbinitInput
 from monty.os import makedirs_p
 from monty.tempfile import ScratchDir
 
+import atomate2
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import (
     AbinitInputGenerator,
@@ -29,13 +30,21 @@ class TestAbinitInputSet:
         assert '"@class": "AbinitInput"' in ais.inputs["abinit_input.json"]
         assert ais.input_files is None
         assert ais.link_files is True
+        assert ais.validate() is True
         ais = AbinitInputSet(
             abinit_input=abinit_input,
-            input_files=["/some/input/file", "/some/other/input/file"],
+            input_files=[
+                ("/some/input/file", "file"),
+                ("/some/other/input/file", "other_file"),
+            ],
             link_files=False,
         )
-        assert ais.input_files == ["/some/input/file", "/some/other/input/file"]
+        assert ais.input_files == [
+            ("/some/input/file", "file"),
+            ("/some/other/input/file", "other_file"),
+        ]
         assert ais.link_files is False
+        assert ais.validate() is False
 
     def test_write_input(self, abinit_test_dir):
         abinit_input = load_abinit_input(
@@ -43,6 +52,7 @@ class TestAbinitInputSet:
         )
         with ScratchDir("."):
             ais = AbinitInputSet(abinit_input=abinit_input)
+            assert ais.validate() is True
             ais.write_input("testdir")
             assert os.path.exists("testdir")
             dirlist = os.listdir("testdir")
@@ -70,7 +80,11 @@ class TestAbinitInputSet:
             makedirs_p(prev_outdata)
             out_den = Path(os.path.join(prev_outdata, "out_DEN"))
             out_den.touch()
-            ais = AbinitInputSet(abinit_input=abinit_input, input_files=[out_den])
+            ais = AbinitInputSet(
+                abinit_input=abinit_input, input_files=[(out_den, "in_DEN")]
+            )
+            assert "irdden" not in ais.abinit_input
+            assert ais.validate() is False
             ais.write_input("testdir")
             in_den = os.path.join("testdir", "indata", "in_DEN")
             assert os.path.islink(in_den)
@@ -84,10 +98,14 @@ class TestAbinitInputSet:
             out_den.touch()
             ais = AbinitInputSet(
                 abinit_input=abinit_input,
-                input_files=[out_den],
+                input_files=[(out_den, "in_DEN")],
                 link_files=False,
             )
-            abinit_input["irdden"] = 1
+            assert "irdden" not in ais.abinit_input
+            assert ais.validate() is False
+            ais.abinit_input["irdden"] = 1
+            assert "irdden" in ais.abinit_input
+            assert ais.validate() is True
             ais.write_input("testdir")
             assert os.path.exists(in_den)
             assert os.path.isfile(in_den)
@@ -95,7 +113,7 @@ class TestAbinitInputSet:
             with open("testdir/run.abi", "r") as f:
                 abistr = f.read()
                 assert "irdden 1" in abistr
-            del abinit_input["irdden"]
+            del ais.abinit_input["irdden"]
 
         with ScratchDir(".") as tmpdir:
             prev_output_dir = os.path.join(tmpdir, "prev_output")
@@ -108,7 +126,7 @@ class TestAbinitInputSet:
             abinit_input["irdden"] = 1
             ais = AbinitInputSet(
                 abinit_input=abinit_input,
-                input_files=[{str(out_den): "in_DEN"}],
+                input_files=[(str(out_den), "in_DEN")],
             )
             ais.write_input("testdir")
             in_den = os.path.join("testdir", INDIR_NAME, "in_DEN")
@@ -190,18 +208,18 @@ class TestAbinitInputSetGenerator:
                 prev_output_dir, exts=("WFK", "DEN")
             )
             assert irdvars == {"irdden": 1}
-            assert restart_file == [os.path.join(prev_outdata, "out_DEN")]
+            assert restart_file == [(os.path.join(prev_outdata, "out_DEN"), "in_DEN")]
             Path(os.path.join(prev_outdata, "out_WFK")).touch()
             irdvars, restart_file = aisg.resolve_dep_exts(
                 prev_output_dir, exts=("WFK", "DEN")
             )
             assert irdvars == {"irdwfk": 1}
-            assert restart_file == [os.path.join(prev_outdata, "out_WFK")]
+            assert restart_file == [(os.path.join(prev_outdata, "out_WFK"), "in_WFK")]
             irdvars, restart_file = aisg.resolve_dep_exts(
                 prev_output_dir, exts=("DEN",)
             )
             assert irdvars == {"irdden": 1}
-            assert restart_file == [os.path.join(prev_outdata, "out_DEN")]
+            assert restart_file == [(os.path.join(prev_outdata, "out_DEN"), "in_DEN")]
         with ScratchDir(".") as tmpdir:
             prev_output_dir = os.path.join(tmpdir, "prev_output")
             prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
@@ -211,7 +229,7 @@ class TestAbinitInputSetGenerator:
                 prev_output_dir, exts=("WFK", "DEN")
             )
             assert irdvars == {"irdwfk": 1}
-            assert restart_file == [os.path.join(prev_outdata, "out_WFK")]
+            assert restart_file == [(os.path.join(prev_outdata, "out_WFK"), "in_WFK")]
             with pytest.raises(
                 InitializationError, match=r"Cannot find DDB file to restart from."
             ):
@@ -233,14 +251,14 @@ class TestAbinitInputSetGenerator:
             )
             assert irdvars == {"irdden": 1}
             assert restart_file == [
-                {os.path.join(prev_outdata, "out_TIM15_DEN"): "in_DEN"}
+                (os.path.join(prev_outdata, "out_TIM15_DEN"), "in_DEN")
             ]
             Path(os.path.join(prev_outdata, "out_DEN")).touch()
             irdvars, restart_file = aisg.resolve_dep_exts(
                 prev_output_dir, exts=("DEN",)
             )
             assert irdvars == {"irdden": 1}
-            assert restart_file == [os.path.join(prev_outdata, "out_DEN")]
+            assert restart_file == [(os.path.join(prev_outdata, "out_DEN"), "in_DEN")]
 
     def test_resolve_deps(self):
         aisg = AbinitInputGenerator()
@@ -261,34 +279,59 @@ class TestAbinitInputSetGenerator:
                     prev_outputs, deps=("any:WFK|DEN",), check_runlevel=False
                 )
                 assert irdvars == {"irdden": 1, "irdwfk": 1}
-                assert str(wfk) in input_files
-                assert str(den) in input_files
+                assert (str(wfk), "in_WFK") in input_files
+                assert (str(den), "in_DEN") in input_files
                 assert len(input_files) == 2
 
-    def test_get_input_set(self, si_structure):
+    def test_get_input_set(self, si_structure, mocker):
         with ScratchDir(".") as tmpdir:
-            saisg = SomeAbinitInputSetGenerator(
-                param1=2, extra_abivars={"ecut": 5.0, "nstep": 25}
-            )
+            saisg = SomeAbinitInputSetGenerator()
             abinit_input_set = saisg.get_input_set(
                 structure=si_structure,
-                param2=0.5,
-                extra_abivars={"nstep": 35, "tsmear": 0.04},
             )
             abinit_input_set.write_input("output1")
             output1 = os.path.join(tmpdir, "output1")
 
-            saisg.param3 = [1]
             out_wfk1 = Path(os.path.join(output1, OUTDIR_NAME, "out_WFK"))
             out_wfk1.touch()
-            # abinit_input_set = saisg.get_input_set(
-            #     structure=si_structure,
-            #     restart_from=output1,
-            #     param2=5.5,
-            #     extra_abivars={"nstep": 5},
-            # )
-            # abinit_input_set.write_input("output2")
-            # output2 = os.path.join(tmpdir, "output2")
-            # in_wfk2 = os.path.join(output2, INDIR_NAME, "in_WFK")
-            # assert os.path.islink(in_wfk2)
-            # assert os.readlink(in_wfk2) == str(out_wfk1)
+            out_den1 = Path(os.path.join(output1, OUTDIR_NAME, "out_DEN"))
+            out_den1.touch()
+
+            abinit_input_set.write_input("output1b")
+            output1b = os.path.join(tmpdir, "output1b")
+
+            out_den1b = Path(os.path.join(output1b, OUTDIR_NAME, "out_DEN"))
+            out_den1b.touch()
+
+            mocker.patch.object(
+                atomate2.abinit.sets.base,
+                "get_final_structure",
+                return_value=si_structure,
+            )
+            abinit_input_set = saisg.get_input_set(
+                structure=si_structure,
+                restart_from=output1,
+            )
+            assert "irdwfk" in abinit_input_set.abinit_input
+            assert "irdden" not in abinit_input_set.abinit_input
+            assert abinit_input_set.abinit_input["irdwfk"] == 1
+            assert abinit_input_set.validate() is True
+            abinit_input_set.write_input("output2")
+            output2 = os.path.join(tmpdir, "output2")
+            in_wfk2 = os.path.join(output2, INDIR_NAME, "in_WFK")
+            assert os.path.islink(in_wfk2)
+            assert os.readlink(in_wfk2) == str(out_wfk1)
+
+            abinit_input_set = saisg.get_input_set(
+                structure=si_structure,
+                restart_from=output1b,
+            )
+            assert "irdwfk" not in abinit_input_set.abinit_input
+            assert "irdden" in abinit_input_set.abinit_input
+            assert abinit_input_set.abinit_input["irdden"] == 1
+            assert abinit_input_set.validate() is True
+            abinit_input_set.write_input("output2b")
+            output2b = os.path.join(tmpdir, "output2b")
+            in_den2b = os.path.join(output2b, INDIR_NAME, "in_DEN")
+            assert os.path.islink(in_den2b)
+            assert os.readlink(in_den2b) == str(out_den1b)

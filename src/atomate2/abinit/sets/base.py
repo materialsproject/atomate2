@@ -6,7 +6,7 @@ import os
 from collections import namedtuple
 from dataclasses import dataclass, field, fields
 from pathlib import Path
-from typing import Any, Iterable, List, Optional, Union
+from typing import Any, Iterable, List, Optional, Tuple, Union
 
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk.psrepos import get_repo_from_name
@@ -16,7 +16,7 @@ from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.abinit.files import load_abinit_input, out_to_in
+from atomate2.abinit.files import fname2ext, load_abinit_input, out_to_in
 from atomate2.abinit.utils.common import (
     INDATA_PREFIX,
     INDATAFILE_PREFIX,
@@ -44,12 +44,15 @@ class AbinitInputSet(InputSet):
     ----------
     abinit_input
         An AbinitInput object.
+    input_files
+        A list of input files needed for the calculation. The corresponding
+        file reading variables (ird***) should be present in the abinit_input.
     """
 
     def __init__(
         self,
         abinit_input: AbinitInput,
-        input_files: Optional[Iterable[Union[str, Path, dict]]] = None,
+        input_files: Optional[Iterable[Tuple[str, str]]] = None,
         link_files: bool = True,
     ):
         self.input_files = input_files
@@ -82,17 +85,35 @@ class AbinitInputSet(InputSet):
             zip_inputs=zip_inputs,
         )
         del self.inputs["abinit_input.json"]
-        self.indir, self.outdir, self.tmpdir = self.set_workdir(workdir=directory)
+        indir, outdir, tmpdir = self.set_workdir(workdir=directory)
 
         if self.input_files:
             out_to_in(
                 out_files=self.input_files,
-                indir=self.indir.path,
+                indir=indir.path,
                 link_files=self.link_files,
             )
 
+    def validate(self) -> bool:
+        """Validate the input set. Check that all files in the input directory
+        have their corresponding ird variables."""
+        if not self.input_files:
+            return True
+        for _out_filepath, in_file in self.input_files:
+            ext = fname2ext(in_file)
+            if ext is None:
+                return False
+            irdvars = irdvars_for_ext(ext)
+            for irdvar, irdval in irdvars.items():
+                if irdvar not in self.abinit_input:
+                    return False
+                if self.abinit_input[irdvar] != irdval:
+                    return False
+        return True
+
     @property
     def abinit_input(self):
+        """Get the AbinitInput object."""
         return self[INPUT_FILE_NAME]
 
     @staticmethod
@@ -361,8 +382,10 @@ class AbinitInputGenerator(InputGenerator):
         all_irdvars = {}
         input_files = []
         if restart_from is not None:
-            structure = get_final_structure(restart_from[0])
+            # Use the previous abinit input
             abinit_input = load_abinit_input(restart_from[0])
+            # Update with the abinit input with the final structure
+            structure = get_final_structure(restart_from[0])
             abinit_input.set_structure(structure=structure)
             # Files for restart (e.g. continue a not yet converged
             # scf/nscf/relax calculation)
@@ -445,6 +468,13 @@ class AbinitInputGenerator(InputGenerator):
         return deps_irdvars, input_files
 
     @staticmethod
+    def _get_in_file_name(out_filepath):
+        in_file = os.path.basename(out_filepath)
+        in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
+        in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
+        return in_file
+
+    @staticmethod
     def resolve_dep_exts(prev_dir, exts):
         """Return irdvars and corresponding file for a given dependency.
 
@@ -455,6 +485,8 @@ class AbinitInputGenerator(InputGenerator):
         inp_files = []
 
         for ext in exts:
+            # TODO: how to check that we have the files we need ?
+            #  Should we raise if don't find at least one file for a given extension ?
             if ext in ("1WF", "1DEN"):
                 # Special treatment for 1WF and 1DEN files
                 if ext == "1WF":
@@ -464,7 +496,10 @@ class AbinitInputGenerator(InputGenerator):
                 else:
                     raise RuntimeError("Should not occur.")
                 if files is not None:
-                    inp_files = [f.path for f in files]
+                    inp_files = (
+                        (f.path, AbinitInputGenerator._get_in_file_name(f.path))
+                        for f in files
+                    )
                     irdvars = irdvars_for_ext(ext)
                     break
             elif ext == "DEN":
@@ -475,7 +510,9 @@ class AbinitInputGenerator(InputGenerator):
                 out_den = prev_outdir.path_in(f"{OUTDATAFILE_PREFIX}_DEN")
                 if os.path.exists(out_den):
                     irdvars = irdvars_for_ext("DEN")
-                    inp_files.append(out_den)
+                    inp_files.append(
+                        (out_den, AbinitInputGenerator._get_in_file_name(out_den))
+                    )
                     break
                 last_timden = prev_outdir.find_last_timden_file()
                 if last_timden is not None:
@@ -483,17 +520,16 @@ class AbinitInputGenerator(InputGenerator):
                         in_file_name = f"{INDATAFILE_PREFIX}_DEN.nc"
                     else:
                         in_file_name = f"{INDATAFILE_PREFIX}_DEN"
-                    inp_files.append({last_timden.path: in_file_name})
+                    inp_files.append((last_timden.path, in_file_name))
                     irdvars = irdvars_for_ext("DEN")
                     break
             else:
-                inp_file = prev_outdir.has_abiext(ext)
+                out_file = prev_outdir.has_abiext(ext)
                 irdvars = irdvars_for_ext(ext)
-                if inp_file:
-                    if ext == "WFQ":
-                        inp_files.append({inp_file: inp_file.replace("WFQ", "WFK", 1)})
-                    else:
-                        inp_files.append(inp_file)
+                if out_file:
+                    inp_files.append(
+                        (out_file, AbinitInputGenerator._get_in_file_name(out_file))
+                    )
                     break
         else:
             msg = f"Cannot find {' or '.join(exts)} file to restart from."

@@ -7,7 +7,7 @@ import os
 import time
 from collections import namedtuple
 from dataclasses import dataclass, field, fields
-from typing import Any, ClassVar, List, Optional, Sequence, Union
+from typing import ClassVar, List, Optional, Sequence, Union
 
 import jobflow
 from abipy.flowtk.events import as_event_class
@@ -235,8 +235,8 @@ class BaseAbinitMaker(Maker):
     def make(
         self,
         structure: Optional[Structure] = None,
-        prev_outputs: Optional[Any] = None,
-        restart_from: Optional[Union[str]] = None,
+        prev_outputs: Optional[List[str]] = None,
+        restart_from: Optional[List[str]] = None,
         history: Optional[JobHistory] = None,
     ) -> Union[jobflow.Flow, jobflow.Job]:
         """
