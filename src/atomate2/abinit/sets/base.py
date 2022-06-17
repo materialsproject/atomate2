@@ -13,6 +13,7 @@ from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
 from monty.json import MontyEncoder
 from pymatgen.core.structure import Structure
+from pymatgen.io.abinit.abiobjects import KSampling
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 
@@ -541,6 +542,20 @@ class AbinitInputGenerator(InputGenerator):
     ):
         """Get AbinitInput object."""
         raise NotImplementedError
+
+    def _get_shift_mode(self, shifts):
+        if isinstance(shifts, str):
+            return shifts
+        else:
+            return "Gamma"  # Dummy shift mode, shifts will be overwritten
+
+    @staticmethod
+    def _set_shifts_kpoints(abinit_input, structure, kppa, shifts):
+        if not isinstance(shifts, str):
+            ksampling = KSampling.automatic_density(
+                structure, kppa, chksymbreak=0, shifts=shifts
+            )
+            abinit_input.set_vars(ksampling.to_abivars())
 
     def on_restart(self, abinit_input):
         """Perform updates of AbinitInput upon restart of a previous calculation."""
