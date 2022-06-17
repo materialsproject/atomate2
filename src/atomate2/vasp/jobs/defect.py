@@ -35,6 +35,13 @@ from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler("atomate2.log")
+fh.setLevel(logging.DEBUG)
+# create formatter and add it to the handlers
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+fh.setFormatter(formatter)
+_logger.addHandler(fh)
 
 ################################################################################
 # Default settings                                                            ##
@@ -287,11 +294,12 @@ def collect_defect_outputs(
         vbm_path = Path(strip_hostname(dir_name)) / "vasprun.xml.gz"
         vasp_run = Vasprun(vbm_path)
         vbm = vasp_run.get_band_structure().get_vbm()
-        entry = vbm.get_computed_entry()
+        entry = vasp_run.get_computed_entry()
         return dict(entry=entry, vbm=vbm)
 
     bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
     bulk_data = parse_bulk_dir(bulk_sc_dir)
+    _logger.info(f"Bulk entry energy: {bulk_data['entry'].energy} eV")
     output = dict(
         defects_output=defects_output,
         bulk_entry=bulk_data["entry"],
@@ -300,6 +308,7 @@ def collect_defect_outputs(
     )
     # first loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
     for defect_name, def_out in defects_output.items():
+        _logger.debug(f"Processing defect {defect_name}")
         defect = def_out.pop("defect")
         defect_locpots = dict()
         defect_entries = []
@@ -307,6 +316,7 @@ def collect_defect_outputs(
 
         # then loop over the different charge states
         for qq, v in def_out["results"].items():
+            _logger.debug(f"Processing charge state {qq}")
             if not isinstance(v, dict):
                 continue
             defect_locpots[int(qq)] = get_locpot_from_dir(v["dir_name"])
