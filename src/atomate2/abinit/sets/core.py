@@ -1,7 +1,7 @@
 """Module defining core Abinit input set generators."""
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Union
 
 from abipy.abio.factories import (
     dos_from_gsinput,
@@ -10,6 +10,7 @@ from abipy.abio.factories import (
     scf_input,
 )
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
+from pymatgen.io.abinit.abiobjects import KSampling
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import AbinitInputGenerator
@@ -37,9 +38,23 @@ class GroundStateSetGenerator(AbinitInputGenerator):
     smearing: str = "fermi_dirac:0.1 eV"
     charge: float = 0.0
     scf_algorithm: Optional[str] = None
-    shift_mode: str = "Monkhorst-Pack"
+    shifts: Union[str, tuple] = "Monkhorst-Pack"
 
     restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:DEN",)
+
+    def _get_shift_mode(self, shifts):
+        if isinstance(shifts, str):
+            return shifts
+        else:
+            return "Gamma"  # Dummy shift mode, shifts will be overwritten
+
+    @staticmethod
+    def _set_shifts_kpoints(abinit_input, structure, kppa, shifts):
+        if not isinstance(shifts, str):
+            ksampling = KSampling.automatic_density(
+                structure, kppa, chksymbreak=0, shifts=shifts
+            )
+            abinit_input.set_vars(ksampling.to_abivars())
 
 
 @dataclass
@@ -62,7 +77,7 @@ class StaticSetGenerator(GroundStateSetGenerator):
         smearing=GroundStateSetGenerator.smearing,
         charge=GroundStateSetGenerator.charge,
         scf_algorithm=GroundStateSetGenerator.scf_algorithm,
-        shift_mode=GroundStateSetGenerator.shift_mode,
+        shifts=GroundStateSetGenerator.shifts,
     ):
         """Get AbinitInput object for static calculation."""
         if structure is None:
@@ -74,8 +89,7 @@ class StaticSetGenerator(GroundStateSetGenerator):
                 "(e.g. relaxation) calculation, use restart_from argument of "
                 "get_input_set method instead."
             )
-
-        return scf_input(
+        inp = scf_input(
             structure=structure,
             pseudos=pseudos,
             kppa=kppa,
@@ -87,8 +101,10 @@ class StaticSetGenerator(GroundStateSetGenerator):
             smearing=smearing,
             charge=charge,
             scf_algorithm=scf_algorithm,
-            shift_mode=shift_mode,
+            shift_mode=self._get_shift_mode(shifts),
         )
+        self._set_shifts_kpoints(inp, structure, kppa, shifts)
+        return inp
 
     def on_restart(self, abinit_input):
         """Perform updates of AbinitInput upon restart.
@@ -279,7 +295,7 @@ class RelaxSetGenerator(GroundStateSetGenerator):
         smearing=GroundStateSetGenerator.smearing,
         charge=GroundStateSetGenerator.charge,
         scf_algorithm=GroundStateSetGenerator.scf_algorithm,
-        shift_mode=GroundStateSetGenerator.shift_mode,
+        shifts=GroundStateSetGenerator.shifts,
         relax_cell=relax_cell,
         tolmxf=tolmxf,
         **kwargs,
@@ -309,8 +325,9 @@ class RelaxSetGenerator(GroundStateSetGenerator):
             smearing=smearing,
             charge=charge,
             scf_algorithm=scf_algorithm,
-            shift_mode=shift_mode,
+            shift_mode=self._get_shift_mode(shifts),
         )[ind]
         relax_input["tolmxf"] = tolmxf
+        self._set_shifts_kpoints(relax_input, structure, kppa, shifts)
 
         return relax_input
