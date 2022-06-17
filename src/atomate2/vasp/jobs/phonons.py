@@ -1,27 +1,17 @@
 from __future__ import annotations
 
-import copy
 import logging
 from dataclasses import dataclass, field
 
 import numpy as np
 from jobflow import Flow, Response, job
-from phonopy import Phonopy, load
-from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-from phonopy.structure.symmetry import elaborate_borns_and_epsilon
+from phonopy import Phonopy
 from phonopy.units import VaspToTHz
 from pymatgen.core import Structure
-from pymatgen.io.phonopy import (
-    get_ph_bs_symm_line,
-    get_ph_dos,
-    get_phonopy_structure,
-    get_pmg_structure,
-)
-from pymatgen.io.vasp import Kpoints
-from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
+from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
+from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
+from pymatgen.phonon.dos import PhononDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatgen.symmetry.bandstructure import HighSymmKpath
-from pymatgen.symmetry.kpath import KPathSeek
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
@@ -58,48 +48,59 @@ def structure_to_conventional(structure: Structure, symprec: float):
 
 # TODO: maybe add  an alternative algorithm
 @job
-def get_supercell_size(structure: Structure, min_length: float):
-    transformation = CubicSupercellTransformation(min_length=min_length)
-    transformation.apply_transformation(structure=structure)
-    supercell_matrix = transformation.transformation_matrix.tolist()
+def get_supercell_size(
+    structure: Structure,
+    min_length: float,
+    mode: str = "cheap",
+    distance_to_min: float = 10,
+):
+    # cheap mode will use CubicSupercellTransformation from pymatgen
+    # TODO: include an expensive method testing all possible combinations
+    #  and preferring cells with 3 90 degree angles over
+    if mode == "cheap":
+        transformation = CubicSupercellTransformation(min_length=min_length)
+        transformation.apply_transformation(structure=structure)
+        supercell_matrix = transformation.transformation_matrix.tolist()
+    elif mode == "expensive":
+        pass
     return supercell_matrix
 
 
-def get_phonon_object(
-    structure: Structure,
-    supercell_matrix: np.array,
-    displacement: float,
-    sym_reduce: bool,
-    symprec: float,
-    use_standard_primitive: bool,
-    kpath_scheme: str,
-    code: str,
-):
-    if code == "vasp":
-        factor = VaspToTHz
-    # TODO: add other codes?
-
-    cell = get_phonopy_structure(structure)
-    if use_standard_primitive and kpath_scheme != "seekpath":
-        phonon = Phonopy(
-            cell,
-            supercell_matrix,
-            primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-            factor=factor,
-            symprec=symprec,
-            is_symmetry=sym_reduce,
-        )
-    else:
-        phonon = Phonopy(
-            cell,
-            supercell_matrix,
-            primitive_matrix="auto",
-            factor=factor,
-            symprec=symprec,
-            is_symmetry=sym_reduce,
-        )
-    phonon.generate_displacements(distance=displacement)
-    return phonon
+# def get_phonon_object(
+#     structure: Structure,
+#     supercell_matrix: np.array,
+#     displacement: float,
+#     sym_reduce: bool,
+#     symprec: float,
+#     use_standard_primitive: bool,
+#     kpath_scheme: str,
+#     code: str,
+# ):
+#     if code == "vasp":
+#         factor = VaspToTHz
+#     # TODO: add other codes?
+#
+#     cell = get_phonopy_structure(structure)
+#     if use_standard_primitive and kpath_scheme != "seekpath":
+#         phonon = Phonopy(
+#             cell,
+#             supercell_matrix,
+#             primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+#             factor=factor,
+#             symprec=symprec,
+#             is_symmetry=sym_reduce,
+#         )
+#     else:
+#         phonon = Phonopy(
+#             cell,
+#             supercell_matrix,
+#             primitive_matrix="auto",
+#             factor=factor,
+#             symprec=symprec,
+#             is_symmetry=sym_reduce,
+#         )
+#     phonon.generate_displacements(distance=displacement)
+#     return phonon
 
 
 @job
@@ -125,17 +126,32 @@ def generate_phonon_displacements(
     List[Deformation]
         A list of displacements.
     """
-    phonopy_object = get_phonon_object(
-        structure=structure,
-        supercell_matrix=np.array(supercell_matrix),
-        displacement=displacement,
-        sym_reduce=sym_reduce,
-        symprec=symprec,
-        use_standard_primitive=use_standard_primitive,
-        kpath_scheme=kpath_scheme,
-        code=code,
-    )
-    supercells = phonopy_object.supercells_with_displacements
+    cell = get_phonopy_structure(structure)
+    if code == "vasp":
+        factor = VaspToTHz
+    # a bit of code repetition here as I currently
+    # do not see how to pass the phonopy object?
+    if use_standard_primitive and kpath_scheme != "seekpath":
+        phonon = Phonopy(
+            cell,
+            supercell_matrix,
+            primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+            factor=factor,
+            symprec=symprec,
+            is_symmetry=sym_reduce,
+        )
+    else:
+        phonon = Phonopy(
+            cell,
+            supercell_matrix,
+            primitive_matrix="auto",
+            factor=factor,
+            symprec=symprec,
+            is_symmetry=sym_reduce,
+        )
+    phonon.generate_displacements(distance=displacement)
+
+    supercells = phonon.supercells_with_displacements
 
     displacements = []
     for cell in supercells:
@@ -143,7 +159,7 @@ def generate_phonon_displacements(
     return displacements
 
 
-@job(output_schema=PhononBSDOSDoc)
+@job(output_schema=PhononBSDOSDoc, data=[PhononDos, PhononBandStructureSymmLine])
 def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
@@ -166,6 +182,8 @@ def generate_frequencies_eigenvectors(
     tstep=10,
     units="THz",
     img_format="eps",
+    create_thermal_displacements=True,
+    freq_min=0.0,
 ):
     """
     Compute phonon band structures and density of states.
@@ -174,41 +192,7 @@ def generate_frequencies_eigenvectors(
     ----------
 
     """
-    # TODO: move his part to another class?
-    def get_kpath(structure: Structure, kpath_scheme: str, **kpath_kwargs):
-        """
-        get high-symmetry points in k-space
-        Args:
-            structure: Structure Object
-        Returns:
-        """
-
-        if kpath_scheme in [
-            "setyawan_curtarolo",
-            "hinuma",
-            "latimer_munro",
-            "all_pymatgen",
-        ]:
-            if kpath_scheme == "all_pymatgen":
-                kpath_scheme = "all"
-            highsymmkpath = HighSymmKpath(
-                structure, path_type=kpath_scheme, **kpath_kwargs
-            )
-            kpath = highsymmkpath.kpath
-        elif kpath_scheme == "seekpath":
-            highsymmkpath = KPathSeek(structure, **kpath_kwargs)
-            kpath = highsymmkpath._kpath
-
-        path = copy.deepcopy(kpath["path"])
-
-        for ilabelset, labelset in enumerate(kpath["path"]):
-            for ilabel, label in enumerate(labelset):
-                path[ilabelset][ilabel] = kpath["kpoints"][label]
-        return kpath["kpoints"], path
-
-    # have to regenerate this object as I cannot make it a job output
-    # TODO: other way?
-    phonon = get_phonon_object(
+    phonon_doc = PhononBSDOSDoc.from_forces_born(
         structure=structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
@@ -217,94 +201,21 @@ def generate_frequencies_eigenvectors(
         use_standard_primitive=use_standard_primitive,
         kpath_scheme=kpath_scheme,
         code=code,
-    )
-
-    set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-
-    if born is not None:
-        if full_born:
-            # TODO: if this is a good way when user provide data
-            borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
-                ucell=get_phonopy_structure(structure),
-                borns=np.array(born),
-                epsilon=np.array(epsilon_static),
-                symprec=symprec,
-                primitive_matrix=phonon.primitive_matrix,
-                supercell_matrix=phonon.supercell_matrix,
-            )
-        else:
-            borns = born
-        if code == "vasp":
-            phonon.nac_params = {
-                "born": borns,
-                "dielectric": epsilon,
-                "factor": 14.399652,
-            }
-    phonon.produce_force_constants(forces=set_of_forces)
-
-    # Currently, the setting of the born
-    # charges does not work without this! I am not sure why!
-    # I don't see it
-    # I think I am missing something in the code
-    phonon.save("phonopy.yaml")
-    phonon = load("phonopy.yaml")
-    # get phonon band structure
-    # TODO: check if this is correct for every possible setting
-    kpath_dict, kpath_concrete = get_kpath(structure, kpath_scheme)
-    qpoints, connections = get_band_qpoints_and_path_connections(
-        kpath_concrete, npoints=npoints_band
-    )
-
-    # add option to disable phonon bandstructure computation?
-    filename_band_yaml = "phonon_band_structure.yaml"
-    phonon.run_band_structure(qpoints, path_connections=connections)
-    phonon.write_yaml_band_structure(filename=filename_band_yaml)
-    bs_symm_line = get_ph_bs_symm_line(filename_band_yaml, labels_dict=kpath_dict)
-    new_plotter = PhononBSPlotter(bs=bs_symm_line)
-    new_plotter.save_plot(
-        "phonon_band_structure.eps", img_format=img_format, units=units
-    )
-    # add a free energy document?
-    imaginary_modes = bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
-
-    # get phonon density of states
-    filename_dos_yaml = "phonon_dos.yaml"
-    kpoint = Kpoints.automatic_density(
-        structure=structure, kppa=kpoint_density_dos, force_gamma=True
-    )
-    phonon.run_mesh(kpoint.kpts[0])
-    phonon.run_total_dos()
-    phonon.write_total_dos(filename=filename_dos_yaml)
-    dos = get_ph_dos(filename_dos_yaml)
-    new_plotter_dos = PhononDosPlotter()
-    new_plotter_dos.add_dos(label="total", dos=dos)
-    new_plotter_dos.save_plot(
-        filename="phonon_dos.eps", img_format=img_format, units=units
-    )
-
-    # add tmin tmax tstep
-    temperature_range = np.arange(tmin, tmax, tstep)
-    free_energy = [
-        dos.helmholtz_free_energy(structure=structure, t=temperature)
-        for temperature in temperature_range
-    ]
-
-    # transfer the force constants to compute Grüneisen parameters?
-    formula_units = (
-        structure.composition.num_atoms
-        / structure.composition.reduced_composition.num_atoms
-    )
-    # TODO: add more meta data here
-    phonon_doc = PhononBSDOSDoc(
-        structure=structure,
-        ph_bs=bs_symm_line,
-        ph_dos=dos,
-        free_energy={
-            "temp": temperature_range,
-            "free_energy": free_energy,
-            "total_energy": total_energy / formula_units,
-        },
-        imaginary_modes=imaginary_modes,
+        displacement_data=displacement_data,
+        total_energy=total_energy,
+        epsilon_static=epsilon_static,
+        born=born,
+        full_born=full_born,
+        npoints_band=npoints_band,
+        kpoint_density_dos=kpoint_density_dos,
+        tol_imaginary_modes=tol_imaginary_modes,
+        tmin=tmin,
+        tmax=tmax,
+        tstep=tstep,
+        units=units,
+        img_format=img_format,
+        freq_min=freq_min,
+        create_thermal_displacements=create_thermal_displacements,
     )
 
     return phonon_doc

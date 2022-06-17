@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import List
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
@@ -94,6 +95,11 @@ class PhononMaker(Maker):
         Instead of recomputing born charges and epsilon,
          these values can also be provided manually. born_maker has to
         be None
+        if full_born==False, it will expect Phonopy convention for symmetrically
+        inequivalent atoms
+        if fullborn==True, it will expect VASP convention with information for
+        every atom in unit cell. Please be careful when converting
+        structures within in this workflow
     full_born: bool
         reduced born file (only symmerically inequivalent atoms)
          or full information on born
@@ -119,7 +125,7 @@ class PhononMaker(Maker):
     symprec: float = SETTINGS.SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
-    supercell_matrix: list | None = None
+    supercell_matrix: Matrix3D | None = None
     use_primitive_standard_structure: bool = False
     use_conventional_standard_structure: bool = False
     bulk_relax_maker: BaseVaspMaker | None = field(
@@ -129,12 +135,13 @@ class PhononMaker(Maker):
     generate_phonon_displacements_kwargs: dict = field(default_factory=dict)
     run_phonon_displacements_kwargs: dict = field(default_factory=dict)
     born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
-    born_manual: Matrix3D | None = None
+    born_manual: List[Matrix3D] | None = None
     full_born: bool = True
     epsilon_static_manual: Matrix3D | None = None
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
     )
+    create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = "vasp"
@@ -162,7 +169,7 @@ class PhononMaker(Maker):
         #  born charges than via outcar["born"]?
         # TODO: make sure all parameters are tight enough
         #  for phonons! Cross-check with A.B. workflow
-        # TODO: add option to change kpath scheme
+        # TODO: check kpath and primitive structure convention!
         #  (if not possible yet)
         # TODO: can we add some kind of convergence test?
         # TODO: can we get rid of the dependency
@@ -172,6 +179,8 @@ class PhononMaker(Maker):
         # TODO: potentially improve supercell transformation -
         #  does not always find cell with lattice parameters close to
         # 90
+        # TODO: make sure the workflow works if BORN=0
+
         if (
             not self.use_primitive_standard_structure
             and self.kpath_scheme != "seekpath"
@@ -180,9 +189,11 @@ class PhononMaker(Maker):
             raise ValueError(
                 "You can only use other kpath schemes with the primitive standard structure"
             )
+
         if self.kpath_scheme not in [
             "seekpath",
             "hinuma",
+            "setyawan_curtarolo",
             "latimer_munro",
             "all_pymatgen",
         ]:
@@ -267,6 +278,7 @@ class PhononMaker(Maker):
                 born=born_job.output.calcs_reversed[0].output.outcar["born"],
                 full_born=True,
                 total_energy=static_job.output.output.energy,
+                create_thermal_displacements=self.create_thermal_displacements,
                 **self.generate_frequencies_eigenvectors_kwargs,
             )
         else:
@@ -284,6 +296,7 @@ class PhononMaker(Maker):
                 born=self.born_manual,
                 full_born=self.full_born,
                 total_energy=static_job.output.output.energy,
+                create_thermal_displacements=self.create_thermal_displacements,
                 **self.generate_frequencies_eigenvectors_kwargs,
             )
 
