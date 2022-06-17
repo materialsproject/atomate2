@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, Union
 
+import numpy as np
 from abipy.abio.factories import (
     dos_from_gsinput,
     ebands_from_gsinput,
@@ -110,7 +111,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
 
     calc_type: str = "nscf"
 
-    nband: Optional[int] = None
+    nbands_factor: float = 1.2
     accuracy: str = "normal"
 
     # TODO: how to switch between ndivsm and line_density determination of kpoints ?
@@ -156,7 +157,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
         structure=None,
         pseudos=None,
         prev_outputs=None,
-        nband=nband,
+        nbands_factor=nbands_factor,
         accuracy=accuracy,
         ndivsm=ndivsm,
         kppa=kppa,
@@ -190,6 +191,13 @@ class NonSCFSetGenerator(AbinitInputGenerator):
                     "Structure is provided in non-SCF input set generator but "
                     "is not the same as the one from the previous (SCF) input set."
                 )
+        nband = previous_abinit_input.get(
+            "nband",
+            previous_abinit_input.structure.num_valence_electrons(
+                previous_abinit_input.pseudos
+            ),
+        )
+        nband = int(np.ceil(nband * nbands_factor))
         if mode == "line":
             return ebands_from_gsinput(
                 gs_input=previous_abinit_input,
