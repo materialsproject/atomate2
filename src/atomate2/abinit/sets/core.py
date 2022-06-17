@@ -7,10 +7,10 @@ from abipy.abio.factories import (
     dos_from_gsinput,
     ebands_from_gsinput,
     ion_ioncell_relax_input,
+    nscf_from_gsinput,
     scf_input,
 )
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
-from pymatgen.io.abinit.abiobjects import KSampling
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.sets.base import AbinitInputGenerator
@@ -41,20 +41,6 @@ class GroundStateSetGenerator(AbinitInputGenerator):
     shifts: Union[str, tuple] = "Monkhorst-Pack"
 
     restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:DEN",)
-
-    def _get_shift_mode(self, shifts):
-        if isinstance(shifts, str):
-            return shifts
-        else:
-            return "Gamma"  # Dummy shift mode, shifts will be overwritten
-
-    @staticmethod
-    def _set_shifts_kpoints(abinit_input, structure, kppa, shifts):
-        if not isinstance(shifts, str):
-            ksampling = KSampling.automatic_density(
-                structure, kppa, chksymbreak=0, shifts=shifts
-            )
-            abinit_input.set_vars(ksampling.to_abivars())
 
 
 @dataclass
@@ -147,6 +133,10 @@ class NonSCFSetGenerator(AbinitInputGenerator):
     #  or just use the vasp KPoints object generated using reciprocal_density
     #  to set up the grid manually in abinit ?
     # reciprocal_density: float = 100
+    shifts: Union[str, tuple] = "Monkhorst-Pack"
+
+    dos_method: Optional[str] = None
+    projection: str = "l"
 
     mode: str = "line"
 
@@ -170,6 +160,9 @@ class NonSCFSetGenerator(AbinitInputGenerator):
         accuracy=accuracy,
         ndivsm=ndivsm,
         kppa=kppa,
+        shifts=shifts,
+        dos_method=dos_method,
+        projection=projection,
         mode=mode,
     ):
         """Get AbinitInput object for Non-SCF calculation."""
@@ -205,13 +198,25 @@ class NonSCFSetGenerator(AbinitInputGenerator):
                 accuracy=accuracy,
             )
         elif mode == "uniform":
-            uniform_input = dos_from_gsinput(
-                gs_input=previous_abinit_input,
-                dos_kppa=kppa,
-                nband=nband,
-                accuracy=accuracy,
-                pdos=False,
-            )
+            if dos_method:
+                uniform_input = dos_from_gsinput(
+                    gs_input=previous_abinit_input,
+                    kppa=kppa,
+                    nband=nband,
+                    accuracy=accuracy,
+                    dos_method=dos_method,
+                    projection=projection,
+                    shift_mode=self._get_shift_mode(shifts),
+                )
+            else:
+                uniform_input = nscf_from_gsinput(
+                    gs_input=previous_abinit_input,
+                    kppa=kppa,
+                    nband=nband,
+                    accuracy=accuracy,
+                    shift_mode=self._get_shift_mode(shifts),
+                )
+            self._set_shifts_kpoints(uniform_input, structure, kppa, shifts)
             return uniform_input
         else:
             raise RuntimeError(
