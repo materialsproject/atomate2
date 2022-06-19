@@ -293,9 +293,9 @@ def collect_defect_outputs(
     def parse_bulk_dir(dir_name: str) -> dict:
         vbm_path = Path(strip_hostname(dir_name)) / "vasprun.xml.gz"
         vasp_run = Vasprun(vbm_path)
-        vbm = vasp_run.get_band_structure().get_vbm()
+        band_structure = vasp_run.get_band_structure()
         entry = vasp_run.get_computed_entry()
-        return dict(entry=entry, vbm=vbm)
+        return dict(entry=entry, band_structure=band_structure)
 
     bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
     bulk_data = parse_bulk_dir(bulk_sc_dir)
@@ -303,7 +303,7 @@ def collect_defect_outputs(
     output = dict(
         defects_output=defects_output,
         bulk_entry=bulk_data["entry"],
-        bulk_vbm=bulk_data["vbm"],
+        bulk_band_structure=bulk_data["band_structure"],
         bulk_sc_dir=bulk_sc_dir,
     )
     # first loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
