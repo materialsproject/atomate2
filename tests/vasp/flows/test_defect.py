@@ -141,7 +141,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     from pymatgen.analysis.defect.core import Defect
     from pymatgen.analysis.defect.generators import SubstitutionGenerator
     from pymatgen.core import Structure
-    from pymatgen.entries.computed_entries import ComputedStructureEntry
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
     from atomate2.vasp.powerups import (
@@ -158,18 +157,19 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
         "relax Mg_Ga-0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
     }
     fake_run_vasp_kwargs = {
-        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar", "poscar"]}
-        for k in ref_paths
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]} for k in ref_paths
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    struct_GaN = Structure.from_file(test_dir / "structures" / "GaN.cif")
+    struct_GaN = Structure.from_file(test_dir / "vasp" / "GaN_Mg_defect" / "GaN.vasp")
     sub_gen = SubstitutionGenerator(structure=struct_GaN, substitutions={"Ga": "Mg"})
 
     maker = FormationEnergyMaker()
-    flow = maker.make(sub_gen, sc_mat=[[2, 2, 0], [2, -2, 0], [0, 0, 1]])
+    flow = maker.make(
+        sub_gen, sc_mat=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
+    )
     flow = update_user_kpoints_settings(flow, {"reciprocal_density": 64})
     flow = update_user_incar_settings(
         flow,
@@ -196,7 +196,13 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     )
 
     results = responses[flow.jobs[-1].uuid][1].output
-    res_defect = results["defect_calcs"]["Mg_Ga-0"]["defect"]
+    res_defect = results["results"]["Mg_Ga-0"]["defect"]
+
+    # check that the defect object was stored
     assert isinstance(res_defect, Defect)
-    for q, r_dict in results["defect_calcs"]["Mg_Ga-0"]["results"].items():
-        assert isinstance(r_dict["entry"], ComputedStructureEntry)
+    # check that freysoldt correction was performed
+    for r_dict in results["results"]["Mg_Ga-0"]["defect_entries"]:
+        if r_dict.charge_state == 0:
+            assert r_dict.corrections["freysoldt_potential_alignment"] == 0
+        else:
+            assert r_dict.corrections["freysoldt_potential_alignment"] != 0

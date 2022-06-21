@@ -301,10 +301,11 @@ def collect_defect_outputs(
     bulk_data = parse_bulk_dir(bulk_sc_dir)
     _logger.info(f"Bulk entry energy: {bulk_data['entry'].energy} eV")
     output = dict(
-        defects_output=defects_output,
+        defect_relax_outputs=defects_output,
         bulk_entry=bulk_data["entry"],
         bulk_band_structure=bulk_data["band_structure"],
         bulk_sc_dir=bulk_sc_dir,
+        results=dict(),
     )
     # first loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
     for defect_name, def_out in defects_output.items():
@@ -335,7 +336,7 @@ def collect_defect_outputs(
             defect_entries.append(def_ent)
             fnv_plots[int(qq)] = plot_data
 
-        output[defect_name] = dict(
+        output["results"][defect_name] = dict(
             defect=defect, defect_entries=defect_entries, fnv_plots=fnv_plots
         )
     return output
