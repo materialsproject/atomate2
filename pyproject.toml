@@ -33,7 +33,7 @@ dependencies = [
     "PyYAML",
     "numpy",
     "click",
-    "pymatgen-analysis-defects@git+https://github.com/materialsproject/pymatgen-analysis-defects.git",
+    "pymatgen-analysis-defects@git+https://github.com/materialsproject/pymatgen-analysis-defects.git@main",
 ]
 
 [project.optional-dependencies]
