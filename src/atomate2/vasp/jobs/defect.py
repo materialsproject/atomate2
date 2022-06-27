@@ -101,7 +101,7 @@ def get_supercell_from_prv_calc(
     Returns
     -------
     Response:
-        Output containing the supercell transformation
+        Output containing the supercell transformation and the dir_name
     """
     vasprun = Vasprun(Path(prv_calc_dir) / "vasprun.xml")
     sc_structure = vasprun.initial_structure
