@@ -18,7 +18,7 @@ from pymatgen.analysis.defect.supercells import (
     get_sc_fromstruct,
 )
 from pymatgen.analysis.defect.thermo import DefectEntry
-from pymatgen.core import Structure
+from pymatgen.core import Lattice, Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
@@ -79,6 +79,49 @@ DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": Tru
 ################################################################################
 
 
+@job
+def get_supercell_from_prv_calc(
+    uc_structure: Structure,
+    prv_calc_dir: str | Path | None = None,
+    sc_mat_ref: NDArray | None = None,
+) -> dict:
+    """Get the supercell from the previous calculation.
+
+    Parse the previous calculation directory to obtain the supercell transformation.
+
+    Parameters
+    ----------
+    uc_structure : Structure
+        The unit cell structure of the bulk material.
+    prv_calc_dir : Path
+        The directory of the previous calculation.
+    sc_mat : NDArray
+        The supercell matrix. If not None, use this to validate the extracted supercell.
+
+    Returns
+    -------
+    Response:
+        Output containing the supercell transformation
+    """
+    vasprun = Vasprun(Path(prv_calc_dir) / "vasprun.xml")
+    sc_structure = vasprun.initial_structure
+    (sc_mat_prv, _) = get_matched_structure_mapping(
+        uc_struct=uc_structure, sc_struct=sc_structure
+    )
+
+    if sc_mat_ref is not None:
+        latt_ref = Lattice(sc_mat_ref)
+        latt_prv = Lattice(sc_mat_prv)
+        if not (
+            np.allclose(sorted(latt_ref.abc), sorted(latt_prv.abc))
+            and np.allclose(sorted(latt_ref.angles), sorted(latt_prv.angles))
+        ):
+            raise ValueError(
+                "The supercell matrix extracted from the previous calculation does not match the the desired supercell shape."
+            )
+    return dict(sc_mat=sc_mat_prv, dir_name=prv_calc_dir)
+
+
 @job(
     name="bulk supercell",
 )
@@ -86,7 +129,7 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
-):
+) -> Response:
     """Bulk Supercell calculation.
 
     Check if the information from a bulk supercell calculation has been provided.
@@ -103,8 +146,8 @@ def bulk_supercell_calculation(
 
     Returns
     -------
-    dict:
-        The bulk supercell calculation summary.
+    Response:
+        Output a dictionary containing the bulk supercell calculation summary.
     """
     _logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
@@ -114,7 +157,6 @@ def bulk_supercell_calculation(
     relax_job.name = "bulk relax"
     relax_output: TaskDocument = relax_job.output
 
-    # Is this the best way to pass a subset of data through?
     summary_d = dict(
         uc_structure=uc_structure,
         sc_entry=relax_output.entry,
@@ -123,31 +165,8 @@ def bulk_supercell_calculation(
         dir_name=relax_output.dir_name,
         uuid=relax_job.uuid,
     )
-    waiter = wait_for_dict(summary_d)
-    return Response(output=waiter.output, replace=[relax_job, waiter])
-
-
-@job
-def wait_for_dict(d: dict):
-    """Wait for a dictionary to be populated.
-
-    Parameters
-    ----------
-    d : dict
-        The dictionary to wait for.
-    """
-    return d
-
-
-# @job
-# def create_summary(d: dict) -> BulkSuperCellSummary:
-#     """Create a summary from a bulk supercell calculation."""
-#     entry = d["sc_entry"]
-#     structure = d["sc_struct"]
-#     entry_d = entry.as_dict()
-#     entry_d["structure"] = structure.as_dict()
-#     d["sc_entry"] = ComputedStructureEntry.from_dict(entry_d)
-#     return BulkSuperCellSummary(**d)
+    # waiter = wait_for_dict(summary_d)
+    return Response(output=summary_d, replace=[relax_job])
 
 
 @job
@@ -155,7 +174,7 @@ def spawn_defects_calcs(
     defect_gen: DefectGenerator,
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
-    bulk_sc_dir: str | Path | None,
+    prv_calc_dir: str | Path | None,
 ) -> Response:
     """Spawn defect calculations from the DefectGenerator.
 
@@ -165,25 +184,14 @@ def spawn_defects_calcs(
         The defect generator to use.
     sc_mat : NDArray
         The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
-    bulk_sc_dir : str | Path | None
-        The directory of the bulk supercell calculation.
-        If the directory name is "skip", we will not store the pristine supercell.
+    prv_calc_dir : str | Path | None
+        The directory to copy the calculation settings from.
 
     Returns
     -------
     Response:
         The response containing the outputs of the defect calculations as a dictionary
     """
-    if bulk_sc_dir is not None:
-        bulk_sc_dir = strip_hostname(bulk_sc_dir)
-        bulk_sc_dir = Path(bulk_sc_dir)
-        bulk_sc_entry = Vasprun(bulk_sc_dir / "vasprun.xml.gz").get_computed_entry(
-            inc_structure=True
-        )
-        # bulk_locpot = Locpot(bulk_sc_dir / "LOCPOT.gz")
-        (sc_mat, _) = get_matched_structure_mapping(
-            defect_gen.structure, bulk_sc_entry.structure
-        )  # TODO: this might need relaxing if too tight
 
     defect_q_jobs = []
     output = dict()
@@ -194,7 +202,7 @@ def spawn_defects_calcs(
             defect,
             sc_mat=sc_mat,
             relax_maker=relax_maker,
-            prev_vasp_dir=str(bulk_sc_dir),
+            prev_vasp_dir=str(prv_calc_dir),
             defect_index=f"{name_counter[defect.name]}",
         )
         defect_q_jobs.append(defect_job)
@@ -284,6 +292,15 @@ def collect_defect_outputs(
     """Collect all the outputs from the defect calculations.
 
     This job will combine the structure and entry fields to create a ComputerStructureEntry object.
+
+    Parameters
+    ----------
+    defects_output:
+        The output from the defect calculations.
+    bulk_sc_dir:
+        The directory containing the bulk supercell calculation.
+    dielectric:
+        The dielectric constant used to construct the formation energy diagram.
     """
 
     def get_locpot_from_dir(dir_name: str) -> Locpot:

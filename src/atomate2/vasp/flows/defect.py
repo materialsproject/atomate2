@@ -20,6 +20,7 @@ from atomate2.vasp.jobs.defect import (
     calculate_finite_diff,
     collect_defect_outputs,
     get_ccd_documents,
+    get_supercell_from_prv_calc,
     spawn_defects_calcs,
     spawn_energy_curve_calcs,
 )
@@ -102,28 +103,24 @@ class FormationEnergyMaker(Maker):
         """Make a flow to calculate the formation energy diagram."""
         jobs = []
 
-        if bulk_sc_dir is None:
-            bulk_job = bulk_supercell_calculation(
+        if bulk_sc_dir is not None:
+            get_sc_job = get_supercell_from_prv_calc(
+                defect_gen.structure, bulk_sc_dir, sc_mat
+            )
+        else:
+            get_sc_job = bulk_supercell_calculation(
                 uc_structure=defect_gen.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=sc_mat,
             )
-            spawn_output = spawn_defects_calcs(
-                defect_gen=defect_gen,
-                sc_mat=bulk_job.output["sc_mat"],
-                relax_maker=self.relax_maker,
-                bulk_sc_dir=bulk_job.output["dir_name"],
-            )
-            jobs.extend([bulk_job, spawn_output])
-            bulk_sc_dir = bulk_job.output["dir_name"]
-        else:
-            spawn_output = spawn_defects_calcs(
-                defect_gen=defect_gen,
-                sc_mat=sc_mat,
-                relax_maker=self.relax_maker,
-                bulk_sc_dir=bulk_sc_dir,
-            )
-            jobs.append(spawn_output)
+
+        spawn_output = spawn_defects_calcs(
+            defect_gen=defect_gen,
+            sc_mat=get_sc_job.output["sc_mat"],
+            relax_maker=self.relax_maker,
+            bulk_sc_dir=get_sc_job.output["dir_name"],
+        )
+        jobs.extend([get_sc_job, spawn_output])
 
         collect_job = collect_defect_outputs(
             spawn_output.output, bulk_sc_dir, dielectric
