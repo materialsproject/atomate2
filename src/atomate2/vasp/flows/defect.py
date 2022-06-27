@@ -103,22 +103,22 @@ class FormationEnergyMaker(Maker):
         """Make a flow to calculate the formation energy diagram."""
         jobs = []
 
-        if bulk_sc_dir is not None:
-            get_sc_job = get_supercell_from_prv_calc(
-                defect_gen.structure, bulk_sc_dir, sc_mat
-            )
-        else:
+        if bulk_sc_dir is None:
             get_sc_job = bulk_supercell_calculation(
                 uc_structure=defect_gen.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=sc_mat,
+            )
+        else:
+            get_sc_job = get_supercell_from_prv_calc(
+                defect_gen.structure, bulk_sc_dir, sc_mat
             )
 
         spawn_output = spawn_defects_calcs(
             defect_gen=defect_gen,
             sc_mat=get_sc_job.output["sc_mat"],
             relax_maker=self.relax_maker,
-            prv_cal_dir=get_sc_job.output["dir_name"],
+            prv_calc_dir=get_sc_job.output["dir_name"],
         )
         jobs.extend([get_sc_job, spawn_output])
 

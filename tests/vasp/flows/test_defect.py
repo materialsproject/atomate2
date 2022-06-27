@@ -157,8 +157,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
         "relax Mg_Ga-0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
     }
     fake_run_vasp_kwargs = {
-        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar", "poscar"]}
-        for k in ref_paths
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]} for k in ref_paths
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
