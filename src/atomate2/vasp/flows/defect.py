@@ -118,12 +118,12 @@ class FormationEnergyMaker(Maker):
             defect_gen=defect_gen,
             sc_mat=get_sc_job.output["sc_mat"],
             relax_maker=self.relax_maker,
-            bulk_sc_dir=get_sc_job.output["dir_name"],
+            prv_cal_dir=get_sc_job.output["dir_name"],
         )
         jobs.extend([get_sc_job, spawn_output])
 
         collect_job = collect_defect_outputs(
-            spawn_output.output, bulk_sc_dir, dielectric
+            spawn_output.output, get_sc_job.output["dir_name"], dielectric
         )
         jobs.append(collect_job)
 
