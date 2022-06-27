@@ -192,8 +192,6 @@ def spawn_defects_calcs(
     Response:
         The response containing the outputs of the defect calculations as a dictionary
     """
-    print(">>>>>>>>")
-    print(sc_mat)
     defect_q_jobs = []
     output = dict()
     name_counter: dict = defaultdict(lambda: 0)
@@ -251,7 +249,6 @@ def perform_defect_calcs(
     jobs = []
     outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
-    print(sc_def_struct)
     relax_maker = relax_maker or DEFAULT_RELAX_MAKER
     for qq in defect.get_charge_states():
         suffix = (
