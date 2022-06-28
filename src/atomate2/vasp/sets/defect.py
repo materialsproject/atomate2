@@ -22,8 +22,7 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -57,5 +56,3 @@ class AtomicRelaxSetGenerator(VaspInputSetGenerator):
             "GGA": None,
             "LCHARG": True,
         }
-
-        # TODO LCHARG should be False if but writing LOCPOT also requires CHGCAR for some reason
