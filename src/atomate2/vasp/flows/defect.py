@@ -69,14 +69,16 @@ DEFECT_STATIC_GENERATOR: StaticSetGenerator = StaticSetGenerator(
 
 @dataclass
 class FormationEnergyMaker(Maker):
-    """Class to generate VASP input sets for the calculation of the formation energy diagram.
+    """Class to generate VASP input sets for the calculation of the formation energy
+    diagram.
 
     Parameters
     ----------
     name: str
         The name of the flow created by this maker.
     relax_maker: .BaseVaspMaker or None
-        A maker to perform a atomic-position-only relaxation on the defect charge states.
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states.
         If None, the defaults will be used.
     """
 
@@ -170,8 +172,7 @@ class ConfigurationCoordinateMaker(Maker):
         charge_state1: int,
         charge_state2: int,
     ):
-        """
-        Make a job for the calculation of the configuration coordinate diagram.
+        """Make a job for the calculation of the configuration coordinate diagram.
 
         Parameters
         ----------

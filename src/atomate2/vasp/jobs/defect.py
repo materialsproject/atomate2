@@ -136,7 +136,8 @@ def bulk_supercell_calculation(
     relax_maker : RelaxMaker
         The relax maker to use.
     sc_mat : NDArray | None
-        The supercell matrix. if None, the code will attempt to create a nearly-cubic supercell.
+        The supercell matrix. if None, the code will attempt to create a
+        nearly-cubic supercell.
 
     Returns
     -------
@@ -177,7 +178,8 @@ def spawn_defect_calcs(
     defect_gen : DefectGenerator
         The defect generator to use.
     sc_mat : NDArray
-        The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
+        The supercell matrix. If None, the code will attempt to create a
+        nearly-cubic supercell.
     prv_calc_dir : str | Path | None
         The directory to copy the calculation settings from.
 
@@ -226,11 +228,13 @@ def run_all_charge_states(
     defect:
         A defect object representing the defect in a unit cell.
     relax_maker:
-        A RelaxMaker object to use for the atomic relaxation. If None, the default will be used (see DEFAULT_RELAX_MAKER).
+        A RelaxMaker object to use for the atomic relaxation.
+        If None, the default will be used (see DEFAULT_RELAX_MAKER).
     prev_vasp_dir:
         The directory containing the previous VASP calculation.
     sc_mat:
-        The supercell matrix. If None, the code will attempt to create a nearly-cubic supercell.
+        The supercell matrix. If None, the code will attempt to create a
+        nearly-cubic supercell.
     defect_index:
         Additional index to give unique names to the defect calculations.
     add_info:
@@ -240,8 +244,8 @@ def run_all_charge_states(
     Returns
     -------
     Response
-        A response object containing the summary of the calculations for different charge states.
-
+        A response object containing the summary of the calculations for different
+        charge states.
     """
     jobs = []
     outputs = dict()
@@ -289,7 +293,8 @@ def collect_defect_outputs(
 ) -> dict:
     """Collect all the outputs from the defect calculations.
 
-    This job will combine the structure and entry fields to create a ComputerStructureEntry object.
+    This job will combine the structure and entry fields to create a
+    ComputerStructureEntry object.
 
     Parameters
     ----------
@@ -452,8 +457,7 @@ def get_ccd_documents(
     inputs2: Iterable[CCDInput],
     undistorted_index: int,
 ):
-    """
-    Get the configuration coordinate diagram from the task documents.
+    """Get the configuration coordinate diagram from the task documents.
 
     Parameters
     ----------
