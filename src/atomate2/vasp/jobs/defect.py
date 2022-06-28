@@ -35,13 +35,6 @@ from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 _logger = logging.getLogger(__name__)
-_logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler("atomate2.log")
-fh.setLevel(logging.DEBUG)
-# create formatter and add it to the handlers
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-fh.setFormatter(formatter)
-_logger.addHandler(fh)
 
 ################################################################################
 # Default settings                                                            ##
@@ -72,6 +65,7 @@ DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
 
 DEFAULT_RELAX_MAKER = RelaxMaker(input_set_generator=DEFECT_RELAX_GENERATOR)
 DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": True})
+DEFAULT_RELAX_MAKER.task_document_kwargs.update({"store_volumetric_data": ["locpot"]})
 
 
 ################################################################################
@@ -170,7 +164,7 @@ def bulk_supercell_calculation(
 
 
 @job
-def spawn_defects_calcs(
+def spawn_defect_calcs(
     defect_gen: DefectGenerator,
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
@@ -197,24 +191,24 @@ def spawn_defects_calcs(
     name_counter: dict = defaultdict(lambda: 0)
 
     for defect in defect_gen:
-        defect_job = perform_defect_calcs(
+        q_job = run_all_charge_states(
             defect,
             sc_mat=sc_mat,
             relax_maker=relax_maker,
             prev_vasp_dir=str(prv_calc_dir),
             defect_index=f"{name_counter[defect.name]}",
         )
-        defect_q_jobs.append(defect_job)
+        defect_q_jobs.append(q_job)
         output[f"{defect.name}-{name_counter[defect.name]}"] = dict(
             defect=defect,
-            results=defect_job.output,
+            results=q_job.output,
         )
         name_counter[defect.name] += 1
     return Response(output=output, replace=defect_q_jobs)
 
 
 @job
-def perform_defect_calcs(
+def run_all_charge_states(
     defect: Defect,
     relax_maker: RelaxMaker | None = None,
     prev_vasp_dir: str | Path | None = None,
@@ -223,6 +217,9 @@ def perform_defect_calcs(
     add_info: dict | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations and save the Hartree potential.
+
+    Run a ISIF2 calculation for each available charge state of the defect.
+    Ensure that the LOCPOT file is stored in the output.
 
     Parameters
     ----------
@@ -250,6 +247,8 @@ def perform_defect_calcs(
     outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     relax_maker = relax_maker or DEFAULT_RELAX_MAKER
+    if "locpot" not in relax_maker.task_document_kwargs["store_volumetric_data"]:
+        raise ValueError("The relax maker must store the locpot.")
     for qq in defect.get_charge_states():
         suffix = (
             f" {defect.name} q={qq}"

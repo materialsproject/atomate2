@@ -21,7 +21,7 @@ from atomate2.vasp.jobs.defect import (
     collect_defect_outputs,
     get_ccd_documents,
     get_supercell_from_prv_calc,
-    spawn_defects_calcs,
+    spawn_defect_calcs,
     spawn_energy_curve_calcs,
 )
 from atomate2.vasp.schemas.defect import CCDDocument
@@ -114,7 +114,7 @@ class FormationEnergyMaker(Maker):
                 defect_gen.structure, bulk_sc_dir, sc_mat
             )
 
-        spawn_output = spawn_defects_calcs(
+        spawn_output = spawn_defect_calcs(
             defect_gen=defect_gen,
             sc_mat=get_sc_job.output["sc_mat"],
             relax_maker=self.relax_maker,
