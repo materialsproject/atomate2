@@ -11,13 +11,13 @@ import numpy as np
 from jobflow import Flow, Response, job
 from numpy.typing import NDArray
 from pydantic import BaseModel
-from pymatgen.analysis.defect.core import Defect
-from pymatgen.analysis.defect.generators import DefectGenerator
-from pymatgen.analysis.defect.supercells import (
+from pymatgen.analysis.defects2.core import Defect
+from pymatgen.analysis.defects2.generators import DefectGenerator
+from pymatgen.analysis.defects2.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
-from pymatgen.analysis.defect.thermo import DefectEntry
+from pymatgen.analysis.defects2.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar

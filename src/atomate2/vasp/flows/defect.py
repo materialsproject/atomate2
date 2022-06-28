@@ -9,7 +9,7 @@ from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
 from numpy.typing import NDArray
-from pymatgen.analysis.defect.generators import DefectGenerator
+from pymatgen.analysis.defects2.generators import DefectGenerator
 from pymatgen.core.structure import Structure
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
