@@ -12,7 +12,7 @@ from pymatgen.core.periodic_table import Element
 from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = [
     "RelaxSetGenerator",
@@ -29,7 +29,7 @@ __all__ = [
 
 
 @dataclass
-class RelaxSetGenerator(VaspInputSetGenerator):
+class RelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP relaxation input sets."""
 
     def get_incar_updates(
@@ -65,7 +65,7 @@ class RelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class TightRelaxSetGenerator(VaspInputSetGenerator):
+class TightRelaxSetGenerator(VaspInputGenerator):
     """Class to generate tight VASP relaxation input sets."""
 
     def get_incar_updates(
@@ -111,7 +111,7 @@ class TightRelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class StaticSetGenerator(VaspInputSetGenerator):
+class StaticSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP static input sets.
 
@@ -124,7 +124,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
         Whether to set LCALCPOL (used for calculating the electronic contribution to
         the polarization)
     **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     lepsilon: bool = False
@@ -178,7 +178,7 @@ class StaticSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class NonSCFSetGenerator(VaspInputSetGenerator):
+class NonSCFSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP non-self-consistent field input sets.
 
@@ -198,7 +198,7 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
         Multiplicative factor for NBANDS when starting from a previous calculation.
         Choose a higher number if you are doing an LOPTICS calculation.
     **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     mode: str = "line"
@@ -326,8 +326,15 @@ class NonSCFSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSERelaxSetGenerator(VaspInputSetGenerator):
-    """Class to generate VASP HSE06 relaxation input sets."""
+class HSERelaxSetGenerator(VaspInputGenerator):
+    """Class to generate VASP HSE06 relaxation input sets.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+
+    """
 
     def get_incar_updates(
         self,
@@ -360,7 +367,7 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
         """
         return {
             "NSW": 99,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "LHFCALC": True,
@@ -373,8 +380,14 @@ class HSERelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSETightRelaxSetGenerator(VaspInputSetGenerator):
-    """Class to generate tight VASP HSE relaxation input sets."""
+class HSETightRelaxSetGenerator(VaspInputGenerator):
+    """Class to generate tight VASP HSE relaxation input sets.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+    """
 
     def get_incar_updates(
         self,
@@ -413,7 +426,7 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
             "LAECHG": False,
             "EDIFFG": -0.001,
             "LREAL": False,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "NSW": 99,
             "LCHARG": False,
             "GGA": "PE",
@@ -426,8 +439,15 @@ class HSETightRelaxSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSEStaticSetGenerator(VaspInputSetGenerator):
-    """Class to generate VASP HSE06 static input sets."""
+class HSEStaticSetGenerator(VaspInputGenerator):
+    """Class to generate VASP HSE06 static input sets.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
+
+    """
 
     def get_incar_updates(
         self,
@@ -460,7 +480,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
         """
         return {
             "NSW": 0,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "LHFCALC": True,
@@ -475,7 +495,7 @@ class HSEStaticSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class HSEBSSetGenerator(VaspInputSetGenerator):
+class HSEBSSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP HSE06 band structure input sets.
 
@@ -496,6 +516,11 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
     The "uniform_dense" mode employs are regular weighted k-point mesh, in addition
     to a zero-weighted uniform mesh with higher density.
+
+    .. note::
+        By default the hybrid input sets use ALGO = Normal which is only efficient for
+        VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
+        details.
 
     Parameters
     ----------
@@ -518,12 +543,12 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
     added_kpoints
         A list of kpoints in fractional coordinates to add as zero-weighted points.
     **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputSetGenerator`.
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     mode: str = "gap"
     dedos: float = 0.02
-    reciprocal_density: float = 50
+    reciprocal_density: float = 64
     line_density: float = 20
     zero_weighted_reciprocal_density: float = 100
     optics: bool = False
@@ -624,7 +649,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
         """
         updates = {
             "NSW": 0,
-            "ALGO": "All",
+            "ALGO": "Normal",
             "GGA": "PE",
             "HFSCREEN": 0.2,
             "PRECFOCK": "Fast",
@@ -664,7 +689,7 @@ class HSEBSSetGenerator(VaspInputSetGenerator):
 
 
 @dataclass
-class ElectronPhononSetGenerator(VaspInputSetGenerator):
+class ElectronPhononSetGenerator(VaspInputGenerator):
     """
     Class to generate VASP electron phonon input sets.
 
