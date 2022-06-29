@@ -113,3 +113,13 @@ def mock_jobflow_settings(memory_jobstore):
 
     with mock.patch("jobflow.SETTINGS", settings):
         yield
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--abinit-integration",
+        action="store_true",
+        default=False,
+        help="Run abinit integration tests. "
+        "This basically runs the same tests but without the mocking.",
+    )
