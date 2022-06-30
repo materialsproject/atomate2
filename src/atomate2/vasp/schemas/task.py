@@ -10,6 +10,7 @@ from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.analysis.structure_analyzer import oxide_type
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
@@ -201,11 +202,8 @@ class OutputSummary(BaseModel):
         OutputSummary
             The calculation output summary.
         """
-
-        if calc_doc.output.ionic_steps is not None:
-            ionic_steps = calc_doc.output.ionic_steps
-        else:
-            ionic_steps = calc_doc.output.trajectory.ionic_steps
+        if isinstance(calc_doc.output.ionic_steps, Trajectory):
+            ionic_steps = calc_doc.output.ionic_steps.frame_properties
 
         return cls(
             structure=calc_doc.output.structure,
