@@ -12,6 +12,7 @@ from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import BandStructure
 from pymatgen.electronic_structure.core import OrbitalType
 from pymatgen.electronic_structure.dos import CompleteDos, Dos
@@ -320,20 +321,6 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
     structure: Structure = Field(None, description="The structure at this step.")
 
 
-class Trajectory(BaseModel):
-    """Document defining a trajectory, i.e. a sequence of ionic steps.
-
-    Note, this stores the same information as :obj:`.CalculationOutput.ionic_steps`.
-    An intended use case is for MD tasks with long trajectories; instead of storing
-    the info in :obj:`.CalculationOutput.ionic_steps` in the main job store,
-    one stores ionic steps and a Trajectory in an additional store.
-    """
-
-    ionic_steps: List[IonicStep] = Field(
-        None, description="Energy, forces, and structure for each ionic step"
-    )
-
-
 class CalculationOutput(BaseModel):
     """Document defining VASP calculation outputs."""
 
@@ -367,7 +354,9 @@ class CalculationOutput(BaseModel):
     )
     mag_density: float = Field(
         None,
-        description="The magnetization density, defined as total_mag/volume (units of A^-3)",
+        description=(
+            "The magnetization density, defined as total_mag/volume (units of A^-3)"
+        ),
     )
     epsilon_static: Matrix3D = Field(
         None, description="The high-frequency dielectric constant"
@@ -414,15 +403,13 @@ class CalculationOutput(BaseModel):
     )
     dos_properties: Dict[str, Dict[str, Dict[str, float]]] = Field(
         None,
-        description="Element- and orbital-projected band properties (in eV) for the DOS. "
-        "All properties are with respect to the Fermi level.",
+        description=(
+            "Element- and orbital-projected band properties (in eV) for the DOS. "
+            "All properties are with respect to the Fermi level."
+        ),
     )
     run_stats: RunStatistics = Field(
         None, description="Summary of runtime statistics for this calculation"
-    )
-
-    trajectory: Trajectory = Field(
-        None, description="Trajectory (ionic steps) of an MD run."
     )
 
     @classmethod
@@ -449,8 +436,8 @@ class CalculationOutput(BaseModel):
             Path to displaced electron-phonon coupling POSCAR files generated using
             ``PHON_LMC = True``.
         store_trajectory
-            Whether to store ionic steps as an :obj:`.Trajectory` object in the
-            additional store.
+            Whether to store ionic steps as a :obj:`pymatgen.core.trajectory.Trajectory`
+            object in the additional store.
 
         Returns
         -------
@@ -533,12 +520,12 @@ class CalculationOutput(BaseModel):
                 elph_structures["structures"].append(Structure.from_file(elph_poscar))
 
         if store_trajectory:
-            ionic_steps = None
-            trajectory = Trajectory(ionic_steps=vasprun.ionic_steps)
-            kwargs = {"trajectory": trajectory}
+            structures = [Structure(d["structure"]) for d in vasprun.ionic_steps]
+            ionic_steps = Trajectory.from_structures(
+                structures, frame_properties=vasprun.ionic_steps, constant_lattice=False
+            )
         else:
             ionic_steps = vasprun.ionic_steps
-            kwargs = {}
 
         return cls(
             structure=structure,
@@ -557,7 +544,6 @@ class CalculationOutput(BaseModel):
             run_stats=RunStatistics.from_outcar(outcar),
             **electronic_output,
             **phonon_output,
-            **kwargs,
         )
 
 
@@ -670,8 +656,8 @@ class Calculation(BaseModel):
         store_volumetric_data
             Which volumetric files to store.
         store_trajectory
-            Whether to store ionic steps as an :obj:`.Trajectory` object in the
-            additional store.
+            Whether to store ionic steps as a :obj:`pymatgen.core.trajectory.Trajectory`
+            object in the additional store.
         vasprun_kwargs
             Additional keyword arguments that will be passed to the Vasprun init.
 
