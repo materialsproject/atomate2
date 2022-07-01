@@ -188,29 +188,39 @@ class OutputSummary(BaseModel):
     )
 
     @classmethod
-    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
+    def from_vasp_calc_doc_and_trajectory(
+        cls, calc_doc: Calculation, traj: Union[Trajectory, None]
+    ) -> "OutputSummary":
         """
-        Create a summary of VASP calculation outputs from a VASP calculation document.
+        Create a summary of VASP calculation outputs from a VASP calculation document
+        or pymatgen Trajectory object.
+
+        This will first look for ionic steps in the calculation document. If found, will
+        use it and ignore trajectory. I not found, will get ionic steps info from the
+        trajectory.
 
         Parameters
         ----------
         calc_doc
             A VASP calculation document.
+        traj
+            A pymatgen Trajectory.
 
         Returns
         -------
         OutputSummary
             The calculation output summary.
         """
-        if isinstance(calc_doc.output.ionic_steps, Trajectory):
-            traj = calc_doc.output.ionic_steps
+
+        if calc_doc.output.ionic_steps is not None:
+            forces = calc_doc.output.ionic_steps[-1].forces
+            stress = calc_doc.output.ionic_steps[-1].stress
+        elif traj is not None:
             ionic_steps = traj.frame_properties
             forces = ionic_steps[-1]["forces"]
             stress = ionic_steps[-1]["stress"]
         else:
-            ionic_steps = calc_doc.output.ionic_steps
-            forces = ionic_steps[-1].forces
-            stress = ionic_steps[-1].stress
+            raise RuntimeError("Unable to find ionic steps.")
 
         return cls(
             structure=calc_doc.output.structure,
@@ -370,7 +380,9 @@ class TaskDocument(StructureMetadata):
             author=author,
             completed_at=calcs_reversed[-1].completed_at,
             input=InputSummary.from_vasp_calc_doc(calcs_reversed[0]),
-            output=OutputSummary.from_vasp_calc_doc(calcs_reversed[-1]),
+            output=OutputSummary.from_vasp_calc_doc_and_trajectory(
+                calcs_reversed[-1], vasp_objects.get(VaspObject.TRAJECTORY, None)
+            ),
             state=_get_state(calcs_reversed, analysis),
             entry=cls.get_entry(calcs_reversed),
             run_stats=_get_run_stats(calcs_reversed),

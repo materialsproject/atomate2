@@ -373,7 +373,7 @@ class CalculationOutput(BaseModel):
         description="Frequency-dependent dielectric information from an LOPTICS "
         "calculation",
     )
-    ionic_steps: Union[List[IonicStep], Trajectory] = Field(
+    ionic_steps: List[IonicStep] = Field(
         None, description="Energy, forces, structure, etc. for each ionic step"
     )
     locpot: Dict[int, List[float]] = Field(
@@ -419,7 +419,7 @@ class CalculationOutput(BaseModel):
         outcar: Outcar,
         locpot: Optional[Locpot] = None,
         elph_poscars: Optional[List[Path]] = None,
-        store_trajectory: bool = False,
+        store_ionic_steps: bool = True,
     ) -> "CalculationOutput":
         """
         Create a VASP output document from VASP outputs.
@@ -435,9 +435,8 @@ class CalculationOutput(BaseModel):
         elph_poscars
             Path to displaced electron-phonon coupling POSCAR files generated using
             ``PHON_LMC = True``.
-        store_trajectory
-            Whether to store ionic steps as a :obj:`pymatgen.core.trajectory.Trajectory`
-            object in the additional store.
+        store_ionic_steps
+            Whether to store ionic steps. If `False`, the `ionic_steps` is left as None.
 
         Returns
         -------
@@ -519,14 +518,6 @@ class CalculationOutput(BaseModel):
                 elph_structures["temperatures"].append(temp)
                 elph_structures["structures"].append(Structure.from_file(elph_poscar))
 
-        ionic_steps = vasprun.ionic_steps
-        if store_trajectory:
-            ionic_steps = Trajectory.from_structures(
-                [d["structure"] for d in ionic_steps],
-                frame_properties=[IonicStep(**x).dict() for x in ionic_steps],
-                constant_lattice=False,
-            )
-
         return cls(
             structure=structure,
             energy=vasprun.final_energy,
@@ -538,7 +529,7 @@ class CalculationOutput(BaseModel):
             frequency_dependent_dielectric=freq_dependent_diel,
             elph_displaced_structures=elph_structures,
             dos_properties=dosprop_dict,
-            ionic_steps=ionic_steps,
+            ionic_steps=vasprun.ionic_steps if store_ionic_steps else None,
             locpot=locpot_avg,
             outcar=outcar_dict,
             run_stats=RunStatistics.from_outcar(outcar),
@@ -601,7 +592,7 @@ class Calculation(BaseModel):
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
-        store_trajectory: bool = False,
+        store_ionic_steps: bool = True,
         vasprun_kwargs: Optional[Dict] = None,
     ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """
@@ -646,18 +637,19 @@ class Calculation(BaseModel):
             Whether to store the average of the LOCPOT along the crystal axes.
         run_bader
             Whether to run bader on the charge density.
-        strip_dos_projections : bool
+        strip_dos_projections
             Whether to strip the element and site projections from the density of
             states. This can help reduce the size of DOS objects in systems with many
             atoms.
-        strip_bandstructure_projections : bool
+        strip_bandstructure_projections
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
         store_volumetric_data
             Which volumetric files to store.
-        store_trajectory
-            Whether to store ionic steps as a :obj:`pymatgen.core.trajectory.Trajectory`
-            object in the additional store.
+        store_ionic_steps
+            Whether to store ionic steps in the calculation output document. If `False`,
+            the ionic steps will be stored as `frame_properties` in a
+            :obj:`pymatgen.core.trajectory.Trajectory` object.
         vasprun_kwargs
             Additional keyword arguments that will be passed to the Vasprun init.
 
@@ -707,13 +699,21 @@ class Calculation(BaseModel):
                 locpot = Locpot.from_file(dir_name / locpot_file)
 
         input_doc = CalculationInput.from_vasprun(vasprun)
+
         output_doc = CalculationOutput.from_vasp_outputs(
             vasprun,
             outcar,
             locpot=locpot,
             elph_poscars=elph_poscars,
-            store_trajectory=store_trajectory,
+            store_ionic_steps=store_ionic_steps,
         )
+        if not store_ionic_steps:
+            traj = Trajectory.from_structures(
+                [d["structure"] for d in vasprun.ionic_steps],
+                frame_properties=[IonicStep(**x).dict() for x in vasprun.ionic_steps],
+                constant_lattice=False,
+            )
+            vasp_objects[VaspObject.TRAJECTORY] = traj
 
         has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
         return (
