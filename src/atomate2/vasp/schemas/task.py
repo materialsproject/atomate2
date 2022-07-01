@@ -203,15 +203,22 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         if isinstance(calc_doc.output.ionic_steps, Trajectory):
-            ionic_steps = calc_doc.output.ionic_steps.frame_properties
+            traj = calc_doc.output.ionic_steps
+            ionic_steps = traj.frame_properties
+            forces = ionic_steps[-1]["forces"]
+            stress = ionic_steps[-1]["stress"]
+        else:
+            ionic_steps = calc_doc.output.ionic_steps
+            forces = ionic_steps[-1].forces
+            stress = ionic_steps[-1].stress
 
         return cls(
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
-            forces=ionic_steps[-1].forces,
-            stress=ionic_steps[-1].stress,
+            forces=forces,
+            stress=stress,
         )
 
 

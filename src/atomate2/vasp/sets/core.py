@@ -805,7 +805,7 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
 
 
 @dataclass
-class MDSetGenerator(VaspInputSetGenerator):
+class MDSetGenerator(VaspInputGenerator):
     """Class to generate VASP molecular dynamics input sets."""
 
     ensemble: str = "nvt"

@@ -373,7 +373,7 @@ class CalculationOutput(BaseModel):
         description="Frequency-dependent dielectric information from an LOPTICS "
         "calculation",
     )
-    ionic_steps: List[IonicStep] = Field(
+    ionic_steps: Union[List[IonicStep], Trajectory] = Field(
         None, description="Energy, forces, structure, etc. for each ionic step"
     )
     locpot: Dict[int, List[float]] = Field(
@@ -519,13 +519,13 @@ class CalculationOutput(BaseModel):
                 elph_structures["temperatures"].append(temp)
                 elph_structures["structures"].append(Structure.from_file(elph_poscar))
 
+        ionic_steps = vasprun.ionic_steps
         if store_trajectory:
-            structures = [Structure(d["structure"]) for d in vasprun.ionic_steps]
             ionic_steps = Trajectory.from_structures(
-                structures, frame_properties=vasprun.ionic_steps, constant_lattice=False
+                [d["structure"] for d in ionic_steps],
+                frame_properties=[IonicStep(**x).dict() for x in ionic_steps],
+                constant_lattice=False,
             )
-        else:
-            ionic_steps = vasprun.ionic_steps
 
         return cls(
             structure=structure,
