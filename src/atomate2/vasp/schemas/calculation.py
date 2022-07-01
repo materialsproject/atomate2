@@ -715,7 +715,16 @@ class Calculation(BaseModel):
             )
             vasp_objects[VaspObject.TRAJECTORY] = traj
 
-        has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
+        # MD run
+        if vasprun.parameters.get("IBRION", -1) == 0:
+            if vasprun.parameters.get("NSW", 0) == vasprun.nionic_steps:
+                has_vasp_completed = Status.SUCCESS
+            else:
+                has_vasp_completed = Status.FAILED
+        # others
+        else:
+            has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
+
         return (
             cls(
                 dir_name=str(dir_name),

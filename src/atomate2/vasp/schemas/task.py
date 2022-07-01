@@ -85,7 +85,9 @@ class AnalysisSummary(BaseModel):
         if final_calc.has_vasp_completed == Status.SUCCESS:
             # max force and valid structure checks
             structure = final_calc.output.structure
-            max_force = _get_max_force(final_calc)
+            # do not check max force for MD run
+            if calc_docs[-1].input.parameters.get("IBRION", -1) != 0:
+                max_force = _get_max_force(final_calc)
             warnings.extend(_get_drift_warnings(final_calc))
             if not structure.is_valid():
                 errors.append("Bad structure (atoms are too close!)")

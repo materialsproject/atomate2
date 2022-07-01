@@ -563,6 +563,8 @@ class MDMaker(BaseVaspMaker):
 
     input_set_generator: VaspInputGenerator = field(default_factory=MDSetGenerator)
 
+    # Explicitly pass the handlers to not use the default ones. Some default handlers
+    # such as PotimErrorHandler do not apply to MD runs.
     run_vasp_kwargs: dict = field(
         default_factory=lambda: {
             "handlers": (
@@ -577,21 +579,11 @@ class MDMaker(BaseVaspMaker):
         }
     )
 
+    # Store ionic steps info in a pymatgen Trajectory object instead of in the output
+    # document.
     task_document_kwargs: dict = field(
         default_factory=lambda: {"store_ionic_steps": False}
     )
-
-    stop_children_kwargs: dict = field(
-        default_factory=lambda: {"handle_unsuccessful": False}
-    )
-    # TODO, should set TaskDocument.state instead of the above three lines.
-    #  But this essentially combines from Vasprun.converted.
-    #  The calling stack is:
-    #  should_stop_children()
-    #  -> TaskDocument.state -> _get_state() (in task.py)
-    #  ->  [c.has_vasp_completed == Status.SUCCESS for c in calc_docs]
-    #  ->  Calculations.from_vasp_files() (calculation.py)
-    #  ->  has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
 
 
 def _get_transformations(
