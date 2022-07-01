@@ -123,7 +123,9 @@ def check_run_abi(ref_path: Union[str, Path]):
     user = AbinitInputFile.from_file("run.abi")
     assert user.ndtset == 1, f"'run.abi' has multiple datasets (ndtset={user.ndtset})."
     ref = AbinitInputFile.from_file(ref_path / "inputs" / "run.abi")
-    diffs = user.get_differences(ref)
+    # Ignore the pseudos as the directory depends on the pseudo root directory
+    diffs = user.get_differences(ref, ignore_vars=["pseudos"])
+    # TODO: should we still add some check on the pseudos here ?
     assert diffs == [], "'run.abi' is different from reference."
 
 
