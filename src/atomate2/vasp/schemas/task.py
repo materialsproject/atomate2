@@ -189,7 +189,7 @@ class OutputSummary(BaseModel):
 
     @classmethod
     def from_vasp_calc_doc_and_trajectory(
-        cls, calc_doc: Calculation, traj: Union[Trajectory, None]
+        cls, calc_doc: Calculation, traj: Union[Trajectory, None] = None
     ) -> "OutputSummary":
         """
         Create a summary of VASP calculation outputs from a VASP calculation document

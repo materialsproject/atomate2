@@ -561,7 +561,7 @@ class MDMaker(BaseVaspMaker):
 
     name: str = "molecular dynamics"
 
-    input_set_generator: VaspInputSetGenerator = field(default_factory=MDSetGenerator)
+    input_set_generator: VaspInputGenerator = field(default_factory=MDSetGenerator)
 
     run_vasp_kwargs: dict = field(
         default_factory=lambda: {
@@ -578,7 +578,7 @@ class MDMaker(BaseVaspMaker):
     )
 
     task_document_kwargs: dict = field(
-        default_factory=lambda: {"store_trajectory": True}
+        default_factory=lambda: {"store_ionic_steps": False}
     )
 
     stop_children_kwargs: dict = field(
