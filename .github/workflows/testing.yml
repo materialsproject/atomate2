@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict,tests,dev]
+          pip install .[strict,tests,dev,abinit]
 
       - name: Lint
         run: pre-commit run --all-files --show-diff-on-failure
@@ -51,7 +51,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+<<<<<<< HEAD
             pip install .[strict,tests,docs]
+=======
+          pip install .[strict]
+          pip install .[tests]
+          pip install .[docs]
+          pip install .[abinit]
+          mkdir -p ~/.abinit/pseudos
+          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
+>>>>>>> d44808c (Squashed commit of the following:)
 
       - name: Test
         env:
