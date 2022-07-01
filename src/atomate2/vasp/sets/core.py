@@ -806,10 +806,32 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
 
 @dataclass
 class MDSetGenerator(VaspInputGenerator):
-    """Class to generate VASP molecular dynamics input sets."""
+    """
+    Class to generate VASP molecular dynamics input sets.
+
+    Parameters
+    ----------
+    ensemble
+        Molecular dynamics ensemble to run. Options include `nvt`, `nve`, `npt`,
+        and `nph`.
+    start_temp
+        Starting temperature. The VASP `TEBEG` parameter.
+    end_temp
+        Final temperature. The VASP `TEEND` parameter.
+    nsteps
+        Number of time steps for simulations. The VASP `NSW` parameter.
+    time_step
+        The time step (in femtosecond) for the simulation. The VASP `POTIM` parameter.
+    spin_polarized
+        Whether to do spin polarized calculations. The VASP `ISPIN` parameter.
+    """
 
     ensemble: str = "nvt"
-    auto_ispin: bool = True
+    start_temp: float = 300
+    end_temp: float = 300
+    nsteps: int = 1000
+    time_step: int = 2
+    spin_polarized: bool = False
 
     def get_incar_updates(
         self,
@@ -842,34 +864,35 @@ class MDSetGenerator(VaspInputGenerator):
         """
         updates = self._get_ensemble_defaults(self.ensemble)
 
-        # TODO params copied and changed based on pymatgen.io.vasp.sets.MPMDSet,
-        #  dobule check and discuss with others
+        # Based on pymatgen.io.vasp.sets.MPMDSet. Changes include:
+        # LREAL: True -> AUTO
         updates.update(
             {
-                "NSW": 1000,
-                "TEBEG": 300,
-                "TEEND": 300,
-                "POTIM": 2,
-                "ENCUT": None,  # None use VASP default ENCUT
-                "PREC": "Normal",
-                "IBRION": 0,
-                "LREAL": "Auto",
-                "NELM": 500,
-                "NELMIN": 4,
-                "ISYM": 0,
-                "NBLOCK": 1,
-                "KBLOCK": 100,
+                "ENCUT": None,  # None to use VASP default
+                "TEBEG": self.start_temp,
+                "TEEND": self.end_temp,
+                "NSW": self.nsteps,
+                "POTIM": self.time_step,
+                "ISPIN": 2 if self.spin_polarized else 1,
+                "EDIFF_PER_ATOM": 0.00001,
                 "LSCALU": False,
                 "LCHARG": False,
                 "LPLANE": False,
                 "LWAVE": True,
+                "ISMEAR": 0,
+                "NELMIN": 4,
+                "LREAL": "Auto",
+                "BMIX": 1,
+                "MAXMIX": 20,
+                "NELM": 500,
+                "NSIM": 4,
+                "ISYM": 0,
+                "IBRION": 0,
+                "NBLOCK": 1,
+                "KBLOCK": 100,
+                "PREC": "Normal",
                 "LDAU": False,
-                # "ISMEAR": 0,
-                # "EDIFF_PER_ATOM": 0.00001, # TODO deprecated?
-                # "MAXMIX": 20,
-                # "BMIX": 1,
-                # "NSIM": 4,
-                # "ADDGRID": True,
+                "ADDGRID": True,
             }
         )
 
@@ -884,7 +907,7 @@ class MDSetGenerator(VaspInputGenerator):
         Get default params for the ensemble.
         """
         defaults = {
-            "nve": {"MDALGO": 1, "ISIF": 0, "ANDERSEN_PROB": 0.0},
+            "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
             "npt": {"MDALGO": 3, "ISIF": 3},
             "nph": {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0},
@@ -898,34 +921,6 @@ class MDSetGenerator(VaspInputGenerator):
             raise ValueError(
                 f"Expect `ensemble` to be one of {supported}; got {ensemble}."
             )
-
-    def _check_user_incar_settings(self):
-        """
-        Enuser user incar settings do make sense.
-        """
-        expected_settings = {
-            "nve": {"ISIF": [0, 1, 2]},
-            "nvt": {"ISIF": 2},
-            "npt": {"ISIF": 3},
-            "nph": {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0},
-        }
-
-        setting = expected_settings[self.ensemble.lower()]
-        for k, v in setting.items():
-            if k in self.user_incar_settings:
-                user_val = self.user_incar_settings[k]
-                if isinstance(v, list):
-                    if user_val not in v:
-                        raise ValueError(
-                            f"For {self.ensemble} ensemble, expect {k} to be one of "
-                            f"{v}; got {user_val}."
-                        )
-                else:
-                    if user_val != v:
-                        raise ValueError(
-                            f"For {self.ensemble} ensemble, expect {k} to be {v}; got "
-                            f"{user_val}."
-                        )
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
