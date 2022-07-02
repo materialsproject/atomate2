@@ -76,7 +76,7 @@ si_structure = Structure(
 
 # generate the flow and reduce the k-point mesh for the relaxation jobs
 flow = ElasticMaker().make(si_structure)
-update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
+flow = update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
 
 # run the the workflow using a custom store so that we can easily compile test data
 store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
