@@ -65,7 +65,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     import atomate2.vasp.run
     from atomate2.vasp.sets.base import VaspInputGenerator
 
-    def mock_run_vasp(**kwargs):
+    def mock_run_vasp(*args, **kwargs):
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
