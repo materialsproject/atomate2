@@ -200,7 +200,7 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
 
     from atomate2.vasp.jobs.core import MDMaker
-    from atomate2.vasp.powerups import update_user_incar_settings
+    from atomate2.vasp.schemas.calculation import IonicStep, VaspObject
     from atomate2.vasp.schemas.task import TaskDocument
 
     # mapping from job name to directory containing test files
@@ -216,7 +216,8 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
 
     # generate job
     job = MDMaker().make(si_structure)
-    job = update_user_incar_settings(job, {"NSW": 3})
+    NSW = 3
+    job.maker.input_set_generator.user_incar_settings["NSW"] = NSW
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -225,3 +226,11 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == pytest.approx(-11.46520398)
+
+    # check ionic steps stored as pymatgen Trajectory
+    assert output1.calcs_reversed[0].output.ionic_steps is None
+    traj = output1.vasp_objects[VaspObject.TRAJECTORY]
+    assert len(traj.frame_properties) == NSW
+    # simply check a frame property can be converted to an IonicStep
+    for frame in traj.frame_properties:
+        IonicStep(**frame)
