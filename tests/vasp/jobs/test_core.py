@@ -193,3 +193,35 @@ def test_transmuter(mock_vasp, clean_dir, si_structure):
     np.testing.assert_allclose(
         output1.structure.lattice.abc, [3.866974, 3.866975, 7.733949]
     )
+
+
+def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
+    import pytest
+    from jobflow import run_locally
+
+    from atomate2.vasp.jobs.core import MDMaker
+    from atomate2.vasp.powerups import update_user_incar_settings
+    from atomate2.vasp.schemas.task import TaskDocument
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"molecular dynamics": "Si_molecular_dynamics/molecular_dynamics"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "molecular dynamics": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]}
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate job
+    job = MDMaker().make(si_structure)
+    job = update_user_incar_settings(job, {"NSW": 3})
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # validation on the outputs
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, TaskDocument)
+    assert output1.output.energy == pytest.approx(-11.46520398)

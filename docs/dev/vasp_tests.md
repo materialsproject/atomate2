@@ -69,7 +69,11 @@ from monty.serialization import dumpfn
 
 # silicon structure
 si_structure = Structure(
-    lattice=[[3.348898, 0.0, 1.933487], [1.116299, 3.157372, 1.933487], [0.0, 0.0, 3.866975]],
+    lattice=[
+        [3.348898, 0.0, 1.933487],
+        [1.116299, 3.157372, 1.933487],
+        [0.0, 0.0, 3.866975],
+    ],
     species=["Si", "Si"],
     coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
 )
@@ -78,7 +82,7 @@ si_structure = Structure(
 flow = ElasticMaker().make(si_structure)
 flow = update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
 
-# run the the workflow using a custom store so that we can easily compile test data
+# run the workflow using a custom store so that we can easily compile test data
 store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
 run_locally(flow, store=store, create_folders=True)
 
