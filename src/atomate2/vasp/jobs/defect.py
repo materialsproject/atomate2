@@ -24,7 +24,13 @@ from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 from pymatgen.io.vasp.outputs import WSWQ, Locpot, Vasprun
 
-from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
+from atomate2.common.files import (
+    copy_files,
+    get_zfile,
+    gunzip_files,
+    gzip_files,
+    rename_files,
+)
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
@@ -97,7 +103,11 @@ def get_supercell_from_prv_calc(
     Response:
         Output containing the supercell transformation and the dir_name
     """
-    vasprun = Vasprun(Path(prv_calc_dir) / "vasprun.xml")
+
+    fc = FileClient()
+    files = fc.listdir(prv_calc_dir)
+    vasprun_file = Path(prv_calc_dir) / get_zfile(files, "vasprun.xml")
+    vasprun = Vasprun(vasprun_file)
     sc_structure = vasprun.initial_structure
     (sc_mat_prv, _) = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
