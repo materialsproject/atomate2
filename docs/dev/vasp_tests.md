@@ -69,9 +69,10 @@ from monty.serialization import dumpfn
 
 # silicon structure
 si_structure = Structure(
-    lattice=[[3.348898, 0.0, 1.933487],
-             [1.116299, 3.157372, 1.933487],
-             [0.0, 0.0, 3.866975],
+    lattice=[
+        [3.348898, 0.0, 1.933487],
+        [1.116299, 3.157372, 1.933487],
+        [0.0, 0.0, 3.866975],
     ],
     species=["Si", "Si"],
     coords=[[0.25, 0.25, 0.25], [0, 0, 0]],
