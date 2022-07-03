@@ -75,7 +75,7 @@ si_structure = Structure(
         [0.0, 0.0, 3.866975],
     ],
     species=["Si", "Si"],
-    coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    coords=[[0.25, 0.25, 0.25], [0, 0, 0]],
 )
 
 # generate the flow and reduce the k-point mesh for the relaxation jobs
