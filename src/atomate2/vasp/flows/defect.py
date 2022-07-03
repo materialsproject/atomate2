@@ -93,21 +93,13 @@ class FormationEnergyMaker(Maker):
 
     def __post_init__(self):
         """Post-initialization."""
-        self.relax_maker.input_set_generator.user_incar_settings["LVHAR"] = True
-        if "store_volumetric_data" not in self.relax_maker.task_document_kwargs:
-            logger.warn("Adding 'store_volumetric_data' to task_document_kwargs")
-            self.relax_maker.task_document_kwargs["store_volumetric_data"] = ["locpot"]
-        else:
-            if (
-                "locpot"
-                not in self.relax_maker.task_document_kwargs["store_volumetric_data"]
-            ):
-                logger.warn(
-                    "Adding 'locpot' to task_document_kwargs['store_volumetric_data']"
-                )
-                self.relax_maker.task_document_kwargs["store_volumetric_data"].append(
-                    "locpot"
-                )
+        self.relax_maker.input_set_generator.user_incar_settings.update({"LVHAR": True})
+        vol_data_ = self.relax_maker.task_document_kwargs.get(
+            "store_volumetric_data", []
+        )
+        self.relax_maker.task_document_kwargs.update(
+            {"store_volumetric_data": ["locpot"] + vol_data_}
+        )
 
     def make(
         self,
