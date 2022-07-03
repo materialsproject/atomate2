@@ -251,7 +251,9 @@ def run_all_charge_states(
     outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     relax_maker = relax_maker or DEFAULT_RELAX_MAKER
-    if "locpot" not in relax_maker.task_document_kwargs["store_volumetric_data"]:
+    if "locpot" not in relax_maker.task_document_kwargs.get(
+        "store_volumetric_data", []
+    ):
         raise ValueError("The relax maker must store the locpot.")
     for qq in defect.get_charge_states():
         suffix = (
