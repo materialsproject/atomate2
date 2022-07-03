@@ -713,7 +713,7 @@ class Calculation(BaseModel):
                 frame_properties=[IonicStep(**x).dict() for x in vasprun.ionic_steps],
                 constant_lattice=False,
             )
-            vasp_objects[VaspObject.TRAJECTORY] = traj
+            vasp_objects[VaspObject.TRAJECTORY] = traj  # type: ignore
 
         # MD run
         if vasprun.parameters.get("IBRION", -1) == 0:

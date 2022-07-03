@@ -383,7 +383,7 @@ class TaskDocument(StructureMetadata):
             completed_at=calcs_reversed[-1].completed_at,
             input=InputSummary.from_vasp_calc_doc(calcs_reversed[0]),
             output=OutputSummary.from_vasp_calc_doc_and_trajectory(
-                calcs_reversed[-1], vasp_objects.get(VaspObject.TRAJECTORY, None)
+                calcs_reversed[-1], vasp_objects.get(VaspObject.TRAJECTORY)  # type: ignore
             ),
             state=_get_state(calcs_reversed, analysis),
             entry=cls.get_entry(calcs_reversed),
