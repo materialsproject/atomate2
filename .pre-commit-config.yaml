@@ -1,8 +1,4 @@
-exclude:  |
-  (?x)^(
-      src/atomate2/vasp/schemas/calc_types/|
-      tests/test_data/abinit/
-  )$
+exclude: ^(src/atomate2/vasp/schemas/calc_types/|tests/test_data/abinit/)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.3.0
