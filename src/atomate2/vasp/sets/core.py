@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
@@ -13,6 +14,9 @@ from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.common.schemas.math import Vector3D
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+logger = logging.getLogger(__name__)
+
 
 __all__ = [
     "RelaxSetGenerator",
@@ -897,7 +901,12 @@ class MDSetGenerator(VaspInputGenerator):
         )
 
         if Element("H") in structure.species:
-            updates["POTIM"] = 0.5
+            if updates["POTIM"] > 0.5:
+                logger.warning(
+                    f"Molecular dynamics time step is {updates['POTIM']}, which is "
+                    "typically too large for a structure contains H. Consider set it "
+                    "to a value of 0.5 or smaller."
+                )
 
         return updates
 
@@ -914,8 +923,7 @@ class MDSetGenerator(VaspInputGenerator):
         }
 
         try:
-            settings: dict[str, Any] = defaults[ensemble.lower()]  # type: ignore
-            return settings
+            return defaults[ensemble.lower()]  # type: ignore
         except KeyError:
             supported = tuple(defaults.keys())
             raise ValueError(
