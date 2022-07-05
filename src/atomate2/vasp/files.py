@@ -99,7 +99,7 @@ def copy_vasp_outputs(
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 
     if contcar_to_poscar:
-        rename_files({"CONTCAR": "POSCAR"}, file_client=file_client)
+        cp_contcar_to_poscar(allow_bad_contcar=True, file_client=file_client)
 
     logger.info("Finished copying inputs")
 
@@ -189,3 +189,17 @@ def write_vasp_input_set(
 
     logger.info("Writing VASP input set.")
     vis.write_input(directory, potcar_spec=potcar_spec, **kwargs)
+
+
+def cp_contcar_to_poscar(allow_bad_contcar: bool = True, **rename_files_kwargs):
+    """Check that the CONTCAR file can be parsed as a Structure.
+
+    Check for the unzipped CONTCAR file only.
+    """
+    try:
+        Structure.from_file("CONTCAR")
+    except Exception:
+        if not allow_bad_contcar:
+            raise RuntimeError("Could not parse CONTCAR file as Structure.")
+        return None
+    rename_files({"CONTCAR": "POSCAR"}, **rename_files_kwargs)
