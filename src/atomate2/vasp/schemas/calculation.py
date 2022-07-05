@@ -354,9 +354,8 @@ class CalculationOutput(BaseModel):
     )
     mag_density: float = Field(
         None,
-        description=(
-            "The magnetization density, defined as total_mag/volume (units of A^-3)"
-        ),
+        description="The magnetization density, defined as total_mag/volume "
+        "(units of A^-3)",
     )
     epsilon_static: Matrix3D = Field(
         None, description="The high-frequency dielectric constant"
@@ -403,10 +402,8 @@ class CalculationOutput(BaseModel):
     )
     dos_properties: Dict[str, Dict[str, Dict[str, float]]] = Field(
         None,
-        description=(
-            "Element- and orbital-projected band properties (in eV) for the DOS. "
-            "All properties are with respect to the Fermi level."
-        ),
+        description="Element- and orbital-projected band properties (in eV) for the "
+        "DOS. All properties are with respect to the Fermi level.",
     )
     run_stats: RunStatistics = Field(
         None, description="Summary of runtime statistics for this calculation"
