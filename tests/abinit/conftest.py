@@ -43,7 +43,8 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
-        ref_path = abinit_test_dir / _REF_PATHS[name]
+        index = CURRENT_JOB.job.index
+        ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
 
         atomate2.abinit.files.write_abinit_input_set(*args, **kwargs)
         check_abinit_inputs(ref_path)
@@ -60,7 +61,8 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
             from jobflow import CURRENT_JOB
 
             name = CURRENT_JOB.job.name
-            ref_path = abinit_test_dir / _REF_PATHS[name]
+            index = CURRENT_JOB.job.index
+            ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
             check_abinit_inputs(ref_path)
             fake_run_abinit(ref_path)
 
@@ -154,3 +156,8 @@ def copy_abinit_outputs(ref_path: Union[str, Path]):
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
+    for datadir in ["indata", "outdata", "tmpdata"]:
+        refdatadir = output_path / datadir
+        for file in refdatadir.iterdir():
+            if file.is_file():
+                shutil.copy(file, datadir)

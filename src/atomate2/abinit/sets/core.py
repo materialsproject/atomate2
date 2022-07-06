@@ -41,7 +41,7 @@ class GroundStateSetGenerator(AbinitInputGenerator):
     scf_algorithm: Optional[str] = None
     shifts: Union[str, tuple] = "Monkhorst-Pack"
 
-    restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:DEN",)
+    restart_from_deps: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
 
 
 @dataclass
