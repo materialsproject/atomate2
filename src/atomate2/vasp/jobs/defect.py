@@ -223,7 +223,6 @@ def spawn_defect_calcs(
 def run_all_charge_states(
     defect: Defect,
     relax_maker: RelaxMaker | None = None,
-    prev_vasp_dir: str | Path | None = None,
     sc_mat: NDArray | None = None,
     defect_index: str = "",
     add_info: dict | None = None,
@@ -240,8 +239,6 @@ def run_all_charge_states(
     relax_maker:
         A RelaxMaker object to use for the atomic relaxation.
         If None, the default will be used (see DEFAULT_RELAX_MAKER).
-    prev_vasp_dir:
-        The directory containing the previous VASP calculation.
     sc_mat:
         The supercell matrix. If None, the code will attempt to create a
         nearly-cubic supercell.
@@ -273,7 +270,7 @@ def run_all_charge_states(
         )
         charged_struct = sc_def_struct.copy()
         charged_struct.set_charge(qq)
-        charged_relax = relax_maker.make(charged_struct, prev_vasp_dir=prev_vasp_dir)
+        charged_relax = relax_maker.make(charged_struct)
         charged_relax.append_name(suffix)
 
         # write some provenances data in info.json file
@@ -287,13 +284,14 @@ def run_all_charge_states(
             {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
         )
         jobs.append(charged_relax)
-        charge_output: TaskDocument = charged_relax.output
+        charged_output: TaskDocument = charged_relax.output
 
         outputs[qq] = {
-            "structure": charge_output.structure,
-            "entry": charge_output.entry,
-            "dir_name": charge_output.dir_name,
+            "structure": charged_output.structure,
+            "entry": charged_output.entry,
+            "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
+            "task_document": charged_output.task_document,
         }
     add_flow = Flow(jobs, output=outputs)
     return Response(output=outputs, replace=add_flow)
