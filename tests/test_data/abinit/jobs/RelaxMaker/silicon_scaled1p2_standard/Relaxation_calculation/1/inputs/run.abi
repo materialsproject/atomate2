@@ -1,0 +1,71 @@
+##############################################
+####                SECTION: basic               
+##############################################
+ ecut 4.0
+ ngkpt 2 2 2
+ shiftk    0.5    0.5    0.5
+ nshiftk 1
+ kptopt 1
+ nsppol 1
+ nband 4
+ occopt 3
+ tolrff 0.02
+##############################################
+####                SECTION: files               
+##############################################
+ indata_prefix "indata/in"
+ outdata_prefix "outdata/out"
+ tmpdata_prefix "tmpdata/tmp"
+ pseudos "/home/davidwaroquiers/.abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4/Si/Si.psp8"
+##############################################
+####               SECTION: gstate               
+##############################################
+ chksymbreak 0
+ nspinor 1
+ nspden 1
+ charge 0.0
+ tsmear 0.0036749322175655 Ha
+##############################################
+####                 SECTION: rlx                
+##############################################
+ ionmov 3
+ optcell 2
+ ntime 80
+ tolmxf 5e-05
+ dilatmx 1.05
+ ecutsm 0.5
+##############################################
+####                  STRUCTURE                  
+##############################################
+ natom 2
+ ntypat 1
+ typat 1 1
+ znucl 14
+ xred
+    0.0000000000    0.0000000000    0.0000000000
+    0.7500000000    0.5000000000    0.7500000000
+ acell    1.0    1.0    1.0
+ rprim
+    7.7116307307    0.0000000000    0.0000000000
+    3.8558153653    6.6784705769    0.0000000000
+    0.0000000000   -4.4523104387    6.2965212844
+
+
+#<JSON>
+#{
+#    "pseudos": [
+#        {
+#            "basename": "Si.psp8",
+#            "type": "NcAbinitPseudo",
+#            "symbol": "Si",
+#            "Z": 14,
+#            "Z_val": 4.0,
+#            "l_max": 2,
+#            "md5": "45c393525680abc7b25445b8ec62bf83",
+#            "filepath": "/home/davidwaroquiers/.abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4/Si/Si.psp8",
+#            "@module": "pymatgen.io.abinit.pseudos",
+#            "@class": "NcAbinitPseudo"
+#        }
+#    ]
+#}
+#</JSON>

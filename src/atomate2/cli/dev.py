@@ -256,7 +256,6 @@ def abinit_test_data(test_name, test_data_dir, force):
     an outputs.json file and job folders in the current directory. Please refer to
     the atomate2 documentation on writing unit tests for more information.
     """
-    import os
     import sys
     import warnings
     from pathlib import Path
@@ -269,16 +268,14 @@ def abinit_test_data(test_name, test_data_dir, force):
     from atomate2.utils.path import strip_hostname
 
     if test_data_dir is None:
-        abinit_test_data_dir = Path(
-            os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                "..",
-                "..",
-                "..",
-                "tests",
-                "test_data",
-                "abinit",
-            )
+        abinit_test_data_dir = (
+            Path(__file__).parent
+            / ".."
+            / ".."
+            / ".."
+            / "tests"
+            / "test_data"
+            / "abinit"
         )
     else:
         abinit_test_data_dir = Path(test_data_dir) / "abinit"
@@ -295,10 +292,13 @@ def abinit_test_data(test_name, test_data_dir, force):
     maker = maker_info["maker"]
 
     maker_name = maker.__class__.__name__
+    maker_dir = abinit_test_data_dir / "jobs" / maker_name
+    if not maker_dir.exists():
+        maker_dir.mkdir()
     if isinstance(maker, BaseAbinitMaker):
-        test_dir = abinit_test_data_dir / "jobs" / maker_name / test_name
+        test_dir = maker_dir / test_name
     else:
-        test_dir = abinit_test_data_dir / "flows" / maker_name / test_name
+        test_dir = maker_dir / test_name
 
     def _makedir(directory, force_overwrite):
         if not directory.exists():
@@ -364,6 +364,33 @@ def abinit_test_data(test_name, test_data_dir, force):
                         "File is not a symbolic link nor a regular file."
                     )
 
+    def _fake_dirs(
+        src_dir,
+        dest_dir,
+        indata_files=None,
+        outdata_files=None,
+        tmpdata_files=None,
+        indata_fake_files=None,
+        outdata_fake_files=None,
+        tmpdata_fake_files=None,
+        force_overwrite=False,
+        allow_missing=True,
+    ):
+        for (dirdata_name, data_files, data_fake_files) in zip(
+            ("indata", "outdata", "tmpdata"),
+            (indata_files, outdata_files, tmpdata_files),
+            (indata_fake_files, outdata_fake_files, tmpdata_fake_files),
+        ):
+            _fake_dirdata(
+                src_dir=src_dir,
+                dest_dir=dest_dir,
+                dirdata_name=dirdata_name,
+                include_files=data_files,
+                include_fake_files=data_fake_files,
+                force_overwrite=force_overwrite,
+                allow_missing=allow_missing,
+            )
+
     for output in outputs:
         if not isinstance(output["output"], AbinitTaskDocument):
             # this is not an Abinit job
@@ -418,30 +445,15 @@ def abinit_test_data(test_name, test_data_dir, force):
             ],
             allow_missing=False,
         )
-        _fake_dirdata(
+        _fake_dirs(
             src_dir=orig_job_dir,
             dest_dir=input_dir,
-            dirdata_name="indata",
-            include_files=None,
-            include_fake_files=["in_DEN", "in_WFK"],
-            force_overwrite=force,
-            allow_missing=True,
-        )
-        _fake_dirdata(
-            src_dir=orig_job_dir,
-            dest_dir=input_dir,
-            dirdata_name="outdata",
-            include_files=None,
-            include_fake_files=None,
-            force_overwrite=force,
-            allow_missing=True,
-        )
-        _fake_dirdata(
-            src_dir=orig_job_dir,
-            dest_dir=input_dir,
-            dirdata_name="tmpdata",
-            include_files=None,
-            include_fake_files=None,
+            indata_files=None,
+            outdata_files=None,
+            tmpdata_files=None,
+            indata_fake_files=["in_DEN", "in_WFK"],
+            outdata_fake_files=None,
+            tmpdata_fake_files=None,
             force_overwrite=force,
             allow_missing=True,
         )
@@ -458,30 +470,15 @@ def abinit_test_data(test_name, test_data_dir, force):
             ],
             allow_missing=False,
         )
-        _fake_dirdata(
+        _fake_dirs(
             src_dir=orig_job_dir,
             dest_dir=output_dir,
-            dirdata_name="indata",
-            include_files=None,
-            include_fake_files=None,
-            force_overwrite=force,
-            allow_missing=True,
-        )
-        _fake_dirdata(
-            src_dir=orig_job_dir,
-            dest_dir=output_dir,
-            dirdata_name="outdata",
-            include_files=[],
-            include_fake_files=["out_DEN", "out_WFK"],
-            force_overwrite=force,
-            allow_missing=True,
-        )
-        _fake_dirdata(
-            src_dir=orig_job_dir,
-            dest_dir=output_dir,
-            dirdata_name="tmpdata",
-            include_files=None,
-            include_fake_files=None,
+            indata_files=None,
+            outdata_files=None,
+            tmpdata_files=None,
+            indata_fake_files=None,
+            outdata_fake_files=["out_DEN", "out_WFK"],
+            tmpdata_fake_files=None,
             force_overwrite=force,
             allow_missing=True,
         )
