@@ -335,6 +335,10 @@ def abinit_test_data(test_name, test_data_dir, force):
             raise RuntimeError(f"Source directory {src_dirdata} does not exist")
         dest_dirdata = dest_dir / dirdata_name
         _makedir(dest_dirdata, force_overwrite=force_overwrite)
+        empty_file = dest_dirdata / ".empty"
+        empty_file.write_text(
+            "Empty file for git to be able to have an empty directory"
+        )
         if include_files:
             copy_files(
                 src_dirdata,
