@@ -207,7 +207,6 @@ def spawn_defect_calcs(
             defect,
             sc_mat=sc_mat,
             relax_maker=relax_maker,
-            prev_vasp_dir=str(prv_calc_dir),
             defect_index=f"{name_counter[defect.name]}",
         )
         defect_q_jobs.append(q_job)
@@ -291,7 +290,6 @@ def run_all_charge_states(
             "entry": charged_output.entry,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
-            "task_document": charged_output.task_document,
         }
     add_flow = Flow(jobs, output=outputs)
     return Response(output=outputs, replace=add_flow)
