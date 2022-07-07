@@ -179,7 +179,6 @@ def spawn_defect_calcs(
     defect_gen: DefectGenerator,
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
-    prv_calc_dir: str | Path | None,
 ) -> Response:
     """Spawn defect calculations from the DefectGenerator.
 
@@ -190,8 +189,6 @@ def spawn_defect_calcs(
     sc_mat : NDArray
         The supercell matrix. If None, the code will attempt to create a
         nearly-cubic supercell.
-    prv_calc_dir : str | Path | None
-        The directory to copy the calculation settings from.
 
     Returns
     -------
