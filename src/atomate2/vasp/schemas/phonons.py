@@ -298,7 +298,7 @@ class PhononBSDOSDoc(BaseModel):
             )
 
             # will compute thermal displacement matrices
-            temperature_range_thermal_displacements = range(
+            temperature_range_thermal_displacements = np.arange(
                 kwargs["tmin_thermal_displacements"],
                 kwargs["tmax_thermal_displacements"],
                 kwargs["tstep_thermal_displacements"],
@@ -344,7 +344,7 @@ class PhononBSDOSDoc(BaseModel):
             kpath_scheme=kpath_scheme,
             kpoint_density_dos=kwargs["kpoint_density_dos"],
             freq_min_thermal_displacements=kwargs["freq_min_thermal_displacements"],
-            temperatures_thermal_displacements=temperature_range_thermal_displacements,
+            temperatures_thermal_displacements=temperature_range_thermal_displacements.tolist(),
             displacements_uuids=displacement_data["uuids"],
             displacements_job_dirs=displacement_data["dirs"],
             static_run_job_dir=kwargs["static_run_job_dir"],
