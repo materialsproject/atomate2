@@ -94,7 +94,19 @@ class FormationEnergyMaker(Maker):
     def __post_init__(self):
         """Post-initialization."""
         self.relax_maker = self.relax_maker.update_kwargs(
-            update={"_set": {"input_set_generator->user_incar_settings->LVHAR": True}},
+            update={
+                "_set": {
+                    "input_set_generator->user_incar_settings->LVHAR": True,
+                    "input_set_generator->use_structure_charge": True,
+                }
+            },
+            class_filter=RelaxMaker,
+            dict_mod=True,
+        )
+        self.relax_maker = self.relax_maker.update_kwargs(
+            update={
+                "_add_to_set": {"task_document_kwargs->store_volumetric_data": "locpot"}
+            },
             class_filter=RelaxMaker,
             dict_mod=True,
         )
