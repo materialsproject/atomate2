@@ -9,7 +9,6 @@ from typing import List
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
-from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -122,10 +121,9 @@ class PhononMaker(Maker):
     #  to easily use other codes to compute phonons?
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = SETTINGS.SYMPREC
+    symprec: float = 0.001  # SETTINGS.SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
-    supercell_matrix: Matrix3D | None = None
     use_primitive_standard_structure: bool = False
     use_conventional_standard_structure: bool = False
     bulk_relax_maker: BaseVaspMaker | None = field(
@@ -135,9 +133,6 @@ class PhononMaker(Maker):
     generate_phonon_displacements_kwargs: dict = field(default_factory=dict)
     run_phonon_displacements_kwargs: dict = field(default_factory=dict)
     born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
-    born_manual: List[Matrix3D] | None = None
-    full_born: bool = True
-    epsilon_static_manual: Matrix3D | None = None
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
     )
@@ -150,6 +145,11 @@ class PhononMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
+        born_manual: List[Matrix3D] | None = None,
+        full_born: bool = True,
+        epsilon_static_manual: Matrix3D | None = None,
+        supercell_matrix: Matrix3D | None = None,
+        total_dft_energy: float | None = None,
     ):
         """
         Make flow to calculate the elastic constant.
@@ -215,10 +215,10 @@ class PhononMaker(Maker):
             jobs.append(conv_job)
             structure = conv_job.output
 
-        # add a job to get the supercell size
-        if self.min_length is not None:
-            # currently also trying another algorithm
-            # to arrive at the supercell (based on ase)
+        # if supercell_matrix is None, supercell size will be determined
+        if supercell_matrix is not None:
+            self.supercell_matrix = None
+        else:
             supercell_job = get_supercell_size(structure, self.min_length)
             jobs.append(supercell_job)
             self.supercell_matrix = supercell_job.output
@@ -252,7 +252,9 @@ class PhononMaker(Maker):
         jobs.append(vasp_displacement_calcs)
 
         # Computation of BORN charges
-        if self.born_maker is not None:
+        if self.born_maker is not None and (
+            born_manual is None or epsilon_static_manual is None
+        ):
             born_job = self.born_maker.make(structure)
             jobs.append(born_job)
 
@@ -260,45 +262,46 @@ class PhononMaker(Maker):
         if self.static_energy_maker is not None:
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)
-
-        if self.born_maker is not None:
-            phonon_collect = generate_frequencies_eigenvectors(
-                supercell_matrix=self.supercell_matrix,
-                displacement=self.displacement,
-                sym_reduce=self.sym_reduce,
-                symprec=self.symprec,
-                use_standard_primitive=self.use_primitive_standard_structure,
-                kpath_scheme=self.kpath_scheme,
-                code=self.code,
-                structure=structure,
-                displacement_data=vasp_displacement_calcs.output,
-                epsilon_static=born_job.output.calcs_reversed[0].output.epsilon_static,
-                # TODO: could "born" also be added to the
-                #  standard outputs? currently, this is vasp specific!
-                born=born_job.output.calcs_reversed[0].output.outcar["born"],
-                full_born=True,
-                total_energy=static_job.output.output.energy,
-                create_thermal_displacements=self.create_thermal_displacements,
-                **self.generate_frequencies_eigenvectors_kwargs,
-            )
+            total_energy = static_job.output.output.energy
+            static_run_job_dir = static_job.output.dir_name
+            static_run_uuid = static_job.output.uuid
         else:
-            phonon_collect = generate_frequencies_eigenvectors(
-                structure=structure,
-                supercell_matrix=self.supercell_matrix,
-                displacement=self.displacement,
-                sym_reduce=self.sym_reduce,
-                symprec=self.symprec,
-                use_standard_primitive=self.use_primitive_standard_structure,
-                kpath_scheme=self.kpath_scheme,
-                code=self.code,
-                displacement_data=vasp_displacement_calcs.output,
-                epsilon_static=self.epsilon_static_manual,
-                born=self.born_manual,
-                full_born=self.full_born,
-                total_energy=static_job.output.output.energy,
-                create_thermal_displacements=self.create_thermal_displacements,
-                **self.generate_frequencies_eigenvectors_kwargs,
-            )
+            total_energy = total_dft_energy
+            static_run_job_dir = None
+            static_run_uuid = None
+        if self.born_maker is not None:
+            epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
+            born = born_job.output.calcs_reversed[0].output.outcar["born"]
+            full_born = True
+            born_run_job_dir = born_job.output.dir_name
+            born_run_uuid = born_job.output.uuid
+        else:
+            epsilon_static = epsilon_static_manual
+            born = born_manual
+            born_run_job_dir = None
+            born_run_uuid = None
+
+        phonon_collect = generate_frequencies_eigenvectors(
+            supercell_matrix=self.supercell_matrix,
+            displacement=self.displacement,
+            sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
+            use_standard_primitive=self.use_primitive_standard_structure,
+            kpath_scheme=self.kpath_scheme,
+            code=self.code,
+            structure=structure,
+            displacement_data=vasp_displacement_calcs.output,
+            epsilon_static=epsilon_static,
+            born=born,
+            full_born=full_born,
+            total_energy=total_energy,
+            static_run_job_dir=static_run_job_dir,
+            static_run_uuid=static_run_uuid,
+            born_run_job_dir=born_run_job_dir,
+            born_run_uuid=born_run_uuid,
+            create_thermal_displacements=self.create_thermal_displacements,
+            **self.generate_frequencies_eigenvectors_kwargs,
+        )
 
         jobs.append(phonon_collect)
         # # create a flow including all jobs for a phonon computation

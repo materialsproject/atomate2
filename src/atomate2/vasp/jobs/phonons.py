@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import List, Union
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -66,43 +68,6 @@ def get_supercell_size(
     return supercell_matrix
 
 
-# def get_phonon_object(
-#     structure: Structure,
-#     supercell_matrix: np.array,
-#     displacement: float,
-#     sym_reduce: bool,
-#     symprec: float,
-#     use_standard_primitive: bool,
-#     kpath_scheme: str,
-#     code: str,
-# ):
-#     if code == "vasp":
-#         factor = VaspToTHz
-#     # TODO: add other codes?
-#
-#     cell = get_phonopy_structure(structure)
-#     if use_standard_primitive and kpath_scheme != "seekpath":
-#         phonon = Phonopy(
-#             cell,
-#             supercell_matrix,
-#             primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-#             factor=factor,
-#             symprec=symprec,
-#             is_symmetry=sym_reduce,
-#         )
-#     else:
-#         phonon = Phonopy(
-#             cell,
-#             supercell_matrix,
-#             primitive_matrix="auto",
-#             factor=factor,
-#             symprec=symprec,
-#             is_symmetry=sym_reduce,
-#         )
-#     phonon.generate_displacements(distance=displacement)
-#     return phonon
-
-
 @job
 def generate_phonon_displacements(
     structure: Structure,
@@ -132,23 +97,21 @@ def generate_phonon_displacements(
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
     if use_standard_primitive and kpath_scheme != "seekpath":
-        phonon = Phonopy(
-            cell,
-            supercell_matrix,
-            primitive_matrix=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-            factor=factor,
-            symprec=symprec,
-            is_symmetry=sym_reduce,
-        )
+        primitive_matrix: Union[List[List[float]], str] = [
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0],
+        ]
     else:
-        phonon = Phonopy(
-            cell,
-            supercell_matrix,
-            primitive_matrix="auto",
-            factor=factor,
-            symprec=symprec,
-            is_symmetry=sym_reduce,
-        )
+        primitive_matrix = "auto"
+    phonon = Phonopy(
+        cell,
+        supercell_matrix,
+        primitive_matrix=primitive_matrix,
+        factor=factor,
+        symprec=symprec,
+        is_symmetry=sym_reduce,
+    )
     phonon.generate_displacements(distance=displacement)
 
     supercells = phonon.supercells_with_displacements
@@ -174,6 +137,13 @@ def generate_frequencies_eigenvectors(
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
     full_born: bool = True,
+    born_run_job_dir: str | Path | None = None,
+    born_run_uuid=None,
+    static_run_job_dir: str | Path | None = None,
+    static_run_uuid=None,
+    optimization_run_job_dir=None,
+    optimization_run_uuid=None,
+    # combine serval of these options
     npoints_band: int = 100,
     kpoint_density_dos: int = 7000,
     tol_imaginary_modes: float = 1e-5,
@@ -183,7 +153,11 @@ def generate_frequencies_eigenvectors(
     units="THz",
     img_format="eps",
     create_thermal_displacements=True,
-    freq_min=0.0,
+    freq_min_thermal_displacements=0.0,
+    tmin_thermal_displacements=0,
+    tmax_thermal_displacements=500,
+    tstep_thermal_displacements=100,
+    store_force_constants=True,
 ):
     """
     Compute phonon band structures and density of states.
@@ -214,8 +188,18 @@ def generate_frequencies_eigenvectors(
         tstep=tstep,
         units=units,
         img_format=img_format,
-        freq_min=freq_min,
+        freq_min_thermal_displacements=freq_min_thermal_displacements,
         create_thermal_displacements=create_thermal_displacements,
+        tmin_thermal_displacements=tmin_thermal_displacements,
+        tmax_thermal_displacements=tmax_thermal_displacements,
+        tstep_thermal_displacements=tstep_thermal_displacements,
+        store_force_constants=store_force_constants,
+        born_run_job_dir=born_run_job_dir,
+        static_run_job_dir=static_run_job_dir,
+        optimization_run_job_dir=optimization_run_job_dir,
+        born_run_uuid=born_run_uuid,
+        static_run_uuid=static_run_uuid,
+        optimization_run_uuid=optimization_run_uuid,
     )
 
     return phonon_doc
