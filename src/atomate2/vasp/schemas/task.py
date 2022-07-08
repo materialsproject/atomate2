@@ -194,11 +194,10 @@ class OutputSummary(BaseModel):
         cls, calc_doc: Calculation, trajectory: Optional[Trajectory] = None
     ) -> "OutputSummary":
         """
-        Create a summary of VASP calculation outputs from a VASP calculation document
-        or pymatgen Trajectory object.
+        Create a summary of VASP calculation outputs from a VASP calculation document.
 
         This will first look for ionic steps in the calculation document. If found, will
-        use it and ignore the trajectory. I not, will get ionic steps info from the
+        use it and ignore the trajectory. I not, will get ionic steps from the
         trajectory.
 
         Parameters
