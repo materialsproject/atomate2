@@ -816,8 +816,8 @@ class MDSetGenerator(VaspInputGenerator):
     Parameters
     ----------
     ensemble
-        Molecular dynamics ensemble to run. Options include `nvt`, `nve`, `npt`,
-        and `nph`.
+        Molecular dynamics ensemble to run. Options include `nvt`, `nve`, `npt`, and
+        `nph`.
     start_temp
         Starting temperature. The VASP `TEBEG` parameter.
     end_temp
@@ -869,7 +869,9 @@ class MDSetGenerator(VaspInputGenerator):
         updates = self._get_ensemble_defaults(self.ensemble)
 
         # Based on pymatgen.io.vasp.sets.MPMDSet. Changes include:
-        # LREAL: True -> AUTO
+        # LREAL: True -> Auto
+        # ADDGRID: True -> False
+        # EDIFF_PER_ATOM: 0.00001, removed in favor of EDIFF
         updates.update(
             {
                 "ENCUT": None,  # None to use VASP default
@@ -878,7 +880,6 @@ class MDSetGenerator(VaspInputGenerator):
                 "NSW": self.nsteps,
                 "POTIM": self.time_step,
                 "ISPIN": 2 if self.spin_polarized else 1,
-                "EDIFF_PER_ATOM": 0.00001,
                 "LSCALU": False,
                 "LCHARG": False,
                 "LPLANE": False,
@@ -896,7 +897,6 @@ class MDSetGenerator(VaspInputGenerator):
                 "KBLOCK": 100,
                 "PREC": "Normal",
                 "LDAU": False,
-                "ADDGRID": True,
             }
         )
 
@@ -904,7 +904,7 @@ class MDSetGenerator(VaspInputGenerator):
             if updates["POTIM"] > 0.5:
                 logger.warning(
                     f"Molecular dynamics time step is {updates['POTIM']}, which is "
-                    "typically too large for a structure contains H. Consider set it "
+                    "typically too large for a structure containing H. Consider set it "
                     "to a value of 0.5 or smaller."
                 )
 
