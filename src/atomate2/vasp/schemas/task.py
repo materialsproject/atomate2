@@ -190,22 +190,22 @@ class OutputSummary(BaseModel):
     )
 
     @classmethod
-    def from_vasp_calc_doc_and_trajectory(
-        cls, calc_doc: Calculation, traj: Union[Trajectory, None] = None
+    def from_vasp_calc_doc(
+        cls, calc_doc: Calculation, trajectory: Union[Trajectory, None] = None
     ) -> "OutputSummary":
         """
         Create a summary of VASP calculation outputs from a VASP calculation document
         or pymatgen Trajectory object.
 
         This will first look for ionic steps in the calculation document. If found, will
-        use it and ignore trajectory. I not found, will get ionic steps info from the
+        use it and ignore the trajectory. I not, will get ionic steps info from the
         trajectory.
 
         Parameters
         ----------
         calc_doc
             A VASP calculation document.
-        traj
+        trajectory
             A pymatgen Trajectory.
 
         Returns
@@ -217,8 +217,8 @@ class OutputSummary(BaseModel):
         if calc_doc.output.ionic_steps is not None:
             forces = calc_doc.output.ionic_steps[-1].forces
             stress = calc_doc.output.ionic_steps[-1].stress
-        elif traj is not None:
-            ionic_steps = traj.frame_properties
+        elif trajectory is not None:
+            ionic_steps = trajectory.frame_properties
             forces = ionic_steps[-1]["forces"]
             stress = ionic_steps[-1]["stress"]
         else:
@@ -382,7 +382,7 @@ class TaskDocument(StructureMetadata):
             author=author,
             completed_at=calcs_reversed[-1].completed_at,
             input=InputSummary.from_vasp_calc_doc(calcs_reversed[0]),
-            output=OutputSummary.from_vasp_calc_doc_and_trajectory(
+            output=OutputSummary.from_vasp_calc_doc(
                 calcs_reversed[-1], vasp_objects.get(VaspObject.TRAJECTORY)  # type: ignore
             ),
             state=_get_state(calcs_reversed, analysis),

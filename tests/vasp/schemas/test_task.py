@@ -87,7 +87,7 @@ def test_output_summary(vasp_test_dir, object_name, task_name):
     files = test_object.task_files[task_name]
     calc_doc, _ = Calculation.from_vasp_files(dir_name, task_name, **files)
 
-    test_doc = OutputSummary.from_vasp_calc_doc_and_trajectory(calc_doc)
+    test_doc = OutputSummary.from_vasp_calc_doc(calc_doc)
     valid_doc = test_object.task_doc["output"]
     assert_schemas_equal(test_doc, valid_doc)
 
