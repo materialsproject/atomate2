@@ -416,7 +416,7 @@ class CalculationOutput(BaseModel):
         outcar: Outcar,
         locpot: Optional[Locpot] = None,
         elph_poscars: Optional[List[Path]] = None,
-        store_ionic_steps: bool = True,
+        store_trajectory: bool = False,
     ) -> "CalculationOutput":
         """
         Create a VASP output document from VASP outputs.
@@ -432,8 +432,9 @@ class CalculationOutput(BaseModel):
         elph_poscars
             Path to displaced electron-phonon coupling POSCAR files generated using
             ``PHON_LMC = True``.
-        store_ionic_steps
-            Whether to store ionic steps. If `False`, the `ionic_steps` is left as None.
+        store_trajectory
+            Whether to store ionic steps as a pymatgen Trajectory object. If `True`,
+            the `ionic_steps` field is left as None.
 
         Returns
         -------
@@ -526,7 +527,7 @@ class CalculationOutput(BaseModel):
             frequency_dependent_dielectric=freq_dependent_diel,
             elph_displaced_structures=elph_structures,
             dos_properties=dosprop_dict,
-            ionic_steps=vasprun.ionic_steps if store_ionic_steps else None,
+            ionic_steps=vasprun.ionic_steps if not store_trajectory else None,
             locpot=locpot_avg,
             outcar=outcar_dict,
             run_stats=RunStatistics.from_outcar(outcar),
@@ -589,7 +590,7 @@ class Calculation(BaseModel):
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
-        store_ionic_steps: bool = True,
+        store_trajectory: bool = False,
         vasprun_kwargs: Optional[Dict] = None,
     ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """
@@ -643,10 +644,10 @@ class Calculation(BaseModel):
             This can help reduce the size of DOS objects in systems with many atoms.
         store_volumetric_data
             Which volumetric files to store.
-        store_ionic_steps
-            Whether to store ionic steps in the calculation output document. If `False`,
-            the ionic steps will be stored as `frame_properties` in a
-            :obj:`pymatgen.core.trajectory.Trajectory` object.
+        store_trajectory
+            Whether to store the ionic steps in a pymatgen Trajectory object. if `True`,
+            :obj:'.CalculationOutput.ionic_steps' is set to None to reduce duplicating
+            information.
         vasprun_kwargs
             Additional keyword arguments that will be passed to the Vasprun init.
 
@@ -702,9 +703,9 @@ class Calculation(BaseModel):
             outcar,
             locpot=locpot,
             elph_poscars=elph_poscars,
-            store_ionic_steps=store_ionic_steps,
+            store_trajectory=store_trajectory,
         )
-        if not store_ionic_steps:
+        if store_trajectory:
             traj = Trajectory.from_structures(
                 [d["structure"] for d in vasprun.ionic_steps],
                 frame_properties=[IonicStep(**x).dict() for x in vasprun.ionic_steps],
