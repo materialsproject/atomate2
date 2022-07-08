@@ -110,13 +110,6 @@ class FormationEnergyMaker(Maker):
             class_filter=RelaxMaker,
             dict_mod=True,
         )
-        self.relax_maker = self.relax_maker.update_kwargs(
-            update={
-                "_add_to_set": {"task_document_kwargs->store_volumetric_data": "locpot"}
-            },
-            class_filter=RelaxMaker,
-            dict_mod=True,
-        )
 
     def make(
         self,
