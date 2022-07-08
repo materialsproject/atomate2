@@ -582,7 +582,7 @@ class MDMaker(BaseVaspMaker):
     # Store ionic steps info in a pymatgen Trajectory object instead of in the output
     # document.
     task_document_kwargs: dict = field(
-        default_factory=lambda: {"store_trajectory": False}
+        default_factory=lambda: {"store_trajectory": True}
     )
 
 
