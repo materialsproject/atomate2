@@ -25,7 +25,7 @@ classifiers = [
 ]
 requires-python = '>="3.8"'
 dependencies = [
-    'pymatgen@git+https://github.com/materialsproject/pymatgen@master',
+    'pymatgen>=2022.7.8',
     'custodian>=2019.8.24',
     "pydantic",
     "monty",
@@ -56,7 +56,7 @@ tests = [
 ]
 strict = [
     "pydantic==1.9.0",
-    "pymatgen==2022.4.26",
+    "pymatgen==2022.7.8",
     "custodian==2022.2.13",
     "monty==2022.4.26",
     "jobflow==0.1.8",

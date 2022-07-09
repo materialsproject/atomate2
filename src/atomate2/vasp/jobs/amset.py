@@ -21,7 +21,7 @@ from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import HSEBSMaker, NonSCFMaker
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSEStaticSetGenerator,
@@ -50,7 +50,7 @@ class DenseUniformMaker(NonSCFMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -71,7 +71,7 @@ class DenseUniformMaker(NonSCFMaker):
     """
 
     name: str = "dense uniform"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: NonSCFSetGenerator(
             mode="uniform", reciprocal_density=1000, user_incar_settings={"LWAVE": True}
         )
@@ -91,7 +91,7 @@ class StaticDeformationMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -112,7 +112,7 @@ class StaticDeformationMaker(BaseVaspMaker):
     """
 
     name: str = "static deformation"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"reciprocal_density": 100},
             user_incar_settings={"KSPACING": None},
@@ -133,7 +133,7 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -154,7 +154,7 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
     """
 
     name: str = "static deformation"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: HSEStaticSetGenerator(
             user_kpoints_settings={"reciprocal_density": 100},
             user_incar_settings={"KSPACING": None},
@@ -171,7 +171,7 @@ class HSEDenseUniformMaker(HSEBSMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -192,7 +192,7 @@ class HSEDenseUniformMaker(HSEBSMaker):
     """
 
     name: str = "dense uniform"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: HSEBSSetGenerator(
             mode="uniform_dense",
             zero_weighted_reciprocal_density=1000,

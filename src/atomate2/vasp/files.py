@@ -13,7 +13,7 @@ from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
 
@@ -143,7 +143,7 @@ def get_largest_relax_extension(
 
 def write_vasp_input_set(
     structure: Structure,
-    input_set_generator: VaspInputSetGenerator,
+    input_set_generator: VaspInputGenerator,
     directory: Union[str, Path] = ".",
     from_prev: bool = False,
     apply_incar_updates: bool = True,
@@ -158,7 +158,7 @@ def write_vasp_input_set(
     ----------
     structure : .Structure
         A structure.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A VASP input set generator.
     directory : str or Path
         The directory to write the input files to.

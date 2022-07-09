@@ -18,7 +18,7 @@ def update_user_incar_settings(
     class_filter: type[Maker] | None = BaseVaspMaker,
 ) -> Job | Flow | Maker:
     """
-    Update the user_incar_settings of any VaspInputSetGenerators in the flow.
+    Update the user_incar_settings of any VaspInputGenerators in the flow.
 
     Alternatively, if a Maker is supplied, the user_incar_settings of the maker will
     be updated.
@@ -73,7 +73,7 @@ def update_user_potcar_settings(
     class_filter: type[Maker] | None = BaseVaspMaker,
 ) -> Job | Flow | Maker:
     """
-    Update the user_potcar_settings of any VaspInputSetGenerators in the flow.
+    Update the user_potcar_settings of any VaspInputGenerators in the flow.
 
     Alternatively, if a Maker is supplied, the user_potcar_settings of the maker will
     be updated.
@@ -128,7 +128,7 @@ def update_user_potcar_functional(
     class_filter: type[Maker] | None = BaseVaspMaker,
 ) -> Job | Flow | Maker:
     """
-    Update the user_potcar_functional of any VaspInputSetGenerators in the flow.
+    Update the user_potcar_functional of any VaspInputGenerators in the flow.
 
     Alternatively, if a Maker is supplied, the user_potcar_functional of the maker will
     be updated.
@@ -181,7 +181,7 @@ def update_user_kpoints_settings(
     class_filter: type[Maker] | None = BaseVaspMaker,
 ) -> Job | Flow | Maker:
     """
-    Update the user_kpoints_settings of any VaspInputSetGenerators in the flow.
+    Update the user_kpoints_settings of any VaspInputGenerators in the flow.
 
     Alternatively, if a Maker is supplied, the user_kpoints_settings of the maker will
     be updated.
@@ -243,7 +243,7 @@ def use_auto_ispin(
     class_filter: type[Maker] | None = BaseVaspMaker,
 ) -> Job | Flow | Maker:
     """
-    Update the auto_ispin setting of any VaspInputSetGenerators in the flow.
+    Update the auto_ispin setting of any VaspInputGenerators in the flow.
 
     Alternatively, if a Maker is supplied, the auto_ispin of the maker will be updated.
 
