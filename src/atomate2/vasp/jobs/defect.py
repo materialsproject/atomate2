@@ -144,8 +144,7 @@ def bulk_supercell_calculation(
     relax_maker : RelaxMaker
         The relax maker to use.
     sc_mat : NDArray | None
-        The supercell matrix. if None, the code will attempt to create a
-        nearly-cubic supercell.
+        The supercell matrix used to construct the simulation cell.
 
     Returns
     -------

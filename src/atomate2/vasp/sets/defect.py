@@ -52,8 +52,6 @@ class AtomicRelaxSetGenerator(VaspInputGenerator):
             "LAECHG": False,
             "NELMIN": 6,
             "ALGO": "Normal",
-            "NCORE": 4,
-            "GGA": None,
             "LCHARG": True,
             "ISMEAR": 0,
             "SIGMA": 0.05,

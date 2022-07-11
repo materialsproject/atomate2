@@ -18,8 +18,9 @@ logger = logging.getLogger(__name__)
 __all__ = ["CCDDocument", "WSWQ", "FiniteDifferenceDocument"]
 
 
-class DefectCalcSummary(BaseModel):
-    defect_entries: List[ComputedStructureEntry]
+# TODO: add the fields for the output of the formation energy calculation
+# class DefectCalcSummary(BaseModel):
+#     defect_entries: List[ComputedStructureEntry]
 
 
 class FiniteDifferenceDocument(BaseModel):
