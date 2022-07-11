@@ -74,9 +74,7 @@ DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": Tru
 DEFAULT_RELAX_MAKER.task_document_kwargs.update({"store_volumetric_data": ["locpot"]})
 
 
-################################################################################
-# Formation Energy                                                          ####
-################################################################################
+# For Formation Energy Calculations
 
 
 @job
@@ -367,9 +365,7 @@ def collect_defect_outputs(
     return output
 
 
-################################################################################
-# Configuration-Coordinate-Diagram (CCD)                                    ####
-################################################################################
+# For Configuration-Coordinate-Diagram (CCD) Calculations
 class CCDInput(BaseModel):
     """Document model to help construct CCDDocument."""
 

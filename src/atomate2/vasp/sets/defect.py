@@ -55,4 +55,7 @@ class AtomicRelaxSetGenerator(VaspInputGenerator):
             "NCORE": 4,
             "GGA": None,
             "LCHARG": True,
+            "ISMEAR": 0,
+            "SIGMA": 0.05,
+            "KSPACING": None,
         }

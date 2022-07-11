@@ -27,6 +27,7 @@ def copy_vasp_outputs(
     src_host: str | None = None,
     additional_vasp_files: Sequence[str] = tuple(),
     contcar_to_poscar: bool = True,
+    check_contcar: bool = False,
     file_client: FileClient | None = None,
 ):
     """
@@ -50,6 +51,8 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
+    allow_bad_contcar : bool
+        Whether to check CONTCAR for validity.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
@@ -99,7 +102,7 @@ def copy_vasp_outputs(
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 
     if contcar_to_poscar:
-        cp_contcar_to_poscar(allow_bad_contcar=True, file_client=file_client)
+        cp_contcar_to_poscar(check_contcar=check_contcar, file_client=file_client)
 
     logger.info("Finished copying inputs")
 
@@ -158,7 +161,7 @@ def write_vasp_input_set(
     ----------
     structure : .Structure
         A structure.
-    input_set_generator : .VaspInputGenerator
+    input_set_generator : .VaspInputSetGenerator
         A VASP input set generator.
     directory : str or Path
         The directory to write the input files to.
@@ -191,7 +194,7 @@ def write_vasp_input_set(
     vis.write_input(directory, potcar_spec=potcar_spec, **kwargs)
 
 
-def cp_contcar_to_poscar(allow_bad_contcar: bool = True, **rename_files_kwargs):
+def cp_contcar_to_poscar(check_contcar: bool = True, **rename_files_kwargs):
     """Check that the CONTCAR file can be parsed as a Structure.
 
     Check for the unzipped CONTCAR file only.
@@ -199,7 +202,7 @@ def cp_contcar_to_poscar(allow_bad_contcar: bool = True, **rename_files_kwargs):
     try:
         Structure.from_file("CONTCAR")
     except Exception:
-        if not allow_bad_contcar:
+        if check_contcar:
             raise RuntimeError("Could not parse CONTCAR file as Structure.")
         return None
     rename_files({"CONTCAR": "POSCAR"}, **rename_files_kwargs)

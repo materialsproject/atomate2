@@ -8,9 +8,10 @@ from pathlib import Path
 from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
+from jobflow.core.maker import recursive_call
 from numpy.typing import NDArray
 from pymatgen.analysis.defects2.generators import DefectGenerator
-from pymatgen.core.structure import Structure
+from pymatgen.core.structure import Lattice, Structure
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -30,17 +31,9 @@ from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
 
-################################################################################
-# Default settings                                                            ##
-################################################################################
+# Defaults
+DUMMY_STRUCT = Structure(Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]])
 
-DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
-DEFECT_INCAR_SETTINGS = {
-    "ISMEAR": 0,
-    "SIGMA": 0.05,
-    "KSPACING": None,
-    "ENCUT": 500,
-}
 DEFECT_KPOINT_SETTINGS = Kpoints(
     comment="special k-point",
     num_kpts=1,
@@ -52,19 +45,40 @@ DEFECT_KPOINT_SETTINGS = Kpoints(
 
 DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
-    user_incar_settings=DEFECT_INCAR_SETTINGS,
+    user_incar_settings={"LVHAR": True},
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
 
 DEFECT_STATIC_GENERATOR: StaticSetGenerator = StaticSetGenerator(
-    user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
 
+CCD_DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
-################################################################################
-# Formation Energy                                                            ##
-################################################################################
+
+# Define RelaxMaker Errors
+def check_relax_maker(maker: Maker):
+    """Check specific RelaxMaker settings
+
+    Check all nested RelaxMaker in to make sure specific Setting is set.
+
+    Parameters
+    ----------
+    maker : Maker
+        The Maker object to check.
+    """
+
+    def check_func(relax_maker: RelaxMaker):
+        input_gen = relax_maker.input_set_generator
+        vis = input_gen.get_input_set(DUMMY_STRUCT, potcar_spec=True)
+        if input_gen.use_structure_charge is False:
+            raise ValueError("use_structure_charge should be set to True")
+        if vis.incar["LVHAR"] is False:
+            raise ValueError("LVHAR should be set to True")
+        if vis.incar["ISIF"] != 2:
+            raise ValueError("ISIF should be 2")
+
+    recursive_call(maker, func=check_func, class_filter=RelaxMaker, nested=True)
 
 
 @dataclass
@@ -72,18 +86,19 @@ class FormationEnergyMaker(Maker):
     """Class to generate VASP input sets for the calculation of the formation energy
     diagram.
 
-    Parameters
+    Attributes
     ----------
     name: str
         The name of the flow created by this maker.
     relax_maker: .BaseVaspMaker or None
         A maker to perform a atomic-position-only relaxation on the defect charge
-        states.
-        If None, the defaults will be used.
+        states. If None, the defaults will be used.
+    validate_maker: bool
+        If True, the code will check the relax_maker for specific settings
     """
 
     name: str = "formation energy"
-
+    validate_maker: bool = True
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=DEFECT_RELAX_GENERATOR,
@@ -92,24 +107,9 @@ class FormationEnergyMaker(Maker):
     )
 
     def __post_init__(self):
-        """Post-initialization."""
-        self.relax_maker = self.relax_maker.update_kwargs(
-            update={
-                "_set": {
-                    "input_set_generator->user_incar_settings->LVHAR": True,
-                    "input_set_generator->use_structure_charge": True,
-                }
-            },
-            class_filter=RelaxMaker,
-            dict_mod=True,
-        )
-        self.relax_maker = self.relax_maker.update_kwargs(
-            update={
-                "_add_to_set": {"task_document_kwargs->store_volumetric_data": "locpot"}
-            },
-            class_filter=RelaxMaker,
-            dict_mod=True,
-        )
+        """Check the calculation settings."""
+        if self.validate_maker:
+            check_relax_maker(self.relax_maker)
 
     def make(
         self,
@@ -179,7 +179,7 @@ class ConfigurationCoordinateMaker(Maker):
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
     )
-    distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
+    distortions: tuple[float, ...] = CCD_DEFAULT_DISTORTIONS
 
     def make(
         self,
