@@ -208,7 +208,17 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        "molecular dynamics": {"incar_settings": ["NSW", "ISMEAR", "IBRION"]}
+        "molecular dynamics": {
+            "incar_settings": [
+                "IBRION",
+                "TBEN",
+                "TEND",
+                "NSW",
+                "POTIM",
+                "MDALGO",
+                "ISIF",
+            ]
+        }
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
