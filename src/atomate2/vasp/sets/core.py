@@ -876,8 +876,6 @@ class MDSetGenerator(VaspInputGenerator):
                 "NSW": self.nsteps,
                 "POTIM": self.time_step,
                 "LCHARG": False,
-                "LPLANE": False,
-                "LWAVE": True,
                 "NELMIN": 4,
                 "MAXMIX": 20,
                 "NELM": 500,
