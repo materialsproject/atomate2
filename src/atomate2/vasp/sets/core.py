@@ -826,8 +826,8 @@ class MDSetGenerator(VaspInputGenerator):
         Number of time steps for simulations. The VASP `NSW` parameter.
     time_step
         The time step (in femtosecond) for the simulation. The VASP `POTIM` parameter.
-    spin_polarized
-        Whether to do spin polarized calculations. The VASP `ISPIN` parameter.
+    **kwargs
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
     ensemble: str = "nvt"
@@ -835,7 +835,7 @@ class MDSetGenerator(VaspInputGenerator):
     end_temp: float = 300
     nsteps: int = 1000
     time_step: int = 2
-    spin_polarized: bool = False
+    auto_ispin: bool = True
 
     def get_incar_updates(
         self,
@@ -868,35 +868,24 @@ class MDSetGenerator(VaspInputGenerator):
         """
         updates = self._get_ensemble_defaults(self.ensemble)
 
-        # Based on pymatgen.io.vasp.sets.MPMDSet. Changes include:
-        # LREAL: True -> Auto
-        # ADDGRID: True -> False
-        # EDIFF_PER_ATOM: 0.00001, removed in favor of EDIFF
+        # Based on pymatgen.io.vasp.sets.MPMDSet.
         updates.update(
             {
-                "ENCUT": None,  # None to use VASP default
+                "ENCUT": 520,
                 "TEBEG": self.start_temp,
                 "TEEND": self.end_temp,
                 "NSW": self.nsteps,
                 "POTIM": self.time_step,
-                "ISPIN": 2 if self.spin_polarized else 1,
-                "LSCALU": False,
                 "LCHARG": False,
                 "LPLANE": False,
                 "LWAVE": True,
-                "ISMEAR": 0,
                 "NELMIN": 4,
-                "LREAL": "Auto",
-                "BMIX": 1,
                 "MAXMIX": 20,
                 "NELM": 500,
-                "NSIM": 4,
                 "ISYM": 0,
                 "IBRION": 0,
-                "NBLOCK": 1,
                 "KBLOCK": 100,
                 "PREC": "Normal",
-                "LDAU": False,
             }
         )
 
