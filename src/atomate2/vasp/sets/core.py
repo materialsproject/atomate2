@@ -816,8 +816,7 @@ class MDSetGenerator(VaspInputGenerator):
     Parameters
     ----------
     ensemble
-        Molecular dynamics ensemble to run. Options include `nvt`, `nve`, `npt`, and
-        `nph`.
+        Molecular dynamics ensemble to run. Options include `nvt`, `nve`, and `npt`.
     start_temp
         Starting temperature. The VASP `TEBEG` parameter.
     end_temp
@@ -866,7 +865,7 @@ class MDSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        updates = self._get_ensemble_defaults(self.ensemble)
+        updates = self._get_ensemble_defaults(structure, self.ensemble)
 
         # Based on pymatgen.io.vasp.sets.MPMDSet.
         updates.update(
@@ -900,15 +899,21 @@ class MDSetGenerator(VaspInputGenerator):
         return updates
 
     @staticmethod
-    def _get_ensemble_defaults(ensemble: str) -> dict[str, Any]:
+    def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
         """
         Get default params for the ensemble.
         """
         defaults = {
             "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
-            "npt": {"MDALGO": 3, "ISIF": 3},
-            "nph": {"MDALGO": 3, "ISIF": 3, "LANGEVIN_GAMMA_L": 0.0},
+            "npt": {
+                "MDALGO": 3,
+                "ISIF": 3,
+                "LANGEVIN_GAMMA": [10] * structure.ntypesp,
+                "LANGEVIN_GAMMA_L": 1,
+                "PMASS": 10,
+                "PSTRESS": 0,
+            },
         }
 
         try:
