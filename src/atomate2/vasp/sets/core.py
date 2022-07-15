@@ -1,15 +1,22 @@
 """Module defining core VASP input set generators."""
 
+from __future__ import annotations
+
+import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from pymatgen.core import Structure
+from pymatgen.core.periodic_table import Element
 from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.common.schemas.math import Vector3D
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+logger = logging.getLogger(__name__)
+
 
 __all__ = [
     "RelaxSetGenerator",
@@ -21,6 +28,7 @@ __all__ = [
     "HSEBSSetGenerator",
     "HSETightRelaxSetGenerator",
     "ElectronPhononSetGenerator",
+    "MDSetGenerator",
 ]
 
 
@@ -798,6 +806,121 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
             A dictionary of updates to apply to the KPOINTS config.
         """
         return {"reciprocal_density": self.reciprocal_density}
+
+
+@dataclass
+class MDSetGenerator(VaspInputGenerator):
+    """
+    Class to generate VASP molecular dynamics input sets.
+
+    Parameters
+    ----------
+    ensemble
+        Molecular dynamics ensemble to run. Options include `nvt`, `nve`, and `npt`.
+    start_temp
+        Starting temperature. The VASP `TEBEG` parameter.
+    end_temp
+        Final temperature. The VASP `TEEND` parameter.
+    nsteps
+        Number of time steps for simulations. The VASP `NSW` parameter.
+    time_step
+        The time step (in femtosecond) for the simulation. The VASP `POTIM` parameter.
+    **kwargs
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
+    """
+
+    ensemble: str = "nvt"
+    start_temp: float = 300
+    end_temp: float = 300
+    nsteps: int = 1000
+    time_step: int = 2
+    auto_ispin: bool = True
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = 0,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a molecular dynamics job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        updates = self._get_ensemble_defaults(structure, self.ensemble)
+
+        # Based on pymatgen.io.vasp.sets.MPMDSet.
+        updates.update(
+            {
+                "ENCUT": 520,
+                "TEBEG": self.start_temp,
+                "TEEND": self.end_temp,
+                "NSW": self.nsteps,
+                "POTIM": self.time_step,
+                "LCHARG": False,
+                "NELMIN": 4,
+                "MAXMIX": 20,
+                "NELM": 500,
+                "ISYM": 0,
+                "IBRION": 0,
+                "KBLOCK": 100,
+                "PREC": "Normal",
+            }
+        )
+
+        if Element("H") in structure.species:
+            if updates["POTIM"] > 0.5:
+                logger.warning(
+                    f"Molecular dynamics time step is {updates['POTIM']}, which is "
+                    "typically too large for a structure containing H. Consider set it "
+                    "to a value of 0.5 or smaller."
+                )
+
+        return updates
+
+    @staticmethod
+    def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
+        """
+        Get default params for the ensemble.
+        """
+        defaults = {
+            "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
+            "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
+            "npt": {
+                "MDALGO": 3,
+                "ISIF": 3,
+                "LANGEVIN_GAMMA": [10] * structure.ntypesp,
+                "LANGEVIN_GAMMA_L": 1,
+                "PMASS": 10,
+                "PSTRESS": 0,
+            },
+        }
+
+        try:
+            return defaults[ensemble.lower()]  # type: ignore
+        except KeyError:
+            supported = tuple(defaults.keys())
+            raise ValueError(
+                f"Expect `ensemble` to be one of {supported}; got {ensemble}."
+            )
 
 
 def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
