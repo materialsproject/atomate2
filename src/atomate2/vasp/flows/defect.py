@@ -59,7 +59,7 @@ CCD_DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 # Define RelaxMaker Errors
 def check_relax_maker(maker: Maker):
-    """Check specific RelaxMaker settings
+    """Check specific RelaxMaker settings.
 
     Check all nested RelaxMaker in to make sure specific Setting is set.
 
@@ -85,8 +85,7 @@ def check_relax_maker(maker: Maker):
 
 @dataclass
 class FormationEnergyMaker(Maker):
-    """Class to generate VASP input sets for the calculation of the formation energy
-    diagram.
+    """Maker class to help calculate of the formation energy diagram.
 
     Attributes
     ----------
