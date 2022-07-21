@@ -138,8 +138,8 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
-    from pymatgen.analysis.defects2.core import Defect
-    from pymatgen.analysis.defects2.generators import SubstitutionGenerator
+    from pymatgen.analysis.defects.core import Defect
+    from pymatgen.analysis.defects.generators import SubstitutionGenerator
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker

@@ -8,9 +8,10 @@ from pathlib import Path
 from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
-from jobflow.core.maker import recursive_call
+
+# from jobflow.core.maker import recursive_call
 from numpy.typing import NDArray
-from pymatgen.analysis.defects2.generators import DefectGenerator
+from pymatgen.analysis.defects.generators import DefectGenerator
 from pymatgen.core.structure import Lattice, Structure
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
@@ -78,7 +79,8 @@ def check_relax_maker(maker: Maker):
         if vis.incar["ISIF"] != 2:
             raise ValueError("ISIF should be 2")
 
-    recursive_call(maker, func=check_func, class_filter=RelaxMaker, nested=True)
+    # TODO: add this check after JobFlow is updated to support recursive_call
+    # recursive_call(maker, func=check_func, class_filter=RelaxMaker, nested=True)
 
 
 @dataclass

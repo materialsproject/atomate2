@@ -11,13 +11,13 @@ import numpy as np
 from jobflow import Flow, Response, job
 from numpy.typing import NDArray
 from pydantic import BaseModel
-from pymatgen.analysis.defects2.core import Defect
-from pymatgen.analysis.defects2.generators import DefectGenerator
-from pymatgen.analysis.defects2.supercells import (
+from pymatgen.analysis.defects.core import Defect
+from pymatgen.analysis.defects.generators import DefectGenerator
+from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
-from pymatgen.analysis.defects2.thermo import DefectEntry
+from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
@@ -350,10 +350,11 @@ def collect_defect_outputs(
                 defect=defect,
                 charge_state=int(qq),
                 sc_entry=sc_entry,
-                dielectric=dielectric,
             )
             plot_data = def_ent.get_freysoldt_correction(
-                defect_locpots[int(qq)], bulk_locpot
+                defect_locpots[int(qq)],
+                bulk_locpot,
+                dielectric=dielectric,
             )
             defect_entries.append(def_ent)
             fnv_plots[int(qq)] = plot_data
