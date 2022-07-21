@@ -42,9 +42,7 @@ from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 
 _logger = logging.getLogger(__name__)
 
-################################################################################
-# Default settings                                                            ##
-################################################################################
+# Default settings
 
 DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 DEFECT_INCAR_SETTINGS = {
@@ -100,8 +98,8 @@ def get_supercell_from_prv_calc(
     -------
     Response:
         Output containing the supercell transformation and the dir_name
-    """
 
+    """
     fc = FileClient()
     files = fc.listdir(prv_calc_dir)
     vasprun_file = Path(prv_calc_dir) / get_zfile(files, "vasprun.xml")
