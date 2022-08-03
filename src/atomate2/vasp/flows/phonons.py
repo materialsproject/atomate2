@@ -9,6 +9,7 @@ from typing import List
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -55,7 +56,11 @@ class PhononMaker(Maker):
     sym_reduce : bool
         Whether to reduce the number of deformations using symmetry.
     symprec : float
-        Symmetry precision to use in the reduction of symmetry.
+        Symmetry precision to use in the
+        reduction of symmetry to find the primitive/conventional cell
+        (use_primitive_standard_structure, use_conventional_standard_structure)
+    symprec_phonopy : float
+        Symmetry precision for all phonopy-related symmetry searches
     displacement: float
         displacement distance for phonons
     min_length: float
@@ -82,7 +87,8 @@ class PhononMaker(Maker):
          We will however use seekpath and primitive structures
         from phonopy to compute the phonon band structure
     bulk_relax_maker : .BaseVaspMaker or None
-        A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
+        A maker to perform a tight relaxation on the bulk.
+        Set to ``None`` to skip the
         bulk relaxation
     generate_phonon_diplsacements_kwargs: dict
         keyword arguments paseed to :oj: enerate_phonon_displacements
@@ -121,7 +127,8 @@ class PhononMaker(Maker):
     #  to easily use other codes to compute phonons?
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 0.001  # SETTINGS.SYMPREC
+    symprec: float = SETTINGS.SYMPREC
+    symprec_phonopy: float = 0.001
     displacement: float = 0.01
     min_length: float | None = 20.0
     use_primitive_standard_structure: bool = False
@@ -235,7 +242,7 @@ class PhononMaker(Maker):
             supercell_matrix=self.supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
-            symprec=self.symprec,
+            symprec=self.symprec_phonopy,
             use_standard_primitive=self.use_primitive_standard_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
@@ -285,7 +292,7 @@ class PhononMaker(Maker):
             supercell_matrix=self.supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
-            symprec=self.symprec,
+            symprec=self.symprec_phonopy,
             use_standard_primitive=self.use_primitive_standard_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,

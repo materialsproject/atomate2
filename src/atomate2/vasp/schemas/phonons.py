@@ -5,7 +5,7 @@ import logging
 from typing import List, Union
 
 import numpy as np
-from phonopy import Phonopy, load
+from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import elaborate_borns_and_epsilon
 from phonopy.units import VaspToTHz
@@ -219,7 +219,7 @@ class PhononBSDOSDoc(BaseModel):
 
         # still not working
         phonon.save("phonopy.yaml")
-        phonon = load("phonopy.yaml")
+        # phonon = load("phonopy.yaml")
         # get phonon band structure
 
         kpath_dict, kpath_concrete = cls.get_kpath(
