@@ -96,22 +96,6 @@ class PhononMaker(Maker):
         Keyword arguments passed to :obj:`run_phonon_displacements__kwargs`.
     born_maker: .BaseVaspMaker or None
         Maker to compute the BORN charges.
-    born_manual: Matrix3D
-        Instead of recomputing born charges and epsilon,
-         these values can also be provided manually. born_maker has to
-        be None
-        if full_born==False, it will expect Phonopy convention for symmetrically
-        inequivalent atoms
-        if fullborn==True, it will expect VASP convention with information for
-        every atom in unit cell. Please be careful when converting
-        structures within in this workflow
-    full_born: bool
-        reduced born file (only symmerically inequivalent atoms)
-         or full information on born
-    epsilon_static_manual: Matrix3D
-        Instead of recomputing born charges and epsilon,
-         these values can also be provided manually. born_maker has to
-        be None
     phonon_displacement_maker : .BaseVaspMaker or None
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
@@ -167,6 +151,23 @@ class PhononMaker(Maker):
             A pymatgen structure.
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
+        born_manual: Matrix3D
+            Instead of recomputing born charges and epsilon,
+            these values can also be provided manually. born_maker has to
+            be None
+            if full_born==False, it will expect Phonopy convention for symmetrically
+            inequivalent atoms
+            if fullborn==True, it will expect VASP convention with information for
+            every atom in unit cell. Please be careful when converting
+            structures within in this workflow
+        full_born: bool
+            reduced born file (only symmerically inequivalent atoms)
+            or full information on born
+        epsilon_static_manual: Matrix3D
+            Instead of recomputing born charges and epsilon,
+            these values can also be provided manually. born_maker has to
+            be None
+
         """
         # TODO: check how magnetic structures are treated?
         #  only ferromagnetic settings?

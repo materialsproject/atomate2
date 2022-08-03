@@ -31,6 +31,59 @@ logger = logging.getLogger(__name__)
 __all__ = ["PhononBSDOSDoc"]
 
 
+class PhononComputationalSettings(BaseModel):
+    # could be optional and implemented at a later stage?
+    npoints_band: int = Field("number of points for band structure computation")
+    kpath_scheme: str = Field("indicates the kpath scheme")
+    kpoint_density_dos: int = Field(
+        "number of points for computation of free energies and densities of states",
+    )
+
+
+class ThermalDisplacementData(BaseModel):
+    freq_min_thermal_displacements: float = Field(
+        "cutoff frequency in THz to avoid numerical issues in the "
+        "computation of the thermal displacement parameters"
+    )
+    thermal_displacement_matrix_cif: List[List[Matrix3D]] = Field(
+        None, description="field including thermal displacement matrices in cif format"
+    )
+    thermal_displacement_matrix: List[List[Matrix3D]] = Field(
+        None,
+        description="field including thermal displacement matrices in cartesian coordinate system",
+    )
+
+    temperatures_thermal_displacements: List[int] = Field(
+        None,
+        description="temperatures at which the thermal displacement matrices"
+        "have been computed",
+    )
+
+
+class PhononUUIDs(BaseModel):
+    optimization_run_uuid: str = Field(None, description="optimization run uuid")
+    displacements_uuids: List[str] = Field(
+        None, description="The uuids of the displacement jobs."
+    )
+    static_run_uuid: str = Field(None, description="static run uuid")
+    born_run_uuid: str = Field(None, description="born run uuid")
+
+
+class PhononJobDirs(BaseModel):
+    displacements_job_dirs: List[str] = Field(
+        None, description="The directories where the displacement jobs were run."
+    )
+    static_run_job_dir: str = Field(
+        None, description="Directory where static run was performed."
+    )
+    born_run_job_dir: str = Field(
+        None, description="Directory where born run was performed."
+    )
+    optimization_run_job_dir: str = Field(
+        None, description="Directory where optimization run was performed."
+    )
+
+
 class PhononBSDOSDoc(BaseModel):
     """
     Phonon band structures and density of states data.
@@ -96,47 +149,18 @@ class PhononBSDOSDoc(BaseModel):
     )
 
     code: str = Field("String describing the code for the computation")
-    thermal_displacement_matrix_cif: List[List[Matrix3D]] = Field(
-        None, description="field including thermal displacement matrices in cif format"
-    )
-    thermal_displacement_matrix: List[List[Matrix3D]] = Field(
-        None,
-        description="field including thermal displacement matrices in cartesian coordinate system",
-    )
-    # could be optional and implemented at a later stage?
-    npoints_band: int = Field("number of points for band structure computation")
-    kpath_scheme: str = Field("indicates the kpath scheme")
-    kpoint_density_dos: int = Field(
-        "number of points for computation of free energies and densities of states",
-    )
-    freq_min_thermal_displacements: float = Field(
-        "cutoff frequency in THz to avoid numerical issues in the "
-        "computation of the thermal displacement parameters"
-    )
-    temperatures_thermal_displacements: List[int] = Field(
-        None,
-        description="temperatures at which the thermal displacement matrices"
-        "have been computed",
+
+    phonopy_settings: PhononComputationalSettings = Field(
+        "Field including settings for Phonopy"
     )
 
-    displacements_uuids: List[str] = Field(
-        None, description="The uuids of the displacement jobs."
+    thermal_displacement_data: ThermalDisplacementData = Field(
+        "Includes all data of the " "computation of the thermal displacements"
     )
-    displacements_job_dirs: List[str] = Field(
-        None, description="The directories where the displacement jobs were run."
-    )
-    static_run_job_dir: str = Field(
-        None, description="Directory where static run was performed."
-    )
-    static_run_uuid: str = Field(None, description="static run uuid")
-    born_run_job_dir: str = Field(
-        None, description="Directory where born run was performed."
-    )
-    born_run_uuid: str = Field(None, description="born run uuid")
-    optimization_run_job_dir: str = Field(
-        None, description="Directory where optimization run was performed."
-    )
-    optimization_run_uuid: str = Field(None, description="optimization run uuid")
+
+    jobdirs: PhononJobDirs = Field("Field including all relevant job directories")
+
+    uuids: PhononUUIDs = Field("Field including all relevant uuids")
 
     @classmethod
     def from_forces_born(
@@ -217,9 +241,7 @@ class PhononBSDOSDoc(BaseModel):
 
         phonon.produce_force_constants(forces=set_of_forces)
 
-        # still not working
         phonon.save("phonopy.yaml")
-        # phonon = load("phonopy.yaml")
         # get phonon band structure
 
         kpath_dict, kpath_concrete = cls.get_kpath(
@@ -255,7 +277,6 @@ class PhononBSDOSDoc(BaseModel):
 
         # gets data for visualization on website - yaml is also enough
         phononwebsite_dict = bs_symm_line.as_phononwebsite()
-        # TODO: should we include any other animation output?
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
@@ -338,21 +359,31 @@ class PhononBSDOSDoc(BaseModel):
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
             code="vasp",
-            thermal_displacement_matrix_cif=tdisp_mat_cif,
-            thermal_displacement_matrix=tdisp_mat,
-            npoints_band=kwargs["npoints_band"],
-            kpath_scheme=kpath_scheme,
-            kpoint_density_dos=kwargs["kpoint_density_dos"],
-            freq_min_thermal_displacements=kwargs["freq_min_thermal_displacements"],
-            temperatures_thermal_displacements=temperature_range_thermal_displacements.tolist(),
-            displacements_uuids=displacement_data["uuids"],
-            displacements_job_dirs=displacement_data["dirs"],
-            static_run_job_dir=kwargs["static_run_job_dir"],
-            static_run_uuid=kwargs["static_run_uuid"],
-            born_run_job_dir=kwargs["born_run_job_dir"],
-            born_run_uuid=kwargs["born_run_uuid"],
-            optimization_run_job_dir=kwargs["optimization_run_job_dir"],
-            optimization_run_uuid=kwargs["optimization_run_uuid"],
+            thermal_displacement_data={
+                "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),
+                "thermal_displacement_matrix_cif": tdisp_mat_cif,
+                "thermal_displacement_matrix": tdisp_mat,
+                "freq_min_thermal_displacements": kwargs[
+                    "freq_min_thermal_displacements"
+                ],
+            },
+            jobdirs={
+                "displacements_job_dirs": displacement_data["dirs"],
+                "static_run_job_dir": kwargs["static_run_job_dir"],
+                "born_run_job_dir": kwargs["born_run_job_dir"],
+                "optimization_run_job_dir": kwargs["optimization_run_job_dir"],
+            },
+            uuids={
+                "displacements_uuids": displacement_data["uuids"],
+                "born_run_uuid": kwargs["born_run_uuid"],
+                "optimization_run_uuid": kwargs["optimization_run_uuid"],
+                "static_run_uuid": kwargs["static_run_uuid"],
+            },
+            phonopy_settings={
+                "npoints_band": kwargs["npoints_band"],
+                "kpath_scheme": kpath_scheme,
+                "kpoint_density_dos": kwargs["kpoint_density_dos"],
+            },
         )
 
     @staticmethod
