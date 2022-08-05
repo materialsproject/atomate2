@@ -169,21 +169,11 @@ class PhononMaker(Maker):
             be None
 
         """
-        # TODO: check how magnetic structures are treated?
-        #  only ferromagnetic settings?
-        # TODO: add more flexibility, allow other codes
-        #  -> different conversion factors in phonopy needed
         # TODO: check if there is a better way to access
         #  born charges than via outcar["born"]?
         # TODO: make sure all parameters are tight enough
         #  for phonons! Cross-check with A.B. workflow
-        # TODO: check kpath and primitive structure convention!
-        #  (if not possible yet)
         # TODO: can we add some kind of convergence test?
-        # TODO: can we get rid of the dependency
-        #  on a phonopy function not part of the API?
-        # TODO: switch off charge creation for
-        #  static phonon runs -> too much data
         # TODO: potentially improve supercell transformation -
         #  does not always find cell with lattice parameters close to
         # 90
@@ -193,7 +183,6 @@ class PhononMaker(Maker):
             not self.use_primitive_standard_structure
             and self.kpath_scheme != "seekpath"
         ):
-            # TODO: make it a warning?
             raise ValueError(
                 "You can only use other kpath schemes with the primitive standard structure"
             )
@@ -277,6 +266,7 @@ class PhononMaker(Maker):
             total_energy = total_dft_energy
             static_run_job_dir = None
             static_run_uuid = None
+
         if self.born_maker is not None:
             epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
             born = born_job.output.calcs_reversed[0].output.outcar["born"]

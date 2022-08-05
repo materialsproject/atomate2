@@ -104,7 +104,6 @@ class PhononBSDOSDoc(BaseModel):
         description="Phonon density of states object.",
     )
 
-    # TODO: improve this data structure
     free_energy_list: List[float] = Field(
         None,
         description="vibrational part of the free energies in kJ/mol per "
@@ -209,7 +208,6 @@ class PhononBSDOSDoc(BaseModel):
             is_symmetry=sym_reduce,
         )
         phonon.generate_displacements(distance=displacement)
-
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
         if born is not None and epsilon_static is not None:
@@ -243,9 +241,10 @@ class PhononBSDOSDoc(BaseModel):
 
         phonon.save("phonopy.yaml")
         # get phonon band structure
-
         kpath_dict, kpath_concrete = cls.get_kpath(
-            get_pmg_structure(phonon.primitive), kpath_scheme
+            structure=get_pmg_structure(phonon.primitive),
+            kpath_scheme=kpath_scheme,
+            symprec=symprec,
         )
 
         # Okay or do I need to implement
@@ -308,6 +307,8 @@ class PhononBSDOSDoc(BaseModel):
             / structure.composition.reduced_composition.num_atoms
         )
         if kwargs["create_thermal_displacements"]:
+            # will compute thermal displacement matrices
+            # for the primitive cell (phonon.primitive!)
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -318,7 +319,6 @@ class PhononBSDOSDoc(BaseModel):
                 freq_min=kwargs["freq_min_thermal_displacements"],
             )
 
-            # will compute thermal displacement matrices
             temperature_range_thermal_displacements = np.arange(
                 kwargs["tmin_thermal_displacements"],
                 kwargs["tmax_thermal_displacements"],
@@ -326,7 +326,7 @@ class PhononBSDOSDoc(BaseModel):
             )
             for i, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
-                    get_phonopy_structure(structure),
+                    phonon.primitive,
                     i,
                     filename="tdispmat_" + str(temp) + "K.cif",
                 )
@@ -387,7 +387,9 @@ class PhononBSDOSDoc(BaseModel):
         )
 
     @staticmethod
-    def get_kpath(structure: Structure, kpath_scheme: str, **kpath_kwargs):
+    def get_kpath(
+        structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
+    ):
         """
         get high-symmetry points in k-space
         Args:
@@ -397,18 +399,18 @@ class PhononBSDOSDoc(BaseModel):
 
         if kpath_scheme in [
             "setyawan_curtarolo",
-            "hinuma",  # is the same as seekpath?!
             "latimer_munro",
             "all_pymatgen",
+            "hinuma",
         ]:
             if kpath_scheme == "all_pymatgen":
                 kpath_scheme = "all"
             highsymmkpath = HighSymmKpath(
-                structure, path_type=kpath_scheme, **kpath_kwargs
+                structure, path_type=kpath_scheme, symprec=symprec, **kpath_kwargs
             )
             kpath = highsymmkpath.kpath
         elif kpath_scheme == "seekpath":
-            highsymmkpath = KPathSeek(structure, **kpath_kwargs)
+            highsymmkpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
             kpath = highsymmkpath._kpath
 
         path = copy.deepcopy(kpath["path"])
