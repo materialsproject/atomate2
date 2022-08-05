@@ -61,25 +61,31 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     For examples, see the tests in tests/vasp/makers/core.py.
     """
     import atomate2.vasp.jobs.base
+    import atomate2.vasp.jobs.defect
     import atomate2.vasp.run
-    from atomate2.vasp.sets.base import VaspInputSetGenerator
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
-    def mock_run_vasp():
+    def mock_run_vasp(*args, **kwargs):
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
         ref_path = vasp_test_dir / _REF_PATHS[name]
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
-    get_input_set_orig = VaspInputSetGenerator.get_input_set
+    get_input_set_orig = VaspInputGenerator.get_input_set
 
     def mock_get_input_set(self, *args, **kwargs):
         kwargs["potcar_spec"] = True
         return get_input_set_orig(self, *args, **kwargs)
 
+    def mock_get_nelect(*_, **__):
+        return 12
+
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(VaspInputSetGenerator, "get_input_set", mock_get_input_set)
+    monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
+    monkeypatch.setattr(VaspInputGenerator, "get_input_set", mock_get_input_set)
+    monkeypatch.setattr(VaspInputGenerator, "get_nelect", mock_get_nelect)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
         if fake_run_vasp_kwargs is None:
@@ -186,7 +192,7 @@ def check_kpoints(ref_path: Union[str, Path]):
 
         if user.get("KSPACING", None) != ref.get("KSPACING", None):
             raise ValueError(
-                "KSPACING is not inconsistent: "
+                "KSPACING is not consistent: "
                 f"{user.get('KSPACING', None)} != {ref.get('KSPACING', None)}"
             )
 

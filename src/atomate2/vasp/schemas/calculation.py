@@ -12,6 +12,7 @@ from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import BandStructure
 from pymatgen.electronic_structure.core import OrbitalType
 from pymatgen.electronic_structure.dos import CompleteDos, Dos
@@ -313,7 +314,7 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
     e_wo_entrp: float = Field(None, description="The energy without entropy.")
     e_0_energy: float = Field(None, description="The internal energy.")
     forces: List[Vector3D] = Field(None, description="The forces on each atom.")
-    stress: List[Vector3D] = Field(None, description="The stress on the lattice.")
+    stress: Matrix3D = Field(None, description="The stress on the lattice.")
     electronic_steps: List[ElectronicStep] = Field(
         None, description="The electronic convergence steps."
     )
@@ -353,7 +354,8 @@ class CalculationOutput(BaseModel):
     )
     mag_density: float = Field(
         None,
-        description="The magnetization density, defined as total_mag/volume (units of A^-3)",
+        description="The magnetization density, defined as total_mag/volume "
+        "(units of A^-3)",
     )
     epsilon_static: Matrix3D = Field(
         None, description="The high-frequency dielectric constant"
@@ -371,7 +373,7 @@ class CalculationOutput(BaseModel):
         "calculation",
     )
     ionic_steps: List[IonicStep] = Field(
-        None, description="Energy, forces, and structure for each ionic step"
+        None, description="Energy, forces, structure, etc. for each ionic step"
     )
     locpot: Dict[int, List[float]] = Field(
         None, description="Average of the local potential along the crystal axes"
@@ -400,8 +402,8 @@ class CalculationOutput(BaseModel):
     )
     dos_properties: Dict[str, Dict[str, Dict[str, float]]] = Field(
         None,
-        description="Element- and orbital-projected band properties (in eV) for the DOS. "
-        "All properties are with respect to the Fermi level.",
+        description="Element- and orbital-projected band properties (in eV) for the "
+        "DOS. All properties are with respect to the Fermi level.",
     )
     run_stats: RunStatistics = Field(
         None, description="Summary of runtime statistics for this calculation"
@@ -414,6 +416,7 @@ class CalculationOutput(BaseModel):
         outcar: Outcar,
         locpot: Optional[Locpot] = None,
         elph_poscars: Optional[List[Path]] = None,
+        store_trajectory: bool = False,
     ) -> "CalculationOutput":
         """
         Create a VASP output document from VASP outputs.
@@ -426,6 +429,12 @@ class CalculationOutput(BaseModel):
             An Outcar object.
         locpot
             A Locpot object.
+        elph_poscars
+            Path to displaced electron-phonon coupling POSCAR files generated using
+            ``PHON_LMC = True``.
+        store_trajectory
+            Whether to store ionic steps as a pymatgen Trajectory object. If `True`,
+            the `ionic_steps` field is left as None.
 
         Returns
         -------
@@ -518,7 +527,7 @@ class CalculationOutput(BaseModel):
             frequency_dependent_dielectric=freq_dependent_diel,
             elph_displaced_structures=elph_structures,
             dos_properties=dosprop_dict,
-            ionic_steps=vasprun.ionic_steps,
+            ionic_steps=vasprun.ionic_steps if not store_trajectory else None,
             locpot=locpot_avg,
             outcar=outcar_dict,
             run_stats=RunStatistics.from_outcar(outcar),
@@ -581,6 +590,7 @@ class Calculation(BaseModel):
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
+        store_trajectory: bool = False,
         vasprun_kwargs: Optional[Dict] = None,
     ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """
@@ -625,17 +635,21 @@ class Calculation(BaseModel):
             Whether to store the average of the LOCPOT along the crystal axes.
         run_bader
             Whether to run bader on the charge density.
-        strip_dos_projections : bool
+        strip_dos_projections
             Whether to strip the element and site projections from the density of
             states. This can help reduce the size of DOS objects in systems with many
             atoms.
-        strip_bandstructure_projections : bool
+        strip_bandstructure_projections
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
         store_volumetric_data
             Which volumetric files to store.
+        store_trajectory
+            Whether to store the ionic steps in a pymatgen Trajectory object. if `True`,
+            :obj:'.CalculationOutput.ionic_steps' is set to None to reduce duplicating
+            information.
         vasprun_kwargs
-            Additional keyword arguments that will be passed to to the Vasprun init.
+            Additional keyword arguments that will be passed to the Vasprun init.
 
         Returns
         -------
@@ -683,11 +697,32 @@ class Calculation(BaseModel):
                 locpot = Locpot.from_file(dir_name / locpot_file)
 
         input_doc = CalculationInput.from_vasprun(vasprun)
-        output_doc = CalculationOutput.from_vasp_outputs(
-            vasprun, outcar, locpot=locpot, elph_poscars=elph_poscars
-        )
 
-        has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
+        output_doc = CalculationOutput.from_vasp_outputs(
+            vasprun,
+            outcar,
+            locpot=locpot,
+            elph_poscars=elph_poscars,
+            store_trajectory=store_trajectory,
+        )
+        if store_trajectory:
+            traj = Trajectory.from_structures(
+                [d["structure"] for d in vasprun.ionic_steps],
+                frame_properties=[IonicStep(**x).dict() for x in vasprun.ionic_steps],
+                constant_lattice=False,
+            )
+            vasp_objects[VaspObject.TRAJECTORY] = traj  # type: ignore
+
+        # MD run
+        if vasprun.parameters.get("IBRION", -1) == 0:
+            if vasprun.parameters.get("NSW", 0) == vasprun.nionic_steps:
+                has_vasp_completed = Status.SUCCESS
+            else:
+                has_vasp_completed = Status.FAILED
+        # others
+        else:
+            has_vasp_completed = Status.SUCCESS if vasprun.converged else Status.FAILED
+
         return (
             cls(
                 dir_name=str(dir_name),
@@ -841,7 +876,6 @@ def _get_band_props(
             OrbitalType.s,
             OrbitalType.p,
             OrbitalType.d,
-            OrbitalType.f,
         ]:
             orb_name = orb_type.name
             if (

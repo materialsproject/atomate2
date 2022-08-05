@@ -22,7 +22,7 @@ from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class ElasticRelaxMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -69,7 +69,7 @@ class ElasticRelaxMaker(BaseVaspMaker):
     """
 
     name: str = "elastic relax"
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"grid_density": 7000},
             user_incar_settings={
