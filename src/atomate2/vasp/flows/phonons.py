@@ -9,7 +9,6 @@ from typing import List
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
-from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -59,12 +58,16 @@ class PhononMaker(Maker):
         Symmetry precision to use in the
         reduction of symmetry to find the primitive/conventional cell
         (use_primitive_standard_structure, use_conventional_standard_structure)
-    symprec_phonopy : float
-        Symmetry precision for all phonopy-related symmetry searches
+        and to handle all symmetry-related tasks in phonopy
     displacement: float
         displacement distance for phonons
     min_length: float
         min length of the supercell that will be build
+    prefer_90_degrees: bool
+        if set to True, supercell algorithm will first try to find a supercell
+        with 3 90 degree angles
+    get_supercell_kwargs: additional arguments
+        to determine supercell
     supercell_matrix: list
         instead of min_length, also a supercell_matrix can
          be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
@@ -107,14 +110,13 @@ class PhononMaker(Maker):
         determines the dft code. currently only vasp is implemented
     """
 
-    # TODO: add some unit conversion factors
-    #  to easily use other codes to compute phonons?
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = SETTINGS.SYMPREC
-    symprec_phonopy: float = 0.001
+    symprec: float = 1e-4
     displacement: float = 0.01
     min_length: float | None = 20.0
+    prefer_90_degrees: bool = True
+    get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_primitive_standard_structure: bool = False
     use_conventional_standard_structure: bool = False
     bulk_relax_maker: BaseVaspMaker | None = field(
@@ -216,7 +218,12 @@ class PhononMaker(Maker):
         if supercell_matrix is not None:
             self.supercell_matrix = None
         else:
-            supercell_job = get_supercell_size(structure, self.min_length)
+            supercell_job = get_supercell_size(
+                structure,
+                self.min_length,
+                self.prefer_90_degrees,
+                **self.get_supercell_size_kwargs,
+            )
             jobs.append(supercell_job)
             self.supercell_matrix = supercell_job.output
 
@@ -232,7 +239,7 @@ class PhononMaker(Maker):
             supercell_matrix=self.supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
-            symprec=self.symprec_phonopy,
+            symprec=self.symprec,
             use_standard_primitive=self.use_primitive_standard_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
@@ -283,7 +290,7 @@ class PhononMaker(Maker):
             supercell_matrix=self.supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
-            symprec=self.symprec_phonopy,
+            symprec=self.symprec,
             use_standard_primitive=self.use_primitive_standard_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,

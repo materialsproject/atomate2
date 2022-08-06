@@ -133,7 +133,6 @@ class BaseVaspMaker(Maker):
 
         if "from_prev" not in self.write_input_set_kwargs:
             self.write_input_set_kwargs["from_prev"] = from_prev
-
         # write vasp input files
         write_vasp_input_set(
             structure, self.input_set_generator, **self.write_input_set_kwargs

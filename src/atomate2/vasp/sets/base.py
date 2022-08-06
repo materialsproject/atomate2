@@ -380,6 +380,7 @@ class VaspInputGenerator(InputGenerator):
             vasprun=vasprun,
             outcar=outcar,
         )
+
         kspacing = self._kspacing(incar_updates)
         kpoints = self._get_kpoints(structure, kpoints_updates, kspacing)
         incar = self._get_incar(
@@ -618,6 +619,7 @@ class VaspInputGenerator(InputGenerator):
             self.auto_kspacing,
             bandgap,
             kpoints,
+            previous_incar is None,
         )
 
         # handle auto ISPIN
@@ -943,7 +945,13 @@ def _remove_unused_incar_params(incar, skip=None):
 
 
 def _set_kspacing(
-    incar, incar_settings, user_incar_settings, auto_kspacing, bandgap, kpoints
+    incar,
+    incar_settings,
+    user_incar_settings,
+    auto_kspacing,
+    bandgap,
+    kpoints,
+    from_prev,
 ):
     """
     Set KSPACING in an INCAR.
@@ -952,6 +960,7 @@ def _set_kspacing(
     if kspacing set in user_incar_settings then use that
     if auto_kspacing then do that
     if kspacing is set in config use that.
+    if from_prev is True, ISMEAR will be set according to the band gap
     """
     if kpoints is not None:
         # unset KSPACING as we are using a KPOINTS file
@@ -968,15 +977,20 @@ def _set_kspacing(
     elif "KSPACING" in user_incar_settings:
         incar["KSPACING"] = user_incar_settings["KSPACING"]
     elif incar_settings.get("KSPACING") and auto_kspacing:
+        # will always default to 0.22 in first run as one
+        # cannot be sure if one treats a metal or
+        # semiconductor/insulator
         incar["KSPACING"] = _get_kspacing(bandgap)
-
-        # be careful to not override user_incar_settings
-        if bandgap == 0:
-            incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
-            incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
-        else:
-            incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
-            incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
+        # This should default to ISMEAR=0 if band gap is not known (first computation)
+        # if not from_prev:
+        #     # be careful to not override user_incar_settings
+        if not from_prev:
+            if bandgap == 0:
+                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
+                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
+            else:
+                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
+                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
     elif incar_settings.get("KSPACING"):
         incar["KSPACING"] = incar_settings["KSPACING"]
 

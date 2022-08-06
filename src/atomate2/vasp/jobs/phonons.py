@@ -21,7 +21,7 @@ from pymatgen.transformations.advanced_transformations import (
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
-from atomate2.vasp.sets.base import VaspInputSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 logger = logging.getLogger(__name__)
@@ -51,20 +51,57 @@ def structure_to_conventional(structure: Structure, symprec: float):
 # TODO: maybe add  an alternative algorithm
 @job
 def get_supercell_size(
-    structure: Structure,
-    min_length: float,
-    mode: str = "cheap",
-    distance_to_min: float = 10,
+    structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
 ):
-    # cheap mode will use CubicSupercellTransformation from pymatgen
-    # TODO: include an expensive method testing all possible combinations
-    #  and preferring cells with 3 90 degree angles over
-    if mode == "cheap":
-        transformation = CubicSupercellTransformation(min_length=min_length)
-        transformation.apply_transformation(structure=structure)
-        supercell_matrix = transformation.transformation_matrix.tolist()
-    elif mode == "expensive":
-        pass
+    if "min_atoms" not in kwargs:
+        kwargs["min_atoms"] = None
+    if "force_diagonal" not in kwargs:
+        kwargs["force_diagonal"] = False
+
+    if not prefer_90_degrees:
+        if "max_atoms" not in kwargs:
+            kwargs["max_atoms"] = None
+        transformation = CubicSupercellTransformation(
+            min_length=min_length,
+            min_atoms=kwargs["min_atoms"],
+            max_atoms=kwargs["max_atoms"],
+            force_diagonal=kwargs["force_diagonal"],
+            force_90_degrees=False,
+        )
+        structure = transformation.apply_transformation(structure=structure)
+
+    else:
+        if "max_atoms" not in kwargs:
+            max_atoms = 1000
+        else:
+            max_atoms = kwargs["max_atoms"]
+        if "angle_tolerance" not in kwargs:
+            kwargs["angle_tolerance"] = 1e-2
+        try:
+            transformation = CubicSupercellTransformation(
+                min_length=min_length,
+                min_atoms=kwargs["min_atoms"],
+                max_atoms=max_atoms,
+                force_diagonal=kwargs["force_diagonal"],
+                force_90_degrees=True,
+                angle_tolerance=kwargs["angle_tolerance"],
+            )
+            transformation.apply_transformation(structure=structure)
+
+        except AttributeError:
+            if "max_atoms" not in kwargs:
+                kwargs["max_atoms"] = None
+
+            transformation = CubicSupercellTransformation(
+                min_length=min_length,
+                min_atoms=kwargs["min_atoms"],
+                max_atoms=kwargs["max_atoms"],
+                force_diagonal=kwargs["force_diagonal"],
+                force_90_degrees=False,
+            )
+            transformation.apply_transformation(structure=structure)
+
+    supercell_matrix = transformation.transformation_matrix.tolist()
     return supercell_matrix
 
 
@@ -270,7 +307,7 @@ class PhononDisplacementMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputSetGenerator
+    input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
@@ -294,7 +331,7 @@ class PhononDisplacementMaker(BaseVaspMaker):
 
     # TODO: test these values!
     # TODO: change smearing?
-    input_set_generator: VaspInputSetGenerator = field(
+    input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"grid_density": 7000},
             user_incar_settings={
