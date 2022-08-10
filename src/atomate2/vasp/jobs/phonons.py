@@ -37,22 +37,52 @@ __all__ = [
 
 
 @job
-def structure_to_primitive(structure, symprec):
+def structure_to_primitive(structure: Structure, symprec: float):
+    """
+    Job hat creates a standard primitive structure
+    Parameters
+    ----------
+        structure: Structure object
+        symprec: float
+            precision to determine symmetry
+
+    """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
 
 
 @job
 def structure_to_conventional(structure: Structure, symprec: float):
+    """
+    Job hat creates a standard conventional structure
+    Parameters
+    ----------
+    structure: Structure object
+    symprec: float
+        precision to determine symmetry
+
+
+    """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_conventional_standard_structure()
 
 
-# TODO: maybe add  an alternative algorithm
 @job
 def get_supercell_size(
     structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
 ):
+    """
+
+    Parameters
+    ----------
+    structure: Structure Object
+    min_length: float
+        minimum length of cell in Angstrom
+    prefer_90_degrees: bool
+        if True, the algorithm will try to find a cell with 90 degree angles first
+    **kwargs:
+
+    """
     if "min_atoms" not in kwargs:
         kwargs["min_atoms"] = None
     if "force_diagonal" not in kwargs:
@@ -68,7 +98,7 @@ def get_supercell_size(
             force_diagonal=kwargs["force_diagonal"],
             force_90_degrees=False,
         )
-        structure = transformation.apply_transformation(structure=structure)
+        transformation.apply_transformation(structure=structure)
 
     else:
         if "max_atoms" not in kwargs:
@@ -117,16 +147,24 @@ def generate_phonon_displacements(
     code: str,
 ):
     """
-    Generate phonon displacements.
-
+    will generate displacement structures based on phonopy
     Parameters
     ----------
-    phonopy_object: Phonopy_object
-
-    Returns
-    -------
-    List[Deformation]
-        A list of displacements.
+    structure: Structure object
+    supercell_matrix: np.array
+        array to describe supercell matrix
+    displacement: float
+        displacement in Angstrom
+    sym_reduce: bool
+        if True, symmetry will be used to generate displacements
+    symprec: float
+        precision to determine symmetry
+    use_standard_primitive: bool
+        will the standard primitive be used for the computation
+    kpath_scheme: str
+        scheme to generate kpath
+    code:
+        code to perform the computations
     """
     cell = get_phonopy_structure(structure)
     if code == "vasp":
@@ -178,7 +216,7 @@ def generate_frequencies_eigenvectors(
     born_run_uuid=None,
     static_run_job_dir: str | Path | None = None,
     static_run_uuid=None,
-    optimization_run_job_dir=None,
+    optimization_run_job_dir: str | Path | None = None,
     optimization_run_uuid=None,
     # combine serval of these options
     npoints_band: int = 100,
@@ -197,10 +235,76 @@ def generate_frequencies_eigenvectors(
     store_force_constants=True,
 ):
     """
-    Compute phonon band structures and density of states.
 
     Parameters
     ----------
+    structure: Structure object
+    supercell_matrix: np.array
+        array to describe supercell
+    displacement: float
+        displacement in Angstrom used for supercell computation
+    sym_reduce: bool
+        if True, symmetry will be used in phonopy
+    symprec: float
+        precision to determine symmetry
+    use_standard_primitive: bool
+        if true, standard primitive cell will be used
+    kpath_scheme: str
+        kpath scheme for phonon band structure computation
+    code: str
+        code to run computations
+    displacement_data: dict
+        outputs from displacements
+    total_energy: float
+        total energy of cell in eV
+    epsilon_static: Matrix3D
+        The high-frequency dielectric constant
+    born: Matrix3D
+        Born charges
+    full_born: bool
+        if true, vasp convention for born charges will be used,
+         otherwise reduced convention from phonopy
+    born_run_job_dir: str, Path
+        path to directory where born has been run
+    born_run_uuid:
+        uuid for born computation
+    static_run_job_dir:str, Path
+        path to directory where static run has been performed
+    static_run_uuid:
+        uuid for static computation
+    optimization_run_job_dir: str, Path
+        path to directory where optimization has been run
+    optimization_run_uuid:
+        uuid for optimization
+    npoints_band: int
+        number of points for band structure computations
+    kpoint_density_dos: int
+        density of the density of states computation
+    tol_imaginary_modes: float
+        tolerance to detect imaginary modes
+    tmin: float
+        minimum temperature to compute free energy
+    tmax: float
+        maximum temperature to compute free energy
+    tstep: float
+        temperature step to compute free energy
+    units:  str
+        unit for phonon band structure and phonon density of states
+    img_format: str
+        in which format will the phonon band structure and density of states be produced
+    create_thermal_displacements: bool
+        if True, thermal_displacement_matrices will be computed
+    freq_min_thermal_displacements: float
+        will set the frequencies to cutoff for
+        the computation of the thermal_displacement_matrices
+    tmin_thermal_displacements:
+        minimum temperature to compute thermal displacement matrices
+    tmax_thermal_displacements:
+        maximum temperature to compute thermal displacement matrices
+    tstep_thermal_displacements:
+        temperature step to compute thermal displacement matrices
+    store_force_constants: bool
+        if true, force constants will be stored later on
 
     """
     phonon_doc = PhononBSDOSDoc.from_forces_born(
@@ -297,7 +401,7 @@ def run_phonon_displacements(
 @dataclass
 class PhononDisplacementMaker(BaseVaspMaker):
     """
-    Maker to perform an static calculation as a part of the finite displacement method.
+    Maker to perform a static calculation as a part of the finite displacement method.
 
     The input set is for a static run with tighter convergence parameters.
     Both the k-point mesh density and convergence parameters
@@ -329,8 +433,6 @@ class PhononDisplacementMaker(BaseVaspMaker):
 
     name: str = "phonon static"
 
-    # TODO: test these values!
-    # TODO: change smearing?
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"grid_density": 7000},

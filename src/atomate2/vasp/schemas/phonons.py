@@ -32,6 +32,10 @@ __all__ = ["PhononBSDOSDoc"]
 
 
 class PhononComputationalSettings(BaseModel):
+    """
+    Collection to store computational settings for the phonon computation
+    """
+
     # could be optional and implemented at a later stage?
     npoints_band: int = Field("number of points for band structure computation")
     kpath_scheme: str = Field("indicates the kpath scheme")
@@ -41,6 +45,12 @@ class PhononComputationalSettings(BaseModel):
 
 
 class ThermalDisplacementData(BaseModel):
+    """
+    Collection to store information on the thermal displacement matrices
+    """
+
+    # TODO: check if we could add a connection
+    #  to a pymatgen class for thermal displacement matrices
     freq_min_thermal_displacements: float = Field(
         "cutoff frequency in THz to avoid numerical issues in the "
         "computation of the thermal displacement parameters"
@@ -52,7 +62,6 @@ class ThermalDisplacementData(BaseModel):
         None,
         description="field including thermal displacement matrices in cartesian coordinate system",
     )
-
     temperatures_thermal_displacements: List[int] = Field(
         None,
         description="temperatures at which the thermal displacement matrices"
@@ -61,6 +70,10 @@ class ThermalDisplacementData(BaseModel):
 
 
 class PhononUUIDs(BaseModel):
+    """
+    Collection to save all uuids connected to the phonon run
+    """
+
     optimization_run_uuid: str = Field(None, description="optimization run uuid")
     displacements_uuids: List[str] = Field(
         None, description="The uuids of the displacement jobs."
@@ -70,6 +83,10 @@ class PhononUUIDs(BaseModel):
 
 
 class PhononJobDirs(BaseModel):
+    """
+    Collection to save all job directories relevant for the phonon run
+    """
+
     displacements_job_dirs: List[str] = Field(
         None, description="The directories where the displacement jobs were run."
     )
@@ -86,7 +103,7 @@ class PhononJobDirs(BaseModel):
 
 class PhononBSDOSDoc(BaseModel):
     """
-    Phonon band structures and density of states data.
+    Collection of all data produced by the phonon worklow
     """
 
     structure: Structure = Field(
@@ -122,7 +139,6 @@ class PhononBSDOSDoc(BaseModel):
     has_imaginary_modes: bool = Field(
         None, description="if true, structure has imaginary modes"
     )
-    # copied from electron-phonon workflow
 
     # needed, e.g. to compute Grueneisen parameter etc
     force_constants: List[List[Matrix3D]] = Field(
@@ -179,18 +195,51 @@ class PhononBSDOSDoc(BaseModel):
         full_born: bool = True,
         **kwargs,
     ):
-        """This will initialize
-        the document starting from forces, and born information"""
-        # Could we do this in a better way?
+        """
+        generates  a collection of phonon data
 
-        # have to regenerate this object as I cannot make it a job output
-        # TODO: other way?
+        Parameters
+        ----------
+        structure: Structure object
+        supercell_matrix: numpy array describing the supercell
+        displacement: float
+            size of displacement in angstrom
+        sym_reduce: bool
+            if True, phonopy will use symmetry
+        symprec: float
+            precision to determine kpaths,
+            primitive cells and symmetry in phonopy and pymatgen
+        use_standard_primitive: bool
+            has the standard primitivie cell been used
+        kpath_scheme: str
+            kpath scheme to generate phonon band structure
+        code: str
+            which code was used for computation
+        displacement_data:
+            output of the VASP displacement data
+        total_energy: float
+            total energy in eV for whole cell
+        epsilon_static: Matrix3D
+            The high-frequency dielectric constant
+        born: Matrix3D
+            born charges
+        full_born: bool
+            format of born charges. if True, born
+            charges for whole cell are expected (VASP format)
+            if false, reduced phonopy format is expected
+        **kwargs:
+            additional arguments
+
+
+        """
+
         if code == "vasp":
             factor = VaspToTHz
-        # TODO: add other codes?
+        # This opens the opportunity to add support for other codes
+        # that are supported by phonopy
 
         cell = get_phonopy_structure(structure)
-        # TODO: check why this does not work!
+
         if use_standard_primitive and kpath_scheme != "seekpath":
             primitive_matrix: Union[List[List[float]], str] = [
                 [1.0, 0.0, 0.0],
@@ -212,8 +261,6 @@ class PhononBSDOSDoc(BaseModel):
 
         if born is not None and epsilon_static is not None:
             if full_born:
-
-                # TODO: if this is a good way when user provide data
                 borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
                     ucell=get_phonopy_structure(structure),
                     borns=np.array(born),
@@ -232,14 +279,17 @@ class PhononBSDOSDoc(BaseModel):
                         "dielectric": epsilon,
                         "factor": 14.399652,
                     }
+            # Other codes could be added here
         else:
             borns = None
             epsilon = None
-        # This the next part should be done as a part of the Scheme
 
+        # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
+        # with phonon.load("phonopy.yaml") the phonopy API can be used
         phonon.save("phonopy.yaml")
+
         # get phonon band structure
         kpath_dict, kpath_concrete = cls.get_kpath(
             structure=get_pmg_structure(phonon.primitive),
@@ -247,13 +297,11 @@ class PhononBSDOSDoc(BaseModel):
             symprec=symprec,
         )
 
-        # Okay or do I need to implement
-        # a fallback in case "npoints" band is not implemented?
         qpoints, connections = get_band_qpoints_and_path_connections(
             kpath_concrete, npoints=kwargs["npoints_band"]
         )
 
-        # add option to disable phonon bandstructure computation?
+        # phonon band structures will always be cmouted
         filename_band_yaml = "phonon_band_structure.yaml"
         phonon.run_band_structure(
             qpoints, path_connections=connections, with_eigenvectors=True
@@ -269,7 +317,8 @@ class PhononBSDOSDoc(BaseModel):
             img_format=kwargs["img_format"],
             units=kwargs["units"],
         )
-        # add a free energy document?
+
+        # will determine if imaginary modes are present in the structure
         imaginary_modes = bs_symm_line.has_imaginary_freq(
             tol=kwargs["tol_imaginary_modes"]
         )
@@ -294,21 +343,23 @@ class PhononBSDOSDoc(BaseModel):
             units=kwargs["units"],
         )
 
-        # add tmin tmax tstep
+        # compute vibrational part of free energies per formula unit
         temperature_range = np.arange(kwargs["tmin"], kwargs["tmax"], kwargs["tstep"])
         free_energy = [
             dos.helmholtz_free_energy(structure=structure, t=temperature)
             for temperature in temperature_range
         ]
 
-        # transfer the force constants to compute Grüneisen parameters?
+        # compute formula units to divide total dft energy by formula unit
         formula_units = (
             structure.composition.num_atoms
             / structure.composition.reduced_composition.num_atoms
         )
+        # will compute thermal displacement matrices
+        # for the primitive cell (phonon.primitive!)
+        # only this is available in phonopy
         if kwargs["create_thermal_displacements"]:
-            # will compute thermal displacement matrices
-            # for the primitive cell (phonon.primitive!)
+
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -391,20 +442,22 @@ class PhononBSDOSDoc(BaseModel):
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ):
         """
-        get high-symmetry points in k-space
-        Args:
+            get high-symmetry points in k-space
+            Parameters
+        -   ---------
             structure: Structure Object
-        Returns:
+            kpath_scheme: str
+                string describing kpath
+            symprec: float
+                precision for symmetry determination
         """
 
         if kpath_scheme in [
             "setyawan_curtarolo",
             "latimer_munro",
-            "all_pymatgen",
+            "all",
             "hinuma",
         ]:
-            if kpath_scheme == "all_pymatgen":
-                kpath_scheme = "all"
             highsymmkpath = HighSymmKpath(
                 structure, path_type=kpath_scheme, symprec=symprec, **kpath_kwargs
             )

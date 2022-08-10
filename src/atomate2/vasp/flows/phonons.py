@@ -68,9 +68,6 @@ class PhononMaker(Maker):
         with 3 90 degree angles
     get_supercell_kwargs: additional arguments
         to determine supercell
-    supercell_matrix: list
-        instead of min_length, also a supercell_matrix can
-         be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
     use_primitive_standard_structure: bool
         this will enforce to start the phonon computation
         from the primitive standard structure
@@ -87,27 +84,42 @@ class PhononMaker(Maker):
         High-throughput electronic band structure calculations:
         Challenges and tools. Computational Materials Science,
         49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-         We will however use seekpath and primitive structures
-        from phonopy to compute the phonon band structure
+        We will however use seekpath and primitive structures
+        as determined by from phonopy to compute the phonon band structure
     bulk_relax_maker : .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
+    static_energy_maker : .BaseVaspMaker or None
+        A maker to perform the computation of the DFT energy on the bulk.
+        Set to ``None`` to skip the
+        static energy computation
     generate_phonon_diplsacements_kwargs: dict
-        keyword arguments paseed to :oj: enerate_phonon_displacements
+        keyword arguments paseed to :obj: generate_phonon_displacements
     run_phonon_displacements_kwargs : dict
-        Keyword arguments passed to :obj:`run_phonon_displacements__kwargs`.
+        Keyword arguments passed to :obj:`run_phonon_displacements`.
     born_maker: .BaseVaspMaker or None
         Maker to compute the BORN charges.
     phonon_displacement_maker : .BaseVaspMaker or None
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
+    create_thermal_displacements: bool
+        Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
-        scheme to generate kpoints. Please be aware t
-        hat you can only use seekpath with any kind of cell
+        scheme to generate kpoints. Please be aware that
+         you can only use seekpath with any kind of cell
+         Otherwise, please use the standard primitive structure
+         Available schemes are:
+         "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro",
+         "all". "seekpath" and "hinuma" are the same definition but
+         seekpath can be used with any kind of unit cell as
+         it relies on phonopy to handle the relationship
+         to the primitive cell and not pymatgen
     code: str
-        determines the dft code. currently only vasp is implemented
+        determines the dft code. currently only vasp is implemented.
+        This keyword might enable the implementation of other codes
+        in the future
     """
 
     name: str = "phonon"
@@ -141,11 +153,11 @@ class PhononMaker(Maker):
         born_manual: List[Matrix3D] | None = None,
         full_born: bool = True,
         epsilon_static_manual: Matrix3D | None = None,
-        supercell_matrix: Matrix3D | None = None,
         total_dft_energy: float | None = None,
+        supercell_matrix: Matrix3D | None = None,
     ):
         """
-        Make flow to calculate the elastic constant.
+        Make flow to calculate the phonon properties.
 
         Parameters
         ----------
@@ -166,20 +178,18 @@ class PhononMaker(Maker):
             reduced born file (only symmerically inequivalent atoms)
             or full information on born
         epsilon_static_manual: Matrix3D
+            The high-frequency dielectric constant
             Instead of recomputing born charges and epsilon,
             these values can also be provided manually. born_maker has to
             be None
-
+        total_dft_energy: float
+            Instead of recomputing the energy of the bulk structure every time,
+            this value can also be provided in eV. Please make sure that
+            it fits to the cell you are generating within this workflow
+        supercell_matrix: list
+            instead of min_length, also a supercell_matrix can
+            be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         """
-        # TODO: check if there is a better way to access
-        #  born charges than via outcar["born"]?
-        # TODO: make sure all parameters are tight enough
-        #  for phonons! Cross-check with A.B. workflow
-        # TODO: can we add some kind of convergence test?
-        # TODO: potentially improve supercell transformation -
-        #  does not always find cell with lattice parameters close to
-        # 90
-        # TODO: make sure the workflow works if BORN=0
 
         if (
             not self.use_primitive_standard_structure
@@ -194,7 +204,7 @@ class PhononMaker(Maker):
             "hinuma",
             "setyawan_curtarolo",
             "latimer_munro",
-            "all_pymatgen",
+            "all",
         ]:
             raise ValueError("kpath scheme is not implemented")
 
@@ -275,6 +285,8 @@ class PhononMaker(Maker):
             static_run_uuid = None
 
         if self.born_maker is not None:
+            # I am not happy how we currently access "born" charges
+            # This is very vasp specific code
             epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
             born = born_job.output.calcs_reversed[0].output.outcar["born"]
             full_born = True
@@ -309,6 +321,6 @@ class PhononMaker(Maker):
         )
 
         jobs.append(phonon_collect)
-        # # create a flow including all jobs for a phonon computation
-        my_flow = Flow(jobs, phonon_collect.output)
-        return my_flow
+        # create a flow including all jobs for a phonon computation
+        flow = Flow(jobs, phonon_collect.output)
+        return flow
