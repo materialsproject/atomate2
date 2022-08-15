@@ -55,13 +55,13 @@ SPECIAL_KPOINT_GAMMA = Kpoints(
 )
 
 # Default relax should use: PBE -> HSE to save computation time
-PBE_RELAX: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
+PBE_GEN: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
     user_incar_settings={"LVHAR": False},
     user_kpoints_settings=SPECIAL_KPOINT,
 )
 
-HSE_RELAX: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
+HSE_GEN: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
     user_incar_settings={
         "LAECHG": False,
@@ -79,8 +79,12 @@ HSE_RELAX: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     user_kpoints_settings=SPECIAL_KPOINT,
 )
 
-DEFECT_RELAX_GENERATOR = DoubleRelaxMaker(
-    relax_maker1=PBE_RELAX, relax_maker2=HSE_RELAX
+HSE_DOUBLE_RELAX = DoubleRelaxMaker(
+    relax_maker1=RelaxMaker(input_set_generator=PBE_GEN),
+    relax_maker2=RelaxMaker(
+        input_set_generator=HSE_GEN,
+        task_document_kwargs={"store_volumetric_data": ["locpot"]},
+    ),
 )
 
 DEFECT_STATIC_GENERATOR: StaticSetGenerator = StaticSetGenerator(
@@ -135,7 +139,7 @@ class FormationEnergyMaker(Maker):
     validate_maker: bool = True
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
-            input_set_generator=DEFECT_RELAX_GENERATOR,
+            input_set_generator=PBE_GEN,
             task_document_kwargs={"store_volumetric_data": ["locpot"]},
         )
     )
@@ -207,7 +211,7 @@ class ConfigurationCoordinateMaker(Maker):
     name: str = "config. coordinate"
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
-            input_set_generator=DEFECT_RELAX_GENERATOR,
+            input_set_generator=PBE_GEN,
         )
     )
     static_maker: BaseVaspMaker = field(
