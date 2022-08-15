@@ -143,10 +143,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
-    from atomate2.vasp.powerups import (
-        update_user_incar_settings,
-        update_user_kpoints_settings,
-    )
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -170,19 +166,19 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     flow = maker.make(
         sub_gen, sc_mat=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
     )
-    flow = update_user_kpoints_settings(flow, {"reciprocal_density": 64})
-    flow = update_user_incar_settings(
-        flow,
-        {
-            "LREAL": "Auto",
-            "ALGO": "Normal",
-            "ENCUT": 500,
-            "GGA": None,
-            "NELMIN": 6,
-            "NCORE": 4,
-            "EDIFFG": -0.1,
-        },
-    )
+    # # flow = update_user_kpoints_settings(flow, {"reciprocal_density": 64})
+    # flow = update_user_incar_settings(
+    #     flow,
+    #     {
+    #         "LREAL": "Auto",
+    #         "ALGO": "Normal",
+    #         "ENCUT": 500,
+    #         "GGA": None,
+    #         "NELMIN": 6,
+    #         "NCORE": 4,
+    #         "EDIFFG": -0.1,
+    #     },
+    # )
 
     # run the flow and ensure that it finished running successfully
     docs_store = MemoryStore()

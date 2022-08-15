@@ -15,6 +15,7 @@ from pymatgen.analysis.defects.generators import DefectGenerator
 from pymatgen.core.structure import Lattice, Structure
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
+from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
@@ -35,7 +36,7 @@ logger = logging.getLogger(__name__)
 # Defaults
 DUMMY_STRUCT = Structure(Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]])
 
-DEFECT_KPOINT_SETTINGS = Kpoints(
+SPECIAL_KPOINT = Kpoints(
     comment="special k-point",
     num_kpts=1,
     style=Kpoints_supported_modes.Reciprocal,
@@ -44,14 +45,46 @@ DEFECT_KPOINT_SETTINGS = Kpoints(
     kpts_weights=[1],
 )
 
-DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
+SPECIAL_KPOINT_GAMMA = Kpoints(
+    comment="special k-point",
+    num_kpts=1,
+    style=Kpoints_supported_modes.Reciprocal,
+    kpts=((0.25, 0.25, 0.25), (0.25, 0.25, 0.25)),
+    kpts_shift=(0, 0, 0),
+    kpts_weights=[1, 0],
+)
+
+# Default relax should use: PBE -> HSE to save computation time
+PBE_RELAX: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
     use_structure_charge=True,
-    user_incar_settings={"LVHAR": True},
-    user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
+    user_incar_settings={"LVHAR": False},
+    user_kpoints_settings=SPECIAL_KPOINT,
+)
+
+HSE_RELAX: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
+    use_structure_charge=True,
+    user_incar_settings={
+        "LAECHG": False,
+        "LREAL": False,
+        "ALGO": "Normal",
+        "NSW": 99,
+        "LCHARG": False,
+        "GGA": "PE",
+        "HFSCREEN": 0.2,
+        "LHFCALC": True,
+        "PRECFOCK": "Fast",
+        "LASPH": True,
+        "LDAU": False,
+    },
+    user_kpoints_settings=SPECIAL_KPOINT,
+)
+
+DEFECT_RELAX_GENERATOR = DoubleRelaxMaker(
+    relax_maker1=PBE_RELAX, relax_maker2=HSE_RELAX
 )
 
 DEFECT_STATIC_GENERATOR: StaticSetGenerator = StaticSetGenerator(
-    user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
+    user_kpoints_settings=SPECIAL_KPOINT,
 )
 
 CCD_DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
