@@ -69,7 +69,6 @@ HSE_GEN: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
         "ALGO": "Normal",
         "NSW": 99,
         "LCHARG": False,
-        "GGA": "PE",
         "HFSCREEN": 0.2,
         "LHFCALC": True,
         "PRECFOCK": "Fast",
