@@ -147,10 +147,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
         "bulk relax": "GaN_Mg_defect/bulk_relax",
-        "relax Mg_Ga-0 q=-2": "GaN_Mg_defect/Mg_Ga_0_q=-2",
-        "relax Mg_Ga-0 q=-1": "GaN_Mg_defect/Mg_Ga_0_q=-1",
-        "relax Mg_Ga-0 q=0": "GaN_Mg_defect/Mg_Ga_0_q=0",
-        "relax Mg_Ga-0 q=1": "GaN_Mg_defect/Mg_Ga_0_q=1",
+        "relax Mg_Ga-0 q=-2": "GaN_Mg_defect/relax_Mg_Ga-0_q=-2",
+        "relax Mg_Ga-0 q=-1": "GaN_Mg_defect/relax_Mg_Ga-0_q=-1",
+        "relax Mg_Ga-0 q=0": "GaN_Mg_defect/relax_Mg_Ga-0_q=0",
+        "relax Mg_Ga-0 q=1": "GaN_Mg_defect/relax_Mg_Ga-0_q=1",
     }
     fake_run_vasp_kwargs = {
         k: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]} for k in ref_paths
@@ -166,19 +166,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     flow = maker.make(
         sub_gen, sc_mat=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
     )
-    # # flow = update_user_kpoints_settings(flow, {"reciprocal_density": 64})
-    # flow = update_user_incar_settings(
-    #     flow,
-    #     {
-    #         "LREAL": "Auto",
-    #         "ALGO": "Normal",
-    #         "ENCUT": 500,
-    #         "GGA": None,
-    #         "NELMIN": 6,
-    #         "NCORE": 4,
-    #         "EDIFFG": -0.1,
-    #     },
-    # )
 
     # run the flow and ensure that it finished running successfully
     docs_store = MemoryStore()
