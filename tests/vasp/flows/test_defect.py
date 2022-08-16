@@ -160,7 +160,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     struct_GaN = Structure.from_file(test_dir / "structures" / "GaN.cif")
-    sub_gen = SubstitutionGenerator(structure=struct_GaN, substitutions={"Ga": "Mg"})
+    sub_gen = SubstitutionGenerator(structure=struct_GaN, substitution={"Ga": "Mg"})
 
     maker = FormationEnergyMaker()
     flow = maker.make(
