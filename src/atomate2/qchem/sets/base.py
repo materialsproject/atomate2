@@ -29,7 +29,7 @@ _BASE_QCHEM_SET = loadfn(resource_filename("atomate2.qchem.sets", "BaseQchemSet.
 __all__ = ["QChemInputGenerator"]
 
 @dataclass
-class QchemInputGenerator(InputGenerator):
+class QChemInputGenerator(InputGenerator):
     """
     A class to generate QChem input sets for different calculations
     """
