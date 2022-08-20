@@ -33,7 +33,7 @@ dependencies = [
     "PyYAML",
     "numpy",
     "click",
-    "pymatgen-analysis-defects>=2022.8.15",
+    "pymatgen-analysis-defects>=2022.8.20",
 ]
 
 [project.optional-dependencies]
@@ -56,8 +56,8 @@ tests = [
 ]
 strict = [
     "pydantic==1.9.0",
-    'pymatgen==2022.7.19',
-    "pymatgen-analysis-defects==2022.8.15",
+    'pymatgen==2022.7.25',
+    "pymatgen-analysis-defects==2022.8.20",
     "custodian==2022.2.13",
     "monty==2022.4.26",
     "jobflow==0.1.8",
