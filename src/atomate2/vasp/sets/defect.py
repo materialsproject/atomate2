@@ -36,6 +36,7 @@ class ChargeStateRelaxSetGenerator(VaspInputGenerator):
 
     def __post_init__(self):
         self.use_structure_charge = True
+        super().__post_init__()
 
     def get_incar_updates(
         self,
@@ -93,6 +94,7 @@ class ChargeStateStaticSetGenerator(VaspInputGenerator):
 
     def __post_init__(self):
         self.use_structure_charge = True
+        super().__post_init__()
 
     def get_incar_updates(
         self,
@@ -150,6 +152,7 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
 
     def __post_init__(self):
         self.use_structure_charge = True
+        super().__post_init__()
 
     def get_incar_updates(
         self,
@@ -213,6 +216,7 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
 
     def __post_init__(self):
         self.use_structure_charge = True
+        super().__post_init__()
 
     def get_incar_updates(
         self,
