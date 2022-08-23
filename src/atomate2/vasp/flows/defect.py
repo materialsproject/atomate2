@@ -109,7 +109,9 @@ class FormationEnergyMaker(Maker):
     validate_maker: bool = True
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
-            input_set_generator=ChargeStateRelaxSetGenerator(),
+            input_set_generator=ChargeStateRelaxSetGenerator(
+                user_kpoints_settings=SPECIAL_KPOINT
+            ),
             task_document_kwargs={"store_volumetric_data": ["locpot"]},
         )
     )

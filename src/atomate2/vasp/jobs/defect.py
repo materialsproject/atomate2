@@ -36,17 +36,8 @@ from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
-from atomate2.vasp.sets.defect import ChargeStateRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
-
-# Default settings
-
-DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
-DEFAULT_RELAX_MAKER = RelaxMaker(
-    input_set_generator=ChargeStateRelaxSetGenerator(),
-    task_document_kwargs={"store_volumetric_data": ["locpot"]},
-)
 
 
 @job
@@ -186,7 +177,7 @@ def spawn_defect_calcs(
 @job
 def run_all_charge_states(
     defect: Defect,
-    relax_maker: RelaxMaker | None = None,
+    relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
     defect_index: str = "",
     add_info: dict | None = None,
@@ -202,7 +193,6 @@ def run_all_charge_states(
         A defect object representing the defect in a unit cell.
     relax_maker:
         A RelaxMaker object to use for the atomic relaxation.
-        If None, the default will be used (see DEFAULT_RELAX_MAKER).
     sc_mat:
         The supercell matrix. If None, the code will attempt to create a
         nearly-cubic supercell.
@@ -221,7 +211,6 @@ def run_all_charge_states(
     jobs = []
     outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
-    relax_maker = relax_maker or DEFAULT_RELAX_MAKER
     for qq in defect.get_charge_states():
         suffix = (
             f" {defect.name} q={qq}"
