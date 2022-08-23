@@ -14,9 +14,9 @@ from numpy.typing import NDArray
 from pymatgen.analysis.defects.generators import DefectGenerator
 from pymatgen.core.structure import Lattice, Structure
 
-from atomate2.vasp.flows.core import DoubleRelaxMaker, HSEBandStructureMaker
+from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
+from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.jobs.defect import (
     bulk_supercell_calculation,
     calculate_finite_diff,
@@ -28,15 +28,21 @@ from atomate2.vasp.jobs.defect import (
 )
 from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.sets.core import StaticSetGenerator
-from atomate2.vasp.sets.defect import SPECIAL_KPOINT, AtomicRelaxSetGenerator, ChargeStateRelaxSetGenerator, HSEChargeStateRelaxSetGenerator
+from atomate2.vasp.sets.defect import (
+    SPECIAL_KPOINT,
+    ChargeStateRelaxSetGenerator,
+    ChargeStateStaticSetGenerator,
+    HSEChargeStateRelaxSetGenerator,
+)
 
 logger = logging.getLogger(__name__)
+
 
 """
 Example Compound Maker to speed up defect relaxation calculations
 TODO: Update this into a faster maker:
 [PBE] -> (WAVECAR) -> [HSE]
-[PBE] -> (STUCTURE) -> [HSE,gamma] -> (STUCTURE) -> [HSE]
+[PBE] -> (STRUCTURE) -> [HSE,gamma] -> (STRUCTURE) -> [HSE]
 """
 
 HSE_DOUBLE_RELAX = DoubleRelaxMaker(
@@ -56,7 +62,7 @@ CCD_DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 
 # Define RelaxMaker Errors
-def check_relax_maker(maker: Maker):
+def check_defect_relax_maker(maker: Maker):
     """Check specific RelaxMaker settings.
 
     Check all nested RelaxMaker in to make sure specific Setting is set.
@@ -66,7 +72,9 @@ def check_relax_maker(maker: Maker):
     maker : Maker
         The Maker object to check.
     """
-    DUMMY_STRUCT = Structure(Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]])
+    DUMMY_STRUCT = Structure(
+        Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]]
+    )
 
     def check_func(relax_maker: RelaxMaker):
         input_gen = relax_maker.input_set_generator
@@ -101,7 +109,7 @@ class FormationEnergyMaker(Maker):
     validate_maker: bool = True
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
-            input_set_generator=PBE_GEN,
+            input_set_generator=ChargeStateRelaxSetGenerator(),
             task_document_kwargs={"store_volumetric_data": ["locpot"]},
         )
     )
@@ -109,31 +117,31 @@ class FormationEnergyMaker(Maker):
     def __post_init__(self):
         """Check the calculation settings."""
         if self.validate_maker:
-            check_relax_maker(self.relax_maker)
+            check_defect_relax_maker(self.relax_maker)
 
     def make(
         self,
-        defect_gen: DefectGenerator,
+        defect_generator: DefectGenerator,
         dielectric: float | NDArray,
-        bulk_sc_dir: str | Path | None = None,
-        sc_mat: NDArray | None = None,
+        bulk_supercell_dir: str | Path | None = None,
+        supercell_matrix: NDArray | None = None,
     ):
         """Make a flow to calculate the formation energy diagram."""
         jobs = []
 
-        if bulk_sc_dir is None:
+        if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
-                uc_structure=defect_gen.structure,
+                uc_structure=defect_generator.structure,
                 relax_maker=self.relax_maker,
-                sc_mat=sc_mat,
+                sc_mat=supercell_matrix,
             )
         else:
             get_sc_job = get_supercell_from_prv_calc(
-                defect_gen.structure, bulk_sc_dir, sc_mat
+                defect_generator.structure, bulk_supercell_dir, supercell_matrix
             )
 
         spawn_output = spawn_defect_calcs(
-            defect_gen=defect_gen,
+            defect_gen=defect_generator,
             sc_mat=get_sc_job.output["sc_mat"],
             relax_maker=self.relax_maker,
         )
@@ -173,11 +181,11 @@ class ConfigurationCoordinateMaker(Maker):
     name: str = "config. coordinate"
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
-            input_set_generator=PBE_GEN,
+            input_set_generator=ChargeStateRelaxSetGenerator(),
         )
     )
     static_maker: BaseVaspMaker = field(
-        default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
+        default_factory=lambda: ChargeStateStaticSetGenerator()
     )
     distortions: tuple[float, ...] = CCD_DEFAULT_DISTORTIONS
 

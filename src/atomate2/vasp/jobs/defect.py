@@ -21,7 +21,6 @@ from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.io.vasp import Incar
-from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 from pymatgen.io.vasp.outputs import WSWQ, Locpot, Vasprun
 
 from atomate2.common.files import (
@@ -38,43 +37,20 @@ from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
-from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
+from atomate2.vasp.sets.defect import ChargeStateRelaxSetGenerator
 
 _logger = logging.getLogger(__name__)
 
 # Default settings
 
 DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
-DEFECT_INCAR_SETTINGS = {
-    "ISMEAR": 0,
-    "SIGMA": 0.05,
-    "KSPACING": None,
-    "ENCUT": 500,
-    "LVHAR": True,
-}
-DEFECT_KPOINT_SETTINGS = Kpoints(
-    comment="special k-point",
-    num_kpts=1,
-    style=Kpoints_supported_modes.Reciprocal,
-    kpts=((0.25, 0.25, 0.25),),
-    kpts_shift=(0, 0, 0),
-    kpts_weights=[1],
+DEFAULT_RELAX_MAKER = RelaxMaker(
+    input_set_generator=ChargeStateRelaxSetGenerator(),
+    task_document_kwargs={"store_volumetric_data": ["locpot"]},
 )
-
-DEFECT_RELAX_GENERATOR: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
-    use_structure_charge=True,
-    user_incar_settings=DEFECT_INCAR_SETTINGS,
-    user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
-)
-
-DEFAULT_RELAX_MAKER = RelaxMaker(input_set_generator=DEFECT_RELAX_GENERATOR)
-DEFAULT_RELAX_MAKER.input_set_generator.user_incar_settings.update({"LVHAR": True})
-DEFAULT_RELAX_MAKER.task_document_kwargs.update({"store_volumetric_data": ["locpot"]})
 
 
 # For Formation Energy Calculations
-
-
 @job
 def get_supercell_from_prv_calc(
     uc_structure: Structure,

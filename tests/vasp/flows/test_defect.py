@@ -164,7 +164,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
 
     maker = FormationEnergyMaker()
     flow = maker.make(
-        sub_gen, sc_mat=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
+        sub_gen, supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
     )
 
     # run the flow and ensure that it finished running successfully
