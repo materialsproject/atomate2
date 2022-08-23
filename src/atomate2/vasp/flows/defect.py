@@ -31,7 +31,6 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.defect import (
     SPECIAL_KPOINT,
     ChargeStateRelaxSetGenerator,
-    ChargeStateStaticSetGenerator,
     HSEChargeStateRelaxSetGenerator,
 )
 
@@ -46,9 +45,15 @@ TODO: Update this into a faster maker:
 """
 
 HSE_DOUBLE_RELAX = DoubleRelaxMaker(
-    relax_maker1=RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator()),
+    relax_maker1=RelaxMaker(
+        input_set_generator=ChargeStateRelaxSetGenerator(
+            user_kpoints_settings=SPECIAL_KPOINT
+        )
+    ),
     relax_maker2=RelaxMaker(
-        input_set_generator=HSEChargeStateRelaxSetGenerator(),
+        input_set_generator=HSEChargeStateRelaxSetGenerator(
+            user_kpoints_settings=SPECIAL_KPOINT
+        ),
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
         copy_vasp_kwargs={"addtional_vasp_files": ("WAVECAR")},
     ),
@@ -229,12 +234,16 @@ class ConfigurationCoordinateMaker(Maker):
     name: str = "config. coordinate"
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
-            input_set_generator=ChargeStateRelaxSetGenerator(),
+            input_set_generator=ChargeStateRelaxSetGenerator(
+                user_kpoints_settings=SPECIAL_KPOINT
+            ),
         )
     )
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(
-            input_set_generator=ChargeStateStaticSetGenerator()
+            input_set_generator=ChargeStateRelaxSetGenerator(
+                user_kpoints_settings=SPECIAL_KPOINT
+            ),
         )
     )
     distortions: tuple[float, ...] = CCD_DEFAULT_DISTORTIONS
