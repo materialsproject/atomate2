@@ -126,7 +126,26 @@ class FormationEnergyMaker(Maker):
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: NDArray | None = None,
     ):
-        """Make a flow to calculate the formation energy diagram."""
+        """Make a flow to calculate the formation energy diagram.
+
+        Parameters
+        ----------
+        defects: list[Defect]
+            List of defects objects to calculate the formation energy diagram for.
+        dielectric: float | NDArray
+            The dielectric constant or tensor used to calculate the
+            finite-size correction.
+        bulk_supercell_dir: str | Path | None
+            If provided, the bulk supercell calculation will be skipped.
+        supercell_matrix: NDArray | None
+            The supercell transformation matrix. If None, the supercell matrix
+            will be computed automatically.
+
+        Returns
+        -------
+        flow: Flow
+            The workflow to calculate the formation energy diagram.
+        """
         jobs = []
 
         check_input = ensure_defects_same_structure(defects)
@@ -161,6 +180,29 @@ class FormationEnergyMaker(Maker):
             name=self.name,
             output=collect_job.output,
         )
+
+
+@job
+def ensure_defects_same_structure(defects: Iterable[Defect]):
+    """Ensure that the defects are valid.
+
+    Parameters
+    ----------
+    defects
+        The defects to check.
+
+    Raises
+    ------
+    ValueError
+        If any defect is invalid.
+    """
+    struct = None
+    for defect in defects:
+        if struct is None:
+            struct = defect.structure
+        elif struct != defect.structure:
+            raise ValueError("All defects must have the same host structure.")
+    return struct
 
 
 @dataclass
@@ -315,29 +357,6 @@ def get_charged_structures(structure: Structure, charges: Iterable):
     for i, q in enumerate(charges):
         structs_out[i].set_charge(q)
     return structs_out
-
-
-@job
-def ensure_defects_same_structure(defects: Iterable[Defect]):
-    """Ensure that the defects are valid.
-
-    Parameters
-    ----------
-    defects
-        The defects to check.
-
-    Raises
-    ------
-    ValueError
-        If any defect is invalid.
-    """
-    struct = None
-    for defect in defects:
-        if struct is None:
-            struct = defect.structure
-        elif struct != defect.structure:
-            raise ValueError("All defects must have the same host structure.")
-    return struct
 
 
 @dataclass
