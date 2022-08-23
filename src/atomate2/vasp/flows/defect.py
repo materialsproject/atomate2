@@ -124,23 +124,24 @@ class FormationEnergyMaker(Maker):
         defects: list[Defect],
         dielectric: float | NDArray,
         bulk_supercell_dir: str | Path | None = None,
-        structure: Structure | None = None,
         supercell_matrix: NDArray | None = None,
     ):
         """Make a flow to calculate the formation energy diagram."""
         jobs = []
 
-        ensure_defects(defects)
+        check_input = ensure_defects_same_structure(defects)
+        jobs.append(check_input)
+        uc_structure = check_input.outputs
 
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
-                uc_structure=structure,
+                uc_structure=uc_structure,
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
             )
         else:
             get_sc_job = get_supercell_from_prv_calc(
-                structure, bulk_supercell_dir, supercell_matrix
+                uc_structure, bulk_supercell_dir, supercell_matrix
             )
 
         spawn_output = spawn_defect_calcs(
@@ -317,7 +318,7 @@ def get_charged_structures(structure: Structure, charges: Iterable):
 
 
 @job
-def ensure_defects(defects: Iterable[Defect]):
+def ensure_defects_same_structure(defects: Iterable[Defect]):
     """Ensure that the defects are valid.
 
     Parameters
@@ -336,6 +337,7 @@ def ensure_defects(defects: Iterable[Defect]):
             struct = defect.structure
         elif struct != defect.structure:
             raise ValueError("All defects must have the same host structure.")
+    return struct
 
 
 @dataclass

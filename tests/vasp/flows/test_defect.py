@@ -175,10 +175,15 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     sub_gen = SubstitutionGenerator().get_defects(
         structure=struct_GaN, substitution={"Ga": ["Mg"]}
     )
+    defects = list(
+        SubstitutionGenerator().get_defects(
+            structure=struct_GaN, substitution={"Ga": ["Mg"]}
+        )
+    )
 
     maker = FormationEnergyMaker()
     flow = maker.make(
-        sub_gen, supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
+        defects, supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
     )
 
     # run the flow and ensure that it finished running successfully
