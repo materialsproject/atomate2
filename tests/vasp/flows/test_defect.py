@@ -34,9 +34,15 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     si_defect = Structure.from_file(
         test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
     )
-
     # generate flow
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
+    ccd_maker.relax_maker.input_set_generator.user_kpoints_settings = {
+        "reciprocal_density": 64
+    }
+    ccd_maker.static_maker.input_set_generator.user_kpoints_settings = {
+        "reciprocal_density": 64
+    }
+
     assert ccd_maker.distortions == (-0.2, -0.1, 0, 0.1, 0.2)
     flow = ccd_maker.make(si_defect, charge_state1=0, charge_state2=1)
 
@@ -100,6 +106,12 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     )
 
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
+    ccd_maker.relax_maker.input_set_generator.user_kpoints_settings = {
+        "reciprocal_density": 64
+    }
+    ccd_maker.static_maker.input_set_generator.user_kpoints_settings = {
+        "reciprocal_density": 64
+    }
     non_rad_maker = NonRadiativeMaker(ccd_maker=ccd_maker)
 
     flow = non_rad_maker.make(si_defect, charge_state1=0, charge_state2=1)
@@ -160,7 +172,9 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     struct_GaN = Structure.from_file(test_dir / "structures" / "GaN.cif")
-    sub_gen = SubstitutionGenerator(structure=struct_GaN, substitution={"Ga": ["Mg"]})
+    sub_gen = SubstitutionGenerator().get_defects(
+        structure=struct_GaN, substitution={"Ga": ["Mg"]}
+    )
 
     maker = FormationEnergyMaker()
     flow = maker.make(

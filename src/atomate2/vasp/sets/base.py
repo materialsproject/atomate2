@@ -635,8 +635,8 @@ class VaspInputGenerator(InputGenerator):
     def _get_kpoints(
         self,
         structure: Structure,
-        kpoints_updates: Optional[Union[Kpoints, Dict[str, Any]]],
-        kspacing: Optional[float] = None,
+        kpoints_updates: Optional[Dict[str, Any]],
+        kspacing: Optional[float],
     ) -> Union[Kpoints, None]:
         """Get the kpoints file."""
         kpoints_updates = {} if kpoints_updates is None else kpoints_updates

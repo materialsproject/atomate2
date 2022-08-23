@@ -12,7 +12,6 @@ from jobflow import Flow, Response, job
 from numpy.typing import NDArray
 from pydantic import BaseModel
 from pymatgen.analysis.defects.core import Defect
-from pymatgen.analysis.defects.generators import DefectGenerator
 from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
@@ -39,7 +38,7 @@ from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.defect import ChargeStateRelaxSetGenerator
 
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # Default settings
 
@@ -50,7 +49,6 @@ DEFAULT_RELAX_MAKER = RelaxMaker(
 )
 
 
-# For Formation Energy Calculations
 @job
 def get_supercell_from_prv_calc(
     uc_structure: Structure,
@@ -125,7 +123,7 @@ def bulk_supercell_calculation(
     Response:
         Output a dictionary containing the bulk supercell calculation summary.
     """
-    _logger.info("Running bulk supercell calculation. Running...")
+    logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
     sc_structure = uc_structure * sc_mat
@@ -146,7 +144,7 @@ def bulk_supercell_calculation(
 
 @job
 def spawn_defect_calcs(
-    defect_gen: DefectGenerator,
+    defects: list[Defect],
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
 ) -> Response:
@@ -169,7 +167,7 @@ def spawn_defect_calcs(
     output = dict()
     name_counter: dict = defaultdict(lambda: 0)
 
-    for defect in defect_gen:
+    for defect in defects:
         q_job = run_all_charge_states(
             defect,
             sc_mat=sc_mat,
@@ -290,7 +288,7 @@ def collect_defect_outputs(
 
     bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
     bulk_data = parse_bulk_dir(bulk_sc_dir)
-    _logger.info(f"Bulk entry energy: {bulk_data['entry'].energy} eV")
+    logger.info(f"Bulk entry energy: {bulk_data['entry'].energy} eV")
     output = dict(
         defect_relax_outputs=defects_output,
         bulk_entry=bulk_data["entry"],
@@ -300,7 +298,7 @@ def collect_defect_outputs(
     )
     # first loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
     for defect_name, def_out in defects_output.items():
-        _logger.debug(f"Processing defect {defect_name}")
+        logger.debug(f"Processing defect {defect_name}")
         defect = def_out.pop("defect")
         defect_locpots = dict()
         defect_entries = []
@@ -308,7 +306,7 @@ def collect_defect_outputs(
 
         # then loop over the different charge states
         for qq, v in def_out["results"].items():
-            _logger.debug(f"Processing charge state {qq}")
+            logger.debug(f"Processing charge state {qq}")
             if not isinstance(v, dict):
                 continue
             defect_locpots[int(qq)] = get_locpot_from_dir(v["dir_name"])
@@ -334,7 +332,6 @@ def collect_defect_outputs(
     return output
 
 
-# For Configuration-Coordinate-Diagram (CCD) Calculations
 class CCDInput(BaseModel):
     """Document model to help construct CCDDocument."""
 

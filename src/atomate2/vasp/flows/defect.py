@@ -11,12 +11,12 @@ from jobflow import Flow, Job, Maker, OutputReference, job
 
 # from jobflow.core.maker import recursive_call
 from numpy.typing import NDArray
-from pymatgen.analysis.defects.generators import DefectGenerator
+from pymatgen.analysis.defects.core import Defect
 from pymatgen.core.structure import Lattice, Structure
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import RelaxMaker
+from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
     bulk_supercell_calculation,
     calculate_finite_diff,
@@ -121,27 +121,30 @@ class FormationEnergyMaker(Maker):
 
     def make(
         self,
-        defect_generator: DefectGenerator,
+        defects: list[Defect],
         dielectric: float | NDArray,
         bulk_supercell_dir: str | Path | None = None,
+        structure: Structure | None = None,
         supercell_matrix: NDArray | None = None,
     ):
         """Make a flow to calculate the formation energy diagram."""
         jobs = []
 
+        ensure_defects(defects)
+
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
-                uc_structure=defect_generator.structure,
+                uc_structure=structure,
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
             )
         else:
             get_sc_job = get_supercell_from_prv_calc(
-                defect_generator.structure, bulk_supercell_dir, supercell_matrix
+                structure, bulk_supercell_dir, supercell_matrix
             )
 
         spawn_output = spawn_defect_calcs(
-            defect_gen=defect_generator,
+            defects=defects,
             sc_mat=get_sc_job.output["sc_mat"],
             relax_maker=self.relax_maker,
         )
@@ -185,7 +188,9 @@ class ConfigurationCoordinateMaker(Maker):
         )
     )
     static_maker: BaseVaspMaker = field(
-        default_factory=lambda: ChargeStateStaticSetGenerator()
+        default_factory=lambda: StaticMaker(
+            input_set_generator=ChargeStateStaticSetGenerator()
+        )
     )
     distortions: tuple[float, ...] = CCD_DEFAULT_DISTORTIONS
 
@@ -309,6 +314,28 @@ def get_charged_structures(structure: Structure, charges: Iterable):
     for i, q in enumerate(charges):
         structs_out[i].set_charge(q)
     return structs_out
+
+
+@job
+def ensure_defects(defects: Iterable[Defect]):
+    """Ensure that the defects are valid.
+
+    Parameters
+    ----------
+    defects
+        The defects to check.
+
+    Raises
+    ------
+    ValueError
+        If any defect is invalid.
+    """
+    struct = None
+    for defect in defects:
+        if struct is None:
+            struct = defect.structure
+        elif struct != defect.structure:
+            raise ValueError("All defects must have the same host structure.")
 
 
 @dataclass
