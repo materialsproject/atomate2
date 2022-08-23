@@ -141,7 +141,6 @@ def bulk_supercell_calculation(
         dir_name=relax_output.dir_name,
         uuid=relax_job.uuid,
     )
-    # waiter = wait_for_dict(summary_d)
     return Response(output=summary_d, replace=[relax_job])
 
 
@@ -225,10 +224,6 @@ def run_all_charge_states(
     outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     relax_maker = relax_maker or DEFAULT_RELAX_MAKER
-    # if "locpot" not in relax_maker.task_document_kwargs.get(
-    #     "store_volumetric_data", []
-    # ):
-    #     raise ValueError("The relax maker must store the locpot.")
     for qq in defect.get_charge_states():
         suffix = (
             f" {defect.name} q={qq}"
