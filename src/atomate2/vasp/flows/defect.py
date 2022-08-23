@@ -131,7 +131,7 @@ class FormationEnergyMaker(Maker):
 
         check_input = ensure_defects_same_structure(defects)
         jobs.append(check_input)
-        uc_structure = check_input.outputs
+        uc_structure = check_input.output
 
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(

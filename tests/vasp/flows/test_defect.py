@@ -155,6 +155,8 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
+    from atomate2.vasp.jobs.core import RelaxMaker
+    from atomate2.vasp.sets.defect import ChargeStateRelaxSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -180,8 +182,9 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
             structure=struct_GaN, substitution={"Ga": ["Mg"]}
         )
     )
-
-    maker = FormationEnergyMaker()
+    rmaker = RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator())
+    rmaker.input_set_generator.user_kpoints_settings = {"reciprocal_density": 64}
+    maker = FormationEnergyMaker(relax_maker=rmaker)
     flow = maker.make(
         defects, supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
     )
