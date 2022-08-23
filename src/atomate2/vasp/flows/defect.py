@@ -13,9 +13,8 @@ from jobflow import Flow, Job, Maker, OutputReference, job
 from numpy.typing import NDArray
 from pymatgen.analysis.defects.generators import DefectGenerator
 from pymatgen.core.structure import Lattice, Structure
-from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
-from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.flows.core import DoubleRelaxMaker, HSEBandStructureMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
@@ -29,60 +28,23 @@ from atomate2.vasp.jobs.defect import (
 )
 from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.sets.core import StaticSetGenerator
-from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
+from atomate2.vasp.sets.defect import SPECIAL_KPOINT, AtomicRelaxSetGenerator, ChargeStateRelaxSetGenerator, HSEChargeStateRelaxSetGenerator
 
 logger = logging.getLogger(__name__)
 
-# Defaults
-DUMMY_STRUCT = Structure(Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]])
-
-SPECIAL_KPOINT = Kpoints(
-    comment="special k-point",
-    num_kpts=1,
-    style=Kpoints_supported_modes.Reciprocal,
-    kpts=((0.25, 0.25, 0.25),),
-    kpts_shift=(0, 0, 0),
-    kpts_weights=[1],
-)
-
-SPECIAL_KPOINT_GAMMA = Kpoints(
-    comment="special k-point",
-    num_kpts=1,
-    style=Kpoints_supported_modes.Reciprocal,
-    kpts=((0.25, 0.25, 0.25), (0.25, 0.25, 0.25)),
-    kpts_shift=(0, 0, 0),
-    kpts_weights=[1, 0],
-)
-
-# Default relax should use: PBE -> HSE to save computation time
-PBE_GEN: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
-    use_structure_charge=True,
-    user_incar_settings={"LVHAR": False},
-    user_kpoints_settings=SPECIAL_KPOINT,
-)
-
-HSE_GEN: AtomicRelaxSetGenerator = AtomicRelaxSetGenerator(
-    use_structure_charge=True,
-    user_incar_settings={
-        "LAECHG": False,
-        "LREAL": False,
-        "ALGO": "Normal",
-        "NSW": 99,
-        "LCHARG": False,
-        "HFSCREEN": 0.2,
-        "LHFCALC": True,
-        "PRECFOCK": "Fast",
-        "LASPH": True,
-        "LDAU": False,
-    },
-    user_kpoints_settings=SPECIAL_KPOINT,
-)
+"""
+Example Compound Maker to speed up defect relaxation calculations
+TODO: Update this into a faster maker:
+[PBE] -> (WAVECAR) -> [HSE]
+[PBE] -> (STUCTURE) -> [HSE,gamma] -> (STUCTURE) -> [HSE]
+"""
 
 HSE_DOUBLE_RELAX = DoubleRelaxMaker(
-    relax_maker1=RelaxMaker(input_set_generator=PBE_GEN),
+    relax_maker1=RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator()),
     relax_maker2=RelaxMaker(
-        input_set_generator=HSE_GEN,
+        input_set_generator=HSEChargeStateRelaxSetGenerator(),
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
+        copy_vasp_kwargs={"addtional_vasp_files": ("WAVECAR")},
     ),
 )
 
@@ -104,6 +66,7 @@ def check_relax_maker(maker: Maker):
     maker : Maker
         The Maker object to check.
     """
+    DUMMY_STRUCT = Structure(Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]])
 
     def check_func(relax_maker: RelaxMaker):
         input_gen = relax_maker.input_set_generator

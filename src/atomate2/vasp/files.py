@@ -52,8 +52,8 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
-    allow_bad_contcar : bool
-        Whether to check CONTCAR for validity.
+    check_contcar : bool
+        If ``True``, check that the CONTCAR file can be parsed into a Structure object.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
@@ -200,10 +200,9 @@ def cp_contcar_to_poscar(check_contcar: bool = True, **rename_files_kwargs):
 
     Check for the unzipped CONTCAR file only.
     """
-    try:
-        Structure.from_file("CONTCAR")
-    except Exception:
-        if check_contcar:
+    if check_contcar:
+        try:
+            Structure.from_file("CONTCAR")
+        except Exception:
             raise RuntimeError("Could not parse CONTCAR file as Structure.")
-        return None
     rename_files({"CONTCAR": "POSCAR"}, **rename_files_kwargs)
