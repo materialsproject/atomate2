@@ -91,6 +91,7 @@ def copy_vasp_outputs(
         include_files=required_files + optional_files,
         allow_missing=True,
         file_client=file_client,
+        force=True,
     )
 
     # rename files to remove relax extension
