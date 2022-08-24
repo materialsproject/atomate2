@@ -1,4 +1,4 @@
-"""Functions for manipulating VASP files"""
+"""Functions for manipulating QChem files"""
 
 from __future__ import annotations
 
