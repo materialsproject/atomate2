@@ -31,6 +31,7 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.defect import (
     SPECIAL_KPOINT,
     ChargeStateRelaxSetGenerator,
+    ChargeStateStaticSetGenerator,
     HSEChargeStateRelaxSetGenerator,
 )
 
@@ -241,7 +242,7 @@ class ConfigurationCoordinateMaker(Maker):
     )
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(
-            input_set_generator=ChargeStateRelaxSetGenerator(
+            input_set_generator=ChargeStateStaticSetGenerator(
                 user_kpoints_settings=SPECIAL_KPOINT
             ),
         )

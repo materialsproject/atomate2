@@ -126,7 +126,6 @@ class ChargeStateStaticSetGenerator(VaspInputGenerator):
         """
         return {
             "IBRION": 1,
-            "ISIF": 2,
             "EDIFF": 1e-5,
             "EDIFFG": -0.05,
             "LREAL": False,
@@ -250,7 +249,6 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
             "ALGO": "All",
             "IBRION": 1,
             "LAECHG": False,
-            "ISIF": 2,
             "EDIFF": 1e-5,
             "EDIFFG": -0.05,
             "LREAL": False,
