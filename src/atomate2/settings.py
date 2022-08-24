@@ -92,6 +92,25 @@ class Atomate2Settings(BaseSettings):
         None, description="Additional settings applied to AMSET settings file."
     )
 
+
+    #QChem specific settings
+
+    QCHEM_CMD: str = Field(
+        "qchem_std", description="Command to run standard version of qchem."
+    )
+
+    QCHEM_CUSTODIAN_MAX_ERRORS: int = Field(
+        5, description="Maximum number of errors to correct before custodian gives up"
+    )
+
+    QCHEM_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
+        "fizzle",
+        description="Three-way toggle on what to do if the job looks OK but is actually"
+        " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
+        "stop children. - False: do nothing, continue with workflow as normal. 'error':"
+        " throw an error",
+    )
+
     class Config:
         """Pydantic config settings."""
 
