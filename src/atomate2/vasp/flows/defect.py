@@ -56,7 +56,7 @@ HSE_DOUBLE_RELAX = DoubleRelaxMaker(
             user_kpoints_settings=SPECIAL_KPOINT
         ),
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
-        copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR")},
+        copy_vasp_kwargs={"addtional_vasp_files": ("WAVECAR")},
     ),
 )
 
