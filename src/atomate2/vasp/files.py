@@ -144,7 +144,7 @@ def get_largest_relax_extension(
 def write_vasp_input_set(
     structure: Structure,
     input_set_generator: VaspInputGenerator,
-    directory: Union[str, Path] = ".",
+    directory: str | Path = ".",
     from_prev: bool = False,
     apply_incar_updates: bool = True,
     potcar_spec: bool = False,

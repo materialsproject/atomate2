@@ -153,7 +153,7 @@ def get_ccd_documents(
 
 @job(data=WSWQ, output_schema=FiniteDifferenceDocument)
 def calculate_finite_diff(
-    distorted_calc_dirs: List[str],
+    distorted_calc_dirs: list[str],
     ref_calc_index: int,
     run_vasp_kwargs: dict | None = None,
 ):

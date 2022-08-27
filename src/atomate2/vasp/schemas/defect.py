@@ -25,7 +25,7 @@ class FiniteDifferenceDocument(BaseModel):
     from distorted structures.
     """
 
-    wswqs: List[WSWQ]
+    wswqs: list[WSWQ]
 
     dir_name: str = Field(
         None, description="Directory where the WSWQ calculations are performed"
@@ -33,7 +33,7 @@ class FiniteDifferenceDocument(BaseModel):
     ref_dir: str = Field(
         None, description="Directory where the reference W(0) wavefunction comes from"
     )
-    distorted_dirs: List[str] = Field(
+    distorted_dirs: list[str] = Field(
         None,
         description="List of directories where the distorted W(Q) wavefunctions come from",
     )
@@ -43,7 +43,7 @@ class FiniteDifferenceDocument(BaseModel):
         cls,
         directory: str | Path,
         ref_dir: str | Path | None = None,
-        distorted_dirs: List[str] | None = None,
+        distorted_dirs: list[str] | None = None,
     ) -> FiniteDifferenceDocument:
         """
         Read the FintieDiff file.
@@ -89,38 +89,38 @@ class CCDDocument(BaseModel):
         None, description="The structure of defect (supercell) in charge state (q2)."
     )
 
-    distortions1: List[float] = Field(
+    distortions1: list[float] = Field(
         None,
         description="The distortions of the defect (supercell) in charge state (q1).",
     )
-    distortions2: List[float] = Field(
+    distortions2: list[float] = Field(
         None,
         description="The distortions of the defect (supercell) in charge state (q2).",
     )
 
-    energies1: List[float] = Field(
+    energies1: list[float] = Field(
         None, description="The energies of the defect (supercell) in charge state (q1)."
     )
-    energies2: List[float] = Field(
+    energies2: list[float] = Field(
         None, description="The energies of the defect (supercell) in charge state (q2)."
     )
 
-    static_dirs1: List[str] = Field(
+    static_dirs1: list[str] = Field(
         None,
         description="Directories of distorted calculations for the defect (supercell) in charge state (q1).",
     )
 
-    static_dirs2: List[str] = Field(
+    static_dirs2: list[str] = Field(
         None,
         description="Directories of distorted calculations for the defect (supercell) in charge state (q2).",
     )
 
-    static_uuids1: List[str] = Field(
+    static_uuids1: list[str] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in charge state (q1).",
     )
 
-    static_uuids2: List[str] = Field(
+    static_uuids2: list[str] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in charge state (q2).",
     )
@@ -138,14 +138,14 @@ class CCDDocument(BaseModel):
     @classmethod
     def from_task_outputs(
         cls,
-        structures1: List[Structure],
-        structures2: List[Structure],
-        energies1: List[float],
-        energies2: List[float],
-        static_dirs1: List[str],
-        static_dirs2: List[str],
-        static_uuids1: List[str],
-        static_uuids2: List[str],
+        structures1: list[Structure],
+        structures2: list[Structure],
+        energies1: list[float],
+        energies2: list[float],
+        static_dirs1: list[str],
+        static_dirs2: list[str],
+        static_uuids1: list[str],
+        static_uuids2: list[str],
         relaxed_uuid1: str,
         relaxed_uuid2: str,
     ):
@@ -202,9 +202,9 @@ class CCDDocument(BaseModel):
 
     @classmethod
     def from_entries(
-        cls: Type[CCDDocument],
-        entries1: List[ComputedStructureEntry],
-        entries2: List[ComputedStructureEntry],
+        cls: type[CCDDocument],
+        entries1: list[ComputedStructureEntry],
+        entries2: list[ComputedStructureEntry],
         relaxed_uuid1: str | None = None,
         relaxed_uuid2: str | None = None,
     ) -> CCDDocument:
@@ -294,8 +294,8 @@ class CCDDocument(BaseModel):
 
 
 def sort_pos_dist(
-    list_in: List[Any], s1: Any, s2: Any, dist: Callable
-) -> Tuple[List[Any], List[float]]:
+    list_in: list[Any], s1: Any, s2: Any, dist: Callable
+) -> tuple[list[Any], list[float]]:
     """
     Sort a list defined when we can only compute a positive-definite distance.
 

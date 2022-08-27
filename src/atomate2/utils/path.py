@@ -59,7 +59,7 @@ def strip_hostname(uri_path: str | Path) -> str:
 
 
 def find_recent_logfile(
-    dir_name: Union[Path, str], logfile_extensions: Union[str, List[str]]
+    dir_name: Path | str, logfile_extensions: str | list[str]
 ):
     """
     Find the most recent logfile in a given directory.

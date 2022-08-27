@@ -67,3 +67,8 @@ repos:
   - id: codespell
     stages: [commit, commit-msg]
     args: [--ignore-words-list, 'titel,statics,ba,nd,te']
+- repo: https://github.com/asottile/pyupgrade
+  rev: v2.37.3
+  hooks:
+    - id: pyupgrade
+      args: [--py38-plus]
