@@ -11,8 +11,8 @@ jobs:
   deploy-docs:
 
     # only run if commit is a push to master and the testing finished
-    # if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && ( github.event.workflow_run.head_branch == 'main' || startsWith(github.event.workflow_run.head_branch, 'v') ) }}
-    if: ${{ github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.') }}
+    # if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && ( github.event.workflow_run.head_branch == 'main' || startsWith(github.event.workflow_run.head_branch, 'v') )
+    if: github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.')
     runs-on: ubuntu-latest
 
     steps:
@@ -47,7 +47,7 @@ jobs:
   deploy-pypi:
 
     # only run if commit is a push to master, the testing finished, and tagged as version
-    if: ${{ github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.') }}
+    if: github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.')
     runs-on: ubuntu-latest
 
     steps:

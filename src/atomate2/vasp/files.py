@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence, Union
+from typing import Sequence
 
 from pymatgen.core import Structure
 

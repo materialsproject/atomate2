@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable
 
 from jobflow import Flow, Response, job
 from pydantic import BaseModel
