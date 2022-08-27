@@ -261,9 +261,6 @@ def generate_frequencies_eigenvectors(
         The high-frequency dielectric constant
     born: Matrix3D
         Born charges
-    full_born: bool
-        if true, vasp convention for born charges will be used,
-         otherwise reduced convention from phonopy
     born_run_job_dir: str, Path
         path to directory where born has been run
     born_run_uuid:
@@ -320,7 +317,6 @@ def generate_frequencies_eigenvectors(
         total_energy=total_energy,
         epsilon_static=epsilon_static,
         born=born,
-        full_born=full_born,
         npoints_band=npoints_band,
         kpoint_density_dos=kpoint_density_dos,
         tol_imaginary_modes=tol_imaginary_modes,

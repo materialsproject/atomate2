@@ -62,14 +62,16 @@ class PhononMaker(Maker):
     displacement: float
         displacement distance for phonons
     min_length: float
-        min length of the supercell that will be build
+        min length of the supercell that will be built
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
     get_supercell_kwargs: additional arguments
         to determine supercell
-    use_primitive_standard_structure: bool
-        this will enforce to start the phonon computation
+    use_symmetrized_structure: str
+        allowed strings: "primitive", "conventional", None
+
+        "primitive" will enforce to start the phonon computation
         from the primitive standard structure
         according to Setyawan, W., & Curtarolo, S. (2010).
         High-throughput electronic band structure calculations:
@@ -77,8 +79,8 @@ class PhononMaker(Maker):
         49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
         This makes it possible to use certain k-path definitions
         with this workflow. Otherwise, we must rely on seekpath
-    use_conventional_standard_structure: bool
-        this will enforce to start the phonon computation
+
+        "conventional" will enforce to start the phonon computation
         from the conventional standard structure
         according to Setyawan, W., & Curtarolo, S. (2010).
         High-throughput electronic band structure calculations:
@@ -94,10 +96,6 @@ class PhononMaker(Maker):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    generate_phonon_diplsacements_kwargs: dict
-        keyword arguments paseed to :obj: generate_phonon_displacements
-    run_phonon_displacements_kwargs : dict
-        Keyword arguments passed to :obj:`run_phonon_displacements`.
     born_maker: .BaseVaspMaker or None
         Maker to compute the BORN charges.
     phonon_displacement_maker : .BaseVaspMaker or None
@@ -129,14 +127,12 @@ class PhononMaker(Maker):
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_primitive_standard_structure: bool = False
+    use_symmetrized_structure: str | None = None
     use_conventional_standard_structure: bool = False
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
     static_energy_maker: BaseVaspMaker | None = field(default_factory=StaticMaker)
-    generate_phonon_displacements_kwargs: dict = field(default_factory=dict)
-    run_phonon_displacements_kwargs: dict = field(default_factory=dict)
     born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
@@ -150,9 +146,8 @@ class PhononMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-        born_manual: List[Matrix3D] | None = None,
-        full_born: bool = True,
-        epsilon_static_manual: Matrix3D | None = None,
+        born: List[Matrix3D] | None = None,
+        epsilon_static: Matrix3D | None = None,
         total_dft_energy: float | None = None,
         supercell_matrix: Matrix3D | None = None,
     ):
@@ -165,19 +160,17 @@ class PhononMaker(Maker):
             A pymatgen structure.
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
-        born_manual: Matrix3D
+        born: Matrix3D
             Instead of recomputing born charges and epsilon,
             these values can also be provided manually. born_maker has to
             be None
-            if full_born==False, it will expect Phonopy convention for symmetrically
-            inequivalent atoms
-            if fullborn==True, it will expect VASP convention with information for
+            this matrix can be provided in the phonopy convention
+            with born charges for symmetrically
+            inequivalent atoms only or
+            it can be provided in the VASP convention with information for
             every atom in unit cell. Please be careful when converting
-            structures within in this workflow
-        full_born: bool
-            reduced born file (only symmerically inequivalent atoms)
-            or full information on born
-        epsilon_static_manual: Matrix3D
+            structures within in this workflow as this could lead to errors
+        epsilon_static: Matrix3D
             The high-frequency dielectric constant
             Instead of recomputing born charges and epsilon,
             these values can also be provided manually. born_maker has to
@@ -190,9 +183,13 @@ class PhononMaker(Maker):
             instead of min_length, also a supercell_matrix can
             be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         """
+        if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
+            raise ValueError(
+                "use_symmetrized_structure can only be primitive, conventional," "None"
+            )
 
         if (
-            not self.use_primitive_standard_structure
+            not self.use_symmetrized_structure == "primitive"
             and self.kpath_scheme != "seekpath"
         ):
             raise ValueError(
@@ -210,13 +207,13 @@ class PhononMaker(Maker):
 
         jobs = []
 
-        if self.use_primitive_standard_structure:
+        if self.use_symmetrized_structure == "primitive":
             # These structures are compatible with many
             # of the kpath algorithms that are used for Materials Project
             prim_job = structure_to_primitive(structure, self.symprec)
             jobs.append(prim_job)
             structure = prim_job.output
-        elif self.use_conventional_standard_structure:
+        elif self.use_symmetrized_structure == "conventional":
             # it could be beneficial to use conventional
             # standard structures to arrive faster at supercells with right
             # angels
@@ -225,9 +222,7 @@ class PhononMaker(Maker):
             structure = conv_job.output
 
         # if supercell_matrix is None, supercell size will be determined
-        if supercell_matrix is not None:
-            self.supercell_matrix = None
-        else:
+        if supercell_matrix is None:
             supercell_job = get_supercell_size(
                 structure,
                 self.min_length,
@@ -235,7 +230,7 @@ class PhononMaker(Maker):
                 **self.get_supercell_size_kwargs,
             )
             jobs.append(supercell_job)
-            self.supercell_matrix = supercell_job.output
+            supercell_matrix = supercell_job.output
 
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
@@ -246,7 +241,7 @@ class PhononMaker(Maker):
         # get a phonon object from phonopy
         displacements = generate_phonon_displacements(
             structure=structure,
-            supercell_matrix=self.supercell_matrix,
+            supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
@@ -260,17 +255,10 @@ class PhononMaker(Maker):
         vasp_displacement_calcs = run_phonon_displacements(
             displacements=displacements.output,
             structure=structure,
-            supercell_matrix=self.supercell_matrix,
+            supercell_matrix=supercell_matrix,
             phonon_maker=self.phonon_displacement_maker,
         )
         jobs.append(vasp_displacement_calcs)
-
-        # Computation of BORN charges
-        if self.born_maker is not None and (
-            born_manual is None or epsilon_static_manual is None
-        ):
-            born_job = self.born_maker.make(structure)
-            jobs.append(born_job)
 
         # Computation of static energy
         if self.static_energy_maker is not None:
@@ -284,17 +272,20 @@ class PhononMaker(Maker):
             static_run_job_dir = None
             static_run_uuid = None
 
-        if self.born_maker is not None:
+        # Computation of BORN charges
+        if self.born_maker is not None and (born is None or epsilon_static is None):
+            born_job = self.born_maker.make(structure)
+            jobs.append(born_job)
+
             # I am not happy how we currently access "born" charges
             # This is very vasp specific code
             epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
             born = born_job.output.calcs_reversed[0].output.outcar["born"]
-            full_born = True
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
         else:
-            epsilon_static = epsilon_static_manual
-            born = born_manual
+            epsilon_static = epsilon_static
+            born = born
             born_run_job_dir = None
             born_run_uuid = None
 
@@ -310,7 +301,6 @@ class PhononMaker(Maker):
             displacement_data=vasp_displacement_calcs.output,
             epsilon_static=epsilon_static,
             born=born,
-            full_born=full_born,
             total_energy=total_energy,
             static_run_job_dir=static_run_job_dir,
             static_run_uuid=static_run_uuid,

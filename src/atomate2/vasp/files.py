@@ -177,7 +177,7 @@ def write_vasp_input_set(
     vis = input_set_generator.get_input_set(
         structure, prev_dir=prev_dir, potcar_spec=potcar_spec
     )
-    print(vis)
+
     if apply_incar_updates:
         vis.incar.update(SETTINGS.VASP_INCAR_UPDATES)
 

@@ -111,17 +111,17 @@ class PhononBSDOSDoc(BaseModel):
         description="Structure of Materials Project.",
     )
 
-    ph_bs: PhononBandStructureSymmLine = Field(
+    phonon_bandstructure: PhononBandStructureSymmLine = Field(
         None,
         description="Phonon band structure object.",
     )
 
-    ph_dos: PhononDos = Field(
+    phonon_dos: PhononDos = Field(
         None,
         description="Phonon density of states object.",
     )
 
-    free_energy_list: List[float] = Field(
+    free_energies: List[float] = Field(
         None,
         description="vibrational part of the free energies in kJ/mol per "
         "formula unit for temperatures in temperature_list",
@@ -192,7 +192,6 @@ class PhononBSDOSDoc(BaseModel):
         total_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
-        full_born: bool = True,
         **kwargs,
     ):
         """
@@ -223,10 +222,6 @@ class PhononBSDOSDoc(BaseModel):
             The high-frequency dielectric constant
         born: Matrix3D
             born charges
-        full_born: bool
-            format of born charges. if True, born
-            charges for whole cell are expected (VASP format)
-            if false, reduced phonopy format is expected
         **kwargs:
             additional arguments
 
@@ -260,7 +255,7 @@ class PhononBSDOSDoc(BaseModel):
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
         if born is not None and epsilon_static is not None:
-            if full_born:
+            if len(structure) == len(born):
                 borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
                     ucell=get_phonopy_structure(structure),
                     borns=np.array(born),
@@ -345,7 +340,7 @@ class PhononBSDOSDoc(BaseModel):
 
         # compute vibrational part of free energies per formula unit
         temperature_range = np.arange(kwargs["tmin"], kwargs["tmax"], kwargs["tstep"])
-        free_energy = [
+        free_energies = [
             dos.helmholtz_free_energy(structure=structure, t=temperature)
             for temperature in temperature_range
         ]
@@ -395,9 +390,9 @@ class PhononBSDOSDoc(BaseModel):
 
         return cls(
             structure=structure,
-            ph_bs=bs_symm_line,
-            ph_dos=dos,
-            free_energy_list=free_energy,
+            phonon_bandstructure=bs_symm_line,
+            phonon_dos=dos,
+            free_energies=free_energies,
             temperatures=temperature_range.tolist(),
             total_energy=total_energy / formula_units,
             has_imaginary_modes=imaginary_modes,
