@@ -128,7 +128,6 @@ class PhononMaker(Maker):
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
-    use_conventional_standard_structure: bool = False
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
@@ -245,7 +244,7 @@ class PhononMaker(Maker):
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
-            use_standard_primitive=self.use_primitive_standard_structure,
+            use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
         )

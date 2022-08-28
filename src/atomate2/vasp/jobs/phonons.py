@@ -142,7 +142,7 @@ def generate_phonon_displacements(
     displacement: float,
     sym_reduce: bool,
     symprec: float,
-    use_standard_primitive: bool,
+    use_symmetrized_structure: Union[str, None],
     kpath_scheme: str,
     code: str,
 ):
@@ -159,8 +159,8 @@ def generate_phonon_displacements(
         if True, symmetry will be used to generate displacements
     symprec: float
         precision to determine symmetry
-    use_standard_primitive: bool
-        will the standard primitive be used for the computation
+    use_symmetrized_structure: str»|None
+        primitive, conventional or None
     kpath_scheme: str
         scheme to generate kpath
     code:
@@ -171,7 +171,7 @@ def generate_phonon_displacements(
         factor = VaspToTHz
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
-    if use_standard_primitive and kpath_scheme != "seekpath":
+    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
         primitive_matrix: Union[List[List[float]], str] = [
             [1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],
