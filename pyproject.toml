@@ -64,6 +64,7 @@ strict = [
     "PyYAML==6.0",
     "cclib==1.7.1",
     "numpy",
+    "pymatgen-analysis-defects>=2022.8.24",
 ]
 
 [project.scripts]
