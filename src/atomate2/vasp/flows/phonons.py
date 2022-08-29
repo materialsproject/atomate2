@@ -161,8 +161,9 @@ class PhononMaker(Maker):
             A previous vasp calculation directory to use for copying outputs.
         born: Matrix3D
             Instead of recomputing born charges and epsilon,
-            these values can also be provided manually. born_maker has to
-            be None
+            these values can also be provided manually.
+            if born, epsilon_static are provided, the born
+            run will be skipped
             this matrix can be provided in the phonopy convention
             with born charges for symmetrically
             inequivalent atoms only or
@@ -172,11 +173,13 @@ class PhononMaker(Maker):
         epsilon_static: Matrix3D
             The high-frequency dielectric constant
             Instead of recomputing born charges and epsilon,
-            these values can also be provided manually. born_maker has to
-            be None
+            these values can also be provided.
+            if born, epsilon_static are provided, the born
+            run will be skipped
         total_dft_energy: float
             Instead of recomputing the energy of the bulk structure every time,
-            this value can also be provided in eV. Please make sure that
+            this value can also be provided in eV. If it is provided,
+            the static run will be skipped. Please make sure that
             it fits to the cell you are generating within this workflow
         supercell_matrix: list
             instead of min_length, also a supercell_matrix can
@@ -260,7 +263,7 @@ class PhononMaker(Maker):
         jobs.append(vasp_displacement_calcs)
 
         # Computation of static energy
-        if self.static_energy_maker is not None:
+        if self.static_energy_maker is not None and total_dft_energy is None:
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)
             total_energy = static_job.output.output.energy
