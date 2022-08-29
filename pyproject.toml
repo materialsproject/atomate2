@@ -25,11 +25,11 @@ classifiers = [
 ]
 requires-python = '>="3.8"'
 dependencies = [
-    'pymatgen>=2022.7.8',
-    'custodian>=2019.8.24',
+    "pymatgen>=2022.7.8",
+    "custodian>=2019.8.24",
     "pydantic",
     "monty",
-    'jobflow>=0.1.5',
+    "jobflow>=0.1.5",
     "PyYAML",
     "numpy",
     "click",
@@ -55,8 +55,8 @@ tests = [
 ]
 strict = [
     "pydantic==1.9.0",
-    "pymatgen==2022.7.8",
-    "custodian==2022.2.13",
+    "pymatgen==2022.8.23",
+    "custodian==2022.5.26",
     "monty==2022.4.26",
     "jobflow==0.1.8",
     "click==8.1.3",
