@@ -34,9 +34,7 @@ class ChargeStateRelaxSetGenerator(VaspInputGenerator):
     Since the defect cells are assumed to be large, we will use only a single k-point.
     """
 
-    def __post_init__(self):
-        self.use_structure_charge = True
-        super().__post_init__()
+    use_structure_charge: bool = True
 
     def get_incar_updates(
         self,
@@ -92,9 +90,7 @@ class ChargeStateStaticSetGenerator(VaspInputGenerator):
     Since the defect cells are assumed to be large, we will use only a single k-point.
     """
 
-    def __post_init__(self):
-        self.use_structure_charge = True
-        super().__post_init__()
+    use_structure_charge: bool = True
 
     def get_incar_updates(
         self,
@@ -149,9 +145,7 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
     Since the defect cells are assumed to be large, we will use only a single k-point.
     """
 
-    def __post_init__(self):
-        self.use_structure_charge = True
-        super().__post_init__()
+    use_structure_charge: bool = True
 
     def get_incar_updates(
         self,
@@ -213,9 +207,7 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
     Since the defect cells are assumed to be large, we will use only a single k-point.
     """
 
-    def __post_init__(self):
-        self.use_structure_charge = True
-        super().__post_init__()
+    use_structure_charge: bool = True
 
     def get_incar_updates(
         self,

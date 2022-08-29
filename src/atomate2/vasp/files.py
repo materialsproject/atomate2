@@ -33,7 +33,6 @@ def copy_vasp_outputs(
     """
     Copy VASP output files to the current directory.
 
-
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
     the suffix will be removed. Additional vasp files will be also be  copied with the
