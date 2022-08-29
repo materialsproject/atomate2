@@ -185,7 +185,7 @@ class PhononBSDOSDoc(BaseModel):
         displacement: float,
         sym_reduce: bool,
         symprec: float,
-        use_standard_primitive: bool,
+        use_symmetrized_structure: Union[str, None],
         kpath_scheme: str,
         code: str,
         displacement_data: dict[str, list],
@@ -208,8 +208,8 @@ class PhononBSDOSDoc(BaseModel):
         symprec: float
             precision to determine kpaths,
             primitive cells and symmetry in phonopy and pymatgen
-        use_standard_primitive: bool
-            has the standard primitivie cell been used
+        use_symmetrized_structure: str
+            primitive, conentional or None
         kpath_scheme: str
             kpath scheme to generate phonon band structure
         code: str
@@ -235,7 +235,7 @@ class PhononBSDOSDoc(BaseModel):
 
         cell = get_phonopy_structure(structure)
 
-        if use_standard_primitive and kpath_scheme != "seekpath":
+        if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
             primitive_matrix: Union[List[List[float]], str] = [
                 [1.0, 0.0, 0.0],
                 [0.0, 1.0, 0.0],

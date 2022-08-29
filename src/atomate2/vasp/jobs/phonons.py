@@ -204,14 +204,13 @@ def generate_frequencies_eigenvectors(
     displacement: float,
     sym_reduce: bool,
     symprec: float,
-    use_standard_primitive: bool,
+    use_symmetrized_structure: Union[str, None],
     kpath_scheme: str,
     code: str,
     displacement_data: dict[str, list],
     total_energy: float,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
-    full_born: bool = True,
     born_run_job_dir: str | Path | None = None,
     born_run_uuid=None,
     static_run_job_dir: str | Path | None = None,
@@ -247,8 +246,8 @@ def generate_frequencies_eigenvectors(
         if True, symmetry will be used in phonopy
     symprec: float
         precision to determine symmetry
-    use_standard_primitive: bool
-        if true, standard primitive cell will be used
+    use_symmetrized_structure: str
+        primitive, conventional, None are allowed
     kpath_scheme: str
         kpath scheme for phonon band structure computation
     code: str
@@ -310,7 +309,7 @@ def generate_frequencies_eigenvectors(
         displacement=displacement,
         sym_reduce=sym_reduce,
         symprec=symprec,
-        use_standard_primitive=use_standard_primitive,
+        use_symmetrized_structure=use_symmetrized_structure,
         kpath_scheme=kpath_scheme,
         code=code,
         displacement_data=displacement_data,

@@ -289,11 +289,11 @@ class PhononMaker(Maker):
             born_run_uuid = None
 
         phonon_collect = generate_frequencies_eigenvectors(
-            supercell_matrix=self.supercell_matrix,
+            supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
-            use_standard_primitive=self.use_primitive_standard_structure,
+            use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
             structure=structure,
