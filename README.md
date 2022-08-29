@@ -37,9 +37,9 @@ It is easy to customise and compose any of the above workflows.
 
 ## Quick start
 
-Workflows in atomate2 written using the [jobflow] library. Workflows are generated using
-`Maker` objects, that have a consistent API for modifying input settings and chaining
-workflows together.  Below, we demonstrate how to run a band structure workflow
+Workflows in atomate2 are written using the [jobflow] library. Workflows are generated using
+`Maker` objects which have a consistent API for modifying input settings and chaining
+workflows together. Below, we demonstrate how to run a band structure workflow
 (see the [documentation][RelaxBandStructure] for more details). In total, 4 VASP
 calculations will be performed:
 

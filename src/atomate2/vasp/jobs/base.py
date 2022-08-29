@@ -10,6 +10,7 @@ from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.core import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
     BandStructureSymmLine,
@@ -34,6 +35,7 @@ _DATA_OBJECTS = [
     Locpot,
     Chgcar,
     Wavecar,
+    Trajectory,
     "force_constants",
     "normalmode_eigenvecs",
 ]
