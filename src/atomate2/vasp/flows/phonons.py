@@ -70,7 +70,7 @@ class PhononMaker(Maker):
         to determine supercell
     use_symmetrized_structure: str
         allowed strings: "primitive", "conventional", None
-        
+
         - "primitive" will enforce to start the phonon computation
           from the primitive standard structure
           according to Setyawan, W., & Curtarolo, S. (2010).
@@ -269,7 +269,6 @@ class PhononMaker(Maker):
             static_run_job_dir = static_job.output.dir_name
             static_run_uuid = static_job.output.uuid
         else:
-            total_energy = total_dft_energy
             static_run_job_dir = None
             static_run_uuid = None
 
@@ -285,8 +284,6 @@ class PhononMaker(Maker):
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
         else:
-            epsilon_static = epsilon_static
-            born = born
             born_run_job_dir = None
             born_run_uuid = None
 
@@ -302,7 +299,7 @@ class PhononMaker(Maker):
             displacement_data=vasp_displacement_calcs.output,
             epsilon_static=epsilon_static,
             born=born,
-            total_energy=total_energy,
+            total_dft_energy=total_dft_energy,
             static_run_job_dir=static_run_job_dir,
             static_run_uuid=static_run_uuid,
             born_run_job_dir=born_run_job_dir,

@@ -189,7 +189,7 @@ class PhononBSDOSDoc(BaseModel):
         kpath_scheme: str,
         code: str,
         displacement_data: dict[str, list],
-        total_energy: float,
+        total_dft_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
@@ -216,7 +216,7 @@ class PhononBSDOSDoc(BaseModel):
             which code was used for computation
         displacement_data:
             output of the VASP displacement data
-        total_energy: float
+        total_dft_energy: float
             total energy in eV for whole cell
         epsilon_static: Matrix3D
             The high-frequency dielectric constant
@@ -394,7 +394,7 @@ class PhononBSDOSDoc(BaseModel):
             phonon_dos=dos,
             free_energies=free_energies,
             temperatures=temperature_range.tolist(),
-            total_energy=total_energy / formula_units,
+            total_energy=total_dft_energy / formula_units,
             has_imaginary_modes=imaginary_modes,
             force_constants=phonon.force_constants.tolist()
             if kwargs["store_force_constants"]

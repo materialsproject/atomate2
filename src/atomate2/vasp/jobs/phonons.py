@@ -208,7 +208,7 @@ def generate_frequencies_eigenvectors(
     kpath_scheme: str,
     code: str,
     displacement_data: dict[str, list],
-    total_energy: float,
+    total_dft_energy: float,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
     born_run_job_dir: str | Path | None = None,
@@ -217,21 +217,22 @@ def generate_frequencies_eigenvectors(
     static_run_uuid=None,
     optimization_run_job_dir: str | Path | None = None,
     optimization_run_uuid=None,
-    # combine serval of these options
-    npoints_band: int = 100,
-    kpoint_density_dos: int = 7000,
-    tol_imaginary_modes: float = 1e-5,
-    tmin=0,
-    tmax=500,
-    tstep=10,
-    units="THz",
-    img_format="eps",
-    create_thermal_displacements=True,
-    freq_min_thermal_displacements=0.0,
-    tmin_thermal_displacements=0,
-    tmax_thermal_displacements=500,
-    tstep_thermal_displacements=100,
     store_force_constants=True,
+    **kwargs,
+    # combine serval of these options
+    # npoints_band: int = 100,
+    # kpoint_density_dos: int = 7000,
+    # tol_imaginary_modes: float = 1e-5,
+    # tmin=0,
+    # tmax=500,
+    # tstep=10,
+    # units="THz",
+    # img_format="eps",
+    # create_thermal_displacements=True,
+    # freq_min_thermal_displacements=0.0,
+    # tmin_thermal_displacements=0,
+    # tmax_thermal_displacements=500,
+    # tstep_thermal_displacements=100,
 ):
     """
 
@@ -254,8 +255,8 @@ def generate_frequencies_eigenvectors(
         code to run computations
     displacement_data: dict
         outputs from displacements
-    total_energy: float
-        total energy of cell in eV
+    total_dft_energy: float
+        total dft energy of cell in eV
     epsilon_static: Matrix3D
         The high-frequency dielectric constant
     born: Matrix3D
@@ -272,6 +273,10 @@ def generate_frequencies_eigenvectors(
         path to directory where optimization has been run
     optimization_run_uuid:
         uuid for optimization
+    store_force_constants: bool
+        if true, force constants will be stored later on
+
+    #moved into kwargs
     npoints_band: int
         number of points for band structure computations
     kpoint_density_dos: int
@@ -299,8 +304,6 @@ def generate_frequencies_eigenvectors(
         maximum temperature to compute thermal displacement matrices
     tstep_thermal_displacements:
         temperature step to compute thermal displacement matrices
-    store_force_constants: bool
-        if true, force constants will be stored later on
 
     """
     phonon_doc = PhononBSDOSDoc.from_forces_born(
@@ -313,22 +316,9 @@ def generate_frequencies_eigenvectors(
         kpath_scheme=kpath_scheme,
         code=code,
         displacement_data=displacement_data,
-        total_energy=total_energy,
+        total_dft_energy=total_dft_energy,
         epsilon_static=epsilon_static,
         born=born,
-        npoints_band=npoints_band,
-        kpoint_density_dos=kpoint_density_dos,
-        tol_imaginary_modes=tol_imaginary_modes,
-        tmin=tmin,
-        tmax=tmax,
-        tstep=tstep,
-        units=units,
-        img_format=img_format,
-        freq_min_thermal_displacements=freq_min_thermal_displacements,
-        create_thermal_displacements=create_thermal_displacements,
-        tmin_thermal_displacements=tmin_thermal_displacements,
-        tmax_thermal_displacements=tmax_thermal_displacements,
-        tstep_thermal_displacements=tstep_thermal_displacements,
         store_force_constants=store_force_constants,
         born_run_job_dir=born_run_job_dir,
         static_run_job_dir=static_run_job_dir,
@@ -336,6 +326,19 @@ def generate_frequencies_eigenvectors(
         born_run_uuid=born_run_uuid,
         static_run_uuid=static_run_uuid,
         optimization_run_uuid=optimization_run_uuid,
+        npoints_band=kwargs["npoints_band"],
+        kpoint_density_dos=kwargs["kpoint_density_dos"],
+        tol_imaginary_modes=kwargs["tol_imaginary_modes"],
+        tmin=kwargs["tmin"],
+        tmax=kwargs["tmax"],
+        tstep=kwargs["tstep"],
+        units=kwargs["units"],
+        img_format=kwargs["img_format"],
+        freq_min_thermal_displacements=kwargs["freq_min_thermal_displacements"],
+        create_thermal_displacements=kwargs["create_thermal_displacements"],
+        tmin_thermal_displacements=kwargs["tmin_thermal_displacements"],
+        tmax_thermal_displacements=kwargs["tmax_thermal_displacements"],
+        tstep_thermal_displacements=kwargs["tstep_thermal_displacements"],
     )
 
     return phonon_doc
