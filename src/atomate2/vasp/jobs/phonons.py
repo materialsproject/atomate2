@@ -239,6 +239,8 @@ def generate_frequencies_eigenvectors(
         The high-frequency dielectric constant
     born: Matrix3D
         Born charges
+    kwargs:
+        additional arguments that are passed
 
     """
     phonon_doc = PhononBSDOSDoc.from_forces_born(
@@ -254,7 +256,7 @@ def generate_frequencies_eigenvectors(
         total_dft_energy=total_dft_energy,
         epsilon_static=epsilon_static,
         born=born,
-        kwargs=kwargs,
+        **kwargs,
     )
 
     return phonon_doc
