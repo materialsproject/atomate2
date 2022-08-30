@@ -70,24 +70,23 @@ class PhononMaker(Maker):
         to determine supercell
     use_symmetrized_structure: str
         allowed strings: "primitive", "conventional", None
-
-        "primitive" will enforce to start the phonon computation
-        from the primitive standard structure
-        according to Setyawan, W., & Curtarolo, S. (2010).
-        High-throughput electronic band structure calculations:
-        Challenges and tools. Computational Materials Science,
-        49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-        This makes it possible to use certain k-path definitions
-        with this workflow. Otherwise, we must rely on seekpath
-
-        "conventional" will enforce to start the phonon computation
-        from the conventional standard structure
-        according to Setyawan, W., & Curtarolo, S. (2010).
-        High-throughput electronic band structure calculations:
-        Challenges and tools. Computational Materials Science,
-        49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-        We will however use seekpath and primitive structures
-        as determined by from phonopy to compute the phonon band structure
+        
+        - "primitive" will enforce to start the phonon computation
+          from the primitive standard structure
+          according to Setyawan, W., & Curtarolo, S. (2010).
+          High-throughput electronic band structure calculations:
+          Challenges and tools. Computational Materials Science,
+          49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
+          This makes it possible to use certain k-path definitions
+          with this workflow. Otherwise, we must rely on seekpath
+        - "conventional" will enforce to start the phonon computation
+          from the conventional standard structure
+          according to Setyawan, W., & Curtarolo, S. (2010).
+          High-throughput electronic band structure calculations:
+          Challenges and tools. Computational Materials Science,
+          49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
+          We will however use seekpath and primitive structures
+          as determined by from phonopy to compute the phonon band structure
     bulk_relax_maker : .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
