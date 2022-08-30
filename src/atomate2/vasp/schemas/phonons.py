@@ -189,7 +189,7 @@ class PhononBSDOSDoc(BaseModel):
         kpath_scheme: str,
         code: str,
         displacement_data: dict[str, list],
-        total_dft_energy: float,
+        total_dft_energy: Union[float, None],
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
