@@ -265,7 +265,7 @@ class PhononMaker(Maker):
         if self.static_energy_maker is not None and total_dft_energy is None:
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)
-            total_energy = static_job.output.output.energy
+            total_dft_energy = static_job.output.output.energy
             static_run_job_dir = static_job.output.dir_name
             static_run_uuid = static_job.output.uuid
         else:
