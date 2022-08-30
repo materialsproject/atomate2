@@ -117,6 +117,8 @@ class PhononMaker(Maker):
         determines the dft code. currently only vasp is implemented.
         This keyword might enable the implementation of other codes
         in the future
+    store_force_constants: bool
+        if True, force constants will be stored
     """
 
     name: str = "phonon"
@@ -139,6 +141,7 @@ class PhononMaker(Maker):
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = "vasp"
+    store_force_constants: bool = True
 
     def make(
         self,
@@ -305,6 +308,7 @@ class PhononMaker(Maker):
             born_run_job_dir=born_run_job_dir,
             born_run_uuid=born_run_uuid,
             create_thermal_displacements=self.create_thermal_displacements,
+            store_force_constants=self.store_force_constants,
             **self.generate_frequencies_eigenvectors_kwargs,
         )
 
