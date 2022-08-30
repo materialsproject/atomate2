@@ -292,6 +292,7 @@ class PhononBSDOSDoc(BaseModel):
             symprec=symprec,
         )
 
+        npoints_band = kwargs.get("npoints_band", 101)
         qpoints, connections = get_band_qpoints_and_path_connections(
             kpath_concrete, npoints=kwargs.get("npoints_band", 101)
         )
@@ -323,9 +324,11 @@ class PhononBSDOSDoc(BaseModel):
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
+
+        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7000)
         kpoint = Kpoints.automatic_density(
             structure=structure,
-            kppa=kwargs.get("kpoint_density_dos", 7000),
+            kppa=kpoint_density_dos,
             force_gamma=True,
         )
         phonon.run_mesh(kpoint.kpts[0])
@@ -433,9 +436,9 @@ class PhononBSDOSDoc(BaseModel):
                 "static_run_uuid": kwargs["static_run_uuid"],
             },
             phonopy_settings={
-                "npoints_band": kwargs["npoints_band"],
+                "npoints_band": npoints_band,
                 "kpath_scheme": kpath_scheme,
-                "kpoint_density_dos": kwargs["kpoint_density_dos"],
+                "kpoint_density_dos": kpoint_density_dos,
             },
         )
 
