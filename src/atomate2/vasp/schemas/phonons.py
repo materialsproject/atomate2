@@ -437,14 +437,15 @@ class PhononBSDOSDoc(BaseModel):
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ):
         """
-            get high-symmetry points in k-space
-            Parameters
-        -   ---------
-            structure: Structure Object
-            kpath_scheme: str
-                string describing kpath
-            symprec: float
-                precision for symmetry determination
+        get high-symmetry points in k-space
+
+        Parameters
+        ----------
+        structure: Structure Object
+        kpath_scheme: str
+            string describing kpath
+        symprec: float
+            precision for symmetry determination
         """
 
         if kpath_scheme in [
