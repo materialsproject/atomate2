@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import List, Union
 
 import numpy as np
@@ -211,28 +210,7 @@ def generate_frequencies_eigenvectors(
     total_dft_energy: float,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
-    born_run_job_dir: str | Path | None = None,
-    born_run_uuid=None,
-    static_run_job_dir: str | Path | None = None,
-    static_run_uuid=None,
-    optimization_run_job_dir: str | Path | None = None,
-    optimization_run_uuid=None,
-    store_force_constants=True,
     **kwargs,
-    # combine serval of these options
-    # npoints_band: int = 100,
-    # kpoint_density_dos: int = 7000,
-    # tol_imaginary_modes: float = 1e-5,
-    # tmin=0,
-    # tmax=500,
-    # tstep=10,
-    # units="THz",
-    # img_format="eps",
-    # create_thermal_displacements=True,
-    # freq_min_thermal_displacements=0.0,
-    # tmin_thermal_displacements=0,
-    # tmax_thermal_displacements=500,
-    # tstep_thermal_displacements=100,
 ):
     """
 
@@ -261,49 +239,6 @@ def generate_frequencies_eigenvectors(
         The high-frequency dielectric constant
     born: Matrix3D
         Born charges
-    born_run_job_dir: str, Path
-        path to directory where born has been run
-    born_run_uuid:
-        uuid for born computation
-    static_run_job_dir:str, Path
-        path to directory where static run has been performed
-    static_run_uuid:
-        uuid for static computation
-    optimization_run_job_dir: str, Path
-        path to directory where optimization has been run
-    optimization_run_uuid:
-        uuid for optimization
-    store_force_constants: bool
-        if true, force constants will be stored later on
-
-    #moved into kwargs
-    npoints_band: int
-        number of points for band structure computations
-    kpoint_density_dos: int
-        density of the density of states computation
-    tol_imaginary_modes: float
-        tolerance to detect imaginary modes
-    tmin: float
-        minimum temperature to compute free energy
-    tmax: float
-        maximum temperature to compute free energy
-    tstep: float
-        temperature step to compute free energy
-    units:  str
-        unit for phonon band structure and phonon density of states
-    img_format: str
-        in which format will the phonon band structure and density of states be produced
-    create_thermal_displacements: bool
-        if True, thermal_displacement_matrices will be computed
-    freq_min_thermal_displacements: float
-        will set the frequencies to cutoff for
-        the computation of the thermal_displacement_matrices
-    tmin_thermal_displacements:
-        minimum temperature to compute thermal displacement matrices
-    tmax_thermal_displacements:
-        maximum temperature to compute thermal displacement matrices
-    tstep_thermal_displacements:
-        temperature step to compute thermal displacement matrices
 
     """
     phonon_doc = PhononBSDOSDoc.from_forces_born(
@@ -319,13 +254,13 @@ def generate_frequencies_eigenvectors(
         total_dft_energy=total_dft_energy,
         epsilon_static=epsilon_static,
         born=born,
-        store_force_constants=store_force_constants,
-        born_run_job_dir=born_run_job_dir,
-        static_run_job_dir=static_run_job_dir,
-        optimization_run_job_dir=optimization_run_job_dir,
-        born_run_uuid=born_run_uuid,
-        static_run_uuid=static_run_uuid,
-        optimization_run_uuid=optimization_run_uuid,
+        store_force_constants=kwargs["store_force_constants"],
+        born_run_job_dir=kwargs["born_run_job_dir"],
+        static_run_job_dir=kwargs["static_run_job_dir"],
+        optimization_run_job_dir=kwargs["optimization_run_job_dir"],
+        born_run_uuid=kwargs["born_run_uuid"],
+        static_run_uuid=kwargs["static_run_uuid"],
+        optimization_run_uuid=kwargs["optimization_run_uuid"],
         npoints_band=kwargs["npoints_band"],
         kpoint_density_dos=kwargs["kpoint_density_dos"],
         tol_imaginary_modes=kwargs["tol_imaginary_modes"],
