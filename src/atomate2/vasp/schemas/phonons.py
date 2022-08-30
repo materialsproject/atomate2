@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 import logging
-from typing import List, Union
+from typing import List, Optional, Union
 
 import numpy as np
 from phonopy import Phonopy
@@ -134,7 +134,7 @@ class PhononBSDOSDoc(BaseModel):
         " and other properties have been computed",
     )
 
-    total_dft_energy: float = Field(None, "total DFT energy per formula unit in eV")
+    total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
 
     has_imaginary_modes: bool = Field(
         None, description="if true, structure has imaginary modes"
@@ -189,7 +189,7 @@ class PhononBSDOSDoc(BaseModel):
         kpath_scheme: str,
         code: str,
         displacement_data: dict[str, list],
-        total_dft_energy: Union[float, None],
+        total_dft_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
@@ -398,15 +398,17 @@ class PhononBSDOSDoc(BaseModel):
             tdisp_mat = None
             tdisp_mat_cif = None
 
+        if total_dft_energy:
+            total_dft_energy_per_formula_unit = total_dft_energy / formula_units
+        else:
+            total_dft_energy_per_formula_unit = None
         return cls(
             structure=structure,
             phonon_bandstructure=bs_symm_line,
             phonon_dos=dos,
             free_energies=free_energies,
             temperatures=temperature_range.tolist(),
-            total_dft_energy=total_dft_energy / formula_units
-            if total_dft_energy
-            else None,
+            total_dft_energy=total_dft_energy_per_formula_unit,
             has_imaginary_modes=imaginary_modes,
             force_constants=phonon.force_constants.tolist()
             if kwargs["store_force_constants"]
