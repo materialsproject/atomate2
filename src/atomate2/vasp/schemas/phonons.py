@@ -293,7 +293,7 @@ class PhononBSDOSDoc(BaseModel):
         )
 
         qpoints, connections = get_band_qpoints_and_path_connections(
-            kpath_concrete, npoints=kwargs["npoints_band"]
+            kpath_concrete, npoints=kwargs.get("npoints_band", 101)
         )
 
         # phonon band structures will always be cmouted
@@ -309,13 +309,13 @@ class PhononBSDOSDoc(BaseModel):
 
         new_plotter.save_plot(
             "phonon_band_structure.eps",
-            img_format=kwargs["img_format"],
-            units=kwargs["units"],
+            img_format=kwargs.get("img_format", "eps"),
+            units=kwargs.get("units", "THz"),
         )
 
         # will determine if imaginary modes are present in the structure
         imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=kwargs["tol_imaginary_modes"]
+            tol=kwargs.get("tol_imaginary_modes", 1e-5)
         )
 
         # gets data for visualization on website - yaml is also enough
@@ -324,7 +324,9 @@ class PhononBSDOSDoc(BaseModel):
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
         kpoint = Kpoints.automatic_density(
-            structure=structure, kppa=kwargs["kpoint_density_dos"], force_gamma=True
+            structure=structure,
+            kppa=kwargs.get("kpoint_density_dos", 7000),
+            force_gamma=True,
         )
         phonon.run_mesh(kpoint.kpts[0])
         phonon.run_total_dos()
@@ -334,12 +336,14 @@ class PhononBSDOSDoc(BaseModel):
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
             filename="phonon_dos.eps",
-            img_format=kwargs["img_format"],
-            units=kwargs["units"],
+            img_format=kwargs.get("img_format", "eps"),
+            units=kwargs.get("units", "THz"),
         )
 
         # compute vibrational part of free energies per formula unit
-        temperature_range = np.arange(kwargs["tmin"], kwargs["tmax"], kwargs["tstep"])
+        temperature_range = np.arange(
+            kwargs.get("tmin", 0), kwargs.get("tmax", 100), kwargs.get("tstep", 100)
+        )
         free_energies = [
             dos.helmholtz_free_energy(structure=structure, t=temperature)
             for temperature in temperature_range
@@ -359,16 +363,16 @@ class PhononBSDOSDoc(BaseModel):
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
             phonon.run_thermal_displacement_matrices(
-                t_min=kwargs["tmin_thermal_displacements"],
-                t_max=kwargs["tmax_thermal_displacements"],
-                t_step=kwargs["tstep_thermal_displacements"],
-                freq_min=kwargs["freq_min_thermal_displacements"],
+                t_min=kwargs.get("tmin_thermal_displacements", 0),
+                t_max=kwargs.get("tmax_thermal_displacements", 500),
+                t_step=kwargs.get("tstep_thermal_displacements", 100),
+                freq_min=kwargs.get("freq_min_thermal_displacements", 0.0),
             )
 
             temperature_range_thermal_displacements = np.arange(
-                kwargs["tmin_thermal_displacements"],
-                kwargs["tmax_thermal_displacements"],
-                kwargs["tstep_thermal_displacements"],
+                kwargs.get("tmin_thermal_displacements", 0),
+                kwargs.get("tmax_thermal_displacements", 500),
+                kwargs.get("tstep_thermal_displacements", 100),
             )
             for i, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
