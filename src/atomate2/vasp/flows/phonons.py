@@ -241,6 +241,11 @@ class PhononMaker(Maker):
             bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
+            optimization_run_job_dir = bulk.output.dir_name
+            optimization_run_uuid = bulk.output.uuid
+        else:
+            optimization_run_job_dir = None
+            optimization_run_uuid = None
 
         # get a phonon object from phonopy
         displacements = generate_phonon_displacements(
@@ -307,6 +312,8 @@ class PhononMaker(Maker):
             static_run_uuid=static_run_uuid,
             born_run_job_dir=born_run_job_dir,
             born_run_uuid=born_run_uuid,
+            optimization_run_job_dir=optimization_run_job_dir,
+            optimization_run_uuid=optimization_run_uuid,
             create_thermal_displacements=self.create_thermal_displacements,
             store_force_constants=self.store_force_constants,
             **self.generate_frequencies_eigenvectors_kwargs,
