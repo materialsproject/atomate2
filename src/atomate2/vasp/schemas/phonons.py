@@ -437,7 +437,7 @@ class PhononBSDOSDoc(BaseModel):
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ):
         """
-        get high-symmetry points in k-space
+        get high-symmetry points in k-space in phonopy format
 
         Parameters
         ----------
@@ -446,6 +446,8 @@ class PhononBSDOSDoc(BaseModel):
             string describing kpath
         symprec: float
             precision for symmetry determination
+        **kpath_kwargs:
+            additional parameters that can be passed to this method as a dict
         """
 
         if kpath_scheme in [
