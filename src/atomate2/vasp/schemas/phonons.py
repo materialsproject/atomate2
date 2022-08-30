@@ -398,7 +398,7 @@ class PhononBSDOSDoc(BaseModel):
             phonon_dos=dos,
             free_energies=free_energies,
             temperatures=temperature_range.tolist(),
-            total_energy=total_dft_energy / formula_units,
+            total_energy=total_dft_energy / formula_units if total_dft_energy else None,
             has_imaginary_modes=imaginary_modes,
             force_constants=phonon.force_constants.tolist()
             if kwargs["store_force_constants"]
