@@ -362,11 +362,14 @@ class PhononBSDOSDoc(BaseModel):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
+            freq_min_thermal_displacements = kwargs.get(
+                "freq_min_thermal_displacements", 0.0
+            )
             phonon.run_thermal_displacement_matrices(
                 t_min=kwargs.get("tmin_thermal_displacements", 0),
                 t_max=kwargs.get("tmax_thermal_displacements", 500),
                 t_step=kwargs.get("tstep_thermal_displacements", 100),
-                freq_min=kwargs.get("freq_min_thermal_displacements", 0.0),
+                freq_min=freq_min_thermal_displacements,
             )
 
             temperature_range_thermal_displacements = np.arange(
@@ -415,9 +418,7 @@ class PhononBSDOSDoc(BaseModel):
                 "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),
                 "thermal_displacement_matrix_cif": tdisp_mat_cif,
                 "thermal_displacement_matrix": tdisp_mat,
-                "freq_min_thermal_displacements": kwargs[
-                    "freq_min_thermal_displacements"
-                ],
+                "freq_min_thermal_displacements": freq_min_thermal_displacements,
             },
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],
