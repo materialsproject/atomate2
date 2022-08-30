@@ -600,7 +600,6 @@ def _get_transformations(
         found = False
         for m in (
             "advanced_transformations",
-            "defect_transformations",
             "site_transformations",
             "standard_transformations",
         ):
