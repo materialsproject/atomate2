@@ -134,7 +134,7 @@ class PhononBSDOSDoc(BaseModel):
         " and other properties have been computed",
     )
 
-    total_dft_energy: float = Field("total DFT energy per formula unit in eV")
+    total_dft_energy: float = Field(None, "total DFT energy per formula unit in eV")
 
     has_imaginary_modes: bool = Field(
         None, description="if true, structure has imaginary modes"
