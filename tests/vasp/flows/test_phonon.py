@@ -274,6 +274,171 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     )
 
 
+def test_phonon_wf_only_displacements_none(mock_vasp, clean_dir):
+    from jobflow import run_locally
+
+    structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "phonon static 1/1": "Si_phonons_3/phonon_static_1_1",
+        "static": "Si_phonons_3/static",
+    }
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "phonon static 1/1": {"incar_settings": ["NSW", "ISMEAR"]},
+        "static": {"incar_settings": ["NSW", "ISMEAR"]},
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # !!! Generate job
+    job = PhononMaker(
+        min_length=3.0,
+        bulk_relax_maker=None,
+        static_energy_maker=None,
+        born_maker=None,
+        use_symmetrized_structure=None,
+        create_thermal_displacements=False,
+        store_force_constants=False,
+        prefer_90_degrees=False,
+    ).make(structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # !!! validation on the outputs
+    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.free_energies,
+        [
+            5774.566996471001,
+            5616.29786373465,
+            4724.736849262271,
+            3044.193412800876,
+            696.3435315493462,
+        ],
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.entropies,
+        [
+            0.0,
+            4.78666294741712,
+            13.025332342984333,
+            20.36075467024152,
+            26.398072464162844,
+        ],
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.heat_capacities,
+        [
+            0.0,
+            8.047497695382027,
+            15.971019069215203,
+            19.970326488158854,
+            21.874752681396565,
+        ],
+    )
+
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.internal_energies,
+        [
+            5774.566996471001,
+            6094.964157503006,
+            7329.8033166885825,
+            9152.419812411707,
+            11255.57251541699,
+        ],
+    )
+
+    assert isinstance(
+        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
+        PhononBandStructureSymmLine,
+    )
+    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
+    assert (
+        getattr(responses[job.jobs[-1].uuid][1].output, "thermal_displacement_data")
+        is None
+    )
+    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
+    )
+    assert getattr(responses[job.jobs[-1].uuid][1].output, "force_constants") is None
+    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
+    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
+    assert getattr(responses[job.jobs[-1].uuid][1].output, "total_dft_energy") is None
+    assert getattr(responses[job.jobs[-1].uuid][1].output, "born") is None
+    assert getattr(responses[job.jobs[-1].uuid][1].output, "epsilon_static") is None
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
+        ((-1.0, 1.0, 1.0), (1.0, -1.0, 1.0), (1.0, 1.0, -1.0)),
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        (
+            (0, 0.5000000000000001, 0.5000000000000001),
+            (0.5000000000000001, 0.0, 0.5000000000000001),
+            (0.5000000000000001, 0.5000000000000001, 0.0),
+        ),
+    )
+    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert isinstance(
+        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        PhononComputationalSettings,
+    )
+    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
+    assert (
+        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
+        == "seekpath"
+    )
+    assert (
+        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
+        == 7000
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.entropies,
+        [
+            0.0,
+            4.758835931690624,
+            13.006294732918269,
+            20.352092580946515,
+            26.397942155819845,
+        ],
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.heat_capacities,
+        [
+            0.0,
+            8.049678406519691,
+            15.993062329741573,
+            19.998721812895262,
+            21.90544411094204,
+        ],
+    )
+
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.internal_energies,
+        [
+            5782.997103024745,
+            6102.443839457205,
+            7338.666539742863,
+            9163.863165837072,
+            11269.987019231552,
+        ],
+    )
+
+
 # test all kpath schemes
 @pytest.mark.parametrize(
     "kpathscheme", ["seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro"]
