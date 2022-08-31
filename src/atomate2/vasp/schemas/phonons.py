@@ -261,8 +261,8 @@ class PhononBSDOSDoc(BaseModel):
                     supercell_matrix=phonon.supercell_matrix,
                 )
             else:
-                borns = born
-                epsilon = epsilon_static
+                borns = np.array(born)
+                epsilon = np.array(epsilon_static)
             if code == "vasp":
                 if not np.all(np.isclose(borns, 0.0)):
                     phonon.nac_params = {

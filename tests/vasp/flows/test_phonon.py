@@ -228,6 +228,16 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
+    born = [
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+    ]
+    epsilon_static = [
+        [5.24520821, 0.0, 0.0],
+        [0.0, 5.24520817, -0.0],
+        [0.0, 0.0, 5.27805909],
+    ]
+    total_dft_energy_per_formula_unit = -5
     # !!! Generate job
     job = PhononMaker(
         min_length=3.0,
@@ -235,7 +245,12 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         static_energy_maker=None,
         born_maker=None,
         use_symmetrized_structure="primitive",
-    ).make(structure=structure, total_dft_energy_per_formula_unit=-5)
+    ).make(
+        structure=structure,
+        total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
+        born=born,
+        epsilon_static=epsilon_static,
+    )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -276,9 +291,14 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "born") is None
-    assert responses[job.jobs[-1].uuid][1].output.total_dft_energy == -5
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "epsilon_static") is None
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.born, born)
+    assert np.isclose(
+        responses[job.jobs[-1].uuid][1].output.total_dft_energy,
+        total_dft_energy_per_formula_unit,
+    )
+    assert np.allclose(
+        responses[job.jobs[-1].uuid][1].output.epsilon_static, epsilon_static
+    )
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
         [[-1.0, 1.0, 1.0], [1.0, -1.0, 1.0], [1.0, 1.0, -1.0]],
@@ -304,3 +324,12 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
 
 
 # test run including all steps of the computation
+
+
+# use a structure where born charges are actually useful
+
+
+# test runs for different cell definitions
+
+
+# test raises?
