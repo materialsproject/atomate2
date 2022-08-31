@@ -357,7 +357,7 @@ class PhononBSDOSDoc(BaseModel):
 
         # compute vibrational part of free energies per formula unit
         temperature_range = np.arange(
-            kwargs.get("tmin", 0), kwargs.get("tmax", 500), kwargs.get("tstep", 100)
+            kwargs.get("tmin", 0), kwargs.get("tmax", 500), kwargs.get("tstep", 10)
         )
 
         free_energies = [

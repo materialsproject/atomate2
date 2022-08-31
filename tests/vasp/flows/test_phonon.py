@@ -44,6 +44,7 @@ def test_phonon_wf_only_displacements_new(mock_vasp, clean_dir):
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -174,6 +175,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -308,6 +310,7 @@ def test_phonon_wf_only_displacements_none(mock_vasp, clean_dir):
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -387,9 +390,9 @@ def test_phonon_wf_only_displacements_none(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
         (
-            (0, 0.5000000000000001, 0.5000000000000001),
-            (0.5000000000000001, 0.0, 0.5000000000000001),
-            (0.5000000000000001, 0.5000000000000001, 0.0),
+            (1.0000000000000002, 0.0, 0.0),
+            (0.0, 1.0000000000000002, 0.0),
+            (0.0, 0.0, 1.0000000000000002),
         ),
     )
     assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
@@ -410,31 +413,31 @@ def test_phonon_wf_only_displacements_none(mock_vasp, clean_dir):
         responses[job.jobs[-1].uuid][1].output.entropies,
         [
             0.0,
-            4.758835931690624,
-            13.006294732918269,
-            20.352092580946515,
-            26.397942155819845,
+            4.78666294741712,
+            13.025332342984333,
+            20.36075467024152,
+            26.398072464162844,
         ],
     )
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
         [
             0.0,
-            8.049678406519691,
-            15.993062329741573,
-            19.998721812895262,
-            21.90544411094204,
+            8.047497695382027,
+            15.971019069215203,
+            19.970326488158854,
+            21.874752681396565,
         ],
     )
 
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
         [
-            5782.997103024745,
-            6102.443839457205,
-            7338.666539742863,
-            9163.863165837072,
-            11269.987019231552,
+            5774.566996471001,
+            6094.964157503006,
+            7329.8033166885825,
+            9152.419812411707,
+            11255.57251541699,
         ],
     )
 
@@ -469,6 +472,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
         born_maker=None,
         use_symmetrized_structure="primitive",
         kpath_scheme=kpathscheme,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -575,6 +579,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         static_energy_maker=None,
         born_maker=None,
         use_symmetrized_structure="primitive",
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(
         structure=structure,
         total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
