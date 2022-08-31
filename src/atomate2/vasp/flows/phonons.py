@@ -271,9 +271,8 @@ class PhononMaker(Maker):
         jobs.append(vasp_displacement_calcs)
 
         # Computation of static energy
-        if (
-            self.static_energy_maker is not None
-            and total_dft_energy_per_formula_unit is None
+        if (self.static_energy_maker is not None) and (
+            total_dft_energy_per_formula_unit is None
         ):
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)

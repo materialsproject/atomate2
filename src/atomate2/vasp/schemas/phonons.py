@@ -430,10 +430,11 @@ class PhononBSDOSDoc(BaseModel):
             / structure.composition.reduced_composition.num_atoms
         )
 
-        if total_dft_energy:
+        if total_dft_energy is not None:
             total_dft_energy_per_formula_unit = total_dft_energy / formula_units
         else:
             total_dft_energy_per_formula_unit = None
+
         return cls(
             structure=structure,
             phonon_bandstructure=bs_symm_line,
