@@ -462,7 +462,6 @@ class PhononBSDOSDoc(BaseModel):
         if kpath_scheme in [
             "setyawan_curtarolo",
             "latimer_munro",
-            "all",
             "hinuma",
         ]:
             highsymmkpath = HighSymmKpath(

@@ -108,8 +108,8 @@ class PhononMaker(Maker):
          you can only use seekpath with any kind of cell
          Otherwise, please use the standard primitive structure
          Available schemes are:
-         "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro",
-         "all". "seekpath" and "hinuma" are the same definition but
+         "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro".
+         "seekpath" and "hinuma" are the same definition but
          seekpath can be used with any kind of unit cell as
          it relies on phonopy to handle the relationship
          to the primitive cell and not pymatgen
@@ -205,7 +205,6 @@ class PhononMaker(Maker):
             "hinuma",
             "setyawan_curtarolo",
             "latimer_munro",
-            "all",
         ]:
             raise ValueError("kpath scheme is not implemented")
 
