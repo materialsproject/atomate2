@@ -18,6 +18,7 @@ from atomate2.vasp.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
     get_supercell_size,
+    get_total_energy_per_cell,
     run_phonon_displacements,
     structure_to_conventional,
     structure_to_primitive,
@@ -149,7 +150,7 @@ class PhononMaker(Maker):
         prev_vasp_dir: str | Path | None = None,
         born: List[Matrix3D] | None = None,
         epsilon_static: Matrix3D | None = None,
-        total_dft_energy: float | None = None,
+        total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
     ):
         """
@@ -178,11 +179,12 @@ class PhononMaker(Maker):
             these values can also be provided.
             if born, epsilon_static are provided, the born
             run will be skipped
-        total_dft_energy: float
+        total_dft_energy_per_formula_unit: float
+            It has to be given per formula unit (as a result in corresponding Doc)
             Instead of recomputing the energy of the bulk structure every time,
             this value can also be provided in eV. If it is provided,
-            the static run will be skipped. Please make sure that
-            it fits to the cell you are generating within this workflow
+            the static run will be skipped. This energy is the typical
+            output dft energy of the dft workflow. No conversion needed.
         supercell_matrix: list
             instead of min_length, also a supercell_matrix can
             be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
@@ -269,13 +271,25 @@ class PhononMaker(Maker):
         jobs.append(vasp_displacement_calcs)
 
         # Computation of static energy
-        if self.static_energy_maker is not None and total_dft_energy is None:
+        if (
+            self.static_energy_maker is not None
+            and total_dft_energy_per_formula_unit is None
+        ):
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
             static_run_job_dir = static_job.output.dir_name
             static_run_uuid = static_job.output.uuid
         else:
+            if total_dft_energy_per_formula_unit is not None:
+                # to make sure that one can reuse results from Doc
+                compute_total_energy_job = get_total_energy_per_cell(
+                    total_dft_energy_per_formula_unit, structure
+                )
+                jobs.append(compute_total_energy_job)
+                total_dft_energy = compute_total_energy_job.output
+            else:
+                total_dft_energy = None
             static_run_job_dir = None
             static_run_uuid = None
 

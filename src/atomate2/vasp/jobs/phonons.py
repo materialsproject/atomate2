@@ -67,6 +67,28 @@ def structure_to_conventional(structure: Structure, symprec: float):
 
 
 @job
+def get_total_energy_per_cell(
+    total_dft_energy_per_formula_unit: float, structure: Structure
+):
+    """
+    Job that computes total dft energy of the cell
+    Parameters
+    ----------
+    total_dft_energy_per_formula_unit: float
+        total energy in eV per formula unit
+    structure: Structure object
+
+
+    """
+    formula_units = (
+        structure.composition.num_atoms
+        / structure.composition.reduced_composition.num_atoms
+    )
+
+    return total_dft_energy_per_formula_unit * formula_units
+
+
+@job
 def get_supercell_size(
     structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
 ):
@@ -234,7 +256,7 @@ def generate_frequencies_eigenvectors(
     displacement_data: dict
         outputs from displacements
     total_dft_energy: float
-        total dft energy of cell in eV
+        total dft energy in eV per cell
     epsilon_static: Matrix3D
         The high-frequency dielectric constant
     born: Matrix3D

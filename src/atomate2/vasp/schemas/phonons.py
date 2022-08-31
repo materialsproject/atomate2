@@ -213,7 +213,7 @@ class PhononBSDOSDoc(BaseModel):
         displacement_data:
             output of the VASP displacement data
         total_dft_energy: float
-            total energy in eV for whole cell
+            total energy in eV per cell
         epsilon_static: Matrix3D
             The high-frequency dielectric constant
         born: Matrix3D
@@ -348,11 +348,6 @@ class PhononBSDOSDoc(BaseModel):
             for temperature in temperature_range
         ]
 
-        # compute formula units to divide total dft energy by formula unit
-        formula_units = (
-            structure.composition.num_atoms
-            / structure.composition.reduced_composition.num_atoms
-        )
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
@@ -393,6 +388,11 @@ class PhononBSDOSDoc(BaseModel):
         else:
             tdisp_mat = None
             tdisp_mat_cif = None
+
+        formula_units = (
+            structure.composition.num_atoms
+            / structure.composition.reduced_composition.num_atoms
+        )
 
         if total_dft_energy:
             total_dft_energy_per_formula_unit = total_dft_energy / formula_units
