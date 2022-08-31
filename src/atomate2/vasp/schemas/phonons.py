@@ -123,8 +123,25 @@ class PhononBSDOSDoc(BaseModel):
 
     free_energies: List[float] = Field(
         None,
-        description="vibrational part of the free energies in kJ/mol per "
+        description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
+    )
+
+    heat_capacities: List[float] = Field(
+        None,
+        description="heat capacities in J/K/mol per "
+        "formula unit for temperatures in temperature_list",
+    )
+
+    internal_energies: List[float] = Field(
+        None,
+        description="internal energies in  J/mol per "
+        "formula unit for temperatures in temperature_list",
+    )
+    entropies: List[float] = Field(
+        None,
+        description="entropies in J/(K*mol) per formula unit"
+        "for temperatures in temperature_list ",
     )
 
     temperatures: List[int] = Field(
@@ -223,7 +240,6 @@ class PhononBSDOSDoc(BaseModel):
 
 
         """
-
         if code == "vasp":
             factor = VaspToTHz
         # This opens the opportunity to add support for other codes
@@ -343,8 +359,28 @@ class PhononBSDOSDoc(BaseModel):
         temperature_range = np.arange(
             kwargs.get("tmin", 0), kwargs.get("tmax", 500), kwargs.get("tstep", 100)
         )
+
         free_energies = [
-            dos.helmholtz_free_energy(structure=structure, t=temperature)
+            dos.helmholtz_free_energy(
+                structure=get_pmg_structure(phonon.primitive), t=temperature
+            )
+            for temperature in temperature_range
+        ]
+
+        entropies = [
+            dos.entropy(structure=get_pmg_structure(phonon.primitive), t=temperature)
+            for temperature in temperature_range
+        ]
+
+        internal_energies = [
+            dos.internal_energy(
+                structure=get_pmg_structure(phonon.primitive), t=temperature
+            )
+            for temperature in temperature_range
+        ]
+
+        heat_capacities = [
+            dos.cv(structure=get_pmg_structure(phonon.primitive), t=temperature)
             for temperature in temperature_range
         ]
 
@@ -403,6 +439,9 @@ class PhononBSDOSDoc(BaseModel):
             phonon_bandstructure=bs_symm_line,
             phonon_dos=dos,
             free_energies=free_energies,
+            internal_energies=internal_energies,
+            heat_capacities=heat_capacities,
+            entropies=entropies,
             temperatures=temperature_range.tolist(),
             total_dft_energy=total_dft_energy_per_formula_unit,
             has_imaginary_modes=imaginary_modes,
