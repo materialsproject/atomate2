@@ -153,10 +153,6 @@ class PhononBSDOSDoc(BaseModel):
     epsilon_static: Matrix3D = Field(
         None, description="The high-frequency dielectric constant"
     )
-    dft_phononwebsite: dict = Field(
-        "dict of the band structure information that can be visualized with phonon"
-        "website (http://henriquemiranda.github.io/phononwebsite)"
-    )
 
     supercell_matrix: Matrix3D = Field("matrix describing the supercell")
     primitive_matrix: Matrix3D = Field(
@@ -169,7 +165,7 @@ class PhononBSDOSDoc(BaseModel):
         "Field including settings for Phonopy"
     )
 
-    thermal_displacement_data: ThermalDisplacementData = Field(
+    thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
         "Includes all data of the " "computation of the thermal displacements"
     )
 
@@ -320,7 +316,7 @@ class PhononBSDOSDoc(BaseModel):
         )
 
         # gets data for visualization on website - yaml is also enough
-        phononwebsite_dict = bs_symm_line.as_phononwebsite()
+        bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
@@ -345,7 +341,7 @@ class PhononBSDOSDoc(BaseModel):
 
         # compute vibrational part of free energies per formula unit
         temperature_range = np.arange(
-            kwargs.get("tmin", 0), kwargs.get("tmax", 100), kwargs.get("tstep", 100)
+            kwargs.get("tmin", 0), kwargs.get("tmax", 500), kwargs.get("tstep", 100)
         )
         free_energies = [
             dos.helmholtz_free_energy(structure=structure, t=temperature)
@@ -415,7 +411,6 @@ class PhononBSDOSDoc(BaseModel):
             else None,
             born=borns.tolist() if borns is not None else None,
             epsilon_static=epsilon.tolist() if epsilon is not None else None,
-            dft_phononwebsite=phononwebsite_dict,
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
             code="vasp",
@@ -424,7 +419,9 @@ class PhononBSDOSDoc(BaseModel):
                 "thermal_displacement_matrix_cif": tdisp_mat_cif,
                 "thermal_displacement_matrix": tdisp_mat,
                 "freq_min_thermal_displacements": freq_min_thermal_displacements,
-            },
+            }
+            if kwargs["create_thermal_displacements"]
+            else None,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],
                 "static_run_job_dir": kwargs["static_run_job_dir"],
