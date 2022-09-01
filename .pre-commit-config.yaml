@@ -10,7 +10,7 @@ repos:
   - id: end-of-file-fixer
   - id: trailing-whitespace
 - repo: https://github.com/myint/autoflake
-  rev: v1.5.1
+  rev: v1.5.2
   hooks:
   - id: autoflake
     args:
@@ -19,7 +19,7 @@ repos:
     - --remove-unused-variables
     - --ignore-init-module-imports
 - repo: https://github.com/psf/black
-  rev: 22.6.0
+  rev: 22.8.0
   hooks:
   - id: black
 - repo: https://github.com/asottile/blacken-docs
