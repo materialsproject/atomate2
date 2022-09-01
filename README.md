@@ -1,6 +1,6 @@
 # atomate2
 
-[![code coverage](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
+[![tests](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
@@ -121,7 +121,6 @@ Atomate2 was designed and developed by Alex Ganose.
 
 A full list of all contributors can be found [here][contributors].
 
-[maggma]: https://materialsproject.github.io/maggma/
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
