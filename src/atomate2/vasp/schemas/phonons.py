@@ -38,9 +38,7 @@ __all__ = [
 
 
 class PhononComputationalSettings(BaseModel):
-    """
-    Collection to store computational settings for the phonon computation.
-    """
+    """Collection to store computational settings for the phonon computation."""
 
     # could be optional and implemented at a later stage?
     npoints_band: int = Field("number of points for band structure computation")
@@ -51,9 +49,7 @@ class PhononComputationalSettings(BaseModel):
 
 
 class ThermalDisplacementData(BaseModel):
-    """
-    Collection to store information on the thermal displacement matrices.
-    """
+    """Collection to store information on the thermal displacement matrices."""
 
     freq_min_thermal_displacements: float = Field(
         "cutoff frequency in THz to avoid numerical issues in the "
@@ -74,9 +70,7 @@ class ThermalDisplacementData(BaseModel):
 
 
 class PhononUUIDs(BaseModel):
-    """
-    Collection to save all uuids connected to the phonon run
-    """
+    """Collection to save all uuids connected to the phonon run"""
 
     optimization_run_uuid: str = Field(None, description="optimization run uuid")
     displacements_uuids: List[str] = Field(
@@ -87,9 +81,7 @@ class PhononUUIDs(BaseModel):
 
 
 class PhononJobDirs(BaseModel):
-    """
-    Collection to save all job directories relevant for the phonon run
-    """
+    """Collection to save all job directories relevant for the phonon run"""
 
     displacements_job_dirs: List[str] = Field(
         None, description="The directories where the displacement jobs were run."
@@ -106,9 +98,7 @@ class PhononJobDirs(BaseModel):
 
 
 class PhononBSDOSDoc(BaseModel):
-    """
-    Collection of all data produced by the phonon worklow.
-    """
+    """Collection of all data produced by the phonon workflow."""
 
     structure: Structure = Field(
         None,
