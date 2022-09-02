@@ -26,7 +26,6 @@ jobs:
           pip install .[strict]
           pip install .[tests]
           pip install .[dev]
-          pip install .[phonons]
       - name: Lint
         run: pre-commit run --all-files --show-diff-on-failure
 
@@ -57,6 +56,7 @@ jobs:
             pip install .[strict]
             pip install .[tests]
             pip install .[docs]
+            pip install .[phonons]
 
       - name: Test
         run: pytest --cov=atomate2 --cov-report=xml
