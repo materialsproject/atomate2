@@ -665,7 +665,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
 
 
 # test run including all steps of the computation for Si
-def test_phonon_wf_only_displacements_all_steps(mock_vasp, clean_dir):
+def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     from jobflow import run_locally
 
     structure = Structure(
@@ -707,7 +707,6 @@ def test_phonon_wf_only_displacements_all_steps(mock_vasp, clean_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # !!! validation on the outputs
-    # print(type(responses))
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert np.allclose(
@@ -789,7 +788,6 @@ def test_phonon_wf_only_displacements_all_steps(mock_vasp, clean_dir):
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
 def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
-    pass
 
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -823,7 +821,6 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
 def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
-    pass
 
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -850,3 +847,79 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
             kpath_scheme=kpathscheme,
             generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         ).make(structure)
+
+
+def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
+    from jobflow import run_locally
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.flows.phonons import PhononMaker
+    from atomate2.vasp.powerups import (
+        update_user_incar_settings,
+        update_user_kpoints_settings,
+    )
+
+    structure = Structure(
+        lattice=[
+            [5.691694, 0.000000, 0.000000],
+            [-0.000000, 5.691694, 0.000000],
+            [0.000000, 0.000000, 5.691694],
+        ],
+        species=["Na", "Na", "Na", "Na", "Cl", "Cl", "Cl", "Cl"],
+        coords=[
+            [0.0, 0.0, 0.0],
+            [0.0, 0.5, 0.5],
+            [0.5, 0.0, 0.5],
+            [0.5, 0.5, 0.0],
+            [0.5, 0.0, 0.0],
+            [0.5, 0.5, 0.5],
+            [0.0, 0.0, 0.5],
+            [0.0, 0.5, 0.0],
+        ],
+    )
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "dielectric": "NaCl_phonons/dielectric",
+        "phonon static 1/2": "NaCl_phonons/phonon_static_1_2",
+        "phonon static 2/2": "NaCl_phonons/phonon_static_2_2",
+        "static": "NaCl_phonons/static",
+    }
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "dielectric": {"incar_settings": ["NSW", "ISMEAR"]},
+        "phonon static 1/2": {"incar_settings": ["NSW", "ISMEAR"]},
+        "phonon static 2/2": {"incar_settings": ["NSW", "ISMEAR"]},
+        "static": {"incar_settings": ["NSW", "ISMEAR"]},
+    }
+
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    phonon_flow = PhononMaker(min_length=3.0, bulk_relax_maker=None).make(structure)
+    update_user_kpoints_settings(
+        phonon_flow, {"grid_density": 100}, name_filter="relax"
+    )
+    update_user_kpoints_settings(
+        phonon_flow, {"grid_density": 100}, name_filter="static"
+    )
+    update_user_kpoints_settings(
+        phonon_flow, {"grid_density": 100}, name_filter="dielectric"
+    )
+    update_user_kpoints_settings(
+        phonon_flow, {"grid_density": 100}, name_filter="Phonon static"
+    )
+    update_user_incar_settings(phonon_flow, {"ALGO": "Normal"}, name_filter="static")
+
+    # run the job
+    responses = run_locally(phonon_flow, create_folders=True, ensure_success=True)
+
+    # !!! validation on the outputs
+    assert isinstance(responses[phonon_flow.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+    assert np.allclose(
+        responses[phonon_flow.jobs[-1].uuid][1].output.born,
+        [
+            ((1.1033, 0.0, 0.0), (0.0, 1.1033, -0.0), (0.0, 0.0, 1.1033)),
+            ((-1.1033, 0.0, -0.0), (-0.0, -1.1033, 0.0), (-0.0, 0.0, -1.1033)),
+        ],
+    )

@@ -159,7 +159,9 @@ class PhononMaker(Maker):
         Parameters
         ----------
         structure : .Structure
-            A pymatgen structure.
+            A pymatgen structure. Please start with a structure
+            that is nearly fully optimized as the internal optimizers
+            have very strict settings!
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         born: Matrix3D
@@ -212,6 +214,11 @@ class PhononMaker(Maker):
 
         jobs = []
 
+        # TODO: should this be after or before structural
+        # optimization as the optimization could change
+        # the symmetry
+        # we could add a tutorial and point out that the structure
+        # should be nearly optimized before the phonon workflow
         if self.use_symmetrized_structure == "primitive":
             # These structures are compatible with many
             # of the kpath algorithms that are used for Materials Project
@@ -226,17 +233,6 @@ class PhononMaker(Maker):
             jobs.append(conv_job)
             structure = conv_job.output
 
-        # if supercell_matrix is None, supercell size will be determined
-        if supercell_matrix is None:
-            supercell_job = get_supercell_size(
-                structure,
-                self.min_length,
-                self.prefer_90_degrees,
-                **self.get_supercell_size_kwargs,
-            )
-            jobs.append(supercell_job)
-            supercell_matrix = supercell_job.output
-
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
             bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
@@ -247,6 +243,19 @@ class PhononMaker(Maker):
         else:
             optimization_run_job_dir = None
             optimization_run_uuid = None
+
+        # if supercell_matrix is None, supercell size will be determined
+        # after relax maker to ensure that cell lengths are really larger
+        # than threshold
+        if supercell_matrix is None:
+            supercell_job = get_supercell_size(
+                structure,
+                self.min_length,
+                self.prefer_90_degrees,
+                **self.get_supercell_size_kwargs,
+            )
+            jobs.append(supercell_job)
+            supercell_matrix = supercell_job.output
 
         # get a phonon object from phonopy
         displacements = generate_phonon_displacements(
