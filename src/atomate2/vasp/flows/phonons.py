@@ -193,7 +193,7 @@ class PhononMaker(Maker):
         """
         if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
             raise ValueError(
-                "use_symmetrized_structure can only be primitive, conventional," "None"
+                "use_symmetrized_structure can only be primitive, conventional, None"
             )
 
         if (
