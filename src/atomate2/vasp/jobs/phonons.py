@@ -38,7 +38,8 @@ __all__ = [
 @job
 def structure_to_primitive(structure: Structure, symprec: float):
     """
-    Job hat creates a standard primitive structure
+    Job hat creates a standard primitive structure.
+
     Parameters
     ----------
         structure: Structure object
@@ -53,7 +54,8 @@ def structure_to_primitive(structure: Structure, symprec: float):
 @job
 def structure_to_conventional(structure: Structure, symprec: float):
     """
-    Job hat creates a standard conventional structure
+    Job hat creates a standard conventional structure.
+
     Parameters
     ----------
     structure: Structure object
@@ -71,7 +73,8 @@ def get_total_energy_per_cell(
     total_dft_energy_per_formula_unit: float, structure: Structure
 ):
     """
-    Job that computes total dft energy of the cell
+    Job that computes total dft energy of the cell.
+
     Parameters
     ----------
     total_dft_energy_per_formula_unit: float
@@ -93,6 +96,7 @@ def get_supercell_size(
     structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
 ):
     """
+    Determine supercell size with given min_length.
 
     Parameters
     ----------
