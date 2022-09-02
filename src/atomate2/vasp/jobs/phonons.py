@@ -28,6 +28,8 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "structure_to_primitive",
     "structure_to_conventional",
+    "get_total_energy_per_cell",
+    "get_supercell_size",
     "generate_phonon_displacements",
     "run_phonon_displacements",
     "generate_frequencies_eigenvectors",
@@ -78,10 +80,9 @@ def get_total_energy_per_cell(
     Parameters
     ----------
     total_dft_energy_per_formula_unit: float
-        total energy in eV per formula unit
+        Total DFT energy in eV per formula unit.
     structure: Structure object
-
-
+        Corresponding structure object.
     """
     formula_units = (
         structure.composition.num_atoms
@@ -106,7 +107,7 @@ def get_supercell_size(
     prefer_90_degrees: bool
         if True, the algorithm will try to find a cell with 90 degree angles first
     **kwargs:
-
+        Additional parameters that can be set.
     """
     if "min_atoms" not in kwargs:
         kwargs["min_atoms"] = None
