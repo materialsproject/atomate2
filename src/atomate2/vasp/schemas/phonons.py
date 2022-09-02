@@ -70,7 +70,7 @@ class ThermalDisplacementData(BaseModel):
 
 
 class PhononUUIDs(BaseModel):
-    """Collection to save all uuids connected to the phonon run"""
+    """Collection to save all uuids connected to the phonon run."""
 
     optimization_run_uuid: str = Field(None, description="optimization run uuid")
     displacements_uuids: List[str] = Field(
@@ -81,7 +81,7 @@ class PhononUUIDs(BaseModel):
 
 
 class PhononJobDirs(BaseModel):
-    """Collection to save all job directories relevant for the phonon run"""
+    """Collection to save all job directories relevant for the phonon run."""
 
     displacements_job_dirs: List[str] = Field(
         None, description="The directories where the displacement jobs were run."
@@ -490,7 +490,6 @@ class PhononBSDOSDoc(BaseModel):
         **kpath_kwargs:
             additional parameters that can be passed to this method as a dict
         """
-
         if kpath_scheme in [
             "setyawan_curtarolo",
             "latimer_munro",
