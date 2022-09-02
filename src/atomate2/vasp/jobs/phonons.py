@@ -173,7 +173,8 @@ def generate_phonon_displacements(
     code: str,
 ):
     """
-    will generate displacement structures based on phonopy
+    Generate displaced structures with phonopy.
+
     Parameters
     ----------
     structure: Structure object
@@ -240,6 +241,7 @@ def generate_frequencies_eigenvectors(
     **kwargs,
 ):
     """
+    Analyze the phonon runs and summarize the results.
 
     Parameters
     ----------
@@ -298,7 +300,8 @@ def run_phonon_displacements(
 ):
     """
     Run phonon displacements.
-    Note, this job will replace itself with N displacement calculations
+
+    Note, this job will replace itself with N displacement calculations.
 
     Parameters
     ----------

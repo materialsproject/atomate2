@@ -28,12 +28,18 @@ from atomate2.common.schemas.math import Matrix3D
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["PhononBSDOSDoc"]
+__all__ = [
+    "PhononBSDOSDoc",
+    "PhononComputationalSettings",
+    "PhononUUIDs",
+    "PhononJobDirs",
+    "ThermalDisplacementData",
+]
 
 
 class PhononComputationalSettings(BaseModel):
     """
-    Collection to store computational settings for the phonon computation
+    Collection to store computational settings for the phonon computation.
     """
 
     # could be optional and implemented at a later stage?
@@ -46,11 +52,9 @@ class PhononComputationalSettings(BaseModel):
 
 class ThermalDisplacementData(BaseModel):
     """
-    Collection to store information on the thermal displacement matrices
+    Collection to store information on the thermal displacement matrices.
     """
 
-    # TODO: check if we could add a connection
-    #  to a pymatgen class for thermal displacement matrices
     freq_min_thermal_displacements: float = Field(
         "cutoff frequency in THz to avoid numerical issues in the "
         "computation of the thermal displacement parameters"
@@ -103,7 +107,7 @@ class PhononJobDirs(BaseModel):
 
 class PhononBSDOSDoc(BaseModel):
     """
-    Collection of all data produced by the phonon worklow
+    Collection of all data produced by the phonon worklow.
     """
 
     structure: Structure = Field(
@@ -208,7 +212,7 @@ class PhononBSDOSDoc(BaseModel):
         **kwargs,
     ):
         """
-        generates  a collection of phonon data
+        Generate collection of phonon data.
 
         Parameters
         ----------
@@ -237,8 +241,6 @@ class PhononBSDOSDoc(BaseModel):
             born charges
         **kwargs:
             additional arguments
-
-
         """
         if code == "vasp":
             factor = VaspToTHz
