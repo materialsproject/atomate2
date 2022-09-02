@@ -787,7 +787,9 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
 @pytest.mark.parametrize(
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
+def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
+    mock_vasp, clean_dir, kpathscheme
+):
 
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -806,7 +808,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
 
     with pytest.raises(ValueError):
 
-        job = PhononMaker(
+        PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,
             static_energy_maker=None,
@@ -820,7 +822,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
 @pytest.mark.parametrize(
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
+def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpathscheme):
 
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -838,7 +840,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
     with pytest.raises(ValueError):
         # !!! Generate job
-        job = PhononMaker(
+        PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,
             static_energy_maker=None,
