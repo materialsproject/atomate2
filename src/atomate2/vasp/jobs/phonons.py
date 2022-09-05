@@ -273,7 +273,8 @@ def run_phonon_displacements(
     Parameters
     ----------
     displacements
-    structure: original structure for meta data
+    structure: Structure object
+        Fully optimized structure used for phonon computations
     supercell_matrix: supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
