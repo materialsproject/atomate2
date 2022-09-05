@@ -12,7 +12,7 @@ __all__ = ["structure_to_primitive", "structure_to_conventional"]
 @job
 def structure_to_primitive(structure: Structure, symprec: float = SETTINGS.SYMPREC):
     """
-    Job hat creates a standard primitive structure.
+    Job that creates a standard primitive structure.
 
     Parameters
     ----------
