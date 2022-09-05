@@ -228,7 +228,7 @@ class PhononMaker(Maker):
         elif self.use_symmetrized_structure == "conventional":
             # it could be beneficial to use conventional
             # standard structures to arrive faster at supercells with right
-            # angels
+            # angles
             conv_job = structure_to_conventional(structure, self.symprec)
             jobs.append(conv_job)
             structure = conv_job.output
