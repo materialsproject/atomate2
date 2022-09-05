@@ -12,7 +12,6 @@ from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
@@ -26,8 +25,6 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 logger = logging.getLogger(__name__)
 
 __all__ = [
-    "structure_to_primitive",
-    "structure_to_conventional",
     "get_total_energy_per_cell",
     "get_supercell_size",
     "generate_phonon_displacements",
@@ -35,39 +32,6 @@ __all__ = [
     "generate_frequencies_eigenvectors",
     "PhononDisplacementMaker",
 ]
-
-
-@job
-def structure_to_primitive(structure: Structure, symprec: float):
-    """
-    Job hat creates a standard primitive structure.
-
-    Parameters
-    ----------
-        structure: Structure object
-        symprec: float
-            precision to determine symmetry
-
-    """
-    sga = SpacegroupAnalyzer(structure, symprec=symprec)
-    return sga.get_primitive_standard_structure()
-
-
-@job
-def structure_to_conventional(structure: Structure, symprec: float):
-    """
-    Job hat creates a standard conventional structure.
-
-    Parameters
-    ----------
-    structure: Structure object
-    symprec: float
-        precision to determine symmetry
-
-
-    """
-    sga = SpacegroupAnalyzer(structure, symprec=symprec)
-    return sga.get_conventional_standard_structure()
 
 
 @job

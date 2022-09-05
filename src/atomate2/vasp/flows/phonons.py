@@ -9,6 +9,7 @@ from typing import List
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
+from atomate2.common.jobs import structure_to_conventional, structure_to_primitive
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -20,8 +21,6 @@ from atomate2.vasp.jobs.phonons import (
     get_supercell_size,
     get_total_energy_per_cell,
     run_phonon_displacements,
-    structure_to_conventional,
-    structure_to_primitive,
 )
 
 __all__ = ["PhononMaker"]
