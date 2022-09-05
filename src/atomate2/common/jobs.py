@@ -21,6 +21,9 @@ def structure_to_primitive(structure: Structure, symprec: float = SETTINGS.SYMPR
         symprec: float
             precision to determine symmetry
 
+    Returns
+    -------
+    .Structure
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
@@ -38,6 +41,9 @@ def structure_to_conventional(structure: Structure, symprec: float = SETTINGS.SY
     symprec: float
         precision to determine symmetry
 
+    Returns
+    -------
+    .Structure
 
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
