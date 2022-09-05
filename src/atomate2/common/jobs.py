@@ -24,6 +24,7 @@ def structure_to_primitive(structure: Structure, symprec: float = SETTINGS.SYMPR
     Returns
     -------
     .Structure
+
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
