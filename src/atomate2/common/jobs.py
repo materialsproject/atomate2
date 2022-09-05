@@ -16,10 +16,10 @@ def structure_to_primitive(structure: Structure, symprec: float = SETTINGS.SYMPR
 
     Parameters
     ----------
-        structure: Structure object
-            input structure that will be transformed
-        symprec: float
-            precision to determine symmetry
+    structure: Structure object
+        input structure that will be transformed
+    symprec: float
+        precision to determine symmetry
 
     Returns
     -------
