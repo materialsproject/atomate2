@@ -5,10 +5,6 @@ from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
 from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.powerups import (
-    update_user_incar_settings,
-    update_user_kpoints_settings,
-)
 from atomate2.vasp.schemas.phonons import (
     PhononBSDOSDoc,
     PhononComputationalSettings,
@@ -700,8 +696,6 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
         use_symmetrized_structure=None,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(structure)
-    update_user_kpoints_settings(job, {"grid_density": 100}, name_filter="relax")
-    update_user_incar_settings(job, {"ALGO": "Normal"}, name_filter="static")
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -856,10 +850,6 @@ def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.flows.phonons import PhononMaker
-    from atomate2.vasp.powerups import (
-        update_user_incar_settings,
-        update_user_kpoints_settings,
-    )
 
     structure = Structure(
         lattice=[
@@ -899,19 +889,6 @@ def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     phonon_flow = PhononMaker(min_length=3.0, bulk_relax_maker=None).make(structure)
-    update_user_kpoints_settings(
-        phonon_flow, {"grid_density": 100}, name_filter="relax"
-    )
-    update_user_kpoints_settings(
-        phonon_flow, {"grid_density": 100}, name_filter="static"
-    )
-    update_user_kpoints_settings(
-        phonon_flow, {"grid_density": 100}, name_filter="dielectric"
-    )
-    update_user_kpoints_settings(
-        phonon_flow, {"grid_density": 100}, name_filter="Phonon static"
-    )
-    update_user_incar_settings(phonon_flow, {"ALGO": "Normal"}, name_filter="static")
 
     # run the job
     responses = run_locally(phonon_flow, create_folders=True, ensure_success=True)
