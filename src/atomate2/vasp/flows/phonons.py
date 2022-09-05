@@ -67,8 +67,8 @@ class PhononMaker(Maker):
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
-    get_supercell_kwargs: additional arguments
-        to determine supercell
+    get_supercell_size_kwargs: dict
+        kwargs that will be passed to get_supercell_size to determine supercell size
     use_symmetrized_structure: str
         allowed strings: "primitive", "conventional", None
 
@@ -106,14 +106,14 @@ class PhononMaker(Maker):
         Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
         scheme to generate kpoints. Please be aware that
-         you can only use seekpath with any kind of cell
-         Otherwise, please use the standard primitive structure
-         Available schemes are:
-         "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro".
-         "seekpath" and "hinuma" are the same definition but
-         seekpath can be used with any kind of unit cell as
-         it relies on phonopy to handle the relationship
-         to the primitive cell and not pymatgen
+        you can only use seekpath with any kind of cell
+        Otherwise, please use the standard primitive structure
+        Available schemes are:
+        "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro".
+        "seekpath" and "hinuma" are the same definition but
+        seekpath can be used with any kind of unit cell as
+        it relies on phonopy to handle the relationship
+        to the primitive cell and not pymatgen
     code: str
         determines the dft code. currently only vasp is implemented.
         This keyword might enable the implementation of other codes
