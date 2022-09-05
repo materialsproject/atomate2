@@ -66,6 +66,7 @@ def get_supercell_size(
     Parameters
     ----------
     structure: Structure Object
+        Input structure that will be used to determine supercell
     min_length: float
         minimum length of cell in Angstrom
     prefer_90_degrees: bool
@@ -142,6 +143,7 @@ def generate_phonon_displacements(
     Parameters
     ----------
     structure: Structure object
+        Fully optimized input structure for phonon run
     supercell_matrix: np.array
         array to describe supercell matrix
     displacement: float
@@ -150,7 +152,7 @@ def generate_phonon_displacements(
         if True, symmetry will be used to generate displacements
     symprec: float
         precision to determine symmetry
-    use_symmetrized_structure: str»|None
+    use_symmetrized_structure: str or None
         primitive, conventional or None
     kpath_scheme: str
         scheme to generate kpath
@@ -210,6 +212,7 @@ def generate_frequencies_eigenvectors(
     Parameters
     ----------
     structure: Structure object
+        Fully optimized structure used for phonon runs
     supercell_matrix: np.array
         array to describe supercell
     displacement: float
@@ -232,8 +235,8 @@ def generate_frequencies_eigenvectors(
         The high-frequency dielectric constant
     born: Matrix3D
         Born charges
-    kwargs:
-        additional arguments that are passed
+    kwargs: dict
+        Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
 
     """
     phonon_doc = PhononBSDOSDoc.from_forces_born(
