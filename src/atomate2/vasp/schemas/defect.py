@@ -46,12 +46,12 @@ class FiniteDifferenceDocument(BaseModel):
         distorted_dirs: list[str] | None = None,
     ) -> FiniteDifferenceDocument:
         """
-        Read the FintieDiff file.
+        Read the FiniteDiff file.
 
         Parameters
         ----------
         directory : str | Path
-            Path to the FintieDiff directory.
+            Path to the FiniteDiff directory.
         ref_dir : str | Path
             Directory where the reference W(0) wavefunction comes from.
         distorted_dirs : List[str | Path]
@@ -59,8 +59,8 @@ class FiniteDifferenceDocument(BaseModel):
 
         Returns
         -------
-        FintieDiffDocument
-            FintieDiffDocument object.
+        FiniteDiffDocument
+            FiniteDiffDocument object.
         """
         wswq_dir = Path(directory)
         files = list(Path(wswq_dir).glob("WSWQ.[0-9]*"))
