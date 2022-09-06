@@ -23,9 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict]
-          pip install .[tests]
-          pip install .[dev]
+          pip install .[strict,tests,dev]
 
       - name: Lint
         run: pre-commit run --all-files --show-diff-on-failure
@@ -54,9 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-            pip install .[strict]
-            pip install .[tests]
-            pip install .[docs]
+            pip install .[strict,tests,docs]
 
       - name: Test
         run: pytest --cov=atomate2 --cov-report=xml
@@ -82,8 +78,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict]
-          pip install .[docs]
+          pip install .[strict,docs]
 
       - name: Build
         run: jupyter-book build docs --path-output docs_build

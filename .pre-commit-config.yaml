@@ -5,8 +5,7 @@ repos:
   hooks:
   - id: check-yaml
   - id: fix-encoding-pragma
-    args:
-    - --remove
+    args: [--remove]
   - id: end-of-file-fixer
   - id: trailing-whitespace
 - repo: https://github.com/myint/autoflake
