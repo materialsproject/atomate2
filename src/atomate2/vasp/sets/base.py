@@ -1,5 +1,7 @@
 """Module defining base VASP input set and generator."""
 
+from __future__ import annotations
+
 import glob
 import os
 import warnings
@@ -7,7 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 from monty.io import zopen
@@ -56,9 +58,9 @@ class VaspInputSet(InputSet):
         self,
         incar: Incar,
         poscar: Poscar,
-        potcar: Union[Potcar, List[str]],
-        kpoints: Optional[Kpoints] = None,
-        optional_files: Optional[Dict] = None,
+        potcar: Potcar | list[str],
+        kpoints: Kpoints | None = None,
+        optional_files: dict | None = None,
     ):
         self.incar = incar
         self.poscar = poscar
@@ -68,7 +70,7 @@ class VaspInputSet(InputSet):
 
     def write_input(
         self,
-        directory: Union[str, Path],
+        directory: str | Path,
         make_dir: bool = True,
         overwrite: bool = True,
         potcar_spec: bool = False,
@@ -113,7 +115,7 @@ class VaspInputSet(InputSet):
                 raise FileExistsError(f"{directory / k} already exists.")
 
     @staticmethod
-    def from_directory(directory: Union[str, Path], optional_files: Dict = None):
+    def from_directory(directory: str | Path, optional_files: dict = None):
         """
         Load a set of VASP inputs from a directory.
 
@@ -263,9 +265,9 @@ class VaspInputGenerator(InputGenerator):
         The config dictionary to use containing the base input set settings.
     """
 
-    user_incar_settings: Dict = field(default_factory=dict)
-    user_kpoints_settings: Union[Dict, Kpoints] = field(default_factory=dict)
-    user_potcar_settings: Dict = field(default_factory=dict)
+    user_incar_settings: dict = field(default_factory=dict)
+    user_kpoints_settings: dict | Kpoints = field(default_factory=dict)
+    user_potcar_settings: dict = field(default_factory=dict)
     user_potcar_functional: str = None
     auto_kspacing: bool = True
     constrain_total_magmom: bool = False
@@ -276,7 +278,7 @@ class VaspInputGenerator(InputGenerator):
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
     auto_ispin: bool = False
-    config_dict: Dict = field(default_factory=lambda: _BASE_VASP_SET)
+    config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
         """Post init formatting of arguments."""
@@ -337,7 +339,7 @@ class VaspInputGenerator(InputGenerator):
     def get_input_set(  # type: ignore
         self,
         structure: Structure = None,
-        prev_dir: Union[str, Path] = None,
+        prev_dir: str | Path = None,
         potcar_spec: bool = False,
     ) -> VaspInputSet:
         """
@@ -487,9 +489,7 @@ class VaspInputGenerator(InputGenerator):
 
         return nelect
 
-    def _get_previous(
-        self, structure: Structure = None, prev_dir: Union[str, Path] = None
-    ):
+    def _get_previous(self, structure: Structure = None, prev_dir: str | Path = None):
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
             raise ValueError("Either structure or prev_dir must be set.")
@@ -578,8 +578,8 @@ class VaspInputGenerator(InputGenerator):
         self,
         structure,
         kpoints: Kpoints,
-        previous_incar: Dict = None,
-        incar_updates: Dict = None,
+        previous_incar: dict = None,
+        incar_updates: dict = None,
         bandgap: float = 0.0,
         ispin: int = None,
     ):
@@ -652,9 +652,9 @@ class VaspInputGenerator(InputGenerator):
     def _get_kpoints(
         self,
         structure: Structure,
-        kpoints_updates: Optional[Dict[str, Any]],
-        kspacing: Optional[float],
-    ) -> Union[Kpoints, None]:
+        kpoints_updates: dict[str, Any] | None,
+        kspacing: float | None,
+    ) -> Kpoints | None:
         """Get the kpoints file."""
         kpoints_updates = {} if kpoints_updates is None else kpoints_updates
 
@@ -1044,7 +1044,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
     )
 
 
-def _get_ispin(vasprun: Optional[Vasprun], outcar: Optional[Outcar]):
+def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
     """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
     if outcar is not None and outcar.magnetization is not None:
         # Turn off spin when magmom for every site is smaller than 0.02.

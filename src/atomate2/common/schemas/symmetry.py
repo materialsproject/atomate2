@@ -1,6 +1,8 @@
 """Schemas for crystal symmetry."""
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
@@ -64,7 +66,7 @@ class SymmetryData(BaseModel):
     @classmethod
     def from_structure(
         cls, structure: Structure, symprec: float = SETTINGS.SYMPREC
-    ) -> "SymmetryData":
+    ) -> SymmetryData:
         """
         Create a symmetry data model from a structure.
 
@@ -81,7 +83,7 @@ class SymmetryData(BaseModel):
             A symmetry data model.
         """
         sg = SpacegroupAnalyzer(structure, symprec=symprec)
-        symmetry: Dict[str, Any] = {"symprec": symprec}
+        symmetry: dict[str, Any] = {"symprec": symprec}
         if not sg.get_symmetry_dataset():
             sg = SpacegroupAnalyzer(structure, 1e-3, 1)
             symmetry["symprec"] = 1e-3

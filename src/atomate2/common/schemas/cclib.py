@@ -1,9 +1,11 @@
 """Core definition of a cclib-generated task document."""
 
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, TypeVar
 
 from monty.dev import requires
 from monty.json import jsanitize
@@ -41,15 +43,15 @@ class TaskDocument(MoleculeMetadata):
     logfile: str = Field(
         None, description="Path to the log file used in the post-processing analysis"
     )
-    attributes: Dict = Field(
+    attributes: dict = Field(
         None, description="Computed properties and calculation outputs"
     )
-    metadata: Dict = Field(
+    metadata: dict = Field(
         None,
         description="Calculation metadata, including input parameters and runtime statistics",
     )
     task_label: str = Field(None, description="A description of the task")
-    tags: List[str] = Field(None, description="Optional tags for this task document")
+    tags: list[str] = Field(None, description="Optional tags for this task document")
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
@@ -63,14 +65,14 @@ class TaskDocument(MoleculeMetadata):
     @classmethod
     @requires(cclib, "The cclib TaskDocument requires cclib to be installed.")
     def from_logfile(
-        cls: Type[_T],
-        dir_name: Union[str, Path],
-        logfile_extensions: Union[str, List[str]],
+        cls: type[_T],
+        dir_name: str | Path,
+        logfile_extensions: str | list[str],
         store_trajectory: bool = False,
         store_input_orientation: bool = False,
-        additional_fields: Dict[str, Any] = None,
-        analysis: Union[str, List[str]] = None,
-        proatom_dir: Union[Path, str] = None,
+        additional_fields: dict[str, Any] = None,
+        analysis: str | list[str] = None,
+        proatom_dir: Path | str = None,
     ) -> _T:
         """
         Create a TaskDocument from a log file.
@@ -262,9 +264,9 @@ class TaskDocument(MoleculeMetadata):
 def cclib_calculate(
     cclib_obj,
     method: str,
-    cube_file: Union[Path, str],
-    proatom_dir: Union[Path, str],
-) -> Optional[Dict[str, Any]]:
+    cube_file: Path | str,
+    proatom_dir: Path | str,
+) -> dict[str, Any] | None:
     """
     Run a cclib population analysis.
 
@@ -361,8 +363,8 @@ def cclib_calculate(
 
 
 def _get_homos_lumos(
-    moenergies: List[List[float]], homo_indices: List[int]
-) -> Tuple[List[float], Optional[List[float]], Optional[List[float]]]:
+    moenergies: list[list[float]], homo_indices: list[int]
+) -> tuple[list[float], list[float] | None, list[float] | None]:
     """
     Calculate the HOMO, LUMO, and HOMO-LUMO gap energies in eV.
 
