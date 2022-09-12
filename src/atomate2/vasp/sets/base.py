@@ -1,5 +1,6 @@
 """Module defining base VASP input set and generator."""
 
+import glob
 import os
 import warnings
 from copy import deepcopy
@@ -502,13 +503,25 @@ class VaspInputGenerator(InputGenerator):
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
 
+            path = Path(prev_dir)
+            contcars = list(glob.glob(str(path / "CONTCAR*")))
+
+            contcarfile_fullpath = str(path / "CONTCAR")
+            contcarfile = (
+                contcarfile_fullpath
+                if contcarfile_fullpath in contcars
+                else sorted(contcars)[-1]
+            )
+            contcar = Poscar.from_file(contcarfile)
+
             if vasprun.efermi is None:
                 # VASP doesn't output efermi in vasprun if IBRION = 1
                 vasprun.efermi = outcar.efermi
 
             bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
-            prev_structure = vasprun.final_structure
+            # prev_structure = vasprun.final_structure
+            prev_structure = contcar.structure
             bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
 
             if self.auto_ispin:
