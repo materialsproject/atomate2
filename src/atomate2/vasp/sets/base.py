@@ -520,7 +520,8 @@ class VaspInputGenerator(InputGenerator):
 
             bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
-            # prev_structure = vasprun.final_structure
+            # use structure from CONTCAR as it is written to greater
+            # precision than in the vasprun
             prev_structure = contcar.structure
             bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
 
