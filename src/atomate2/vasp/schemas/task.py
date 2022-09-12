@@ -650,7 +650,6 @@ def _find_vasp_files(
         for file in files:
             if file.match(f"*vasprun.xml{suffix}*"):
                 vasp_files["vasprun_file"] = file
-                vasp_files["vasprun_file"] = file
             elif file.match(f"*OUTCAR{suffix}*"):
                 vasp_files["outcar_file"] = file
             elif file.match(f"*CONTCAR{suffix}*"):
