@@ -497,7 +497,7 @@ class CalculationOutput(BaseModel):
         outcar_dict = outcar.as_dict()
         outcar_dict.pop("run_stats")
 
-        # structure = vasprun.final_structure
+        # use structure from CONTCAR as it is written to greater precision than in the vasprun
         structure = contcar.structure
         mag_density = outcar.total_mag / structure.volume if outcar.total_mag else None
 
