@@ -504,13 +504,10 @@ class VaspInputGenerator(InputGenerator):
             vasprun, outcar = get_vasprun_outcar(prev_dir)
 
             path_prev_dir = Path(prev_dir)
-            print(path_prev_dir)
-            print(path_prev_dir)
-            contcars = list(glob.glob(str(path_prev_dir / "CONTCAR*")))
-            print(contcars)
-            print(outcar)
-            contcarfile_fullpath = str(path_prev_dir / "CONTCAR")
-            print(contcarfile_fullpath)
+
+            # CONTCAR is already renamed POSCAR
+            contcars = list(glob.glob(str(path_prev_dir / "POSCAR*")))
+            contcarfile_fullpath = str(path_prev_dir / "POSCAR")
             contcarfile = (
                 contcarfile_fullpath
                 if contcarfile_fullpath in contcars

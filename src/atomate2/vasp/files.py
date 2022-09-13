@@ -61,9 +61,7 @@ def copy_vasp_outputs(
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
     # find required files
-    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml", "CONTCAR") + tuple(
-        additional_vasp_files
-    )
+    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml") + tuple(additional_vasp_files)
     required_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
 
     # find optional files; do not fail if KPOINTS is missing, this might be KSPACING
