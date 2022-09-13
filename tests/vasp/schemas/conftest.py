@@ -47,11 +47,13 @@ class SiOptimizeDouble(SchemaTestData):
             "vasprun_file": "vasprun.xml.relax1.gz",
             "outcar_file": "OUTCAR.relax1.gz",
             "volumetric_files": ["CHGCAR.relax1.gz"],
+            "contcar_file": "CONTCAR.relax1.gz",
         },
         "relax2": {
             "vasprun_file": "vasprun.xml.relax2.gz",
             "outcar_file": "OUTCAR.relax2.gz",
             "volumetric_files": ["CHGCAR.relax2.gz"],
+            "contcar_file": "CONTCAR.relax2.gz",
         },
     }
     objects = {"relax1": []}
@@ -109,6 +111,7 @@ class SiNonSCFUniform(SchemaTestData):
             "vasprun_file": "vasprun.xml.gz",
             "outcar_file": "OUTCAR.gz",
             "volumetric_files": ["CHGCAR.gz"],
+            "contcar_file": "CONTCAR.gz",
         }
     }
     objects = {"standard": []}
@@ -166,6 +169,7 @@ class SiStatic(SchemaTestData):
             "vasprun_file": "vasprun.xml.gz",
             "outcar_file": "OUTCAR.gz",
             "volumetric_files": ["CHGCAR.gz"],
+            "contcar_file": "CONTCAR.gz",
         }
     }
     objects = {"standard": []}
