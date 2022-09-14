@@ -1,6 +1,6 @@
 import copy
 import logging
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 from phonopy import Phonopy
@@ -193,7 +193,7 @@ class PhononBSDOSDoc(BaseModel):
         use_symmetrized_structure: Union[str, None],
         kpath_scheme: str,
         code: str,
-        displacement_data: dict[str, list],
+        displacement_data: Dict[str, list],
         total_dft_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
@@ -214,7 +214,7 @@ class PhononBSDOSDoc(BaseModel):
             precision to determine kpaths,
             primitive cells and symmetry in phonopy and pymatgen
         use_symmetrized_structure: str
-            primitive, conentional or None
+            primitive, conventional or None
         kpath_scheme: str
             kpath scheme to generate phonon band structure
         code: str
