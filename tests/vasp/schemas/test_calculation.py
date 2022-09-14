@@ -62,7 +62,7 @@ def test_calculation_input(vasp_test_dir, object_name, task_name):
 )
 def test_calculation_output(vasp_test_dir, object_name, task_name):
     from monty.json import MontyDecoder, jsanitize
-    from pymatgen.io.vasp import Outcar, Vasprun
+    from pymatgen.io.vasp import Outcar, Poscar, Vasprun
 
     from atomate2.vasp.schemas.calculation import CalculationOutput
 
@@ -70,9 +70,11 @@ def test_calculation_output(vasp_test_dir, object_name, task_name):
     folder = vasp_test_dir / test_object.folder / "outputs"
     vasprun_file = folder / test_object.task_files[task_name]["vasprun_file"]
     outcar_file = folder / test_object.task_files[task_name]["outcar_file"]
+    contcar_file = folder / test_object.task_files[task_name]["contcar_file"]
     vasprun = Vasprun(vasprun_file)
     outcar = Outcar(outcar_file)
-    test_doc = CalculationOutput.from_vasp_outputs(vasprun, outcar)
+    contcar = Poscar.from_file(contcar_file)
+    test_doc = CalculationOutput.from_vasp_outputs(vasprun, outcar, contcar)
     valid_doc = test_object.task_doc["calcs_reversed"][0]["output"]
     assert_schemas_equal(test_doc, valid_doc)
     assert test_doc.efermi == vasprun.get_band_structure(efermi="smart").efermi
@@ -85,14 +87,16 @@ def test_calculation_output(vasp_test_dir, object_name, task_name):
 
 
 def test_mag_calculation_output(vasp_test_dir):
-    from pymatgen.io.vasp import Outcar, Vasprun
+    from pymatgen.io.vasp import Outcar, Poscar, Vasprun
 
     from atomate2.vasp.schemas.calculation import CalculationOutput
 
     # Test magnetic properties
     dir_name = vasp_test_dir / "magnetic_run"
     d = CalculationOutput.from_vasp_outputs(
-        Vasprun(dir_name / "vasprun.xml.gz"), Outcar(dir_name / "OUTCAR.gz")
+        Vasprun(dir_name / "vasprun.xml.gz"),
+        Outcar(dir_name / "OUTCAR.gz"),
+        Poscar.from_file(dir_name / "CONTCAR.gz"),
     )
     assert d.dict()["mag_density"] == pytest.approx(0.19384725901794095)
 
