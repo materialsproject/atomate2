@@ -20,6 +20,7 @@ from pymatgen.io.vasp import (
     BSVasprun,
     Locpot,
     Outcar,
+    Poscar,
     Potcar,
     PotcarSingle,
     Vasprun,
@@ -414,6 +415,7 @@ class CalculationOutput(BaseModel):
         cls,
         vasprun: Vasprun,
         outcar: Outcar,
+        contcar: Poscar,
         locpot: Optional[Locpot] = None,
         elph_poscars: Optional[List[Path]] = None,
         store_trajectory: bool = False,
@@ -427,6 +429,8 @@ class CalculationOutput(BaseModel):
             A Vasprun object.
         outcar
             An Outcar object.
+        contcar
+            A Poscar object.
         locpot
             A Locpot object.
         elph_poscars
@@ -493,7 +497,9 @@ class CalculationOutput(BaseModel):
         outcar_dict = outcar.as_dict()
         outcar_dict.pop("run_stats")
 
-        structure = vasprun.final_structure
+        # use structure from CONTCAR as it is written to
+        # greater precision than in the vasprun
+        structure = contcar.structure
         mag_density = outcar.total_mag / structure.volume if outcar.total_mag else None
 
         if len(outcar.magnetization) != 0:
@@ -579,6 +585,7 @@ class Calculation(BaseModel):
         task_name: str,
         vasprun_file: Union[Path, str],
         outcar_file: Union[Path, str],
+        contcar_file: Union[Path, str],
         volumetric_files: List[str] = None,
         elph_poscars: List[Path] = None,
         parse_dos: Union[str, bool] = False,
@@ -606,6 +613,8 @@ class Calculation(BaseModel):
             Path to the vasprun.xml file, relative to dir_name.
         outcar_file
             Path to the OUTCAR file, relative to dir_name.
+        contcar_file
+            Path to the CONTCAR file, relative to dir_name
         volumetric_files
             Path to volumetric files, relative to dir_name.
         elph_poscars
@@ -659,11 +668,13 @@ class Calculation(BaseModel):
         dir_name = Path(dir_name)
         vasprun_file = dir_name / vasprun_file
         outcar_file = dir_name / outcar_file
+        contcar_file = dir_name / contcar_file
 
         vasprun_kwargs = vasprun_kwargs if vasprun_kwargs else {}
         volumetric_files = [] if volumetric_files is None else volumetric_files
         vasprun = Vasprun(vasprun_file, **vasprun_kwargs)
         outcar = Outcar(outcar_file)
+        contcar = Poscar.from_file(contcar_file)
         completed_at = str(datetime.fromtimestamp(vasprun_file.stat().st_mtime))
 
         output_file_paths = _get_output_file_paths(volumetric_files)
@@ -701,6 +712,7 @@ class Calculation(BaseModel):
         output_doc = CalculationOutput.from_vasp_outputs(
             vasprun,
             outcar,
+            contcar,
             locpot=locpot,
             elph_poscars=elph_poscars,
             store_trajectory=store_trajectory,

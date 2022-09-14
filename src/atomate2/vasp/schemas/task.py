@@ -631,6 +631,7 @@ def _find_vasp_files(
                 task_name: {
                     "vasprun_file": vasprun_filename,
                     "outcar_file": outcar_filename,
+                    "contcar_file": contcar_filename,
                     "volumetric_files": [CHGCAR, LOCPOT, etc]
                     "elph_poscars": [POSCAR.T=300, POSCAR.T=400, etc]
                 },
@@ -651,6 +652,8 @@ def _find_vasp_files(
                 vasp_files["vasprun_file"] = file
             elif file.match(f"*OUTCAR{suffix}*"):
                 vasp_files["outcar_file"] = file
+            elif file.match(f"*CONTCAR{suffix}*"):
+                vasp_files["contcar_file"] = file
             elif any([file.match(f"*{f}{suffix}*") for f in volumetric_files]):
                 vol_files.append(file)
             elif file.match(f"*POSCAR.T=*{suffix}*"):
