@@ -255,7 +255,13 @@ class PhononBSDOSDoc(BaseModel):
             symprec=symprec,
             is_symmetry=sym_reduce,
         )
+        # TODO: add additional check here that forces are passed in correct order
         phonon.generate_displacements(distance=displacement)
+        # there needs to be an algorithm that maps generated structures from here with
+        # the ones that originally have been computed
+        phonon.supercells_with_displacements
+
+        displacement_data["structures"]
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
         if born is not None and epsilon_static is not None:
