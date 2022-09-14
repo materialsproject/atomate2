@@ -1,8 +1,7 @@
 """Settings for atomate2."""
 
-from __future__ import annotations
-
 from pathlib import Path
+from typing import Optional, Tuple, Union
 
 from pydantic import BaseSettings, Field, root_validator
 
@@ -59,7 +58,7 @@ class Atomate2Settings(BaseSettings):
         description="Maximum volume change allowed in VASP relaxations before the "
         "calculation is tagged with a warning",
     )
-    VASP_HANDLE_UNSUCCESSFUL: str | bool = Field(
+    VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
         "fizzle",
         description="Three-way toggle on what to do if the job looks OK but is actually"
         " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
@@ -69,7 +68,7 @@ class Atomate2Settings(BaseSettings):
     VASP_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    VASP_STORE_VOLUMETRIC_DATA: tuple[str] | None = Field(
+    VASP_STORE_VOLUMETRIC_DATA: Optional[Tuple[str]] = Field(
         None, description="Store data from these files in database if present"
     )
     VASP_STORE_ADDITIONAL_JSON: bool = Field(

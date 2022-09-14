@@ -1,8 +1,6 @@
 """Core definition of Molecule metadata."""
 
-from __future__ import annotations
-
-from typing import TypeVar
+from typing import List, Optional, Type, TypeVar
 
 from pydantic import BaseModel, Field
 from pymatgen.core import Composition, Molecule
@@ -19,7 +17,7 @@ class MoleculeMetadata(BaseModel):
 
     # Molecule metadata
     nsites: int = Field(None, description="Total number of sites in the structure")
-    elements: list[Element] = Field(
+    elements: List[Element] = Field(
         None, description="List of elements in the material"
     )
     nelements: int = Field(None, title="Number of Elements")
@@ -65,10 +63,10 @@ class MoleculeMetadata(BaseModel):
 
     @classmethod
     def from_composition(
-        cls: type[T],
+        cls: Type[T],
         composition: Composition,
-        fields: list[str] | None = None,
-        **kwargs,
+        fields: Optional[List[str]] = None,
+        **kwargs
     ) -> T:
         """
         Create a MoleculeMetadata model from a composition.
@@ -116,11 +114,11 @@ class MoleculeMetadata(BaseModel):
 
     @classmethod
     def from_molecule(
-        cls: type[T],
+        cls: Type[T],
         molecule: Molecule,
-        fields: list[str] | None = None,
+        fields: Optional[List[str]] = None,
         include_molecule: bool = False,
-        **kwargs,
+        **kwargs
     ) -> T:
         """
         Create schema from a molecule.

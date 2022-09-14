@@ -1,8 +1,7 @@
 """Schemas for electron-phonon renormalisation documents."""
 
-from __future__ import annotations
-
 import logging
+from typing import Dict, List, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -18,21 +17,21 @@ __all__ = ["RawElectronicData", "ElectronPhononRenormalisationDoc"]
 class RawElectronicData(BaseModel):
     """Raw data used to fit electron-phonon renormalisation."""
 
-    displacement_uuids: list[str] = Field(
+    displacement_uuids: List[str] = Field(
         None, description="UUIDs of the displacement band structure calculations"
     )
-    displacement_dirs: list[str] = Field(
+    displacement_dirs: List[str] = Field(
         None, description="Directories of the displacement band structure calculations"
     )
-    displacement_structures: list[Structure] = Field(
+    displacement_structures: List[Structure] = Field(
         None, description="The electron-phonon displaced structures at each temperature"
     )
-    displacement_cbms: list[list[float]] = Field(
+    displacement_cbms: List[List[float]] = Field(
         None,
         description="Conduction band minima of the displaced structures, as an"
         "array with the shape (ntemps, ncbms)",
     )
-    displacement_vbms: list[list[float]] = Field(
+    displacement_vbms: List[List[float]] = Field(
         None,
         description="Valence band maxima of the displaced structures, as an"
         "array with the shape (ntemps, nvbms)",
@@ -50,12 +49,12 @@ class RawElectronicData(BaseModel):
     bulk_vbm: float = Field(
         None, description="Valence band maximum of the bulk (supercell) structure"
     )
-    bulk_vbm_band_indices: dict[str, list[int]] = Field(
+    bulk_vbm_band_indices: Dict[str, List[int]] = Field(
         None,
         description="Indices of bands that are degenerate at the valence band "
         "maximum (zero indexed) in the bulk (supercell) structure",
     )
-    bulk_cbm_band_indices: dict[str, list[int]] = Field(
+    bulk_cbm_band_indices: Dict[str, List[int]] = Field(
         None,
         description="Indices of bands that are degenerate at the conduction band "
         "minimum (zero indexed) in the bulk (supercell) structure",
@@ -84,19 +83,19 @@ class ElectronPhononRenormalisationDoc(BaseModel):
         None,
         description="Cleaned representation of the formula",
     )
-    temperatures: list[float] = Field(
+    temperatures: List[float] = Field(
         None, description="Temperatures at which electron-phonon coupling was obtained"
     )
-    band_gaps: list[float] = Field(
+    band_gaps: List[float] = Field(
         None, description="Temperature renormalised band gaps"
     )
-    vbms: list[float] = Field(
+    vbms: List[float] = Field(
         None, description="Temperature renormalised valence band maxima"
     )
-    cbms: list[float] = Field(
+    cbms: List[float] = Field(
         None, description="Temperature renormalised conduction band minima"
     )
-    delta_band_gaps: list[float] = Field(
+    delta_band_gaps: List[float] = Field(
         None, description="Change in band gap relative to the bulk structure"
     )
     bulk_band_gap: float = Field(
@@ -111,11 +110,11 @@ class ElectronPhononRenormalisationDoc(BaseModel):
     @classmethod
     def from_band_structures(
         cls,
-        temperatures: list[float],
-        displacement_band_structures: list[BandStructure],
-        displacement_structures: list[Structure],
-        displacement_uuids: list[str],
-        displacement_dirs: list[str],
+        temperatures: List[float],
+        displacement_band_structures: List[BandStructure],
+        displacement_structures: List[Structure],
+        displacement_uuids: List[str],
+        displacement_dirs: List[str],
         bulk_band_structure: BandStructure,
         bulk_structure: Structure,
         bulk_uuid: str,
@@ -244,8 +243,8 @@ class ElectronPhononRenormalisationDoc(BaseModel):
 
 
 def _get_displacement_band_edges(
-    band_structures: list[BandStructure],
-    band_indices: dict[Spin, list[int]],
+    band_structures: List[BandStructure],
+    band_indices: Dict[Spin, List[int]],
     cbm: bool = True,
 ):
     """Extract band edge energies based on a band structure and band indices."""
@@ -266,7 +265,7 @@ def _get_displacement_band_edges(
 def _get_band_edge_indices(
     band_structure: BandStructure,
     tol: float = 0.005,
-) -> tuple[dict[Spin, list[int]], dict[Spin, list[int]]]:
+) -> Tuple[Dict[Spin, List[int]], Dict[Spin, List[int]]]:
     """
     Get indices of degenerate band edge states, within a tolerance.
 

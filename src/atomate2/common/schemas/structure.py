@@ -1,8 +1,6 @@
 """Core definition of Structure metadata."""
 
-from __future__ import annotations
-
-from typing import TypeVar
+from typing import List, Optional, Type, TypeVar
 
 from pydantic import BaseModel, Field
 from pymatgen.core import Composition, Structure
@@ -20,7 +18,7 @@ class StructureMetadata(BaseModel):
 
     # Structure metadata
     nsites: int = Field(None, description="Total number of sites in the structure")
-    elements: list[Element] = Field(
+    elements: List[Element] = Field(
         None, description="List of elements in the material"
     )
     nelements: int = Field(None, title="Number of Elements")
@@ -67,10 +65,10 @@ class StructureMetadata(BaseModel):
 
     @classmethod
     def from_composition(
-        cls: type[T],
+        cls: Type[T],
         composition: Composition,
-        fields: list[str] | None = None,
-        **kwargs,
+        fields: Optional[List[str]] = None,
+        **kwargs
     ) -> T:
         """
         Create a StructureMetadata model from a composition.
@@ -118,11 +116,11 @@ class StructureMetadata(BaseModel):
 
     @classmethod
     def from_structure(
-        cls: type[T],
+        cls: Type[T],
         structure: Structure,
-        fields: list[str] | None = None,
+        fields: Optional[List[str]] = None,
         include_structure: bool = False,
-        **kwargs,
+        **kwargs
     ) -> T:
         """
         Create schema from a structure.
