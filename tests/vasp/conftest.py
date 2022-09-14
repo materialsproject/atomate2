@@ -257,7 +257,6 @@ def copy_vasp_outputs(ref_path: Union[str, Path]):
     import shutil
 
     output_path = ref_path / "outputs"
-    print(output_path.iterdir())
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
