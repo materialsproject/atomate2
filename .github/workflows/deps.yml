@@ -2,10 +2,8 @@ name: Merge dependencies
 
 on:
   workflow_run:
-    workflows:
-      - testing
-    types:
-      - completed
+    workflows: [testing]
+    types: [completed]
 
 jobs:
   merge-deps:

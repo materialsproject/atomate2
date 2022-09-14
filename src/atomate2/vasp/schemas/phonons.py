@@ -54,11 +54,11 @@ class ThermalDisplacementData(BaseModel):
         "computation of the thermal displacement parameters"
     )
     thermal_displacement_matrix_cif: List[List[Matrix3D]] = Field(
-        None, description="field including thermal displacement matrices in cif format"
+        None, description="field including thermal displacement matrices in CIF format"
     )
     thermal_displacement_matrix: List[List[Matrix3D]] = Field(
         None,
-        description="field including thermal displacement matrices in cartesian coordinate system",
+        description="field including thermal displacement matrices in Cartesian coordinate system",
     )
     temperatures_thermal_displacements: List[int] = Field(
         None,
