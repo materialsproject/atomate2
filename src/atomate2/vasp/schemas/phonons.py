@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import copy
 import logging
 from typing import List, Optional, Union
@@ -177,7 +175,7 @@ class PhononBSDOSDoc(BaseModel):
     )
 
     thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
-        "Includes all data of the " "computation of the thermal displacements"
+        "Includes all data of the computation of the thermal displacements"
     )
 
     jobdirs: PhononJobDirs = Field("Field including all relevant job directories")
