@@ -260,7 +260,7 @@ def test_elastic(mock_vasp, clean_dir):
 
     # generate the flow and reduce the k-point mesh for the relaxation jobs
     flow = ElasticMaker().make(si_structure)
-    update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
+    flow = update_user_kpoints_settings(flow, {"grid_density": 100}, name_filter="relax")
 
     # run the flow and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
