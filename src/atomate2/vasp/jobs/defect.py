@@ -163,7 +163,7 @@ def calculate_finite_diff(
     cases where data from the same calculation is used multiple times.
 
     Since all of the standard outputs are presumably already stored in the database,
-    the make function here should only only store new data.
+    the make function here should only store new data.
 
     Parameters
     ----------

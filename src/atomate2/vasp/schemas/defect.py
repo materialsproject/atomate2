@@ -225,7 +225,7 @@ class CCDDocument(BaseModel):
         """
 
         def find_entry(entries, uuid) -> tuple[int, ComputedStructureEntry]:
-            """Find the entry with the given given UUID."""
+            """Find the entry with the given UUID."""
             for itr, entry in enumerate(entries):
                 if entry.data["uuid"] == uuid:
                     return itr, entry
