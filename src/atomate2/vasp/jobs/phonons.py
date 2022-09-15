@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import List, Union
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -133,7 +132,7 @@ def generate_phonon_displacements(
     displacement: float,
     sym_reduce: bool,
     symprec: float,
-    use_symmetrized_structure: Union[str, None],
+    use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
 ):
@@ -165,7 +164,7 @@ def generate_phonon_displacements(
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
     if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: Union[List[List[float]], str] = [
+        primitive_matrix: list[list[float]] | str = [
             [1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],
             [0.0, 0.0, 1.0],
@@ -197,7 +196,7 @@ def generate_frequencies_eigenvectors(
     displacement: float,
     sym_reduce: bool,
     symprec: float,
-    use_symmetrized_structure: Union[str, None],
+    use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
     displacement_data: dict[str, list],

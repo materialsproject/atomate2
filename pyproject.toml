@@ -7,8 +7,8 @@ name = "atomate2"
 description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
 keywords = ["high-throughput", "automated", "workflow", "dft", "vasp"]
-license = {text = "modified BSD"}
-authors = [{name = "Alex Ganose", email = "alexganose@gmail.com"}]
+license = { text = "modified BSD" }
+authors = [{ name = "Alex Ganose", email = "alexganose@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -48,11 +48,7 @@ docs = [
     "jupyter-book==0.12.3",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = [
-    "pytest==7.1.2",
-    "pytest-cov==3.0.0",
-    "FireWorks==2.0.3",
-]
+tests = ["pytest==7.1.2", "pytest-cov==3.0.0", "FireWorks==2.0.3"]
 strict = [
     "pydantic==1.9.0",
     "pymatgen==2022.8.23",
@@ -126,3 +122,10 @@ exclude_lines = [
     'if typing.TYPE_CHECKING:',
     '^\s*@overload( |$)',
 ]
+
+[tool.autoflake]
+in-place = true
+remove-all-unused-imports = true
+remove-unused-variables = true
+ignore-init-module-imports = true
+expand-star-imports = true
