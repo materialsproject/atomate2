@@ -1,11 +1,9 @@
 """Module defining amset document schemas."""
 
-from __future__ import annotations
-
 import logging
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 from monty.dev import requires
@@ -32,23 +30,23 @@ logger = logging.getLogger(__name__)
 class TransportData(BaseModel):
     """Definition of AMSET transport data model."""
 
-    doping: list[float] = Field(None, description="Carrier concentrations in cm^-3")
-    temperatures: list[float] = Field(None, description="Temperatures in K")
-    fermi_levels: list[list[float]] = Field(
+    doping: List[float] = Field(None, description="Carrier concentrations in cm^-3")
+    temperatures: List[float] = Field(None, description="Temperatures in K")
+    fermi_levels: List[List[float]] = Field(
         None, description="Fermi level positions in eV, given as (ndoping, ntemps)"
     )
-    conductivity: list[list[Matrix3D]] = Field(
+    conductivity: List[List[Matrix3D]] = Field(
         None, description="Conductivity tensor in S/m, given as (ndoping, ntemps, 3, 3)"
     )
-    seebeck: list[list[Matrix3D]] = Field(
+    seebeck: List[List[Matrix3D]] = Field(
         None, description="Seebeck tensor in µV/K, given as (ndoping, ntemps, 3, 3)"
     )
-    electronic_thermal_conductivity: list[list[Matrix3D]] = Field(
+    electronic_thermal_conductivity: List[List[Matrix3D]] = Field(
         None,
         description="Electronic thermal conductivity tensor in W/mK, given as "
         "(ndoping, ntemps, 3, 3)",
     )
-    mobility: dict[str, list[list[Matrix3D]]] = Field(
+    mobility: Dict[str, List[List[Matrix3D]]] = Field(
         None,
         description="Carrier mobility tensor in cm^2/Vs, given as "
         "{scattering_type: (ndoping, ntemps, 3, 3)}",
@@ -76,32 +74,32 @@ class UsageStats(BaseModel):
 class MeshData(BaseModel):
     """Definition of full AMSET mesh data."""
 
-    energies: dict[str, list[list[float]]] = Field(
+    energies: Dict[str, List[List[float]]] = Field(
         None, description="Band structure energies in eV on the irreducible mesh."
     )
-    kpoints: list[Vector3D] = Field(
+    kpoints: List[Vector3D] = Field(
         None, description="K-points in fractional coordinates"
     )
-    ir_kpoints: list[Vector3D] = Field(
+    ir_kpoints: List[Vector3D] = Field(
         None, description="Irreducible k-points in fractional coordinates"
     )
-    ir_to_full_kpoint_mapping: list[int] = Field(
+    ir_to_full_kpoint_mapping: List[int] = Field(
         None, description="Mapping from irreducible to full k-points"
     )
     efermi: float = Field(None, description="Intrinsic Fermi level from band structure")
-    vb_idx: dict[str, int] = Field(
+    vb_idx: Dict[str, int] = Field(
         None, description="Index of highest valence band for each spin"
     )
     num_electrons: float = Field(None, description="Number of electrons in the system")
-    velocities: dict[str, list[list[Vector3D]]] = Field(
+    velocities: Dict[str, List[List[Vector3D]]] = Field(
         None, description="Band velocities for each irreducible k-point."
     )
-    scattering_rates: dict[str, list[list[list[list[list[float]]]]]] = Field(
+    scattering_rates: Dict[str, List[List[List[List[List[float]]]]]] = Field(
         None,
         description="Scattering rates in s^-1, given as "
         "{spin: (nscattering_types, ndoping, ntemps, nbands, nkpoints)}",
     )
-    fd_cutoffs: tuple[list[list[float]], list[list[float]]] = Field(
+    fd_cutoffs: Tuple[List[List[float]], List[List[float]]] = Field(
         None,
         description="Energy cutoffs within which the scattering rates are calculated"
         "given as (min_cutoff, max_cutoff) where each cutoff is given"
@@ -131,7 +129,7 @@ class AmsetTaskDocument(StructureMetadata):
     nkpoints: int = Field(None, description="Total number of interpolated k-points")
     log: str = Field(None, description="Full AMSET running log")
     is_metal: bool = Field(None, description="Whether the system is a metal")
-    scattering_labels: list[str] = Field(
+    scattering_labels: List[str] = Field(
         None, description="The scattering types used in the calculation"
     )
     soc: bool = Field(None, description="Whether spin–orbit coupling was included")
@@ -146,8 +144,8 @@ class AmsetTaskDocument(StructureMetadata):
     @requires(amset, "amset must be installed to create an AmsetTaskDocument.")
     def from_directory(
         cls,
-        dir_name: Path | str,
-        additional_fields: dict[str, Any] = None,
+        dir_name: Union[Path, str],
+        additional_fields: Dict[str, Any] = None,
         include_mesh: bool = False,
     ):
         """
