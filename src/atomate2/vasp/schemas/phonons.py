@@ -284,9 +284,9 @@ class PhononBSDOSDoc(BaseModel):
                     is_symmetry=kwargs.get("symmetrize_born", True),
                 )
             else:
-                # TODO: how to deal with reduced born representation
-                borns = np.array(born)
-                epsilon = np.array(epsilon_static)
+                raise ValueError(
+                    "Number of born charges does not agree with number of atoms"
+                )
             if code == "vasp":
                 if not np.all(np.isclose(borns, 0.0)):
                     phonon.nac_params = {
