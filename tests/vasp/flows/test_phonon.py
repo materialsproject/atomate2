@@ -420,6 +420,56 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
 
 
 # test supply of born charges, epsilon, dft energy, supercell
+def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
+    from jobflow import run_locally
+
+    structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"phonon static 1/1": "Si_phonons_1/phonon_static_1_1"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"phonon static 1/1": {"incar_settings": ["NSW", "ISMEAR"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    born = [
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.1]],
+    ]
+    epsilon_static = [
+        [5.25, 0.0, 0.0],
+        [0.0, 5.25, -0.0],
+        [0.0, 0.0, 5.25],
+    ]
+    total_dft_energy_per_formula_unit = -5
+
+    job = PhononMaker(
+        min_length=3.0,
+        bulk_relax_maker=None,
+        static_energy_maker=None,
+        born_maker=None,
+        use_symmetrized_structure="primitive",
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+    ).make(
+        structure=structure,
+        total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
+        born=born,
+        epsilon_static=epsilon_static,
+    )
+
+    with pytest.raises(ValueError):
+        # run the flow or job and ensure that it finished running successfully
+        run_locally(job, create_folders=True, ensure_success=True)
+
+
+# test supply of born charges, epsilon, dft energy, supercell
 def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     from jobflow import run_locally
 
@@ -448,7 +498,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         [0.0, 0.0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
-    # !!! Generate job
+    # TODO: add value error
     job = PhononMaker(
         min_length=3.0,
         bulk_relax_maker=None,
@@ -811,43 +861,6 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
             kpath_scheme=kpathscheme,
             generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         ).make(structure)
-
-
-def test_phonon_raises_born(mock_vasp, clean_dir, kpathscheme):
-
-    structure = Structure(
-        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
-        species=["Si", "Si"],
-        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
-    )
-
-    # mapping from job name to directory containing test files
-    ref_paths = {"phonon static 1/1": "Si_phonons_1/phonon_static_1_1"}
-
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {"phonon static 1/1": {"incar_settings": ["NSW", "ISMEAR"]}}
-
-    # automatically use fake VASP and write POTCAR.spec during the test
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
-
-    born = [
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-    ]
-    epsilon_static = [[5.25, 0.0, 0.0], [0.0, 5.25, -0.0], [0.0, 0.0, 5.25]]
-
-    with pytest.raises(ValueError):
-
-        PhononMaker(
-            min_length=3.0,
-            bulk_relax_maker=None,
-            static_energy_maker=None,
-            born_maker=None,
-            use_symmetrized_structure=None,
-            kpath_scheme=kpathscheme,
-            generate_frequencies_eigenvectors_kwargs={"tstep": 100},
-        ).make(structure, born=born, epsilon_static=epsilon_static)
 
 
 @pytest.mark.parametrize(
