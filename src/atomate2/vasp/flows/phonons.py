@@ -343,3 +343,6 @@ class PhononMaker(Maker):
         # create a flow including all jobs for a phonon computation
         flow = Flow(jobs, phonon_collect.output)
         return flow
+
+
+# add a test with more than two atoms

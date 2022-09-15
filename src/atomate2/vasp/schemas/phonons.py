@@ -7,9 +7,10 @@ from typing import List, Optional, Union
 import numpy as np
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-from phonopy.structure.symmetry import elaborate_borns_and_epsilon
+from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
+from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
     get_ph_bs_symm_line,
@@ -259,22 +260,31 @@ class PhononBSDOSDoc(BaseModel):
         phonon.generate_displacements(distance=displacement)
         # there needs to be an algorithm that maps generated structures from here with
         # the ones that originally have been computed
-        phonon.supercells_with_displacements
 
-        displacement_data["structures"]
-        set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
+        # check this algorithm more deeply: could be buggy depending on tolerances
+        set_of_forces = []
+        for cell in phonon.supercells_with_displacements:
+            for structure2, forces in zip(
+                displacement_data["displaced_structures"], displacement_data["forces"]
+            ):
+                structure1 = get_pmg_structure(cell)
+                sm = StructureMatcher(ltol=1e-5, stol=1e-5)
+                if sm.fit(structure1, structure2):
+                    set_of_forces.append(np.array(forces))
 
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
-                borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
-                    ucell=get_phonopy_structure(structure),
+                borns, epsilon = symmetrize_borns_and_epsilon(
+                    ucell=phonon.unitcell,
                     borns=np.array(born),
                     epsilon=np.array(epsilon_static),
                     symprec=symprec,
                     primitive_matrix=phonon.primitive_matrix,
                     supercell_matrix=phonon.supercell_matrix,
+                    is_symmetry=kwargs.get("symmetrize_born", True),
                 )
             else:
+                # TODO: how to deal with reduced born representation
                 borns = np.array(born)
                 epsilon = np.array(epsilon_static)
             if code == "vasp":

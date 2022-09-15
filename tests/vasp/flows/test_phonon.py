@@ -443,9 +443,9 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
     ]
     epsilon_static = [
-        [5.24520821, 0.0, 0.0],
-        [0.0, 5.24520817, -0.0],
-        [0.0, 0.0, 5.27805909],
+        [5.25, 0.0, 0.0],
+        [0.0, 5.25, -0.0],
+        [0.0, 0.0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
     # !!! Generate job
