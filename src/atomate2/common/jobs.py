@@ -1,5 +1,7 @@
 """Module defining common jobs."""
 
+from __future__ import annotations
+
 from jobflow import job
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer

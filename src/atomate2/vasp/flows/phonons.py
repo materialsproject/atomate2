@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
@@ -147,7 +146,7 @@ class PhononMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-        born: List[Matrix3D] | None = None,
+        born: list[Matrix3D] | None = None,
         epsilon_static: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
