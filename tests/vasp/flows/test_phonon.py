@@ -813,6 +813,43 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
         ).make(structure)
 
 
+def test_phonon_raises_born(mock_vasp, clean_dir, kpathscheme):
+
+    structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"phonon static 1/1": "Si_phonons_1/phonon_static_1_1"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"phonon static 1/1": {"incar_settings": ["NSW", "ISMEAR"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    born = [
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+    ]
+    epsilon_static = [[5.25, 0.0, 0.0], [0.0, 5.25, -0.0], [0.0, 0.0, 5.25]]
+
+    with pytest.raises(ValueError):
+
+        PhononMaker(
+            min_length=3.0,
+            bulk_relax_maker=None,
+            static_energy_maker=None,
+            born_maker=None,
+            use_symmetrized_structure=None,
+            kpath_scheme=kpathscheme,
+            generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        ).make(structure, born=born, epsilon_static=epsilon_static)
+
+
 @pytest.mark.parametrize(
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
