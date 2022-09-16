@@ -450,22 +450,21 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     ]
     total_dft_energy_per_formula_unit = -5
 
-    job = PhononMaker(
-        min_length=3.0,
-        bulk_relax_maker=None,
-        static_energy_maker=None,
-        born_maker=None,
-        use_symmetrized_structure="primitive",
-        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
-    ).make(
-        structure=structure,
-        total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
-        born=born,
-        epsilon_static=epsilon_static,
-    )
+    with pytest.raises(RuntimeError):
+        job = PhononMaker(
+            min_length=3.0,
+            bulk_relax_maker=None,
+            static_energy_maker=None,
+            born_maker=None,
+            use_symmetrized_structure="primitive",
+            generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        ).make(
+            structure=structure,
+            total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
+            born=born,
+            epsilon_static=epsilon_static,
+        )
 
-    with pytest.raises(ValueError):
-        # run the flow or job and ensure that it finished running successfully
         run_locally(job, create_folders=True, ensure_success=True)
 
 

@@ -8,7 +8,6 @@ from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
-from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
     get_ph_bs_symm_line,
@@ -256,19 +255,7 @@ class PhononBSDOSDoc(BaseModel):
         )
         # TODO: add additional check here that forces are passed in correct order
         phonon.generate_displacements(distance=displacement)
-        # there needs to be an algorithm that maps generated structures from here with
-        # the ones that originally have been computed
-
-        # check this algorithm more deeply: could be buggy depending on tolerances
-        set_of_forces = []
-        for cell in phonon.supercells_with_displacements:
-            for structure2, forces in zip(
-                displacement_data["displaced_structures"], displacement_data["forces"]
-            ):
-                structure1 = get_pmg_structure(cell)
-                sm = StructureMatcher(ltol=1e-5, stol=1e-5)
-                if sm.fit(structure1, structure2):
-                    set_of_forces.append(np.array(forces))
+        set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
