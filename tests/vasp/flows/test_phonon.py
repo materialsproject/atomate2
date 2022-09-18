@@ -497,7 +497,6 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         [0.0, 0.0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
-    # TODO: add value error
     job = PhononMaker(
         min_length=3.0,
         bulk_relax_maker=None,
