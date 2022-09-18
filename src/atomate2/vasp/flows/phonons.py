@@ -167,9 +167,6 @@ class PhononMaker(Maker):
             these values can also be provided manually.
             if born, epsilon_static are provided, the born
             run will be skipped
-            this matrix can be provided in the phonopy convention
-            with born charges for symmetrically
-            inequivalent atoms only or
             it can be provided in the VASP convention with information for
             every atom in unit cell. Please be careful when converting
             structures within in this workflow as this could lead to errors

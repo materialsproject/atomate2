@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Union
 import numpy as np
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-from phonopy.structure.symmetry import elaborate_borns_and_epsilon
+from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
@@ -258,17 +258,19 @@ class PhononBSDOSDoc(BaseModel):
 
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
-                borns, epsilon, atom_indices = elaborate_borns_and_epsilon(
-                    ucell=get_phonopy_structure(structure),
+                borns, epsilon = symmetrize_borns_and_epsilon(
+                    ucell=phonon.unitcell,
                     borns=np.array(born),
                     epsilon=np.array(epsilon_static),
                     symprec=symprec,
                     primitive_matrix=phonon.primitive_matrix,
                     supercell_matrix=phonon.supercell_matrix,
+                    is_symmetry=kwargs.get("symmetrize_born", True),
                 )
             else:
-                borns = np.array(born)
-                epsilon = np.array(epsilon_static)
+                raise ValueError(
+                    "Number of born charges does not agree with number of atoms"
+                )
             if code == "vasp":
                 if not np.all(np.isclose(borns, 0.0)):
                     phonon.nac_params = {

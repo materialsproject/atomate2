@@ -420,6 +420,55 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
 
 
 # test supply of born charges, epsilon, dft energy, supercell
+def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
+    from jobflow import run_locally
+
+    structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"phonon static 1/1": "Si_phonons_1/phonon_static_1_1"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {"phonon static 1/1": {"incar_settings": ["NSW", "ISMEAR"]}}
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    born = [
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.1]],
+    ]
+    epsilon_static = [
+        [5.25, 0.0, 0.0],
+        [0.0, 5.25, -0.0],
+        [0.0, 0.0, 5.25],
+    ]
+    total_dft_energy_per_formula_unit = -5
+
+    with pytest.raises(RuntimeError):
+        job = PhononMaker(
+            min_length=3.0,
+            bulk_relax_maker=None,
+            static_energy_maker=None,
+            born_maker=None,
+            use_symmetrized_structure="primitive",
+            generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        ).make(
+            structure=structure,
+            total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
+            born=born,
+            epsilon_static=epsilon_static,
+        )
+
+        run_locally(job, create_folders=True, ensure_success=True)
+
+
+# test supply of born charges, epsilon, dft energy, supercell
 def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     from jobflow import run_locally
 
@@ -443,12 +492,11 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
     ]
     epsilon_static = [
-        [5.24520821, 0.0, 0.0],
-        [0.0, 5.24520817, -0.0],
-        [0.0, 0.0, 5.27805909],
+        [5.25, 0.0, 0.0],
+        [0.0, 5.25, -0.0],
+        [0.0, 0.0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
-    # !!! Generate job
     job = PhononMaker(
         min_length=3.0,
         bulk_relax_maker=None,
@@ -902,3 +950,73 @@ def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
             ((-1.1033, 0.0, -0.0), (-0.0, -1.1033, 0.0), (-0.0, 0.0, -1.1033)),
         ],
     )
+
+    def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
+        from jobflow import run_locally
+        from pymatgen.core.structure import Structure
+
+        from atomate2.vasp.flows.phonons import PhononMaker
+
+        structure = Structure(
+            lattice=[
+                [2.3003714889113018, -3.9843602950772405, 0.0000000000000000],
+                [2.3003714889113018, 3.9843602950772405, 0.0000000000000000],
+                [0.0000000000000000, 0.0000000000000000, 7.2813299999999996],
+            ],
+            species=["Mg", "Mg", "Mg", "Sb", "Sb"],
+            coords=[
+                [0.0, 0.0, 0.0],
+                [0.3333333333333333, 0.6666666666666666, 0.3683250000000000],
+                [0.6666666666666667, 0.3333333333333334, 0.6316750000000000],
+                [0.3333333333333333, 0.6666666666666666, 0.7747490000000000],
+                [0.6666666666666667, 0.3333333333333334, 0.2252510000000000],
+            ],
+        )
+
+        ref_paths = {
+            "dielectric": "Mg3Sb2_phonons/dielectric",
+            "phonon static 1/10": "Mg3Sb2_phonons/phonon_static_1_10",
+            "phonon static 10/10": "Mg3Sb2_phonons/phonon_static_10_10",
+            "phonon static 2/10": "Mg3Sb2_phonons/phonon_static_2_10",
+            "phonon static 3/10": "Mg3Sb2_phonons/phonon_static_3_10",
+            "phonon static 4/10": "Mg3Sb2_phonons/phonon_static_4_10",
+            "phonon static 5/10": "Mg3Sb2_phonons/phonon_static_5_10",
+            "phonon static 6/10": "Mg3Sb2_phonons/phonon_static_6_10",
+            "phonon static 7/10": "Mg3Sb2_phonons/phonon_static_7_10",
+            "phonon static 8/10": "Mg3Sb2_phonons/phonon_static_8_10",
+            "phonon static 9/10": "Mg3Sb2_phonons/phonon_static_9_10",
+        }
+
+        # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+        fake_run_vasp_kwargs = {
+            "dielectric": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 1/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 10/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 2/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 3/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 4/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 5/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 6/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 7/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 8/10": {"incar_settings": ["NSW", "ISMEAR"]},
+            "phonon static 9/10": {"incar_settings": ["NSW", "ISMEAR"]},
+        }
+
+        # automatically use fake VASP and write POTCAR.spec during the test
+        mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+        phonon_flow = PhononMaker(
+            min_length=3.0,
+            bulk_relax_maker=None,
+            static_energy_maker=None,
+            use_symmetrized_structure="primitive",
+            kpath_scheme="setyawan_curtarolo",
+        ).make(structure)
+
+        # run the job
+        responses = run_locally(phonon_flow, create_folders=True, ensure_success=True)
+
+        # !!! validation on the outputs
+        assert isinstance(
+            responses[phonon_flow.jobs[-1].uuid][1].output, PhononBSDOSDoc
+        )
