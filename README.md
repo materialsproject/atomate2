@@ -1,6 +1,6 @@
 # atomate2
 
-[![code coverage](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
+[![tests](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
@@ -29,17 +29,17 @@ software, but we are actively working on adding more codes.
 Some of the workflows available in atomate2 are:
 
 - electronic band structures
+- elastic, dielectric, and piezoelectric tensors
+- one-shot electron-phonon interactions
 - electronic transport using [AMSET]
-- full elastic tensor
-- dielectric tensor
 
 It is easy to customise and compose any of the above workflows.
 
 ## Quick start
 
-Workflows in atomate2 written using the [jobflow] library. Workflows are generated using
-`Maker` objects, that have a consistent API for modifying input settings and chaining
-workflows together.  Below, we demonstrate how to run a band structure workflow
+Workflows in atomate2 are written using the [jobflow] library. Workflows are generated using
+`Maker` objects which have a consistent API for modifying input settings and chaining
+workflows together. Below, we demonstrate how to run a band structure workflow
 (see the [documentation][RelaxBandStructure] for more details). In total, 4 VASP
 calculations will be performed:
 
@@ -51,8 +51,6 @@ calculations will be performed:
    band structure).
 
 ```python
-# MgO_bandstructure.py
-
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -67,15 +65,15 @@ mgo_structure = Structure(
 # make a band structure flow to optimise the structure and obtain the band structure
 bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 
-# run the job
+# run the flow
 run_locally(bandstructure_flow, create_folders=True)
 ```
 
 Before the above code can run successfully, you'll need to
 
-- set `PMG_VASP_PSP_DIR` in `~/.pmgrc.yaml` to a directory with VASP POTCAR files,
-- tell atomate2 where to find your VASP binary,
-- have a MongoDB instance ready to accept job output.
+- tell pymatgen where to [find your pseudopotential files](https://pymatgen.org/installation.html#potcar-setup)
+- tell atomate2 where to find your VASP binary
+- (optionally) prepare an external database to store the job output
 
 See the [installation] steps for details how to set all of this up.
 
@@ -123,7 +121,6 @@ Atomate2 was designed and developed by Alex Ganose.
 
 A full list of all contributors can be found [here][contributors].
 
-[maggma]: https://materialsproject.github.io/maggma/
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
@@ -132,10 +129,10 @@ A full list of all contributors can be found [here][contributors].
 [AMSET]: https://hackingmaterials.lbl.gov/amset/
 [help-forum]: https://matsci.org/c/atomate
 [issues]: https://github.com/materialsproject/atomate2/issues
-[changelog]: https://materialsproject.github.io/atomate2/user/changelog.html
+[changelog]: https://materialsproject.github.io/atomate2/about/changelog.html
 [installation]: https://materialsproject.github.io/atomate2/user/install.html
-[contributing]: https://materialsproject.github.io/atomate2/user/contributing.html
-[contributors]: https://materialsproject.github.io/atomate2/user/contributors.html
+[contributing]: https://materialsproject.github.io/atomate2/about/contributing.html
+[contributors]: https://materialsproject.github.io/atomate2/about/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html

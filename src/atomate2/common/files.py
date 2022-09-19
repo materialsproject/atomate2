@@ -45,8 +45,8 @@ def copy_files(
         be used as the source.
     include_files : None or list of (str or .Path)
         Filenames to include as a list of str or Path objects given relative to
-        ``src_dir``. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
-        in the source directory will be copied.
+        ``src_dir``. Glob file paths are supported, e.g. "\*.dat". If ``None``, all
+        files in the source directory will be copied.
     exclude_files : None or list of (str or .Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
     suffix : str
@@ -246,8 +246,8 @@ def gunzip_files(
         inferred from the current user. If ``None``, the local filesystem will be used.
     include_files : None or list of (str or Path)
         Filenames to include as a list of str or Path objects given relative to
-        directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all gzipped
-        files in the directory will be gunzipped.
+        directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all
+        gzipped files in the directory will be gunzipped.
     exclude_files : None or list of (str or Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
     allow_missing : bool
@@ -346,7 +346,7 @@ def get_zfile(
     directory_listing : list of Path
         A list of files in a directory.
     base_name : str
-        The base name of file file to find.
+        The base name of file to find.
     allow_missing : bool
         Whether to error if no version of the file (gzipped or un-gzipped) can be found.
 

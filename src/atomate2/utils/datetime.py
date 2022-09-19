@@ -1,5 +1,7 @@
 """Helper functions for datetime objects."""
 
+from __future__ import annotations
+
 from datetime import datetime
 
 __all__ = ["datetime_str"]

@@ -72,10 +72,10 @@ def task_type(
     """
     acalc_type = []
     incar = inputs.get("incar", {})
+    kpts = inputs.get("kpoints") or {}  # kpoints can be None, then want a dict
 
     if incar.get("ICHARG", 0) > 10:
         try:
-            kpts = inputs.get("kpoints") or {}
             kpt_labels = kpts.get("labels") or []
             num_kpt_labels = len(list(filter(None.__ne__, kpt_labels)))
         except Exception as e:
@@ -85,7 +85,8 @@ def task_type(
             acalc_type.append("NSCF Line")
         else:
             acalc_type.append("NSCF Uniform")
-
+    elif len([x for x in kpts.get("labels") or [] if x is not None]) > 0:
+        acalc_type.append("SCF Line")
     elif incar.get("LEPSILON", False):
         if incar.get("IBRION", 0) > 6:
             acalc_type.append("DFPT")
@@ -108,6 +109,9 @@ def task_type(
 
     elif incar.get("ISIF", 3) == 2 and incar.get("IBRION", 0) > 0:
         acalc_type.append("Deformation")
+
+    elif incar.get("IBRION", 1) == 0:
+        acalc_type.append("MD")
 
     if len(acalc_type) == 0:
         return TaskType("Unrecognized")

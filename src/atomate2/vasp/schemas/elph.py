@@ -148,7 +148,8 @@ class ElectronPhononRenormalisationDoc(BaseModel):
         bulk_dir : str
             The directory of the bulk undisplaced supercell band structure calculation.
         elph_uuid : str
-            The UUID of electron-phonon calculation that generated the displaced structures.
+            The UUID of the electron-phonon calculation that generated the displaced
+            structures.
         elph_dir : str
             The directory of electron-phonon calculation that generated the displaced
             structures.

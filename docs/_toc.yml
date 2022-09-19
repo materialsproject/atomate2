@@ -1,0 +1,28 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: index
+parts:
+- caption: User Guide
+  chapters:
+  - file: user/index
+  - file: user/install
+  - file: user/running-workflows
+  - file: user/fireworks
+  - file: user/codes/index
+    sections:
+      - file: user/codes/vasp
+- caption: Reference
+  chapters:
+    - file: reference/index
+- caption: Developer Guide
+  chapters:
+    - file: dev/dev_install
+    - file: dev/vasp_tests
+- caption: About
+  chapters:
+    - file: about/changelog
+    - file: about/contributors
+    - file: about/contributing
+    - file: about/license

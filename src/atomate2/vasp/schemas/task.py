@@ -10,6 +10,7 @@ from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.analysis.structure_analyzer import oxide_type
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 
@@ -84,7 +85,9 @@ class AnalysisSummary(BaseModel):
         if final_calc.has_vasp_completed == Status.SUCCESS:
             # max force and valid structure checks
             structure = final_calc.output.structure
-            max_force = _get_max_force(final_calc)
+            # do not check max force for MD run
+            if calc_docs[-1].input.parameters.get("IBRION", -1) != 0:
+                max_force = _get_max_force(final_calc)
             warnings.extend(_get_drift_warnings(final_calc))
             if not structure.is_valid():
                 errors.append("Bad structure (atoms are too close!)")
@@ -187,27 +190,46 @@ class OutputSummary(BaseModel):
     )
 
     @classmethod
-    def from_vasp_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
+    def from_vasp_calc_doc(
+        cls, calc_doc: Calculation, trajectory: Optional[Trajectory] = None
+    ) -> "OutputSummary":
         """
         Create a summary of VASP calculation outputs from a VASP calculation document.
+
+        This will first look for ionic steps in the calculation document. If found, will
+        use it and ignore the trajectory. I not, will get ionic steps from the
+        trajectory.
 
         Parameters
         ----------
         calc_doc
             A VASP calculation document.
+        trajectory
+            A pymatgen Trajectory.
 
         Returns
         -------
         OutputSummary
             The calculation output summary.
         """
+
+        if calc_doc.output.ionic_steps is not None:
+            forces = calc_doc.output.ionic_steps[-1].forces
+            stress = calc_doc.output.ionic_steps[-1].stress
+        elif trajectory is not None:
+            ionic_steps = trajectory.frame_properties
+            forces = ionic_steps[-1]["forces"]
+            stress = ionic_steps[-1]["stress"]
+        else:
+            raise RuntimeError("Unable to find ionic steps.")
+
         return cls(
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
-            forces=calc_doc.output.ionic_steps[-1].get("forces", None),
-            stress=calc_doc.output.ionic_steps[-1].get("stress", None),
+            forces=forces,
+            stress=stress,
         )
 
 
@@ -359,7 +381,9 @@ class TaskDocument(StructureMetadata):
             author=author,
             completed_at=calcs_reversed[-1].completed_at,
             input=InputSummary.from_vasp_calc_doc(calcs_reversed[0]),
-            output=OutputSummary.from_vasp_calc_doc(calcs_reversed[-1]),
+            output=OutputSummary.from_vasp_calc_doc(
+                calcs_reversed[-1], vasp_objects.get(VaspObject.TRAJECTORY)  # type: ignore
+            ),
             state=_get_state(calcs_reversed, analysis),
             entry=cls.get_entry(calcs_reversed),
             run_stats=_get_run_stats(calcs_reversed),
@@ -512,7 +536,7 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
 
 def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     """Get max force acting on atoms from a calculation document."""
-    forces = calc_doc.output.ionic_steps[-1].get("forces")
+    forces: Optional[Union[np.ndarray, List]] = calc_doc.output.ionic_steps[-1].forces
     structure = calc_doc.output.structure
     if forces:
         forces = np.array(forces)
@@ -607,6 +631,7 @@ def _find_vasp_files(
                 task_name: {
                     "vasprun_file": vasprun_filename,
                     "outcar_file": outcar_filename,
+                    "contcar_file": contcar_filename,
                     "volumetric_files": [CHGCAR, LOCPOT, etc]
                     "elph_poscars": [POSCAR.T=300, POSCAR.T=400, etc]
                 },
@@ -627,6 +652,8 @@ def _find_vasp_files(
                 vasp_files["vasprun_file"] = file
             elif file.match(f"*OUTCAR{suffix}*"):
                 vasp_files["outcar_file"] = file
+            elif file.match(f"*CONTCAR{suffix}*"):
+                vasp_files["contcar_file"] = file
             elif any([file.match(f"*{f}{suffix}*") for f in volumetric_files]):
                 vol_files.append(file)
             elif file.match(f"*POSCAR.T=*{suffix}*"):

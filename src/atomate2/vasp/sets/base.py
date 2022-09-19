@@ -1,12 +1,15 @@
 """Module defining base VASP input set and generator."""
 
+from __future__ import annotations
+
+import glob
 import os
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 from monty.io import zopen
@@ -14,6 +17,7 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.core import Magmom
+from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
 from pymatgen.io.vasp.sets import (
     BadInputSetWarning,
@@ -24,11 +28,10 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
-from atomate2.common.sets import InputSet, InputSetGenerator
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
-__all__ = ["VaspInputSet", "VaspInputSetGenerator"]
+__all__ = ["VaspInputSet", "VaspInputGenerator"]
 
 
 class VaspInputSet(InputSet):
@@ -55,9 +58,9 @@ class VaspInputSet(InputSet):
         self,
         incar: Incar,
         poscar: Poscar,
-        potcar: Union[Potcar, List[str]],
-        kpoints: Optional[Kpoints] = None,
-        optional_files: Optional[Dict] = None,
+        potcar: Potcar | list[str],
+        kpoints: Kpoints | None = None,
+        optional_files: dict | None = None,
     ):
         self.incar = incar
         self.poscar = poscar
@@ -67,7 +70,7 @@ class VaspInputSet(InputSet):
 
     def write_input(
         self,
-        directory: Union[str, Path],
+        directory: str | Path,
         make_dir: bool = True,
         overwrite: bool = True,
         potcar_spec: bool = False,
@@ -112,7 +115,7 @@ class VaspInputSet(InputSet):
                 raise FileExistsError(f"{directory / k} already exists.")
 
     @staticmethod
-    def from_directory(directory: Union[str, Path], optional_files: Dict = None):
+    def from_directory(directory: str | Path, optional_files: dict = None):
         """
         Load a set of VASP inputs from a directory.
 
@@ -200,7 +203,7 @@ class VaspInputSet(InputSet):
 
 
 @dataclass
-class VaspInputSetGenerator(InputSetGenerator):
+class VaspInputGenerator(InputGenerator):
     """
     A class to generate VASP input sets.
 
@@ -262,9 +265,9 @@ class VaspInputSetGenerator(InputSetGenerator):
         The config dictionary to use containing the base input set settings.
     """
 
-    user_incar_settings: Dict = field(default_factory=dict)
-    user_kpoints_settings: Union[Dict, Kpoints] = field(default_factory=dict)
-    user_potcar_settings: Dict = field(default_factory=dict)
+    user_incar_settings: dict = field(default_factory=dict)
+    user_kpoints_settings: dict | Kpoints = field(default_factory=dict)
+    user_potcar_settings: dict = field(default_factory=dict)
     user_potcar_functional: str = None
     auto_kspacing: bool = True
     constrain_total_magmom: bool = False
@@ -275,7 +278,7 @@ class VaspInputSetGenerator(InputSetGenerator):
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
     auto_ispin: bool = False
-    config_dict: Dict = field(default_factory=lambda: _BASE_VASP_SET)
+    config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
         """Post init formatting of arguments."""
@@ -336,7 +339,7 @@ class VaspInputSetGenerator(InputSetGenerator):
     def get_input_set(  # type: ignore
         self,
         structure: Structure = None,
-        prev_dir: Union[str, Path] = None,
+        prev_dir: str | Path = None,
         potcar_spec: bool = False,
     ) -> VaspInputSet:
         """
@@ -380,6 +383,7 @@ class VaspInputSetGenerator(InputSetGenerator):
             vasprun=vasprun,
             outcar=outcar,
         )
+
         kspacing = self._kspacing(incar_updates)
         kpoints = self._get_kpoints(structure, kpoints_updates, kspacing)
         incar = self._get_incar(
@@ -485,9 +489,7 @@ class VaspInputSetGenerator(InputSetGenerator):
 
         return nelect
 
-    def _get_previous(
-        self, structure: Structure = None, prev_dir: Union[str, Path] = None
-    ):
+    def _get_previous(self, structure: Structure = None, prev_dir: str | Path = None):
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
             raise ValueError("Either structure or prev_dir must be set.")
@@ -501,13 +503,27 @@ class VaspInputSetGenerator(InputSetGenerator):
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
 
+            path_prev_dir = Path(prev_dir)
+
+            # CONTCAR is already renamed POSCAR
+            contcars = list(glob.glob(str(path_prev_dir / "POSCAR*")))
+            contcarfile_fullpath = str(path_prev_dir / "POSCAR")
+            contcarfile = (
+                contcarfile_fullpath
+                if contcarfile_fullpath in contcars
+                else sorted(contcars)[-1]
+            )
+            contcar = Poscar.from_file(contcarfile)
+
             if vasprun.efermi is None:
                 # VASP doesn't output efermi in vasprun if IBRION = 1
                 vasprun.efermi = outcar.efermi
 
             bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
-            prev_structure = vasprun.final_structure
+            # use structure from CONTCAR as it is written to greater
+            # precision than in the vasprun
+            prev_structure = contcar.structure
             bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
 
             if self.auto_ispin:
@@ -562,8 +578,8 @@ class VaspInputSetGenerator(InputSetGenerator):
         self,
         structure,
         kpoints: Kpoints,
-        previous_incar: Dict = None,
-        incar_updates: Dict = None,
+        previous_incar: dict = None,
+        incar_updates: dict = None,
         bandgap: float = 0.0,
         ispin: int = None,
     ):
@@ -618,6 +634,7 @@ class VaspInputSetGenerator(InputSetGenerator):
             self.auto_kspacing,
             bandgap,
             kpoints,
+            previous_incar is None,
         )
 
         # handle auto ISPIN
@@ -635,9 +652,9 @@ class VaspInputSetGenerator(InputSetGenerator):
     def _get_kpoints(
         self,
         structure: Structure,
-        kpoints_updates: Optional[Dict[str, Any]],
-        kspacing: Optional[float],
-    ) -> Union[Kpoints, None]:
+        kpoints_updates: dict[str, Any] | None,
+        kspacing: float | None,
+    ) -> Kpoints | None:
         """Get the kpoints file."""
         kpoints_updates = {} if kpoints_updates is None else kpoints_updates
 
@@ -943,7 +960,13 @@ def _remove_unused_incar_params(incar, skip=None):
 
 
 def _set_kspacing(
-    incar, incar_settings, user_incar_settings, auto_kspacing, bandgap, kpoints
+    incar,
+    incar_settings,
+    user_incar_settings,
+    auto_kspacing,
+    bandgap,
+    kpoints,
+    from_prev,
 ):
     """
     Set KSPACING in an INCAR.
@@ -952,6 +975,7 @@ def _set_kspacing(
     if kspacing set in user_incar_settings then use that
     if auto_kspacing then do that
     if kspacing is set in config use that.
+    if from_prev is True, ISMEAR will be set according to the band gap
     """
     if kpoints is not None:
         # unset KSPACING as we are using a KPOINTS file
@@ -968,15 +992,20 @@ def _set_kspacing(
     elif "KSPACING" in user_incar_settings:
         incar["KSPACING"] = user_incar_settings["KSPACING"]
     elif incar_settings.get("KSPACING") and auto_kspacing:
+        # will always default to 0.22 in first run as one
+        # cannot be sure if one treats a metal or
+        # semiconductor/insulator
         incar["KSPACING"] = _get_kspacing(bandgap)
-
-        # be careful to not override user_incar_settings
-        if bandgap == 0:
-            incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
-            incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
-        else:
-            incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
-            incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
+        # This should default to ISMEAR=0 if band gap is not known (first computation)
+        # if not from_prev:
+        #     # be careful to not override user_incar_settings
+        if not from_prev:
+            if bandgap == 0:
+                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
+                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
+            else:
+                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
+                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
     elif incar_settings.get("KSPACING"):
         incar["KSPACING"] = incar_settings["KSPACING"]
 
@@ -1015,7 +1044,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
     )
 
 
-def _get_ispin(vasprun: Optional[Vasprun], outcar: Optional[Outcar]):
+def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
     """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
     if outcar is not None and outcar.magnetization is not None:
         # Turn off spin when magmom for every site is smaller than 0.02.
