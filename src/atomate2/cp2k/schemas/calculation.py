@@ -198,10 +198,34 @@ class CalculationOutput(BaseModel):
 
         structure = output.final_structure
 
+        if output.band_structure:
+            bandgap_info = output.band_structure.get_band_gap()
+            electronic_output = dict(
+                efermi=output.band_structure.efermi,
+                vbm=output.band_structure.get_vbm()["energy"],
+                cbm=output.band_structure.get_cbm()["energy"],
+                bandgap=bandgap_info["energy"],
+                is_gap_direct=bandgap_info["direct"],
+                is_metal=output.band_structure.is_metal(),
+                direct_gap=output.band_structure.get_direct_band_gap(),
+                transition=bandgap_info["transition"],
+            )
+        else:
+            logger.warning("Error in parsing bandstructure")
+            logger.warning("Collecting band edge info as available")
+            electronic_output = {
+                "efermi": output.efermi,
+                "vbm": output.vbm,
+                "cbm": output.cbm,
+                "bandgap": output.band_gap,
+                "is_metal": output.is_metal,
+            }
+
         return cls(
             structure=structure,
             energy=output.final_energy,
             energy_per_atom=output.final_energy / len(structure),
+            **electronic_output, 
             ionic_steps=output.ionic_steps,
             v_hartree=v_hart_avg,
             run_stats=RunStatistics.from_cp2k_output(output),

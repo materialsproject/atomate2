@@ -105,6 +105,7 @@ class AtomicKind(BaseModel):
     auxiliary_basis: int = Field(None, description="Auxiliary basis for this (if any) for this atom kind")
     ghost: bool = Field(None, description="Whether this atom kind is a ghost")
 
+
 class AtomicKindSummary(BaseModel):
     """A summary of pseudo-potential type and functional."""
 
@@ -124,6 +125,7 @@ class AtomicKindSummary(BaseModel):
                 "ghost": True if info['pseudo_potential'] == 'NONE' else False,
             }
         return cls(**d)
+
 
 class InputSummary(BaseModel):
     """Summary of inputs for a CP2K calculation."""
@@ -398,137 +400,6 @@ class TaskDocument(StructureMetadata):
         return ComputedEntry.from_dict(entry_dict)
 
 
-def _parse_transformations(
-    dir_name: Path,
-) -> Tuple[Dict, Optional[int], Optional[List[str]], Optional[str]]:
-    """Parse transformations.json file."""
-    transformations = {}
-    filenames = tuple(dir_name.glob("transformations.json*"))
-    icsd_id = None
-    if len(filenames) >= 1:
-        transformations = loadfn(filenames[0], cls=None)
-        try:
-            match = re.match(r"(\d+)-ICSD", transformations["history"][0]["source"])
-            if match:
-                icsd_id = int(match.group(1))
-        except (KeyError, IndexError):
-            pass
-
-    # We don't want to leave tags or authors in the
-    # transformations file because they'd be copied into
-    # every structure generated after this one.
-    other_parameters = transformations.get("other_parameters", {})
-    new_tags = other_parameters.pop("tags", None)
-    new_author = other_parameters.pop("author", None)
-
-    if "other_parameters" in transformations and not other_parameters:
-        # if dict is now empty remove it
-        transformations.pop("other_parameters")
-
-    return transformations, icsd_id, new_tags, new_author
-
-
-def _parse_custodian(dir_name: Path) -> Optional[Dict]:
-    """
-    Parse custodian.json file.
-
-    Calculations done using custodian have a custodian.json file which tracks the makers
-    performed and any errors detected and fixed.
-
-    Parameters
-    ----------
-    dir_name
-        Path to calculation directory.
-
-    Returns
-    -------
-    Optional[dict]
-        The information parsed from custodian.json file.
-    """
-    filenames = tuple(dir_name.glob("custodian.json*"))
-    if len(filenames) >= 1:
-        return loadfn(filenames[0], cls=None)
-    return None
-
-
-
-def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
-    """
-    Parse original input files.
-
-    Calculations using custodian generate a *.orig file for the inputs. This is useful
-    to know how the calculation originally started.
-
-    Parameters
-    ----------
-    dir_name
-        Path to calculation directory.
-
-    Returns
-    -------
-    Dict[str, Union[Kpints, Poscar, PotcarSpec, Incar]]
-        The original POSCAR, KPOINTS, POTCAR, and INCAR data.
-    """
-    orig_inputs = {}
-    input_mapping = {
-        "cp2k.inp": Cp2kInput,
-    }
-    for filename in dir_name.glob("*.orig*"):
-        for name, cp2k_input in input_mapping.items():
-            if f"{name}.orig" in str(filename):
-                orig_inputs[name.lower()] = cp2k_input.from_file(filename)
-
-    return orig_inputs
-
-# TODO These functions seem like they do not need to be cp2k/vasp specific 
-
-def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
-    """Parse additional json files in the directory."""
-    additional_json = {}
-    for filename in dir_name.glob("*.json*"):
-        key = filename.name.split(".")[0]
-        if key not in ("custodian", "transformations"):
-            additional_json[key] = loadfn(filename, cls=None)
-    return additional_json
-
-
-def _get_max_force(calc_doc: Calculation) -> Optional[float]:
-    """Get max force acting on atoms from a calculation document."""
-    forces = calc_doc.output.ionic_steps[-1].get("forces")
-    structure = calc_doc.output.structure
-    if forces:
-        forces = np.array(forces)
-        sdyn = structure.site_properties.get("selective_dynamics")
-        if sdyn:
-            forces[np.logical_not(sdyn)] = 0
-        return max(np.linalg.norm(forces, axis=1))
-    return None
-
-
-def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
-    """Get state from calculation documents and relaxation analysis."""
-    all_calcs_completed = all(
-        [c.has_cp2k_completed == Status.SUCCESS for c in calc_docs]
-    )
-    if len(analysis.errors) == 0 and all_calcs_completed:
-        return Status.SUCCESS  # type: ignore
-    return Status.FAILED  # type: ignore
-
-
-def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
-    """Get summary of runtime statistics for each calculation in this task."""
-    run_stats = {}
-    total = dict(
-        total_time=0.0,
-    )
-    for calc_doc in calc_docs:
-        stats = calc_doc.output.run_stats
-        run_stats[calc_doc.task_name] = stats
-        total["total_time"] += stats.total_time
-    run_stats["overall"] = RunStatistics(**total)
-    return run_stats
-
-
 def _find_cp2k_files(
     path: Union[str, Path],
     volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
@@ -597,3 +468,134 @@ def _find_cp2k_files(
             task_files["standard"] = standard_files
 
     return task_files
+
+# TODO These functions seem like they do not need to be cp2k/vasp specific 
+
+def _parse_transformations(
+    dir_name: Path,
+) -> Tuple[Dict, Optional[int], Optional[List[str]], Optional[str]]:
+    """Parse transformations.json file."""
+    transformations = {}
+    filenames = tuple(dir_name.glob("transformations.json*"))
+    icsd_id = None
+    if len(filenames) >= 1:
+        transformations = loadfn(filenames[0], cls=None)
+        try:
+            match = re.match(r"(\d+)-ICSD", transformations["history"][0]["source"])
+            if match:
+                icsd_id = int(match.group(1))
+        except (KeyError, IndexError):
+            pass
+
+    # We don't want to leave tags or authors in the
+    # transformations file because they'd be copied into
+    # every structure generated after this one.
+    other_parameters = transformations.get("other_parameters", {})
+    new_tags = other_parameters.pop("tags", None)
+    new_author = other_parameters.pop("author", None)
+
+    if "other_parameters" in transformations and not other_parameters:
+        # if dict is now empty remove it
+        transformations.pop("other_parameters")
+
+    return transformations, icsd_id, new_tags, new_author
+
+
+def _parse_custodian(dir_name: Path) -> Optional[Dict]:
+    """
+    Parse custodian.json file.
+
+    Calculations done using custodian have a custodian.json file which tracks the makers
+    performed and any errors detected and fixed.
+
+    Parameters
+    ----------
+    dir_name
+        Path to calculation directory.
+
+    Returns
+    -------
+    Optional[dict]
+        The information parsed from custodian.json file.
+    """
+    filenames = tuple(dir_name.glob("custodian.json*"))
+    if len(filenames) >= 1:
+        return loadfn(filenames[0], cls=None)
+    return None
+
+
+def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
+    """
+    Parse original input files.
+
+    Calculations using custodian generate a *.orig file for the inputs. This is useful
+    to know how the calculation originally started.
+
+    Parameters
+    ----------
+    dir_name
+        Path to calculation directory.
+
+    Returns
+    -------
+    Dict[str, Union[Kpints, Poscar, PotcarSpec, Incar]]
+        The original POSCAR, KPOINTS, POTCAR, and INCAR data.
+    """
+    orig_inputs = {}
+    input_mapping = {
+        "cp2k.inp": Cp2kInput,
+    }
+    for filename in dir_name.glob("*.orig*"):
+        for name, cp2k_input in input_mapping.items():
+            if f"{name}.orig" in str(filename):
+                orig_inputs[name.lower()] = cp2k_input.from_file(filename)
+
+    return orig_inputs
+
+
+def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
+    """Parse additional json files in the directory."""
+    additional_json = {}
+    for filename in dir_name.glob("*.json*"):
+        key = filename.name.split(".")[0]
+        if key not in ("custodian", "transformations"):
+            additional_json[key] = loadfn(filename, cls=None)
+    return additional_json
+
+
+def _get_max_force(calc_doc: Calculation) -> Optional[float]:
+    """Get max force acting on atoms from a calculation document."""
+    forces = calc_doc.output.ionic_steps[-1].get("forces")
+    structure = calc_doc.output.structure
+    if forces:
+        forces = np.array(forces)
+        sdyn = structure.site_properties.get("selective_dynamics")
+        if sdyn:
+            forces[np.logical_not(sdyn)] = 0
+        return max(np.linalg.norm(forces, axis=1))
+    return None
+
+
+def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
+    """Get state from calculation documents and relaxation analysis."""
+    all_calcs_completed = all(
+        [c.has_cp2k_completed == Status.SUCCESS for c in calc_docs]
+    )
+    if len(analysis.errors) == 0 and all_calcs_completed:
+        return Status.SUCCESS  # type: ignore
+    return Status.FAILED  # type: ignore
+
+
+def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
+    """Get summary of runtime statistics for each calculation in this task."""
+    run_stats = {}
+    total = dict(
+        total_time=0.0,
+    )
+    for calc_doc in calc_docs:
+        stats = calc_doc.output.run_stats
+        run_stats[calc_doc.task_name] = stats
+        total["total_time"] += stats.total_time
+    run_stats["overall"] = RunStatistics(**total)
+    return run_stats
+
