@@ -8,7 +8,11 @@ _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").res
 _TASK_TYPES = [
     "Static",
     "Structure Optimization",
-    "Constrained Structure Optimization"
+    "Constrained Structure Optimization",
+    "Molecular Dynamics",
+    "NSCF Line",
+    "NSCF Uniform",
+    "Unrecognized",
 ]
 
 _RUN_TYPES = (

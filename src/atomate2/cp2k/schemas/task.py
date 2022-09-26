@@ -538,17 +538,22 @@ def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
 
     Returns
     -------
-    Dict[str, Union[Kpints, Poscar, PotcarSpec, Incar]]
-        The original POSCAR, KPOINTS, POTCAR, and INCAR data.
+    Dict[str, Cp2kInput]
+        The original data.
     """
     orig_inputs = {}
     input_mapping = {
-        "cp2k.inp": Cp2kInput,
+        "input": {
+            "filename": "cp2k.inp",
+            "object": Cp2kInput,
+        }
     }
     for filename in dir_name.glob("*.orig*"):
         for name, cp2k_input in input_mapping.items():
-            if f"{name}.orig" in str(filename):
-                orig_inputs[name.lower()] = cp2k_input.from_file(filename)
+            fn = cp2k_input.get("filename")
+            obj = cp2k_input.get("object")
+            if f"{fn}.orig" in str(filename):
+                orig_inputs[name.lower()] = obj.from_file(filename)
 
     return orig_inputs
 

@@ -1,0 +1,16 @@
+cp2k_input:
+  ot: True
+  energy_gap: -1
+  eps_default: 1.e-12
+  eps_scf: 1.e-6
+  minimizer: DIIS
+  preconditioner: FULL_SINGLE_INVERSE
+  algorithm: IRAC
+  linesearch: 2PNT
+  rotation: True
+  occupation_preconditioner: False
+  cutoff:  0
+  rel_cutoff: 50
+  ngrids: 5
+  progression_factor: 3
+  smearing: True

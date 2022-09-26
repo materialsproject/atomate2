@@ -4,6 +4,7 @@ from typing import Dict
 from monty.serialization import loadfn
 from typing import Iterable
 
+from pymatgen.io.cp2k.inputs import Cp2kInput, Keyword, KeywordList
 from atomate2.cp2k.schemas.calc_types import RunType, TaskType, CalcType
 
 _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").resolve()))
@@ -73,9 +74,24 @@ def task_type(
 
     calc_type = []
     cp2k_run_type = inputs.get("cp2k_global", {}).get('Run_type', '')
+    ci = Cp2kInput.from_dict(inputs['cp2k_input'])
 
     if cp2k_run_type.upper() in ['ENERGY', 'ENERGY_FORCE', 'WAVEFUNCTION_OPTIMIZATION', 'WFN_OPT']:
-        calc_type.append('Static')
+        if ci.check("FORCE_EVAL/DFT/SCF"):
+                tmp = ci['force_eval']['dft']['scf'].get("MAX_SCF", Keyword("", 50))
+                if tmp.values[0] == 1: 
+                    if ci.check("force_eval/dft/print/band_structure"):
+                        kpt_sets = ci.by_path("force_eval/dft/print/band_structure").get("kpoint_set", [])
+                        spcl = kpt_sets.get("SPECIAL_POINT")
+                        label = spcl[0].values[0] if isinstance(spcl, KeywordList) else spcl.values[0]
+                        if label is not None:
+                            calc_type.append("NSCF Line")
+                        else:
+                            calc_type.append("NSCF Uniform")
+                else:
+                    calc_type.append("Static")
+        else:    
+            calc_type.append('Static')
 
     elif cp2k_run_type.upper() in ['GEO_OPT', 'GEOMETRY_OPTIMIZATION', 'CELL_OPT']:
         calc_type.append('Structure Optimization')

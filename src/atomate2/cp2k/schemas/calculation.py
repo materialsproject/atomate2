@@ -11,13 +11,13 @@ from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, validator
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import BaderAnalysis
-from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos, CompleteDos
 from pymatgen.electronic_structure.bandstructure import BandStructure
 
 from pymatgen.io.cube import Cube 
-from pymatgen.io.cp2k.outputs import Cp2kOutput
+from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 from pymatgen.core.units import Ha_to_eV
 
 from atomate2 import SETTINGS
@@ -42,6 +42,11 @@ __all__ = [
     "Calculation",
 ]
 
+# Can be expanded if support for other volumetric files is added
+__is_stored_in_Ha__ = [
+    "v_hartree"
+]
+
 
 _BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
 
@@ -58,11 +63,12 @@ class Cp2kObject(ValueEnum):
     """Types of CP2K data objects."""
 
     DOS = "dos"
+    BANDSTRUCTURE = "band_structure"
     E_DENSITY = "e_density" # e_density
     SPIN_DENSITY = "spin_density" # spin density
     V_HARTREE = "v_hartree" # elec. potential
-    TRAJECTORY = "traj" # Trajectory
-    WFN = "wave" # Wavefunction file
+    TRAJECTORY = "trajectory" # Trajectory
+    WFN = "wfn" # Wavefunction file
 
 
 class CalculationInput(BaseModel):
@@ -174,6 +180,7 @@ class CalculationOutput(BaseModel):
         cls,
         output: Cp2kOutput, # Must use auto_load kwarg when passed
         v_hartree: Optional[Cube] = None,
+        store_trajectory: bool = False
     ) -> "CalculationOutput":
         """
         Create a CP2K output document from CP2K outputs.
@@ -211,8 +218,7 @@ class CalculationOutput(BaseModel):
                 transition=bandgap_info["transition"],
             )
         else:
-            logger.warning("Error in parsing bandstructure")
-            logger.warning("Collecting band edge info as available")
+            logger.warning("Unable to parse bandstructure. Collecting band edge info as available")
             electronic_output = {
                 "efermi": output.efermi,
                 "vbm": output.vbm,
@@ -226,7 +232,7 @@ class CalculationOutput(BaseModel):
             energy=output.final_energy,
             energy_per_atom=output.final_energy / len(structure),
             **electronic_output, 
-            ionic_steps=output.ionic_steps,
+            ionic_steps=None if store_trajectory else output.ionic_steps,
             v_hartree=v_hart_avg,
             run_stats=RunStatistics.from_cp2k_output(output),
         )
@@ -235,7 +241,7 @@ class CalculationOutput(BaseModel):
 class Calculation(BaseModel):
     """Full CP2K calculation inputs and outputs."""
 
-    dir_name: str = Field(None, description="The directory for this VASP calculation")
+    dir_name: str = Field(None, description="The directory for this CP2K calculation")
     cp2k_version: str = Field(
         None, description="CP2K version used to perform the calculation"
     )
@@ -281,6 +287,7 @@ class Calculation(BaseModel):
         run_bader: bool = (SETTINGS.CP2K_RUN_BADER and _BADER_EXE_EXISTS),
         strip_bandstructure_projections: bool = False,
         strip_dos_projections: bool = False,
+        store_trajectory: bool = False,
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA,
@@ -352,13 +359,13 @@ class Calculation(BaseModel):
         if dos is not None:
             if strip_dos_projections:
                 dos = Dos(dos.efermi, dos.energies, dos.densities)
-            vasp_objects[Cp2kObject.DOS] = dos  # type: ignore
+            cp2k_objects[Cp2kObject.DOS] = dos  # type: ignore
 
         bandstructure = _parse_bandstructure(parse_bandstructure, cp2k_output)
         if bandstructure is not None:
             if strip_bandstructure_projections:
                 bandstructure.projections = {}
-            vasp_objects[Cp2kObject.BANDSTRUCTURE] = bandstructure  # type: ignore
+            cp2k_objects[Cp2kObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         bader = None
         if run_bader and Cp2kObject.E_DENSITY in output_file_paths:
@@ -400,8 +407,11 @@ class Calculation(BaseModel):
         else:
                 geom = False
         scf = cp2k_output.data.get("scf_converged", [True])[-1] 
-        has_cp2k_completed = Status.SUCCESS if cp2k_output.ran_successfully() \
-            and cp2k_output.completed and geom and scf else Status.FAILED
+        has_cp2k_completed = Status.SUCCESS if cp2k_output.completed and geom and scf else Status.FAILED
+
+        if store_trajectory:
+            traj = _parse_trajectory(cp2k_output=cp2k_output)
+            cp2k_objects[Cp2kObject.TRAJECTORY] = traj  # type: ignore
 
         return cls(
                 dir_name=str(dir_name),
@@ -423,7 +433,7 @@ class Calculation(BaseModel):
 
 def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]:
     """
-    Get the output file paths for VASP output files from the list of volumetric files.
+    Get the output file paths for CP2K output files from the list of volumetric files.
 
     Parameters
     ----------
@@ -432,14 +442,14 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]
 
     Returns
     -------
-    Dict[VaspObject, str]
-        A mapping between the VASP object type and the file path.
+    Dict[Cp2kObject, str]
+        A mapping between the CP2K object type and the file path.
     """
     output_file_paths = {}
-    for vasp_object in Cp2kObject:  # type: ignore
+    for cp2k_object in Cp2kObject:  # type: ignore
         for volumetric_file in volumetric_files:
-            if vasp_object.name in str(volumetric_file):
-                output_file_paths[vasp_object] = str(volumetric_file)
+            if cp2k_object.name in str(volumetric_file):
+                output_file_paths[cp2k_object] = str(volumetric_file)
     return output_file_paths
 
 
@@ -458,13 +468,13 @@ def _get_volumetric_data(
     output_file_paths
         A dictionary mapping the data type to file path relative to dir_name.
     store_volumetric_data
-        The volumetric data files to load. E.g., `("chgcar", "locpot")
+        The volumetric data files to load. E.g., `("v_hartree", "e_density", "spin_density")
 
     Returns
     -------
-    Dict[VaspObject, VolumetricData]
-        A dictionary mapping the VASP object data type (`VaspObject.LOCPOT`,
-        `VaspObject.CHGCAR`, etc) to the volumetric data object.
+    Dict[Cp2kObject, VolumetricData]
+        A dictionary mapping the CP2K object data type (`Cp2kObject.v_hartree`,
+        `Cp2kObject.electron_density`, etc) to the volumetric data object.
     """
 
     if store_volumetric_data is None or len(store_volumetric_data) == 0:
@@ -482,9 +492,18 @@ def _get_volumetric_data(
             volumetric_data[file_type] = Cube(dir_name / file)
         except Exception:
             raise ValueError(f"Failed to parse {file_type} at {file}.")
+    
+    for file_type in volumetric_data:
+        if file_type.name in __is_stored_in_Ha__:
+            volumetric_data[file_type].scale() # TODO write this method
+
     return volumetric_data
 
-
+# TODO As written, this will only get the complete dos if it is available. 
+# cp2k can only generate the complete DOS for gamma-point only calculations
+# and it has to be requested (not default). Should this method grab overall
+# dos / elemental project dos if the complete dos is not available, or stick
+# to grabbing the complete dos?
 def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
     """
             parse_dos
@@ -504,7 +523,7 @@ def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
 
 def _parse_bandstructure(parse_bandstructure: str | bool, cp2k_output: Cp2kOutput) -> Optional[BandStructure]:
     """
-    Get the band structure
+    Get the band structure.
 
     Parameters
     ----------
@@ -514,56 +533,13 @@ def _parse_bandstructure(parse_bandstructure: str | bool, cp2k_output: Cp2kOutpu
         return cp2k_output.band_structure
     return None
 
-# TODO this is not cp2k or vasp specific. Shouldn't be here
-def _get_band_props(
-    complete_dos: CompleteDos, structure: Structure
-) -> Dict[str, Dict[str, Dict[str, float]]]:
+def _parse_trajectory(cp2k_output: Cp2kOutput) -> Optional[Trajectory]:
     """
-    Calculate band properties from a CompleteDos object and Structure.
+    Grab a Trajectory object given a cp2k output object. 
 
-    Parameters
-    ----------
-    complete_dos
-        A CompleteDos object.
-    structure
-        a pymatgen Structure object.
-
-    Returns
-    -------
-    Dict
-        A dictionary of element and orbital-projected DOS properties.
+    If an "ener" file is present containing MD results, it will be added as frame data to the traj object
     """
-    dosprop_dict: Dict[str, Dict[str, Dict[str, float]]] = {}
-    for el in structure.composition.elements:
-        el_name = el.name
-        dosprop_dict[el_name] = {}
-        for orb_type in [
-            OrbitalType.s,
-            OrbitalType.p,
-            OrbitalType.d,
-            OrbitalType.f,
-        ]:
-            orb_name = orb_type.name
-            if (
-                (el.block == "s" and orb_name in ["p", "d", "f"])
-                or (el.block == "p" and orb_name in ["d", "f"])
-                or (el.block == "d" and orb_name == "f")
-            ):
-                continue
-            dosprops = {
-                "filling": complete_dos.get_band_filling(band=orb_type, elements=[el]),
-                "center": complete_dos.get_band_center(band=orb_type, elements=[el]),
-                "bandwidth": complete_dos.get_band_width(band=orb_type, elements=[el]),
-                "skewness": complete_dos.get_band_skewness(
-                    band=orb_type, elements=[el]
-                ),
-                "kurtosis": complete_dos.get_band_kurtosis(
-                    band=orb_type, elements=[el]
-                ),
-                "upper_edge": complete_dos.get_upper_band_edge(
-                    band=orb_type, elements=[el]
-                ),
-            }
-            dosprop_dict[el_name][orb_name] = dosprops
-
-    return dosprop_dict
+    ener = cp2k_output.filenames.get("ener")[-1] if cp2k_output.filenames.get("ener") else None
+    data = parse_energy_file(ener) if ener else None
+    constant_lattice = all(s.lattice == cp2k_output.initial_structure.lattice for s in cp2k_output.structures)
+    return Trajectory.from_structures(cp2k_output.structures, constant_lattice=constant_lattice, frame_properties=data)
