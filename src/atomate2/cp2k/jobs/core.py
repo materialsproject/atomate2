@@ -167,7 +167,8 @@ class NonSCFMaker(BaseCp2kMaker):
                 AbortHandler(),
                 NumericalPrecisionHandler(),
                 WalltimeHandler()
-            )
+            ),
+            "validators": () # TODO remove the convergence checks, but will pass an empty file if I/O fails
         }
     )
 

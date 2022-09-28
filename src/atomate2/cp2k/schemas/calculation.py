@@ -399,15 +399,7 @@ class Calculation(BaseModel):
             cp2k_output, v_hartree=v_hartree 
         )
 
-        if not cp2k_output.data.get("geo_opt_converged") and \
-            not cp2k_output.data.get("geo_opt_not_converged"):
-                geom = True
-        elif cp2k_output.data.get("geo_opt_converged")[-1]:
-                geom = True
-        else:
-                geom = False
-        scf = cp2k_output.data.get("scf_converged", [True])[-1] 
-        has_cp2k_completed = Status.SUCCESS if cp2k_output.completed and geom and scf else Status.FAILED
+        has_cp2k_completed = Status.SUCCESS if cp2k_output.completed else Status.FAILED
 
         if store_trajectory:
             traj = _parse_trajectory(cp2k_output=cp2k_output)
