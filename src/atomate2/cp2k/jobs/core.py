@@ -9,6 +9,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from custodian.cp2k.jobs import Cp2kJob
+from custodian.cp2k.handlers import (
+    StdErrHandler, FrozenJobErrorHandler, AbortHandler,
+    NumericalPrecisionHandler, WalltimeHandler
+)
 from custodian.cp2k.validators import Cp2kOutputValidator
 
 from pymatgen.alchemy.materials import TransformedStructure
@@ -153,6 +157,19 @@ class NonSCFMaker(BaseCp2kMaker):
 
     name: str = "non-scf"
     input_set_generator: Cp2kInputGenerator = field(default_factory=NonSCFSetGenerator)
+
+    # Explicitly pass the handlers to avoid the unconverged scf handler
+    run_cp2k_kwargs: dict = field(
+        default_factory=lambda: {
+            "handlers": (
+                StdErrHandler(), 
+                FrozenJobErrorHandler(),
+                AbortHandler(),
+                NumericalPrecisionHandler(),
+                WalltimeHandler()
+            )
+        }
+    )
 
     @cp2k_job
     def make(
