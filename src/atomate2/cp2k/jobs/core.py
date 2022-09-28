@@ -1,4 +1,4 @@
-"""Core jobs for running VASP calculations."""
+"""Core jobs for running CP2K calculations."""
 
 from __future__ import annotations
 from email.policy import default

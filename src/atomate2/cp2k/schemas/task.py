@@ -210,7 +210,7 @@ class OutputSummary(BaseModel):
 class TaskDocument(StructureMetadata):
     """Definition of CP2K task document."""
 
-    dir_name: str = Field(None, description="The directory for this VASP task")
+    dir_name: str = Field(None, description="The directory for this CP2K task")
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
@@ -359,7 +359,7 @@ class TaskDocument(StructureMetadata):
             state=_get_state(calcs_reversed, analysis),
             entry=cls.get_entry(calcs_reversed),
             run_stats=_get_run_stats(calcs_reversed),
-            vasp_objects=cp2k_objects,
+            cp2k_objects=cp2k_objects,
             included_objects=included_objects,
         )
         doc = doc.copy(update=additional_fields)

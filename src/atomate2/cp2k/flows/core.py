@@ -20,7 +20,6 @@ from atomate2.cp2k.schemas.calculation import Cp2kObject
 __all__ = [
 ]
 
-
 @dataclass
 class DoubleRelaxMaker(Maker):
     """

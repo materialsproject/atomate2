@@ -14,3 +14,5 @@ cp2k_input:
   ngrids: 5
   progression_factor: 3
   smearing: True
+KPOINTS:
+  reciprocal_density: 64

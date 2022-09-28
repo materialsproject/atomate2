@@ -152,7 +152,7 @@ def write_cp2k_input_set(
     **kwargs,
 ):
     """
-    Write VASP input set.
+    Write CP2K input set.
 
     Parameters
     ----------
