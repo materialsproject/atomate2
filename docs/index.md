@@ -10,31 +10,45 @@
 Atomate2 is an open source library providing computational workflows for
 automating first principles calculations.
 
-:::{panels}
-:container: + text-center
-:column: col-lg-6 px-2 py-2
-:card:
+::::{grid} 1 1 2 2
+:class-container: text-center
+:gutter: 3
 
-**[User Guide](user/index)** 🚀
+:::{grid-item-card}
+:link: user/index
+:link-type: doc
+:class-header: bg-light
+**User Guide** 🚀
 ^^^
-The [user guide](user/index) provides in-depth information and tutorials for using *atomate2*.
+The user guide provides in-depth information and tutorials for using *atomate2*.
+:::
 
----
-**[Support forum](https://matsci.org/c/atomate)** ✨
+:::{grid-item-card}
+:link: https://matsci.org/c/atomate
+:class-header: bg-light
+**Support forum** ✨
 ^^^
-You've read the [user guide](user/index) but still need help? Ask questions on the [atomate2
-support forum](https://matsci.org/c/atomate)
+You've read the user guide but still need help? Ask questions on the atomate2
+support forum.
+:::
 
----
-**[API reference](reference/index)** 📖
+:::{grid-item-card}
+:link: reference/index
+:link-type: doc
+:class-header: bg-light
+**API reference** 📖
 ^^^
-The [reference guide](reference/index) contains a detailed description of the *atomate2* API. It
+The reference guide contains a detailed description of the *atomate2* API. It
 assumes that you have an understanding of the key concepts.
+:::
 
----
-**[Developer guide](dev/dev_install)** 👩‍💻
+:::{grid-item-card}
+:link: dev/dev_install
+:link-type: doc
+:class-header: bg-light
+**Developer guide** 👩‍💻
 ^^^
 Do you want to develop your own workflows or improve existing functionalities?
-Check out the [developer guide](dev/dev_install).
-
+Check out the developer guide.
 :::
+::::

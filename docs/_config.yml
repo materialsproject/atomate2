@@ -151,5 +151,5 @@ sphinx:
     - sphinx.ext.intersphinx
     - sphinx.ext.viewcode
     - sphinx.ext.autosummary
-    - sphinx_panels
+    - sphinx_design
     - sphinxcontrib.autodoc_pydantic
