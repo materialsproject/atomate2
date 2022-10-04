@@ -1,5 +1,7 @@
 """Module defining VASP input set generators for defect calculations."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from pymatgen.core import Structure

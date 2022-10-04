@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 from pymatgen.core import Structure
@@ -290,7 +290,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        updates: Dict[str, Any] = {
+        updates: dict[str, Any] = {
             "LCHARG": False,
             "LORBIT": 11,
             "LWAVE": False,
@@ -557,7 +557,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
     zero_weighted_reciprocal_density: float = 100
     optics: bool = False
     nbands_factor: float = 1.2
-    added_kpoints: List[Vector3D] = field(default_factory=list)
+    added_kpoints: list[Vector3D] = field(default_factory=list)
     auto_ispin: bool = True
 
     def __post_init__(self):
@@ -600,7 +600,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply to the KPOINTS config.
         """
-        kpoints: Dict[str, Any] = {"reciprocal_density": self.reciprocal_density}
+        kpoints: dict[str, Any] = {"reciprocal_density": self.reciprocal_density}
 
         if self.mode == "line":
             # add line_density on top of reciprocal density
@@ -709,7 +709,7 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
         Density of k-mesh by reciprocal volume.
     """
 
-    temperatures: Tuple[float, ...] = (
+    temperatures: tuple[float, ...] = (
         0,
         100,
         200,
@@ -923,7 +923,7 @@ class MDSetGenerator(VaspInputGenerator):
             )
 
 
-def _get_nedos(vasprun: Optional[Vasprun], dedos: float):
+def _get_nedos(vasprun: Vasprun | None, dedos: float):
     """Automatic setting of nedos using the energy range and the energy step."""
     if vasprun is None:
         return 2000

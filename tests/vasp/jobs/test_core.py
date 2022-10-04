@@ -232,7 +232,8 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation on the outputs
+    # validation on the output
+
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == pytest.approx(-11.46520398)
