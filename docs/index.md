@@ -26,9 +26,9 @@ You've read the [user guide](user/index) but still need help? Ask questions on t
 support forum](https://matsci.org/c/atomate)
 
 ---
-**[API reference](api/index)** 📖
+**[API reference](reference/index)** 📖
 ^^^
-The [reference guide](api/index) contains a detailed description of the *atomate2* API. It
+The [reference guide](reference/index) contains a detailed description of the *atomate2* API. It
 assumes that you have an understanding of the key concepts.
 
 ---
