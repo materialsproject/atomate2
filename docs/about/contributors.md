@@ -30,3 +30,17 @@ PhD Student \
 Cambridge University
 
 [janosh]: https://github.com/janosh
+
+**Ryan Kingsbury** [![gh]][rkingsbury] [![orc]][0000-0002-7168-3967] \
+Incoming Assistant Professor \
+Princeton University
+
+[rkingsbury]: https://github.com/rkingsbury
+[0000-0002-7168-3967]: https://orcid.org/0000-0002-7168-3967
+
+**Janine George** [![gh]][JaGeo] [![orc]][0000-0002-7168-3967] \
+Junior Group Leader \
+FSU Jena (Institute of Condensed Matter Theory and Optics)
+
+[JaGeo]: https://github.com/JaGeo
+[0000-0001-8907-0336]: https://orcid.org/0000-0001-8907-0336
