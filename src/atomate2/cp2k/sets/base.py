@@ -503,6 +503,7 @@ def multi(foo):
         return updates
     return get_input_updates 
 
+
 def multiple_updators(decorator, methods=("get_input_updates",)):
     def decorate(cls):
         for attr in methods:
@@ -510,6 +511,7 @@ def multiple_updators(decorator, methods=("get_input_updates",)):
                 setattr(cls, attr, decorator(getattr(cls, attr)))
         return cls 
     return decorate
+
 
 def recursive_update(d, u):
     for k, v in u.items():

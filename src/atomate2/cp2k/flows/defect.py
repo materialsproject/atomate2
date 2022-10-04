@@ -16,7 +16,7 @@ from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.supercells import get_sc_fromstruct
 
 from atomate2.cp2k.jobs.base import BaseCp2kMaker 
-from atomate2.cp2k.jobs.core import StaticMaker, HybridStaticMaker, CellOptMaker, HybridCellOptMaker
+from atomate2.cp2k.jobs.core import StaticMaker, HybridStaticMaker, RelaxMaker, HybridRelaxMaker, CellOptMaker, HybridCellOptMaker
 
 from atomate2.cp2k.sets.core import (
     StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator
@@ -104,8 +104,8 @@ class FormationEnergyMaker(Maker):
             self.def_maker = HybridRelaxFlowMaker(
                 hybrid_functional=self.hybrid_functional,
                 initialize_with_pbe=self.initialize_with_pbe,
-                initialize_maker=StaticMaker(),
-                hybrid_maker=DefectHybridRelaxMaker()
+                initialize_maker=DefectStaticMaker(),
+                hybrid_maker=HybridRelaxMaker()
             )
         else:
             self.def_maker = DefectRelaxMaker()
