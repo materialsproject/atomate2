@@ -39,6 +39,7 @@ dependencies = [
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 phonons = ["phonopy>=1.10.8"]
+mp = ["mp-api"]
 docs = [
     "numpydoc==1.3.1",
     "mistune==0.8.4",
