@@ -41,7 +41,7 @@ Princeton University
 **Janine George** [![gh]][JaGeo] [![orc]][0000-0001-8907-0336] \
 Junior Group Leader \
 Federal Institute for Materials Research and Testing (Berlin) \
-Friedrich Schiller Univeristy Jena
+Friedrich Schiller University Jena
 
 [JaGeo]: https://github.com/JaGeo
 [0000-0001-8907-0336]: https://orcid.org/0000-0001-8907-0336
