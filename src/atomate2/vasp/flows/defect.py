@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
+from jobflow.core.maker import recursive_call
 
 # from jobflow.core.maker import recursive_call
 from numpy.typing import NDArray
@@ -95,8 +96,7 @@ def check_defect_relax_maker(maker: Maker):
         if vis.incar["ISIF"] != 2:
             raise ValueError("ISIF should be 2")
 
-    # TODO: add this check after JobFlow is updated to support recursive_call
-    # recursive_call(maker, func=check_func, class_filter=RelaxMaker, nested=True)
+    recursive_call(maker, func=check_func, class_filter=RelaxMaker, nested=True)
 
 
 @dataclass
