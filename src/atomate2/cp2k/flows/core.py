@@ -5,8 +5,9 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Iterable
 
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, Job
 from pymatgen.core.structure import Structure
 
 from atomate2.cp2k.jobs.base import BaseCp2kMaker
@@ -205,9 +206,32 @@ class RelaxBandStructureMaker(Maker):
 
         return Flow([relax_job, bs_flow], bs_flow.output, name=self.name)
 
+@dataclass
+class HybridFlowMaker(Maker):
+
+    hybrid_functional: str = "PBE0"
+    initialize_with_pbe: bool = field(default=True)
+    initialize_maker: BaseCp2kMaker = field(default_factory=StaticMaker)
+    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridStaticMaker) 
+
+    def __post_init__(self):
+        self.hybrid_maker.hybrid_functional = self.hybrid_functional
+
+    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None) -> Job:
+        jobs = []
+        if self.initialize_with_pbe:
+            initialization = self.initialize_maker.make(structure, prev_cp2k_dir)
+            jobs.append(initialization)
+        hyb = self.hybrid_maker.make(
+            initialization.output.structure if self.initialize_with_pbe else structure, 
+            prev_cp2k_dir=initialization.output.dir_name if self.initialize_with_pbe else prev_cp2k_dir
+        ) 
+        jobs.append(hyb)
+        print(jobs)
+        return Flow(jobs, output=hyb.output, name=self.name)
 
 @dataclass
-class HybridStaticMaker(Maker):
+class HybridStaticFlowMaker(HybridFlowMaker):
     """
     Maker to perform a PBE restart to hybrid static flow
 
@@ -221,30 +245,40 @@ class HybridStaticMaker(Maker):
         Maker to use to generate the second relaxation.
     """
 
-    name: str = "pbe to hybrid"
-    pbe_maker: BaseCp2kMaker = field(default_factory=StaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridStaticMaker)
+    name: str = "pbe to hybrid static"
 
-    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
-        """
-        Create a flow with a pbe static used as restart for the hybrid calc.
+@dataclass
+class HybridRelaxFlowMaker(HybridFlowMaker):
+    """
+    Maker to perform a PBE restart to hybrid relax flow
 
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object.
-        prev_cp2k_dir : str or Path or None
-            A previous Cp2k calculation directory to copy output files from.
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    pbe_maker : .BaseCp2kMaker
+        Maker to use to generate PBE restart file for hybrid calc
+    hybrid_maker : .BaseCp2kMaker
+        Maker to use to generate the second relaxation.
+    """
 
-        Returns
-        -------
-        Flow
-            A flow containing two relaxations.
-        """
-        pbe = self.pbe_maker.make(structure, prev_cp2k_dir=prev_cp2k_dir)
+    name: str = "pbe to hybrid relaxation"
+    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridRelaxMaker)
 
-        hyb = self.hybrid_maker.make(
-            pbe.output.structure, prev_cp2k_dir=pbe.output.dir_name
-        )
+@dataclass
+class HybridCellOptFlowMaker(HybridFlowMaker):
+    """
+    Maker to perform a PBE restart to hybrid cell opt flow
 
-        return Flow([pbe, hyb], hyb.output, name=self.name)
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    pbe_maker : .BaseCp2kMaker
+        Maker to use to generate PBE restart file for hybrid calc
+    hybrid_maker : .BaseCp2kMaker
+        Maker to use to generate the second relaxation.
+    """
+
+    name: str = "pbe to hybrid cell opt"
+    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridCellOptMaker)

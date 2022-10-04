@@ -6,7 +6,8 @@ import os
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from tkinter import W
+from typing import Any, Iterable
 
 import numpy as np
 from monty.io import zopen
@@ -219,7 +220,7 @@ class Cp2kInputGenerator(InputGenerator):
             optional_files=optional_files
         )
 
-    def get_input_updates(self) -> dict:
+    def get_input_updates(self, *args, **kwargs) -> dict:
         """
         Get updates to the cp2k input for this calculation type.
 
@@ -239,7 +240,7 @@ class Cp2kInputGenerator(InputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        raise NotImplementedError
+        raise NotImplementedError 
 
     def get_kpoints_updates(
         self,
@@ -302,7 +303,6 @@ class Cp2kInputGenerator(InputGenerator):
         kpoints: Kpoints | None = None,
         previous_input: Cp2kInput = None,
         input_updates: dict = None,
-        bandgap: float = 0.0,
     ):
         """Get the input."""
         previous_input = {} if previous_input is None else previous_input
@@ -310,9 +310,10 @@ class Cp2kInputGenerator(InputGenerator):
         input_settings = dict(self.config_dict["cp2k_input"])
 
         # Generate base input but override with user input settings
-        input_settings.update(**input_updates)
-        input_settings.update(**self.user_input_settings)
+        input_settings = recursive_update(input_settings, input_updates)
+        input_settings = recursive_update(input_settings, self.user_input_settings)
         cp2k_input = DftSet(structure=structure, kpoints=kpoints, **input_settings)
+
         for setting in input_settings:
             if hasattr(cp2k_input, setting) and input_settings[setting]:
                 if callable(getattr(cp2k_input, setting)):
@@ -489,3 +490,31 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
         kpts_weights=weights,
     )
 
+
+def multi(foo):
+    def get_input_updates(self, *args, **kwargs):
+        updates = {}
+        for parent in self.__class__.__bases__:
+            # TODO This is just a hack to avoid recursion error
+            # when class A(B, C) has B or C also applying multi
+            if "<locals>" in str(getattr(parent, foo.__name__)):
+                continue
+            updates.update(getattr(parent, foo.__name__)(self, *args, **kwargs))
+        return updates
+    return get_input_updates 
+
+def multiple_updators(decorator, methods=("get_input_updates",)):
+    def decorate(cls):
+        for attr in methods:
+            if callable(getattr(cls, attr)):
+                setattr(cls, attr, decorator(getattr(cls, attr)))
+        return cls 
+    return decorate
+
+def recursive_update(d, u):
+    for k, v in u.items():
+        if isinstance(v, dict):
+            d[k] = recursive_update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d

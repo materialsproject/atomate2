@@ -17,6 +17,8 @@ from pymatgen.electronic_structure.bandstructure import (
 )
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.cube import Cube
+from pymatgen.alchemy.materials import TransformedStructure
+from pymatgen.alchemy.transmuters import StandardTransmuter
 
 from atomate2.cp2k.files import copy_cp2k_outputs, write_cp2k_input_set
 from atomate2.cp2k.run import run_cp2k, should_stop_children
@@ -109,6 +111,8 @@ class BaseCp2kMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
     stop_children_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
+    transformations: tuple[str, ...] = field(default_factory=tuple)
+    transformation_params: tuple[dict, ...] | None = None
 
     @cp2k_job
     def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
@@ -122,6 +126,21 @@ class BaseCp2kMaker(Maker):
         prev_vasp_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         """
+
+        # Apply transformations if they are present
+        if self.transformations: 
+            transformations = _get_transformations(
+                self.transformations, self.transformation_params
+            )
+            ts = TransformedStructure(structure)
+            transmuter = StandardTransmuter([ts], transformations)
+            structure = transmuter.transformed_structures[-1].final_structure
+
+            # to avoid mongoDB errors, ":" is automatically converted to "."
+            if "transformations:json" not in self.write_additional_data:
+                tjson = transmuter.transformed_structures[-1]
+                self.write_additional_data["transformations:json"] = tjson
+
         # copy previous inputs
         from_prev = prev_cp2k_dir is not None
         if prev_cp2k_dir is not None:
@@ -155,3 +174,39 @@ class BaseCp2kMaker(Maker):
             stored_data={"custodian": task_doc.custodian},
             output=task_doc,
         )
+
+# TODO This should go in common
+def _get_transformations(
+    transformations: tuple[str, ...], params: tuple[dict, ...] | None
+):
+    """Get instantiated transformation objects from their names and parameters."""
+    params = ({},) * len(transformations) if params is None else params
+
+    if len(params) != len(transformations):
+        raise ValueError("Number of transformations and parameters must be the same.")
+
+    transformation_objects = []
+    for transformation, transformation_params in zip(transformations, params):
+        found = False
+        for m in (
+            "advanced_transformations",
+            "site_transformations",
+            "standard_transformations",
+        ):
+            from importlib import import_module
+
+            mod = import_module(f"pymatgen.transformations.{m}")
+
+            try:
+                t_cls = getattr(mod, transformation)
+                found = True
+                continue
+            except AttributeError:
+                pass
+
+        if not found:
+            raise ValueError(f"Could not find transformation: {transformation}")
+
+        t_obj = t_cls(**transformation_params)
+        transformation_objects.append(t_obj)
+    return transformation_objects

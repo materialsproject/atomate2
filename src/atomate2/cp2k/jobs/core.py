@@ -23,7 +23,7 @@ from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
     NonSCFSetGenerator,
-    HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator,
+    HybridSetGenerator, HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator,
     StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
     MDSetGenerator,
 )
@@ -69,7 +69,6 @@ class StaticMaker(BaseCp2kMaker):
     name: str = "static"
     input_set_generator: Cp2kInputGenerator = field(default_factory=StaticSetGenerator)
 
-
 @dataclass
 class RelaxMaker(BaseCp2kMaker):
     """
@@ -111,20 +110,32 @@ class CellOptMaker(BaseCp2kMaker):
 @dataclass
 class HybridStaticMaker(BaseCp2kMaker):
 
-    name: str = "static"
+    name: str = "hybrid static"
+    hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridStaticSetGenerator)
+
+    def __post_init__(self):
+        self.input_set_generator.hybrid_functional = self.hybrid_functional
 
 @dataclass
 class HybridRelaxMaker(BaseCp2kMaker):
 
     name: str = "hybrid relax"
+    hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridRelaxSetGenerator)
+
+    def __post_init__(self):
+        self.input_set_generator.hybrid_functional = self.hybrid_functional
 
 @dataclass
 class HybridCellOptMaker(BaseCp2kMaker):
 
-    name: str = "hybrid relax"
+    name: str = "hybrid cell opt"
+    hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridCellOptSetGenerator)
+
+    def __post_init__(self):
+        self.input_set_generator.hybrid_functional = self.hybrid_functional
 
 @dataclass
 class NonSCFMaker(BaseCp2kMaker):
@@ -208,7 +219,6 @@ class NonSCFMaker(BaseCp2kMaker):
 
         return super().make.original(self, structure, prev_cp2k_dir)
 
-
 @dataclass
 class TransmuterMaker(BaseCp2kMaker):
     """
@@ -283,7 +293,6 @@ class TransmuterMaker(BaseCp2kMaker):
 
         return super().make.original(self, structure, prev_cp2k_dir)
 
-
 @dataclass
 class MDMaker(BaseCp2kMaker):
 
@@ -295,8 +304,7 @@ class MDMaker(BaseCp2kMaker):
         }
     )
 
-
-# TODO THis should go in common
+# TODO This should go in common
 def _get_transformations(
     transformations: tuple[str, ...], params: tuple[dict, ...] | None
 ):

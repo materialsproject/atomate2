@@ -17,6 +17,7 @@ from pymatgen.electronic_structure.dos import Dos, CompleteDos
 from pymatgen.electronic_structure.bandstructure import BandStructure
 
 from pymatgen.io.cube import Cube 
+from pymatgen.io.vasp import VolumetricData
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 from pymatgen.core.units import Ha_to_eV
 
@@ -64,9 +65,9 @@ class Cp2kObject(ValueEnum):
 
     DOS = "dos"
     BANDSTRUCTURE = "band_structure"
-    E_DENSITY = "e_density" # e_density
+    ELECTRON_DENSITY = "electron_density" # e_density
     SPIN_DENSITY = "spin_density" # spin density
-    V_HARTREE = "v_hartree" # elec. potential
+    v_hartree = "v_hartree" # elec. potential
     TRAJECTORY = "trajectory" # Trajectory
     WFN = "wfn" # Wavefunction file
 
@@ -158,6 +159,7 @@ class CalculationOutput(BaseModel):
     )
     is_metal: bool = Field(None, description="Whether the system is metallic")
     bandgap: float = Field(None, description="The band gap from the calculation in eV")
+    v_hartree: Dict[int, List[float]] | None = Field(None, description="Plane averaged electrostatic potential")
     cbm: float = Field(
         None,
         description="The conduction band minimum in eV (if system is not metallic)",
@@ -179,7 +181,7 @@ class CalculationOutput(BaseModel):
     def from_cp2k_output(
         cls,
         output: Cp2kOutput, # Must use auto_load kwarg when passed
-        v_hartree: Optional[Cube] = None,
+        v_hartree: Optional[VolumetricData] = None,
         store_trajectory: bool = False
     ) -> "CalculationOutput":
         """
@@ -190,7 +192,7 @@ class CalculationOutput(BaseModel):
         output
             A Cp2kOutput object.
         v_hartree
-            A Cube object for the V_HARTREE data
+            A VolumetricData object for the V_HARTREE data
 
         Returns
         -------
@@ -202,7 +204,6 @@ class CalculationOutput(BaseModel):
             v_hart_avg = {
                 i: v_hartree.get_average_along_axis(i).tolist() for i in range(3)
             }
-
         structure = output.final_structure
 
         if output.band_structure:
@@ -368,9 +369,9 @@ class Calculation(BaseModel):
             cp2k_objects[Cp2kObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         bader = None
-        if run_bader and Cp2kObject.E_DENSITY in output_file_paths:
+        if run_bader and Cp2kObject.ELECTRON_DENSITY in output_file_paths:
             suffix = "" if task_name == "standard" else f".{task_name}"
-            ba = BaderAnalysis(cube_filename=Cp2kObject.E_DENSITY)
+            ba = BaderAnalysis(cube_filename=Cp2kObject.ELECTRON_DENSITY)
             #TODO vasp version calls bader_analysis_from_path but cp2k
             # cube files don't support that yet, do it manually
             bader = {
@@ -385,14 +386,13 @@ class Calculation(BaseModel):
 
         v_hartree = None
         if average_v_hartree:
-            if Cp2kObject.V_HARTREE in cp2k_objects:
-                v_hartree = cp2k_objects[Cp2kObject.V_HARTREE]  # type: ignore
-            elif Cp2kObject.V_HARTREE in output_file_paths:
-                v_hartree_file = output_file_paths[Cp2kObject.V_HARTREE]  # type: ignore
+            if Cp2kObject.v_hartree in cp2k_objects:
+                v_hartree = cp2k_objects[Cp2kObject.v_hartree]  # type: ignore
+            elif Cp2kObject.v_hartree in output_file_paths:
+                v_hartree_file = output_file_paths[Cp2kObject.v_hartree]  # type: ignore
                 v_hartree = Cube(dir_name / v_hartree_file)
-
                 #TODO Very important am converting from native Ha to eV for storing
-                np.multiply(v_hartree.data, Ha_to_eV)
+                v_hartree = VolumetricData(structure=v_hartree.structure, data={'total': np.multiply(v_hartree.data, Ha_to_eV)})
 
         input_doc = CalculationInput.from_cp2k_output(cp2k_output)
         output_doc = CalculationOutput.from_cp2k_output(
@@ -449,7 +449,7 @@ def _get_volumetric_data(
     dir_name: Path,
     output_file_paths: Dict[Cp2kObject, str],
     store_volumetric_data: Optional[Tuple[str]],
-) -> Dict[Cp2kObject, Cube]:
+) -> Dict[Cp2kObject, VolumetricData]:
     """
     Load volumetric data files from a directory.
 
@@ -475,19 +475,20 @@ def _get_volumetric_data(
     volumetric_data = {}
     for file_type, file in output_file_paths.items():
         if file_type.name not in store_volumetric_data:
-            pass
-
+            continue
         try:
             # TODO This volumetric data may be in atomic units. i.e. 
             # Cp2k version of locpot stores in Ha, not eV, so must be converted 
             # somewhere
-            volumetric_data[file_type] = Cube(dir_name / file)
+            cube = Cube(dir_name / file)
+            volumetric_data[file_type] = VolumetricData(structure=cube.structure, data={'total': cube.data})
         except Exception:
             raise ValueError(f"Failed to parse {file_type} at {file}.")
     
     for file_type in volumetric_data:
         if file_type.name in __is_stored_in_Ha__:
-            volumetric_data[file_type].scale() # TODO write this method
+            # TODO make built in method for the volumetric data/cube object
+            volumetric_data[file_type].data['total'] = np.multiply(volumetric_data[file_type].data['total'], Ha_to_eV)
 
     return volumetric_data
 

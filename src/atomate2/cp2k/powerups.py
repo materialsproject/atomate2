@@ -63,6 +63,7 @@ def update_user_input_settings(
             class_filter=class_filter,
             dict_mod=True,
         )
+
     return updated_flow
 
 

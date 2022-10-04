@@ -1,7 +1,12 @@
 cp2k_input:
+
+  # Default QS behavior
+  eps_default: 1.e-12
+  eps_pgf_orb: 1.e-16
+
+  # Default SCF Behavior
   ot: True
   energy_gap: -1
-  eps_default: 1.e-12
   eps_scf: 1.e-6
   minimizer: DIIS
   preconditioner: FULL_SINGLE_INVERSE
@@ -9,10 +14,21 @@ cp2k_input:
   linesearch: 2PNT
   rotation: True
   occupation_preconditioner: False
-  cutoff:  0
+  smearing: True
+
+  # Default multigrid behavior
+  cutoff:  0 # Auto
   rel_cutoff: 50
   ngrids: 5
   progression_factor: 3
-  smearing: True
+
+  # Default outputs are false
+  print_v_hartree: False
+  print_e_density: False
+  print_mo_cubes: False
+  print_dos: False
+  print_pdos: False
+  print_bandstructure: False
+
 KPOINTS:
   reciprocal_density: 64

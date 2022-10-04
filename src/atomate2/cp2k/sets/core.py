@@ -1,4 +1,4 @@
-"""Module defining core VASP input set generators."""
+"""Module defining core CP2K input set generators."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
+from atomate2.cp2k.sets.base import Cp2kInputGenerator, multi, multiple_updators 
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +41,7 @@ class StaticSetGenerator(Cp2kInputGenerator):
 
     """
 
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
+    def get_input_updates(self, *args, **kwargs) -> dict:
         """
         Get updates to the input for a static CP2K job.
 
@@ -60,7 +55,6 @@ class StaticSetGenerator(Cp2kInputGenerator):
             A dictionary of updates to apply.
         """
         updates = {"run_type": "ENERGY_FORCE"}
-
         return updates
 
 @dataclass
@@ -69,12 +63,7 @@ class RelaxSetGenerator(Cp2kInputGenerator):
 
     """
 
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
+    def get_input_updates(self, *args, **kwargs) -> dict:
         """
         """
         updates = {
@@ -84,8 +73,8 @@ class RelaxSetGenerator(Cp2kInputGenerator):
             "override_default_params": {
                 "MOTION": {"GEO_OPT": {"BFGS": {"TRUST_RADIUS": 0.1}}}
                 },
+            "modify_dft_print_iters": {"iters": 0, "add_last": "numeric"},
         }
-
         return updates
 
 @dataclass
@@ -94,12 +83,8 @@ class CellOptSetGenerator(Cp2kInputGenerator):
 
     """
 
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
+
+    def get_input_updates(self, *args, **kwargs) -> dict:
         """
         """
         updates = {
@@ -110,6 +95,7 @@ class CellOptSetGenerator(Cp2kInputGenerator):
             "override_default_params": {
                 "MOTION": {"CELL_OPT": {"BFGS": {"TRUST_RADIUS": 0.1}}}
                 },
+            "modify_dft_print_iters": {"iters": 0, "add_last": "numeric"},
         }
 
         return updates
@@ -120,98 +106,30 @@ class HybridSetGenerator(Cp2kInputGenerator):
 
     hybrid_functional: str = "PBE0"
 
-    def get_input_updates(self, structure) -> dict:
+    def get_input_updates(self, structure, *args, **kwargs) -> dict:
         updates = {
             "activate_hybrid": {
                 "hybrid_functional": self.hybrid_functional,
                 "cutoff_radius": get_truncated_coulomb_cutoff(structure),
             },
-        } 
+        }
+        updates.update(super().get_input_updates(structure, *args, **kwargs))
         return updates
 
 @dataclass
+@multiple_updators(multi)
 class HybridStaticSetGenerator(HybridSetGenerator, StaticSetGenerator):
-    """
-    Class to generate CP2K static input sets.
-
-    Parameters
-    ----------
-
-    """
-
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
-        """
-        Get updates to the input for a static CP2K job.
-
-        Parameters
-        ----------
-
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-
-        updates = HybridSetGenerator.get_input_updates(self, structure)
-        updates.update(StaticSetGenerator.get_input_updates(self, structure, prev_input=prev_input))
-        return updates
+    pass
 
 @dataclass
+@multiple_updators(multi)
 class HybridRelaxSetGenerator(HybridSetGenerator, RelaxSetGenerator):
-    """
-    Class to generate CP2K static input sets.
-
-    Parameters
-    ----------
-
-    """
-
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
-        """
-        Get updates to the input for a static CP2K job.
-
-        Parameters
-        ----------
-
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-
-        updates = HybridSetGenerator.get_input_updates(self, structure)
-        updates.update(RelaxSetGenerator.get_input_updates(self, structure, prev_input=prev_input))
-        return updates
+    pass
 
 @dataclass
+@multiple_updators(multi)
 class HybridCellOptSetGenerator(HybridSetGenerator, CellOptSetGenerator):
-    """
-
-    """
-
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
-        """
-        """
-        updates = HybridSetGenerator.get_input_updates(self, structure)
-        updates.update(CellOptSetGenerator.get_input_updates(self, structure, prev_input=prev_input))
-        return updates
+    pass
 
 @dataclass
 class NonSCFSetGenerator(Cp2kInputGenerator):
@@ -335,7 +253,6 @@ class MDSetGenerator(Cp2kInputGenerator):
         self,
         structure: Structure,
         prev_input: Cp2kInput = None,
-        bandgap: float = 0.0,
         cp2k_output: Cp2kOutput = None,
     ) -> dict:
         """
