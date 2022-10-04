@@ -38,9 +38,10 @@ Princeton University
 [rkingsbury]: https://github.com/rkingsbury
 [0000-0002-7168-3967]: https://orcid.org/0000-0002-7168-3967
 
-**Janine George** [![gh]][JaGeo] [![orc]][0000-0002-7168-3967] \
+**Janine George** [![gh]][JaGeo] [![orc]][0000-0001-8907-0336] \
 Junior Group Leader \
-FSU Jena (Institute of Condensed Matter Theory and Optics)
+Federal Institute for Materials Research and Testing (Berlin) \
+Friedrich Schiller University Jena
 
 [JaGeo]: https://github.com/JaGeo
 [0000-0001-8907-0336]: https://orcid.org/0000-0001-8907-0336
