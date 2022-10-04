@@ -227,7 +227,6 @@ class HybridFlowMaker(Maker):
             prev_cp2k_dir=initialization.output.dir_name if self.initialize_with_pbe else prev_cp2k_dir
         ) 
         jobs.append(hyb)
-        print(jobs)
         return Flow(jobs, output=hyb.output, name=self.name)
 
 @dataclass

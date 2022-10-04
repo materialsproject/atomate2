@@ -197,3 +197,18 @@ def write_cp2k_input_set(
 
     logger.info("Writing CP2K input set.")
     cis.write_input(directory, **kwargs)
+
+@auto_fileclient
+def cleanup_cp2k_outputs(
+    directory: Path | str,
+    host: str | None = None,
+    file_patterns: Sequence[str] = ("*bak*", ),
+    file_client: FileClient | None = None,
+    ):
+
+    files_to_delete = []
+    for pattern in file_patterns:
+        files_to_delete.extend(file_client.glob(Path(directory) / pattern, host=host))
+
+    for file in files_to_delete:
+        file_client.remove(file)

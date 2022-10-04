@@ -2,6 +2,7 @@
 """Flows used in the calculation of defect properties."""
 
 from __future__ import annotations
+from copy import deepcopy
 
 import logging
 from dataclasses import dataclass, field
@@ -134,17 +135,24 @@ class FormationEnergyMaker(Maker):
         jobs = []
         bulk_structure = ensure_defects_same_structure(defects)
 
-        if self.run_bulk:
-            sc_mat = self.supercell_matrix if self.supercell_matrix else \
+        sc_mat = self.supercell_matrix if self.supercell_matrix else \
                     get_sc_fromstruct(
                         bulk_structure, self.min_atoms, 
                         self.max_atoms, self.min_length, 
                         self.force_diagonal,)
+
+        if self.run_bulk:
             bulk_job = self.bulk_maker.make(bulk_structure * sc_mat, prev_cp2k_dir=prev_cp2k_dir)
             jobs.append(bulk_job)
 
         for defect in defects:
-            jobs.append(self.def_maker.make(defect))
+            # write some provenances data in info.json file
+            info = {"defect": deepcopy(defect), "supercell_matrix": sc_mat}
+            defect_job = self.def_maker.make(defect)
+            defect_job.update_maker_kwargs(
+                {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
+            )
+            jobs.append(defect_job)
 
         return Flow(
             jobs=jobs,

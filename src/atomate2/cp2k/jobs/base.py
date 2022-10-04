@@ -20,7 +20,7 @@ from pymatgen.io.cube import Cube
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 
-from atomate2.cp2k.files import copy_cp2k_outputs, write_cp2k_input_set
+from atomate2.cp2k.files import copy_cp2k_outputs, write_cp2k_input_set, cleanup_cp2k_outputs
 from atomate2.cp2k.run import run_cp2k, should_stop_children
 from atomate2.cp2k.schemas.task import TaskDocument
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
@@ -165,6 +165,9 @@ class BaseCp2kMaker(Maker):
 
         # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
+
+        # cleanup files to save disk space 
+        cleanup_cp2k_outputs(directory=Path.cwd())
 
         # gzip folder
         gzip_dir(".")
