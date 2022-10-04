@@ -46,7 +46,7 @@ FSU Jena (Institute of Condensed Matter Theory and Optics)
 [0000-0001-8907-0336]: https://orcid.org/0000-0001-8907-0336
 
 **Mingjian Wen** [![gh]][mjwen] [![orc]][0000-0003-0013-575X] \
-Postdoctoral researcher
+Postdoctoral researcher \
 Lawrence Berkeley National Laboratory
 
 [mjwen]: https://github.com/mjwen
