@@ -245,7 +245,7 @@ def run_all_charge_states(
 
 @job
 def collect_defect_outputs(
-    defects_output: dict, bulk_sc_dir: str, dielectric: float | NDArray
+    defects_output: dict, bulk_sc_dir: str, dielectric: float | NDArray | None = None
 ) -> dict:
     """Collect all the outputs from the defect calculations.
 
@@ -260,6 +260,7 @@ def collect_defect_outputs(
         The directory containing the bulk supercell calculation.
     dielectric:
         The dielectric constant used to construct the formation energy diagram.
+        If None (default), finite size corrections will not be applied.
     """
 
     def get_locpot_from_dir(dir_name: str) -> Locpot:

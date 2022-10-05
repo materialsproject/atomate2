@@ -103,6 +103,13 @@ def check_defect_relax_maker(maker: Maker):
 class FormationEnergyMaker(Maker):
     """Maker class to help calculate of the formation energy diagram.
 
+    Maker class to calculate formation energy diagrams. The main settings for
+    this maker is the `relax_maker` which contains the settings for the atomic
+    relaxations that each defect supercell will undergo. The `relax_maker`
+    uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
+    like the `HSEDoubleRelaxMaker` can be used for more accurate (but expensive)
+    calculations.
+
     Attributes
     ----------
     name: str
@@ -133,7 +140,7 @@ class FormationEnergyMaker(Maker):
     def make(
         self,
         defects: list[Defect],
-        dielectric: float | NDArray,
+        dielectric: float | NDArray | None = None,
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: NDArray | None = None,
     ):
@@ -143,9 +150,10 @@ class FormationEnergyMaker(Maker):
         ----------
         defects: list[Defect]
             List of defects objects to calculate the formation energy diagram for.
-        dielectric: float | NDArray
+        dielectric: float | NDArray | None
             The dielectric constant or tensor used to calculate the
-            finite-size correction.
+            finite-size correction. If None (default), no finite-size correction will be
+            applied.
         bulk_supercell_dir: str | Path | None
             If provided, the bulk supercell calculation will be skipped.
         supercell_matrix: NDArray | None
