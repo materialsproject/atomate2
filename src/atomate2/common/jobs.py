@@ -8,7 +8,11 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 
-__all__ = ["structure_to_primitive", "structure_to_conventional"]
+__all__ = [
+    "structure_to_primitive",
+    "structure_to_conventional",
+    "retrieve_structure_from_materials_project",
+]
 
 
 @job
