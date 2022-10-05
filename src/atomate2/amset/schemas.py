@@ -208,7 +208,7 @@ class AmsetTaskDocument(StructureMetadata):
             kpoint_mesh=inter_mesh,
             nkpoints=np.product(inter_mesh),
             log=log,
-            **mesh_kwargs
+            **mesh_kwargs,
         )
         doc.copy(update=additional_fields)
         return doc

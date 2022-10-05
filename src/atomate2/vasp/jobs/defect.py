@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable
 
 from jobflow import Flow, Response, job
 from pydantic import BaseModel
@@ -153,7 +153,7 @@ def get_ccd_documents(
 
 @job(data=WSWQ, output_schema=FiniteDifferenceDocument)
 def calculate_finite_diff(
-    distorted_calc_dirs: List[str],
+    distorted_calc_dirs: list[str],
     ref_calc_index: int,
     run_vasp_kwargs: dict | None = None,
 ):
@@ -163,7 +163,7 @@ def calculate_finite_diff(
     cases where data from the same calculation is used multiple times.
 
     Since all of the standard outputs are presumably already stored in the database,
-    the make function here should only only store new data.
+    the make function here should only store new data.
 
     Parameters
     ----------

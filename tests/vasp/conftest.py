@@ -246,6 +246,7 @@ def clear_vasp_inputs():
         "CHGCAR",
         "OUTCAR",
         "vasprun.xml",
+        "CONTCAR",
     ):
         if Path(vasp_file).exists():
             Path(vasp_file).unlink()

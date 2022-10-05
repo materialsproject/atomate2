@@ -5,21 +5,15 @@ repos:
   hooks:
   - id: check-yaml
   - id: fix-encoding-pragma
-    args:
-    - --remove
+    args: [--remove]
   - id: end-of-file-fixer
   - id: trailing-whitespace
 - repo: https://github.com/myint/autoflake
-  rev: v1.4
+  rev: v1.6.1
   hooks:
   - id: autoflake
-    args:
-    - --in-place
-    - --remove-all-unused-imports
-    - --remove-unused-variables
-    - --ignore-init-module-imports
 - repo: https://github.com/psf/black
-  rev: 22.6.0
+  rev: 22.8.0
   hooks:
   - id: black
 - repo: https://github.com/asottile/blacken-docs
@@ -53,7 +47,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.961
+  rev: v0.981
   hooks:
   - id: mypy
     files: ^src/
@@ -62,8 +56,13 @@ repos:
     - types-pkg_resources==0.1.2
     - types-paramiko
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.1.0
+  rev: v2.2.1
   hooks:
   - id: codespell
     stages: [commit, commit-msg]
     args: [--ignore-words-list, 'titel,statics,ba,nd,te']
+- repo: https://github.com/asottile/pyupgrade
+  rev: v2.38.2
+  hooks:
+    - id: pyupgrade
+      args: [--py38-plus]
