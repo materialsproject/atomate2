@@ -12,7 +12,9 @@ __all__ = ["structure_to_primitive", "structure_to_conventional"]
 
 
 @job
-def structure_to_primitive(structure: Structure, symprec: float = SETTINGS.SYMPREC):
+def structure_to_primitive(
+    structure: Structure, symprec: float = SETTINGS.SYMPREC
+) -> Structure:
     """
     Job that creates a standard primitive structure.
 
@@ -31,8 +33,11 @@ def structure_to_primitive(structure: Structure, symprec: float = SETTINGS.SYMPR
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
 
+
 @job
-def structure_to_conventional(structure: Structure, symprec: float = SETTINGS.SYMPREC):
+def structure_to_conventional(
+    structure: Structure, symprec: float = SETTINGS.SYMPREC
+) -> Structure:
     """
     Job hat creates a standard conventional structure.
 
@@ -51,12 +56,13 @@ def structure_to_conventional(structure: Structure, symprec: float = SETTINGS.SY
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_conventional_standard_structure()
 
+
 @job
 def retrieve_structure_from_materials_project(
     material_id_or_task_id: str,
     use_task_id: bool = False,
     reset_magnetic_moments: bool = False,
-) -> Response:
+) -> Response[Structure]:
     """
     Retrieve a Structure from Materials Project. This job is
     useful for constructing a Flow that always will retrieve
