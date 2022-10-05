@@ -46,3 +46,21 @@ def test_retrieve_structure_from_materials_project():
     # test stored data is in expected format
     datetime.strptime(stored_data["database_version"], "%Y.%m.%d")
     assert stored_data["task_id"].startswith("mp-")
+
+    job = retrieve_structure_from_materials_project(
+        "mp-19009", reset_magnetic_moments=False
+    )
+
+    responses = run_locally(job)
+    output = responses[job.uuid][1].output
+
+    assert "magmom" in output.site_properties
+
+    job = retrieve_structure_from_materials_project(
+        "mp-19009", reset_magnetic_moments=True
+    )
+
+    responses = run_locally(job)
+    output = responses[job.uuid][1].output
+
+    assert "magmom" not in output.site_properties
