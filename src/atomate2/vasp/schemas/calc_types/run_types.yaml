@@ -1,0 +1,120 @@
+GGA:
+  AM05:
+    GGA: AM
+  GGA:
+    GGA: --
+  PBE:
+    GGA: PE
+  PBESol:
+    GGA: PS
+  RevPBE+PADE:
+    GGA: RP
+  optB86b:
+    GGA: MK
+  optB88:
+    GGA: BO
+  optPBE:
+    GGA: OR
+  revPBE:
+    GGA: RE
+HF:
+  B3LYP:
+    AEXX: 0.2
+    AGGAC: 0.81
+    AGGAX: 0.72
+    ALDAC: 0.19
+    GGA: B3
+    LHFCALC: true
+  HF:
+    AEXX: 1.0
+    AGGAC: 0.0
+    AGGAX: 1.0
+    ALDAC: 0.0
+    LHFCALC: true
+  HSE03:
+    AEXX: 0.25
+    AGGAC: 1.0
+    AGGAX: 0.75
+    ALDAC: 1.0
+    HFSCREEN: 0.3
+    LHFCALC: true
+  HSE06:
+    AEXX: 0.25
+    AGGAC: 1.0
+    AGGAX: 0.75
+    ALDAC: 1.0
+    HFSCREEN: 0.2
+    LHFCALC: true
+  PBE0:
+    AEXX: 0.25
+    AGGAC: 1.0
+    AGGAX: 0.75
+    ALDAC: 1.0
+    LHFCALC: true
+METAGGA:
+  M06L:
+    METAGGA: M06L
+  MBJL:
+    METAGGA: MBJL
+  MS0:
+    METAGGA: MS0
+  MS1:
+    METAGGA: MS1
+  MS2:
+    METAGGA: MS2
+  RTPSS:
+    METAGGA: RTPSS
+  SCAN:
+    METAGGA: SCAN
+  R2SCAN:
+    METAGGA: R2SCAN
+  TPSS:
+    METAGGA: TPSS
+VDW:
+  R2SCAN-rVV10:
+    BPARAM: 15.7
+    LASPH: true
+    LUSE_VDW: true
+    METAGGA: R2SCAN
+  SCAN-rVV10:
+    BPARAM: 15.7
+    LASPH: true
+    LUSE_VDW: true
+    METAGGA: SCAN
+  optB86b-vdW:
+    AGGAC: 0.0
+    GGA: MK
+    LASPH: true
+    LUSE_VDW: true
+    PARAM1: 0.1234
+    PARAM2: 1.0
+  optB88-vdW:
+    AGGAC: 0.0
+    GGA: BO
+    LUSE_VDW: true
+    PARAM1: 0.1833333333
+    PARAM2: 0.22
+  optPBE-vdW:
+    AGGAC: 0.0
+    GGA: OR
+    LASPH: true
+    LUSE_VDW: true
+  rev-vdW-DF2:
+    AGGAC: 0.0
+    GGA: MK
+    LASPH: true
+    LUSE_VDW: true
+    PARAM1: 0.1234
+    PARAM2: 0.711357
+    Zab_vdW: -1.8867
+  revPBE-vdW:
+    AGGAC: 0.0
+    GGA: RE
+    LASPH: true
+    LUSE_VDW: true
+  vdW-DF2:
+    AGGAC: 0.0
+    GGA: ML
+    LASPH: true
+    LUSE_VDW: true
+    Zab_vdW: -1.8867
