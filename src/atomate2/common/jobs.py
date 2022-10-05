@@ -1,6 +1,6 @@
 """Module defining common jobs."""
 
-from jobflow import job, Response
+from jobflow import Response, job
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
