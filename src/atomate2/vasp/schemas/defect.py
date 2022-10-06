@@ -23,19 +23,8 @@ class FormationEnergyDiagramDocument(BaseModel):
     """A document for storing a formation energy diagram.
     Basically a PyDantic version of the `FormationEnergyDiagram` dataclass
     with some additional data fields.
-    Also the `pd_entries` field is now optional since the workflow will not necessarily
+    The `pd_entries` field is now optional since the workflow will not necessarily
     have all the entries in the phase diagram computed.
-
-    bulk_entry: 'ComputedStructureEntry',
-    defect_entries: 'List[DefectEntry]',
-    pd_entries: 'list[ComputedEntry]',
-    vbm: 'float',
-    band_gap: 'Optional[float]' = None,
-    inc_inf_values: 'bool' = False,
-    pd_entries: List[ComputedEntry] = Field(
-        None, description="The entries used to construct the phase diagram."
-    )
-
     """
 
     bulk_entry: ComputedStructureEntry = Field(
@@ -83,7 +72,12 @@ class FormationEnergyDiagramDocument(BaseModel):
     def from_FormationEnergyDiagram(
         cls, fed: FormationEnergyDiagram, **kwargs
     ) -> "FormationEnergyDiagramDocument":
-        """Create a document from a `FormationEnergyDiagram` object."""
+        """Create a document from a `FormationEnergyDiagram` object.
+
+        Args:
+            fed: The `FormationEnergyDiagram` object.
+            kwargs: Additional keyword arguments to pass to the document.
+        """
         defect = fed.defect_entries[0].defect
         return cls(
             defect=defect,
@@ -100,6 +94,9 @@ class FormationEnergyDiagramDocument(BaseModel):
         self, pd_entries: Optional[List[ComputedEntry]] = None
     ) -> "FormationEnergyDiagram":
         """Create a `FormationEnergyDiagram` object from the document.
+
+        Since the `pd_entries` field is optional, this method allows the user
+        to pass in the phase diagram entries if they are not stored in this document.
 
         Args:
             pd_entries: The entries used to construct the phase diagram. If None,

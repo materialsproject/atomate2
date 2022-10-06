@@ -145,6 +145,8 @@ def spawn_defect_calcs(
 ) -> Response:
     """Spawn defect calculations from the DefectGenerator.
 
+    Dynamic Jobflow wrapper around `run_all_charge_states`.
+
     Parameters
     ----------
     defect : Defect
@@ -152,6 +154,11 @@ def spawn_defect_calcs(
     sc_mat : NDArray
         The supercell matrix. If None, the code will attempt to create a
         nearly-cubic supercell.
+    relax_maker : RelaxMaker
+        The relax maker to be used for defect supercell calculations.
+    defect_index : int | str
+        Additional index to give unique names to the defect calculations.
+        Useful for external bookkeeping of symmetry distinct defects.
 
     Returns
     -------
@@ -192,6 +199,7 @@ def run_all_charge_states(
         nearly-cubic supercell.
     defect_index:
         Additional index to give unique names to the defect calculations.
+        Useful for external bookkeeping of symmetry distinct defects.
     add_info:
         Additional information to store with the defect cell relaxation calculation.
         By default only the defect object and charge state are stored.
