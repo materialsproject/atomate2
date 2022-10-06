@@ -59,7 +59,6 @@ HSE_DOUBLE_RELAX = DoubleRelaxMaker(
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
         copy_vasp_kwargs={
             "additional_vasp_files": ("WAVECAR",),
-            "contcar_to_poscar": True,
         },
     ),
 )
@@ -172,9 +171,9 @@ class FormationEnergyMaker(Maker):
             The supercell transformation matrix. If None, the supercell matrix
             will be computed automatically.  If `bulk_supercell_dir` is provided,
             this parameter will be ignored.
-        defect_index: int | str
-            The index of the defect in the list of defects. This is useful to help
-            with external bookkeeping.
+        defect_index : int | str
+            Additional index to give unique names to the defect calculations.
+            Useful for external bookkeeping of symmetry distinct defects.
 
         Returns
         -------
