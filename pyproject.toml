@@ -38,6 +38,7 @@ dependencies =[
 [project.optional-dependencies]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
+mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 defects = ["pymatgen-analysis-defects>=2022.9.14", "dscribe>=1.2.0"]
 docs = [
@@ -61,6 +62,7 @@ strict = [
     "phonopy==2.16.2",
     "seekpath==2.0.1",
     "numpy",
+    "mp-api==0.27.5"
     "pymatgen-analysis-defects==2022.9.14",
     "dscribe==1.2.1"
 ]
