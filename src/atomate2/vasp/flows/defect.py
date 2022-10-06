@@ -142,7 +142,7 @@ class FormationEnergyMaker(Maker):
 
     def make(
         self,
-        defects: list[Defect],
+        defect: Defect,
         dielectric: float | NDArray | None = None,
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: NDArray | None = None,
@@ -159,7 +159,7 @@ class FormationEnergyMaker(Maker):
 
         Parameters
         ----------
-        defects: list[Defect]
+        defects: Defect
             List of defects objects to calculate the formation energy diagram for.
         dielectric: float | NDArray | None
             The dielectric constant or tensor used to calculate the
@@ -179,13 +179,13 @@ class FormationEnergyMaker(Maker):
         """
         jobs = []
 
-        check_input = ensure_defects_same_structure(defects)
-        jobs.append(check_input)
-        uc_structure = check_input.output
+        # check_input = ensure_defects_same_structure(defect)
+        # jobs.append(check_input)
+        # uc_structure = check_input.output
 
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
-                uc_structure=uc_structure,
+                uc_structure=defect.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
             )
@@ -193,12 +193,12 @@ class FormationEnergyMaker(Maker):
             bulk_supercell_dir = get_sc_job.output["dir_name"]
         else:
             get_sc_job = get_supercell_from_prv_calc(
-                uc_structure, bulk_supercell_dir, supercell_matrix
+                defect.structure, bulk_supercell_dir, supercell_matrix
             )
             sc_mat = get_sc_job.output["sc_mat"]
 
         spawn_output = spawn_defect_calcs(
-            defects=defects,
+            defect=defect,
             sc_mat=sc_mat,
             relax_maker=self.relax_maker,
         )
