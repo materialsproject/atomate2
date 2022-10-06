@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
@@ -34,7 +33,11 @@ from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.run import run_vasp
-from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
+from atomate2.vasp.schemas.defect import (
+    CCDDocument,
+    FiniteDifferenceDocument,
+    FormationEnergyDiagramDocument,
+)
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
@@ -84,7 +87,7 @@ def get_supercell_from_prv_calc(
             raise ValueError(
                 "The supercell matrix extracted from the previous calculation does not match the the desired supercell shape."
             )
-    return dict(sc_mat=sc_mat_prv, dir_name=prv_calc_dir)
+    return dict(sc_mat=sc_mat_prv)
 
 
 @job(
@@ -135,7 +138,7 @@ def bulk_supercell_calculation(
 
 @job
 def spawn_defect_calcs(
-    defects: list[Defect],
+    defect: list[Defect],
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
 ) -> Response:
@@ -143,8 +146,8 @@ def spawn_defect_calcs(
 
     Parameters
     ----------
-    defect_gen : DefectGenerator
-        The defect generator to use.
+    defect : Defect
+        The defect to generate charge states for.
     sc_mat : NDArray
         The supercell matrix. If None, the code will attempt to create a
         nearly-cubic supercell.
@@ -156,21 +159,16 @@ def spawn_defect_calcs(
     """
     defect_q_jobs = []
     output = dict()
-    name_counter: dict = defaultdict(lambda: 0)
-
-    for defect in defects:
-        single_def_out, add_jobs = run_all_charge_states(
-            defect,
-            sc_mat=sc_mat,
-            relax_maker=relax_maker,
-            defect_index=f"{name_counter[defect.name]}",
-        )
-        defect_q_jobs.extend(add_jobs)
-        output[f"{defect.name}-{name_counter[defect.name]}"] = dict(
-            defect=defect,
-            results=single_def_out,
-        )
-        name_counter[defect.name] += 1
+    chg_state_output, add_jobs = run_all_charge_states(
+        defect,
+        sc_mat=sc_mat,
+        relax_maker=relax_maker,
+    )
+    defect_q_jobs.extend(add_jobs)
+    output = dict(
+        defect=defect,
+        chg_state_output=chg_state_output,
+    )
     return Response(output=output, replace=defect_q_jobs)
 
 
@@ -208,7 +206,7 @@ def run_all_charge_states(
         charge states.
     """
     jobs = []
-    outputs = dict()
+    chg_state_output = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     for qq in defect.get_charge_states():
         suffix = (
@@ -233,17 +231,16 @@ def run_all_charge_states(
         )
         jobs.append(charged_relax)
         charged_output: TaskDocument = charged_relax.output
-
-        outputs[qq] = {
+        chg_state_output[qq] = {
             "structure": charged_output.structure,
             "entry": charged_output.entry,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
         }
-    return outputs, jobs
+    return chg_state_output, jobs
 
 
-@job
+@job(output_schema=FormationEnergyDiagramDocument)
 def collect_defect_outputs(
     defects_output: dict, bulk_sc_dir: str, dielectric: float | NDArray | None = None
 ) -> dict:
@@ -277,23 +274,25 @@ def collect_defect_outputs(
     bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
     bulk_data = parse_bulk_dir(bulk_sc_dir)
     logger.info(f"Bulk entry energy: {bulk_data['entry'].energy} eV")
-    output = dict(
-        defect_relax_outputs=defects_output,
+
+    fe_doc = FormationEnergyDiagramDocument(
         bulk_entry=bulk_data["entry"],
-        bulk_band_structure=bulk_data["band_structure"],
+        vbm=bulk_data["band_structure"].get_vbm()["energy"],
+        band_gap=bulk_data["band_structure"].get_band_gap()["energy"],
         bulk_sc_dir=bulk_sc_dir,
-        results=dict(),
+        dielectric=dielectric,
+        defect_entries=list(),
+        defect_sc_dirs=dict(),
     )
-    # first loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
+
+    # loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
     for defect_name, def_out in defects_output.items():
         logger.debug(f"Processing defect {defect_name}")
         defect = def_out.pop("defect")
         defect_locpots = dict()
-        defect_entries = []
-        fnv_plots = dict()
-
+        defect_entries: list[DefectEntry] = []
         # then loop over the different charge states
-        for qq, v in def_out["results"].items():
+        for qq, v in def_out["chg_state_output"].items():
             logger.debug(f"Processing charge state {qq}")
             if not isinstance(v, dict):
                 continue
@@ -306,18 +305,15 @@ def collect_defect_outputs(
                 charge_state=int(qq),
                 sc_entry=sc_entry,
             )
-            plot_data = def_ent.get_freysoldt_correction(
+            def_ent.get_freysoldt_correction(
                 defect_locpots[int(qq)],
                 bulk_locpot,
                 dielectric=dielectric,
             )
-            defect_entries.append(def_ent)
-            fnv_plots[int(qq)] = plot_data
+            fe_doc.defect_entries.append(defect_entries)
+            fe_doc.defect_sc_dirs[qq] = v["dir_name"]
 
-        output["results"][defect_name] = dict(
-            defect=defect, defect_entries=defect_entries, fnv_plots=fnv_plots
-        )
-    return output
+    return fe_doc
 
 
 class CCDInput(BaseModel):

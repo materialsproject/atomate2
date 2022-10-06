@@ -154,6 +154,8 @@ class FormationEnergyMaker(Maker):
         a bulk supercell calculation (to obtain the pristine electrostatic potentia),
         this maker will either perform a bulk supercell calculation or use a existing
         one if provided.
+        If a value for the dielectric constant is provided, the Freysoldt correction
+        will be applied to the formation energy.
 
         Parameters
         ----------
@@ -167,7 +169,8 @@ class FormationEnergyMaker(Maker):
             If provided, the bulk supercell calculation will be skipped.
         supercell_matrix: NDArray | None
             The supercell transformation matrix. If None, the supercell matrix
-            will be computed automatically.
+            will be computed automatically.  If `bulk_supercell_dir` is provided,
+            this parameter will be ignored.
 
         Returns
         -------
@@ -186,20 +189,23 @@ class FormationEnergyMaker(Maker):
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
             )
+            sc_mat = get_sc_job.output["sc_mat"]
+            bulk_supercell_dir = get_sc_job.output["dir_name"]
         else:
             get_sc_job = get_supercell_from_prv_calc(
                 uc_structure, bulk_supercell_dir, supercell_matrix
             )
+            sc_mat = get_sc_job.output["sc_mat"]
 
         spawn_output = spawn_defect_calcs(
             defects=defects,
-            sc_mat=get_sc_job.output["sc_mat"],
+            sc_mat=sc_mat,
             relax_maker=self.relax_maker,
         )
         jobs.extend([get_sc_job, spawn_output])
 
         collect_job = collect_defect_outputs(
-            spawn_output.output, get_sc_job.output["dir_name"], dielectric
+            spawn_output.output, bulk_supercell_dir, dielectric
         )
         jobs.append(collect_job)
 

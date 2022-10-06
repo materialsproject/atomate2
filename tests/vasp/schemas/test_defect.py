@@ -86,3 +86,17 @@ def test_CCDDocument(vasp_test_dir):
     tasks = ccd_doc.get_taskdocs()
     assert len(tasks[0]) == 5
     assert len(tasks[1]) == 5
+
+
+def test_FormationEnergyDiagramDocument(test_dir):
+    import pytest
+    from monty.serialization import loadfn
+
+    from atomate2.vasp.schemas.defect import FormationEnergyDiagramDocument
+
+    test_json = test_dir / "schemas" / "formation_en.json"
+    fe_doc = FormationEnergyDiagramDocument(**loadfn(test_json))
+    assert fe_doc.vbm == pytest.approx(4.5715)
+    fe_obj = fe_doc.as_FormationEnergyDiagram(pd_entries=fe_doc.pd_entries)
+    fe_obj1 = fe_doc.as_FormationEnergyDiagram()
+    assert set(fe_obj1.pd_entries) == set(fe_obj.pd_entries)
