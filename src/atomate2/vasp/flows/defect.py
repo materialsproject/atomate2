@@ -109,6 +109,8 @@ class FormationEnergyMaker(Maker):
     uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
     like the `HSEDoubleRelaxMaker` can be used for more accurate (but expensive)
     calculations.
+    If the `validate_maker` is set to True, the maker will check for some basic
+    settings in the `relax_maker` to make sure the calculations are done correctly.
 
     Attributes
     ----------
@@ -118,7 +120,8 @@ class FormationEnergyMaker(Maker):
         A maker to perform a atomic-position-only relaxation on the defect charge
         states. If None, the defaults will be used.
     validate_maker: bool
-        If True, the code will check the relax_maker for specific settings
+        If True, the code will check the relax_maker for specific settings.
+        Leave this as True unless you really know what you are doing.
     """
 
     name: str = "formation energy"
@@ -145,6 +148,12 @@ class FormationEnergyMaker(Maker):
         supercell_matrix: NDArray | None = None,
     ):
         """Make a flow to calculate the formation energy diagram.
+
+        Start a series of charged supercell relaxations from a single defect
+        structure. Since the standard finite size correction (Freysoldt) requires
+        a bulk supercell calculation (to obtain the pristine electrostatic potentia),
+        this maker will either perform a bulk supercell calculation or use a existing
+        one if provided.
 
         Parameters
         ----------
