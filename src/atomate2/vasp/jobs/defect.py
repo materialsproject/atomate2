@@ -141,6 +141,7 @@ def spawn_defect_calcs(
     defect: list[Defect],
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
+    defect_index: int | str = "",
 ) -> Response:
     """Spawn defect calculations from the DefectGenerator.
 
@@ -162,6 +163,7 @@ def spawn_defect_calcs(
         defect,
         sc_mat=sc_mat,
         relax_maker=relax_maker,
+        defect_index=defect_index,
     )
     defect_q_jobs.extend(add_jobs)
     return Response(output=all_chg_outputs, replace=defect_q_jobs)
@@ -171,7 +173,7 @@ def run_all_charge_states(
     defect: Defect,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
-    defect_index: str = "",
+    defect_index: int | str = "",
     add_info: dict | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations and save the Hartree potential.
@@ -289,7 +291,7 @@ def collect_defect_outputs(
     # loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
     logger.debug(f"Processing defect {defect.name}")
     defect_locpots = dict()
-    defect_entries: list[DefectEntry] = []
+    # defect_entries: list[DefectEntry] = []
     # then loop over the different charge states
     for qq, v in all_chg_outputs.items():
         logger.debug(f"Processing charge state {qq}")
@@ -309,7 +311,7 @@ def collect_defect_outputs(
             bulk_locpot,
             dielectric=dielectric,
         )
-        fe_doc.defect_entries.append(defect_entries)
+        fe_doc.defect_entries.append(def_ent)
         fe_doc.defect_sc_dirs[qq] = v["dir_name"]
     return fe_doc
 

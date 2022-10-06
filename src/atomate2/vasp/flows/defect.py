@@ -146,6 +146,7 @@ class FormationEnergyMaker(Maker):
         dielectric: float | NDArray | None = None,
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: NDArray | None = None,
+        defect_index: int | str = "",
     ):
         """Make a flow to calculate the formation energy diagram.
 
@@ -171,6 +172,9 @@ class FormationEnergyMaker(Maker):
             The supercell transformation matrix. If None, the supercell matrix
             will be computed automatically.  If `bulk_supercell_dir` is provided,
             this parameter will be ignored.
+        defect_index: int | str
+            The index of the defect in the list of defects. This is useful to help
+            with external bookkeeping.
 
         Returns
         -------
@@ -178,10 +182,6 @@ class FormationEnergyMaker(Maker):
             The workflow to calculate the formation energy diagram.
         """
         jobs = []
-
-        # check_input = ensure_defects_same_structure(defect)
-        # jobs.append(check_input)
-        # uc_structure = check_input.output
 
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
@@ -201,11 +201,15 @@ class FormationEnergyMaker(Maker):
             defect=defect,
             sc_mat=sc_mat,
             relax_maker=self.relax_maker,
+            defect_index=defect_index,
         )
         jobs.extend([get_sc_job, spawn_output])
 
         collect_job = collect_defect_outputs(
-            spawn_output.output, bulk_supercell_dir, dielectric
+            defect=defect,
+            all_chg_outputs=spawn_output.output,
+            bulk_sc_dir=bulk_supercell_dir,
+            dielectric=dielectric,
         )
         jobs.append(collect_job)
 

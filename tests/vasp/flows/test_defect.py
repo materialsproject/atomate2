@@ -1,3 +1,6 @@
+from atomate2.vasp.schemas.defect import FormationEnergyDiagramDocument
+
+
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import run_locally
     from pymatgen.core import Structure
@@ -148,9 +151,9 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
 
 def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
+    import pytest
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
-    from pymatgen.analysis.defects.core import Defect
     from pymatgen.analysis.defects.generators import SubstitutionGenerator
     from pymatgen.core import Structure
 
@@ -180,7 +183,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     # rmaker = RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator())
     maker = FormationEnergyMaker()
     flow = maker.make(
-        defects, supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]], dielectric=8.9
+        defects[0],
+        supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]],
+        dielectric=8.9,
+        defect_index=0,
     )
 
     # run the flow and ensure that it finished running successfully
@@ -194,14 +200,20 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
         store=store,
     )
 
-    results = responses[flow.jobs[-1].uuid][1].output
-    res_defect = results["results"]["Mg_Ga-0"]["defect"]
-
-    # check that the defect object was stored
-    assert isinstance(res_defect, Defect)
-    # check that freysoldt correction was performed
-    for r_dict in results["results"]["Mg_Ga-0"]["defect_entries"]:
-        if r_dict.charge_state == 0:
-            assert r_dict.corrections["freysoldt_potential_alignment"] == 0
+    result: FormationEnergyDiagramDocument = responses[flow.jobs[-1].uuid][1].output
+    assert result.vbm == pytest.approx(4.5715)
+    for def_ent in result.defect_entries:
+        if def_ent.charge_state == 0:
+            assert def_ent.corrections["freysoldt_potential_alignment"] == 0
         else:
-            assert r_dict.corrections["freysoldt_potential_alignment"] != 0
+            assert def_ent.corrections["freysoldt_potential_alignment"] != 0
+
+    # assert isinstance(res_defect, FormationEnergyDiagramDocument)
+
+    # # check that the defect object was stored
+    # # check that freysoldt correction was performed
+    # for r_dict in results["results"]["Mg_Ga-0"]["defect_entries"]:
+    #     if r_dict.charge_state == 0:
+    #         assert r_dict.corrections["freysoldt_potential_alignment"] == 0
+    #     else:
+    #         assert r_dict.corrections["freysoldt_potential_alignment"] != 0
