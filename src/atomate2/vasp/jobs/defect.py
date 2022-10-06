@@ -158,18 +158,13 @@ def spawn_defect_calcs(
         The response containing the outputs of the defect calculations as a dictionary
     """
     defect_q_jobs = []
-    output = dict()
-    chg_state_output, add_jobs = run_all_charge_states(
+    all_chg_outputs, add_jobs = run_all_charge_states(
         defect,
         sc_mat=sc_mat,
         relax_maker=relax_maker,
     )
     defect_q_jobs.extend(add_jobs)
-    output = dict(
-        defect=defect,
-        chg_state_output=chg_state_output,
-    )
-    return Response(output=output, replace=defect_q_jobs)
+    return Response(output=all_chg_outputs, replace=defect_q_jobs)
 
 
 def run_all_charge_states(
@@ -206,7 +201,7 @@ def run_all_charge_states(
         charge states.
     """
     jobs = []
-    chg_state_output = dict()
+    all_chg_outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     for qq in defect.get_charge_states():
         suffix = (
@@ -231,18 +226,21 @@ def run_all_charge_states(
         )
         jobs.append(charged_relax)
         charged_output: TaskDocument = charged_relax.output
-        chg_state_output[qq] = {
+        all_chg_outputs[qq] = {
             "structure": charged_output.structure,
             "entry": charged_output.entry,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
         }
-    return chg_state_output, jobs
+    return all_chg_outputs, jobs
 
 
 @job(output_schema=FormationEnergyDiagramDocument)
 def collect_defect_outputs(
-    defects_output: dict, bulk_sc_dir: str, dielectric: float | NDArray | None = None
+    defect,
+    all_chg_outputs: dict,
+    bulk_sc_dir: str,
+    dielectric: float | NDArray | None = None,
 ) -> dict:
     """Collect all the outputs from the defect calculations.
 
@@ -251,8 +249,11 @@ def collect_defect_outputs(
 
     Parameters
     ----------
-    defects_output:
-        The output from the defect calculations.
+    defect:
+        The defect object.
+    all_chg_outputs:
+        The output from the defect calculations. See `run_all_charge_states` for
+        more information.
     bulk_sc_dir:
         The directory containing the bulk supercell calculation.
     dielectric:
@@ -286,33 +287,30 @@ def collect_defect_outputs(
     )
 
     # loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
-    for defect_name, def_out in defects_output.items():
-        logger.debug(f"Processing defect {defect_name}")
-        defect = def_out.pop("defect")
-        defect_locpots = dict()
-        defect_entries: list[DefectEntry] = []
-        # then loop over the different charge states
-        for qq, v in def_out["chg_state_output"].items():
-            logger.debug(f"Processing charge state {qq}")
-            if not isinstance(v, dict):
-                continue
-            defect_locpots[int(qq)] = get_locpot_from_dir(v["dir_name"])
-            sc_dict = v["entry"].as_dict()
-            sc_dict["structure"] = v["structure"]
-            sc_entry = ComputedStructureEntry.from_dict(sc_dict)
-            def_ent = DefectEntry(
-                defect=defect,
-                charge_state=int(qq),
-                sc_entry=sc_entry,
-            )
-            def_ent.get_freysoldt_correction(
-                defect_locpots[int(qq)],
-                bulk_locpot,
-                dielectric=dielectric,
-            )
-            fe_doc.defect_entries.append(defect_entries)
-            fe_doc.defect_sc_dirs[qq] = v["dir_name"]
-
+    logger.debug(f"Processing defect {defect.name}")
+    defect_locpots = dict()
+    defect_entries: list[DefectEntry] = []
+    # then loop over the different charge states
+    for qq, v in all_chg_outputs.items():
+        logger.debug(f"Processing charge state {qq}")
+        if not isinstance(v, dict):
+            continue
+        defect_locpots[int(qq)] = get_locpot_from_dir(v["dir_name"])
+        sc_dict = v["entry"].as_dict()
+        sc_dict["structure"] = v["structure"]
+        sc_entry = ComputedStructureEntry.from_dict(sc_dict)
+        def_ent = DefectEntry(
+            defect=defect,
+            charge_state=int(qq),
+            sc_entry=sc_entry,
+        )
+        def_ent.get_freysoldt_correction(
+            defect_locpots[int(qq)],
+            bulk_locpot,
+            dielectric=dielectric,
+        )
+        fe_doc.defect_entries.append(defect_entries)
+        fe_doc.defect_sc_dirs[qq] = v["dir_name"]
     return fe_doc
 
 
