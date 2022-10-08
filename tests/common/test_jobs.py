@@ -1,4 +1,6 @@
-from pytest import approx
+import os
+
+from pytest import approx, mark
 
 
 def test_structure_to_primitive(si_structure):
@@ -27,7 +29,7 @@ def test_structure_to_conventional(si_structure):
     assert output.lattice.alpha == approx(90)
 
 
-@pytest.mark.skipif(not os.environ.get("MP_API_KEY"))
+@mark.skipif(not os.environ.get("MP_API_KEY"))
 def test_retrieve_structure_from_materials_project():
     from datetime import datetime
 
