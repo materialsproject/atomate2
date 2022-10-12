@@ -331,7 +331,7 @@ class PhononBSDOSDoc(BaseModel):
 
         kpoint_density_dos = kwargs.get("kpoint_density_dos", 7000)
         kpoint = Kpoints.automatic_density(
-            structure=structure,
+            structure=get_pmg_structure(phonon.primitive),
             kppa=kpoint_density_dos,
             force_gamma=True,
         )

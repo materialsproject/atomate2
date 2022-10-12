@@ -47,8 +47,8 @@ Friedrich Schiller University Jena
 [0000-0001-8907-0336]: https://orcid.org/0000-0001-8907-0336
 
 **Mingjian Wen** [![gh]][mjwen] [![orc]][0000-0003-0013-575X] \
-Postdoctoral researcher \
-Lawrence Berkeley National Laboratory
+Assistant Professor \
+University of Houston
 
 [mjwen]: https://github.com/mjwen
 [0000-0003-0013-575X]: https://orcid.org0000-0003-0013-575X/

@@ -139,7 +139,7 @@ class Atomate2Settings(BaseSettings):
         Load settings from file or environment variables.
 
         Loads settings from a root file if available and uses that as defaults in
-        place of built in defaults.
+        place of built-in defaults.
 
         This allows setting of the config file path through environment variables.
         """
