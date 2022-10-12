@@ -1,10 +1,10 @@
 cp2k_input:
 
-  # Default QS behavior
+  # Default QS behavior/precision
   eps_default: 1.e-12
   eps_pgf_orb: 1.e-16
 
-  # Default SCF Behavior
+  # Default SCF Behavior is OT
   ot: True
   energy_gap: -1
   eps_scf: 1.e-6

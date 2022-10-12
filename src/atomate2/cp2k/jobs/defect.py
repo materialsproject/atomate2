@@ -40,7 +40,7 @@ class BaseDefectMaker(BaseCp2kMaker):
     force_diagonal: bool = field(default=False)
 
     @cp2k_job
-    def make(self, defect: Defect, prev_cp2k_dir: str | Path | None = None):
+    def make(self, defect: Defect, charge: int = 0, prev_cp2k_dir: str | Path | None = None):
         if isinstance(defect, Vacancy):
             defect = GhostVacancy(
                 structure=defect.structure, site=defect.site,
@@ -55,6 +55,7 @@ class BaseDefectMaker(BaseCp2kMaker):
             min_length=self.min_length,
             force_diagonal=self.force_diagonal,
         )
+        structure.set_charge(charge)
         return super().make.original(self, structure=structure, prev_cp2k_dir=prev_cp2k_dir)
 
 @dataclass

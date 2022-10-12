@@ -16,8 +16,7 @@ from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos, CompleteDos
 from pymatgen.electronic_structure.bandstructure import BandStructure
 
-from pymatgen.io.cube import Cube 
-from pymatgen.io.vasp import VolumetricData
+from pymatgen.io.common import VolumetricData
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 from pymatgen.core.units import Ha_to_eV
 
@@ -219,7 +218,6 @@ class CalculationOutput(BaseModel):
                 transition=bandgap_info["transition"],
             )
         else:
-            logger.warning("Unable to parse bandstructure. Collecting band edge info as available")
             electronic_output = {
                 "efermi": output.efermi,
                 "vbm": output.vbm,
@@ -390,9 +388,8 @@ class Calculation(BaseModel):
                 v_hartree = cp2k_objects[Cp2kObject.v_hartree]  # type: ignore
             elif Cp2kObject.v_hartree in output_file_paths:
                 v_hartree_file = output_file_paths[Cp2kObject.v_hartree]  # type: ignore
-                v_hartree = Cube(dir_name / v_hartree_file)
-                #TODO Very important am converting from native Ha to eV for storing
-                v_hartree = VolumetricData(structure=v_hartree.structure, data={'total': np.multiply(v_hartree.data, Ha_to_eV)})
+                v_hartree = VolumetricData.from_cube(dir_name / v_hartree_file)
+                v_hartree.scale(Ha_to_eV)
 
         input_doc = CalculationInput.from_cp2k_output(cp2k_output)
         output_doc = CalculationOutput.from_cp2k_output(
@@ -480,15 +477,14 @@ def _get_volumetric_data(
             # TODO This volumetric data may be in atomic units. i.e. 
             # Cp2k version of locpot stores in Ha, not eV, so must be converted 
             # somewhere
-            cube = Cube(dir_name / file)
-            volumetric_data[file_type] = VolumetricData(structure=cube.structure, data={'total': cube.data})
+            volumetric_data[file_type] = VolumetricData.from_cube(dir_name / file)
         except Exception:
             raise ValueError(f"Failed to parse {file_type} at {file}.")
     
     for file_type in volumetric_data:
         if file_type.name in __is_stored_in_Ha__:
             # TODO make built in method for the volumetric data/cube object
-            volumetric_data[file_type].data['total'] = np.multiply(volumetric_data[file_type].data['total'], Ha_to_eV)
+            volumetric_data[file_type].scale(Ha_to_eV)
 
     return volumetric_data
 

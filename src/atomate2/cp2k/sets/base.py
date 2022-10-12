@@ -13,8 +13,7 @@ import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
-from pymatgen.core import Structure
-from pymatgen.electronic_structure.core import Magmom
+from pymatgen.core.structure import Structure, Molecule
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.outputs import Cp2kOutput
@@ -174,7 +173,7 @@ class Cp2kInputGenerator(InputGenerator):
 
     def get_input_set(  # type: ignore
         self,
-        structure: Structure = None,
+        structure: Structure | Molecule = None,
         prev_dir: str | Path = None,
         optional_files: dict | None = None,
     ) -> Cp2kInputSet:
@@ -200,15 +199,15 @@ class Cp2kInputGenerator(InputGenerator):
         input_updates = self.get_input_updates(
             structure,
             prev_input=prev_input,
-            cp2k_output=cp2k_output,
         )
-        kpoints_updates = self.get_kpoints_updates(
-            structure,
-            prev_input=prev_input,
-            cp2k_output=cp2k_output,
-        )
-
-        kpoints = self._get_kpoints(structure, kpoints_updates)
+        if isinstance(structure, Structure):
+            kpoints_updates = self.get_kpoints_updates(
+                structure,
+                prev_input=prev_input,
+            )
+            kpoints = self._get_kpoints(structure, kpoints_updates)
+        else:
+            kpoints = None
         cp2k_input = self._get_input(
             structure,
             kpoints,
@@ -220,7 +219,7 @@ class Cp2kInputGenerator(InputGenerator):
             optional_files=optional_files
         )
 
-    def get_input_updates(self, *args, **kwargs) -> dict:
+    def get_input_updates(self, structure, prev_input) -> dict:
         """
         Get updates to the cp2k input for this calculation type.
 
@@ -246,7 +245,6 @@ class Cp2kInputGenerator(InputGenerator):
         self,
         structure: Structure,
         prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
     ) -> dict:
         """
         Get updates to the kpoints configuration for this calculation type.
@@ -299,7 +297,7 @@ class Cp2kInputGenerator(InputGenerator):
 
     def _get_input(
         self,
-        structure,
+        structure: Structure | Molecule,
         kpoints: Kpoints | None = None,
         previous_input: Cp2kInput = None,
         input_updates: dict = None,
@@ -459,61 +457,54 @@ class Cp2kInputGenerator(InputGenerator):
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
 
-def _combine_kpoints(*kpoints_objects: Kpoints):
-    """Combine k-points files together."""
-    labels = []
-    kpoints = []
-    weights = []
+def multiple_input_updators():
+    """
+    This utility function acts to decorate child classes of Cp2kInputGenerator so that multiple sets can
+    combine to produce more complex ones.
 
-    for kpoints_object in filter(None, kpoints_objects):
-        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
-            raise ValueError(
-                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
-            )
-        if kpoints_object.labels is None:
-            labels.append([""] * len(kpoints_object.kpts))
-        else:
-            labels.append(kpoints_object.labels)
+    For example, the HybridRelaxSetGenerator is a combination of the RelaxSet and the HybridSet. This decorator
+    allows HybridRelaxSetGenerator to be defined consisely as:
 
-        weights.append(kpoints_object.kpts_weights)
-        kpoints.append(kpoints_object.kpts)
+    @dataclass
+    @multiple_input_updators()
+    class HybridRelaxSetGenerator(HybridSetGenerator, RelaxSetGenerator):
+        pass
 
-    labels = np.concatenate(labels).tolist()
-    weights = np.concatenate(weights).tolist()
-    kpoints = np.concatenate(kpoints)
-    return Kpoints(
-        comment="Combined k-points",
-        style=Kpoints.supported_modes.Reciprocal,
-        num_kpts=len(kpoints),
-        kpts=kpoints,
-        labels=labels,
-        kpts_weights=weights,
-    )
+    Where multiple_input_updators() will joing the get_input_updates functions from HybridSetGenerator and
+    RelaxSetGenerator to produce a combined effect. 
+    """
+    def decorate(myclass):
+        def multi(foo):
+            def get_input_updates(self, *args, **kwargs):
+                updates = {}
+                for parent in (self.__class__.__bases__ if isinstance(self, Cp2kInputGenerator) else self.__bases__):
+                    if parent.__bases__ == (Cp2kInputGenerator, ):
+                        updates.update(getattr(parent, foo.__name__)(self, *args, **kwargs))
+                    else:
+                        updates.update(get_input_updates(parent, *args, **kwargs))
+                return updates
+            return get_input_updates
 
-
-def multi(foo):
-    def get_input_updates(self, *args, **kwargs):
-        updates = {}
-        for parent in self.__class__.__bases__:
-            # TODO This is just a hack to avoid recursion error
-            # when class A(B, C) has B or C also applying multi
-            if "<locals>" in str(getattr(parent, foo.__name__)):
-                continue
-            updates.update(getattr(parent, foo.__name__)(self, *args, **kwargs))
-        return updates
-    return get_input_updates 
-
-
-def multiple_updators(decorator, methods=("get_input_updates",)):
-    def decorate(cls):
-        for attr in methods:
-            if callable(getattr(cls, attr)):
-                setattr(cls, attr, decorator(getattr(cls, attr)))
-        return cls 
+        if callable(getattr(myclass, "get_input_updates")):
+            setattr(myclass, "get_input_updates", multi(getattr(myclass, "get_input_updates")))
+        return myclass 
     return decorate
 
 
-def recursive_update(d, u):
+def recursive_update(d: Dict, u: Dict):
+    """
+    Update a dictionary recursively.
+
+    Args:
+        d: Input dictionary
+        u: Update dictionary
+    
+    Example:
+        d = {'activate_hybrid': {"hybrid_functional": "HSE06"}}
+        u = {'activate_hybrid': {"cutoff_radius": 8}}
+    
+        yields {'activate_hybrid': {"hybrid_functional": "HSE06", "cutoff_radius": 8}}}
+    """
     for k, v in u.items():
         if isinstance(v, dict):
             d[k] = recursive_update(d.get(k, {}), v)

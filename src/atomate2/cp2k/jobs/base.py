@@ -16,7 +16,7 @@ from pymatgen.electronic_structure.bandstructure import (
     BandStructureSymmLine,
 )
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
-from pymatgen.io.cube import Cube
+from pymatgen.io.common import VolumetricData
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 
@@ -34,7 +34,7 @@ _DATA_OBJECTS = [
     DOS,
     Dos,
     CompleteDos,
-    Cube,
+    VolumetricData,
     Trajectory,
 ]
 

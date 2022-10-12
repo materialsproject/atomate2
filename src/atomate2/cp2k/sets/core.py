@@ -15,7 +15,7 @@ from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.cp2k.sets.base import Cp2kInputGenerator, multi, multiple_updators 
+from atomate2.cp2k.sets.base import Cp2kInputGenerator, multiple_input_updators
 
 logger = logging.getLogger(__name__)
 
@@ -113,21 +113,20 @@ class HybridSetGenerator(Cp2kInputGenerator):
                 "cutoff_radius": get_truncated_coulomb_cutoff(structure),
             },
         }
-        updates.update(super().get_input_updates(structure, *args, **kwargs))
         return updates
 
 @dataclass
-@multiple_updators(multi)
+@multiple_input_updators()
 class HybridStaticSetGenerator(HybridSetGenerator, StaticSetGenerator):
     pass
 
 @dataclass
-@multiple_updators(multi)
+@multiple_input_updators()
 class HybridRelaxSetGenerator(HybridSetGenerator, RelaxSetGenerator):
     pass
 
 @dataclass
-@multiple_updators(multi)
+@multiple_input_updators()
 class HybridCellOptSetGenerator(HybridSetGenerator, CellOptSetGenerator):
     pass
 
@@ -169,7 +168,6 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
         self,
         structure: Structure,
         prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
     ) -> dict:
         """
         Get updates to the kpoints configuration for a non-self consistent VASP job.

@@ -12,7 +12,7 @@ from pymatgen.core import Structure
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 
-from atomate2.cp2k.sets.base import Cp2kInputGenerator, multi, multiple_updators
+from atomate2.cp2k.sets.base import Cp2kInputGenerator, multiple_input_updators
 from atomate2.cp2k.sets.core import (
     StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator, HybridSetGenerator,
     HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator
@@ -30,31 +30,31 @@ class DefectSetGenerator(Cp2kInputGenerator):
         return {'print_v_hartree': True}
 
 @dataclass
-@multiple_updators(multi)
+@multiple_input_updators()
 class DefectStaticSetGenerator(DefectSetGenerator, StaticSetGenerator):
     pass    
 
 @dataclass
-@multiple_updators(multi)
+@multiple_input_updators()
 class DefectRelaxSetGenerator(DefectSetGenerator, RelaxSetGenerator):
     pass
 
 @dataclass
-@multiple_updators(multi)
+@multiple_input_updators()
 class DefectCellOptSetGenerator(DefectSetGenerator, CellOptSetGenerator):
     pass
 
 @dataclass
-@multiple_updators(multi)
-class DefectHybridStaticSetGenerator(DefectSetGenerator, HybridSetGenerator, StaticSetGenerator):
+@multiple_input_updators()
+class DefectHybridStaticSetGenerator(DefectSetGenerator, HybridStaticSetGenerator):
     pass   
 
 @dataclass
-@multiple_updators(multi)
-class DefectHybridRelaxSetGenerator(DefectSetGenerator, HybridSetGenerator, RelaxSetGenerator):
+@multiple_input_updators()
+class DefectHybridRelaxSetGenerator(DefectSetGenerator, HybridRelaxSetGenerator):
     pass   
 
 @dataclass
-@multiple_updators(multi)
-class DefectHybridCellOptSetGenerator(DefectSetGenerator, HybridSetGenerator, CellOptSetGenerator):
+@multiple_input_updators()
+class DefectHybridCellOptSetGenerator(DefectSetGenerator, HybridCellOptSetGenerator):
     pass   
