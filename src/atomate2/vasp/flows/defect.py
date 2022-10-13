@@ -9,8 +9,6 @@ from typing import Iterable
 
 from jobflow import Flow, Job, Maker, OutputReference, job
 from jobflow.core.maker import recursive_call
-
-# from jobflow.core.maker import recursive_call
 from numpy.typing import NDArray
 from pymatgen.analysis.defects.core import Defect
 from pymatgen.core.structure import Lattice, Structure
