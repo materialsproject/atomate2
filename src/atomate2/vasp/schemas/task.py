@@ -52,14 +52,14 @@ class AnalysisSummary(BaseModel):
     errors: List[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_vasp_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
+    def from_vasp_calc_docs(cls, calcs_reversed: List[Calculation]) -> "AnalysisSummary":
         """
         Create analysis summary from VASP calculation documents.
 
         Parameters
         ----------
-        calc_docs
-            VASP calculation documents.
+        calcs_reversed
+            A list of VASP calculation documents in reverse order .
 
         Returns
         -------
@@ -68,8 +68,8 @@ class AnalysisSummary(BaseModel):
         """
         from atomate2.vasp.schemas.calculation import Status
 
-        initial_vol = calc_docs[0].input.structure.lattice.volume
-        final_vol = calc_docs[-1].output.structure.lattice.volume
+        initial_vol = calcs_reversed[-1].input.structure.lattice.volume
+        final_vol = calcs_reversed[0].output.structure.lattice.volume
         delta_vol = final_vol - initial_vol
         percent_delta_vol = 100 * delta_vol / initial_vol
         warnings = []
@@ -80,13 +80,13 @@ class AnalysisSummary(BaseModel):
                 f"Volume change > {SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL * 100}%"
             )
 
-        final_calc = calc_docs[-1]
+        final_calc = calcs_reversed[0]
         max_force = None
         if final_calc.has_vasp_completed == Status.SUCCESS:
             # max force and valid structure checks
             structure = final_calc.output.structure
             # do not check max force for MD run
-            if calc_docs[-1].input.parameters.get("IBRION", -1) != 0:
+            if calcs_reversed[0].input.parameters.get("IBRION", -1) != 0:
                 max_force = _get_max_force(final_calc)
             warnings.extend(_get_drift_warnings(final_calc))
             if not structure.is_valid():
@@ -348,6 +348,11 @@ class TaskDocument(StructureMetadata):
             calcs_reversed.append(calc_doc)
             all_vasp_objects.append(vasp_objects)
 
+        # Reverse the list of calculations in the order:  newest calc is the first
+        # To match with calcs_reversed, all_vasp_objects is also reversed.
+        calcs_reversed.reverse()
+        all_vasp_objects.reverse()
+
         analysis = AnalysisSummary.from_vasp_calc_docs(calcs_reversed)
         transformations, icsd_id, tags, author = _parse_transformations(dir_name)
         custodian = _parse_custodian(dir_name)
@@ -361,13 +366,13 @@ class TaskDocument(StructureMetadata):
 
         # only store objects from last calculation
         # TODO: make this an option
-        vasp_objects = all_vasp_objects[-1]
+        vasp_objects = all_vasp_objects[0]
         included_objects = None
         if vasp_objects:
             included_objects = list(vasp_objects.keys())
 
         doc = cls.from_structure(
-            structure=calcs_reversed[-1].output.structure,
+            structure=calcs_reversed[0].output.structure,
             include_structure=True,
             dir_name=dir_name,
             calcs_reversed=calcs_reversed,
@@ -379,10 +384,10 @@ class TaskDocument(StructureMetadata):
             icsd_id=icsd_id,
             tags=tags,
             author=author,
-            completed_at=calcs_reversed[-1].completed_at,
-            input=InputSummary.from_vasp_calc_doc(calcs_reversed[0]),
+            completed_at=calcs_reversed[0].completed_at,
+            input=InputSummary.from_vasp_calc_doc(calcs_reversed[-1]),
             output=OutputSummary.from_vasp_calc_doc(
-                calcs_reversed[-1], vasp_objects.get(VaspObject.TRAJECTORY)  # type: ignore
+                calcs_reversed[0], vasp_objects.get(VaspObject.TRAJECTORY)  # type: ignore
             ),
             state=_get_state(calcs_reversed, analysis),
             entry=cls.get_entry(calcs_reversed),
@@ -395,15 +400,15 @@ class TaskDocument(StructureMetadata):
 
     @staticmethod
     def get_entry(
-        calc_docs: List[Calculation], job_id: Optional[str] = None
+        calcs_reversed: List[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
         """
         Get a computed entry from a list of VASP calculation documents.
 
         Parameters
         ----------
-        calc_docs
-            A list of VASP calculation documents.
+        calcs_reversed
+            A list of VASP calculation documents in a reverse order.
         job_id
             The job identifier.
 
@@ -415,16 +420,16 @@ class TaskDocument(StructureMetadata):
         entry_dict = {
             "correction": 0.0,
             "entry_id": job_id,
-            "composition": calc_docs[-1].output.structure.composition,
-            "energy": calc_docs[-1].output.energy,
+            "composition": calcs_reversed[0].output.structure.composition,
+            "energy": calcs_reversed[0].output.energy,
             "parameters": {
-                "potcar_spec": calc_docs[-1].input.potcar_spec,
+                "potcar_spec": calcs_reversed[0].input.potcar_spec,
                 # Required to be compatible with MontyEncoder for the ComputedEntry
-                "run_type": str(calc_docs[-1].run_type),
+                "run_type": str(calcs_reversed[0].run_type),
             },
             "data": {
-                "oxide_type": oxide_type(calc_docs[-1].output.structure),
-                "aspherical": calc_docs[-1].input.parameters.get("LASPH", False),
+                "oxide_type": oxide_type(calcs_reversed[0].output.structure),
+                "aspherical": calcs_reversed[0].input.parameters.get("LASPH", False),
                 "last_updated": datetime_str(),
             },
         }
@@ -566,17 +571,17 @@ def _get_drift_warnings(calc_doc: Calculation) -> List[str]:
     return warnings
 
 
-def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
+def _get_state(calcs_reversed: List[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
     all_calcs_completed = all(
-        [c.has_vasp_completed == Status.SUCCESS for c in calc_docs]
+        [c.has_vasp_completed == Status.SUCCESS for c in calcs_reversed]
     )
     if len(analysis.errors) == 0 and all_calcs_completed:
         return Status.SUCCESS  # type: ignore
     return Status.FAILED  # type: ignore
 
 
-def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
+def _get_run_stats(calcs_reversed: List[Calculation]) -> Dict[str, RunStatistics]:
     """Get summary of runtime statistics for each calculation in this task."""
     run_stats = {}
     total = dict(
@@ -588,7 +593,7 @@ def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
         total_time=0.0,
         cores=0,
     )
-    for calc_doc in calc_docs:
+    for calc_doc in calcs_reversed:
         stats = calc_doc.output.run_stats
         run_stats[calc_doc.task_name] = stats
         total["average_memory"] = max(total["average_memory"], stats.average_memory)
