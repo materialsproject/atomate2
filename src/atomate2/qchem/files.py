@@ -9,16 +9,16 @@ from typing import Sequence, Union
 
 from pymatgen.core.structure import Molecule
 
-from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.qchem.sets.base import QChemInputGenerator
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from atomate2.qchem.sets.base import QChemInputGenerator
 
 __all__ = ["copy_qchem_outputs", "get_largest_opt_extension"]
 
 
 logger = logging.getLogger(__name__)
+
 
 @auto_fileclient
 def copy_qchem_outputs(
@@ -26,7 +26,7 @@ def copy_qchem_outputs(
     src_host: str | None = None,
     additional_qchem_files: Sequence[str] = tuple(),
     file_client: FileClient | None = None,
-    ):
+):
     """
     Copy QChem output files to the current directory.
 
@@ -50,7 +50,7 @@ def copy_qchem_outputs(
         A file client to use for performing file operations.
     """
     src_dir = strip_hostname(src_dir)  # TODO: Handle hostnames properly.
-    
+
     logger.info(f"Copying QChem inputs from {src_dir}")
     opt_ext = get_largest_opt_extension(src_dir, src_host, file_client=file_client)
     directory_listing = file_client.listdir(src_dir, host=src_host)
@@ -82,6 +82,7 @@ def copy_qchem_outputs(
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 
     logger.info("Finished copying inputs")
+
 
 @auto_fileclient
 def get_largest_opt_extension(
@@ -144,10 +145,7 @@ def write_qchem_input_set(
         Keyword arguments that will be passed to :obj:`.QChemInputSet.write_input`.
     """
     prev_dir = "." if from_prev else None
-    vis = input_set_generator.get_input_set(
-        molecule, prev_dir=prev_dir
-    )
-
+    vis = input_set_generator.get_input_set(molecule, prev_dir=prev_dir)
 
     logger.info("Writing QChem input set.")
     vis.write_input(directory, **kwargs)

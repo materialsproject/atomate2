@@ -9,7 +9,6 @@ from typing import Callable
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
-
 from pymatgen.core.structure import Molecule
 from pymatgen.io.qchem.inputs import QCInput
 
@@ -34,7 +33,7 @@ __all__ = ["BaseQChemMaker", "qchem_job"]
 #     "normalmode_eigenvecs",
 # ]
 
-_DATA_OBJECTS = [QCInput]
+# _DATA_OBJECTS = [QCInput]
 
 
 def qchem_job(method: Callable):
@@ -67,7 +66,8 @@ def qchem_job(method: Callable):
     callable
         A decorated version of the make function that will generate QChem jobs.
     """
-    return job(method, data=_DATA_OBJECTS, output_schema=TaskDocument)
+    return job(method, data=QCInput, output_schema=TaskDocument)
+
 
 @dataclass
 class BaseQChemMaker(Maker):
@@ -99,7 +99,9 @@ class BaseQChemMaker(Maker):
     """
 
     name: str = "base qchem job"
-    input_set_generator: QChemInputGenerator = field(default_factory=QChemInputGenerator)
+    input_set_generator: QChemInputGenerator = field(
+        default_factory=QChemInputGenerator
+    )
     write_input_set_kwargs: dict = field(default_factory=dict)
     copy_qchem_kwargs: dict = field(default_factory=dict)
     run_qchem_kwargs: dict = field(default_factory=dict)
@@ -154,5 +156,3 @@ class BaseQChemMaker(Maker):
             stored_data={"custodian": task_doc.custodian},
             output=task_doc,
         )
-
-

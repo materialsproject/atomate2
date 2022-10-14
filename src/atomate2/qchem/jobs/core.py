@@ -4,24 +4,22 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+
+from atomate2.qchem.jobs.base import BaseQChemMaker
+from atomate2.qchem.sets.base import QChemInputGenerator
+from atomate2.qchem.sets.core import (
+    ForceSetGenerator,
+    FreqSetGenerator,
+    OptSetGenerator,
+    PESScanSetGenerator,
+    SinglePointSetGenerator,
+    TransitionStateSetGenerator,
+)
 
 # from custodian.qchem.handlers import (
 #     QChemErrorHandler,
 # )
 
-from pymatgen.core.structure import Molecule
-
-from atomate2.qchem.jobs.base import BaseQChemMaker, qchem_job
-from atomate2.qchem.sets.base import QChemInputGenerator
-from atomate2.qchem.sets.core import (
-    SinglePointSetGenerator,
-    OptSetGenerator,
-    ForceSetGenerator,
-    TransitionStateSetGenerator,
-    FreqSetGenerator,
-    PESScanSetGenerator
-)
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +31,7 @@ __all__ = [
     "FreqMaker",
     "PESScanMaker",
 ]
+
 
 @dataclass
 class SinglePointMaker(BaseQChemMaker):
@@ -64,7 +63,9 @@ class SinglePointMaker(BaseQChemMaker):
     """
 
     name: str = "single_point"
-    input_set_generator: QChemInputGenerator = field(default_factory=SinglePointSetGenerator)
+    input_set_generator: QChemInputGenerator = field(
+        default_factory=SinglePointSetGenerator
+    )
 
 
 @dataclass
@@ -163,7 +164,9 @@ class TransitionStateMaker(BaseQChemMaker):
     """
 
     name: str = "transition_state"
-    input_set_generator: QChemInputGenerator = field(default_factory=TransitionStateSetGenerator)
+    input_set_generator: QChemInputGenerator = field(
+        default_factory=TransitionStateSetGenerator
+    )
 
 
 @dataclass
@@ -230,4 +233,6 @@ class PESScanMaker(BaseQChemMaker):
     """
 
     name: str = "pes_scan"
-    input_set_generator: QChemInputGenerator = field(default_factory=PESScanSetGenerator)
+    input_set_generator: QChemInputGenerator = field(
+        default_factory=PESScanSetGenerator
+    )
