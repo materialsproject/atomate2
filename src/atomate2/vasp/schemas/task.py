@@ -52,7 +52,9 @@ class AnalysisSummary(BaseModel):
     errors: List[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_vasp_calc_docs(cls, calcs_reversed: List[Calculation]) -> "AnalysisSummary":
+    def from_vasp_calc_docs(
+        cls, calcs_reversed: List[Calculation]
+    ) -> "AnalysisSummary":
         """
         Create analysis summary from VASP calculation documents.
 

@@ -56,7 +56,7 @@ class SiOptimizeDouble(SchemaTestData):
             "contcar_file": "CONTCAR.relax1.gz",
         },
     }
-    objects = {"relax1": []}
+    objects = {"relax2": []}
     task_doc = {
         "calcs_reversed": [
             {
