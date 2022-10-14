@@ -11,14 +11,10 @@ import subprocess
 from os.path import expandvars
 from typing import Any, Sequence
 
-import numpy as np
 from custodian import Custodian
 from custodian.custodian import ErrorHandler
 from custodian.qchem.handlers import QChemErrorHandler
 from custodian.qchem.jobs import QCJob
-
-from pymatgen.io.qchem.inputs import QCInput
-
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
@@ -30,23 +26,22 @@ __all__ = [
     "should_stop_children",
 ]
 
-_DEFAULT_HANDLERS = (
-    QChemErrorHandler,
-)
+_DEFAULT_HANDLERS = (QChemErrorHandler,)
 
 logger = logging.getLogger(__name__)
 
 
 class JobType(ValueEnum):
     """
-Type of QChem job.
+    Type of QChem job.
 
-    - ``DIRECT``: Run QChem without using custodian.
-    - ``NORMAL``: Normal custodian :obj:`.QCJob`.
+        - ``DIRECT``: Run QChem without using custodian.
+        - ``NORMAL``: Normal custodian :obj:`.QCJob`.
     """
 
     DIRECT = "direct"
     NORMAL = "normal"
+
 
 def run_qchem(
     job_type: JobType | str = JobType.NORMAL,

@@ -92,8 +92,7 @@ class Atomate2Settings(BaseSettings):
         None, description="Additional settings applied to AMSET settings file."
     )
 
-
-    #QChem specific settings
+    # QChem specific settings
 
     QCHEM_CMD: str = Field(
         "qchem_std", description="Command to run standard version of qchem."
