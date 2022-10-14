@@ -55,7 +55,7 @@ def test_calculation_input(vasp_test_dir, object_name, task_name):
 @pytest.mark.parametrize(
     "object_name,task_name",
     [
-        pytest.param("SiOptimizeDouble", "relax1", id="SiOptimizeDouble"),
+        pytest.param("SiOptimizeDouble", "relax2", id="SiOptimizeDouble"),
         pytest.param("SiStatic", "standard", id="SiStatic"),
         pytest.param("SiNonSCFUniform", "standard", id="SiNonSCFUniform"),
     ],
@@ -133,7 +133,7 @@ def test_run_statistics(vasp_test_dir, object_name, task_name):
 @pytest.mark.parametrize(
     "object_name,task_name",
     [
-        pytest.param("SiOptimizeDouble", "relax1", id="SiOptimizeDouble"),
+        pytest.param("SiOptimizeDouble", "relax2", id="SiOptimizeDouble"),
         pytest.param("SiStatic", "standard", id="SiStatic"),
         pytest.param("SiNonSCFUniform", "standard", id="SiNonSCFUniform"),
     ],
