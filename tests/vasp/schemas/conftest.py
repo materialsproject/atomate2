@@ -61,16 +61,16 @@ class SiOptimizeDouble(SchemaTestData):
         "calcs_reversed": [
             {
                 "output": {
-                    "vbm": 5.6149,
-                    "cbm": 6.2649,
-                    "bandgap": 0.65,
+                    "vbm": 5.6147,
+                    "cbm": 6.2652,
+                    "bandgap": 0.6505,
                     "is_gap_direct": False,
                     "is_metal": False,
                     "transition": "(0.000,0.000,0.000)-(0.375,0.375,0.000)",
                     "direct_gap": 2.5561,
                     "run_stats": {
                         "average_memory": 0,
-                        "max_memory": 28640.0,
+                        "max_memory": 28096.0,
                         "cores": 16,
                     },
                 },
