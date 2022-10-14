@@ -43,17 +43,17 @@ class SchemaTestData:
 class SiOptimizeDouble(SchemaTestData):
     folder = "Si_old_double_relax"
     task_files = {
-        "relax1": {
-            "vasprun_file": "vasprun.xml.relax1.gz",
-            "outcar_file": "OUTCAR.relax1.gz",
-            "volumetric_files": ["CHGCAR.relax1.gz"],
-            "contcar_file": "CONTCAR.relax1.gz",
-        },
         "relax2": {
             "vasprun_file": "vasprun.xml.relax2.gz",
             "outcar_file": "OUTCAR.relax2.gz",
             "volumetric_files": ["CHGCAR.relax2.gz"],
             "contcar_file": "CONTCAR.relax2.gz",
+        },
+        "relax1": {
+            "vasprun_file": "vasprun.xml.relax1.gz",
+            "outcar_file": "OUTCAR.relax1.gz",
+            "volumetric_files": ["CHGCAR.relax1.gz"],
+            "contcar_file": "CONTCAR.relax1.gz",
         },
     }
     objects = {"relax1": []}
