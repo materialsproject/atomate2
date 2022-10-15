@@ -303,9 +303,7 @@ def cclib_calculate(
         )
     if method in ["ddec6", "hirshfeld"] and not proatom_dir:
         if "PROATOM_DIR" not in os.environ:
-            raise EnvironmentError(
-                "PROATOM_DIR environment variable not set. Returning None."
-            )
+            raise OSError("PROATOM_DIR environment variable not set. Returning None.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
     if proatom_dir and not os.path.exists(proatom_dir):
         raise FileNotFoundError(

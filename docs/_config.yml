@@ -90,7 +90,7 @@ sphinx:
         - "https://materialsproject.github.io/jobflow"
         - null
       monty:
-        - "https://guide.materialsvirtuallab.org/monty"
+        - "https://materialsvirtuallab.github.io/monty"
         - null
     language: en
     html_extra_path:
@@ -103,6 +103,7 @@ sphinx:
     templates_path:
       - "_templates"
       - components
+    suppress_warnings: etoc.toctree
 
     # pygments_style: github
 
@@ -130,13 +131,13 @@ sphinx:
     # control pydantic model docs
     autodoc_pydantic_model_show_json: false
     autodoc_pydantic_model_show_field_summary: false
-    autodoc_pydantic_model_show_config: false
+    autodoc_pydantic_model_show_config_member: false
     autodoc_pydantic_model_show_config_summary: false
     autodoc_pydantic_model_show_validator_members: false
     autodoc_pydantic_model_member_order: bysource
     autodoc_pydantic_settings_show_json: false
     autodoc_pydantic_settings_show_field_summary: false
-    autodoc_pydantic_settings_show_config: false
+    autodoc_pydantic_settings_show_config_member: false
     autodoc_pydantic_settings_show_config_summary: false
     autodoc_pydantic_settings_show_validator_members: false
     autodoc_pydantic_settings_member_order: bysource
@@ -150,5 +151,5 @@ sphinx:
     - sphinx.ext.intersphinx
     - sphinx.ext.viewcode
     - sphinx.ext.autosummary
-    - sphinx_panels
+    - sphinx_design
     - sphinxcontrib.autodoc_pydantic

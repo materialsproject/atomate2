@@ -346,7 +346,7 @@ def get_zfile(
     directory_listing : list of Path
         A list of files in a directory.
     base_name : str
-        The base name of file file to find.
+        The base name of file to find.
     allow_missing : bool
         Whether to error if no version of the file (gzipped or un-gzipped) can be found.
 

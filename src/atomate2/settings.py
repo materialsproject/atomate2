@@ -121,7 +121,7 @@ class Atomate2Settings(BaseSettings):
         Load settings from file or environment variables.
 
         Loads settings from a root file if available and uses that as defaults in
-        place of built in defaults.
+        place of built-in defaults.
 
         This allows setting of the config file path through environment variables.
         """
@@ -130,8 +130,8 @@ class Atomate2Settings(BaseSettings):
         config_file_path: str = values.get("CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
 
         new_values = {}
-        if Path(config_file_path).exists():
-            new_values.update(loadfn(config_file_path))
+        if Path(config_file_path).expanduser().exists():
+            new_values.update(loadfn(Path(config_file_path).expanduser()))
 
         new_values.update(values)
         return new_values

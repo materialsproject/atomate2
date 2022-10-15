@@ -1,9 +1,8 @@
 """Schemas for defect documents."""
-from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, Callable, List, Tuple, Type
+from typing import Any, Callable, List, Optional, Tuple, Type, Union
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -41,17 +40,17 @@ class FiniteDifferenceDocument(BaseModel):
     @classmethod
     def from_directory(
         cls,
-        directory: str | Path,
-        ref_dir: str | Path | None = None,
-        distorted_dirs: List[str] | None = None,
-    ) -> FiniteDifferenceDocument:
+        directory: Union[str, Path],
+        ref_dir: Optional[Union[str, Path]] = None,
+        distorted_dirs: Optional[List[str]] = None,
+    ) -> "FiniteDifferenceDocument":
         """
-        Read the FintieDiff file.
+        Read the FiniteDiff file.
 
         Parameters
         ----------
         directory : str | Path
-            Path to the FintieDiff directory.
+            Path to the FiniteDiff directory.
         ref_dir : str | Path
             Directory where the reference W(0) wavefunction comes from.
         distorted_dirs : List[str | Path]
@@ -59,8 +58,8 @@ class FiniteDifferenceDocument(BaseModel):
 
         Returns
         -------
-        FintieDiffDocument
-            FintieDiffDocument object.
+        FiniteDiffDocument
+            FiniteDiffDocument object.
         """
         wswq_dir = Path(directory)
         files = list(Path(wswq_dir).glob("WSWQ.[0-9]*"))
@@ -202,12 +201,12 @@ class CCDDocument(BaseModel):
 
     @classmethod
     def from_entries(
-        cls: Type[CCDDocument],
+        cls: Type["CCDDocument"],
         entries1: List[ComputedStructureEntry],
         entries2: List[ComputedStructureEntry],
-        relaxed_uuid1: str | None = None,
-        relaxed_uuid2: str | None = None,
-    ) -> CCDDocument:
+        relaxed_uuid1: Optional[str] = None,
+        relaxed_uuid2: Optional[str] = None,
+    ) -> "CCDDocument":
         """
         Create a CCDTaskDocument from a list of distorted calculations.
 
@@ -224,8 +223,8 @@ class CCDDocument(BaseModel):
 
         """
 
-        def find_entry(entries, uuid) -> tuple[int, ComputedStructureEntry]:
-            """Find the entry with the given given UUID."""
+        def find_entry(entries, uuid) -> Tuple[int, ComputedStructureEntry]:
+            """Find the entry with the given UUID."""
             for itr, entry in enumerate(entries):
                 if entry.data["uuid"] == uuid:
                     return itr, entry
