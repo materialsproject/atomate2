@@ -1,5 +1,7 @@
 """Core QChem Flows"""
 
+from __future__ import annotations
+
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -64,12 +66,12 @@ class FrequencyFlatteningOptimizeMaker(Maker):
         Returns
         -------
         Flow
-            A flow containing two relaxations.
+            A flow containing two optimizations.
         """
-        freq1 = self.freq_maker1.make(molecule, prev_qchem_dir=prev_qchem_dir)
+        freq1 = self.freq_maker.make(molecule, prev_qchem_dir=prev_qchem_dir)
         freq1.name += " 1"
 
-        opt2 = self.opt_maker2.make(
+        opt2 = self.opt_maker.make(
             freq1.output.molecule, prev_qchem_dir=freq1.output.dir_name
         )
         opt2.name += " 2"

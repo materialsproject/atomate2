@@ -30,7 +30,7 @@ class QChemStatus(ValueEnum):
     Q-Chem Calculation State
     """
 
-    SUCESS = "successful"
+    SUCCESS = "successful"
     FAILED = "unsuccessful"
 
 
