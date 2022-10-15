@@ -137,7 +137,7 @@ class ForceMaker(BaseQChemMaker):
 @dataclass
 class TransitionStateMaker(BaseQChemMaker):
     """
-     Maker to create QChem transition state sructure optimization jobs.
+     Maker to create QChem transition state structure optimization jobs.
 
     Parameters
     ----------
