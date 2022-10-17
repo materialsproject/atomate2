@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import ClassVar, List, Optional, Sequence, Union
+from typing import ClassVar, Sequence
 
 from jobflow import job
 from pymatgen.core.structure import Structure
@@ -55,10 +55,10 @@ class NonSCFMaker(BaseAbinitMaker):
     @job
     def make(
         self,
-        structure: Optional[Structure] = None,
-        prev_outputs: Optional[Union[str, List[str]]] = None,
-        restart_from: Optional[Union[str, List[str]]] = None,
-        history: Optional[JobHistory] = None,
+        structure: Structure | None = None,
+        prev_outputs: str | list[str] | None = None,
+        restart_from: str | list[str] | None = None,
+        history: JobHistory | None = None,
         mode: str = "line",
     ):
         """

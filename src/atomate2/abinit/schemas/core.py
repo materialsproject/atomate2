@@ -107,7 +107,7 @@ class AbinitTaskDocument(StructureMetadata):
                 state = Status.SUCCESS
 
         except Exception as exc:
-            msg = "%s exception while parsing event_report:\n%s" % (cls, exc)
+            msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 
         abinit_input = load_abinit_input(dir_name)

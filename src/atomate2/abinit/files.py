@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from typing import Iterable, Tuple, Union
+from typing import Iterable
 
 from abipy.flowtk.utils import abi_extensions
 from monty.serialization import loadfn
@@ -44,7 +44,7 @@ def fname2ext(filepath):
 
 @auto_fileclient
 def out_to_in(
-    out_files: Iterable[Tuple[str, str]],
+    out_files: Iterable[tuple[str, str]],
     src_host: str | None = None,
     indir: Path | str = INDIR_NAME,
     file_client: FileClient | None = None,
@@ -111,7 +111,7 @@ def write_abinit_input_set(
     input_set_generator,
     prev_outputs=None,
     restart_from=None,
-    directory: Union[str, Path] = ".",
+    directory: str | Path = ".",
 ):
     """Write the abinit inputs for a given structure using a given generator.
 

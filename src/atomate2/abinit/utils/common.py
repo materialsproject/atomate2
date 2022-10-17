@@ -35,7 +35,7 @@ HISTORY_JSON = "history.json"
 logger = logging.getLogger(__name__)
 
 
-class ErrorCode(object):
+class ErrorCode:
     """Error code to classify the errors."""
 
     ERROR = "Error"
@@ -403,7 +403,5 @@ def get_event_report(ofile, mpiabort_file):
     # except parser.Error as exc:
     except Exception as exc:
         # Return a report with an error entry with info on the exception.
-        logger.critical(
-            "{}: Exception while parsing ABINIT events:\n {}".format(ofile, str(exc))
-        )
+        logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {str(exc)}")
         return parser.report_exception(ofile.path, exc)

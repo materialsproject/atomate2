@@ -7,7 +7,7 @@ import os
 import time
 from collections import namedtuple
 from dataclasses import dataclass, field, fields
-from typing import ClassVar, List, Optional, Sequence, Union
+from typing import ClassVar, Sequence
 
 import jobflow
 from abipy.flowtk.events import as_event_class
@@ -111,7 +111,7 @@ class BaseAbinitMaker(Maker):
 
     input_set_generator: AbinitInputGenerator
     name: str = "base abinit job"
-    wall_time: Optional[int] = None
+    wall_time: int | None = None
     run_abinit_kwargs: dict = field(default_factory=dict)
 
     # class variables
@@ -234,11 +234,11 @@ class BaseAbinitMaker(Maker):
     @job
     def make(
         self,
-        structure: Optional[Structure] = None,
-        prev_outputs: Optional[List[str]] = None,
-        restart_from: Optional[List[str]] = None,
-        history: Optional[JobHistory] = None,
-    ) -> Union[jobflow.Flow, jobflow.Job]:
+        structure: Structure | None = None,
+        prev_outputs: list[str] | None = None,
+        restart_from: list[str] | None = None,
+        history: JobHistory | None = None,
+    ) -> jobflow.Flow | jobflow.Job:
         """
         Return an ABINIT jobflow.Job.
 
@@ -300,7 +300,7 @@ class BaseAbinitMaker(Maker):
         task_document: AbinitTaskDocument,
         history: JobHistory,
         max_restarts: int = 5,
-        prev_outputs: Optional[List[str]] = None,
+        prev_outputs: list[str] | None = None,
     ):
         """Get new job to restart abinit calculation."""
         if task_document.state == Status.SUCCESS:
@@ -313,7 +313,7 @@ class BaseAbinitMaker(Maker):
             #  if we should throw an error.
             unconverged_error = UnconvergedError(
                 self,
-                msg="Unconverged after {} runs.".format(history.run_number),
+                msg=f"Unconverged after {history.run_number} runs.",
                 abinit_input=task_document.abinit_input,
                 history=history,
             )

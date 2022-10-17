@@ -548,7 +548,7 @@ def save_abinit_maker(maker):
 
     caller_frame = inspect.stack()[1]
     caller_filename_full = caller_frame.filename
-    with open(caller_filename_full, "r") as f:
+    with open(caller_filename_full) as f:
         script_str = f.read()
     git = shutil.which("git")
     author = None

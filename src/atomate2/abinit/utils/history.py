@@ -148,7 +148,7 @@ class JobHistory(collections.deque, MSONable):
         except AttributeError:
             exception_details = None
         except BaseException as e:
-            logger.error("Exception couldn't be serialized: {} ".format(e))
+            logger.error(f"Exception couldn't be serialized: {e} ")
             exception_details = None
         if exception_details:
             event_details["exception_details"] = exception_details

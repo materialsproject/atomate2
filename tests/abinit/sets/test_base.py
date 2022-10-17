@@ -78,10 +78,10 @@ class TestAbinitInputSet:
             assert os.path.isdir("testdir/tmpdata")
             assert "run.abi" in dirlist
             assert "abinit_input.json" in dirlist
-            with open("testdir/run.abi", "r") as f:
+            with open("testdir/run.abi") as f:
                 abistr = f.read()
                 assert "ecut" in abistr
-            with open("testdir/abinit_input.json", "r") as f:
+            with open("testdir/abinit_input.json") as f:
                 abijsonstr = f.read()
                 assert "@module" in abijsonstr
             with pytest.raises(FileExistsError):
@@ -123,7 +123,7 @@ class TestAbinitInputSet:
             assert os.path.exists(in_den)
             assert os.path.isfile(in_den)
             assert not os.path.islink(in_den)
-            with open("testdir/run.abi", "r") as f:
+            with open("testdir/run.abi") as f:
                 abistr = f.read()
                 assert "irdden 1" in abistr
             del ais.abinit_input["irdden"]
