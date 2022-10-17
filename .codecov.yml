@@ -6,9 +6,7 @@ comment:
   require_head: yes
 coverage:
   status:
-    project:
-      default:
-        only_pulls: true
+    project: off
     patch:
       default:
         only_pulls: true
