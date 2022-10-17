@@ -43,34 +43,34 @@ class SchemaTestData:
 class SiOptimizeDouble(SchemaTestData):
     folder = "Si_old_double_relax"
     task_files = {
-        "relax1": {
-            "vasprun_file": "vasprun.xml.relax1.gz",
-            "outcar_file": "OUTCAR.relax1.gz",
-            "volumetric_files": ["CHGCAR.relax1.gz"],
-            "contcar_file": "CONTCAR.relax1.gz",
-        },
         "relax2": {
             "vasprun_file": "vasprun.xml.relax2.gz",
             "outcar_file": "OUTCAR.relax2.gz",
             "volumetric_files": ["CHGCAR.relax2.gz"],
             "contcar_file": "CONTCAR.relax2.gz",
         },
+        "relax1": {
+            "vasprun_file": "vasprun.xml.relax1.gz",
+            "outcar_file": "OUTCAR.relax1.gz",
+            "volumetric_files": ["CHGCAR.relax1.gz"],
+            "contcar_file": "CONTCAR.relax1.gz",
+        },
     }
-    objects = {"relax1": []}
+    objects = {"relax2": []}
     task_doc = {
         "calcs_reversed": [
             {
                 "output": {
-                    "vbm": 5.6149,
-                    "cbm": 6.2649,
-                    "bandgap": 0.65,
+                    "vbm": 5.6147,
+                    "cbm": 6.2652,
+                    "bandgap": 0.6505,
                     "is_gap_direct": False,
                     "is_metal": False,
                     "transition": "(0.000,0.000,0.000)-(0.375,0.375,0.000)",
                     "direct_gap": 2.5561,
                     "run_stats": {
                         "average_memory": 0,
-                        "max_memory": 28640.0,
+                        "max_memory": 28096.0,
                         "cores": 16,
                     },
                 },
