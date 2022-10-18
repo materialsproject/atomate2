@@ -63,6 +63,12 @@ class StructureMetadata(BaseModel):
 
     symmetry: SymmetryData = Field(None, description="Symmetry data for this material")
 
+    structure: Structure = Field(
+        None,
+        title="Structure",
+        description="The crystalline structure as a pymatgen Structure",
+    )
+
     @classmethod
     def from_composition(
         cls: Type[T],
