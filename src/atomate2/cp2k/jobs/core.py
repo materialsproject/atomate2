@@ -105,7 +105,7 @@ class RelaxMaker(BaseCp2kMaker):
 class CellOptMaker(BaseCp2kMaker):
 
     name: str = "relax"
-    input_set_generator: Cp2kInputGenerator = field(default_factory=RelaxSetGenerator)
+    input_set_generator: Cp2kInputGenerator = field(default_factory=CellOptSetGenerator)
 
 @dataclass
 class HybridStaticMaker(BaseCp2kMaker):
