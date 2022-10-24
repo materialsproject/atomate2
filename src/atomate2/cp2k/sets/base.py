@@ -7,7 +7,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from tkinter import W
-from typing import Any, Iterable
+from typing import Any, Iterable, Dict
 
 import numpy as np
 from monty.io import zopen
@@ -164,7 +164,7 @@ class Cp2kInputGenerator(InputGenerator):
     use_structure_charge: bool = False
     sort_structure: bool = True
     symprec: float = SETTINGS.SYMPREC
-    force_gamma: bool = True
+    force_gamma: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_CP2K_SET)
 
     def __post_init__(self):
@@ -340,7 +340,7 @@ class Cp2kInputGenerator(InputGenerator):
             return kconfig
 
         explicit = (
-            kconfig.get("explicit", True)
+            kconfig.get("explicit", False)
             or len(kconfig.get("added_kpoints", [])) > 0
             or "zero_weighted_reciprocal_density" in kconfig
             or "zero_weighted_line_density" in kconfig
