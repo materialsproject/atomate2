@@ -1,34 +1,512 @@
-cp2k_input:
-
-  # Default QS behavior/precision
-  eps_default: 1.e-12
-  eps_pgf_orb: 1.e-16
-
-  # Default SCF Behavior is OT
-  ot: True
-  energy_gap: -1
-  eps_scf: 1.e-6
-  minimizer: DIIS
-  preconditioner: FULL_SINGLE_INVERSE
-  algorithm: IRAC
-  linesearch: 2PNT
-  rotation: True
-  occupation_preconditioner: False
-  smearing: True
-
-  # Default multigrid behavior
-  cutoff:  0 # Auto
-  rel_cutoff: 50
-  ngrids: 5
-  progression_factor: 3
-
-  # Default outputs are false
-  print_v_hartree: False
-  print_e_density: False
-  print_mo_cubes: False
-  print_dos: False
-  print_pdos: False
-  print_bandstructure: False
-
 KPOINTS:
   reciprocal_density: 64
+cp2k_input:
+  
+  basis_set_and_potential:
+    Ac:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ag:
+      aux_basis: admm-dz-q11
+      basis: TZVP-MOLOPT-PBE-GTH-q11
+      potential: GTH-PBE-q19
+    Al:
+      aux_basis: admm-dz-q3
+      basis: TZVP-MOLOPT-PBE-GTH-q3
+      potential: GTH-PBE-q3
+    Am:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ar:
+      aux_basis: admm-dz-q8
+      basis: TZVP-MOLOPT-PBE-GTH-q8
+      potential: GTH-PBE-q8
+    As:
+      aux_basis: admm-dz-q5
+      basis: TZVP-MOLOPT-PBE-GTH-q5
+      potential: GTH-PBE-q5
+    At:
+      aux_basis: admm-dz-q7
+      basis: TZVP-MOLOPT-PBE-GTH-q7
+      potential: GTH-PBE-q7
+    Au:
+      aux_basis: admm-dz-q11
+      basis: TZVP-MOLOPT-PBE-GTH-q11
+      potential: GTH-PBE-q19
+    B:
+      aux_basis: admm-dz-q3
+      basis: TZVP-MOLOPT-PBE-GTH-q3
+      potential: GTH-PBE-q3
+    Ba:
+      aux_basis: admm-dz-q10
+      basis: TZVP-MOLOPT-PBE-GTH-q10
+      potential: GTH-PBE-q10
+    Be:
+      aux_basis: admm-dz-q4
+      basis: TZVP-MOLOPT-PBE-GTH-q2
+      potential: GTH-PBE-q4
+    Bh:
+      aux_basis: null
+      basis: null
+      potential: null
+    Bi:
+      aux_basis: admm-dz-q5
+      basis: TZVP-MOLOPT-PBE-GTH-q5
+      potential: GTH-PBE-q5
+    Bk:
+      aux_basis: null
+      basis: null
+      potential: null
+    Br:
+      aux_basis: admm-dz-q7
+      basis: TZVP-MOLOPT-PBE-GTH-q7
+      potential: GTH-PBE-q7
+    C:
+      aux_basis: admm-dz-q4
+      basis: TZVP-MOLOPT-PBE-GTH-q4
+      potential: GTH-PBE-q4
+    Ca:
+      aux_basis: admm-dz-q10
+      basis: TZVP-MOLOPT-PBE-GTH-q10
+      potential: GTH-PBE-q10
+    Cd:
+      aux_basis: admm-dz-q12
+      basis: TZVP-MOLOPT-PBE-GTH-q12
+      potential: GTH-PBE-q12
+    Ce:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q30
+    Cf:
+      aux_basis: null
+      basis: null
+      potential: null
+    Cl:
+      aux_basis: admm-dz-q7
+      basis: TZVP-MOLOPT-PBE-GTH-q7
+      potential: GTH-PBE-q7
+    Cm:
+      aux_basis: null
+      basis: null
+      potential: null
+    Cn:
+      aux_basis: null
+      basis: null
+      potential: null
+    Co:
+      aux_basis: admm-dz-q17
+      basis: TZVP-MOLOPT-PBE-GTH-q17
+      potential: GTH-PBE-q17
+    Cr:
+      aux_basis: admm-dz-q14
+      basis: TZVP-MOLOPT-PBE-GTH-q14
+      potential: GTH-PBE-q14
+    Cs:
+      aux_basis: admm-dz-q9
+      basis: TZVP-MOLOPT-PBE-GTH-q9
+      potential: GTH-PBE-q9
+    Cu:
+      aux_basis: admm-dz-q11
+      basis: TZVP-MOLOPT-PBE-GTH-q11
+      potential: GTH-PBE-q19
+    Db:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ds:
+      aux_basis: null
+      basis: null
+      potential: null
+    Dy:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q20
+    Er:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q22
+    Es:
+      aux_basis: null
+      basis: null
+      potential: null
+    Eu:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q17
+    F:
+      aux_basis: admm-dz-q7
+      basis: TZVP-MOLOPT-PBE-GTH-q7
+      potential: GTH-PBE-q7
+    Fe:
+      aux_basis: admm-dz-q16
+      basis: TZVP-MOLOPT-PBE-GTH-q16
+      potential: GTH-PBE-q16
+    Fl:
+      aux_basis: null
+      basis: null
+      potential: null
+    Fm:
+      aux_basis: null
+      basis: null
+      potential: null
+    Fr:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ga:
+      aux_basis: admm-dz-q13
+      basis: TZVP-MOLOPT-PBE-GTH-q13
+      potential: GTH-PBE-q3
+    Gd:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q18
+    Ge:
+      aux_basis: admm-dz-q4
+      basis: TZVP-MOLOPT-PBE-GTH-q4
+      potential: GTH-PBE-q4
+    H:
+      aux_basis: admm-dz-q1
+      basis: TZVP-MOLOPT-PBE-GTH-q1
+      potential: GTH-PBE-q1
+    He:
+      aux_basis: admm-dz-q2
+      basis: TZVP-MOLOPT-PBE-GTH-q2
+      potential: GTH-PBE-q2
+    Hf:
+      aux_basis: admm-dz-q12
+      basis: TZVP-MOLOPT-PBE-GTH-q12
+      potential: GTH-PBE-q12
+    Hg:
+      aux_basis: admm-dz-q12
+      basis: TZVP-MOLOPT-PBE-GTH-q12
+      potential: GTH-PBE-q12
+    Ho:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q21
+    Hs:
+      aux_basis: null
+      basis: null
+      potential: null
+    I:
+      aux_basis: admm-dz-q7
+      basis: TZVP-MOLOPT-PBE-GTH-q7
+      potential: GTH-PBE-q7
+    In:
+      aux_basis: admm-dz-q13
+      basis: TZVP-MOLOPT-PBE-GTH-q13
+      potential: GTH-PBE-q3
+    Ir:
+      aux_basis: admm-dz-q17
+      basis: TZVP-MOLOPT-PBE-GTH-q17
+      potential: GTH-PBE-q9
+    K:
+      aux_basis: admm-dz-q9
+      basis: TZVP-MOLOPT-PBE-GTH-q9
+      potential: GTH-PBE-q9
+    Kr:
+      aux_basis: admm-dz-q8
+      basis: TZVP-MOLOPT-PBE-GTH-q8
+      potential: GTH-PBE-q8
+    La:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q11
+    Li:
+      aux_basis: admm-dz-q3
+      basis: TZVP-MOLOPT-PBE-GTH-q1
+      potential: GTH-PBE-q3
+    Lr:
+      aux_basis: null
+      basis: null
+      potential: null
+    Lu:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q25
+    Lv:
+      aux_basis: null
+      basis: null
+      potential: null
+    Mc:
+      aux_basis: null
+      basis: null
+      potential: null
+    Md:
+      aux_basis: null
+      basis: null
+      potential: null
+    Mg:
+      aux_basis: admm-dz-q10
+      basis: TZVP-MOLOPT-PBE-GTH-q10
+      potential: GTH-PBE-q2
+    Mn:
+      aux_basis: admm-dz-q15
+      basis: TZVP-MOLOPT-PBE-GTH-q15
+      potential: GTH-PBE-q15
+    Mo:
+      aux_basis: admm-dz-q14
+      basis: TZVP-MOLOPT-PBE-GTH-q14
+      potential: GTH-PBE-q14
+    Mt:
+      aux_basis: null
+      basis: null
+      potential: null
+    N:
+      aux_basis: admm-dz-q5
+      basis: TZVP-MOLOPT-PBE-GTH-q5
+      potential: GTH-PBE-q5
+    Na:
+      aux_basis: admm-dz-q9
+      basis: TZVP-MOLOPT-PBE-GTH-q1
+      potential: GTH-PBE-q9
+    Nb:
+      aux_basis: admm-dz-q13
+      basis: TZVP-MOLOPT-PBE-GTH-q13
+      potential: GTH-PBE-q13
+    Nd:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q14
+    Ne:
+      aux_basis: admm-dz-q8
+      basis: TZVP-MOLOPT-PBE-GTH-q8
+      potential: GTH-PBE-q8
+    Nh:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ni:
+      aux_basis: admm-dz-q18
+      basis: TZVP-MOLOPT-PBE-GTH-q18
+      potential: GTH-PBE-q18
+    'No':
+      aux_basis: null
+      basis: null
+      potential: null
+    Np:
+      aux_basis: null
+      basis: null
+      potential: null
+    O:
+      aux_basis: admm-dz-q6
+      basis: TZVP-MOLOPT-PBE-GTH-q6
+      potential: GTH-PBE-q6
+    Og:
+      aux_basis: null
+      basis: null
+      potential: null
+    Os:
+      aux_basis: admm-dz-q16
+      basis: TZVP-MOLOPT-PBE-GTH-q16
+      potential: GTH-PBE-q8
+    P:
+      aux_basis: admm-dz-q5
+      basis: TZVP-MOLOPT-PBE-GTH-q5
+      potential: GTH-PBE-q5
+    Pa:
+      aux_basis: null
+      basis: null
+      potential: null
+    Pb:
+      aux_basis: admm-dz-q4
+      basis: TZVP-MOLOPT-PBE-GTH-q4
+      potential: GTH-PBE-q4
+    Pd:
+      aux_basis: admm-dz-q18
+      basis: TZVP-MOLOPT-PBE-GTH-q18
+      potential: GTH-PBE-q18
+    Pm:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q15
+    Po:
+      aux_basis: admm-dz-q6
+      basis: TZVP-MOLOPT-PBE-GTH-q6
+      potential: GTH-PBE-q6
+    Pr:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q13
+    Pt:
+      aux_basis: admm-dz-q18
+      basis: TZVP-MOLOPT-PBE-GTH-q18
+      potential: GTH-PBE-q18
+    Pu:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ra:
+      aux_basis: null
+      basis: null
+      potential: null
+    Rb:
+      aux_basis: admm-dz-q9
+      basis: TZVP-MOLOPT-PBE-GTH-q9
+      potential: GTH-PBE-q9
+    Re:
+      aux_basis: admm-dz-q15
+      basis: TZVP-MOLOPT-PBE-GTH-q15
+      potential: GTH-PBE-q7
+    Rf:
+      aux_basis: null
+      basis: null
+      potential: null
+    Rg:
+      aux_basis: null
+      basis: null
+      potential: null
+    Rh:
+      aux_basis: admm-dz-q17
+      basis: TZVP-MOLOPT-PBE-GTH-q17
+      potential: GTH-PBE-q9
+    Rn:
+      aux_basis: admm-dz-q8
+      basis: TZVP-MOLOPT-PBE-GTH-q8
+      potential: GTH-PBE-q8
+    Ru:
+      aux_basis: admm-dz-q16
+      basis: TZVP-MOLOPT-PBE-GTH-q16
+      potential: GTH-PBE-q8
+    S:
+      aux_basis: admm-dz-q6
+      basis: TZVP-MOLOPT-PBE-GTH-q6
+      potential: GTH-PBE-q6
+    Sb:
+      aux_basis: admm-dz-q5
+      basis: TZVP-MOLOPT-PBE-GTH-q5
+      potential: GTH-PBE-q5
+    Sc:
+      aux_basis: admm-dz-q11
+      basis: TZVP-MOLOPT-PBE-GTH-q11
+      potential: GTH-PBE-q11
+    Se:
+      aux_basis: admm-dz-q6
+      basis: TZVP-MOLOPT-PBE-GTH-q6
+      potential: GTH-PBE-q6
+    Sg:
+      aux_basis: null
+      basis: null
+      potential: null
+    Si:
+      aux_basis: admm-dz-q4
+      basis: TZVP-MOLOPT-PBE-GTH-q4
+      potential: GTH-PBE-q4
+    Sm:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q16
+    Sn:
+      aux_basis: admm-dz-q4
+      basis: TZVP-MOLOPT-PBE-GTH-q4
+      potential: GTH-PBE-q4
+    Sr:
+      aux_basis: admm-dz-q10
+      basis: TZVP-MOLOPT-PBE-GTH-q10
+      potential: GTH-PBE-q10
+    Ta:
+      aux_basis: admm-dz-q13
+      basis: TZVP-MOLOPT-PBE-GTH-q13
+      potential: GTH-PBE-q5
+    Tb:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q19
+    Tc:
+      aux_basis: admm-dz-q15
+      basis: TZVP-MOLOPT-PBE-GTH-q15
+      potential: GTH-PBE-q15
+    Te:
+      aux_basis: admm-dz-q6
+      basis: TZVP-MOLOPT-PBE-GTH-q6
+      potential: GTH-PBE-q6
+    Th:
+      aux_basis: null
+      basis: null
+      potential: null
+    Ti:
+      aux_basis: admm-dz-q12
+      basis: TZVP-MOLOPT-PBE-GTH-q12
+      potential: GTH-PBE-q12
+    Tl:
+      aux_basis: admm-dz-q13
+      basis: TZVP-MOLOPT-PBE-GTH-q13
+      potential: GTH-PBE-q3
+    Tm:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q23
+    Ts:
+      aux_basis: null
+      basis: null
+      potential: null
+    U:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q14
+    V:
+      aux_basis: admm-dz-q13
+      basis: TZVP-MOLOPT-PBE-GTH-q13
+      potential: GTH-PBE-q13
+    W:
+      aux_basis: admm-dz-q14
+      basis: TZVP-MOLOPT-PBE-GTH-q14
+      potential: GTH-PBE-q6
+    Xe:
+      aux_basis: admm-dz-q8
+      basis: TZVP-MOLOPT-PBE-GTH-q8
+      potential: GTH-PBE-q8
+    Y:
+      aux_basis: admm-dz-q11
+      basis: TZVP-MOLOPT-PBE-GTH-q11
+      potential: GTH-PBE-q11
+    Yb:
+      aux_basis: null
+      basis: null
+      potential: GTH-PBE-q24
+    Zn:
+      aux_basis: admm-dz-q12
+      basis: TZVP-MOLOPT-PBE-GTH-q12
+      potential: GTH-PBE-q20
+    Zr:
+      aux_basis: admm-dz-q12
+      basis: TZVP-MOLOPT-PBE-GTH-q12
+      potential: GTH-PBE-q12
+    basis_file_names:
+    - BASIS_ADMM_UZH
+    - BASIS_MOLOPT_UZH
+    potential_filename: GTH_POTENTIALS
+  
+  # Precision
+  eps_default: 1.0e-12
+  eps_pgf_orb: 1.0e-16
+
+  #SCF Behavior
+  algorithm: IRAC
+  energy_gap: -1 # Auto
+  eps_scf: 1.0e-06
+  linesearch: 2PNT
+  minimizer: DIIS
+  occupation_preconditioner: false
+  ot: true
+  preconditioner: FULL_SINGLE_INVERSE
+  rotation: true
+  smearing: true
+
+  # Printing behavior
+  print_bandstructure: false
+  print_dos: false
+  print_e_density: false
+  print_mo_cubes: false
+  print_pdos: false
+  print_v_hartree: false
+
+  # Multigrid behavior
+  cutoff: 0 # Auto
+  ngrids: 5
+  progression_factor: 3
+  rel_cutoff: 50
+
