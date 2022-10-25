@@ -110,7 +110,7 @@ class HybridSetGenerator(Cp2kInputGenerator):
         if hasattr(structure, "lattice"):
             cutoff_radius = get_truncated_coulomb_cutoff(structure),
         else:
-            cutoff_radius = 0
+            cutoff_radius = 1
         updates = {
             "activate_hybrid": {
                 "hybrid_functional": self.hybrid_functional,
