@@ -208,6 +208,7 @@ class Cp2kInputGenerator(InputGenerator):
             kpoints = self._get_kpoints(structure, kpoints_updates)
         else:
             kpoints = None
+
         cp2k_input = self._get_input(
             structure,
             kpoints,
