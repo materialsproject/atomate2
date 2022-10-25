@@ -475,7 +475,7 @@ cp2k_input:
       aux_basis: admm-dz-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q12
-    basis_file_names:
+    basis_filenames:
     - BASIS_ADMM_UZH
     - BASIS_MOLOPT_UZH
     potential_filename: GTH_POTENTIALS
