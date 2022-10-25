@@ -2,7 +2,7 @@ KPOINTS:
   reciprocal_density: 64
 cp2k_input:
   
-  basis_set_and_potential:
+  basis_and_potential:
     Ac:
       aux_basis: null
       basis: null
