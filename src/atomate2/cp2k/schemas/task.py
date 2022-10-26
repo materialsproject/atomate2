@@ -102,7 +102,7 @@ class AtomicKind(BaseModel):
     element: str = Field(None, description="Element assigned to this atom kind")
     basis: str = Field(None, description="Basis set for this atom kind")
     potential: str = Field(None, description="Name of pseudopotential for this atom kind")
-    auxiliary_basis: int = Field(None, description="Auxiliary basis for this (if any) for this atom kind")
+    auxiliary_basis: str = Field(None, description="Auxiliary basis for this (if any) for this atom kind")
     ghost: bool = Field(None, description="Whether this atom kind is a ghost")
 
 
