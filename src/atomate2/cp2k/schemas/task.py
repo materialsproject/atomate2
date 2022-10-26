@@ -115,9 +115,9 @@ class AtomicKindSummary(BaseModel):
 
     @classmethod
     def from_atomic_kind_info(cls, atomic_kind_info: dict):
-        d = {}
+        d = {'atomic_kinds': {}}
         for kind, info in atomic_kind_info.items():
-            d[kind] = {
+            d['atomic_kinds'][kind] = {
                 'element': info['element'],
                 'basis': info['orbital_basis_set'],
                 'potential': info['pseudo_potential'],
