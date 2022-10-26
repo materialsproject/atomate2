@@ -197,13 +197,19 @@ class OutputSummary(BaseModel):
         OutputSummary
             The calculation output summary.
         """
+        if calc_doc.output.ionic_steps:
+            forces=calc_doc.output.ionic_steps[-1].get("forces", None)
+            stress=calc_doc.output.ionic_steps[-1].get("stress", None)
+        else:
+            forces=None
+            stress=None
         return cls(
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
-            forces=calc_doc.output.ionic_steps[-1].get("forces", None),
-            stress=calc_doc.output.ionic_steps[-1].get("stress", None),
+            forces=forces,
+            stress=stress,
         )
 
 
