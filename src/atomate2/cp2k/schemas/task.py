@@ -121,7 +121,7 @@ class AtomicKindSummary(BaseModel):
                 'element': info['element'],
                 'basis': info['orbital_basis_set'],
                 'potential': info['pseudo_potential'],
-                'auxiliary_basis': info['auxiliary_basis_set'],
+                'auxiliary_basis': info['auxiliary_basis_set'][0] if info['auxiliary_basis_set'] else None,
                 "ghost": True if info['pseudo_potential'] == 'NONE' else False,
             }
         return cls(**d)
