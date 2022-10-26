@@ -107,16 +107,13 @@ class HybridSetGenerator(Cp2kInputGenerator):
     hybrid_functional: str = "PBE0"
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
-        if hasattr(structure, "lattice"):
-            cutoff_radius = get_truncated_coulomb_cutoff(structure),
-        else:
-            cutoff_radius = 1
         updates = {
             "activate_hybrid": {
                 "hybrid_functional": self.hybrid_functional,
-                "cutoff_radius": cutoff_radius
             },
         }
+        if hasattr(structure, "lattice"):
+            updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
         return updates
 
 @dataclass
