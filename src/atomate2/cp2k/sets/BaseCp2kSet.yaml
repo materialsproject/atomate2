@@ -478,7 +478,7 @@ cp2k_input:
     basis_filenames:
     - BASIS_ADMM_UZH
     - BASIS_MOLOPT_UZH
-    potential_filename: POTENTIALS_UZH
+    potential_filename: POTENTIAL_UZH
   
   # Precision
   eps_default: 1.0e-12
