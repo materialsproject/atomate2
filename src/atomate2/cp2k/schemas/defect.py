@@ -6,11 +6,12 @@ from pydantic import validator
 from itertools import groupby
 
 from monty.json import MontyDecoder 
+from monty.tempfile import ScratchDir
 
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.analysis.defects.core import Defect
-from pymatgen.analysis.defects.corrections import get_correction
+from pymatgen.analysis.defects.corrections import get_freysoldt_correction, get_freysoldt2d_correction
 from pymatgen.analysis.defects.thermo import DefectEntry, DefectSiteFinder
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from atomate2 import SETTINGS
@@ -211,15 +212,7 @@ class DefectDoc(StructureMetadata):
         if dielectric:
             parameters['dielectric'] = dielectric
 
-        if parameters['charge_state']
-            corrections, plt_data = get_correction(
-                q=defect_entry.charge_state, dielectric=parameters['dielectric'], 
-                defect_locpot=parameters['defect_v_hartree'], 
-                bulk_locpot=parameters['bulk_v_hartree'], 
-                defect_frac_coords=parameters['defect_frac_sc_coords'],
-                )
-        else:
-            corrections = {}
+        corrections, metadata = cls.get_correction_from_parameters(parameters)
 
         sc_entry = ComputedStructureEntry(
             structure=parameters['final_defect_structure'], 
@@ -228,13 +221,57 @@ class DefectDoc(StructureMetadata):
 
         defect_entry = DefectEntry(
             defect=cls.get_defect_from_task(query=query, task=defect_task),
-            charge_state=,
+            charge_state=parameters['charge_state'],
             sc_entry=sc_entry,
             sc_defect_frac_coords=parameters['defect_frac_sc_coords'],
             corrections=corrections,
         )
 
         return defect_entry.as_dict()
+
+    @classmethod
+    def get_correction_from_parameters(cls, parameters) -> Tuple[Dict, Dict]:
+        corrections = {}
+        metadata = {}
+        for correction in ["get_freysoldt_correction", "get_freysoldt2d_correction"]:
+            c, m = getattr(cls, correction)(parameters)
+            corrections.update(c)
+            metadata.update(m)
+        return corrections, metadata
+
+    @classmethod
+    def get_freysold_correction(cls, parameters) -> Tuple[Dict, Dict]:
+        if parameters['charge_state'] and not parameters.get("2d"):
+            return get_freysoldt_correction(
+                q=parameters['charge_state'], dielectric=parameters['dielectric'], 
+                defect_locpot=parameters['defect_v_hartree'], 
+                bulk_locpot=parameters['bulk_v_hartree'], 
+                defect_frac_coords=parameters['defect_frac_sc_coords'],
+                )
+        return {}, {}
+    
+    @classmethod
+    def get_freysoldt2d_correction(cls, parameters):
+
+        from pymatgen.io.vasp.outputs import VolumetricData as VaspVolumetricData
+
+        if parameters['charge_state'] and parameters.get("2d"):
+            eps_parallel = (parameters['dielectric'][0][0] + parameters['dielectric'][1][1]) / 2
+            eps_perp = parameters['dielectric'][2][2]
+            dielectric = (eps_parallel - 1) / (1 - 1/eps_perp)
+            with ScratchDir('.'):
+                
+                lref = VaspVolumetricData(structure=parameters['bulk_locpot'].structure, data=parameters['bulk_locpot'].data)
+                ldef = VaspVolumetricData(structure=parameters['defect_locpot'].structure, data=parameters['defect_locpot'].data)
+                lref.write_file("LOCPOT.ref")
+                ldef.write_file("LOCPOT.def")
+
+                return get_freysoldt2d_correction(
+                    q=parameters['charge_state'], dielectric=dielectric, defect_locpot="LOCPOT.def", 
+                    bulk_locpot="LOCPOT.ref", defect_frac_coords=parameters['defect_frac_sc_coords'], 
+                    energy_cutoff=250, slab_buffer=2
+                    )
+        return {}, {}
 
     @classmethod
     def get_defect_from_task(cls, query, task):
@@ -272,70 +309,13 @@ class DefectDoc(StructureMetadata):
             'final_defect_structure': final_defect_structure,
             'vbm': bulk_task['output']['vbm'],
             'cbm': bulk_task['output']['cbm'],
+            'charge_state': defect_task.output.structure.charge,
             'defect_frac_sc_coords': defect_frac_sc_coords,
             'defect_v_hartree': defect_task.cp2k_objects['v_hartree'], # TODO CP2K spec name
             'bulk_v_hartree': bulk_task.cp2k_objects['v_hartree'], # TODO CP2K spec name
         }
 
         return parameters
-
-
-# TODO Some of this should be done by DefectCompatibility,
-# but it's not clear how to do that since 2d materials 
-# are not tagged in any particular way to allow defect compatibility
-# to decide which correction to apply
-class DefectDoc2d(DefectDoc):
-    """
-    DefectDoc subclass for 2D defects
-    """
-
-    @classmethod
-    def get_defect_entry_from_tasks(cls, defect_task, bulk_task, dielectric=None, query='transformations.history.0.defect'):
-        """
-        Get defect entry from defect and bulk tasks. 
-        Args:
-            defect_task: task dict for the defect calculation
-            bulk_task: task dict for the bulk calculation
-            dielectric: dielectric tensor for the defect calculation
-            query: query string for defect entry
-        """
-        parameters = cls.get_parameters_from_tasks(defect_task=defect_task, bulk_task=bulk_task)
-        if dielectric:
-            eps_parallel = (dielectric[0][0] + dielectric[1][1]) / 2
-            eps_perp = dielectric[2][2]
-            parameters['dielectric'] = (eps_parallel - 1) / (1 - 1/eps_perp)
-
-        defect_entry = DefectEntry(
-            cls.get_defect_from_task(query=query, task=defect_task),
-            uncorrected_energy=parameters.pop('defect_energy') - parameters.pop('bulk_energy'),
-            parameters=parameters,
-            entry_id=parameters.pop('entry_id')
-        )
-
-        DefectCompatibility().process_entry(defect_entry, perform_corrections=False)
-        with ScratchDir('.'):
-            fc = FreysoldtCorrection2d(
-                    defect_entry.parameters.get('dielectric'), 
-                    "LOCPOT.ref", "LOCPOT.def", encut=520, buffer=2
-                ) 
-            lref = VolumetricData(
-                structure=Structure.from_dict(bulk_task['input']['structure']), 
-                data={'total': MontyDecoder().process_decoded(bulk_task['v_hartree'])}
-            )
-            ldef = VolumetricData(
-                structure=Structure.from_dict(defect_task['input']['structure']), 
-                data={'total': MontyDecoder().process_decoded(defect_task['v_hartree'])}
-            )
-            lref.write_file("LOCPOT.ref")
-            ldef.write_file("LOCPOT.def")
-            ecorr = fc.get_correction(defect_entry)
-            defect_entry.corrections.update(ecorr)
-            defect_entry.parameters['freysoldt2d_meta'] = fc.metadata
-
-        defect_entry_as_dict = defect_entry.as_dict()
-        defect_entry_as_dict['task_id'] = defect_entry_as_dict['entry_id']  # this seemed necessary for legacy db
-
-        return defect_entry
 
 def unpack(query, d):
     if not query:

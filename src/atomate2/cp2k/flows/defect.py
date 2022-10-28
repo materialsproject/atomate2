@@ -78,32 +78,34 @@ class FormationEnergyMaker(Maker):
     force_diagonal: bool = field(default=False)
 
     def __post_init__(self):
-        if self.run_bulk:
-            if self.run_bulk == 'relax':
-                if self.hybrid_functional:
-                    self.bulk_maker = HybridCellOptFlowMaker(
-                        initialize_with_pbe=self.initialize_with_pbe,
-                        hybrid_functional=self.hybrid_functional,
-                        hybrid_maker=HybridCellOptMaker(
-                            input_set_generator=DefectHybridCellOptSetGenerator()
+        if self.run_bulk == 'relax':
+            if self.hybrid_functional:
+                self.bulk_maker = HybridCellOptFlowMaker(
+                    initialize_with_pbe=self.initialize_with_pbe,
+                    hybrid_functional=self.hybrid_functional,
+                    hybrid_maker=HybridCellOptMaker(
+                        input_set_generator=DefectHybridCellOptSetGenerator()
                         )
+                    )
+            else:
+                self.bulk_maker = CellOptMaker(
+                    input_set_generator=DefectCellOptSetGenerator()
+                    )
+        elif self.run_bulk == "static":
+            if self.hybrid_functional:
+                self.bulk_maker = HybridStaticFlowMaker( 
+                    hybrid_functional=self.hybrid_functional,
+                    hybrid_maker=HybridStaticMaker(
+                        input_set_generator=DefectHybridStaticSetGenerator()
                         )
-                else:
-                    self.bulk_maker = CellOptMaker(
-                        input_set_generator=DefectCellOptSetGenerator()
-                        )
-            elif self.run_bulk == "static":
-                if self.hybrid_functional:
-                    self.bulk_maker = HybridStaticFlowMaker( 
-                        hybrid_functional=self.hybrid_functional,
-                        hybrid_maker=HybridStaticMaker(
-                            input_set_generator=DefectHybridStaticSetGenerator()
-                        )
-                        )
-                else:
-                    self.bulk_maker = StaticMaker(
-                        input_set_generator=DefectStaticSetGenerator()
-                        )
+                    )
+            else:
+                self.bulk_maker = StaticMaker(
+                    input_set_generator=DefectStaticSetGenerator()
+                    )
+
+        # TODO Can probably put this somewhere else?
+        self.bulk_maker.task_document_kwargs.update({"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)})
 
         if self.hybrid_functional:
             self.def_maker = HybridRelaxFlowMaker(
@@ -158,12 +160,7 @@ class FormationEnergyMaker(Maker):
         for defect in defects:
             chgs = defect.get_charge_states() if run_all_charges else [0]
             for charge in chgs:
-                # write some provenances data in info.json file
-                info = {"defect": deepcopy(defect), "supercell_matrix": sc_mat}
                 defect_job = self.def_maker.make(defect=deepcopy(defect), charge=charge)
-                defect_job.update_maker_kwargs(
-                    {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
-                )
                 jobs.append(defect_job)
                 defect_outputs[defect.name][int(charge)] = (defect, defect_job.output)
 

@@ -8,11 +8,11 @@ cp2k_input:
       basis: null
       potential: null
     Ag:
-      aux_basis: admm-dz-q11
+      aux_basis: admm-tzp-q11
       basis: TZVP-MOLOPT-PBE-GTH-q11
       potential: GTH-PBE-q19
     Al:
-      aux_basis: admm-dz-q3
+      aux_basis: admm-tzp-q3
       basis: TZVP-MOLOPT-PBE-GTH-q3
       potential: GTH-PBE-q3
     Am:
@@ -20,31 +20,31 @@ cp2k_input:
       basis: null
       potential: null
     Ar:
-      aux_basis: admm-dz-q8
+      aux_basis: admm-tzp-q8
       basis: TZVP-MOLOPT-PBE-GTH-q8
       potential: GTH-PBE-q8
     As:
-      aux_basis: admm-dz-q5
+      aux_basis: admm-tzp-q5
       basis: TZVP-MOLOPT-PBE-GTH-q5
       potential: GTH-PBE-q5
     At:
-      aux_basis: admm-dz-q7
+      aux_basis: admm-tzp-q7
       basis: TZVP-MOLOPT-PBE-GTH-q7
       potential: GTH-PBE-q7
     Au:
-      aux_basis: admm-dz-q11
+      aux_basis: admm-tzp-q11
       basis: TZVP-MOLOPT-PBE-GTH-q11
       potential: GTH-PBE-q19
     B:
-      aux_basis: admm-dz-q3
+      aux_basis: admm-tzp-q3
       basis: TZVP-MOLOPT-PBE-GTH-q3
       potential: GTH-PBE-q3
     Ba:
-      aux_basis: admm-dz-q10
+      aux_basis: admm-tzp-q10
       basis: TZVP-MOLOPT-PBE-GTH-q10
       potential: GTH-PBE-q10
     Be:
-      aux_basis: admm-dz-q4
+      aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q2
       potential: GTH-PBE-q4
     Bh:
@@ -52,7 +52,7 @@ cp2k_input:
       basis: null
       potential: null
     Bi:
-      aux_basis: admm-dz-q5
+      aux_basis: admm-tzp-q5
       basis: TZVP-MOLOPT-PBE-GTH-q5
       potential: GTH-PBE-q5
     Bk:
@@ -60,19 +60,19 @@ cp2k_input:
       basis: null
       potential: null
     Br:
-      aux_basis: admm-dz-q7
+      aux_basis: admm-tzp-q7
       basis: TZVP-MOLOPT-PBE-GTH-q7
       potential: GTH-PBE-q7
     C:
-      aux_basis: admm-dz-q4
+      aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q4
       potential: GTH-PBE-q4
     Ca:
-      aux_basis: admm-dz-q10
+      aux_basis: admm-tzp-q10
       basis: TZVP-MOLOPT-PBE-GTH-q10
       potential: GTH-PBE-q10
     Cd:
-      aux_basis: admm-dz-q12
+      aux_basis: admm-tzp-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q12
     Ce:
@@ -84,7 +84,7 @@ cp2k_input:
       basis: null
       potential: null
     Cl:
-      aux_basis: admm-dz-q7
+      aux_basis: admm-tzp-q7
       basis: TZVP-MOLOPT-PBE-GTH-q7
       potential: GTH-PBE-q7
     Cm:
@@ -96,19 +96,19 @@ cp2k_input:
       basis: null
       potential: null
     Co:
-      aux_basis: admm-dz-q17
+      aux_basis: admm-tzp-q17
       basis: TZVP-MOLOPT-PBE-GTH-q17
       potential: GTH-PBE-q17
     Cr:
-      aux_basis: admm-dz-q14
+      aux_basis: admm-tzp-q14
       basis: TZVP-MOLOPT-PBE-GTH-q14
       potential: GTH-PBE-q14
     Cs:
-      aux_basis: admm-dz-q9
+      aux_basis: admm-tzp-q9
       basis: TZVP-MOLOPT-PBE-GTH-q9
       potential: GTH-PBE-q9
     Cu:
-      aux_basis: admm-dz-q11
+      aux_basis: admm-tzp-q11
       basis: TZVP-MOLOPT-PBE-GTH-q11
       potential: GTH-PBE-q19
     Db:
@@ -136,11 +136,11 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q17
     F:
-      aux_basis: admm-dz-q7
+      aux_basis: admm-tzp-q7
       basis: TZVP-MOLOPT-PBE-GTH-q7
       potential: GTH-PBE-q7
     Fe:
-      aux_basis: admm-dz-q16
+      aux_basis: admm-tzp-q16
       basis: TZVP-MOLOPT-PBE-GTH-q16
       potential: GTH-PBE-q16
     Fl:
@@ -156,7 +156,7 @@ cp2k_input:
       basis: null
       potential: null
     Ga:
-      aux_basis: admm-dz-q13
+      aux_basis: admm-tzp-q13
       basis: TZVP-MOLOPT-PBE-GTH-q13
       potential: GTH-PBE-q3
     Gd:
@@ -164,23 +164,23 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q18
     Ge:
-      aux_basis: admm-dz-q4
+      aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q4
       potential: GTH-PBE-q4
     H:
-      aux_basis: admm-dz-q1
+      aux_basis: admm-tzp-q1
       basis: TZVP-MOLOPT-PBE-GTH-q1
       potential: GTH-PBE-q1
     He:
-      aux_basis: admm-dz-q2
+      aux_basis: admm-tzp-q2
       basis: TZVP-MOLOPT-PBE-GTH-q2
       potential: GTH-PBE-q2
     Hf:
-      aux_basis: admm-dz-q12
+      aux_basis: admm-tzp-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q12
     Hg:
-      aux_basis: admm-dz-q12
+      aux_basis: admm-tzp-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q12
     Ho:
@@ -192,23 +192,23 @@ cp2k_input:
       basis: null
       potential: null
     I:
-      aux_basis: admm-dz-q7
+      aux_basis: admm-tzp-q7
       basis: TZVP-MOLOPT-PBE-GTH-q7
       potential: GTH-PBE-q7
     In:
-      aux_basis: admm-dz-q13
+      aux_basis: admm-tzp-q13
       basis: TZVP-MOLOPT-PBE-GTH-q13
       potential: GTH-PBE-q3
     Ir:
-      aux_basis: admm-dz-q17
+      aux_basis: admm-tzp-q17
       basis: TZVP-MOLOPT-PBE-GTH-q17
       potential: GTH-PBE-q9
     K:
-      aux_basis: admm-dz-q9
+      aux_basis: admm-tzp-q9
       basis: TZVP-MOLOPT-PBE-GTH-q9
       potential: GTH-PBE-q9
     Kr:
-      aux_basis: admm-dz-q8
+      aux_basis: admm-tzp-q8
       basis: TZVP-MOLOPT-PBE-GTH-q8
       potential: GTH-PBE-q8
     La:
@@ -216,7 +216,7 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q11
     Li:
-      aux_basis: admm-dz-q3
+      aux_basis: admm-tzp-q3
       basis: TZVP-MOLOPT-PBE-GTH-q1
       potential: GTH-PBE-q3
     Lr:
@@ -240,15 +240,15 @@ cp2k_input:
       basis: null
       potential: null
     Mg:
-      aux_basis: admm-dz-q10
+      aux_basis: admm-tzp-q10
       basis: TZVP-MOLOPT-PBE-GTH-q10
       potential: GTH-PBE-q2
     Mn:
-      aux_basis: admm-dz-q15
+      aux_basis: admm-tzp-q15
       basis: TZVP-MOLOPT-PBE-GTH-q15
       potential: GTH-PBE-q15
     Mo:
-      aux_basis: admm-dz-q14
+      aux_basis: admm-tzp-q14
       basis: TZVP-MOLOPT-PBE-GTH-q14
       potential: GTH-PBE-q14
     Mt:
@@ -256,15 +256,15 @@ cp2k_input:
       basis: null
       potential: null
     N:
-      aux_basis: admm-dz-q5
+      aux_basis: admm-tzp-q5
       basis: TZVP-MOLOPT-PBE-GTH-q5
       potential: GTH-PBE-q5
     Na:
-      aux_basis: admm-dz-q9
+      aux_basis: admm-tzp-q9
       basis: TZVP-MOLOPT-PBE-GTH-q1
       potential: GTH-PBE-q9
     Nb:
-      aux_basis: admm-dz-q13
+      aux_basis: admm-tzp-q13
       basis: TZVP-MOLOPT-PBE-GTH-q13
       potential: GTH-PBE-q13
     Nd:
@@ -272,7 +272,7 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q14
     Ne:
-      aux_basis: admm-dz-q8
+      aux_basis: admm-tzp-q8
       basis: TZVP-MOLOPT-PBE-GTH-q8
       potential: GTH-PBE-q8
     Nh:
@@ -280,7 +280,7 @@ cp2k_input:
       basis: null
       potential: null
     Ni:
-      aux_basis: admm-dz-q18
+      aux_basis: admm-tzp-q18
       basis: TZVP-MOLOPT-PBE-GTH-q18
       potential: GTH-PBE-q18
     'No':
@@ -292,7 +292,7 @@ cp2k_input:
       basis: null
       potential: null
     O:
-      aux_basis: admm-dz-q6
+      aux_basis: admm-tzp-q6
       basis: TZVP-MOLOPT-PBE-GTH-q6
       potential: GTH-PBE-q6
     Og:
@@ -300,11 +300,11 @@ cp2k_input:
       basis: null
       potential: null
     Os:
-      aux_basis: admm-dz-q16
+      aux_basis: admm-tzp-q16
       basis: TZVP-MOLOPT-PBE-GTH-q16
       potential: GTH-PBE-q8
     P:
-      aux_basis: admm-dz-q5
+      aux_basis: admm-tzp-q5
       basis: TZVP-MOLOPT-PBE-GTH-q5
       potential: GTH-PBE-q5
     Pa:
@@ -312,11 +312,11 @@ cp2k_input:
       basis: null
       potential: null
     Pb:
-      aux_basis: admm-dz-q4
+      aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q4
       potential: GTH-PBE-q4
     Pd:
-      aux_basis: admm-dz-q18
+      aux_basis: admm-tzp-q18
       basis: TZVP-MOLOPT-PBE-GTH-q18
       potential: GTH-PBE-q18
     Pm:
@@ -324,7 +324,7 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q15
     Po:
-      aux_basis: admm-dz-q6
+      aux_basis: admm-tzp-q6
       basis: TZVP-MOLOPT-PBE-GTH-q6
       potential: GTH-PBE-q6
     Pr:
@@ -332,7 +332,7 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q13
     Pt:
-      aux_basis: admm-dz-q18
+      aux_basis: admm-tzp-q18
       basis: TZVP-MOLOPT-PBE-GTH-q18
       potential: GTH-PBE-q18
     Pu:
@@ -344,11 +344,11 @@ cp2k_input:
       basis: null
       potential: null
     Rb:
-      aux_basis: admm-dz-q9
+      aux_basis: admm-tzp-q9
       basis: TZVP-MOLOPT-PBE-GTH-q9
       potential: GTH-PBE-q9
     Re:
-      aux_basis: admm-dz-q15
+      aux_basis: admm-tzp-q15
       basis: TZVP-MOLOPT-PBE-GTH-q15
       potential: GTH-PBE-q7
     Rf:
@@ -360,31 +360,31 @@ cp2k_input:
       basis: null
       potential: null
     Rh:
-      aux_basis: admm-dz-q17
+      aux_basis: admm-tzp-q17
       basis: TZVP-MOLOPT-PBE-GTH-q17
       potential: GTH-PBE-q9
     Rn:
-      aux_basis: admm-dz-q8
+      aux_basis: admm-tzp-q8
       basis: TZVP-MOLOPT-PBE-GTH-q8
       potential: GTH-PBE-q8
     Ru:
-      aux_basis: admm-dz-q16
+      aux_basis: admm-tzp-q16
       basis: TZVP-MOLOPT-PBE-GTH-q16
       potential: GTH-PBE-q8
     S:
-      aux_basis: admm-dz-q6
+      aux_basis: admm-tzp-q6
       basis: TZVP-MOLOPT-PBE-GTH-q6
       potential: GTH-PBE-q6
     Sb:
-      aux_basis: admm-dz-q5
+      aux_basis: admm-tzp-q5
       basis: TZVP-MOLOPT-PBE-GTH-q5
       potential: GTH-PBE-q5
     Sc:
-      aux_basis: admm-dz-q11
+      aux_basis: admm-tzp-q11
       basis: TZVP-MOLOPT-PBE-GTH-q11
       potential: GTH-PBE-q11
     Se:
-      aux_basis: admm-dz-q6
+      aux_basis: admm-tzp-q6
       basis: TZVP-MOLOPT-PBE-GTH-q6
       potential: GTH-PBE-q6
     Sg:
@@ -392,7 +392,7 @@ cp2k_input:
       basis: null
       potential: null
     Si:
-      aux_basis: admm-dz-q4
+      aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q4
       potential: GTH-PBE-q4
     Sm:
@@ -400,15 +400,15 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q16
     Sn:
-      aux_basis: admm-dz-q4
+      aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q4
       potential: GTH-PBE-q4
     Sr:
-      aux_basis: admm-dz-q10
+      aux_basis: admm-tzp-q10
       basis: TZVP-MOLOPT-PBE-GTH-q10
       potential: GTH-PBE-q10
     Ta:
-      aux_basis: admm-dz-q13
+      aux_basis: admm-tzp-q13
       basis: TZVP-MOLOPT-PBE-GTH-q13
       potential: GTH-PBE-q5
     Tb:
@@ -416,11 +416,11 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q19
     Tc:
-      aux_basis: admm-dz-q15
+      aux_basis: admm-tzp-q15
       basis: TZVP-MOLOPT-PBE-GTH-q15
       potential: GTH-PBE-q15
     Te:
-      aux_basis: admm-dz-q6
+      aux_basis: admm-tzp-q6
       basis: TZVP-MOLOPT-PBE-GTH-q6
       potential: GTH-PBE-q6
     Th:
@@ -428,11 +428,11 @@ cp2k_input:
       basis: null
       potential: null
     Ti:
-      aux_basis: admm-dz-q12
+      aux_basis: admm-tzp-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q12
     Tl:
-      aux_basis: admm-dz-q13
+      aux_basis: admm-tzp-q13
       basis: TZVP-MOLOPT-PBE-GTH-q13
       potential: GTH-PBE-q3
     Tm:
@@ -448,19 +448,19 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q14
     V:
-      aux_basis: admm-dz-q13
+      aux_basis: admm-tzp-q13
       basis: TZVP-MOLOPT-PBE-GTH-q13
       potential: GTH-PBE-q13
     W:
-      aux_basis: admm-dz-q14
+      aux_basis: admm-tzp-q14
       basis: TZVP-MOLOPT-PBE-GTH-q14
       potential: GTH-PBE-q6
     Xe:
-      aux_basis: admm-dz-q8
+      aux_basis: admm-tzp-q8
       basis: TZVP-MOLOPT-PBE-GTH-q8
       potential: GTH-PBE-q8
     Y:
-      aux_basis: admm-dz-q11
+      aux_basis: admm-tzp-q11
       basis: TZVP-MOLOPT-PBE-GTH-q11
       potential: GTH-PBE-q11
     Yb:
@@ -468,11 +468,11 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q24
     Zn:
-      aux_basis: admm-dz-q12
+      aux_basis: admm-tzp-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q20
     Zr:
-      aux_basis: admm-dz-q12
+      aux_basis: admm-tzp-q12
       basis: TZVP-MOLOPT-PBE-GTH-q12
       potential: GTH-PBE-q12
     basis_filenames:
