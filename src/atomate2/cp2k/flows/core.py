@@ -217,15 +217,14 @@ class HybridFlowMaker(Maker):
     def __post_init__(self):
         self.hybrid_maker.hybrid_functional = self.hybrid_functional
 
-    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None) -> Job:
+    def make(self, *args, **kwargs) -> Flow:
         jobs = []
         if self.initialize_with_pbe:
-            initialization = self.initialize_maker.make(structure, prev_cp2k_dir)
+            initialization = self.initialize_maker.make(*args, **kwargs)
             jobs.append(initialization)
-        hyb = self.hybrid_maker.make(
-            initialization.output.structure if self.initialize_with_pbe else structure, 
-            prev_cp2k_dir=initialization.output.dir_name if self.initialize_with_pbe else prev_cp2k_dir
-        ) 
+            hyb = self.hybrid_maker.make(initialization.output.structure, prev_cp2k_dir=initialization.output.dir_name)
+        else:
+            hyb = self.hybrid_maker.make(*args, **kwargs)
         jobs.append(hyb)
         return Flow(jobs, output=hyb.output, name=self.name)
 

@@ -40,6 +40,7 @@ from atomate2.cp2k.flows.core import HybridStaticFlowMaker, HybridRelaxFlowMaker
 
 logger = logging.getLogger(__name__)
 
+
 # TODO close to being able to put this in common. Just need a switch that decides which core flow/job to use based on software
 @dataclass
 class FormationEnergyMaker(Maker):
@@ -84,35 +85,36 @@ class FormationEnergyMaker(Maker):
                     initialize_with_pbe=self.initialize_with_pbe,
                     hybrid_functional=self.hybrid_functional,
                     hybrid_maker=HybridCellOptMaker(
-                        input_set_generator=DefectHybridCellOptSetGenerator()
+                        input_set_generator=DefectHybridCellOptSetGenerator(),
+                        task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
                         )
                     )
             else:
                 self.bulk_maker = CellOptMaker(
-                    input_set_generator=DefectCellOptSetGenerator()
+                    input_set_generator=DefectCellOptSetGenerator(),
+                    task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
                     )
         elif self.run_bulk == "static":
             if self.hybrid_functional:
                 self.bulk_maker = HybridStaticFlowMaker( 
                     hybrid_functional=self.hybrid_functional,
                     hybrid_maker=HybridStaticMaker(
-                        input_set_generator=DefectHybridStaticSetGenerator()
+                        input_set_generator=DefectHybridStaticSetGenerator(),
+                        task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
                         )
                     )
             else:
                 self.bulk_maker = StaticMaker(
-                    input_set_generator=DefectStaticSetGenerator()
+                    input_set_generator=DefectStaticSetGenerator(),
+                    task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
                     )
-
-        # TODO Can probably put this somewhere else?
-        self.bulk_maker.task_document_kwargs.update({"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)})
 
         if self.hybrid_functional:
             self.def_maker = HybridRelaxFlowMaker(
                 hybrid_functional=self.hybrid_functional,
                 initialize_with_pbe=self.initialize_with_pbe,
                 initialize_maker=DefectStaticMaker(),
-                hybrid_maker=HybridRelaxMaker()
+                hybrid_maker=DefectHybridRelaxMaker(),
             )
         else:
             self.def_maker = DefectRelaxMaker()
@@ -160,21 +162,24 @@ class FormationEnergyMaker(Maker):
         for defect in defects:
             chgs = defect.get_charge_states() if run_all_charges else [0]
             for charge in chgs:
-                defect_job = self.def_maker.make(defect=deepcopy(defect), charge=charge)
+                defect_job = self.def_maker.make(deepcopy(defect), charge)
                 jobs.append(defect_job)
                 defect_outputs[defect.name][int(charge)] = (defect, defect_job.output)
 
-        jobs.append(collect_defect_outputs(
-            defect_outputs=defect_outputs,
-            bulk_output=bulk_job.output,
-            dielectric=dielectric
-            )
-        )
+        if self.run_bulk and defects:
+            collect_job = collect_defect_outputs(
+                defect_outputs=defect_outputs,
+                bulk_output=bulk_job.output if self.run_bulk else None,
+                dielectric=dielectric
+                )
+            jobs.append(collect_job)
+        else:
+            collect_job = None
 
         return Flow(
             jobs=jobs,
             name=self.name,
-            output=jobs[-1].output,
+            output=jobs[-1].output if collect_job else None,
         )
 
 # TODO this is totally code agnostic and should be in common

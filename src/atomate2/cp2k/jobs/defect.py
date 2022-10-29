@@ -9,6 +9,7 @@ from copy import deepcopy
 from tkinter import W
 from numpy.typing import NDArray
 
+from pymatgen.core import Structure
 from pymatgen.analysis.defects.core import Defect, Vacancy
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.defect import (
@@ -36,21 +37,32 @@ class BaseDefectMaker(BaseCp2kMaker):
     force_diagonal: bool = field(default=False)
 
     @cp2k_job
-    def make(self, defect: Defect, charge: int = 0, prev_cp2k_dir: str | Path | None = None):
-        if isinstance(defect, Vacancy):
-            defect = GhostVacancy(
-                structure=defect.structure, site=defect.site,
-                multiplicity=defect.multiplicity, oxi_state=defect.oxi_state,
-                symprec=defect.symprec, angle_tolerance=defect.angle_tolerance
-                )
-        structure = defect.get_supercell_structure(
-            sc_mat=self.supercell_matrix, 
-            dummy_species=None, 
-            min_atoms=self.min_atoms,
-            max_atoms=self.max_atoms,
-            min_length=self.min_length,
-            force_diagonal=self.force_diagonal,
-        )
+    def make(self, defect: Defect | Structure, charge: int = 0, prev_cp2k_dir: str | Path | None = None):
+        if isinstance(defect, Defect):
+            if isinstance(defect, Vacancy):
+                defect = GhostVacancy(
+                    structure=defect.structure, site=defect.site,
+                    multiplicity=defect.multiplicity, oxi_state=defect.oxi_state,
+                    symprec=defect.symprec, angle_tolerance=defect.angle_tolerance
+                    )
+            structure = defect.get_supercell_structure(
+                sc_mat=self.supercell_matrix, 
+                dummy_species=None, 
+                min_atoms=self.min_atoms,
+                max_atoms=self.max_atoms,
+                min_length=self.min_length,
+                force_diagonal=self.force_diagonal,
+            )
+            self.write_additional_data.update(
+            {
+                "info.json": {
+                    "defect": deepcopy(defect), 
+                    "defect_charge": charge, 
+                    "sc_mat": self.supercell_matrix}
+                    }
+            )
+        else:
+            structure = deepcopy(defect)
         structure.set_charge(charge)
         # provenance stuff
         self.write_additional_data.update(
