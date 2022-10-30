@@ -25,6 +25,7 @@ from pymatgen.io.vasp import (
     PotcarSingle,
     Vasprun,
     VolumetricData,
+    Waveder,
 )
 
 from atomate2 import SETTINGS
@@ -80,6 +81,7 @@ class VaspObject(ValueEnum):
     LOCPOT = "locpot"
     OPTIC = "optic"
     PROCAR = "procar"
+    WAVEDER = "waveder"
 
 
 class PotcarSpec(BaseModel):
@@ -601,6 +603,7 @@ class Calculation(BaseModel):
             Tuple[str]
         ] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA,
         store_trajectory: bool = False,
+        store_waveder: bool = False,
         vasprun_kwargs: Optional[Dict] = None,
     ) -> Tuple["Calculation", Dict[VaspObject, Dict]]:
         """
@@ -656,6 +659,9 @@ class Calculation(BaseModel):
             This can help reduce the size of DOS objects in systems with many atoms.
         store_volumetric_data
             Which volumetric files to store.
+        store_waveder
+            Whether to store the contents of the binary WAVEDER file.
+            Which is used to compute frequency dependent dielectric functions.
         store_trajectory
             Whether to store the ionic steps in a pymatgen Trajectory object. if `True`,
             :obj:'.CalculationOutput.ionic_steps' is set to None to reduce duplicating
@@ -727,6 +733,12 @@ class Calculation(BaseModel):
                 constant_lattice=False,
             )
             vasp_objects[VaspObject.TRAJECTORY] = traj  # type: ignore
+
+        if store_waveder:
+            wavder = _parse_waveder(dir_name)
+            if wavder is None:
+                raise RuntimeError(f"WAVEDER file not found in directory {dir_name}.")
+            vasp_objects[VaspObject.WAVEDER] = wavder  # type: ignore
 
         # MD run
         if vasprun.parameters.get("IBRION", -1) == 0:
@@ -826,6 +838,26 @@ def _get_volumetric_data(
         except Exception:
             raise ValueError(f"Failed to parse {file_type} at {file}.")
     return volumetric_data
+
+
+def _parse_waveder(dir_name: Path) -> Optional[Waveder]:
+    """
+    Parse the WAVEDER file.
+
+    Parameters
+    ----------
+    dir_name
+        The directory containing the WAVEDER file.
+
+    Returns
+    -------
+    Optional[Waveder]
+        The WAVEDER data.
+    """
+    try:
+        return Waveder.from_binary(dir_name / "WAVEDER")
+    except Exception:
+        return None
 
 
 def _parse_dos(parse_mode: Union[str, bool], vasprun: Vasprun) -> Optional[Dos]:
