@@ -63,3 +63,5 @@ docs/reference/atomate2.*
 .vscode/
 
 .DS_Store
+
+env/
