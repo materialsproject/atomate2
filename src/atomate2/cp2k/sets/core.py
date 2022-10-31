@@ -110,6 +110,10 @@ class HybridSetGenerator(Cp2kInputGenerator):
         updates = {
             "activate_hybrid": {
                 "hybrid_functional": self.hybrid_functional,
+                "screen_on_initial_p": False,
+                "screen_p_forces": False,
+                "eps_schwarz": 1e-7,
+                "eps_schwarz_forces": 1e-7,
             },
         }
         if hasattr(structure, "lattice"):
