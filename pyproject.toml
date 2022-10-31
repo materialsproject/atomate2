@@ -44,7 +44,7 @@ docs = [
     "numpydoc==1.4.0",
     "ipython==8.5.0",
     "FireWorks==2.0.3",
-    "autodoc_pydantic==1.7.2",
+    "autodoc_pydantic==1.8.0",
     "jupyter-book==0.13.1",
 ]
 dev = ["pre-commit>=2.12.1"]
