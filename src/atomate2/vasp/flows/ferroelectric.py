@@ -14,7 +14,7 @@ from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.core import PolarizationMaker
-
+from atomate2.vasp.jobs.ferroelectric import polarization_analysis
 
 __all__ = ["FerroelectricMaker"]
 
@@ -102,11 +102,9 @@ class FerroelectricMaker(Maker):
 
         outputs.update({"nonpolar_lcalcpol": nonpolar_lcalcpol.output})
         
-        # TODO there might be a standard way to store results in a db
         polarization_analysis = polarization_analysis(outputs)
         jobs.append(polarization_analysis)
         
-
         # allow some of the deformations to fail
         # fit_tensor.config.on_missing_references = OnMissing.NONE
 
