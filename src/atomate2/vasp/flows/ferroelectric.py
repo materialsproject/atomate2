@@ -104,8 +104,8 @@ class FerroelectricMaker(Maker):
 
         outputs.update({"nonpolar_lcalcpol": nonpolar_lcalcpol.output})
         
-        polarization_analysis = polarization_analysis(outputs)
-        jobs.append(polarization_analysis)
+        pol_analysis = polarization_analysis(outputs)
+        jobs.append(pol_analysis)
         
         # allow some of the deformations to fail
         # fit_tensor.config.on_missing_references = OnMissing.NONE
