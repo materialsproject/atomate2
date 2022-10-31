@@ -95,7 +95,7 @@ class FerroelectricMaker(Maker):
         }
 
         interpolations = []
-        interp_structures = polar_structure.interpolate(nonpolar_structure,nimages,True)
+        interp_structures = polar_structure.interpolate(nonpolar_structure,self.nimages,True)
         
         for i,interp_structure in enumerate(interp_structures[1:]):
             interpolation = self.lcalcpol_maker.make(interp_structure)
