@@ -112,7 +112,7 @@ class FerroelectricMaker(Maker):
 
         flow = Flow(
             jobs=jobs,
-            output=polarization_analysis.output,
+            output=pol_analysis.output,
             name=self.name,
         )
         return flow
