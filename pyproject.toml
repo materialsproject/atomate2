@@ -42,7 +42,7 @@ mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 docs = [
     "numpydoc==1.4.0",
-    "ipython==8.5.0",
+    "ipython==8.6.0",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
     "jupyter-book==0.13.1",
