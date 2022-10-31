@@ -217,9 +217,8 @@ class HybridFlowMaker(Maker):
     def __post_init__(self):
         self.hybrid_maker.hybrid_functional = self.hybrid_functional
         if self.initialize_with_pbe:
-            self.hybrid_maker.input_set_generator.user_input_settings.update(
-                {"activate_hybrid": {"screen_on_initial_p": True, "screen_p_forces": True}}
-                )
+            self.hybrid_maker.input_set_generator.screen_on_initial_p = True
+            self.hybrid_maker.input_set_generator.screen_p_forces = True
 
     def make(self, *args, **kwargs) -> Flow:
         jobs = []

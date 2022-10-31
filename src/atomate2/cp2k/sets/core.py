@@ -72,7 +72,6 @@ class RelaxSetGenerator(Cp2kInputGenerator):
                 'optimizer': "BFGS",
                 "trust_radius": 0.1
             },
-            "modify_dft_print_iters": {"iters": 0, "add_last": "numeric"},
         }
         return updates
 
@@ -81,7 +80,6 @@ class CellOptSetGenerator(Cp2kInputGenerator):
     """
 
     """
-
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """
@@ -92,7 +90,6 @@ class CellOptSetGenerator(Cp2kInputGenerator):
                 'optimizer': "BFGS",
                 "trust_radius": 0.1
             },
-            "modify_dft_print_iters": {"iters": 0, "add_last": "numeric"},
         }
 
         return updates
@@ -102,19 +99,24 @@ class CellOptSetGenerator(Cp2kInputGenerator):
 class HybridSetGenerator(Cp2kInputGenerator):
 
     hybrid_functional: str = "PBE0"
+    screen_on_initial_p: bool = False
+    screen_p_forces: bool = False
+    eps_schwarz: float = 1e-7
+    eps_schwarz_forces: float = 1e-7
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         updates = {
             "activate_hybrid": {
                 "hybrid_functional": self.hybrid_functional,
-                "screen_on_initial_p": False,
-                "screen_p_forces": False,
-                "eps_schwarz": 1e-7,
-                "eps_schwarz_forces": 1e-7,
+                "screen_on_initial_p": self.screen_on_initial_p,
+                "screen_p_forces": self.screen_p_forces,
+                "eps_schwarz": self.eps_schwarz,
+                "eps_schwarz_forces": self.eps_schwarz_forces,
             },
         }
         if hasattr(structure, "lattice"):
             updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
+
         return updates
 
 @dataclass
