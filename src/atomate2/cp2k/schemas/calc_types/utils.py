@@ -55,7 +55,7 @@ def run_type(inputs: Dict) -> RunType:
                     for param, value in params.items()
                 ]
             ):
-                return RunType(f"{functional_class}{is_hubbard}")
+                return RunType(f"{special_type}{is_hubbard}")
 
     # TODO elegant way to handle this? 
     # This is a hack to get the non-standard hybrids to work
