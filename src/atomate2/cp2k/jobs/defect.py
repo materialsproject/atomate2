@@ -60,8 +60,9 @@ class BaseDefectMaker(BaseCp2kMaker):
                 "info.json": {
                     "defect": deepcopy(defect), 
                     "defect_charge": charge, 
-                    "sc_mat": self.supercell_matrix}
+                    "sc_mat": self.supercell_matrix
                     }
+                }
             )
         else:
             structure = deepcopy(defect)

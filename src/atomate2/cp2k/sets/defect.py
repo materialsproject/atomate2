@@ -9,7 +9,7 @@ from pymatgen.core import Structure
 
 from atomate2.cp2k.sets.base import Cp2kInputGenerator, multiple_input_updators
 from atomate2.cp2k.sets.core import (
-    StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
+    HybridSetGenerator, StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
     HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator
 ) 
 logger = logging.getLogger(__name__)
@@ -41,15 +41,15 @@ class DefectCellOptSetGenerator(DefectSetGenerator, CellOptSetGenerator):
 
 @dataclass
 @multiple_input_updators()
-class DefectHybridStaticSetGenerator(DefectSetGenerator, HybridStaticSetGenerator):
+class DefectHybridStaticSetGenerator(DefectSetGenerator, StaticSetGenerator, HybridSetGenerator):
     pass   
 
 @dataclass
 @multiple_input_updators()
-class DefectHybridRelaxSetGenerator(DefectSetGenerator, HybridRelaxSetGenerator):
-    pass   
+class DefectHybridRelaxSetGenerator(DefectSetGenerator, RelaxSetGenerator, HybridSetGenerator):
+    pass
 
 @dataclass
 @multiple_input_updators()
-class DefectHybridCellOptSetGenerator(DefectSetGenerator, HybridCellOptSetGenerator):
+class DefectHybridCellOptSetGenerator(DefectSetGenerator, CellOptSetGenerator, HybridSetGenerator):
     pass 
