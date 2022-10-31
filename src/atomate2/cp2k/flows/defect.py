@@ -161,7 +161,9 @@ class FormationEnergyMaker(Maker):
                         self.force_diagonal,)
 
         if self.run_bulk:
-            bulk_job = self.bulk_maker.make(bulk_structure * sc_mat, prev_cp2k_dir=prev_cp2k_dir)
+            s = bulk_structure.copy()
+            s.make_supercell(sc_mat)
+            bulk_job = self.bulk_maker.make(s, prev_cp2k_dir=prev_cp2k_dir)
             jobs.append(bulk_job)
 
         for defect in defects:
