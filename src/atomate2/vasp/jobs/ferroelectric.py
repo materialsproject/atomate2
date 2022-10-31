@@ -8,10 +8,7 @@ from pathlib import Path
 
 import numpy as np
 from jobflow import Flow, Response, job
-from pymatgen.alchemy.materials import TransformedStructure
-from pymatgen.analysis.elasticity import Deformation, Strain, Stress
 from pymatgen.core.structure import Structure
-from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.analysis.ferroelectricity.polarization import (
     EnergyTrend,
@@ -20,13 +17,7 @@ from pymatgen.analysis.ferroelectricity.polarization import (
 )
 
 from atomate2 import SETTINGS
-from atomate2.common.analysis.elastic import get_default_strain_states
-from atomate2.common.schemas.elastic import ElasticDocument
-from atomate2.common.schemas.math import Matrix3D
-from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
-from atomate2.vasp.sets.core import StaticSetGenerator
-
+from atomate2.common.schemas.ferroelectric import PolarizationDocument
 
 logger = logging.getLogger(__name__)
 
@@ -97,9 +88,6 @@ def polarization_analysis(lcalcpol_outputs):
             d.update({var_name + f"_{j}": np.ravel(var[:, i]).tolist()})
         return d
 
-    # Add some sort of id for the structures? Like cid but more general?
-    # polarization_dict.update({'cid': cid})
-
     # General information
     polarization_dict.update(
         {"pretty_formula": structures[0].composition.reduced_formula}
@@ -115,7 +103,7 @@ def polarization_analysis(lcalcpol_outputs):
     )
     polarization_dict.update(split_abc(same_branch, "same_branch_polarization"))
     polarization_dict.update(split_abc(raw_elecs, "raw_electron_polarization"))
-    polarization_dict.update(split_abc(raw_ions, "raw_electron_polarization"))
+    polarization_dict.update(split_abc(raw_ions, "raw_ion_polarization"))
     polarization_dict.update(split_abc(quanta, "polarization_quanta"))
     polarization_dict.update({"zval_dict": zval_dict})
 
@@ -130,4 +118,4 @@ def polarization_analysis(lcalcpol_outputs):
 
 
     
-    return polarization_dict
+    return PolarizationDocument(**polarization_dict)
