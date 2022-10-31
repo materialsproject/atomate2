@@ -40,6 +40,23 @@ from atomate2.cp2k.flows.core import HybridStaticFlowMaker, HybridRelaxFlowMaker
 
 logger = logging.getLogger(__name__)
 
+@dataclass
+class DefectHybridStaticFlowMaker(HybridStaticFlowMaker):
+
+    initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
+    hybrid_maker: BaseCp2kMaker = field(default_factory=DefectHybridStaticMaker)
+
+@dataclass 
+class DefectHybridRelaxFlowMaker(HybridRelaxFlowMaker):
+
+    initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
+    hybrid_maker: BaseCp2kMaker = field(default_factory=DefectHybridRelaxMaker)
+
+@dataclass 
+class DefectHybridCellOptFlowMaker(HybridCellOptFlowMaker):
+
+    initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
+    hybrid_maker: BaseCp2kMaker = field(default_factory=DefectHybridCellOptMaker)
 
 # TODO close to being able to put this in common. Just need a switch that decides which core flow/job to use based on software
 @dataclass
@@ -81,40 +98,28 @@ class FormationEnergyMaker(Maker):
     def __post_init__(self):
         if self.run_bulk == 'relax':
             if self.hybrid_functional:
-                self.bulk_maker = HybridCellOptFlowMaker(
-                    initialize_with_pbe=self.initialize_with_pbe,
-                    hybrid_functional=self.hybrid_functional,
-                    hybrid_maker=HybridCellOptMaker(
-                        input_set_generator=DefectHybridCellOptSetGenerator(),
-                        task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
-                        )
+                self.bulk_maker = DefectHybridCellOptMaker(
+                    name="bulk hybrid relax",
+                    initialize_with_pbe=self.initialize_with_pbe, 
+                    hybrid_functional=self.hybrid_functional
                     )
             else:
-                self.bulk_maker = CellOptMaker(
-                    input_set_generator=DefectCellOptSetGenerator(),
-                    task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
-                    )
+                self.bulk_maker = DefectCellOptMaker(name="bulk relax")
+
         elif self.run_bulk == "static":
             if self.hybrid_functional:
-                self.bulk_maker = HybridStaticFlowMaker( 
+                self.bulk_maker = DefectHybridStaticFlowMaker( 
+                    name='bulk hybrid static',
+                    initialize_with_pbe=self.initialize_with_pbe,
                     hybrid_functional=self.hybrid_functional,
-                    hybrid_maker=HybridStaticMaker(
-                        input_set_generator=DefectHybridStaticSetGenerator(),
-                        task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
-                        )
                     )
             else:
-                self.bulk_maker = StaticMaker(
-                    input_set_generator=DefectStaticSetGenerator(),
-                    task_document_kwargs={"average_v_hartree": True, "store_volumetric_data": ("v_hartree",)}
-                    )
+                self.bulk_maker = DefectStaticMaker(name="bulk static")
 
         if self.hybrid_functional:
-            self.def_maker = HybridRelaxFlowMaker(
+            self.def_maker = DefectHybridRelaxFlowMaker(
                 hybrid_functional=self.hybrid_functional,
                 initialize_with_pbe=self.initialize_with_pbe,
-                initialize_maker=DefectStaticMaker(),
-                hybrid_maker=DefectHybridRelaxMaker(),
             )
         else:
             self.def_maker = DefectRelaxMaker()
@@ -128,7 +133,7 @@ class FormationEnergyMaker(Maker):
 
     def make(
         self, defects: Iterable[Defect], 
-        run_all_charges: bool = False, 
+        charges: bool | Iterable[int] = False, 
         dielectric: NDArray | int | float | None = None,
         prev_cp2k_dir: str | Path | None = None):
         """Make a flow to run multiple defects in order to calculate their formation 
@@ -160,7 +165,10 @@ class FormationEnergyMaker(Maker):
             jobs.append(bulk_job)
 
         for defect in defects:
-            chgs = defect.get_charge_states() if run_all_charges else [0]
+            if charges == True:
+                chgs = defect.get_charge_states() if charges else [0]
+            else:
+                chgs = charges if charges else [0]
             for charge in chgs:
                 defect_job = self.def_maker.make(deepcopy(defect), charge)
                 jobs.append(defect_job)

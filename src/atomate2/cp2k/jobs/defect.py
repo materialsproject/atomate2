@@ -53,6 +53,8 @@ class BaseDefectMaker(BaseCp2kMaker):
                 min_length=self.min_length,
                 force_diagonal=self.force_diagonal,
             )
+
+            # provenance stuff
             self.write_additional_data.update(
             {
                 "info.json": {
@@ -64,15 +66,6 @@ class BaseDefectMaker(BaseCp2kMaker):
         else:
             structure = deepcopy(defect)
         structure.set_charge(charge)
-        # provenance stuff
-        self.write_additional_data.update(
-            {
-                "info.json": {
-                    "defect": deepcopy(defect), 
-                    "defect_charge": charge, 
-                    "sc_mat": self.supercell_matrix}
-                    }
-            )
         return super().make.original(self, structure=structure, prev_cp2k_dir=prev_cp2k_dir)
 
 @dataclass
