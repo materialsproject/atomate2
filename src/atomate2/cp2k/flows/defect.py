@@ -99,12 +99,12 @@ class FormationEnergyMaker(Maker):
         if self.run_bulk == 'relax':
             if self.hybrid_functional:
                 self.bulk_maker = DefectHybridCellOptMaker(
-                    name="bulk hybrid relax",
+                    name="bulk hybrid relax", transformations=None,
                     initialize_with_pbe=self.initialize_with_pbe, 
                     hybrid_functional=self.hybrid_functional
                     )
             else:
-                self.bulk_maker = DefectCellOptMaker(name="bulk relax")
+                self.bulk_maker = DefectCellOptMaker(name="bulk relax", transformations=None)
 
         elif self.run_bulk == "static":
             if self.hybrid_functional:
