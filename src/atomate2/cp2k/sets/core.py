@@ -67,12 +67,11 @@ class RelaxSetGenerator(Cp2kInputGenerator):
         """
         """
         updates = {
-            "activate_motion": True,
-            "optimizer": "BFGS",
             "run_type": "GEO_OPT",
-            "override_default_params": {
-                "MOTION": {"GEO_OPT": {"BFGS": {"TRUST_RADIUS": 0.1}}}
-                },
+            "activate_motion": {
+                'optimizer': "BFGS",
+                "trust_radius": 0.1
+            },
             "modify_dft_print_iters": {"iters": 0, "add_last": "numeric"},
         }
         return updates
@@ -88,13 +87,11 @@ class CellOptSetGenerator(Cp2kInputGenerator):
         """
         """
         updates = {
-            "activate_motion": True,
-            "max_iter": 200,
-            "optimizer": "BFGS",
             "run_type": "CELL_OPT",
-            "override_default_params": {
-                "MOTION": {"CELL_OPT": {"BFGS": {"TRUST_RADIUS": 0.1}}}
-                },
+            "activate_motion": {
+                'optimizer': "BFGS",
+                "trust_radius": 0.1
+            },
             "modify_dft_print_iters": {"iters": 0, "add_last": "numeric"},
         }
 
@@ -261,27 +258,20 @@ class MDSetGenerator(Cp2kInputGenerator):
         """
         """
         updates = {
-            "activate_motion": True,
+            "run_type": "MD",
+            "activate_motion": {
+                "ensemble": self.ensemble,
+                "temperature": self.temperature,
+                "timestep": self.time_step,
+                "nsteps": self.nsteps,
+                "thermostat": self.thermostat
+            },
             "print_bandstructure": False, # Disable printing
             "print_dos": False,
             "print_pdos": False,
             "print_v_hartree": False,
             "print_e_density": False,
             "print_mo_cubes": False, 
-            "run_type": "MD",
-            "override_default_params": {
-                "MOTION": {
-                    "MD": {
-                        "ENSEMBLE": self.ensemble,
-                        "TEMPERATURE": self.temperature,
-                        "TIMESTEP": self.time_step,
-                        "STEPS": self.nsteps,
-                        "THERMOSTAT": {
-                            "TYPE": self.thermostat
-                        }
-                    }
-                    }
-                },
         }
 
         return updates
