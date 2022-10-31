@@ -121,15 +121,27 @@ class FormationEnergyMaker(Maker):
                 hybrid_functional=self.hybrid_functional,
                 initialize_with_pbe=self.initialize_with_pbe,
             )
+            self.def_maker.initialize_maker.supercell_matrix = self.supercell_matrix
+            self.def_maker.hybrid_maker.supercell_matrix = self.supercell_matrix
+
+            self.def_maker.initialize_maker.max_atoms = self.max_atoms
+            self.def_maker.hybrid_maker.max_atoms = self.max_atoms
+
+            self.def_maker.initialize_maker.min_atoms = self.min_atoms
+            self.def_maker.hybrid_maker.min_atoms = self.min_atoms
+
+            self.def_maker.initialize_maker.min_length = self.min_length
+            self.def_maker.hybrid_maker.min_length = self.min_length
+
+            self.def_maker.initialize_maker.force_diagonal = self.force_diagonal
+            self.def_maker.hybrid_maker.force_diagonal = self.force_diagonal
         else:
             self.def_maker = DefectRelaxMaker()
-
-
-        self.def_maker.supercell_matrix = self.supercell_matrix
-        self.def_maker.max_atoms = self.max_atoms
-        self.def_maker.min_atoms = self.min_atoms
-        self.def_maker.min_length = self.min_length
-        self.def_maker.force_diagonal = self.force_diagonal
+            self.def_maker.supercell_matrix = self.supercell_matrix
+            self.def_maker.max_atoms = self.max_atoms
+            self.def_maker.min_atoms = self.min_atoms
+            self.def_maker.min_length = self.min_length
+            self.def_maker.force_diagonal = self.force_diagonal
 
     def make(
         self, defects: Iterable[Defect], 
@@ -163,7 +175,7 @@ class FormationEnergyMaker(Maker):
         if self.run_bulk:
             s = bulk_structure.copy()
             s.make_supercell(sc_mat)
-            bulk_job = self.bulk_maker.make(s, prev_cp2k_dir=prev_cp2k_dir)
+            bulk_job = self.bulk_maker.make(bulk_structure * sc_mat, prev_cp2k_dir=prev_cp2k_dir)
             jobs.append(bulk_job)
 
         for defect in defects:
