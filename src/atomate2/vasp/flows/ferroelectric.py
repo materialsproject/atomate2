@@ -37,7 +37,7 @@ class FerroelectricMaker(Maker):
     name: str = "ferroelectric"
     nimages: int = 9
     symprec: float = SETTINGS.SYMPREC
-    relax: bool | tuple = (relax,relax) if isinstance(relax,bool) else False
+    relax: bool | tuple = False
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
@@ -62,6 +62,9 @@ class FerroelectricMaker(Maker):
         
         jobs = []
         outputs = {}
+
+        if isinstance(self.relax,bool):
+            self.relax = (self.relax,self.relax) 
         
         if self.relax[0]:
             # optionally relax the polar structure
@@ -71,7 +74,7 @@ class FerroelectricMaker(Maker):
             polar_structure = bulk.output.structure
             prev_vasp_dir = bulk.output.dir_name
         
-        polar_lcalcpol = self.lcalcpol_maker.make(nonpolar_structure,
+        polar_lcalcpol = self.lcalcpol_maker.make(polar_structure,
                                                   prev_vasp_dir=prev_vasp_dir)
 
         if self.relax[1]:
@@ -96,7 +99,6 @@ class FerroelectricMaker(Maker):
         
         for i,interp_structure in enumerate(interp_structures[1:]):
             interpolation = self.lcalcpol_maker.make(interp_structure)
-            
             jobs.append(interpolation)
             outputs.update({f'interpolation_{i}_lcalcpol':interpolation.output})
 

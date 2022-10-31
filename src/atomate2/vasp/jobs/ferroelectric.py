@@ -17,7 +17,7 @@ from pymatgen.analysis.ferroelectricity.polarization import (
 )
 
 from atomate2 import SETTINGS
-from atomate2.common.schemas.ferroelectric import PolarizationDocument
+from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +30,16 @@ def polarization_analysis(lcalcpol_outputs):
     for a ferroelectric workflow.
     """
 
-    # ferroelectric workflow groups calculations by generated wfid tag
-    polarization_tasks = reversed(lcalcpol_outputs.values())
+    # oreder previous calculations from nonpolar to polar
+    ordered_keys = ["nonpolar_lcalcpol"]
+    ordered_keys.extend([f'interpolation_{i}_lcalcpol' for i in reversed(range(len(lcalcpol_outputs)-2))])
+    ordered_keys.append("nonpolar_lcalcpol")
+        
+    polarization_tasks = [lcalcpol_outputs[k] for k in ordered_keys]
 
     tasks = []
     outcars = []
     structure_dicts = []
-    sort_weight = []
     energies_per_atom = []
     energies = []
     zval_dicts = []
