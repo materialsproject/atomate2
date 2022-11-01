@@ -66,7 +66,8 @@ class FerroelectricMaker(Maker):
         
         jobs = []
         outputs = {}
-
+        prev_vasp_dir_p,prev_vasp_dir_np = None, None
+        
         if isinstance(self.relax,bool):
             self.relax = (self.relax,self.relax) 
         

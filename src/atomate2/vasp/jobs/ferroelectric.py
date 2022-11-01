@@ -35,9 +35,9 @@ def polarization_analysis(lcalcpol_outputs):
     ordered_keys = [f'interpolation_{i}_lcalcpol' for i in reversed(range(len(lcalcpol_outputs[2])))]
 
 
-    polarization_tasks = [lcalcpol_outputs[0]]    
-    polarization_tasks += [lcalcpol_outputs[2][k] for k in ordered_keys]
-    polarization_tasks = [lcalcpol_outputs[1]]
+    polarization_tasks = [lcalcpol_outputs[0].dict()]    
+    polarization_tasks += [lcalcpol_outputs[2][k].dict() for k in ordered_keys]
+    polarization_tasks = [lcalcpol_outputs[1].dict()]
     
     tasks = []
     outcars = []
