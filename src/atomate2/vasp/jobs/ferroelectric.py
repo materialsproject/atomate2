@@ -147,7 +147,7 @@ def interpolate_structures(p_st,np_st,nimages):
     
     for i,interp_structure in enumerate(interp_structures[1:]):
         interpolation = PolarizationMaker().make(interp_structure)
-        interpolation.append_name(f'interpolation_{i}_lcalcpol')
+        interpolation.append_name(f' interpolation_{i}_lcalcpol')
         jobs.append(interpolation)
         
         outputs.update({f'interpolation_{i}_lcalcpol':interpolation.output})

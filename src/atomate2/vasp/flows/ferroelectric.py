@@ -72,36 +72,43 @@ class FerroelectricMaker(Maker):
         
         if self.relax[0]:
             # optionally relax the polar structure
-            bulk = self.bulk_relax_maker.make(polar_structure,
-                                              prev_vasp_dir=prev_vasp_dir)
-            jobs.append(bulk)
-            polar_structure = bulk.output.structure
-            prev_vasp_dir = bulk.output.dir_name
+            relax_p = self.bulk_relax_maker.make(polar_structure)
+            relax_p.append_name(" polar")
+            jobs.append(relax_p)
+            polar_structure = relax_p.output.structure
+            prev_vasp_dir_p = relax_p.output.dir_name
 
         logger.info(f'{type(polar_structure)}')
         
         polar_lcalcpol = self.lcalcpol_maker.make(polar_structure,
-                                                  prev_vasp_dir=prev_vasp_dir)
-
+                                                  prev_vasp_dir=prev_vasp_dir_p)
+        polar_lcalcpol.name += " polar"
+        jobs.append(polar_lcalcpol)
+        polar_structure = polar_lcalcpol.output.structure
+        
         if self.relax[1]:
             # optionally relax the nonpolar structure
-            bulk = self.bulk_relax_maker.make(nonpolar_structure,
-                                              prev_vasp_dir=prev_vasp_dir)
-            jobs.append(bulk)
-            nonpolar_structure = bulk.output.structure
-            prev_vasp_dir = bulk.output.dir_name
+            relax_np = self.bulk_relax_maker.make(nonpolar_structure)
+            relax_np.append_name(" nonpolar")
+            jobs.append(relax_np)
+            nonpolar_structure = relax_np.output.structure
+            prev_vasp_dir_np = relax_np.output.dir_name
 
         nonpolar_lcalcpol = self.lcalcpol_maker.make(nonpolar_structure,
-                                                     prev_vasp_dir=prev_vasp_dir)
-        jobs.append(polar_lcalcpol)
+                                                     prev_vasp_dir=prev_vasp_dir_np)
+        nonpolar_lcalcpol.append_name(" nonpolar")
         jobs.append(nonpolar_lcalcpol)
+        nonpolar_structure = nonpolar_lcalcpol.output.structure
+        
 
-        interp_lcalcpol = interpolate_structures(polar_structure,nonpolar_structure)
+        interp_lcalcpol = interpolate_structures(polar_structure,
+                                                 nonpolar_structure,
+                                                 self.nimages)
         jobs.append(interp_lcalcpol)
         
         pol_analysis = polarization_analysis([nonpolar_lcalcpol.output,
                                               polar_lcalcpol.output,
-                                              interp_lcalcpol])
+                                              interp_lcalcpol.output])
         jobs.append(pol_analysis)
         
         # allow some of the deformations to fail
