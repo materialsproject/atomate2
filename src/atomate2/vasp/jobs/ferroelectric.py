@@ -18,6 +18,7 @@ from pymatgen.analysis.ferroelectricity.polarization import (
 
 from atomate2 import SETTINGS
 from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
+from atomate2.vasp.jobs.core import PolarizationMaker
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +32,13 @@ def polarization_analysis(lcalcpol_outputs):
     """
 
     # oreder previous calculations from nonpolar to polar
-    ordered_keys = ["nonpolar_lcalcpol"]
-    ordered_keys.extend([f'interpolation_{i}_lcalcpol' for i in reversed(range(len(lcalcpol_outputs)-2))])
-    ordered_keys.append("nonpolar_lcalcpol")
-        
-    polarization_tasks = [lcalcpol_outputs[k] for k in ordered_keys]
+    ordered_keys = [f'interpolation_{i}_lcalcpol' for i in reversed(range(len(lcalcpol_outputs[2])))]
 
+
+    polarization_tasks = [lcalcpol_outputs[0]]    
+    polarization_tasks += [lcalcpol_outputs[2][k] for k in ordered_keys]
+    polarization_tasks = [lcalcpol_outputs[1]]
+    
     tasks = []
     outcars = []
     structure_dicts = []
@@ -122,3 +124,33 @@ def polarization_analysis(lcalcpol_outputs):
 
     
     return PolarizationDocument(**polarization_dict)
+
+
+@job
+def interpolate_structures(p_st,np_st,nimages):
+    """
+    Interpolate polar and nonpolar structures with nimages points
+
+
+    Parameters
+    ----------
+    polar_structure : .Structure
+        A pymatgen structure of polar phase.
+    nonpolar_structure : .Structure
+        A pymatgen structure of nonpolar phase.
+    """
+    
+    interp_structures = p_st.interpolate(np_st,nimages,True)
+
+    jobs = []
+    outputs = {}
+    
+    for i,interp_structure in enumerate(interp_structures[1:]):
+        interpolation = PolarizationMaker().make(interp_structure)
+        interpolation.append_name(f'interpolation_{i}_lcalcpol')
+        jobs.append(interpolation)
+        
+        outputs.update({f'interpolation_{i}_lcalcpol':interpolation.output})
+
+    interp_flow = Flow(jobs,outputs)
+    return Response(replace=interp_flow)

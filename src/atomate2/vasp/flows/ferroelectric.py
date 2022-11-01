@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -12,12 +13,13 @@ from atomate2 import SETTINGS
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import TightRelaxMaker
+from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.jobs.core import PolarizationMaker
-from atomate2.vasp.jobs.ferroelectric import polarization_analysis
+from atomate2.vasp.jobs.ferroelectric import polarization_analysis, interpolate_structures
 
 __all__ = ["FerroelectricMaker"]
 
+logger = logging.getLogger(__name__)
 
 @dataclass
 class FerroelectricMaker(Maker):
@@ -39,7 +41,7 @@ class FerroelectricMaker(Maker):
     symprec: float = SETTINGS.SYMPREC
     relax: bool | tuple = False
     bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
     lcalcpol_maker: BaseVaspMaker = field(default_factory=PolarizationMaker)
 
@@ -54,8 +56,10 @@ class FerroelectricMaker(Maker):
 
         Parameters
         ----------
-        structure : .Structure
-            A pymatgen structure.
+        polar_structure : .Structure
+            A pymatgen structure of polar phase.
+        nonpolar_structure : .Structure
+            A pymatgen structure of nonpolar phase.
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
@@ -73,6 +77,8 @@ class FerroelectricMaker(Maker):
             jobs.append(bulk)
             polar_structure = bulk.output.structure
             prev_vasp_dir = bulk.output.dir_name
+
+        logger.info(f'{type(polar_structure)}')
         
         polar_lcalcpol = self.lcalcpol_maker.make(polar_structure,
                                                   prev_vasp_dir=prev_vasp_dir)
@@ -90,21 +96,12 @@ class FerroelectricMaker(Maker):
         jobs.append(polar_lcalcpol)
         jobs.append(nonpolar_lcalcpol)
 
-        outputs = {
-            "polar_lcalcpol": polar_lcalcpol.output,
-        }
-
-        interpolations = []
-        interp_structures = polar_structure.interpolate(nonpolar_structure,self.nimages,True)
+        interp_lcalcpol = interpolate_structures(polar_structure,nonpolar_structure)
+        jobs.append(interp_lcalcpol)
         
-        for i,interp_structure in enumerate(interp_structures[1:]):
-            interpolation = self.lcalcpol_maker.make(interp_structure)
-            jobs.append(interpolation)
-            outputs.update({f'interpolation_{i}_lcalcpol':interpolation.output})
-
-        outputs.update({"nonpolar_lcalcpol": nonpolar_lcalcpol.output})
-        
-        pol_analysis = polarization_analysis(outputs)
+        pol_analysis = polarization_analysis([nonpolar_lcalcpol.output,
+                                              polar_lcalcpol.output,
+                                              interp_lcalcpol])
         jobs.append(pol_analysis)
         
         # allow some of the deformations to fail
