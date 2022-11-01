@@ -62,7 +62,7 @@ repos:
     stages: [commit, commit-msg]
     args: [--ignore-words-list, 'titel,statics,ba,nd,te']
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.1.0
+  rev: v3.2.0
   hooks:
     - id: pyupgrade
       args: [--py38-plus]
