@@ -79,7 +79,7 @@ class PolarizationDocument(BaseModel):
         description=""
     )
 
-    outcars: dict = Field(
+    outcars: List[dict] = Field(
         None, title="Outcars",
         description="VASP Outcar for each structure",
     )
@@ -89,7 +89,7 @@ class PolarizationDocument(BaseModel):
         description="All the interpolated structures",
     )
 
-    polarization_max_spline_jumps: float = Field(
+    polarization_max_spline_jumps: List[float] = Field(
         None, title="Polarization Max Spline Jump",
         description="Maximum jump of the spline that interpolate the polarization branch",
     )

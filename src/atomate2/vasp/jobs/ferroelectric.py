@@ -32,33 +32,30 @@ def polarization_analysis(lcalcpol_outputs):
     """
 
     # oreder previous calculations from nonpolar to polar
-    ordered_keys = [f'interpolation_{i}_lcalcpol' for i in reversed(range(len(lcalcpol_outputs[2])))]
+    ordered_keys = [f'interpolation_{i}' for i in reversed(range(len(lcalcpol_outputs[2])))]
 
 
     polarization_tasks = [lcalcpol_outputs[0].dict()]    
     polarization_tasks += [lcalcpol_outputs[2][k].dict() for k in ordered_keys]
-    polarization_tasks = [lcalcpol_outputs[1].dict()]
+    polarization_tasks += [lcalcpol_outputs[1].dict()]
     
     tasks = []
     outcars = []
-    structure_dicts = []
+    structures = []
     energies_per_atom = []
     energies = []
     zval_dicts = []
 
     for p in polarization_tasks:
-        # Grab data from each polarization task
-        energies_per_atom.append(
-            p["calcs_reversed"][0]["output"]["energy_per_atom"]
-        )
+        energies_per_atom.append(p["calcs_reversed"][0]["output"]["energy_per_atom"])
         energies.append(p["calcs_reversed"][0]["output"]["energy"])
         tasks.append(p["task_label"])
         outcars.append(p["calcs_reversed"][0]["output"]["outcar"])
-        structure_dicts.append(p["calcs_reversed"][0]["input"]["structure"])
+        structures.append(p["calcs_reversed"][0]["input"]["structure"])
         zval_dicts.append(p["calcs_reversed"][0]["output"]["outcar"]["zval_dict"])
 
 
-    structures = [Structure.from_dict(structure) for structure in structure_dicts]
+    # structures = [Structure.from_dict(structure) for structure in structure_dicts]
 
     # If LCALCPOL = True then Outcar will parse and store the pseudopotential zvals.
     zval_dict = zval_dicts.pop()
@@ -97,7 +94,7 @@ def polarization_analysis(lcalcpol_outputs):
     polarization_dict.update(
         {"pretty_formula": structures[0].composition.reduced_formula}
     )
-    polarization_dict.update({"wfid": wfid})
+    #polarization_dict.update({"wfid": wfid})
     polarization_dict.update({"task_label_order": tasks})
 
     # Polarization information
@@ -119,10 +116,8 @@ def polarization_analysis(lcalcpol_outputs):
     polarization_dict.update({"energies": energies})
     polarization_dict.update({"energies_per_atom": energies_per_atom})
     polarization_dict.update({"outcars": outcars})
-    polarization_dict.update({"structures": structure_dicts})
+    polarization_dict.update({"structures": structures})
 
-
-    
     return PolarizationDocument(**polarization_dict)
 
 
@@ -147,10 +142,10 @@ def interpolate_structures(p_st,np_st,nimages):
     
     for i,interp_structure in enumerate(interp_structures[1:]):
         interpolation = PolarizationMaker().make(interp_structure)
-        interpolation.append_name(f' interpolation_{i}_lcalcpol')
+        interpolation.append_name(f' interpolation_{i}')
         jobs.append(interpolation)
         
-        outputs.update({f'interpolation_{i}_lcalcpol':interpolation.output})
+        outputs.update({f'interpolation_{i}':interpolation.output})
 
     interp_flow = Flow(jobs,outputs)
     return Response(replace=interp_flow)
