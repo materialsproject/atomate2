@@ -127,7 +127,8 @@ class DefectBuilder(Builder):
             'output.output.structure',
             'output.input',
             'output.nsites',
-            'output.cp2k_objects.v_hartree'
+            'output.cp2k_objects.v_hartree',
+            'output.additional_json.info.sc_mat' # TODO figure out how to remove this requirement
         ] 
 
         self._required_bulk_properties = [

@@ -1,6 +1,6 @@
 from datetime import datetime
 from tokenize import group
-from typing import ClassVar, Dict, Tuple, Mapping, List
+from typing import ClassVar, TypeVar, Type, Dict, Tuple, Mapping, List
 from pydantic import BaseModel, Field
 from pydantic import validator
 from itertools import groupby
@@ -21,6 +21,10 @@ from atomate2.cp2k.schemas.calc_types.utils import run_type, task_type, calc_typ
 from atomate2.cp2k.schemas.calc_types.enums import CalcType, TaskType, RunType
 from atomate2.cp2k.schemas.task import TaskDocument
 
+__all__ = ["DefectDoc"]
+
+T = TypeVar("T", bound="DefectDoc")
+
 class DefectDoc(StructureMetadata):
     """
     A document used to represent a single defect. e.g. a O vacancy with a -2 charge.
@@ -28,9 +32,6 @@ class DefectDoc(StructureMetadata):
     pairs (defect and bulk) of calculations. This document provides access to the "best"
     calculation of each run_type.
     """
-
-    class Config:
-        arbitrary_types_allowed = True
 
     property_name: ClassVar[str] = "defect"
 
@@ -40,8 +41,9 @@ class DefectDoc(StructureMetadata):
 
     material_id: str = Field(None, description="Unique material ID for the bulk material") #TODO Change to MPID
 
+    # TODO Should it be all (defect + bulk) ids?
     task_ids: List[str] = Field(
-        None, description="All task ids used in creating this defect doc."
+        None, description="All defect task ids used in creating this defect doc."
     )
 
     calc_types: Mapping[str, CalcType] = Field(  # type: ignore
@@ -57,8 +59,12 @@ class DefectDoc(StructureMetadata):
         description="Run types for all the calculations that make up this material",
     )
 
-    tasks: Mapping[RunType, Tuple[TaskDocument, TaskDocument]] = Field(
-        None, description="Task documents (defect task, bulk task) for the defect entry of RunType"
+    best_tasks: Mapping[RunType, Tuple[str, str]] = Field(
+        None, description="Task ids (defect task, bulk task) for all tasks of a RunType"
+    )
+
+    all_tasks: Mapping[RunType, List[Tuple[str, str]]] = Field(
+        None, description="Task ids (defect task, bulk task) for all tasks of a RunType"
     )
 
     entries: Mapping[RunType, DefectEntry] = Field(
@@ -130,7 +136,7 @@ class DefectDoc(StructureMetadata):
             self.update(defect_task=defect_task, bulk_task=bulk_task, dielectric=dielectric, query=query)
 
     @classmethod
-    def from_tasks(cls, defect_tasks: List, bulk_tasks: List, dielectrics: List, query='defect', key="task_id", material_id=None):
+    def from_tasks(cls: Type[T], defect_tasks: List, bulk_tasks: List, dielectrics: List, query='defect', key="task_id", material_id=None):
         """
         The standard way to create this document.
         Args:
@@ -138,7 +144,8 @@ class DefectDoc(StructureMetadata):
                 series of DefectEntry objects.
             query: How to retrieve the defect object stored in the task.
         """
-        task_ids = [defect_task[key] for defect_task in defect_tasks]
+        defect_task_ids = [defect_task[key] for defect_task in defect_tasks]
+        bulk_task_ids = [bulk_task[key] for bulk_task in bulk_tasks]
         bulk_tasks= [TaskDocument(**bulk_task['output']) for bulk_task in bulk_tasks]
         defects = [cls.get_defect_from_task(query=query, task=defect_task) for defect_task in defect_tasks]
         defect_tasks = [TaskDocument(**defect_task['output']) for defect_task in defect_tasks]
@@ -151,9 +158,9 @@ class DefectDoc(StructureMetadata):
         #    {task.task_id for task in task_group if not task.is_valid}
         #)
 
-        run_types = {id: task.calcs_reversed[0].run_type for id, task in zip(task_ids, defect_tasks)}
-        task_types = {id: task.calcs_reversed[0].task_type for id, task in zip(task_ids, defect_tasks)}
-        calc_types = {id: task.calcs_reversed[0].calc_type for id, task in zip(task_ids, defect_tasks)}
+        run_types = {id: task.calcs_reversed[0].run_type for id, task in zip(defect_task_ids, defect_tasks)}
+        task_types = {id: task.calcs_reversed[0].task_type for id, task in zip(defect_task_ids, defect_tasks)}
+        calc_types = {id: task.calcs_reversed[0].calc_type for id, task in zip(defect_task_ids, defect_tasks)}
 
         def _run_type(x):
             return x[0].calcs_reversed[0].run_type.value
@@ -163,20 +170,21 @@ class DefectDoc(StructureMetadata):
             return -x[0].nsites, x[0].output.energy
 
         entries = {}
-        final_tasks = {}
+        all_tasks = {}
+        best_tasks = {}
         metadata = {}
-        for key, tasks_for_runtype in groupby(sorted(zip(defect_tasks, bulk_tasks, defects, dielectrics), key=_run_type), key=_run_type):
+        for key, tasks_for_runtype in groupby(sorted(zip(defect_tasks, bulk_tasks, defects, dielectrics, defect_task_ids, bulk_task_ids), key=_run_type), key=_run_type):
             sorted_tasks = sorted(tasks_for_runtype, key=_sort)
             ents = [
                 cls.get_defect_entry_from_tasks(defect_task, bulk_task, defect, dielectric) 
-                for defect_task, bulk_task, defect, dielectric in sorted_tasks
+                for defect_task, bulk_task, defect, dielectric, did, bid in sorted_tasks
                 ]
+            rt = run_types[sorted_tasks[0][-2]]
             best_entry = ents[0]
-            best_defect_task  = sorted_tasks[0][0]
-            best_bulk_task = sorted_tasks[0][1]
+            best_tasks[rt] = (sorted_tasks[0][-2], sorted_tasks[0][-1]) 
+            all_tasks[rt] = [ (s[-2], s[-1]) for s in sorted_tasks ]
             metadata[key] = {'convergence': [(sorted_tasks[i][0].nsites, ents[i].corrected_energy) for i in range(len(ents))]}
-            entries[best_defect_task.calcs_reversed[0].run_type] = best_entry
-            final_tasks[best_defect_task.calcs_reversed[0].run_type] = (best_defect_task, best_bulk_task)
+            entries[rt] = ents[0]
 
         data = {
                 'entries': entries,
@@ -185,9 +193,10 @@ class DefectDoc(StructureMetadata):
                 'calc_types': calc_types,
                 'last_updated': last_updated,
                 'created_at': created_at,
-                'task_ids': task_ids,
+                'task_ids': defect_task_ids,
                 #'deprecated_tasks': deprecated_tasks,
-                'tasks': final_tasks,
+                'all_tasks': all_tasks,
+                'best_tasks': best_tasks,
                 'material_id': material_id if material_id else best_entry.parameters['material_id'],
                 'defect': best_entry.defect,
                 'metadata': metadata,

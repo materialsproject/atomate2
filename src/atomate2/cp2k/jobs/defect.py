@@ -72,7 +72,7 @@ class BaseDefectMaker(BaseCp2kMaker):
 @dataclass
 class DefectStaticMaker(BaseDefectMaker):
 
-    name: str = "defect static"
+    name: str = field(default="defect static")
     input_set_generator: DefectSetGenerator = field(
         default_factory=DefectStaticSetGenerator
         )
@@ -86,7 +86,7 @@ class DefectRelaxMaker(BaseDefectMaker):
     the hartree potential for finite size corrections.
     """
 
-    name: str = "defect relax"
+    name: str = field(default="defect relax")
     input_set_generator: Cp2kInputGenerator = field(default_factory=DefectRelaxSetGenerator)
     transformations: tuple[str, ...] = field(default=("PerturbStructureTransformation",))
     transformation_params: tuple[dict, ...] | None = field(default=({"distance": 0.01},))
@@ -100,7 +100,7 @@ class DefectCellOptMaker(BaseDefectMaker):
     the hartree potential for finite size corrections.
     """
 
-    name: str = "defect relax"
+    name: str = field(default="defect relax")
     input_set_generator: Cp2kInputGenerator = field(default_factory=DefectCellOptSetGenerator)
     transformations: tuple[str, ...] = field(default=("PerturbStructureTransformation",))
     transformation_params: tuple[dict, ...] | None = field(default=({"distance": 0.01},))
@@ -108,19 +108,19 @@ class DefectCellOptMaker(BaseDefectMaker):
 @dataclass
 class DefectHybridStaticMaker(DefectStaticMaker, HybridStaticMaker):
     
-    name: str = "defect hybrid static"
+    name: str = field(default="defect hybrid static")
     input_set_generator: DefectSetGenerator = field(default_factory=DefectHybridStaticSetGenerator)
 
 @dataclass
 class DefectHybridRelaxMaker(DefectRelaxMaker, HybridRelaxMaker):
 
-    name: str = "defect hybrid relax"
+    name: str = field(default="defect hybrid relax")
     input_set_generator: DefectSetGenerator = field(default_factory=DefectHybridRelaxSetGenerator)
 
 @dataclass
 class DefectHybridCellOptMaker(DefectCellOptMaker, HybridCellOptMaker):
 
-    name: str = "defect hybrid cell opt"
+    name: str = field(default="defect hybrid cell opt")
     input_set_generator: DefectSetGenerator = field(default_factory=DefectHybridCellOptSetGenerator)
 
 class GhostVacancy(Vacancy):

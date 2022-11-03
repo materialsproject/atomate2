@@ -233,7 +233,7 @@ def collect_defect_outputs(
             defect_entry = DefectEntry(
                 defect=defect,
                 charge_state=charge,
-                sc_entry=ComputedStructureEntry(structure=bulk_output.structure, energy=bulk_output.output.energy)
+                sc_entry=ComputedStructureEntry(structure=bulk_output.structure, energy=output_with_charge.output.energy - bulk_output.output.energy)
             )
             defect_entries.append(defect_entry)
             plot_data = defect_entry.get_freysoldt_correction(
