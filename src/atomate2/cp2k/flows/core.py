@@ -246,7 +246,7 @@ class HybridStaticFlowMaker(HybridFlowMaker):
         Maker to use to generate the second relaxation.
     """
 
-    name: str = "pbe to hybrid static"
+    name: str = "hybrid static flow"
 
 @dataclass
 class HybridRelaxFlowMaker(HybridFlowMaker):
@@ -263,7 +263,7 @@ class HybridRelaxFlowMaker(HybridFlowMaker):
         Maker to use to generate the second relaxation.
     """
 
-    name: str = "pbe to hybrid relaxation"
+    name: str = "hybrid relax flow"
     hybrid_maker: BaseCp2kMaker = field(default_factory=HybridRelaxMaker)
 
 @dataclass
@@ -281,5 +281,5 @@ class HybridCellOptFlowMaker(HybridFlowMaker):
         Maker to use to generate the second relaxation.
     """
 
-    name: str = "pbe to hybrid cell opt"
+    name: str = "hybrid cell opt flow"
     hybrid_maker: BaseCp2kMaker = field(default_factory=HybridCellOptMaker)

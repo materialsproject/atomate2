@@ -311,6 +311,7 @@ class Cp2kInputGenerator(InputGenerator):
         # Generate base input but override with user input settings
         input_settings = recursive_update(input_settings, input_updates)
         input_settings = recursive_update(input_settings, self.user_input_settings)
+        overrides = input_settings.pop("override_default_params") if "override_default_params" in input_settings else {}
         cp2k_input = DftSet(structure=structure, kpoints=kpoints, **input_settings)
 
         for setting in input_settings:
@@ -319,6 +320,7 @@ class Cp2kInputGenerator(InputGenerator):
                     subsettings = input_settings.get(setting)
                     getattr(cp2k_input, setting)(**subsettings if isinstance(subsettings, dict) else {})
 
+        cp2k_input.update(overrides)
         return cp2k_input
     
     def _get_kpoints(
