@@ -11,7 +11,7 @@ from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, validator
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import BaderAnalysis
-from pymatgen.core.structure import Structure
+from pymatgen.core.structure import Structure, Molecule
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos, CompleteDos
 from pymatgen.electronic_structure.bandstructure import BandStructure
@@ -76,7 +76,7 @@ class CalculationInput(BaseModel):
     Summary of inputs for a CP2K calculation
     """
 
-    structure: Structure = Field(None, description="The input structure object")
+    structure: Structure | Molecule = Field(None, description="The input structure/molecule object")
 
     atomic_kind_info: Dict = Field(None, description="Description of parameters used for each atomic kind")
 
@@ -150,8 +150,8 @@ class CalculationOutput(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the calculation"
     )
-    structure: Structure = Field(
-        None, description="The final structure from the calculation"
+    structure: Structure | Molecule = Field(
+        None, description="The final structure/molecule from the calculation"
     )
     efermi: float = Field(
         None, description="The Fermi level from the calculation in eV"
