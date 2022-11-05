@@ -9,7 +9,7 @@ import numpy as np
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.analysis.structure_analyzer import oxide_type
-from pymatgen.core.structure import Structure
+from pymatgen.core.structure import Structure, Molecule
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.inputs import Cp2kInput
@@ -17,6 +17,7 @@ from pymatgen.io.cp2k.inputs import Cp2kInput
 from atomate2 import SETTINGS, __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.structure import StructureMetadata
+from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 from atomate2.cp2k.schemas.calculation import (
@@ -53,7 +54,7 @@ class AnalysisSummary(BaseModel):
     @classmethod
     def from_cp2k_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
         """
-        Create analysis summary from VASP calculation documents.
+        Create analysis summary from CP2K calculation documents.
 
         Parameters
         ----------
@@ -67,17 +68,22 @@ class AnalysisSummary(BaseModel):
         """
         from atomate2.cp2k.schemas.calculation import Status
 
-        initial_vol = calc_docs[0].input.structure.lattice.volume
-        final_vol = calc_docs[-1].output.structure.lattice.volume
-        delta_vol = final_vol - initial_vol
-        percent_delta_vol = 100 * delta_vol / initial_vol
         warnings = []
         errors = []
 
-        if abs(percent_delta_vol) > SETTINGS.CP2K_VOLUME_CHANGE_WARNING_TOL * 100:
-            warnings.append(
-                f"Volume change > {SETTINGS.CP2K_VOLUME_CHANGE_WARNING_TOL * 100}%"
-            )
+        if isinstance(calc_docs[0].input.structure, Structure):
+            initial_vol = calc_docs[0].input.structure.lattice.volume
+            final_vol = calc_docs[-1].output.structure.lattice.volume
+            delta_vol = final_vol - initial_vol
+            percent_delta_vol = 100 * delta_vol / initial_vol
+
+            if abs(percent_delta_vol) > SETTINGS.CP2K_VOLUME_CHANGE_WARNING_TOL * 100:
+                warnings.append(
+                    f"Volume change > {SETTINGS.CP2K_VOLUME_CHANGE_WARNING_TOL * 100}%"
+                )
+        else:
+            delta_vol = None
+            percent_delta_vol = None
 
         final_calc = calc_docs[-1]
         max_force = None
@@ -130,7 +136,7 @@ class AtomicKindSummary(BaseModel):
 class InputSummary(BaseModel):
     """Summary of inputs for a CP2K calculation."""
 
-    structure: Structure = Field(None, description="The input structure object")
+    structure: Structure | Molecule = Field(None, description="The input structure object")
 
     atomic_kind_info: AtomicKindSummary = Field(
         None, description="Summary of the potential and basis used for each atom kind" 
@@ -167,7 +173,7 @@ class InputSummary(BaseModel):
 class OutputSummary(BaseModel):
     """Summary of the outputs for a CP2K calculation."""
 
-    structure: Structure = Field(None, description="The output structure object")
+    structure: Structure | Molecule = Field(None, description="The output structure object")
     energy: float = Field(
         None, description="The final total DFT energy for the last calculation"
     )
@@ -213,7 +219,7 @@ class OutputSummary(BaseModel):
         )
 
 
-class TaskDocument(StructureMetadata):
+class TaskDocument(StructureMetadata, MoleculeMetadata):
     """Definition of CP2K task document."""
 
     dir_name: str = Field(None, description="The directory for this CP2K task")
@@ -228,8 +234,8 @@ class TaskDocument(StructureMetadata):
     output: OutputSummary = Field(
         None, description="The output of the final calculation"
     )
-    structure: Structure = Field(
-        None, description="Final output structure from the task"
+    structure: Structure | Molecule = Field(
+        None, description="Final output structure from the task", alias="molecule"
     )
     state: Status = Field(None, description="State of this task")
     included_objects: List[Cp2kObject] = Field(
@@ -346,9 +352,19 @@ class TaskDocument(StructureMetadata):
         if cp2k_objects:
             included_objects = list(cp2k_objects.keys())
 
-        doc = cls.from_structure(
-            structure=calcs_reversed[-1].output.structure,
-            include_structure=True,
+        if isinstance(calcs_reversed[-1].output.structure, Structure):
+            attr = "from_structure"
+            dat = {"structure": calcs_reversed[-1].output.structure, "include_structure": True}
+        elif isinstance(calcs_reversed[-1].output.structure, Molecule):
+            attr = "from_molecule"
+            dat = {
+                "structure": calcs_reversed[-1].output.structure,
+                "molecule": calcs_reversed[-1].output.structure, 
+                "include_molecule": True
+                }
+
+        doc = getattr(cls, attr)(
+            **dat,
             dir_name=dir_name,
             calcs_reversed=calcs_reversed,
             analysis=analysis,
