@@ -235,7 +235,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         None, description="The output of the final calculation"
     )
     structure: Structure | Molecule = Field(
-        None, description="Final output structure from the task", alias="molecule"
+        None, description="Final output structure from the task"
     )
     state: Status = Field(None, description="State of this task")
     included_objects: List[Cp2kObject] = Field(
@@ -362,28 +362,32 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
                 "molecule": calcs_reversed[-1].output.structure, 
                 "include_molecule": True
                 }
-
-        doc = getattr(cls, attr)(
-            **dat,
-            dir_name=dir_name,
-            calcs_reversed=calcs_reversed,
-            analysis=analysis,
-            transformations=transformations,
-            custodian=custodian,
-            orig_inputs=orig_inputs,
-            additional_json=additional_json,
-            icsd_id=icsd_id,
-            tags=tags,
-            author=author,
-            completed_at=calcs_reversed[-1].completed_at,
-            input=InputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
-            output=OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
-            state=_get_state(calcs_reversed, analysis),
-            entry=cls.get_entry(calcs_reversed),
-            run_stats=_get_run_stats(calcs_reversed),
-            cp2k_objects=cp2k_objects,
-            included_objects=included_objects,
-        )
+        
+        doc = getattr(cls, attr)(**dat)
+        ddict = doc.dict()
+        data = {
+            'structure': calcs_reversed[-1].output.structure, 
+            'dir_name': dir_name,
+            'calcs_reversed': calcs_reversed,
+            'analysis':analysis,
+            'transformations':transformations,
+            'custodian':custodian,
+            'orig_inputs':orig_inputs,
+            'additional_json': additional_json,
+            'icsd_id': icsd_id,
+            'tags':tags,
+            'author': author,
+            'completed_at': calcs_reversed[-1].completed_at,
+            'input': InputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
+            'output': OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
+            'state': _get_state(calcs_reversed, analysis),
+            'entry': cls.get_entry(calcs_reversed),
+            'run_stats':_get_run_stats(calcs_reversed),
+            'cp2k_objects':cp2k_objects,
+            'included_objects': included_objects,
+        }
+        doc = cls(**ddict)
+        doc = doc.copy(update=data)
         doc = doc.copy(update=additional_fields)
         return doc
 
