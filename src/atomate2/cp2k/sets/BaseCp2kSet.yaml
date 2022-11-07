@@ -242,7 +242,7 @@ cp2k_input:
     Mg:
       aux_basis: admm-tzp-q10
       basis: TZVP-MOLOPT-PBE-GTH-q10
-      potential: GTH-PBE-q2
+      potential: GTH-PBE-q10
     Mn:
       aux_basis: admm-tzp-q15
       basis: TZVP-MOLOPT-PBE-GTH-q15
