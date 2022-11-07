@@ -176,12 +176,15 @@ class CalculationOutput(BaseModel):
         None, description="Summary of runtime statistics for this calculation"
     )
 
+    scf: List = Field(None, description="SCF optimization steps")
+
     @classmethod
     def from_cp2k_output(
         cls,
         output: Cp2kOutput, # Must use auto_load kwarg when passed
         v_hartree: Optional[VolumetricData] = None,
-        store_trajectory: bool = False
+        store_trajectory: bool = False,
+        store_scf: bool = False,
     ) -> "CalculationOutput":
         """
         Create a CP2K output document from CP2K outputs.
@@ -226,6 +229,13 @@ class CalculationOutput(BaseModel):
                 "is_metal": output.is_metal,
             }
 
+        if store_scf:
+            output.parse_scf_opt()
+            scf = output.data.get('electronic_steps')
+            scf = [item for sublist in scf for item in sublist]
+        else:
+            scf = None
+
         return cls(
             structure=structure,
             energy=output.final_energy,
@@ -234,6 +244,7 @@ class CalculationOutput(BaseModel):
             ionic_steps=None if store_trajectory else output.ionic_steps,
             v_hartree=v_hart_avg,
             run_stats=RunStatistics.from_cp2k_output(output),
+            scf=scf,
         )
 
 
@@ -287,6 +298,7 @@ class Calculation(BaseModel):
         strip_bandstructure_projections: bool = False,
         strip_dos_projections: bool = False,
         store_trajectory: bool = False,
+        store_scf: bool = False,
         store_volumetric_data: Optional[
             Tuple[str]
         ] = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA,
@@ -393,7 +405,7 @@ class Calculation(BaseModel):
 
         input_doc = CalculationInput.from_cp2k_output(cp2k_output)
         output_doc = CalculationOutput.from_cp2k_output(
-            cp2k_output, v_hartree=v_hartree 
+            cp2k_output, v_hartree=v_hartree, store_scf=store_scf
         )
 
         has_cp2k_completed = Status.SUCCESS if cp2k_output.completed else Status.FAILED
