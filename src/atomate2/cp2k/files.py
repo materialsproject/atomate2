@@ -67,15 +67,19 @@ def copy_cp2k_outputs(
     o.parse_files()
     if restart_to_input:
         additional_cp2k_files += ('restart',)
-        restart_file = Path(o.filenames['restart']).name if o.filenames['restart'] else None
 
     #TODO it looks like in the vasp version, wavecar/chgcar are not copied by default. Seems odd?
     additional_cp2k_files += ('wfn',)
-    files = ["cp2k.inp", "cp2k.out"] + [
-        Path(o.filenames[f]).name if isinstance(o.filenames[f], str) else Path(o.filenames[f][-1]).name
-        for f in set(additional_cp2k_files) 
-        if o.filenames.get(f)
-    ]
+    files = ["cp2k.inp", "cp2k.out"]
+    for f in set(additional_cp2k_files):
+        if f in o.filenames:
+            if o.filenames.get(f):
+                if isinstance(o.filenames[f], str):
+                    files.append(Path(o.filenames[f]).name)
+                else:
+                    files.append(Path(o.filenames[f][-1]).name)
+        else:
+            files.append(Path(f).name)
     all_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
 
     copy_files(
