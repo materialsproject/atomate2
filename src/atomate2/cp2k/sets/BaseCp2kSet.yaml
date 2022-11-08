@@ -44,13 +44,8 @@ cp2k_input:
       basis: TZVP-MOLOPT-PBE-GTH-q10
       potential: GTH-PBE-q10
     Be:
-<<<<<<< Updated upstream
-      aux_basis: admm-dz-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q2
-=======
       aux_basis: admm-tzp-q4
       basis: TZVP-MOLOPT-PBE-GTH-q4
->>>>>>> Stashed changes
       potential: GTH-PBE-q4
     Bh:
       aux_basis: null
@@ -221,13 +216,8 @@ cp2k_input:
       basis: null
       potential: GTH-PBE-q11
     Li:
-<<<<<<< Updated upstream
-      aux_basis: admm-dz-q3
-      basis: TZVP-MOLOPT-PBE-GTH-q1
-=======
       aux_basis: admm-tzp-q3
       basis: TZVP-MOLOPT-PBE-GTH-q3
->>>>>>> Stashed changes
       potential: GTH-PBE-q3
     Lr:
       aux_basis: null
@@ -270,13 +260,8 @@ cp2k_input:
       basis: TZVP-MOLOPT-PBE-GTH-q5
       potential: GTH-PBE-q5
     Na:
-<<<<<<< Updated upstream
-      aux_basis: admm-dz-q9
-      basis: TZVP-MOLOPT-PBE-GTH-q1
-=======
       aux_basis: admm-tzp-q9
       basis: TZVP-MOLOPT-PBE-GTH-q9
->>>>>>> Stashed changes
       potential: GTH-PBE-q9
     Nb:
       aux_basis: admm-dz-q13
