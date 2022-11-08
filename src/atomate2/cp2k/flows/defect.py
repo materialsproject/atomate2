@@ -44,19 +44,25 @@ logger = logging.getLogger(__name__)
 class DefectHybridStaticFlowMaker(HybridStaticFlowMaker):
 
     initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default_factory=DefectHybridStaticMaker)
+    hybrid_maker: BaseCp2kMaker = field(default=DefectHybridStaticMaker(
+        copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
+        )
 
 @dataclass 
 class DefectHybridRelaxFlowMaker(HybridRelaxFlowMaker):
 
     initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default_factory=DefectHybridRelaxMaker)
+    hybrid_maker: BaseCp2kMaker = field(default=DefectHybridRelaxMaker(
+        copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
+        )
 
 @dataclass 
 class DefectHybridCellOptFlowMaker(HybridCellOptFlowMaker):
 
     initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default_factory=DefectHybridCellOptMaker)
+    hybrid_maker: BaseCp2kMaker = field(default=DefectHybridCellOptMaker(
+        copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
+        )
 
 # TODO close to being able to put this in common. Just need a switch that decides which core flow/job to use based on software
 @dataclass
