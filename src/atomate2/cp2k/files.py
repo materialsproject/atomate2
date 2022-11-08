@@ -36,7 +36,7 @@ def copy_cp2k_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
-    the suffix will be removed. Additional vasp files will be also be  copied with the
+    the suffix will be removed. Additional cp2k files will be also be  copied with the
     same suffix applied. Lastly, this function will gunzip any gzipped files.
 
     Parameters
@@ -72,12 +72,11 @@ def copy_cp2k_outputs(
     additional_cp2k_files += ('wfn',)
     files = ["cp2k.inp", "cp2k.out"]
     for f in set(additional_cp2k_files):
-        if f in o.filenames:
-            if o.filenames.get(f):
-                if isinstance(o.filenames[f], str):
-                    files.append(Path(o.filenames[f]).name)
-                else:
-                    files.append(Path(o.filenames[f][-1]).name)
+        if o.filenames.get(f):
+            if isinstance(o.filenames[f], str):
+                files.append(Path(o.filenames[f]).name)
+            else:
+                files.append(Path(o.filenames[f][-1]).name)
         else:
             files.append(Path(f).name)
     all_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
@@ -87,6 +86,7 @@ def copy_cp2k_outputs(
         src_host=src_host,
         include_files=all_files,
         file_client=file_client,
+        allow_missing=True,
     )
 
     gunzip_files(
