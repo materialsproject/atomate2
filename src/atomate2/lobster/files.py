@@ -1,4 +1,4 @@
-"""Module defining functions for manipulating amset files."""
+"""Module defining functions for manipulating lobster files."""
 
 from __future__ import annotations
 
@@ -11,7 +11,41 @@ from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+LOBSTEROUTPUT_FILES = [
+    "lobsterout",
+    "CHARGE.lobster",
+    "COHPCAR.lobster",
+    "COOPCAR.lobster",
+    "DOSCAR.lobster",
+    "GROSSPOP.lobster",
+    "ICOHPLIST.lobster",
+    "ICOOPLIST.lobster",
+    "lobster.out",
+    "projectionData.lobster",
+    "MadelungEnergies.lobster",
+    "SitePotentials.lobster",
+    "bandOverlaps.lobster",
+    "ICOBILIST.lobster",
+    "COBICAR.lobster",
+]
 
+VASP_OUTPUT_FILES = [
+    "OUTCAR",
+    "vasprun.xml",
+    "CHG",
+    "CHGCAR",
+    "CONTCAR",
+    "INCAR",
+    "KPOINTS",
+    "POSCAR",
+    "POTCAR",
+    "DOSCAR",
+    "EIGENVAL",
+    "IBZKPT",
+    "OSZICAR",
+    "WAVECAR",
+    "XDATCAR",
+]
 __all__ = ["copy_lobster_files"]
 
 
@@ -25,7 +59,7 @@ def copy_lobster_files(
     file_client: FileClient = None,
 ):
     """
-    Copy AMSET files to current directory.
+    Copy Lobster files to current directory.
 
     This function will gunzip any gzipped files.
 
@@ -43,19 +77,12 @@ def copy_lobster_files(
     """
     src_dir = strip_hostname(src_dir)  # TODO: Handle hostnames properly.
 
-    logger.info(f"Copying AMSET inputs from {src_dir}")
+    logger.info(f"Copying LOBSTER inputs from {src_dir}")
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
     # find optional files
     files = []
-    for file in (
-        "settings.yaml",
-        "vasprun.xml",
-        "band_structure_data.json",
-        "wavefunction.h5",
-        "deformation.h5",
-        "transport.json",
-    ):
+    for file in VASP_OUTPUT_FILES:
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
             files.append(found_file)
@@ -73,11 +100,11 @@ def copy_lobster_files(
         file_client=file_client,
     )
 
-    rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
+    #rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
     logger.info("Finished copying inputs")
 
 
-# something similar is present in pymatgen?
+# something similar is present in pymatgen? # Do I need this?
 def write_lobster_settings(settings_updates: dict, from_prev: bool = False):
     """
     Write AMSET settings to file.

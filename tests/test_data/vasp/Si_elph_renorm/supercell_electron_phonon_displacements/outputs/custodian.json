@@ -1,0 +1,92 @@
+[
+    {
+        "job": {
+            "@module": "custodian.vasp.jobs",
+            "@class": "VaspJob",
+            "@version": "2021.2.8",
+            "vasp_cmd": [
+                "mpirun",
+                "-np",
+                "4",
+                "/Users/alex/dev/bin/vasp_std",
+                ">",
+                "vasp.out"
+            ],
+            "output_file": "vasp.out",
+            "stderr_file": "std_err.txt",
+            "suffix": "",
+            "final": true,
+            "backup": true,
+            "auto_npar": false,
+            "auto_gamma": true,
+            "settings_override": null,
+            "gamma_vasp_cmd": [
+                "vasp_gam"
+            ],
+            "copy_magmom": false,
+            "auto_continue": false
+        },
+        "corrections": [
+            {
+                "errors": [
+                    "dfpt_ncore"
+                ],
+                "actions": [
+                    {
+                        "dict": "INCAR",
+                        "action": {
+                            "_unset": {
+                                "NCORE": 0
+                            }
+                        }
+                    }
+                ],
+                "handler": {
+                    "@module": "custodian.vasp.handlers",
+                    "@class": "VaspErrorHandler",
+                    "@version": "2021.2.8",
+                    "output_filename": "vasp.out",
+                    "natoms_large_cell": 100,
+                    "errors_subset_to_catch": [
+                        "tet",
+                        "inv_rot_mat",
+                        "brmix",
+                        "subspacematrix",
+                        "tetirr",
+                        "incorrect_shift",
+                        "real_optlay",
+                        "rspher",
+                        "dentet",
+                        "too_few_bands",
+                        "triple_product",
+                        "rot_matrix",
+                        "brions",
+                        "pricel",
+                        "zpotrf",
+                        "amin",
+                        "zbrent",
+                        "pssyevx",
+                        "eddrmm",
+                        "edddav",
+                        "grad_not_orth",
+                        "nicht_konv",
+                        "zheev",
+                        "elf_kpar",
+                        "elf_ncl",
+                        "rhosyg",
+                        "posmap",
+                        "point_group",
+                        "symprec_noise",
+                        "dfpt_ncore"
+                    ]
+                }
+            }
+        ],
+        "handler": null,
+        "validator": null,
+        "max_errors": false,
+        "max_errors_per_job": false,
+        "max_errors_per_handler": false,
+        "nonzero_return_code": false
+    }
+]

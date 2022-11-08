@@ -13,6 +13,8 @@ from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, RelaxMaker
+from atomate2.vasp.jobs.lobster import VaspLobsterMaker, get_vasp_lobster_jobs
+
 
 __all__ = ["LobsterMaker"]
 
@@ -135,8 +137,10 @@ class LobsterMaker(Maker):
             optimization_run_job_dir = None
             optimization_run_uuid = None
 
-        # do a static WAVECAR computation with symmetry and standard number of bands first
 
+
+        # do a static WAVECAR computation with symmetry and standard number of bands first
+        # Do a static VASP computation
 
 
         # find out maximum number of bands that needs to be computed
@@ -144,8 +148,9 @@ class LobsterMaker(Maker):
         #
 
 
-        # do a WAVECAR computation with correct number of bands
-
+        # do a WAVECAR computation with correct number of bands and create vasp jobs
+        vaspjob=get_vasp_lobster_jobs(structure, address_max_basis=None, address_min_basis=None, prev_vasp_dir=None)
+        jobs.append(vaspjob)
 
         # do Lobster computation with the previous WAVECAR
         # lobster job has to be implemented
@@ -154,5 +159,5 @@ class LobsterMaker(Maker):
         # delete wavecars
 
 
-        # flow = Flow(jobs, lobster.output)
-        #return flow
+        flow = Flow(jobs, vaspjob.output)
+        return flow

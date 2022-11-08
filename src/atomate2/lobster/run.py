@@ -1,7 +1,3 @@
-"""Module defining functions to run amset."""
-
-from __future__ import annotations
-
 """
 Functions to run LOBSTER.
 
@@ -51,7 +47,7 @@ class JobType(ValueEnum):
 
 def run_lobster(
         job_type: JobType | str = JobType.NORMAL,
-        lobster_cmd: str = SETTINGS.VASP_CMD,
+        lobster_cmd: str = SETTINGS.LOBSTER_CMD,
         max_errors: int = SETTINGS.LOBSTER_CUSTODIAN_MAX_ERRORS,
         scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
         validators: Sequence[Validator] = _DEFAULT_VALIDATORS,

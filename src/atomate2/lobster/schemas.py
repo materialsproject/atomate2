@@ -32,7 +32,8 @@ try:
     from lobsterpy.cohp.analyze import Analysis
     from lobsterpy.cohp.describe import Description
 except ImportError:
-    lobsterpy = None
+    Analysis=None
+    Description=None
 
 __all__ = ["LobsterTaskDocument"]
 
@@ -94,7 +95,7 @@ class LobsterTaskDocument(StructureMetadata):
     )
     lobsterout: LobsteroutModel =Field("Lobster out data")
     lobsterin: Lobsterin = Field("Lobsterin")
-    LobsterPy_cation_anion: LobsterPyModel = Field("Model describing the LobsterPy data")
+    #LobsterPy_cation_anion: LobsterPyModel = Field("Model describing the LobsterPy data")
     #COHPData
     #COOPData
     #COBIData
@@ -108,7 +109,7 @@ class LobsterTaskDocument(StructureMetadata):
     )
 
     @classmethod
-    @requires(lobsterpy, "lobsterpy must be installed to create an AmsetTaskDocument.")
+    @requires(Analysis, "lobsterpy must be installed to create an LobsterTaskDocument.")
     def from_directory(
         cls,
         dir_name: Union[Path, str],
