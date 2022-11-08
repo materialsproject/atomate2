@@ -72,21 +72,21 @@ def copy_cp2k_outputs(
     additional_cp2k_files += ('wfn',)
     files = ["cp2k.inp", "cp2k.out"]
     for f in set(additional_cp2k_files):
-        if o.filenames.get(f):
+        if f in o.filenames and o.filenames.get(f):
             if isinstance(o.filenames[f], str):
                 files.append(Path(o.filenames[f]).name)
             else:
                 files.append(Path(o.filenames[f][-1]).name)
         else:
             files.append(Path(f).name)
-    all_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
+    all_files = [get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files]
+    all_files = [f for f in all_files if f]
 
     copy_files(
         src_dir,
         src_host=src_host,
         include_files=all_files,
         file_client=file_client,
-        allow_missing=True,
     )
 
     gunzip_files(
