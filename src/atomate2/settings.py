@@ -82,6 +82,11 @@ class Atomate2Settings(BaseSettings):
         "Requires the bader executable to be on the path.",
     )
 
+    LOBSTER_CMD: str =Field(default="lobster", description="Command to run standard version of VASP.")
+    LOBSTER_CUSTODIAN_MAX_ERRORS: int = Field(
+        5, description="Maximum number of errors to correct before custodian gives up"
+    )
+
     # Elastic constant settings
     ELASTIC_FITTING_METHOD: str = Field(
         "finite_difference", description="Elastic constant fitting method"
@@ -112,8 +117,8 @@ class Atomate2Settings(BaseSettings):
         config_file_path: str = values.get("CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
 
         new_values = {}
-        if Path(config_file_path).exists():
-            new_values.update(loadfn(config_file_path))
+        if Path(config_file_path).expanduser().exists():
+            new_values.update(loadfn(Path(config_file_path).expanduser()))
 
         new_values.update(values)
         return new_values
