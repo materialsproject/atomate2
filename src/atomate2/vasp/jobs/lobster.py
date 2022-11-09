@@ -9,6 +9,7 @@ from jobflow import Flow, Maker
 from jobflow import Maker, Response, job
 from monty.serialization import loadfn
 from monty.shutil import gzip_dir
+from atomate2.common.files import delete_files
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputGenerator
@@ -71,9 +72,10 @@ class VaspLobsterMaker(BaseVaspMaker):
             },
         )
     )
+    copy_vasp_kwargs = {"additional_vasp_files":["WAVECAR"]}
 
 @job
-def get_basis_infos(structure, vaspmaker, address_max_basis, address_min_basis):
+def get_basis_infos(structure, vaspmaker, address_max_basis=None, address_min_basis=None):
     # create a vasp input for lobster
 
     # we need to add more files to copy if prev_vasp_dir exists
@@ -106,26 +108,72 @@ def get_basis_infos(structure, vaspmaker, address_max_basis, address_min_basis):
         )
 
     nband_list = []
-    for basis in list_basis_dict:
+    for dict_for_basis in list_basis_dict:
+        basis = [key + " " + value for key, value in dict_for_basis.items()]
         lobsterin = Lobsterin(settingsdict={"basisfunctions": basis})
         nbands = lobsterin._get_nbands(structure=structure)
         nband_list.append(nbands)
 
+    return {"nbands": max(nband_list), "basis_dict": list_basis_dict}
 
-    return {"nbands":max(nband_list), "basis_dict":list_basis_dict}
 
+@job
+def update_user_incar_settings_job(vaspjob, nbands):
+    vaspjob=update_user_incar_settings(vaspjob, {"NBANDS": nbands["nbands"]})
+    return Response(replace=vaspjob)
 
 @job
 def get_lobster_jobs(basis_dict, wavefunction_dir):
     jobs=[]
     outputs={}
+    outputs["uuids"]=[]
+    outputs["dirs"]=[]
+    outputs["basis"]=[]
     for i, basis in enumerate(basis_dict):
         lobsterjob=PureLobsterMaker().make(wavefunction_dir=wavefunction_dir, basis_dict=basis)
-        outputs["displacement_number"].append(i)
         outputs["uuids"].append(lobsterjob.output.uuid)
         outputs["dirs"].append(lobsterjob.output.dir_name)
         outputs["basis"].append(basis)
+        jobs.append(lobsterjob)
 
-    flow=Flow(jobs, outputs=outputs)
-    return Response(flow)
+    flow=Flow(jobs, output=outputs)
+    return Response(replace=flow)
+
+
+@job
+def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
+    jobs=[]
+    for dir_name in dirs:
+        jobs.append(delete_files(dir_name, include_files=["WAVECAR", "WAVECAR.gz"]))
+    if dir_vasp is not None:
+        jobs.append(delete_files(dir_vasp, include_files=["WAVECAR", "WAVECAR.gz"]))
+    if dir_preconverge is not None:
+        jobs.append(delete_files(dir_preconverge, include_files=["WAVECAR", "WAVECAR.gz"]))
+
+    return Response(replace=Flow(jobs))
+
+
+@job(output_schema=LobsterTaskDocument)
+def generate_database_entry(
+
+    **kwargs,
+):
+    """
+    Analyze the phonon runs and summarize the results.
+
+    Parameters
+    ----------
+    structure: Structure object
+        Fully optimized structure used for phonon runs
+
+    kwargs: dict
+        Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
+
+    """
+    lobster_doc = LobsterTaskDocument.from_directory(
+        **kwargs,
+    )
+
+    return lobster_doc
+
 

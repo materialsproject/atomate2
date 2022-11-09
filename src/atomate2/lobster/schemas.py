@@ -135,61 +135,57 @@ class LobsterTaskDocument(StructureMetadata):
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
-        struct = Structure.from_file(get_zfile("POSCAR"))
-        Lobsterout_here = Lobsterout(get_zfile("lobsterout"))
+        #struct = Structure.from_file(get_zfile(directory_listing=".",base_name="POSCAR"))
+        Lobsterout_here = Lobsterout("lobsterout.gz")
         lobsterout_doc=Lobsterout_here.get_doc()
-        Lobsterin_here = Lobsterin.from_file(get_zfile("lobsterin"))
+        #Lobsterin_here = Lobsterin.from_file(get_zfile(directory_listing=".", base_name="lobsterin"))
         # cation anion-mode
 
-        directory = (
-                Path(__file__).parent / "LobsterOutputs/outputs"
-        )
-
-        analyse = Analysis(
-            path_to_poscar=os.path.join(directory, "POSCAR"),
-            path_to_icohplist=os.path.join(directory, "ICOHPLIST.lobster"),
-            path_to_cohpcar=os.path.join(directory, "COHPCAR.lobster"),
-            path_to_charge=os.path.join(directory, "CHARGE.lobster"),
-            summed_spins=True,
-            cutoff_icohp=0.01
-        )
-
-        # Setup Desciption dict
-        describe = Description(analysis_object=analyse)
-        describe.write_description()
-
-        # Automatic plots
-        # describe.plot_cohps(
-        #    ylim=[-4, 2],
-        #    xlim=[-10, 10],
-        #    integrated=False,
+        # analyse = Analysis(
+        #     path_to_poscar=os.path.join(directory, "POSCAR"),
+        #     path_to_icohplist=os.path.join(directory, "ICOHPLIST.lobster"),
+        #     path_to_cohpcar=os.path.join(directory, "COHPCAR.lobster"),
+        #     path_to_charge=os.path.join(directory, "CHARGE.lobster"),
+        #     summed_spins=True,
+        #     cutoff_icohp=0.01
         # )
+        #
+        # # Setup Desciption dict
+        # describe = Description(analysis_object=analyse)
+        # describe.write_description()
+        #
+        # # Automatic plots
+        # # describe.plot_cohps(
+        # #    ylim=[-4, 2],
+        # #    xlim=[-10, 10],
+        # #    integrated=False,
+        # # )
+        #
+        # # different dicts that summarize the results
+        #
+        # print(analyse.condensed_bonding_analysis)
+        # print(analyse.final_dict_bonds)
+        # print(analyse.final_dict_ions)
+        #
+        # # This is similar to the ChemEnv output now
+        # lse = analyse.chemenv.get_light_structure_environment(only_cation_environments=True)
+        #
+        # for coord, neighbor_sets in zip(lse.coordination_environments, lse.neighbors_sets):
+        #     # we are only looking at cation-anion bonds here and we only return environments of cations
+        #     if neighbor_sets is not None:
+        #         print(coord[0])
+        #         print(neighbor_sets[0])
+        #         # This returns the list of all neighboring atoms as PeriodicSite objects including coordinates.
+        #         # This should be useful for computing vectors
+        #         print(neighbor_sets[0].neighb_sites)
+        #
+        # # process Lobsterout (similar to outputs from atomate)
+        #
+        # # use lobsterpy for automatic analysis
+        # # add further infos on COHP
 
-        # different dicts that summarize the results
-
-        print(analyse.condensed_bonding_analysis)
-        print(analyse.final_dict_bonds)
-        print(analyse.final_dict_ions)
-
-        # This is similar to the ChemEnv output now
-        lse = analyse.chemenv.get_light_structure_environment(only_cation_environments=True)
-
-        for coord, neighbor_sets in zip(lse.coordination_environments, lse.neighbors_sets):
-            # we are only looking at cation-anion bonds here and we only return environments of cations
-            if neighbor_sets is not None:
-                print(coord[0])
-                print(neighbor_sets[0])
-                # This returns the list of all neighboring atoms as PeriodicSite objects including coordinates.
-                # This should be useful for computing vectors
-                print(neighbor_sets[0].neighb_sites)
-
-        # process Lobsterout (similar to outputs from atomate)
-
-        # use lobsterpy for automatic analysis
-        # add further infos on COHP
-
-        doc.copy(update=additional_fields)
-        return doc
+        #doc.copy(update=additional_fields)
+        return  lobsterout_doc #doc
 
 
 def _get_structure() -> Structure:

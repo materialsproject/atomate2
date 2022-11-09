@@ -65,13 +65,13 @@ class PureLobsterMaker(Maker):
         logger.info("Running LOBSTER")
         run_lobster()
 
-        converged = None
+        #converged = None
 
         # parse amset outputs
         task_doc = LobsterTaskDocument.from_directory(
             Path.cwd(), **self.task_document_kwargs
         )
-        task_doc.converged = converged
+        #task_doc.converged = converged
 
         # gzip folder
         gzip_dir(".")
