@@ -17,7 +17,7 @@ from pymatgen.io.lobster import Lobsterin
 from atomate2.vasp.powerups import update_user_incar_settings
 from pymatgen.core import Structure
 from atomate2.lobster.jobs import PureLobsterMaker
-__all__ = [ "VaspLobsterMaker"]
+__all__ = [ "VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
 
 logger = logging.getLogger(__name__)
 
@@ -73,12 +73,12 @@ class VaspLobsterMaker(BaseVaspMaker):
     )
 
 @job
-def get_vasp_lobster_jobs(structure, address_max_basis, address_min_basis, prev_vasp_dir):
+def get_basis_infos(structure, vaspmaker, address_max_basis, address_min_basis):
     # create a vasp input for lobster
-    vaspmaker=VaspLobsterMaker()
+
     # we need to add more files to copy if prev_vasp_dir exists
     potcar_symbols=vaspmaker.input_set_generator._get_potcar(structure=structure, potcar_spec=True)
-    vaspjob=vaspmaker.make(structure=structure)
+
     # get data from Lobsterinput
     #Lobster
     if address_max_basis is None and address_min_basis is None:
@@ -111,88 +111,21 @@ def get_vasp_lobster_jobs(structure, address_max_basis, address_min_basis, prev_
         nbands = lobsterin._get_nbands(structure=structure)
         nband_list.append(nbands)
 
-    #vaspjob.maker.input_set_generator.user_incar_settings["NBANDS"] = max(nband_list)
 
+    return {"nbands":max(nband_list), "basis_dict":list_basis_dict}
+
+
+@job
+def get_lobster_jobs(basis_dict, wavefunction_dir):
     jobs=[]
-    jobs.append(vaspjob)
-    update_user_incar_settings(vaspjob, {"NBANDS": max(nband_list)})
+    outputs={}
+    for i, basis in enumerate(basis_dict):
+        lobsterjob=PureLobsterMaker().make(wavefunction_dir=wavefunction_dir, basis_dict=basis)
+        outputs["displacement_number"].append(i)
+        outputs["uuids"].append(lobsterjob.output.uuid)
+        outputs["dirs"].append(lobsterjob.output.dir_name)
+        outputs["basis"].append(basis)
 
-    for basis in list_basis_dict:
-        jobs.append(PureLobsterMaker().make(wavefunction_dir=vaspjob.output.dir_name, basis_dict=basis))
-
-    #create a list of lobsterjobs or give back the different basis sets that need to be computed?!
-    # make lobster jobs
-    flow=Flow(jobs)
-
-    #make a flow of vaspjob and LobsterJobs
-    # return a vasp job and set of lobster computations
-    return Response(replace=flow)
-
-#
-#
-# @dataclass
-# class PureLobsterMaker(Maker):
-#     """
-#     Lobster job maker.
-#
-#     Parameters
-#     ----------
-#     name : str
-#         Name of jobs produced by this maker.
-#     resubmit : bool
-#         Could this be interesting?
-#     task_document_kwargs : dict
-#         Keyword arguments passed to :obj:`.LobsterTaskDocument.from_directory`.
-#     """
-#
-#     name: str = "lobster"
-#     resubmit: bool = False
-#     task_document_kwargs: dict = field(default_factory=dict)
-#
-#     @job(output_schema=LobsterTaskDocument)
-#     def make(
-#         self,
-#         settings: dict,
-#         #prev_lobster_dir: str | Path = None, # needed?
-#         wavefunction_dir: str | Path = None,
-#     ):
-#         """
-#         Run an AMSET calculation.
-#
-#         Parameters
-#         ----------
-#         settings : dict
-#             Amset settings.
-#         wavefunction_dir : str or Path
-#             A directory containing a VASP computation including WAVECAR
-#             # could be extended to other codes as well
-#
-#         """
-#         copy_lobster_files(wavefunction_dir)
-#
-#         # write amset settings
-#         write_lobster_settings(settings)
-#
-#         # run amset
-#         logger.info("Running LOBSTER")
-#         run_lobster()
-#
-#
-#         # what checks might be useful? we have validators in custodian already
-#
-#
-#
-#         # parse amset outputs
-#         task_doc = LosterTaskDocument.from_directory(
-#             Path.cwd(), **self.task_document_kwargs
-#         )
-#
-#         # gzip folder
-#         gzip_dir(".")
-#
-#         # handle resubmission for non-converged calculations
-#         # not sure what do here or if needed!
-#
-#
-#         return Response(output=task_doc)
+    flow=Flow(jobs, outputs=outputs)
+    return Response(flow)
 

@@ -13,7 +13,21 @@ from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, RelaxMaker
-from atomate2.vasp.jobs.lobster import VaspLobsterMaker, get_vasp_lobster_jobs
+from atomate2.vasp.jobs.lobster import VaspLobsterMaker, get_basis_infos, get_lobster_jobs
+import logging
+from dataclasses import dataclass, field
+from pathlib import Path
+from jobflow import Flow, Maker
+from jobflow import Maker, Response, job
+from monty.serialization import loadfn
+from monty.shutil import gzip_dir
+from atomate2.lobster.schemas import LobsterTaskDocument
+from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.vasp.sets.base import VaspInputGenerator
+from atomate2.vasp.sets.core import StaticSetGenerator
+from pymatgen.io.lobster import Lobsterin
+from atomate2.vasp.powerups import update_user_incar_settings
+from pymatgen.core import Structure
 
 
 __all__ = ["LobsterMaker"]
@@ -142,15 +156,33 @@ class LobsterMaker(Maker):
         # do a static WAVECAR computation with symmetry and standard number of bands first
         # Do a static VASP computation
 
+        # This needs to be included
 
-        # find out maximum number of bands that needs to be computed
-        # switch off symmetry?!
-        #
 
+        vaspmaker = VaspLobsterMaker()
+        if optimization_run_job_dir is not None:
+            vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=optimization_run_job_dir)
+        else:
+            vaspjob = vaspmaker.make(structure=structure)
+
+        nbands, basis_dict=get_basis_infos(structure=structure, vaspmaker=vaspmaker)
+
+        vaspjob=update_user_incar_settings(vaspjob,{"NBANDS":nbands})
+
+        jobs.append(vaspjob)
+
+        lobsterjobs=get_lobster_jobs(basis_dict,vaspjob.output.dir_name)
+
+        jobs.append(lobsterjobs)
+
+
+        # transfer all lobsteroutputs to a last method, where all data is analyzed and summarized
+
+        # give the vaspmaker to a function that gives back maximum number of bands and the basis functions
 
         # do a WAVECAR computation with correct number of bands and create vasp jobs
-        vaspjob=get_vasp_lobster_jobs(structure, address_max_basis=None, address_min_basis=None, prev_vasp_dir=None)
-        jobs.append(vaspjob)
+        #vaspjob=get_vasp_lobster_jobs(structure, address_max_basis=None, address_min_basis=None, prev_vasp_dir=None)
+        #jobs.append(vaspjob)
 
         # do Lobster computation with the previous WAVECAR
         # lobster job has to be implemented
