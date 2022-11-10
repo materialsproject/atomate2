@@ -9,7 +9,7 @@ import numpy as np
 from monty.dev import requires
 from monty.serialization import loadfn
 from pymatgen.core import Structure
-from pymatgen.io.lobster import Lobsterin, Lobsterout, Icohplist
+from pymatgen.io.lobster import Lobsterin, Lobsterout, Icohplist, Charge
 
 import os
 from pathlib import Path
@@ -69,43 +69,43 @@ class LobsteroutModel(BaseModel):
 class LobsterinModel(BaseModel):
     """Collection to store input settings for the LOBSTER computation."""
 
-    COHPstartEnergy: bool =Field("has this run been restarted from a projection")
-    COHPendEnergy: str = Field("Lobster version")
-    COHPSteps: int = Field("Number of threads that Lobster ran on")
-    basisSet: str = Field("Which DFT program was used for this run")
-    cohpGenerator: float = Field("Absolute charge spilling")
-    saveProjectionToFile: float = Field("Total spilling")
-    basisfunctions: str = Field("Elements in structure")
+    COHPstartEnergy: bool =Field(None, description="Start energy for COHP computation")
+    COHPendEnergy: str = Field(None, description="End energy for COHP computation")
+    COHPSteps: int = Field(None, description="Number steps in COHPCAR; similar to NEDOS of VASP")
+    basisSet: str = Field(None, description="basis set of computation")
+    cohpGenerator: float = Field(None, description="Build the list of atom pairs to be analyzed using given distance")
+    saveProjectionToFile: float = Field(None, description="Save the results of projections")
+    basisfunctions: str = Field(None, description="Specify the basis functions for element")
 
 class CondensedBondingAnalysisModel(BaseModel):
     """Collection to store condensed bonding analysis data from LobsterPy based on ICOHP"""
 
-    formula: str = Field("Pretty formula of the structure")
-    max_considered_bond_length: float = Field("Maximum bond length considered in bonding analysis")
-    limit_icohp: List[float] =Field("ICOHP range considered in co-ordination environment analysis")
-    number_of_considered_ions: int = Field("number of ions detected based on Mulliken/Löwdin Charges")
-    sites: dict = Field("Dict object that describes bond summary stats, "
+    formula: str = Field(None, description="Pretty formula of the structure")
+    max_considered_bond_length: Tuple[float] = Field(None, description="Maximum bond length considered in bonding analysis")
+    limit_icohp: List[float] =Field(None, description="ICOHP range considered in co-ordination environment analysis")
+    number_of_considered_ions: int = Field(None, description="number of ions detected based on Mulliken/Löwdin Charges")
+    sites: dict = Field(None, description="Dict object that describes bond summary stats, "
                         "bonding/antibonding percentage and its coordination environment")
-    type_charges: str =Field("Charge type considered for assinging valences in bonding analysis")
-    madelung_energy: float = Field("Total electrostatic energy for the structure based on chosen type_charges")
-    cutoff_icohp: float = Field("Percent limiting the ICOHP values to be considered relative to strongest ICOHP")
-    summed_spins: bool = Field("Bool stating whether to sum spin channels during analysis")
-    start: Optional[float] = Field("Sets the lower limit of energy relative to Fermi for evaluating"""
+    type_charges: str =Field(None, description="Charge type considered for assinging valences in bonding analysis")
+    madelung_energy: float = Field(None, description="Total electrostatic energy for the structure based on chosen type_charges")
+    cutoff_icohp: float = Field(None, description="Percent limiting the ICOHP values to be considered relative to strongest ICOHP")
+    summed_spins: bool = Field(None, description="Bool stating whether to sum spin channels during analysis")
+    start: Optional[float] = Field(None, description="Sets the lower limit of energy relative to Fermi for evaluating"""
                          "bonding/anti-bonding percentages in the bond"
                          "if set to None, all energies up-to the Fermi is considered")
-    cohp_plot_data:dict[float] = Field("Stores the COHP plot data based on relevant bond labels "
+    cohp_plot_data:dict[float] = Field(None, description="Stores the COHP plot data based on relevant bond labels "
                                        "for site as keys")
 
 class StrongestBondsModel(BaseModel):
     """Collection to store strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
 
-    only_cation_anion: bool = Field("If True, only information of cation-anion pairs "
+    only_cation_anion: bool = Field(None, description="If True, only information of cation-anion pairs "
                                     "bond strength ,length will be returned ")
-    are_coops: bool = Field("Denotes whether the file consists of ICOOPs")
-    are_cobis: bool = Field("Denotes whether the file consists of ICOBIs")
-    bond_label: str = Field("String denoting atom pairs")
-    bond_strength: float = Field("Strongest bond based on ICOHPLIST/ICOOPLIST/ICOBILIST")
-    bond_length: float = Field("Bond length corresponding strongest bond based on ICOHPLIST/ICOOPLIST/ICOBILIST")
+    are_coops: bool = Field(None, description="Denotes whether the file consists of ICOOPs")
+    are_cobis: bool = Field(None, description="Denotes whether the file consists of ICOBIs")
+    bond_label: str = Field(None, description="String denoting atom pairs")
+    bond_strength: float = Field(None, description="Strongest bond based on ICOHPLIST/ICOOPLIST/ICOBILIST")
+    bond_length: float = Field(None, description="Bond length corresponding strongest bond based on ICOHPLIST/ICOOPLIST/ICOBILIST")
 
 
 
@@ -121,11 +121,15 @@ class LobsterTaskDocument(StructureMetadata):
         None, description="Timestamp for when this task was completed"
     )
     lobsterout: LobsteroutModel =Field("Lobster out data")
-    lobsterin: Lobsterin = Field("Lobsterin")
-    #LobsterPy_cation_anion: LobsterPyModel = Field("Model describing the LobsterPy data")
+    lobsterin: LobsterinModel = Field("Lobsterin")
+    LobsterPy_cation_anion: CondensedBondingAnalysisModel = Field("Model describing the LobsterPy data")
+    lobster_strongest_bonds_icohp: StrongestBondsModel = Field("Describes the strongest ICOHP bonds")
+    lobster_strongest_bonds_icoop: StrongestBondsModel = Field("Describes the strongest ICOOP bonds")
+    lobster_strongest_bonds_icobi: StrongestBondsModel = Field("Describes the strongest ICOBI bonds")
     #COHPData
     #COOPData
     #COBIData
+
 
 
     structure: Structure = Field(None, description="The structure used in this task")
@@ -162,20 +166,51 @@ class LobsterTaskDocument(StructureMetadata):
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
-        #struct = Structure.from_file(get_zfile(directory_listing=".",base_name="POSCAR"))
+        struct = Structure.from_file(get_zfile(directory_listing=".",base_name="POSCAR"))
         Lobsterout_here = Lobsterout("lobsterout.gz")
         lobsterout_doc=Lobsterout_here.get_doc()
-        #Lobsterin_here = Lobsterin.from_file(get_zfile(directory_listing=".", base_name="lobsterin"))
+        lobsterin_here = Lobsterin.from_file(get_zfile(directory_listing=".", base_name="lobsterin"))
         # cation anion-mode
 
-        # analyse = Analysis(
-        #     path_to_poscar=os.path.join(directory, "POSCAR"),
-        #     path_to_icohplist=os.path.join(directory, "ICOHPLIST.lobster"),
-        #     path_to_cohpcar=os.path.join(directory, "COHPCAR.lobster"),
-        #     path_to_charge=os.path.join(directory, "CHARGE.lobster"),
-        #     summed_spins=True,
-        #     cutoff_icohp=0.01
-        # )
+        analyse = Analysis(
+             path_to_poscar=os.path.join(dir_name, "POSCAR"),
+             path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster"),
+             path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster"),
+             path_to_charge=os.path.join(dir_name, "CHARGE.lobster"),
+             summed_spins=True,
+             cutoff_icohp=0.01
+         )
+
+        cba = analyse.condensed_bonding_analysis #initialize lobsterpy condensed bonding analysis
+        cba_cohp_plot_data={} #Initialize dict to store plot data
+        for site,val in cba.condensed_bonding_analysis['sites'].items():
+            cohp_data=cba.chemenv.completecohp.get_summed_cohp_by_label_list(val['relevant_bonds']).as_dict()
+            spinup_cohps = cohp_data["COHP"]["1"]
+            spindown_cohps = cohp_data["COHP"]["-1"]
+            energies = cohp_data["energies"]
+            efermi=cohp_data['efermi']
+            cba_cohp_plot_data.update({site:{"COHP_spin_up":spinup_cohps,
+                                             "COHP_spin_down":spindown_cohps,
+                                             "Energies": energies,
+                                             "Efermi":efermi}})
+
+        lpca= CondensedBondingAnalysisModel(formula=cba['formula'],
+                                            max_considered_bond_length=cba['max_considered_bond_length'],
+                                            limit_icohp=cba['limit_icohp'],
+                                            number_of_considered_ions=cba['number_of_considered_ions'],
+                                            sites=cba['sites'],
+                                            type_charges=cba['type_charges'],
+                                            madelung_energy=cba['madelung_energy'],
+                                            cohp_plot_data=cba_cohp_plot_data)
+
+        lobsout = LobsteroutModel(**lobsterout_doc)
+        lobsin =  LobsterinModel(**lobsterin_here)
+
+        icohplist = Icohplist(filename=os.path.join(dir_name, "ICOHPLIST.lobster"), are_cobis=False, are_coops=False)
+        icobilist = Icohplist(filename=os.path.join(dir_name, "ICOBILIST.lobster"), are_cobis=True, are_coops=False)
+        icooplist = Icohplist(filename=os.path.join(dir_name, "ICOOPLIST.lobster"), are_coops=True, are_cobis=False)
+
+
         #
         # # Setup Desciption dict
         # describe = Description(analysis_object=analyse)
