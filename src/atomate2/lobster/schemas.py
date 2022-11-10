@@ -3,14 +3,13 @@
 import logging
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union, Optional
 
 import numpy as np
 from monty.dev import requires
 from monty.serialization import loadfn
-from pydantic import BaseModel, Field
 from pymatgen.core import Structure
-from pymatgen.io.lobster import Lobsterin, Lobsterout
+from pymatgen.io.lobster import Lobsterin, Lobsterout, Icohplist
 
 import os
 from pathlib import Path
@@ -40,13 +39,13 @@ __all__ = ["LobsterTaskDocument"]
 logger = logging.getLogger(__name__)
 
 class LobsteroutModel(BaseModel):
-    """Collection to store computational settings for the phonon computation."""
+    """Collection to store computational settings from the LOBSTER computation."""
 
     restart_from_projection: bool =Field("has this run been restarted from a projection")
     lobster_version: str = Field("Lobster version")
     threads: int = Field("Number of threads that Lobster ran on")
     dft_program: str = Field("Which DFT program was used for this run")
-    chargespilling: float = Field("Charge spilling")
+    chargespilling: float = Field("Absolute charge spilling")
     totalspilling: float = Field("Total spilling")
     elements: str = Field("Elements in structure")
     basistype: str= Field("Basis set used in Lobster")
@@ -67,18 +66,46 @@ class LobsteroutModel(BaseModel):
     hasGrossPopulation: bool = Field("Bool indicating if GrossPopulations file is present.")
     hasDensityOfEnergies: bool = Field("Bool indicating if DensityofEnergies is present")
 
+class LobsterinModel(BaseModel):
+    """Collection to store input settings for the LOBSTER computation."""
+
+    COHPstartEnergy: bool =Field("has this run been restarted from a projection")
+    COHPendEnergy: str = Field("Lobster version")
+    COHPSteps: int = Field("Number of threads that Lobster ran on")
+    basisSet: str = Field("Which DFT program was used for this run")
+    cohpGenerator: float = Field("Absolute charge spilling")
+    saveProjectionToFile: float = Field("Total spilling")
+    basisfunctions: str = Field("Elements in structure")
+
 class CondensedBondingAnalysisModel(BaseModel):
-    """Collection to store computational settings for the phonon computation."""
-    #formula: formula,
-    #"max_considered_bond_length": max_bond_lengths,
-    #"limit_icohp": limit_icohps,
-    #"number_of_considered_ions": number_considered_ions,
-    #"sites": site_dict,
-    #"type_charges": self.type_charge,
-    #"madelung_energy": madelung_energy,
+    """Collection to store condensed bonding analysis data from LobsterPy based on ICOHP"""
 
+    formula: str = Field("Pretty formula of the structure")
+    max_considered_bond_length: float = Field("Maximum bond length considered in bonding analysis")
+    limit_icohp: List[float] =Field("ICOHP range considered in co-ordination environment analysis")
+    number_of_considered_ions: int = Field("number of ions detected based on Mulliken/Löwdin Charges")
+    sites: dict = Field("Dict object that describes bond summary stats, "
+                        "bonding/antibonding percentage and its coordination environment")
+    type_charges: str =Field("Charge type considered for assinging valences in bonding analysis")
+    madelung_energy: float = Field("Total electrostatic energy for the structure based on chosen type_charges")
+    cutoff_icohp: float = Field("Percent limiting the ICOHP values to be considered relative to strongest ICOHP")
+    summed_spins: bool = Field("Bool stating whether to sum spin channels during analysis")
+    start: Optional[float] = Field("Sets the lower limit of energy relative to Fermi for evaluating"""
+                         "bonding/anti-bonding percentages in the bond"
+                         "if set to None, all energies up-to the Fermi is considered")
+    cohp_plot_data:dict[float] = Field("Stores the COHP plot data based on relevant bond labels "
+                                       "for site as keys")
 
-# get stuff from VASP?
+class StrongestBondsModel(BaseModel):
+    """Collection to store strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
+
+    only_cation_anion: bool = Field("If True, only information of cation-anion pairs "
+                                    "bond strength ,length will be returned ")
+    are_coops: bool = Field("Denotes whether the file consists of ICOOPs")
+    are_cobis: bool = Field("Denotes whether the file consists of ICOBIs")
+    bond_label: str = Field("String denoting atom pairs")
+    bond_strength: float = Field("Strongest bond based on ICOHPLIST/ICOOPLIST/ICOBILIST")
+    bond_length: float = Field("Bond length corresponding strongest bond based on ICOHPLIST/ICOOPLIST/ICOBILIST")
 
 
 
@@ -116,7 +143,7 @@ class LobsterTaskDocument(StructureMetadata):
         additional_fields: Dict[str, Any] = None,
     ):
         """
-        Create a task document from a directory containing VASP files.
+        Create a task document from a directory containing LOBSTER files.
 
         Parameters
         ----------
