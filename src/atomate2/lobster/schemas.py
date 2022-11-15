@@ -106,7 +106,7 @@ class CondensedBondingAnalysis(BaseModel):
     """Collection to store condensed bonding analysis data from LobsterPy based on ICOHP"""
 
     formula: str = Field(None, description="Pretty formula of the structure")
-    max_considered_bond_length: Tuple[float] = Field(
+    max_considered_bond_length: Any = Field(
         None, description="Maximum bond length considered " "in bonding analysis"
     )
     limit_icohp: List[float] = Field(
@@ -143,7 +143,7 @@ class CondensedBondingAnalysis(BaseModel):
         " bonding/anti-bonding percentages in the bond"
         " if set to None, all energies up-to the Fermi is considered",
     )
-    cohp_plot_data: dict[float] = Field(
+    cohp_plot_data: Any = Field(
         None,
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
