@@ -63,8 +63,8 @@ strict = [
     "seekpath==2.0.1",
     "numpy",
     "mp-api==0.29.5",
-    "pymatgen-analysis-defects==2022.9.14",
     "dscribe==1.2.1",
+    "pymatgen-analysis-defects==2022.10.28",
 ]
 
 [project.scripts]
