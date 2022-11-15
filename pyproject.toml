@@ -41,27 +41,27 @@ cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 docs = [
-    "numpydoc==1.4.0",
-    "ipython==8.5.0",
+    "numpydoc==1.5.0",
+    "ipython==8.6.0",
     "FireWorks==2.0.3",
-    "autodoc_pydantic==1.7.2",
+    "autodoc_pydantic==1.8.0",
     "jupyter-book==0.13.1",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["pytest==7.1.3", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
+tests = ["pytest==7.2.0", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
     "pydantic==1.10.2",
-    "pymatgen==2022.9.21",
+    "pymatgen==2022.11.7",
     "custodian==2022.5.26",
     "monty==2022.9.9",
     "jobflow==0.1.9",
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "phonopy==2.16.2",
+    "phonopy==2.16.3",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.27.5"
+    "mp-api==0.29.3"
 ]
 
 [project.scripts]
