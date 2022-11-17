@@ -45,16 +45,16 @@ class LobsteroutModel(BaseModel):
     )
     lobster_version: str = Field("Lobster version")
     threads: int = Field("Number of threads that Lobster ran on")
-    dft_program: str = Field("DFT program was used for this run")
-    chargespilling: float = Field("Absolute charge spilling")
-    totalspilling: float = Field("Total spilling")
-    elements: str = Field("Elements in structure")
-    basistype: str = Field("Basis set used in Lobster")
-    basisfunctions: str = Field("basis_functions")
-    timing: dict = Field("Dict with infos on timing")
-    warnings: str = Field("Warnings")
-    orthonormalization: str = Field("info_orthonormalization")
-    infos: str = Field("info_lines")
+    Dftprogram: str = Field("DFT program was used for this run")
+    chargespilling: Any = Field("Absolute charge spilling")
+    totalspilling: Any = Field("Total spilling")
+    elements: Any = Field("Elements in structure")
+    basistype: Any = Field("Basis set used in Lobster")
+    basisfunctions: Any = Field("basis_functions")
+    timing: Any = Field("Dict with infos on timing")
+    warnings: Any = Field("Warnings")
+    orthonormalization: Any = Field("info_orthonormalization")
+    infos: Any = Field("info_lines")
     hasDOSCAR: bool = Field("Bool indicating if DOSCAR is present.")
     hasCOHPCAR: bool = Field("Bool indicating if COHPCAR is present.")
     hasCOOPCAR: bool = Field("Bool indicating if COOPCAR is present.")
@@ -75,10 +75,10 @@ class LobsteroutModel(BaseModel):
 class LobsterinModel(BaseModel):
     """Collection to store input settings for the LOBSTER computation."""
 
-    COHPstartEnergy: float = Field(
+    cohpstartenergy: float = Field(
         None, description="Start energy for COHP computation"
     )
-    COHPendEnergy: float = Field(None, description="End energy for COHP computation")
+    cohpendenergy: float = Field(None, description="End energy for COHP computation")
     gaussianSmearingWidth: float = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
@@ -86,18 +86,18 @@ class LobsterinModel(BaseModel):
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    COHPSteps: int = Field(
+    cohpsteps: float = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
-    basisSet: str = Field(None, description="basis set of computation")
-    cohpGenerator: float = Field(
+    basisset: Any = Field(None, description="basis set of computation")
+    cohpgenerator: Any = Field(
         None,
         description="Build the list of atom pairs to be analyzed using given distance",
     )
-    saveProjectionToFile: float = Field(
+    saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    basisfunctions: str = Field(
+    basisfunctions: Any = Field(
         None, description="Specify the basis functions for element"
     )
 
@@ -106,10 +106,10 @@ class CondensedBondingAnalysis(BaseModel):
     """Collection to store condensed bonding analysis data from LobsterPy based on ICOHP"""
 
     formula: str = Field(None, description="Pretty formula of the structure")
-    max_considered_bond_length: Tuple[float] = Field(
+    max_considered_bond_length: Any = Field(
         None, description="Maximum bond length considered " "in bonding analysis"
     )
-    limit_icohp: List[float] = Field(
+    limit_icohp: Any = Field(
         None, description="ICOHP range considered in co-ordination environment analysis"
     )
     number_of_considered_ions: int = Field(
@@ -143,7 +143,7 @@ class CondensedBondingAnalysis(BaseModel):
         " bonding/anti-bonding percentages in the bond"
         " if set to None, all energies up-to the Fermi is considered",
     )
-    cohp_plot_data: dict[float] = Field(
+    cohp_plot_data: dict = Field(
         None,
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
@@ -239,16 +239,18 @@ class LobsterTaskDocument(StructureMetadata):
         # struct = Structure.from_file(get_zfile(directory_listing=".", base_name="POSCAR"))
         lobsterout_here = Lobsterout("lobsterout.gz")
         lobsterout_doc = lobsterout_here.get_doc()
-        lobsterin_here = Lobsterin.from_file(os.path.join(dir_name, "lobsterin"))
+        lobsterin_here = Lobsterin.from_file(os.path.join(dir_name, "lobsterin.gz"))
         # cation anion-mode
         start = time.time()
         analyse = Analysis(
             path_to_poscar=os.path.join(dir_name, "POSCAR"),
-            path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster"),
-            path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster"),
-            path_to_charge=os.path.join(dir_name, "CHARGE.lobster"),
+            path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
+            path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
+            path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
+            path_to_madelung=os.path.join(dir_name, "MadelungEnergies.lobster.gz"),
             summed_spins=True,
             cutoff_icohp=0.10,
+            whichbonds="cation-anion",
         )
 
         cba_run_time = time.time() - start
@@ -257,8 +259,8 @@ class LobsterTaskDocument(StructureMetadata):
             analyse.condensed_bonding_analysis
         )  # initialize lobsterpy condensed bonding analysis
         cba_cohp_plot_data = {}  # Initialize dict to store plot data
-        for site, val in cba.condensed_bonding_analysis["sites"].items():
-            cohp_data = cba.chemenv.completecohp.get_summed_cohp_by_label_list(
+        for site, val in analyse.condensed_bonding_analysis["sites"].items():
+            cohp_data = analyse.chemenv.completecohp.get_summed_cohp_by_label_list(
                 val["relevant_bonds"]
             ).as_dict()
             spinup_cohps = cohp_data["COHP"]["1"]
@@ -291,19 +293,19 @@ class LobsterTaskDocument(StructureMetadata):
         lobsout = LobsteroutModel(**lobsterout_doc)
         lobsin = LobsterinModel(**lobsterin_here)
 
-        ch = Charge(os.path.join(dir_name, "CHARGE.lobster"))
+        ch = Charge(os.path.join(dir_name, "CHARGE.lobster.gz"))
         icohplist = Icohplist(
-            filename=os.path.join(dir_name, "ICOHPLIST.lobster"),
+            filename=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
             are_cobis=False,
             are_coops=False,
         )
         icobilist = Icohplist(
-            filename=os.path.join(dir_name, "ICOBILIST.lobster"),
+            filename=os.path.join(dir_name, "ICOBILIST.lobster.gz"),
             are_cobis=True,
             are_coops=False,
         )
         icooplist = Icohplist(
-            filename=os.path.join(dir_name, "ICOOPLIST.lobster"),
+            filename=os.path.join(dir_name, "ICOOPLIST.lobster.gz"),
             are_coops=True,
             are_cobis=False,
         )
