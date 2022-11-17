@@ -143,7 +143,8 @@ class CondensedBondingAnalysis(BaseModel):
         " bonding/anti-bonding percentages in the bond"
         " if set to None, all energies up-to the Fermi is considered",
     )
-    cohp_plot_data: dict = Field(
+
+    cohp_plot_data: Any = Field(
         None,
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
