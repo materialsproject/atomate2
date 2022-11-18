@@ -101,7 +101,7 @@ class LobsterMaker(Maker):
     )
     vasp_lobster_maker: BaseVaspMaker = field(default_factory=lambda: VaspLobsterMaker())
     additional_static_run_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: StaticMaker(input_set_generator=StaticSetGenerator(user_incar_settings={"LWAVE": True},
+        default_factory=lambda: StaticMaker(name='addtional_static_run', input_set_generator=StaticSetGenerator(user_incar_settings={"LWAVE": True},
                                                                                    user_kpoints_settings={"grid_density":1}))
     )
 
@@ -129,7 +129,7 @@ class LobsterMaker(Maker):
         # do a relaxation step first
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
-            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir, name='Bulk_relax')
             jobs.append(bulk)
             structure = bulk.output.structure
             optimization_run_job_dir = bulk.output.dir_name
@@ -173,6 +173,8 @@ class LobsterMaker(Maker):
             dir_vasp=vaspjob.output.dir_name
             if self.additional_static_run_maker is not None:
                 dir_preconverge=preconvergence_job.output.dir_name
+            elif self.additional_static_run_maker is None:
+                dir_preconverge = None
 
         else:
             dir_vasp=None

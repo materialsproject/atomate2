@@ -10,6 +10,7 @@ from jobflow import Maker, Response, job
 from monty.serialization import loadfn
 from monty.shutil import gzip_dir
 from pymatgen.io.lobster import Lobsterin
+from pymatgen.electronic_structure.cohp import CompleteCohp
 from atomate2.lobster.files import copy_lobster_files, write_lobster_settings
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.lobster.run import run_lobster
@@ -38,11 +39,11 @@ class PureLobsterMaker(Maker):
     resubmit: bool = False
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=LobsterTaskDocument)
+    @job(output_schema=LobsterTaskDocument, data=[CompleteCohp])
     def make(
         self,
         wavefunction_dir: str | Path = None,
-        basis_dict: dict=None,
+        basis_dict: dict = None,
         # something for the basis
     ):
         """
@@ -57,24 +58,24 @@ class PureLobsterMaker(Maker):
         # copy previous inputs # VASP for example
         copy_lobster_files(wavefunction_dir)
 
-
         # write lobster settings
-        lobsterin=Lobsterin.standard_calculations_from_vasp_files("POSCAR","INCAR",dict_for_basis=basis_dict)
+        lobsterin = Lobsterin.standard_calculations_from_vasp_files(
+            "POSCAR", "INCAR", dict_for_basis=basis_dict
+        )
         lobsterin.write_lobsterin("lobsterin")
         # run lobster
         logger.info("Running LOBSTER")
         run_lobster()
 
-        #converged = None
+        # converged = None
 
         # parse amset outputs
         task_doc = LobsterTaskDocument.from_directory(
             Path.cwd(), **self.task_document_kwargs
         )
-        #task_doc.converged = converged
+        # task_doc.converged = converged
 
         # gzip folder
         gzip_dir(".")
-
 
         return Response(output=task_doc)

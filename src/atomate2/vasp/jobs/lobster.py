@@ -52,7 +52,7 @@ class VaspLobsterMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "lobster"
+    name: str = "static_run"
     #TODO: set grid_density to a normal value
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
@@ -130,7 +130,7 @@ def get_lobster_jobs(basis_dict, wavefunction_dir):
     outputs["dirs"]=[]
     outputs["basis"]=[]
     for i, basis in enumerate(basis_dict):
-        lobsterjob=PureLobsterMaker().make(wavefunction_dir=wavefunction_dir, basis_dict=basis)
+        lobsterjob=PureLobsterMaker(name='lobster_run_{}'.format(i)).make(wavefunction_dir=wavefunction_dir, basis_dict=basis)
         outputs["uuids"].append(lobsterjob.output.uuid)
         outputs["dirs"].append(lobsterjob.output.dir_name)
         outputs["basis"].append(basis)
@@ -144,11 +144,11 @@ def get_lobster_jobs(basis_dict, wavefunction_dir):
 def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
     jobs=[]
     for dir_name in dirs:
-        jobs.append(delete_files(dir_name, include_files=["WAVECAR", "WAVECAR.gz"]))
+        jobs.append(delete_files(dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True))
     if dir_vasp is not None:
-        jobs.append(delete_files(dir_vasp, include_files=["WAVECAR", "WAVECAR.gz"]))
+        jobs.append(delete_files(dir_vasp, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True))
     if dir_preconverge is not None:
-        jobs.append(delete_files(dir_preconverge, include_files=["WAVECAR", "WAVECAR.gz"]))
+        jobs.append(delete_files(dir_preconverge, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True))
 
     return Response(replace=Flow(jobs))
 

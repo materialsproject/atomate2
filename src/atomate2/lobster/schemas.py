@@ -10,6 +10,7 @@ from monty.dev import requires
 from monty.serialization import loadfn
 from pymatgen.core import Structure
 from pymatgen.io.lobster import Lobsterin, Lobsterout, Icohplist, Charge
+from pymatgen.electronic_structure.cohp import CompleteCohp
 
 import os
 from pathlib import Path
@@ -177,6 +178,7 @@ class StrongestBonds(BaseModel):
 class LobsterTaskDocument(StructureMetadata):
     """Definition of LOBSTER task document."""
 
+    structure: Structure = Field(None, description="The structure used in this task")
     dir_name: str = Field(None, description="The directory for this Lobster task")
     last_updated: str = Field(
         default_factory=datetime_str,
@@ -199,11 +201,20 @@ class LobsterTaskDocument(StructureMetadata):
     lobster_strongest_bonds_ICOBI: StrongestBonds = Field(
         "Describes the strongest cation-anion ICOBI bonds"
     )
+    COHP_data: CompleteCohp = Field(
+        None, description="pymatgen CompleteCohp object with COHP data"
+    )
+    COOP_data: CompleteCohp = Field(
+        None, description="pymatgen CompleteCohp object with COOP data"
+    )
+    COBI_data: CompleteCohp = Field(
+        None, description="pymatgen CompleteCohp object with COBI data"
+    )
     # COHPData
     # COOPData
     # COBIData
 
-    structure: Structure = Field(None, description="The structure used in this task")
+
     _schema: str = Field(
         __version__,
         description="Version of atomate2 used to create the document",
@@ -237,7 +248,7 @@ class LobsterTaskDocument(StructureMetadata):
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
-        # struct = Structure.from_file(get_zfile(directory_listing=".", base_name="POSCAR"))
+        struct = Structure.from_file(os.path.join(dir_name, "POSCAR"))
         lobsterout_here = Lobsterout("lobsterout.gz")
         lobsterout_doc = lobsterout_here.get_doc()
         lobsterin_here = Lobsterin.from_file(os.path.join(dir_name, "lobsterin.gz"))
@@ -403,13 +414,46 @@ class LobsterTaskDocument(StructureMetadata):
         icobi_bond_dict = get_strng_bonds(icobi_dict, are_cobis=True, are_coops=False)
 
         sb_ichop = StrongestBonds(
-            are_cobis=False, are_coops=False, strongest_bonds=icohp_bond_dict
+            are_cobis=False,
+            are_coops=False,
+            strongest_bonds=icohp_bond_dict,
+            only_cation_anion=True,
         )
         sb_icoop = StrongestBonds(
-            are_cobis=False, are_coops=True, strongest_bonds=icoop_bond_dict
+            are_cobis=False,
+            are_coops=True,
+            strongest_bonds=icoop_bond_dict,
+            only_cation_anion=True,
         )
         sb_icobi = StrongestBonds(
-            are_cobis=True, are_coops=False, strongest_bonds=icobi_bond_dict
+            are_cobis=True,
+            are_coops=False,
+            strongest_bonds=icobi_bond_dict,
+            only_cation_anion=True,
+        )
+
+        cohp_obj = CompleteCohp.from_file(
+            fmt="LOBSTER",
+            structure_file="POSCAR",
+            filename="COHPCAR.lobster.gz",
+            are_coops=False,
+            are_cobis=False,
+        )
+
+        coop_obj = CompleteCohp.from_file(
+            fmt="LOBSTER",
+            structure_file="POSCAR",
+            filename="COOPCAR.lobster.gz",
+            are_coops=True,
+            are_cobis=False,
+        )
+
+        cobi_obj = CompleteCohp.from_file(
+            fmt="LOBSTER",
+            structure_file="POSCAR",
+            filename="COBICAR.lobster.gz",
+            are_coops=False,
+            are_cobis=True,
         )
 
         #
@@ -449,12 +493,16 @@ class LobsterTaskDocument(StructureMetadata):
 
         # doc.copy(update=additional_fields)
         return cls(
+            structure=struct,
             lobsterin=lobsin,
             lobsterout=lobsout,
             lobsterpy_data=lpca,
             lobster_strongest_bonds_ICOHP=sb_ichop,
             lobster_strongest_bonds_ICOOP=sb_icoop,
             lobster_strongest_bonds_ICOBI=sb_icobi,
+            COHP_data=cohp_obj,
+            COOP_data=coop_obj,
+            COBI_data=cobi_obj,
         )  # doc
 
 
