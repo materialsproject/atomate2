@@ -11,6 +11,7 @@ from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+
 LOBSTEROUTPUT_FILES = [
     "lobsterout",
     "CHARGE.lobster",
@@ -100,7 +101,7 @@ def copy_lobster_files(
         file_client=file_client,
     )
 
-    #rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
+    # rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
     logger.info("Finished copying inputs")
 
 

@@ -214,7 +214,6 @@ class LobsterTaskDocument(StructureMetadata):
     # COOPData
     # COBIData
 
-
     _schema: str = Field(
         __version__,
         description="Version of atomate2 used to create the document",

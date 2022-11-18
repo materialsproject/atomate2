@@ -46,13 +46,13 @@ class JobType(ValueEnum):
 
 
 def run_lobster(
-        job_type: JobType | str = JobType.NORMAL,
-        lobster_cmd: str = SETTINGS.LOBSTER_CMD,
-        max_errors: int = SETTINGS.LOBSTER_CUSTODIAN_MAX_ERRORS,
-        scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
-        validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
-        lobster_job_kwargs: dict[str, Any] = None,
-        custodian_kwargs: dict[str, Any] = None,
+    job_type: JobType | str = JobType.NORMAL,
+    lobster_cmd: str = SETTINGS.LOBSTER_CMD,
+    max_errors: int = SETTINGS.LOBSTER_CUSTODIAN_MAX_ERRORS,
+    scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
+    validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
+    lobster_job_kwargs: dict[str, Any] = None,
+    custodian_kwargs: dict[str, Any] = None,
 ):
     """
     Run Lobster.
