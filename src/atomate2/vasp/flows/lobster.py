@@ -39,42 +39,7 @@ class LobsterMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    sym_reduce : bool
-        Whether to reduce the number of deformations using symmetry.
-    symprec : float
-        Symmetry precision to use in the
-        reduction of symmetry to find the primitive/conventional cell
-        (use_primitive_standard_structure, use_conventional_standard_structure)
-        and to handle all symmetry-related tasks in phonopy
-    displacement: float
-        displacement distance for phonons
-    min_length: float
-        min length of the supercell that will be built
-    prefer_90_degrees: bool
-        if set to True, supercell algorithm will first try to find a supercell
-        with 3 90 degree angles
-    get_supercell_size_kwargs: dict
-        kwargs that will be passed to get_supercell_size to determine supercell size
-    use_symmetrized_structure: str
-        allowed strings: "primitive", "conventional", None
-
-        - "primitive" will enforce to start the phonon computation
-          from the primitive standard structure
-          according to Setyawan, W., & Curtarolo, S. (2010).
-          High-throughput electronic band structure calculations:
-          Challenges and tools. Computational Materials Science,
-          49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-          This makes it possible to use certain k-path definitions
-          with this workflow. Otherwise, we must rely on seekpath
-        - "conventional" will enforce to start the phonon computation
-          from the conventional standard structure
-          according to Setyawan, W., & Curtarolo, S. (2010).
-          High-throughput electronic band structure calculations:
-          Challenges and tools. Computational Materials Science,
-          49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-          We will however use seekpath and primitive structures
-          as determined by from phonopy to compute the phonon band structure
-    bulk_relax_maker : .BaseVaspMaker or None
+        bulk_relax_maker : .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
@@ -142,9 +107,7 @@ class LobsterMaker(Maker):
         # do a relaxation step first
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
-            bulk = self.bulk_relax_maker.make(
-                structure, prev_vasp_dir=prev_vasp_dir, name="Bulk_relax"
-            )
+            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
             optimization_run_job_dir = bulk.output.dir_name
@@ -193,18 +156,16 @@ class LobsterMaker(Maker):
         # will delete all WAVECARs that have been copied
 
         if self.delete_all_wavecars:
-            dir_vasp = vaspjob.output.dir_name
+            vasp_stat = vaspjob.output.dir_name
             if self.additional_static_run_maker is not None:
-                dir_preconverge = preconvergence_job.output.dir_name
-            elif self.additional_static_run_maker is None:
-                dir_preconverge = None
-
-        else:
-            dir_vasp = None
-            dir_preconverge = None
+                vasp_add_stat = preconvergence_job.output.dir_name
+            if self.additional_static_run_maker is None:
+                vasp_add_stat = None
 
         delete_wavecars = delete_lobster_wavecar(
-            lobsterjobs.output["dirs"], dir_vasp, dir_preconverge
+            dirs=lobsterjobs.output["dirs"],
+            dir_vasp=vasp_stat,
+            dir_preconverge=vasp_add_stat,
         )
 
         jobs.append(delete_wavecars)

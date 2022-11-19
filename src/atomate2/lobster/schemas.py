@@ -4,7 +4,6 @@ import logging
 import time
 from typing import Any, Dict, List, Tuple, Union, Optional
 
-
 import numpy as np
 from monty.dev import requires
 from monty.serialization import loadfn
@@ -80,6 +79,7 @@ class LobsterinModel(BaseModel):
         None, description="Start energy for COHP computation"
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
+
     gaussianSmearingWidth: float = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
@@ -114,7 +114,7 @@ class CondensedBondingAnalysis(BaseModel):
         None, description="ICOHP range considered in co-ordination environment analysis"
     )
     number_of_considered_ions: int = Field(
-        None, description="number of ions detected based on Mulliken/Löwdin Charges"
+        None, description="number of ions detected based on Mulliken/L�wdin Charges"
     )
     sites: dict = Field(
         None,
@@ -144,8 +144,7 @@ class CondensedBondingAnalysis(BaseModel):
         " bonding/anti-bonding percentages in the bond"
         " if set to None, all energies up-to the Fermi is considered",
     )
-
-    cohp_plot_data: Any = Field(
+    cohp_plot_data: dict = Field(
         None,
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
@@ -175,11 +174,11 @@ class StrongestBonds(BaseModel):
     )
 
 
-class LobsterTaskDocument(StructureMetadata):
+class LobsterTaskDocument(BaseModel):
     """Definition of LOBSTER task document."""
 
     structure: Structure = Field(None, description="The structure used in this task")
-    dir_name: str = Field(None, description="The directory for this Lobster task")
+    dir_name: Any = Field(None, description="The directory for this Lobster task")
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
@@ -210,9 +209,10 @@ class LobsterTaskDocument(StructureMetadata):
     COBI_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COBI data"
     )
-    # COHPData
-    # COOPData
-    # COBIData
+    lobster_charges: Any = Field(
+        None,
+        description="Atomic charges dict from LOBSTER based on Mulliken and L�wdin",
+    )
 
     _schema: str = Field(
         __version__,
@@ -298,6 +298,8 @@ class LobsterTaskDocument(StructureMetadata):
             type_charges=cba["type_charges"],
             madelung_energy=cba["madelung_energy"],
             cohp_plot_data=cba_cohp_plot_data,
+            cutoff_icohp=0.10,
+            summed_spins=True,
             run_time=cba_run_time,
         )
 
@@ -305,6 +307,9 @@ class LobsterTaskDocument(StructureMetadata):
         lobsin = LobsterinModel(**lobsterin_here)
 
         ch = Charge(os.path.join(dir_name, "CHARGE.lobster.gz"))
+
+        lobster_charges = {"Mulliken": ch.Mulliken, "L�wdin": ch.Loewdin}
+
         icohplist = Icohplist(
             filename=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
             are_cobis=False,
@@ -493,6 +498,7 @@ class LobsterTaskDocument(StructureMetadata):
         # doc.copy(update=additional_fields)
         return cls(
             structure=struct,
+            dir_name=dir_name,
             lobsterin=lobsin,
             lobsterout=lobsout,
             lobsterpy_data=lpca,
@@ -502,6 +508,7 @@ class LobsterTaskDocument(StructureMetadata):
             COHP_data=cohp_obj,
             COOP_data=coop_obj,
             COBI_data=cobi_obj,
+            lobster_charges=lobster_charges,
         )  # doc
 
 

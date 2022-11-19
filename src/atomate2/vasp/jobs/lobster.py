@@ -153,26 +153,50 @@ def get_lobster_jobs(basis_dict, wavefunction_dir):
 @job
 def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
     jobs = []
+    outputs = {}
+    outputs["lobster_dir_name"] = []
+    outputs["add_static_dir_name"] = []
+    outputs["static_dir_name"] = []
+    dec_delete_files = job(delete_files)
     for dir_name in dirs:
         jobs.append(
-            delete_files(
+            dec_delete_files(
                 dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
             )
         )
-    if dir_vasp is not None:
+        outputs["lobster_dir_name"].append(dir_name)
+    if dir_preconverge is None and dir_vasp is not None:
+        dir_vasp_stat = strip_hostname(dir_vasp)
         jobs.append(
-            delete_files(
-                dir_vasp, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
-            )
-        )
-    if dir_preconverge is not None:
-        jobs.append(
-            delete_files(
-                dir_preconverge,
+            dec_delete_files(
+                dir_vasp_stat,
                 include_files=["WAVECAR", "WAVECAR.gz"],
                 allow_missing=True,
             )
         )
+        outputs["static_dir_name"].append(dir_vasp_stat)
+    if dir_preconverge is not None and dir_vasp is not None:
+        dir_vasp_add_stat = strip_hostname(dir_preconverge)
+        dir_vasp_stat = strip_hostname(dir_vasp)
+        jobs.append(
+            dec_delete_files(
+                dir_vasp_stat,
+                include_files=["WAVECAR", "WAVECAR.gz"],
+                allow_missing=True,
+            )
+        )
+        jobs.append(
+            dec_delete_files(
+                dir_vasp_add_stat,
+                include_files=["WAVECAR", "WAVECAR.gz"],
+                allow_missing=True,
+            )
+        )
+        outputs["add_static_dir_name"].append(dir_vasp_add_stat)
+        outputs["static_dir_name"].append(dir_vasp_stat)
+
+    flow = Flow(jobs, output=outputs)
+    return Response(replace=flow)
 
     return Response(replace=Flow(jobs))
 
@@ -182,15 +206,13 @@ def generate_database_entry(
     **kwargs,
 ):
     """
-    Analyze the phonon runs and summarize the results.
+    Analyze the LOBSTER runs and summarize the results.
 
     Parameters
     ----------
-    structure: Structure object
-        Fully optimized structure used for phonon runs
 
     kwargs: dict
-        Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
+        Additional parameters that are passed to LobsterTaskDocument.from_directory
 
     """
     lobster_doc = LobsterTaskDocument.from_directory(
