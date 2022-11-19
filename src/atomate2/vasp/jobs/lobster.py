@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from jobflow import Flow, Maker
+from jobflow import Flow,
 from jobflow import Maker, Response, job
 from monty.serialization import loadfn
 from monty.shutil import gzip_dir
@@ -198,8 +198,6 @@ def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
 
     flow = Flow(jobs, output=outputs)
     return Response(replace=flow)
-
-    return Response(replace=Flow(jobs))
 
 
 @job(output_schema=LobsterTaskDocument)
