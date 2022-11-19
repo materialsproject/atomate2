@@ -79,9 +79,23 @@ def check_defect_relax_maker(maker: Maker):
     maker : Maker
         The Maker object to check.
     """
+    from pymatgen.io.vasp.inputs import PotcarSingle
+
     DUMMY_STRUCT = Structure(
         Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]]
     )
+    try:
+        PotcarSingle.from_symbol_and_functional("Si")
+    except ValueError:
+        raise ValueError(
+            """
+            Validation of the relax_maker failed.
+            Please make sure that your pymatgen installation is able to discover POTCAR files automatically.
+
+            For more information, please see:
+            https://pymatgen.org/installation.html#potcar-setup
+            """
+        )
 
     def check_func(relax_maker: RelaxMaker):
         input_gen = relax_maker.input_set_generator
