@@ -18,6 +18,7 @@ from pymatgen.io.lobster import Lobsterin
 from atomate2.vasp.powerups import update_user_incar_settings
 from pymatgen.core import Structure
 from atomate2.lobster.jobs import PureLobsterMaker
+from atomate2.utils.path import strip_hostname
 
 __all__ = ["VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
 
