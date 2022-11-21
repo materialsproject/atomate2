@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from jobflow import Flow, Maker
+from jobflow import Flow,
 from jobflow import Maker, Response, job
 from monty.serialization import loadfn
 from monty.shutil import gzip_dir
@@ -18,11 +18,14 @@ from pymatgen.io.lobster import Lobsterin
 from atomate2.vasp.powerups import update_user_incar_settings
 from pymatgen.core import Structure
 from atomate2.lobster.jobs import PureLobsterMaker
-__all__ = [ "VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
+from atomate2.utils.path import strip_hostname
+
+__all__ = ["VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
 
 logger = logging.getLogger(__name__)
 
 # include a class where we can also add Lobster
+
 
 @dataclass
 class VaspLobsterMaker(BaseVaspMaker):
@@ -52,8 +55,8 @@ class VaspLobsterMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "lobster"
-    #TODO: set grid_density to a normal value
+    name: str = "static_run"
+    # TODO: set grid_density to a normal value
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"grid_density": 1},
@@ -67,22 +70,27 @@ class VaspLobsterMaker(BaseVaspMaker):
                 "ALGO": "Normal",
                 "NSW": 99,
                 "LCHARG": False,
-                "LWAVE":True,
-                "ISYM":0
+                "LWAVE": True,
+                "ISYM": 0,
             },
         )
     )
-    copy_vasp_kwargs = {"additional_vasp_files":["WAVECAR"]}
+    copy_vasp_kwargs = {"additional_vasp_files": ["WAVECAR"]}
+
 
 @job
-def get_basis_infos(structure, vaspmaker, address_max_basis=None, address_min_basis=None):
+def get_basis_infos(
+    structure, vaspmaker, address_max_basis=None, address_min_basis=None
+):
     # create a vasp input for lobster
 
     # we need to add more files to copy if prev_vasp_dir exists
-    potcar_symbols=vaspmaker.input_set_generator._get_potcar(structure=structure, potcar_spec=True)
+    potcar_symbols = vaspmaker.input_set_generator._get_potcar(
+        structure=structure, potcar_spec=True
+    )
 
     # get data from Lobsterinput
-    #Lobster
+    # Lobster
     if address_max_basis is None and address_min_basis is None:
         list_basis_dict = Lobsterin.get_all_possible_basis_functions(
             structure=structure, potcar_symbols=potcar_symbols
@@ -119,55 +127,91 @@ def get_basis_infos(structure, vaspmaker, address_max_basis=None, address_min_ba
 
 @job
 def update_user_incar_settings_job(vaspjob, nbands):
-    vaspjob=update_user_incar_settings(vaspjob, {"NBANDS": nbands["nbands"]})
+    vaspjob = update_user_incar_settings(vaspjob, {"NBANDS": nbands["nbands"]})
     return Response(replace=vaspjob)
+
 
 @job
 def get_lobster_jobs(basis_dict, wavefunction_dir):
-    jobs=[]
-    outputs={}
-    outputs["uuids"]=[]
-    outputs["dirs"]=[]
-    outputs["basis"]=[]
+    jobs = []
+    outputs = {}
+    outputs["uuids"] = []
+    outputs["dirs"] = []
+    outputs["basis"] = []
     for i, basis in enumerate(basis_dict):
-        lobsterjob=PureLobsterMaker().make(wavefunction_dir=wavefunction_dir, basis_dict=basis)
+        lobsterjob = PureLobsterMaker(name="lobster_run_{}".format(i)).make(
+            wavefunction_dir=wavefunction_dir, basis_dict=basis
+        )
         outputs["uuids"].append(lobsterjob.output.uuid)
         outputs["dirs"].append(lobsterjob.output.dir_name)
         outputs["basis"].append(basis)
         jobs.append(lobsterjob)
 
-    flow=Flow(jobs, output=outputs)
+    flow = Flow(jobs, output=outputs)
     return Response(replace=flow)
 
 
 @job
 def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
-    jobs=[]
+    jobs = []
+    outputs = {}
+    outputs["lobster_dir_name"] = []
+    outputs["add_static_dir_name"] = []
+    outputs["static_dir_name"] = []
+    dec_delete_files = job(delete_files)
     for dir_name in dirs:
-        jobs.append(delete_files(dir_name, include_files=["WAVECAR", "WAVECAR.gz"]))
-    if dir_vasp is not None:
-        jobs.append(delete_files(dir_vasp, include_files=["WAVECAR", "WAVECAR.gz"]))
-    if dir_preconverge is not None:
-        jobs.append(delete_files(dir_preconverge, include_files=["WAVECAR", "WAVECAR.gz"]))
+        jobs.append(
+            dec_delete_files(
+                dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
+            )
+        )
+        outputs["lobster_dir_name"].append(dir_name)
+    if dir_preconverge is None and dir_vasp is not None:
+        dir_vasp_stat = strip_hostname(dir_vasp)
+        jobs.append(
+            dec_delete_files(
+                dir_vasp_stat,
+                include_files=["WAVECAR", "WAVECAR.gz"],
+                allow_missing=True,
+            )
+        )
+        outputs["static_dir_name"].append(dir_vasp_stat)
+    if dir_preconverge is not None and dir_vasp is not None:
+        dir_vasp_add_stat = strip_hostname(dir_preconverge)
+        dir_vasp_stat = strip_hostname(dir_vasp)
+        jobs.append(
+            dec_delete_files(
+                dir_vasp_stat,
+                include_files=["WAVECAR", "WAVECAR.gz"],
+                allow_missing=True,
+            )
+        )
+        jobs.append(
+            dec_delete_files(
+                dir_vasp_add_stat,
+                include_files=["WAVECAR", "WAVECAR.gz"],
+                allow_missing=True,
+            )
+        )
+        outputs["add_static_dir_name"].append(dir_vasp_add_stat)
+        outputs["static_dir_name"].append(dir_vasp_stat)
 
-    return Response(replace=Flow(jobs))
+    flow = Flow(jobs, output=outputs)
+    return Response(replace=flow)
 
 
 @job(output_schema=LobsterTaskDocument)
 def generate_database_entry(
-
     **kwargs,
 ):
     """
-    Analyze the phonon runs and summarize the results.
+    Analyze the LOBSTER runs and summarize the results.
 
     Parameters
     ----------
-    structure: Structure object
-        Fully optimized structure used for phonon runs
 
     kwargs: dict
-        Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
+        Additional parameters that are passed to LobsterTaskDocument.from_directory
 
     """
     lobster_doc = LobsterTaskDocument.from_directory(
@@ -175,5 +219,3 @@ def generate_database_entry(
     )
 
     return lobster_doc
-
-
