@@ -51,7 +51,7 @@ dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.2.0", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
     "pydantic==1.10.2",
-    "pymatgen==2022.10.22",
+    "pymatgen==2022.11.7",
     "custodian==2022.5.26",
     "monty==2022.9.9",
     "jobflow==0.1.9",
@@ -61,7 +61,7 @@ strict = [
     "phonopy==2.16.3",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.29.3"
+    "mp-api==0.29.4"
 ]
 
 [project.scripts]
