@@ -466,9 +466,9 @@ def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]
     """
     data = {}
     if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(dir_name / "BASIS")
+        data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))
     if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(dir_name / "POTENTIAL")
+        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(str(dir_name / "POTENTIAL"))
     return data
 
 def _get_volumetric_data(
