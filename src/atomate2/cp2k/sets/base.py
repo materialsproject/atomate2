@@ -15,7 +15,7 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 from pymatgen.core.structure import Structure, Molecule
 from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.cp2k.inputs import Cp2kInput
+from pymatgen.io.cp2k.inputs import Cp2kInput, BasisFile, PotentialFile, GaussianTypeOrbitalBasisSet, GthPotential
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.sets import DftSet
 
@@ -107,7 +107,18 @@ class Cp2kInputSet(InputSet):
         """
         directory = Path(directory)
         if (directory / "cp2k.inp").exists():
-            return Cp2kInput.from_file(directory / "cp2k.inp")
+            cp2k_input = Cp2kInput.from_file(directory / "cp2k.inp")
+        else:
+            raise FileNotFoundError
+        optional_files = optional_files if optional_files else {}
+        optional = {}
+        for filename, obj in optional_files.items():
+            optional[filename] = {
+                'filename': filename,
+                'object': obj.from_file(filename)
+            }
+
+        return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional)
 
     # TODO Validation
     @property
@@ -215,6 +226,10 @@ class Cp2kInputGenerator(InputGenerator):
             prev_input,
             input_updates,
         )
+        optional_files = optional_files if optional_files else {}
+        optional_files['basis'] = {"filename": "BASIS", "object": self._get_basis_file(cp2k_input=cp2k_input)}
+        optional_files['potential'] = {"filename": "POTENTIAL", "object": self._get_potential_file(cp2k_input=cp2k_input)}
+
         return Cp2kInputSet(
             cp2k_input=cp2k_input,
             optional_files=optional_files
@@ -322,7 +337,35 @@ class Cp2kInputGenerator(InputGenerator):
 
         cp2k_input.update(overrides)
         return cp2k_input
-    
+
+    def _get_basis_file(self, cp2k_input: Cp2kInput):
+        """
+        Get the basis sets for the input object and convert them to a 
+        basis file object. Allows calculation to execute if the basis sets 
+        are not available on the execution resource.
+        """
+        basis_sets = []
+        for el in cp2k_input.structure.symbol_set:
+            for data in cp2k_input.basis_and_potential[el].values():
+                if isinstance(data, GaussianTypeOrbitalBasisSet):
+                    basis_sets.append(data)
+        if not basis_sets:
+            return None
+        cp2k_input.safeset({'force_eval': {'dft': {'BASIS_SET_FILE_NAME': "BASIS"}}})
+        return BasisFile(objects=basis_sets)
+
+    def _get_potential_file(self, cp2k_input: Cp2kInput):
+        """
+        Get the potentials for the input object and convert them to a 
+        potential file object. Allows calculation to execute if the potentials 
+        are not available on the execution resource.
+        """
+        potentials = [cp2k_input.basis_and_potential[el]['potential'] for el in cp2k_input.structure.symbol_set]
+        if not potentials:
+            return None
+        cp2k_input.safeset({'force_eval': {'dft': {'POTENTIAL_FILE_NAME': "POTENTIAL"}}})
+        return PotentialFile(objects=potentials)
+
     def _get_kpoints(
         self,
         structure: Structure,

@@ -17,6 +17,7 @@ from pymatgen.electronic_structure.dos import Dos, CompleteDos
 from pymatgen.electronic_structure.bandstructure import BandStructure
 
 from pymatgen.io.common import VolumetricData
+from pymatgen.io.cp2k.inputs import DataFile, BasisFile, PotentialFile, GthPotential
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 from pymatgen.core.units import Ha_to_eV
 
@@ -58,12 +59,13 @@ class Status(ValueEnum):
     FAILED = "failed"
 
 
-# TODO: Naming convention. Should we just use the VASP names?
 class Cp2kObject(ValueEnum):
     """Types of CP2K data objects."""
 
     DOS = "dos"
     BANDSTRUCTURE = "band_structure"
+    BASIS = "basis" # Basis file
+    POTENTIAL = "potential" # potential file
     ELECTRON_DENSITY = "electron_density" # e_density
     SPIN_DENSITY = "spin_density" # spin density
     v_hartree = "v_hartree" # elec. potential
@@ -104,7 +106,6 @@ class CalculationInput(BaseModel):
         cls,
         output: Cp2kOutput
     ):
-
         return cls(
             structure=output.initial_structure,
             atomic_kind_info=output.data.get("atomic_kind_info", None),
@@ -365,6 +366,7 @@ class Calculation(BaseModel):
         cp2k_objects: Dict[Cp2kObject, Any] = _get_volumetric_data(
             dir_name, output_file_paths, store_volumetric_data
         )
+        cp2k_objects.update(_get_basis_and_potential_files(dir_name))
 
         dos = _parse_dos(parse_dos, cp2k_output)
         if dos is not None:
@@ -453,6 +455,21 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]
                 output_file_paths[cp2k_object] = str(volumetric_file)
     return output_file_paths
 
+
+def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]:
+    """
+    Get the path of the basis and potential files, so exact info 
+    about the basis set /potential used can be retrieved.
+
+    Calculation summaries will only have metadata (i.e. the name) that matches to
+    the basis/potential contained in these files.
+    """
+    data = {}
+    if Path.exists(dir_name / "BASIS"):
+        data[Cp2kObject.BASIS] = BasisFile.from_file(dir_name / "BASIS")
+    if Path.exists(dir_name / "POTENTIAL"):
+        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(dir_name / "POTENTIAL")
+    return data
 
 def _get_volumetric_data(
     dir_name: Path,
