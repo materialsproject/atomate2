@@ -204,9 +204,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
     assert result.vbm == pytest.approx(4.5715)
     for def_ent in result.defect_entries:
         if def_ent.charge_state == 0:
-            assert def_ent.corrections["freysoldt_potential_alignment"] == 0
+            assert def_ent.corrections["potential_alignment"] == 0
+            assert def_ent.corrections["electrostatic"] == 0
         else:
-            assert def_ent.corrections["freysoldt_potential_alignment"] != 0
+            assert def_ent.corrections["potential_alignment"] != 0
 
     # assert isinstance(res_defect, FormationEnergyDiagramDocument)
 
