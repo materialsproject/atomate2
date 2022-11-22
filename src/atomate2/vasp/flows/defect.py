@@ -69,7 +69,7 @@ CCD_DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 
 # Define RelaxMaker Errors
-def check_defect_relax_maker(maker: Maker):
+def check_defect_relax_maker(maker: Maker):  # pragma: no cover
     """Check specific RelaxMaker settings.
 
     Check all nested RelaxMaker in to make sure specific Setting is set.
