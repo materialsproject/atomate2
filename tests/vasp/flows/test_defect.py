@@ -208,13 +208,3 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
             assert def_ent.corrections["electrostatic"] == 0
         else:
             assert def_ent.corrections["potential_alignment"] != 0
-
-    # assert isinstance(res_defect, FormationEnergyDiagramDocument)
-
-    # # check that the defect object was stored
-    # # check that freysoldt correction was performed
-    # for r_dict in results["results"]["Mg_Ga-0"]["defect_entries"]:
-    #     if r_dict.charge_state == 0:
-    #         assert r_dict.corrections["freysoldt_potential_alignment"] == 0
-    #     else:
-    #         assert r_dict.corrections["freysoldt_potential_alignment"] != 0

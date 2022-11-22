@@ -136,7 +136,7 @@ class FormationEnergyMaker(Maker):
     """
 
     name: str = "formation energy"
-    validate_maker: bool = True
+    validate_maker: bool = False
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=ChargeStateRelaxSetGenerator(
