@@ -160,8 +160,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
 
-    # Application of the monkeypatch to replace Path.home
-    # with the behavior of mockreturn defined above.
     def fake_Si(*args):
         pot_head = """
             PAW_PBE Si 05Jan2001
