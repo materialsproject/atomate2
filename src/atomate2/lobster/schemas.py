@@ -10,6 +10,8 @@ from monty.serialization import loadfn
 from pymatgen.core import Structure
 from pymatgen.io.lobster import Lobsterin, Lobsterout, Icohplist, Charge
 from pymatgen.electronic_structure.cohp import CompleteCohp
+from pymatgen.io.lobster import Doscar
+from pymatgen.electronic_structure.dos import Dos, LobsterCompleteDos
 
 import os
 from pathlib import Path
@@ -183,9 +185,9 @@ class LobsterTaskDocument(BaseModel):
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    completed_at: str = Field(
-        None, description="Timestamp for when this task was completed"
-    )
+    # completed_at: str = Field(
+    #    None, description="Timestamp for when this task was completed"
+    # )
     lobsterout: LobsteroutModel = Field("Lobster out data")
     lobsterin: LobsterinModel = Field("Lobster calculation inputs")
     lobsterpy_data: CondensedBondingAnalysis = Field(
@@ -208,6 +210,9 @@ class LobsterTaskDocument(BaseModel):
     )
     COBI_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COBI data"
+    )
+    lobster_dos: LobsterCompleteDos = Field(
+        None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
     lobster_charges: Any = Field(
         None,
@@ -459,6 +464,8 @@ class LobsterTaskDocument(BaseModel):
             are_coops=False,
             are_cobis=True,
         )
+        dos = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR")
+        lobster_dos = dos.completedos
 
         #
         # # Setup Desciption dict
@@ -508,6 +515,7 @@ class LobsterTaskDocument(BaseModel):
             COHP_data=cohp_obj,
             COOP_data=coop_obj,
             COBI_data=cobi_obj,
+            lobster_dos=lobster_dos,
             lobster_charges=lobster_charges,
         )  # doc
 
