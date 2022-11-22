@@ -132,7 +132,6 @@ class FormationEnergyMaker(Maker):
         states. If None, the defaults will be used.
     validate_maker: bool
         If True, the code will check the relax_maker for specific settings.
-        Leave this as True unless you really know what you are doing.
     """
 
     name: str = "formation energy"
