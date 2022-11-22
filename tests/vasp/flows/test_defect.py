@@ -150,14 +150,32 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         assert wswq_p.me_imag.shape == (2, 4, 18, 18)
 
 
-def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
+def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     import pytest
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
     from pymatgen.analysis.defects.generators import SubstitutionGenerator
     from pymatgen.core import Structure
+    from pymatgen.io.vasp.inputs import PotcarSingle
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
+
+    # Application of the monkeypatch to replace Path.home
+    # with the behavior of mockreturn defined above.
+    def fake_Si(*args):
+        pot_head = """
+            PAW_PBE Si 05Jan2001
+            4.00000000000000000
+            parameters from PSCTR are:
+            VRHFIN =Si: s2p2
+            NELECTRONS =4.0
+            END of PSCTR-controll parameters
+        """
+        ps = PotcarSingle(pot_head, symbol="Si")
+        ps.keywords["NELECTRONS"] = 4.0
+        return ps
+
+    monkeypatch.setattr(PotcarSingle, "from_symbol_and_functional", fake_Si)
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -208,3 +226,13 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir):
             assert def_ent.corrections["electrostatic"] == 0
         else:
             assert def_ent.corrections["potential_alignment"] != 0
+
+    # assert isinstance(res_defect, FormationEnergyDiagramDocument)
+
+    # # check that the defect object was stored
+    # # check that freysoldt correction was performed
+    # for r_dict in results["results"]["Mg_Ga-0"]["defect_entries"]:
+    #     if r_dict.charge_state == 0:
+    #         assert r_dict.corrections["freysoldt_potential_alignment"] == 0
+    #     else:
+    #         assert r_dict.corrections["freysoldt_potential_alignment"] != 0

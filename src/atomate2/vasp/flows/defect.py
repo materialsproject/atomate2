@@ -69,7 +69,7 @@ CCD_DEFAULT_DISTORTIONS = (-1, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 1)
 
 
 # Define RelaxMaker Errors
-def check_defect_relax_maker(maker: Maker):  # pragma: no cover
+def check_defect_relax_maker(maker: Maker):
     """Check specific RelaxMaker settings.
 
     Check all nested RelaxMaker in to make sure specific Setting is set.
@@ -135,7 +135,7 @@ class FormationEnergyMaker(Maker):
     """
 
     name: str = "formation energy"
-    validate_maker: bool = False
+    validate_maker: bool = True
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=ChargeStateRelaxSetGenerator(
