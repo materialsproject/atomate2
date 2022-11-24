@@ -1,3 +1,5 @@
+default_language_version:
+  python: python3.8
 exclude: '^src/atomate2/vasp/schemas/calc_types/'
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
