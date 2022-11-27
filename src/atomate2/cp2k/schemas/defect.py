@@ -270,15 +270,15 @@ class DefectDoc(StructureMetadata):
             dielectric = (eps_parallel - 1) / (1 - 1/eps_perp)
             with ScratchDir('.'):
                 
-                lref = VaspVolumetricData(structure=parameters['bulk_locpot'].structure, data=parameters['bulk_locpot'].data)
-                ldef = VaspVolumetricData(structure=parameters['defect_locpot'].structure, data=parameters['defect_locpot'].data)
+                lref = VaspVolumetricData(structure=parameters['bulk_v_hartree'].structure, data=parameters['bulk_v_hartree'].data)
+                ldef = VaspVolumetricData(structure=parameters['defect_v_hartree'].structure, data=parameters['defect_v_hartree'].data)
                 lref.write_file("LOCPOT.ref")
                 ldef.write_file("LOCPOT.def")
 
                 return get_freysoldt2d_correction(
-                    q=parameters['charge_state'], dielectric=dielectric, defect_locpot="LOCPOT.def", 
-                    bulk_locpot="LOCPOT.ref", defect_frac_coords=parameters['defect_frac_sc_coords'], 
-                    energy_cutoff=250, slab_buffer=2
+                    q=parameters['charge_state'], dielectric=dielectric, defect_locpot=ldef, 
+                    bulk_locpot=lref, defect_frac_coords=parameters['defect_frac_sc_coords'], 
+                    energy_cutoff=520, slab_buffer=2
                     )
         return {}, {}
 
@@ -304,19 +304,21 @@ class DefectDoc(StructureMetadata):
 
         ghost = [index for index, prop in enumerate(final_defect_structure.site_properties.get("ghost")) if prop]
         if ghost:
-            defect_frac_sc_coords = final_defect_structure[ghost[0]]
+            defect_frac_sc_coords = final_defect_structure[ghost[0]].frac_coords
         else:
             defect_frac_sc_coords = DefectSiteFinder(SETTINGS.SYMPREC).get_defect_fpos(defect_structure=final_defect_structure, base_structure=final_bulk_structure)
-
         parameters = {
             'defect_energy': defect_task.output.energy,
             'bulk_energy': bulk_task.output.energy,
             'final_defect_structure': final_defect_structure,
             'charge_state': defect_task.output.structure.charge,
             'defect_frac_sc_coords': defect_frac_sc_coords,
-            'defect_v_hartree': defect_task.cp2k_objects['v_hartree'], # TODO CP2K spec name
-            'bulk_v_hartree': bulk_task.cp2k_objects['v_hartree'], # TODO CP2K spec name
+            'defect_v_hartree': MontyDecoder().process_decoded(defect_task.cp2k_objects['v_hartree']), # TODO CP2K spec name
+            'bulk_v_hartree': MontyDecoder().process_decoded(bulk_task.cp2k_objects['v_hartree']), # TODO CP2K spec name
         }
+
+        if defect_task.tags and "2d" in defect_task.tags:
+            parameters['2d'] = True
 
         return parameters
 

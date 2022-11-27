@@ -543,8 +543,8 @@ d        """
         """
         return [
             (
-                self.tasks.query_one(criteria={self.tasks.key: defect_tasks_id}),
-                self.tasks.query_one(criteria={self.tasks.key: bulk_tasks_id}),
+                self.tasks.query_one(criteria={self.tasks.key: defect_tasks_id}, load=True),
+                self.tasks.query_one(criteria={self.tasks.key: bulk_tasks_id}, load=True), # load all for now
                 self.__get_dielectric(self._mpid_map[bulk_tasks_id]),
             )
             for defect_tasks_id, bulk_tasks_id in task_ids

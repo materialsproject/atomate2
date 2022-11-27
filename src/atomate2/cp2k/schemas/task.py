@@ -336,6 +336,10 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
 
         analysis = AnalysisSummary.from_cp2k_calc_docs(calcs_reversed)
         transformations, icsd_id, tags, author = _parse_transformations(dir_name)
+        if tags:
+            tags.extend(additional_fields.get("tags", []))
+        else:
+            tags = additional_fields.get('tags')
         custodian = _parse_custodian(dir_name)
         orig_inputs = _parse_orig_inputs(dir_name)
 

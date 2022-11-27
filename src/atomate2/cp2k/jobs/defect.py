@@ -11,7 +11,7 @@ from numpy.typing import NDArray
 
 from pymatgen.core import Structure
 from pymatgen.analysis.defects.core import Defect, Vacancy
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
+from atomate2.cp2k.sets.base import Cp2kInputGenerator, recursive_update
 from atomate2.cp2k.sets.defect import (
     DefectSetGenerator, DefectStaticSetGenerator, DefectRelaxSetGenerator, DefectCellOptSetGenerator, 
     DefectHybridStaticSetGenerator, DefectHybridRelaxSetGenerator, DefectHybridCellOptSetGenerator
@@ -55,8 +55,7 @@ class BaseDefectMaker(BaseCp2kMaker):
             )
 
             # provenance stuff
-            self.write_additional_data.update(
-            {
+            recursive_update(self.write_additional_data, {
                 "info.json": {
                     "defect": deepcopy(defect), 
                     "defect_charge": charge, 
@@ -64,6 +63,7 @@ class BaseDefectMaker(BaseCp2kMaker):
                     }
                 }
             )
+            
         else:
             structure = deepcopy(defect)
         structure.set_charge(charge)
