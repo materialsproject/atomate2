@@ -65,7 +65,9 @@ class BaseDefectMaker(BaseCp2kMaker):
             )
             
         else:
+            charge = charge if charge else defect.charge
             structure = deepcopy(defect)
+
         structure.set_charge(charge)
         return super().make.original(self, structure=structure, prev_cp2k_dir=prev_cp2k_dir)
 
