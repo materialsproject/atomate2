@@ -27,6 +27,7 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from atomate2 import SETTINGS
 
 _BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
+_BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
 
 __all__ = ["Cp2kInputSet", "Cp2kInputGenerator"]
 
@@ -502,6 +503,18 @@ class Cp2kInputGenerator(InputGenerator):
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
+
+@dataclass
+class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
+
+    user_input_settings: dict = field(default_factory=dict)
+    use_structure_charge: bool = False
+    sort_structure: bool = True
+    symprec: float = SETTINGS.SYMPREC
+    config_dict: dict = field(default_factory=lambda: _BASE_GAPW_SET)
+
+    def _get_kpoints(self, structure: Structure, kpoints_updates: dict[str, Any] | None) -> Kpoints | None:
+        return None
 
 def multiple_input_updators():
     """
