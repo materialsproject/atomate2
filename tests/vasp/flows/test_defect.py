@@ -230,14 +230,4 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     from monty.serialization import dumpfn
 
     dumpfn(data_out, "/Users/shen9/Desktop/data_out.json")
-    assert store.additional_stores["data"].count({}) == 3
-
-    # assert isinstance(res_defect, FormationEnergyDiagramDocument)
-
-    # # check that the defect object was stored
-    # # check that freysoldt correction was performed
-    # for r_dict in results["results"]["Mg_Ga-0"]["defect_entries"]:
-    #     if r_dict.charge_state == 0:
-    #         assert r_dict.corrections["freysoldt_potential_alignment"] == 0
-    #     else:
-    #         assert r_dict.corrections["freysoldt_potential_alignment"] != 0
+    assert store.additional_stores["data"].count({}) == 5
