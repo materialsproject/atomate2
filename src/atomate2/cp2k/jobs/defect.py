@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 DEFECT_TASK_DOC = {
     "average_v_hartree": True,
-    "store_volumetric_data": ("v_hartree",)
+    "store_volumetric_data": ("v_hartree",),
+    "print_pdos": True,
 }
 
 @dataclass 

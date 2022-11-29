@@ -22,7 +22,7 @@ class DefectSetGenerator(Cp2kInputGenerator):
     def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """
         """
-        return {'print_v_hartree': True}
+        return {'print_v_hartree': True, "print_pdos": True}
 
 @dataclass
 @multiple_input_updators()
