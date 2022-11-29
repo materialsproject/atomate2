@@ -793,7 +793,10 @@ def _get_volumetric_data(
     output_file_paths
         A dictionary mapping the data type to file path relative to dir_name.
     store_volumetric_data
-        The volumetric data files to load. E.g., `("chgcar", "locpot")
+        The volumetric data files to load. E.g., `("chgcar", "locpot")`.
+        Provided as a list of strings note you can use either the keys or the
+        values available in the `VaspObject` enum (e.g., "locpot" or "LOCPOT")
+        are both valid.
 
     Returns
     -------
