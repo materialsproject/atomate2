@@ -226,8 +226,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
             assert def_ent.corrections["potential_alignment"] != 0
 
     # check that the locpot data was written:
-    data_out = list(store.query())
-    from monty.serialization import dumpfn
+    list(store.query())
 
-    dumpfn(data_out, "/Users/shen9/Desktop/data_out.json")
     assert store.additional_stores["data"].count({}) == 5
