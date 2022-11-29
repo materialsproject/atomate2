@@ -9,10 +9,10 @@ from monty.json import MontyDecoder
 from monty.tempfile import ScratchDir
 
 from pymatgen.core import Structure
-from pymatgen.entries.computed_entries import ComputedStructureEntry
+from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
 from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.corrections import get_freysoldt_correction, get_freysoldt2d_correction
-from pymatgen.analysis.defects.thermo import DefectEntry, DefectSiteFinder
+from pymatgen.analysis.defects.thermo import DefectEntry, DefectSiteFinder, FormationEnergyDiagram
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from atomate2 import SETTINGS
 
@@ -67,8 +67,12 @@ class DefectDoc(StructureMetadata):
         None, description="Task ids (defect task, bulk task) for all tasks of a RunType"
     )
 
-    entries: Mapping[RunType, DefectEntry] = Field(
+    defect_entries: Mapping[RunType, DefectEntry] = Field(
         None, description="Dictionary for tracking entries for CP2K calculations"
+    )
+    
+    bulk_entries: Mapping[RunType, ComputedStructureEntry] = Field(
+        None, description="Computed structure entry for the bulk calc."
     )
 
     last_updated: datetime = Field(
@@ -82,14 +86,6 @@ class DefectDoc(StructureMetadata):
     )
 
     metadata: Dict = Field(description="Metadata for this defect")
-
-    # TODO How can monty serialization incorporate into pydantic? It seems like VASP MatDocs dont need this
-    @validator("entries", pre=True)
-    def decode(cls, entries):
-        for e in entries:
-            if isinstance(entries[e], dict):
-                entries[e] = MontyDecoder().process_decoded({k: v for k, v in entries[e].items()})
-        return entries
 
     def update(self, defect_task, bulk_task, dielectric, query='defect'):
 
@@ -136,7 +132,7 @@ class DefectDoc(StructureMetadata):
             self.update(defect_task=defect_task, bulk_task=bulk_task, dielectric=dielectric, query=query)
 
     @classmethod
-    def from_tasks(cls: Type[T], defect_tasks: List, bulk_tasks: List, dielectrics: List, query='defect', key="task_id", material_id=None):
+    def from_tasks(cls: Type[T], defect_tasks: List, bulk_tasks: List, dielectrics: List, query='defect', key="task_id", material_id=None) -> T:
         """
         The standard way to create this document.
         Args:
@@ -169,25 +165,30 @@ class DefectDoc(StructureMetadata):
             # TODO return kpoint density, currently just does supercell size
             return -x[0].nsites, x[0].output.energy
 
-        entries = {}
+        defect_entries = {}
+        bulk_entries = {}
         all_tasks = {}
         best_tasks = {}
         metadata = {}
         for key, tasks_for_runtype in groupby(sorted(zip(defect_tasks, bulk_tasks, defects, dielectrics, defect_task_ids, bulk_task_ids), key=_run_type), key=_run_type):
             sorted_tasks = sorted(tasks_for_runtype, key=_sort)
             ents = [
-                cls.get_defect_entry_from_tasks(defect_task, bulk_task, defect, dielectric) 
+                (
+                    cls.get_defect_entry_from_tasks(defect_task, bulk_task, defect, dielectric),
+                    cls.get_bulk_entry_from_task(bulk_task)
+                )
                 for defect_task, bulk_task, defect, dielectric, did, bid in sorted_tasks
                 ]
             rt = run_types[sorted_tasks[0][-2]]
-            best_entry = ents[0]
             best_tasks[rt] = (sorted_tasks[0][-2], sorted_tasks[0][-1]) 
             all_tasks[rt] = [ (s[-2], s[-1]) for s in sorted_tasks ]
-            metadata[key] = {'convergence': [(sorted_tasks[i][0].nsites, ents[i].corrected_energy) for i in range(len(ents))]}
-            entries[rt] = ents[0]
+            metadata[key] = {'convergence': [(sorted_tasks[i][0].nsites, ents[i][0].corrected_energy) for i in range(len(ents))]}
+            defect_entries[rt], bulk_entries[rt] = ents[0]
 
+        v = next(iter(defect_entries.values())) 
         data = {
-                'entries': entries,
+                'defect_entries': defect_entries,
+                "bulk_entries": bulk_entries,
                 'run_types': run_types,
                 'task_types': task_types,
                 'calc_types': calc_types,
@@ -197,11 +198,12 @@ class DefectDoc(StructureMetadata):
                 #'deprecated_tasks': deprecated_tasks,
                 'all_tasks': all_tasks,
                 'best_tasks': best_tasks,
-                'material_id': material_id if material_id else best_entry.parameters['material_id'],
-                'defect': best_entry.defect,
+                'material_id': material_id if material_id else v.parameters['material_id'],
+                'defect': v.defect, 
+                "name": v.defect.name,
                 'metadata': metadata,
         }
-        prim = SpacegroupAnalyzer(best_entry.defect.structure).get_primitive_standard_structure()
+        prim = SpacegroupAnalyzer(v.defect.structure).get_primitive_standard_structure()
         data.update(StructureMetadata.from_structure(prim).dict())
         return cls(**data)
 
@@ -225,7 +227,7 @@ class DefectDoc(StructureMetadata):
 
         sc_entry = ComputedStructureEntry(
             structure=parameters['final_defect_structure'], 
-            energy=parameters['defect_energy'] - parameters['bulk_energy']
+            energy=parameters['defect_energy']
             )
 
         defect_entry = DefectEntry(
@@ -237,6 +239,13 @@ class DefectDoc(StructureMetadata):
         )
 
         return defect_entry
+
+    @classmethod
+    def get_bulk_entry_from_task(cls, bulk_task: TaskDocument):
+        return ComputedStructureEntry(
+            structure=bulk_task.structure,
+            energy=bulk_task.output.energy,
+        )
 
     @classmethod
     def get_correction_from_parameters(cls, parameters) -> Tuple[Dict, Dict]:
