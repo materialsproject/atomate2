@@ -181,6 +181,8 @@ class OutputSummary(BaseModel):
         None, description="The final DFT energy per atom for the last calculation"
     )
     bandgap: float = Field(None, description="The DFT bandgap for the last calculation")
+    cbm: float = Field(None, description="CBM for this calculation")
+    vbm: float = Field(None, description="VBM for this calculation")
     forces: List[Vector3D] = Field(
         None, description="Forces on atoms from the last calculation"
     )
@@ -214,6 +216,8 @@ class OutputSummary(BaseModel):
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
+            cbm=calc_doc.output.cbm,
+            vbm=calc_doc.output.vbm,
             forces=forces,
             stress=stress,
         )
@@ -366,13 +370,13 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         doc = getattr(cls, attr)(**dat)
         ddict = doc.dict()
         data = {
-            'structure': calcs_reversed[-1].output.structure, 
+            'structure': calcs_reversed[-1].output.structure,
             'dir_name': dir_name,
             'calcs_reversed': calcs_reversed,
-            'analysis':analysis,
-            'transformations':transformations,
-            'custodian':custodian,
-            'orig_inputs':orig_inputs,
+            'analysis': analysis,
+            'transformations': transformations,
+            'custodian': custodian,
+            'orig_inputs': orig_inputs,
             'additional_json': additional_json,
             'icsd_id': icsd_id,
             'tags':tags,
@@ -382,8 +386,8 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             'output': OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
             'state': _get_state(calcs_reversed, analysis),
             'entry': cls.get_entry(calcs_reversed),
-            'run_stats':_get_run_stats(calcs_reversed),
-            'cp2k_objects':cp2k_objects,
+            'run_stats': _get_run_stats(calcs_reversed),
+            'cp2k_objects': cp2k_objects,
             'included_objects': included_objects,
         }
         doc = cls(**ddict)

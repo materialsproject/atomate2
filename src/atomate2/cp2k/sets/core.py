@@ -277,3 +277,33 @@ class MDSetGenerator(Cp2kInputGenerator):
         }
 
         return updates
+
+
+@dataclass
+class AllElectronSetGenerator(Cp2kInputGenerator):
+    """
+    Class to generate CP2K static input sets.
+
+    Parameters
+    ----------
+
+    """
+
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        """
+        Get updates to the input for a static CP2K job.
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        updates = {
+            "qs_method": "GAPW",
+            "basis_and_potential": {str(e): {"potential": "ALL"} for e in Element}
+            }
+        return updates
