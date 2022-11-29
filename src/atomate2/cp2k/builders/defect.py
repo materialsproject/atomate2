@@ -19,10 +19,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate.utils.utils import load_class
 
-from emmet.core.thermo import ThermoDoc
 from emmet.core.material import MaterialsDoc
-
-from emmet.builders.settings import EmmetBuildSettings
 
 from atomate2.settings import Atomate2Settings
 from atomate2.cp2k.schemas.task import TaskDocument

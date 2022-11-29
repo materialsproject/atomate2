@@ -24,6 +24,7 @@ from atomate2.cp2k.schemas.task import TaskDocument
 __all__ = ["DefectDoc"]
 
 T = TypeVar("T", bound="DefectDoc")
+S = TypeVar("S", bound="DefectiveMaterialDoc")
 
 class DefectDoc(StructureMetadata):
     """
@@ -330,6 +331,69 @@ class DefectDoc(StructureMetadata):
             parameters['2d'] = True
 
         return parameters
+
+class DefectiveMaterialDoc(StructureMetadata):
+    """Document containing all / many defect tasks for a single material ID"""
+
+    property_name: ClassVar[str] = "defective material"
+
+    material_id: str = Field(None, description="Unique material ID for the bulk material") #TODO Change to MPID
+
+    formation_energy_diagrams: Mapping[RunType, FormationEnergyDiagram] = Field(None, description="")
+
+    last_updated: datetime = Field(
+        description="Timestamp for when this document was last updated",
+        default_factory=datetime.utcnow,
+    )
+
+    created_at: datetime = Field(
+        description="Timestamp for when this material document was first created",
+        default_factory=datetime.utcnow,
+    )
+
+    metadata: Dict = Field(None, description="Metadata for this object")
+
+    @classmethod
+    def from_docs(cls: Type["S"], defect_docs: DefectDoc, thermo: Dict, dos) -> S:
+        """
+        # Metadata
+        metadata = {}
+        last_updated = datetime.now() 
+        created_at = datetime.now() 
+
+        bulk_ents = {}
+        dfct_ents = {}
+        formation_energy_diagrams = {}
+        els = set()
+        for doc in defect_docs:
+            els = els | set(doc.defect.element_changes.keys())
+            for rt, defect_entry in doc.defect_entries.items():
+                if rt not in dfct_ents:
+                    dfct_ents[rt] = []
+                dfct_ents[rt].append(defect_entry)
+            bulk_ents[rt] = doc.bulk_entries[rt]
+
+        atomic_entries = [ComputedEntry(composition=str(el), energy=thermo[el]) for el in els]
+
+        for rt in dfct_ents:
+
+            pd = PhaseDiagram(mp_entries)
+            cbm, vbm = dos.get_cbm_vbm()
+            
+            adjusted_entries = _get_adjusted_pd_entries(
+                    phase_diagram=pd, atomic_entries=atomic_entries
+                )
+
+            formation_energy_diagrams[rt] = FormationEnergyDiagram.with_atomic_entries(
+                                                bulk_entry=bulk_ents[rt], defect_entries=dfct_ents[rt],
+                                                atomic_entries=atomic_entries, phase_diagram=pd, vbm=vbm,
+                                                band_gap=cbm-vbm,
+                                            )
+        """
+
+        raise NotImplementedError
+        
+       
 
 def unpack(query, d):
     if not query:
