@@ -808,7 +808,10 @@ def _get_volumetric_data(
 
     volumetric_data = {}
     for file_type, file in output_file_paths.items():
-        if file_type.name not in store_volumetric_data:
+        if (
+            file_type.name not in store_volumetric_data
+            and file_type.value not in store_volumetric_data
+        ):
             pass
 
         try:
