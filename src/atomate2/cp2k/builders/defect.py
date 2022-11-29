@@ -5,6 +5,7 @@ from tkinter import W
 from typing import Dict, Iterator, List, Literal, Optional
 from copy import deepcopy
 from math import ceil
+import numpy as np
 from monty.json import MontyDecoder, jsanitize
 
 from maggma.builders import Builder
@@ -13,6 +14,7 @@ from maggma.utils import grouper
 
 from pymatgen.core import Structure
 from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
+from pymatgen.electronic_structure.dos import CompleteDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate.utils.utils import load_class
@@ -24,7 +26,7 @@ from emmet.builders.settings import EmmetBuildSettings
 
 from atomate2.settings import Atomate2Settings
 from atomate2.cp2k.schemas.task import TaskDocument
-from atomate2.cp2k.schemas.defect import DefectDoc
+from atomate2.cp2k.schemas.defect import DefectDoc, DefectiveMaterialDoc
 from atomate2.cp2k.schemas.calc_types import TaskType
 from atomate2.cp2k.schemas.calc_types.utils import run_type
 
@@ -33,8 +35,6 @@ from emmet.core.electronic_structure import ElectronicStructureDoc
 __author__ = "Nicholas Winner <nwinner@berkeley.edu>"
 
 
-# TODO this builder is very close to being code agnostic. We need only resolve the standard key names and
-# how they are fed to the DefectDoc class. e.g. VASP calcs store "locpot", but CP2K store "v_hartree"
 class DefectBuilder(Builder):
     """
     The DefectBuilder collects task documents performed on structures containing a single point defect.
@@ -60,7 +60,11 @@ class DefectBuilder(Builder):
     """
 
     #TODO how to incorporate into settings?
-    DEFAULT_ALLOWED_TASKS = [
+    DEFAULT_ALLOWED_DFCT_TASKS = [
+            TaskType.Structure_Optimization.value, 
+            ]
+
+    DEFAULT_ALLOWED_BULK_TASKS = [
             TaskType.Structure_Optimization.value, 
             TaskType.Static.value
             ]
@@ -76,7 +80,8 @@ class DefectBuilder(Builder):
         task_validation: Optional[Store] = None,
         query: Optional[Dict] = None,
         bulk_query: Optional[Dict] = None,
-        allowed_task_types: Optional[List[str]] = DEFAULT_ALLOWED_TASKS,
+        allowed_dfct_types: Optional[List[str]] = DEFAULT_ALLOWED_DFCT_TASKS,
+        allowed_bulk_types: Optional[List[str]] = DEFAULT_ALLOWED_BULK_TASKS, 
         task_schema: Literal["cp2k"] = "cp2k", # TODO cp2k specific right now, but this will go in common eventually
         settings: Dict | None = None,
         **kwargs,
@@ -103,9 +108,9 @@ class DefectBuilder(Builder):
         self.electronic_structure = electronic_structure
         self.electrostatic_potentials = electrostatic_potentials
         self.task_validation = task_validation
-        self.allowed_task_types = allowed_task_types #TODO How to incorporate into getitems?
+        self._allowed_dfct_types = allowed_dfct_types #TODO How to incorporate into getitems?
+        self._allowed_bulk_types = allowed_bulk_types #TODO How to incorporate into getitems?
 
-        self._allowed_task_types = {TaskType(t) for t in self.allowed_task_types}
         settings = settings if settings else {}
         self.settings = Atomate2Settings(**settings) # TODO don't think this is right 
         self.query = query if query else {}
@@ -128,7 +133,6 @@ class DefectBuilder(Builder):
             'output.input',
             'output.nsites',
             'output.cp2k_objects.v_hartree',
-            'output.additional_json.info.sc_mat' # TODO figure out how to remove this requirement
         ] 
 
         self._required_bulk_properties = [
@@ -187,6 +191,14 @@ class DefectBuilder(Builder):
     def mpid_map(self) -> Dict:
         return self._mpid_map
 
+    @property
+    def allowed_dfct_types(self) -> set:
+        return {TaskType(t) for t in self._allowed_dfct_types}
+
+    @property
+    def allowed_bulk_types(self) -> set:
+        return {TaskType(t) for t in self._allowed_bulk_types}
+    
     def ensure_indexes(self):
         """
         Ensures indicies on the tasks and materials collections
@@ -276,7 +288,10 @@ d        """
 
         self.logger.info("Defect builder started")
         self.logger.info(
-            f"Allowed task types: {[task_type.value for task_type in self._allowed_task_types]}"
+            f"Allowed defect types: {[task_type.value for task_type in self.allowed_dfct_types]}"
+        )
+        self.logger.info(
+            f"Allowed bulk types: {[task_type.value for task_type in self.allowed_bulk_types]}"
         )
 
         self.logger.info("Setting indexes")
@@ -287,7 +302,7 @@ d        """
 
         self.logger.info("Finding tasks to process")
 
-        # Get defect tasks
+        ##### Get defect tasks #####
         temp_query = self.query.copy()
         temp_query.update({d: {'$exists': True, "$ne": None} for d in self.required_defect_properties})
         temp_query.update({self.defect_query: {'$exists': True}, "output.state": "successful"})
@@ -296,7 +311,17 @@ d        """
             for doc in self.tasks.query(criteria=temp_query, properties=[self.tasks.key])
         }
 
-        # Get bulk tasks
+        # TODO Seems slow
+        not_allowed = {
+            doc[self.tasks.key] 
+            for doc in self.tasks.query(criteria={self.tasks.key: {"$in": list(defect_tasks)}})
+            if TaskDocument(**doc['output']).calcs_reversed[0].task_type not in self.allowed_dfct_types
+        }
+        if not_allowed:
+            self.logger.debug(f"{len(not_allowed)} defect tasks dropped. Not allowed TaskType")
+        defect_tasks = defect_tasks - not_allowed
+
+        ##### Get bulk tasks #####
         temp_query = self.bulk_query.copy()
         temp_query.update({d: {'$exists': True} for d in self.required_bulk_properties})
         temp_query.update({self.defect_query: {'$exists': False}, "output.state": "successful"})
@@ -304,6 +329,16 @@ d        """
             doc[self.tasks.key]
             for doc in self.tasks.query(criteria=temp_query, properties=[self.tasks.key])
         }
+        
+        # TODO seems slow
+        not_allowed = {
+            doc[self.tasks.key] 
+            for doc in self.tasks.query(criteria={self.tasks.key: {"$in": list(bulk_tasks)}})
+            if TaskDocument(**doc['output']).calcs_reversed[0].task_type not in self.allowed_bulk_types
+        }
+        if not_allowed:
+            self.logger.debug(f"{len(not_allowed)} bulk tasks dropped. Not allowed TaskType")
+        bulk_tasks = bulk_tasks - not_allowed
 
         # TODO Not the same validation behavior as material builders?
         # If validation store exists, find tasks that are invalid and remove them
@@ -393,7 +428,7 @@ d        """
                     defect_tasks=defect_tasks, bulk_tasks=bulk_tasks, dielectrics=dielectrics,
                     query=self.defect_query, key=self.tasks.key, material_id=material_id
                     )
-            return defect_doc.dict()
+            return jsanitize(defect_doc.dict(), allow_bson=True, enum_values=True, strict=True)
         return {}
 
     def update_targets(self, items):
@@ -412,10 +447,7 @@ d        """
                        "task_ids": item['task_ids'],
                     }
                 )
-            self.defects.update(
-                docs=jsanitize(items, allow_bson=True),
-                key='task_ids',
-            )
+            self.defects.update(items, key='task_ids')
         else:
             self.logger.info("No items to update")
 
@@ -462,19 +494,25 @@ d        """
             To decide if defects are equal. Either the defect objects are
             equal, OR two different defect objects relaxed to the same final structure
             (common with interstitials).
-:w
 
             TODO Need a way to do the output structure comparison for a X atom defect cell
             TODO which can be embedded in a Y atom defect cell up to tolerance.
             """
+
+            # Defects with diff charges return true for the native __eq__
+            if x['structure'].charge != y['structure'].charge:
+                return False
+
+            # Are the defect objects eq.
             if x['defect'] == y['defect']:
                 return True
 
-            # TODO This is needed for ghost vacancy unfortunately, since sm.fit can't distinguish ghosts
-            if x['defect'].defect_composition == y['defect'].defect_composition and \
-                    x['defect'].charge == y['defect'].charge and \
+            # Are the final structures equal
+            # element-changes needed for ghost vacancies, since sm.fit can't distinguish them
+            if x['defect'].element_changes == y['defect'].element_changes and \
                     sm.fit(x['structure'], y['structure']):
                 return True
+
             return False
 
         sorted_s_list = sorted(enumerate(defects), key=lambda x: key(x[1]))
@@ -682,21 +720,28 @@ d        """
             - If no follow up transform exists, the calculation input will be returned
 
         If defect cannot be found in task, return the input structure.
+
+        scale_matrix = np.array(scaling_matrix, int)
+        if scale_matrix.shape != (3, 3):
+            scale_matrix = np.array(scale_matrix * np.eye(3), int)
+        new_lattice = Lattice(np.dot(scale_matrix, self._lattice.matrix))
         """
         d = unpack(query=self.defect_query, d=task)
+        out_structure = MontyDecoder().process_decoded(task['output']['output']['structure'])
         if d:
             defect = MontyDecoder().process_decoded(d)
-            sc_mat = task.get('output', {}).get('additional_json', {}).get("info", {}).get('sc_mat')
             s = defect.structure.copy()
+            sc_mat = out_structure.lattice.matrix.dot(np.linalg.inv(s.lattice.matrix))
             s.make_supercell(sc_mat)
             return s
         else:
-            return MontyDecoder().process_decoded(task['output']['output']['structure'])
+            return out_structure
 
 #TODO Major problem with this builder. materials store is used to sync the diel, elec, and pd with a single material id
 #TODO This is a problem because the material id in vasp store is not synced to cp2k store
 #TODO Also the chempots needed to adjust entries must come from cp2k, but you need to give vasp to sync the others
-class DefectThermoBuilder(Builder):
+#TODO Thermo store is being replaced with a manual definition of chempots until further notice
+class DefectiveMaterialBuilder(Builder):
 
     """
     This builder creates collections of the DefectThermoDoc object.
@@ -712,9 +757,9 @@ class DefectThermoBuilder(Builder):
             defects: Store,
             defect_thermos: Store,
             materials: Store,
-            thermo: Store,
             electronic_structures: Store,
             dos: Store,
+            thermo: Dict,
             query: Optional[Dict] = None,
             **kwargs,
     ):
@@ -731,14 +776,14 @@ class DefectThermoBuilder(Builder):
         self.defect_thermos = defect_thermos
         self.materials = materials
         self.thermo = thermo
-        self.dos = dos
         self.electronic_structures = electronic_structures
+        self.dos = dos
 
         self.query = query if query else {}
         self.timestamp = None
         self.kwargs = kwargs
 
-        super().__init__(sources=[defects, materials, thermo, electronic_structures, dos], targets=[defect_thermos], **kwargs)
+        super().__init__(sources=[defects, materials, electronic_structures, dos], targets=[defect_thermos], **kwargs)
 
     def ensure_indexes(self):
         """
@@ -785,12 +830,13 @@ class DefectThermoBuilder(Builder):
 
         def filterfunc(x):
             # material for defect x exists
-            if not list(self.materials.query(criteria={'material_id': x['material_id']}, properties=None)):
+            if not self.materials.query_one(criteria={'material_id': x['material_id']}, properties=None):
                 self.logger.debug(f"No material with MPID={x['material_id']} in the material store")
                 return False
 
-            for el in load_class(x['defect']['@module'], x['defect']['@class']).from_dict(x['defect']).defect_composition:
-                if not list(self.thermo.query(criteria={'chemsys': str(el)}, properties=None)):
+            defect = MontyDecoder().process_decoded(x['defect'])
+            for el in defect.element_changes: 
+                if el not in self.thermo:
                     self.logger.debug(f"No entry for {el} in Thermo Store")
                     return False
 
@@ -805,7 +851,7 @@ class DefectThermoBuilder(Builder):
             group = [g for g in group]
             try:
                 mat = self.__get_materials(key)
-                thermo = self.__get_thermos(mat.composition)
+                thermo = self.thermo #self.__get_thermos(mat.composition)
                 elec = self.__get_electronic_structure(group[0]['material_id'])
                 yield (group, mat, thermo, elec)
             except LookupError as exception:
@@ -816,10 +862,10 @@ class DefectThermoBuilder(Builder):
         Process a group of defects belonging to the same material into a defect thermo doc
         """
         self.logger.info(f"Processing defects")
-        defects, material, thermos, elec_struc = docs
+        defects, material, thermo, dos = docs
         defects = [DefectDoc(**d) for d in defects]
-        thermos = [ThermoDoc(**t) for t in thermos]
-        defect_thermo_doc = DefectThermoDoc.from_docs(defects, thermos=thermos, electronic_structure=elec_struc)
+        dos = CompleteDos.from_dict(dos)
+        defect_thermo_doc = DefectiveMaterialDoc.from_docs(defects, thermo=thermo, dos=dos)
         return defect_thermo_doc.dict()
 
     def update_targets(self, items):
