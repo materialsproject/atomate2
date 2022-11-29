@@ -76,6 +76,8 @@ class DefectDoc(StructureMetadata):
         None, description="Computed structure entry for the bulk calc."
     )
 
+    vbm: Mapping[RunType, float] = Field(None, description="VBM for bulk task of each run type. Used for aligning potential")
+
     last_updated: datetime = Field(
         description="Timestamp for when this document was last updated",
         default_factory=datetime.utcnow,
@@ -170,6 +172,7 @@ class DefectDoc(StructureMetadata):
         bulk_entries = {}
         all_tasks = {}
         best_tasks = {}
+        vbm = {}
         metadata = {}
         for key, tasks_for_runtype in groupby(sorted(zip(defect_tasks, bulk_tasks, defects, dielectrics, defect_task_ids, bulk_task_ids), key=_run_type), key=_run_type):
             sorted_tasks = sorted(tasks_for_runtype, key=_sort)
@@ -181,6 +184,7 @@ class DefectDoc(StructureMetadata):
                 for defect_task, bulk_task, defect, dielectric, did, bid in sorted_tasks
                 ]
             rt = run_types[sorted_tasks[0][-2]]
+            vbm[rt] = sorted_tasks[0][1].output.vbm
             best_tasks[rt] = (sorted_tasks[0][-2], sorted_tasks[0][-1]) 
             all_tasks[rt] = [ (s[-2], s[-1]) for s in sorted_tasks ]
             metadata[key] = {'convergence': [(sorted_tasks[i][0].nsites, ents[i][0].corrected_energy) for i in range(len(ents))]}
@@ -202,6 +206,7 @@ class DefectDoc(StructureMetadata):
                 'material_id': material_id if material_id else v.parameters['material_id'],
                 'defect': v.defect, 
                 "name": v.defect.name,
+                "vbm": vbm,
                 'metadata': metadata,
         }
         prim = SpacegroupAnalyzer(v.defect.structure).get_primitive_standard_structure()

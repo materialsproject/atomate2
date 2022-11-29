@@ -137,7 +137,8 @@ class DefectBuilder(Builder):
             'output.output.energy',
             'output.output.structure',
             'output.input',
-            'output.cp2k_objects.v_hartree'
+            'output.cp2k_objects.v_hartree',
+            'output.vbm',
         ] 
 
         self._optional_defect_properties = []
@@ -281,7 +282,7 @@ class DefectBuilder(Builder):
             
                 task bundles bundle are all the tasks that correspond to the same defect and all possible
                 bulk tasks that could be matched to them.
-d        """
+        """
 
         self.logger.info("Defect builder started")
         self.logger.info(
