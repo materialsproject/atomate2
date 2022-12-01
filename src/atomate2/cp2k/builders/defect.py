@@ -16,8 +16,7 @@ from pymatgen.core import Structure
 from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
 from pymatgen.electronic_structure.dos import CompleteDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-from atomate.utils.utils import load_class
+from pymatgen.io.cp2k.inputs import Cp2kInput
 
 from emmet.core.material import MaterialsDoc
 
@@ -92,7 +91,8 @@ class DefectBuilder(Builder):
             materials: Store of materials documents
             electrostatic_potentials: Store of electrostatic potential data. These
                 are generally stored in seperately from the tasks on GridFS due to their size.
-            task_validation: Store of task validation documents.
+            task_validation: Store of task validation documents. If true, then only tasks that have passed
+                validation will be considered.
             query: dictionary to limit tasks to be analyzed. NOT the same as the defect_query property
             allowed_task_types: list of task_types that can be processed
             settings: EmmetBuildSettings object
@@ -138,7 +138,7 @@ class DefectBuilder(Builder):
             'output.output.structure',
             'output.input',
             'output.cp2k_objects.v_hartree',
-            'output.vbm',
+            'output.output.vbm',
         ] 
 
         self._optional_defect_properties = []
@@ -321,7 +321,7 @@ class DefectBuilder(Builder):
 
         ##### Get bulk tasks #####
         temp_query = self.bulk_query.copy()
-        temp_query.update({d: {'$exists': True} for d in self.required_bulk_properties})
+        temp_query.update({d: {'$exists': True, "$ne": None} for d in self.required_bulk_properties})
         temp_query.update({self.defect_query: {'$exists': False}, "output.state": "successful"})
         bulk_tasks = {
             doc[self.tasks.key]
@@ -456,7 +456,7 @@ class DefectBuilder(Builder):
         will be grouped together.
 
         Args:
-            tasks: task_ids for unprocessed defects
+            tasks: task_ids (according to self.tasks.key) for unprocessed defects
 
         returns:
             [ (defect, [task_ids] ), ...] where task_ids correspond to the same defect
@@ -631,7 +631,7 @@ class DefectBuilder(Builder):
             'output.input',
             'output.nsites',
             'output.output.structure',
-            "output.additional_json.info.sc_mat" 
+            'output.calcs_reversed' 
         ]
         defects = list(self.tasks.query(criteria={self.tasks.key: {'$in': list(defect_ids)}}, properties=props))
         ps = self.__get_pristine_supercell(defects[0])
@@ -646,6 +646,28 @@ class DefectBuilder(Builder):
             )
         ) 
         
+        pairs = [
+            (defect[self.tasks.key], bulk[self.tasks.key])
+            for bulk in bulks
+            for defect in defects
+            if self.__are_bulk_and_defect_commensurate(bulk, defect)
+        ]
+
+        self.logger.debug(f"Found {len(pairs)} commensurate bulk/defect pairs")
+        return pairs
+
+    # TODO Checking for same dft settings (e.g. OT/diag) is a little cumbersome. 
+    # Maybe, in future, task doc can be defined to have OT/diag as part of input summary 
+    # for fast querying
+    def __are_bulk_and_defect_commensurate(self, b, d):
+        """
+        Check if a bulk and defect task are commensurate.
+
+        Checks for:
+            1. Same run type.
+            2. Same pristine structures with no supercell reduction
+            3. Compatible DFT settings 
+        """
         # TODO add settings
         sm = StructureMatcher(
             primitive_cell=False,
@@ -654,24 +676,17 @@ class DefectBuilder(Builder):
             allow_subset=False,
             comparator=ElementComparator(),
         )
-
-        def _compare(b, d):
-            rtb = b.get('output').get('input').get('xc').split("+U")[0]
-            rtd = d.get('output').get('input').get('xc').split("+U")[0]
-            if rtb == rtd: 
-                if sm.fit(self.__get_pristine_supercell(d), self.__get_pristine_supercell(b)):
-                       return True
-            return False
-
-        pairs = [
-            (defect[self.tasks.key], bulk[self.tasks.key])
-            for bulk in bulks
-            for defect in defects
-            if _compare(bulk, defect)
-        ]
-
-        self.logger.debug(f"Found {len(pairs)} commensurate bulk/defect pairs")
-        return pairs
+        rtb = b.get('output').get('input').get('xc').split("+U")[0]
+        rtd = d.get('output').get('input').get('xc').split("+U")[0]
+        if rtb == rtd: 
+            if sm.fit(self.__get_pristine_supercell(d), self.__get_pristine_supercell(b)):
+                    cib = Cp2kInput.from_dict(b['output']['calcs_reversed'][0]['input']['cp2k_input'])
+                    cid = Cp2kInput.from_dict(d['output']['calcs_reversed'][0]['input']['cp2k_input'])
+                    bis_ot = cib.check("force_eval/dft/scf/ot")
+                    dis_ot = cid.check("force_eval/dft/scf/ot")
+                    if (bis_ot and dis_ot) or (not bis_ot and not dis_ot):
+                        return True
+        return False
 
     def __preprocess_bulk(self, task):
         """
