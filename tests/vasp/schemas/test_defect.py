@@ -5,7 +5,7 @@ def test_sort_pos_dist():
     """
     import numpy as np
 
-    from atomate2.vasp.schemas.defect import sort_pos_dist
+    from atomate2.common.analysis.defects.schemas import sort_pos_dist
 
     def abs_d(s1, s2):
         return np.linalg.norm(np.array(s1) - np.array(s2))
@@ -24,7 +24,7 @@ def test_CCDDocument(vasp_test_dir):
     """
     from collections import defaultdict
 
-    from atomate2.vasp.schemas.defect import CCDDocument
+    from atomate2.common.analysis.defects.schemas import CCDDocument
     from atomate2.vasp.schemas.task import TaskDocument
 
     def is_strict_minimum(min_index, arr):
