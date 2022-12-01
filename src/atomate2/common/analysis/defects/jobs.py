@@ -13,11 +13,15 @@ from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
+from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
-from pymatgen.io.vasp.outputs import Vasprun
+from pymatgen.entries.computed_entries import ComputedStructureEntry
+from pymatgen.io.vasp.outputs import Locpot, Vasprun
 
+from atomate2.common.analysis.defects.schemas import FormationEnergyDiagramDocument
 from atomate2.common.files import get_zfile
 from atomate2.utils.file_client import FileClient
+from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.schemas.task import TaskDocument
 
@@ -224,3 +228,82 @@ def run_all_charge_states(
             "uuid": charged_relax.uuid,
         }
     return all_chg_outputs, jobs
+
+
+@job(output_schema=FormationEnergyDiagramDocument)
+def collect_defect_outputs(
+    defect,
+    all_chg_outputs: dict,
+    bulk_sc_dir: str,
+    dielectric: float | NDArray | None = None,
+) -> dict:
+    """Collect all the outputs from the defect calculations.
+
+    This job will combine the structure and entry fields to create a
+    ComputerStructureEntry object.
+
+    Parameters
+    ----------
+    defect:
+        The defect object.
+    all_chg_outputs:
+        The output from the defect calculations. See `run_all_charge_states` for
+        more information.
+    bulk_sc_dir:
+        The directory containing the bulk supercell calculation.
+    dielectric:
+        The dielectric constant used to construct the formation energy diagram.
+        If None (default), finite size corrections will not be applied.
+    """
+
+    def get_locpot_from_dir(dir_name: str) -> Locpot:
+        locpot_path = Path(strip_hostname(dir_name)) / "LOCPOT.gz"
+        return Locpot.from_file(locpot_path)
+
+    def parse_bulk_dir(dir_name: str) -> dict:
+        vbm_path = Path(strip_hostname(dir_name)) / "vasprun.xml.gz"
+        vasp_run = Vasprun(vbm_path)
+        band_structure = vasp_run.get_band_structure()
+        entry = vasp_run.get_computed_entry()
+        return dict(entry=entry, band_structure=band_structure)
+
+    bulk_locpot = get_locpot_from_dir(bulk_sc_dir)
+    bulk_data = parse_bulk_dir(bulk_sc_dir)
+    logger.info(f"Bulk entry energy: {bulk_data['entry'].energy} eV")
+
+    fe_doc = FormationEnergyDiagramDocument(
+        bulk_entry=bulk_data["entry"],
+        vbm=bulk_data["band_structure"].get_vbm()["energy"],
+        band_gap=bulk_data["band_structure"].get_band_gap()["energy"],
+        bulk_sc_dir=bulk_sc_dir,
+        dielectric=dielectric,
+        defect_entries=list(),
+        defect_sc_dirs=dict(),
+    )
+
+    # loop over the different distinct defect: Mg_Ga_1, Mg_Ga_2, ...
+    logger.debug(f"Processing defect {defect.name}")
+    defect_locpots = dict()
+    # defect_entries: list[DefectEntry] = []
+    # then loop over the different charge states
+    for qq, v in all_chg_outputs.items():
+        logger.debug(f"Processing charge state {qq}")
+        if not isinstance(v, dict):
+            continue
+        defect_locpots[int(qq)] = get_locpot_from_dir(v["dir_name"])
+        sc_dict = v["entry"].as_dict()
+        sc_dict["structure"] = v["structure"]
+        sc_entry = ComputedStructureEntry.from_dict(sc_dict)
+        def_ent = DefectEntry(
+            defect=defect,
+            charge_state=int(qq),
+            sc_entry=sc_entry,
+        )
+        def_ent.get_freysoldt_correction(
+            defect_locpots[int(qq)],
+            bulk_locpot,
+            dielectric=dielectric,
+        )
+        fe_doc.defect_entries.append(def_ent)
+        fe_doc.defect_sc_dirs[qq] = v["dir_name"]
+    return fe_doc
