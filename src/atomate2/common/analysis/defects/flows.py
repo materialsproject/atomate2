@@ -10,12 +10,12 @@ from jobflow import Flow, Maker
 from numpy.typing import NDArray
 from pymatgen.analysis.defects.core import Defect
 
-from atomate2.vasp.jobs.core import RelaxMaker
-from atomate2.vasp.jobs.defect import (
+from atomate2.common.analysis.defects.jobs import (
     bulk_supercell_calculation,
     get_supercell_from_prv_calc,
     spawn_defect_calcs,
 )
+from atomate2.vasp.jobs.core import RelaxMaker
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,6 @@ class FormationEnergyMaker(Maker):
     def make(
         self,
         defect: Defect,
-        dielectric: float | NDArray | None = None,
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: NDArray | None = None,
         defect_index: int | str = "",

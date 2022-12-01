@@ -9,6 +9,7 @@ from typing import Iterable
 from jobflow import Flow, Job, Maker, OutputReference, job
 from pymatgen.core.structure import Structure
 
+from atomate2.common.analysis.defects.schemas import CCDDocument
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import (
@@ -16,7 +17,6 @@ from atomate2.vasp.jobs.defect import (
     get_ccd_documents,
     spawn_energy_curve_calcs,
 )
-from atomate2.vasp.schemas.defect import CCDDocument
 from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
 

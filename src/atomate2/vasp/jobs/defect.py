@@ -12,13 +12,14 @@ from pymatgen.core import Structure
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
 
+from atomate2.common.analysis.defects.schemas import CCDDocument
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs
 from atomate2.vasp.jobs.core import StaticMaker
 from atomate2.vasp.run import run_vasp
-from atomate2.vasp.schemas.defect import CCDDocument, FiniteDifferenceDocument
+from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
