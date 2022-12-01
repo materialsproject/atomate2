@@ -41,15 +41,6 @@ class ConfigurationCoordinateMaker(Maker):
     relax_maker: Maker
     static_maker: Maker
     name: str = "config. coordinate"
-    # relax_maker: BaseVaspMaker = field(
-    #     default_factory=lambda: RelaxMaker(
-    #         input_set_generator=DEFECT_RELAX_GENERATOR,
-    #     )
-    # )
-    # static_maker: BaseVaspMaker = field(
-    #     default_factory=lambda: StaticMaker(
-    #     input_set_generator=DEFECT_STATIC_GENERATOR)
-    # )
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
 
     def make(
