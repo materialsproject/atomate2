@@ -76,7 +76,7 @@ class FormationEnergyMaker(flows.FormationEnergyMaker):
             input_set_generator=ChargeStateRelaxSetGenerator(
                 user_kpoints_settings=SPECIAL_KPOINT
             ),
-            task_document_kwargs={"store_volumetric_data": ["locpot"]},
+            task_document_kwargs={"average_locpot": True},
         )
     )
 
