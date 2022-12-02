@@ -21,7 +21,7 @@ SPECIAL_KPOINT = Kpoints(
 
 SPECIAL_KPOINT_GAMMA = Kpoints(
     comment="special k-point",
-    num_kpts=1,
+    num_kpts=2,
     style=Kpoints_supported_modes.Reciprocal,
     kpts=((0.25, 0.25, 0.25), (0.0, 0.0, 0.0)),
     kpts_shift=(0, 0, 0),
@@ -94,7 +94,7 @@ class ChargeStateStaticSetGenerator(VaspInputGenerator):
     """
 
     use_structure_charge: bool = True
-    user_kpoints_settings = field(default_factory=SPECIAL_KPOINT)
+    user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
     def get_incar_updates(
         self,
@@ -150,6 +150,7 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
     """
 
     use_structure_charge: bool = True
+    user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
     def get_incar_updates(
         self,
@@ -212,6 +213,7 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
     """
 
     use_structure_charge: bool = True
+    user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
     def get_incar_updates(
         self,
