@@ -8,15 +8,19 @@ from dataclasses import dataclass, field
 from jobflow import Flow, Maker, OutputReference
 from pymatgen.core.structure import Structure
 
+from atomate2.common.analysis.defects import flows
 from atomate2.common.analysis.defects.flows import (
     ConfigurationCoordinateMaker as BaseCCDMaker,
 )
-from atomate2.common.analysis.defects.schemas import CCDDocument
+from atomate2.common.schemas.defects import CCDDocument
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
-from atomate2.vasp.sets.core import StaticSetGenerator
-from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
+from atomate2.vasp.sets.defect import (
+    SPECIAL_KPOINT,
+    ChargeStateRelaxSetGenerator,
+    ChargeStateStaticSetGenerator,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,15 +34,51 @@ DEFECT_INCAR_SETTINGS = {
 }
 DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
 
-DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(
+DEFECT_RELAX_GENERATOR = ChargeStateRelaxSetGenerator(
     use_structure_charge=True,
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
-DEFECT_STATIC_GENERATOR = StaticSetGenerator(
+DEFECT_STATIC_GENERATOR = ChargeStateStaticSetGenerator(
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
+
+
+@dataclass
+class FormationEnergyMaker(flows.FormationEnergyMaker):
+    """Maker class to help calculate of the formation energy diagram.
+
+    Maker class to calculate formation energy diagrams. The main settings for
+    this maker is the `relax_maker` which contains the settings for the atomic
+    relaxations that each defect supercell will undergo. The `relax_maker`
+    uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
+    like the `HSEDoubleRelaxMaker` can be used for more accurate (but expensive)
+    calculations.
+    If the `validate_maker` is set to True, the maker will check for some basic
+    settings in the `relax_maker` to make sure the calculations are done correctly.
+
+    Attributes
+    ----------
+    name: str
+        The name of the flow created by this maker.
+    relax_maker: .BaseVaspMaker or None
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states. If None, the defaults will be used.
+    validate_maker: bool
+        If True, the code will check the relax_maker for specific settings.
+    """
+
+    name: str = "formation energy"
+    validate_maker: bool = True
+    relax_maker: BaseVaspMaker = field(
+        default_factory=lambda: RelaxMaker(
+            input_set_generator=ChargeStateRelaxSetGenerator(
+                user_kpoints_settings=SPECIAL_KPOINT
+            ),
+            task_document_kwargs={"store_volumetric_data": ["locpot"]},
+        )
+    )
 
 
 @dataclass

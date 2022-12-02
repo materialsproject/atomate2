@@ -18,8 +18,8 @@ from pymatgen.analysis.defects.supercells import (
 from pymatgen.core import Lattice, Structure
 from pymatgen.io.vasp.outputs import Vasprun
 
-from atomate2.common.analysis.defects.schemas import CCDDocument
 from atomate2.common.files import get_zfile
+from atomate2.common.schemas.defects import CCDDocument
 from atomate2.utils.file_client import FileClient
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.schemas.task import TaskDocument
