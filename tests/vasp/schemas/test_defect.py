@@ -1,6 +1,7 @@
 def test_CCDDocument(vasp_test_dir):
     """
-    Test the CCDDocument schema
+    Test the CCDDocument schema, this test needs to be placed here
+    since we are using the VASP TaskDocuments for testing.
     """
     from collections import defaultdict
 
