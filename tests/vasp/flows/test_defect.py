@@ -1,6 +1,3 @@
-from atomate2.vasp.schemas.defect import FormationEnergyDiagramDocument
-
-
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import run_locally
     from pymatgen.core import Structure
@@ -159,6 +156,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     from pymatgen.io.vasp.inputs import PotcarSingle
 
     from atomate2.vasp.flows.defect import FormationEnergyMaker
+    from atomate2.vasp.schemas.defect import FormationEnergyDiagramDocument
 
     def fake_Si(*args):
         pot_head = """
