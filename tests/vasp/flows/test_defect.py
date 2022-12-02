@@ -181,5 +181,5 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         ]["calcs_reversed"][0]["output"]["locpot"]
         assert set(plnr_locpot.keys()) == {"0", "1", "2"}
 
-    _check_plnr_locpot("bulk relax")
-    _check_plnr_locpot("relax Mg_Ga-0 q=0")
+    for k in ref_paths:
+        _check_plnr_locpot(k)
