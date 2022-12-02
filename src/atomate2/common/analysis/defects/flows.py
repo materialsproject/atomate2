@@ -13,6 +13,7 @@ from pymatgen.core.structure import Structure
 
 from atomate2.common.analysis.defects.jobs import (
     bulk_supercell_calculation,
+    collect_defect_outputs,
     get_ccd_documents,
     get_charged_structures,
     get_supercell_from_prv_calc,
@@ -239,16 +240,16 @@ class FormationEnergyMaker(Maker):
         )
         jobs.extend([get_sc_job, spawn_output])
 
-        # collect_job = collect_defect_outputs(
-        #     defect=defect,
-        #     all_chg_outputs=spawn_output.output,
-        #     bulk_sc_dir=bulk_supercell_dir,
-        #     dielectric=dielectric,
-        # )
-        # jobs.append(collect_job)
+        collect_job = collect_defect_outputs(
+            defect=defect,
+            all_chg_outputs=spawn_output.output,
+            bulk_sc_dir=bulk_supercell_dir,
+            dielectric=dielectric,
+        )
+        jobs.append(collect_job)
 
         return Flow(
             jobs=jobs,
             name=self.name,
-            # output=collect_job.output,
+            output=collect_job.output,
         )
