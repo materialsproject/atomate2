@@ -347,6 +347,12 @@ class Calculation(BaseModel):
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
+        store_trajectory:       
+            Whether to store the ionic steps as a pmg trajectory object, which can be pushed,
+            to a bson data store, instead of as a list od dicts. Useful for large 
+            trajectories.
+        store_scf:
+            Whether to store the SCF convergence data.
         store_volumetric_data
             Which volumetric files to store.
 
@@ -503,16 +509,12 @@ def _get_volumetric_data(
         if file_type.name not in store_volumetric_data:
             continue
         try:
-            # TODO This volumetric data may be in atomic units. i.e. 
-            # Cp2k version of locpot stores in Ha, not eV, so must be converted 
-            # somewhere
             volumetric_data[file_type] = VolumetricData.from_cube(dir_name / file)
         except Exception:
             raise ValueError(f"Failed to parse {file_type} at {file}.")
     
     for file_type in volumetric_data:
         if file_type.name in __is_stored_in_Ha__:
-            # TODO make built in method for the volumetric data/cube object
             volumetric_data[file_type].scale(Ha_to_eV)
 
     return volumetric_data
