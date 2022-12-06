@@ -473,9 +473,9 @@ def _find_cp2k_files(
         vol_files = []
         for file in files:
             if file.match(f"*cp2k.out{suffix}*"):
-                cp2k_files["cp2k_output_file"] = file
+                cp2k_files["cp2k_output_file"] = Path(file).name
             elif any([file.match(f"*{f}*cube{suffix}*") for f in volumetric_files]):
-                vol_files.append(file)
+                vol_files.append(Path(file).name)
 
         if len(vol_files) > 0:
             # add volumetric files if some were found or other vasp files were found
