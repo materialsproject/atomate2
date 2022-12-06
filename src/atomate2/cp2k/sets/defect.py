@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DefectSetGenerator(Cp2kInputGenerator):
     """
+    Base input set generator for defect calculations. Adds printing of the 
+    partial density of states and the electrostatic potential.
     """
 
     def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:

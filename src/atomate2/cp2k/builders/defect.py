@@ -313,7 +313,7 @@ class DefectBuilder(Builder):
         not_allowed = {
             doc[self.tasks.key] 
             for doc in self.tasks.query(criteria={self.tasks.key: {"$in": list(defect_tasks)}})
-            if TaskDocument(**doc['output']).calcs_reversed[0].task_type not in self.allowed_dfct_types
+            if TaskType(doc['output']['calcs_reversed'][0]['task_type']) not in self.allowed_dfct_types
         }
         if not_allowed:
             self.logger.debug(f"{len(not_allowed)} defect tasks dropped. Not allowed TaskType")
@@ -332,7 +332,7 @@ class DefectBuilder(Builder):
         not_allowed = {
             doc[self.tasks.key] 
             for doc in self.tasks.query(criteria={self.tasks.key: {"$in": list(bulk_tasks)}})
-            if TaskDocument(**doc['output']).calcs_reversed[0].task_type not in self.allowed_bulk_types
+            if TaskType(doc['output']['calcs_reversed'][0]['task_type']) not in self.allowed_bulk_types
         }
         if not_allowed:
             self.logger.debug(f"{len(not_allowed)} bulk tasks dropped. Not allowed TaskType")
@@ -770,9 +770,6 @@ class DefectiveMaterialBuilder(Builder):
             defects: Store,
             defect_thermos: Store,
             materials: Store,
-            electronic_structures: Store,
-            dos: Store,
-            thermo: Dict,
             query: Optional[Dict] = None,
             **kwargs,
     ):
@@ -788,15 +785,12 @@ class DefectiveMaterialBuilder(Builder):
         self.defects = defects
         self.defect_thermos = defect_thermos
         self.materials = materials
-        self.thermo = thermo
-        self.electronic_structures = electronic_structures
-        self.dos = dos
 
         self.query = query if query else {}
         self.timestamp = None
         self.kwargs = kwargs
 
-        super().__init__(sources=[defects, materials, electronic_structures, dos], targets=[defect_thermos], **kwargs)
+        super().__init__(sources=[defects, materials], targets=[defect_thermos], **kwargs)
 
     def ensure_indexes(self):
         """
@@ -842,11 +836,10 @@ class DefectiveMaterialBuilder(Builder):
         self.logger.debug(f"Found {len(all_docs)} defect docs to process")
 
         def filterfunc(x):
-            # material for defect x exists
             if not self.materials.query_one(criteria={'material_id': x['material_id']}, properties=None):
                 self.logger.debug(f"No material with MPID={x['material_id']} in the material store")
                 return False
-
+            return True
             defect = MontyDecoder().process_decoded(x['defect'])
             for el in defect.element_changes: 
                 if el not in self.thermo:
@@ -861,24 +854,18 @@ class DefectiveMaterialBuilder(Builder):
                     sorted(all_docs, key=lambda x: x['material_id'])
                 ), key=lambda x: x['material_id']
         ):
-            group = [g for g in group]
             try:
-                mat = self.__get_materials(key)
-                thermo = self.thermo #self.__get_thermos(mat.composition)
-                elec = self.__get_electronic_structure(group[0]['material_id'])
-                yield (group, mat, thermo, elec)
+                yield list(group)
             except LookupError as exception:
                 raise exception
 
-    def process_item(self, docs):
+    def process_item(self, defects):
         """
         Process a group of defects belonging to the same material into a defect thermo doc
         """
-        self.logger.info(f"Processing defects")
-        defects, material, thermo, dos = docs
-        defects = [DefectDoc(**d) for d in defects]
-        dos = CompleteDos.from_dict(dos)
-        defect_thermo_doc = DefectiveMaterialDoc.from_docs(defects, thermo=thermo, dos=dos)
+        defect_docs = [DefectDoc(**d) for d in defects]
+        self.logger.info(f"Processing {len(defect_docs)} defects")
+        defect_thermo_doc = DefectiveMaterialDoc.from_docs(defect_docs, material_id=defect_docs[0].material_id)
         return defect_thermo_doc.dict()
 
     def update_targets(self, items):
@@ -892,7 +879,7 @@ class DefectiveMaterialBuilder(Builder):
         if len(items) > 0:
             self.logger.info(f"Updating {len(items)} defect thermo docs")
             self.defect_thermos.update(
-                docs=jsanitize(items, allow_bson=True),
+                docs=jsanitize(items, allow_bson=True, enum_values=True, strict=True),
                 key=self.defect_thermos.key,
             )
         else:

@@ -153,7 +153,9 @@ class FormationEnergyMaker(Maker):
         self, defects: Iterable[Defect], 
         charges: bool | Iterable[int] = False, 
         dielectric: NDArray | int | float | None = None,
-        prev_cp2k_dir: str | Path | None = None):
+        prev_cp2k_dir: str | Path | None = None,
+        collect_outputs: bool = True,
+        ):
         """Make a flow to run multiple defects in order to calculate their formation 
         energy diagram.
 
@@ -194,7 +196,7 @@ class FormationEnergyMaker(Maker):
                 jobs.append(defect_job)
                 defect_outputs[defect.name][int(charge)] = (defect, defect_job.output)
 
-        if self.run_bulk and defects:
+        if self.run_bulk and defects and collect_outputs:
             collect_job = collect_defect_outputs(
                 defect_outputs=defect_outputs,
                 bulk_output=bulk_job.output if self.run_bulk else None,

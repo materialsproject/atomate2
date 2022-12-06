@@ -39,20 +39,18 @@ class BaseDefectMaker(BaseCp2kMaker):
     @cp2k_job
     def make(self, defect: Defect | Structure, charge: int = 0, prev_cp2k_dir: str | Path | None = None):
         if isinstance(defect, Defect):
-            if isinstance(defect, Vacancy):
-                defect = GhostVacancy(
-                    structure=defect.structure, site=defect.site,
-                    multiplicity=defect.multiplicity, oxi_state=defect.oxi_state,
-                    symprec=defect.symprec, angle_tolerance=defect.angle_tolerance
-                    )
+
             structure = defect.get_supercell_structure(
                 sc_mat=self.supercell_matrix, 
-                dummy_species=None, 
+                dummy_species=defect.site.species if isinstance(defect, Vacancy) else None, 
                 min_atoms=self.min_atoms,
                 max_atoms=self.max_atoms,
                 min_length=self.min_length,
                 force_diagonal=self.force_diagonal,
             )
+
+            if isinstance(defect, Vacancy):
+                structure.sites[-1].properties['ghost'] = True
 
             # provenance stuff
             recursive_update(self.write_additional_data, {
