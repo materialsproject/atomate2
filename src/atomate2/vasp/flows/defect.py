@@ -8,11 +8,9 @@ from dataclasses import dataclass, field
 from jobflow import Flow, Maker, OutputReference
 from pymatgen.core.structure import Structure
 
-from atomate2.common.analysis.defects import flows
-from atomate2.common.analysis.defects.flows import (
-    ConfigurationCoordinateMaker as BaseCCDMaker,
-)
+from atomate2.common.analysis.defects import flows as defect_flows
 from atomate2.common.schemas.defects import CCDDocument
+from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
@@ -20,6 +18,7 @@ from atomate2.vasp.sets.defect import (
     SPECIAL_KPOINT,
     ChargeStateRelaxSetGenerator,
     ChargeStateStaticSetGenerator,
+    HSEChargeStateRelaxSetGenerator,
 )
 
 logger = logging.getLogger(__name__)
@@ -43,10 +42,26 @@ DEFECT_STATIC_GENERATOR = ChargeStateStaticSetGenerator(
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
+HSE_DOUBLE_RELAX = DoubleRelaxMaker(
+    relax_maker1=RelaxMaker(
+        input_set_generator=ChargeStateRelaxSetGenerator(
+            user_kpoints_settings=SPECIAL_KPOINT
+        )
+    ),
+    relax_maker2=RelaxMaker(
+        input_set_generator=HSEChargeStateRelaxSetGenerator(
+            user_kpoints_settings=SPECIAL_KPOINT
+        ),
+        task_document_kwargs={"store_volumetric_data": ["locpot"]},
+        copy_vasp_kwargs={
+            "additional_vasp_files": ("WAVECAR",),
+        },
+    ),
+)
 
 
 @dataclass
-class FormationEnergyMaker(flows.FormationEnergyMaker):
+class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     """Maker class to help calculate of the formation energy diagram.
 
     Maker class to calculate formation energy diagrams. The main settings for
@@ -82,7 +97,7 @@ class FormationEnergyMaker(flows.FormationEnergyMaker):
 
 
 @dataclass
-class ConfigurationCoordinateMaker(BaseCCDMaker):
+class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=DEFECT_RELAX_GENERATOR,
