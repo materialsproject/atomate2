@@ -815,7 +815,7 @@ def _get_volumetric_data(
             file_type.name not in store_volumetric_data
             and file_type.value not in store_volumetric_data
         ):
-            pass
+            continue
 
         try:
             # assume volumetric data is all in CHGCAR format
