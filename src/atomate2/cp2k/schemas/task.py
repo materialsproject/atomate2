@@ -13,6 +13,7 @@ from pymatgen.core.structure import Structure, Molecule
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.inputs import Cp2kInput
+from pymatgen.io.cp2k.utils import natural_keys
 
 from atomate2 import SETTINGS, __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
@@ -474,11 +475,14 @@ def _find_cp2k_files(
         for file in files:
             if file.match(f"*cp2k.out{suffix}*"):
                 cp2k_files["cp2k_output_file"] = Path(file).name
-            elif any([file.match(f"*{f}*cube{suffix}*") for f in volumetric_files]):
-                vol_files.append(Path(file).name)
+        for vol in volumetric_files:
+            _files = [f.name for f in files if f.match(f"*{vol}*cube{suffix}*")]
+            _files.sort(key=natural_keys, reverse=True)
+            if _files:
+                vol_files.append(_files[0])
 
         if len(vol_files) > 0:
-            # add volumetric files if some were found or other vasp files were found
+            # add volumetric files if some were found or other cp2k files were found
             cp2k_files["volumetric_files"] = vol_files
 
         return cp2k_files
