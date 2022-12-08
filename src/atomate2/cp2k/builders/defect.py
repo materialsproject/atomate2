@@ -312,7 +312,10 @@ class DefectBuilder(Builder):
         # TODO Seems slow
         not_allowed = {
             doc[self.tasks.key] 
-            for doc in self.tasks.query(criteria={self.tasks.key: {"$in": list(defect_tasks)}})
+            for doc in self.tasks.query(
+                criteria={self.tasks.key: {"$in": list(defect_tasks)}}, 
+                properties=['output.calcs_reversed']
+                )
             if TaskType(doc['output']['calcs_reversed'][0]['task_type']) not in self.allowed_dfct_types
         }
         if not_allowed:
@@ -331,7 +334,10 @@ class DefectBuilder(Builder):
         # TODO seems slow
         not_allowed = {
             doc[self.tasks.key] 
-            for doc in self.tasks.query(criteria={self.tasks.key: {"$in": list(bulk_tasks)}})
+            for doc in self.tasks.query(
+                criteria={self.tasks.key: {"$in": list(bulk_tasks)}},
+                properties=['output.calcs_reversed']
+                )
             if TaskType(doc['output']['calcs_reversed'][0]['task_type']) not in self.allowed_bulk_types
         }
         if not_allowed:
@@ -670,6 +676,9 @@ class DefectBuilder(Builder):
         """
         # TODO add settings
         sm = StructureMatcher(
+            ltol = 1e-3,
+            stol = 0.1,
+            angle_tol = 1,
             primitive_cell=False,
             scale=True,
             attempt_supercell=False,
@@ -678,6 +687,15 @@ class DefectBuilder(Builder):
         )
         rtb = b.get('output').get('input').get('xc').split("+U")[0]
         rtd = d.get('output').get('input').get('xc').split("+U")[0]
+        baux = {
+            dat['element']: dat.get('auxiliary_basis')
+            for dat in b['output']['input']['atomic_kind_info']['atomic_kinds'].values()
+            }
+        daux = {
+            dat['element']: dat.get('auxiliary_basis')
+            for dat in d['output']['input']['atomic_kind_info']['atomic_kinds'].values()
+            }
+
         if rtb == rtd: 
             if sm.fit(self.__get_pristine_supercell(d), self.__get_pristine_supercell(b)):
                     cib = Cp2kInput.from_dict(b['output']['calcs_reversed'][0]['input']['cp2k_input'])
@@ -685,6 +703,9 @@ class DefectBuilder(Builder):
                     bis_ot = cib.check("force_eval/dft/scf/ot")
                     dis_ot = cid.check("force_eval/dft/scf/ot")
                     if (bis_ot and dis_ot) or (not bis_ot and not dis_ot):
+                        for el in baux:
+                            if baux[el].upper() != daux[el].upper():
+                                return False
                         return True
         return False
 

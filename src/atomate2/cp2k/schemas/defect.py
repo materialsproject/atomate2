@@ -20,6 +20,7 @@ from pymatgen.analysis.defects.thermo import (
     DefectEntry,
     DefectSiteFinder,
     FormationEnergyDiagram,
+    MultiFormationEnergyDiagram
 )
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
@@ -495,7 +496,7 @@ class DefectiveMaterialDoc(StructureMetadata):
         atomic_entries: List[ComputedEntry],
         phase_diagram: PhaseDiagram,
         filters: Dict | None = None,
-    ) -> FormationEnergyDiagram:
+    ) -> MultiFormationEnergyDiagram:
 
         filters = filters if filters else {}
 
@@ -515,14 +516,13 @@ class DefectiveMaterialDoc(StructureMetadata):
         # Need to convert the differences into energy adjustments so that
         # form en diagram is consistent with all of them
 
-        return FormationEnergyDiagram.with_atomic_entries(
+        return MultiFormationEnergyDiagram.with_atomic_entries(
             bulk_entry=bulk_entries[0],
             defect_entries=defect_entries,
             atomic_entries=atomic_entries,
             phase_diagram=phase_diagram,
             vbm=vbms[0],
         )
-
 
 def unpack(query, d):
     if not query:

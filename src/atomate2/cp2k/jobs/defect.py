@@ -50,7 +50,7 @@ class BaseDefectMaker(BaseCp2kMaker):
             )
 
             if isinstance(defect, Vacancy):
-                structure.sites[-1].properties['ghost'] = True
+                structure.add_site_property("ghost", [False]*(len(structure.sites)-1) + [True])
 
             # provenance stuff
             recursive_update(self.write_additional_data, {
