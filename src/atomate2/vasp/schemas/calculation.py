@@ -70,16 +70,16 @@ class VaspObject(ValueEnum):
 
     BANDSTRUCTURE = "bandstructure"
     DOS = "dos"
-    CHGCAR = "chg"
-    AECCAR0 = "aec0"
-    AECCAR1 = "aec1"
-    AECCAR2 = "aec2"
-    TRAJECTORY = "traj"
-    ELFCAR = "elf"
-    WAVECAR = "wave"
+    CHGCAR = "chgcar"
+    AECCAR0 = "aeccar0"
+    AECCAR1 = "aeccar1"
+    AECCAR2 = "aeccar2"
+    TRAJECTORY = "trajectory"
+    ELFCAR = "elfcar"
+    WAVECAR = "wavecar"
     LOCPOT = "locpot"
     OPTIC = "optic"
-    PROCAR = "proj"
+    PROCAR = "procar"
 
 
 class PotcarSpec(BaseModel):
@@ -815,7 +815,7 @@ def _get_volumetric_data(
             file_type.name not in store_volumetric_data
             and file_type.value not in store_volumetric_data
         ):
-            pass
+            continue
 
         try:
             # assume volumetric data is all in CHGCAR format
