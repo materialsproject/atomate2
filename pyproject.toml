@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = '>="3.8"'
+requires-python = '>=3.8'
 dependencies =[
     "pymatgen>=2022.8.23",
     "custodian>=2022.5.26",
