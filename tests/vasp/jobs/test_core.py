@@ -22,7 +22,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate job
-    job = StaticMaker(task_document_kwargs={"store_volumetric_data": ("chg",)}).make(
+    job = StaticMaker(task_document_kwargs={"store_volumetric_data": ("chgcar",)}).make(
         si_structure
     )
 
