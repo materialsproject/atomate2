@@ -70,16 +70,16 @@ class VaspObject(ValueEnum):
 
     BANDSTRUCTURE = "bandstructure"
     DOS = "dos"
-    CHGCAR = "chg"
-    AECCAR0 = "aec0"
-    AECCAR1 = "aec1"
-    AECCAR2 = "aec2"
-    TRAJECTORY = "traj"
-    ELFCAR = "elf"
-    WAVECAR = "wave"
+    CHGCAR = "chgcar"
+    AECCAR0 = "aeccar0"
+    AECCAR1 = "aeccar1"
+    AECCAR2 = "aeccar2"
+    TRAJECTORY = "trajectory"
+    ELFCAR = "elfcar"
+    WAVECAR = "wavecar"
     LOCPOT = "locpot"
     OPTIC = "optic"
-    PROCAR = "proj"
+    PROCAR = "procar"
 
 
 class PotcarSpec(BaseModel):
@@ -793,7 +793,10 @@ def _get_volumetric_data(
     output_file_paths
         A dictionary mapping the data type to file path relative to dir_name.
     store_volumetric_data
-        The volumetric data files to load. E.g., `("chgcar", "locpot")
+        The volumetric data files to load. E.g., `("chgcar", "locpot")`.
+        Provided as a list of strings note you can use either the keys or the
+        values available in the `VaspObject` enum (e.g., "locpot" or "LOCPOT")
+        are both valid.
 
     Returns
     -------
@@ -808,8 +811,11 @@ def _get_volumetric_data(
 
     volumetric_data = {}
     for file_type, file in output_file_paths.items():
-        if file_type.name not in store_volumetric_data:
-            pass
+        if (
+            file_type.name not in store_volumetric_data
+            and file_type.value not in store_volumetric_data
+        ):
+            continue
 
         try:
             # assume volumetric data is all in CHGCAR format
