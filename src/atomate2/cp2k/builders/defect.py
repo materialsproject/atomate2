@@ -766,7 +766,7 @@ class DefectBuilder(Builder):
             defect = MontyDecoder().process_decoded(d)
             s = defect.structure.copy()
             sc_mat = out_structure.lattice.matrix.dot(np.linalg.inv(s.lattice.matrix))
-            s.make_supercell(sc_mat)
+            s.make_supercell(sc_mat.round())
             return s
         else:
             return out_structure

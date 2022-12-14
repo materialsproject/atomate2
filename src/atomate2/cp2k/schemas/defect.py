@@ -524,6 +524,7 @@ class DefectiveMaterialDoc(StructureMetadata):
             vbm=vbms[0],
         )
 
+
 def unpack(query, d):
     if not query:
         return d
