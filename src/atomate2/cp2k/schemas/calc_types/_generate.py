@@ -15,20 +15,12 @@ _TASK_TYPES = [
     "Unrecognized",
 ]
 
-_RUN_TYPES = (
-    [
-        rt
-        for functional_class in _RUN_TYPE_DATA
-        for rt in _RUN_TYPE_DATA[functional_class]
-    ]
-    + [
-        f"{rt}+U"
-        for functional_class in _RUN_TYPE_DATA
-        for rt in _RUN_TYPE_DATA[functional_class]
-    ]
-    + ["LDA", "LDA+U"]
-)
-
+_RUN_TYPES = []
+for functional_class in _RUN_TYPE_DATA:
+    for rt in _RUN_TYPE_DATA[functional_class]:
+        for vdw in ["", "-RVV10", "-LMKLL", "-DRSLL", "-D3", "-D2", "-D3(BJ)"]:
+            for u in ["", "+U"]:
+                _RUN_TYPES.append(f"{rt}{vdw}{u}")
 
 def get_enum_source(enum_name, doc, items):
     header = f"""
@@ -45,7 +37,7 @@ run_type_enum = get_enum_source(
     "CP2K calculation run types",
     dict(
         {
-            "_".join(rt.split()).replace("+", "_").replace("-", "_"): rt
+            "_".join(rt.split()).replace("+", "_").replace("-", "_").replace("(", "_").replace(")", ""): rt
             for rt in _RUN_TYPES
         }
     ),
@@ -59,7 +51,7 @@ calc_type_enum = get_enum_source(
     "CalcType",
     "CP2K calculation types",
     {
-        f"{'_'.join(rt.split()).replace('+','_').replace('-','_')}_{'_'.join(tt.split())}": f"{rt} {tt}"
+        f"{'_'.join(rt.split()).replace('+','_').replace('-','_').replace('(', '_').replace(')', '')}_{'_'.join(tt.split())}": f"{rt} {tt}"
         for rt, tt in product(_RUN_TYPES, _TASK_TYPES)
     },
 )
