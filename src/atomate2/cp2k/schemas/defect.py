@@ -12,7 +12,7 @@ from pymatgen.core import Structure, Element
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.analysis.defects.core import Defect, DefectType
-from pymatgen.analysis.defects.corrections import (
+from pymatgen.analysis.defects.corrections.freysoldt import (
     get_freysoldt_correction,
     get_freysoldt2d_correction,
 )
