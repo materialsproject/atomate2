@@ -33,6 +33,7 @@ def run_type(inputs: Dict) -> RunType:
             return v1 == v2
 
     is_hubbard = '+U' if dft.get('dft_plus_u') else ''
+    vdw = f"-{dft.get('vdw')}" if dft.get('vdw') else ''
 
     parameters = {
         'FUNCTIONAL': dft.get('functional'),
@@ -55,12 +56,12 @@ def run_type(inputs: Dict) -> RunType:
                     for param, value in params.items()
                 ]
             ):
-                return RunType(f"{special_type}{is_hubbard}")
+                return RunType(f"{special_type}{vdw}{is_hubbard}")
 
     # TODO elegant way to handle this? 
     # This is a hack to get the non-standard hybrids to work
     if parameters.get('FRACTION'):
-        return RunType(f"HYBRID{is_hubbard}")
+        return RunType(f"HYBRID{vdw}{is_hubbard}")
 
 def task_type(
     inputs: Dict 

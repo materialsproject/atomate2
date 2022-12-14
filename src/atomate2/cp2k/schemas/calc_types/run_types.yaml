@@ -1,6 +1,15 @@
+LDA:
+  PADE:
+    FRACTION: 0
+    FUNCTIONAL: PADE
 GGA:
   PBE:
     FUNCTIONAL: PBE
+    FRACTION: 0
+  PBEsol:
+    FUNCTIONAL:
+      - GGA_C_PBE_SOL
+      - GGA_X_PBE_SOL
     FRACTION: 0
   GGA:
     GGA: --
