@@ -102,7 +102,7 @@ class HybridSetGenerator(Cp2kInputGenerator):
     screen_on_initial_p: bool = False
     screen_p_forces: bool = False
     eps_schwarz: float = 1e-7
-    eps_schwarz_forces: float = 1e-7
+    eps_schwarz_forces: float = 1e-5
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         updates = {
