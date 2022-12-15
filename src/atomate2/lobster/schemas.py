@@ -2,22 +2,29 @@
 
 import logging
 import time
-from typing import Any, Dict, List, Tuple, Union, Optional
-
+from typing import Any, Union, Optional, Dict
+import os
+from pathlib import Path
 import numpy as np
 from monty.dev import requires
 from monty.serialization import loadfn
 from pymatgen.core import Structure
-from pymatgen.io.lobster import Lobsterin, Lobsterout, Icohplist, Charge
+from pymatgen.io.lobster import (
+    Lobsterin,
+    Lobsterout,
+    Icohplist,
+    Charge,
+    MadelungEnergies,
+)
 from pymatgen.electronic_structure.cohp import CompleteCohp
+from pymatgen.io.lobster import Doscar
+from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
-import os
-from pathlib import Path
 from pydantic import BaseModel, Field
 
 from atomate2 import __version__
 
-from atomate2.common.schemas.structure import StructureMetadata
+# from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
 
 # from atomate2.common.files import get_zfile
@@ -45,29 +52,29 @@ class LobsteroutModel(BaseModel):
     )
     lobster_version: str = Field("Lobster version")
     threads: int = Field("Number of threads that Lobster ran on")
-    Dftprogram: str = Field("DFT program was used for this run")
-    chargespilling: Any = Field("Absolute charge spilling")
-    totalspilling: Any = Field("Total spilling")
-    elements: Any = Field("Elements in structure")
-    basistype: Any = Field("Basis set used in Lobster")
-    basisfunctions: Any = Field("basis_functions")
+    dft_program: str = Field("DFT program was used for this run")
+    charge_spilling: list = Field("Absolute charge spilling")
+    total_spilling: list = Field("Total spilling")
+    elements: list = Field("Elements in structure")
+    basis_type: list = Field("Basis set used in Lobster")
+    basis_functions: list = Field("basis_functions")
     timing: Any = Field("Dict with infos on timing")
-    warnings: Any = Field("Warnings")
-    orthonormalization: Any = Field("info_orthonormalization")
-    infos: Any = Field("info_lines")
-    hasDOSCAR: bool = Field("Bool indicating if DOSCAR is present.")
-    hasCOHPCAR: bool = Field("Bool indicating if COHPCAR is present.")
-    hasCOOPCAR: bool = Field("Bool indicating if COOPCAR is present.")
-    hasCOBICAR: bool = Field("Bool indicating if COBICAR is present.")
-    hasCHARGE: bool = Field("Bool indicating if CHARGE is present.")
-    hasmadelung: bool = Field("Bool indicating if Madelung file is present.")
-    hasProjection: bool = Field("Bool indicating if projection file is present.")
-    hasbandoverlaps: bool = Field("Bool indicating if BANDOVERLAPS file is presetn")
-    hasfatband: bool = Field("Bool indicating if Fatbands are present.")
-    hasGrossPopulation: bool = Field(
+    warning_lines: list = Field("Warnings")
+    info_orthonormalization: list = Field("info_orthonormalization")
+    info_lines: list = Field("info_lines")
+    has_doscar: bool = Field("Bool indicating if DOSCAR is present.")
+    has_cohpcar: bool = Field("Bool indicating if COHPCAR is present.")
+    has_coopcar: bool = Field("Bool indicating if COOPCAR is present.")
+    has_cobicar: bool = Field("Bool indicating if COBICAR is present.")
+    has_charge: bool = Field("Bool indicating if CHARGE is present.")
+    has_madelung: bool = Field("Bool indicating if Madelung file is present.")
+    has_projection: bool = Field("Bool indicating if projection file is present.")
+    has_bandoverlaps: bool = Field("Bool indicating if BANDOVERLAPS file is presetn")
+    has_fatbands: bool = Field("Bool indicating if Fatbands are present.")
+    has_grosspopulation: bool = Field(
         "Bool indicating if GrossPopulations file is present."
     )
-    hasDensityOfEnergies: bool = Field(
+    has_density_of_energies: bool = Field(
         "Bool indicating if DensityofEnergies is present"
     )
 
@@ -80,25 +87,25 @@ class LobsterinModel(BaseModel):
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
 
-    gaussianSmearingWidth: float = Field(
+    gaussiansmearingwidth: float = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    useDecimalPlaces: int = Field(
+    usedecimalplaces: int = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
     cohpsteps: float = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
-    basisset: Any = Field(None, description="basis set of computation")
-    cohpgenerator: Any = Field(
+    basisset: str = Field(None, description="basis set of computation")
+    cohpgenerator: str = Field(
         None,
         description="Build the list of atom pairs to be analyzed using given distance",
     )
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    basisfunctions: Any = Field(
+    basisfunctions: list = Field(
         None, description="Specify the basis functions for element"
     )
 
@@ -110,7 +117,7 @@ class CondensedBondingAnalysis(BaseModel):
     max_considered_bond_length: Any = Field(
         None, description="Maximum bond length considered " "in bonding analysis"
     )
-    limit_icohp: Any = Field(
+    limit_icohp: list = Field(
         None, description="ICOHP range considered in co-ordination environment analysis"
     )
     number_of_considered_ions: int = Field(
@@ -124,11 +131,6 @@ class CondensedBondingAnalysis(BaseModel):
     type_charges: str = Field(
         None,
         description="Charge type considered for assinging valences in bonding analysis",
-    )
-    madelung_energy: float = Field(
-        None,
-        description="Total electrostatic energy for the structure "
-        "based on chosen type_charges",
     )
     cutoff_icohp: float = Field(
         None,
@@ -149,6 +151,18 @@ class CondensedBondingAnalysis(BaseModel):
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
     )
+    whichbonds: str = Field(
+        None,
+        description="Specifies types of bond considerd in LobsterPy analysis",
+    )
+    final_dict_bonds: dict = Field(
+        None,
+        description="Dict consisting information on ICOHPs per bond type",
+    )
+    final_dict_ions: dict = Field(
+        None,
+        description="Dict consisting information on environments of cations",
+    )
     run_time: float = Field(
         None, description="Time needed to run Lobsterpy condensed bonding analysis"
     )
@@ -157,10 +171,9 @@ class CondensedBondingAnalysis(BaseModel):
 class StrongestBonds(BaseModel):
     """Collection to store strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
 
-    only_cation_anion: bool = Field(
+    which_bonds: str = Field(
         None,
-        description="If True, only information of cation-anion pairs "
-        "bond strength ,length will be returned ",
+        description="Denotes whether the information is for cation-anion pairs or all bonds",
     )
     are_coops: bool = Field(
         None, description="Denotes whether the file consists of ICOOPs"
@@ -183,35 +196,44 @@ class LobsterTaskDocument(BaseModel):
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    completed_at: str = Field(
-        None, description="Timestamp for when this task was completed"
+    charges: dict = Field(
+        None,
+        description="Atomic charges dict from LOBSTER based on Mulliken and Loewdin charge analysis",
     )
     lobsterout: LobsteroutModel = Field("Lobster out data")
     lobsterin: LobsterinModel = Field("Lobster calculation inputs")
     lobsterpy_data: CondensedBondingAnalysis = Field(
         "Model describing the LobsterPy data"
     )
-    lobster_strongest_bonds_ICOHP: StrongestBonds = Field(
+    lobsterpy_summary_text: str = Field(
+        None,
+        description="Stores LobsterPy automatic analysis summary text",
+    )
+    strongest_bonds_icohp: StrongestBonds = Field(
         "Describes the strongest cation-anion ICOHP bonds"
     )
-    lobster_strongest_bonds_ICOOP: StrongestBonds = Field(
+    strongest_bonds_icoop: StrongestBonds = Field(
         "Describes the strongest cation-anion ICOOP bonds"
     )
-    lobster_strongest_bonds_ICOBI: StrongestBonds = Field(
+    strongest_bonds_icobi: StrongestBonds = Field(
         "Describes the strongest cation-anion ICOBI bonds"
     )
-    COHP_data: CompleteCohp = Field(
+    cohp_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COHP data"
     )
-    COOP_data: CompleteCohp = Field(
+    coop_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COOP data"
     )
-    COBI_data: CompleteCohp = Field(
+    cobi_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COBI data"
     )
-    lobster_charges: Any = Field(
+    dos: LobsterCompleteDos = Field(
+        None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
+    )
+
+    madelung_energies: dict = Field(
         None,
-        description="Atomic charges dict from LOBSTER based on Mulliken and L�wdin",
+        description="Madelung energies dict from LOBSTER based on Mulliken and Loewdin charges",
     )
 
     _schema: str = Field(
@@ -234,7 +256,7 @@ class LobsterTaskDocument(BaseModel):
         ----------
         dir_name : path or str
             The path to the folder containing the calculation outputs.
-        additional_fields : dict
+         additional_fields : dict
             Dictionary of additional fields to add to output document.
 
         Returns
@@ -252,25 +274,42 @@ class LobsterTaskDocument(BaseModel):
         lobsterout_doc = lobsterout_here.get_doc()
         lobsterin_here = Lobsterin.from_file(os.path.join(dir_name, "lobsterin.gz"))
         # cation anion-mode
-        start = time.time()
-        analyse = Analysis(
-            path_to_poscar=os.path.join(dir_name, "POSCAR"),
-            path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
-            path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
-            path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
-            path_to_madelung=os.path.join(dir_name, "MadelungEnergies.lobster.gz"),
-            summed_spins=True,
-            cutoff_icohp=0.10,
-            whichbonds="cation-anion",
-        )
 
-        cba_run_time = time.time() - start
+        try:
+            start = time.time()
+            analyse = Analysis(
+                path_to_poscar=os.path.join(dir_name, "POSCAR"),
+                path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
+                path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
+                path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
+                path_to_madelung=os.path.join(dir_name, "MadelungEnergies.lobster.gz"),
+                summed_spins=True,
+                cutoff_icohp=0.10,
+                whichbonds="cation-anion",
+            )
+
+            cba_run_time = time.time() - start
+        except ValueError:
+            start = time.time()
+            analyse = Analysis(
+                path_to_poscar=os.path.join(dir_name, "POSCAR"),
+                path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
+                path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
+                path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
+                summed_spins=True,
+                cutoff_icohp=0.10,
+                whichbonds="all",
+            )
+
+            cba_run_time = time.time() - start
 
         cba = (
             analyse.condensed_bonding_analysis
         )  # initialize lobsterpy condensed bonding analysis
         cba_cohp_plot_data = {}  # Initialize dict to store plot data
-        for site, val in analyse.condensed_bonding_analysis["sites"].items():
+        for index, (_site, val) in enumerate(
+            analyse.condensed_bonding_analysis["sites"].items()
+        ):
             cohp_data = analyse.chemenv.completecohp.get_summed_cohp_by_label_list(
                 val["relevant_bonds"]
             ).as_dict()
@@ -280,7 +319,7 @@ class LobsterTaskDocument(BaseModel):
             efermi = cohp_data["efermi"]
             cba_cohp_plot_data.update(
                 {
-                    site: {
+                    analyse.set_labels_cohps[index][0]: {
                         "COHP_spin_up": spinup_cohps,
                         "COHP_spin_down": spindown_cohps,
                         "Energies": energies,
@@ -288,6 +327,7 @@ class LobsterTaskDocument(BaseModel):
                     }
                 }
             )
+        describe = Description(analysis_object=analyse)
 
         lpca = CondensedBondingAnalysis(
             formula=cba["formula"],
@@ -295,20 +335,23 @@ class LobsterTaskDocument(BaseModel):
             limit_icohp=cba["limit_icohp"],
             number_of_considered_ions=cba["number_of_considered_ions"],
             sites=cba["sites"],
-            type_charges=cba["type_charges"],
-            madelung_energy=cba["madelung_energy"],
+            type_charges=analyse.type_charge,
+            # madelung_energy=cba["madelung_energy"],
             cohp_plot_data=cba_cohp_plot_data,
-            cutoff_icohp=0.10,
+            cutoff_icohp=analyse.cutoff_icohp,
             summed_spins=True,
+            whichbonds=analyse.whichbonds,
+            final_dict_bonds=analyse.final_dict_bonds,
+            final_dict_ions=analyse.final_dict_ions,
             run_time=cba_run_time,
         )
 
-        lobsout = LobsteroutModel(**lobsterout_doc)
-        lobsin = LobsterinModel(**lobsterin_here)
+        lobster_out = LobsteroutModel(**lobsterout_doc)
+        lobster_in = LobsterinModel(**lobsterin_here)
 
-        ch = Charge(os.path.join(dir_name, "CHARGE.lobster.gz"))
+        charge = Charge(os.path.join(dir_name, "CHARGE.lobster.gz"))
 
-        lobster_charges = {"Mulliken": ch.Mulliken, "L�wdin": ch.Loewdin}
+        charges = {"Mulliken": charge.Mulliken, "Loewdin": charge.Loewdin}
 
         icohplist = Icohplist(
             filename=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
@@ -330,26 +373,21 @@ class LobsterTaskDocument(BaseModel):
         icobi_dict = icobilist.icohpcollection.as_dict()
         icoop_dict = icooplist.icohpcollection.as_dict()
 
-        def get_strng_bonds(bondlist, are_cobis, are_coops, ch=ch):
-            charges = {}
-            for i, v in enumerate(ch.atomlist):
-                if ch.Mulliken[i] > 0:
-                    charges.update({v.rstrip("0123456789"): "Cation"})
-                else:
-                    charges.update({v.rstrip("0123456789"): "Anion"})
-
+        def get_strng_bonds(
+            bondlist, are_cobis, are_coops, relevant_bonds: dict,
+        ):
             bonds = []
             icohp_all = []
             lengths = []
-            for a, b, c, l in zip(
+            for atom1, atom2, coxx, length in zip(
                 bondlist["list_atom1"],
                 bondlist["list_atom2"],
                 bondlist["list_icohp"],
                 bondlist["list_length"],
             ):
-                bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
-                icohp_all.append(sum(c.values()))
-                lengths.append(l)
+                bonds.append(atom1.rstrip("0123456789") + "-" + atom2.rstrip("0123456789"))
+                icohp_all.append(sum(coxx.values()))
+                lengths.append(length)
 
             bond_labels_unique = list(set(bonds))
             sep_blabels = [[] for _ in range(len(bond_labels_unique))]
@@ -365,13 +403,13 @@ class LobsterTaskDocument(BaseModel):
             if not are_cobis and not are_coops:
                 bond_dict = {}
                 for i, lab in enumerate(bond_labels_unique):
-                    label = lab.split("-")
-                    if label[0] != label[1]:
-                        if charges[label[0]] != charges[label[1]]:
+                    # label = lab.split("-")
+                    for rel_bnd in relevant_bonds.keys():
+                        if lab == rel_bnd:
                             index = np.argmin(sep_icohp[i])
                             bond_dict.update(
                                 {
-                                    lab: {
+                                    rel_bnd: {
                                         "ICOHP": min(sep_icohp[i]),
                                         "length": sep_lengths[i][index],
                                     }
@@ -382,13 +420,13 @@ class LobsterTaskDocument(BaseModel):
             if are_cobis and not are_coops:
                 bond_dict = {}
                 for i, lab in enumerate(bond_labels_unique):
-                    label = lab.split("-")
-                    if label[0] != label[1]:
-                        if charges[label[0]] != charges[label[1]]:
+                    # label = lab.split("-")
+                    for rel_bnd in relevant_bonds.keys():
+                        if lab == rel_bnd:
                             index = np.argmin(sep_icohp[i])
                             bond_dict.update(
                                 {
-                                    lab: {
+                                    rel_bnd: {
                                         "ICOBI": max(sep_icohp[i]),
                                         "length": sep_lengths[i][index],
                                     }
@@ -399,13 +437,13 @@ class LobsterTaskDocument(BaseModel):
             if not are_cobis and are_coops:
                 bond_dict = {}
                 for i, lab in enumerate(bond_labels_unique):
-                    label = lab.split("-")
-                    if label[0] != label[1]:
-                        if charges[label[0]] != charges[label[1]]:
+                    # label = lab.split("-")
+                    for rel_bnd in relevant_bonds.keys():
+                        if lab == rel_bnd:
                             index = np.argmin(sep_icohp[i])
                             bond_dict.update(
                                 {
-                                    lab: {
+                                    rel_bnd: {
                                         "ICOOP": max(sep_icohp[i]),
                                         "length": sep_lengths[i][index],
                                     }
@@ -413,27 +451,42 @@ class LobsterTaskDocument(BaseModel):
                             )
                 return bond_dict
 
-        icohp_bond_dict = get_strng_bonds(icohp_dict, are_cobis=False, are_coops=False)
-        icoop_bond_dict = get_strng_bonds(icoop_dict, are_cobis=False, are_coops=True)
-        icobi_bond_dict = get_strng_bonds(icobi_dict, are_cobis=True, are_coops=False)
+        icohp_bond_dict = get_strng_bonds(
+            icohp_dict,
+            are_cobis=False,
+            are_coops=False,
+            relevant_bonds=analyse.final_dict_bonds,
+        )
+        icoop_bond_dict = get_strng_bonds(
+            icoop_dict,
+            are_cobis=False,
+            are_coops=True,
+            relevant_bonds=analyse.final_dict_bonds,
+        )
+        icobi_bond_dict = get_strng_bonds(
+            icobi_dict,
+            are_cobis=True,
+            are_coops=False,
+            relevant_bonds=analyse.final_dict_bonds,
+        )
 
         sb_ichop = StrongestBonds(
             are_cobis=False,
             are_coops=False,
             strongest_bonds=icohp_bond_dict,
-            only_cation_anion=True,
+            which_bonds=analyse.whichbonds,
         )
         sb_icoop = StrongestBonds(
             are_cobis=False,
             are_coops=True,
             strongest_bonds=icoop_bond_dict,
-            only_cation_anion=True,
+            which_bonds=analyse.whichbonds,
         )
         sb_icobi = StrongestBonds(
             are_cobis=True,
             are_coops=False,
             strongest_bonds=icobi_bond_dict,
-            only_cation_anion=True,
+            which_bonds=analyse.whichbonds,
         )
 
         cohp_obj = CompleteCohp.from_file(
@@ -459,56 +512,33 @@ class LobsterTaskDocument(BaseModel):
             are_coops=False,
             are_cobis=True,
         )
+        doscar_lobster = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR")
+        dos = doscar_lobster.completedos
 
-        #
-        # # Setup Desciption dict
-        # describe = Description(analysis_object=analyse)
-        # describe.write_description()
-        #
-        # # Automatic plots
-        # # describe.plot_cohps(
-        # #    ylim=[-4, 2],
-        # #    xlim=[-10, 10],
-        # #    integrated=False,
-        # # )
-        #
-        # # different dicts that summarize the results
-        #
-        # print(analyse.condensed_bonding_analysis)
-        # print(analyse.final_dict_bonds)
-        # print(analyse.final_dict_ions)
-        #
-        # # This is similar to the ChemEnv output now
-        # lse = analyse.chemenv.get_light_structure_environment(only_cation_environments=True)
-        #
-        # for coord, neighbor_sets in zip(lse.coordination_environments, lse.neighbors_sets):
-        #     # we are only looking at cation-anion bonds here and we only return environments of cations
-        #     if neighbor_sets is not None:
-        #         print(coord[0])
-        #         print(neighbor_sets[0])
-        #         # This returns the list of all neighboring atoms as PeriodicSite objects including coordinates.
-        #         # This should be useful for computing vectors
-        #         print(neighbor_sets[0].neighb_sites)
-        #
-        # # process Lobsterout (similar to outputs from atomate)
-        #
-        # # use lobsterpy for automatic analysis
-        # # add further infos on COHP
+        madelung_obj = MadelungEnergies(filename="MadelungEnergies.lobster.gz")
 
-        # doc.copy(update=additional_fields)
+        madelung_energies = {
+            "Mulliken": madelung_obj.madelungenergies_Mulliken,
+            "Loewdin": madelung_obj.madelungenergies_Loewdin,
+            "Ewald_splitting": madelung_obj.ewald_splitting,
+        }
+
         return cls(
             structure=struct,
             dir_name=dir_name,
-            lobsterin=lobsin,
-            lobsterout=lobsout,
+            lobsterin=lobster_in,
+            lobsterout=lobster_out,
             lobsterpy_data=lpca,
-            lobster_strongest_bonds_ICOHP=sb_ichop,
-            lobster_strongest_bonds_ICOOP=sb_icoop,
-            lobster_strongest_bonds_ICOBI=sb_icobi,
-            COHP_data=cohp_obj,
-            COOP_data=coop_obj,
-            COBI_data=cobi_obj,
-            lobster_charges=lobster_charges,
+            lobsterpy_summary_text=" ".join(describe.text),
+            strongest_bonds_icohp=sb_ichop,
+            strongest_bonds_icoop=sb_icoop,
+            strongest_bonds_icobi=sb_icobi,
+            cohp_data=cohp_obj,
+            coop_data=coop_obj,
+            cobi_data=cobi_obj,
+            dos=dos,
+            charges=charges,
+            madelung_energies=madelung_energies,
         )  # doc
 
 

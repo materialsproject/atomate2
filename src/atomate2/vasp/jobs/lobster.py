@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from jobflow import Flow,
+from jobflow import Flow
 from jobflow import Maker, Response, job
 from monty.serialization import loadfn
 from monty.shutil import gzip_dir
