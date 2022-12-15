@@ -151,7 +151,7 @@ class CondensedBondingAnalysis(BaseModel):
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
     )
-    whichbonds: str = Field(
+    which_bonds: str = Field(
         None,
         description="Specifies types of bond considerd in LobsterPy analysis",
     )
@@ -340,7 +340,7 @@ class LobsterTaskDocument(BaseModel):
             cohp_plot_data=cba_cohp_plot_data,
             cutoff_icohp=analyse.cutoff_icohp,
             summed_spins=True,
-            whichbonds=analyse.whichbonds,
+            which_bonds=analyse.whichbonds,
             final_dict_bonds=analyse.final_dict_bonds,
             final_dict_ions=analyse.final_dict_ions,
             run_time=cba_run_time,
