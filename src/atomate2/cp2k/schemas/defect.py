@@ -143,7 +143,7 @@ class DefectDoc(StructureMetadata):
             self.task_types[tt] = d_id
             self.calc_types[ct] = d_id
 
-        self.task_ids = list(set(self.task_ids) | set(d_id))
+        self.task_ids = list(set(self.task_ids) | {d_id})
 
     def update_many(
         self, defect_tasks: List, bulk_tasks: List, dielectrics: List, query="defect"
