@@ -374,7 +374,7 @@ class LobsterTaskDocument(BaseModel):
         icoop_dict = icooplist.icohpcollection.as_dict()
 
         def get_strng_bonds(
-            bondlist, are_cobis, are_coops, relevant_bonds=analyse.final_dict_bonds
+            bondlist, are_cobis, are_coops, relevant_bonds: dict
         ):
             bonds = []
             icohp_all = []
