@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field
 from pydantic import validator
 from itertools import groupby
 
+import numpy as np
+
 from monty.json import MontyDecoder
 from monty.tempfile import ScratchDir
 
@@ -80,14 +82,6 @@ class DefectDoc(StructureMetadata):
         description="Run types for all the calculations that make up this material",
     )
 
-    best_tasks: Mapping[RunType, Tuple[str, str]] = Field(
-        None, description="Task ids (defect task, bulk task) for all tasks of a RunType"
-    )
-
-    all_tasks: Mapping[RunType, List[Tuple[str, str]]] = Field(
-        None, description="Task ids (defect task, bulk task) for all tasks of a RunType"
-    )
-
     defect_entries: Mapping[RunType, DefectEntry] = Field(
         None, description="Dictionary for tracking entries for CP2K calculations"
     )
@@ -111,9 +105,10 @@ class DefectDoc(StructureMetadata):
         default_factory=datetime.utcnow,
     )
 
-    metadata: Dict = Field(description="Metadata for this defect")
+    metadata: Dict = Field(None, description="Metadata for this defect")
 
-    def update(self, defect_task, bulk_task, dielectric, query="defect", key="task_id"):
+    # TODO The sorting here should also maybe be done by builder
+    def update_one(self, defect_task, bulk_task, dielectric, query="defect", key="task_id"):
 
         # Metadata
         self.last_updated = datetime.now()
@@ -122,19 +117,20 @@ class DefectDoc(StructureMetadata):
         defect = self.get_defect_from_task(query=query, task=defect_task)
         d_id = defect_task[key]
         b_id = bulk_task[key]
-        defect_task = TaskDocument(**defect_task)
-        bulk_task = TaskDocument(**bulk_task)
+        defect_task = TaskDocument(**defect_task['output'])
+        bulk_task = TaskDocument(**bulk_task['output']) # TODO Atomate2Store 
         defect_entry = self.get_defect_entry_from_tasks(
             defect_task, bulk_task, defect, dielectric
         )
         bulk_entry = self.get_bulk_entry_from_task(bulk_task)
 
         rt = defect_task.calcs_reversed[0].run_type
-        current_largest_sc = self.defect_entries[rt].sc_entry.composition.num_atoms
+        tt = defect_task.calcs_reversed[0].task_type
+        ct = defect_task.calcs_reversed[0].calc_type
+        current_largest_sc = self.defect_entries[rt].sc_entry.composition.num_atoms if rt in self.defect_entries else 0
         potential_largest_sc = defect_entry.sc_entry.composition.num_atoms
         if (
-            rt not in self.defect_entries
-            or potential_largest_sc > current_largest_sc
+            potential_largest_sc > current_largest_sc
             or (
                 potential_largest_sc == current_largest_sc
                 and defect_entry.sc_entry.energy
@@ -143,18 +139,19 @@ class DefectDoc(StructureMetadata):
         ):
             self.defect_entries[rt] = defect_entry
             self.bulk_entries[rt] = bulk_entry
-            self.best_tasks[rt] = (d_id, b_id)
+            self.run_types[rt] = d_id
+            self.task_types[tt] = d_id
+            self.calc_types[ct] = d_id
 
-        self.all_tasks[rt].append((d_id, b_id))
-        self.metadata["convergence"].append((current_largest_sc, defect_entry.corrected_energy - bulk_entry.energy))
+        self.task_ids = list(set(self.task_ids) | set(d_id))
 
-    def update_all(
+    def update_many(
         self, defect_tasks: List, bulk_tasks: List, dielectrics: List, query="defect"
     ):
         for defect_task, bulk_task, dielectric in zip(
             defect_tasks, bulk_tasks, dielectrics
         ):
-            self.update(
+            self.update_one(
                 defect_task=defect_task,
                 bulk_task=bulk_task,
                 dielectric=dielectric,
@@ -162,15 +159,7 @@ class DefectDoc(StructureMetadata):
             )
 
     @classmethod
-    def from_tasks(
-        cls: Type[T],
-        defect_tasks: List,
-        bulk_tasks: List,
-        dielectrics: List,
-        query="defect",
-        key="task_id",
-        material_id=None,
-    ) -> T:
+    def from_tasks(cls: Type[T], defect_task, bulk_task, dielectric, query="defect", key="task_id", material_id=None) -> T:
         """
         The standard way to create this document.
         Args:
@@ -178,92 +167,30 @@ class DefectDoc(StructureMetadata):
                 series of DefectEntry objects.
             query: How to retrieve the defect object stored in the task.
         """
-        defect_task_ids = [defect_task[key] for defect_task in defect_tasks]
-        bulk_task_ids = [bulk_task[key] for bulk_task in bulk_tasks]
-        bulk_tasks = [TaskDocument(**bulk_task["output"]) for bulk_task in bulk_tasks]
-        defects = [
-            cls.get_defect_from_task(query=query, task=defect_task)
-            for defect_task in defect_tasks
-        ]
-        defect_tasks = [
-            TaskDocument(**defect_task["output"]) for defect_task in defect_tasks
-        ]
+        defect_task_id = defect_task[key]
+        defect = cls.get_defect_from_task(query=query, task=defect_task)
+        defect_task = TaskDocument(**defect_task["output"])
+        bulk_task = TaskDocument(**bulk_task['output'])
 
         # Metadata
-        last_updated = datetime.now() or max(task.last_updated for task in defect_tasks)
-        created_at = datetime.now() or min(task.completed_at for task in defect_tasks)
+        last_updated = datetime.now() 
+        created_at = datetime.now() 
 
-        run_types = {
-            id: task.calcs_reversed[0].run_type
-            for id, task in zip(defect_task_ids, defect_tasks)
-        }
-        task_types = {
-            id: task.calcs_reversed[0].task_type
-            for id, task in zip(defect_task_ids, defect_tasks)
-        }
-        calc_types = {
-            id: task.calcs_reversed[0].calc_type
-            for id, task in zip(defect_task_ids, defect_tasks)
-        }
+        rt = defect_task.calcs_reversed[0].run_type
+        run_types = {defect_task_id: defect_task.calcs_reversed[0].run_type}
+        task_types = {defect_task_id: defect_task.calcs_reversed[0].task_type} 
+        calc_types = {defect_task_id: defect_task.calcs_reversed[0].calc_type}
 
-        def _run_type(x):
-            return x[0].calcs_reversed[0].run_type.value
-
-        def _sort(x):
-            # TODO return kpoint density, currently just does supercell size
-            return -x[0].nsites, x[0].output.energy
-
-        defect_entries = {}
-        bulk_entries = {}
-        all_tasks = {}
-        best_tasks = {}
-        vbm = {}
         metadata = {}
-        for key, tasks_for_runtype in groupby(
-            sorted(
-                zip(
-                    defect_tasks,
-                    bulk_tasks,
-                    defects,
-                    dielectrics,
-                    defect_task_ids,
-                    bulk_task_ids,
-                ),
-                key=_run_type,
-            ),
-            key=_run_type,
-        ):
-            sorted_tasks = sorted(tasks_for_runtype, key=_sort)
-            ents = [
-                (
-                    cls.get_defect_entry_from_tasks(
-                        defect_task, bulk_task, defect, dielectric
-                    ),
-                    cls.get_bulk_entry_from_task(bulk_task),
-                )
-                for defect_task, bulk_task, defect, dielectric, did, bid in sorted_tasks
-            ]
-            rt = run_types[sorted_tasks[0][-2]]
-            vbm[rt] = sorted_tasks[0][1].output.vbm
-            best_tasks[rt] = (sorted_tasks[0][-2], sorted_tasks[0][-1])
-            all_tasks[rt] = [(s[-2], s[-1]) for s in sorted_tasks]
-            defect_entries[rt], bulk_entries[rt] = ents[0]
-            metadata[key] = {
-                "convergence": [
-                    (
-                        sorted_tasks[i][0].nsites,
-                        defect_entries[rt].corrected_energy - bulk_entries[rt].energy,
-                    )
-                    for i in range(len(ents))
-                ]
-            }
+        defect_entries = {rt: cls.get_defect_entry_from_tasks(defect_task, bulk_task, defect, dielectric)}
+        bulk_entries = {rt: cls.get_bulk_entry_from_task(bulk_task)}
+        vbm = {rt: bulk_task.output.vbm}
 
-        v = next(iter(defect_entries.values()))
         metadata["defect_origin"] = (
             "intrinsic"
             if all(
-                el in v.defect.structure.composition
-                for el in v.defect.element_changes.keys()
+                el in defect_entries[rt].defect.structure.composition
+                for el in defect_entries[rt].defect.element_changes.keys()
             )
             else "extrinsic"
         )
@@ -276,17 +203,15 @@ class DefectDoc(StructureMetadata):
             "calc_types": calc_types,
             "last_updated": last_updated,
             "created_at": created_at,
-            "task_ids": defect_task_ids,
-            "all_tasks": all_tasks,
-            "best_tasks": best_tasks,
-            "material_id": material_id if material_id else v.parameters["material_id"],
-            "defect": v.defect,
-            "charge": v.charge_state,
-            "name": v.defect.name,
+            "task_ids": list(defect_task_id),
+            "material_id": material_id,
+            "defect": defect_entries[rt].defect,
+            "charge": defect_entries[rt].charge_state,
+            "name": defect_entries[rt].defect.name,
             "vbm": vbm,
             "metadata": metadata,
         }
-        prim = SpacegroupAnalyzer(v.defect.structure).get_primitive_standard_structure()
+        prim = SpacegroupAnalyzer(defect_entries[rt].defect.structure).get_primitive_standard_structure()
         data.update(StructureMetadata.from_structure(prim).dict())
         return cls(**data)
 
@@ -343,21 +268,22 @@ class DefectDoc(StructureMetadata):
         corrections = {}
         metadata = {}
         for correction in ["get_freysoldt_correction", "get_freysoldt2d_correction"]:
-            c, m = getattr(cls, correction)(parameters)
-            corrections.update(c)
-            metadata.update(m)
+            corr, met = getattr(cls, correction)(parameters)
+            corrections.update(corr)
+            metadata.update(met)
         return corrections, metadata
 
     @classmethod
     def get_freysoldt_correction(cls, parameters) -> Tuple[Dict, Dict]:
         if parameters["charge_state"] and not parameters.get("2d"):
-            return get_freysoldt_correction(
+            es, pot, met = get_freysoldt_correction(
                 q=parameters["charge_state"],
-                dielectric=parameters["dielectric"],
+                dielectric=np.array(parameters["dielectric"]), # TODO pmg-analysis expects np array here
                 defect_locpot=parameters["defect_v_hartree"],
                 bulk_locpot=parameters["bulk_v_hartree"],
                 defect_frac_coords=parameters["defect_frac_sc_coords"],
             )
+            return {"electrostatic": es, "potential_alignment": pot}, met
         return {}, {}
 
     @classmethod
@@ -384,7 +310,7 @@ class DefectDoc(StructureMetadata):
                 lref.write_file("LOCPOT.ref")
                 ldef.write_file("LOCPOT.def")
 
-                return get_freysoldt2d_correction(
+                es, pot, met = get_freysoldt2d_correction(
                     q=parameters["charge_state"],
                     dielectric=dielectric,
                     defect_locpot=ldef,
@@ -393,6 +319,7 @@ class DefectDoc(StructureMetadata):
                     energy_cutoff=520,
                     slab_buffer=2,
                 )
+                return {"electrostatic": es, "potential_alignment": pot}, met
         return {}, {}
 
     @classmethod
@@ -413,7 +340,6 @@ class DefectDoc(StructureMetadata):
             defect_task: task dict for the defect calculation
             bulk_task: task dict for the bulk calculation
         """
-
         final_defect_structure = defect_task.structure
         final_bulk_structure = bulk_task.structure
 

@@ -404,8 +404,9 @@ class DefectBuilder(Builder):
                 continue 
             doc = self.__get_defect_doc(defect)
             item_bundle = self.__get_item_bundle(task_ids)
-            material_id = self.mpid_map[item_bundle[0][1][self.tasks.key]]
-            yield doc, item_bundle, material_id
+            m = next(iter(task_ids.values()))[1]
+            material_id = self.mpid_map[m]
+            yield doc, item_bundle, material_id, task_ids
 
     def process_item(self, items):
         """
@@ -418,20 +419,17 @@ class DefectBuilder(Builder):
 
         returns: the defect document as a dictionary
         """
-        defect_doc, item_bundle, material_id = items
+        defect_doc, item_bundle, material_id, task_ids = items
         self.logger.info(f"Processing group of {len(item_bundle)} defects into DefectDoc")
         if item_bundle:
-            defect_tasks, bulk_tasks, dielectrics = list(zip(*item_bundle))
-            if defect_doc:
-                defect_doc.update_all(
-                    defect_tasks=defect_tasks, bulk_tasks=bulk_tasks, 
-                    dielectrics=dielectrics, query=self.defect_query
-                    )
-            else:
-                defect_doc = DefectDoc.from_tasks(
-                    defect_tasks=defect_tasks, bulk_tasks=bulk_tasks, dielectrics=dielectrics,
-                    query=self.defect_query, key=self.tasks.key, material_id=material_id
-                    )
+            for _, (defect_task, bulk_task, dielectric) in item_bundle.items():
+                if not defect_doc:
+                    defect_doc = DefectDoc.from_tasks(
+                        defect_task=defect_task, bulk_task=bulk_task, dielectric=dielectric,
+                        query=self.defect_query, key=self.tasks.key, material_id=material_id
+                        )
+                else:
+                    defect_doc.update_one(defect_task, bulk_task, dielectric, query=self.defect_query, key=self.tasks.key) # TODO Atomate2Store wrapper
             return jsanitize(defect_doc.dict(), allow_bson=True, enum_values=True, strict=True)
         return {}
 
@@ -581,16 +579,15 @@ class DefectBuilder(Builder):
             bulk_tasks: possible bulk tasks to match to defects
             defect_task_group: group of equivalent defects (defined by PointDefectComparator)
 
-        returns: [(defect task dict, bulk_task_dict, dielectric dict), ...]
+        returns: dict {run type: (defect task dict, bulk_task_dict, dielectric dict)}
         """
-        return [
-            (
-                self.tasks.query_one(criteria={self.tasks.key: defect_tasks_id}, load=True),
-                self.tasks.query_one(criteria={self.tasks.key: bulk_tasks_id}, load=True), # load all for now
-                self.__get_dielectric(self._mpid_map[bulk_tasks_id]),
-            )
-            for defect_tasks_id, bulk_tasks_id in task_ids
-        ]
+        return {
+            rt: (
+                self.tasks.query_one(criteria={self.tasks.key: pairs[0]}, load=True), 
+                self.tasks.query_one(criteria={self.tasks.key: pairs[1]}, load=True), 
+                self.__get_dielectric(self._mpid_map[pairs[1]])
+                ) for rt, pairs in task_ids.items()
+                }
 
     def _get_mpid(self, structure):
         """
@@ -615,17 +612,14 @@ class DefectBuilder(Builder):
                 return m['material_id']
         return None
 
-    def __match_defects_to_bulks(self, bulk_ids, defect_ids):
+    def __match_defects_to_bulks(self, bulk_ids, defect_ids) -> list[tuple]:
         """
         Given task_ids of bulk and defect tasks, match the defects to a bulk task that has
         commensurate:
-
             - Composition
             - Number of sites
             - Symmetry
-
         """
-
         self.logger.debug(f"Finding bulk/defect task combinations.")
         self.logger.debug(f"Bulk tasks: {bulk_ids}")
         self.logger.debug(f"Defect tasks: {defect_ids}")
@@ -637,6 +631,7 @@ class DefectBuilder(Builder):
             'output.input',
             'output.nsites',
             'output.output.structure',
+            'output.output.energy',
             'output.calcs_reversed' 
         ]
         defects = list(self.tasks.query(criteria={self.tasks.key: {'$in': list(defect_ids)}}, properties=props))
@@ -653,14 +648,27 @@ class DefectBuilder(Builder):
         ) 
         
         pairs = [
-            (defect[self.tasks.key], bulk[self.tasks.key])
+            (defect, bulk)
             for bulk in bulks
             for defect in defects
             if self.__are_bulk_and_defect_commensurate(bulk, defect)
         ]
-
         self.logger.debug(f"Found {len(pairs)} commensurate bulk/defect pairs")
-        return pairs
+
+        def key(x):
+            return -x[0]['output']['nsites'], x[0]['output']['output']['energy']
+        def _run_type(x):
+            return x[0]['output']['calcs_reversed'][0]['run_type']
+
+        rt_pairs = {}
+        for rt, group in groupby(pairs, key=_run_type):
+            rt_pairs[rt] = [
+                (defect[self.tasks.key], bulk[self.tasks.key]) 
+                for defect, bulk in sorted(list(group), key=key)
+                ]
+
+        # Return only the first (best) pair for each rt
+        return {rt: lst[0] for rt, lst in rt_pairs.items()}
 
     # TODO Checking for same dft settings (e.g. OT/diag) is a little cumbersome. 
     # Maybe, in future, task doc can be defined to have OT/diag as part of input summary 
