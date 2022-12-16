@@ -203,7 +203,7 @@ class DefectDoc(StructureMetadata):
             "calc_types": calc_types,
             "last_updated": last_updated,
             "created_at": created_at,
-            "task_ids": list(defect_task_id),
+            "task_ids": [defect_task_id],
             "material_id": material_id,
             "defect": defect_entries[rt].defect,
             "charge": defect_entries[rt].charge_state,
