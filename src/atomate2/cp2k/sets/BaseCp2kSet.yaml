@@ -1,96 +1,92 @@
-#
-# Base settings for GPW DFT calculations
-#
-
 KPOINTS:
   reciprocal_density: 64
 cp2k_input:
-  
+  algorithm: IRAC
   basis_and_potential:
     Ac:
       aux_basis: null
       basis: null
       potential: null
     Ag:
-      aux_basis: admm-tzp-q11
-      basis: TZVP-MOLOPT-PBE-GTH-q11
-      potential: GTH-PBE-q11
+      aux_basis: e43d13a505ac2baf947a7f92ec0e7fa7
+      basis: d26d3a0b52e6b31b11f6dc93077b5b46
+      potential: a4946c40ec53cd98ce4433d32e121d89
     Al:
-      aux_basis: admm-tzp-q3
-      basis: TZVP-MOLOPT-PBE-GTH-q3
-      potential: GTH-PBE-q3
+      aux_basis: 3d6263aa51c5b2d75467be0a18e4f427
+      basis: e4cc67b11f5e250b3b9fffcc6b4730fa
+      potential: 25d8d6e3bad4a4601e02fae998b89060
     Am:
       aux_basis: null
       basis: null
       potential: null
     Ar:
-      aux_basis: admm-tzp-q8
-      basis: TZVP-MOLOPT-PBE-GTH-q8
-      potential: GTH-PBE-q8
+      aux_basis: cbf32405c9e65add1d8f9151fca7ca38
+      basis: fbfb481a2a4fb81a6700eb0de996862f
+      potential: 6c9a3e76329a3f1fd9e94058ed34ef95
     As:
-      aux_basis: admm-tzp-q5
-      basis: TZVP-MOLOPT-PBE-GTH-q5
-      potential: GTH-PBE-q5
+      aux_basis: 8f57e07775cab80c4db09c92033e630b
+      basis: 83b995364a0a779ce74592e3cca1b647
+      potential: 379120c2ea2bf89ff6d6aed44fea2bd3
     At:
-      aux_basis: admm-tzp-q7
-      basis: TZVP-MOLOPT-PBE-GTH-q7
-      potential: GTH-PBE-q7
+      aux_basis: 495db2b81004dc3d72a086d387482e6d
+      basis: 42576852d2deecbd8a1a019fff91c102
+      potential: 3af84e14110590dffd4b1edfaf9da0aa
     Au:
-      aux_basis: admm-tzp-q11
-      basis: TZVP-MOLOPT-PBE-GTH-q11
-      potential: GTH-PBE-q11
+      aux_basis: d57eb85c86b9742cf28ae3eb3aa539f5
+      basis: 5bcb85061ca98cbcfdaeca7adb565e3a
+      potential: 7acb08dc79509b5c73b7a51a5109aa0a
     B:
-      aux_basis: admm-tzp-q3
-      basis: TZVP-MOLOPT-PBE-GTH-q3
-      potential: GTH-PBE-q3
+      aux_basis: 76539851b7573e9db68af957662c6f9c
+      basis: b498ceaf4e7823303a27921dbb05b04b
+      potential: 37a9327201b1fd80623c01cb86e7eca5
     Ba:
-      aux_basis: admm-tzp-q10
-      basis: TZVP-MOLOPT-PBE-GTH-q10
-      potential: GTH-PBE-q10
+      aux_basis: d2312e9fad3f50a6c44251fa403bda15
+      basis: c06dd1974eacd7823f1c7d5f09cc38b2
+      potential: 966c25aebe29d56dbf8ddee91ba8b078
     Be:
-      aux_basis: admm-tzp-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q4
-      potential: GTH-PBE-q4
+      aux_basis: 4bb2e693b01e6ddea5268bddb3895031
+      basis: 096d3a767fadd7fb52b865ea8899c75b
+      potential: 135bf2471e258cd025128645d4b914c4
     Bh:
       aux_basis: null
       basis: null
       potential: null
     Bi:
-      aux_basis: admm-tzp-q5
-      basis: TZVP-MOLOPT-PBE-GTH-q5
-      potential: GTH-PBE-q5
+      aux_basis: 3b9e5fad60ab4ac1f4262811f77717ab
+      basis: a34c22ca64cecfe52be37906e02c80c3
+      potential: b74f8163754e774601c1da85655ba37e
     Bk:
       aux_basis: null
       basis: null
       potential: null
     Br:
-      aux_basis: admm-tzp-q7
-      basis: TZVP-MOLOPT-PBE-GTH-q7
-      potential: GTH-PBE-q7
+      aux_basis: 66704daeab14b18f6e30c16d830f586a
+      basis: 87f6f825e282ac6fd8127272068602ca
+      potential: 1f5d5f619b6ab6e99c6394396845438d
     C:
-      aux_basis: admm-tzp-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q4
-      potential: GTH-PBE-q4
+      aux_basis: 985eb95f6396516f245912da1087f7a7
+      basis: f879a0070b16014ca125d1d962b7b536
+      potential: afde0821ec33271c065fac2968a87d20
     Ca:
-      aux_basis: admm-tzp-q10
-      basis: TZVP-MOLOPT-PBE-GTH-q10
-      potential: GTH-PBE-q10
+      aux_basis: b6258173eeb1f8c1c02485e55526355a
+      basis: c647395a14dddc1197b071686f795f4c
+      potential: 21860f926ae28f22c2688b7ba92f16d0
     Cd:
-      aux_basis: admm-tzp-q12
-      basis: TZVP-MOLOPT-PBE-GTH-q12
-      potential: GTH-PBE-q12
+      aux_basis: 38a3ebdb437583af3cf211d79bf72887
+      basis: 32fe190d2da276f71e2e8fc29b903c6c
+      potential: 605ce8482a9f33921841bc22d5aed715
     Ce:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q30
+      potential: null
     Cf:
       aux_basis: null
       basis: null
       potential: null
     Cl:
-      aux_basis: admm-tzp-q7
-      basis: TZVP-MOLOPT-PBE-GTH-q7
-      potential: GTH-PBE-q7
+      aux_basis: 35eb0c25e98949c34405d1d880e8a894
+      basis: d2df109f523ea678fa1752fb499e9217
+      potential: e1cdadfac28a199cc570c4e5ffbee359
     Cm:
       aux_basis: null
       basis: null
@@ -100,21 +96,21 @@ cp2k_input:
       basis: null
       potential: null
     Co:
-      aux_basis: admm-tzp-q17
-      basis: TZVP-MOLOPT-PBE-GTH-q17
-      potential: GTH-PBE-q17
+      aux_basis: c3649c345bc4463f085925514e0beaf9
+      basis: f8792d4f053423fc25659b0fbc532faa
+      potential: 6a1a6be7673149197320827be6df9ea0
     Cr:
-      aux_basis: admm-tzp-q14
-      basis: TZVP-MOLOPT-PBE-GTH-q14
-      potential: GTH-PBE-q14
+      aux_basis: 43fae12f723467f77ee7b345d743aecc
+      basis: c27c551423d2e55af47dd4736b764ef9
+      potential: fb6a70dd371f97a8a2011a5d57ef8821
     Cs:
-      aux_basis: admm-tzp-q9
-      basis: TZVP-MOLOPT-PBE-GTH-q9
-      potential: GTH-PBE-q9
+      aux_basis: 93f1b19d7a4d16dbc97ecb4afbb04cab
+      basis: a7dce97f6be1732704f8a46887273e8d
+      potential: 3c65f8fec241d4350609bfb7e652dfa8
     Cu:
-      aux_basis: admm-tzp-q11
-      basis: TZVP-MOLOPT-PBE-GTH-q11
-      potential: GTH-PBE-q11
+      aux_basis: 8f9bac64ce01f2a324a6e39b2bf76d1c
+      basis: 48e90e687c06154a20f860ac2f1927d4
+      potential: 55918e30aa44f7f1d6bba477990878db
     Db:
       aux_basis: null
       basis: null
@@ -126,11 +122,11 @@ cp2k_input:
     Dy:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q20
+      potential: null
     Er:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q22
+      potential: null
     Es:
       aux_basis: null
       basis: null
@@ -138,15 +134,15 @@ cp2k_input:
     Eu:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q17
+      potential: null
     F:
-      aux_basis: admm-tzp-q7
-      basis: TZVP-MOLOPT-PBE-GTH-q7
-      potential: GTH-PBE-q7
+      aux_basis: 46b277c7db0771c018daf697a81cfddb
+      basis: 22953dc12002ca5aadbea00a7bc0b89f
+      potential: 669debe3e8c0ffb1d875dacf25f63e3c
     Fe:
-      aux_basis: admm-tzp-q16
-      basis: TZVP-MOLOPT-PBE-GTH-q16
-      potential: GTH-PBE-q16
+      aux_basis: 86ca252d929c98ebadbeccb6936e3cfa
+      basis: 352782418e626db9bbbf4f86ac88738d
+      potential: 590e4b63b3cc834507fa9e44ed96e7e1
     Fl:
       aux_basis: null
       basis: null
@@ -160,69 +156,69 @@ cp2k_input:
       basis: null
       potential: null
     Ga:
-      aux_basis: admm-tzp-q13
-      basis: TZVP-MOLOPT-PBE-GTH-q13
-      potential: GTH-PBE-q13
+      aux_basis: 7b770d7ed7d74d506bbbb05169912ef3
+      basis: cd95f50b54463c6dad4cd4a25911b84e
+      potential: 4478e1af7133c701b8d1a4da1a84c10d
     Gd:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q18
+      potential: null
     Ge:
-      aux_basis: admm-tzp-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q4
-      potential: GTH-PBE-q4
+      aux_basis: 269c96a347daac748cf00d8a6b0630cb
+      basis: 0f66566781a00adad8abff05364b98ed
+      potential: 6d6c7eb38baa6230ed85d3374799e95f
     H:
-      aux_basis: admm-tzp-q1
-      basis: TZVP-MOLOPT-PBE-GTH-q1
-      potential: GTH-PBE-q1
+      aux_basis: 79d31dfe462773979d969c903b3b138a
+      basis: f414d00e930efb7d910ff011d4392c92
+      potential: 4c60595900f9a5cca607850d669c7401
     He:
-      aux_basis: admm-tzp-q2
-      basis: TZVP-MOLOPT-PBE-GTH-q2
-      potential: GTH-PBE-q2
+      aux_basis: d73598a8836e16124ecddcb462b0303e
+      basis: 04408fe9b2849da9cc9e90e124a3dccb
+      potential: e24fdefd0e623dc69a2f17c53abae7f2
     Hf:
-      aux_basis: admm-tzp-q12
-      basis: TZVP-MOLOPT-PBE-GTH-q12
-      potential: GTH-PBE-q12
+      aux_basis: 48050975ab0596987fafd3b9d3ab8146
+      basis: 86e75f8f101e6aada1977c9dc80dfc14
+      potential: 62aa62d9583f4abc573c8998c853a3fd
     Hg:
-      aux_basis: admm-tzp-q12
-      basis: TZVP-MOLOPT-PBE-GTH-q12
-      potential: GTH-PBE-q12
+      aux_basis: 27057d3bbcd3cab45d17302569a2743e
+      basis: 7939e55ce60699289f43b2fbd7d30c93
+      potential: 26d8fcb99fa93f0231f1bde416d95efd
     Ho:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q21
+      potential: null
     Hs:
       aux_basis: null
       basis: null
       potential: null
     I:
-      aux_basis: admm-tzp-q7
-      basis: TZVP-MOLOPT-PBE-GTH-q7
-      potential: GTH-PBE-q7
+      aux_basis: 6983f42cd1993b52f39bfc97853b4771
+      basis: 017599454755311e93fe72790de100f0
+      potential: a01250ebe54288d6d54d482e4c092089
     In:
-      aux_basis: admm-tzp-q13
-      basis: TZVP-MOLOPT-PBE-GTH-q13
-      potential: GTH-PBE-q13
+      aux_basis: d66a7138fa80aa80d321f8e53591dfef
+      basis: c85eab6d6536419a49896ee2ff456aed
+      potential: af2ba8c128342894d66c816e51daabaa
     Ir:
-      aux_basis: admm-tzp-q17
-      basis: TZVP-MOLOPT-PBE-GTH-q17
-      potential: GTH-PBE-q17
+      aux_basis: 4dc880849606629d46d0c29c8d6fc9bd
+      basis: 1493bca6740ffefe77d46475919ebebf
+      potential: accc6d7db26e16ceea219a0f853761f2
     K:
-      aux_basis: admm-tzp-q9
-      basis: TZVP-MOLOPT-PBE-GTH-q9
-      potential: GTH-PBE-q9
+      aux_basis: f3fc8a783be7f6c10c968a9156f7d954
+      basis: ae6e0bda6316f9ad207c34c83d097c7a
+      potential: 507fae689f5cfaac9dc903eccb82fcd9
     Kr:
-      aux_basis: admm-tzp-q8
-      basis: TZVP-MOLOPT-PBE-GTH-q8
-      potential: GTH-PBE-q8
+      aux_basis: 5d881cbfd24ce00d75b41cfe61cf8323
+      basis: 497e629b00f4c84f6af78dbe97ae5b05
+      potential: b6e56460aa131a7f88aa2f4fc0f322a5
     La:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q11
+      potential: null
     Li:
-      aux_basis: admm-tzp-q3
-      basis: TZVP-MOLOPT-PBE-GTH-q3
-      potential: GTH-PBE-q3
+      aux_basis: b7cf403abc1c0f50d459ee0d1b5e80c9
+      basis: 2d9ba9b4926e0f622389e3395eabe191
+      potential: faea0fa069e76ffc874c48427cd35f59
     Lr:
       aux_basis: null
       basis: null
@@ -230,7 +226,7 @@ cp2k_input:
     Lu:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q25
+      potential: null
     Lv:
       aux_basis: null
       basis: null
@@ -244,50 +240,50 @@ cp2k_input:
       basis: null
       potential: null
     Mg:
-      aux_basis: admm-tzp-q10
-      basis: TZVP-MOLOPT-PBE-GTH-q10
-      potential: GTH-PBE-q10
+      aux_basis: 7d976b1b7df0f30db0fd46e54212fa41
+      basis: b5ea9c06bcca6f677d51b209031d6e6a
+      potential: 4101d66c616bb81aa553e3b59ab87a21
     Mn:
-      aux_basis: admm-tzp-q15
-      basis: TZVP-MOLOPT-PBE-GTH-q15
-      potential: GTH-PBE-q15
+      aux_basis: 367151ee5396c9bbbc5186b571137a5e
+      basis: 25bd967ba873c08fe8d0ccb1e6d08a48
+      potential: 3df74f319b59b4357ac595f691de5e15
     Mo:
-      aux_basis: admm-tzp-q14
-      basis: TZVP-MOLOPT-PBE-GTH-q14
-      potential: GTH-PBE-q14
+      aux_basis: 1f575371b303ca586cf88a868ede3b96
+      basis: d1e75fba0f867849beaa542681b06d56
+      potential: 3c7a2e8a3731e1b22aac6ad2c47ee660
     Mt:
       aux_basis: null
       basis: null
       potential: null
     N:
-      aux_basis: admm-tzp-q5
-      basis: TZVP-MOLOPT-PBE-GTH-q5
-      potential: GTH-PBE-q5
+      aux_basis: a5786378370ad716517b79586b757c38
+      basis: 906a381dc1cd7a90bf62e9f95223b5bf
+      potential: 5b56f52cd69ef257b0fe9c786afc405a
     Na:
-      aux_basis: admm-tzp-q9
-      basis: TZVP-MOLOPT-PBE-GTH-q9
-      potential: GTH-PBE-q9
+      aux_basis: c41805c3ed0f9541bc3d986e26dc5a78
+      basis: ea5e04a4f7611ddac34c8f8b6aad79ed
+      potential: e40244b13692259fbf035b4e8cc4bf90
     Nb:
-      aux_basis: admm-tzp-q13
-      basis: TZVP-MOLOPT-PBE-GTH-q13
-      potential: GTH-PBE-q13
+      aux_basis: 4df3a5bc37857e6c280b121836c7d702
+      basis: ed1aad594e50ca564922de6873b7b762
+      potential: b18c24e61d439102696d8e4b87835fe8
     Nd:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q14
+      potential: null
     Ne:
-      aux_basis: admm-tzp-q8
-      basis: TZVP-MOLOPT-PBE-GTH-q8
-      potential: GTH-PBE-q8
+      aux_basis: 46ad7c924a43d4ab5f88604f92b6e76b
+      basis: cb7c9d7d2ce76faca00d069e4be24bd0
+      potential: 25efd65d092094aec6c815e5a0872282
     Nh:
       aux_basis: null
       basis: null
       potential: null
     Ni:
-      aux_basis: admm-tzp-q18
-      basis: TZVP-MOLOPT-PBE-GTH-q18
-      potential: GTH-PBE-q18
-    'No':
+      aux_basis: b60cd5bac477c7dc1aa50f23f5110bd0
+      basis: 0a5659ec6183806c2efb3a45416ed251
+      potential: bac70b59bc9dd77ad20dae18ced5b2e1
+    No:
       aux_basis: null
       basis: null
       potential: null
@@ -296,49 +292,49 @@ cp2k_input:
       basis: null
       potential: null
     O:
-      aux_basis: admm-tzp-q6
-      basis: TZVP-MOLOPT-PBE-GTH-q6
-      potential: GTH-PBE-q6
+      aux_basis: d6083ad133b7e93fb0b91f3e94194c8f
+      basis: 545e3c15290754a9d22b2f3da1944042
+      potential: 69c2412832d914711dcf5ba8de796d8a
     Og:
       aux_basis: null
       basis: null
       potential: null
     Os:
-      aux_basis: admm-tzp-q16
-      basis: TZVP-MOLOPT-PBE-GTH-q16
-      potential: GTH-PBE-q16
+      aux_basis: 32cf1543bce9c42c758684b703045e03
+      basis: 9fe496cb297b47bc375124986831ebb5
+      potential: 7e13c5fa8a8e70fd33a7113a8c1b6f14
     P:
-      aux_basis: admm-tzp-q5
-      basis: TZVP-MOLOPT-PBE-GTH-q5
-      potential: GTH-PBE-q5
+      aux_basis: b00f2cc90a7df1dc3b6c908c836a94a1
+      basis: 6e4647073ac61059ef68ee73303bf00c
+      potential: 777d3c94ce90d2312b040c3f76a6a4c9
     Pa:
       aux_basis: null
       basis: null
       potential: null
     Pb:
-      aux_basis: admm-tzp-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q4
-      potential: GTH-PBE-q4
+      aux_basis: 7ad7f3e9cf23f51cb8096a2e7c51e33c
+      basis: 4a2a41d49b0f76d2529d8f59a63f34b1
+      potential: 1f1f81bfba5a66a3e750ca95e0f5b60e
     Pd:
-      aux_basis: admm-tzp-q18
-      basis: TZVP-MOLOPT-PBE-GTH-q18
-      potential: GTH-PBE-q18
+      aux_basis: 422603269fcd6aaa1737abfa8a9469de
+      basis: 114c4955b1db2590b3c3c425660df18f
+      potential: d55b4d36b78a2eefad1361612af75dbe
     Pm:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q15
+      potential: null
     Po:
-      aux_basis: admm-tzp-q6
-      basis: TZVP-MOLOPT-PBE-GTH-q6
-      potential: GTH-PBE-q6
+      aux_basis: 0149b3262caceef9a84fc70cb842d97d
+      basis: 9e710ae19ac5018c61c2d3417a8908b8
+      potential: 90ce3bedb8b6d5ff3f7f93ddb76c14ae
     Pr:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q13
+      potential: null
     Pt:
-      aux_basis: admm-tzp-q18
-      basis: TZVP-MOLOPT-PBE-GTH-q18
-      potential: GTH-PBE-q18
+      aux_basis: 4cc3bb9e5a9d9796db52c755826c3d2b
+      basis: 6f562c474e4c46a338d73c4d649ef1ee
+      potential: 0fb0316e522a0212d3dfa00c671818d9
     Pu:
       aux_basis: null
       basis: null
@@ -348,13 +344,13 @@ cp2k_input:
       basis: null
       potential: null
     Rb:
-      aux_basis: admm-tzp-q9
-      basis: TZVP-MOLOPT-PBE-GTH-q9
-      potential: GTH-PBE-q9
+      aux_basis: e253f241d875bee4ee927494f4052c96
+      basis: 399245341004253e5c72825cb03e7c18
+      potential: b247cb1e37ed38e86c2c7c1d0187dfdf
     Re:
-      aux_basis: admm-tzp-q15
-      basis: TZVP-MOLOPT-PBE-GTH-q15
-      potential: GTH-PBE-q15
+      aux_basis: 61352c1aab57daa989527752009313df
+      basis: 946eee0e976f2b1063c42b466cf2a831
+      potential: 2d02c0cd119a24b8278443b23e752501
     Rf:
       aux_basis: null
       basis: null
@@ -364,85 +360,85 @@ cp2k_input:
       basis: null
       potential: null
     Rh:
-      aux_basis: admm-tzp-q17
-      basis: TZVP-MOLOPT-PBE-GTH-q17
-      potential: GTH-PBE-q17
+      aux_basis: ea0a50618617b2ce9758cbe0cc8330fe
+      basis: abc2fd385e019de6110817f5fbd25251
+      potential: b42ed4ea2d0aeb9e79deb8ba763c0d02
     Rn:
-      aux_basis: admm-tzp-q8
-      basis: TZVP-MOLOPT-PBE-GTH-q8
-      potential: GTH-PBE-q8
+      aux_basis: 86881faaa281f67ddfd0c476997d56c3
+      basis: 5133cdf8c2dc7465abe39905d0899089
+      potential: 02ffd29eafe1c2af4c172b6133d75c71
     Ru:
-      aux_basis: admm-tzp-q16
-      basis: TZVP-MOLOPT-PBE-GTH-q16
-      potential: GTH-PBE-q16
+      aux_basis: 8141c96722896ca54a4f0814ba61a87f
+      basis: 81295fb5a3129f358318b075aae26f7b
+      potential: fec6964f0a735c6602c9a25ff86c09e5
     S:
-      aux_basis: admm-tzp-q6
-      basis: TZVP-MOLOPT-PBE-GTH-q6
-      potential: GTH-PBE-q6
+      aux_basis: 49441fd94eda561a0a4efddd33c7b4f9
+      basis: d96faf85d22ec9558ea5d2f1eaa136c6
+      potential: 5728f97207f8ed995619af2297c41d47
     Sb:
-      aux_basis: admm-tzp-q5
-      basis: TZVP-MOLOPT-PBE-GTH-q5
-      potential: GTH-PBE-q5
+      aux_basis: a3b6ff6ec237d5b542e0982590ef97d7
+      basis: ded3fa8cdaa0118eb9ba508b20bfc360
+      potential: d2dda2ce39050f12479be87bec995b4b
     Sc:
-      aux_basis: admm-tzp-q11
-      basis: TZVP-MOLOPT-PBE-GTH-q11
-      potential: GTH-PBE-q11
+      aux_basis: 8bb043db6ba0caee8ad2a144e909a8cf
+      basis: 078d88d4200a272ad8a17c41f2a16cc6
+      potential: fe9f2852ead4053f109f21706614cccb
     Se:
-      aux_basis: admm-tzp-q6
-      basis: TZVP-MOLOPT-PBE-GTH-q6
-      potential: GTH-PBE-q6
+      aux_basis: a9587b7f3c8e5cc534f75320049f7b08
+      basis: 33680223e8ebb2581cb96e41e9edbeeb
+      potential: b12abb54154a97b6c773a3a7311d6c6a
     Sg:
       aux_basis: null
       basis: null
       potential: null
     Si:
-      aux_basis: admm-tzp-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q4
-      potential: GTH-PBE-q4
+      aux_basis: df031bd75a481ab70feed79dd4ea6748
+      basis: 7e82c876b4dcf2a8434e33b2fb07d409
+      potential: 21e2f468a18404ff6119fe801da81e43
     Sm:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q16
+      potential: null
     Sn:
-      aux_basis: admm-tzp-q4
-      basis: TZVP-MOLOPT-PBE-GTH-q4
-      potential: GTH-PBE-q4
+      aux_basis: 18824a9965bd89cc9ab8d5f9c90958fc
+      basis: 7783c50727f055182a341256c476fa9e
+      potential: 79c551270124b1fc993f52ddbd8a13ca
     Sr:
-      aux_basis: admm-tzp-q10
-      basis: TZVP-MOLOPT-PBE-GTH-q10
-      potential: GTH-PBE-q10
+      aux_basis: afc6ad2348f8187a9bcdf39c96b1010e
+      basis: dee3e3381d423de213596b9c412d5f05
+      potential: 2ae1216f76158ccca70ffa710a4da591
     Ta:
-      aux_basis: admm-tzp-q13
-      basis: TZVP-MOLOPT-PBE-GTH-q13
-      potential: GTH-PBE-q13
+      aux_basis: d264e917a574a6f1a2be6b71a51bc77f
+      basis: d332f769d001173e2435aba684695556
+      potential: 86fcdbe7a4cc1c9734d5a5296575f6b9
     Tb:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q19
+      potential: null
     Tc:
-      aux_basis: admm-tzp-q15
-      basis: TZVP-MOLOPT-PBE-GTH-q15
-      potential: GTH-PBE-q15
+      aux_basis: 47ac0afeb5e33280d08e44589a3590e2
+      basis: f58b5e4c87cb13a91196bffab42ae66a
+      potential: 34fc70b5a13f32297c43ff1843d6bedd
     Te:
-      aux_basis: admm-tzp-q6
-      basis: TZVP-MOLOPT-PBE-GTH-q6
-      potential: GTH-PBE-q6
+      aux_basis: 0dc0f04a01e20b4373b5064c33b8d8a3
+      basis: d5480a42f4ff1ad902dee05c45206ec6
+      potential: f049ef5cae8ecfc949abd1b64eee649f
     Th:
       aux_basis: null
       basis: null
       potential: null
     Ti:
-      aux_basis: admm-tzp-q12
-      basis: TZVP-MOLOPT-PBE-GTH-q12
-      potential: GTH-PBE-q12
+      aux_basis: 65c96fd967ec97c2aa9c280355c05521
+      basis: eb6725ab535c3a47c860b96bae117cf2
+      potential: 1470a2e41bb3746180a2cd3909ac7c18
     Tl:
-      aux_basis: admm-tzp-q13
-      basis: TZVP-MOLOPT-PBE-GTH-q13
-      potential: GTH-PBE-q13
+      aux_basis: 979ffb3a31831d23d0dae6b0898b194d
+      basis: 9f6c035c0c049a7877106a5baed64533
+      potential: 737c5bf20db9222608f42185da87ec3b
     Tm:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q23
+      potential: null
     Ts:
       aux_basis: null
       basis: null
@@ -450,67 +446,53 @@ cp2k_input:
     U:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q14
+      potential: null
     V:
-      aux_basis: admm-tzp-q13
-      basis: TZVP-MOLOPT-PBE-GTH-q13
-      potential: GTH-PBE-q13
+      aux_basis: 2546d9beee0c5f98cf5e7abf74987ef9
+      basis: 014f4bb6cf44239042d3fea64f98fe79
+      potential: 447e9863526ccce5c9c774222de54389
     W:
-      aux_basis: admm-tzp-q14
-      basis: TZVP-MOLOPT-PBE-GTH-q14
-      potential: GTH-PBE-q14
+      aux_basis: e7e022e547072d6c6f0774e44bc61b13
+      basis: ed28386aae4f38c09fcf540f4632cd2e
+      potential: be26017493ba24707ab55a9ccac1f77d
     Xe:
-      aux_basis: admm-tzp-q8
-      basis: TZVP-MOLOPT-PBE-GTH-q8
-      potential: GTH-PBE-q8
+      aux_basis: 1658886f8eacdd0b26f980dde2cc189b
+      basis: 550da27c6cf7333bdb50235f2a266c2e
+      potential: 227fc0768e7b1360c5947d6872079fba
     Y:
-      aux_basis: admm-tzp-q11
-      basis: TZVP-MOLOPT-PBE-GTH-q11
-      potential: GTH-PBE-q11
+      aux_basis: bb1de03cb1de0dc8d2b989c287609f3c
+      basis: 3db89f67f7eb3523427000acc23dcfff
+      potential: 945f930485b10469d4504df97b91b336
     Yb:
       aux_basis: null
       basis: null
-      potential: GTH-PBE-q24
+      potential: null
     Zn:
-      aux_basis: admm-tzp-q12
-      basis: TZVP-MOLOPT-PBE-GTH-q12
-      potential: GTH-PBE-q12
+      aux_basis: 5ba08a98a4d1a64229f2e84e74aeda7c
+      basis: 0cd4462eb6952f00545015e9f542e707
+      potential: 100ce8726c99623dfccf7b68ae2c0cf6
     Zr:
-      aux_basis: admm-tzp-q12
-      basis: TZVP-MOLOPT-PBE-GTH-q12
-      potential: GTH-PBE-q12
-    basis_filenames:
-    - BASIS_ADMM_UZH
-    - BASIS_MOLOPT_UZH
-    potential_filename: POTENTIAL_UZH
-  
-  # Precision
-  eps_default: 1.0e-12
-  eps_pgf_orb: 1.0e-16
-
-  #SCF Behavior
-  algorithm: IRAC
-  energy_gap: -1 # Auto
-  eps_scf: 1.0e-06
+      aux_basis: fec87b5a939929beaf55c3cf53ba0fa1
+      basis: a2fd31c2afefd6f917d39131a9994aaf
+      potential: 699ea004c906574ff9ff9fd5869c74ef
+  cutoff: 0
+  energy_gap: -1
+  eps_default: 1e-12
+  eps_pgf_orb: 1e-16
+  eps_scf: 1e-06
   linesearch: 2PNT
   minimizer: DIIS
+  ngrids: 5
   occupation_preconditioner: false
   ot: true
   preconditioner: FULL_SINGLE_INVERSE
-  rotation: true
-  smearing: true
-
-  # Printing behavior
   print_bandstructure: false
   print_dos: false
   print_e_density: false
   print_mo_cubes: false
   print_pdos: false
   print_v_hartree: false
-
-  # Multigrid behavior
-  cutoff: 0 # Auto
-  ngrids: 5
   progression_factor: 3
   rel_cutoff: 50
-
+  rotation: true
+  smearing: true
