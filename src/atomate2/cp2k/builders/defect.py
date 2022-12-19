@@ -703,8 +703,6 @@ class DefectBuilder(Builder):
             dat['element']: dat.get('auxiliary_basis')
             for dat in d['output']['input']['atomic_kind_info']['atomic_kinds'].values()
             }
-        baux = baux.upper() if baux else baux
-        daux = daux.upper() if daux else daux
 
         if rtb == rtd: 
             if sm.fit(self.__get_pristine_supercell(d), self.__get_pristine_supercell(b)):
