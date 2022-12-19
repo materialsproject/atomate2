@@ -105,6 +105,9 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
+    lsodos: bool = Field(
+        None, description="Writes DOS output from the orthonormalized LCAO basis"
+    )
     basisfunctions: list = Field(
         None, description="Specify the basis functions for element"
     )
@@ -230,7 +233,9 @@ class LobsterTaskDocument(BaseModel):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-
+    lso_dos: LobsterCompleteDos = Field(
+        None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
+    )
     madelung_energies: dict = Field(
         None,
         description="Madelung energies dict from LOBSTER based on Mulliken and Loewdin charges",
@@ -247,7 +252,7 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: Dict[str, Any] = None,
+        additional_fields: list[str] = (None,),
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -265,7 +270,7 @@ class LobsterTaskDocument(BaseModel):
             A task document for the lobster calculation.
         """
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = [] if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
@@ -282,7 +287,6 @@ class LobsterTaskDocument(BaseModel):
                 path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
                 path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
                 path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
-                path_to_madelung=os.path.join(dir_name, "MadelungEnergies.lobster.gz"),
                 summed_spins=True,
                 cutoff_icohp=0.10,
                 whichbonds="cation-anion",
@@ -336,7 +340,6 @@ class LobsterTaskDocument(BaseModel):
             number_of_considered_ions=cba["number_of_considered_ions"],
             sites=cba["sites"],
             type_charges=analyse.type_charge,
-            # madelung_energy=cba["madelung_energy"],
             cohp_plot_data=cba_cohp_plot_data,
             cutoff_icohp=analyse.cutoff_icohp,
             summed_spins=True,
@@ -524,6 +527,13 @@ class LobsterTaskDocument(BaseModel):
         doscar_lobster = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR.gz")
         dos = doscar_lobster.completedos
 
+        if additional_fields:
+            if 'DOSCAR.LSO.lobster' in additional_fields:
+                doscar_lso_lobster = Doscar(doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz")
+                lso_dos = doscar_lso_lobster.completedos
+        else:
+            lso_dos = None
+
         madelung_obj = MadelungEnergies(filename="MadelungEnergies.lobster.gz")
 
         madelung_energies = {
@@ -546,6 +556,7 @@ class LobsterTaskDocument(BaseModel):
             coop_data=coop_obj,
             cobi_data=cobi_obj,
             dos=dos,
+            lso_dos=lso_dos,
             charges=charges,
             madelung_energies=madelung_energies,
         )  # doc

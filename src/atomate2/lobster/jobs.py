@@ -45,6 +45,8 @@ class PureLobsterMaker(Maker):
         self,
         wavefunction_dir: str | Path = None,
         basis_dict: dict = None,
+        user_lobsterin_settings: dict = None,
+        additional_outputs: list[str] = (None,)
         # something for the basis
     ):
         """
@@ -63,6 +65,10 @@ class PureLobsterMaker(Maker):
         lobsterin = Lobsterin.standard_calculations_from_vasp_files(
             "POSCAR", "INCAR", dict_for_basis=basis_dict
         )
+        if user_lobsterin_settings:
+            for key, parameter in user_lobsterin_settings.items():
+                lobsterin[key] = parameter
+
         lobsterin.write_lobsterin("lobsterin")
         # run lobster
         logger.info("Running LOBSTER")
@@ -75,7 +81,7 @@ class PureLobsterMaker(Maker):
 
         # parse amset outputs
         task_doc = LobsterTaskDocument.from_directory(
-            Path.cwd(), **self.task_document_kwargs
+            Path.cwd(), **self.task_document_kwargs, additional_fields=additional_outputs
         )
         # task_doc.converged = converged
 
