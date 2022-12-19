@@ -696,13 +696,15 @@ class DefectBuilder(Builder):
         rtb = b.get('output').get('input').get('xc').split("+U")[0]
         rtd = d.get('output').get('input').get('xc').split("+U")[0]
         baux = {
-            dat['element']: dat.get('auxiliary_basis', "")
+            dat['element']: dat.get('auxiliary_basis')
             for dat in b['output']['input']['atomic_kind_info']['atomic_kinds'].values()
             }
         daux = {
-            dat['element']: dat.get('auxiliary_basis', "")
+            dat['element']: dat.get('auxiliary_basis')
             for dat in d['output']['input']['atomic_kind_info']['atomic_kinds'].values()
             }
+        baux = baux.upper() if baux else baux
+        daux = daux.upper() if daux else daux
 
         if rtb == rtd: 
             if sm.fit(self.__get_pristine_supercell(d), self.__get_pristine_supercell(b)):
@@ -712,7 +714,7 @@ class DefectBuilder(Builder):
                     dis_ot = cid.check("force_eval/dft/scf/ot")
                     if (bis_ot and dis_ot) or (not bis_ot and not dis_ot):
                         for el in baux:
-                            if baux[el].upper() != daux[el].upper():
+                            if baux[el] != daux[el]:
                                 return False
                         return True
         return False

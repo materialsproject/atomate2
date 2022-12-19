@@ -142,6 +142,7 @@ class DefectDoc(StructureMetadata):
             self.run_types[d_id] = rt
             self.task_types[d_id] = tt
             self.calc_types[d_id] = ct
+            self.vbm[rt] = bulk_task.output.vbm
 
         self.task_ids = list(set(self.task_ids) | {d_id})
 
@@ -431,10 +432,11 @@ class DefectiveMaterialDoc(StructureMetadata):
         bulk_entries = []
         vbms = []
         for doc in self.defect_docs:
-            els = els | set(doc.defect.element_changes.keys())
-            defect_entries.append(doc.defect_entries.get(run_type))
-            bulk_entries.append(doc.bulk_entries.get(run_type))
-            vbms.append(doc.vbm.get(run_type))
+            if doc.defect_entries.get(run_type):
+                els = els | set(doc.defect.element_changes.keys())
+                defect_entries.append(doc.defect_entries.get(run_type))
+                bulk_entries.append(doc.bulk_entries.get(run_type))
+                vbms.append(doc.vbm.get(run_type))
 
         # TODO bulks and vbms
         # form en diagram takes one bulk entry and one bulk vbm
