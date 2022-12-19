@@ -696,11 +696,11 @@ class DefectBuilder(Builder):
         rtb = b.get('output').get('input').get('xc').split("+U")[0]
         rtd = d.get('output').get('input').get('xc').split("+U")[0]
         baux = {
-            dat['element']: dat.get('auxiliary_basis')
+            dat['element']: dat.get('auxiliary_basis', "")
             for dat in b['output']['input']['atomic_kind_info']['atomic_kinds'].values()
             }
         daux = {
-            dat['element']: dat.get('auxiliary_basis')
+            dat['element']: dat.get('auxiliary_basis', "")
             for dat in d['output']['input']['atomic_kind_info']['atomic_kinds'].values()
             }
 

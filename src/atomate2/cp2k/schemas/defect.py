@@ -139,9 +139,9 @@ class DefectDoc(StructureMetadata):
         ):
             self.defect_entries[rt] = defect_entry
             self.bulk_entries[rt] = bulk_entry
-            self.run_types[rt] = d_id
-            self.task_types[tt] = d_id
-            self.calc_types[ct] = d_id
+            self.run_types[d_id] = rt
+            self.task_types[d_id] = tt
+            self.calc_types[d_id] = ct
 
         self.task_ids = list(set(self.task_ids) | {d_id})
 
