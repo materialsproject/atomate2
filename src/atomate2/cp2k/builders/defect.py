@@ -486,6 +486,7 @@ class DefectBuilder(Builder):
             # TODO remove oxidation state because spins/oxidation cause errors in comparison.
             #  but they shouldnt if those props are close in value
             d['structure'].remove_oxidation_states()
+            d['defect'].user_charges = [d['structure'].charge]
 
         def key(x):
             s = x['defect'].structure
@@ -504,10 +505,6 @@ class DefectBuilder(Builder):
             # Defects with diff charges return true for the native __eq__
             if x['structure'].charge != y['structure'].charge:
                 return False
-
-            # Are the defect objects eq.
-            if x['defect'] == y['defect']:
-                return True
 
             # Are the final structures equal
             # element-changes needed for ghost vacancies, since sm.fit can't distinguish them
@@ -555,9 +552,23 @@ class DefectBuilder(Builder):
             for doc in self.defects.query(criteria={'material_id': material_id}, properties=None)
         ]
         for doc in docs:
-            if defect == doc.defect:
+            if self.__defect_match(defect, doc.defect):
                 return doc
         return None
+
+    def __defect_match(self, x, y):
+
+        sm = StructureMatcher()
+
+        # Defects with diff charges return true for the native __eq__
+        if x.user_charges[0] != y.user_charges[0]:
+            return False
+
+        if x.element_changes == y.element_changes and \
+                sm.fit(x.defect_structure, y.defect_structure):
+            return True
+
+        return False
 
     # TODO should move to returning dielectric doc or continue returning the total diel tensor?
     def __get_dielectric(self, key):
