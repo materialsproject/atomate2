@@ -403,6 +403,8 @@ class DefectBuilder(Builder):
             if not task_ids:
                 continue 
             doc = self.__get_defect_doc(defect)
+            if doc:
+                self.logger.info(f"DOC IS {doc.defect.__repr__()}")
             item_bundle = self.__get_item_bundle(task_ids)
             m = next(iter(task_ids.values()))[1]
             material_id = self.mpid_map[m]
@@ -557,13 +559,12 @@ class DefectBuilder(Builder):
         return None
 
     def __defect_match(self, x, y):
-
+        """Match two defects, including there charges"""
         sm = StructureMatcher()
-
-        # Defects with diff charges return true for the native __eq__
         if x.user_charges[0] != y.user_charges[0]:
             return False
 
+        # Elem. changes needed to distinguish ghost vacancies
         if x.element_changes == y.element_changes and \
                 sm.fit(x.defect_structure, y.defect_structure):
             return True
