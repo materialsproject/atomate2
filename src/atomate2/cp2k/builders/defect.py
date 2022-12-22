@@ -408,7 +408,7 @@ class DefectBuilder(Builder):
             item_bundle = self.__get_item_bundle(task_ids)
             m = next(iter(task_ids.values()))[1]
             material_id = self.mpid_map[m]
-            yield doc, item_bundle, material_id, task_ids
+            yield doc, item_bundle, material_id, defect_task_group
 
     def process_item(self, items):
         """
@@ -432,6 +432,7 @@ class DefectBuilder(Builder):
                         )
                 else:
                     defect_doc.update_one(defect_task, bulk_task, dielectric, query=self.defect_query, key=self.tasks.key) # TODO Atomate2Store wrapper
+                defect_doc.task_ids = list(set(task_ids + defect_doc.task_ids)) # TODO should I store the bulk id too?
             return jsanitize(defect_doc.dict(), allow_bson=True, enum_values=True, strict=True)
         return {}
 
