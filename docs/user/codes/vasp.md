@@ -234,6 +234,15 @@ converted into a dynamical matrix. To correct for polarization effects, a correc
 dynamical matrix based on BORN charges can be performed. Finally, phonon densities of states, 
 phonon band structures and thermodynamic properties are computed.
 
+```{note}
+It is heavily recommended to symmetrize the structure before passing it to
+this flow. Otherwise, a different space group might be detected and too
+many displacement calculations will be generated.
+It is recommended to check the convergence parameters here and
+adjust them if necessary. The default might not be strict enough
+for your specific case.
+```
+
 
 (modifying_input_sets)=
 Modifying input sets
