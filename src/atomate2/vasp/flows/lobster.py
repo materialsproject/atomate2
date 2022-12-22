@@ -148,7 +148,8 @@ class LobsterMaker(Maker):
         jobs.append(vaspjob)
 
         lobsterjobs = get_lobster_jobs(
-            basis_infos.output["basis_dict"], vaspjob.output.dir_name
+            basis_infos.output["basis_dict"], vaspjob.output.dir_name,
+            user_lobsterin_settings=self.user_lobsterin_settings, additional_outputs=self.additional_outputs
         )
 
         jobs.append(lobsterjobs)

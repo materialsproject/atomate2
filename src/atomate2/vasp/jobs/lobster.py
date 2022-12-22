@@ -132,7 +132,7 @@ def update_user_incar_settings_job(vaspjob, nbands):
 
 
 @job
-def get_lobster_jobs(basis_dict, wavefunction_dir):
+def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, additional_outputs):
     jobs = []
     outputs = {}
     outputs["uuids"] = []
@@ -140,7 +140,8 @@ def get_lobster_jobs(basis_dict, wavefunction_dir):
     outputs["basis"] = []
     for i, basis in enumerate(basis_dict):
         lobsterjob = PureLobsterMaker(name="lobster_run_{}".format(i)).make(
-            wavefunction_dir=wavefunction_dir, basis_dict=basis
+            wavefunction_dir=wavefunction_dir, basis_dict=basis,
+            user_lobsterin_settings=user_lobsterin_settings, additional_outputs=additional_outputs
         )
         outputs["uuids"].append(lobsterjob.output.uuid)
         outputs["dirs"].append(lobsterjob.output.dir_name)

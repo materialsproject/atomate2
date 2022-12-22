@@ -105,6 +105,9 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
+    lsodos: bool = Field(
+        None, description="Writes DOS output from the orthonormalized LCAO basis"
+    )
     basisfunctions: list = Field(
         None, description="Specify the basis functions for element"
     )
@@ -151,7 +154,7 @@ class CondensedBondingAnalysis(BaseModel):
         description="Stores the COHP plot data based on relevant bond labels "
         "for site as keys",
     )
-    whichbonds: str = Field(
+    which_bonds: str = Field(
         None,
         description="Specifies types of bond considerd in LobsterPy analysis",
     )
@@ -230,7 +233,9 @@ class LobsterTaskDocument(BaseModel):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-
+    lso_dos: LobsterCompleteDos = Field(
+        None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
+    )
     madelung_energies: dict = Field(
         None,
         description="Madelung energies dict from LOBSTER based on Mulliken and Loewdin charges",
@@ -247,7 +252,7 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: Dict[str, Any] = None,
+        additional_fields: list[str] = (None,),
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -265,11 +270,11 @@ class LobsterTaskDocument(BaseModel):
             A task document for the lobster calculation.
         """
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = [] if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
-        struct = Structure.from_file(os.path.join(dir_name, "POSCAR"))
+        struct = Structure.from_file(os.path.join(dir_name, "POSCAR.gz"))
         lobsterout_here = Lobsterout("lobsterout.gz")
         lobsterout_doc = lobsterout_here.get_doc()
         lobsterin_here = Lobsterin.from_file(os.path.join(dir_name, "lobsterin.gz"))
@@ -278,11 +283,10 @@ class LobsterTaskDocument(BaseModel):
         try:
             start = time.time()
             analyse = Analysis(
-                path_to_poscar=os.path.join(dir_name, "POSCAR"),
+                path_to_poscar=os.path.join(dir_name, "POSCAR.gz"),
                 path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
                 path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
                 path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
-                path_to_madelung=os.path.join(dir_name, "MadelungEnergies.lobster.gz"),
                 summed_spins=True,
                 cutoff_icohp=0.10,
                 whichbonds="cation-anion",
@@ -292,7 +296,7 @@ class LobsterTaskDocument(BaseModel):
         except ValueError:
             start = time.time()
             analyse = Analysis(
-                path_to_poscar=os.path.join(dir_name, "POSCAR"),
+                path_to_poscar=os.path.join(dir_name, "POSCAR.gz"),
                 path_to_icohplist=os.path.join(dir_name, "ICOHPLIST.lobster.gz"),
                 path_to_cohpcar=os.path.join(dir_name, "COHPCAR.lobster.gz"),
                 path_to_charge=os.path.join(dir_name, "CHARGE.lobster.gz"),
@@ -336,11 +340,10 @@ class LobsterTaskDocument(BaseModel):
             number_of_considered_ions=cba["number_of_considered_ions"],
             sites=cba["sites"],
             type_charges=analyse.type_charge,
-            # madelung_energy=cba["madelung_energy"],
             cohp_plot_data=cba_cohp_plot_data,
             cutoff_icohp=analyse.cutoff_icohp,
             summed_spins=True,
-            whichbonds=analyse.whichbonds,
+            which_bonds=analyse.whichbonds,
             final_dict_bonds=analyse.final_dict_bonds,
             final_dict_ions=analyse.final_dict_ions,
             run_time=cba_run_time,
@@ -374,20 +377,20 @@ class LobsterTaskDocument(BaseModel):
         icoop_dict = icooplist.icohpcollection.as_dict()
 
         def get_strng_bonds(
-            bondlist, are_cobis, are_coops, relevant_bonds: dict,
+            bondlist, are_cobis, are_coops, relevant_bonds: dict
         ):
             bonds = []
             icohp_all = []
             lengths = []
-            for atom1, atom2, coxx, length in zip(
+            for a, b, c, l in zip(
                 bondlist["list_atom1"],
                 bondlist["list_atom2"],
                 bondlist["list_icohp"],
                 bondlist["list_length"],
             ):
-                bonds.append(atom1.rstrip("0123456789") + "-" + atom2.rstrip("0123456789"))
-                icohp_all.append(sum(coxx.values()))
-                lengths.append(length)
+                bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
+                icohp_all.append(sum(c.values()))
+                lengths.append(l)
 
             bond_labels_unique = list(set(bonds))
             sep_blabels = [[] for _ in range(len(bond_labels_unique))]
@@ -403,9 +406,12 @@ class LobsterTaskDocument(BaseModel):
             if not are_cobis and not are_coops:
                 bond_dict = {}
                 for i, lab in enumerate(bond_labels_unique):
-                    # label = lab.split("-")
+                    label = lab.split("-")
+                    label.sort()
                     for rel_bnd in relevant_bonds.keys():
-                        if lab == rel_bnd:
+                        rel_bnd_list=rel_bnd.split('-')
+                        rel_bnd_list.sort()
+                        if label==rel_bnd_list:
                             index = np.argmin(sep_icohp[i])
                             bond_dict.update(
                                 {
@@ -420,10 +426,13 @@ class LobsterTaskDocument(BaseModel):
             if are_cobis and not are_coops:
                 bond_dict = {}
                 for i, lab in enumerate(bond_labels_unique):
-                    # label = lab.split("-")
+                    label = lab.split("-")
+                    label.sort()
                     for rel_bnd in relevant_bonds.keys():
-                        if lab == rel_bnd:
-                            index = np.argmin(sep_icohp[i])
+                        rel_bnd_list=rel_bnd.split('-')
+                        rel_bnd_list.sort()
+                        if label==rel_bnd_list:
+                            index = np.argmax(sep_icohp[i])
                             bond_dict.update(
                                 {
                                     rel_bnd: {
@@ -437,10 +446,13 @@ class LobsterTaskDocument(BaseModel):
             if not are_cobis and are_coops:
                 bond_dict = {}
                 for i, lab in enumerate(bond_labels_unique):
-                    # label = lab.split("-")
+                    label = lab.split("-")
+                    label.sort()
                     for rel_bnd in relevant_bonds.keys():
-                        if lab == rel_bnd:
-                            index = np.argmin(sep_icohp[i])
+                        rel_bnd_list=rel_bnd.split('-')
+                        rel_bnd_list.sort()
+                        if label==rel_bnd_list:
+                            index = np.argmax(sep_icohp[i])
                             bond_dict.update(
                                 {
                                     rel_bnd: {
@@ -491,7 +503,7 @@ class LobsterTaskDocument(BaseModel):
 
         cohp_obj = CompleteCohp.from_file(
             fmt="LOBSTER",
-            structure_file="POSCAR",
+            structure_file="POSCAR.gz",
             filename="COHPCAR.lobster.gz",
             are_coops=False,
             are_cobis=False,
@@ -499,7 +511,7 @@ class LobsterTaskDocument(BaseModel):
 
         coop_obj = CompleteCohp.from_file(
             fmt="LOBSTER",
-            structure_file="POSCAR",
+            structure_file="POSCAR.gz",
             filename="COOPCAR.lobster.gz",
             are_coops=True,
             are_cobis=False,
@@ -507,13 +519,20 @@ class LobsterTaskDocument(BaseModel):
 
         cobi_obj = CompleteCohp.from_file(
             fmt="LOBSTER",
-            structure_file="POSCAR",
+            structure_file="POSCAR.gz",
             filename="COBICAR.lobster.gz",
             are_coops=False,
             are_cobis=True,
         )
-        doscar_lobster = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR")
+        doscar_lobster = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR.gz")
         dos = doscar_lobster.completedos
+
+        if additional_fields:
+            if 'DOSCAR.LSO.lobster' in additional_fields:
+                doscar_lso_lobster = Doscar(doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz")
+                lso_dos = doscar_lso_lobster.completedos
+            else:
+                lso_dos = None
 
         madelung_obj = MadelungEnergies(filename="MadelungEnergies.lobster.gz")
 
@@ -537,6 +556,7 @@ class LobsterTaskDocument(BaseModel):
             coop_data=coop_obj,
             cobi_data=cobi_obj,
             dos=dos,
+            lso_dos=lso_dos,
             charges=charges,
             madelung_energies=madelung_energies,
         )  # doc
