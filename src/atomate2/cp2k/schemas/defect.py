@@ -57,20 +57,10 @@ class DefectDoc(StructureMetadata):
     material_id: str = Field(
         None, description="Unique material ID for the bulk material"
     )  # TODO Change to MPID
+    defect_ids: Mapping[RunType, str] = Field(None, description="Map run types of defect entry to task id")
+    bulk_ids: Mapping[RunType, str] = Field(None, description="Map run types of bulk entry to task id")
     task_ids: List[str] = Field(
         None, description="All defect task ids used in creating this defect doc."
-    )
-    calc_types: Mapping[str, CalcType] = Field(  # type: ignore
-        None,
-        description="Calculation types for all the calculations that make up this material",
-    )
-    task_types: Mapping[str, TaskType] = Field(
-        None,
-        description="Task types for all the calculations that make up this material",
-    )
-    run_types: Mapping[str, RunType] = Field(
-        None,
-        description="Run types for all the calculations that make up this material",
     )
     defect_entries: Mapping[RunType, DefectEntry] = Field(
         None, description="Dictionary for tracking entries for CP2K calculations"
@@ -93,7 +83,6 @@ class DefectDoc(StructureMetadata):
     metadata: Dict = Field(None, description="Metadata for this defect")
     valid: Mapping[RunType, Dict] = Field(None, description="Whether each run type has a valid entry")
 
-    # TODO The sorting here should also maybe be done by builder
     def update_one(self, defect_task, bulk_task, dielectric, query="defect", key="task_id"):
 
         # Metadata
@@ -124,10 +113,9 @@ class DefectDoc(StructureMetadata):
             )
         ):
             self.defect_entries[rt] = defect_entry
+            self.defect_ids[rt] = d_id
             self.bulk_entries[rt] = bulk_entry
-            self.run_types[d_id] = rt
-            self.task_types[d_id] = tt
-            self.calc_types[d_id] = ct
+            self.bulk_ids[b_id] = b_id
             self.vbm[rt] = bulk_task.output.vbm
             self.valid[rt] = valid
 
@@ -158,6 +146,7 @@ class DefectDoc(StructureMetadata):
         defect_task_id = defect_task[key]
         defect = cls.get_defect_from_task(query=query, task=defect_task)
         defect_task = TaskDocument(**defect_task["output"])
+        bulk_task_id = bulk_task[key]
         bulk_task = TaskDocument(**bulk_task['output'])
 
         # Metadata
@@ -165,9 +154,6 @@ class DefectDoc(StructureMetadata):
         created_at = datetime.now() 
 
         rt = defect_task.calcs_reversed[0].run_type
-        run_types = {defect_task_id: defect_task.calcs_reversed[0].run_type}
-        task_types = {defect_task_id: defect_task.calcs_reversed[0].task_type} 
-        calc_types = {defect_task_id: defect_task.calcs_reversed[0].calc_type}
 
         metadata = {}
         defect_entry, valid = cls.get_defect_entry_from_tasks(defect_task, bulk_task, defect, dielectric)
@@ -188,9 +174,8 @@ class DefectDoc(StructureMetadata):
         data = {
             "defect_entries": defect_entries,
             "bulk_entries": bulk_entries,
-            "run_types": run_types,
-            "task_types": task_types,
-            "calc_types": calc_types,
+            "defect_ids": {rt: defect_task_id},
+            "bulk_ids": {rt: bulk_task_id},
             "last_updated": last_updated,
             "created_at": created_at,
             "task_ids": [defect_task_id],
