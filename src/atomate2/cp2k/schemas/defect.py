@@ -1,6 +1,6 @@
 from datetime import datetime
 from tokenize import group
-from typing import ClassVar, TypeVar, Type, Dict, Tuple, Mapping, List
+from typing import ClassVar, TypeVar, Type, Dict, Tuple, Mapping, List, Callable
 from pydantic import BaseModel, Field
 from pydantic import validator
 from itertools import groupby
@@ -15,7 +15,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 from pymatgen.analysis.phase_diagram import PhaseDiagram
-from pymatgen.analysis.defects.core import Defect
+from pymatgen.analysis.defects.core import Defect, Adsorbate
 from pymatgen.analysis.defects.corrections.freysoldt import (
     get_freysoldt_correction,
     get_freysoldt2d_correction,
@@ -115,7 +115,7 @@ class DefectDoc(StructureMetadata):
             self.defect_entries[rt] = defect_entry
             self.defect_ids[rt] = d_id
             self.bulk_entries[rt] = bulk_entry
-            self.bulk_ids[b_id] = b_id
+            self.bulk_ids[rt] = b_id
             self.vbm[rt] = bulk_task.output.vbm
             self.valid[rt] = valid
 
@@ -229,6 +229,7 @@ class DefectDoc(StructureMetadata):
             sc_defect_frac_coords=parameters["defect_frac_sc_coords"],
             corrections=corrections,
         )
+        parameters['defect'] = defect
         valid = DefectValidation().process_entry(parameters)
         return defect_entry, valid
 
@@ -361,9 +362,12 @@ class DefectValidation(BaseModel):
         description="Threshold for the mean absolute displacement of atoms outside a defect's radius of isolution"
         )
 
+    DESORPTION_DISTANCE: float = Field(3, description="Distance to consider adsorbate as desorbed")
+
     def process_entry(self, parameters) -> V:
         v = {} 
         v.update(self._atomic_relaxation(parameters))
+        v.update(self._desorption(parameters))
         return v
 
     def _atomic_relaxation(self, parameters):
@@ -377,6 +381,15 @@ class DefectValidation(BaseModel):
         if np.mean(distances_outside) > self.MAX_ATOMIC_RELAXATION:
             return {"atomic_relaxation": False}
         return {"atomic_relaxation": True}
+
+    def _desorption(self, parameters):
+        if isinstance(parameters['defect'], Adsorbate):
+            out_struc = parameters["final_defect_structure"]
+            defect_site =  out_struc.get_sites_in_sphere(parameters['defect_frac_sc_coords'], 0.1, include_index=True)[0]
+            distances = [defect_site.distance(site) for site in out_struc]
+            if all(d > self.DESORPTION_DISTANCE for d in distances):
+                return {'desorption': False}
+        return {'desorption': True}
 
 class DefectiveMaterialDoc(StructureMetadata):
     """Document containing all / many defect tasks for a single material ID"""
@@ -422,27 +435,20 @@ class DefectiveMaterialDoc(StructureMetadata):
         run_type: RunType | str,
         atomic_entries: List[ComputedEntry],
         phase_diagram: PhaseDiagram,
-        filters: Dict | None = None,
+        filters: List[Callable, None] = None,
     ) -> MultiFormationEnergyDiagram:
 
-        filters = filters if filters else {}
-
+        filters = filters if filters else lambda _: True
         els = set()
         defect_entries = []
         bulk_entries = []
         vbms = []
-        for doc in self.defect_docs:
+        for doc in filter(lambda x: all(f(x) for f in filters), self.defect_docs):
             if doc.defect_entries.get(run_type):
                 els = els | set(doc.defect.element_changes.keys())
                 defect_entries.append(doc.defect_entries.get(run_type))
                 bulk_entries.append(doc.bulk_entries.get(run_type))
                 vbms.append(doc.vbm.get(run_type))
-
-        # TODO bulks and vbms
-        # form en diagram takes one bulk entry and one bulk vbm
-        # These, however, can be different for each defect/bulk task pair
-        # Need to convert the differences into energy adjustments so that
-        # form en diagram is consistent with all of them
 
         return MultiFormationEnergyDiagram.with_atomic_entries(
             bulk_entry=bulk_entries[0],

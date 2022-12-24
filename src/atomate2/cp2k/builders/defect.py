@@ -1,10 +1,7 @@
 from datetime import datetime
-from itertools import chain, groupby, combinations
-from re import A
-from tkinter import W
+from itertools import groupby
 from typing import Dict, Iterator, List, Literal, Optional
-from copy import deepcopy
-from math import ceil
+
 import numpy as np
 from monty.json import MontyDecoder, jsanitize
 
@@ -14,7 +11,6 @@ from maggma.utils import grouper
 
 from pymatgen.core import Structure
 from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
-from pymatgen.electronic_structure.dos import CompleteDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.io.cp2k.inputs import Cp2kInput
 
@@ -24,7 +20,6 @@ from atomate2.settings import Atomate2Settings
 from atomate2.cp2k.schemas.task import TaskDocument
 from atomate2.cp2k.schemas.defect import DefectDoc, DefectiveMaterialDoc
 from atomate2.cp2k.schemas.calc_types import TaskType
-from atomate2.cp2k.schemas.calc_types.utils import run_type
 
 from emmet.core.electronic_structure import ElectronicStructureDoc
 
@@ -64,7 +59,7 @@ class DefectBuilder(Builder):
             TaskType.Structure_Optimization.value, 
             TaskType.Static.value
             ]
-    
+
     def __init__(
         self,
         tasks: Store,
@@ -253,7 +248,7 @@ class DefectBuilder(Builder):
             for doc in self.tasks.query(criteria=temp_query, properties=[self.tasks.key])
         }
 
-        N = ceil(len(defect_tasks) / number_splits)
+        N = np.ceil(len(defect_tasks) / number_splits)
         for task_chunk in grouper(defect_tasks, N):
             yield {"query": {"task_id": {"$in": task_chunk + list(bulk_tasks)}}}
 
@@ -372,7 +367,6 @@ class DefectBuilder(Builder):
             for d in self.defects.query({}, ["task_ids"])
             for t_id in d.get("task_ids", [])
         }
-
         all_tasks = defect_tasks | bulk_tasks
 
         self.logger.debug("All tasks: {}".format(len(all_tasks)))
@@ -496,25 +490,11 @@ class DefectBuilder(Builder):
             return get_sg(s), s.composition.reduced_composition
 
         def are_equal(x, y):
-            """
-            To decide if defects are equal. Either the defect objects are
-            equal, OR two different defect objects relaxed to the same final structure
-            (common with interstitials).
-
-            TODO Need a way to do the output structure comparison for a X atom defect cell
-            TODO which can be embedded in a Y atom defect cell up to tolerance.
-            """
-
-            # Defects with diff charges return true for the native __eq__
+            """To decide if defects are equal."""
             if x['structure'].charge != y['structure'].charge:
                 return False
-
-            # Are the final structures equal
-            # element-changes needed for ghost vacancies, since sm.fit can't distinguish them
-            if x['defect'].element_changes == y['defect'].element_changes and \
-                    sm.fit(x['structure'], y['structure']):
+            if x['defect'] == y['defect']:
                 return True
-
             return False
 
         sorted_s_list = sorted(enumerate(defects), key=lambda x: key(x[1]))
@@ -533,7 +513,7 @@ class DefectBuilder(Builder):
                     (defects[i]['defect'], [defects[i][self.tasks.key] for i in matches])
                 )
 
-        self.logger.debug(f"All groups {all_groups}")
+        self.logger.debug(f"{len(all_groups)} groups")
         return all_groups
 
     def __get_defect_from_task(self, task):
@@ -654,7 +634,7 @@ class DefectBuilder(Builder):
             self.tasks.query(
                 criteria={
                     self.tasks.key: {'$in': list(bulk_ids)},
-                    'output.composition_reduced': jsanitize(ps.composition.to_reduced_dict),
+                    'output.formula_pretty': jsanitize(ps.composition.reduced_formula),
                 },
                 properties=props
             )
@@ -792,10 +772,7 @@ class DefectBuilder(Builder):
         else:
             return out_structure
 
-#TODO Major problem with this builder. materials store is used to sync the diel, elec, and pd with a single material id
-#TODO This is a problem because the material id in vasp store is not synced to cp2k store
-#TODO Also the chempots needed to adjust entries must come from cp2k, but you need to give vasp to sync the others
-#TODO Thermo store is being replaced with a manual definition of chempots until further notice
+
 class DefectiveMaterialBuilder(Builder):
 
     """
@@ -958,6 +935,46 @@ class DefectiveMaterialBuilder(Builder):
 
     def __get_thermos(self, composition) -> List:
         return list(self.thermo.query(criteria={'elements': {"$size": 1}}, properties=None))
+
+
+class DefectValidator(Builder):
+
+    def __init__(
+        self, 
+        tasks: Store, 
+        defect_validation: Store, 
+        chunk_size: int = 1000,
+        defect_query = 'output.additional_json.info.defect',
+       ):
+        self.tasks = tasks
+        self.defect_validation = defect_validation
+        self.chunk_size = chunk_size
+        self.defect_query = defect_query
+        super().__init__(sources=tasks, targets=defect_validation, chunk_size=chunk_size)
+
+    def get_items(self):
+        self.logger.info("Getting tasks")
+        tids = list(self.tasks.query(criteria={self.defect_query: {"$exists": True}}, properties=[self.tasks.key]))
+        self.logger.info(f"{len(tids)} to process")
+        for t in self.tasks.query():
+            yield t
+    
+    def process_item(self, item):
+        from atomate2.cp2k.schemas.defect import DefectValidation
+        tid = item[self.tasks.key]
+        return jsanitize(DefectValidation.process_task(item, tid).dict(), allow_bson=True, enum_values=True, strict=True)
+
+    def update_targets(self, items: List):
+        """
+        Inserts the new task_types into the task_types collection
+        """
+        items = [item for item in items if item]
+        if len(items) > 0:
+            self.logger.info(f"Updating {len(items)} defects")
+            self.defect_validation.update(items, key=self.defect_validation.key)
+        else:
+            self.logger.info("No items to update")
+        return super().update_targets(items)
 
 
 def unpack(query, d):
