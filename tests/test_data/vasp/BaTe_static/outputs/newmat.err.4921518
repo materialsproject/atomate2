@@ -1,0 +1,14 @@
+/home/htc/anaik/miniconda3/envs/atomate2/lib/python3.10/site-packages/pymatgen/io/vasp/inputs.py:1827: UnknownPotcarWarning: POTCAR data with symbol Ba_sv does not match any VASP POTCAR known to pymatgen. There is a possibility your POTCAR is corrupted or that the pymatgen database is incomplete.
+  warnings.warn(
+/home/htc/anaik/miniconda3/envs/atomate2/lib/python3.10/site-packages/pymatgen/io/vasp/inputs.py:1827: UnknownPotcarWarning: POTCAR data with symbol Te does not match any VASP POTCAR known to pymatgen. There is a possibility your POTCAR is corrupted or that the pymatgen database is incomplete.
+  warnings.warn(
+Tetrahedron method fails
+/home/htc/anaik/miniconda3/envs/atomate2/lib/python3.10/site-packages/pymatgen/io/vasp/inputs.py:1827: UnknownPotcarWarning: POTCAR data with symbol Ba_sv does not match any VASP POTCAR known to pymatgen. There is a possibility your POTCAR is corrupted or that the pymatgen database is incomplete.
+  warnings.warn(
+/home/htc/anaik/miniconda3/envs/atomate2/lib/python3.10/site-packages/pymatgen/io/vasp/inputs.py:1827: UnknownPotcarWarning: POTCAR data with symbol Te does not match any VASP POTCAR known to pymatgen. There is a possibility your POTCAR is corrupted or that the pymatgen database is incomplete.
+  warnings.warn(
+ERROR:custodian.custodian:VaspErrorHandler
+/home/htc/anaik/miniconda3/envs/atomate2/lib/python3.10/site-packages/pymatgen/io/vasp/inputs.py:1827: UnknownPotcarWarning: POTCAR data with symbol Ba_sv does not match any VASP POTCAR known to pymatgen. There is a possibility your POTCAR is corrupted or that the pymatgen database is incomplete.
+  warnings.warn(
+/home/htc/anaik/miniconda3/envs/atomate2/lib/python3.10/site-packages/pymatgen/io/vasp/inputs.py:1827: UnknownPotcarWarning: POTCAR data with symbol Te does not match any VASP POTCAR known to pymatgen. There is a possibility your POTCAR is corrupted or that the pymatgen database is incomplete.
+  warnings.warn(

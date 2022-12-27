@@ -29,6 +29,8 @@ _DEFAULT_HANDLERS = ()
 
 logger = logging.getLogger(__name__)
 
+_REF_PATHS = {}
+
 
 class JobType(ValueEnum):
     """
