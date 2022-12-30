@@ -8,7 +8,7 @@ from pathlib import Path
 from jobflow import Flow
 from jobflow import Maker
 from pymatgen.core import Structure
-from atomate2.common.files import delete_files
+
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
@@ -74,10 +74,10 @@ class LobsterMaker(Maker):
         default_factory=lambda: VaspLobsterMaker()
     )
     additional_static_run_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: StaticMaker(
-            name="addtional_static_run",
+        default_factory=lambda:StaticMaker(
+            name="additional_static_run",
             input_set_generator=StaticSetGenerator(
-                user_incar_settings={"LWAVE": True},
+                user_incar_settings={"LWAVE": True, "ISMEAR": 0},
                 user_kpoints_settings={"grid_density": 1},
             ),
         )
@@ -110,6 +110,7 @@ class LobsterMaker(Maker):
             bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
+            print(structure)
             optimization_run_job_dir = bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
         else:
@@ -142,7 +143,8 @@ class LobsterMaker(Maker):
             address_max_basis=None,
         )
         jobs.append(basis_infos)
-
+        #nbands=basis_infos.output["nbands"]
+        #vaspjob = update_user_incar_settings(vaspjob,incar_updates={"NBANDS":8}, name_filter='static_run')
         vaspjob = update_user_incar_settings_job(vaspjob, basis_infos.output)
 
         jobs.append(vaspjob)
@@ -163,13 +165,13 @@ class LobsterMaker(Maker):
             if self.additional_static_run_maker is None:
                 vasp_add_stat = None
 
-        delete_wavecars = delete_lobster_wavecar(
-            dirs=lobsterjobs.output["dirs"],
-            dir_vasp=vasp_stat,
-            dir_preconverge=vasp_add_stat,
-        )
+            delete_wavecars = delete_lobster_wavecar(
+                dirs=lobsterjobs.output["dirs"],
+                dir_vasp=vasp_stat,
+                dir_preconverge=vasp_add_stat,
+            )
 
-        jobs.append(delete_wavecars)
+            jobs.append(delete_wavecars)
 
         flow = Flow(jobs)
         return flow

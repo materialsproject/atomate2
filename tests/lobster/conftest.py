@@ -7,7 +7,7 @@ import pytest
 logger = logging.getLogger("atomate2")
 
 _VFILES = "lobsterin.gz"
-_REF_PATHS = {}
+_LOBS_REF_PATHS = {}
 _FAKE_RUN_LOBSTER_KWARGS = {}
 
 
@@ -52,23 +52,26 @@ def mock_lobster(monkeypatch, lobster_test_dir):
     6. Run your lobster job after calling `mock_lobster`.
     """
     import atomate2.lobster.run
+    import atomate2.lobster.jobs
 
     def mock_run_lobster(*args, **kwargs):
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
-        ref_path = lobster_test_dir / _REF_PATHS[name]
+        ref_path = lobster_test_dir / _LOBS_REF_PATHS[name]
         fake_run_lobster(ref_path, **_FAKE_RUN_LOBSTER_KWARGS.get(name, {}))
 
     monkeypatch.setattr(atomate2.lobster.run, "run_lobster", mock_run_lobster)
+    monkeypatch.setattr(atomate2.lobster.jobs, "run_lobster", mock_run_lobster)
 
-    def _run(ref_paths):
-        _REF_PATHS.update(ref_paths)
+    def _run(ref_paths,fake_run_lobster_kwargs):
+        _LOBS_REF_PATHS.update(ref_paths)
+        _FAKE_RUN_LOBSTER_KWARGS.update(fake_run_lobster_kwargs)
 
     yield _run
 
     monkeypatch.undo()
-    _REF_PATHS.clear()
+    _LOBS_REF_PATHS.clear()
 
 
 def fake_run_lobster(
@@ -104,7 +107,7 @@ def fake_run_lobster(
 def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str]):
 
     from pymatgen.io.lobster import Lobsterin
-    user = Lobsterin.from_file("lobsterin.gz")
+    user = Lobsterin.from_file(ref_path / "outputs" /"lobsterin.gz")
 
     # Check lobsterin
     ref = Lobsterin.from_file(ref_path / "inputs" / "lobsterin.gz")
