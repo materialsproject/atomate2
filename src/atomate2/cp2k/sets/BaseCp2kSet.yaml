@@ -486,6 +486,7 @@ cp2k_input:
   eps_scf: 1e-06
   linesearch: 2PNT
   minimizer: DIIS
+  max_iter: 100
   ngrids: 5
   occupation_preconditioner: false
   ot: true
