@@ -86,7 +86,7 @@ cp2k_input:
     Cl:
       aux_basis: 35eb0c25e98949c34405d1d880e8a894
       basis: d2df109f523ea678fa1752fb499e9217
-      potential: 69392412dae1ab5602df09ffc4b63321
+      potential: 94563bb71850fc1d8c96dfa4884d629e
     Cm:
       aux_basis: null
       basis: null
@@ -138,7 +138,7 @@ cp2k_input:
     F:
       aux_basis: 46b277c7db0771c018daf697a81cfddb
       basis: 22953dc12002ca5aadbea00a7bc0b89f
-      potential: 3cde852904e600d7943c8b77d3e1a80b
+      potential: 6e20476c2e0b79c9e68750e20b7d6722
     Fe:
       aux_basis: 86ca252d929c98ebadbeccb6936e3cfa
       basis: 352782418e626db9bbbf4f86ac88738d
@@ -170,7 +170,7 @@ cp2k_input:
     H:
       aux_basis: 79d31dfe462773979d969c903b3b138a
       basis: f414d00e930efb7d910ff011d4392c92
-      potential: 857f10eac0ee8345f1e80f8b8399ef6f
+      potential: de2cd834795e3a8f8f4b612123f46699
     He:
       aux_basis: d73598a8836e16124ecddcb462b0303e
       basis: 04408fe9b2849da9cc9e90e124a3dccb
@@ -294,7 +294,7 @@ cp2k_input:
     O:
       aux_basis: d6083ad133b7e93fb0b91f3e94194c8f
       basis: 545e3c15290754a9d22b2f3da1944042
-      potential: 88d976e6c00ebe0a783f9fdf74d487e4
+      potential: d285f5de24632da9c19274dc43e8f433
     Og:
       aux_basis: null
       basis: null
@@ -306,7 +306,7 @@ cp2k_input:
     P:
       aux_basis: b00f2cc90a7df1dc3b6c908c836a94a1
       basis: 6e4647073ac61059ef68ee73303bf00c
-      potential: 26409d29fcd89424933381e1dce2afec
+      potential: 883f30441887afbbae3e3c2d684e1fee
     Pa:
       aux_basis: null
       basis: null
@@ -394,7 +394,7 @@ cp2k_input:
     Si:
       aux_basis: df031bd75a481ab70feed79dd4ea6748
       basis: 7e82c876b4dcf2a8434e33b2fb07d409
-      potential: 96ccdac37f16224de25b29497b741fbf
+      potential: adc0eab136a82462af80b04ed7f1eff8
     Sm:
       aux_basis: null
       basis: null
