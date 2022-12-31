@@ -365,12 +365,14 @@ class DefectValidation(BaseModel):
     DESORPTION_DISTANCE: float = Field(3, description="Distance to consider adsorbate as desorbed")
 
     def process_entry(self, parameters) -> V:
+        """Gets a dictionary of {validator: result}. Result true for passing, false for failing."""
         v = {} 
         v.update(self._atomic_relaxation(parameters))
         v.update(self._desorption(parameters))
         return v
 
     def _atomic_relaxation(self, parameters):
+        """Returns false if the mean displacement outside the isolation radius is greater than the cutoff"""
         in_struc = parameters["initial_defect_structure"]
         out_struc = parameters["final_defect_structure"]
         sites = out_struc.get_sites_in_sphere(parameters['defect_frac_sc_coords'], get_truncated_coulomb_cutoff(in_struc), include_index=True)
@@ -383,10 +385,14 @@ class DefectValidation(BaseModel):
         return {"atomic_relaxation": True}
 
     def _desorption(self, parameters):
+        """Returns false if any atom is too far from all other atoms."""
         if isinstance(parameters['defect'], Adsorbate):
             out_struc = parameters["final_defect_structure"]
-            defect_site =  out_struc.get_sites_in_sphere(parameters['defect_frac_sc_coords'], 0.1, include_index=True)[0]
-            distances = [defect_site.distance(site) for site in out_struc]
+            defect_site =  out_struc.get_sites_in_sphere(
+                out_struc.lattice.get_cartesian_coords(parameters['defect_frac_sc_coords']), 
+                0.1, include_index=True
+                )[0]
+            distances = [defect_site.distance(site) for i, site in enumerate(out_struc) if i != defect_site.index]
             if all(d > self.DESORPTION_DISTANCE for d in distances):
                 return {'desorption': False}
         return {'desorption': True}
@@ -435,7 +441,7 @@ class DefectiveMaterialDoc(StructureMetadata):
         run_type: RunType | str,
         atomic_entries: List[ComputedEntry],
         phase_diagram: PhaseDiagram,
-        filters: List[Callable, None] = None,
+        filters: List[Callable] | None = None,
     ) -> MultiFormationEnergyDiagram:
 
         filters = filters if filters else lambda _: True

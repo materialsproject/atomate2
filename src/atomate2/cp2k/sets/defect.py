@@ -10,7 +10,6 @@ from pymatgen.core import Structure
 from atomate2.cp2k.sets.base import Cp2kInputGenerator, multiple_input_updators
 from atomate2.cp2k.sets.core import (
     HybridSetGenerator, StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
-    HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator
 ) 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +21,8 @@ class DefectSetGenerator(Cp2kInputGenerator):
     """
 
     def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
-        """
-        """
-        return {'print_v_hartree': True, "print_pdos": True}
+        """Get input updates"""
+        return {'print_v_hartree': True, "print_pdos": True, "print_dos": True}
 
 @dataclass
 @multiple_input_updators()
