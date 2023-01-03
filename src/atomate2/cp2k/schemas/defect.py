@@ -444,7 +444,7 @@ class DefectiveMaterialDoc(StructureMetadata):
         filters: List[Callable] | None = None,
     ) -> MultiFormationEnergyDiagram:
 
-        filters = filters if filters else lambda _: True
+        filters = filters if filters else [lambda _: True]
         els = set()
         defect_entries = []
         bulk_entries = []
