@@ -13,6 +13,16 @@ _FAKE_RUN_CP2K_KWARGS = {}
 
 
 @pytest.fixture(scope="session")
+def basis_and_potential():
+    return {
+        'basis_and_potential': {
+            "basis": "DZVP-MOLOPT-SR-GTH-q4",
+            "potential": "GTH-PBE-q4",
+            "aux_basis": "pFIT3"
+            }
+        }
+
+@pytest.fixture(scope="session")
 def cp2k_test_dir(test_dir):
     return test_dir / "cp2k"
 
@@ -37,7 +47,7 @@ def mock_cp2k(monkeypatch, cp2k_test_dir):
     reference files will be copied into the directory instead. As we do not want to
     test whether CP2K is giving the correct output rather that the calculation inputs
     are generated correctly and that the outputs are parsed properly, this should be
-    sufficient for our needs. 
+    sufficient for our needs.
 
     To use the fixture successfully, the following steps must be followed:
     1. "mock_cp2k" should be included as an argument to any test that would like to use

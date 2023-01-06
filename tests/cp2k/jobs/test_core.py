@@ -1,7 +1,7 @@
 from pytest import approx
 
 
-def test_static_maker(mock_cp2k, clean_dir, si_structure):
+def test_static_maker(mock_cp2k, si_structure, clean_dir, basis_and_potential):
     from jobflow import run_locally
     from atomate2.cp2k.jobs.core import StaticMaker
     from atomate2.cp2k.schemas.task import TaskDocument
@@ -12,7 +12,7 @@ def test_static_maker(mock_cp2k, clean_dir, si_structure):
     # settings passed to fake_run_cp2k; adjust these to check for certain input settings
     fake_run_cp2k_kwargs = {}
 
-    # automatically use fake CP2K 
+    # automatically use fake CP2K
     mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
 
     # generate job
@@ -35,7 +35,7 @@ def test_relax_maker(mock_cp2k, clean_dir, si_structure):
     ref_paths = {"relax": "Si_double_relax/relax_1"}
 
     # settings passed to fake_run_cp2k; adjust these to check for certain input settings
-    fake_run_cp2k_kwargs = {"transmuter": {"input_settings": []}} 
+    fake_run_cp2k_kwargs = {"transmuter": {"input_settings": []}}
 
     # automatically use fake CP2K
     mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
@@ -89,4 +89,3 @@ def test_transmuter(mock_cp2k, clean_dir, si_structure):
     np.testing.assert_allclose(
         output1.structure.lattice.abc, [3.866975, 3.866975, 7.733949]
     )
-
