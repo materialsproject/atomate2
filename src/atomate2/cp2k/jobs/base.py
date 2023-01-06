@@ -20,6 +20,7 @@ from pymatgen.io.common import VolumetricData
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 
+from atomate2.common.utils import get_transformations
 from atomate2.cp2k.files import copy_cp2k_outputs, write_cp2k_input_set, cleanup_cp2k_outputs
 from atomate2.cp2k.run import run_cp2k, should_stop_children
 from atomate2.cp2k.schemas.task import TaskDocument
@@ -129,7 +130,7 @@ class BaseCp2kMaker(Maker):
 
         # Apply transformations if they are present
         if self.transformations:
-            transformations = _get_transformations(
+            transformations = get_transformations(
                 self.transformations, self.transformation_params
             )
             ts = TransformedStructure(structure)
