@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 from typing import Literal, Sequence, Union
+from hashlib import md5
 
 import pytest
 
@@ -15,6 +16,13 @@ _FAKE_RUN_CP2K_KWARGS = {}
 def cp2k_test_dir(test_dir):
     return test_dir / "cp2k"
 
+@pytest.fixture(scope="session")
+def cp2k_test_inputs(test_dir):
+    return Path(test_dir / "cp2k").glob("*/inputs")
+
+@pytest.fixture(scope="session")
+def cp2k_test_outputs(test_dir):
+    return Path(test_dir / "cp2k").glob("*/outputs")
 
 @pytest.fixture(scope="function")
 def mock_cp2k(monkeypatch, cp2k_test_dir):
@@ -128,22 +136,24 @@ def fake_run_cp2k(
     # pretend to run cp2k by copying pre-generated outputs from reference dir
     logger.info("Generated fake cp2k outputs")
 
+@pytest.fixture(scope="function")
+def check_input():
+    def _check_input(ref_path, user_input):
+        from pymatgen.io.cp2k.inputs import Cp2kInput
 
-# TODO not a comprehensive input comparisons
-def check_input(ref_path: Union[str, Path], input_settings: Sequence[str]):
-    from pymatgen.io.cp2k.inputs import Cp2kInput
+        ref = Cp2kInput.from_file(ref_path / "inputs" / "cp2k.inp")
+        user_input.verbosity(False)
+        ref.verbosity(False)
+        user_string = " ".join(user_input.get_string().lower().split())
+        user_hash = md5(user_string.encode("utf-8")).hexdigest()
 
-    user = Cp2kInput.from_file("cp2k.inp")
-    ref = Cp2kInput.from_file(ref_path / "inputs" / "cp2k.inp")
-    for path, name in input_settings:
-        if not user.check(path):
-            raise ValueError(f"CP2K section {path} not present in the user file")
-        if not user.by_path(path).get(name) != ref.by_path(path).get(name):
-            raise ValueError(
-                f"CP2K value of {name} in {path} is inconsistent"
-                f"with the provided reference file"
-            )
+        ref_string = " ".join(ref.get_string().lower().split())
+        ref_hash = md5(ref_string.encode("utf-8")).hexdigest()
 
+        if ref_hash != user_hash:
+            raise ValueError("Cp2k Inputs do not match!")
+
+    return _check_input
 
 def clear_cp2k_inputs():
     for cp2k_file in (

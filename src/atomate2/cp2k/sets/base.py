@@ -6,10 +6,8 @@ import os
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from tkinter import W
-from typing import Any, Iterable, Dict
+from typing import Any, Dict
 
-import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
@@ -29,7 +27,7 @@ from atomate2 import SETTINGS
 _BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
 _BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
 
-__all__ = ["Cp2kInputSet", "Cp2kInputGenerator"]
+__all__ = ["Cp2kInputSet", "Cp2kInputGenerator", "Cp2kAllElectronInputGenerator"]
 
 
 class Cp2kInputSet(InputSet):
@@ -43,12 +41,39 @@ class Cp2kInputSet(InputSet):
         optional_files: dict | None = None,
     ):
         """
-        Initialize the set
+        Initialize the set.
 
         Parameters
         ----------
-        cp2k_input: Cp2kInput object for representing the main cp2k input file
-        optional_files: If CP2K contains external file links, then they can be stored here.
+
+        cp2k_input
+            Cp2kInput object for representing the main cp2k input file
+
+        optional_files
+            Any additional files needed for running the calculations. Most common
+            use is to make data files available which are not guarunteed to be available
+            at runtime.
+
+            Format pseudocode:
+                {
+                    "name of this optional data": {
+                        "filename": filename to write to,
+                        "object": object with a __str__ method to write the file
+                    }
+                }
+
+            Some examples uses:
+
+                (1) Cp2kInputGenerator below will try to put the basis and potential
+                    info into their own optional files. This allows them to run when the
+                    cp2k executable cannot find this info due to version mismatch, custom
+                    data, etc.
+                (2) Include files. CP2K preprocessor link input sections like the structure
+                    definition to an external file in order to keep the main input file neat.
+                    This use case requires "@include" parameters (see pymatgen.io.cp2k or
+                    the cp2k manual)
+                (3) Other custom data files like vdw kernal tables, truncated coulomb tables,
+                    classical MD potential parameters.
 
         """
         self.cp2k_input = cp2k_input
@@ -143,29 +168,16 @@ class Cp2kInputGenerator(InputGenerator):
     Parameters
     ----------
     user_input_settings:
-
+        Updates to the inputs in the base config dict.
     user_kpoints_settings:
-
-    use_structure_charge
-        If set to True, then the overall charge of the structure (``structure.charge``)
-        is  used to set NELECT.
+        Updates to the kpoint settings in the base config dict
     sort_structure
         Whether to sort the structure (using the default sort order of
         electronegativity) before generating input files. Defaults to True, the behavior
         you would want most of the time. This ensures that similar atomic species are
         grouped together.
-    vdw
-        Adds default parameters for van-der-Waals functionals supported by VASP to
-        INCAR. Supported functionals are: DFT-D2, undamped DFT-D3, DFT-D3 with
-        Becke-Jonson damping, Tkatchenko-Scheffler, Tkatchenko-Scheffler with iterative
-        Hirshfeld partitioning, MBD@rSC, dDsC, Dion's vdW-DF, DF2, optPBE, optB88,
-        optB86b and rVV10.
     symprec
         Tolerance for symmetry finding, used for line mode band structure k-points.
-    auto_ispin
-        If generating input set from a previous calculation, this controls whether
-        to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
-        moments are less than 0.02.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -178,10 +190,6 @@ class Cp2kInputGenerator(InputGenerator):
     symprec: float = SETTINGS.SYMPREC
     force_gamma: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_CP2K_SET)
-
-    def __post_init__(self):
-        """Post init formatting of arguments."""
-        pass
 
     def get_input_set(  # type: ignore
         self,
@@ -201,6 +209,9 @@ class Cp2kInputGenerator(InputGenerator):
             A structure.
         prev_dir
             A previous directory to generate the input set from.
+        optional_files
+            Additional files (e.g. vdw kernal file) to be included in the input set.
+
         Returns
         -------
         Cp2kInput
@@ -256,7 +267,7 @@ class Cp2kInputGenerator(InputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        raise NotImplementedError 
+        raise NotImplementedError
 
     def get_kpoints_updates(
         self,
@@ -306,10 +317,8 @@ class Cp2kInputGenerator(InputGenerator):
 
     def _get_structure(self, structure):
         """Get the standardized structure."""
-
         if self.sort_structure and hasattr(structure, "get_sorted_structure"):
             structure = structure.get_sorted_structure()
-
         return structure
 
     def _get_input(
@@ -341,8 +350,8 @@ class Cp2kInputGenerator(InputGenerator):
 
     def _get_basis_file(self, cp2k_input: Cp2kInput):
         """
-        Get the basis sets for the input object and convert them to a 
-        basis file object. Allows calculation to execute if the basis sets 
+        Get the basis sets for the input object and convert them to a
+        basis file object. Allows calculation to execute if the basis sets
         are not available on the execution resource.
         """
         basis_sets = []
@@ -357,11 +366,15 @@ class Cp2kInputGenerator(InputGenerator):
 
     def _get_potential_file(self, cp2k_input: Cp2kInput):
         """
-        Get the potentials for the input object and convert them to a 
-        potential file object. Allows calculation to execute if the potentials 
+        Get the potentials for the input object and convert them to a
+        potential file object. Allows calculation to execute if the potentials
         are not available on the execution resource.
         """
-        potentials = [cp2k_input.basis_and_potential[el]['potential'] for el in cp2k_input.structure.symbol_set]
+        potentials = []
+        for el in cp2k_input.structure.symbol_set:
+            for data in cp2k_input.basis_and_potential[el].values():
+                if isinstance(data, GthPotential):
+                    potentials.append(data)
         if not potentials:
             return None
         cp2k_input.safeset({'force_eval': {'dft': {'POTENTIAL_FILE_NAME': "POTENTIAL"}}})
@@ -372,7 +385,7 @@ class Cp2kInputGenerator(InputGenerator):
         structure: Structure,
         kpoints_updates: dict[str, Any] | None,
     ) -> Kpoints | None:
-        """Get the kpoints file."""
+        """Get the kpoints object."""
         kpoints_updates = {} if kpoints_updates is None else kpoints_updates
 
         # use user setting if set otherwise default to base config settings
@@ -487,7 +500,7 @@ class Cp2kInputGenerator(InputGenerator):
             return base_kpoints
         elif added_kpoints and not (base_kpoints or zero_weighted_kpoints):
             return added_kpoints
-        
+
         # do some sanity checking
         if "line_density" in kconfig and zero_weighted_kpoints:
             raise ValueError(
@@ -506,62 +519,54 @@ class Cp2kInputGenerator(InputGenerator):
 
 @dataclass
 class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
+    """
+    A class to generate Cp2k input sets for all electron calculations.
 
+    Parameters
+    ----------
+    user_input_settings:
+        Updates to the inputs in the base config dict.
+    sort_structure
+        Whether to sort the structure (using the default sort order of
+        electronegativity) before generating input files. Defaults to True, the behavior
+        you would want most of the time. This ensures that similar atomic species are
+        grouped together.
+    symprec
+        Tolerance for symmetry finding, used for line mode band structure k-points.
+    config_dict
+        The config dictionary to use containing the base input set settings.
+    """
     user_input_settings: dict = field(default_factory=dict)
-    use_structure_charge: bool = False
     sort_structure: bool = True
     symprec: float = SETTINGS.SYMPREC
     config_dict: dict = field(default_factory=lambda: _BASE_GAPW_SET)
 
     def _get_kpoints(self, structure: Structure, kpoints_updates: dict[str, Any] | None) -> Kpoints | None:
+        """No Kpoints possible"""
         return None
-
-def multiple_input_updators():
-    """
-    This utility function acts to decorate child classes of Cp2kInputGenerator so that multiple sets can
-    combine to produce more complex ones.
-
-    For example, the HybridRelaxSetGenerator is a combination of the RelaxSet and the HybridSet. This decorator
-    allows HybridRelaxSetGenerator to be defined consisely as:
-
-    @dataclass
-    @multiple_input_updators()
-    class HybridRelaxSetGenerator(HybridSetGenerator, RelaxSetGenerator):
-        pass
-
-    Where multiple_input_updators() will joing the get_input_updates functions from HybridSetGenerator and
-    RelaxSetGenerator to produce a combined effect. 
-    """
-    def decorate(myclass):
-        def multi(foo):
-            def get_input_updates(self, *args, **kwargs):
-                updates = {}
-                for parent in (self.__class__.__bases__ if isinstance(self, Cp2kInputGenerator) else self.__bases__):
-                    if parent.__bases__ == (Cp2kInputGenerator, ):
-                        updates.update(getattr(parent, foo.__name__)(self, *args, **kwargs))
-                    else:
-                        updates.update(get_input_updates(parent, *args, **kwargs))
-                return updates
-            return get_input_updates
-
-        if callable(getattr(myclass, "get_input_updates")):
-            setattr(myclass, "get_input_updates", multi(getattr(myclass, "get_input_updates")))
-        return myclass 
-    return decorate
 
 
 def recursive_update(d: Dict, u: Dict):
     """
-    Update a dictionary recursively.
+    Update a dictionary recursively and return it.
 
-    Args:
-        d: Input dictionary
-        u: Update dictionary
-    
-    Example:
+    Parameters
+    ----------
+        d: Dict
+            Input dictionary to modify
+        u: Dict
+            Dictionary of updates to apply
+
+    Returns
+    ----------
+    Dict
+        The updated dictionary.
+
+    Example
+    ----------
         d = {'activate_hybrid': {"hybrid_functional": "HSE06"}}
         u = {'activate_hybrid': {"cutoff_radius": 8}}
-    
+
         yields {'activate_hybrid': {"hybrid_functional": "HSE06", "cutoff_radius": 8}}}
     """
     for k, v in u.items():

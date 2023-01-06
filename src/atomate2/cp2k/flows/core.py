@@ -12,10 +12,11 @@ from pymatgen.core.structure import Structure
 
 from atomate2.cp2k.jobs.base import BaseCp2kMaker
 from atomate2.cp2k.jobs.core import (
-    StaticMaker, RelaxMaker, CellOptMaker, 
+    StaticMaker, RelaxMaker, CellOptMaker,
     HybridStaticMaker, HybridRelaxMaker, HybridCellOptMaker,
     NonSCFMaker, MDMaker
 )
+from atomate2.cp2k.powerups import update_user_input_settings
 from atomate2.cp2k.schemas.calculation import Cp2kObject
 
 __all__ = [
@@ -37,8 +38,8 @@ class DoubleRelaxMaker(Maker):
     """
 
     name: str = "double relax"
-    relax_maker1: BaseCp2kMaker = field(default_factory=RelaxMaker)
-    relax_maker2: BaseCp2kMaker = field(default_factory=RelaxMaker)
+    relax_maker1: Maker = field(default_factory=RelaxMaker)
+    relax_maker2: Maker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
         """
@@ -103,8 +104,8 @@ class BandStructureMaker(Maker):
 
     name: str = "band structure"
     bandstructure_type: str = "both"
-    static_maker: BaseCp2kMaker = field(default_factory=StaticMaker)
-    bs_maker: BaseCp2kMaker = field(default_factory=NonSCFMaker)
+    static_maker: Maker = field(default_factory=StaticMaker)
+    bs_maker: Maker = field(default_factory=NonSCFMaker)
 
     def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
         """
@@ -180,8 +181,8 @@ class RelaxBandStructureMaker(Maker):
     """
 
     name: str = "relax and band structure"
-    relax_maker: BaseCp2kMaker = field(default_factory=DoubleRelaxMaker)
-    band_structure_maker: BaseCp2kMaker = field(default_factory=BandStructureMaker)
+    relax_maker: Maker = field(default_factory=DoubleRelaxMaker)
+    band_structure_maker: Maker = field(default_factory=BandStructureMaker)
 
     def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
         """
@@ -208,26 +209,48 @@ class RelaxBandStructureMaker(Maker):
 
 @dataclass
 class HybridFlowMaker(Maker):
+    """
+    Maker to create hybrid flows.
+
+    Parameters
+    ----------
+    hybrid_functional
+        built-in hybrid functional to use
+    initialize_with_pbe
+        Whether or not to attach a pre-hybrid flow that can be used to kickstart the hybrid
+        flow. This is treated differently than just stiching flows together, because of the
+        screening done in __post_init__
+    pbe_maker
+        Maker for the initialization
+    hybrid_maker
+        Maker for the hybrid job
+    """
 
     hybrid_functional: str = "PBE0"
     initialize_with_pbe: bool = field(default=True)
-    initialize_maker: BaseCp2kMaker = field(default_factory=StaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridStaticMaker) 
+    pbe_maker: Maker = field(default_factory=StaticMaker)
+    hybrid_maker: Maker = field(default_factory=HybridStaticMaker)
 
     def __post_init__(self):
+        """Initializing with PBE allows CP2K to screen exchange integrals using
+        the PBE density matrix, which creates huge speed-ups. Rarely causes problems
+        so it is done as a default here.
+        """
         self.hybrid_maker.hybrid_functional = self.hybrid_functional
         if self.initialize_with_pbe:
-            self.hybrid_maker.input_set_generator.screen_on_initial_p = True
-            self.hybrid_maker.input_set_generator.screen_p_forces = True
+            self.hybrid_maker = update_user_input_settings(
+                self.hybrid_maker, {"activate_hybrid": {"screen_on_initial_p": True, "screen_p_forces": True}}
+                )
 
-    def make(self, *args, **kwargs) -> Flow:
+    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None) -> Job:
         jobs = []
         if self.initialize_with_pbe:
-            initialization = self.initialize_maker.make(*args, **kwargs)
+            initialization = self.pbe_maker.make(structure, prev_cp2k_dir)
             jobs.append(initialization)
-            hyb = self.hybrid_maker.make(initialization.output.structure, prev_cp2k_dir=initialization.output.dir_name)
-        else:
-            hyb = self.hybrid_maker.make(*args, **kwargs)
+        hyb = self.hybrid_maker.make(
+            initialization.output.structure if self.initialize_with_pbe else structure,
+            prev_cp2k_dir=initialization.output.dir_name if self.initialize_with_pbe else prev_cp2k_dir
+        )
         jobs.append(hyb)
         return Flow(jobs, output=hyb.output, name=self.name)
 
@@ -264,7 +287,7 @@ class HybridRelaxFlowMaker(HybridFlowMaker):
     """
 
     name: str = "hybrid relax flow"
-    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridRelaxMaker)
+    hybrid_maker: Maker = field(default_factory=HybridRelaxMaker)
 
 @dataclass
 class HybridCellOptFlowMaker(HybridFlowMaker):
@@ -282,4 +305,4 @@ class HybridCellOptFlowMaker(HybridFlowMaker):
     """
 
     name: str = "hybrid cell opt flow"
-    hybrid_maker: BaseCp2kMaker = field(default_factory=HybridCellOptMaker)
+    hybrid_maker: Maker = field(default_factory=HybridCellOptMaker)

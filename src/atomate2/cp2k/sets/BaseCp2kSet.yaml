@@ -481,9 +481,9 @@ cp2k_input:
     potential_filename: POTENTIAL_UZH
   cutoff: 0
   energy_gap: -1
-  eps_default: 1e-12
-  eps_pgf_orb: 1e-16
-  eps_scf: 1e-06
+  eps_default: 1.e-12
+  eps_pgf_orb: 1.e-16
+  eps_scf: 1.e-06
   linesearch: 2PNT
   minimizer: DIIS
   max_iter: 100

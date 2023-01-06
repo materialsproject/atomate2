@@ -62,10 +62,10 @@ def test_transmuter(mock_cp2k, clean_dir, si_structure):
     # mapping from job name to directory containing test files
     ref_paths = {"transmuter": "Si_transmuter"}
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    # settings passed to fake_run_cp2k; adjust these to check for certain settings
     fake_run_cp2k_kwargs = {"transmuter": {"input_settings": []}}
 
-    # automatically use fake VASP and write POTCAR.spec during the test
+    # automatically use fake CP2K and write POTCAR.spec during the test
     mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
 
     # generate transmuter job

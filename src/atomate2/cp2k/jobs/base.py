@@ -20,6 +20,7 @@ from pymatgen.io.common import VolumetricData
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 
+from atomate2.common.utils import get_transformations
 from atomate2.cp2k.files import copy_cp2k_outputs, write_cp2k_input_set, cleanup_cp2k_outputs
 from atomate2.cp2k.run import run_cp2k, should_stop_children
 from atomate2.cp2k.schemas.task import TaskDocument
@@ -43,7 +44,7 @@ def cp2k_job(method: Callable):
     """
     Decorate the ``make`` method of CP2K job makers.
 
-    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
     settings for all CP2K jobs. For example, it ensures that large data objects
     (band structures, density of states, Cubes, etc) are all stored in the
     atomate2 data store. It also configures the output schema to be a CP2K
@@ -128,8 +129,8 @@ class BaseCp2kMaker(Maker):
         """
 
         # Apply transformations if they are present
-        if self.transformations: 
-            transformations = _get_transformations(
+        if self.transformations:
+            transformations = get_transformations(
                 self.transformations, self.transformation_params
             )
             ts = TransformedStructure(structure)
@@ -166,7 +167,7 @@ class BaseCp2kMaker(Maker):
         # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
-        # cleanup files to save disk space 
+        # cleanup files to save disk space
         cleanup_cp2k_outputs(directory=Path.cwd())
 
         # gzip folder
@@ -177,39 +178,3 @@ class BaseCp2kMaker(Maker):
             stored_data={"custodian": task_doc.custodian},
             output=task_doc,
         )
-
-# TODO This should go in common
-def _get_transformations(
-    transformations: tuple[str, ...], params: tuple[dict, ...] | None
-):
-    """Get instantiated transformation objects from their names and parameters."""
-    params = ({},) * len(transformations) if params is None else params
-
-    if len(params) != len(transformations):
-        raise ValueError("Number of transformations and parameters must be the same.")
-
-    transformation_objects = []
-    for transformation, transformation_params in zip(transformations, params):
-        found = False
-        for m in (
-            "advanced_transformations",
-            "site_transformations",
-            "standard_transformations",
-        ):
-            from importlib import import_module
-
-            mod = import_module(f"pymatgen.transformations.{m}")
-
-            try:
-                t_cls = getattr(mod, transformation)
-                found = True
-                continue
-            except AttributeError:
-                pass
-
-        if not found:
-            raise ValueError(f"Could not find transformation: {transformation}")
-
-        t_obj = t_cls(**transformation_params)
-        transformation_objects.append(t_obj)
-    return transformation_objects
