@@ -7,16 +7,19 @@ from dataclasses import dataclass
 
 from pymatgen.core import Structure
 
-from atomate2.cp2k.sets.base import Cp2kInputGenerator, multiple_input_updators
+from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
-    HybridSetGenerator, StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
-) 
+    StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
+    HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator
+)
 logger = logging.getLogger(__name__)
+
+DEFECT_SET_UPDATES = {'print_v_hartree': True, "print_pdos": True, "print_dos": True}
 
 @dataclass
 class DefectSetGenerator(Cp2kInputGenerator):
     """
-    Base input set generator for defect calculations. Adds printing of the 
+    Base input set generator for defect calculations. Adds printing of the
     partial density of states and the electrostatic potential.
     """
 
@@ -25,31 +28,37 @@ class DefectSetGenerator(Cp2kInputGenerator):
         return {'print_v_hartree': True, "print_pdos": True, "print_dos": True}
 
 @dataclass
-@multiple_input_updators()
-class DefectStaticSetGenerator(DefectSetGenerator, StaticSetGenerator):
-    pass    
+class DefectStaticSetGenerator(StaticSetGenerator):
+
+    def __post_init__(self):
+        self.user_input_settings.update(DEFECT_SET_UPDATES)
 
 @dataclass
-@multiple_input_updators()
-class DefectRelaxSetGenerator(DefectSetGenerator, RelaxSetGenerator):
-    pass
+class DefectRelaxSetGenerator(RelaxSetGenerator):
+
+    def __post_init__(self):
+        self.user_input_settings.update(DEFECT_SET_UPDATES)
 
 @dataclass
-@multiple_input_updators()
-class DefectCellOptSetGenerator(DefectSetGenerator, CellOptSetGenerator):
-    pass
+class DefectCellOptSetGenerator(CellOptSetGenerator):
+
+    def __post_init__(self):
+        self.user_input_settings.update(DEFECT_SET_UPDATES)
 
 @dataclass
-@multiple_input_updators()
-class DefectHybridStaticSetGenerator(DefectSetGenerator, StaticSetGenerator, HybridSetGenerator):
-    pass   
+class DefectHybridStaticSetGenerator(HybridStaticSetGenerator):
+
+    def __post_init__(self):
+        self.user_input_settings.update(DEFECT_SET_UPDATES)
 
 @dataclass
-@multiple_input_updators()
-class DefectHybridRelaxSetGenerator(DefectSetGenerator, RelaxSetGenerator, HybridSetGenerator):
-    pass
+class DefectHybridRelaxSetGenerator(HybridRelaxSetGenerator):
+
+    def __post_init__(self):
+        self.user_input_settings.update(DEFECT_SET_UPDATES)
 
 @dataclass
-@multiple_input_updators()
-class DefectHybridCellOptSetGenerator(DefectSetGenerator, CellOptSetGenerator, HybridSetGenerator):
-    pass 
+class DefectHybridCellOptSetGenerator(HybridCellOptSetGenerator):
+
+    def __post_init__(self):
+        self.user_input_settings.update(DEFECT_SET_UPDATES)
