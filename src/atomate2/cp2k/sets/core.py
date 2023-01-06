@@ -15,7 +15,7 @@ from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.cp2k.sets.base import Cp2kInputGenerator, multiple_input_updators
+from atomate2.cp2k.sets.base import Cp2kInputGenerator, Cp2kAllElectronInputGenerator, multiple_input_updators
 
 logger = logging.getLogger(__name__)
 
@@ -35,37 +35,22 @@ __all__ = [
 class StaticSetGenerator(Cp2kInputGenerator):
     """
     Class to generate CP2K static input sets.
-
-    Parameters
-    ----------
-
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
-        """
-        Get updates to the input for a static CP2K job.
-
-        Parameters
-        ----------
-
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
+        """Get updates to the input for a static job."""
         updates = {"run_type": "ENERGY_FORCE"}
         return updates
 
 @dataclass
 class RelaxSetGenerator(Cp2kInputGenerator):
     """
-
+    Class to generate CP2K relax sets, i.e. sets for optimization
+    of internal coordinates without cell parameter optimization.
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
-        """
-        """
+        """Get updates to the input for a relax job"""
         updates = {
             "run_type": "GEO_OPT",
             "activate_motion": {
@@ -78,12 +63,13 @@ class RelaxSetGenerator(Cp2kInputGenerator):
 @dataclass
 class CellOptSetGenerator(Cp2kInputGenerator):
     """
-
+    Class to generate CP2K cell optimization sets, i.e. sets
+    for optimization of both internal coordinates and the
+    lattice vectors.
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
-        """
-        """
+        """Get updates to the input for a cell opt job"""
         updates = {
             "run_type": "CELL_OPT",
             "activate_motion": {
@@ -91,27 +77,24 @@ class CellOptSetGenerator(Cp2kInputGenerator):
                 "trust_radius": 0.1
             },
         }
-
         return updates
 
-
 @dataclass
-class HybridSetGenerator(Cp2kInputGenerator):
-
-    hybrid_functional: str = "PBE0"
-    screen_on_initial_p: bool = False
-    screen_p_forces: bool = False
-    eps_schwarz: float = 1e-7
-    eps_schwarz_forces: float = 1e-5
+class HybridStaticSetGenerator(Cp2kInputGenerator):
+    """
+    Class for generating static hybrid input sets
+    """
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
+        """Get input updates for a hybrid calculation"""
         updates = {
+            "run_type": "ENERGY_FORCE",
             "activate_hybrid": {
-                "hybrid_functional": self.hybrid_functional,
-                "screen_on_initial_p": self.screen_on_initial_p,
-                "screen_p_forces": self.screen_p_forces,
-                "eps_schwarz": self.eps_schwarz,
-                "eps_schwarz_forces": self.eps_schwarz_forces,
+                "hybrid_functional": "PBE0",
+                "screen_on_initial_p": False,
+                "screen_p_forces": False,
+                "eps_schwarz": 1e-7,
+                "eps_schwarz_forces": 1e-5,
             },
         }
         if hasattr(structure, "lattice"):
@@ -120,19 +103,58 @@ class HybridSetGenerator(Cp2kInputGenerator):
         return updates
 
 @dataclass
-@multiple_input_updators()
-class HybridStaticSetGenerator(HybridSetGenerator, StaticSetGenerator):
-    pass
+class HybridRelaxSetGenerator(Cp2kInputGenerator):
+    """
+    Class for generating hybrid relaxation input sets
+    """
+
+    def get_input_updates(self, structure, *args, **kwargs) -> dict:
+        """Get input updates for a hybrid calculation"""
+        updates = {
+            "run_type": "GEO_OPT",
+            "activate_motion": {
+                'optimizer': "BFGS",
+                "trust_radius": 0.1
+            },
+            "activate_hybrid": {
+                "hybrid_functional": "PBE0",
+                "screen_on_initial_p": False,
+                "screen_p_forces": False,
+                "eps_schwarz": 1e-7,
+                "eps_schwarz_forces": 1e-5,
+            },
+        }
+        if hasattr(structure, "lattice"):
+            updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
+
+        return updates
 
 @dataclass
-@multiple_input_updators()
-class HybridRelaxSetGenerator(HybridSetGenerator, RelaxSetGenerator):
-    pass
+class HybridCellOptSetGenerator(Cp2kInputGenerator):
+    """
+    Class for generating hybrid cell optimization input sets
+    """
 
-@dataclass
-@multiple_input_updators()
-class HybridCellOptSetGenerator(HybridSetGenerator, CellOptSetGenerator):
-    pass
+    def get_input_updates(self, structure, *args, **kwargs) -> dict:
+        """Get input updates for a hybrid calculation"""
+        updates = {
+            "run_type": "CELL_OPT",
+            "activate_motion": {
+                'optimizer': "BFGS",
+                "trust_radius": 0.1
+            },
+            "activate_hybrid": {
+                "hybrid_functional": "PBE0",
+                "screen_on_initial_p": False,
+                "screen_p_forces": False,
+                "eps_schwarz": 1e-7,
+                "eps_schwarz_forces": 1e-5,
+            },
+        }
+        if hasattr(structure, "lattice"):
+            updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
+
+        return updates
 
 @dataclass
 class NonSCFSetGenerator(Cp2kInputGenerator):
@@ -140,7 +162,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
     Class to generate CP2K non-self-consistent field input sets.
 
     **Note** cp2k doesn't have a true non scf option. All you can do is set
-    max_scf to 1, and use a pre-converged wavefunction. While this seems to 
+    max_scf to 1, and use a pre-converged wavefunction. While this seems to
     be the same, it means that the kpoint grid used to generate the restart file
     needs to be present in the input set or the first scf step can slightly jump
     away from the minimum that was found.
@@ -212,7 +234,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
 
         updates = {
             'max_scf': 1,
-            'print_bandstructure': True, 
+            'print_bandstructure': True,
             'kpoints_line_density': self.line_density if self.mode == "line" else 1,
             'print_dos': True,
             'print_pdos': False, # Not possible as of 2022.1
@@ -225,85 +247,26 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
 @dataclass
 class MDSetGenerator(Cp2kInputGenerator):
     """
-    Class to generate VASP molecular dynamics input sets.
-
-    Parameters
-    ----------
-    ensemble
-        Molecular dynamics ensemble to run. All options are (from manual):
-            HYDROSTATICSHOCK, ISOKIN, LANGEVIN, MSST, MSST_DAMPED, NPE_F, NPE_I,
-            NPT_F, NPT_I, NPT_IA, NVE, NVT, NVT_ADIABATIC, REFTRAJ
-    start_temp
-        Starting temperature. TEMPERATURE
-    end_temp
-        Final temperature. The VASP `TEEND` parameter.
-    nsteps
-        Number of time steps for simulations. The VASP `NSW` parameter.
-    time_step
-        The time step (in femtosecond) for the simulation. The VASP `POTIM` parameter.
-    **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
+    Class to generate molecular dynamics input sets.
     """
 
-    ensemble: str = "NVT"
-    temperature: float = 300
-    nsteps: int = 1000
-    time_step: int = 2
-    thermostat: str = "NOSE"
-
-    def get_input_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
-        cp2k_output: Cp2kOutput = None,
-    ) -> dict:
-        """
-        """
+    def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
+        """Get input updates for running a MD calculation."""
         updates = {
             "run_type": "MD",
             "activate_motion": {
-                "ensemble": self.ensemble,
-                "temperature": self.temperature,
-                "timestep": self.time_step,
-                "nsteps": self.nsteps,
-                "thermostat": self.thermostat
+                "ensemble": "NVT",
+                "temperature": 300,
+                "timestep": 2,
+                "nsteps": 1000,
+                "thermostat": "NOSE"
             },
             "print_bandstructure": False, # Disable printing
             "print_dos": False,
             "print_pdos": False,
             "print_v_hartree": False,
             "print_e_density": False,
-            "print_mo_cubes": False, 
+            "print_mo_cubes": False,
         }
 
-        return updates
-
-
-@dataclass
-class AllElectronSetGenerator(Cp2kInputGenerator):
-    """
-    Class to generate CP2K static input sets.
-
-    Parameters
-    ----------
-
-    """
-
-    def get_input_updates(self, *args, **kwargs) -> dict:
-        """
-        Get updates to the input for a static CP2K job.
-
-        Parameters
-        ----------
-
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-        updates = {
-            "qs_method": "GAPW",
-            "basis_and_potential": {str(e): {"potential": "ALL"} for e in Element}
-            }
         return updates

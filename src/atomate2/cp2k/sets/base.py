@@ -43,12 +43,39 @@ class Cp2kInputSet(InputSet):
         optional_files: dict | None = None,
     ):
         """
-        Initialize the set
+        Initialize the set.
 
         Parameters
         ----------
-        cp2k_input: Cp2kInput object for representing the main cp2k input file
-        optional_files: If CP2K contains external file links, then they can be stored here.
+
+        cp2k_input
+            Cp2kInput object for representing the main cp2k input file
+
+        optional_files
+            Any additional files needed for running the calculations. Most common
+            use is to make data files available which are not guarunteed to be available
+            at runtime.
+
+            Format pseudocode:
+                {
+                    "name of this optional data": {
+                        "filename": filename to write to,
+                        "object": object with a __str__ method to write the file
+                    }
+                }
+
+            Some examples uses:
+
+                (1) Cp2kInputGenerator below will try to put the basis and potential
+                    info into their own optional files. This allows them to run when the
+                    cp2k executable cannot find this info due to version mismatch, custom
+                    data, etc.
+                (2) Include files. CP2K preprocessor link input sections like the structure
+                    definition to an external file in order to keep the main input file neat.
+                    This use case requires "@include" parameters (see pymatgen.io.cp2k or
+                    the cp2k manual)
+                (3) Other custom data files like vdw kernal tables, truncated coulomb tables,
+                    classical MD potential parameters.
 
         """
         self.cp2k_input = cp2k_input
@@ -166,10 +193,6 @@ class Cp2kInputGenerator(InputGenerator):
     force_gamma: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_CP2K_SET)
 
-    def __post_init__(self):
-        """Post init formatting of arguments."""
-        pass
-
     def get_input_set(  # type: ignore
         self,
         structure: Structure | Molecule = None,
@@ -188,6 +211,9 @@ class Cp2kInputGenerator(InputGenerator):
             A structure.
         prev_dir
             A previous directory to generate the input set from.
+        optional_files
+            Additional files (e.g. vdw kernal file) to be included in the input set.
+
         Returns
         -------
         Cp2kInput
@@ -517,49 +543,25 @@ class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
         """No Kpoints possible"""
         return None
 
-def multiple_input_updators():
-    """
-    This utility function acts to decorate child classes of Cp2kInputGenerator so that multiple sets can
-    combine to produce more complex ones.
-
-    For example, the HybridRelaxSetGenerator is a combination of the RelaxSet and the HybridSet. This decorator
-    allows HybridRelaxSetGenerator to be defined consisely as:
-
-    @dataclass
-    @multiple_input_updators()
-    class HybridRelaxSetGenerator(HybridSetGenerator, RelaxSetGenerator):
-        pass
-
-    Where multiple_input_updators() will joing the get_input_updates functions from HybridSetGenerator and
-    RelaxSetGenerator to produce a combined effect.
-    """
-    def decorate(myclass):
-        def multi(foo):
-            def get_input_updates(self, *args, **kwargs):
-                updates = {}
-                for parent in (self.__class__.__bases__ if isinstance(self, Cp2kInputGenerator) else self.__bases__):
-                    if parent.__bases__ == (Cp2kInputGenerator, ):
-                        updates.update(getattr(parent, foo.__name__)(self, *args, **kwargs))
-                    else:
-                        updates.update(get_input_updates(parent, *args, **kwargs))
-                return updates
-            return get_input_updates
-
-        if callable(getattr(myclass, "get_input_updates")):
-            setattr(myclass, "get_input_updates", multi(getattr(myclass, "get_input_updates")))
-        return myclass
-    return decorate
-
 
 def recursive_update(d: Dict, u: Dict):
     """
-    Update a dictionary recursively.
+    Update a dictionary recursively and return it.
 
-    Args:
-        d: Input dictionary
-        u: Update dictionary
+    Parameters
+    ----------
+        d: Dict
+            Input dictionary to modify
+        u: Dict
+            Dictionary of updates to apply
 
-    Example:
+    Returns
+    ----------
+    Dict
+        The updated dictionary.
+
+    Example
+    ----------
         d = {'activate_hybrid': {"hybrid_functional": "HSE06"}}
         u = {'activate_hybrid': {"cutoff_radius": 8}}
 

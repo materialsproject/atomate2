@@ -43,7 +43,7 @@ def cp2k_job(method: Callable):
     """
     Decorate the ``make`` method of CP2K job makers.
 
-    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
     settings for all CP2K jobs. For example, it ensures that large data objects
     (band structures, density of states, Cubes, etc) are all stored in the
     atomate2 data store. It also configures the output schema to be a CP2K
@@ -128,7 +128,7 @@ class BaseCp2kMaker(Maker):
         """
 
         # Apply transformations if they are present
-        if self.transformations: 
+        if self.transformations:
             transformations = _get_transformations(
                 self.transformations, self.transformation_params
             )
@@ -166,7 +166,7 @@ class BaseCp2kMaker(Maker):
         # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
-        # cleanup files to save disk space 
+        # cleanup files to save disk space
         cleanup_cp2k_outputs(directory=Path.cwd())
 
         # gzip folder
