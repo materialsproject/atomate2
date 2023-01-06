@@ -29,7 +29,7 @@ from atomate2 import SETTINGS
 _BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
 _BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
 
-__all__ = ["Cp2kInputSet", "Cp2kInputGenerator"]
+__all__ = ["Cp2kInputSet", "Cp2kInputGenerator", "Cp2kAllElectronInputGenerator"]
 
 
 class Cp2kInputSet(InputSet):

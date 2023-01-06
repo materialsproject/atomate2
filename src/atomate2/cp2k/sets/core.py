@@ -15,7 +15,7 @@ from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.common.schemas.math import Vector3D
-from atomate2.cp2k.sets.base import Cp2kInputGenerator, Cp2kAllElectronInputGenerator, multiple_input_updators
+from atomate2.cp2k.sets.base import Cp2kInputGenerator, Cp2kAllElectronInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,7 @@ __all__ = [
     "HybridRelaxSetGenerator",
     "HybridCellOptSetGenerator",
     "NonSCFSetGenerator",
+    "MDSetGenerator"
 ]
 
 

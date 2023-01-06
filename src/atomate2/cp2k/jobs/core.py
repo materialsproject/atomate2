@@ -13,7 +13,6 @@ from custodian.cp2k.handlers import (
     StdErrHandler, FrozenJobErrorHandler, AbortHandler,
     NumericalPrecisionHandler, WalltimeHandler
 )
-from custodian.cp2k.validators import Cp2kOutputValidator
 
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
@@ -24,7 +23,7 @@ from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
     NonSCFSetGenerator,
-    HybridSetGenerator, HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator,
+    HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator,
     StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
     MDSetGenerator,
 )
@@ -34,7 +33,13 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "StaticMaker",
     "RelaxMaker",
+    "CellOptMaker",
+    "HybridStaticMaker",
+    "HybridRelaxMaker",
+    "HybridCellOptMaker",
     "NonSCFMaker",
+    "TransmuterMaker",
+    "MDMaker"
 ]
 
 
@@ -110,32 +115,71 @@ class CellOptMaker(BaseCp2kMaker):
 
 @dataclass
 class HybridStaticMaker(BaseCp2kMaker):
+    """
+    Maker for static hybrid jobs
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    hybrid_functional : str
+        Built-in hybrid functional to use.
+    input_set_generator : .Cp2kInputGenerator
+        A generator used to make the input set.
+    """
 
     name: str = "hybrid static"
     hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridStaticSetGenerator)
 
     def __post_init__(self):
+        """Update the input settings with hybrid_functional attribute"""
         self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
 
 @dataclass
 class HybridRelaxMaker(BaseCp2kMaker):
+    """
+    Maker for hybrid relax jobs
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    hybrid_functional : str
+        Built-in hybrid functional to use.
+    input_set_generator : .Cp2kInputGenerator
+        A generator used to make the input set.
+    """
 
     name: str = "hybrid relax"
     hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridRelaxSetGenerator)
 
     def __post_init__(self):
+        """Update the input settings with hybrid_functional attribute"""
         self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
 
 @dataclass
 class HybridCellOptMaker(BaseCp2kMaker):
+    """
+    Maker for hybrid cell opt jobs
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    hybrid_functional : str
+        Built-in hybrid functional to use.
+    input_set_generator : .Cp2kInputGenerator
+        A generator used to make the input set.
+    """
 
     name: str = "hybrid cell opt"
     hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridCellOptSetGenerator)
 
     def __post_init__(self):
+        """Update the input settings with hybrid_functional attribute"""
         self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
 
 @dataclass
@@ -296,6 +340,19 @@ class TransmuterMaker(BaseCp2kMaker):
 
 @dataclass
 class MDMaker(BaseCp2kMaker):
+    """
+    Maker for creating MD jobs.
+
+    Parameters
+    ----------
+    name
+        The job name.
+    input_set_generator
+        A generator used to make the input set.
+    task_document_kwargs
+        Task document kwargs to pass to the base maker. By default
+        this maker will turn-on the storing of a trajectory.
+    """
 
     name: str = "md"
     input_set_generator: Cp2kInputGenerator = field(default_factory=MDSetGenerator)
