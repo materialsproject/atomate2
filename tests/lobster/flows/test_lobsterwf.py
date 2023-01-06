@@ -28,17 +28,17 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
 
     # mapping from job name to directory containing test files
     ref_paths = {
-        #"relax 1": "NaCl_static_relax_lobs/relax_1",
-        #"relax 2": "NaCl_static_relax_lobs/relax_2",
-        #"additional_static_run": "NaCl_static_relax_lobs/additional_static",
+        "relax 1": "NaCl_static_relax_lobs/relax_1",
+        "relax 2": "NaCl_static_relax_lobs/relax_2",
+        "additional_static_run": "NaCl_static_relax_lobs/additional_static",
         "static_run": "NaCl_static_relax_lobs/static_run",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-       # "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
-       # "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-       # "additional_static_run": {"incar_settings": ["NSW", "ISMEAR"]},
+       "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
+       "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
+       "additional_static_run": {"incar_settings": ["NSW", "ISMEAR"]},
         "static_run": {"incar_settings": ["NSW", "ISMEAR"]},
     }
 
@@ -56,7 +56,7 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
     mock_lobster(ref_paths_lobster, fake_run_lobster_kwargs)
 
     # !!! Generate job
-    job = LobsterMaker(user_lobsterin_settings={'LSODOS': True} ,bulk_relax_maker=None, additional_static_run_maker=None,
+    job = LobsterMaker(#user_lobsterin_settings={'LSODOS': True} ,#bulk_relax_maker=None, additional_static_run_maker=None,
                        additional_outputs=['DOSCAR.LSO.lobster'],
                        delete_all_wavecars=False).make(structure=structure)
 
