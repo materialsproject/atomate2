@@ -184,7 +184,6 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
 
     def __post_init__(self):
         """Ensure mode is set correctly."""
-        super().__post_init__()
         self.mode = self.mode.lower()
 
         supported_modes = ("line", "uniform")
