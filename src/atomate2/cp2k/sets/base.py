@@ -6,10 +6,8 @@ import os
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from tkinter import W
-from typing import Any, Iterable, Dict
+from typing import Any, Dict
 
-import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
@@ -372,7 +370,11 @@ class Cp2kInputGenerator(InputGenerator):
         potential file object. Allows calculation to execute if the potentials
         are not available on the execution resource.
         """
-        potentials = [cp2k_input.basis_and_potential[el]['potential'] for el in cp2k_input.structure.symbol_set]
+        potentials = []
+        for el in cp2k_input.structure.symbol_set:
+            for data in cp2k_input.basis_and_potential[el].values():
+                if isinstance(data, GthPotential):
+                    potentials.append(data)
         if not potentials:
             return None
         cp2k_input.safeset({'force_eval': {'dft': {'POTENTIAL_FILE_NAME': "POTENTIAL"}}})
