@@ -51,7 +51,7 @@ def copy_cp2k_outputs(
     additional_cp2k_files : list of str
         Additional files to copy
     restart_to_input : bool
-        Move the cp2k restart file to by the cp2k input in the new directory 
+        Move the cp2k restart file to by the cp2k input in the new directory
     file_client : .FileClient
         A file client to use for performing file operations.
     """
@@ -151,7 +151,6 @@ def write_cp2k_input_set(
     directory: str | Path = ".",
     from_prev: bool = False,
     apply_input_updates: bool = True,
-    clean_prev: bool = True,
     optional_files: dict | None = None,
     **kwargs,
 ):
@@ -183,22 +182,6 @@ def write_cp2k_input_set(
     if apply_input_updates:
         cis.cp2k_input.update(SETTINGS.CP2K_INPUT_UPDATES)
 
-    #if prev_dir:
-        #o = Cp2kOutput(get_zfile([], "cp2k.out"), auto_load=False)
-        #o.parse_files()
-        #files = ["cp2k.inp", "cp2k.out", ] + [Path(o.filenames[f][-1]).name for f in o.filenames]
-        #all_files = [get_zfile([], r) for r in files]
-
-    if clean_prev and prev_dir:
-
-        from atomate2.common.files import delete_files
-
-        #delete_files()
-        # remove previous inputs and outputs (prevents certain files from concatenating) 
-        # for filename in all_files:
-        #    if Path(filename).exists():
-        #        Path(filename).unlink()
-
     logger.info("Writing CP2K input set.")
     cis.write_input(directory, **kwargs)
 
@@ -209,7 +192,21 @@ def cleanup_cp2k_outputs(
     file_patterns: Sequence[str] = ("*bak*", ),
     file_client: FileClient | None = None,
     ):
+    """
+    Remove unnecessary files.
 
+    Parameters
+    ----------
+    directory:
+        Directory containing files
+    host:
+        File client host
+    file_patterns:
+        Glob patterns to find files for deletion. Default is to
+        remove the "backup" wavefunctions.
+    file_client:
+        A file client to use for performing file operations.
+    """
     files_to_delete = []
     for pattern in file_patterns:
         files_to_delete.extend(file_client.glob(Path(directory) / pattern, host=host))
