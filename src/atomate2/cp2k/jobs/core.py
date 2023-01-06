@@ -19,6 +19,7 @@ from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.structure import Structure
 
+from atomate2.common.utils import get_transformations
 from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
@@ -115,7 +116,7 @@ class HybridStaticMaker(BaseCp2kMaker):
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridStaticSetGenerator)
 
     def __post_init__(self):
-        self.input_set_generator.hybrid_functional = self.hybrid_functional
+        self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
 
 @dataclass
 class HybridRelaxMaker(BaseCp2kMaker):
@@ -125,7 +126,7 @@ class HybridRelaxMaker(BaseCp2kMaker):
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridRelaxSetGenerator)
 
     def __post_init__(self):
-        self.input_set_generator.hybrid_functional = self.hybrid_functional
+        self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
 
 @dataclass
 class HybridCellOptMaker(BaseCp2kMaker):
@@ -135,7 +136,7 @@ class HybridCellOptMaker(BaseCp2kMaker):
     input_set_generator: Cp2kInputGenerator = field(default_factory=HybridCellOptSetGenerator)
 
     def __post_init__(self):
-        self.input_set_generator.hybrid_functional = self.hybrid_functional
+        self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
 
 @dataclass
 class NonSCFMaker(BaseCp2kMaker):
@@ -173,7 +174,7 @@ class NonSCFMaker(BaseCp2kMaker):
     run_cp2k_kwargs: dict = field(
         default_factory=lambda: {
             "handlers": (
-                StdErrHandler(), 
+                StdErrHandler(),
                 FrozenJobErrorHandler(),
                 AbortHandler(),
                 NumericalPrecisionHandler(),
@@ -279,7 +280,7 @@ class TransmuterMaker(BaseCp2kMaker):
         prev_vasp_dir : str or Path or None
             A previous Cp2k calculation directory to copy output files from.
         """
-        transformations = _get_transformations(
+        transformations = get_transformations(
             self.transformations, self.transformation_params
         )
         ts = TransformedStructure(structure)
@@ -303,39 +304,3 @@ class MDMaker(BaseCp2kMaker):
             "store_trajectory": True
         }
     )
-
-# TODO This should go in common
-def _get_transformations(
-    transformations: tuple[str, ...], params: tuple[dict, ...] | None
-):
-    """Get instantiated transformation objects from their names and parameters."""
-    params = ({},) * len(transformations) if params is None else params
-
-    if len(params) != len(transformations):
-        raise ValueError("Number of transformations and parameters must be the same.")
-
-    transformation_objects = []
-    for transformation, transformation_params in zip(transformations, params):
-        found = False
-        for m in (
-            "advanced_transformations",
-            "site_transformations",
-            "standard_transformations",
-        ):
-            from importlib import import_module
-
-            mod = import_module(f"pymatgen.transformations.{m}")
-
-            try:
-                t_cls = getattr(mod, transformation)
-                found = True
-                continue
-            except AttributeError:
-                pass
-
-        if not found:
-            raise ValueError(f"Could not find transformation: {transformation}")
-
-        t_obj = t_cls(**transformation_params)
-        transformation_objects.append(t_obj)
-    return transformation_objects
