@@ -6,7 +6,7 @@ import os
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from monty.io import zopen
 from monty.serialization import loadfn
