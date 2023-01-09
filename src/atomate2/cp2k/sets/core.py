@@ -80,7 +80,7 @@ class HybridStaticSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation"""
-        updates = {
+        updates: dict = {
             "run_type": "ENERGY_FORCE",
             "activate_hybrid": {
                 "hybrid_functional": "PBE0",
@@ -106,7 +106,7 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation"""
-        updates = {
+        updates: dict = {
             "run_type": "GEO_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
             "activate_hybrid": {
@@ -133,7 +133,7 @@ class HybridCellOptSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation"""
-        updates = {
+        updates: dict = {
             "run_type": "CELL_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
             "activate_hybrid": {

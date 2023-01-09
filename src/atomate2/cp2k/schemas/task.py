@@ -124,7 +124,7 @@ class AtomicKindSummary(BaseModel):
 
     @classmethod
     def from_atomic_kind_info(cls, atomic_kind_info: dict):
-        d = {"atomic_kinds": {}}
+        d: Dict[str, Dict[str, Any]] = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
             d["atomic_kinds"][kind] = {
                 "element": info["element"],
@@ -168,11 +168,13 @@ class InputSummary(BaseModel):
             A summary of the input structure and parameters.
         """
 
-        aks = AtomicKindSummary.from_atomic_kind_info(calc_doc.input.atomic_kind_info)
+        summary = AtomicKindSummary.from_atomic_kind_info(
+            calc_doc.input.atomic_kind_info
+        )
 
         return cls(
             structure=calc_doc.input.structure,
-            atomic_kind_info=aks,
+            atomic_kind_info=summary,
             xc=str(calc_doc.run_type),
         )
 
