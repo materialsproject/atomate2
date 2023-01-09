@@ -83,12 +83,17 @@ class Atomate2Settings(BaseSettings):
     )
 
     # CP2K specific settings
-    CP2K_CMD: str = Field("cp2k.psmp", description="Command to run the MPI version of cp2k")
-    CP2K_RUN_BADER: bool = Field(
-        False, description="Whether to run the Bader program when parsing CP2K calculations."
-        "Requires the bader executable to be on the path."
+    CP2K_CMD: str = Field(
+        "cp2k.psmp", description="Command to run the MPI version of cp2k"
     )
-    CP2K_INPUT_UPDATES: dict = Field(default_factory=dict, description="Updates to apply to cp2k input files.")
+    CP2K_RUN_BADER: bool = Field(
+        False,
+        description="Whether to run the Bader program when parsing CP2K calculations."
+        "Requires the bader executable to be on the path.",
+    )
+    CP2K_INPUT_UPDATES: dict = Field(
+        default_factory=dict, description="Updates to apply to cp2k input files."
+    )
     CP2K_RELAX_MAX_FORCE: float = Field(
         0.25,
         description="Maximum force allowed on each atom for successful structure "

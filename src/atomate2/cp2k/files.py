@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from tkinter import W
 from typing import Sequence
 
 from pymatgen.core import Structure
@@ -13,9 +12,9 @@ from pymatgen.io.cp2k.outputs import Cp2kOutput
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 __all__ = ["copy_cp2k_outputs", "write_cp2k_input_set"]
 
@@ -27,7 +26,7 @@ logger = logging.getLogger(__name__)
 def copy_cp2k_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
-    additional_cp2k_files: Sequence[str] = tuple(),
+    additional_cp2k_files: list[str] | None = None,
     restart_to_input: bool = True,
     file_client: FileClient | None = None,
 ):
@@ -60,16 +59,16 @@ def copy_cp2k_outputs(
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
     directory_listing = file_client.listdir(src_dir, host=src_host)
     restart_file = None
+    additional_cp2k_files = additional_cp2k_files if additional_cp2k_files else []
 
     # find required files
-    # TODO Using "parse_files" from Cp2kOutput to find and sort files. Should this just be done here?
     o = Cp2kOutput(src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False)
     o.parse_files()
     if restart_to_input:
-        additional_cp2k_files += ('restart',)
+        additional_cp2k_files += ("restart",)
 
-    #TODO it looks like in the vasp version, wavecar/chgcar are not copied by default. Seems odd?
-    additional_cp2k_files += ('wfn',)
+    # copy files
+    additional_cp2k_files += ("wfn",)
     files = ["cp2k.inp", "cp2k.out"]
     for f in set(additional_cp2k_files):
         if f in o.filenames and o.filenames.get(f):
@@ -79,7 +78,9 @@ def copy_cp2k_outputs(
                 files.append(Path(o.filenames[f][-1]).name)
         else:
             files.append(Path(f).name)
-    all_files = [get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files]
+    all_files = [
+        get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files
+    ]
     all_files = [f for f in all_files if f]
 
     copy_files(
@@ -109,6 +110,7 @@ def copy_cp2k_outputs(
 
     logger.info("Finished copying inputs")
 
+
 @auto_fileclient
 def get_largest_relax_extension(
     directory: Path | str,
@@ -118,24 +120,26 @@ def get_largest_relax_extension(
     """
     Get the largest numbered relax extension of files in a directory.
 
-    For example, if listdir gives ["Cp2k-RESTART.wfn.relax1.gz", "Cp2k-RESTART.wfn.relax2.gz"],
-    this function will return ".relax2".
+    For example, if listdir gives ["Cp2k-RESTART.wfn.relax1.gz",
+    "Cp2k-RESTART.wfn.relax2.gz"], this function will return ".relax2".
 
     Parameters
     ----------
     directory : str or Path
         A directory to search.
     host : str or None
-        The hostname used to specify a remote filesystem. Can be given as either
-        "username@remote_host" or just "remote_host" in which case the username will be
-        inferred from the current user. If ``None``, the local filesystem will be used.
+        The hostname used to specify a remote filesystem. Can be given as
+        either "username@remote_host" or just "remote_host" in which case
+        the username will be inferred from the current user. If ``None``,
+        the local filesystem will be used.
     file_client : .FileClient
         A file client to use for performing file operations.
 
     Returns
     -------
     str
-        The relax extension or an empty string if there were not multiple relaxations.
+        The relax extension or an empty string if there were not multiple
+        relaxations.
     """
     relax_files = file_client.glob(Path(directory) / "*.relax*", host=host)
     if len(relax_files) == 0:
@@ -144,6 +148,7 @@ def get_largest_relax_extension(
     numbers = [re.search(r".relax(\d+)", file.name).group(1) for file in relax_files]
     max_relax = max(numbers, key=lambda x: int(x))
     return f".relax{max_relax}"
+
 
 def write_cp2k_input_set(
     structure: Structure,
@@ -168,11 +173,12 @@ def write_cp2k_input_set(
     from_prev : bool
         Whether to initialize the input set from a previous calculation.
     apply_input_updates : bool
-        Whether to apply incar updates given in the ~/.atomate2.yaml settings file.
+        Whether to apply incar updates given in the ~/.atomate2.yaml settings
+        file.
     clean_prev : bool
         Remove previous inputs before writing new inputs.
     **kwargs
-        Keyword arguments that will be passed to :obj:`.Cp2kInputSet.write_input`.
+        Keyword arguments to pass to :obj:`.Cp2kInputSet.write_input`.
     """
     prev_dir = "." if from_prev else None
     cis = input_set_generator.get_input_set(
@@ -185,13 +191,14 @@ def write_cp2k_input_set(
     logger.info("Writing CP2K input set.")
     cis.write_input(directory, **kwargs)
 
+
 @auto_fileclient
 def cleanup_cp2k_outputs(
     directory: Path | str,
     host: str | None = None,
-    file_patterns: Sequence[str] = ("*bak*", ),
+    file_patterns: Sequence[str] = ("*bak*",),
     file_client: FileClient | None = None,
-    ):
+):
     """
     Remove unnecessary files.
 

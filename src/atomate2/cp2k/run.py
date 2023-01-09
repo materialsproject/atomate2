@@ -8,23 +8,22 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from tkinter import W
 from typing import Any, Sequence
 
 from custodian import Custodian
-from custodian.custodian import ErrorHandler, Validator
 from custodian.cp2k.handlers import (
-    StdErrHandler,
-    UnconvergedScfErrorHandler,
+    AbortHandler,
     DivergingScfErrorHandler,
     FrozenJobErrorHandler,
-    AbortHandler,
     NumericalPrecisionHandler,
+    StdErrHandler,
     UnconvergedRelaxationErrorHandler,
+    UnconvergedScfErrorHandler,
     WalltimeHandler,
 )
 from custodian.cp2k.jobs import Cp2kJob
 from custodian.cp2k.validators import Cp2kOutputValidator
+from custodian.custodian import ErrorHandler, Validator
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
@@ -46,7 +45,7 @@ _DEFAULT_HANDLERS = (
     UnconvergedRelaxationErrorHandler(),
     WalltimeHandler(),
 )
-_DEFAULT_VALIDATORS = (Cp2kOutputValidator(), )
+_DEFAULT_VALIDATORS = (Cp2kOutputValidator(),)
 
 logger = logging.getLogger(__name__)
 

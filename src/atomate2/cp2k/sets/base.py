@@ -6,19 +6,26 @@ import os
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
+import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
-from pymatgen.core.structure import Structure, Molecule
+from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.cp2k.inputs import Cp2kInput, BasisFile, PotentialFile, GaussianTypeOrbitalBasisSet, GthPotential
+from pymatgen.io.cp2k.inputs import (
+    BasisFile,
+    Cp2kInput,
+    GaussianTypeOrbitalBasisSet,
+    GthPotential,
+    PotentialFile,
+)
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.sets import DftSet
-
-from pymatgen.io.vasp import Kpoints # TODO continues to be an issue that kpoint functionality is kept in vasp io module
-
+from pymatgen.io.vasp import (  # TODO continues to be an issue that kpoint functionality is kept in vasp io module
+    Kpoints,
+)
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
@@ -51,7 +58,7 @@ class Cp2kInputSet(InputSet):
 
         optional_files
             Any additional files needed for running the calculations. Most common
-            use is to make data files available which are not guarunteed to be available
+            use is to make data files available which are not guaranteed to be available
             at runtime.
 
             Format pseudocode:
@@ -66,14 +73,14 @@ class Cp2kInputSet(InputSet):
 
                 (1) Cp2kInputGenerator below will try to put the basis and potential
                     info into their own optional files. This allows them to run when the
-                    cp2k executable cannot find this info due to version mismatch, custom
-                    data, etc.
-                (2) Include files. CP2K preprocessor link input sections like the structure
-                    definition to an external file in order to keep the main input file neat.
-                    This use case requires "@include" parameters (see pymatgen.io.cp2k or
-                    the cp2k manual)
-                (3) Other custom data files like vdw kernal tables, truncated coulomb tables,
-                    classical MD potential parameters.
+                    cp2k executable cannot find this info due to version mismatch,
+                    custom data, etc.
+                (2) Include files. CP2K preprocessor link input sections like the
+                    structure definition to an external file in order to keep the main
+                    input file neat. This use case requires "@include" parameters (see
+                    pymatgen.io.cp2k or the cp2k manual)
+                (3) Other custom data files like vdw kernel tables, truncated coulomb
+                    tables, classical MD potential parameters.
 
         """
         self.cp2k_input = cp2k_input
@@ -102,10 +109,7 @@ class Cp2kInputSet(InputSet):
             os.makedirs(directory)
 
         inputs = {
-            "input": {
-                "filename": "cp2k.inp",
-                "object": self.cp2k_input
-            },
+            "input": {"filename": "cp2k.inp", "object": self.cp2k_input},
         }
         inputs.update(self.optional_files)
 
@@ -140,8 +144,8 @@ class Cp2kInputSet(InputSet):
         optional = {}
         for filename, obj in optional_files.items():
             optional[filename] = {
-                'filename': filename,
-                'object': obj.from_file(filename)
+                "filename": filename,
+                "object": obj.from_file(filename),
             }
 
         return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional)
@@ -210,7 +214,7 @@ class Cp2kInputGenerator(InputGenerator):
         prev_dir
             A previous directory to generate the input set from.
         optional_files
-            Additional files (e.g. vdw kernal file) to be included in the input set.
+            Additional files (e.g. vdw kernel file) to be included in the input set.
 
         Returns
         -------
@@ -239,13 +243,16 @@ class Cp2kInputGenerator(InputGenerator):
             input_updates,
         )
         optional_files = optional_files if optional_files else {}
-        optional_files['basis'] = {"filename": "BASIS", "object": self._get_basis_file(cp2k_input=cp2k_input)}
-        optional_files['potential'] = {"filename": "POTENTIAL", "object": self._get_potential_file(cp2k_input=cp2k_input)}
+        optional_files["basis"] = {
+            "filename": "BASIS",
+            "object": self._get_basis_file(cp2k_input=cp2k_input),
+        }
+        optional_files["potential"] = {
+            "filename": "POTENTIAL",
+            "object": self._get_potential_file(cp2k_input=cp2k_input),
+        }
 
-        return Cp2kInputSet(
-            cp2k_input=cp2k_input,
-            optional_files=optional_files
-        )
+        return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional_files)
 
     def get_input_updates(self, structure, prev_input) -> dict:
         """
@@ -336,14 +343,20 @@ class Cp2kInputGenerator(InputGenerator):
         # Generate base input but override with user input settings
         input_settings = recursive_update(input_settings, input_updates)
         input_settings = recursive_update(input_settings, self.user_input_settings)
-        overrides = input_settings.pop("override_default_params") if "override_default_params" in input_settings else {}
+        overrides = (
+            input_settings.pop("override_default_params")
+            if "override_default_params" in input_settings
+            else {}
+        )
         cp2k_input = DftSet(structure=structure, kpoints=kpoints, **input_settings)
 
         for setting in input_settings:
             if hasattr(cp2k_input, setting) and input_settings[setting]:
                 if callable(getattr(cp2k_input, setting)):
                     subsettings = input_settings.get(setting)
-                    getattr(cp2k_input, setting)(**subsettings if isinstance(subsettings, dict) else {})
+                    getattr(cp2k_input, setting)(
+                        **subsettings if isinstance(subsettings, dict) else {}
+                    )
 
         cp2k_input.update(overrides)
         return cp2k_input
@@ -361,7 +374,7 @@ class Cp2kInputGenerator(InputGenerator):
                     basis_sets.append(data)
         if not basis_sets:
             return None
-        cp2k_input.safeset({'force_eval': {'dft': {'BASIS_SET_FILE_NAME': "BASIS"}}})
+        cp2k_input.safeset({"force_eval": {"dft": {"BASIS_SET_FILE_NAME": "BASIS"}}})
         return BasisFile(objects=basis_sets)
 
     def _get_potential_file(self, cp2k_input: Cp2kInput):
@@ -377,7 +390,9 @@ class Cp2kInputGenerator(InputGenerator):
                     potentials.append(data)
         if not potentials:
             return None
-        cp2k_input.safeset({'force_eval': {'dft': {'POTENTIAL_FILE_NAME': "POTENTIAL"}}})
+        cp2k_input.safeset(
+            {"force_eval": {"dft": {"POTENTIAL_FILE_NAME": "POTENTIAL"}}}
+        )
         return PotentialFile(objects=potentials)
 
     def _get_kpoints(
@@ -517,6 +532,41 @@ class Cp2kInputGenerator(InputGenerator):
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
 
+# TODO From `atomate2.vasp.sets.base`. Should possibly go in common.
+# only reservation is if, eventually, CP2K gets it own kpoint object version
+# instead of using the vasp kpoint objects.
+def _combine_kpoints(*kpoints_objects: Kpoints):
+    """Combine k-points files together."""
+    labels = []
+    kpoints = []
+    weights = []
+
+    for kpoints_object in filter(None, kpoints_objects):
+        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+            raise ValueError(
+                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
+            )
+        if kpoints_object.labels is None:
+            labels.append([""] * len(kpoints_object.kpts))
+        else:
+            labels.append(kpoints_object.labels)
+
+        weights.append(kpoints_object.kpts_weights)
+        kpoints.append(kpoints_object.kpts)
+
+    labels = np.concatenate(labels).tolist()
+    weights = np.concatenate(weights).tolist()
+    kpoints = np.concatenate(kpoints)
+    return Kpoints(
+        comment="Combined k-points",
+        style=Kpoints.supported_modes.Reciprocal,
+        num_kpts=len(kpoints),
+        kpts=kpoints,
+        labels=labels,
+        kpts_weights=weights,
+    )
+
+
 @dataclass
 class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
     """
@@ -536,17 +586,20 @@ class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
     config_dict
         The config dictionary to use containing the base input set settings.
     """
+
     user_input_settings: dict = field(default_factory=dict)
     sort_structure: bool = True
     symprec: float = SETTINGS.SYMPREC
     config_dict: dict = field(default_factory=lambda: _BASE_GAPW_SET)
 
-    def _get_kpoints(self, structure: Structure, kpoints_updates: dict[str, Any] | None) -> Kpoints | None:
+    def _get_kpoints(
+        self, structure: Structure, kpoints_updates: dict[str, Any] | None
+    ) -> Kpoints | None:
         """No Kpoints possible"""
         return None
 
 
-def recursive_update(d: Dict, u: Dict):
+def recursive_update(d: dict, u: dict):
     """
     Update a dictionary recursively and return it.
 

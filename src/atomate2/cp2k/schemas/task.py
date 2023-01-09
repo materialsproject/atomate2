@@ -8,25 +8,23 @@ from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 import numpy as np
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
-from pymatgen.analysis.structure_analyzer import oxide_type
-from pymatgen.core.structure import Structure, Molecule
+from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
-from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
 
 from atomate2 import SETTINGS, __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
-from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.common.schemas.molecule import MoleculeMetadata
-from atomate2.utils.datetime import datetime_str
-from atomate2.utils.path import get_uri
+from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.cp2k.schemas.calculation import (
     Calculation,
+    Cp2kObject,
     RunStatistics,
     Status,
-    Cp2kObject,
 )
+from atomate2.utils.datetime import datetime_str
+from atomate2.utils.path import get_uri
 
 __all__ = [
     "AnalysisSummary",
@@ -108,8 +106,12 @@ class AtomicKind(BaseModel):
 
     element: str = Field(None, description="Element assigned to this atom kind")
     basis: str = Field(None, description="Basis set for this atom kind")
-    potential: str = Field(None, description="Name of pseudopotential for this atom kind")
-    auxiliary_basis: str = Field(None, description="Auxiliary basis for this (if any) for this atom kind")
+    potential: str = Field(
+        None, description="Name of pseudopotential for this atom kind"
+    )
+    auxiliary_basis: str = Field(
+        None, description="Auxiliary basis for this (if any) for this atom kind"
+    )
     ghost: bool = Field(None, description="Whether this atom kind is a ghost")
 
 
@@ -118,18 +120,20 @@ class AtomicKindSummary(BaseModel):
 
     atomic_kinds: Dict[str, AtomicKind] = Field(
         None, description="Dictionary mapping atomic kind labels to their info"
-        )
+    )
 
     @classmethod
     def from_atomic_kind_info(cls, atomic_kind_info: dict):
-        d = {'atomic_kinds': {}}
+        d = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
-            d['atomic_kinds'][kind] = {
-                'element': info['element'],
-                'basis': info['orbital_basis_set'],
-                'potential': info['pseudo_potential'],
-                'auxiliary_basis': info['auxiliary_basis_set'][0] if info['auxiliary_basis_set'] else None,
-                "ghost": True if info['pseudo_potential'] == 'NONE' else False,
+            d["atomic_kinds"][kind] = {
+                "element": info["element"],
+                "basis": info["orbital_basis_set"],
+                "potential": info["pseudo_potential"],
+                "auxiliary_basis": info["auxiliary_basis_set"][0]
+                if info["auxiliary_basis_set"]
+                else None,
+                "ghost": True if info["pseudo_potential"] == "NONE" else False,
             }
         return cls(**d)
 
@@ -137,10 +141,12 @@ class AtomicKindSummary(BaseModel):
 class InputSummary(BaseModel):
     """Summary of inputs for a CP2K calculation."""
 
-    structure: Structure | Molecule = Field(None, description="The input structure object")
+    structure: Structure | Molecule = Field(
+        None, description="The input structure object"
+    )
 
     atomic_kind_info: AtomicKindSummary = Field(
-        None, description="Summary of the potential and basis used for each atom kind" 
+        None, description="Summary of the potential and basis used for each atom kind"
     )
     xc: str = Field(
         None, description="Exchange-correlation functional used if not the default"
@@ -167,14 +173,16 @@ class InputSummary(BaseModel):
         return cls(
             structure=calc_doc.input.structure,
             atomic_kind_info=aks,
-            xc=str(calc_doc.run_type)
+            xc=str(calc_doc.run_type),
         )
 
 
 class OutputSummary(BaseModel):
     """Summary of the outputs for a CP2K calculation."""
 
-    structure: Structure | Molecule = Field(None, description="The output structure object")
+    structure: Structure | Molecule = Field(
+        None, description="The output structure object"
+    )
     energy: float = Field(
         None, description="The final total DFT energy for the last calculation"
     )
@@ -207,11 +215,11 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         if calc_doc.output.ionic_steps:
-            forces=calc_doc.output.ionic_steps[-1].get("forces", None)
-            stress=calc_doc.output.ionic_steps[-1].get("stress", None)
+            forces = calc_doc.output.ionic_steps[-1].get("forces", None)
+            stress = calc_doc.output.ionic_steps[-1].get("stress", None)
         else:
-            forces=None
-            stress=None
+            forces = None
+            stress = None
         return cls(
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
@@ -363,37 +371,40 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
 
         if isinstance(calcs_reversed[-1].output.structure, Structure):
             attr = "from_structure"
-            dat = {"structure": calcs_reversed[-1].output.structure, "include_structure": True}
+            dat = {
+                "structure": calcs_reversed[-1].output.structure,
+                "include_structure": True,
+            }
         elif isinstance(calcs_reversed[-1].output.structure, Molecule):
             attr = "from_molecule"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
-                "molecule": calcs_reversed[-1].output.structure, 
-                "include_molecule": True
-                }
-        
+                "molecule": calcs_reversed[-1].output.structure,
+                "include_molecule": True,
+            }
+
         doc = getattr(cls, attr)(**dat)
         ddict = doc.dict()
         data = {
-            'structure': calcs_reversed[-1].output.structure,
-            'dir_name': dir_name,
-            'calcs_reversed': calcs_reversed,
-            'analysis': analysis,
-            'transformations': transformations,
-            'custodian': custodian,
-            'orig_inputs': orig_inputs,
-            'additional_json': additional_json,
-            'icsd_id': icsd_id,
-            'tags':tags,
-            'author': author,
-            'completed_at': calcs_reversed[-1].completed_at,
-            'input': InputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
-            'output': OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
-            'state': _get_state(calcs_reversed, analysis),
-            'entry': cls.get_entry(calcs_reversed),
-            'run_stats': _get_run_stats(calcs_reversed),
-            'cp2k_objects': cp2k_objects,
-            'included_objects': included_objects,
+            "structure": calcs_reversed[-1].output.structure,
+            "dir_name": dir_name,
+            "calcs_reversed": calcs_reversed,
+            "analysis": analysis,
+            "transformations": transformations,
+            "custodian": custodian,
+            "orig_inputs": orig_inputs,
+            "additional_json": additional_json,
+            "icsd_id": icsd_id,
+            "tags": tags,
+            "author": author,
+            "completed_at": calcs_reversed[-1].completed_at,
+            "input": InputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
+            "output": OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
+            "state": _get_state(calcs_reversed, analysis),
+            "entry": cls.get_entry(calcs_reversed),
+            "run_stats": _get_run_stats(calcs_reversed),
+            "cp2k_objects": cp2k_objects,
+            "included_objects": included_objects,
         }
         doc = cls(**ddict)
         doc = doc.copy(update=data)
@@ -507,7 +518,9 @@ def _find_cp2k_files(
 
     return task_files
 
-# TODO These functions seem like they do not need to be cp2k/vasp specific 
+
+# TODO These functions seem like they do not need to be cp2k/vasp specific
+
 
 def _parse_transformations(
     dir_name: Path,
@@ -608,7 +621,11 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
 
 def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     """Get max force acting on atoms from a calculation document."""
-    forces = calc_doc.output.ionic_steps[-1].get("forces") if calc_doc.output.ionic_steps else None
+    forces = (
+        calc_doc.output.ionic_steps[-1].get("forces")
+        if calc_doc.output.ionic_steps
+        else None
+    )
     structure = calc_doc.output.structure
     if forces:
         forces = np.array(forces)
@@ -641,4 +658,3 @@ def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
         total["total_time"] += stats.total_time
     run_stats["overall"] = RunStatistics(**total)
     return run_stats
-

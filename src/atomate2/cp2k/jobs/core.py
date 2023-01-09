@@ -1,19 +1,18 @@
 """Core jobs for running CP2K calculations."""
 
 from __future__ import annotations
-from email.policy import default
-from lib2to3.pytree import Base
 
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from custodian.cp2k.jobs import Cp2kJob
 from custodian.cp2k.handlers import (
-    StdErrHandler, FrozenJobErrorHandler, AbortHandler,
-    NumericalPrecisionHandler, WalltimeHandler
+    AbortHandler,
+    FrozenJobErrorHandler,
+    NumericalPrecisionHandler,
+    StdErrHandler,
+    WalltimeHandler,
 )
-
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.structure import Structure
@@ -22,10 +21,14 @@ from atomate2.common.utils import get_transformations
 from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
-    NonSCFSetGenerator,
-    HybridStaticSetGenerator, HybridRelaxSetGenerator, HybridCellOptSetGenerator,
-    StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator,
+    CellOptSetGenerator,
+    HybridCellOptSetGenerator,
+    HybridRelaxSetGenerator,
+    HybridStaticSetGenerator,
     MDSetGenerator,
+    NonSCFSetGenerator,
+    RelaxSetGenerator,
+    StaticSetGenerator,
 )
 
 logger = logging.getLogger(__name__)
@@ -39,7 +42,7 @@ __all__ = [
     "HybridCellOptMaker",
     "NonSCFMaker",
     "TransmuterMaker",
-    "MDMaker"
+    "MDMaker",
 ]
 
 
@@ -75,6 +78,7 @@ class StaticMaker(BaseCp2kMaker):
     name: str = "static"
     input_set_generator: Cp2kInputGenerator = field(default_factory=StaticSetGenerator)
 
+
 @dataclass
 class RelaxMaker(BaseCp2kMaker):
     """
@@ -107,11 +111,13 @@ class RelaxMaker(BaseCp2kMaker):
     name: str = "relax"
     input_set_generator: Cp2kInputGenerator = field(default_factory=RelaxSetGenerator)
 
+
 @dataclass
 class CellOptMaker(BaseCp2kMaker):
 
     name: str = "relax"
     input_set_generator: Cp2kInputGenerator = field(default_factory=CellOptSetGenerator)
+
 
 @dataclass
 class HybridStaticMaker(BaseCp2kMaker):
@@ -130,11 +136,16 @@ class HybridStaticMaker(BaseCp2kMaker):
 
     name: str = "hybrid static"
     hybrid_functional: str = "PBE0"
-    input_set_generator: Cp2kInputGenerator = field(default_factory=HybridStaticSetGenerator)
+    input_set_generator: Cp2kInputGenerator = field(
+        default_factory=HybridStaticSetGenerator
+    )
 
     def __post_init__(self):
         """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
+        self.input_set_generator.user_input_settings.update(
+            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
+        )
+
 
 @dataclass
 class HybridRelaxMaker(BaseCp2kMaker):
@@ -153,11 +164,16 @@ class HybridRelaxMaker(BaseCp2kMaker):
 
     name: str = "hybrid relax"
     hybrid_functional: str = "PBE0"
-    input_set_generator: Cp2kInputGenerator = field(default_factory=HybridRelaxSetGenerator)
+    input_set_generator: Cp2kInputGenerator = field(
+        default_factory=HybridRelaxSetGenerator
+    )
 
     def __post_init__(self):
         """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
+        self.input_set_generator.user_input_settings.update(
+            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
+        )
+
 
 @dataclass
 class HybridCellOptMaker(BaseCp2kMaker):
@@ -176,11 +192,16 @@ class HybridCellOptMaker(BaseCp2kMaker):
 
     name: str = "hybrid cell opt"
     hybrid_functional: str = "PBE0"
-    input_set_generator: Cp2kInputGenerator = field(default_factory=HybridCellOptSetGenerator)
+    input_set_generator: Cp2kInputGenerator = field(
+        default_factory=HybridCellOptSetGenerator
+    )
 
     def __post_init__(self):
         """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update({"activate_hybrid": {"hybrid_functional": self.hybrid_functional}})
+        self.input_set_generator.user_input_settings.update(
+            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
+        )
+
 
 @dataclass
 class NonSCFMaker(BaseCp2kMaker):
@@ -222,9 +243,9 @@ class NonSCFMaker(BaseCp2kMaker):
                 FrozenJobErrorHandler(),
                 AbortHandler(),
                 NumericalPrecisionHandler(),
-                WalltimeHandler()
+                WalltimeHandler(),
             ),
-            "validators": () # TODO remove the convergence checks, but will pass an empty file if I/O fails
+            "validators": (),  # TODO remove the convergence checks, but will pass an empty file if I/O fails
         }
     )
 
@@ -263,6 +284,7 @@ class NonSCFMaker(BaseCp2kMaker):
             self.copy_cp2k_kwargs["additional_cp2k_files"] = ("wfn",)
 
         return super().make.original(self, structure, prev_cp2k_dir)
+
 
 @dataclass
 class TransmuterMaker(BaseCp2kMaker):
@@ -338,6 +360,7 @@ class TransmuterMaker(BaseCp2kMaker):
 
         return super().make.original(self, structure, prev_cp2k_dir)
 
+
 @dataclass
 class MDMaker(BaseCp2kMaker):
     """
@@ -357,7 +380,5 @@ class MDMaker(BaseCp2kMaker):
     name: str = "md"
     input_set_generator: Cp2kInputGenerator = field(default_factory=MDSetGenerator)
     task_document_kwargs: dict = field(
-        default_factory=lambda: {
-            "store_trajectory": True
-        }
+        default_factory=lambda: {"store_trajectory": True}
     )
