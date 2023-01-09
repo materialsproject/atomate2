@@ -60,7 +60,7 @@ class Cp2kDrone(AbstractDrone):
 
         There are some restrictions on the valid directory structures:
 
-        1. There can be only one cp2k.out in each directory. Nested directories are fine.
+        1. There can be only one cp2k.out in each directory. Nested directories are ok.
         2. Directories designated "relax1"..."relax9" are considered to be parts of a
            multiple-optimization run.
         3. Directories containing VASP output with ".relax1"...".relax9" are also

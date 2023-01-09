@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
@@ -57,7 +58,7 @@ class Cp2kInputSet(InputSet):
 
         optional_files
             Any additional files needed for running the calculations. Most common
-            use is to make data files available which are not guarunteed to be available
+            use is to make data files available which are not guaranteed to be available
             at runtime.
 
             Format pseudocode:
@@ -72,14 +73,14 @@ class Cp2kInputSet(InputSet):
 
                 (1) Cp2kInputGenerator below will try to put the basis and potential
                     info into their own optional files. This allows them to run when the
-                    cp2k executable cannot find this info due to version mismatch, custom
-                    data, etc.
-                (2) Include files. CP2K preprocessor link input sections like the structure
-                    definition to an external file in order to keep the main input file neat.
-                    This use case requires "@include" parameters (see pymatgen.io.cp2k or
-                    the cp2k manual)
-                (3) Other custom data files like vdw kernal tables, truncated coulomb tables,
-                    classical MD potential parameters.
+                    cp2k executable cannot find this info due to version mismatch,
+                    custom data, etc.
+                (2) Include files. CP2K preprocessor link input sections like the
+                    structure definition to an external file in order to keep the main
+                    input file neat. This use case requires "@include" parameters (see
+                    pymatgen.io.cp2k or the cp2k manual)
+                (3) Other custom data files like vdw kernel tables, truncated coulomb
+                    tables, classical MD potential parameters.
 
         """
         self.cp2k_input = cp2k_input
@@ -213,7 +214,7 @@ class Cp2kInputGenerator(InputGenerator):
         prev_dir
             A previous directory to generate the input set from.
         optional_files
-            Additional files (e.g. vdw kernal file) to be included in the input set.
+            Additional files (e.g. vdw kernel file) to be included in the input set.
 
         Returns
         -------
@@ -529,6 +530,41 @@ class Cp2kInputGenerator(InputGenerator):
             return None
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
+
+
+# TODO From `atomate2.vasp.sets.base`. Should possibly go in common.
+# only reservation is if, eventually, CP2K gets it own kpoint object version
+# instead of using the vasp kpoint objects.
+def _combine_kpoints(*kpoints_objects: Kpoints):
+    """Combine k-points files together."""
+    labels = []
+    kpoints = []
+    weights = []
+
+    for kpoints_object in filter(None, kpoints_objects):
+        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+            raise ValueError(
+                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
+            )
+        if kpoints_object.labels is None:
+            labels.append([""] * len(kpoints_object.kpts))
+        else:
+            labels.append(kpoints_object.labels)
+
+        weights.append(kpoints_object.kpts_weights)
+        kpoints.append(kpoints_object.kpts)
+
+    labels = np.concatenate(labels).tolist()
+    weights = np.concatenate(weights).tolist()
+    kpoints = np.concatenate(kpoints)
+    return Kpoints(
+        comment="Combined k-points",
+        style=Kpoints.supported_modes.Reciprocal,
+        num_kpts=len(kpoints),
+        kpts=kpoints,
+        labels=labels,
+        kpts_weights=weights,
+    )
 
 
 @dataclass

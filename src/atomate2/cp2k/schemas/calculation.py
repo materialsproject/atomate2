@@ -345,15 +345,16 @@ class Calculation(BaseModel):
         run_bader
             Whether to run bader on the charge density.
         strip_dos_projections : bool
-            Whether to strip the element and site projections from the density of states.
-            This can help reduce the size of DOS objects in systems with many atoms.
+            Whether to strip the element and site projections from the density of
+            states. This can help reduce the size of DOS objects in systems with
+            many atoms.
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
         store_trajectory:
-            Whether to store the ionic steps as a pmg trajectory object, which can be pushed,
-            to a bson data store, instead of as a list od dicts. Useful for large
-            trajectories.
+            Whether to store the ionic steps as a pmg trajectory object, which can be
+            pushed, to a bson data store, instead of as a list od dicts. Useful for
+            large trajectories.
         store_scf:
             Whether to store the SCF convergence data.
         store_volumetric_data
@@ -391,7 +392,6 @@ class Calculation(BaseModel):
 
         bader = None
         if run_bader and Cp2kObject.ELECTRON_DENSITY in output_file_paths:
-            suffix = "" if task_name == "standard" else f".{task_name}"
             ba = BaderAnalysis(cube_filename=Cp2kObject.ELECTRON_DENSITY)
             # TODO vasp version calls bader_analysis_from_path but cp2k
             # cube files don't support that yet, do it manually
@@ -476,11 +476,13 @@ def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]
     Calculation summaries will only have metadata (i.e. the name) that matches to
     the basis/potential contained in these files.
     """
-    data = {}
+    data: Dict[Cp2kObject, DataFile] = {}
     if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))
+        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type: ignore
+            str(dir_name / "BASIS")
+        )
     if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(
+        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore
             str(dir_name / "POTENTIAL")
         )
     return data
@@ -501,7 +503,7 @@ def _get_volumetric_data(
     output_file_paths
         A dictionary mapping the data type to file path relative to dir_name.
     store_volumetric_data
-        The volumetric data files to load. E.g., `("v_hartree", "e_density", "spin_density")
+        The volumetric data files to load. E.g., ("v_hartree", "e_density")
 
     Returns
     -------
@@ -560,7 +562,8 @@ def _parse_bandstructure(
 
     Parameters
     ----------
-         parse_bandstructure (bool): Whether to parse. Does not support the auto/line distinction currently.
+         parse_bandstructure (bool): Whether to parse. Does not support the
+            auto/line distinction currently.
     """
     if parse_bandstructure:
         return cp2k_output.band_structure
@@ -571,7 +574,8 @@ def _parse_trajectory(cp2k_output: Cp2kOutput) -> Optional[Trajectory]:
     """
     Grab a Trajectory object given a cp2k output object.
 
-    If an "ener" file is present containing MD results, it will be added as frame data to the traj object
+    If an "ener" file is present containing MD results, it will be added as
+    frame data to the traj object
     """
     ener = (
         cp2k_output.filenames.get("ener")[-1]

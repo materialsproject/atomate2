@@ -21,7 +21,15 @@ from atomate2.cp2k.jobs.core import (
 from atomate2.cp2k.powerups import update_user_input_settings
 from atomate2.cp2k.schemas.calculation import Cp2kObject
 
-__all__ = []
+__all__ = [
+    "DoubleRelaxMaker",
+    "BandStructureMaker",
+    "RelaxBandStructureMaker",
+    "HybridFlowMaker",
+    "HybridStaticFlowMaker",
+    "HybridRelaxFlowMaker",
+    "HybridCellOptFlowMaker",
+]
 
 
 @dataclass
@@ -220,9 +228,10 @@ class HybridFlowMaker(Maker):
     hybrid_functional
         built-in hybrid functional to use
     initialize_with_pbe
-        Whether or not to attach a pre-hybrid flow that can be used to kickstart the hybrid
-        flow. This is treated differently than just stiching flows together, because of the
-        screening done in __post_init__
+        Whether or not to attach a pre-hybrid flow that can be used to
+        kickstart the hybrid flow. This is treated differently than just
+        stiching flows together, because of the screening done in
+        __post_init__
     pbe_maker
         Maker for the initialization
     hybrid_maker
@@ -236,8 +245,8 @@ class HybridFlowMaker(Maker):
 
     def __post_init__(self):
         """Initializing with PBE allows CP2K to screen exchange integrals using
-        the PBE density matrix, which creates huge speed-ups. Rarely causes problems
-        so it is done as a default here.
+        the PBE density matrix, which creates huge speed-ups. Rarely causes
+        problems so it is done as a default here.
         """
         self.hybrid_maker.hybrid_functional = self.hybrid_functional
         if self.initialize_with_pbe:
@@ -254,6 +263,21 @@ class HybridFlowMaker(Maker):
     def make(
         self, structure: Structure, prev_cp2k_dir: str | Path | None = None
     ) -> Job:
+        """
+        Make a hybrid flow.
+
+        Parameters
+        ----------
+        structure: .Structure
+            A pymatgen structure object.
+        prev_cp2k_dir : str or Path or None
+            A previous CP2K calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A hybrid flow with a possible PBE initialization step
+        """
         jobs = []
         if self.initialize_with_pbe:
             initialization = self.pbe_maker.make(structure, prev_cp2k_dir)

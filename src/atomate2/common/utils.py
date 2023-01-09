@@ -6,7 +6,8 @@ from importlib import import_module
 
 
 def get_transformations(transformations: tuple[str], params: tuple[dict, ...] | None):
-    """Get instantiated transformation objects from their names and parameters."""
+    """Get instantiated transformation objects from their names
+    and parameters."""
     params = ({},) * len(transformations) if params is None else params
 
     if len(params) != len(transformations):
