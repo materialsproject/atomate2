@@ -127,4 +127,3 @@ def update_user_kpoints_settings(
             dict_mod=True,
         )
     return updated_flow
-

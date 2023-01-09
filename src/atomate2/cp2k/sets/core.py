@@ -3,19 +3,14 @@
 from __future__ import annotations
 
 import logging
-from copy import deepcopy
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 
-import numpy as np
 from pymatgen.core import Structure
-from pymatgen.core.periodic_table import Element
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
-from atomate2.common.schemas.math import Vector3D
-from atomate2.cp2k.sets.base import Cp2kInputGenerator, Cp2kAllElectronInputGenerator
+from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +23,7 @@ __all__ = [
     "HybridRelaxSetGenerator",
     "HybridCellOptSetGenerator",
     "NonSCFSetGenerator",
-    "MDSetGenerator"
+    "MDSetGenerator",
 ]
 
 
@@ -43,6 +38,7 @@ class StaticSetGenerator(Cp2kInputGenerator):
         updates = {"run_type": "ENERGY_FORCE"}
         return updates
 
+
 @dataclass
 class RelaxSetGenerator(Cp2kInputGenerator):
     """
@@ -54,12 +50,10 @@ class RelaxSetGenerator(Cp2kInputGenerator):
         """Get updates to the input for a relax job"""
         updates = {
             "run_type": "GEO_OPT",
-            "activate_motion": {
-                'optimizer': "BFGS",
-                "trust_radius": 0.1
-            },
+            "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
         }
         return updates
+
 
 @dataclass
 class CellOptSetGenerator(Cp2kInputGenerator):
@@ -73,12 +67,10 @@ class CellOptSetGenerator(Cp2kInputGenerator):
         """Get updates to the input for a cell opt job"""
         updates = {
             "run_type": "CELL_OPT",
-            "activate_motion": {
-                'optimizer': "BFGS",
-                "trust_radius": 0.1
-            },
+            "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
         }
         return updates
+
 
 @dataclass
 class HybridStaticSetGenerator(Cp2kInputGenerator):
@@ -99,9 +91,12 @@ class HybridStaticSetGenerator(Cp2kInputGenerator):
             },
         }
         if hasattr(structure, "lattice"):
-            updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
+            updates["activate_hybrid"]["cutoff_radius"] = get_truncated_coulomb_cutoff(
+                structure
+            )
 
         return updates
+
 
 @dataclass
 class HybridRelaxSetGenerator(Cp2kInputGenerator):
@@ -113,10 +108,7 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
         """Get input updates for a hybrid calculation"""
         updates = {
             "run_type": "GEO_OPT",
-            "activate_motion": {
-                'optimizer': "BFGS",
-                "trust_radius": 0.1
-            },
+            "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
             "activate_hybrid": {
                 "hybrid_functional": "PBE0",
                 "screen_on_initial_p": False,
@@ -126,9 +118,12 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
             },
         }
         if hasattr(structure, "lattice"):
-            updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
+            updates["activate_hybrid"]["cutoff_radius"] = get_truncated_coulomb_cutoff(
+                structure
+            )
 
         return updates
+
 
 @dataclass
 class HybridCellOptSetGenerator(Cp2kInputGenerator):
@@ -140,10 +135,7 @@ class HybridCellOptSetGenerator(Cp2kInputGenerator):
         """Get input updates for a hybrid calculation"""
         updates = {
             "run_type": "CELL_OPT",
-            "activate_motion": {
-                'optimizer': "BFGS",
-                "trust_radius": 0.1
-            },
+            "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
             "activate_hybrid": {
                 "hybrid_functional": "PBE0",
                 "screen_on_initial_p": False,
@@ -153,9 +145,12 @@ class HybridCellOptSetGenerator(Cp2kInputGenerator):
             },
         }
         if hasattr(structure, "lattice"):
-            updates['activate_hybrid']['cutoff_radius'] = get_truncated_coulomb_cutoff(structure)
+            updates["activate_hybrid"]["cutoff_radius"] = get_truncated_coulomb_cutoff(
+                structure
+            )
 
         return updates
+
 
 @dataclass
 class NonSCFSetGenerator(Cp2kInputGenerator):
@@ -229,20 +224,20 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
         prev_input: Cp2kInput = None,
         cp2k_output: Cp2kOutput = None,
     ) -> dict:
-        """
-        """
+        """ """
 
         updates = {
-            'max_scf': 1,
-            'print_bandstructure': True,
-            'kpoints_line_density': self.line_density if self.mode == "line" else 1,
-            'print_dos': True,
-            'print_pdos': False, # Not possible as of 2022.1
-            'print_mo_cubes': False,
-            'run_type': 'ENERGY_FORCE',
+            "max_scf": 1,
+            "print_bandstructure": True,
+            "kpoints_line_density": self.line_density if self.mode == "line" else 1,
+            "print_dos": True,
+            "print_pdos": False,  # Not possible as of 2022.1
+            "print_mo_cubes": False,
+            "run_type": "ENERGY_FORCE",
         }
 
         return updates
+
 
 @dataclass
 class MDSetGenerator(Cp2kInputGenerator):
@@ -259,9 +254,9 @@ class MDSetGenerator(Cp2kInputGenerator):
                 "temperature": 300,
                 "timestep": 2,
                 "nsteps": 1000,
-                "thermostat": "NOSE"
+                "thermostat": "NOSE",
             },
-            "print_bandstructure": False, # Disable printing
+            "print_bandstructure": False,  # Disable printing
             "print_dos": False,
             "print_pdos": False,
             "print_v_hartree": False,

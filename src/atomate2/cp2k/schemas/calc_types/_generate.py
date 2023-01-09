@@ -22,6 +22,7 @@ for functional_class in _RUN_TYPE_DATA:
             for u in ["", "+U"]:
                 _RUN_TYPES.append(f"{rt}{vdw}{u}")
 
+
 def get_enum_source(enum_name, doc, items):
     header = f"""
 class {enum_name}(ValueEnum):
@@ -37,7 +38,11 @@ run_type_enum = get_enum_source(
     "CP2K calculation run types",
     dict(
         {
-            "_".join(rt.split()).replace("+", "_").replace("-", "_").replace("(", "_").replace(")", ""): rt
+            "_".join(rt.split())
+            .replace("+", "_")
+            .replace("-", "_")
+            .replace("(", "_")
+            .replace(")", ""): rt
             for rt in _RUN_TYPES
         }
     ),

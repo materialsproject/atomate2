@@ -1,28 +1,25 @@
 """Core definitions of a CP2K calculation documents."""
 
-import os
 import logging
+import os
 from pathlib import Path
 from shutil import which
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import numpy as np
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, validator
 from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import BaderAnalysis
-from pymatgen.core.structure import Structure, Molecule
+from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
-from pymatgen.electronic_structure.dos import Dos, CompleteDos
-from pymatgen.electronic_structure.bandstructure import BandStructure
-
-from pymatgen.io.common import VolumetricData
-from pymatgen.io.cp2k.inputs import DataFile, BasisFile, PotentialFile, GthPotential
-from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 from pymatgen.core.units import Ha_to_eV
+from pymatgen.electronic_structure.bandstructure import BandStructure
+from pymatgen.electronic_structure.dos import Dos
+from pymatgen.io.common import VolumetricData
+from pymatgen.io.cp2k.inputs import BasisFile, DataFile, PotentialFile
+from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 
 from atomate2 import SETTINGS
-from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.cp2k.schemas.calc_types import (
     CalcType,
     RunType,
@@ -44,9 +41,7 @@ __all__ = [
 ]
 
 # Can be expanded if support for other volumetric files is added
-__is_stored_in_Ha__ = [
-    "v_hartree"
-]
+__is_stored_in_Ha__ = ["v_hartree"]
 
 
 _BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
@@ -64,13 +59,13 @@ class Cp2kObject(ValueEnum):
 
     DOS = "dos"
     BANDSTRUCTURE = "band_structure"
-    BASIS = "basis" # Basis file
-    POTENTIAL = "potential" # potential file
-    ELECTRON_DENSITY = "electron_density" # e_density
-    SPIN_DENSITY = "spin_density" # spin density
-    v_hartree = "v_hartree" # elec. potential
-    TRAJECTORY = "trajectory" # Trajectory
-    WFN = "wfn" # Wavefunction file
+    BASIS = "basis"  # Basis file
+    POTENTIAL = "potential"  # potential file
+    ELECTRON_DENSITY = "electron_density"  # e_density
+    SPIN_DENSITY = "spin_density"  # spin density
+    v_hartree = "v_hartree"  # elec. potential
+    TRAJECTORY = "trajectory"  # Trajectory
+    WFN = "wfn"  # Wavefunction file
 
 
 class CalculationInput(BaseModel):
@@ -78,40 +73,46 @@ class CalculationInput(BaseModel):
     Summary of inputs for a CP2K calculation
     """
 
-    structure: Structure | Molecule = Field(None, description="The input structure/molecule object")
+    structure: Structure | Molecule = Field(
+        None, description="The input structure/molecule object"
+    )
 
-    atomic_kind_info: Dict = Field(None, description="Description of parameters used for each atomic kind")
+    atomic_kind_info: Dict = Field(
+        None, description="Description of parameters used for each atomic kind"
+    )
 
     cp2k_input: Dict = Field(None, description="The cp2k input used for this task")
 
-    dft: Dict = Field(None, description="Description of the DFT parameters used in the last calc of this task")
+    dft: Dict = Field(
+        None,
+        description="Description of the DFT parameters used in the last calc of this task",
+    )
 
-    cp2k_global: Dict = Field(None, description="CP2K global parameters used in the last calc of this task")
+    cp2k_global: Dict = Field(
+        None, description="CP2K global parameters used in the last calc of this task"
+    )
 
-    @validator('atomic_kind_info')
+    @validator("atomic_kind_info")
     def remove_unnecessary(cls, atomic_kind_info):
         for k in atomic_kind_info:
-            if 'total_pseudopotential_energy' in atomic_kind_info[k]:
-                del atomic_kind_info[k]['total_pseudopotential_energy']
+            if "total_pseudopotential_energy" in atomic_kind_info[k]:
+                del atomic_kind_info[k]["total_pseudopotential_energy"]
         return atomic_kind_info
 
-    @validator('dft')
+    @validator("dft")
     def cleanup_dft(cls, dft):
-        if any(v.upper() == 'UKS' for v in dft.values()):
-            dft['UKS'] = True
+        if any(v.upper() == "UKS" for v in dft.values()):
+            dft["UKS"] = True
         return dft
 
     @classmethod
-    def from_cp2k_output(
-        cls,
-        output: Cp2kOutput
-    ):
+    def from_cp2k_output(cls, output: Cp2kOutput):
         return cls(
             structure=output.initial_structure,
             atomic_kind_info=output.data.get("atomic_kind_info", None),
             cp2k_input=output.input.as_dict(),
             dft=output.data.get("dft", None),
-            cp2k_global=output.data.get("global", None)
+            cp2k_global=output.data.get("global", None),
         )
 
 
@@ -138,7 +139,7 @@ class RunStatistics(BaseModel):
         # rename these statistics
         run_stats = {}
         output.parse_timing()
-        run_stats['total_time'] = output.timing["CP2K"]["total_time"]["maximum"]
+        run_stats["total_time"] = output.timing["CP2K"]["total_time"]["maximum"]
         return cls(**run_stats)
 
 
@@ -159,7 +160,9 @@ class CalculationOutput(BaseModel):
     )
     is_metal: bool = Field(None, description="Whether the system is metallic")
     bandgap: float = Field(None, description="The band gap from the calculation in eV")
-    v_hartree: Dict[int, List[float]] | None = Field(None, description="Plane averaged electrostatic potential")
+    v_hartree: Dict[int, List[float]] | None = Field(
+        None, description="Plane averaged electrostatic potential"
+    )
     cbm: float = Field(
         None,
         description="The conduction band minimum in eV (if system is not metallic)",
@@ -182,7 +185,7 @@ class CalculationOutput(BaseModel):
     @classmethod
     def from_cp2k_output(
         cls,
-        output: Cp2kOutput, # Must use auto_load kwarg when passed
+        output: Cp2kOutput,  # Must use auto_load kwarg when passed
         v_hartree: Optional[VolumetricData] = None,
         store_trajectory: bool = False,
         store_scf: bool = False,
@@ -201,7 +204,7 @@ class CalculationOutput(BaseModel):
         -------
             The CP2K calculation output document.
         """
-        
+
         v_hart_avg = None
         if v_hartree:
             v_hart_avg = {
@@ -232,7 +235,7 @@ class CalculationOutput(BaseModel):
 
         if store_scf:
             output.parse_scf_opt()
-            scf = output.data.get('electronic_steps')
+            scf = output.data.get("electronic_steps")
             scf = [item for sublist in scf for item in sublist]
         else:
             scf = None
@@ -241,7 +244,7 @@ class CalculationOutput(BaseModel):
             structure=structure,
             energy=output.final_energy,
             energy_per_atom=output.final_energy / len(structure),
-            **electronic_output, 
+            **electronic_output,
             ionic_steps=None if store_trajectory else output.ionic_steps,
             v_hartree=v_hart_avg,
             run_stats=RunStatistics.from_cp2k_output(output),
@@ -347,9 +350,9 @@ class Calculation(BaseModel):
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
-        store_trajectory:       
+        store_trajectory:
             Whether to store the ionic steps as a pmg trajectory object, which can be pushed,
-            to a bson data store, instead of as a list od dicts. Useful for large 
+            to a bson data store, instead of as a list od dicts. Useful for large
             trajectories.
         store_scf:
             Whether to store the SCF convergence data.
@@ -390,7 +393,7 @@ class Calculation(BaseModel):
         if run_bader and Cp2kObject.ELECTRON_DENSITY in output_file_paths:
             suffix = "" if task_name == "standard" else f".{task_name}"
             ba = BaderAnalysis(cube_filename=Cp2kObject.ELECTRON_DENSITY)
-            #TODO vasp version calls bader_analysis_from_path but cp2k
+            # TODO vasp version calls bader_analysis_from_path but cp2k
             # cube files don't support that yet, do it manually
             bader = {
                 "min_dist": [d["min_dist"] for d in ba.data],
@@ -422,7 +425,8 @@ class Calculation(BaseModel):
             traj = _parse_trajectory(cp2k_output=cp2k_output)
             cp2k_objects[Cp2kObject.TRAJECTORY] = traj  # type: ignore
 
-        return cls(
+        return (
+            cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
                 cp2k_version=cp2k_output.cp2k_version,
@@ -437,7 +441,9 @@ class Calculation(BaseModel):
                 run_type=run_type(input_doc.dict()),
                 task_type=task_type(input_doc.dict()),
                 calc_type=calc_type(input_doc.dict()),
-        ), cp2k_objects
+            ),
+            cp2k_objects,
+        )
 
 
 def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]:
@@ -464,7 +470,7 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]
 
 def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]:
     """
-    Get the path of the basis and potential files, so exact info 
+    Get the path of the basis and potential files, so exact info
     about the basis set /potential used can be retrieved.
 
     Calculation summaries will only have metadata (i.e. the name) that matches to
@@ -474,8 +480,11 @@ def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]
     if Path.exists(dir_name / "BASIS"):
         data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))
     if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(str(dir_name / "POTENTIAL"))
+        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(
+            str(dir_name / "POTENTIAL")
+        )
     return data
+
 
 def _get_volumetric_data(
     dir_name: Path,
@@ -512,26 +521,27 @@ def _get_volumetric_data(
             volumetric_data[file_type] = VolumetricData.from_cube(dir_name / file)
         except Exception:
             raise ValueError(f"Failed to parse {file_type} at {file}.")
-    
+
     for file_type in volumetric_data:
         if file_type.name in __is_stored_in_Ha__:
             volumetric_data[file_type].scale(Ha_to_eV)
 
     return volumetric_data
 
-# TODO As written, this will only get the complete dos if it is available. 
+
+# TODO As written, this will only get the complete dos if it is available.
 # cp2k can only generate the complete DOS for gamma-point only calculations
 # and it has to be requested (not default). Should this method grab overall
 # dos / elemental project dos if the complete dos is not available, or stick
 # to grabbing the complete dos?
 def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
     """
-            parse_dos
-            Whether to parse the DOS. Can be:
+    parse_dos
+    Whether to parse the DOS. Can be:
 
-            - "auto": Only parse DOS if there are no ionic steps.
-            - True: Always parse DOS.
-            - False: Never parse DOS.
+    - "auto": Only parse DOS if there are no ionic steps.
+    - True: Always parse DOS.
+    - False: Never parse DOS.
     """
     if parse_dos == "auto":
         if len(cp2k_output.ionic_steps) == 0:
@@ -541,7 +551,10 @@ def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
         return cp2k_output.complete_dos
     return None
 
-def _parse_bandstructure(parse_bandstructure: str | bool, cp2k_output: Cp2kOutput) -> Optional[BandStructure]:
+
+def _parse_bandstructure(
+    parse_bandstructure: str | bool, cp2k_output: Cp2kOutput
+) -> Optional[BandStructure]:
     """
     Get the band structure.
 
@@ -553,13 +566,23 @@ def _parse_bandstructure(parse_bandstructure: str | bool, cp2k_output: Cp2kOutpu
         return cp2k_output.band_structure
     return None
 
+
 def _parse_trajectory(cp2k_output: Cp2kOutput) -> Optional[Trajectory]:
     """
-    Grab a Trajectory object given a cp2k output object. 
+    Grab a Trajectory object given a cp2k output object.
 
     If an "ener" file is present containing MD results, it will be added as frame data to the traj object
     """
-    ener = cp2k_output.filenames.get("ener")[-1] if cp2k_output.filenames.get("ener") else None
+    ener = (
+        cp2k_output.filenames.get("ener")[-1]
+        if cp2k_output.filenames.get("ener")
+        else None
+    )
     data = parse_energy_file(ener) if ener else None
-    constant_lattice = all(s.lattice == cp2k_output.initial_structure.lattice for s in cp2k_output.structures)
-    return Trajectory.from_structures(cp2k_output.structures, constant_lattice=constant_lattice, frame_properties=data)
+    constant_lattice = all(
+        s.lattice == cp2k_output.initial_structure.lattice
+        for s in cp2k_output.structures
+    )
+    return Trajectory.from_structures(
+        cp2k_output.structures, constant_lattice=constant_lattice, frame_properties=data
+    )

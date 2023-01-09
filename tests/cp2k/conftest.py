@@ -1,13 +1,13 @@
 import logging
+from hashlib import md5
 from pathlib import Path
 from typing import Literal, Sequence, Union
-from hashlib import md5
 
 import pytest
 
 logger = logging.getLogger("atomate2")
 
-_VFILES = ("cp2k.inp")
+_VFILES = "cp2k.inp"
 _REF_PATHS = {}
 _FAKE_RUN_CP2K_KWARGS = {}
 
@@ -15,24 +15,28 @@ _FAKE_RUN_CP2K_KWARGS = {}
 @pytest.fixture(scope="session")
 def basis_and_potential():
     return {
-        'basis_and_potential': {
+        "basis_and_potential": {
             "basis": "DZVP-MOLOPT-SR-GTH-q4",
             "potential": "GTH-PBE-q4",
-            "aux_basis": "pFIT3"
-            }
+            "aux_basis": "pFIT3",
         }
+    }
+
 
 @pytest.fixture(scope="session")
 def cp2k_test_dir(test_dir):
     return test_dir / "cp2k"
 
+
 @pytest.fixture(scope="session")
 def cp2k_test_inputs(test_dir):
     return Path(test_dir / "cp2k").glob("*/inputs")
 
+
 @pytest.fixture(scope="session")
 def cp2k_test_outputs(test_dir):
     return Path(test_dir / "cp2k").glob("*/outputs")
+
 
 @pytest.fixture(scope="function")
 def mock_cp2k(monkeypatch, cp2k_test_dir):
@@ -146,6 +150,7 @@ def fake_run_cp2k(
     # pretend to run cp2k by copying pre-generated outputs from reference dir
     logger.info("Generated fake cp2k outputs")
 
+
 @pytest.fixture(scope="function")
 def check_input():
     def _check_input(ref_path, user_input):
@@ -164,6 +169,7 @@ def check_input():
             raise ValueError("Cp2k Inputs do not match!")
 
     return _check_input
+
 
 def clear_cp2k_inputs():
     for cp2k_file in (

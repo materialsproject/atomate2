@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from tkinter import W
 from typing import Sequence
 
 from pymatgen.core import Structure
@@ -13,9 +12,9 @@ from pymatgen.io.cp2k.outputs import Cp2kOutput
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 __all__ = ["copy_cp2k_outputs", "write_cp2k_input_set"]
 
@@ -66,10 +65,10 @@ def copy_cp2k_outputs(
     o = Cp2kOutput(src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False)
     o.parse_files()
     if restart_to_input:
-        additional_cp2k_files += ('restart',)
+        additional_cp2k_files += ("restart",)
 
-    #TODO it looks like in the vasp version, wavecar/chgcar are not copied by default. Seems odd?
-    additional_cp2k_files += ('wfn',)
+    # TODO it looks like in the vasp version, wavecar/chgcar are not copied by default. Seems odd?
+    additional_cp2k_files += ("wfn",)
     files = ["cp2k.inp", "cp2k.out"]
     for f in set(additional_cp2k_files):
         if f in o.filenames and o.filenames.get(f):
@@ -79,7 +78,9 @@ def copy_cp2k_outputs(
                 files.append(Path(o.filenames[f][-1]).name)
         else:
             files.append(Path(f).name)
-    all_files = [get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files]
+    all_files = [
+        get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files
+    ]
     all_files = [f for f in all_files if f]
 
     copy_files(
@@ -108,6 +109,7 @@ def copy_cp2k_outputs(
         rename_files({f"{file_to_rename}": "cp2k.inp"}, file_client=file_client)
 
     logger.info("Finished copying inputs")
+
 
 @auto_fileclient
 def get_largest_relax_extension(
@@ -144,6 +146,7 @@ def get_largest_relax_extension(
     numbers = [re.search(r".relax(\d+)", file.name).group(1) for file in relax_files]
     max_relax = max(numbers, key=lambda x: int(x))
     return f".relax{max_relax}"
+
 
 def write_cp2k_input_set(
     structure: Structure,
@@ -185,13 +188,14 @@ def write_cp2k_input_set(
     logger.info("Writing CP2K input set.")
     cis.write_input(directory, **kwargs)
 
+
 @auto_fileclient
 def cleanup_cp2k_outputs(
     directory: Path | str,
     host: str | None = None,
-    file_patterns: Sequence[str] = ("*bak*", ),
+    file_patterns: Sequence[str] = ("*bak*",),
     file_client: FileClient | None = None,
-    ):
+):
     """
     Remove unnecessary files.
 

@@ -3,6 +3,7 @@ from pytest import approx
 
 def test_static_maker(mock_cp2k, si_structure, clean_dir, basis_and_potential):
     from jobflow import run_locally
+
     from atomate2.cp2k.jobs.core import StaticMaker
     from atomate2.cp2k.schemas.task import TaskDocument
 
@@ -26,8 +27,10 @@ def test_static_maker(mock_cp2k, si_structure, clean_dir, basis_and_potential):
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-214.23651374775685)
 
+
 def test_relax_maker(mock_cp2k, clean_dir, si_structure):
     from jobflow import run_locally
+
     from atomate2.cp2k.jobs.core import RelaxMaker
     from atomate2.cp2k.schemas.task import TaskDocument
 
@@ -51,6 +54,7 @@ def test_relax_maker(mock_cp2k, clean_dir, si_structure):
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-193.39161102270234)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 1
+
 
 def test_transmuter(mock_cp2k, clean_dir, si_structure):
     import numpy as np

@@ -4,7 +4,10 @@ import pytest
 @pytest.mark.parametrize(
     "copy_kwargs,files",
     [
-        ({"additional_cp2k_files": ("electron_density", )}, ("CP2K-ELECTRON_DENSITY-1_0.cube", "cp2k.out", "cp2k.inp")),
+        (
+            {"additional_cp2k_files": ("electron_density",)},
+            ("CP2K-ELECTRON_DENSITY-1_0.cube", "cp2k.out", "cp2k.inp"),
+        ),
     ],
 )
 def test_copy_cp2k_outputs_static(cp2k_test_dir, tmp_dir, copy_kwargs, files):
