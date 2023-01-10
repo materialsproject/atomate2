@@ -1,57 +1,71 @@
-
 """Flows used in the calculation of defect properties."""
 
 from __future__ import annotations
-from copy import deepcopy
 
 import logging
+from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Iterable, Literal, Mapping
 from pathlib import Path
+from typing import Iterable, Literal, Mapping
+
+from jobflow import Flow, Maker, OutputReference, job
 from numpy.typing import NDArray
-import itertools
-
-from jobflow import Flow, Job, Maker, OutputReference, job
-from pymatgen.core.structure import Structure
-from pymatgen.io.common import VolumetricData
-from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymatgen.analysis.defects.core import Defect
-from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.analysis.defects.supercells import get_sc_fromstruct
+from pymatgen.analysis.defects.thermo import DefectEntry
+from pymatgen.entries.computed_entries import ComputedStructureEntry
+from pymatgen.io.common import VolumetricData
 
+from atomate2.cp2k.flows.core import (
+    HybridCellOptFlowMaker,
+    HybridRelaxFlowMaker,
+    HybridStaticFlowMaker,
+)
 from atomate2.cp2k.jobs.base import BaseCp2kMaker
 from atomate2.cp2k.jobs.defect import (
-    DefectStaticMaker, DefectRelaxMaker, DefectCellOptMaker,
-    DefectHybridStaticMaker, DefectHybridRelaxMaker, DefectHybridCellOptMaker
+    DefectCellOptMaker,
+    DefectHybridCellOptMaker,
+    DefectHybridRelaxMaker,
+    DefectHybridStaticMaker,
+    DefectRelaxMaker,
+    DefectStaticMaker,
 )
 
-from atomate2.cp2k.flows.core import HybridStaticFlowMaker, HybridRelaxFlowMaker, HybridCellOptFlowMaker
-
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class DefectHybridStaticFlowMaker(HybridStaticFlowMaker):
 
     pbe_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default=DefectHybridStaticMaker(
-        copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
+    hybrid_maker: BaseCp2kMaker = field(
+        default=DefectHybridStaticMaker(
+            copy_cp2k_kwargs={"additional_cp2k_files": ("info.json",)}
         )
+    )
+
 
 @dataclass
 class DefectHybridRelaxFlowMaker(HybridRelaxFlowMaker):
 
     pbe_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default=DefectHybridRelaxMaker(
-        copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
+    hybrid_maker: BaseCp2kMaker = field(
+        default=DefectHybridRelaxMaker(
+            copy_cp2k_kwargs={"additional_cp2k_files": ("info.json",)}
         )
+    )
+
 
 @dataclass
 class DefectHybridCellOptFlowMaker(HybridCellOptFlowMaker):
 
     pbe_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
-    hybrid_maker: BaseCp2kMaker = field(default=DefectHybridCellOptMaker(
-        copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
+    hybrid_maker: BaseCp2kMaker = field(
+        default=DefectHybridCellOptMaker(
+            copy_cp2k_kwargs={"additional_cp2k_files": ("info.json",)}
         )
+    )
+
 
 # TODO close to being able to put this in common. Just need a switch that decides which core flow/job to use based on software
 @dataclass
@@ -91,23 +105,26 @@ class FormationEnergyMaker(Maker):
     force_diagonal: bool = field(default=False)
 
     def __post_init__(self):
-        if self.run_bulk == 'relax':
+        if self.run_bulk == "relax":
             if self.hybrid_functional:
                 self.bulk_maker = DefectHybridCellOptMaker(
-                    name="bulk hybrid relax", transformations=None,
+                    name="bulk hybrid relax",
+                    transformations=None,
                     initialize_with_pbe=self.initialize_with_pbe,
-                    hybrid_functional=self.hybrid_functional
-                    )
+                    hybrid_functional=self.hybrid_functional,
+                )
             else:
-                self.bulk_maker = DefectCellOptMaker(name="bulk relax", transformations=None)
+                self.bulk_maker = DefectCellOptMaker(
+                    name="bulk relax", transformations=None
+                )
 
         elif self.run_bulk == "static":
             if self.hybrid_functional:
                 self.bulk_maker = DefectHybridStaticFlowMaker(
-                    name='bulk hybrid static',
+                    name="bulk hybrid static",
                     initialize_with_pbe=self.initialize_with_pbe,
                     hybrid_functional=self.hybrid_functional,
-                    )
+                )
             else:
                 self.bulk_maker = DefectStaticMaker(name="bulk static")
 
@@ -140,12 +157,13 @@ class FormationEnergyMaker(Maker):
             self.def_maker.force_diagonal = self.force_diagonal
 
     def make(
-        self, defects: Iterable[Defect],
+        self,
+        defects: Iterable[Defect],
         charges: bool | Iterable[int] = False,
         dielectric: NDArray | int | float | None = None,
         prev_cp2k_dir: str | Path | None = None,
         collect_outputs: bool = True,
-        ):
+    ):
         """Make a flow to run multiple defects in order to calculate their formation
         energy diagram.
 
@@ -161,19 +179,29 @@ class FormationEnergyMaker(Maker):
             The workflow to calculate the formation energy diagram.
         """
         jobs, defect_outputs = [], {}
-        defect_outputs = {defect.name: {} for defect in defects} # TODO DEFECT NAMES ARE NOT UNIQUE HASHES
+        defect_outputs = {
+            defect.name: {} for defect in defects
+        }  # TODO DEFECT NAMES ARE NOT UNIQUE HASHES
         bulk_structure = ensure_defects_same_structure(defects)
 
-        sc_mat = self.supercell_matrix if self.supercell_matrix else \
-                    get_sc_fromstruct(
-                        bulk_structure, self.min_atoms,
-                        self.max_atoms, self.min_length,
-                        self.force_diagonal,)
+        sc_mat = (
+            self.supercell_matrix
+            if self.supercell_matrix
+            else get_sc_fromstruct(
+                bulk_structure,
+                self.min_atoms,
+                self.max_atoms,
+                self.min_length,
+                self.force_diagonal,
+            )
+        )
 
         if self.run_bulk:
             s = bulk_structure.copy()
             s.make_supercell(sc_mat)
-            bulk_job = self.bulk_maker.make(bulk_structure * sc_mat, prev_cp2k_dir=prev_cp2k_dir)
+            bulk_job = self.bulk_maker.make(
+                bulk_structure * sc_mat, prev_cp2k_dir=prev_cp2k_dir
+            )
             jobs.append(bulk_job)
 
         for defect in defects:
@@ -192,8 +220,8 @@ class FormationEnergyMaker(Maker):
             collect_job = collect_defect_outputs(
                 defect_outputs=defect_outputs,
                 bulk_output=bulk_job.output if self.run_bulk else None,
-                dielectric=dielectric
-                )
+                dielectric=dielectric,
+            )
             jobs.append(collect_job)
         else:
             collect_job = None
@@ -203,10 +231,13 @@ class FormationEnergyMaker(Maker):
             output=jobs[-1].output if collect_job else None,
         )
 
+
 # TODO this is totally code agnostic and should be in common
 @job
 def collect_defect_outputs(
-    defect_outputs: Mapping[str, Mapping[int, OutputReference]], bulk_output: OutputReference, dielectric: NDArray | int | float | None
+    defect_outputs: Mapping[str, Mapping[int, OutputReference]],
+    bulk_output: OutputReference,
+    dielectric: NDArray | int | float | None,
 ) -> dict:
     """Collect all the outputs from the defect calculations.
     This job will combine the structure and entry fields to create a
@@ -222,7 +253,9 @@ def collect_defect_outputs(
     """
     outputs = {"results": {}}
     if not dielectric:
-        logger.warn("Dielectric constant not provided. Defect formation energies will be uncorrected.")
+        logger.warn(
+            "Dielectric constant not provided. Defect formation energies will be uncorrected."
+        )
     for defect_name, defects_with_charges in defect_outputs.items():
         defect_entries = []
         fnv_plots = {}
@@ -232,21 +265,29 @@ def collect_defect_outputs(
             defect_entry = DefectEntry(
                 defect=defect,
                 charge_state=charge,
-                sc_entry=ComputedStructureEntry(structure=bulk_output.structure, energy=output_with_charge.output.energy - bulk_output.output.energy)
+                sc_entry=ComputedStructureEntry(
+                    structure=bulk_output.structure,
+                    energy=output_with_charge.output.energy - bulk_output.output.energy,
+                ),
             )
             defect_entries.append(defect_entry)
             plot_data = defect_entry.get_freysoldt_correction(
-                defect_locpot=VolumetricData.from_dict(output_with_charge.cp2k_objects['v_hartree']),
-                bulk_locpot=VolumetricData.from_dict(output_with_charge.cp2k_objects['v_hartree']),
-                dielectric=dielectric
-                )
+                defect_locpot=VolumetricData.from_dict(
+                    output_with_charge.cp2k_objects["v_hartree"]
+                ),
+                bulk_locpot=VolumetricData.from_dict(
+                    output_with_charge.cp2k_objects["v_hartree"]
+                ),
+                dielectric=dielectric,
+            )
             fnv_plots[int(charge)] = plot_data
         outputs["results"][defect.name] = dict(
             defect=defect, defect_entries=defect_entries, fnv_plots=fnv_plots
         )
     return outputs
 
-#TODO should be in common
+
+# TODO should be in common
 def ensure_defects_same_structure(defects: Iterable[Defect]):
     """Ensure that the defects are valid.
     Parameters
