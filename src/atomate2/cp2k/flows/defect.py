@@ -19,20 +19,9 @@ from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.analysis.defects.supercells import get_sc_fromstruct
 
-from atomate2.cp2k.jobs.base import BaseCp2kMaker 
-from atomate2.cp2k.jobs.core import StaticMaker, HybridStaticMaker, RelaxMaker, HybridRelaxMaker, CellOptMaker, HybridCellOptMaker
-
-from atomate2.cp2k.schemas.defect import DefectDoc
-from atomate2.cp2k.sets.core import (
-    StaticSetGenerator, RelaxSetGenerator, CellOptSetGenerator
-)
-
-from atomate2.cp2k.sets.defect import (
-    DefectStaticSetGenerator, DefectRelaxSetGenerator, DefectCellOptSetGenerator,
-    DefectHybridStaticSetGenerator, DefectHybridRelaxSetGenerator, DefectHybridCellOptSetGenerator
-)
+from atomate2.cp2k.jobs.base import BaseCp2kMaker
 from atomate2.cp2k.jobs.defect import (
-    BaseDefectMaker, DefectStaticMaker, DefectRelaxMaker, DefectCellOptMaker,
+    DefectStaticMaker, DefectRelaxMaker, DefectCellOptMaker,
     DefectHybridStaticMaker, DefectHybridRelaxMaker, DefectHybridCellOptMaker
 )
 
@@ -43,23 +32,23 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DefectHybridStaticFlowMaker(HybridStaticFlowMaker):
 
-    initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
+    pbe_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
     hybrid_maker: BaseCp2kMaker = field(default=DefectHybridStaticMaker(
         copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
         )
 
-@dataclass 
+@dataclass
 class DefectHybridRelaxFlowMaker(HybridRelaxFlowMaker):
 
-    initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
+    pbe_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
     hybrid_maker: BaseCp2kMaker = field(default=DefectHybridRelaxMaker(
         copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
         )
 
-@dataclass 
+@dataclass
 class DefectHybridCellOptFlowMaker(HybridCellOptFlowMaker):
 
-    initialize_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
+    pbe_maker: BaseCp2kMaker = field(default_factory=DefectStaticMaker)
     hybrid_maker: BaseCp2kMaker = field(default=DefectHybridCellOptMaker(
         copy_cp2k_kwargs={'additional_cp2k_files': ("info.json",)})
         )
@@ -73,7 +62,7 @@ class FormationEnergyMaker(Maker):
 
     Parameters
     ----------
-    name: This flow's name. i.e. "defect formation energy" 
+    name: This flow's name. i.e. "defect formation energy"
     run_bulk: whether to run the bulk supercell as a static ("static")
         calculation, a full relaxation ("relax"), or to skip it (False)
     hybrid_functional: If provided, this activates hybrid version of the
@@ -91,10 +80,10 @@ class FormationEnergyMaker(Maker):
     """
 
     name: str = "defect formation energy"
-    run_bulk: Literal["static", "relax"] | bool = field(default="static") 
+    run_bulk: Literal["static", "relax"] | bool = field(default="static")
     hybrid_functional: str | None = field(default=None)
     initialize_with_pbe: bool = field(default=True)
-    
+
     supercell_matrix: NDArray = field(default=None)
     min_atoms: int = field(default=80)
     max_atoms: int = field(default=240)
@@ -106,7 +95,7 @@ class FormationEnergyMaker(Maker):
             if self.hybrid_functional:
                 self.bulk_maker = DefectHybridCellOptMaker(
                     name="bulk hybrid relax", transformations=None,
-                    initialize_with_pbe=self.initialize_with_pbe, 
+                    initialize_with_pbe=self.initialize_with_pbe,
                     hybrid_functional=self.hybrid_functional
                     )
             else:
@@ -114,7 +103,7 @@ class FormationEnergyMaker(Maker):
 
         elif self.run_bulk == "static":
             if self.hybrid_functional:
-                self.bulk_maker = DefectHybridStaticFlowMaker( 
+                self.bulk_maker = DefectHybridStaticFlowMaker(
                     name='bulk hybrid static',
                     initialize_with_pbe=self.initialize_with_pbe,
                     hybrid_functional=self.hybrid_functional,
@@ -127,20 +116,21 @@ class FormationEnergyMaker(Maker):
                 hybrid_functional=self.hybrid_functional,
                 initialize_with_pbe=self.initialize_with_pbe,
             )
-            self.def_maker.initialize_maker.supercell_matrix = self.supercell_matrix
+            self.def_maker.pbe_maker.supercell_matrix = self.supercell_matrix
             self.def_maker.hybrid_maker.supercell_matrix = self.supercell_matrix
 
-            self.def_maker.initialize_maker.max_atoms = self.max_atoms
+            self.def_maker.pbe_maker.max_atoms = self.max_atoms
             self.def_maker.hybrid_maker.max_atoms = self.max_atoms
 
-            self.def_maker.initialize_maker.min_atoms = self.min_atoms
+            self.def_maker.pbe_maker.min_atoms = self.min_atoms
             self.def_maker.hybrid_maker.min_atoms = self.min_atoms
 
-            self.def_maker.initialize_maker.min_length = self.min_length
+            self.def_maker.pbe_maker.min_length = self.min_length
             self.def_maker.hybrid_maker.min_length = self.min_length
 
-            self.def_maker.initialize_maker.force_diagonal = self.force_diagonal
+            self.def_maker.pbe_maker.force_diagonal = self.force_diagonal
             self.def_maker.hybrid_maker.force_diagonal = self.force_diagonal
+
         else:
             self.def_maker = DefectRelaxMaker()
             self.def_maker.supercell_matrix = self.supercell_matrix
@@ -150,13 +140,13 @@ class FormationEnergyMaker(Maker):
             self.def_maker.force_diagonal = self.force_diagonal
 
     def make(
-        self, defects: Iterable[Defect], 
-        charges: bool | Iterable[int] = False, 
+        self, defects: Iterable[Defect],
+        charges: bool | Iterable[int] = False,
         dielectric: NDArray | int | float | None = None,
         prev_cp2k_dir: str | Path | None = None,
         collect_outputs: bool = True,
         ):
-        """Make a flow to run multiple defects in order to calculate their formation 
+        """Make a flow to run multiple defects in order to calculate their formation
         energy diagram.
 
         Parameters
@@ -176,8 +166,8 @@ class FormationEnergyMaker(Maker):
 
         sc_mat = self.supercell_matrix if self.supercell_matrix else \
                     get_sc_fromstruct(
-                        bulk_structure, self.min_atoms, 
-                        self.max_atoms, self.min_length, 
+                        bulk_structure, self.min_atoms,
+                        self.max_atoms, self.min_length,
                         self.force_diagonal,)
 
         if self.run_bulk:
@@ -192,7 +182,9 @@ class FormationEnergyMaker(Maker):
             else:
                 chgs = charges if charges else [0]
             for charge in chgs:
-                defect_job = self.def_maker.make(deepcopy(defect), charge)
+                dfct = deepcopy(defect)
+                dfct.user_charges = [charge]
+                defect_job = self.def_maker.make(dfct)
                 jobs.append(defect_job)
                 defect_outputs[defect.name][int(charge)] = (defect, defect_job.output)
 
@@ -205,7 +197,6 @@ class FormationEnergyMaker(Maker):
             jobs.append(collect_job)
         else:
             collect_job = None
-
         return Flow(
             jobs=jobs,
             name=self.name,
@@ -274,4 +265,3 @@ def ensure_defects_same_structure(defects: Iterable[Defect]):
         elif struct != defect.structure:
             raise ValueError("All defects must have the same host structure.")
     return struct
-

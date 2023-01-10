@@ -13,7 +13,7 @@ from pymatgen.core import Structure
 from pymatgen.analysis.defects.core import Defect, Vacancy
 from atomate2.cp2k.sets.base import Cp2kInputGenerator, recursive_update
 from atomate2.cp2k.sets.defect import (
-    DefectSetGenerator, DefectStaticSetGenerator, DefectRelaxSetGenerator, DefectCellOptSetGenerator, 
+    DefectSetGenerator, DefectStaticSetGenerator, DefectRelaxSetGenerator, DefectCellOptSetGenerator,
     DefectHybridStaticSetGenerator, DefectHybridRelaxSetGenerator, DefectHybridCellOptSetGenerator
 )
 from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
@@ -26,7 +26,7 @@ DEFECT_TASK_DOC = {
     "store_volumetric_data": ("v_hartree",),
 }
 
-@dataclass 
+@dataclass
 class BaseDefectMaker(BaseCp2kMaker):
 
     task_document_kwargs: dict = field(default_factory=lambda: DEFECT_TASK_DOC)
@@ -37,12 +37,12 @@ class BaseDefectMaker(BaseCp2kMaker):
     force_diagonal: bool = field(default=False)
 
     @cp2k_job
-    def make(self, defect: Defect | Structure, charge: int = 0, prev_cp2k_dir: str | Path | None = None):
+    def make(self, defect: Defect | Structure, prev_cp2k_dir: str | Path | None = None):
         if isinstance(defect, Defect):
 
             structure = defect.get_supercell_structure(
-                sc_mat=self.supercell_matrix, 
-                dummy_species=defect.site.species if isinstance(defect, Vacancy) else None, 
+                sc_mat=self.supercell_matrix,
+                dummy_species=defect.site.species if isinstance(defect, Vacancy) else None,
                 min_atoms=self.min_atoms,
                 max_atoms=self.max_atoms,
                 min_length=self.min_length,
@@ -52,19 +52,26 @@ class BaseDefectMaker(BaseCp2kMaker):
             if isinstance(defect, Vacancy):
                 structure.add_site_property("ghost", [False]*(len(structure.sites)-1) + [True])
 
+            if defect.user_charges:
+                if len(defect.user_charges) > 1:
+                    raise ValueError("Multiple user charges found. Individual defect jobs can only contain 1.")
+                else:
+                    charge = defect.user_charges[0]
+            else:
+                charge = 0
+
             # provenance stuff
             recursive_update(self.write_additional_data, {
                 "info.json": {
-                    "defect": deepcopy(defect), 
-                    "defect_charge": charge, 
+                    "defect": deepcopy(defect),
                     "sc_mat": self.supercell_matrix
                     }
                 }
             )
-            
+
         else:
-            charge = charge if charge else defect.charge
             structure = deepcopy(defect)
+            charge = structure.charge
 
         structure.set_charge(charge)
         return super().make.original(self, structure=structure, prev_cp2k_dir=prev_cp2k_dir)
@@ -106,29 +113,19 @@ class DefectCellOptMaker(BaseDefectMaker):
     transformation_params: tuple[dict, ...] | None = field(default=({"distance": 0.01},))
 
 @dataclass
-class DefectHybridStaticMaker(DefectStaticMaker, HybridStaticMaker):
-    
+class DefectHybridStaticMaker(BaseDefectMaker):
+
     name: str = field(default="defect hybrid static")
     input_set_generator: DefectSetGenerator = field(default_factory=DefectHybridStaticSetGenerator)
 
 @dataclass
-class DefectHybridRelaxMaker(DefectRelaxMaker, HybridRelaxMaker):
+class DefectHybridRelaxMaker(BaseDefectMaker):
 
     name: str = field(default="defect hybrid relax")
     input_set_generator: DefectSetGenerator = field(default_factory=DefectHybridRelaxSetGenerator)
 
 @dataclass
-class DefectHybridCellOptMaker(DefectCellOptMaker, HybridCellOptMaker):
+class DefectHybridCellOptMaker(BaseDefectMaker):
 
     name: str = field(default="defect hybrid cell opt")
     input_set_generator: DefectSetGenerator = field(default_factory=DefectHybridCellOptSetGenerator)
-
-class GhostVacancy(Vacancy):
-    """Custom override of vacancy to deal with basis set superposition error."""
-
-    @property
-    def defect_structure(self):
-        """Returns the defect structure with the proper oxidation state"""
-        struct = self.structure.copy()
-        struct.add_site_property("ghost", [i == self.defect_site_index for i in range(len(struct))])
-        return struct
