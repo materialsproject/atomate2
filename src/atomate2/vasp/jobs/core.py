@@ -537,11 +537,7 @@ class DielectricMaker(BaseVaspMaker):
 @dataclass
 class PolarizationMaker(BaseVaspMaker):
     """
-    Maker to create dielectric calculation VASP jobs.
-
-    .. Note::
-        The input structure should be well relaxed to avoid imaginary modes. For
-        example, using :obj:`TightRelaxMaker`.
+    Maker to create polarization calculation VASP jobs.
 
     .. Note::
         If starting from a previous calculation, magnetism will be disabled if all

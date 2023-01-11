@@ -1,4 +1,4 @@
-"""Schemas for crystal symmetry."""
+"""Schemas for Ferroelectric wflow."""
 
 from typing import Any, Dict, List
 
