@@ -1,4 +1,4 @@
-"""Flows for calculating elastic constants."""
+"""Flows for calculating the polarization of a polar material."""
 
 from __future__ import annotations
 
@@ -57,9 +57,9 @@ class FerroelectricMaker(Maker):
         Parameters
         ----------
         polar_structure : .Structure
-            A pymatgen structure of polar phase.
+            A pymatgen structure of the polar phase.
         nonpolar_structure : .Structure
-            A pymatgen structure of nonpolar phase.
+            A pymatgen structure of the nonpolar phase.
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """

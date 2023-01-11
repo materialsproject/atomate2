@@ -1,4 +1,4 @@
-"""Jobs used in the calculation of elastic tensors."""
+"""Job used in the Ferroelectric wflow."""
 
 from __future__ import annotations
 
@@ -27,11 +27,11 @@ __all__ = ["polarization_analysis"]
 @job(output_schema=PolarizationDocument)
 def polarization_analysis(lcalcpol_outputs):
     """
-    Recovers the same branch polarization and spontaneous polarization
+    Recovers the same branch polarization and the spontaneous polarization
     for a ferroelectric workflow.
     """
 
-    # oreder previous calculations from nonpolar to polar
+    # order previous calculations from nonpolar to polar
     ordered_keys = [f'interpolation_{i}' for i in reversed(range(len(lcalcpol_outputs[2])))]
 
 
@@ -124,7 +124,7 @@ def polarization_analysis(lcalcpol_outputs):
 @job
 def interpolate_structures(p_st,np_st,nimages):
     """
-    Interpolate polar and nonpolar structures with nimages points
+    Interpolate linearly the polar and the nonpolar structures with nimages structures
 
 
     Parameters
@@ -133,6 +133,8 @@ def interpolate_structures(p_st,np_st,nimages):
         A pymatgen structure of polar phase.
     nonpolar_structure : .Structure
         A pymatgen structure of nonpolar phase.
+    nimages: int
+        Number of interpolations calculated from polar to nonpolar structures, including the nonpolar.
     """
     
     interp_structures = p_st.interpolate(np_st,nimages,True)
