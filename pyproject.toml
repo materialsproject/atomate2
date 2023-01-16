@@ -62,7 +62,7 @@ strict = [
     "phonopy==2.17.0",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.30.4"
+    "mp-api==0.30.6"
 ]
 
 [project.scripts]
