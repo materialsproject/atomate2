@@ -46,12 +46,13 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
     "jupyter-book==0.13.1",
+    "jsonschema[format]"
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.2.0", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
     "pydantic==1.10.2",
-    "pymatgen==2022.11.7",
+    "pymatgen==2023.1.9",
     "custodian==2022.5.26",
     "monty==2022.9.9",
     "jobflow==0.1.9",
