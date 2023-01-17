@@ -1,35 +1,30 @@
 from datetime import datetime
-from tokenize import group
-from typing import ClassVar, TypeVar, Type, Dict, Tuple, Mapping, List, Callable
-from pydantic import BaseModel, Field
-from pydantic import validator
-from itertools import groupby
+from typing import Callable, ClassVar, Dict, List, Mapping, Tuple, Type, TypeVar
 
 import numpy as np
-
 from monty.json import MontyDecoder
 from monty.tempfile import ScratchDir
-
-from pymatgen.core import Structure, Element
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
-from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
-from pymatgen.analysis.phase_diagram import PhaseDiagram
-from pymatgen.analysis.defects.core import Defect, Adsorbate
+from pydantic import BaseModel, Field
+from pymatgen.analysis.defects.core import Adsorbate, Defect
 from pymatgen.analysis.defects.corrections.freysoldt import (
-    get_freysoldt_correction,
     get_freysoldt2d_correction,
+    get_freysoldt_correction,
 )
+from pymatgen.analysis.defects.finder import DefectSiteFinder
 from pymatgen.analysis.defects.thermo import (
     DefectEntry,
     DefectSiteFinder,
-    MultiFormationEnergyDiagram
+    MultiFormationEnergyDiagram,
 )
-from pymatgen.analysis.defects.finder import DefectSiteFinder
+from pymatgen.analysis.phase_diagram import PhaseDiagram
+from pymatgen.core import Element
+from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
+from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.schemas.structure import StructureMetadata
-from atomate2.cp2k.schemas.calc_types.enums import CalcType, TaskType, RunType
+from atomate2.cp2k.schemas.calc_types.enums import RunType
 from atomate2.cp2k.schemas.task import TaskDocument
 
 __all__ = ["DefectDoc"]
@@ -37,6 +32,7 @@ __all__ = ["DefectDoc"]
 T = TypeVar("T", bound="DefectDoc")
 S = TypeVar("S", bound="DefectiveMaterialDoc")
 V = TypeVar("V", bound="DefectValidation")
+
 
 class DefectDoc(StructureMetadata):
     """
@@ -57,8 +53,12 @@ class DefectDoc(StructureMetadata):
     material_id: str = Field(
         None, description="Unique material ID for the bulk material"
     )  # TODO Change to MPID
-    defect_ids: Mapping[RunType, str] = Field(None, description="Map run types of defect entry to task id")
-    bulk_ids: Mapping[RunType, str] = Field(None, description="Map run types of bulk entry to task id")
+    defect_ids: Mapping[RunType, str] = Field(
+        None, description="Map run types of defect entry to task id"
+    )
+    bulk_ids: Mapping[RunType, str] = Field(
+        None, description="Map run types of bulk entry to task id"
+    )
     task_ids: List[str] = Field(
         None, description="All defect task ids used in creating this defect doc."
     )
@@ -81,9 +81,13 @@ class DefectDoc(StructureMetadata):
         default_factory=datetime.utcnow,
     )
     metadata: Dict = Field(None, description="Metadata for this defect")
-    valid: Mapping[RunType, Dict] = Field(None, description="Whether each run type has a valid entry")
+    valid: Mapping[RunType, Dict] = Field(
+        None, description="Whether each run type has a valid entry"
+    )
 
-    def update_one(self, defect_task, bulk_task, dielectric, query="defect", key="task_id"):
+    def update_one(
+        self, defect_task, bulk_task, dielectric, query="defect", key="task_id"
+    ):
 
         # Metadata
         self.last_updated = datetime.now()
@@ -92,25 +96,25 @@ class DefectDoc(StructureMetadata):
         defect = self.get_defect_from_task(query=query, task=defect_task)
         d_id = defect_task[key]
         b_id = bulk_task[key]
-        defect_task = TaskDocument(**defect_task['output'])
-        bulk_task = TaskDocument(**bulk_task['output']) # TODO Atomate2Store 
+        defect_task = TaskDocument(**defect_task["output"])
+        bulk_task = TaskDocument(**bulk_task["output"])  # TODO Atomate2Store
         defect_entry, valid = self.get_defect_entry_from_tasks(
             defect_task, bulk_task, defect, dielectric
         )
         bulk_entry = self.get_bulk_entry_from_task(bulk_task)
 
         rt = defect_task.calcs_reversed[0].run_type
-        tt = defect_task.calcs_reversed[0].task_type
-        ct = defect_task.calcs_reversed[0].calc_type
-        current_largest_sc = self.defect_entries[rt].sc_entry.composition.num_atoms if rt in self.defect_entries else 0
+        defect_task.calcs_reversed[0].task_type
+        defect_task.calcs_reversed[0].calc_type
+        current_largest_sc = (
+            self.defect_entries[rt].sc_entry.composition.num_atoms
+            if rt in self.defect_entries
+            else 0
+        )
         potential_largest_sc = defect_entry.sc_entry.composition.num_atoms
-        if (
-            potential_largest_sc > current_largest_sc
-            or (
-                potential_largest_sc == current_largest_sc
-                and defect_entry.sc_entry.energy
-                < self.defect_entries[rt].sc_entry.energy
-            )
+        if potential_largest_sc > current_largest_sc or (
+            potential_largest_sc == current_largest_sc
+            and defect_entry.sc_entry.energy < self.defect_entries[rt].sc_entry.energy
         ):
             self.defect_entries[rt] = defect_entry
             self.defect_ids[rt] = d_id
@@ -135,7 +139,15 @@ class DefectDoc(StructureMetadata):
             )
 
     @classmethod
-    def from_tasks(cls: Type[T], defect_task, bulk_task, dielectric, query="defect", key="task_id", material_id=None) -> T:
+    def from_tasks(
+        cls: Type[T],
+        defect_task,
+        bulk_task,
+        dielectric,
+        query="defect",
+        key="task_id",
+        material_id=None,
+    ) -> T:
         """
         The standard way to create this document.
         Args:
@@ -147,16 +159,18 @@ class DefectDoc(StructureMetadata):
         defect = cls.get_defect_from_task(query=query, task=defect_task)
         defect_task = TaskDocument(**defect_task["output"])
         bulk_task_id = bulk_task[key]
-        bulk_task = TaskDocument(**bulk_task['output'])
+        bulk_task = TaskDocument(**bulk_task["output"])
 
         # Metadata
-        last_updated = datetime.now() 
-        created_at = datetime.now() 
+        last_updated = datetime.now()
+        created_at = datetime.now()
 
         rt = defect_task.calcs_reversed[0].run_type
 
         metadata = {}
-        defect_entry, valid = cls.get_defect_entry_from_tasks(defect_task, bulk_task, defect, dielectric)
+        defect_entry, valid = cls.get_defect_entry_from_tasks(
+            defect_task, bulk_task, defect, dielectric
+        )
         valid = {rt: valid}
         defect_entries = {rt: defect_entry}
         bulk_entries = {rt: cls.get_bulk_entry_from_task(bulk_task)}
@@ -187,7 +201,9 @@ class DefectDoc(StructureMetadata):
             "metadata": metadata,
             "valid": valid,
         }
-        prim = SpacegroupAnalyzer(defect_entries[rt].defect.structure).get_primitive_standard_structure()
+        prim = SpacegroupAnalyzer(
+            defect_entries[rt].defect.structure
+        ).get_primitive_standard_structure()
         data.update(StructureMetadata.from_structure(prim).dict())
         return cls(**data)
 
@@ -229,7 +245,7 @@ class DefectDoc(StructureMetadata):
             sc_defect_frac_coords=parameters["defect_frac_sc_coords"],
             corrections=corrections,
         )
-        parameters['defect'] = defect
+        parameters["defect"] = defect
         valid = DefectValidation().process_entry(parameters)
         return defect_entry, valid
 
@@ -255,7 +271,9 @@ class DefectDoc(StructureMetadata):
         if parameters["charge_state"] and not parameters.get("2d"):
             es, pot, met = get_freysoldt_correction(
                 q=parameters["charge_state"],
-                dielectric=np.array(parameters["dielectric"]), # TODO pmg-analysis expects np array here
+                dielectric=np.array(
+                    parameters["dielectric"]
+                ),  # TODO pmg-analysis expects np array here
                 defect_locpot=parameters["defect_v_hartree"],
                 bulk_locpot=parameters["bulk_v_hartree"],
                 defect_frac_coords=parameters["defect_frac_sc_coords"],
@@ -268,7 +286,7 @@ class DefectDoc(StructureMetadata):
 
         from pymatgen.io.vasp.outputs import VolumetricData as VaspVolumetricData
 
-        if False: #parameters["charge_state"] and parameters.get("2d"):
+        if parameters["charge_state"] and parameters.get("2d"):
             eps_parallel = (
                 parameters["dielectric"][0][0] + parameters["dielectric"][1][1]
             ) / 2
@@ -354,19 +372,22 @@ class DefectDoc(StructureMetadata):
 
         return parameters
 
+
 class DefectValidation(BaseModel):
     """Validate a task document for defect processing"""
 
     MAX_ATOMIC_RELAXATION: float = Field(
-        0.02, 
-        description="Threshold for the mean absolute displacement of atoms outside a defect's radius of isolution"
-        )
+        0.02,
+        description="Threshold for the mean absolute displacement of atoms outside a defect's radius of isolution",
+    )
 
-    DESORPTION_DISTANCE: float = Field(3, description="Distance to consider adsorbate as desorbed")
+    DESORPTION_DISTANCE: float = Field(
+        3, description="Distance to consider adsorbate as desorbed"
+    )
 
     def process_entry(self, parameters) -> V:
         """Gets a dictionary of {validator: result}. Result true for passing, false for failing."""
-        v = {} 
+        v = {}
         v.update(self._atomic_relaxation(parameters))
         v.update(self._desorption(parameters))
         return v
@@ -375,10 +396,16 @@ class DefectValidation(BaseModel):
         """Returns false if the mean displacement outside the isolation radius is greater than the cutoff"""
         in_struc = parameters["initial_defect_structure"]
         out_struc = parameters["final_defect_structure"]
-        sites = out_struc.get_sites_in_sphere(parameters['defect_frac_sc_coords'], get_truncated_coulomb_cutoff(in_struc), include_index=True)
+        sites = out_struc.get_sites_in_sphere(
+            parameters["defect_frac_sc_coords"],
+            get_truncated_coulomb_cutoff(in_struc),
+            include_index=True,
+        )
         inside_sphere = [site.index for site in sites]
         outside_sphere = [i for i in range(len(out_struc)) if i not in inside_sphere]
-        distances = np.array([site.distance(in_struc[i]) for i, site in enumerate(out_struc)])
+        distances = np.array(
+            [site.distance(in_struc[i]) for i, site in enumerate(out_struc)]
+        )
         distances_outside = distances[outside_sphere]
         if np.mean(distances_outside) > self.MAX_ATOMIC_RELAXATION:
             return {"atomic_relaxation": False}
@@ -386,16 +413,24 @@ class DefectValidation(BaseModel):
 
     def _desorption(self, parameters):
         """Returns false if any atom is too far from all other atoms."""
-        if isinstance(parameters['defect'], Adsorbate):
+        if isinstance(parameters["defect"], Adsorbate):
             out_struc = parameters["final_defect_structure"]
-            defect_site =  out_struc.get_sites_in_sphere(
-                out_struc.lattice.get_cartesian_coords(parameters['defect_frac_sc_coords']), 
-                0.1, include_index=True
-                )[0]
-            distances = [defect_site.distance(site) for i, site in enumerate(out_struc) if i != defect_site.index]
+            defect_site = out_struc.get_sites_in_sphere(
+                out_struc.lattice.get_cartesian_coords(
+                    parameters["defect_frac_sc_coords"]
+                ),
+                0.1,
+                include_index=True,
+            )[0]
+            distances = [
+                defect_site.distance(site)
+                for i, site in enumerate(out_struc)
+                if i != defect_site.index
+            ]
             if all(d > self.DESORPTION_DISTANCE for d in distances):
-                return {'desorption': False}
-        return {'desorption': True}
+                return {"desorption": False}
+        return {"desorption": True}
+
 
 class DefectiveMaterialDoc(StructureMetadata):
     """Document containing all / many defect tasks for a single material ID"""
@@ -431,7 +466,7 @@ class DefectiveMaterialDoc(StructureMetadata):
 
     @property
     def element_set(self) -> set:
-        els = set(Element(e) for e in self.defect_docs[0].defect.structure.symbol_set)
+        els = {Element(e) for e in self.defect_docs[0].defect.structure.symbol_set}
         for d in self.defect_docs:
             els = els | set(d.defect.element_changes.keys())
         return els
