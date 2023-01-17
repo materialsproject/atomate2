@@ -1,12 +1,10 @@
 """Core definition of a CP2K task document."""
 import logging
-import re
 from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 import numpy as np
-from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
@@ -17,6 +15,11 @@ from atomate2 import SETTINGS, __version__
 from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.common.schemas.structure import StructureMetadata
+from atomate2.common.utils import (
+    parse_additional_json,
+    parse_custodian,
+    parse_transformations,
+)
 from atomate2.cp2k.schemas.calculation import (
     Calculation,
     Cp2kObject,
@@ -124,7 +127,7 @@ class AtomicKindSummary(BaseModel):
 
     @classmethod
     def from_atomic_kind_info(cls, atomic_kind_info: dict):
-        d = {"atomic_kinds": {}}
+        d: Dict[str, Dict[str, Any]] = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
             d["atomic_kinds"][kind] = {
                 "element": info["element"],
@@ -168,11 +171,13 @@ class InputSummary(BaseModel):
             A summary of the input structure and parameters.
         """
 
-        aks = AtomicKindSummary.from_atomic_kind_info(calc_doc.input.atomic_kind_info)
+        summary = AtomicKindSummary.from_atomic_kind_info(
+            calc_doc.input.atomic_kind_info
+        )
 
         return cls(
             structure=calc_doc.input.structure,
-            atomic_kind_info=aks,
+            atomic_kind_info=summary,
             xc=str(calc_doc.run_type),
         )
 
@@ -348,17 +353,17 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             all_cp2k_objects.append(cp2k_objects)
 
         analysis = AnalysisSummary.from_cp2k_calc_docs(calcs_reversed)
-        transformations, icsd_id, tags, author = _parse_transformations(dir_name)
+        transformations, icsd_id, tags, author = parse_transformations(dir_name)
         if tags:
             tags.extend(additional_fields.get("tags", []))
         else:
-            tags = additional_fields.get('tags')
-        custodian = _parse_custodian(dir_name)
+            tags = additional_fields.get("tags")
+        custodian = parse_custodian(dir_name)
         orig_inputs = _parse_orig_inputs(dir_name)
 
         additional_json = None
         if store_additional_json:
-            additional_json = _parse_additional_json(dir_name)
+            additional_json = parse_additional_json(dir_name)
 
         dir_name = get_uri(dir_name)  # convert to full uri path
 
@@ -519,62 +524,6 @@ def _find_cp2k_files(
     return task_files
 
 
-# TODO These functions seem like they do not need to be cp2k/vasp specific
-
-
-def _parse_transformations(
-    dir_name: Path,
-) -> Tuple[Dict, Optional[int], Optional[List[str]], Optional[str]]:
-    """Parse transformations.json file."""
-    transformations = {}
-    filenames = tuple(dir_name.glob("transformations.json*"))
-    icsd_id = None
-    if len(filenames) >= 1:
-        transformations = loadfn(filenames[0], cls=None)
-        try:
-            match = re.match(r"(\d+)-ICSD", transformations["history"][0]["source"])
-            if match:
-                icsd_id = int(match.group(1))
-        except (KeyError, IndexError):
-            pass
-
-    # We don't want to leave tags or authors in the
-    # transformations file because they'd be copied into
-    # every structure generated after this one.
-    other_parameters = transformations.get("other_parameters", {})
-    new_tags = other_parameters.pop("tags", None)
-    new_author = other_parameters.pop("author", None)
-
-    if "other_parameters" in transformations and not other_parameters:
-        # if dict is now empty remove it
-        transformations.pop("other_parameters")
-
-    return transformations, icsd_id, new_tags, new_author
-
-
-def _parse_custodian(dir_name: Path) -> Optional[Dict]:
-    """
-    Parse custodian.json file.
-
-    Calculations done using custodian have a custodian.json file which tracks the makers
-    performed and any errors detected and fixed.
-
-    Parameters
-    ----------
-    dir_name
-        Path to calculation directory.
-
-    Returns
-    -------
-    Optional[dict]
-        The information parsed from custodian.json file.
-    """
-    filenames = tuple(dir_name.glob("custodian.json*"))
-    if len(filenames) >= 1:
-        return loadfn(filenames[0], cls=None)
-    return None
-
-
 def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
     """
     Parse original input files.
@@ -607,16 +556,6 @@ def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
                 orig_inputs[name.lower()] = obj.from_file(filename)
 
     return orig_inputs
-
-
-def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
-    """Parse additional json files in the directory."""
-    additional_json = {}
-    for filename in dir_name.glob("*.json*"):
-        key = filename.name.split(".")[0]
-        if key not in ("custodian", "transformations"):
-            additional_json[key] = loadfn(filename, cls=None)
-    return additional_json
 
 
 def _get_max_force(calc_doc: Calculation) -> Optional[float]:
