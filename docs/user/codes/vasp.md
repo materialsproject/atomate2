@@ -225,13 +225,13 @@ not properly converged in VASP.
 
 ### Phonons
 
-Calculate the harmonic phonons of a material. 
+Calculate the harmonic phonons of a material.
 
-Initially, a tight structural relaxation is performed to obtain a structure without forces 
+Initially, a tight structural relaxation is performed to obtain a structure without forces
 on the atoms. Subsequently, supercells with one displaced atom are generated and accurate
-forces are computed for these structures. With the help of phonopy, these forces are then 
-converted into a dynamical matrix. To correct for polarization effects, a correction of the 
-dynamical matrix based on BORN charges can be performed. Finally, phonon densities of states, 
+forces are computed for these structures. With the help of phonopy, these forces are then
+converted into a dynamical matrix. To correct for polarization effects, a correction of the
+dynamical matrix based on BORN charges can be performed. Finally, phonon densities of states,
 phonon band structures and thermodynamic properties are computed.
 
 ```{note}
