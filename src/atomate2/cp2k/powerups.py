@@ -44,10 +44,20 @@ def update_user_input_settings(
     Job or Flow or Maker
         A copy of the input flow/job/maker modified to use the updated input settings.
     """
-    dict_mod_updates = {
-        f"input_set_generator->user_input_settings->{k}": v
-        for k, v in input_updates.items()
-    }
+
+    # Convert nested dictionary updates for cp2k inpt settings
+    # into dict_mod update format
+    def nested_to_dictmod(d, kk="input_set_generator->user_input_settings"):
+        d2 = {}
+        for k, v in d.items():
+            k2 = kk + f"->{k}"
+            if isinstance(v, dict):
+                d2.update(nested_to_dictmod(v, kk=k2))
+            else:
+                d2[k2] = v
+        return d2
+    dict_mod_updates = nested_to_dictmod(input_updates)
+
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
         updated_flow = updated_flow.update_kwargs(

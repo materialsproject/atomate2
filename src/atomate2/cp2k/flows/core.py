@@ -249,16 +249,10 @@ class HybridFlowMaker(Maker):
         problems so it is done as a default here.
         """
         self.hybrid_maker.hybrid_functional = self.hybrid_functional
+        updates = {'activate_hybrid': {"hybrid_functional": self.hybrid_functional}}
         if self.initialize_with_pbe:
-            self.hybrid_maker = update_user_input_settings(
-                self.hybrid_maker,
-                {
-                    "activate_hybrid": {
-                        "screen_on_initial_p": True,
-                        "screen_p_forces": True,
-                    }
-                },
-            )
+            updates['activate_hybrid'].update({"screen_on_initial_p": True, "screen_p_forces": True})
+        self.hybrid_maker = update_user_input_settings(self.hybrid_maker, updates)
 
     def make(
         self, structure: Structure, prev_cp2k_dir: str | Path | None = None
