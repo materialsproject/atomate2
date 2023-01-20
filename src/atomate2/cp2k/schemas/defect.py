@@ -294,6 +294,11 @@ class DefectDoc(StructureMetadata):
             dielectric = (eps_parallel - 1) / (1 - 1 / eps_perp)
             with ScratchDir("."):
 
+                # TODO builder ensure structures are commensurate, but the sxdefectalign2d requires exact match
+                # between structures (to about 6 digits of precision). No good solution right now,
+                # Just setting def lattice with bulk lattice, which will shift the locpot data
+                parameters["defect_v_hartree"].structure.lattice = parameters["bulk_v_hartree"].structure
+
                 lref = VaspVolumetricData(
                     structure=parameters["bulk_v_hartree"].structure,
                     data=parameters["bulk_v_hartree"].data,
