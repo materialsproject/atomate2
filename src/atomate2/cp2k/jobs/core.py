@@ -182,12 +182,6 @@ class HybridStaticMaker(BaseCp2kMaker):
         default_factory=HybridStaticSetGenerator
     )
 
-    def __post_init__(self):
-        """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update(
-            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
-        )
-
 
 @dataclass
 class HybridRelaxMaker(BaseCp2kMaker):
@@ -226,12 +220,6 @@ class HybridRelaxMaker(BaseCp2kMaker):
         default_factory=HybridRelaxSetGenerator
     )
 
-    def __post_init__(self):
-        """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update(
-            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
-        )
-
 
 @dataclass
 class HybridCellOptMaker(BaseCp2kMaker):
@@ -269,12 +257,6 @@ class HybridCellOptMaker(BaseCp2kMaker):
     input_set_generator: Cp2kInputGenerator = field(
         default_factory=HybridCellOptSetGenerator
     )
-
-    def __post_init__(self):
-        """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update(
-            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
-        )
 
 
 @dataclass
