@@ -56,6 +56,7 @@ def update_user_input_settings(
             else:
                 d2[k2] = v
         return d2
+
     dict_mod_updates = nested_to_dictmod(input_updates)
 
     updated_flow = deepcopy(flow)
