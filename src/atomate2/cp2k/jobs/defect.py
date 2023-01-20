@@ -19,7 +19,6 @@ from atomate2.cp2k.sets.defect import (
     DefectHybridRelaxSetGenerator,
     DefectHybridStaticSetGenerator,
     DefectRelaxSetGenerator,
-    DefectSetGenerator,
     DefectStaticSetGenerator,
 )
 
@@ -96,7 +95,7 @@ class BaseDefectMaker(BaseCp2kMaker):
 class DefectStaticMaker(BaseDefectMaker):
 
     name: str = field(default="defect static")
-    input_set_generator: DefectSetGenerator = field(
+    input_set_generator: Cp2kInputGenerator = field(
         default_factory=DefectStaticSetGenerator
     )
 
@@ -148,23 +147,16 @@ class DefectHybridStaticMaker(BaseDefectMaker):
 
     name: str = field(default="defect hybrid static")
     hybrid_functional: str = "PBE0"
-    input_set_generator: DefectSetGenerator = field(
+    input_set_generator: Cp2kInputGenerator = field(
         default_factory=DefectHybridStaticSetGenerator
     )
-
-    def __post_init__(self):
-        """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update(
-            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
-        )
-
 
 @dataclass
 class DefectHybridRelaxMaker(BaseDefectMaker):
 
     name: str = field(default="defect hybrid relax")
     hybrid_functional: str = "PBE0"
-    input_set_generator: DefectSetGenerator = field(
+    input_set_generator: Cp2kInputGenerator = field(
         default_factory=DefectHybridRelaxSetGenerator
     )
     transformations: tuple[str, ...] = field(
@@ -174,19 +166,13 @@ class DefectHybridRelaxMaker(BaseDefectMaker):
         default=({"distance": 0.01},)
     )
 
-    def __post_init__(self):
-        """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update(
-            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
-        )
-
 
 @dataclass
 class DefectHybridCellOptMaker(BaseDefectMaker):
 
     name: str = field(default="defect hybrid cell opt")
     hybrid_functional: str = "PBE0"
-    input_set_generator: DefectSetGenerator = field(
+    input_set_generator: Cp2kInputGenerator = field(
         default_factory=DefectHybridCellOptSetGenerator
     )
     transformations: tuple[str, ...] = field(
@@ -195,9 +181,3 @@ class DefectHybridCellOptMaker(BaseDefectMaker):
     transformation_params: tuple[dict, ...] | None = field(
         default=({"distance": 0.01},)
     )
-
-    def __post_init__(self):
-        """Update the input settings with hybrid_functional attribute"""
-        self.input_set_generator.user_input_settings.update(
-            {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
-        )

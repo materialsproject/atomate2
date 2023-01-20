@@ -6,6 +6,7 @@ import logging
 from dataclasses import dataclass
 
 from pymatgen.core import Structure
+from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
@@ -17,48 +18,49 @@ logger = logging.getLogger(__name__)
 DEFECT_SET_UPDATES = {'print_v_hartree': True, "print_pdos": True, "print_dos": True}
 
 @dataclass
-class DefectSetGenerator(Cp2kInputGenerator):
-    """
-    Base input set generator for defect calculations. Adds printing of the
-    partial density of states and the electrostatic potential.
-    """
-
-    def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
-        """Get input updates"""
-        return {'print_v_hartree': True, "print_pdos": True, "print_dos": True}
-
-@dataclass
 class DefectStaticSetGenerator(StaticSetGenerator):
 
-    def __post_init__(self):
-        self.user_input_settings.update(DEFECT_SET_UPDATES)
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        updates = super().get_input_updates(*args, **kwargs)
+        updates.update(DEFECT_SET_UPDATES)
+        return updates
 
 @dataclass
 class DefectRelaxSetGenerator(RelaxSetGenerator):
 
-    def __post_init__(self):
-        self.user_input_settings.update(DEFECT_SET_UPDATES)
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        updates = super().get_input_updates(*args, **kwargs)
+        updates.update(DEFECT_SET_UPDATES)
+        return updates
 
 @dataclass
 class DefectCellOptSetGenerator(CellOptSetGenerator):
 
-    def __post_init__(self):
-        self.user_input_settings.update(DEFECT_SET_UPDATES)
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        updates = super().get_input_updates(*args, **kwargs)
+        updates.update(DEFECT_SET_UPDATES)
+        return updates
 
 @dataclass
 class DefectHybridStaticSetGenerator(HybridStaticSetGenerator):
 
-    def __post_init__(self):
-        self.user_input_settings.update(DEFECT_SET_UPDATES)
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        updates = super().get_input_updates(*args, **kwargs)
+        updates.update(DEFECT_SET_UPDATES)
+        return updates
 
 @dataclass
 class DefectHybridRelaxSetGenerator(HybridRelaxSetGenerator):
 
-    def __post_init__(self):
-        self.user_input_settings.update(DEFECT_SET_UPDATES)
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        updates = super().get_input_updates(*args, **kwargs)
+        updates.update(DEFECT_SET_UPDATES)
+        return updates
 
 @dataclass
 class DefectHybridCellOptSetGenerator(HybridCellOptSetGenerator):
 
-    def __post_init__(self):
-        self.user_input_settings.update(DEFECT_SET_UPDATES)
+    def get_input_updates(self, *args, **kwargs) -> dict:
+        updates = super().get_input_updates(*args, **kwargs)
+        updates.update(DEFECT_SET_UPDATES)
+        return updates
