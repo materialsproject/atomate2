@@ -151,6 +151,7 @@ class DefectHybridStaticMaker(BaseDefectMaker):
         default_factory=DefectHybridStaticSetGenerator
     )
 
+
 @dataclass
 class DefectHybridRelaxMaker(BaseDefectMaker):
 
