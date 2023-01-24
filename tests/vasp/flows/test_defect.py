@@ -2,8 +2,8 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import run_locally
     from pymatgen.core import Structure
 
+    from atomate2.common.analysis.defects.schemas import CCDDocument
     from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
-    from atomate2.vasp.schemas.defect import CCDDocument
 
     # mapping from job name to directory containing test files
     # mapping from job name to directory containing test files
