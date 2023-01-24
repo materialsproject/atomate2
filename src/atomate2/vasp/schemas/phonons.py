@@ -1,3 +1,5 @@
+"""Schemas for phonon documents."""
+
 import copy
 import logging
 from typing import Dict, List, Optional, Union
