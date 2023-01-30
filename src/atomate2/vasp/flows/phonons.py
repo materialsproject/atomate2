@@ -1,4 +1,4 @@
-"""Flows for calculating elastic constants."""
+"""Flows for calculating phonons."""
 
 from __future__ import annotations
 

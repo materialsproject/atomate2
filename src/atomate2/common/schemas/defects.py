@@ -1,113 +1,16 @@
 import logging
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, List, Optional, Tuple, Type
 
 import numpy as np
 from pydantic import BaseModel, Field
-from pymatgen.analysis.defects.core import Defect
-from pymatgen.analysis.defects.thermo import DefectEntry, FormationEnergyDiagram
 from pymatgen.core import Structure
-from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["CCDDocument", "FormationEnergyDiagramDocument"]
-
-
-class FormationEnergyDiagramDocument(BaseModel):
-    """A document for storing a formation energy diagram.
-    Basically a PyDantic version of the `FormationEnergyDiagram` dataclass
-    with some additional data fields.
-    The `pd_entries` field is now optional since the workflow will not necessarily
-    have all the entries in the phase diagram computed.
-    """
-
-    bulk_entry: ComputedStructureEntry = Field(
-        None, description="The ComputedEntry representing the bulk structure."
-    )
-
-    defect_entries: List[DefectEntry] = Field(
-        None, description="The defect entries for the formation energy diagram."
-    )
-
-    pd_entries: List[ComputedEntry] = Field(
-        None, description="The entries used to construct the phase diagram."
-    )
-
-    vbm: float = Field(
-        None, description="The VBM of the pristine supercell calculation."
-    )
-
-    band_gap: float = Field(
-        None, description="The band gap of the pristine supercell calculation."
-    )
-
-    inc_inf_values: bool = Field(
-        None, description="Whether or not to include infinite values in the diagram."
-    )
-
-    defect: Defect = Field(
-        None, description="The defect for which the diagram is being calculated."
-    )
-
-    bulk_sc_dir: str = Field(
-        None, description="The directory name of the pristine supercell calculation."
-    )
-
-    defect_sc_dirs: Dict[int, str] = Field(
-        None, description="The directory names of the charged defect calculations."
-    )
-
-    dielectric: Union[float, List[List[float]]] = Field(
-        None,
-        description="The dielectric constant or tensor, can be used to compute corrections.",
-    )
-
-    @classmethod
-    def from_FormationEnergyDiagram(
-        cls, fed: FormationEnergyDiagram, **kwargs
-    ) -> "FormationEnergyDiagramDocument":
-        """Create a document from a `FormationEnergyDiagram` object.
-
-        Args:
-            fed: The `FormationEnergyDiagram` object.
-            kwargs: Additional keyword arguments to pass to the document.
-        """
-        defect = fed.defect_entries[0].defect
-        return cls(
-            defect=defect,
-            bulk_entry=fed.bulk_entry,
-            defect_entries=fed.defect_entries,
-            vbm=fed.vbm,
-            band_gap=fed.band_gap,
-            pd_entries=fed.pd_entries,
-            inc_inf_values=fed.inc_inf_values,
-            **kwargs,
-        )
-
-    def as_FormationEnergyDiagram(
-        self, pd_entries: Optional[List[ComputedEntry]] = None
-    ) -> "FormationEnergyDiagram":
-        """Create a `FormationEnergyDiagram` object from the document.
-
-        Since the `pd_entries` field is optional, this method allows the user
-        to pass in the phase diagram entries if they are not stored in this document.
-
-        Args:
-            pd_entries: The entries used to construct the phase diagram. If None,
-            the `pd_entries` field of the document will be used.
-        """
-        if pd_entries is None:
-            pd_entries = self.pd_entries
-        return FormationEnergyDiagram(
-            bulk_entry=self.bulk_entry,
-            defect_entries=self.defect_entries,
-            vbm=self.vbm,
-            band_gap=self.band_gap,
-            pd_entries=pd_entries,
-            inc_inf_values=self.inc_inf_values,
-        )
+__all__ = ["CCDDocument"]
 
 
 class CCDDocument(BaseModel):
