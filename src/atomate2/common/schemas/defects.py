@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Callable, List, Optional, Tuple, Type
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -11,8 +11,6 @@ from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEn
 from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
-
-__all__ = ["CCDDocument", "FormationEnergyDiagramDocument"]
 
 
 class FormationEnergyDiagramDocument(BaseModel):
@@ -55,11 +53,11 @@ class FormationEnergyDiagramDocument(BaseModel):
         None, description="The directory name of the pristine supercell calculation."
     )
 
-    defect_sc_dirs: dict[int, str] = Field(
+    defect_sc_dirs: Dict[int, str] = Field(
         None, description="The directory names of the charged defect calculations."
     )
 
-    dielectric: float | list[list[float]] = Field(
+    dielectric: Union[float, List[List[float]]] = Field(
         None,
         description="The dielectric constant or tensor, can be used to compute corrections.",
     )
@@ -88,7 +86,7 @@ class FormationEnergyDiagramDocument(BaseModel):
 
     def as_FormationEnergyDiagram(
         self, pd_entries: Optional[List[ComputedEntry]] = None
-    ) -> "FormationEnergyDiagram":
+    ) -> FormationEnergyDiagram:
         """Create a `FormationEnergyDiagram` object from the document.
 
         Since the `pd_entries` field is optional, this method allows the user
@@ -235,7 +233,7 @@ class CCDDocument(BaseModel):
 
     @classmethod
     def from_entries(
-        cls: Type["CCDDocument"],
+        cls,
         entries1: List[ComputedStructureEntry],
         entries2: List[ComputedStructureEntry],
         relaxed_uuid1: Optional[str] = None,
@@ -257,7 +255,7 @@ class CCDDocument(BaseModel):
 
         """
 
-        def find_entry(entries, uuid) -> Tuple[int, ComputedStructureEntry]:
+        def find_entry(entries, uuid) -> tuple[int, ComputedStructureEntry]:
             """Find the entry with the given UUID."""
             for itr, entry in enumerate(entries):
                 if entry.data["uuid"] == uuid:

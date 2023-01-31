@@ -8,6 +8,14 @@ from jobflow import job
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
 
+from atomate2.common.analysis.defects.jobs import (
+    bulk_supercell_calculation,
+    get_ccd_documents,
+    get_charged_structures,
+    get_supercell_from_prv_calc,
+    spawn_defect_calcs,
+    spawn_energy_curve_calcs,
+)
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
@@ -16,6 +24,17 @@ from atomate2.vasp.run import run_vasp
 from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
 logger = logging.getLogger(__name__)
+
+__all__ = [
+    "bulk_supercell_calculation",
+    "calculate_finite_diff",
+    "get_ccd_documents",
+    "get_charged_structures",
+    "get_supercell_from_prv_calc",
+    "spawn_defect_calcs",
+    "spawn_energy_curve_calcs",
+]
+# sort the list above
 
 
 @job(data=WSWQ, output_schema=FiniteDifferenceDocument)
