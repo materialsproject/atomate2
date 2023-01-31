@@ -177,7 +177,6 @@ class FormationEnergyMaker(Maker):
     def make(
         self,
         defect: Defect,
-        dielectric: float | npt.NDArray | None = None,
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: npt.NDArray | None = None,
         defect_index: int | str = "",
@@ -196,10 +195,6 @@ class FormationEnergyMaker(Maker):
         ----------
         defects: Defect
             List of defects objects to calculate the formation energy diagram for.
-        dielectric: float | NDArray | None
-            The dielectric constant or tensor used to calculate the
-            finite-size correction. If None (default), no finite-size correction will be
-            applied.
         bulk_supercell_dir: str | Path | None
             If provided, the bulk supercell calculation will be skipped.
         supercell_matrix: NDArray | None
