@@ -164,7 +164,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     flow = maker.make(
         defects[0],
         supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]],
-        dielectric=8.9,
         defect_index=0,
     )
 

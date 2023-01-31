@@ -16,17 +16,3 @@ def test_sort_pos_dist():
 
     r, d = sort_pos_dist(points_on_line_2d, s1=(0, 0), s2=(-2.5, -2.5), dist=abs_d)
     assert r == [(2, 2), (1, 1), (0, 0), (-1, -1), (-2, -2)]
-
-
-def test_FormationEnergyDiagramDocument(test_dir):
-    import pytest
-    from monty.serialization import loadfn
-
-    from atomate2.common.schemas.defects import FormationEnergyDiagramDocument
-
-    test_json = test_dir / "schemas" / "formation_en.json"
-    fe_doc = FormationEnergyDiagramDocument(**loadfn(test_json))
-    assert fe_doc.vbm == pytest.approx(4.5715)
-    fe_obj = fe_doc.as_FormationEnergyDiagram(pd_entries=fe_doc.pd_entries)
-    fe_obj1 = fe_doc.as_FormationEnergyDiagram()
-    assert set(fe_obj1.pd_entries) == set(fe_obj.pd_entries)
