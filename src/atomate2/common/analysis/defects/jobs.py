@@ -372,7 +372,10 @@ def run_all_charge_states(
         info = {
             "defect": defect,
             "charge_state": qq,
+            "defect_name": defect.name,
+            "host_formula": defect.structure.composition.reduced_formula,
         }
+
         if add_info is not None:
             info.update(add_info)
         charged_relax.update_maker_kwargs(
