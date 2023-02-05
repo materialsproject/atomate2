@@ -375,7 +375,7 @@ def run_all_charge_states(
             "defect_name": defect.name,
             "host_formula": defect.structure.composition.reduced_formula,
             "host_num_sites": len(defect.structure),
-            "host_space_group_info": defect.structure.get_space_group_info()[1],
+            "host_space_group_info": defect.structure.get_space_group_info(),
         }
 
         if add_info is not None:
