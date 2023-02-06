@@ -267,6 +267,10 @@ def bulk_supercell_calculation(
     sc_structure = uc_structure * sc_mat
     relax_job = relax_maker.make(sc_structure)
     relax_job.name = "bulk relax"
+    info = {"sc_mat": sc_mat.tolist()}
+    relax_job.update_maker_kwargs(
+        {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
+    )
     relax_output: TaskDocument = relax_job.output
 
     summary_d = dict(
@@ -286,6 +290,7 @@ def spawn_defect_calcs(
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
     defect_index: int | str = "",
+    add_info: dict | None = None,
 ) -> Response:
     """Spawn defect calculations from the DefectGenerator.
 
@@ -303,6 +308,9 @@ def spawn_defect_calcs(
     defect_index : int | str
         Additional index to give unique names to the defect calculations.
         Useful for external bookkeeping of symmetry distinct defects.
+    add_info : dict
+        Additional information to be passed to be stored with each defect
+        calculation's TaskDocument.
 
     Returns
     -------
@@ -315,6 +323,7 @@ def spawn_defect_calcs(
         sc_mat=sc_mat,
         relax_maker=relax_maker,
         defect_index=defect_index,
+        add_info=(add_info or {}),
     )
     defect_q_jobs.extend(add_jobs)
     return Response(output=all_chg_outputs, replace=defect_q_jobs)
@@ -357,6 +366,8 @@ def run_all_charge_states(
     jobs = []
     all_chg_outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
+    if sc_mat is not None:
+        sc_mat = np.array(sc_mat).tolist()
     for qq in defect.get_charge_states():
         suffix = (
             f" {defect.name} q={qq}"
@@ -376,6 +387,7 @@ def run_all_charge_states(
             "host_formula": defect.structure.composition.reduced_formula,
             "host_num_sites": len(defect.structure),
             "host_space_group_info": defect.structure.get_space_group_info(),
+            "sc_mat": sc_mat,
         }
 
         if add_info is not None:
