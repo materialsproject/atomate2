@@ -334,10 +334,10 @@ def spawn_defect_calcs(
 def run_all_charge_states(
     defect: Defect,
     relax_maker: RelaxMaker,
+    relaxed_sc_lattice: Lattice,
     sc_mat: NDArray | None = None,
     defect_index: int | str = "",
     add_info: dict | None = None,
-    relaxed_sc_lattice: Lattice | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations and save the Hartree potential.
 
@@ -373,8 +373,7 @@ def run_all_charge_states(
     jobs = []
     all_chg_outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
-    if relaxed_sc_lattice is not None:
-        sc_def_struct.lattice = relaxed_sc_lattice
+    sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
     for qq in defect.get_charge_states():
@@ -393,9 +392,9 @@ def run_all_charge_states(
             "defect": defect,
             "charge_state": qq,
             "defect_name": defect.name,
-            "host_formula": defect.structure.composition.reduced_formula,
-            "host_num_sites": len(defect.structure),
-            "host_space_group_info": defect.structure.get_space_group_info(),
+            "bulk_formula": defect.structure.composition.reduced_formula,
+            "bulk_num_sites": len(defect.structure),
+            "bulk_space_group_info": defect.structure.get_space_group_info(),
             "sc_mat": sc_mat,
         }
 
