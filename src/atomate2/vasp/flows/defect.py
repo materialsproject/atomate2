@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from jobflow import Flow, Job, Maker, OutputReference
+from jobflow import Flow, Maker, OutputReference
 from pymatgen.core.structure import Structure
 from pymatgen.io.vasp.outputs import Vasprun
 
@@ -105,9 +105,9 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     )
     bulk_incar_update: dict = field(default_factory=lambda: {"ISIF": 3})
 
-    def update_bulk_job(self, bulk_job: Job):
+    def update_bulk_job(self, relax_maker: Maker):
         """Update the bulk job with settings from `self.bulk_incar_update`."""
-        return update_user_incar_settings(bulk_job, self.bulk_incar_update)
+        return update_user_incar_settings(relax_maker, self.bulk_incar_update)
 
     def structure_from_prv(self, previous_dir: str):
         """

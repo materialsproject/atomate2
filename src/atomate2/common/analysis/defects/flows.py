@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -147,7 +148,7 @@ class ConfigurationCoordinateMaker(Maker):
 
 
 @dataclass
-class FormationEnergyMaker(Maker):
+class FormationEnergyMaker(Maker, ABC):
     """Maker class to help calculate of the formation energy diagram.
 
     Maker class to calculate formation energy diagrams. The main settings for
@@ -217,12 +218,16 @@ class FormationEnergyMaker(Maker):
                 uc_structure=defect.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
+                update_bulk_job=self.update_bulk_job,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             bulk_supercell_dir = get_sc_job.output["dir_name"]
         else:
             get_sc_job = get_supercell_from_prv_calc(
-                defect.structure, bulk_supercell_dir, supercell_matrix
+                uc_structure=defect.structure,
+                prv_calc_dir=bulk_supercell_dir,
+                sc_mat_ref=supercell_matrix,
+                structure_from_prv=self.structure_from_prv,
             )
             sc_mat = get_sc_job.output["sc_mat"]
 
@@ -243,7 +248,8 @@ class FormationEnergyMaker(Maker):
             name=self.name,
         )
 
-    def update_bulk_job(self, bulk_job: Job):
+    @abstractmethod
+    def update_bulk_job(self, relax_maker: Maker):
         """Update the bulk relaxation job.
 
         Common usage case:
@@ -255,12 +261,28 @@ class FormationEnergyMaker(Maker):
 
         Parameters
         ----------
-        bulk_job: Job
-            The bulk job to use for the formation energy diagram.
+        relax_maker: Maker
+            The maker used to create the defect job.
 
         Returns:
         --------
-        bulk_job: Job
-            The updated bulk job.
+        Maker:
+            The updated maker.
+        """
+        raise NotImplementedError("This method is not implemented yet.")
+
+    @abstractmethod
+    def structure_from_prv(self, previous_dir: str):
+        """Copy the previous directory to the new one.
+
+        Parameters
+        ----------
+        previous_dir: str
+            The directory to copy from.
+
+        Returns
+        -------
+        new_dir: str
+            The new directory.
         """
         raise NotImplementedError("This method is not implemented yet.")
