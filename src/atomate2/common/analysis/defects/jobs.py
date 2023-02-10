@@ -227,7 +227,7 @@ def get_supercell_from_prv_calc(
             raise ValueError(
                 "The supercell matrix extracted from the previous calculation does not match the the desired supercell shape."
             )
-    return dict(sc_mat=sc_mat_prv)
+    return dict(sc_mat=sc_mat_prv, lattice=Lattice(sc_mat_prv.lattice))
 
 
 @job(
@@ -289,6 +289,7 @@ def spawn_defect_calcs(
     defect: list[Defect],
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
+    relaxed_sc_lattice: Lattice,
     defect_index: int | str = "",
     add_info: dict | None = None,
 ) -> Response:
@@ -322,8 +323,9 @@ def spawn_defect_calcs(
         defect,
         sc_mat=sc_mat,
         relax_maker=relax_maker,
-        defect_index=defect_index,
+        relaxed_sc_lattice=relaxed_sc_lattice,
         add_info=(add_info or {}),
+        defect_index=defect_index,
     )
     defect_q_jobs.extend(add_jobs)
     return Response(output=all_chg_outputs, replace=defect_q_jobs)
@@ -335,6 +337,7 @@ def run_all_charge_states(
     sc_mat: NDArray | None = None,
     defect_index: int | str = "",
     add_info: dict | None = None,
+    relaxed_sc_lattice: Lattice | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations and save the Hartree potential.
 
@@ -356,6 +359,10 @@ def run_all_charge_states(
     add_info:
         Additional information to store with the defect cell relaxation calculation.
         By default only the defect object and charge state are stored.
+    relaxed_sc_lattice:
+        The lattice of the relaxed supercell. If provided, the lattice parameters
+        of the supercell will be set to value specified.  Otherwise, the lattice it will
+        only by set by `defect.structure` and `sc_mat`.
 
     Returns
     -------
@@ -366,6 +373,8 @@ def run_all_charge_states(
     jobs = []
     all_chg_outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
+    if relaxed_sc_lattice is not None:
+        sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
     for qq in defect.get_charge_states():
