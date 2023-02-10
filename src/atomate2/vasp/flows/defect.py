@@ -105,7 +105,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     )
     bulk_incar_update: dict = field(default_factory=lambda: {"ISIF": 3})
 
-    def update_bulk_job(self, relax_maker: Maker):
+    def update_maker(self, relax_maker: Maker):
         """Update the bulk job with settings from `self.bulk_incar_update`."""
         return update_user_incar_settings(relax_maker, self.bulk_incar_update)
 
