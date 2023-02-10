@@ -218,7 +218,7 @@ class FormationEnergyMaker(Maker, ABC):
                 uc_structure=defect.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
-                update_bulk_job=self.update_bulk_job,
+                update_maker=self.update_maker,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             bulk_supercell_dir = get_sc_job.output["dir_name"]
@@ -249,8 +249,8 @@ class FormationEnergyMaker(Maker, ABC):
         )
 
     @abstractmethod
-    def update_bulk_job(self, relax_maker: Maker):
-        """Update the bulk relaxation job.
+    def update_maker(self, relax_maker: Maker):
+        """Update the maker for the bulk job.
 
         Common usage case:
         While almost all of the settings for the bulk relaxation and defect

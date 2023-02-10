@@ -213,11 +213,6 @@ def get_supercell_from_prv_calc(
 
     """
     sc_structure = structure_from_prv(prv_calc_dir)
-    # fc = FileClient()
-    # files = fc.listdir(prv_calc_dir)
-    # vasprun_file = Path(prv_calc_dir) / get_zfile(files, "vasprun.xml")
-    # vasprun = Vasprun(vasprun_file)
-    # sc_structure = vasprun.initial_structure
     (sc_mat_prv, _) = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
@@ -242,7 +237,7 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
-    update_bulk_job: Callable | None = None,
+    update_maker: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -257,6 +252,8 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
+    update_maker : Callable | None
+        Function to update the relax maker.
 
     Returns
     -------
@@ -267,9 +264,8 @@ def bulk_supercell_calculation(
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
     sc_structure = uc_structure * sc_mat
-    relax_job = relax_maker.make(sc_structure)
-    if update_bulk_job is not None:
-        relax_job = update_bulk_job(relax_job)
+    maker = update_maker(relax_maker) if update_maker is not None else relax_maker
+    relax_job = maker.make(sc_structure)
     relax_job.name = "bulk relax"
     info = {"sc_mat": sc_mat.tolist()}
     relax_job.update_maker_kwargs(
