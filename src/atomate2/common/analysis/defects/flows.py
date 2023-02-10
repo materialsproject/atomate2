@@ -7,7 +7,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 
-import numpy as np
 import numpy.typing as npt
 from jobflow import Flow, Job, Maker, OutputReference
 from pymatgen.analysis.defects.core import Defect
@@ -234,13 +233,6 @@ class FormationEnergyMaker(Maker, ABC):
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["lattice"]
 
-        ncells = np.abs(np.linalg.det(sc_mat))
-        if not ncells.is_integer():
-            raise ValueError(
-                "The supercell matrix must be an integer matrix. "
-                "Please check the supercell matrix."
-            )
-
         spawn_output = spawn_defect_calcs(
             defect=defect,
             sc_mat=sc_mat,
@@ -250,7 +242,7 @@ class FormationEnergyMaker(Maker, ABC):
             add_info={
                 "bulk_supercell_dir": bulk_supercell_dir,
                 "bulk_supercell_matrix": sc_mat,
-                "bulk_supercell_num_sites": len(defect.structure) * int(ncells),
+                "bulk_unitcell_num_sites": len(defect.structure),
                 "bulk_supercell_uuid": get_sc_job.uuid,
             },
         )
