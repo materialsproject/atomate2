@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Iterable
+from typing import Callable, Iterable
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -16,11 +16,8 @@ from pymatgen.analysis.defects.supercells import (
     get_sc_fromstruct,
 )
 from pymatgen.core import Lattice, Structure
-from pymatgen.io.vasp.outputs import Vasprun
 
-from atomate2.common.files import get_zfile
 from atomate2.common.schemas.defects import CCDDocument
-from atomate2.utils.file_client import FileClient
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.schemas.task import TaskDocument
 
@@ -192,6 +189,7 @@ def get_supercell_from_prv_calc(
     uc_structure: Structure,
     prv_calc_dir: str | Path | None = None,
     sc_mat_ref: NDArray | None = None,
+    structure_from_prv: Callable | None = None,
 ) -> dict:
     """Get the supercell from the previous calculation.
 
@@ -205,6 +203,8 @@ def get_supercell_from_prv_calc(
         The directory of the previous calculation.
     sc_mat : NDArray
         The supercell matrix. If not None, use this to validate the extracted supercell.
+    structure_from_prv : Callable
+        Function to get the supercell structure from the previous calculation.
 
     Returns
     -------
@@ -212,11 +212,12 @@ def get_supercell_from_prv_calc(
         Output containing the supercell transformation and the dir_name
 
     """
-    fc = FileClient()
-    files = fc.listdir(prv_calc_dir)
-    vasprun_file = Path(prv_calc_dir) / get_zfile(files, "vasprun.xml")
-    vasprun = Vasprun(vasprun_file)
-    sc_structure = vasprun.initial_structure
+    sc_structure = structure_from_prv(prv_calc_dir)
+    # fc = FileClient()
+    # files = fc.listdir(prv_calc_dir)
+    # vasprun_file = Path(prv_calc_dir) / get_zfile(files, "vasprun.xml")
+    # vasprun = Vasprun(vasprun_file)
+    # sc_structure = vasprun.initial_structure
     (sc_mat_prv, _) = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
@@ -241,6 +242,7 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
+    update_bulk_job: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -266,6 +268,8 @@ def bulk_supercell_calculation(
     sc_mat = np.array(sc_mat)
     sc_structure = uc_structure * sc_mat
     relax_job = relax_maker.make(sc_structure)
+    if update_bulk_job is not None:
+        relax_job = update_bulk_job(relax_job)
     relax_job.name = "bulk relax"
     info = {"sc_mat": sc_mat.tolist()}
     relax_job.update_maker_kwargs(

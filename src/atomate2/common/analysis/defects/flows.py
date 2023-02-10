@@ -231,6 +231,10 @@ class FormationEnergyMaker(Maker):
             sc_mat=sc_mat,
             relax_maker=self.relax_maker,
             defect_index=defect_index,
+            add_info={
+                "bulk_supercell_dir": bulk_supercell_dir,
+                "bulk_supercell_uuid": get_sc_job.uuid,
+            },
         )
         jobs.extend([get_sc_job, spawn_output])
 
@@ -238,3 +242,25 @@ class FormationEnergyMaker(Maker):
             jobs=jobs,
             name=self.name,
         )
+
+    def update_bulk_job(self, bulk_job: Job):
+        """Update the bulk relaxation job.
+
+        Common usage case:
+        While almost all of the settings for the bulk relaxation and defect
+        relaxation should be the same, it is usually desirable to allow lattice
+        relaxation for the bulk job only.
+        Assuming the `relax_maker` is only allows atomic relaxations, this method
+        will update the bulk job to allow lattice relaxations.
+
+        Parameters
+        ----------
+        bulk_job: Job
+            The bulk job to use for the formation energy diagram.
+
+        Returns:
+        --------
+        bulk_job: Job
+            The updated bulk job.
+        """
+        raise NotImplementedError("This method is not implemented yet.")

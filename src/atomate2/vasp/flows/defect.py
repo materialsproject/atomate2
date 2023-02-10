@@ -4,16 +4,21 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 
-from jobflow import Flow, Maker, OutputReference
+from jobflow import Flow, Job, Maker, OutputReference
 from pymatgen.core.structure import Structure
+from pymatgen.io.vasp.outputs import Vasprun
 
 from atomate2.common.analysis.defects import flows as defect_flows
+from atomate2.common.files import get_zfile
 from atomate2.common.schemas.defects import CCDDocument
+from atomate2.utils.file_client import FileClient
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
+from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.defect import (
     SPECIAL_KPOINT,
     ChargeStateRelaxSetGenerator,
@@ -82,6 +87,10 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         states. If None, the defaults will be used.
     validate_maker: bool
         If True, the code will check the relax_maker for specific settings.
+    bulk_incar_update: dict
+        A dictionary of incar settings to update the bulk job with. This is
+        useful if you want to change the ISIF setting for example. Default is
+        {"ISIF": 3}.
     """
 
     name: str = "formation energy"
@@ -94,6 +103,22 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             task_document_kwargs={"average_locpot": True},
         )
     )
+    bulk_incar_update: dict = field(default_factory=lambda: {"ISIF": 3})
+
+    def update_bulk_job(self, bulk_job: Job):
+        """Update the bulk job with settings from `self.bulk_incar_update`."""
+        return update_user_incar_settings(bulk_job, self.bulk_incar_update)
+
+    def structure_from_prv(self, previous_dir: str):
+        """
+        Read the vasprun.xml file from the previous directory
+        and return the structure.
+        """
+        fc = FileClient()
+        files = fc.listdir(previous_dir)
+        vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
+        vasprun = Vasprun(vasprun_file)
+        return vasprun.initial_structure
 
 
 @dataclass
