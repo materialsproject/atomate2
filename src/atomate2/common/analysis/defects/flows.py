@@ -242,7 +242,6 @@ class FormationEnergyMaker(Maker, ABC):
             add_info={
                 "bulk_supercell_dir": bulk_supercell_dir,
                 "bulk_supercell_matrix": sc_mat,
-                "bulk_unitcell_num_sites": len(defect.structure),
                 "bulk_supercell_uuid": get_sc_job.uuid,
             },
         )
