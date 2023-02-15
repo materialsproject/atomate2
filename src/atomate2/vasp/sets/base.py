@@ -540,7 +540,6 @@ class VaspInputGenerator(InputGenerator):
 
         structure = structure if structure is not None else prev_structure
         structure = self._get_structure(structure)
-
         if self.auto_lreal:
             lreal = _get_recommended_lreal(structure)
 
@@ -1071,4 +1070,4 @@ def _get_recommended_lreal(structure: Structure):
     if structure.num_sites > 16:
         return "Auto"
     elif structure.num_sites <= 8:
-        return "False"
+        return False
