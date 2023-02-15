@@ -1,6 +1,6 @@
 # atomate2
 
-[![tests](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
+[![tests](https://img.shields.io/github/actions/workflow/status/materialsproject/atomate2/testing.yml?branch=main&label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
