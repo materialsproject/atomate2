@@ -1,3 +1,5 @@
+"""Jobs for running phonon calculations."""
+
 from __future__ import annotations
 
 import logging
