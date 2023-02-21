@@ -86,9 +86,6 @@ atomate2 = ["py.typed"]
 method = "git"
 default-tag = "0.0.1"
 
-[tool.isort]
-profile = "black"
-
 [tool.flake8]
 max-line-length = 88
 max-doc-length = 88
@@ -128,9 +125,47 @@ exclude_lines = [
     '^\s*@overload( |$)',
 ]
 
-[tool.autoflake]
-in-place = true
-remove-all-unused-imports = true
-remove-unused-variables = true
-ignore-init-module-imports = true
-expand-star-imports = true
+[tool.ruff]
+target-version = "py38"
+line-length = 120
+select = [
+  "B",   # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "D",   # pydocstyle
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",   # isort
+  "PLE", # pylint error
+  "PLW", # pylint warning
+  "Q",   # flake8-quotes
+  "RUF", # Ruff-specific rules
+  "SIM", # flake8-simplify
+  "TID", # tidy imports
+  "UP",  # pyupgrade
+  "W",   # pycodestyle
+  "YTT", # flake8-2020
+]
+ignore = [
+  "B019",    # functools.lru_cache on methods can lead to memory leaks
+  "B023",    # Function definition does not bind loop variable
+  "B904",    # Within an except clause, raise exceptions with ...
+  "D100",    # Missing docstring in public module
+  "D104",    # Missing docstring in public package
+  "D105",    # Missing docstring in magic method
+  "D107",    # Missing docstring in __init__
+  "D200",    # One-line docstring should fit on one line with quotes
+  "D205",    # 1 blank line required between summary line and description
+  "D212",    # Multi-line docstring summary should start at the first line
+  "D415",    # First line should end with a period, question mark, or exclamation point
+  "E741",    # tmp: we should fix all ambiguous variable names
+  "PLR2004", # Magic number
+  "PLW0120", # awaiting bug fix https://github.com/charliermarsh/ruff/issues/3019
+  "C408",    # Unnecessary dict call - rewrite as a literal
+  "D416",    # Section name should end with a colon
+]
+pydocstyle.convention = "google"
+isort.known-first-party = ["atomate2"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"**/tests/*" = ["D"]
