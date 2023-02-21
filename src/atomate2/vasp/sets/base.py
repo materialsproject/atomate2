@@ -166,7 +166,7 @@ class VaspInputSet(InputSet):
             )
 
         if (
-            all(k.is_metal for k in self.poscar.structure.composition.keys())
+            all(k.is_metal for k in self.poscar.structure.composition)
             and self.incar.get("NSW", 0) > 0
             and self.incar.get("ISMEAR", 1) < 1
         ):

@@ -93,10 +93,7 @@ def get_supercell_size(
         transformation.apply_transformation(structure=structure)
 
     else:
-        if "max_atoms" not in kwargs:
-            max_atoms = 1000
-        else:
-            max_atoms = kwargs["max_atoms"]
+        max_atoms = 1000 if "max_atoms" not in kwargs else kwargs["max_atoms"]
         if "angle_tolerance" not in kwargs:
             kwargs["angle_tolerance"] = 1e-2
         try:

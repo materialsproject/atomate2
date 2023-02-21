@@ -214,7 +214,6 @@ class OutputSummary(BaseModel):
         OutputSummary
             The calculation output summary.
         """
-
         if calc_doc.output.ionic_steps is not None:
             forces = calc_doc.output.ionic_steps[-1].forces
             stress = calc_doc.output.ionic_steps[-1].stress
@@ -561,10 +560,7 @@ def _get_drift_warnings(calc_doc: Calculation) -> List[str]:
         drift = calc_doc.output.outcar.get("drift", [[0, 0, 0]])
         max_drift = max(np.linalg.norm(d) for d in drift)
         ediffg = calc_doc.input.parameters.get("EDIFFG", None)
-        if ediffg and float(ediffg) < 0:
-            max_force = -float(ediffg)
-        else:
-            max_force = np.inf
+        max_force = -float(ediffg) if ediffg and float(ediffg) < 0 else np.inf
         if max_drift > max_force:
             warnings.append(
                 f"Drift ({drift}) > desired force convergence ({max_force}), structure "

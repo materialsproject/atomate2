@@ -273,13 +273,12 @@ class PhononBSDOSDoc(BaseModel):
                 raise ValueError(
                     "Number of born charges does not agree with number of atoms"
                 )
-            if code == "vasp":
-                if not np.all(np.isclose(borns, 0.0)):
-                    phonon.nac_params = {
-                        "born": borns,
-                        "dielectric": epsilon,
-                        "factor": 14.399652,
-                    }
+            if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
+                phonon.nac_params = {
+                    "born": borns,
+                    "dielectric": epsilon,
+                    "factor": 14.399652,
+                }
             # Other codes could be added here
         else:
             borns = None
@@ -424,10 +423,9 @@ class PhononBSDOSDoc(BaseModel):
             / structure.composition.reduced_composition.num_atoms
         )
 
-        if total_dft_energy is not None:
-            total_dft_energy_per_formula_unit = total_dft_energy / formula_units
-        else:
-            total_dft_energy_per_formula_unit = None
+        total_dft_energy_per_formula_unit = (
+            total_dft_energy / formula_units if total_dft_energy is not None else None
+        )
 
         return cls(
             structure=structure,

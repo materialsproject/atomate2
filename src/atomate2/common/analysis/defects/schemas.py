@@ -291,11 +291,9 @@ def get_dQ(ref: Structure, distorted: Structure) -> float:
     """
     return np.sqrt(
         np.sum(
-            list(
-                map(
-                    lambda x: x[0].distance(x[1]) ** 2 * x[0].specie.atomic_mass,
-                    zip(ref, distorted),
-                )
-            )
+            [
+                x[0].distance(x[1]) ** 2 * x[0].specie.atomic_mass
+                for x in zip(ref, distorted)
+            ]
         )
     )

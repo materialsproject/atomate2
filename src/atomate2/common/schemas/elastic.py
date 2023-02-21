@@ -85,7 +85,7 @@ class FittingData(BaseModel):
         None, description="The strains used to fit the elastic tensor."
     )
     pk_stresses: List[Matrix3D] = Field(
-        None, description="The Piola–Kirchoff stresses used to fit the elastic tensor."
+        None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
     deformations: List[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."

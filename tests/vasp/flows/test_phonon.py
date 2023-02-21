@@ -72,10 +72,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
         PhononBandStructureSymmLine,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert (
-        getattr(responses[job.jobs[-1].uuid][1].output, "thermal_displacement_data")
-        is None
-    )
+    assert responses[job.jobs[-1].uuid][1].output.thermal_displacement_data is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
@@ -83,14 +80,14 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
     )
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "force_constants") is None
+    assert responses[job.jobs[-1].uuid][1].output.force_constants is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert np.isclose(
         responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74555232
     )
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "born") is None
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "epsilon_static") is None
+    assert responses[job.jobs[-1].uuid][1].output.born is None
+    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
         [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
@@ -242,10 +239,7 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
         PhononBandStructureSymmLine,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert (
-        getattr(responses[job.jobs[-1].uuid][1].output, "thermal_displacement_data")
-        is None
-    )
+    assert responses[job.jobs[-1].uuid][1].output.thermal_displacement_data is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
@@ -253,14 +247,14 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
     )
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "force_constants") is None
+    assert responses[job.jobs[-1].uuid][1].output.force_constants is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert np.isclose(
         responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74525804
     )
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "born") is None
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "epsilon_static") is None
+    assert responses[job.jobs[-1].uuid][1].output.born is None
+    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
         ((-1.0, 1.0, 1.0), (1.0, -1.0, 1.0), (1.0, 1.0, -1.0)),
@@ -392,9 +386,9 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "total_dft_energy") is None
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "born") is None
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "epsilon_static") is None
+    assert responses[job.jobs[-1].uuid][1].output.total_dft_energy is None
+    assert responses[job.jobs[-1].uuid][1].output.born is None
+    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
         [[-1.0, 1.0, 1.0], [1.0, -1.0, 1.0], [1.0, 1.0, -1.0]],
@@ -667,10 +661,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
         PhononBandStructureSymmLine,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert (
-        getattr(responses[job.jobs[-1].uuid][1].output, "thermal_displacement_data")
-        is None
-    )
+    assert responses[job.jobs[-1].uuid][1].output.thermal_displacement_data is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
@@ -678,12 +669,12 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
     )
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "force_constants") is None
+    assert responses[job.jobs[-1].uuid][1].output.force_constants is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "total_dft_energy") is None
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "born") is None
-    assert getattr(responses[job.jobs[-1].uuid][1].output, "epsilon_static") is None
+    assert responses[job.jobs[-1].uuid][1].output.total_dft_energy is None
+    assert responses[job.jobs[-1].uuid][1].output.born is None
+    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
         [[-1.0, 1.0, 1.0], [1.0, -1.0, 1.0], [1.0, 1.0, -1.0]],

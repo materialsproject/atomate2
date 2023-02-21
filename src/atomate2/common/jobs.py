@@ -106,7 +106,6 @@ def retrieve_structure_from_materials_project(
         and also the database version and specific task_id
         corresponding to that Structure object also stored
     """
-
     # inline import to avoid required dependency
     try:
         from mp_api.client import MPRester

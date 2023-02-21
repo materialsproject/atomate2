@@ -155,10 +155,9 @@ class TaskDocument(MoleculeMetadata):
             metadata["cpu_time"] = [str(m) for m in metadata["cpu_time"]]
 
         # Get the final energy to store as its own key/value pair
-        if cclib_obj.scfenergies is not None:
-            energy = cclib_obj.scfenergies[-1]
-        else:
-            energy = None
+        energy = (
+            cclib_obj.scfenergies[-1] if cclib_obj.scfenergies is not None else None
+        )
 
         # Now we construct the input molecule. Note that this is not necessarily
         # the same as the initial molecule from the relaxation because the
