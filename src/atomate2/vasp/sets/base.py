@@ -261,6 +261,8 @@ class VaspInputGenerator(InputGenerator):
         If generating input set from a previous calculation, this controls whether
         to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
         moments are less than 0.02.
+    auto_lreal
+        If True, automatically use the VASP recommended LREAL based on cell size.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -278,7 +280,7 @@ class VaspInputGenerator(InputGenerator):
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
     auto_ispin: bool = False
-    auto_lreal: bool = True
+    auto_lreal: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
