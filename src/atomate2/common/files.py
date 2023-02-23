@@ -357,11 +357,7 @@ def get_zfile(
         found, then ``None`` will be returned.
     """
     for file in directory_listing:
-        if base_name == file.name:
-            return file
-        elif base_name + ".gz" == file.name:
-            return file
-        elif base_name + ".GZ" == file.name:
+        if base_name in [file.name, file.name + ".gz", file.name + ".GZ"]:
             return file
 
     if allow_missing:
