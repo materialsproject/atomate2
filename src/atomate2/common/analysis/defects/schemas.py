@@ -43,32 +43,38 @@ class CCDDocument(BaseModel):
 
     static_dirs1: List[str] = Field(
         None,
-        description="Directories of distorted calculations for the defect (supercell) in charge state (q1).",
+        description="Directories of distorted calculations for the defect (supercell) "
+        "in charge state (q1).",
     )
 
     static_dirs2: List[str] = Field(
         None,
-        description="Directories of distorted calculations for the defect (supercell) in charge state (q2).",
+        description="Directories of distorted calculations for the defect (supercell) "
+        "in charge state (q2).",
     )
 
     static_uuids1: List[str] = Field(
         None,
-        description="UUIDs of distorted calculations for the defect (supercell) in charge state (q1).",
+        description="UUIDs of distorted calculations for the defect (supercell) in "
+        "charge state (q1).",
     )
 
     static_uuids2: List[str] = Field(
         None,
-        description="UUIDs of distorted calculations for the defect (supercell) in charge state (q2).",
+        description="UUIDs of distorted calculations for the defect (supercell) in "
+        "charge state (q2).",
     )
 
     relaxed_index1: int = Field(
         None,
-        description="The index of the static calculation in that corresponds to the relaxed charge state (q1).",
+        description="The index of the static calculation in that corresponds to the "
+        "relaxed charge state (q1).",
     )
 
     relaxed_index2: int = Field(
         None,
-        description="The index of the static calculation in that corresponds to the relaxed charge state (q2).",
+        description="The index of the static calculation in that corresponds to the "
+        "relaxed charge state (q2).",
     )
 
     @classmethod

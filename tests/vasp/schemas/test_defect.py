@@ -1,7 +1,8 @@
 def test_sort_pos_dist():
     """
     Test the sorting algorithm with a list of 2D positions.
-    The algorithm should sort the list into a straight line depending on the direction of s1 and s2
+    The algorithm should sort the list into a straight line depending on the direction
+    of s1 and s2
     """
     import numpy as np
 

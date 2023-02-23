@@ -810,12 +810,13 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     )
 
 
-# use a structure where born charges are actually useful for the computation and change the values
+# use a structure where Born charges are actually useful for the computation and change
+# the values
 
 
 # test raises?
-# would be good to check if ValueErrors are raised when certain kpath schemes are combined with
-# non-standard-primitive structures
+# would be good to check if ValueErrors are raised when certain kpath schemes are
+# combined with non-standard-primitive structures
 # this will test all kpath schemes in combination with primitive cell
 @pytest.mark.parametrize(
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
@@ -978,7 +979,8 @@ def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
             "phonon static 9/10": "Mg3Sb2_phonons/phonon_static_9_10",
         }
 
-        # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+        # settings passed to fake_run_vasp; adjust these to check for certain INCAR
+        # settings
         fake_run_vasp_kwargs = {
             "dielectric": {"incar_settings": ["NSW", "ISMEAR"]},
             "phonon static 1/10": {"incar_settings": ["NSW", "ISMEAR"]},

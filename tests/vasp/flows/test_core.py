@@ -224,7 +224,8 @@ def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
     # mapping from job name to directory containing test files
     ref_paths = {
         "hse band structure line": "Si_hse_band_structure/hse_band_structure_line",
-        "hse band structure uniform": "Si_hse_band_structure/hse_band_structure_uniform",
+        "hse band structure uniform": "Si_hse_band_structure/"
+        "hse_band_structure_uniform",
         "hse static": "Si_hse_band_structure/hse_static",
     }
 
@@ -274,7 +275,8 @@ def test_hse_uniform_band_structure(mock_vasp, clean_dir, si_structure):
 
     # mapping from job name to directory containing test files
     ref_paths = {
-        "hse band structure uniform": "Si_hse_band_structure/hse_band_structure_uniform",
+        "hse band structure uniform": "Si_hse_band_structure/"
+        "hse_band_structure_uniform",
         "hse static": "Si_hse_band_structure/hse_static",
     }
 

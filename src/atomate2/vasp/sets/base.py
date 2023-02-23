@@ -825,6 +825,11 @@ def _get_kspacing(bandgap: float) -> float:
 def _get_magmoms(magmoms, structure):
     """Get the mamgoms."""
     mag = []
+    msg = (
+        "Co without an oxidation state is initialized as low spin by default in "
+        "Atomate2. If this default behavior is not desired, please set the spin on the "
+        "magmom on the site directly to ensure correct initialization."
+    )
     for site in structure:
         if hasattr(site, "magmom"):
             mag.append(site.magmom)
@@ -832,19 +837,11 @@ def _get_magmoms(magmoms, structure):
             mag.append(site.specie.spin)
         elif str(site.specie) in magmoms:
             if site.specie.symbol == "Co" and magmoms[str(site.specie)] <= 1.0:
-                warnings.warn(
-                    "Co without an oxidation state is initialized as low spin by default in Atomate2. "
-                    "If this default behavior is not desired, please set the spin on the magmom on the "
-                    "site directly to ensure correct initialization."
-                )
+                warnings.warn(msg)
             mag.append(magmoms.get(str(site.specie)))
         else:
             if site.specie.symbol == "Co":
-                warnings.warn(
-                    "Co without an oxidation state is initialized as low spin by default in Atomate2. "
-                    "If this default behavior is not desired, please set the spin on the magmom on the "
-                    "site directly to ensure correct initialization."
-                )
+                warnings.warn(msg)
             mag.append(magmoms.get(site.specie.symbol, 0.6))
     return mag
 

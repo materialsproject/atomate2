@@ -46,7 +46,8 @@ class TaskDocument(MoleculeMetadata):
     )
     metadata: Dict = Field(
         None,
-        description="Calculation metadata, including input parameters and runtime statistics",
+        description="Calculation metadata, including input parameters and runtime "
+        "statistics",
     )
     task_label: str = Field(None, description="A description of the task")
     tags: List[str] = Field(None, description="Optional tags for this task document")
@@ -115,7 +116,7 @@ class TaskDocument(MoleculeMetadata):
         from cclib.io import ccread
 
         logger.info(
-            f"Searching for the most recent log file with extensions {logfile_extensions}"
+            f"Searching for most recent log file with extensions {logfile_extensions}"
         )
 
         # Find the most recent log file with the given extension in the
