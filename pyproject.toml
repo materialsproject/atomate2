@@ -43,7 +43,7 @@ phonons = ["phonopy>=1.10.8", "seekpath"]
 defects = ["pymatgen-analysis-defects>=2022.11.21", "dscribe>=1.2.0"]
 docs = [
     "numpydoc==1.5.0",
-    "ipython==8.8.0",
+    "ipython==8.10.0",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
     "jupyter-book==0.13.1",
