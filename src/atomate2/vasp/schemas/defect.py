@@ -29,7 +29,7 @@ class FiniteDifferenceDocument(BaseModel):
     )
     distorted_dirs: List[str] = Field(
         None,
-        description="List of directories where the distorted W(Q) wavefunctions come from",
+        description="Directories where the distorted W(Q) wavefunctions come from",
     )
 
     @classmethod

@@ -196,7 +196,8 @@ class PhononMaker(Maker):
             and self.kpath_scheme != "seekpath"
         ):
             raise ValueError(
-                "You can only use other kpath schemes with the primitive standard structure"
+                "You can only use other kpath schemes with the primitive standard "
+                "structure"
             )
 
         if self.kpath_scheme not in [
