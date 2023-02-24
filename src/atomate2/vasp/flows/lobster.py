@@ -5,10 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from jobflow import Flow
-from jobflow import Maker
-from pymatgen.core import Structure
-
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
@@ -19,8 +15,10 @@ from atomate2.vasp.jobs.lobster import (
     update_user_incar_settings_job,
     delete_lobster_wavecar,
 )
-from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.core import StaticSetGenerator
+from jobflow import Flow
+from jobflow import Maker
+from pymatgen.core import Structure
 
 __all__ = ["LobsterMaker"]
 
@@ -54,19 +52,19 @@ class LobsterMaker(Maker):
     """
 
     name: str = "lobster"
-    # implemet different calculation types
-    calculation_type: str = ("standard",)
-    delete_all_wavecars: bool = (True,)
-    user_lobsterin_settings: dict = (None,)
-    user_incar_settings: dict = (None,)
-    user_kpoints_settings: dict = (None,)
-    user_supplied_basis: dict = (None,)
-    isym: int = (0,)
-    additional_outputs: list[str] = (None,)
-    additional_optimization: bool = (False,)
+    # implement different calculation types
+    calculation_type: str = "standard",
+    delete_all_wavecars: bool = True,
+    user_lobsterin_settings: dict | None = None
+    user_incar_settings: dict | None = None
+    user_kpoints_settings: dict | None = None
+    user_supplied_basis: dict | None = None
+    isym: int = 0,
+    additional_outputs: list[str] | None = None,
+    additional_optimization: bool = False,
     additional_static_run: bool = True  # will add an additional static run
-    user_incar_settings_optimization: dict = (None,)
-    user_kpoints_settings_optimization: dict = (None,)
+    user_incar_settings_optimization: dict | None = None,
+    user_kpoints_settings_optimization: dict | None = None,
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
@@ -74,7 +72,7 @@ class LobsterMaker(Maker):
         default_factory=lambda: VaspLobsterMaker()
     )
     additional_static_run_maker: BaseVaspMaker | None = field(
-        default_factory=lambda:StaticMaker(
+        default_factory=lambda: StaticMaker(
             name="additional_static_run",
             input_set_generator=StaticSetGenerator(
                 user_incar_settings={"LWAVE": True, "ISMEAR": 0},
@@ -84,9 +82,9 @@ class LobsterMaker(Maker):
     )
 
     def make(
-        self,
-        structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
+            self,
+            structure: Structure,
+            prev_vasp_dir: str | Path | None = None,
     ):
         """
         Make flow to calculate bonding properties.
@@ -143,8 +141,8 @@ class LobsterMaker(Maker):
             address_max_basis=None,
         )
         jobs.append(basis_infos)
-        #nbands=basis_infos.output["nbands"]
-        #vaspjob = update_user_incar_settings(vaspjob,incar_updates={"NBANDS":8}, name_filter='static_run')
+        # nbands=basis_infos.output["nbands"]
+        # vaspjob = update_user_incar_settings(vaspjob,incar_updates={"NBANDS":8}, name_filter='static_run')
         vaspjob = update_user_incar_settings_job(vaspjob, basis_infos.output)
 
         jobs.append(vaspjob)

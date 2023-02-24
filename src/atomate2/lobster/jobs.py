@@ -44,9 +44,9 @@ class PureLobsterMaker(Maker):
     def make(
         self,
         wavefunction_dir: str | Path = None,
-        basis_dict: dict = None,
-        user_lobsterin_settings: dict = None,
-        additional_outputs: list[str] = (None,)
+        basis_dict: dict |None= None,
+        user_lobsterin_settings: dict|None = None,
+        additional_outputs: list[str] |None = None,
         # something for the basis
     ):
         """
