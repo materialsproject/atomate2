@@ -46,7 +46,7 @@ docs = [
     "ipython==8.8.0",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
-    "jupyter-book==0.13.1",
+    "jupyter-book==0.13.2",
     "jsonschema[format]",
 ]
 dev = ["pre-commit>=2.12.1"]
