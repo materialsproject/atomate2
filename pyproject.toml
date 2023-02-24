@@ -52,7 +52,7 @@ docs = [
 dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.2.1", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
-    "pydantic==1.10.4",
+    "pydantic==1.10.5",
     "pymatgen==2023.1.20",
     "custodian==2022.5.26",
     "monty==2022.9.9",
