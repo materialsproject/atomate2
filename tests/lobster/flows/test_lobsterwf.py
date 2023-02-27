@@ -1,6 +1,7 @@
 import numpy as np
 from pymatgen.core.structure import Structure
 from atomate2.vasp.flows.lobster import LobsterMaker
+from maggma.stores.mongolike import MemoryStore
 
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.lobster.jobs import PureLobsterMaker
@@ -22,7 +23,8 @@ from atomate2.vasp.sets.core import StaticSetGenerator
     #assert isinstance(responses["lobster_run_0"], LobsterTaskDocument)
 
 def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
-    from jobflow import run_locally
+    from jobflow import run_locally, JobStore
+
 
 
     structure = Structure(
@@ -63,17 +65,12 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
     job = LobsterMaker(delete_all_wavecars=False).make(structure=structure)
 
     job = update_user_incar_settings(job, {"ISMEAR": 0}, name_filter="static_run")
+    store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, create_folders=True, ensure_success=True)
-    #print(responses)
-    print(responses[job.jobs[1].uuid][0].output)
-    print(job.jobs)
-    #TODO: add useful tests
-    #TODO: check update_user_incar_settings in a script and see whether it works
-    #TODO: find out why it isn't working
-    #TODO: check the generation of the task document in a jobflow store and with fireworks for execution
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, LobsterTaskDocument)
+    responses = run_locally(job, store=store,create_folders=True, ensure_success=True)
+
+    assert isinstance(responses[job.jobs[-1].uuid][1].replace.output['lobster_task_documents'][0].resolve(store), LobsterTaskDocument)
 
 
 

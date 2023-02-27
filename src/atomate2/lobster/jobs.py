@@ -85,4 +85,4 @@ class PureLobsterMaker(Maker):
         )
         # task_doc.converged = converged
 
-        return Response(output=task_doc)
+        return task_doc

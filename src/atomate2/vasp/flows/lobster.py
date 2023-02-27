@@ -152,7 +152,7 @@ class LobsterMaker(Maker):
 
         lobsterjobs = get_lobster_jobs(
             basis_infos.output["basis_dict"], vaspjob.output.dir_name,
-            user_lobsterin_settings=self.user_lobsterin_settings, additional_outputs=self.additional_outputs
+            self.user_lobsterin_settings,self.additional_outputs,  optimization_run_job_dir, optimization_run_uuid, static_run_job_dir, static_run_uuid, additional_static_run_job_dir,  additional_static_run_uuid
         )
 
         jobs.append(lobsterjobs)
@@ -174,15 +174,6 @@ class LobsterMaker(Maker):
             )
 
             jobs.append(delete_wavecars)
-        outputs = {}
-        outputs["optimization_run_job_dir"] = optimization_run_job_dir
-        outputs["optimization_run_uuid"] = optimization_run_uuid
-        outputs["static_run_job_dir"] = static_run_job_dir
-        outputs["static_run_uuid"] = static_run_uuid
-        outputs["additional_static_run_dir"] = additional_static_run_job_dir
-        outputs["additional_static_uuid"] = additional_static_run_uuid
-        outputs["lobster_job_dirs"] = lobsterjobs.output["dirs"]
-        outputs["lobster_uuids"] = lobsterjobs.output["uuids"]
-        outputs["lobster_task_documents"] = lobsterjobs.output["lobster_task_documents"]
-        flow = Flow(jobs, output=outputs)
+
+        flow = Flow(jobs, output=lobsterjobs.output)
         return flow

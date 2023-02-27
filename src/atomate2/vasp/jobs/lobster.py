@@ -143,19 +143,26 @@ def update_user_incar_settings_maker(vaspmaker, nbands, structure, prev_vasp_dir
 
 
 @job
-def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, additional_outputs):
+def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, additional_outputs, optimization_run_job_dir, optimization_run_uuid, static_run_job_dir, static_run_uuid, additional_static_run_job_dir,  additional_static_run_uuid):
     jobs = []
     outputs = {}
-    outputs["uuids"] = []
-    outputs["dirs"] = []
+    outputs["optimization_run_job_dir"] = optimization_run_job_dir
+    outputs["optimization_run_uuid"] = optimization_run_uuid
+    outputs["static_run_job_dir"] = static_run_job_dir
+    outputs["static_run_uuid"] = static_run_uuid
+    outputs["additional_static_run_dir"] = additional_static_run_job_dir
+    outputs["additional_static_uuid"] = additional_static_run_uuid
+    outputs["lobster_uuids"] = []
+    outputs["lobster_dirs"] = []
     outputs["lobster_task_documents"]=[]
+
     for i, basis in enumerate(basis_dict):
         lobsterjob = PureLobsterMaker(name="lobster_run_{}".format(i)).make(
             wavefunction_dir=wavefunction_dir, basis_dict=basis,
             user_lobsterin_settings=user_lobsterin_settings, additional_outputs=additional_outputs
         )
-        outputs["uuids"].append(lobsterjob.output.uuid)
-        outputs["dirs"].append(lobsterjob.output.dir_name)
+        outputs["lobster_uuids"].append(lobsterjob.output.uuid)
+        outputs["lobster_dirs"].append(lobsterjob.output.dir_name)
         outputs["lobster_task_documents"].append(lobsterjob.output)
         jobs.append(lobsterjob)
 
