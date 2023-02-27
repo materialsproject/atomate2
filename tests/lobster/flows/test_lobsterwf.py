@@ -3,15 +3,17 @@ from pymatgen.core.structure import Structure
 from atomate2.vasp.flows.lobster import LobsterMaker
 
 from atomate2.lobster.schemas import LobsterTaskDocument
+from atomate2.lobster.jobs import PureLobsterMaker
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import Lobsterin
+from atomate2.vasp.jobs.lobster import  VaspLobsterMaker
 from atomate2.vasp.powerups import (
         update_user_incar_settings,
         update_user_kpoints_settings
     )
 from atomate2.vasp.jobs.lobster import (VaspLobsterMaker,
-                                        get_basis_infos,update_user_incar_settings_job,
+                                        get_basis_infos, update_user_incar_settings_job,
                                         get_lobster_jobs,)
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
@@ -40,11 +42,10 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
     fake_run_vasp_kwargs = {
        "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
        "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-        "preconvergence run": {"incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"], },
-        # TODO: rerun test data and make sure ISMEAR is not changed by custodian
-        "static_run": {"incar_settings": ["NSW", "LWAVE" , "ISYM", "NBANDS"], "check_inputs":["poscar","potcar","kpoints","incar","wavecar"]},
+       "preconvergence run": {"incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"], },
+       "static_run": {"incar_settings": ["NSW", "LWAVE" , "ISMEAR", "ISYM", "NBANDS"], "check_inputs":["poscar","potcar","kpoints","incar","wavecar"]},
     }
-    #TODO: add correct files for lobster runss
+
     ref_paths_lobster = {
         "lobster_run_0": "Si_lobster/lobster_0",
     }
@@ -59,16 +60,20 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
     mock_lobster(ref_paths_lobster, fake_run_lobster_kwargs)
 
     # !!! Generate job
-    job = LobsterMaker(#additional_static_run_maker=None,bulk_relax_maker=None, #user_lobsterin_settings={'LSODOS': True} ,
-                       delete_all_wavecars=False).make(structure=structure)
+    job = LobsterMaker(delete_all_wavecars=False).make(structure=structure)
 
     job = update_user_incar_settings(job, {"ISMEAR": 0}, name_filter="static_run")
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
-    print(responses)
-
-    #assert isinstance(responses[job.jobs[-2].uuid][1].output, LobsterTaskDocument)
+    #print(responses)
+    print(responses[job.jobs[1].uuid][0].output)
+    print(job.jobs)
+    #TODO: add useful tests
+    #TODO: check update_user_incar_settings in a script and see whether it works
+    #TODO: find out why it isn't working
+    #TODO: check the generation of the task document in a jobflow store and with fireworks for execution
+    assert isinstance(responses[job.jobs[-1].uuid][1].output, LobsterTaskDocument)
 
 
 

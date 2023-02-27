@@ -7,14 +7,19 @@ from pathlib import Path
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
 from atomate2.vasp.jobs.lobster import (
     VaspLobsterMaker,
     get_basis_infos,
     get_lobster_jobs,
     update_user_incar_settings_job,
+    update_user_incar_settings_maker,
     delete_lobster_wavecar,
 )
+from atomate2.vasp.powerups import (
+        update_user_incar_settings,
+        update_user_kpoints_settings
+    )
 from atomate2.vasp.sets.core import StaticSetGenerator
 from jobflow import Flow
 from jobflow import Maker
@@ -56,15 +61,9 @@ class LobsterMaker(Maker):
     calculation_type: str = "standard",
     delete_all_wavecars: bool = True,
     user_lobsterin_settings: dict | None = None
-    user_incar_settings: dict | None = None
-    user_kpoints_settings: dict | None = None
     user_supplied_basis: dict | None = None
     isym: int = 0,
     additional_outputs: list[str] | None = None,
-    additional_optimization: bool = False,
-    additional_static_run: bool = True  # will add an additional static run
-    user_incar_settings_optimization: dict | None = None,
-    user_kpoints_settings_optimization: dict | None = None,
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
@@ -133,9 +132,7 @@ class LobsterMaker(Maker):
             additional_static_run_uuid = None
 
         # at gamma: -5 is used as standard, leads to errors for gamma only
-        vaspjob = self.vasp_lobster_maker.make(
-            structure=structure, prev_vasp_dir=prev_vasp_dir
-        )
+
 
         basis_infos = get_basis_infos(
             structure=structure,
@@ -144,9 +141,9 @@ class LobsterMaker(Maker):
             address_max_basis=None,
         )
         jobs.append(basis_infos)
-        # nbands=basis_infos.output["nbands"]
-        # vaspjob = update_user_incar_settings(vaspjob,incar_updates={"NBANDS":8}, name_filter='static_run')
-        vaspjob = update_user_incar_settings_job(vaspjob, basis_infos.output)
+
+        vaspjob = update_user_incar_settings_maker(self.vasp_lobster_maker, basis_infos.output, structure,prev_vasp_dir)
+
 
         jobs.append(vaspjob)
 
@@ -177,15 +174,15 @@ class LobsterMaker(Maker):
             )
 
             jobs.append(delete_wavecars)
-        outputs={}
-        outputs["optimization_run_job_dir"]=optimization_run_job_dir
-        outputs["optimization_run_uuid"]=optimization_run_uuid
-        outputs["static_run_job_dir"]=static_run_job_dir
-        outputs["static_run_uuid"]=static_run_uuid
-        outputs["additional_static_run_dir"]=additional_static_run_job_dir
-        outputs["additional_static_uuid"]=additional_static_run_uuid
-        outputs["lobster_job_dirs"]=lobsterjobs.output["dirs"]
-        outputs["lobster_uuids"]=lobsterjobs.output["uuids"]
-        outputs["lobster_task_documents"]=lobsterjobs.output["lobster_task_documents"]
+        outputs = {}
+        outputs["optimization_run_job_dir"] = optimization_run_job_dir
+        outputs["optimization_run_uuid"] = optimization_run_uuid
+        outputs["static_run_job_dir"] = static_run_job_dir
+        outputs["static_run_uuid"] = static_run_uuid
+        outputs["additional_static_run_dir"] = additional_static_run_job_dir
+        outputs["additional_static_uuid"] = additional_static_run_uuid
+        outputs["lobster_job_dirs"] = lobsterjobs.output["dirs"]
+        outputs["lobster_uuids"] = lobsterjobs.output["uuids"]
+        outputs["lobster_task_documents"] = lobsterjobs.output["lobster_task_documents"]
         flow = Flow(jobs, output=outputs)
         return flow

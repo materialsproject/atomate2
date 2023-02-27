@@ -163,6 +163,8 @@ def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
     for p in incar_settings:
         if user.get(p, defaults.get(p)) != ref.get(p, defaults.get(p)):
+            print(user.get(p))
+            print(ref.get(p))
             raise ValueError(
                 f"INCAR value of {p} is inconsistent: "
                 f"{user.get(p, defaults.get(p))} != {ref.get(p, defaults.get(p))}"

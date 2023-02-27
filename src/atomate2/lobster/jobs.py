@@ -1,4 +1,4 @@
-"""Module defining amset jobs."""
+"""Module defining lobster jobs."""
 
 from __future__ import annotations
 
