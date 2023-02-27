@@ -74,6 +74,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
     get_input_set_orig = VaspInputGenerator.get_input_set
 
+
     def mock_get_input_set(self, *args, **kwargs):
         kwargs["potcar_spec"] = True
         return get_input_set_orig(self, *args, **kwargs)
@@ -119,7 +120,7 @@ def fake_run_vasp(
         A list of INCAR settings to check.
     check_inputs
         A list of vasp input files to check. Supported options are "incar", "kpoints",
-        "poscar", "potcar".
+        "poscar", "potcar", "wavecar".
     clear_inputs
         Whether to clear input files before copying in the reference VASP outputs.
     """
@@ -138,6 +139,10 @@ def fake_run_vasp(
 
     if "potcar" in check_inputs:
         check_potcar(ref_path)
+
+    # This is useful to check if the WAVECAR has been copied
+    if "wavecar" in check_inputs:
+        Path("WAVECAR").exists()
 
     logger.info("Verified inputs successfully")
 

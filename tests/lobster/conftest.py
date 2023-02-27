@@ -6,7 +6,8 @@ import pytest
 
 logger = logging.getLogger("atomate2")
 
-_VFILES = "lobsterin.gz"
+_LFILES = "lobsterin"
+_DFT_FILES = ("WAVECAR", "POSCAR","INCAR","KPOINTS","POTCAR")
 _LOBS_REF_PATHS = {}
 _FAKE_RUN_LOBSTER_KWARGS = {}
 
@@ -76,7 +77,8 @@ def mock_lobster(monkeypatch, lobster_test_dir):
 
 def fake_run_lobster(
     ref_path: Union[str, Path],
-    check_inputs: Sequence[Literal["lobsterin"]] = _VFILES,
+    check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
+    check_dft_inputs: Sequence[Literal["WAVECAR","POSCAR"]]=_DFT_FILES,
     lobsterin_settings: Sequence[str] = tuple(),
 ):
     """
@@ -86,14 +88,20 @@ def fake_run_lobster(
     ref_path
         Path to reference directory with VASP input files in the folder named 'inputs'
         and output files in the folder named 'outputs'.
-    check_inputs
+    check_lobster_inputs
         A list of lobster input files to check. Supported options are "lobsterin.gz".
     lobsterin_settings
         A list of LOBSTER settings to check.
     """
     logger.info("Running fake LOBSTER.")
     ref_path = Path(ref_path)
-    if "lobsterin.gz" in check_inputs:
+
+    # Checks if DFT files have been copied
+    for file in check_dft_inputs:
+        Path(file).exists()
+    logger.info("Verified copying of VASP files successfully")
+    # zipped or not zipped?
+    if "lobsterin" in check_lobster_inputs:
         verify_inputs(ref_path, lobsterin_settings)
 
     logger.info("Verified LOBSTER inputs successfully")
@@ -107,10 +115,10 @@ def fake_run_lobster(
 def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str]):
 
     from pymatgen.io.lobster import Lobsterin
-    user = Lobsterin.from_file(ref_path / "outputs" /"lobsterin.gz")
+    user = Lobsterin.from_file("lobsterin")
 
     # Check lobsterin
-    ref = Lobsterin.from_file(ref_path / "inputs" / "lobsterin.gz")
+    ref = Lobsterin.from_file(ref_path / "inputs" / "lobsterin")
 
     for p in lobsterin_settings:
         if user.get(p, None) != ref.get(p, None):

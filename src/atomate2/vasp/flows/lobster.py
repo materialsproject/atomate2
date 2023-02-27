@@ -7,7 +7,7 @@ from pathlib import Path
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
+from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker, TightRelaxMaker
 from atomate2.vasp.jobs.lobster import (
     VaspLobsterMaker,
     get_basis_infos,
@@ -73,10 +73,10 @@ class LobsterMaker(Maker):
     )
     additional_static_run_maker: BaseVaspMaker | None = field(
         default_factory=lambda: StaticMaker(
-            name="additional_static_run",
+            name="preconvergence run",
             input_set_generator=StaticSetGenerator(
                 user_incar_settings={"LWAVE": True, "ISMEAR": 0},
-                user_kpoints_settings={"grid_density": 1},
+                user_kpoints_settings={"grid_density": 100},
             ),
         )
     )
@@ -108,7 +108,6 @@ class LobsterMaker(Maker):
             bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
-            print(structure)
             optimization_run_job_dir = bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
         else:
@@ -121,13 +120,17 @@ class LobsterMaker(Maker):
             preconvergence_job = self.additional_static_run_maker.make(
                 structure=structure
             )
-            prev_vasp_dir = preconvergence_job.output.dir_name
             jobs.append(preconvergence_job)
+            prev_vasp_dir = preconvergence_job.output.dir_name
+            additional_static_run_job_dir = preconvergence_job.output.dir_name
+            additional_static_run_uuid = preconvergence_job.output.uuid
         else:
             if optimization_run_job_dir is not None:
                 prev_vasp_dir = optimization_run_job_dir
             else:
                 prev_vasp_dir = None
+            additional_static_run_job_dir = None
+            additional_static_run_uuid = None
 
         # at gamma: -5 is used as standard, leads to errors for gamma only
         vaspjob = self.vasp_lobster_maker.make(
@@ -147,12 +150,16 @@ class LobsterMaker(Maker):
 
         jobs.append(vaspjob)
 
+        static_run_job_dir=vaspjob.output.dir_name
+        static_run_uuid=vaspjob.output.uuid
+
         lobsterjobs = get_lobster_jobs(
             basis_infos.output["basis_dict"], vaspjob.output.dir_name,
             user_lobsterin_settings=self.user_lobsterin_settings, additional_outputs=self.additional_outputs
         )
 
         jobs.append(lobsterjobs)
+
 
         # will delete all WAVECARs that have been copied
 
@@ -170,6 +177,15 @@ class LobsterMaker(Maker):
             )
 
             jobs.append(delete_wavecars)
-
-        flow = Flow(jobs)
+        outputs={}
+        outputs["optimization_run_job_dir"]=optimization_run_job_dir
+        outputs["optimization_run_uuid"]=optimization_run_uuid
+        outputs["static_run_job_dir"]=static_run_job_dir
+        outputs["static_run_uuid"]=static_run_uuid
+        outputs["additional_static_run_dir"]=additional_static_run_job_dir
+        outputs["additional_static_uuid"]=additional_static_run_uuid
+        outputs["lobster_job_dirs"]=lobsterjobs.output["dirs"]
+        outputs["lobster_uuids"]=lobsterjobs.output["uuids"]
+        outputs["lobster_task_documents"]=lobsterjobs.output["lobster_task_documents"]
+        flow = Flow(jobs, output=outputs)
         return flow

@@ -59,7 +59,7 @@ class VaspLobsterMaker(BaseVaspMaker):
     # TODO: set grid_density to a normal value
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 1},
+            user_kpoints_settings={"grid_density": 100},
             user_incar_settings={
                 "IBRION": 2,
                 "ISIF": 2,
@@ -137,7 +137,7 @@ def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, addi
     outputs = {}
     outputs["uuids"] = []
     outputs["dirs"] = []
-    outputs["basis"] = []
+    outputs["lobster_task_documents"]=[]
     for i, basis in enumerate(basis_dict):
         lobsterjob = PureLobsterMaker(name="lobster_run_{}".format(i)).make(
             wavefunction_dir=wavefunction_dir, basis_dict=basis,
@@ -145,7 +145,7 @@ def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, addi
         )
         outputs["uuids"].append(lobsterjob.output.uuid)
         outputs["dirs"].append(lobsterjob.output.dir_name)
-        outputs["basis"].append(basis)
+        outputs["lobster_task_documents"].append(lobsterjob.output)
         jobs.append(lobsterjob)
 
     flow = Flow(jobs, output=outputs)
