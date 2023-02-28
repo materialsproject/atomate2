@@ -141,10 +141,21 @@ def get_basis_infos(
 @job
 def update_user_incar_settings_maker(
         vaspmaker: VaspLobsterMaker,
-        nbands: int,
+        nbands: dict,
         structure: Structure,
         prev_vasp_dir: Path | str,
 ):
+    """
+    Update the INCAR settings of a maker
+    Args:
+        vaspmaker: VaspLobsterMaker.
+        nbands: dict including "nbands"
+        structure: Structure object.
+        prev_vasp_dir: Path or string to vasp files.
+
+    Returns:
+
+    """
     vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
 
     vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
