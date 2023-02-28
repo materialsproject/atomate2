@@ -67,7 +67,7 @@ strict = [
     "mp-api==0.30.8",
     "dscribe==1.2.1",
     "pymatgen-analysis-defects==2022.11.21",
-    "lobsterpy==0.2.6"
+    "lobsterpy==0.2.7"
 ]
 
 [project.scripts]
