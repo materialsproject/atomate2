@@ -529,15 +529,13 @@ class LobsterTaskDocument(BaseModel):
         )
         doscar_lobster = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR.gz")
         dos = doscar_lobster.completedos
-
+        lso_dos = None
         if additional_fields:
             if "DOSCAR.LSO.lobster" in additional_fields:
                 doscar_lso_lobster = Doscar(
                     doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz"
                 )
                 lso_dos = doscar_lso_lobster.completedos
-            else:
-                lso_dos = None
 
         madelung_obj = MadelungEnergies(filename="MadelungEnergies.lobster.gz")
 
