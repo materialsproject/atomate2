@@ -221,7 +221,7 @@ def get_lobster_jobs(
 
 
 @job
-def delete_lobster_wavecar(dirs: Path | str, dir_vasp: Path | str = None, dir_preconverge: Path | str = None):
+def delete_lobster_wavecar(dirs: list, dir_vasp: Path | str = None, dir_preconverge: Path | str = None):
     """
     Deletes all WAVECARs
 
@@ -233,9 +233,9 @@ def delete_lobster_wavecar(dirs: Path | str, dir_vasp: Path | str = None, dir_pr
     """
     jobs = []
     outputs = {}
-    outputs["lobster_dir_name"] = []
-    outputs["add_static_dir_name"] = []
-    outputs["static_dir_name"] = []
+    outputs["lobster_dir_name"]: list = []
+    outputs["add_static_dir_name"]: list = []
+    outputs["static_dir_name"]: list = []
     dec_delete_files = job(delete_files)
     for dir_name in dirs:
         jobs.append(
