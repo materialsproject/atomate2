@@ -123,11 +123,13 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
     job = update_user_incar_settings(job, {"NPAR": 4})
 
     # run the flow or job and ensure that it finished running successfully
-    run_locally(job, store=memory_jobstore, create_folders=True, ensure_success=True)
-    #
-    # assert isinstance(
-    #     responses[job.jobs[-1].uuid][1]
-    #     .replace.output["lobster_task_documents"][0]
-    #     .resolve(memory_jobstore),
-    #     LobsterTaskDocument,
-    # )
+    responses = run_locally(
+        job, store=memory_jobstore, create_folders=True, ensure_success=True
+    )
+
+    assert isinstance(
+        responses[job.jobs[-2].uuid][1]
+        .replace.output["lobster_task_documents"][0]
+        .resolve(memory_jobstore),
+        LobsterTaskDocument,
+    )

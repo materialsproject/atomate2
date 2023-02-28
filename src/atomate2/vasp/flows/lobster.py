@@ -183,7 +183,7 @@ class LobsterMaker(Maker):
                 vasp_add_stat = None
 
             delete_wavecars = delete_lobster_wavecar(
-                dirs=lobsterjobs.output["dirs"],
+                dirs=lobsterjobs.output["lobster_dirs"],
                 dir_vasp=vasp_stat,
                 dir_preconverge=vasp_add_stat,
             )
