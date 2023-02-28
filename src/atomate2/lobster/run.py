@@ -91,7 +91,7 @@ def run_lobster(
     else:
         raise ValueError(f"Unsupported job type: {job_type}")
 
-    handlers = []
+    handlers = None
 
     c = Custodian(
         handlers,

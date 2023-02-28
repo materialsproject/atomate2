@@ -5,10 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from monty.serialization import loadfn
-
-from atomate2 import SETTINGS
-from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
+from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
@@ -49,15 +46,14 @@ VASP_OUTPUT_FILES = [
 ]
 __all__ = ["copy_lobster_files"]
 
-
 logger = logging.getLogger(__name__)
 
 
 @auto_fileclient
 def copy_lobster_files(
-    src_dir: Path | str,
-    src_host: str | None = None,
-    file_client: FileClient = None,
+        src_dir: Path | str,
+        src_host: str | None = None,
+        file_client: FileClient = None,
 ):
     """
     Copy Lobster files to current directory.
@@ -103,32 +99,3 @@ def copy_lobster_files(
 
     # rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
     logger.info("Finished copying inputs")
-
-
-# something similar is present in pymatgen? # Do I need this?
-def write_lobster_settings(settings_updates: dict, from_prev: bool = False):
-    """
-    Write AMSET settings to file.
-
-    This function will also apply any settings specified in
-    :obj:`.Atomate2Settings.AMSET_SETTINGS_UPDATE`.
-
-    Parameters
-    ----------
-    settings_updates : dict
-        A dictionary of settings to write.
-    from_prev : bool
-        Whether apply the settings on top of an existing settings.yaml file in the
-        current directory.
-    """
-
-    if from_prev:
-        settings = loadfn("settings.yaml")
-        settings.update(settings_updates)
-    else:
-        settings = settings_updates
-
-    if SETTINGS.AMSET_SETTINGS_UPDATE is not None:
-        settings.update(SETTINGS.AMSET_SETTINGS_UPDATE)
-
-    write_settings(settings, "settings.yaml")

@@ -1,27 +1,11 @@
-import numpy as np
-from pymatgen.core.structure import Structure
-from atomate2.vasp.flows.lobster import LobsterMaker
-from maggma.stores.mongolike import MemoryStore
-
 from atomate2.lobster.schemas import LobsterTaskDocument
-from atomate2.lobster.jobs import PureLobsterMaker
-from pymatgen.electronic_structure.cohp import CompleteCohp
-from pymatgen.electronic_structure.dos import LobsterCompleteDos
-from pymatgen.io.lobster import Lobsterin
-from atomate2.vasp.jobs.lobster import VaspLobsterMaker
+from atomate2.vasp.flows.lobster import LobsterMaker
 from atomate2.vasp.powerups import (
     update_user_incar_settings,
-    update_user_kpoints_settings,
 )
-from atomate2.vasp.jobs.lobster import (
-    VaspLobsterMaker,
-    get_basis_infos,
-    update_user_incar_settings_job,
-    get_lobster_jobs,
-)
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
-from atomate2.vasp.sets.core import StaticSetGenerator
+from maggma.stores.mongolike import MemoryStore
+from pymatgen.core.structure import Structure
+
 
 # assert isinstance(responses["lobster_run_0"], LobsterTaskDocument)
 
@@ -79,7 +63,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
 
     assert isinstance(
         responses[job.jobs[-1].uuid][1]
-        .replace.output["lobster_task_documents"][0]
-        .resolve(store),
+            .replace.output["lobster_task_documents"][0]
+            .resolve(store),
         LobsterTaskDocument,
     )
