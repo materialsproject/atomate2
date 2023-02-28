@@ -7,9 +7,6 @@ from maggma.stores.mongolike import MemoryStore
 from pymatgen.core.structure import Structure
 
 
-# assert isinstance(responses["lobster_run_0"], LobsterTaskDocument)
-
-
 def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
     from jobflow import run_locally, JobStore
 
