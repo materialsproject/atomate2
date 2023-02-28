@@ -252,7 +252,7 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: list[str] = None
+        additional_fields: list = None
     ):
         """
         Create a task document from a directory containing LOBSTER files.
