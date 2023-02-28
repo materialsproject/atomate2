@@ -210,7 +210,6 @@ def get_supercell_from_prv_calc(
     -------
     Response:
         Output containing the supercell transformation and the dir_name
-
     """
     sc_structure = structure_from_prv(prv_calc_dir)
     (sc_mat_prv, _) = get_matched_structure_mapping(
@@ -237,7 +236,8 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
-    update_maker: Callable | None = None,
+    update_bulk_maker: Callable | None = None,
+    grid_update_from_task: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -252,9 +252,11 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
-    update_maker : Callable | None
-        Function to update the relax maker.
-
+    update_bulk_maker : Callable | None
+        Function to update the relax maker for the bulk supercell calculation only.
+    grid_update_from_task : Callable | None
+        Function to read the output grid information
+        in the form of an INCAR update dictionary.
     Returns
     -------
     Response:
@@ -264,7 +266,9 @@ def bulk_supercell_calculation(
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
     sc_structure = uc_structure * sc_mat
-    maker = update_maker(relax_maker) if update_maker is not None else relax_maker
+    maker = (
+        update_bulk_maker(relax_maker) if update_bulk_maker is not None else relax_maker
+    )
     relax_job = maker.make(sc_structure)
     relax_job.name = "bulk relax"
     info = {"sc_mat": sc_mat.tolist()}
@@ -272,7 +276,8 @@ def bulk_supercell_calculation(
         {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
     )
     relax_output: TaskDocument = relax_job.output
-
+    # grid information in the form of an INCAR update
+    grid_update = grid_update_from_task(relax_output)
     summary_d = dict(
         uc_structure=uc_structure,
         sc_entry=relax_output.entry,
@@ -280,6 +285,7 @@ def bulk_supercell_calculation(
         sc_mat=sc_mat.tolist(),
         dir_name=relax_output.dir_name,
         uuid=relax_job.uuid,
+        grid_update=grid_update,
     )
     return Response(output=summary_d, replace=[relax_job])
 

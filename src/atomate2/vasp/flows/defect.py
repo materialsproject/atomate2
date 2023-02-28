@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from jobflow import Flow, Maker, OutputReference
+from jobflow.core.maker import recursive_call
 from pymatgen.core.structure import Structure
 from pymatgen.io.vasp.outputs import Vasprun
 
@@ -63,6 +64,7 @@ HSE_DOUBLE_RELAX = DoubleRelaxMaker(
         },
     ),
 )
+GRID_KEYS = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
 
 
 @dataclass
@@ -94,7 +96,6 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     """
 
     name: str = "formation energy"
-    validate_maker: bool = True
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=ChargeStateRelaxSetGenerator(
@@ -105,7 +106,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     )
     bulk_incar_update: dict = field(default_factory=lambda: {"ISIF": 3})
 
-    def update_maker(self, relax_maker: Maker):
+    def update_bulk_maker(self, relax_maker: Maker):
         """Update the bulk job with settings from `self.bulk_incar_update`."""
         return update_user_incar_settings(relax_maker, self.bulk_incar_update)
 
@@ -118,7 +119,31 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         files = fc.listdir(previous_dir)
         vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
         vasprun = Vasprun(vasprun_file)
-        return vasprun.initial_structure
+        return vasprun.final_structure
+
+    def grid_update_from_task(self, taskdoc):
+        """Get the grid update from the task."""
+        params = taskdoc.output.input.parameters
+        return {k: params[k] for k in GRID_KEYS}
+
+    def grid_update_from_prv(self, previous_dir):
+        """Read the previous directory and get the grid update."""
+        fc = FileClient()
+        files = fc.listdir(previous_dir)
+        vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
+        vasprun = Vasprun(vasprun_file)
+        params = vasprun.parameters
+        return {k: params[k] for k in GRID_KEYS}
+
+    def validate_maker(self):
+        def check_func(relax_maker: RelaxMaker):
+            input_gen = relax_maker.input_set_generator
+            if input_gen.use_structure_charge is False:
+                raise ValueError("use_structure_charge should be set to True")
+
+        recursive_call(
+            self.relax_maker, func=check_func, class_filter=RelaxMaker, nested=True
+        )
 
 
 @dataclass
