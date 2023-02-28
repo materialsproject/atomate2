@@ -37,11 +37,20 @@ class LobsterMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-        bulk_relax_maker : .BaseVaspMaker or None
-        A maker to perform a tight relaxation on the bulk.
+    bulk_relax_maker : .BaseVaspMaker or None
+        A maker to perform a relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
-    static_energy_maker : .BaseVaspMaker or None
+    calculation_type: "standard" for a normal Lobster run
+    delete_all_wavecars: if true, all WAVECARs will be deleated after the run
+    user_lobsterin_settings: Dict including additional information
+    user_supplied_basis: dict | None = None
+    isym: int = 0,
+    additional_outputs
+
+    additional_static_run_maker
+
+    vasp_lobster_maker : .BaseVaspMaker or None
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
@@ -53,12 +62,12 @@ class LobsterMaker(Maker):
 
     name: str = "lobster"
     # implement different calculation types
-    calculation_type: str = "standard",
-    delete_all_wavecars: bool = True,
+    calculation_type: str = "standard"
+    delete_all_wavecars: bool = True
     user_lobsterin_settings: dict | None = None
     user_supplied_basis: dict | None = None
     isym: int = 0,
-    additional_outputs: list[str] | None = None,
+    additional_outputs: list[str] | None = None
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
