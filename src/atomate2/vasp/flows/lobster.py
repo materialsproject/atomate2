@@ -5,20 +5,20 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from jobflow import Flow, Maker
+from pymatgen.core import Structure
+
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
+from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.lobster import (
     VaspLobsterMaker,
+    delete_lobster_wavecar,
     get_basis_infos,
     get_lobster_jobs,
     update_user_incar_settings_maker,
-    delete_lobster_wavecar,
 )
 from atomate2.vasp.sets.core import StaticSetGenerator
-from jobflow import Flow
-from jobflow import Maker
-from pymatgen.core import Structure
 
 __all__ = ["LobsterMaker"]
 
@@ -102,7 +102,6 @@ class LobsterMaker(Maker):
             A previous vasp calculation directory to use for copying outputs.
 
         """
-
         jobs = []
 
         # do a relaxation step first

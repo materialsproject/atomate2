@@ -13,7 +13,7 @@ from typing import Any, Sequence
 
 from custodian import Custodian
 from custodian.custodian import Validator
-from custodian.lobster.handlers import LobsterFilesValidator, EnoughBandsValidator
+from custodian.lobster.handlers import EnoughBandsValidator, LobsterFilesValidator
 from custodian.lobster.jobs import LobsterJob
 from jobflow.utils import ValueEnum
 

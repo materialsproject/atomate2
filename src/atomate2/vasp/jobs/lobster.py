@@ -5,20 +5,19 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from jobflow import Flow
-from jobflow import Maker, Response, job
-from monty.serialization import loadfn
-from monty.shutil import gzip_dir
+
+from jobflow import Flow, Response, job
+from pymatgen.core import Structure
+from pymatgen.io.lobster import Lobsterin
+
 from atomate2.common.files import delete_files
+from atomate2.lobster.jobs import PureLobsterMaker
 from atomate2.lobster.schemas import LobsterTaskDocument
+from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
-from pymatgen.io.lobster import Lobsterin
-from atomate2.vasp.powerups import update_user_incar_settings
-from pymatgen.core import Structure
-from atomate2.lobster.jobs import PureLobsterMaker
-from atomate2.utils.path import strip_hostname
 
 __all__ = ["VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
 
@@ -82,10 +81,10 @@ class VaspLobsterMaker(BaseVaspMaker):
 
 @job
 def get_basis_infos(
-        structure: Structure,
-        vaspmaker: BaseVaspMaker,
-        address_max_basis: str = None,
-        address_min_basis: str = None,
+    structure: Structure,
+    vaspmaker: BaseVaspMaker,
+    address_max_basis: str = None,
+    address_min_basis: str = None,
 ):
     """
 
@@ -140,10 +139,10 @@ def get_basis_infos(
 
 @job
 def update_user_incar_settings_maker(
-        vaspmaker: VaspLobsterMaker,
-        nbands: dict,
-        structure: Structure,
-        prev_vasp_dir: Path | str,
+    vaspmaker: VaspLobsterMaker,
+    nbands: dict,
+    structure: Structure,
+    prev_vasp_dir: Path | str,
 ):
     """
     Update the INCAR settings of a maker
@@ -164,16 +163,16 @@ def update_user_incar_settings_maker(
 
 @job
 def get_lobster_jobs(
-        basis_dict,
-        wavefunction_dir,
-        user_lobsterin_settings,
-        additional_outputs,
-        optimization_run_job_dir,
-        optimization_run_uuid,
-        static_run_job_dir,
-        static_run_uuid,
-        additional_static_run_job_dir,
-        additional_static_run_uuid,
+    basis_dict,
+    wavefunction_dir,
+    user_lobsterin_settings,
+    additional_outputs,
+    optimization_run_job_dir,
+    optimization_run_uuid,
+    static_run_job_dir,
+    static_run_uuid,
+    additional_static_run_job_dir,
+    additional_static_run_uuid,
 ):
     """
 
@@ -205,7 +204,7 @@ def get_lobster_jobs(
     outputs["lobster_task_documents"] = []
 
     for i, basis in enumerate(basis_dict):
-        lobsterjob = PureLobsterMaker(name="lobster_run_{}".format(i)).make(
+        lobsterjob = PureLobsterMaker(name=f"lobster_run_{i}").make(
             wavefunction_dir=wavefunction_dir,
             basis_dict=basis,
             user_lobsterin_settings=user_lobsterin_settings,
@@ -221,7 +220,9 @@ def get_lobster_jobs(
 
 
 @job
-def delete_lobster_wavecar(dirs: list, dir_vasp: Path | str = None, dir_preconverge: Path | str = None):
+def delete_lobster_wavecar(
+    dirs: list, dir_vasp: Path | str = None, dir_preconverge: Path | str = None
+):
     """
     Deletes all WAVECARs
 
@@ -280,7 +281,7 @@ def delete_lobster_wavecar(dirs: list, dir_vasp: Path | str = None, dir_preconve
 
 @job(output_schema=LobsterTaskDocument)
 def generate_database_entry(
-        **kwargs,
+    **kwargs,
 ):
     """
     Analyze the LOBSTER runs and summarize the results.

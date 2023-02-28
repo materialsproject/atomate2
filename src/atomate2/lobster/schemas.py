@@ -1,33 +1,32 @@
 """Module defining amset document schemas."""
 
 import logging
-import time
-from typing import Any, Union, Optional, Dict
 import os
+import time
 from pathlib import Path
+from typing import Any, List, Optional, Union
+
 import numpy as np
 from monty.dev import requires
 from monty.serialization import loadfn
+from pydantic import BaseModel, Field
 from pymatgen.core import Structure
-from pymatgen.io.lobster import (
-    Lobsterin,
-    Lobsterout,
-    Icohplist,
-    Charge,
-    MadelungEnergies,
-)
 from pymatgen.electronic_structure.cohp import CompleteCohp
-from pymatgen.io.lobster import Doscar
 from pymatgen.electronic_structure.core import Spin
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
-
-from pydantic import BaseModel, Field
+from pymatgen.io.lobster import (
+    Charge,
+    Doscar,
+    Icohplist,
+    Lobsterin,
+    Lobsterout,
+    MadelungEnergies,
+)
 
 from atomate2 import __version__
 
 # from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
-from typing import Dict, List, Optional, Union
 
 # from atomate2.common.files import get_zfile
 # from atomate2.utils.path import get_uri
@@ -117,7 +116,8 @@ class LobsterinModel(BaseModel):
 
 class CondensedBondingAnalysis(BaseModel):
     """Collection to store condensed bonding analysis
-    data from LobsterPy based on ICOHP"""
+    data from LobsterPy based on ICOHP
+    """
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
@@ -176,7 +176,8 @@ class CondensedBondingAnalysis(BaseModel):
 
 class StrongestBonds(BaseModel):
     """Collection to store strongest bonds extracted
-    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
+    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs
+    """
 
     which_bonds: str = Field(
         None,
@@ -273,7 +274,6 @@ class LobsterTaskDocument(BaseModel):
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-
         additional_fields = [] if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
@@ -315,20 +315,23 @@ class LobsterTaskDocument(BaseModel):
             analyse.condensed_bonding_analysis
         )  # initialize lobsterpy condensed bonding analysis
         cba_cohp_plot_data = {}  # Initialize dict to store plot data
-        
+
         set_cohps = analyse.set_cohps
         set_labels_cohps = analyse.set_labels_cohps
         set_inequivalent_cations = analyse.set_inequivalent_ions
         struct = analyse.structure
         for _iplot, (ication, labels, cohps) in enumerate(
-                zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
+            zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
         ):
             namecation = str(struct[ication].specie)
             for label, cohp in zip(labels, cohps):
                 if label is not None:
                     cba_cohp_plot_data.update(
                         {
-                            namecation + str(ication + 1) + ": " + label: {
+                            namecation
+                            + str(ication + 1)
+                            + ": "
+                            + label: {
                                 "COHP": list(cohp.get_cohp()[Spin.up]),
                                 "ICOHP": list(cohp.get_icohp()[Spin.up]),
                                 "Energies": list(cohp.energies),
@@ -336,7 +339,7 @@ class LobsterTaskDocument(BaseModel):
                             }
                         }
                     )
-                    
+
         describe = Description(analysis_object=analyse)
 
         lpca = CondensedBondingAnalysis(
@@ -414,7 +417,7 @@ class LobsterTaskDocument(BaseModel):
                 for i, lab in enumerate(bond_labels_unique):
                     label = lab.split("-")
                     label.sort()
-                    for rel_bnd in relevant_bonds.keys():
+                    for rel_bnd in relevant_bonds:
                         rel_bnd_list = rel_bnd.split("-")
                         rel_bnd_list.sort()
                         if label == rel_bnd_list:
@@ -434,7 +437,7 @@ class LobsterTaskDocument(BaseModel):
                 for i, lab in enumerate(bond_labels_unique):
                     label = lab.split("-")
                     label.sort()
-                    for rel_bnd in relevant_bonds.keys():
+                    for rel_bnd in relevant_bonds:
                         rel_bnd_list = rel_bnd.split("-")
                         rel_bnd_list.sort()
                         if label == rel_bnd_list:
@@ -454,7 +457,7 @@ class LobsterTaskDocument(BaseModel):
                 for i, lab in enumerate(bond_labels_unique):
                     label = lab.split("-")
                     label.sort()
-                    for rel_bnd in relevant_bonds.keys():
+                    for rel_bnd in relevant_bonds:
                         rel_bnd_list = rel_bnd.split("-")
                         rel_bnd_list.sort()
                         if label == rel_bnd_list:
@@ -533,12 +536,11 @@ class LobsterTaskDocument(BaseModel):
         doscar_lobster = Doscar(doscar="DOSCAR.lobster.gz", structure_file="POSCAR.gz")
         dos = doscar_lobster.completedos
         lso_dos = None
-        if additional_fields:
-            if "DOSCAR.LSO.lobster" in additional_fields:
-                doscar_lso_lobster = Doscar(
-                    doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz"
-                )
-                lso_dos = doscar_lso_lobster.completedos
+        if additional_fields and "DOSCAR.LSO.lobster" in additional_fields:
+            doscar_lso_lobster = Doscar(
+                doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz"
+            )
+            lso_dos = doscar_lso_lobster.completedos
 
         madelung_obj = MadelungEnergies(filename="MadelungEnergies.lobster.gz")
 

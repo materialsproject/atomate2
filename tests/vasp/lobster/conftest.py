@@ -1,6 +1,7 @@
 import logging
-from typing import Literal, Sequence, Union
 from pathlib import Path
+from typing import Literal, Sequence, Union
+
 import pytest
 
 logger = logging.getLogger("atomate2")
@@ -51,8 +52,8 @@ def mock_lobster(monkeypatch, lobster_test_dir):
        dictionary created in step 4.
     6. Run your lobster job after calling `mock_lobster`.
     """
-    import atomate2.lobster.run
     import atomate2.lobster.jobs
+    import atomate2.lobster.run
 
     def mock_run_lobster(*args, **kwargs):
         from jobflow import CURRENT_JOB

@@ -1,10 +1,11 @@
+from jobflow import run_locally
+from pymatgen.core.structure import Structure
+
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.vasp.flows.lobster import LobsterMaker
 from atomate2.vasp.powerups import (
     update_user_incar_settings,
 )
-from pymatgen.core.structure import Structure
-from jobflow import run_locally
 
 
 def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
