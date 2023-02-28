@@ -30,7 +30,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VaspLobsterMaker(BaseVaspMaker):
     """
-    Maker that performs a VASP computation with settings that are required for Lobter runs
+    Maker that performs a VASP computation with
+     settings that are required for Lobter runs
     Parameters
     ----------
     name : str

@@ -109,7 +109,8 @@ class LobsterMaker(Maker):
             optimization_run_job_dir = None
             optimization_run_uuid = None
 
-        # do a static WAVECAR computation with symmetry and standard number of bands first
+        # do a static WAVECAR computation with symmetry
+        # and standard number of bands first
         # Do a static VASP computation
         if self.additional_static_run_maker is not None:
             preconvergence_job = self.additional_static_run_maker.make(
@@ -137,7 +138,8 @@ class LobsterMaker(Maker):
         )
         jobs.append(basis_infos)
 
-        # Maker needs to be updated here. If the job is updated, no further updates on the job are possible
+        # Maker needs to be updated here. If the job is updated,
+        # no further updates on the job are possible
         vaspjob = update_user_incar_settings_maker(
             self.vasp_lobster_maker, basis_infos.output, structure, prev_vasp_dir
         )

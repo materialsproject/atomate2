@@ -115,7 +115,8 @@ class LobsterinModel(BaseModel):
 
 
 class CondensedBondingAnalysis(BaseModel):
-    """Collection to store condensed bonding analysis data from LobsterPy based on ICOHP"""
+    """Collection to store condensed bonding analysis
+    data from LobsterPy based on ICOHP"""
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
@@ -173,7 +174,8 @@ class CondensedBondingAnalysis(BaseModel):
 
 
 class StrongestBonds(BaseModel):
-    """Collection to store strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
+    """Collection to store strongest bonds extracted
+     from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
 
     which_bonds: str = Field(
         None,
