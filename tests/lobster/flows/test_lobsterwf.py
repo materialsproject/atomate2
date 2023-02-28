@@ -3,18 +3,11 @@ from atomate2.vasp.flows.lobster import LobsterMaker
 from atomate2.vasp.powerups import (
     update_user_incar_settings,
 )
-from maggma.stores.mongolike import MemoryStore
 from pymatgen.core.structure import Structure
+from jobflow import run_locally
 
 
 def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
-    from jobflow import run_locally, JobStore
-
-    structure = Structure(
-        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
-        species=["Si", "Si"],
-        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
-    )
     # mapping from job name to directory containing test files
     ref_paths = {
         "preconvergence run": "Si_lobster/preconvergence_run",
@@ -52,8 +45,8 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     si_structure = Structure(lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]], species=["Si", "Si"],
                              coords=[[0, 0, 0], [0.25, 0.25, 0.25]])
     job = LobsterMaker(user_lobsterin_settings={"COHPstartEnergy": -5.0, "COHPEndEnergy": 5.0,
-                                                    "cohpGenerator": "from 0.1 to 3.0 orbitalwise"},
-                           delete_all_wavecars=False).make(si_structure)
+                                                "cohpGenerator": "from 0.1 to 3.0 orbitalwise"},
+                       delete_all_wavecars=False).make(si_structure)
     job = update_user_incar_settings(job, {"NPAR": 4})
 
     # run the flow or job and ensure that it finished running successfully

@@ -56,10 +56,9 @@ class VaspLobsterMaker(BaseVaspMaker):
     """
 
     name: str = "static_run"
-    # TODO: set grid_density to a normal value
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 100},
+            user_kpoints_settings={"grid_density": 6000},
             user_incar_settings={
                 "IBRION": 2,
                 "ISIF": 2,

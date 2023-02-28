@@ -71,7 +71,7 @@ class LobsterMaker(Maker):
             name="preconvergence run",
             input_set_generator=StaticSetGenerator(
                 user_incar_settings={"LWAVE": True, "ISMEAR": 0},
-                user_kpoints_settings={"grid_density": 100},
+                user_kpoints_settings={"grid_density": 6000},
             ),
         )
     )
