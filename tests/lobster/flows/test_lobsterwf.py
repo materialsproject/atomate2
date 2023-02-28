@@ -60,7 +60,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
 
     assert isinstance(
         responses[job.jobs[-1].uuid][1]
-            .replace.output["lobster_task_documents"][0]
-            .resolve(store),
+        .replace.output["lobster_task_documents"][0]
+        .resolve(store),
         LobsterTaskDocument,
     )
