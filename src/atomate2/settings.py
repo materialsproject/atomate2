@@ -82,7 +82,9 @@ class Atomate2Settings(BaseSettings):
         "Requires the bader executable to be on the path.",
     )
 
-    LOBSTER_CMD: str =Field(default="lobster", description="Command to run standard version of VASP.")
+    LOBSTER_CMD: str = Field(
+        default="lobster", description="Command to run standard version of VASP."
+    )
 
     LOBSTER_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"

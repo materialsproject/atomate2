@@ -42,15 +42,25 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
     mock_lobster(ref_paths_lobster, fake_run_lobster_kwargs)
 
-    si_structure = Structure(lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]], species=["Si", "Si"],
-                             coords=[[0, 0, 0], [0.25, 0.25, 0.25]])
-    job = LobsterMaker(user_lobsterin_settings={"COHPstartEnergy": -5.0, "COHPEndEnergy": 5.0,
-                                                "cohpGenerator": "from 0.1 to 3.0 orbitalwise"},
-                       delete_all_wavecars=False).make(si_structure)
+    si_structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
+    job = LobsterMaker(
+        user_lobsterin_settings={
+            "COHPstartEnergy": -5.0,
+            "COHPEndEnergy": 5.0,
+            "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
+        },
+        delete_all_wavecars=False,
+    ).make(si_structure)
     job = update_user_incar_settings(job, {"NPAR": 4})
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, store=memory_jobstore, create_folders=True, ensure_success=True)
+    responses = run_locally(
+        job, store=memory_jobstore, create_folders=True, ensure_success=True
+    )
 
     assert isinstance(
         responses[job.jobs[-1].uuid][1]
@@ -58,4 +68,3 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         .resolve(memory_jobstore),
         LobsterTaskDocument,
     )
-

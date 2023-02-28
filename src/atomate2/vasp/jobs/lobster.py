@@ -131,19 +131,28 @@ def update_user_incar_settings_job(vaspjob, nbands):
     vaspjob = update_user_incar_settings(vaspjob, {"NBANDS": nbands["nbands"]})
     return Response(replace=vaspjob)
 
+
 @job
 def update_user_incar_settings_maker(vaspmaker, nbands, structure, prev_vasp_dir):
-    vaspmaker= update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
+    vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
 
-    vaspjob = vaspmaker.make(
-        structure=structure, prev_vasp_dir=prev_vasp_dir
-    )
+    vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
     return Response(replace=vaspjob)
 
 
-
 @job
-def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, additional_outputs, optimization_run_job_dir, optimization_run_uuid, static_run_job_dir, static_run_uuid, additional_static_run_job_dir,  additional_static_run_uuid):
+def get_lobster_jobs(
+    basis_dict,
+    wavefunction_dir,
+    user_lobsterin_settings,
+    additional_outputs,
+    optimization_run_job_dir,
+    optimization_run_uuid,
+    static_run_job_dir,
+    static_run_uuid,
+    additional_static_run_job_dir,
+    additional_static_run_uuid,
+):
     jobs = []
     outputs = {}
     outputs["optimization_run_job_dir"] = optimization_run_job_dir
@@ -154,12 +163,14 @@ def get_lobster_jobs(basis_dict, wavefunction_dir, user_lobsterin_settings, addi
     outputs["additional_static_uuid"] = additional_static_run_uuid
     outputs["lobster_uuids"] = []
     outputs["lobster_dirs"] = []
-    outputs["lobster_task_documents"]=[]
+    outputs["lobster_task_documents"] = []
 
     for i, basis in enumerate(basis_dict):
         lobsterjob = PureLobsterMaker(name="lobster_run_{}".format(i)).make(
-            wavefunction_dir=wavefunction_dir, basis_dict=basis,
-            user_lobsterin_settings=user_lobsterin_settings, additional_outputs=additional_outputs
+            wavefunction_dir=wavefunction_dir,
+            basis_dict=basis,
+            user_lobsterin_settings=user_lobsterin_settings,
+            additional_outputs=additional_outputs,
         )
         outputs["lobster_uuids"].append(lobsterjob.output.uuid)
         outputs["lobster_dirs"].append(lobsterjob.output.dir_name)
