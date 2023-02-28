@@ -8,7 +8,7 @@ from pathlib import Path
 
 from jobflow import Flow, Maker, OutputReference
 from jobflow.core.maker import recursive_call
-from pymatgen.core.structure import Structure
+from pymatgen.core.structure import Lattice, Structure
 from pymatgen.io.vasp.outputs import Vasprun
 
 from atomate2.common.analysis.defects import flows as defect_flows
@@ -137,7 +137,10 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
-            isif_ = input_gen.get_incar_updates(None).get("ISIF", 3)
+            DUMMY_STRUCT = Structure(
+                Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]]
+            )
+            isif_ = input_gen.get_incar_updates(DUMMY_STRUCT).get("ISIF", None)
             isif = input_gen.user_incar_settings.get("ISIF", isif_)
             if isif != 2:
                 raise ValueError("ISIF should be set to 2")
