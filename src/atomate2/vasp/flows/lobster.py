@@ -41,33 +41,30 @@ class LobsterMaker(Maker):
         A maker to perform a relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
-    calculation_type: "standard" for a normal Lobster run
-    delete_all_wavecars: if true, all WAVECARs will be deleated after the run
-    user_lobsterin_settings: Dict including additional information
-    user_supplied_basis: dict | None = None
-    isym: int = 0,
-    additional_outputs
-
-    additional_static_run_maker
-
-    vasp_lobster_maker : .BaseVaspMaker or None
-        A maker to perform the computation of the DFT energy on the bulk.
-        Set to ``None`` to skip the
-        static energy computation
+    additional_static_run_maker: .BaseVaspMaker or None
+        A maker to perform a preconvergence run
+        before the wavefunction computation without symmetry
+    vasp_lobster_maker : .BaseVaspMaker
+        A maker to perform the computation of the wavefunction before the static run.
+        Cannot be skipped.
     code: str
         determines the dft code. currently only vasp is implemented.
         This keyword might enable the implementation of other codes
         in the future
+    calculation_type:
+        "standard" for a normal Lobster run
+    delete_all_wavecars:
+        if true, all WAVECARs will be deleated after the run
+    user_lobsterin_settings:
+        Dict including additional information
+    user_supplied_basis: dict or None
+        dict to supply a basis for the lobsterrun
+    additional_outputs:
+        list of filenames to include in output (str)
     """
 
     name: str = "lobster"
     # implement different calculation types
-    calculation_type: str = "standard"
-    delete_all_wavecars: bool = True
-    user_lobsterin_settings: dict | None = None
-    user_supplied_basis: dict | None = None
-    isym: int = 0
-    additional_outputs: list[str] | None = None
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
@@ -83,6 +80,11 @@ class LobsterMaker(Maker):
             ),
         )
     )
+    calculation_type: str = "standard"
+    delete_all_wavecars: bool = True
+    user_lobsterin_settings: dict | None = None
+    user_supplied_basis: dict | None = None
+    additional_outputs: list[str] | None = None
 
     def make(
         self,

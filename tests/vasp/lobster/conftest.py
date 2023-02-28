@@ -21,7 +21,8 @@ def lobster_test_dir(test_dir):
 def mock_lobster(monkeypatch, lobster_test_dir):
     """
     This fixture allows one to mock (fake) running LOBSTER.
-    It works by monkeypatching (replacing) calls to run_lobster that will work when the lobster executables
+    It works by monkeypatching (replacing) calls to run_lobster that will
+    work when the lobster executables
     are not present.
     The primary idea is that instead of running LOBSTER to generate the output files,
     reference files will be copied into the directory instead. As we do not want to
@@ -29,26 +30,30 @@ def mock_lobster(monkeypatch, lobster_test_dir):
     are generated correctly and that the outputs are parsed properly, this should be
     sufficient for our needs.
     To use the fixture successfully, the following steps must be followed:
-    1. "mock_lobster" should be included as an argument to any test that would like to use
-       its functionally.
+    1. "mock_lobster" should be included as an argument to any test that would
+        like to use its functionally.
     2. For each job in your workflow, you should prepare a reference directory
-       containing two folders "inputs" (containing the reference input files expected
-       to be produced by Lobsterin.standard_calculations_from_vasp_files
+       containing two folders "inputs" (containing the reference input files
+       expected to be produced by Lobsterin.standard_calculations_from_vasp_files
        and "outputs" (containing the expected
        output files to be produced by run_lobster). These files should reside in a
        subdirectory of "tests/test_data/lobster".
-    3. Create a dictionary mapping each job name to its reference directory. Note that
-       you should supply the reference directory relative to the "tests/test_data/lobster"
-       folder. For example, if your calculation has one job named "lobster_run_0" and the
-       reference files are present in "tests/test_data/lobster/Si_lobste_run_0", the dictionary
-       would look like: ``{"lobster_run_0": "Si_lobste_run_0"}``.
-    4. Optional: create a dictionary mapping each job name to custom keyword arguments
-       that will be supplied to fake_run_lobster. This way you can configure which lobsterin
-       settings are expected for each job. For example, if your calculation has one job
-       named "lobster_run_0" and you wish to validate that "basisfunctions" is set correctly in the lobsterin,
-       your dictionary would look like ``{"lobster_run_0": {"lobsterin_settings": {"basisfunctions": Ba 5p 5s 6s}}``.
-    5. Inside the test function, call `mock_lobster(ref_paths, fake_lobster_kwargs)`, where
-       ref_paths is the dictionary created in step 3 and fake_lobster_kwargs is the
+    3. Create a dictionary mapping each job name to its reference directory.
+       Note that you should supply the reference directory relative to the
+       "tests/test_data/lobster" folder. For example, if your calculation
+       has one job named "lobster_run_0" and the reference files are present in
+       "tests/test_data/lobster/Si_lobster_run_0", the dictionary
+       would look like: ``{"lobster_run_0": "Si_lobster_run_0"}``.
+    4. Optional: create a dictionary mapping each job name to custom
+       keyword arguments that will be supplied to fake_run_lobster.
+       This way you can configure which lobsterin settings are expected for each job.
+       For example, if your calculation has one job named "lobster_run_0"
+       and you wish to validate that "basisfunctions" is set correctly
+       in the lobsterin, your dictionary would look like
+       ``{"lobster_run_0": {"lobsterin_settings": {"basisfunctions": Ba 5p 5s 6s}}``.
+    5. Inside the test function, call `mock_lobster(ref_paths, fake_lobster_kwargs)`,
+       where ref_paths is the dictionary created in step 3
+       and fake_lobster_kwargs is the
        dictionary created in step 4.
     6. Run your lobster job after calling `mock_lobster`.
     """

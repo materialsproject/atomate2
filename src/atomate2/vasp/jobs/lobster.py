@@ -153,7 +153,7 @@ def update_user_incar_settings_maker(
         prev_vasp_dir: Path or string to vasp files.
 
     Returns:
-
+        VaspLobsterMaker with correct number of bands.
     """
     vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
 
