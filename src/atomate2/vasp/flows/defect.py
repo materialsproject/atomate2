@@ -43,6 +43,18 @@ DEFECT_STATIC_GENERATOR = StaticSetGenerator(
 
 @dataclass
 class ConfigurationCoordinateMaker(BaseCCDMaker):
+    """Maker to calculate the configuration coordinate diagram.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow created by this maker.
+    relax_maker: BaseVaspMaker
+        A maker to perform the relaxation of the defect.
+    static_maker: BaseVaspMaker
+        A maker to perform the static calculation of the defect.
+    """
+
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=DEFECT_RELAX_GENERATOR,

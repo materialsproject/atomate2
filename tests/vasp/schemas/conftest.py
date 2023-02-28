@@ -3,7 +3,7 @@ import pytest
 
 def assert_schemas_equal(test_schema, valid_schema):
     """
-    Recursively test that all items in valid_schema are present and equal in test_schema.
+    Recursively test all items in valid_schema are present and equal in test_schema.
 
     While test_schema can be a pydantic schema or dictionary, the valid schema must
     be a (nested) dictionary. This function automatically handles accessing the
