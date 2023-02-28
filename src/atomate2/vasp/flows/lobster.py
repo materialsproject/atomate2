@@ -12,7 +12,6 @@ from atomate2.vasp.jobs.lobster import (
     VaspLobsterMaker,
     get_basis_infos,
     get_lobster_jobs,
-    update_user_incar_settings_job,
     update_user_incar_settings_maker,
     delete_lobster_wavecar,
 )
