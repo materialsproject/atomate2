@@ -144,6 +144,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             isif = input_gen.user_incar_settings.get("ISIF", isif_)
             if isif != 2:
                 raise ValueError("ISIF should be set to 2")
+            return relax_maker
 
         recursive_call(
             self.relax_maker, func=check_func, class_filter=RelaxMaker, nested=True
