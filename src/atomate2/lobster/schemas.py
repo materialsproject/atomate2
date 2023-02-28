@@ -18,6 +18,7 @@ from pymatgen.io.lobster import (
 )
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.io.lobster import Doscar
+from pymatgen.electronic_structure.core import Spin
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
 from pydantic import BaseModel, Field
@@ -314,26 +315,28 @@ class LobsterTaskDocument(BaseModel):
             analyse.condensed_bonding_analysis
         )  # initialize lobsterpy condensed bonding analysis
         cba_cohp_plot_data = {}  # Initialize dict to store plot data
-        for index, (_site, val) in enumerate(
-            analyse.condensed_bonding_analysis["sites"].items()
+        
+        set_cohps = analyse.set_cohps
+        set_labels_cohps = analyse.set_labels_cohps
+        set_inequivalent_cations = analyse.set_inequivalent_ions
+        struct = analyse.structure
+        for _iplot, (ication, labels, cohps) in enumerate(
+                zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
         ):
-            cohp_data = analyse.chemenv.completecohp.get_summed_cohp_by_label_list(
-                val["relevant_bonds"]
-            ).as_dict()
-            spinup_cohps = cohp_data["COHP"]["1"]
-            spindown_cohps = cohp_data["COHP"]["-1"]
-            energies = cohp_data["energies"]
-            efermi = cohp_data["efermi"]
-            cba_cohp_plot_data.update(
-                {
-                    analyse.set_labels_cohps[index][0]: {
-                        "COHP_spin_up": spinup_cohps,
-                        "COHP_spin_down": spindown_cohps,
-                        "Energies": energies,
-                        "Efermi": efermi,
-                    }
-                }
-            )
+            namecation = str(struct[ication].specie)
+            for label, cohp in zip(labels, cohps):
+                if label is not None:
+                    cba_cohp_plot_data.update(
+                        {
+                            namecation + str(ication + 1) + ": " + label: {
+                                "COHP": list(cohp.get_cohp()[Spin.up]),
+                                "ICOHP": list(cohp.get_icohp()[Spin.up]),
+                                "Energies": list(cohp.energies),
+                                "Efermi": cohp.efermi,
+                            }
+                        }
+                    )
+                    
         describe = Description(analysis_object=analyse)
 
         lpca = CondensedBondingAnalysis(
