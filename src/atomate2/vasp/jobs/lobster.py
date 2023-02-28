@@ -232,7 +232,7 @@ def delete_lobster_wavecar(dirs: list, dir_vasp: Path | str = None, dir_preconve
 
     """
     jobs = []
-    outputs = {}
+    outputs: dict = {}
     outputs["lobster_dir_name"] = []
     outputs["add_static_dir_name"] = []
     outputs["static_dir_name"] = []
