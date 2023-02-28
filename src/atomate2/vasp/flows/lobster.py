@@ -54,12 +54,12 @@ class LobsterMaker(Maker):
 
     name: str = "lobster"
     # implement different calculation types
-    calculation_type: str = ("standard",)
-    delete_all_wavecars: bool = (True,)
+    calculation_type: str = "standard",
+    delete_all_wavecars: bool = True,
     user_lobsterin_settings: dict | None = None
     user_supplied_basis: dict | None = None
-    isym: int = (0,)
-    additional_outputs: list[str] | None = (None,)
+    isym: int = 0,
+    additional_outputs: list[str] | None = None,
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
