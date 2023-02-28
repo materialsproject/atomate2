@@ -24,6 +24,7 @@ __all__ = ["VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
 
 logger = logging.getLogger(__name__)
 
+
 # include a class where we can also add Lobster
 
 
@@ -81,11 +82,22 @@ class VaspLobsterMaker(BaseVaspMaker):
 
 @job
 def get_basis_infos(
-    structure, vaspmaker, address_max_basis=None, address_min_basis=None
+        structure: Structure,
+        vaspmaker: BaseVaspMaker,
+        address_max_basis: str = None,
+        address_min_basis: str = None,
 ):
-    # create a vasp input for lobster
+    """
 
-    # we need to add more files to copy if prev_vasp_dir exists
+    Args:
+        structure: Structure object.
+        vaspmaker: BaseVaspMaker.
+        address_max_basis: string to yaml file including basis set information.
+        address_min_basis: string to yaml file including basis set information.
+
+    Returns:
+        dict including number of bands and basis set information
+    """
     potcar_symbols = vaspmaker.input_set_generator._get_potcar(
         structure=structure, potcar_spec=True
     )
@@ -127,13 +139,12 @@ def get_basis_infos(
 
 
 @job
-def update_user_incar_settings_job(vaspjob, nbands):
-    vaspjob = update_user_incar_settings(vaspjob, {"NBANDS": nbands["nbands"]})
-    return Response(replace=vaspjob)
-
-
-@job
-def update_user_incar_settings_maker(vaspmaker, nbands, structure, prev_vasp_dir):
+def update_user_incar_settings_maker(
+        vaspmaker: VaspLobsterMaker,
+        nbands: int,
+        structure: Structure,
+        prev_vasp_dir: Path | str,
+):
     vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
 
     vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
@@ -142,17 +153,34 @@ def update_user_incar_settings_maker(vaspmaker, nbands, structure, prev_vasp_dir
 
 @job
 def get_lobster_jobs(
-    basis_dict,
-    wavefunction_dir,
-    user_lobsterin_settings,
-    additional_outputs,
-    optimization_run_job_dir,
-    optimization_run_uuid,
-    static_run_job_dir,
-    static_run_uuid,
-    additional_static_run_job_dir,
-    additional_static_run_uuid,
+        basis_dict,
+        wavefunction_dir,
+        user_lobsterin_settings,
+        additional_outputs,
+        optimization_run_job_dir,
+        optimization_run_uuid,
+        static_run_job_dir,
+        static_run_uuid,
+        additional_static_run_job_dir,
+        additional_static_run_uuid,
 ):
+    """
+
+    Args:
+        basis_dict: dict including basis set information.
+        wavefunction_dir: Path to VASP calculation with WAVECAR
+        user_lobsterin_settings: dict to set lobsterin.
+        additional_outputs: add additional outputs to lobster run.
+        optimization_run_job_dir: Path to optimization run.
+        optimization_run_uuid: uuid of optimization run.
+        static_run_job_dir: Path to static VASP calculation.
+        static_run_uuid: uuid of static run.
+        additional_static_run_job_dir: Path to preconvergence step.
+        additional_static_run_uuid: uuid of preconvergence step.
+
+    Returns:
+        List of Lobster jobs
+    """
     jobs = []
     outputs = {}
     outputs["optimization_run_job_dir"] = optimization_run_job_dir
@@ -182,7 +210,16 @@ def get_lobster_jobs(
 
 
 @job
-def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
+def delete_lobster_wavecar(dirs: Path | str, dir_vasp: Path | str = None, dir_preconverge: Path | str = None):
+    """
+    Deletes all WAVECARs
+
+    Args:
+        dirs: Path to directories of lobster jobs.
+        dir_vasp: Path to directory of static VASP run.
+        dir_preconverge: Path to directory of preconvergence run.
+
+    """
     jobs = []
     outputs = {}
     outputs["lobster_dir_name"] = []
@@ -232,7 +269,7 @@ def delete_lobster_wavecar(dirs, dir_vasp=None, dir_preconverge=None):
 
 @job(output_schema=LobsterTaskDocument)
 def generate_database_entry(
-    **kwargs,
+        **kwargs,
 ):
     """
     Analyze the LOBSTER runs and summarize the results.

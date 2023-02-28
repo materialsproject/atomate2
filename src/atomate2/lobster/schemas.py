@@ -175,11 +175,12 @@ class CondensedBondingAnalysis(BaseModel):
 
 class StrongestBonds(BaseModel):
     """Collection to store strongest bonds extracted
-     from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
+    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs"""
 
     which_bonds: str = Field(
         None,
-        description="Denotes whether the information is for cation-anion pairs or all bonds",
+        description="Denotes whether the information "
+        "is for cation-anion pairs or all bonds",
     )
     are_coops: bool = Field(
         None, description="Denotes whether the file consists of ICOOPs"
@@ -189,7 +190,8 @@ class StrongestBonds(BaseModel):
     )
     strongest_bonds: dict = Field(
         None,
-        description="Dict with infos on bond strength, length between cation-anion pairs",
+        description="Dict with infos on bond strength,"
+        " length between cation-anion pairs",
     )
 
 
@@ -204,7 +206,8 @@ class LobsterTaskDocument(BaseModel):
     )
     charges: dict = Field(
         None,
-        description="Atomic charges dict from LOBSTER based on Mulliken and Loewdin charge analysis",
+        description="Atomic charges dict from LOBSTER"
+        " based on Mulliken and Loewdin charge analysis",
     )
     lobsterout: LobsteroutModel = Field("Lobster out data")
     lobsterin: LobsterinModel = Field("Lobster calculation inputs")
@@ -241,7 +244,8 @@ class LobsterTaskDocument(BaseModel):
     )
     madelung_energies: dict = Field(
         None,
-        description="Madelung energies dict from LOBSTER based on Mulliken and Loewdin charges",
+        description="Madelung energies dict from"
+        " LOBSTER based on Mulliken and Loewdin charges",
     )
 
     _schema: str = Field(
