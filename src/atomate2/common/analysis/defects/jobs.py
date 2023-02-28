@@ -190,6 +190,7 @@ def get_supercell_from_prv_calc(
     prv_calc_dir: str | Path | None = None,
     sc_mat_ref: NDArray | None = None,
     structure_from_prv: Callable | None = None,
+    grid_update_from_prv: Callable | None = None,
 ) -> dict:
     """Get the supercell from the previous calculation.
 
@@ -205,6 +206,8 @@ def get_supercell_from_prv_calc(
         The supercell matrix. If not None, use this to validate the extracted supercell.
     structure_from_prv : Callable
         Function to get the supercell structure from the previous calculation.
+    grid_update_from_prv : Callable
+        Function to get the grid update from the previous calculation.
 
     Returns
     -------
@@ -212,6 +215,7 @@ def get_supercell_from_prv_calc(
         Output containing the supercell transformation and the dir_name
     """
     sc_structure = structure_from_prv(prv_calc_dir)
+    grid_update = grid_update_from_prv(prv_calc_dir)
     (sc_mat_prv, _) = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
@@ -226,7 +230,9 @@ def get_supercell_from_prv_calc(
             raise ValueError(
                 "The supercell matrix extracted from the previous calculation does not match the the desired supercell shape."
             )
-    return dict(sc_mat=sc_mat_prv, lattice=Lattice(sc_mat_prv.lattice))
+    return dict(
+        sc_mat=sc_mat_prv, lattice=Lattice(sc_mat_prv.lattice), grid_update=grid_update
+    )
 
 
 @job(
@@ -296,6 +302,8 @@ def spawn_defect_calcs(
     sc_mat: NDArray,
     relax_maker: RelaxMaker,
     relaxed_sc_lattice: Lattice,
+    update_defect_maker_grid: Callable,
+    grid_update: dict,
     defect_index: int | str = "",
     add_info: dict | None = None,
 ) -> Response:
@@ -324,11 +332,12 @@ def spawn_defect_calcs(
     Response:
         The response containing the outputs of the defect calculations as a dictionary
     """
+    updated_relax_maker = update_defect_maker_grid(relax_maker, grid_update)
     defect_q_jobs = []
     all_chg_outputs, add_jobs = run_all_charge_states(
         defect,
         sc_mat=sc_mat,
-        relax_maker=relax_maker,
+        relax_maker=updated_relax_maker,
         relaxed_sc_lattice=relaxed_sc_lattice,
         add_info=(add_info or {}),
         defect_index=defect_index,

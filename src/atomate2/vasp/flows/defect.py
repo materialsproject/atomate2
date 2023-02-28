@@ -110,6 +110,9 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         """Update the bulk job with settings from `self.bulk_incar_update`."""
         return update_user_incar_settings(relax_maker, self.bulk_incar_update)
 
+    def update_defect_maker_grid(self, relax_maker: Maker, grid_update: dict):
+        return update_user_incar_settings(relax_maker, grid_update)
+
     def structure_from_prv(self, previous_dir: str):
         """
         Read the vasprun.xml file from the previous directory

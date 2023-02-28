@@ -229,25 +229,30 @@ class FormationEnergyMaker(Maker, ABC):
             bulk_supercell_dir = get_sc_job.output["dir_name"]
             grid_update = get_sc_job.output["grid_update"]
         else:
+            # all additional reader functions need to be in this job
+            # b/c they might receive Response objects instead of data.
             get_sc_job = get_supercell_from_prv_calc(
                 uc_structure=defect.structure,
                 prv_calc_dir=bulk_supercell_dir,
                 sc_mat_ref=supercell_matrix,
                 structure_from_prv=self.structure_from_prv,
+                grid_update_from_prv=self.grid_update_from_prv,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["lattice"]
-            grid_update = self.grid_update_from_prv(bulk_supercell_dir)
 
-        relax_maker_new_grid = self.update_defect_maker_grid(
-            self.relax_maker, grid_update
-        )
+        # TODO: add collector or move updates to spawn_defect_calcs
+        # relax_maker_new_grid = self.update_defect_maker_grid(
+        #     self.relax_maker, grid_update
+        # )
 
         spawn_output = spawn_defect_calcs(
             defect=defect,
             sc_mat=sc_mat,
-            relax_maker=relax_maker_new_grid,
+            relax_maker=self.relax_maker,
             relaxed_sc_lattice=lattice,
+            update_defect_maker_grid=self.update_defect_maker_grid,
+            grid_update=grid_update,
             defect_index=defect_index,
             add_info={
                 "bulk_supercell_dir": bulk_supercell_dir,
