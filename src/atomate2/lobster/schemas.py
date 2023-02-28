@@ -133,7 +133,7 @@ class CondensedBondingAnalysis(BaseModel):
     )
     type_charges: str = Field(
         None,
-        description="Charge type considered for assinging valences in bonding analysis",
+        description="Charge type considered for assigning valences in bonding analysis",
     )
     cutoff_icohp: float = Field(
         None,
@@ -156,7 +156,7 @@ class CondensedBondingAnalysis(BaseModel):
     )
     which_bonds: str = Field(
         None,
-        description="Specifies types of bond considerd in LobsterPy analysis",
+        description="Specifies types of bond considered in LobsterPy analysis",
     )
     final_dict_bonds: dict = Field(
         None,
@@ -252,7 +252,7 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: list[str]|None = None
+        additional_fields: list[str] | None = None
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -266,7 +266,7 @@ class LobsterTaskDocument(BaseModel):
 
         Returns
         -------
-        AmsetTaskDocument
+        LobsterTaskDocument
             A task document for the lobster calculation.
         """
 
@@ -393,9 +393,9 @@ class LobsterTaskDocument(BaseModel):
                 lengths.append(l)
 
             bond_labels_unique = list(set(bonds))
-            sep_blabels = [[] for _ in range(len(bond_labels_unique))]
-            sep_icohp = [[] for _ in range(len(bond_labels_unique))]
-            sep_lengths = [[] for _ in range(len(bond_labels_unique))]
+            sep_blabels: list[list[str]] = [[] for _ in range(len(bond_labels_unique))]
+            sep_icohp: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
+            sep_lengths: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
 
             for i, val in enumerate(bond_labels_unique):
                 for j, val2 in enumerate(bonds):
