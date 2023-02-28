@@ -26,7 +26,7 @@ from atomate2 import __version__
 
 # from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
-
+from typing import Dict, List, Optional, Union
 # from atomate2.common.files import get_zfile
 # from atomate2.utils.path import get_uri
 # from atomate2.common.schemas.math import Matrix3D, Vector3D
@@ -252,7 +252,7 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: list[str] | None = None
+        additional_fields: List[str] | None = None
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -393,9 +393,9 @@ class LobsterTaskDocument(BaseModel):
                 lengths.append(l)
 
             bond_labels_unique = list(set(bonds))
-            sep_blabels: list[list[str]] = [[] for _ in range(len(bond_labels_unique))]
-            sep_icohp: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
-            sep_lengths: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
+            sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
+            sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+            sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
 
             for i, val in enumerate(bond_labels_unique):
                 for j, val2 in enumerate(bonds):

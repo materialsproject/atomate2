@@ -16,10 +16,6 @@ from atomate2.vasp.jobs.lobster import (
     update_user_incar_settings_maker,
     delete_lobster_wavecar,
 )
-from atomate2.vasp.powerups import (
-        update_user_incar_settings,
-        update_user_kpoints_settings
-    )
 from atomate2.vasp.sets.core import StaticSetGenerator
 from jobflow import Flow
 from jobflow import Maker
@@ -142,6 +138,7 @@ class LobsterMaker(Maker):
         )
         jobs.append(basis_infos)
 
+        #Maker needs to be updated here. If the job is updated, no further updates on the job are possible
         vaspjob = update_user_incar_settings_maker(self.vasp_lobster_maker, basis_infos.output, structure,prev_vasp_dir)
 
 

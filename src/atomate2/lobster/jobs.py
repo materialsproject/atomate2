@@ -6,15 +6,14 @@ import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from jobflow import Maker, Response, job
-from monty.serialization import loadfn
+from atomate2.lobster.files import copy_lobster_files
+from atomate2.lobster.run import run_lobster
+from atomate2.lobster.schemas import LobsterTaskDocument
+from jobflow import Maker, job
 from monty.shutil import gzip_dir
-from pymatgen.io.lobster import Lobsterin
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
-from atomate2.lobster.files import copy_lobster_files, write_lobster_settings
-from atomate2.lobster.schemas import LobsterTaskDocument
-from atomate2.lobster.run import run_lobster
+from pymatgen.io.lobster import Lobsterin
 
 __all__ = ["PureLobsterMaker"]
 
