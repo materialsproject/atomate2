@@ -7,7 +7,7 @@ from maggma.stores.mongolike import MemoryStore
 from pymatgen.core.structure import Structure
 
 
-def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
+def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     from jobflow import run_locally, JobStore
 
     structure = Structure(
@@ -17,7 +17,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
     )
     # mapping from job name to directory containing test files
     ref_paths = {
-        "preconvergence run": "Si_lobster/additional_static_run",
+        "preconvergence run": "Si_lobster/preconvergence_run",
         "relax 1": "Si_lobster/relax_1",
         "relax 2": "Si_lobster/relax_2",
         "static_run": "Si_lobster/static_run",
@@ -49,18 +49,19 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
     mock_lobster(ref_paths_lobster, fake_run_lobster_kwargs)
 
-    # !!! Generate job
-    job = LobsterMaker(delete_all_wavecars=False).make(structure=structure)
-
-    job = update_user_incar_settings(job, {"ISMEAR": 0}, name_filter="static_run")
-    store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
+    si_structure = Structure(lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]], species=["Si", "Si"],
+                             coords=[[0, 0, 0], [0.25, 0.25, 0.25]])
+    job = LobsterMaker(user_lobsterin_settings={"COHPstartEnergy": -5.0, "COHPEndEnergy": 5.0,
+                                                    "cohpGenerator": "from 0.1 to 3.0 orbitalwise"},
+                           delete_all_wavecars=False).make(si_structure)
+    job = update_user_incar_settings(job, {"NPAR": 4})
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, store=store, create_folders=True, ensure_success=True)
+    responses = run_locally(job, store=memory_jobstore, create_folders=True, ensure_success=True)
 
     assert isinstance(
         responses[job.jobs[-1].uuid][1]
         .replace.output["lobster_task_documents"][0]
-        .resolve(store),
+        .resolve(memory_jobstore),
         LobsterTaskDocument,
     )
