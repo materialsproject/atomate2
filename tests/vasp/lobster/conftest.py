@@ -1,4 +1,3 @@
-from ..vasp.conftest import *
 import logging
 from typing import Literal, Sequence, Union
 from pathlib import Path
