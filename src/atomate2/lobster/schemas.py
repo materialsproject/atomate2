@@ -27,6 +27,7 @@ from atomate2 import __version__
 # from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
 from typing import Dict, List, Optional, Union
+
 # from atomate2.common.files import get_zfile
 # from atomate2.utils.path import get_uri
 # from atomate2.common.schemas.math import Matrix3D, Vector3D
@@ -249,11 +250,7 @@ class LobsterTaskDocument(BaseModel):
 
     @classmethod
     @requires(Analysis, "lobsterpy must be installed to create an LobsterTaskDocument.")
-    def from_directory(
-        cls,
-        dir_name: Union[Path, str],
-        additional_fields: list = None
-    ):
+    def from_directory(cls, dir_name: Union[Path, str], additional_fields: list = None):
         """
         Create a task document from a directory containing LOBSTER files.
 
@@ -376,9 +373,7 @@ class LobsterTaskDocument(BaseModel):
         icobi_dict = icobilist.icohpcollection.as_dict()
         icoop_dict = icooplist.icohpcollection.as_dict()
 
-        def get_strng_bonds(
-            bondlist, are_cobis, are_coops, relevant_bonds: dict
-        ):
+        def get_strng_bonds(bondlist, are_cobis, are_coops, relevant_bonds: dict):
             bonds = []
             icohp_all = []
             lengths = []
@@ -395,7 +390,9 @@ class LobsterTaskDocument(BaseModel):
             bond_labels_unique = list(set(bonds))
             sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
             sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
-            sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+            sep_lengths: List[List[float]] = [
+                [] for _ in range(len(bond_labels_unique))
+            ]
 
             for i, val in enumerate(bond_labels_unique):
                 for j, val2 in enumerate(bonds):
@@ -409,9 +406,9 @@ class LobsterTaskDocument(BaseModel):
                     label = lab.split("-")
                     label.sort()
                     for rel_bnd in relevant_bonds.keys():
-                        rel_bnd_list=rel_bnd.split('-')
+                        rel_bnd_list = rel_bnd.split("-")
                         rel_bnd_list.sort()
-                        if label==rel_bnd_list:
+                        if label == rel_bnd_list:
                             index = np.argmin(sep_icohp[i])
                             bond_dict.update(
                                 {
@@ -429,9 +426,9 @@ class LobsterTaskDocument(BaseModel):
                     label = lab.split("-")
                     label.sort()
                     for rel_bnd in relevant_bonds.keys():
-                        rel_bnd_list=rel_bnd.split('-')
+                        rel_bnd_list = rel_bnd.split("-")
                         rel_bnd_list.sort()
-                        if label==rel_bnd_list:
+                        if label == rel_bnd_list:
                             index = np.argmax(sep_icohp[i])
                             bond_dict.update(
                                 {
@@ -449,9 +446,9 @@ class LobsterTaskDocument(BaseModel):
                     label = lab.split("-")
                     label.sort()
                     for rel_bnd in relevant_bonds.keys():
-                        rel_bnd_list=rel_bnd.split('-')
+                        rel_bnd_list = rel_bnd.split("-")
                         rel_bnd_list.sort()
-                        if label==rel_bnd_list:
+                        if label == rel_bnd_list:
                             index = np.argmax(sep_icohp[i])
                             bond_dict.update(
                                 {
@@ -528,8 +525,10 @@ class LobsterTaskDocument(BaseModel):
         dos = doscar_lobster.completedos
 
         if additional_fields:
-            if 'DOSCAR.LSO.lobster' in additional_fields:
-                doscar_lso_lobster = Doscar(doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz")
+            if "DOSCAR.LSO.lobster" in additional_fields:
+                doscar_lso_lobster = Doscar(
+                    doscar="DOSCAR.LSO.lobster.gz", structure_file="POSCAR.gz"
+                )
                 lso_dos = doscar_lso_lobster.completedos
             else:
                 lso_dos = None

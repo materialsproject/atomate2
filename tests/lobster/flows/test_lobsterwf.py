@@ -8,24 +8,26 @@ from atomate2.lobster.jobs import PureLobsterMaker
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import Lobsterin
-from atomate2.vasp.jobs.lobster import  VaspLobsterMaker
+from atomate2.vasp.jobs.lobster import VaspLobsterMaker
 from atomate2.vasp.powerups import (
-        update_user_incar_settings,
-        update_user_kpoints_settings
-    )
-from atomate2.vasp.jobs.lobster import (VaspLobsterMaker,
-                                        get_basis_infos, update_user_incar_settings_job,
-                                        get_lobster_jobs,)
+    update_user_incar_settings,
+    update_user_kpoints_settings,
+)
+from atomate2.vasp.jobs.lobster import (
+    VaspLobsterMaker,
+    get_basis_infos,
+    update_user_incar_settings_job,
+    get_lobster_jobs,
+)
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import StaticMaker, RelaxMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
-    #assert isinstance(responses["lobster_run_0"], LobsterTaskDocument)
+# assert isinstance(responses["lobster_run_0"], LobsterTaskDocument)
 
-def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
+
+def test_lobstermaker(mock_vasp, mock_lobster, clean_dir):
     from jobflow import run_locally, JobStore
-
-
 
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -42,10 +44,15 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-       "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
-       "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-       "preconvergence run": {"incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"], },
-       "static_run": {"incar_settings": ["NSW", "LWAVE" , "ISMEAR", "ISYM", "NBANDS"], "check_inputs":["poscar","potcar","kpoints","incar","wavecar"]},
+        "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
+        "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
+        "preconvergence run": {
+            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"],
+        },
+        "static_run": {
+            "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],
+            "check_inputs": ["poscar", "potcar", "kpoints", "incar", "wavecar"],
+        },
     }
 
     ref_paths_lobster = {
@@ -68,9 +75,11 @@ def test_lobstermaker(mock_vasp,mock_lobster,clean_dir):
     store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, store=store,create_folders=True, ensure_success=True)
+    responses = run_locally(job, store=store, create_folders=True, ensure_success=True)
 
-    assert isinstance(responses[job.jobs[-1].uuid][1].replace.output['lobster_task_documents'][0].resolve(store), LobsterTaskDocument)
-
-
-
+    assert isinstance(
+        responses[job.jobs[-1].uuid][1]
+        .replace.output["lobster_task_documents"][0]
+        .resolve(store),
+        LobsterTaskDocument,
+    )

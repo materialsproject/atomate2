@@ -54,12 +54,12 @@ class LobsterMaker(Maker):
 
     name: str = "lobster"
     # implement different calculation types
-    calculation_type: str = "standard",
-    delete_all_wavecars: bool = True,
+    calculation_type: str = ("standard",)
+    delete_all_wavecars: bool = (True,)
     user_lobsterin_settings: dict | None = None
     user_supplied_basis: dict | None = None
-    isym: int = 0,
-    additional_outputs: list[str] | None = None,
+    isym: int = (0,)
+    additional_outputs: list[str] | None = (None,)
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
@@ -77,9 +77,9 @@ class LobsterMaker(Maker):
     )
 
     def make(
-            self,
-            structure: Structure,
-            prev_vasp_dir: str | Path | None = None,
+        self,
+        structure: Structure,
+        prev_vasp_dir: str | Path | None = None,
     ):
         """
         Make flow to calculate bonding properties.
@@ -129,7 +129,6 @@ class LobsterMaker(Maker):
 
         # at gamma: -5 is used as standard, leads to errors for gamma only
 
-
         basis_infos = get_basis_infos(
             structure=structure,
             vaspmaker=self.vasp_lobster_maker,
@@ -138,22 +137,30 @@ class LobsterMaker(Maker):
         )
         jobs.append(basis_infos)
 
-        #Maker needs to be updated here. If the job is updated, no further updates on the job are possible
-        vaspjob = update_user_incar_settings_maker(self.vasp_lobster_maker, basis_infos.output, structure,prev_vasp_dir)
-
+        # Maker needs to be updated here. If the job is updated, no further updates on the job are possible
+        vaspjob = update_user_incar_settings_maker(
+            self.vasp_lobster_maker, basis_infos.output, structure, prev_vasp_dir
+        )
 
         jobs.append(vaspjob)
 
-        static_run_job_dir=vaspjob.output.dir_name
-        static_run_uuid=vaspjob.output.uuid
+        static_run_job_dir = vaspjob.output.dir_name
+        static_run_uuid = vaspjob.output.uuid
 
         lobsterjobs = get_lobster_jobs(
-            basis_infos.output["basis_dict"], vaspjob.output.dir_name,
-            self.user_lobsterin_settings,self.additional_outputs,  optimization_run_job_dir, optimization_run_uuid, static_run_job_dir, static_run_uuid, additional_static_run_job_dir,  additional_static_run_uuid
+            basis_infos.output["basis_dict"],
+            vaspjob.output.dir_name,
+            self.user_lobsterin_settings,
+            self.additional_outputs,
+            optimization_run_job_dir,
+            optimization_run_uuid,
+            static_run_job_dir,
+            static_run_uuid,
+            additional_static_run_job_dir,
+            additional_static_run_uuid,
         )
 
         jobs.append(lobsterjobs)
-
 
         # will delete all WAVECARs that have been copied
 

@@ -7,7 +7,7 @@ import pytest
 logger = logging.getLogger("atomate2")
 
 _LFILES = "lobsterin"
-_DFT_FILES = ("WAVECAR", "POSCAR","INCAR","KPOINTS","POTCAR")
+_DFT_FILES = ("WAVECAR", "POSCAR", "INCAR", "KPOINTS", "POTCAR")
 _LOBS_REF_PATHS = {}
 _FAKE_RUN_LOBSTER_KWARGS = {}
 
@@ -65,7 +65,7 @@ def mock_lobster(monkeypatch, lobster_test_dir):
     monkeypatch.setattr(atomate2.lobster.run, "run_lobster", mock_run_lobster)
     monkeypatch.setattr(atomate2.lobster.jobs, "run_lobster", mock_run_lobster)
 
-    def _run(ref_paths,fake_run_lobster_kwargs):
+    def _run(ref_paths, fake_run_lobster_kwargs):
         _LOBS_REF_PATHS.update(ref_paths)
         _FAKE_RUN_LOBSTER_KWARGS.update(fake_run_lobster_kwargs)
 
@@ -78,7 +78,7 @@ def mock_lobster(monkeypatch, lobster_test_dir):
 def fake_run_lobster(
     ref_path: Union[str, Path],
     check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
-    check_dft_inputs: Sequence[Literal["WAVECAR","POSCAR"]]=_DFT_FILES,
+    check_dft_inputs: Sequence[Literal["WAVECAR", "POSCAR"]] = _DFT_FILES,
     lobsterin_settings: Sequence[str] = tuple(),
 ):
     """
@@ -113,8 +113,8 @@ def fake_run_lobster(
 
 
 def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str]):
-
     from pymatgen.io.lobster import Lobsterin
+
     user = Lobsterin.from_file("lobsterin")
 
     # Check lobsterin

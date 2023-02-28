@@ -43,9 +43,9 @@ class PureLobsterMaker(Maker):
     def make(
         self,
         wavefunction_dir: str | Path = None,
-        basis_dict: dict |None= None,
-        user_lobsterin_settings: dict|None = None,
-        additional_outputs: list[str] |None = None,
+        basis_dict: dict | None = None,
+        user_lobsterin_settings: dict | None = None,
+        additional_outputs: list[str] | None = None,
         # something for the basis
     ):
         """
@@ -80,7 +80,9 @@ class PureLobsterMaker(Maker):
 
         # parse amset outputs
         task_doc = LobsterTaskDocument.from_directory(
-            Path.cwd(), **self.task_document_kwargs, additional_fields=additional_outputs
+            Path.cwd(),
+            **self.task_document_kwargs,
+            additional_fields=additional_outputs,
         )
         # task_doc.converged = converged
 
