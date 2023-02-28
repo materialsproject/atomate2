@@ -494,7 +494,7 @@ class VaspInputGenerator(InputGenerator):
         nelect = sum(num_atoms * nelec[str(el)] for el, num_atoms in comp.items())
 
         if self.use_structure_charge:
-            return nelect - structure.charge
+            return nelect - structure._charge
 
         return nelect
 
