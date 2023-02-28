@@ -215,19 +215,16 @@ class FormationEnergyMaker(Maker, ABC):
             The workflow to calculate the formation energy diagram.
         """
         jobs = []
-        grid_update = None
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
                 uc_structure=defect.structure,
                 relax_maker=self.relax_maker,
                 sc_mat=supercell_matrix,
                 update_bulk_maker=self.update_bulk_maker,
-                read_grid=self.grid_update_from_task,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["sc_struct"].lattice
             bulk_supercell_dir = get_sc_job.output["dir_name"]
-            grid_update = get_sc_job.output["grid_update"]
         else:
             # all additional reader functions need to be in this job
             # b/c they might receive Response objects instead of data.
@@ -236,23 +233,15 @@ class FormationEnergyMaker(Maker, ABC):
                 prv_calc_dir=bulk_supercell_dir,
                 sc_mat_ref=supercell_matrix,
                 structure_from_prv=self.structure_from_prv,
-                grid_update_from_prv=self.grid_update_from_prv,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["lattice"]
-
-        # TODO: add collector or move updates to spawn_defect_calcs
-        # relax_maker_new_grid = self.update_defect_maker_grid(
-        #     self.relax_maker, grid_update
-        # )
 
         spawn_output = spawn_defect_calcs(
             defect=defect,
             sc_mat=sc_mat,
             relax_maker=self.relax_maker,
             relaxed_sc_lattice=lattice,
-            update_defect_maker_grid=self.update_defect_maker_grid,
-            grid_update=grid_update,
             defect_index=defect_index,
             add_info={
                 "bulk_supercell_dir": bulk_supercell_dir,
@@ -305,62 +294,6 @@ class FormationEnergyMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def grid_update_from_prv(self, previous_dir) -> dict:
-        """Get the grid update from the previous calculation.
-
-        Parameters
-        ----------
-        previous_dir: str
-            The directory of the previous calculation.
-
-        Returns
-        -------
-        grid_update: dict
-            The grid update.
-        """
-
-    @abstractmethod
-    def grid_update_from_task(self, task) -> dict:
-        """Get the grid update from the previous calculation.
-
-        Parameters
-        ----------
-        task: Task
-            The task to get the grid update from.
-
-        Returns
-        -------
-        grid_update: dict
-            The grid update.
-        """
-
-    @abstractmethod
-    def update_defect_maker_grid(self, relax_maker: Maker, grid_update: dict):
-        """Update the grid setting of the defect maker.
-
-        Since the final grid size of the bulk supercell might not be
-        known a priori, we can use the self.grid_update_from_task and
-        self.grid_update_from_prv methods are used to get the grid update
-        in the form of a dictionary.
-        For VASP this might look like:
-        {"NGX": 24, "NGY": 24, "NGZ": 24, "NGXF": 48, "NGYF": 48, "NGZF": 48}
-        This method will update the relax_maker that is called by the defect
-        calculations with these updated grid settings.
-
-        Parameters
-        ----------
-        relax_maker: Maker
-            The maker used to create the defect job.
-        grid_update: dict
-            The grid update.
-
-        Returns:
-        --------
-        Maker:
-            The updated maker.
-        """
-
-    @abstractmethod
     def validate_maker(self):
         """Check some key settings in the relax maker.
 
@@ -370,5 +303,5 @@ class FormationEnergyMaker(Maker, ABC):
         an error if something is wrong.
 
         Example:  For VASP, the relax maker should have:
-        ( ISIF = 2, use
+            `ISIF = 2` and `use_structure_charge = True`
         """
