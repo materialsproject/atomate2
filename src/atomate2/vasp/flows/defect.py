@@ -121,20 +121,26 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         vasprun = Vasprun(vasprun_file)
         return vasprun.final_structure
 
-    def grid_update_from_prv(self, previous_dir):
-        """Read the previous directory and get the grid update."""
-        fc = FileClient()
-        files = fc.listdir(previous_dir)
-        vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
-        vasprun = Vasprun(vasprun_file)
-        params = vasprun.parameters
-        return {k: params[k] for k in GRID_KEYS}
-
     def validate_maker(self):
+        """Check some key settings in the relax maker.
+
+        Since this workflow is pretty complex but allows you to use any
+        relax maker, it can be easy to make mistakes in the settings.
+        This method should check the most important settings and raise
+        an error if something is wrong.
+
+        Example:  For VASP, the relax maker should have:
+            `ISIF = 2` and `use_structure_charge = True`
+        """
+
         def check_func(relax_maker: RelaxMaker):
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
+            isif_ = input_gen.get_incar_updates(None).get("ISIF", 3)
+            isif = input_gen.user_incar_settings.get("ISIF", isif_)
+            if isif != 2:
+                raise ValueError("ISIF should be set to 2")
 
         recursive_call(
             self.relax_maker, func=check_func, class_filter=RelaxMaker, nested=True
