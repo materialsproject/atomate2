@@ -499,7 +499,10 @@ class CalculationOutput(BaseModel):
 
         # use structure from CONTCAR as it is written to
         # greater precision than in the vasprun
+        # but still need to copy the charge over
         structure = contcar.structure
+        structure._charge = vasprun.final_structure._charge
+
         mag_density = outcar.total_mag / structure.volume if outcar.total_mag else None
 
         if len(outcar.magnetization) != 0:
@@ -672,7 +675,7 @@ class Calculation(BaseModel):
 
         vasprun_kwargs = vasprun_kwargs if vasprun_kwargs else {}
         volumetric_files = [] if volumetric_files is None else volumetric_files
-        vasprun = Vasprun(vasprun_file, parse_potcar_file=True, **vasprun_kwargs)
+        vasprun = Vasprun(vasprun_file, **vasprun_kwargs)
         outcar = Outcar(outcar_file)
         contcar = Poscar.from_file(contcar_file)
         completed_at = str(datetime.fromtimestamp(vasprun_file.stat().st_mtime))
