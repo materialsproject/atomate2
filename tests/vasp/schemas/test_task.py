@@ -24,8 +24,9 @@ def test_analysis_summary(vasp_test_dir, object_name):
     for task_name, files in test_object.task_files.items():
         doc, _ = Calculation.from_vasp_files(dir_name, task_name, **files)
         calcs_reversed.append(doc)
-        ## The 2 tasks of double-relaxation have been reversed in "/atomate2/tests/vasp/schemas/conftest.py" for "SiOptimizeDouble"
-        ## task_files are in the order of {"relax2","relax1"}
+        # The 2 tasks of double-relaxation have been reversed in
+        # "/atomate2/tests/vasp/schemas/conftest.py" for "SiOptimizeDouble"
+        # task_files are in the order of {"relax2","relax1"}
 
     test_doc = AnalysisSummary.from_vasp_calc_docs(calcs_reversed)
     valid_doc = test_object.task_doc["analysis"]

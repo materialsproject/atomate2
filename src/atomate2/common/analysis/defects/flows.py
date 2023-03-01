@@ -34,10 +34,10 @@ class ConfigurationCoordinateMaker(Maker):
     ----------
     name: str
         The name of the flow created by this maker.
-    relax_maker: .BaseVaspMaker or None
+    relax_maker: Maker
         A maker to perform a atomic-position-only relaxation on the defect charge
         states.
-    static_maker: .BaseVaspMaker or None
+    static_maker: Maker
         A maker to perform the single-shot static calculation of the distorted
         structures.
     distortions: tuple[float, ...]

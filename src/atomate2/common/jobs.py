@@ -106,7 +106,6 @@ def retrieve_structure_from_materials_project(
         and also the database version and specific task_id
         corresponding to that Structure object also stored
     """
-
     # inline import to avoid required dependency
     try:
         from mp_api.client import MPRester
@@ -132,14 +131,13 @@ def retrieve_structure_from_materials_project(
 
     structure = doc.structure
 
-    if reset_magnetic_moments:
+    if reset_magnetic_moments and "magmom" in structure.site_properties:
         # Materials Project stores magnetic moments via the `magmom` site property
         # and we can safely assume that here. In general, since magnetic order
         # can be represented in multiple ways such as Species.spin, the
         # following method would be better:
         # CollinearMagneticStructureAnalyzer.get_nonmagnetic_structure()
-        if "magmom" in structure.site_properties:
-            structure.remove_site_property("magmom")
+        structure.remove_site_property("magmom")
 
     return Response(
         output=structure,

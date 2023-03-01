@@ -55,7 +55,7 @@ __all__ = [
 ]
 
 
-_BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
+_BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 
 
 class Status(ValueEnum):

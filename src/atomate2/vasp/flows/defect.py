@@ -153,6 +153,23 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
 
 @dataclass
 class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
+    """Maker to generate a configuration coordinate diagram.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow created by this maker.
+    relax_maker: BaseVaspMaker or None
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states.
+    static_maker: BaseVaspMaker or None
+        A maker to perform the single-shot static calculation of the distorted
+        structures.
+    distortions: tuple[float, ...]
+        The distortions, as a fraction of ΔQ, to use in the calculation of the
+        configuration coordinate diagram.
+    """
+
     relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=DEFECT_RELAX_GENERATOR,

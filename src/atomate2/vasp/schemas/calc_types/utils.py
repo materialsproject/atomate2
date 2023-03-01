@@ -28,10 +28,7 @@ def run_type(vasp_parameters: Dict) -> RunType:
     RunType
         The run type.
     """
-    if vasp_parameters.get("LDAU", False):
-        is_hubbard = "+U"
-    else:
-        is_hubbard = ""
+    is_hubbard = "+U" if vasp_parameters.get("LDAU", False) else ""
 
     def _variant_equal(v1, v2) -> bool:
         """Check two strings equal."""
