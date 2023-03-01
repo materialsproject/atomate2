@@ -224,7 +224,8 @@ def get_supercell_from_prv_calc(
             and np.allclose(sorted(latt_ref.angles), sorted(latt_prv.angles))
         ):
             raise ValueError(
-                "The supercell matrix extracted from the previous calculation does not match the the desired supercell shape."
+                "The supercell matrix extracted from the previous calculation "
+                "does not match the the desired supercell shape."
             )
     return dict(sc_mat=sc_mat_prv, lattice=Lattice(sc_mat_prv.lattice))
 
