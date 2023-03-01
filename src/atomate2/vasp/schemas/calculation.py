@@ -672,7 +672,7 @@ class Calculation(BaseModel):
 
         vasprun_kwargs = vasprun_kwargs if vasprun_kwargs else {}
         volumetric_files = [] if volumetric_files is None else volumetric_files
-        vasprun = Vasprun(vasprun_file, **vasprun_kwargs)
+        vasprun = Vasprun(vasprun_file, parse_potcar_file=True, **vasprun_kwargs)
         outcar = Outcar(outcar_file)
         contcar = Poscar.from_file(contcar_file)
         completed_at = str(datetime.fromtimestamp(vasprun_file.stat().st_mtime))
