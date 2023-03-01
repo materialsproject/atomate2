@@ -75,8 +75,9 @@ class VaspLobsterMaker(BaseVaspMaker):
             },
         )
     )
-
-    copy_vasp_kwargs = {"additional_vasp_files": ["WAVECAR"]}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ["WAVECAR"]}
+    )
 
 
 @job
@@ -156,8 +157,8 @@ def update_user_incar_settings_maker(
         VaspLobsterMaker with correct number of bands.
     """
     vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
-
     vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
+
     return Response(replace=vaspjob)
 
 

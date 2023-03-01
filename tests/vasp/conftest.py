@@ -140,8 +140,8 @@ def fake_run_vasp(
         check_potcar(ref_path)
 
     # This is useful to check if the WAVECAR has been copied
-    if "wavecar" in check_inputs:
-        Path("WAVECAR").exists()
+    if "wavecar" in check_inputs and not Path("WAVECAR").exists():
+        raise ValueError("WAVECAR was not correctly copied")
 
     logger.info("Verified inputs successfully")
 
