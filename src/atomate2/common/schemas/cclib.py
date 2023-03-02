@@ -46,7 +46,8 @@ class TaskDocument(MoleculeMetadata):
     )
     metadata: Dict = Field(
         None,
-        description="Calculation metadata, including input parameters and runtime statistics",
+        description="Calculation metadata, including input parameters and runtime "
+        "statistics",
     )
     task_label: str = Field(None, description="A description of the task")
     tags: List[str] = Field(None, description="Optional tags for this task document")
@@ -115,7 +116,7 @@ class TaskDocument(MoleculeMetadata):
         from cclib.io import ccread
 
         logger.info(
-            f"Searching for the most recent log file with extensions {logfile_extensions}"
+            f"Searching for most recent log file with extensions {logfile_extensions}"
         )
 
         # Find the most recent log file with the given extension in the
@@ -155,10 +156,9 @@ class TaskDocument(MoleculeMetadata):
             metadata["cpu_time"] = [str(m) for m in metadata["cpu_time"]]
 
         # Get the final energy to store as its own key/value pair
-        if cclib_obj.scfenergies is not None:
-            energy = cclib_obj.scfenergies[-1]
-        else:
-            energy = None
+        energy = (
+            cclib_obj.scfenergies[-1] if cclib_obj.scfenergies is not None else None
+        )
 
         # Now we construct the input molecule. Note that this is not necessarily
         # the same as the initial molecule from the relaxation because the

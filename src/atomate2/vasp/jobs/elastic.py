@@ -141,7 +141,9 @@ def generate_elastic_deformations(
 
     strains = []
     for state, magnitudes in zip(strain_states, strain_magnitudes):
-        strains.extend([Strain.from_voigt(m * np.array(state)) for m in magnitudes])  # type: ignore
+        strains.extend(
+            [Strain.from_voigt(m * np.array(state)) for m in magnitudes]  # type: ignore
+        )
 
     # remove zero strains
     strains = [strain for strain in strains if (abs(strain) > 1e-10).any()]
