@@ -261,6 +261,8 @@ class VaspInputGenerator(InputGenerator):
         If generating input set from a previous calculation, this controls whether
         to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
         moments are less than 0.02.
+    auto_lreal
+        If True, automatically use the VASP recommended LREAL based on cell size.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -278,6 +280,7 @@ class VaspInputGenerator(InputGenerator):
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
     auto_ispin: bool = False
+    auto_lreal: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
@@ -366,9 +369,15 @@ class VaspInputGenerator(InputGenerator):
         VaspInputSet
             A VASP input set.
         """
-        structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
-            structure, prev_dir
-        )
+        (
+            structure,
+            prev_incar,
+            bandgap,
+            ispin,
+            lreal,
+            vasprun,
+            outcar,
+        ) = self._get_previous(structure, prev_dir)
         incar_updates = self.get_incar_updates(
             structure,
             prev_incar=prev_incar,
@@ -500,6 +509,7 @@ class VaspInputGenerator(InputGenerator):
         outcar = None
         bandgap = 0
         ispin = None
+        lreal = None
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
 
@@ -532,8 +542,10 @@ class VaspInputGenerator(InputGenerator):
 
         structure = structure if structure is not None else prev_structure
         structure = self._get_structure(structure)
+        if self.auto_lreal:
+            lreal = _get_recommended_lreal(structure)
 
-        return structure, prev_incar, bandgap, ispin, vasprun, outcar
+        return structure, prev_incar, bandgap, ispin, lreal, vasprun, outcar
 
     def _get_structure(self, structure):
         """Get the standardized structure."""
@@ -1050,3 +1062,11 @@ def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
     elif vasprun is not None:
         return 2 if vasprun.is_spin else 1
     return 2
+
+
+def _get_recommended_lreal(structure: Structure):
+    """Get recommended LREAL flag based on the structure."""
+    if structure.num_sites > 16:
+        return "Auto"
+    elif structure.num_sites <= 8:
+        return False
