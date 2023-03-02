@@ -43,17 +43,17 @@ phonons = ["phonopy>=1.10.8", "seekpath"]
 defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
 docs = [
     "numpydoc==1.5.0",
-    "ipython==8.8.0",
+    "ipython==8.11.0",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
-    "jupyter-book==0.13.1",
+    "jupyter-book==0.13.2",
     "jsonschema[format]",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.2.1", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
-    "pydantic==1.10.4",
-    "pymatgen==2023.1.30",
+    "pydantic==1.10.5",
+    "pymatgen==2023.2.28",
     "custodian==2022.5.26",
     "monty==2022.9.9",
     "jobflow==0.1.9",
@@ -63,9 +63,9 @@ strict = [
     "phonopy==2.17.1",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.30.8",
-    "dscribe==1.2.1",
-    "pymatgen-analysis-defects==2023.1.30",
+    "mp-api==0.30.10",
+    "dscribe==1.2.2",
+    "pymatgen-analysis-defects==2023.2.7",
 ]
 
 [project.scripts]
