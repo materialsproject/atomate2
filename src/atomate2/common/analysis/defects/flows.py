@@ -152,13 +152,8 @@ class FormationEnergyMaker(Maker, ABC):
     """Maker class to help calculate of the formation energy diagram.
 
     Maker class to calculate formation energy diagrams. The main settings for
-    this maker is the `relax_maker` which contains the settings for the atomic
-    relaxations that each defect supercell will undergo. The `relax_maker`
-    uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
-    like the `HSEDoubleRelaxMaker` can be used for more accurate (but expensive)
-    calculations.
-    If the `validate_maker` is set to True, the maker will check for some basic
-    settings in the `relax_maker` to make sure the calculations are done correctly.
+    this maker is the `defect_relax_maker` which contains the settings for the atomic
+    relaxations that each defect supercell will undergo.
 
     Attributes
     ----------
@@ -168,7 +163,6 @@ class FormationEnergyMaker(Maker, ABC):
         messy, it is recommended for each implementation of this maker to check
         some of the most important settings in the `relax_maker`.  Please see
         `FormationEnergyMaker.validate_maker` for more details.
-
     bulk_relax_maker: Maker
         If None, the same `defect_relax_maker` will be used for the bulk supercell.
         A maker to used to perform the bulk supercell calculation. For marginally
@@ -186,7 +180,6 @@ class FormationEnergyMaker(Maker, ABC):
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
             ng_settings = dict(zip(params, ng + ngf))
             relax_maker = update_user_incar_settings(relax_maker, ng_settings)
-
     name: str
         The name of the flow created by this maker.
     """
@@ -210,12 +203,7 @@ class FormationEnergyMaker(Maker, ABC):
         """Make a flow to calculate the formation energy diagram.
 
         Start a series of charged supercell relaxations from a single defect
-        structure. Since the standard finite size correction (Freysoldt) requires
-        a bulk supercell calculation (to obtain the pristine electrostatic potentia),
-        this maker will either perform a bulk supercell calculation or use a existing
-        one if provided.
-        If a value for the dielectric constant is provided, the Freysoldt correction
-        will be applied to the formation energy.
+        structure.
 
         Parameters
         ----------
@@ -243,7 +231,6 @@ class FormationEnergyMaker(Maker, ABC):
                 uc_structure=defect.structure,
                 relax_maker=self.bulk_relax_maker,
                 sc_mat=supercell_matrix,
-                update_bulk_maker=self.update_bulk_maker,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["sc_struct"].lattice

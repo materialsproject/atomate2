@@ -19,7 +19,6 @@ from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
-from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.defect import (
     SPECIAL_KPOINT,
     ChargeStateRelaxSetGenerator,
@@ -75,28 +74,42 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     this maker is the `relax_maker` which contains the settings for the atomic
     relaxations that each defect supercell will undergo. The `relax_maker`
     uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
-    like the `HSEDoubleRelaxMaker` can be used for more accurate (but expensive)
+    like the `HSE_DOUBLE_RELAX` can be used for more accurate (but expensive)
     calculations.
     If the `validate_maker` is set to True, the maker will check for some basic
     settings in the `relax_maker` to make sure the calculations are done correctly.
 
     Attributes
     ----------
+    defect_relax_maker: Maker
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states. Since these calculations are expensive and the settings might get
+        messy, it is recommended for each implementation of this maker to check
+        some of the most important settings in the `relax_maker`.  Please see
+        `FormationEnergyMaker.validate_maker` for more details.
+    bulk_relax_maker: Maker
+        If None, the same `defect_relax_maker` will be used for the bulk supercell.
+        A maker to used to perform the bulk supercell calculation. For marginally
+        converged calculations, it might be desirable to perform an additional
+        lattice relaxation on the bulk supercell to make sure the energies are more
+        reliable. However, if you do relax the bulk supercell, you can inadvertently
+        change the grid size used in the calculation and thus the representation
+        of the electrostatic potential which will affect calculation of the Freysoldt
+        finite-size correction. Therefore, if you do want to perform a bulk supercell
+        lattice relaxation, you should manually set the grid size.
+
+        .. code-block:: python
+            relax_set = MPRelaxSet(defect.get_supercell_structure())
+            ng, ngf = relax_set.calculate_ng()
+            params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
+            ng_settings = dict(zip(params, ng + ngf))
+            relax_maker = update_user_incar_settings(relax_maker, ng_settings)
     name: str
         The name of the flow created by this maker.
-    relax_maker: .BaseVaspMaker or None
-        A maker to perform a atomic-position-only relaxation on the defect charge
-        states. If None, the defaults will be used.
-    validate_maker: bool
-        If True, the code will check the relax_maker for specific settings.
-    bulk_incar_update: dict
-        A dictionary of incar settings to update the bulk job with. This is
-        useful if you want to change the ISIF setting for example. Default is
-        {"ISIF": 3}.
     """
 
     name: str = "formation energy"
-    relax_maker: BaseVaspMaker = field(
+    defect_relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=ChargeStateRelaxSetGenerator(
                 user_kpoints_settings=SPECIAL_KPOINT
@@ -104,11 +117,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             task_document_kwargs={"average_locpot": True},
         )
     )
-    bulk_incar_update: dict = field(default_factory=lambda: {"ISIF": 3})
-
-    def update_bulk_maker(self, relax_maker: Maker):
-        """Update the bulk job with settings from `self.bulk_incar_update`."""
-        return update_user_incar_settings(relax_maker, self.bulk_incar_update)
+    bulk_relax_maker: BaseVaspMaker = None
 
     def structure_from_prv(self, previous_dir: str):
         """
@@ -147,7 +156,10 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             return relax_maker
 
         recursive_call(
-            self.relax_maker, func=check_func, class_filter=RelaxMaker, nested=True
+            self.defect_relax_maker,
+            func=check_func,
+            class_filter=RelaxMaker,
+            nested=True,
         )
 
 
