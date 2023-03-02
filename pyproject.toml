@@ -65,7 +65,7 @@ strict = [
     "numpy",
     "mp-api==0.30.10",
     "dscribe==1.2.2",
-    "pymatgen-analysis-defects==2022.11.21",
+    "pymatgen-analysis-defects==2023.2.7",
 ]
 
 [project.scripts]
