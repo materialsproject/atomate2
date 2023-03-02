@@ -56,7 +56,8 @@ class SymmetryData(BaseModel):
     symprec: float = Field(
         None,
         title="Symmetry Finding Precision",
-        description="The precision given to spglib to determine the symmetry of this lattice",
+        description="The precision given to spglib to determine the symmetry of this "
+        "lattice",
     )
 
     version: str = Field(None, title="SPGLib version")
