@@ -17,7 +17,7 @@ from atomate2.common.analysis.defects.jobs import (
     get_ccd_documents,
     get_charged_structures,
     get_supercell_from_prv_calc,
-    spawn_defect_calcs,
+    spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
 )
 
@@ -162,21 +162,43 @@ class FormationEnergyMaker(Maker, ABC):
 
     Attributes
     ----------
-    relax_maker: Maker
+    defect_relax_maker: Maker
         A maker to perform a atomic-position-only relaxation on the defect charge
         states. Since these calculations are expensive and the settings might get
         messy, it is recommended for each implementation of this maker to check
         some of the most important settings in the `relax_maker`.  Please see
         `FormationEnergyMaker.validate_maker` for more details.
+
+    bulk_relax_maker: Maker
+        If None, the same `defect_relax_maker` will be used for the bulk supercell.
+        A maker to used to perform the bulk supercell calculation. For marginally
+        converged calculations, it might be desirable to perform an additional
+        lattice relaxation on the bulk supercell to make sure the energies are more
+        reliable. However, if you do relax the bulk supercell, you can inadvertently
+        change the grid size used in the calculation and thus the representation
+        of the electrostatic potential which will affect calculation of the Freysoldt
+        finite-size correction. Therefore, if you do want to perform a bulk supercell
+        lattice relaxation, you should manually set the grid size.
+
+        .. code-block:: python
+            relax_set = MPRelaxSet(defect.get_supercell_structure())
+            ng, ngf = relax_set.calculate_ng()
+            params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
+            ng_settings = dict(zip(params, ng + ngf))
+            relax_maker = update_user_incar_settings(relax_maker, ng_settings)
+
     name: str
         The name of the flow created by this maker.
     """
 
-    relax_maker: Maker
+    defect_relax_maker: Maker
+    bulk_relax_maker: Maker | None = None
     name: str = "formation energy"
 
     def __post_init__(self):
         self.validate_maker()
+        if self.bulk_relax_maker is None:
+            self.bulk_relax_maker = self.defect_relax_maker
 
     def make(
         self,
@@ -197,8 +219,9 @@ class FormationEnergyMaker(Maker, ABC):
 
         Parameters
         ----------
-        defects: Defect
-            List of defects objects to calculate the formation energy diagram for.
+        defect: Defect
+            A `Defect` object representing the Defect we are calculating the
+            formation energy diagram for.
         bulk_supercell_dir: str | Path | None
             If provided, the bulk supercell calculation will be skipped.
         supercell_matrix: NDArray | None
@@ -218,7 +241,7 @@ class FormationEnergyMaker(Maker, ABC):
         if bulk_supercell_dir is None:
             get_sc_job = bulk_supercell_calculation(
                 uc_structure=defect.structure,
-                relax_maker=self.relax_maker,
+                relax_maker=self.bulk_relax_maker,
                 sc_mat=supercell_matrix,
                 update_bulk_maker=self.update_bulk_maker,
             )
@@ -237,10 +260,10 @@ class FormationEnergyMaker(Maker, ABC):
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["lattice"]
 
-        spawn_output = spawn_defect_calcs(
+        spawn_output = spawn_defect_q_jobs(
             defect=defect,
             sc_mat=sc_mat,
-            relax_maker=self.relax_maker,
+            relax_maker=self.defect_relax_maker,
             relaxed_sc_lattice=lattice,
             defect_index=defect_index,
             add_info={
@@ -255,29 +278,6 @@ class FormationEnergyMaker(Maker, ABC):
             jobs=jobs,
             name=self.name,
         )
-
-    @abstractmethod
-    def update_bulk_maker(self, relax_maker: Maker):
-        """Update the maker for the bulk job.
-
-        Common usage case:
-        While almost all of the settings for the bulk relaxation and defect
-        relaxation should be the same, it is usually desirable to allow lattice
-        relaxation for the bulk job only.
-        Assuming the `relax_maker` is only allows atomic relaxations, this method
-        will update the bulk job to allow lattice relaxations.
-
-        Parameters
-        ----------
-        relax_maker: Maker
-            The maker used to create the defect job.
-
-        Returns:
-        --------
-        Maker:
-            The updated maker.
-        """
-        raise NotImplementedError("This method is not implemented yet.")
 
     @abstractmethod
     def structure_from_prv(self, previous_dir: str) -> Structure:

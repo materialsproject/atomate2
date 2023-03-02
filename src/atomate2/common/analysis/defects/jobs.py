@@ -29,7 +29,7 @@ __all__ = [
     "get_ccd_documents",
     "get_supercell_from_prv_calc",
     "bulk_supercell_calculation",
-    "spawn_defect_calcs",
+    "spawn_defect_q_jobs",
 ]
 
 
@@ -230,14 +230,11 @@ def get_supercell_from_prv_calc(
     return dict(sc_mat=sc_mat_prv, lattice=Lattice(sc_mat_prv.lattice))
 
 
-@job(
-    name="bulk supercell",
-)
+@job(name="bulk supercell")
 def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
-    update_bulk_maker: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -252,8 +249,7 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
-    update_bulk_maker : Callable | None
-        Function to update the relax maker for the bulk supercell calculation only.
+
 
     Returns
     -------
@@ -264,10 +260,7 @@ def bulk_supercell_calculation(
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
     sc_structure = uc_structure * sc_mat
-    maker = (
-        update_bulk_maker(relax_maker) if update_bulk_maker is not None else relax_maker
-    )
-    relax_job = maker.make(sc_structure)
+    relax_job = relax_maker.make(sc_structure)
     relax_job.name = "bulk relax"
     info = {"sc_mat": sc_mat.tolist()}
     relax_job.update_maker_kwargs(
@@ -285,54 +278,55 @@ def bulk_supercell_calculation(
     return Response(output=summary_d, replace=[relax_job])
 
 
+# @job
+# def spawn_defect_calcs(
+#     defect: Defect,
+#     sc_mat: NDArray,
+#     relax_maker: RelaxMaker,
+#     relaxed_sc_lattice: Lattice,
+#     defect_index: int | str = "",
+#     add_info: dict | None = None,
+# ) -> Response:
+#     """Spawn defect calculations from the DefectGenerator.
+
+#     Dynamic Jobflow wrapper around `run_all_charge_states`.
+
+#     Parameters
+#     ----------
+#     defect : Defect
+#         The defect to generate charge states for.
+#     sc_mat : NDArray
+#         The supercell matrix. If None, the code will attempt to create a
+#         nearly-cubic supercell.
+#     relax_maker : RelaxMaker
+#         The relax maker to be used for defect supercell calculations.
+#     defect_index : int | str
+#         Additional index to give unique names to the defect calculations.
+#         Useful for external bookkeeping of symmetry distinct defects.
+#     add_info : dict
+#         Additional information to be passed to be stored with each defect
+#         calculation's TaskDocument.
+
+#     Returns
+#     -------
+#     Response:
+#         The response containing the outputs of the defect calculations as a dictionary
+#     """
+#     defect_q_jobs = []
+#     all_chg_outputs, add_jobs = run_all_charge_states(
+#         defect,
+#         sc_mat=sc_mat,
+#         relax_maker=relax_maker,
+#         relaxed_sc_lattice=relaxed_sc_lattice,
+#         add_info=(add_info or {}),
+#         defect_index=defect_index,
+#     )
+#     defect_q_jobs.extend(add_jobs)
+#     return Response(output=all_chg_outputs, replace=defect_q_jobs)
+
+
 @job
-def spawn_defect_calcs(
-    defect: list[Defect],
-    sc_mat: NDArray,
-    relax_maker: RelaxMaker,
-    relaxed_sc_lattice: Lattice,
-    defect_index: int | str = "",
-    add_info: dict | None = None,
-) -> Response:
-    """Spawn defect calculations from the DefectGenerator.
-
-    Dynamic Jobflow wrapper around `run_all_charge_states`.
-
-    Parameters
-    ----------
-    defect : Defect
-        The defect to generate charge states for.
-    sc_mat : NDArray
-        The supercell matrix. If None, the code will attempt to create a
-        nearly-cubic supercell.
-    relax_maker : RelaxMaker
-        The relax maker to be used for defect supercell calculations.
-    defect_index : int | str
-        Additional index to give unique names to the defect calculations.
-        Useful for external bookkeeping of symmetry distinct defects.
-    add_info : dict
-        Additional information to be passed to be stored with each defect
-        calculation's TaskDocument.
-
-    Returns
-    -------
-    Response:
-        The response containing the outputs of the defect calculations as a dictionary
-    """
-    defect_q_jobs = []
-    all_chg_outputs, add_jobs = run_all_charge_states(
-        defect,
-        sc_mat=sc_mat,
-        relax_maker=relax_maker,
-        relaxed_sc_lattice=relaxed_sc_lattice,
-        add_info=(add_info or {}),
-        defect_index=defect_index,
-    )
-    defect_q_jobs.extend(add_jobs)
-    return Response(output=all_chg_outputs, replace=defect_q_jobs)
-
-
-def run_all_charge_states(
+def spawn_defect_q_jobs(
     defect: Defect,
     relax_maker: RelaxMaker,
     relaxed_sc_lattice: Lattice,
@@ -371,7 +365,7 @@ def run_all_charge_states(
         A response object containing the summary of the calculations for different
         charge states.
     """
-    jobs = []
+    defect_q_jobs = []
     all_chg_outputs = dict()
     sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
     sc_def_struct.lattice = relaxed_sc_lattice
@@ -404,7 +398,7 @@ def run_all_charge_states(
         charged_relax.update_maker_kwargs(
             {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
         )
-        jobs.append(charged_relax)
+        defect_q_jobs.append(charged_relax)
         charged_output: TaskDocument = charged_relax.output
         all_chg_outputs[qq] = {
             "structure": charged_output.structure,
@@ -414,7 +408,7 @@ def run_all_charge_states(
         }
         # TODO: check that the charge state was set correctly
 
-    return all_chg_outputs, jobs
+    return Response(output=all_chg_outputs, replace=defect_q_jobs)
 
 
 # TODO: add charge state validation job

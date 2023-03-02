@@ -13,7 +13,7 @@ from atomate2.common.analysis.defects.jobs import (
     get_ccd_documents,
     get_charged_structures,
     get_supercell_from_prv_calc,
-    spawn_defect_calcs,
+    spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
 )
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
@@ -31,7 +31,7 @@ __all__ = [
     "get_ccd_documents",
     "get_charged_structures",
     "get_supercell_from_prv_calc",
-    "spawn_defect_calcs",
+    "spawn_defect_q_jobs",
     "spawn_energy_curve_calcs",
 ]
 # sort the list above
