@@ -8,7 +8,7 @@ from pathlib import Path
 
 from jobflow import Flow, Maker, OutputReference
 from jobflow.core.maker import recursive_call
-from pymatgen.core.structure import Lattice, Structure
+from pymatgen.core.structure import Structure
 from pymatgen.io.vasp.outputs import Vasprun
 
 from atomate2.common.analysis.defects import flows as defect_flows
@@ -108,7 +108,6 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         The name of the flow created by this maker.
     """
 
-    name: str = "formation energy"
     defect_relax_maker: BaseVaspMaker = field(
         default_factory=lambda: RelaxMaker(
             input_set_generator=ChargeStateRelaxSetGenerator(
@@ -117,12 +116,23 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             task_document_kwargs={"average_locpot": True},
         )
     )
-    bulk_relax_maker: BaseVaspMaker = None
+    bulk_relax_maker: BaseVaspMaker | None = None
+    name: str = "formation energy"
 
     def structure_from_prv(self, previous_dir: str):
-        """
+        """Copy the output structure from previous directory.
+
         Read the vasprun.xml file from the previous directory
         and return the structure.
+
+        Parameters
+        ----------
+        previous_dir: str
+            The directory to copy from.
+
+        Returns
+        -------
+        structure: Structure
         """
         fc = FileClient()
         files = fc.listdir(previous_dir)
@@ -146,10 +156,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
-            DUMMY_STRUCT = Structure(
-                Lattice.cubic(3.6), ["Si", "Si"], [[0.5, 0.5, 0.5], [0, 0, 0]]
-            )
-            isif_ = input_gen.get_incar_updates(DUMMY_STRUCT).get("ISIF", None)
+            isif_ = input_gen.get_incar_updates(None).get("ISIF", None)
             isif = input_gen.user_incar_settings.get("ISIF", isif_)
             if isif != 2:
                 raise ValueError("ISIF should be set to 2")
