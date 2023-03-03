@@ -278,53 +278,6 @@ def bulk_supercell_calculation(
     return Response(output=summary_d, replace=[relax_job])
 
 
-# @job
-# def spawn_defect_calcs(
-#     defect: Defect,
-#     sc_mat: NDArray,
-#     relax_maker: RelaxMaker,
-#     relaxed_sc_lattice: Lattice,
-#     defect_index: int | str = "",
-#     add_info: dict | None = None,
-# ) -> Response:
-#     """Spawn defect calculations from the DefectGenerator.
-
-#     Dynamic Jobflow wrapper around `run_all_charge_states`.
-
-#     Parameters
-#     ----------
-#     defect : Defect
-#         The defect to generate charge states for.
-#     sc_mat : NDArray
-#         The supercell matrix. If None, the code will attempt to create a
-#         nearly-cubic supercell.
-#     relax_maker : RelaxMaker
-#         The relax maker to be used for defect supercell calculations.
-#     defect_index : int | str
-#         Additional index to give unique names to the defect calculations.
-#         Useful for external bookkeeping of symmetry distinct defects.
-#     add_info : dict
-#         Additional information to be passed to be stored with each defect
-#         calculation's TaskDocument.
-
-#     Returns
-#     -------
-#     Response:
-#         The response containing the outputs of the defect calculations as a dictionary
-#     """
-#     defect_q_jobs = []
-#     all_chg_outputs, add_jobs = run_all_charge_states(
-#         defect,
-#         sc_mat=sc_mat,
-#         relax_maker=relax_maker,
-#         relaxed_sc_lattice=relaxed_sc_lattice,
-#         add_info=(add_info or {}),
-#         defect_index=defect_index,
-#     )
-#     defect_q_jobs.extend(add_jobs)
-#     return Response(output=all_chg_outputs, replace=defect_q_jobs)
-
-
 @job
 def spawn_defect_q_jobs(
     defect: Defect,
