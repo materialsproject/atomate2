@@ -181,7 +181,7 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "ALGO": "All",
+            "ALGO": "Normal",
             "IBRION": 1,
             "LAECHG": False,
             "ISIF": 2,
@@ -191,6 +191,7 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
             "NSW": 99,
             "ENCUT": 500,
             "NELMIN": 6,
+            "GGA": "Pe",
             "LCHARG": False,
             "ISMEAR": 0,
             "SIGMA": 0.05,
@@ -244,8 +245,7 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "ALGO": "All",
-            "IBRION": 1,
+            "ALGO": "Normal",
             "LAECHG": False,
             "EDIFF": 1e-5,
             "EDIFFG": -0.05,
