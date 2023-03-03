@@ -273,7 +273,8 @@ def bulk_supercell_calculation(
         dir_name=relax_output.dir_name,
         uuid=relax_job.uuid,
     )
-    return Response(output=summary_d, replace=[relax_job])
+    flow = Flow([relax_job], output=summary_d)
+    return Response(replace= flow)
 
 
 @job
