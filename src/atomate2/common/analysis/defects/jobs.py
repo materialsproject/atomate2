@@ -238,8 +238,7 @@ def bulk_supercell_calculation(
 ) -> Response:
     """Bulk Supercell calculation.
 
-    Check if the information from a bulk supercell calculation has been provided.
-    If not, run a bulk supercell calculation.
+    Perform a bulk supercell calculation.
 
     Parameters
     ----------
@@ -249,7 +248,6 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
-
 
     Returns
     -------
@@ -287,10 +285,9 @@ def spawn_defect_q_jobs(
     defect_index: int | str = "",
     add_info: dict | None = None,
 ) -> Response:
-    """Perform charge defect supercell calculations and save the Hartree potential.
+    """Perform charge defect supercell calculations.
 
-    Run a ISIF2 calculation for each available charge state of the defect.
-    Ensure that the LOCPOT file is stored in the output.
+    Run a atomic relaxation calculation for each available charge state of the defect.
 
     Parameters
     ----------
