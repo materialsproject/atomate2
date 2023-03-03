@@ -358,8 +358,8 @@ def spawn_defect_q_jobs(
             "uuid": charged_relax.uuid,
         }
         # TODO: check that the charge state was set correctly
-
-    return Response(output=all_chg_outputs, replace=defect_q_jobs)
+    replace_flow = Flow(defect_q_jobs, output=all_chg_outputs)
+    return Response(replace=replace_flow)
 
 
 # TODO: add charge state validation job
