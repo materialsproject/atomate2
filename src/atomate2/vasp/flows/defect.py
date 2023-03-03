@@ -152,7 +152,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             `ISIF = 2` and `use_structure_charge = True`
         """
 
-        def check_func(relax_maker: RelaxMaker):
+        def check_defect_relax_maker(relax_maker: RelaxMaker):
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
@@ -164,7 +164,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
 
         recursive_call(
             self.defect_relax_maker,
-            func=check_func,
+            func=check_defect_relax_maker,
             class_filter=RelaxMaker,
             nested=True,
         )

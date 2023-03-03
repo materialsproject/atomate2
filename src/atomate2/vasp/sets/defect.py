@@ -245,7 +245,8 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "ALGO": "Normal",
+            "ALGO": "All",
+            "IBRION": 1,
             "LAECHG": False,
             "EDIFF": 1e-5,
             "EDIFFG": -0.05,
