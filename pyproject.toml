@@ -163,7 +163,7 @@ ignore = [
     "D416",    # Section name should end with a colon
     "SIM105",  # Use contextlib.suppress(socket.gaierror, socket.herror) instead of try-except-pass
 ]
-pydocstyle.convention = "google"
+pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]
 
 [tool.ruff.per-file-ignores]
