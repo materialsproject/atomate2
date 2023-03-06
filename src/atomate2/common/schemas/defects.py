@@ -85,7 +85,7 @@ class FormationEnergyDiagramDocument(BaseModel):
             **kwargs,
         )
 
-    def as_FormationEnergyDiagram(
+    def as_formation_energy_diagram(
         self, pd_entries: Optional[List[ComputedEntry]] = None
     ) -> FormationEnergyDiagram:
         """Create a `FormationEnergyDiagram` object from the document.
