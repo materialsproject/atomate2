@@ -8,7 +8,8 @@ from jobflow import job
 from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
 
-from atomate2.common.analysis.defects.jobs import (
+from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
+from atomate2.common.jobs.defect import (
     bulk_supercell_calculation,
     get_ccd_documents,
     get_charged_structures,
@@ -16,7 +17,6 @@ from atomate2.common.analysis.defects.jobs import (
     spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
 )
-from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs

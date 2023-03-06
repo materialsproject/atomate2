@@ -12,7 +12,7 @@ from jobflow import Flow, Job, Maker, OutputReference
 from pymatgen.analysis.defects.core import Defect
 from pymatgen.core.structure import Structure
 
-from atomate2.common.analysis.defects.jobs import (
+from atomate2.common.jobs.defect import (
     bulk_supercell_calculation,
     get_ccd_documents,
     get_charged_structures,
