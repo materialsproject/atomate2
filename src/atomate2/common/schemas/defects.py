@@ -64,7 +64,7 @@ class FormationEnergyDiagramDocument(BaseModel):
     )
 
     @classmethod
-    def from_FormationEnergyDiagram(
+    def from_formation_energy_diagram(
         cls, fed: FormationEnergyDiagram, **kwargs
     ) -> "FormationEnergyDiagramDocument":
         """Create a document from a `FormationEnergyDiagram` object.
