@@ -12,8 +12,9 @@ exclude_patterns: [file-types/include-rst.rst]
 bibtex_bibfiles:
   - references.bib
 
+# force notebook execution; fix for https://github.com/executablebooks/jupyter-book/issues/1902
 execute:
-  execute_notebooks: cache
+  execute_notebooks: force
 
 html:
   #announcement: "⚠️The latest release refactored our HTML, so double-check your custom CSS rules!⚠️"

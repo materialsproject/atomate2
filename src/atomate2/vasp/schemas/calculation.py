@@ -55,7 +55,7 @@ __all__ = [
 ]
 
 
-_BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
+_BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 
 
 class Status(ValueEnum):
@@ -499,7 +499,10 @@ class CalculationOutput(BaseModel):
 
         # use structure from CONTCAR as it is written to
         # greater precision than in the vasprun
+        # but still need to copy the charge over
         structure = contcar.structure
+        structure._charge = vasprun.final_structure._charge
+
         mag_density = outcar.total_mag / structure.volume if outcar.total_mag else None
 
         if len(outcar.magnetization) != 0:

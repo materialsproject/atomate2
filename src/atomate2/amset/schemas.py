@@ -132,7 +132,7 @@ class AmsetTaskDocument(StructureMetadata):
     scattering_labels: List[str] = Field(
         None, description="The scattering types used in the calculation"
     )
-    soc: bool = Field(None, description="Whether spin–orbit coupling was included")
+    soc: bool = Field(None, description="Whether spin-orbit coupling was included")
     structure: Structure = Field(None, description="The structure used in this task")
     _schema: str = Field(
         __version__,
