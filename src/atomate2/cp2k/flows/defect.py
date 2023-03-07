@@ -67,7 +67,8 @@ class DefectHybridCellOptFlowMaker(HybridCellOptFlowMaker):
     )
 
 
-# TODO close to being able to put this in common. Just need a switch that decides which core flow/job to use based on software
+# TODO close to being able to put this in common. Just need a switch that decides
+# which core flow/job to use based on software
 @dataclass
 class FormationEnergyMaker(Maker):
     """
@@ -85,12 +86,14 @@ class FormationEnergyMaker(Maker):
     initialize_with_pbe: If hybrid functional is provided, this enables
         the use of a static PBE run before the hybrid calc to provide a
         starting guess for CP2K HF module.
-    supercell_matrix: If provided, the defect supercell wil lbe created
+    supercell_matrix: If provided, the defect supercell will be created
         by this 3x3 matrix. Else other parameters will be used.
     max_atoms: Maximum number of atoms allowed in the supercell.
     min_atoms: Minimum number of atoms allowed in the supercell.
-    min_length: Minimum length of the smallest supercell lattice vector.
-    force_diagonal: If True, return a transformation with a diagonal transformation matrix.
+    min_length: Minimum length of the smallest supercell lattice
+        vector.
+    force_diagonal: If True, return a transformation with a
+        diagonal transformation matrix.
     """
 
     name: str = "defect formation energy"
@@ -178,8 +181,8 @@ class FormationEnergyMaker(Maker):
         flow: Flow
             The workflow to calculate the formation energy diagram.
         """
-        jobs, defect_outputs = [], {}
-        defect_outputs = {
+        jobs = []
+        defect_outputs: dict[str, dict[int, tuple[Defect, OutputReference]]] = {
             defect.name: {} for defect in defects
         }  # TODO DEFECT NAMES ARE NOT UNIQUE HASHES
         bulk_structure = ensure_defects_same_structure(defects)
@@ -205,8 +208,8 @@ class FormationEnergyMaker(Maker):
             jobs.append(bulk_job)
 
         for defect in defects:
-            if charges == True:
-                chgs = defect.get_charge_states() if charges else [0]
+            if charges is True:
+                chgs = defect.get_charge_states()
             else:
                 chgs = charges if charges else [0]
             for charge in chgs:
@@ -251,7 +254,7 @@ def collect_defect_outputs(
     dielectric:
         The dielectric constant used to construct the formation energy diagram.
     """
-    outputs = {"results": {}}
+    outputs: dict[str, dict[str, dict]] = {"results": {}}
     if not dielectric:
         logger.warn(
             "Dielectric constant not provided. Defect formation energies will be uncorrected."
@@ -261,7 +264,7 @@ def collect_defect_outputs(
         fnv_plots = {}
         for charge, defect_and_output in defects_with_charges.items():
             defect, output_with_charge = defect_and_output
-            logger.info(f"Processing {defect.name} with charge state={charge}")
+            logger.info(f"Processing {defect_name} with charge state={charge}")
             defect_entry = DefectEntry(
                 defect=defect,
                 charge_state=charge,
@@ -281,7 +284,7 @@ def collect_defect_outputs(
                 dielectric=dielectric,
             )
             fnv_plots[int(charge)] = plot_data
-        outputs["results"][defect.name] = dict(
+        outputs["results"][defect_name] = dict(
             defect=defect, defect_entries=defect_entries, fnv_plots=fnv_plots
         )
     return outputs

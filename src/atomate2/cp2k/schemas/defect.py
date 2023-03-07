@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Callable, ClassVar, Dict, List, Mapping, Tuple, Type, TypeVar
+from typing import Callable, ClassVar, Dict, List, Mapping, Set, Tuple, Type, TypeVar
 
 import numpy as np
 from monty.json import MontyDecoder
@@ -11,11 +11,7 @@ from pymatgen.analysis.defects.corrections.freysoldt import (
     get_freysoldt_correction,
 )
 from pymatgen.analysis.defects.finder import DefectSiteFinder
-from pymatgen.analysis.defects.thermo import (
-    DefectEntry,
-    DefectSiteFinder,
-    MultiFormationEnergyDiagram,
-)
+from pymatgen.analysis.defects.thermo import DefectEntry, MultiFormationEnergyDiagram
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.core import Element
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
@@ -25,7 +21,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from atomate2 import SETTINGS
 from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.cp2k.schemas.calc_types.enums import RunType
-from atomate2.cp2k.schemas.task import TaskDocument
+from atomate2.cp2k.schemas.task import Cp2kObject, TaskDocument
 
 __all__ = ["DefectDoc"]
 
@@ -221,8 +217,8 @@ class DefectDoc(StructureMetadata):
         Args:
             defect_task: task dict for the defect calculation
             bulk_task: task dict for the bulk calculation
-            dielectric: Dielectric doc if the defect is charged. If not present, no dielectric
-                corrections will be performed, even if the defect is charged.
+            dielectric: Dielectric doc if the defect is charged. If not present, no
+                dielectric corrections will be performed, even if the defect is charged.
             query: Mongo-style query to retrieve the defect object from the defect task
         """
         parameters = cls.get_parameters_from_tasks(
@@ -294,12 +290,14 @@ class DefectDoc(StructureMetadata):
             dielectric = (eps_parallel - 1) / (1 - 1 / eps_perp)
             with ScratchDir("."):
 
-                # TODO builder ensure structures are commensurate, but the sxdefectalign2d requires exact match
-                # between structures (to about 6 digits of precision). No good solution right now,
-                # Just setting def lattice with bulk lattice, which will shift the locpot data
+                # TODO builder ensure structures are commensurate, but the
+                # sxdefectalign2d requires exact match between structures
+                # (to about 6 digits of precision). No good solution right now,
+                # Just setting def lattice with bulk lattice, which will shift
+                # the locpot data
                 parameters["defect_v_hartree"].structure.lattice = parameters[
                     "bulk_v_hartree"
-                ].structure
+                ].structure.lattice
 
                 lref = VaspVolumetricData(
                     structure=parameters["bulk_v_hartree"].structure,
@@ -337,7 +335,8 @@ class DefectDoc(StructureMetadata):
         cls, defect_task: TaskDocument, bulk_task: TaskDocument
     ):
         """
-        Get parameters necessary to create a defect entry from defect and bulk task dicts
+        Get parameters necessary to create a defect entry from defect and bulk
+        task dicts
         Args:
             defect_task: task dict for the defect calculation
             bulk_task: task dict for the bulk calculation
@@ -367,10 +366,10 @@ class DefectDoc(StructureMetadata):
             "charge_state": defect_task.output.structure.charge,
             "defect_frac_sc_coords": defect_frac_sc_coords,
             "defect_v_hartree": MontyDecoder().process_decoded(
-                defect_task.cp2k_objects["v_hartree"]
+                defect_task.cp2k_objects[Cp2kObject.v_hartree]  # type: ignore
             ),  # TODO CP2K spec name
             "bulk_v_hartree": MontyDecoder().process_decoded(
-                bulk_task.cp2k_objects["v_hartree"]
+                bulk_task.cp2k_objects[Cp2kObject.v_hartree]  # type: ignore
             ),  # TODO CP2K spec name
         }
 
@@ -392,15 +391,21 @@ class DefectValidation(BaseModel):
         3, description="Distance to consider adsorbate as desorbed"
     )
 
-    def process_entry(self, parameters) -> V:
-        """Gets a dictionary of {validator: result}. Result true for passing, false for failing."""
+    def process_entry(self, parameters) -> Dict:
+        """
+        Gets a dictionary of {validator: result}. Result true for passing,
+        false for failing.
+        """
         v = {}
         v.update(self._atomic_relaxation(parameters))
         v.update(self._desorption(parameters))
         return v
 
     def _atomic_relaxation(self, parameters):
-        """Returns false if the mean displacement outside the isolation radius is greater than the cutoff"""
+        """
+        Returns false if the mean displacement outside the isolation radius is greater
+        than the cutoff.
+        """
         in_struc = parameters["initial_defect_structure"]
         out_struc = parameters["final_defect_structure"]
         sites = out_struc.get_sites_in_sphere(
@@ -487,10 +492,12 @@ class DefectiveMaterialDoc(StructureMetadata):
     ) -> MultiFormationEnergyDiagram:
 
         filters = filters if filters else [lambda _: True]
-        els = set()
+        els: Set[Element] = set()
         defect_entries = []
         bulk_entries = []
         vbms = []
+        if isinstance(run_type, str):
+            run_type = RunType(run_type)
         for doc in filter(lambda x: all(f(x) for f in filters), self.defect_docs):
             if doc.defect_entries.get(run_type):
                 els = els | set(doc.defect.element_changes.keys())
