@@ -60,3 +60,4 @@ repos:
   - id: codespell
     stages: [commit, commit-msg]
     args: [--ignore-words-list, 'titel,statics,ba,nd,te']
+    types_or: [python, rst, markdown]
