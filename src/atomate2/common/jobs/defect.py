@@ -227,7 +227,7 @@ def get_supercell_from_prv_calc(
                 "The supercell matrix extracted from the previous calculation "
                 "does not match the the desired supercell shape."
             )
-    return dict(sc_mat=sc_mat_prv, lattice=Lattice(sc_mat_prv.lattice))
+    return dict(sc_mat=sc_mat_prv, lattice=Lattice(sc_structure.lattice))
 
 
 @job(name="bulk supercell")
