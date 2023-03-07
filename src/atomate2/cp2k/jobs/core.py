@@ -177,7 +177,6 @@ class HybridStaticMaker(BaseCp2kMaker):
     """
 
     name: str = "hybrid static"
-    hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(
         default_factory=HybridStaticSetGenerator
     )
@@ -215,7 +214,6 @@ class HybridRelaxMaker(BaseCp2kMaker):
     """
 
     name: str = "hybrid relax"
-    hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(
         default_factory=HybridRelaxSetGenerator
     )
@@ -253,7 +251,6 @@ class HybridCellOptMaker(BaseCp2kMaker):
     """
 
     name: str = "hybrid cell opt"
-    hybrid_functional: str = "PBE0"
     input_set_generator: Cp2kInputGenerator = field(
         default_factory=HybridCellOptSetGenerator
     )

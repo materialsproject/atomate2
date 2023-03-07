@@ -18,8 +18,8 @@ from atomate2.cp2k.jobs.core import (
     RelaxMaker,
     StaticMaker,
 )
-from atomate2.cp2k.powerups import update_user_input_settings
 from atomate2.cp2k.schemas.calculation import Cp2kObject
+from atomate2.cp2k.sets.base import recursive_update
 
 __all__ = [
     "DoubleRelaxMaker",
@@ -248,13 +248,15 @@ class HybridFlowMaker(Maker):
         the PBE density matrix, which creates huge speed-ups. Rarely causes
         problems so it is done as a default here.
         """
-        self.hybrid_maker.hybrid_functional = self.hybrid_functional
+
         updates = {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
         if self.initialize_with_pbe:
             updates["activate_hybrid"].update(
                 {"screen_on_initial_p": True, "screen_p_forces": True}
             )
-        self.hybrid_maker = update_user_input_settings(self.hybrid_maker, updates)
+        self.hybrid_maker.input_set_generator.user_input_settings = recursive_update(
+            updates, self.hybrid_maker.input_set_generator.user_input_settings
+        )
 
     def make(
         self, structure: Structure, prev_cp2k_dir: str | Path | None = None
