@@ -886,13 +886,12 @@ class MDSetGenerator(VaspInputGenerator):
             }
         )
 
-        if Element("H") in structure.species:
-            if updates["POTIM"] > 0.5:
-                logger.warning(
-                    f"Molecular dynamics time step is {updates['POTIM']}, which is "
-                    "typically too large for a structure containing H. Consider set it "
-                    "to a value of 0.5 or smaller."
-                )
+        if Element("H") in structure.species and updates["POTIM"] > 0.5:
+            logger.warning(
+                f"Molecular dynamics time step is {updates['POTIM']}, which is "
+                "typically too large for a structure containing H. Consider set it "
+                "to a value of 0.5 or smaller."
+            )
 
         return updates
 

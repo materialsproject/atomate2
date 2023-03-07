@@ -1,4 +1,4 @@
-"""Flows for calculating elastic constants."""
+"""Flows for calculating phonons."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
-from atomate2.common.jobs import structure_to_conventional, structure_to_primitive
+from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -196,7 +196,8 @@ class PhononMaker(Maker):
             and self.kpath_scheme != "seekpath"
         ):
             raise ValueError(
-                "You can only use other kpath schemes with the primitive standard structure"
+                "You can only use other kpath schemes with the primitive standard "
+                "structure"
             )
 
         if self.kpath_scheme not in [

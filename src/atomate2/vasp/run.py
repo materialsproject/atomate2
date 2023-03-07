@@ -152,7 +152,7 @@ def run_vasp(
         raise ValueError(f"Unsupported job type: {job_type}")
 
     if wall_time is not None:
-        handlers = list(handlers) + [WalltimeHandler(wall_time=wall_time)]
+        handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
     c = Custodian(
         handlers,

@@ -6,7 +6,7 @@ from pytest import approx, mark
 def test_structure_to_primitive(si_structure):
     from jobflow import run_locally
 
-    from atomate2.common.jobs import structure_to_primitive
+    from atomate2.common.jobs.utils import structure_to_primitive
 
     job = structure_to_primitive(si_structure)
 
@@ -19,7 +19,7 @@ def test_structure_to_primitive(si_structure):
 def test_structure_to_conventional(si_structure):
     from jobflow import run_locally
 
-    from atomate2.common.jobs import structure_to_conventional
+    from atomate2.common.jobs.utils import structure_to_conventional
 
     job = structure_to_conventional(si_structure)
 
@@ -39,7 +39,7 @@ def test_retrieve_structure_from_materials_project():
     from jobflow import run_locally
     from pymatgen.core import Structure
 
-    from atomate2.common.jobs import retrieve_structure_from_materials_project
+    from atomate2.common.jobs.utils import retrieve_structure_from_materials_project
 
     job = retrieve_structure_from_materials_project("mp-149")
 

@@ -44,15 +44,18 @@ class DerivedProperties(BaseModel):
     homogeneous_poisson: float = Field(None, description="Homogeneous poisson ratio.")
     y_mod: float = Field(
         None,
-        description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of the bulk and shear moduli.",
+        description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of "
+        "the bulk and shear moduli.",
     )
     trans_v: float = Field(
         None,
-        description="Transverse sound velocity (SI units) obtained from the Voigt-Reuss-Hill average bulk modulus.",
+        description="Transverse sound velocity (SI units) obtained from the "
+        "Voigt-Reuss-Hill average bulk modulus.",
     )
     long_v: float = Field(
         None,
-        description="Longitudinal sound velocity (SI units) obtained from the Voigt-Reuss-Hill average bulk modulus.",
+        description="Longitudinal sound velocity (SI units) obtained from the "
+        "Voigt-Reuss-Hill average bulk modulus.",
     )
     snyder_ac: float = Field(
         None, description="Synder's acoustic sound velocity (SI units)."
@@ -71,7 +74,8 @@ class DerivedProperties(BaseModel):
     )
     debye_temperature: float = Field(
         None,
-        description="Debye temperature from longitudinal and transverse sound velocities (SI units).",
+        description="Debye temperature from longitudinal and transverse sound "
+        "velocities (SI units).",
     )
 
 
@@ -85,7 +89,7 @@ class FittingData(BaseModel):
         None, description="The strains used to fit the elastic tensor."
     )
     pk_stresses: List[Matrix3D] = Field(
-        None, description="The Piola–Kirchoff stresses used to fit the elastic tensor."
+        None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
     deformations: List[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."
