@@ -23,9 +23,7 @@ from pymatgen.io.cp2k.inputs import (
 )
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.sets import DftSet
-from pymatgen.io.vasp import (  # TODO continues to be an issue that kpoint functionality is kept in vasp io module
-    Kpoints,
-)
+from pymatgen.io.vasp import Kpoints  # TODO Currently uses the VASP implementation
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
@@ -52,7 +50,6 @@ class Cp2kInputSet(InputSet):
 
         Parameters
         ----------
-
         cp2k_input
             Cp2kInput object for representing the main cp2k input file
 
@@ -351,12 +348,15 @@ class Cp2kInputGenerator(InputGenerator):
         cp2k_input = DftSet(structure=structure, kpoints=kpoints, **input_settings)
 
         for setting in input_settings:
-            if hasattr(cp2k_input, setting) and input_settings[setting]:
-                if callable(getattr(cp2k_input, setting)):
-                    subsettings = input_settings.get(setting)
-                    getattr(cp2k_input, setting)(
-                        **subsettings if isinstance(subsettings, dict) else {}
-                    )
+            if (
+                hasattr(cp2k_input, setting)
+                and input_settings[setting]
+                and callable(getattr(cp2k_input, setting))
+            ):
+                subsettings = input_settings.get(setting)
+                getattr(cp2k_input, setting)(
+                    **subsettings if isinstance(subsettings, dict) else {}
+                )
 
         cp2k_input.update(overrides)
         return cp2k_input
@@ -595,7 +595,7 @@ class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
     def _get_kpoints(
         self, structure: Structure, kpoints_updates: dict[str, Any] | None
     ) -> Kpoints | None:
-        """No Kpoints possible"""
+        """No Kpoints possible."""
         return None
 
 
@@ -611,7 +611,7 @@ def recursive_update(d: dict, u: dict):
             Dictionary of updates to apply
 
     Returns
-    ----------
+    -------
     Dict
         The updated dictionary.
 

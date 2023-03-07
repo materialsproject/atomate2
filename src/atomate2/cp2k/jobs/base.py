@@ -131,7 +131,6 @@ class BaseCp2kMaker(Maker):
         prev_vasp_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         """
-
         # Apply transformations if they are present
         if self.transformations:
             transformations = get_transformations(

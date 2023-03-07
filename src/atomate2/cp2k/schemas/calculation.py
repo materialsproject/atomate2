@@ -44,7 +44,7 @@ __all__ = [
 __is_stored_in_Ha__ = ["v_hartree"]
 
 
-_BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
+_BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 
 
 class Status(ValueEnum):
@@ -70,7 +70,7 @@ class Cp2kObject(ValueEnum):
 
 class CalculationInput(BaseModel):
     """
-    Summary of inputs for a CP2K calculation
+    Summary of inputs for a CP2K calculation.
     """
 
     structure: Structure | Molecule = Field(
@@ -85,15 +85,17 @@ class CalculationInput(BaseModel):
 
     dft: Dict = Field(
         None,
-        description="Description of the DFT parameters used in the last calc of this task",
+        description="DFT parameters used in the last calc of this task.",
     )
 
     cp2k_global: Dict = Field(
-        None, description="CP2K global parameters used in the last calc of this task"
+        None,
+        description="CP2K global parameters used in the last calc of this task.",
     )
 
     @validator("atomic_kind_info")
     def remove_unnecessary(cls, atomic_kind_info):
+        """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
             if "total_pseudopotential_energy" in atomic_kind_info[k]:
                 del atomic_kind_info[k]["total_pseudopotential_energy"]
@@ -101,12 +103,14 @@ class CalculationInput(BaseModel):
 
     @validator("dft")
     def cleanup_dft(cls, dft):
+        """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
             dft["UKS"] = True
         return dft
 
     @classmethod
     def from_cp2k_output(cls, output: Cp2kOutput):
+        """Initialize from Cp2kOutput object."""
         return cls(
             structure=output.initial_structure,
             atomic_kind_info=output.data.get("atomic_kind_info", None),
@@ -204,7 +208,6 @@ class CalculationOutput(BaseModel):
         -------
             The CP2K calculation output document.
         """
-
         v_hart_avg = None
         if v_hartree:
             v_hart_avg = {
@@ -511,7 +514,6 @@ def _get_volumetric_data(
         A dictionary mapping the CP2K object data type (`Cp2kObject.v_hartree`,
         `Cp2kObject.electron_density`, etc) to the volumetric data object.
     """
-
     if store_volumetric_data is None or len(store_volumetric_data) == 0:
         return {}
 
@@ -538,12 +540,19 @@ def _get_volumetric_data(
 # to grabbing the complete dos?
 def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
     """
-    parse_dos
-    Whether to parse the DOS. Can be:
+    Parse DOS outputs from cp2k calculation.
 
-    - "auto": Only parse DOS if there are no ionic steps.
-    - True: Always parse DOS.
-    - False: Never parse DOS.
+    Parameters
+    ----------
+    parse_dos: Whether to parse the DOS. Can be:
+        - "auto": Only parse DOS if there are no ionic steps.
+        - True: Always parse DOS.
+        - False: Never parse DOS.
+    cp2k_output: Cp2kOutput object for the calculation being parsed.
+
+    Returns
+    -------
+    A Dos object if parse_dos is set accordingly.
     """
     if parse_dos == "auto":
         if len(cp2k_output.ionic_steps) == 0:

@@ -1,4 +1,4 @@
-""" Module to define various calculation types as Enums for CP2K """
+"""Module to define various calculation types as Enums for CP2K."""
 from itertools import product
 from pathlib import Path
 
@@ -52,11 +52,20 @@ task_type_enum = get_enum_source(
     "CP2K calculation task types",
     {"_".join(tt.split()): tt for tt in _TASK_TYPES},
 )
+
+
+def get_calc_type_key(rt):
+    """Conveniece function for readability."""
+    s = "_".join(rt.split())
+    s = s.replace("+", "_").replace("-", "_").replace("(", "_").replace(")", "")
+    return f"{s}"
+
+
 calc_type_enum = get_enum_source(
     "CalcType",
     "CP2K calculation types",
     {
-        f"{'_'.join(rt.split()).replace('+','_').replace('-','_').replace('(', '_').replace(')', '')}_{'_'.join(tt.split())}": f"{rt} {tt}"
+        f"{get_calc_type_key(rt)}_{'_'.join(tt.split())}": f"{rt} {tt}"
         for rt, tt in product(_RUN_TYPES, _TASK_TYPES)
     },
 )

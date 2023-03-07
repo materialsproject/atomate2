@@ -47,7 +47,7 @@ class RelaxSetGenerator(Cp2kInputGenerator):
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
-        """Get updates to the input for a relax job"""
+        """Get updates to the input for a relax job."""
         updates = {
             "run_type": "GEO_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
@@ -64,7 +64,7 @@ class CellOptSetGenerator(Cp2kInputGenerator):
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
-        """Get updates to the input for a cell opt job"""
+        """Get updates to the input for a cell opt job."""
         updates = {
             "run_type": "CELL_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
@@ -75,11 +75,11 @@ class CellOptSetGenerator(Cp2kInputGenerator):
 @dataclass
 class HybridStaticSetGenerator(Cp2kInputGenerator):
     """
-    Class for generating static hybrid input sets
+    Class for generating static hybrid input sets.
     """
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
-        """Get input updates for a hybrid calculation"""
+        """Get input updates for a hybrid calculation."""
         updates: dict = {
             "run_type": "ENERGY_FORCE",
             "activate_hybrid": {
@@ -101,11 +101,11 @@ class HybridStaticSetGenerator(Cp2kInputGenerator):
 @dataclass
 class HybridRelaxSetGenerator(Cp2kInputGenerator):
     """
-    Class for generating hybrid relaxation input sets
+    Class for generating hybrid relaxation input sets.
     """
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
-        """Get input updates for a hybrid calculation"""
+        """Get input updates for a hybrid calculation."""
         updates: dict = {
             "run_type": "GEO_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
@@ -128,11 +128,11 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
 @dataclass
 class HybridCellOptSetGenerator(Cp2kInputGenerator):
     """
-    Class for generating hybrid cell optimization input sets
+    Class for generating hybrid cell optimization input sets.
     """
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
-        """Get input updates for a hybrid calculation"""
+        """Get input updates for a hybrid calculation."""
         updates: dict = {
             "run_type": "CELL_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
@@ -224,8 +224,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
         prev_input: Cp2kInput = None,
         cp2k_output: Cp2kOutput = None,
     ) -> dict:
-        """ """
-
+        """Get input updates for a non scf calculation."""
         updates = {
             "max_scf": 1,
             "print_bandstructure": True,

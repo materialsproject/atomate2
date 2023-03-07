@@ -106,6 +106,10 @@ class AnalysisSummary(BaseModel):
 
 
 class AtomicKind(BaseModel):
+    """
+    A representation of the most important information about each
+    type of species used in the calculation.
+    """
 
     element: str = Field(None, description="Element assigned to this atom kind")
     basis: str = Field(None, description="Basis set for this atom kind")
@@ -127,6 +131,7 @@ class AtomicKindSummary(BaseModel):
 
     @classmethod
     def from_atomic_kind_info(cls, atomic_kind_info: dict):
+        """Initialize from the atomic_kind_info dictionary."""
         d: Dict[str, Dict[str, Any]] = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
             d["atomic_kinds"][kind] = {
@@ -136,7 +141,7 @@ class AtomicKindSummary(BaseModel):
                 "auxiliary_basis": info["auxiliary_basis_set"][0]
                 if info["auxiliary_basis_set"]
                 else None,
-                "ghost": True if info["pseudo_potential"] == "NONE" else False,
+                "ghost": info["pseudo_potential"] == "NONE",
             }
         return cls(**d)
 
@@ -170,7 +175,6 @@ class InputSummary(BaseModel):
         InputSummary
             A summary of the input structure and parameters.
         """
-
         summary = AtomicKindSummary.from_atomic_kind_info(
             calc_doc.input.atomic_kind_info
         )

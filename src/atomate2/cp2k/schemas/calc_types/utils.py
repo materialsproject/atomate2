@@ -1,4 +1,4 @@
-""" Module to define various calculation types as Enums for CP2K """
+"""Module to define various calculation types as Enums for CP2K."""
 from pathlib import Path
 from typing import Dict, Iterable
 
@@ -12,19 +12,16 @@ _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").res
 
 def run_type(inputs: Dict) -> RunType:
     """
-    Determines the run_type from the CP2K input dict
-    This is adapted from pymatgen to be far less unstable
+    Determine the run_type from the CP2K input dict
+    This is adapted from pymatgen to be far less unstable.
 
     Args:
         dft: dictionary of dft parameters (standard from task doc)
     """
-
     dft = inputs.get("dft")
 
     def _variant_equal(v1, v2) -> bool:
-        """
-        helper function to deal with strings
-        """
+        """Determine if two run_types are equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()
         elif isinstance(v1, Iterable) and isinstance(v2, Iterable):
@@ -68,12 +65,11 @@ def run_type(inputs: Dict) -> RunType:
 
 def task_type(inputs: Dict) -> TaskType:
     """
-    Determines the task type
+    Determine the task type.
 
     Args:
-        inputs
+        inputs: Input dictionary
     """
-
     calc_type = []
     cp2k_run_type = inputs.get("cp2k_global", {}).get("Run_type", "")
     ci = Cp2kInput.from_dict(inputs["cp2k_input"])
@@ -152,7 +148,7 @@ def calc_type(
     inputs: Dict,
 ) -> CalcType:
     """
-    Determines the calc type
+    Determine the calc type.
 
     Args:
         inputs: dict from InputSummary containing necessary data for determining

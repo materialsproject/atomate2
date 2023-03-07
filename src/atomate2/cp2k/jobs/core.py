@@ -148,7 +148,7 @@ class CellOptMaker(BaseCp2kMaker):
 @dataclass
 class HybridStaticMaker(BaseCp2kMaker):
     """
-    Maker for static hybrid jobs
+    Maker for static hybrid jobs.
 
     Parameters
     ----------
@@ -185,7 +185,7 @@ class HybridStaticMaker(BaseCp2kMaker):
 @dataclass
 class HybridRelaxMaker(BaseCp2kMaker):
     """
-    Maker for relax hybrid jobs
+    Maker for relax hybrid jobs.
 
     Parameters
     ----------
@@ -222,7 +222,7 @@ class HybridRelaxMaker(BaseCp2kMaker):
 @dataclass
 class HybridCellOptMaker(BaseCp2kMaker):
     """
-    Maker for cell opt. hybrid jobs
+    Maker for cell opt. hybrid jobs.
 
     Parameters
     ----------
@@ -298,7 +298,7 @@ class NonSCFMaker(BaseCp2kMaker):
                 NumericalPrecisionHandler(),
                 WalltimeHandler(),
             ),
-            "validators": (),  # TODO remove the convergence checks, but will pass an empty file if I/O fails
+            "validators": (),
         }
     )
 
