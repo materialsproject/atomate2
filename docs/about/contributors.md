@@ -52,3 +52,17 @@ University of Houston
 
 [mjwen]: https://github.com/mjwen
 [0000-0003-0013-575X]: https://orcid.org0000-0003-0013-575X/
+
+**Christina Ertural** [![gh]][QuantumChemist] [![orc]][0000-0002-7696-5824] \
+Postdoctoral Researcher \
+Federal Institute for Materials Research and Testing (Berlin)
+
+[QuantumChemist]: https://github.com/QuantumChemist
+[0000-0002-7696-5824]: https://orcid.org/0000-0002-7696-5824
+
+**Matthew Horton** [![gh]][mkhorton] [![orc]][0000-0001-7777-8871] \
+Senior Research Software Engineer \
+Microsoft Research
+
+[mkhorton]: https://github.com/mkhorton
+[0000-0001-7777-8871]: https://orcid.org/0000-0001-7777-8871
