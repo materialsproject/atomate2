@@ -25,11 +25,12 @@ Lawrence Livermore National Laboratory
 [jmmshn]: https://github.com/jmmshn
 [0000-0002-2743-7531]: https://orcid.org/0000-0002-2743-7531
 
-**Janosh Riebesell** [![gh]][janosh] \
+**Janosh Riebesell** [![gh]][janosh] [![orc]][0000-0001-5233-3462]\
 PhD Student \
 Cambridge University
 
 [janosh]: https://github.com/janosh
+[0000-0001-5233-3462]: https://orcid.org/0000-0001-5233-3462
 
 **Ryan Kingsbury** [![gh]][rkingsbury] [![orc]][0000-0002-7168-3967] \
 Incoming Assistant Professor \
