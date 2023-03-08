@@ -159,6 +159,7 @@ v0.0.1
 
 Initial release.
 
+[contributors]: <> (CONTRIBUTOR SECTION)
 [nwinner]: https://github.com/nwinner
 [jageo]: https://github.com/JaGeo
 [zhuoying]: https://github.com/Zhuoying
