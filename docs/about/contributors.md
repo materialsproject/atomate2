@@ -66,3 +66,10 @@ Microsoft Research
 
 [mkhorton]: https://github.com/mkhorton
 [0000-0001-7777-8871]: https://orcid.org/0000-0001-7777-8871
+
+**Zhuoying Zhu** [![gh]][zhuoying] [![orc]][0000-0003-1775-7651] \
+Postdoctoral researcher\
+Lawrence Berkeley National Laboratory
+
+[zhuoying]: https://github.com/zhuoying
+[0000-0003-1775-7651]: https://orcid.org/0000-0003-1775-7651
