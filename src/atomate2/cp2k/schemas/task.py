@@ -149,7 +149,7 @@ class AtomicKindSummary(BaseModel):
 class InputSummary(BaseModel):
     """Summary of inputs for a CP2K calculation."""
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The input structure object"
     )
 
@@ -189,7 +189,7 @@ class InputSummary(BaseModel):
 class OutputSummary(BaseModel):
     """Summary of the outputs for a CP2K calculation."""
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The output structure object"
     )
     energy: float = Field(
@@ -256,7 +256,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
     output: OutputSummary = Field(
         None, description="The output of the final calculation"
     )
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="Final output structure from the task"
     )
     state: Status = Field(None, description="State of this task")

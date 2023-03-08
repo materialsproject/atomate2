@@ -73,7 +73,7 @@ class CalculationInput(BaseModel):
     Summary of inputs for a CP2K calculation.
     """
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The input structure/molecule object"
     )
 
@@ -156,7 +156,7 @@ class CalculationOutput(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the calculation"
     )
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The final structure/molecule from the calculation"
     )
     efermi: float = Field(
@@ -164,7 +164,7 @@ class CalculationOutput(BaseModel):
     )
     is_metal: bool = Field(None, description="Whether the system is metallic")
     bandgap: float = Field(None, description="The band gap from the calculation in eV")
-    v_hartree: Dict[int, List[float]] | None = Field(
+    v_hartree: Union[Dict[int, List[float]], None] = Field(
         None, description="Plane averaged electrostatic potential"
     )
     cbm: float = Field(
@@ -538,7 +538,7 @@ def _get_volumetric_data(
 # and it has to be requested (not default). Should this method grab overall
 # dos / elemental project dos if the complete dos is not available, or stick
 # to grabbing the complete dos?
-def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
+def _parse_dos(parse_dos: Union[str, bool], cp2k_output: Cp2kOutput) -> Optional[Dos]:
     """
     Parse DOS outputs from cp2k calculation.
 
@@ -564,7 +564,7 @@ def _parse_dos(parse_dos: str | bool, cp2k_output: Cp2kOutput) -> Optional[Dos]:
 
 
 def _parse_bandstructure(
-    parse_bandstructure: str | bool, cp2k_output: Cp2kOutput
+    parse_bandstructure: Union[str, bool], cp2k_output: Cp2kOutput
 ) -> Optional[BandStructure]:
     """
     Get the band structure.
