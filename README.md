@@ -5,7 +5,7 @@
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
 
-**👉 [Full Documentation][docs] 👈**
+[Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
 Atomate2 is a free, open-source software for performing complex materials science
 workflows using simple Python functions. Features of atomate2 include
@@ -139,3 +139,5 @@ A full list of all contributors can be found [here][contributors].
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
 [docs]: https://materialsproject.github.io/atomate2/
+[github]: https://github.com/materialsproject/atomate2
+[pypi]: https://pypi.org/project/atomate2

@@ -4,19 +4,27 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from jobflow import Flow, Maker, OutputReference
+from jobflow.core.maker import recursive_call
 from pymatgen.core.structure import Structure
+from pymatgen.io.vasp.outputs import Vasprun
 
-from atomate2.common.analysis.defects.flows import (
-    ConfigurationCoordinateMaker as BaseCCDMaker,
-)
-from atomate2.common.analysis.defects.schemas import CCDDocument
+from atomate2.common.files import get_zfile
+from atomate2.common.flows import defect as defect_flows
+from atomate2.common.schemas.defects import CCDDocument
+from atomate2.utils.file_client import FileClient
+from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
-from atomate2.vasp.sets.core import StaticSetGenerator
-from atomate2.vasp.sets.defect import AtomicRelaxSetGenerator
+from atomate2.vasp.sets.defect import (
+    SPECIAL_KPOINT,
+    ChargeStateRelaxSetGenerator,
+    ChargeStateStaticSetGenerator,
+    HSEChargeStateRelaxSetGenerator,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,29 +38,155 @@ DEFECT_INCAR_SETTINGS = {
 }
 DEFECT_KPOINT_SETTINGS = {"reciprocal_density": 64}
 
-DEFECT_RELAX_GENERATOR = AtomicRelaxSetGenerator(
+DEFECT_RELAX_GENERATOR = ChargeStateRelaxSetGenerator(
     use_structure_charge=True,
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
-DEFECT_STATIC_GENERATOR = StaticSetGenerator(
+DEFECT_STATIC_GENERATOR = ChargeStateStaticSetGenerator(
     user_incar_settings=DEFECT_INCAR_SETTINGS,
     user_kpoints_settings=DEFECT_KPOINT_SETTINGS,
 )
+HSE_DOUBLE_RELAX = DoubleRelaxMaker(
+    relax_maker1=RelaxMaker(
+        input_set_generator=ChargeStateRelaxSetGenerator(
+            user_kpoints_settings=SPECIAL_KPOINT
+        )
+    ),
+    relax_maker2=RelaxMaker(
+        input_set_generator=HSEChargeStateRelaxSetGenerator(
+            user_kpoints_settings=SPECIAL_KPOINT
+        ),
+        task_document_kwargs={"store_volumetric_data": ["locpot"]},
+        copy_vasp_kwargs={
+            "additional_vasp_files": ("WAVECAR",),
+        },
+    ),
+)
+GRID_KEYS = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
 
 
 @dataclass
-class ConfigurationCoordinateMaker(BaseCCDMaker):
-    """Maker to calculate the configuration coordinate diagram.
+class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
+    """Maker class to help calculate of the formation energy diagram.
+
+    Maker class to calculate formation energy diagrams. The main settings for
+    this maker is the `relax_maker` which contains the settings for the atomic
+    relaxations that each defect supercell will undergo. The `relax_maker`
+    uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
+    like the `HSE_DOUBLE_RELAX` can be used for more accurate (but expensive)
+    calculations.
+    If the `validate_maker` is set to True, the maker will check for some basic
+    settings in the `relax_maker` to make sure the calculations are done correctly.
+
+    Attributes
+    ----------
+    defect_relax_maker: Maker
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states. Since these calculations are expensive and the settings might get
+        messy, it is recommended for each implementation of this maker to check
+        some of the most important settings in the `relax_maker`.  Please see
+        `FormationEnergyMaker.validate_maker` for more details.
+    bulk_relax_maker: Maker
+        If None, the same `defect_relax_maker` will be used for the bulk supercell.
+        A maker to used to perform the bulk supercell calculation. For marginally
+        converged calculations, it might be desirable to perform an additional
+        lattice relaxation on the bulk supercell to make sure the energies are more
+        reliable. However, if you do relax the bulk supercell, you can inadvertently
+        change the grid size used in the calculation and thus the representation
+        of the electrostatic potential which will affect calculation of the Freysoldt
+        finite-size correction. Therefore, if you do want to perform a bulk supercell
+        lattice relaxation, you should manually set the grid size.
+
+        .. code-block:: python
+            relax_set = MPRelaxSet(defect.get_supercell_structure())
+            ng, ngf = relax_set.calculate_ng()
+            params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
+            ng_settings = dict(zip(params, ng + ngf))
+            relax_maker = update_user_incar_settings(relax_maker, ng_settings)
+    name: str
+        The name of the flow created by this maker.
+    """
+
+    defect_relax_maker: BaseVaspMaker = field(
+        default_factory=lambda: RelaxMaker(
+            input_set_generator=ChargeStateRelaxSetGenerator(
+                user_kpoints_settings=SPECIAL_KPOINT
+            ),
+            task_document_kwargs={"average_locpot": True},
+        )
+    )
+    bulk_relax_maker: BaseVaspMaker | None = None
+    name: str = "formation energy"
+
+    def structure_from_prv(self, previous_dir: str):
+        """Copy the output structure from previous directory.
+
+        Read the vasprun.xml file from the previous directory
+        and return the structure.
+
+        Parameters
+        ----------
+        previous_dir: str
+            The directory to copy from.
+
+        Returns
+        -------
+        structure: Structure
+        """
+        fc = FileClient()
+        files = fc.listdir(previous_dir)
+        vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
+        vasprun = Vasprun(vasprun_file)
+        return vasprun.final_structure
+
+    def validate_maker(self):
+        """Check some key settings in the relax maker.
+
+        Since this workflow is pretty complex but allows you to use any
+        relax maker, it can be easy to make mistakes in the settings.
+        This method should check the most important settings and raise
+        an error if something is wrong.
+
+        Example:  For VASP, the relax maker should have:
+            `ISIF = 2` and `use_structure_charge = True`
+        """
+
+        def check_defect_relax_maker(relax_maker: RelaxMaker):
+            input_gen = relax_maker.input_set_generator
+            if input_gen.use_structure_charge is False:
+                raise ValueError("use_structure_charge should be set to True")
+            isif_ = input_gen.get_incar_updates(None).get("ISIF", None)
+            isif = input_gen.user_incar_settings.get("ISIF", isif_)
+            if isif != 2:
+                raise ValueError("ISIF should be set to 2")
+            return relax_maker
+
+        recursive_call(
+            self.defect_relax_maker,
+            func=check_defect_relax_maker,
+            class_filter=RelaxMaker,
+            nested=True,
+        )
+
+
+@dataclass
+class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
+    """Maker to generate a configuration coordinate diagram.
 
     Parameters
     ----------
     name: str
         The name of the flow created by this maker.
-    relax_maker: BaseVaspMaker
-        A maker to perform the relaxation of the defect.
-    static_maker: BaseVaspMaker
-        A maker to perform the static calculation of the defect.
+    relax_maker: BaseVaspMaker or None
+        A maker to perform a atomic-position-only relaxation on the defect charge
+        states.
+    static_maker: BaseVaspMaker or None
+        A maker to perform the single-shot static calculation of the distorted
+        structures.
+    distortions: tuple[float, ...]
+        The distortions, as a fraction of ΔQ, to use in the calculation of the
+        configuration coordinate diagram.
     """
 
     relax_maker: BaseVaspMaker = field(
