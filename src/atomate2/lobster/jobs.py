@@ -25,6 +25,10 @@ logger = logging.getLogger(__name__)
 class PureLobsterMaker(Maker):
     """
     LOBSTER job maker.
+    The maker copies the DFT output files
+    necessary for the LOBSTER run.
+    It will create all lobsterin files, run LOBSTER,
+    zip the outputs and parse the LOBSTER outputs.
 
     Parameters
     ----------
@@ -65,6 +69,7 @@ class PureLobsterMaker(Maker):
         lobsterin = Lobsterin.standard_calculations_from_vasp_files(
             "POSCAR", "INCAR", dict_for_basis=basis_dict
         )
+        # TODO: make sure basis is not overwritten
         if user_lobsterin_settings:
             for key, parameter in user_lobsterin_settings.items():
                 lobsterin[key] = parameter
@@ -74,17 +79,13 @@ class PureLobsterMaker(Maker):
         logger.info("Running LOBSTER")
         run_lobster()
 
-        # converged = None
-
         # gzip folder
         gzip_dir(".")
 
-        # parse amset outputs
+        # parse lobster outputs
         task_doc = LobsterTaskDocument.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,
             additional_fields=additional_outputs,
         )
-        # task_doc.converged = converged
-
         return task_doc

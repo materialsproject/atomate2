@@ -225,7 +225,7 @@ def delete_lobster_wavecar(
     dirs: list, dir_vasp: Path | str = None, dir_preconverge: Path | str = None
 ):
     """
-    Deletes all WAVECARs
+    Deletes all WAVECARs.
 
     Args:
         dirs: Path to directories of lobster jobs.
