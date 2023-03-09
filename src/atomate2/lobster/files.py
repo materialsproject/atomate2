@@ -97,5 +97,4 @@ def copy_lobster_files(
         file_client=file_client,
     )
 
-    # rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
     logger.info("Finished copying inputs")
