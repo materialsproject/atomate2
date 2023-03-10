@@ -145,7 +145,7 @@ def get_basis_infos(
 @job
 def update_user_incar_settings_maker(
     vaspmaker: VaspLobsterMaker,
-    nbands: dict,
+    nbands: int,
     structure: Structure,
     prev_vasp_dir: Path | str,
 ):
@@ -300,7 +300,6 @@ def generate_database_entry(
     ----------
     kwargs: dict
         Additional parameters that are passed to LobsterTaskDocument.from_directory
-
     """
     lobster_doc = LobsterTaskDocument.from_directory(
         **kwargs,

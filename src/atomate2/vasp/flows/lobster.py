@@ -142,7 +142,10 @@ class LobsterMaker(Maker):
         # Maker needs to be updated here. If the job itself is updated,
         # no further updates on the job are possible
         vaspjob = update_user_incar_settings_maker(
-            self.vasp_lobster_maker, basis_infos.output["nbands"], structure, prev_vasp_dir
+            self.vasp_lobster_maker,
+            basis_infos.output["nbands"],
+            structure,
+            prev_vasp_dir,
         )
 
         jobs.append(vaspjob)
