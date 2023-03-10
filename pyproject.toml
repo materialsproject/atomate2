@@ -73,9 +73,9 @@ atm = "atomate2.cli:cli"
 
 [project.urls]
 homepage = "https://materialsproject.github.io/atomate2/"
-repository = "https://github.com/hackingmaterials/atomate2"
+repository = "https://github.com/materialsproject/atomate2"
 documentation = "https://materialsproject.github.io/atomate2/"
-changelog = "https://github.com/hackingmaterials/atomate2/blob/main/CHANGELOG.md"
+changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [tool.setuptools.package-data]
 atomate2 = ["py.typed"]
