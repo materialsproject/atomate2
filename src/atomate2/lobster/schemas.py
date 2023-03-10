@@ -378,106 +378,20 @@ class LobsterTaskDocument(BaseModel):
         icobi_dict = icobilist.icohpcollection.as_dict()
         icoop_dict = icooplist.icohpcollection.as_dict()
 
-        def get_strng_bonds(bondlist, are_cobis, are_coops, relevant_bonds: dict):
-            bonds = []
-            icohp_all = []
-            lengths = []
-            for a, b, c, l in zip(
-                bondlist["list_atom1"],
-                bondlist["list_atom2"],
-                bondlist["list_icohp"],
-                bondlist["list_length"],
-            ):
-                bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
-                icohp_all.append(sum(c.values()))
-                lengths.append(l)
 
-            bond_labels_unique = list(set(bonds))
-            sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
-            sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
-            sep_lengths: List[List[float]] = [
-                [] for _ in range(len(bond_labels_unique))
-            ]
-
-            for i, val in enumerate(bond_labels_unique):
-                for j, val2 in enumerate(bonds):
-                    if val == val2:
-                        sep_blabels[i].append(val2)
-                        sep_icohp[i].append(icohp_all[j])
-                        sep_lengths[i].append(lengths[j])
-            if not are_cobis and not are_coops:
-                bond_dict = {}
-                for i, lab in enumerate(bond_labels_unique):
-                    label = lab.split("-")
-                    label.sort()
-                    for rel_bnd in relevant_bonds:
-                        rel_bnd_list = rel_bnd.split("-")
-                        rel_bnd_list.sort()
-                        if label == rel_bnd_list:
-                            index = np.argmin(sep_icohp[i])
-                            bond_dict.update(
-                                {
-                                    rel_bnd: {
-                                        "ICOHP": min(sep_icohp[i]),
-                                        "length": sep_lengths[i][index],
-                                    }
-                                }
-                            )
-                return bond_dict
-
-            if are_cobis and not are_coops:
-                bond_dict = {}
-                for i, lab in enumerate(bond_labels_unique):
-                    label = lab.split("-")
-                    label.sort()
-                    for rel_bnd in relevant_bonds:
-                        rel_bnd_list = rel_bnd.split("-")
-                        rel_bnd_list.sort()
-                        if label == rel_bnd_list:
-                            index = np.argmax(sep_icohp[i])
-                            bond_dict.update(
-                                {
-                                    rel_bnd: {
-                                        "ICOBI": max(sep_icohp[i]),
-                                        "length": sep_lengths[i][index],
-                                    }
-                                }
-                            )
-                return bond_dict
-
-            if not are_cobis and are_coops:
-                bond_dict = {}
-                for i, lab in enumerate(bond_labels_unique):
-                    label = lab.split("-")
-                    label.sort()
-                    for rel_bnd in relevant_bonds:
-                        rel_bnd_list = rel_bnd.split("-")
-                        rel_bnd_list.sort()
-                        if label == rel_bnd_list:
-                            index = np.argmax(sep_icohp[i])
-                            bond_dict.update(
-                                {
-                                    rel_bnd: {
-                                        "ICOOP": max(sep_icohp[i]),
-                                        "length": sep_lengths[i][index],
-                                    }
-                                }
-                            )
-                return bond_dict
-
-        icohp_bond_dict = get_strng_bonds(
+        icohp_bond_dict = LobsterTaskDocument._get_strng_bonds(
             icohp_dict,
             are_cobis=False,
             are_coops=False,
             relevant_bonds=analyse.final_dict_bonds,
         )
-        icoop_bond_dict = get_strng_bonds(
+        icoop_bond_dict = LobsterTaskDocument._get_strng_bonds(
             icoop_dict,
             are_cobis=False,
             are_coops=True,
             relevant_bonds=analyse.final_dict_bonds,
         )
-        icobi_bond_dict = get_strng_bonds(
+        icobi_bond_dict = LobsterTaskDocument._get_strng_bonds(
             icobi_dict,
             are_cobis=True,
             are_coops=False,
@@ -561,6 +475,94 @@ class LobsterTaskDocument(BaseModel):
             charges=charges,
             madelung_energies=madelung_energies,
         )  # doc
+
+    @staticmethod
+    def _get_strng_bonds(bondlist, are_cobis, are_coops, relevant_bonds: dict):
+        bonds = []
+        icohp_all = []
+        lengths = []
+        for a, b, c, l in zip(
+                bondlist["list_atom1"],
+                bondlist["list_atom2"],
+                bondlist["list_icohp"],
+                bondlist["list_length"],
+        ):
+            bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
+            icohp_all.append(sum(c.values()))
+            lengths.append(l)
+
+        bond_labels_unique = list(set(bonds))
+        sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
+        sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+        sep_lengths: List[List[float]] = [
+            [] for _ in range(len(bond_labels_unique))
+        ]
+
+        for i, val in enumerate(bond_labels_unique):
+            for j, val2 in enumerate(bonds):
+                if val == val2:
+                    sep_blabels[i].append(val2)
+                    sep_icohp[i].append(icohp_all[j])
+                    sep_lengths[i].append(lengths[j])
+        if not are_cobis and not are_coops:
+            bond_dict = {}
+            for i, lab in enumerate(bond_labels_unique):
+                label = lab.split("-")
+                label.sort()
+                for rel_bnd in relevant_bonds:
+                    rel_bnd_list = rel_bnd.split("-")
+                    rel_bnd_list.sort()
+                    if label == rel_bnd_list:
+                        index = np.argmin(sep_icohp[i])
+                        bond_dict.update(
+                            {
+                                rel_bnd: {
+                                    "ICOHP": min(sep_icohp[i]),
+                                    "length": sep_lengths[i][index],
+                                }
+                            }
+                        )
+            return bond_dict
+
+        if are_cobis and not are_coops:
+            bond_dict = {}
+            for i, lab in enumerate(bond_labels_unique):
+                label = lab.split("-")
+                label.sort()
+                for rel_bnd in relevant_bonds:
+                    rel_bnd_list = rel_bnd.split("-")
+                    rel_bnd_list.sort()
+                    if label == rel_bnd_list:
+                        index = np.argmax(sep_icohp[i])
+                        bond_dict.update(
+                            {
+                                rel_bnd: {
+                                    "ICOBI": max(sep_icohp[i]),
+                                    "length": sep_lengths[i][index],
+                                }
+                            }
+                        )
+            return bond_dict
+
+        if not are_cobis and are_coops:
+            bond_dict = {}
+            for i, lab in enumerate(bond_labels_unique):
+                label = lab.split("-")
+                label.sort()
+                for rel_bnd in relevant_bonds:
+                    rel_bnd_list = rel_bnd.split("-")
+                    rel_bnd_list.sort()
+                    if label == rel_bnd_list:
+                        index = np.argmax(sep_icohp[i])
+                        bond_dict.update(
+                            {
+                                rel_bnd: {
+                                    "ICOOP": max(sep_icohp[i]),
+                                    "length": sep_lengths[i][index],
+                                }
+                            }
+                        )
+            return bond_dict
 
 
 def _get_structure() -> Structure:
