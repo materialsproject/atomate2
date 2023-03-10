@@ -1,6 +1,7 @@
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
 
+from atomate2.lobster.jobs import PureLobsterMaker
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.vasp.flows.lobster import LobsterMaker
 from atomate2.vasp.powerups import (
@@ -11,7 +12,7 @@ from atomate2.vasp.powerups import (
 def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "preconvergence run": "Si_lobster/preconvergence_run",
+        "static preconvergence": "Si_lobster/preconvergence_run",
         "relax 1": "Si_lobster/relax_1",
         "relax 2": "Si_lobster/relax_2",
         "static_run": "Si_lobster/static_run",
@@ -21,7 +22,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     fake_run_vasp_kwargs = {
         "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
         "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-        "preconvergence run": {
+        "static preconvergence": {
             "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"],
         },
         "static_run": {
@@ -49,11 +50,13 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
     job = LobsterMaker(
-        user_lobsterin_settings={
-            "COHPstartEnergy": -5.0,
-            "COHPEndEnergy": 5.0,
-            "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
-        },
+        lobstermaker=PureLobsterMaker(
+            user_lobsterin_settings={
+                "COHPstartEnergy": -5.0,
+                "COHPEndEnergy": 5.0,
+                "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
+            }
+        ),
         delete_all_wavecars=False,
     ).make(si_structure)
     job = update_user_incar_settings(job, {"NPAR": 4})
@@ -74,7 +77,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
 def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "preconvergence run": "Si_lobster/preconvergence_run",
+        "static preconvergence": "Si_lobster/preconvergence_run",
         "relax 1": "Si_lobster/relax_1",
         "relax 2": "Si_lobster/relax_2",
         "static_run": "Si_lobster/static_run",
@@ -113,11 +116,13 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
     job = LobsterMaker(
-        user_lobsterin_settings={
-            "COHPstartEnergy": -5.0,
-            "COHPEndEnergy": 5.0,
-            "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
-        },
+        lobstermaker=PureLobsterMaker(
+            user_lobsterin_settings={
+                "COHPstartEnergy": -5.0,
+                "COHPEndEnergy": 5.0,
+                "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
+            }
+        ),
         delete_all_wavecars=True,
     ).make(si_structure)
     job = update_user_incar_settings(job, {"NPAR": 4})

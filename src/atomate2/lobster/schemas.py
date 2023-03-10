@@ -24,14 +24,7 @@ from pymatgen.io.lobster import (
 )
 
 from atomate2 import __version__
-
-# from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
-
-# from atomate2.common.files import get_zfile
-# from atomate2.utils.path import get_uri
-# from atomate2.common.schemas.math import Matrix3D, Vector3D
-
 
 try:
     from lobsterpy.cohp.analyze import Analysis
@@ -116,7 +109,7 @@ class LobsterinModel(BaseModel):
 
 class CondensedBondingAnalysis(BaseModel):
     """Collection to store condensed bonding analysis
-    data from LobsterPy based on ICOHP
+    data from LobsterPy based on ICOHP.
     """
 
     formula: str = Field(None, description="Pretty formula of the structure")
@@ -176,7 +169,7 @@ class CondensedBondingAnalysis(BaseModel):
 
 class StrongestBonds(BaseModel):
     """Collection to store strongest bonds extracted
-    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs
+    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs.
     """
 
     which_bonds: str = Field(

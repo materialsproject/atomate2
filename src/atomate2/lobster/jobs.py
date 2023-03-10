@@ -38,20 +38,26 @@ class PureLobsterMaker(Maker):
         Maybe useful.
     task_document_kwargs : dict
         Keyword arguments passed to :obj:`.LobsterTaskDocument.from_directory`.
+    user_lobsterin_settings: dict
+        Dict including additional information on the Lobster settings.
+    additional_outputs: list[str]
+        A list including additional output files.
+    calculation_type: str
+        Type of calculation for the Lobster run.
     """
 
     name: str = "lobster"
     resubmit: bool = False
     task_document_kwargs: dict = field(default_factory=dict)
+    user_lobsterin_settings: dict | None = None
+    additional_outputs: list | None = None
+    calculation_type: str = "standard"
 
     @job(output_schema=LobsterTaskDocument, data=[CompleteCohp, LobsterCompleteDos])
     def make(
         self,
         wavefunction_dir: str | Path = None,
         basis_dict: dict | None = None,
-        user_lobsterin_settings: dict | None = None,
-        additional_outputs: list[str] | None = None,
-        # something for the basis
     ):
         """
         Run an LOBSTER calculation.
@@ -60,19 +66,22 @@ class PureLobsterMaker(Maker):
         ----------
         wavefunction_dir : str or Path
             A directory containing a WAVEFUNCTION and other outputs needed for Lobster
-
+        basis_dict: dict
+            A dict including information on the basis set
         """
         # copy previous inputs # VASP for example
         copy_lobster_files(wavefunction_dir)
 
         # write lobster settings
         lobsterin = Lobsterin.standard_calculations_from_vasp_files(
-            "POSCAR", "INCAR", dict_for_basis=basis_dict
+            "POSCAR", "INCAR", dict_for_basis=basis_dict, option=self.calculation_type
         )
-        # TODO: make sure basis is not overwritten
-        if user_lobsterin_settings:
-            for key, parameter in user_lobsterin_settings.items():
-                lobsterin[key] = parameter
+
+        if self.user_lobsterin_settings:
+            for key, parameter in self.user_lobsterin_settings.items():
+                # basis function can only be changed with the help of a yaml file
+                if key != "basisfunctions":
+                    lobsterin[key] = parameter
 
         lobsterin.write_lobsterin("lobsterin")
         # run lobster
@@ -86,6 +95,6 @@ class PureLobsterMaker(Maker):
         task_doc = LobsterTaskDocument.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,
-            additional_fields=additional_outputs,
+            additional_fields=self.additional_outputs,
         )
         return task_doc
