@@ -89,12 +89,14 @@ def get_basis_infos(
     address_min_basis: str = None,
 ):
     """
+    Compute all relevant basis sets and maximum number of bands.
 
-    Args:
-        structure: Structure object.
-        vaspmaker: BaseVaspMaker.
-        address_max_basis: string to yaml file including basis set information.
-        address_min_basis: string to yaml file including basis set information.
+    Parameters
+    ----------
+    structure: Structure object.
+    vaspmaker: BaseVaspMaker.
+    address_max_basis: string to yaml file including basis set information.
+    address_min_basis: string to yaml file including basis set information.
 
     Returns
     -------
