@@ -150,18 +150,20 @@ def update_user_incar_settings_maker(
     prev_vasp_dir: Path | str,
 ):
     """
-    Update the INCAR settings of a maker
-    Args:
-        vaspmaker: VaspLobsterMaker.
-        nbands: dict including "nbands"
-        structure: Structure object.
-        prev_vasp_dir: Path or string to vasp files.
+    Update the INCAR settings of a maker.
+
+    Parameters
+    ----------
+    vaspmaker: VaspLobsterMaker.
+    nbands: int indicating the correct number of bands
+    structure: Structure object.
+    prev_vasp_dir: Path or string to vasp files.
 
     Returns
     -------
         VaspLobsterMaker with correct number of bands.
     """
-    vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands["nbands"]})
+    vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands})
     vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
 
     return Response(replace=vaspjob)
