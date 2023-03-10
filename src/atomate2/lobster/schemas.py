@@ -272,8 +272,8 @@ class LobsterTaskDocument(BaseModel):
         cls,
         dir_name: Union[Path, str],
         additional_fields: list = None,
-        save_cohp_plots:bool=True,
-        plot_kwargs: dict = None
+        save_cohp_plots: bool = True,
+        plot_kwargs: dict = None,
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -400,15 +400,23 @@ class LobsterTaskDocument(BaseModel):
             )
             if save_cohp_plots:
                 if plot_kwargs is None:
-                    describe.plot_cohps(save=True, filename="automatic_cohp_plots.pdf", skip_show=True)
+                    describe.plot_cohps(
+                        save=True, filename="automatic_cohp_plots.pdf", skip_show=True
+                    )
                 else:
-                    describe.plot_cohps(save=True, filename="automatic_cohp_plots.pdf", skip_show=True, **plot_kwargs)
+                    describe.plot_cohps(
+                        save=True,
+                        filename="automatic_cohp_plots.pdf",
+                        skip_show=True,
+                        **plot_kwargs
+                    )
                 import json
-                with open(dir_name/"condensed_bonding_analysis.json", "w") as fp:
-                    json.dump(analyse.condensed_bonding_analysis,fp)
-                with open(dir_name/"condensed_bonding_analysis.txt", "w") as fp:
+
+                with open(dir_name / "condensed_bonding_analysis.json", "w") as fp:
+                    json.dump(analyse.condensed_bonding_analysis, fp)
+                with open(dir_name / "condensed_bonding_analysis.txt", "w") as fp:
                     for line in describe.text:
-                        fp.write(line+'\n')
+                        fp.write(line + "\n")
 
             # Read in strongest icohp values
             sb_icobi, sb_icohp, sb_icoop = cls._identify_strongest_bonds(
