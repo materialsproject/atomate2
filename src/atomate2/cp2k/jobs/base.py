@@ -106,6 +106,9 @@ class BaseCp2kMaker(Maker):
         the "." character which is typically used to denote file extensions. To avoid
         this, use the ":" character, which will automatically be converted to ".". E.g.
         ``{"my_file:txt": "contents of the file"}``.
+    store_output_data: bool
+        Whether the job output (TaskDocument) should be stored in the JobStore through
+        the response.
     """
 
     name: str = "base cp2k job"
@@ -118,6 +121,7 @@ class BaseCp2kMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
     transformations: tuple[str, ...] = field(default_factory=tuple)
     transformation_params: tuple[dict, ...] | None = None
+    store_output_data: bool = True
 
     @cp2k_job
     def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
@@ -179,5 +183,5 @@ class BaseCp2kMaker(Maker):
         return Response(
             stop_children=stop_children,
             stored_data={"custodian": task_doc.custodian},
-            output=task_doc,
+            output=task_doc if self.store_output_data else None,
         )

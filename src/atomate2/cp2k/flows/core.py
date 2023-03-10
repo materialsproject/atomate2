@@ -240,7 +240,7 @@ class HybridFlowMaker(Maker):
 
     hybrid_functional: str = "PBE0"
     initialize_with_pbe: bool = field(default=True)
-    pbe_maker: Maker = field(default_factory=StaticMaker)
+    pbe_maker: Maker = field(default=lambda: StaticMaker(store_output_data=False))
     hybrid_maker: Maker = field(default_factory=HybridStaticMaker)
 
     def __post_init__(self):
