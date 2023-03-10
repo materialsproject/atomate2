@@ -8,7 +8,6 @@ from typing import Any, List, Optional, Union
 
 import numpy as np
 from monty.dev import requires
-from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.cohp import CompleteCohp
@@ -560,18 +559,3 @@ class LobsterTaskDocument(BaseModel):
                             }
                         )
             return bond_dict
-
-
-def _get_structure() -> Structure:
-    """Find amset input file in current directory and extract structure."""
-    vr_files = list(Path(".").glob("*vasprun.xml*"))
-    bs_files = list(Path(".").glob("*band_structure_data*"))
-
-    if len(vr_files) > 0:
-        from pymatgen.io.vasp import BSVasprun
-
-        return BSVasprun(str(vr_files[0])).get_band_structure().structure
-    elif len(bs_files) > 0:
-        return loadfn(bs_files[0])["band_structure"].structure
-
-    raise ValueError("Could not find amset input in current directory.")
