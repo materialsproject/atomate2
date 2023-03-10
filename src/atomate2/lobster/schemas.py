@@ -43,32 +43,34 @@ class LobsteroutModel(BaseModel):
     restart_from_projection: bool = Field(
         "Bool indicating if the run has been restarted from a projection"
     )
-    lobster_version: str = Field("Lobster version")
-    threads: int = Field("Number of threads that Lobster ran on")
-    dft_program: str = Field("DFT program was used for this run")
-    charge_spilling: list = Field("Absolute charge spilling")
-    total_spilling: list = Field("Total spilling")
-    elements: list = Field("Elements in structure")
-    basis_type: list = Field("Basis set used in Lobster")
-    basis_functions: list = Field("basis_functions")
-    timing: Any = Field("Dict with infos on timing")
-    warning_lines: list = Field("Warnings")
-    info_orthonormalization: list = Field("info_orthonormalization")
-    info_lines: list = Field("info_lines")
-    has_doscar: bool = Field("Bool indicating if DOSCAR is present.")
-    has_cohpcar: bool = Field("Bool indicating if COHPCAR is present.")
-    has_coopcar: bool = Field("Bool indicating if COOPCAR is present.")
-    has_cobicar: bool = Field("Bool indicating if COBICAR is present.")
-    has_charge: bool = Field("Bool indicating if CHARGE is present.")
-    has_madelung: bool = Field("Bool indicating if Madelung file is present.")
-    has_projection: bool = Field("Bool indicating if projection file is present.")
-    has_bandoverlaps: bool = Field("Bool indicating if BANDOVERLAPS file is presetn")
-    has_fatbands: bool = Field("Bool indicating if Fatbands are present.")
+    lobster_version: str = Field(None, "Lobster version")
+    threads: int = Field(None, "Number of threads that Lobster ran on")
+    dft_program: str = Field(None, "DFT program was used for this run")
+    charge_spilling: list = Field(None, "Absolute charge spilling")
+    total_spilling: list = Field(None, "Total spilling")
+    elements: list = Field(None, "Elements in structure")
+    basis_type: list = Field(None, "Basis set used in Lobster")
+    basis_functions: list = Field(None, "basis_functions")
+    timing: Any = Field(None, "Dict with infos on timing")
+    warning_lines: list = Field(None, "Warnings")
+    info_orthonormalization: list = Field(None, "info_orthonormalization")
+    info_lines: list = Field(None, "info_lines")
+    has_doscar: bool = Field(None, "Bool indicating if DOSCAR is present.")
+    has_cohpcar: bool = Field(None, "Bool indicating if COHPCAR is present.")
+    has_coopcar: bool = Field(None, "Bool indicating if COOPCAR is present.")
+    has_cobicar: bool = Field(None, "Bool indicating if COBICAR is present.")
+    has_charge: bool = Field(None, "Bool indicating if CHARGE is present.")
+    has_madelung: bool = Field(None, "Bool indicating if Madelung file is present.")
+    has_projection: bool = Field(None, "Bool indicating if projection file is present.")
+    has_bandoverlaps: bool = Field(
+        None, "Bool indicating if BANDOVERLAPS file is presetn"
+    )
+    has_fatbands: bool = Field(None, "Bool indicating if Fatbands are present.")
     has_grosspopulation: bool = Field(
-        "Bool indicating if GrossPopulations file is present."
+        None, "Bool indicating if GrossPopulations file is present."
     )
     has_density_of_energies: bool = Field(
-        "Bool indicating if DensityofEnergies is present"
+        None, "Bool indicating if DensityofEnergies is present"
     )
 
 
@@ -206,20 +208,20 @@ class LobsterTaskDocument(BaseModel):
     lobsterout: LobsteroutModel = Field("Lobster out data")
     lobsterin: LobsterinModel = Field("Lobster calculation inputs")
     lobsterpy_data: CondensedBondingAnalysis = Field(
-        "Model describing the LobsterPy data"
+        None, "Model describing the LobsterPy data"
     )
     lobsterpy_summary_text: str = Field(
         None,
         description="Stores LobsterPy automatic analysis summary text",
     )
     strongest_bonds_icohp: StrongestBonds = Field(
-        "Describes the strongest cation-anion ICOHP bonds"
+        None, "Describes the strongest cation-anion ICOHP bonds"
     )
     strongest_bonds_icoop: StrongestBonds = Field(
-        "Describes the strongest cation-anion ICOOP bonds"
+        None, "Describes the strongest cation-anion ICOOP bonds"
     )
     strongest_bonds_icobi: StrongestBonds = Field(
-        "Describes the strongest cation-anion ICOBI bonds"
+        None, "Describes the strongest cation-anion ICOBI bonds"
     )
     cohp_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COHP data"
@@ -270,10 +272,10 @@ class LobsterTaskDocument(BaseModel):
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
-        struct = Structure.from_file(os.path.join(dir_name, "POSCAR.gz"))
         lobsterout_here = Lobsterout("lobsterout.gz")
         lobsterout_doc = lobsterout_here.get_doc()
         lobsterin_here = Lobsterin.from_file(os.path.join(dir_name, "lobsterin.gz"))
+
         # cation anion-mode
 
         try:
