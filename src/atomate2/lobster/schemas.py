@@ -272,7 +272,8 @@ class LobsterTaskDocument(BaseModel):
         cls,
         dir_name: Union[Path, str],
         additional_fields: list = None,
-        produce_plots=True,
+        save_cohp_plots:bool=True,
+        plot_kwargs: dict = None
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -283,9 +284,11 @@ class LobsterTaskDocument(BaseModel):
             The path to the folder containing the calculation outputs.
         additional_fields : dict
             Dictionary of additional fields to add to output document.
-        produce_plots: bool
+        save_cohp_plots: bool
             Bool to indicate whether automatic cohp plots and jsons
-            will be generated.
+            from lobsterpy will be generated.
+        plot_kwargs: dict
+            kwargs to change plotting options in lobsterpy
 
         Returns
         -------
@@ -378,6 +381,7 @@ class LobsterTaskDocument(BaseModel):
                         )
 
             describe = Description(analysis_object=analyse)
+
             # TODO: add automatic plots from lobsterpy
             condensed_bonding_analysis_data = CondensedBondingAnalysis(
                 formula=cba["formula"],
@@ -394,6 +398,17 @@ class LobsterTaskDocument(BaseModel):
                 final_dict_ions=analyse.final_dict_ions,
                 run_time=cba_run_time,
             )
+            if save_cohp_plots:
+                if plot_kwargs is None:
+                    describe.plot_cohps(save=True, filename="automatic_cohp_plots.pdf", skip_show=True)
+                else:
+                    describe.plot_cohps(save=True, filename="automatic_cohp_plots.pdf", skip_show=True, **plot_kwargs)
+                import json
+                with open(dir_name/"condensed_bonding_analysis.json", "w") as fp:
+                    json.dump(analyse.condensed_bonding_analysis,fp)
+                with open(dir_name/"condensed_bonding_analysis.txt", "w") as fp:
+                    for line in describe.text:
+                        fp.write(line+'\n')
 
             # Read in strongest icohp values
             sb_icobi, sb_icohp, sb_icoop = cls._identify_strongest_bonds(
