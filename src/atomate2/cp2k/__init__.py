@@ -1,1 +1,1 @@
-"""Module for cp2k workflows"""
+"""Module for cp2k workflows."""

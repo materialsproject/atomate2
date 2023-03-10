@@ -240,15 +240,18 @@ class HybridFlowMaker(Maker):
 
     hybrid_functional: str = "PBE0"
     initialize_with_pbe: bool = field(default=True)
-    pbe_maker: Maker = field(default_factory=StaticMaker)
+    pbe_maker: Maker = field(default=lambda: StaticMaker(store_output_data=False))
     hybrid_maker: Maker = field(default_factory=HybridStaticMaker)
 
     def __post_init__(self):
-        """Initializing with PBE allows CP2K to screen exchange integrals using
+        """
+        Set the user-specified hybrid_functional and activate initial
+        density matrix screening if restarting from a PBE calculation.
+
+        Initializing with PBE allows CP2K to screen exchange integrals using
         the PBE density matrix, which creates huge speed-ups. Rarely causes
         problems so it is done as a default here.
         """
-
         updates = {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
         if self.initialize_with_pbe:
             updates["activate_hybrid"].update(
@@ -293,7 +296,7 @@ class HybridFlowMaker(Maker):
 @dataclass
 class HybridStaticFlowMaker(HybridFlowMaker):
     """
-    Maker to perform a PBE restart to hybrid static flow
+    Maker to perform a PBE restart to hybrid static flow.
 
     Parameters
     ----------
@@ -311,7 +314,7 @@ class HybridStaticFlowMaker(HybridFlowMaker):
 @dataclass
 class HybridRelaxFlowMaker(HybridFlowMaker):
     """
-    Maker to perform a PBE restart to hybrid relax flow
+    Maker to perform a PBE restart to hybrid relax flow.
 
     Parameters
     ----------
@@ -330,7 +333,7 @@ class HybridRelaxFlowMaker(HybridFlowMaker):
 @dataclass
 class HybridCellOptFlowMaker(HybridFlowMaker):
     """
-    Maker to perform a PBE restart to hybrid cell opt flow
+    Maker to perform a PBE restart to hybrid cell opt flow.
 
     Parameters
     ----------

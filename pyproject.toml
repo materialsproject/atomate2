@@ -80,7 +80,9 @@ changelog = "https://github.com/hackingmaterials/atomate2/blob/main/CHANGELOG.md
 [tool.setuptools.package-data]
 atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
+"atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.vasp.schemas.calc_types" = ["*.yaml"]
+"atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"
