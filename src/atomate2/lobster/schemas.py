@@ -378,7 +378,6 @@ class LobsterTaskDocument(BaseModel):
         icobi_dict = icobilist.icohpcollection.as_dict()
         icoop_dict = icooplist.icohpcollection.as_dict()
 
-
         icohp_bond_dict = LobsterTaskDocument._get_strng_bonds(
             icohp_dict,
             are_cobis=False,
@@ -482,10 +481,10 @@ class LobsterTaskDocument(BaseModel):
         icohp_all = []
         lengths = []
         for a, b, c, l in zip(
-                bondlist["list_atom1"],
-                bondlist["list_atom2"],
-                bondlist["list_icohp"],
-                bondlist["list_length"],
+            bondlist["list_atom1"],
+            bondlist["list_atom2"],
+            bondlist["list_icohp"],
+            bondlist["list_length"],
         ):
             bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
             icohp_all.append(sum(c.values()))
@@ -494,9 +493,7 @@ class LobsterTaskDocument(BaseModel):
         bond_labels_unique = list(set(bonds))
         sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
         sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
-        sep_lengths: List[List[float]] = [
-            [] for _ in range(len(bond_labels_unique))
-        ]
+        sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
 
         for i, val in enumerate(bond_labels_unique):
             for j, val2 in enumerate(bonds):
