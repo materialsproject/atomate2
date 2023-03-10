@@ -50,11 +50,11 @@ class LobsterMaker(Maker):
     vasp_lobster_maker : .BaseVaspMaker
         A maker to perform the computation of the wavefunction before the static run.
         Cannot be skipped.
-    delete_all_wavecars:
+    delete_all_wavecars: bool
         if true, all WAVECARs will be deleated after the run
-    address_min_basis:
+    address_min_basis: str
         yaml file including basis set information
-    address_max_basis:
+    address_max_basis: str
         yaml file including basis set information
     """
 

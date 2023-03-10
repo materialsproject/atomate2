@@ -509,8 +509,29 @@ class LobsterTaskDocument(BaseModel):
 
     @staticmethod
     def _identify_strongest_bonds(
-        analyse, icobilist_path, icohplist_path, icooplist_path
+        analyse: Analysis,
+        icobilist_path: Path,
+        icohplist_path: Path,
+        icooplist_path: Path,
     ):
+        """
+
+        Parameters
+        ----------
+        analyse: .Analysis
+            Analysis object from lobsterpy automatic analysis
+        icobilist_path: Path or str
+            Path to ICOBILIST.lobster
+        icohplist_path: Path or str
+            Path to ICOHPLIST.lobster
+        icooplist_path: Path or str
+            Path to ICOOPLIST.lobster
+
+        Returns
+        -------
+        Tuple[StrongestBonds]
+            Tuple of StrongestBonds
+        """
         if icohplist_path.exists():
             icohplist = Icohplist(
                 filename=icohplist_path,
@@ -581,7 +602,28 @@ class LobsterTaskDocument(BaseModel):
         return sb_icobi, sb_icohp, sb_icoop
 
     @staticmethod
-    def _get_strng_bonds(bondlist, are_cobis, are_coops, relevant_bonds: dict):
+    def _get_strng_bonds(
+        bondlist: dict, are_cobis: bool, are_coops: bool, relevant_bonds: dict
+    ):
+        """
+        Identify the strongest bonds from a list of bonds.
+
+        Parameters
+        ----------
+        bondlist: dict
+            dict including bonding information
+        are_cobis: bool
+            True if these are cobis
+        are_coops: bool
+            True if these are coops
+        relevant_bonds: dict
+            Dict include all bonds that are considered.
+
+        Returns
+        -------
+        dict
+            Dictionary including strongest bonds.
+        """
         bonds = []
         icohp_all = []
         lengths = []

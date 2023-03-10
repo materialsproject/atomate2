@@ -93,14 +93,19 @@ def get_basis_infos(
 
     Parameters
     ----------
-    structure: Structure object.
-    vaspmaker: BaseVaspMaker.
-    address_max_basis: string to yaml file including basis set information.
-    address_min_basis: string to yaml file including basis set information.
+    structure : .Structure
+     A structure object.
+    vaspmaker : .BaseVaspMaker
+        Maker for Vasp job including a POTCAR.
+    address_max_basis : str
+        string to yaml file including basis set information.
+    address_min_basis : str
+        string to yaml file including basis set information.
 
     Returns
     -------
-        dict including number of bands and basis set information
+    dict
+        Dictionary including number of bands and basis set information.
     """
     potcar_symbols = vaspmaker.input_set_generator._get_potcar(
         structure=structure, potcar_spec=True
@@ -154,13 +159,19 @@ def update_user_incar_settings_maker(
 
     Parameters
     ----------
-    vaspmaker: VaspLobsterMaker.
-    nbands: int indicating the correct number of bands
-    structure: Structure object.
-    prev_vasp_dir: Path or string to vasp files.
+    vaspmaker: .BaseVaspMaker
+        A maker for the static run with all parammeters
+        relevant for Lobster.
+    nbands: int
+        integer indicating the correct number of bands
+    structure: .Structure
+        Structure object.
+    prev_vasp_dir: Path or str
+        Path or string to vasp files.
 
     Returns
     -------
+    .BaseVaspMaker
         VaspLobsterMaker with correct number of bands.
     """
     vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands})
@@ -186,18 +197,28 @@ def get_lobster_jobs(
 
     Parameters
     ----------
-    lobstermaker: maker for the Lobster jobs
-    basis_dict: dict including basis set information.
-    wavefunction_dir: Path to VASP calculation with WAVECAR
-    optimization_run_job_dir: Path to optimization run.
-    optimization_run_uuid: uuid of optimization run.
-    static_run_job_dir: Path to static VASP calculation.
-    static_run_uuid: uuid of static run.
-    additional_static_run_job_dir: Path to preconvergence step.
-    additional_static_run_uuid: uuid of preconvergence step.
+    lobstermaker: .PureLobsterMaker
+        maker for the Lobster jobs
+    basis_dict: dict
+        dict including basis set information.
+    wavefunction_dir: Path or str
+        Path to VASP calculation with WAVECAR
+    optimization_run_job_dir: Path or str
+        Path to optimization run.
+    optimization_run_uuid: str
+        uuid of optimization run.
+    static_run_job_dir: Path or str
+        Path to static VASP calculation.
+    static_run_uuid: str
+        uuid of static run.
+    additional_static_run_job_dir: Path or str
+        Path to preconvergence step.
+    additional_static_run_uuid: str
+        uuid of preconvergence step.
 
     Returns
     -------
+    list
         List of Lobster jobs.
     """
     jobs = []
@@ -238,9 +259,12 @@ def delete_lobster_wavecar(
 
     Parameters
     ----------
-    dirs: Path to directories of lobster jobs.
-    dir_vasp: Path to directory of static VASP run.
-    dir_preconverge: Path to directory of preconvergence run.
+    dirs: List[Path|str]
+        Path to directories of lobster jobs.
+    dir_vasp: Path or str
+        Path to directory of static VASP run.
+    dir_preconverge: Path or str
+        Path to directory of preconvergence run.
     """
     jobs = []
     outputs: dict = {}
