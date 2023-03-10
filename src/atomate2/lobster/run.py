@@ -40,9 +40,6 @@ class JobType(ValueEnum):
 
     DIRECT = "direct"
     NORMAL = "normal"
-    # FATBANDS = "fatbands"
-    # implement additional job types ?
-    # e.g., k-dependent COHP
 
 
 def run_lobster(
@@ -56,22 +53,24 @@ def run_lobster(
 ):
     """
     Run Lobster.
-
     Supports running Lobster with or without custodian (see :obj:`JobType`).
 
     Parameters
     ----------
-    job_type : str or .JobType
-        The job type.
-    validators : list of .Validator
+    job_type: str or .JobType
+         The job type.
+    lobster_cmd: str
+        Command to run lobster.
+    max_errors:
+        Maximum number of errors.
+    scratch_dir: str or Path
+        Scratch directory.
+    validators: list of .Validator
         The validators handlers used by custodian.
-    wall_time : int
-        The maximum wall time. If set, a WallTimeHandler will be added to the list
-        of handlers.
-    vasp_job_kwargs : dict
-        Keyword arguments that are passed to :obj:`.VaspJob`.
+    lobster_job_kwargs: dict
+        Keyword arguments that are passed to :obj:`.LosterJob`.
     custodian_kwargs : dict
-        Keyword arguments that are passed to :obj:`.Custodian`.
+         Keyword arguments that are passed to :obj:`.Custodian`.
     """
     lobster_job_kwargs = {} if lobster_job_kwargs is None else lobster_job_kwargs
     custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
@@ -87,7 +86,6 @@ def run_lobster(
 
     elif job_type == JobType.NORMAL:
         jobs = [LobsterJob(split_lobster_cmd, **lobster_job_kwargs)]
-    # elif job_type == JobType.FATBANDS:
     else:
         raise ValueError(f"Unsupported job type: {job_type}")
 

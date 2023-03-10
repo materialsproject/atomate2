@@ -60,7 +60,7 @@ class PureLobsterMaker(Maker):
         basis_dict: dict | None = None,
     ):
         """
-        Run an LOBSTER calculation.
+        Run a LOBSTER calculation.
 
         Parameters
         ----------

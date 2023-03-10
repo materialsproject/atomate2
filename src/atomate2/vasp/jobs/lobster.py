@@ -31,7 +31,8 @@ logger = logging.getLogger(__name__)
 class VaspLobsterMaker(BaseVaspMaker):
     """
     Maker that performs a VASP computation with
-     settings that are required for Lobter runs
+     settings that are required for Lobter runs.
+
     Parameters
     ----------
     name : str
@@ -193,7 +194,7 @@ def get_lobster_jobs(
 
     Returns
     -------
-        List of Lobster jobs
+        List of Lobster jobs.
     """
     jobs = []
     outputs = {}
@@ -236,9 +237,6 @@ def delete_lobster_wavecar(
     dirs: Path to directories of lobster jobs.
     dir_vasp: Path to directory of static VASP run.
     dir_preconverge: Path to directory of preconvergence run.
-
-    -------
-
     """
     jobs = []
     outputs: dict = {}
