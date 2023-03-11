@@ -50,7 +50,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
     job = LobsterMaker(
-        lobstermaker=PureLobsterMaker(
+        lobster_maker=PureLobsterMaker(
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,
@@ -116,7 +116,7 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
     job = LobsterMaker(
-        lobstermaker=PureLobsterMaker(
+        lobster_maker=PureLobsterMaker(
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,
