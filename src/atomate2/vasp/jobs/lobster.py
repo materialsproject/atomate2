@@ -11,14 +11,14 @@ from pymatgen.core import Structure
 from pymatgen.io.lobster import Lobsterin
 
 from atomate2.common.files import delete_files
-from atomate2.lobster.jobs import PureLobsterMaker
+from atomate2.lobster.jobs import LobsterMaker
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
 
-__all__ = ["VaspLobsterMaker", "get_basis_infos", "get_lobster_jobs"]
+__all__ = ["LobsterStaticMaker", "get_basis_infos", "get_lobster_jobs"]
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class VaspLobsterMaker(BaseVaspMaker):
+class LobsterStaticMaker(BaseVaspMaker):
     """
     Maker that performs a VASP computation with
      settings that are required for Lobter runs.
@@ -83,7 +83,7 @@ class VaspLobsterMaker(BaseVaspMaker):
 @job
 def get_basis_infos(
     structure: Structure,
-    vaspmaker: BaseVaspMaker,
+    vasp_maker: BaseVaspMaker,
     address_max_basis: str = None,
     address_min_basis: str = None,
 ):
@@ -94,7 +94,7 @@ def get_basis_infos(
     ----------
     structure : .Structure
      A structure object.
-    vaspmaker : .BaseVaspMaker
+    vasp_maker : .BaseVaspMaker
         Maker for Vasp job including a POTCAR.
     address_max_basis : str
         string to yaml file including basis set information.
@@ -106,7 +106,7 @@ def get_basis_infos(
     dict
         Dictionary including number of bands and basis set information.
     """
-    potcar_symbols = vaspmaker.input_set_generator._get_potcar(
+    potcar_symbols = vasp_maker.input_set_generator._get_potcar(
         structure=structure, potcar_spec=True
     )
 
@@ -148,7 +148,7 @@ def get_basis_infos(
 
 @job
 def update_user_incar_settings_maker(
-    vaspmaker: VaspLobsterMaker,
+    vasp_maker: LobsterStaticMaker,
     nbands: int,
     structure: Structure,
     prev_vasp_dir: Path | str,
@@ -158,7 +158,7 @@ def update_user_incar_settings_maker(
 
     Parameters
     ----------
-    vaspmaker: .BaseVaspMaker
+    vasp_maker: .BaseVaspMaker
         A maker for the static run with all parammeters
         relevant for Lobster.
     nbands: int
@@ -171,10 +171,10 @@ def update_user_incar_settings_maker(
     Returns
     -------
     .BaseVaspMaker
-        VaspLobsterMaker with correct number of bands.
+        LobsterStaticMaker with correct number of bands.
     """
-    vaspmaker = update_user_incar_settings(vaspmaker, {"NBANDS": nbands})
-    vaspjob = vaspmaker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
+    vasp_maker = update_user_incar_settings(vasp_maker, {"NBANDS": nbands})
+    vaspjob = vasp_maker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
 
     return Response(replace=vaspjob)
 
@@ -196,7 +196,7 @@ def get_lobster_jobs(
 
     Parameters
     ----------
-    lobster_maker: .PureLobsterMaker
+    lobster_maker: .LobsterMaker
         maker for the Lobster jobs
     basis_dict: dict
         dict including basis set information.
@@ -233,7 +233,7 @@ def get_lobster_jobs(
     outputs["lobster_task_documents"] = []
 
     if lobster_maker is None:
-        lobster_maker = PureLobsterMaker()
+        lobster_maker = LobsterMaker()
 
     for i, basis in enumerate(basis_dict):
         lobsterjob = lobster_maker.make(

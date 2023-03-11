@@ -16,13 +16,13 @@ from atomate2.lobster.files import copy_lobster_files
 from atomate2.lobster.run import run_lobster
 from atomate2.lobster.schemas import LobsterTaskDocument
 
-__all__ = ["PureLobsterMaker"]
+__all__ = ["LobsterMaker"]
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
-class PureLobsterMaker(Maker):
+class LobsterMaker(Maker):
     """
     LOBSTER job maker.
     The maker copies the DFT output files

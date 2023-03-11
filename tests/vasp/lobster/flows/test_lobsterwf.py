@@ -1,9 +1,9 @@
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
 
-from atomate2.lobster.jobs import PureLobsterMaker
+from atomate2.lobster.jobs import LobsterMaker
 from atomate2.lobster.schemas import LobsterTaskDocument
-from atomate2.vasp.flows.lobster import LobsterMaker
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.powerups import (
     update_user_incar_settings,
 )
@@ -49,8 +49,8 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         species=["Si", "Si"],
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
-    job = LobsterMaker(
-        lobster_maker=PureLobsterMaker(
+    job = VaspLobsterMaker(
+        lobster_maker=LobsterMaker(
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,
@@ -115,8 +115,8 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         species=["Si", "Si"],
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
-    job = LobsterMaker(
-        lobster_maker=PureLobsterMaker(
+    job = VaspLobsterMaker(
+        lobster_maker=LobsterMaker(
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,

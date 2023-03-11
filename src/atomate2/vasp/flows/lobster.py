@@ -8,12 +8,12 @@ from pathlib import Path
 from jobflow import Flow, Maker
 from pymatgen.core import Structure
 
-from atomate2.lobster.jobs import PureLobsterMaker
+from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.lobster import (
-    VaspLobsterMaker,
+    LobsterStaticMaker,
     delete_lobster_wavecar,
     get_basis_infos,
     get_lobster_jobs,
@@ -21,11 +21,11 @@ from atomate2.vasp.jobs.lobster import (
 )
 from atomate2.vasp.sets.core import StaticSetGenerator
 
-__all__ = ["LobsterMaker"]
+__all__ = ["VaspLobsterMaker"]
 
 
 @dataclass
-class LobsterMaker(Maker):
+class VaspLobsterMaker(Maker):
     """
     Maker to perform a Lobster computation.
 
@@ -47,9 +47,11 @@ class LobsterMaker(Maker):
     additional_static_run_maker: .BaseVaspMaker or None
         A maker to perform a preconvergence run
         before the wavefunction computation without symmetry
-    vasp_lobster_maker : .BaseVaspMaker
+    lobster_static_maker : .BaseVaspMaker
         A maker to perform the computation of the wavefunction before the static run.
         Cannot be skipped.
+    lobster_maker: .LobsterMaker
+        A maker to perform the Lobster run.
     delete_all_wavecars: bool
         if true, all WAVECARs will be deleated after the run
     address_min_basis: str
@@ -62,8 +64,8 @@ class LobsterMaker(Maker):
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
-    vasp_lobster_maker: BaseVaspMaker = field(
-        default_factory=lambda: VaspLobsterMaker()
+    lobster_static_maker: BaseVaspMaker = field(
+        default_factory=lambda: LobsterStaticMaker()
     )
     additional_static_run_maker: BaseVaspMaker | None = field(
         default_factory=lambda: StaticMaker(
@@ -73,8 +75,8 @@ class LobsterMaker(Maker):
             ),
         )
     )
-    lobster_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: PureLobsterMaker()
+    lobster_maker: LobsterMaker | None = field(
+        default_factory=lambda: LobsterMaker()
     )
     delete_all_wavecars: bool = True
     address_min_basis: str | None = None
@@ -135,7 +137,7 @@ class LobsterMaker(Maker):
         # Information about the basis is collected
         basis_infos = get_basis_infos(
             structure=structure,
-            vaspmaker=self.vasp_lobster_maker,
+            vasp_maker=self.lobster_static_maker,
             address_min_basis=self.address_min_basis,
             address_max_basis=self.address_max_basis,
         )
@@ -144,7 +146,7 @@ class LobsterMaker(Maker):
         # Maker needs to be updated here. If the job itself is updated,
         # no further updates on the job are possible
         vaspjob = update_user_incar_settings_maker(
-            self.vasp_lobster_maker,
+            self.lobster_static_maker,
             basis_infos.output["nbands"],
             structure,
             prev_vasp_dir,
