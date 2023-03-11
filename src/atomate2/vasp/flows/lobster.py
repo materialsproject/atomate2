@@ -73,7 +73,9 @@ class LobsterMaker(Maker):
             ),
         )
     )
-    lobstermaker: BaseVaspMaker | None = PureLobsterMaker()
+    lobstermaker: BaseVaspMaker | None = field(
+        default_factory=lambda: PureLobsterMaker()
+    )
     delete_all_wavecars: bool = True
     address_min_basis: str | None = None
     address_max_basis: str | None = None
