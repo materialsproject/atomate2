@@ -311,22 +311,3 @@ def delete_lobster_wavecar(
 
     flow = Flow(jobs, output=outputs)
     return Response(replace=flow)
-
-
-@job(output_schema=LobsterTaskDocument)
-def generate_database_entry(
-    **kwargs,
-):
-    """
-    Analyze the LOBSTER runs and summarize the results.
-
-    Parameters
-    ----------
-    kwargs: dict
-        Additional parameters that are passed to LobsterTaskDocument.from_directory
-    """
-    lobster_doc = LobsterTaskDocument.from_directory(
-        **kwargs,
-    )
-
-    return lobster_doc
