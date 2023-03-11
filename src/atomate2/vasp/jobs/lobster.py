@@ -12,7 +12,6 @@ from pymatgen.io.lobster import Lobsterin
 
 from atomate2.common.files import delete_files
 from atomate2.lobster.jobs import PureLobsterMaker
-from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
