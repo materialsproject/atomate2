@@ -182,7 +182,7 @@ def update_user_incar_settings_maker(
 
 @job
 def get_lobster_jobs(
-    lobstermaker,
+    lobster_maker,
     basis_dict,
     wavefunction_dir,
     optimization_run_job_dir,
@@ -197,7 +197,7 @@ def get_lobster_jobs(
 
     Parameters
     ----------
-    lobstermaker: .PureLobsterMaker
+    lobster_maker: .PureLobsterMaker
         maker for the Lobster jobs
     basis_dict: dict
         dict including basis set information.
@@ -233,11 +233,11 @@ def get_lobster_jobs(
     outputs["lobster_dirs"] = []
     outputs["lobster_task_documents"] = []
 
-    if lobstermaker is None:
-        lobstermaker = PureLobsterMaker()
+    if lobster_maker is None:
+        lobster_maker = PureLobsterMaker()
 
     for i, basis in enumerate(basis_dict):
-        lobsterjob = lobstermaker.make(
+        lobsterjob = lobster_maker.make(
             wavefunction_dir=wavefunction_dir, basis_dict=basis
         )
         lobsterjob.append_name(f"_run_{i}")

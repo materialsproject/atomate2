@@ -73,7 +73,7 @@ class LobsterMaker(Maker):
             ),
         )
     )
-    lobstermaker: BaseVaspMaker | None = field(
+    lobster_maker: BaseVaspMaker | None = field(
         default_factory=lambda: PureLobsterMaker()
     )
     delete_all_wavecars: bool = True
@@ -156,7 +156,7 @@ class LobsterMaker(Maker):
         static_run_uuid = vaspjob.output.uuid
 
         lobsterjobs = get_lobster_jobs(
-            lobstermaker=self.lobstermaker,
+            lobster_maker=self.lobster_maker,
             basis_dict=basis_infos.output["basis_dict"],
             wavefunction_dir=vaspjob.output.dir_name,
             optimization_run_job_dir=optimization_run_job_dir,
