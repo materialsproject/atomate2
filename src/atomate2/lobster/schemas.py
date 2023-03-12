@@ -552,6 +552,7 @@ def _identify_strongest_bonds(
     icooplist_path: Path,
 ):
     """
+    Identify the strongest bonds and convert them into StrongestBonds objects.
 
     Parameters
     ----------
