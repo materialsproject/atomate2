@@ -118,7 +118,9 @@ class VaspLobsterMaker(Maker):
         preconverge_static_dir = None
         preconverge_static_uuid = None
         if self.preconverge_static_maker is not None:
-            preconverge = self.preconverge_static_maker.make(structure)
+            preconverge = self.preconverge_static_maker.make(
+                structure, prev_vasp_dir=prev_vasp_dir
+            )
             preconverge.append_name(" preconverge")
             jobs.append(preconverge)
             preconverge_static_dir = preconverge.output.dir_name
