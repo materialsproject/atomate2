@@ -31,7 +31,13 @@ except ImportError:
     Analysis = None
     Description = None
 
-__all__ = ["LobsterTaskDocument"]
+__all__ = [
+    "LobsterTaskDocument",
+    "LobsteroutModel",
+    "LobsterinModel",
+    "CondensedBondingAnalysis",
+    "StrongestBonds",
+]
 
 logger = logging.getLogger(__name__)
 
@@ -432,9 +438,9 @@ class LobsterTaskDocument(BaseModel):
 
         icohplist_path = dir_name / "ICOHPLIST.lobster.gz"
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
+        charge_path = dir_name / "CHARGE.lobster.gz"
         cobicar_path = dir_name / "COBICAR.lobster.gz"
         coopcar_path = dir_name / "COOPCAR.lobster.gz"
-        charge_path = dir_name / "CHARGE.lobster.gz"
         doscar_path = dir_name / "DOSCAR.lobster.gz"
         structure_path = dir_name / "POSCAR.gz"
         madelung_energies_path = dir_name / "MadelungEnergies.lobster.gz"
@@ -638,72 +644,37 @@ def _get_strong_bonds(
         lengths.append(l)
 
     bond_labels_unique = list(set(bonds))
-    sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
     sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
     sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
 
     for i, val in enumerate(bond_labels_unique):
         for j, val2 in enumerate(bonds):
             if val == val2:
-                sep_blabels[i].append(val2)
                 sep_icohp[i].append(icohp_all[j])
                 sep_lengths[i].append(lengths[j])
-    if not are_cobis and not are_coops:
-        bond_dict = {}
-        for i, lab in enumerate(bond_labels_unique):
-            label = lab.split("-")
-            label.sort()
-            for rel_bnd in relevant_bonds:
-                rel_bnd_list = rel_bnd.split("-")
-                rel_bnd_list.sort()
-                if label == rel_bnd_list:
-                    index = np.argmin(sep_icohp[i])
-                    bond_dict.update(
-                        {
-                            rel_bnd: {
-                                "ICOHP": min(sep_icohp[i]),
-                                "length": sep_lengths[i][index],
-                            }
-                        }
-                    )
-        return bond_dict
 
     if are_cobis and not are_coops:
-        bond_dict = {}
-        for i, lab in enumerate(bond_labels_unique):
-            label = lab.split("-")
-            label.sort()
-            for rel_bnd in relevant_bonds:
-                rel_bnd_list = rel_bnd.split("-")
-                rel_bnd_list.sort()
-                if label == rel_bnd_list:
-                    index = np.argmax(sep_icohp[i])
-                    bond_dict.update(
-                        {
-                            rel_bnd: {
-                                "ICOBI": max(sep_icohp[i]),
-                                "length": sep_lengths[i][index],
-                            }
-                        }
-                    )
-        return bond_dict
+        prop = "ICOBI"
+    elif not are_cobis and are_coops:
+        prop = "ICOOP"
+    else:
+        prop = "ICOHP"
 
-    if not are_cobis and are_coops:
-        bond_dict = {}
-        for i, lab in enumerate(bond_labels_unique):
-            label = lab.split("-")
-            label.sort()
-            for rel_bnd in relevant_bonds:
-                rel_bnd_list = rel_bnd.split("-")
-                rel_bnd_list.sort()
-                if label == rel_bnd_list:
-                    index = np.argmax(sep_icohp[i])
-                    bond_dict.update(
-                        {
-                            rel_bnd: {
-                                "ICOOP": max(sep_icohp[i]),
-                                "length": sep_lengths[i][index],
-                            }
+    bond_dict = {}
+    for i, lab in enumerate(bond_labels_unique):
+        label = lab.split("-")
+        label.sort()
+        for rel_bnd in relevant_bonds:
+            rel_bnd_list = rel_bnd.split("-")
+            rel_bnd_list.sort()
+            if label == rel_bnd_list:
+                index = np.argmin(sep_icohp[i])
+                bond_dict.update(
+                    {
+                        rel_bnd: {
+                            prop: min(sep_icohp[i]),
+                            "length": sep_lengths[i][index],
                         }
-                    )
-        return bond_dict
+                    }
+                )
+    return bond_dict

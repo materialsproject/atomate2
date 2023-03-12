@@ -26,9 +26,8 @@ class LobsterMaker(Maker):
     """
     LOBSTER job maker.
 
-    The maker copies DFT output files necessary for the LOBSTER run.
-    It will create all lobsterin files, run LOBSTER, zip the outputs and parse the
-    LOBSTER outputs.
+    The maker copies DFT output files necessary for the LOBSTER run. It will create all
+    lobsterin files, run LOBSTER, zip the outputs and parse the LOBSTER outputs.
 
     Parameters
     ----------
@@ -91,8 +90,7 @@ class LobsterMaker(Maker):
         gzip_dir(".")
 
         # parse lobster outputs
-        task_doc = LobsterTaskDocument.from_directory(
+        return LobsterTaskDocument.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,
         )
-        return task_doc

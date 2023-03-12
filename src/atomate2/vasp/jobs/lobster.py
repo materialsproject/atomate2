@@ -133,7 +133,7 @@ def get_basis_infos(
 
 @job
 def update_user_incar_settings_maker(
-    vasp_maker: LobsterStaticMaker,
+    vasp_maker: BaseVaspMaker,
     nbands: int,
     structure: Structure,
     prev_vasp_dir: Path | str,
@@ -167,7 +167,6 @@ def update_user_incar_settings_maker(
 def get_lobster_jobs(
     lobster_maker: LobsterMaker,
     basis_dict: dict,
-    wavefunction_dir: Path | str,
     optimization_dir: Path | str,
     optimization_uuid: str,
     static_dir: Path | str,
@@ -184,16 +183,14 @@ def get_lobster_jobs(
         maker for the Lobster jobs
     basis_dict : dict
         dict including basis set information.
-    wavefunction_dir : Path or str
-        Path to VASP calculation with WAVECAR
     optimization_dir : Path or str
         Path to optimization run.
     optimization_uuid : str
         uuid of optimization run.
     static_dir : Path or str
-        Path to static VASP calculation.
+        Path to static VASP calculation containing the WAVECAR.
     static_uuid : str
-        uuid of static run.
+        Uuid of static run.
     preconverge_static_dir : Path or str
         Path to preconvergence step.
     preconverge_static_uuid : str
@@ -221,9 +218,7 @@ def get_lobster_jobs(
         lobster_maker = LobsterMaker()
 
     for i, basis in enumerate(basis_dict):
-        lobsterjob = lobster_maker.make(
-            wavefunction_dir=wavefunction_dir, basis_dict=basis
-        )
+        lobsterjob = lobster_maker.make(wavefunction_dir=static_dir, basis_dict=basis)
         lobsterjob.append_name(f"_run_{i}")
         outputs["lobster_uuids"].append(lobsterjob.output.uuid)
         outputs["lobster_dirs"].append(lobsterjob.output.dir_name)

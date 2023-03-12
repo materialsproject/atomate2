@@ -47,7 +47,7 @@ class VaspLobsterMaker(Maker):
     relax_maker : .BaseVaspMaker or None
         A maker to perform a relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
-    preconverge_static_maker: .BaseVaspMaker or None
+    preconverge_static_maker : .BaseVaspMaker or None
         A maker to perform a preconvergence run before the wavefunction computation
         without symmetry
     lobster_static_maker : .BaseVaspMaker
@@ -55,11 +55,11 @@ class VaspLobsterMaker(Maker):
         Cannot be skipped.
     lobster_maker : .LobsterMaker
         A maker to perform the Lobster run.
-    delete_all_wavecars : bool
+    delete_wavecars : bool
         If true, all WAVECARs will be deleted after the run.
     address_min_basis : str
         A path to a yaml file including basis set information.
-    address_max_basis: str
+    address_max_basis : str
        A path to a yaml file including basis set information.
     """
 
@@ -79,7 +79,7 @@ class VaspLobsterMaker(Maker):
         )
     )
     lobster_maker: LobsterMaker | None = field(default_factory=lambda: LobsterMaker())
-    delete_all_wavecars: bool = True
+    delete_wavecars: bool = True
     address_min_basis: str | None = None
     address_max_basis: str | None = None
 
@@ -151,7 +151,6 @@ class VaspLobsterMaker(Maker):
         lobster_jobs = get_lobster_jobs(
             lobster_maker=self.lobster_maker,
             basis_dict=basis_infos.output["basis_dict"],
-            wavefunction_dir=lobster_static.output.dir_name,
             optimization_dir=optimization_dir,
             optimization_uuid=optimization_uuid,
             static_dir=lobster_static_dir,
@@ -162,7 +161,7 @@ class VaspLobsterMaker(Maker):
         jobs.append(lobster_jobs)
 
         # delete all WAVECARs that have been copied
-        if self.delete_all_wavecars:
+        if self.delete_wavecars:
             delete_wavecars = delete_lobster_wavecar(
                 dirs=lobster_jobs.output["lobster_dirs"],
                 lobster_static_dir=lobster_static.output.dir_name,

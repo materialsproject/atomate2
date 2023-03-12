@@ -19,10 +19,7 @@ from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
 
-__all__ = [
-    "JobType",
-    "run_lobster",
-]
+__all__ = ["JobType", "run_lobster"]
 
 _DEFAULT_VALIDATORS = (LobsterFilesValidator(), EnoughBandsValidator())
 _DEFAULT_HANDLERS = ()

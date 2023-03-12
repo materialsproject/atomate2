@@ -57,7 +57,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
                 "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
             }
         ),
-        delete_all_wavecars=False,
+        delete_wavecars=False,
     ).make(si_structure)
     job = update_user_incar_settings(job, {"NPAR": 4})
 
@@ -123,7 +123,7 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
                 "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
             }
         ),
-        delete_all_wavecars=True,
+        delete_wavecars=True,
     ).make(si_structure)
     job = update_user_incar_settings(job, {"NPAR": 4})
 
