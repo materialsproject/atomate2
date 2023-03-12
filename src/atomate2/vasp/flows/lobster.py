@@ -29,45 +29,48 @@ class VaspLobsterMaker(Maker):
     """
     Maker to perform a Lobster computation.
 
-    Optional optimization.
-    Optional static computation with symmetry
-    to preconverge the wavefunction.
-    Static computation with ISYM=0 is performed
-    Several Lobster computations testing several basis sets are performed.
-    The basis sets can only be changed with yaml files.
+    The calculations performed are:
+
+    1. Optional optimization.
+    2. Optional static computation with symmetry to preconverge the wavefunction.
+    3. Static calculation with ISYM=0.
+    4. Several Lobster computations testing several basis sets are performed.
+
+    .. Note::
+
+        The basis sets can only be changed with yaml files.
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    bulk_relax_maker : .BaseVaspMaker or None
-        A maker to perform a relaxation on the bulk.
-        Set to ``None`` to skip the
-        bulk relaxation
-    additional_static_run_maker: .BaseVaspMaker or None
-        A maker to perform a preconvergence run
-        before the wavefunction computation without symmetry
+    relax_maker : .BaseVaspMaker or None
+        A maker to perform a relaxation on the bulk. Set to ``None`` to skip the
+        bulk relaxation.
+    preconverge_static_maker : .BaseVaspMaker or None
+        A maker to perform a preconvergence run before the wavefunction computation
+        without symmetry
     lobster_static_maker : .BaseVaspMaker
         A maker to perform the computation of the wavefunction before the static run.
         Cannot be skipped.
-    lobster_maker: .LobsterMaker
+    lobster_maker : .LobsterMaker
         A maker to perform the Lobster run.
-    delete_all_wavecars: bool
-        if true, all WAVECARs will be deleated after the run
-    address_min_basis: str
-        yaml file including basis set information
-    address_max_basis: str
-        yaml file including basis set information
+    delete_wavecars : bool
+        If true, all WAVECARs will be deleted after the run.
+    address_min_basis : str
+        A path to a yaml file including basis set information.
+    address_max_basis : str
+       A path to a yaml file including basis set information.
     """
 
     name: str = "lobster"
-    bulk_relax_maker: BaseVaspMaker | None = field(
+    relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
     lobster_static_maker: BaseVaspMaker = field(
         default_factory=lambda: LobsterStaticMaker()
     )
-    additional_static_run_maker: BaseVaspMaker | None = field(
+    preconverge_static_maker: BaseVaspMaker | None = field(
         default_factory=lambda: StaticMaker(
             input_set_generator=StaticSetGenerator(
                 user_incar_settings={"LWAVE": True},
@@ -76,7 +79,7 @@ class VaspLobsterMaker(Maker):
         )
     )
     lobster_maker: LobsterMaker | None = field(default_factory=lambda: LobsterMaker())
-    delete_all_wavecars: bool = True
+    delete_wavecars: bool = True
     address_min_basis: str | None = None
     address_max_basis: str | None = None
 
@@ -96,41 +99,33 @@ class VaspLobsterMaker(Maker):
             have very strict settings!
         prev_vasp_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
-
         """
         jobs = []
 
-        # do a relaxation step first
-        if self.bulk_relax_maker is not None:
-            # optionally relax the structure
-            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-            jobs.append(bulk)
-            structure = bulk.output.structure
-            optimization_run_job_dir = bulk.output.dir_name
-            optimization_run_uuid = bulk.output.uuid
-        else:
-            optimization_run_job_dir = None
-            optimization_run_uuid = None
+        # optionally relax the structure
+        optimization_dir = None
+        optimization_uuid = None
+        if self.relax_maker is not None:
+            optimization = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            jobs.append(optimization)
+            structure = optimization.output.structure
+            optimization_dir = optimization.output.dir_name
+            optimization_uuid = optimization.output.uuid
+            prev_vasp_dir = optimization_dir
 
-        # do a static WAVECAR computation with symmetry
-        # and standard number of bands first
-        # this preconverges the WAVECAR
-        if self.additional_static_run_maker is not None:
-            preconvergence_job = self.additional_static_run_maker.make(
-                structure=structure
+        # do a static WAVECAR computation with symmetry and standard number of bands
+        # first to preconverge the WAVECAR
+        preconverge_static_dir = None
+        preconverge_static_uuid = None
+        if self.preconverge_static_maker is not None:
+            preconverge = self.preconverge_static_maker.make(
+                structure, prev_vasp_dir=prev_vasp_dir
             )
-            preconvergence_job.append_name(" preconvergence")
-            jobs.append(preconvergence_job)
-            prev_vasp_dir = preconvergence_job.output.dir_name
-            additional_static_run_job_dir = preconvergence_job.output.dir_name
-            additional_static_run_uuid = preconvergence_job.output.uuid
-        else:
-            if optimization_run_job_dir is not None:
-                prev_vasp_dir = optimization_run_job_dir
-            else:
-                prev_vasp_dir = None
-            additional_static_run_job_dir = None
-            additional_static_run_uuid = None
+            preconverge.append_name(" preconverge")
+            jobs.append(preconverge)
+            preconverge_static_dir = preconverge.output.dir_name
+            preconverge_static_uuid = preconverge.output.uuid
+            prev_vasp_dir = preconverge.output.dir_name
 
         # Information about the basis is collected
         basis_infos = get_basis_infos(
@@ -141,49 +136,37 @@ class VaspLobsterMaker(Maker):
         )
         jobs.append(basis_infos)
 
-        # Maker needs to be updated here. If the job itself is updated,
-        # no further updates on the job are possible
-        vaspjob = update_user_incar_settings_maker(
+        # Maker needs to be updated here. If the job itself is updated, no further
+        # updates on the job are possible
+        lobster_static = update_user_incar_settings_maker(
             self.lobster_static_maker,
             basis_infos.output["nbands"],
             structure,
             prev_vasp_dir,
         )
+        jobs.append(lobster_static)
+        lobster_static_dir = lobster_static.output.dir_name
+        lobster_static_uuid = lobster_static.output.uuid
 
-        jobs.append(vaspjob)
-
-        static_run_job_dir = vaspjob.output.dir_name
-        static_run_uuid = vaspjob.output.uuid
-
-        lobsterjobs = get_lobster_jobs(
+        lobster_jobs = get_lobster_jobs(
             lobster_maker=self.lobster_maker,
             basis_dict=basis_infos.output["basis_dict"],
-            wavefunction_dir=vaspjob.output.dir_name,
-            optimization_run_job_dir=optimization_run_job_dir,
-            optimization_run_uuid=optimization_run_uuid,
-            static_run_job_dir=static_run_job_dir,
-            static_run_uuid=static_run_uuid,
-            additional_static_run_job_dir=additional_static_run_job_dir,
-            additional_static_run_uuid=additional_static_run_uuid,
+            optimization_dir=optimization_dir,
+            optimization_uuid=optimization_uuid,
+            static_dir=lobster_static_dir,
+            static_uuid=lobster_static_uuid,
+            preconverge_static_dir=preconverge_static_dir,
+            preconverge_static_uuid=preconverge_static_uuid,
         )
+        jobs.append(lobster_jobs)
 
-        jobs.append(lobsterjobs)
-
-        # will delete all WAVECARs that have been copied
-        if self.delete_all_wavecars:
-            vasp_stat = vaspjob.output.dir_name
-            if self.additional_static_run_maker is not None:
-                vasp_add_stat = preconvergence_job.output.dir_name
-            if self.additional_static_run_maker is None:
-                vasp_add_stat = None
-
+        # delete all WAVECARs that have been copied
+        if self.delete_wavecars:
             delete_wavecars = delete_lobster_wavecar(
-                dirs=lobsterjobs.output["lobster_dirs"],
-                dir_vasp=vasp_stat,
-                dir_preconverge=vasp_add_stat,
+                dirs=lobster_jobs.output["lobster_dirs"],
+                lobster_static_dir=lobster_static.output.dir_name,
+                preconverge_static_dir=preconverge_static_dir,
             )
-
             jobs.append(delete_wavecars)
 
-        flow = Flow(jobs, output=lobsterjobs.output)
-        return flow
+        return Flow(jobs, output=lobster_jobs.output)

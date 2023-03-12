@@ -25,32 +25,29 @@ logger = logging.getLogger(__name__)
 class LobsterMaker(Maker):
     """
     LOBSTER job maker.
-    The maker copies the DFT output files
-    necessary for the LOBSTER run.
-    It will create all lobsterin files, run LOBSTER,
-    zip the outputs and parse the LOBSTER outputs.
+
+    The maker copies DFT output files necessary for the LOBSTER run. It will create all
+    lobsterin files, run LOBSTER, zip the outputs and parse the LOBSTER outputs.
 
     Parameters
     ----------
     name : str
         Name of jobs produced by this maker.
-    resubmit : bool
-        Maybe useful.
     task_document_kwargs : dict
         Keyword arguments passed to :obj:`.LobsterTaskDocument.from_directory`.
-    user_lobsterin_settings: dict
+    user_lobsterin_settings : dict
         Dict including additional information on the Lobster settings.
-    additional_outputs: list[str]
-        A list including additional output files.
-    calculation_type: str
-        Type of calculation for the Lobster run.
+    run_lobster_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_lobster`.
+    calculation_type : str
+        Type of calculation for the Lobster run that will get passed to
+        :obj:`.Lobsterin.standard_calculations_from_vasp_files`.
     """
 
     name: str = "lobster"
-    resubmit: bool = False
     task_document_kwargs: dict = field(default_factory=dict)
     user_lobsterin_settings: dict | None = None
-    additional_outputs: list | None = None
+    run_lobster_kwargs: dict = field(default_factory=dict)
     calculation_type: str = "standard"
 
     @job(output_schema=LobsterTaskDocument, data=[CompleteCohp, LobsterCompleteDos])
@@ -84,17 +81,16 @@ class LobsterMaker(Maker):
                     lobsterin[key] = parameter
 
         lobsterin.write_lobsterin("lobsterin")
+
         # run lobster
         logger.info("Running LOBSTER")
-        run_lobster()
+        run_lobster(**self.run_lobster_kwargs)
 
         # gzip folder
         gzip_dir(".")
 
         # parse lobster outputs
-        task_doc = LobsterTaskDocument.from_directory(
+        return LobsterTaskDocument.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,
-            additional_fields=self.additional_outputs,
         )
-        return task_doc

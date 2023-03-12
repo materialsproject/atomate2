@@ -31,13 +31,19 @@ except ImportError:
     Analysis = None
     Description = None
 
-__all__ = ["LobsterTaskDocument"]
+__all__ = [
+    "LobsterTaskDocument",
+    "LobsteroutModel",
+    "LobsterinModel",
+    "CondensedBondingAnalysis",
+    "StrongestBonds",
+]
 
 logger = logging.getLogger(__name__)
 
 
 class LobsteroutModel(BaseModel):
-    """Collection to store computational settings from the LOBSTER computation."""
+    """Definition of computational settings from the LOBSTER computation."""
 
     restart_from_projection: bool = Field(
         None,
@@ -91,7 +97,7 @@ class LobsteroutModel(BaseModel):
 
 
 class LobsterinModel(BaseModel):
-    """Collection to store input settings for the LOBSTER computation."""
+    """Definition of input settings for the LOBSTER computation."""
 
     cohpstartenergy: float = Field(
         None, description="Start energy for COHP computation"
@@ -125,9 +131,7 @@ class LobsterinModel(BaseModel):
 
 
 class CondensedBondingAnalysis(BaseModel):
-    """Collection to store condensed bonding analysis
-    data from LobsterPy based on ICOHP.
-    """
+    """Definition of condensed bonding analysis data from LobsterPy ICOHP."""
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
@@ -183,11 +187,137 @@ class CondensedBondingAnalysis(BaseModel):
         None, description="Time needed to run Lobsterpy condensed bonding analysis"
     )
 
+    @classmethod
+    def from_directory(
+        cls,
+        dir_name: Union[str, Path],
+        save_cohp_plots: bool = True,
+        plot_kwargs: dict = None,
+    ):
+        """
+        Create a task document from a directory containing LOBSTER files.
+
+        Parameters
+        ----------
+        dir_name : path or str
+            The path to the folder containing the calculation outputs.
+        save_cohp_plots : bool
+            Bool to indicate whether automatic cohp plots and jsons
+            from lobsterpy will be generated.
+        plot_kwargs : dict
+            kwargs to change plotting options in lobsterpy.
+        """
+        plot_kwargs = {} if plot_kwargs is None else plot_kwargs
+        dir_name = Path(dir_name)
+
+        cohpcar_path = dir_name / "COHPCAR.lobster.gz"
+        charge_path = dir_name / "CHARGE.lobster.gz"
+        structure_path = dir_name / "POSCAR.gz"
+        icohplist_path = dir_name / "ICOHPLIST.lobster.gz"
+        icobilist_path = dir_name / "ICOBILIST.lobster.gz"
+        icooplist_path = dir_name / "ICOOPLIST.lobster.gz"
+
+        try:
+            # cation anion-mode
+            start = time.time()
+            analyse = Analysis(
+                path_to_poscar=structure_path,
+                path_to_icohplist=icohplist_path,
+                path_to_cohpcar=cohpcar_path,
+                path_to_charge=charge_path,
+                summed_spins=True,
+                cutoff_icohp=0.10,
+                whichbonds="cation-anion",
+            )
+            cba_run_time = time.time() - start
+        except ValueError:
+            # all bonds
+            start = time.time()
+            analyse = Analysis(
+                path_to_poscar=structure_path,
+                path_to_icohplist=icohplist_path,
+                path_to_cohpcar=cohpcar_path,
+                path_to_charge=charge_path,
+                summed_spins=True,
+                cutoff_icohp=0.10,
+                whichbonds="all",
+            )
+            cba_run_time = time.time() - start
+
+        # initialize lobsterpy condensed bonding analysis
+        cba = analyse.condensed_bonding_analysis
+        cba_cohp_plot_data = {}  # Initialize dict to store plot data
+
+        set_cohps = analyse.set_cohps
+        set_labels_cohps = analyse.set_labels_cohps
+        set_inequivalent_cations = analyse.set_inequivalent_ions
+        struct = analyse.structure
+        for _iplot, (ication, labels, cohps) in enumerate(
+            zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
+        ):
+            label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
+            for label, cohp in zip(labels, cohps):
+                if label is not None:
+                    cba_cohp_plot_data.update(
+                        {
+                            label_str
+                            + label: {
+                                "COHP": list(cohp.get_cohp()[Spin.up]),
+                                "ICOHP": list(cohp.get_icohp()[Spin.up]),
+                                "Energies": list(cohp.energies),
+                                "Efermi": cohp.efermi,
+                            }
+                        }
+                    )
+
+        describe = Description(analysis_object=analyse)
+
+        condensed_bonding_analysis = CondensedBondingAnalysis(
+            formula=cba["formula"],
+            max_considered_bond_length=cba["max_considered_bond_length"],
+            limit_icohp=cba["limit_icohp"],
+            number_of_considered_ions=cba["number_of_considered_ions"],
+            sites=cba["sites"],
+            type_charges=analyse.type_charge,
+            cohp_plot_data=cba_cohp_plot_data,
+            cutoff_icohp=analyse.cutoff_icohp,
+            summed_spins=True,
+            which_bonds=analyse.whichbonds,
+            final_dict_bonds=analyse.final_dict_bonds,
+            final_dict_ions=analyse.final_dict_ions,
+            run_time=cba_run_time,
+        )
+        if save_cohp_plots:
+            describe.plot_cohps(
+                save=True,
+                filename="automatic_cohp_plots.pdf",
+                skip_show=True,
+                **plot_kwargs,
+            )
+            import json
+
+            with open(dir_name / "condensed_bonding_analysis.json", "w") as fp:
+                json.dump(analyse.condensed_bonding_analysis, fp)
+            with open(dir_name / "condensed_bonding_analysis.txt", "w") as fp:
+                for line in describe.text:
+                    fp.write(line + "\n")
+
+        # Read in strongest icohp values
+        sb_icobi, sb_icohp, sb_icoop = _identify_strongest_bonds(
+            analyse, icobilist_path, icohplist_path, icooplist_path
+        )
+        return (
+            condensed_bonding_analysis,
+            struct,
+            describe,
+            sb_icobi,
+            sb_icohp,
+            sb_icoop,
+        )
+
 
 class StrongestBonds(BaseModel):
-    """Collection to store strongest bonds extracted
-    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs.
-    """
+    """Strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST from LOBSTER."""
 
     which_bonds: str = Field(
         None,
@@ -271,7 +401,8 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: list = None,
+        additional_fields: dict = None,
+        store_lso_dos: bool = False,
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
     ):
@@ -284,151 +415,60 @@ class LobsterTaskDocument(BaseModel):
             The path to the folder containing the calculation outputs.
         additional_fields : dict
             Dictionary of additional fields to add to output document.
-        save_cohp_plots: bool
+        store_lso_dos : bool
+            Whether to store the LSO DOS.
+        save_cohp_plots : bool
             Bool to indicate whether automatic cohp plots and jsons
             from lobsterpy will be generated.
-        plot_kwargs: dict
-            kwargs to change plotting options in lobsterpy
+        plot_kwargs : dict
+            kwargs to change plotting options in lobsterpy.
 
         Returns
         -------
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = [] if additional_fields is None else additional_fields
+        additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
-        # do automatic analysis with lobsterpy and provide data
-
-        lobsterout_here = Lobsterout(dir_name / "lobsterout.gz")
-        lobsterout_doc = lobsterout_here.get_doc()
-        lobsterin_here = Lobsterin.from_file(dir_name / "lobsterin.gz")
 
         # Read in lobsterout and lobsterin
+        lobsterout_doc = Lobsterout(dir_name / "lobsterout.gz").get_doc()
         lobster_out = LobsteroutModel(**lobsterout_doc)
-        lobster_in = LobsterinModel(**lobsterin_here)
+        lobster_in = LobsterinModel(**Lobsterin.from_file(dir_name / "lobsterin.gz"))
 
         icohplist_path = dir_name / "ICOHPLIST.lobster.gz"
-        icobilist_path = dir_name / "ICOBILIST.lobster.gz"
-        icooplist_path = dir_name / "ICOOPLIST.lobster.gz"
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
+        charge_path = dir_name / "CHARGE.lobster.gz"
         cobicar_path = dir_name / "COBICAR.lobster.gz"
         coopcar_path = dir_name / "COOPCAR.lobster.gz"
-        charge_path = dir_name / "CHARGE.lobster.gz"
         doscar_path = dir_name / "DOSCAR.lobster.gz"
         structure_path = dir_name / "POSCAR.gz"
         madelung_energies_path = dir_name / "MadelungEnergies.lobster.gz"
 
         # Do automatic bonding analysis with LobsterPy
         condensed_bonding_analysis_data = None
+        sb_icobi = None
+        sb_icohp = None
+        sb_icoop = None
+        struct = None
+        describe = None
         if icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists():
-            try:
-                # cation anion-mode
-
-                start = time.time()
-                analyse = Analysis(
-                    path_to_poscar=structure_path,
-                    path_to_icohplist=icohplist_path,
-                    path_to_cohpcar=cohpcar_path,
-                    path_to_charge=charge_path,
-                    summed_spins=True,
-                    cutoff_icohp=0.10,
-                    whichbonds="cation-anion",
-                )
-
-                cba_run_time = time.time() - start
-            except ValueError:
-                # all bonds
-                start = time.time()
-                analyse = Analysis(
-                    path_to_poscar=structure_path,
-                    path_to_icohplist=icohplist_path,
-                    path_to_cohpcar=cohpcar_path,
-                    path_to_charge=charge_path,
-                    summed_spins=True,
-                    cutoff_icohp=0.10,
-                    whichbonds="all",
-                )
-
-                cba_run_time = time.time() - start
-
-            cba = (
-                analyse.condensed_bonding_analysis
-            )  # initialize lobsterpy condensed bonding analysis
-            cba_cohp_plot_data = {}  # Initialize dict to store plot data
-
-            set_cohps = analyse.set_cohps
-            set_labels_cohps = analyse.set_labels_cohps
-            set_inequivalent_cations = analyse.set_inequivalent_ions
-            struct = analyse.structure
-            for _iplot, (ication, labels, cohps) in enumerate(
-                zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
-            ):
-                namecation = str(struct[ication].specie)
-                for label, cohp in zip(labels, cohps):
-                    if label is not None:
-                        cba_cohp_plot_data.update(
-                            {
-                                namecation
-                                + str(ication + 1)
-                                + ": "
-                                + label: {
-                                    "COHP": list(cohp.get_cohp()[Spin.up]),
-                                    "ICOHP": list(cohp.get_icohp()[Spin.up]),
-                                    "Energies": list(cohp.energies),
-                                    "Efermi": cohp.efermi,
-                                }
-                            }
-                        )
-
-            describe = Description(analysis_object=analyse)
-
-            # TODO: add automatic plots from lobsterpy
-            condensed_bonding_analysis_data = CondensedBondingAnalysis(
-                formula=cba["formula"],
-                max_considered_bond_length=cba["max_considered_bond_length"],
-                limit_icohp=cba["limit_icohp"],
-                number_of_considered_ions=cba["number_of_considered_ions"],
-                sites=cba["sites"],
-                type_charges=analyse.type_charge,
-                cohp_plot_data=cba_cohp_plot_data,
-                cutoff_icohp=analyse.cutoff_icohp,
-                summed_spins=True,
-                which_bonds=analyse.whichbonds,
-                final_dict_bonds=analyse.final_dict_bonds,
-                final_dict_ions=analyse.final_dict_ions,
-                run_time=cba_run_time,
-            )
-            if save_cohp_plots:
-                if plot_kwargs is None:
-                    describe.plot_cohps(
-                        save=True, filename="automatic_cohp_plots.pdf", skip_show=True
-                    )
-                else:
-                    describe.plot_cohps(
-                        save=True,
-                        filename="automatic_cohp_plots.pdf",
-                        skip_show=True,
-                        **plot_kwargs
-                    )
-                import json
-
-                with open(dir_name / "condensed_bonding_analysis.json", "w") as fp:
-                    json.dump(analyse.condensed_bonding_analysis, fp)
-                with open(dir_name / "condensed_bonding_analysis.txt", "w") as fp:
-                    for line in describe.text:
-                        fp.write(line + "\n")
-
-            # Read in strongest icohp values
-            sb_icobi, sb_icohp, sb_icoop = cls._identify_strongest_bonds(
-                analyse, icobilist_path, icohplist_path, icooplist_path
+            (
+                condensed_bonding_analysis,
+                struct,
+                describe,
+                sb_icobi,
+                sb_icohp,
+                sb_icoop,
+            ) = CondensedBondingAnalysis.from_directory(
+                dir_name, save_cohp_plots=save_cohp_plots, plot_kwargs=plot_kwargs
             )
 
         # Read in charges
+        charges = None
         if charge_path.exists():
             charge = Charge(charge_path)
             charges = {"Mulliken": charge.Mulliken, "Loewdin": charge.Loewdin}
-        else:
-            charges = None
 
         # Read in COHP, COBI, COOP plots
         cohp_obj = None
@@ -440,6 +480,7 @@ class LobsterTaskDocument(BaseModel):
                 are_coops=False,
                 are_cobis=False,
             )
+
         coop_obj = None
         if coopcar_path.exists():
             coop_obj = CompleteCohp.from_file(
@@ -449,6 +490,7 @@ class LobsterTaskDocument(BaseModel):
                 are_coops=True,
                 are_cobis=False,
             )
+
         cobi_obj = None
         if cobicar_path.exists():
             cobi_obj = CompleteCohp.from_file(
@@ -458,6 +500,7 @@ class LobsterTaskDocument(BaseModel):
                 are_coops=False,
                 are_cobis=True,
             )
+
         # Read in DOS
         dos = None
         if doscar_path.exists():
@@ -468,14 +511,12 @@ class LobsterTaskDocument(BaseModel):
 
         # Read in LSO DOS
         lso_dos = None
-        if additional_fields and "DOSCAR.LSO.lobster" in additional_fields:
-            doscar_lso_path = dir_name / "DOSCAR.LSO.lobster"
-
-            if doscar_lso_path.exists():
-                doscar_lso_lobster = Doscar(
-                    doscar=doscar_lso_path, structure_file=structure_path
-                )
-                lso_dos = doscar_lso_lobster.completedos
+        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster"
+        if store_lso_dos and doscar_lso_path.exists():
+            doscar_lso_lobster = Doscar(
+                doscar=doscar_lso_path, structure_file=structure_path
+            )
+            lso_dos = doscar_lso_lobster.completedos
 
         # Read in Madelung energies
         madelung_energies = None
@@ -488,7 +529,7 @@ class LobsterTaskDocument(BaseModel):
                 "Ewald_splitting": madelung_obj.ewald_splitting,
             }
 
-        return cls(
+        doc = cls(
             structure=struct,
             dir_name=dir_name,
             lobsterin=lobster_in,
@@ -505,205 +546,135 @@ class LobsterTaskDocument(BaseModel):
             lso_dos=lso_dos,
             charges=charges,
             madelung_energies=madelung_energies,
-        )  # doc
+        )
+        doc = doc.copy(update=additional_fields)
+        return doc
 
-    @staticmethod
-    def _identify_strongest_bonds(
-        analyse: Analysis,
-        icobilist_path: Path,
-        icohplist_path: Path,
-        icooplist_path: Path,
-    ):
-        """
 
-        Parameters
-        ----------
-        analyse: .Analysis
-            Analysis object from lobsterpy automatic analysis
-        icobilist_path: Path or str
-            Path to ICOBILIST.lobster
-        icohplist_path: Path or str
-            Path to ICOHPLIST.lobster
-        icooplist_path: Path or str
-            Path to ICOOPLIST.lobster
+def _identify_strongest_bonds(
+    analyse: Analysis,
+    icobilist_path: Path,
+    icohplist_path: Path,
+    icooplist_path: Path,
+):
+    """
+    Identify the strongest bonds and convert them into StrongestBonds objects.
 
-        Returns
-        -------
-        Tuple[StrongestBonds]
-            Tuple of StrongestBonds
-        """
-        if icohplist_path.exists():
+    Parameters
+    ----------
+    analyse : .Analysis
+        Analysis object from lobsterpy automatic analysis
+    icobilist_path : Path or str
+        Path to ICOBILIST.lobster
+    icohplist_path : Path or str
+        Path to ICOHPLIST.lobster
+    icooplist_path : Path or str
+        Path to ICOOPLIST.lobster
+
+    Returns
+    -------
+    Tuple[StrongestBonds]
+        Tuple of StrongestBonds
+    """
+    data = [
+        (icohplist_path, False, False),
+        (icobilist_path, True, False),
+        (icooplist_path, False, True),
+    ]
+    output = []
+    for file, are_cobis, are_coops in data:
+        if file.exists():
             icohplist = Icohplist(
                 filename=icohplist_path,
-                are_cobis=False,
-                are_coops=False,
+                are_cobis=are_cobis,
+                are_coops=are_coops,
             )
-            icohp_dict = icohplist.icohpcollection.as_dict()
-            icohp_bond_dict = LobsterTaskDocument._get_strng_bonds(
-                icohp_dict,
-                are_cobis=False,
-                are_coops=False,
+            bond_dict = _get_strong_bonds(
+                icohplist.icohpcollection.as_dict(),
                 relevant_bonds=analyse.final_dict_bonds,
+                are_cobis=are_cobis,
+                are_coops=are_coops,
             )
-            sb_icohp = StrongestBonds(
-                are_cobis=False,
-                are_coops=False,
-                strongest_bonds=icohp_bond_dict,
-                which_bonds=analyse.whichbonds,
+            output.append(
+                StrongestBonds(
+                    are_cobis=are_cobis,
+                    are_coops=are_coops,
+                    strongest_bonds=bond_dict,
+                    which_bonds=analyse.whichbonds,
+                )
             )
         else:
-            sb_icohp = None
-        if icobilist_path.exists():
-            icobilist = Icohplist(
-                filename=icobilist_path,
-                are_cobis=True,
-                are_coops=False,
-            )
-            icobi_dict = icobilist.icohpcollection.as_dict()
-            icobi_bond_dict = LobsterTaskDocument._get_strng_bonds(
-                icobi_dict,
-                are_cobis=True,
-                are_coops=False,
-                relevant_bonds=analyse.final_dict_bonds,
-            )
-            sb_icobi = StrongestBonds(
-                are_cobis=True,
-                are_coops=False,
-                strongest_bonds=icobi_bond_dict,
-                which_bonds=analyse.whichbonds,
-            )
-        else:
+            output.append(None)
+    return output
 
-            sb_icobi = None
-        if icooplist_path.exists():
-            icooplist = Icohplist(
-                filename=icooplist_path,
-                are_coops=True,
-                are_cobis=False,
-            )
-            icoop_dict = icooplist.icohpcollection.as_dict()
 
-            icoop_bond_dict = LobsterTaskDocument._get_strng_bonds(
-                icoop_dict,
-                are_cobis=False,
-                are_coops=True,
-                relevant_bonds=analyse.final_dict_bonds,
-            )
+def _get_strong_bonds(
+    bondlist: dict, are_cobis: bool, are_coops: bool, relevant_bonds: dict
+):
+    """
+    Identify the strongest bonds from a list of bonds.
 
-            sb_icoop = StrongestBonds(
-                are_cobis=False,
-                are_coops=True,
-                strongest_bonds=icoop_bond_dict,
-                which_bonds=analyse.whichbonds,
-            )
+    Parameters
+    ----------
+    bondlist : dict
+        dict including bonding information
+    are_cobis : bool
+        True if these are cobis
+    are_coops : bool
+        True if these are coops
+    relevant_bonds : dict
+        Dict include all bonds that are considered.
 
-        else:
-            sb_icoop = None
-        return sb_icobi, sb_icohp, sb_icoop
-
-    @staticmethod
-    def _get_strng_bonds(
-        bondlist: dict, are_cobis: bool, are_coops: bool, relevant_bonds: dict
+    Returns
+    -------
+    dict
+        Dictionary including strongest bonds.
+    """
+    bonds = []
+    icohp_all = []
+    lengths = []
+    for a, b, c, l in zip(
+        bondlist["list_atom1"],
+        bondlist["list_atom2"],
+        bondlist["list_icohp"],
+        bondlist["list_length"],
     ):
-        """
-        Identify the strongest bonds from a list of bonds.
+        bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
+        icohp_all.append(sum(c.values()))
+        lengths.append(l)
 
-        Parameters
-        ----------
-        bondlist: dict
-            dict including bonding information
-        are_cobis: bool
-            True if these are cobis
-        are_coops: bool
-            True if these are coops
-        relevant_bonds: dict
-            Dict include all bonds that are considered.
+    bond_labels_unique = list(set(bonds))
+    sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+    sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
 
-        Returns
-        -------
-        dict
-            Dictionary including strongest bonds.
-        """
-        bonds = []
-        icohp_all = []
-        lengths = []
-        for a, b, c, l in zip(
-            bondlist["list_atom1"],
-            bondlist["list_atom2"],
-            bondlist["list_icohp"],
-            bondlist["list_length"],
-        ):
-            bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
-            icohp_all.append(sum(c.values()))
-            lengths.append(l)
+    for i, val in enumerate(bond_labels_unique):
+        for j, val2 in enumerate(bonds):
+            if val == val2:
+                sep_icohp[i].append(icohp_all[j])
+                sep_lengths[i].append(lengths[j])
 
-        bond_labels_unique = list(set(bonds))
-        sep_blabels: List[List[str]] = [[] for _ in range(len(bond_labels_unique))]
-        sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
-        sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+    if are_cobis and not are_coops:
+        prop = "ICOBI"
+    elif not are_cobis and are_coops:
+        prop = "ICOOP"
+    else:
+        prop = "ICOHP"
 
-        for i, val in enumerate(bond_labels_unique):
-            for j, val2 in enumerate(bonds):
-                if val == val2:
-                    sep_blabels[i].append(val2)
-                    sep_icohp[i].append(icohp_all[j])
-                    sep_lengths[i].append(lengths[j])
-        if not are_cobis and not are_coops:
-            bond_dict = {}
-            for i, lab in enumerate(bond_labels_unique):
-                label = lab.split("-")
-                label.sort()
-                for rel_bnd in relevant_bonds:
-                    rel_bnd_list = rel_bnd.split("-")
-                    rel_bnd_list.sort()
-                    if label == rel_bnd_list:
-                        index = np.argmin(sep_icohp[i])
-                        bond_dict.update(
-                            {
-                                rel_bnd: {
-                                    "ICOHP": min(sep_icohp[i]),
-                                    "length": sep_lengths[i][index],
-                                }
-                            }
-                        )
-            return bond_dict
-
-        if are_cobis and not are_coops:
-            bond_dict = {}
-            for i, lab in enumerate(bond_labels_unique):
-                label = lab.split("-")
-                label.sort()
-                for rel_bnd in relevant_bonds:
-                    rel_bnd_list = rel_bnd.split("-")
-                    rel_bnd_list.sort()
-                    if label == rel_bnd_list:
-                        index = np.argmax(sep_icohp[i])
-                        bond_dict.update(
-                            {
-                                rel_bnd: {
-                                    "ICOBI": max(sep_icohp[i]),
-                                    "length": sep_lengths[i][index],
-                                }
-                            }
-                        )
-            return bond_dict
-
-        if not are_cobis and are_coops:
-            bond_dict = {}
-            for i, lab in enumerate(bond_labels_unique):
-                label = lab.split("-")
-                label.sort()
-                for rel_bnd in relevant_bonds:
-                    rel_bnd_list = rel_bnd.split("-")
-                    rel_bnd_list.sort()
-                    if label == rel_bnd_list:
-                        index = np.argmax(sep_icohp[i])
-                        bond_dict.update(
-                            {
-                                rel_bnd: {
-                                    "ICOOP": max(sep_icohp[i]),
-                                    "length": sep_lengths[i][index],
-                                }
-                            }
-                        )
-            return bond_dict
+    bond_dict = {}
+    for i, lab in enumerate(bond_labels_unique):
+        label = lab.split("-")
+        label.sort()
+        for rel_bnd in relevant_bonds:
+            rel_bnd_list = rel_bnd.split("-")
+            rel_bnd_list.sort()
+            if label == rel_bnd_list:
+                index = np.argmin(sep_icohp[i])
+                bond_dict.update(
+                    {
+                        rel_bnd: {
+                            prop: min(sep_icohp[i]),
+                            "length": sep_lengths[i][index],
+                        }
+                    }
+                )
+    return bond_dict

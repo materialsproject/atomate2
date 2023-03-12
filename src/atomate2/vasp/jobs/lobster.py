@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 from jobflow import Flow, Response, job
 from pymatgen.core import Structure
@@ -18,12 +19,14 @@ from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
 
-__all__ = ["LobsterStaticMaker", "get_basis_infos", "get_lobster_jobs"]
+__all__ = [
+    "LobsterStaticMaker",
+    "get_basis_infos",
+    "get_lobster_jobs",
+    "delete_lobster_wavecar",
+]
 
 logger = logging.getLogger(__name__)
-
-
-# include a class where we can also add Lobster
 
 
 @dataclass
@@ -110,31 +113,13 @@ def get_basis_infos(
         structure=structure, potcar_spec=True
     )
 
-    # get data from Lobsterinput
-    # Lobster
-    if address_max_basis is None and address_min_basis is None:
-        list_basis_dict = Lobsterin.get_all_possible_basis_functions(
-            structure=structure, potcar_symbols=potcar_symbols
-        )
-    elif address_max_basis is not None and address_min_basis is None:
-        list_basis_dict = Lobsterin.get_all_possible_basis_functions(
-            structure=structure,
-            potcar_symbols=potcar_symbols,
-            address_basis_file_max=address_max_basis,
-        )
-    elif address_min_basis is not None and address_max_basis is None:
-        list_basis_dict = Lobsterin.get_all_possible_basis_functions(
-            structure=structure,
-            potcar_symbols=potcar_symbols,
-            address_basis_file_min=address_min_basis,
-        )
-    elif address_min_basis is not None and address_max_basis is not None:
-        list_basis_dict = Lobsterin.get_all_possible_basis_functions(
-            structure=structure,
-            potcar_symbols=potcar_symbols,
-            address_basis_file_max=address_max_basis,
-            address_basis_file_min=address_min_basis,
-        )
+    # get data from LobsterInput
+    list_basis_dict = Lobsterin.get_all_possible_basis_functions(
+        structure=structure,
+        potcar_symbols=potcar_symbols,
+        address_basis_file_max=address_max_basis,
+        address_basis_file_min=address_min_basis,
+    )
 
     nband_list = []
     for dict_for_basis in list_basis_dict:
@@ -148,7 +133,7 @@ def get_basis_infos(
 
 @job
 def update_user_incar_settings_maker(
-    vasp_maker: LobsterStaticMaker,
+    vasp_maker: BaseVaspMaker,
     nbands: int,
     structure: Structure,
     prev_vasp_dir: Path | str,
@@ -158,14 +143,14 @@ def update_user_incar_settings_maker(
 
     Parameters
     ----------
-    vasp_maker: .BaseVaspMaker
+    vasp_maker : .BaseVaspMaker
         A maker for the static run with all parammeters
         relevant for Lobster.
-    nbands: int
+    nbands : int
         integer indicating the correct number of bands
-    structure: .Structure
+    structure : .Structure
         Structure object.
-    prev_vasp_dir: Path or str
+    prev_vasp_dir : Path or str
         Path or string to vasp files.
 
     Returns
@@ -174,45 +159,41 @@ def update_user_incar_settings_maker(
         LobsterStaticMaker with correct number of bands.
     """
     vasp_maker = update_user_incar_settings(vasp_maker, {"NBANDS": nbands})
-    vaspjob = vasp_maker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
-
-    return Response(replace=vaspjob)
+    vasp_job = vasp_maker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
+    return Response(replace=vasp_job)
 
 
 @job
 def get_lobster_jobs(
-    lobster_maker,
-    basis_dict,
-    wavefunction_dir,
-    optimization_run_job_dir,
-    optimization_run_uuid,
-    static_run_job_dir,
-    static_run_uuid,
-    additional_static_run_job_dir,
-    additional_static_run_uuid,
+    lobster_maker: LobsterMaker,
+    basis_dict: dict,
+    optimization_dir: Path | str,
+    optimization_uuid: str,
+    static_dir: Path | str,
+    static_uuid: str,
+    preconverge_static_dir: Path | str,
+    preconverge_static_uuid: str,
 ):
     """
     Create a list of Lobster jobs with different basis sets.
 
     Parameters
     ----------
-    lobster_maker: .LobsterMaker
+    lobster_maker : .LobsterMaker
         maker for the Lobster jobs
-    basis_dict: dict
+    basis_dict : dict
         dict including basis set information.
-    wavefunction_dir: Path or str
-        Path to VASP calculation with WAVECAR
-    optimization_run_job_dir: Path or str
+    optimization_dir : Path or str
         Path to optimization run.
-    optimization_run_uuid: str
+    optimization_uuid : str
         uuid of optimization run.
-    static_run_job_dir: Path or str
-        Path to static VASP calculation.
-    static_run_uuid: str
-        uuid of static run.
-    additional_static_run_job_dir: Path or str
+    static_dir : Path or str
+        Path to static VASP calculation containing the WAVECAR.
+    static_uuid : str
+        Uuid of static run.
+    preconverge_static_dir : Path or str
         Path to preconvergence step.
-    additional_static_run_uuid: str
+    preconverge_static_uuid : str
         uuid of preconvergence step.
 
     Returns
@@ -221,24 +202,23 @@ def get_lobster_jobs(
         List of Lobster jobs.
     """
     jobs = []
-    outputs = {}
-    outputs["optimization_run_job_dir"] = optimization_run_job_dir
-    outputs["optimization_run_uuid"] = optimization_run_uuid
-    outputs["static_run_job_dir"] = static_run_job_dir
-    outputs["static_run_uuid"] = static_run_uuid
-    outputs["additional_static_run_dir"] = additional_static_run_job_dir
-    outputs["additional_static_uuid"] = additional_static_run_uuid
-    outputs["lobster_uuids"] = []
-    outputs["lobster_dirs"] = []
-    outputs["lobster_task_documents"] = []
+    outputs: dict[str, Any] = {
+        "optimization_dir": optimization_dir,
+        "optimization_uuid": optimization_uuid,
+        "static_dir": static_dir,
+        "static_uuid": static_uuid,
+        "preconverge_static_dir": preconverge_static_dir,
+        "preconverge_static_uuid": preconverge_static_uuid,
+        "lobster_uuids": [],
+        "lobster_dirs": [],
+        "lobster_task_documents": [],
+    }
 
     if lobster_maker is None:
         lobster_maker = LobsterMaker()
 
     for i, basis in enumerate(basis_dict):
-        lobsterjob = lobster_maker.make(
-            wavefunction_dir=wavefunction_dir, basis_dict=basis
-        )
+        lobsterjob = lobster_maker.make(wavefunction_dir=static_dir, basis_dict=basis)
         lobsterjob.append_name(f"_run_{i}")
         outputs["lobster_uuids"].append(lobsterjob.output.uuid)
         outputs["lobster_dirs"].append(lobsterjob.output.dir_name)
@@ -251,62 +231,30 @@ def get_lobster_jobs(
 
 @job
 def delete_lobster_wavecar(
-    dirs: list, dir_vasp: Path | str = None, dir_preconverge: Path | str = None
+    dirs: list[Path | str],
+    lobster_static_dir: Path | str = None,
+    preconverge_static_dir: Path | str = None,
 ):
     """
     Delete all WAVECARs.
 
     Parameters
     ----------
-    dirs: List[Path|str]
+    dirs : list of path or str
         Path to directories of lobster jobs.
-    dir_vasp: Path or str
+    lobster_static_dir : Path or str
         Path to directory of static VASP run.
-    dir_preconverge: Path or str
+    preconverge_static_dir : Path or str
         Path to directory of preconvergence run.
     """
-    jobs = []
-    outputs: dict = {}
-    outputs["lobster_dir_name"] = []
-    outputs["add_static_dir_name"] = []
-    outputs["static_dir_name"] = []
-    dec_delete_files = job(delete_files)
-    for dir_name in dirs:
-        jobs.append(
-            dec_delete_files(
-                dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
-            )
-        )
-        outputs["lobster_dir_name"].append(dir_name)
-    if dir_preconverge is None and dir_vasp is not None:
-        dir_vasp_stat = strip_hostname(dir_vasp)
-        jobs.append(
-            dec_delete_files(
-                dir_vasp_stat,
-                include_files=["WAVECAR", "WAVECAR.gz"],
-                allow_missing=True,
-            )
-        )
-        outputs["static_dir_name"].append(dir_vasp_stat)
-    if dir_preconverge is not None and dir_vasp is not None:
-        dir_vasp_add_stat = strip_hostname(dir_preconverge)
-        dir_vasp_stat = strip_hostname(dir_vasp)
-        jobs.append(
-            dec_delete_files(
-                dir_vasp_stat,
-                include_files=["WAVECAR", "WAVECAR.gz"],
-                allow_missing=True,
-            )
-        )
-        jobs.append(
-            dec_delete_files(
-                dir_vasp_add_stat,
-                include_files=["WAVECAR", "WAVECAR.gz"],
-                allow_missing=True,
-            )
-        )
-        outputs["add_static_dir_name"].append(dir_vasp_add_stat)
-        outputs["static_dir_name"].append(dir_vasp_stat)
+    if lobster_static_dir:
+        dirs.append(lobster_static_dir)
 
-    flow = Flow(jobs, output=outputs)
-    return Response(replace=flow)
+    if preconverge_static_dir:
+        dirs.append(preconverge_static_dir)
+
+    for dir_name in dirs:
+        dir_name = strip_hostname(dir_name)
+        delete_files(
+            dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
+        )

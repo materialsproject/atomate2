@@ -19,10 +19,7 @@ from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
 
-__all__ = [
-    "JobType",
-    "run_lobster",
-]
+__all__ = ["JobType", "run_lobster"]
 
 _DEFAULT_VALIDATORS = (LobsterFilesValidator(), EnoughBandsValidator())
 _DEFAULT_HANDLERS = ()
@@ -57,17 +54,17 @@ def run_lobster(
 
     Parameters
     ----------
-    job_type: str or .JobType
+    job_type : str or .JobType
          The job type.
-    lobster_cmd: str
+    lobster_cmd : str
         Command to run lobster.
-    max_errors:
+    max_errors : int
         Maximum number of errors.
-    scratch_dir: str or Path
+    scratch_dir : str or Path
         Scratch directory.
-    validators: list of .Validator
+    validators : list of .Validator
         The validators handlers used by custodian.
-    lobster_job_kwargs: dict
+    lobster_job_kwargs : dict
         Keyword arguments that are passed to :obj:`.LosterJob`.
     custodian_kwargs : dict
          Keyword arguments that are passed to :obj:`.Custodian`.
