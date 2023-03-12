@@ -531,74 +531,36 @@ class LobsterTaskDocument(BaseModel):
         Tuple[StrongestBonds]
             Tuple of StrongestBonds
         """
-        if icohplist_path.exists():
-            icohplist = Icohplist(
-                filename=icohplist_path,
-                are_cobis=False,
-                are_coops=False,
-            )
-            icohp_dict = icohplist.icohpcollection.as_dict()
-            icohp_bond_dict = LobsterTaskDocument._get_strng_bonds(
-                icohp_dict,
-                are_cobis=False,
-                are_coops=False,
-                relevant_bonds=analyse.final_dict_bonds,
-            )
-            sb_icohp = StrongestBonds(
-                are_cobis=False,
-                are_coops=False,
-                strongest_bonds=icohp_bond_dict,
-                which_bonds=analyse.whichbonds,
-            )
-        else:
-            sb_icohp = None
-        if icobilist_path.exists():
-            icobilist = Icohplist(
-                filename=icobilist_path,
-                are_cobis=True,
-                are_coops=False,
-            )
-            icobi_dict = icobilist.icohpcollection.as_dict()
-            icobi_bond_dict = LobsterTaskDocument._get_strng_bonds(
-                icobi_dict,
-                are_cobis=True,
-                are_coops=False,
-                relevant_bonds=analyse.final_dict_bonds,
-            )
-            sb_icobi = StrongestBonds(
-                are_cobis=True,
-                are_coops=False,
-                strongest_bonds=icobi_bond_dict,
-                which_bonds=analyse.whichbonds,
-            )
-        else:
-
-            sb_icobi = None
-        if icooplist_path.exists():
-            icooplist = Icohplist(
-                filename=icooplist_path,
-                are_coops=True,
-                are_cobis=False,
-            )
-            icoop_dict = icooplist.icohpcollection.as_dict()
-
-            icoop_bond_dict = LobsterTaskDocument._get_strng_bonds(
-                icoop_dict,
-                are_cobis=False,
-                are_coops=True,
-                relevant_bonds=analyse.final_dict_bonds,
-            )
-
-            sb_icoop = StrongestBonds(
-                are_cobis=False,
-                are_coops=True,
-                strongest_bonds=icoop_bond_dict,
-                which_bonds=analyse.whichbonds,
-            )
-
-        else:
-            sb_icoop = None
-        return sb_icobi, sb_icohp, sb_icoop
+        data = [
+            (icohplist_path, False, False),
+            (icobilist_path, True, False),
+            (icooplist_path, False, True),
+        ]
+        output = []
+        for file, are_cobis, are_coops in data:
+            if file.exists():
+                icohplist = Icohplist(
+                    filename=icohplist_path,
+                    are_cobis=are_cobis,
+                    are_coops=are_coops,
+                )
+                bond_dict = LobsterTaskDocument._get_strng_bonds(
+                    icohplist.icohpcollection.as_dict(),
+                    relevant_bonds=analyse.final_dict_bonds,
+                    are_cobis=are_cobis,
+                    are_coops=are_coops,
+                )
+                output.append(
+                    StrongestBonds(
+                        are_cobis=are_cobis,
+                        are_coops=are_coops,
+                        strongest_bonds=bond_dict,
+                        which_bonds=analyse.whichbonds,
+                    )
+                )
+            else:
+                output.append(None)
+        return output
 
     @staticmethod
     def _get_strng_bonds(
