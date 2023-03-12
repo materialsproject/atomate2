@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 class LobsteroutModel(BaseModel):
-    """Collection to store computational settings from the LOBSTER computation."""
+    """Definition of computational settings from the LOBSTER computation."""
 
     restart_from_projection: bool = Field(
         None,
@@ -91,7 +91,7 @@ class LobsteroutModel(BaseModel):
 
 
 class LobsterinModel(BaseModel):
-    """Collection to store input settings for the LOBSTER computation."""
+    """Definition of input settings for the LOBSTER computation."""
 
     cohpstartenergy: float = Field(
         None, description="Start energy for COHP computation"
@@ -125,9 +125,7 @@ class LobsterinModel(BaseModel):
 
 
 class CondensedBondingAnalysis(BaseModel):
-    """Collection to store condensed bonding analysis
-    data from LobsterPy based on ICOHP.
-    """
+    """Definition of condensed bonding analysis data from LobsterPy ICOHP."""
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
@@ -185,9 +183,7 @@ class CondensedBondingAnalysis(BaseModel):
 
 
 class StrongestBonds(BaseModel):
-    """Collection to store strongest bonds extracted
-    from ICOHPLIST/ICOOPLIST/ICOBILIST data from LOBSTER runs.
-    """
+    """Strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST from LOBSTER."""
 
     which_bonds: str = Field(
         None,
@@ -271,7 +267,8 @@ class LobsterTaskDocument(BaseModel):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: list = None,
+        additional_fields: dict = None,
+        store_lso_dos: bool = False,
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
     ):
@@ -284,18 +281,20 @@ class LobsterTaskDocument(BaseModel):
             The path to the folder containing the calculation outputs.
         additional_fields : dict
             Dictionary of additional fields to add to output document.
-        save_cohp_plots: bool
+        store_lso_dos : bool
+            Whether to store the LSO DOS.
+        save_cohp_plots : bool
             Bool to indicate whether automatic cohp plots and jsons
             from lobsterpy will be generated.
-        plot_kwargs: dict
-            kwargs to change plotting options in lobsterpy
+        plot_kwargs : dict
+            kwargs to change plotting options in lobsterpy.
 
         Returns
         -------
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = [] if additional_fields is None else additional_fields
+        additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
         # do automatic analysis with lobsterpy and provide data
 
@@ -468,14 +467,12 @@ class LobsterTaskDocument(BaseModel):
 
         # Read in LSO DOS
         lso_dos = None
-        if additional_fields and "DOSCAR.LSO.lobster" in additional_fields:
-            doscar_lso_path = dir_name / "DOSCAR.LSO.lobster"
-
-            if doscar_lso_path.exists():
-                doscar_lso_lobster = Doscar(
-                    doscar=doscar_lso_path, structure_file=structure_path
-                )
-                lso_dos = doscar_lso_lobster.completedos
+        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster"
+        if store_lso_dos and doscar_lso_path.exists():
+            doscar_lso_lobster = Doscar(
+                doscar=doscar_lso_path, structure_file=structure_path
+            )
+            lso_dos = doscar_lso_lobster.completedos
 
         # Read in Madelung energies
         madelung_energies = None
@@ -488,7 +485,7 @@ class LobsterTaskDocument(BaseModel):
                 "Ewald_splitting": madelung_obj.ewald_splitting,
             }
 
-        return cls(
+        doc = cls(
             structure=struct,
             dir_name=dir_name,
             lobsterin=lobster_in,
@@ -505,7 +502,9 @@ class LobsterTaskDocument(BaseModel):
             lso_dos=lso_dos,
             charges=charges,
             madelung_energies=madelung_energies,
-        )  # doc
+        )
+        doc = doc.copy(update=additional_fields)
+        return doc
 
     @staticmethod
     def _identify_strongest_bonds(
@@ -518,13 +517,13 @@ class LobsterTaskDocument(BaseModel):
 
         Parameters
         ----------
-        analyse: .Analysis
+        analyse : .Analysis
             Analysis object from lobsterpy automatic analysis
-        icobilist_path: Path or str
+        icobilist_path : Path or str
             Path to ICOBILIST.lobster
-        icohplist_path: Path or str
+        icohplist_path : Path or str
             Path to ICOHPLIST.lobster
-        icooplist_path: Path or str
+        icooplist_path : Path or str
             Path to ICOOPLIST.lobster
 
         Returns
@@ -610,13 +609,13 @@ class LobsterTaskDocument(BaseModel):
 
         Parameters
         ----------
-        bondlist: dict
+        bondlist : dict
             dict including bonding information
-        are_cobis: bool
+        are_cobis : bool
             True if these are cobis
-        are_coops: bool
+        are_coops : bool
             True if these are coops
-        relevant_bonds: dict
+        relevant_bonds : dict
             Dict include all bonds that are considered.
 
         Returns
