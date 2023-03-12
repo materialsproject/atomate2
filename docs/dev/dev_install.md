@@ -10,7 +10,7 @@ You can install the basic functionality of atomate2 using pip:
 pip install atomate2
 ```
 
-If you are planing to use atomate2 with fireworks, you can install the optional
+If you are planning to use atomate2 with fireworks, you can install the optional
 fireworks components:
 
 ```bash
@@ -39,7 +39,7 @@ You can also install fireworks dependencies:
 pip install .[fireworks]
 ```
 
-Or do a developer install by using the ``-e`` flag:
+Or do a developer install by using the `-e` flag:
 
 ```bash
 pip install -e .
@@ -50,13 +50,13 @@ pip install -e .
 If you're planning on contributing to the atomate2 source, you should also install
 the developer requirements with:
 
-```
+```bash
 pip install -e .[dev]
 pre-commit install
 ```
 
-The precommit command will ensure that changes to the source code match the
-atomate2 style guidelines by running code linters such as `black`, `isort`,
+The `pre-commit` command will ensure that changes to the source code match the
+atomate2 style guidelines by running code linters such as `black`, `ruff`,
 and `mypy` automatically with each commit.
 
 ## Running unit tests
@@ -76,8 +76,7 @@ pytest
 
 ## Building the documentation
 
-The atomate2 documentation can be built using the sphinx package. First, install the
-necessary requirement:
+The atomate2 documentation can be built using the sphinx package. First, install the requirements:
 
 ```bash
 pip install .[docs]

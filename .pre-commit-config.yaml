@@ -2,6 +2,11 @@ default_language_version:
   python: python3
 exclude: '^src/atomate2/vasp/schemas/calc_types/'
 repos:
+- repo: https://github.com/charliermarsh/ruff-pre-commit
+  rev: v0.0.250
+  hooks:
+  - id: ruff
+    args: [--fix]
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
@@ -10,10 +15,6 @@ repos:
     args: [--remove]
   - id: end-of-file-fixer
   - id: trailing-whitespace
-- repo: https://github.com/myint/autoflake
-  rev: v2.0.0
-  hooks:
-  - id: autoflake
 - repo: https://github.com/psf/black
   rev: 22.12.0
   hooks:
@@ -24,10 +25,6 @@ repos:
   - id: blacken-docs
     additional_dependencies: [black]
     exclude: README.md
-- repo: https://github.com/pycqa/isort
-  rev: 5.11.4
-  hooks:
-  - id: isort
 - repo: https://github.com/pycqa/flake8
   rev: 6.0.0
   hooks:
@@ -63,8 +60,4 @@ repos:
   - id: codespell
     stages: [commit, commit-msg]
     args: [--ignore-words-list, 'titel,statics,ba,nd,te']
-- repo: https://github.com/asottile/pyupgrade
-  rev: v3.3.1
-  hooks:
-    - id: pyupgrade
-      args: [--py38-plus]
+    types_or: [python, rst, markdown]
