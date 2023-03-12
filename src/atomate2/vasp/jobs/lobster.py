@@ -115,7 +115,10 @@ def get_basis_infos(
 
     # get data from LobsterInput
     list_basis_dict = Lobsterin.get_all_possible_basis_functions(
-        structure=structure, potcar_symbols=potcar_symbols
+        structure=structure,
+        potcar_symbols=potcar_symbols,
+        address_basis_file_max=address_max_basis,
+        address_basis_file_min=address_min_basis,
     )
 
     nband_list = []
