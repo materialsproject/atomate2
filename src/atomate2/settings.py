@@ -88,7 +88,8 @@ class Atomate2Settings(BaseSettings):
 
     LOBSTER_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
-    # CP2K specific settings
+    )
+
     CP2K_CMD: str = Field(
         "cp2k.psmp", description="Command to run the MPI version of cp2k"
     )
