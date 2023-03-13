@@ -10,7 +10,6 @@ jobs:
   deploy-docs:
 
     # only run if commit is a push to master and the testing finished
-    # if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && ( github.event.workflow_run.head_branch == 'main' || startsWith(github.event.workflow_run.head_branch, 'v') )
     if: github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.')
     runs-on: ubuntu-latest
 
@@ -80,7 +79,10 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Write release info
-        run: awk 'BEGIN {p = 0} {a = 0 }; /^v\d*.\d*.\d*./ { p += 1; a = 1}; p + a == 1 { print } ' CHANGELOG.md | sed -e '1,1d' | sed  -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' > release_info.txt
+        run: |
+          awk 'BEGIN {p = 0} {a = 0 }; /^v\d*.\d*.\d*./ { p += 1; a = 1}; p + a == 1 { print } ' CHANGELOG.md | sed -e '1,1d' | sed  -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' > release_info.txt
+          echo "" >> release_info.txt
+          awk '/CONTRIBUTOR SECTION/{f=1; c=0} f' CHANGELOG.md >> release_info.txt
 
       - name: Release
         uses: actions/create-release@v1

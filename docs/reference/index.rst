@@ -14,6 +14,7 @@ This section gives an overview of the API for atomate2.
 
     amset
     common
+    lobster
     settings
     utils
     vasp
