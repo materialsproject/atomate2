@@ -89,7 +89,7 @@ def mock_cp2k(monkeypatch, cp2k_test_dir):
        dictionary created in step 4.
     6. Run your cp2k job after calling `mock_cp2k`.
 
-    For examples, see the tests in tests/cp2k/makers/core.py.
+    For examples, see the tests in tests/cp2k/jobs/core.py.
     """
     import atomate2.cp2k.jobs.base
     import atomate2.cp2k.run
