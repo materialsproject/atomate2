@@ -452,9 +452,10 @@ class LobsterTaskDocument(BaseModel):
         sb_icoop = None
         struct = None
         describe = None
+
         if icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists():
             (
-                condensed_bonding_analysis,
+                condensed_bonding_analysis_data,
                 struct,
                 describe,
                 sb_icobi,
@@ -463,7 +464,6 @@ class LobsterTaskDocument(BaseModel):
             ) = CondensedBondingAnalysis.from_directory(
                 dir_name, save_cohp_plots=save_cohp_plots, plot_kwargs=plot_kwargs
             )
-
         # Read in charges
         charges = None
         if charge_path.exists():
