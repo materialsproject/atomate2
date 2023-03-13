@@ -25,8 +25,8 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "pymatgen>=2022.8.23",
-    "custodian>=2022.5.26",
+    "pymatgen>=2023.1.9",
+    "custodian>=2023.3.10",
     "pydantic",
     "monty",
     "jobflow>=0.1.9",
@@ -40,6 +40,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
+lobster = ["lobsterpy"]
 defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
 docs = [
     "numpydoc==1.5.0",
@@ -52,11 +53,11 @@ docs = [
 dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.2.2", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
-    "pydantic==1.10.5",
-    "pymatgen==2023.2.28",
-    "custodian==2022.5.26",
+    "pydantic==1.10.6",
+    "pymatgen==2023.3.10",
+    "custodian==2023.3.10",
     "monty==2022.9.9",
-    "jobflow==0.1.9",
+    "jobflow==0.1.10",
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
@@ -66,6 +67,7 @@ strict = [
     "mp-api==0.30.10",
     "dscribe==1.2.2",
     "pymatgen-analysis-defects==2023.3.3",
+     "lobsterpy==0.2.8"
 ]
 
 [project.scripts]
@@ -73,9 +75,9 @@ atm = "atomate2.cli:cli"
 
 [project.urls]
 homepage = "https://materialsproject.github.io/atomate2/"
-repository = "https://github.com/hackingmaterials/atomate2"
+repository = "https://github.com/materialsproject/atomate2"
 documentation = "https://materialsproject.github.io/atomate2/"
-changelog = "https://github.com/hackingmaterials/atomate2/blob/main/CHANGELOG.md"
+changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [tool.setuptools.package-data]
 atomate2 = ["py.typed"]

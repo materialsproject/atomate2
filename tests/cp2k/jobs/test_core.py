@@ -1,11 +1,14 @@
 from pytest import approx
 
 
-def test_static_maker(mock_cp2k, si_structure, clean_dir, basis_and_potential):
+def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
+    import os
+
     from jobflow import run_locally
 
     from atomate2.cp2k.jobs.core import StaticMaker
     from atomate2.cp2k.schemas.task import TaskDocument
+    from atomate2.cp2k.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {"static": "Si_static_test"}
@@ -17,9 +20,13 @@ def test_static_maker(mock_cp2k, si_structure, clean_dir, basis_and_potential):
     mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
 
     # generate job
-    job = StaticMaker().make(si_structure)
+    maker = StaticMaker(
+        input_set_generator=StaticSetGenerator(user_input_settings=basis_and_potential)
+    )
+    job = maker.make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
+    os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validation the outputs of the job
@@ -28,11 +35,14 @@ def test_static_maker(mock_cp2k, si_structure, clean_dir, basis_and_potential):
     assert output1.output.energy == approx(-214.23651374775685)
 
 
-def test_relax_maker(mock_cp2k, clean_dir, si_structure):
+def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
+    import os
+
     from jobflow import run_locally
 
     from atomate2.cp2k.jobs.core import RelaxMaker
     from atomate2.cp2k.schemas.task import TaskDocument
+    from atomate2.cp2k.sets.core import RelaxSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {"relax": "Si_double_relax/relax_1"}
@@ -44,9 +54,13 @@ def test_relax_maker(mock_cp2k, clean_dir, si_structure):
     mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
 
     # generate job
-    job = RelaxMaker().make(si_structure)
+    maker = RelaxMaker(
+        input_set_generator=RelaxSetGenerator(user_input_settings=basis_and_potential)
+    )
+    job = maker.make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
+    os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validation the outputs of the job
@@ -56,12 +70,15 @@ def test_relax_maker(mock_cp2k, clean_dir, si_structure):
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 1
 
 
-def test_transmuter(mock_cp2k, clean_dir, si_structure):
+def test_transmuter(tmp_path, mock_cp2k, basis_and_potential, si_structure):
+    import os
+
     import numpy as np
     from jobflow import run_locally
 
     from atomate2.cp2k.jobs.core import TransmuterMaker
     from atomate2.cp2k.schemas.task import TaskDocument
+    from atomate2.cp2k.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {"transmuter": "Si_transmuter"}
@@ -76,9 +93,11 @@ def test_transmuter(mock_cp2k, clean_dir, si_structure):
     job = TransmuterMaker(
         transformations=["SupercellTransformation"],
         transformation_params=[{"scaling_matrix": ((1, 0, 0), (0, 1, 0), (0, 0, 2))}],
+        input_set_generator=StaticSetGenerator(user_input_settings=basis_and_potential),
     ).make(si_structure)
 
     # run the job and ensure that it finished running successfully
+    os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate outputs
