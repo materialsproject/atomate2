@@ -446,12 +446,13 @@ class LobsterTaskDocument(BaseModel):
         madelung_energies_path = dir_name / "MadelungEnergies.lobster.gz"
 
         # Do automatic bonding analysis with LobsterPy
-        condensed_bonding_analysis_data = None
+        condensed_bonding_analysis = None
         sb_icobi = None
         sb_icohp = None
         sb_icoop = None
         struct = None
         describe = None
+
         if icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists():
             (
                 condensed_bonding_analysis,
@@ -463,7 +464,6 @@ class LobsterTaskDocument(BaseModel):
             ) = CondensedBondingAnalysis.from_directory(
                 dir_name, save_cohp_plots=save_cohp_plots, plot_kwargs=plot_kwargs
             )
-
         # Read in charges
         charges = None
         if charge_path.exists():
@@ -534,7 +534,7 @@ class LobsterTaskDocument(BaseModel):
             dir_name=dir_name,
             lobsterin=lobster_in,
             lobsterout=lobster_out,
-            lobsterpy_data=condensed_bonding_analysis_data,
+            lobsterpy_data=condensed_bonding_analysis,
             lobsterpy_summary_text=" ".join(describe.text),
             strongest_bonds_icohp=sb_icohp,
             strongest_bonds_icoop=sb_icoop,
