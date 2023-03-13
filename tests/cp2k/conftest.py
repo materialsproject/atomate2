@@ -12,13 +12,26 @@ _REF_PATHS = {}
 _FAKE_RUN_CP2K_KWARGS = {}
 
 
+@pytest.fixture(autouse=True)
+def patch_settings(monkeypatch, test_dir):
+    settings = {
+        "PMG_CP2K_DATA_DIR": Path(test_dir / "cp2k/data"),
+        "PMG_DEFAULT_CP2K_FUNCTIONAL": "PBE",
+        "PMG_DEFAULT_CP2K_BASIS_TYPE": "DZVP-MOLOPT",
+        "PMG_DEFAULT_CP2K_AUX_BASIS_TYPE": "pFIT",
+    }
+    monkeypatch.setattr("pymatgen.core.SETTINGS", settings)
+
+
 @pytest.fixture(scope="session")
 def basis_and_potential():
     return {
         "basis_and_potential": {
-            "basis": "DZVP-MOLOPT-SR-GTH-q4",
-            "potential": "GTH-PBE-q4",
-            "aux_basis": "pFIT3",
+            "Si": {
+                "basis": "DZVP-MOLOPT-SR-GTH",
+                "potential": "GTH-PBE-q4",
+                "aux_basis": "pFIT3",
+            }
         }
     }
 
