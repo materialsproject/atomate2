@@ -72,7 +72,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         .resolve(memory_jobstore),
         LobsterTaskDocument,
     )
-    # Test that all keys are not None except for optional lso_dos key are not None
+
     for key, value in (
         responses[job.jobs[-1].uuid][1]
         .replace.output["lobster_task_documents"][0]
