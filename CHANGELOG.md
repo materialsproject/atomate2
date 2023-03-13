@@ -1,6 +1,11 @@
 Change log
 ==========
 
+v0.0.10
+-------
+
+Lobster workflow with VASP implementation ([@JaGeo][jageo], [@naik-aakash][naik-aakash] [#200](https://github.com/materialsproject/atomate2/pull/200))
+
 v0.0.9
 ------
 
@@ -170,3 +175,4 @@ Initial release.
 [mjwen]: https://github.com/mjwen
 [arosen]: https://github.com/arosen93
 [rkingsbury]: https://github.com/rkingsbury
+[naik-aakash]: https://github.com/naik-aakash

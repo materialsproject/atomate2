@@ -119,7 +119,7 @@ def fake_run_vasp(
         A list of INCAR settings to check.
     check_inputs
         A list of vasp input files to check. Supported options are "incar", "kpoints",
-        "poscar", "potcar".
+        "poscar", "potcar", "wavecar".
     clear_inputs
         Whether to clear input files before copying in the reference VASP outputs.
     """
@@ -138,6 +138,10 @@ def fake_run_vasp(
 
     if "potcar" in check_inputs:
         check_potcar(ref_path)
+
+    # This is useful to check if the WAVECAR has been copied
+    if "wavecar" in check_inputs and not Path("WAVECAR").exists():
+        raise ValueError("WAVECAR was not correctly copied")
 
     logger.info("Verified inputs successfully")
 

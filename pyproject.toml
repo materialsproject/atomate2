@@ -40,6 +40,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
+lobster = ["lobsterpy"]
 defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
 docs = [
     "numpydoc==1.5.0",
@@ -66,6 +67,7 @@ strict = [
     "mp-api==0.30.10",
     "dscribe==1.2.2",
     "pymatgen-analysis-defects==2023.3.3",
+     "lobsterpy==0.2.8"
 ]
 
 [project.scripts]

@@ -74,3 +74,11 @@ Lawrence Berkeley National Laboratory
 
 [zhuoying]: https://github.com/zhuoying
 [0000-0003-1775-7651]: https://orcid.org/0000-0003-1775-7651
+
+**Aakash Ashok Naik** [![gh]][naik-aakash] [![orc]][0000-0002-6071-6786] \
+PhD student\
+Federal Institute for Materials Research and Testing (Berlin) \
+Friedrich Schiller University Jena
+
+[naik-aakash]: https://github.com/naik-aakash
+[0000-0002-6071-6786]: https://orcid.org/0000-0002-6071-6786

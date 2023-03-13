@@ -32,6 +32,9 @@ Some of the workflows available in atomate2 are:
 - elastic, dielectric, and piezoelectric tensors
 - one-shot electron-phonon interactions
 - electronic transport using [AMSET]
+- phonons using [phonopy]
+- defect formation energy diagrams
+- [Lobster] bonding analysis with [lobsterpy]
 
 It is easy to customise and compose any of the above workflows.
 
@@ -138,6 +141,9 @@ A full list of all contributors can be found [here][contributors].
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
+[Lobster]: http://www.cohp.de
+[lobsterpy]: https://github.com/JaGeo/LobsterPy
+[phonopy]: https://github.com/phonopy/phonopy
 [docs]: https://materialsproject.github.io/atomate2/
 [github]: https://github.com/materialsproject/atomate2
 [pypi]: https://pypi.org/project/atomate2
