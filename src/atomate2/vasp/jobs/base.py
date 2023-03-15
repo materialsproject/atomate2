@@ -16,7 +16,7 @@ from pymatgen.electronic_structure.bandstructure import (
     BandStructureSymmLine,
 )
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
-from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
+from pymatgen.io.vasp import Chgcar, Locpot, Wavecar, Waveder
 
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
@@ -35,6 +35,7 @@ _DATA_OBJECTS = [
     Locpot,
     Chgcar,
     Wavecar,
+    Waveder,
     Trajectory,
     "force_constants",
     "normalmode_eigenvecs",
