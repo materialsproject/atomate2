@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
+from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
@@ -20,7 +21,6 @@ from pymatgen.transformations.standard_transformations import (
 from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
-from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator

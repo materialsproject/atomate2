@@ -8,11 +8,11 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+from emmet.core.math import Vector3D
 from pymatgen.core import Structure
 from pymatgen.core.periodic_table import Element
 from pymatgen.io.vasp import Outcar, Vasprun
 
-from atomate2.common.schemas.math import Vector3D
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)

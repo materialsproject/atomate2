@@ -7,6 +7,7 @@ from pathlib import Path
 
 import numpy as np
 from click.testing import CliRunner
+from emmet.core.math import Vector3D
 from jobflow import Flow, Response, job
 from pymatgen.core import Structure
 from pymatgen.core.tensors import symmetry_reduce
@@ -16,7 +17,6 @@ from pymatgen.transformations.standard_transformations import (
 
 from atomate2 import SETTINGS
 from atomate2.common.files import get_zfile
-from atomate2.common.schemas.math import Vector3D
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
