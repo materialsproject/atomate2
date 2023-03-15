@@ -254,7 +254,8 @@ def delete_lobster_wavecar(
         dirs.append(preconverge_static_dir)
 
     for dir_name in dirs:
-        dir_name = strip_hostname(dir_name)
         delete_files(
-            dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
+            strip_hostname(dir_name),
+            include_files=["WAVECAR", "WAVECAR.gz"],
+            allow_missing=True,
         )

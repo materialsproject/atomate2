@@ -116,7 +116,6 @@ def retrieve_structure_from_materials_project(
         )
 
     with MPRester() as mpr:
-
         if use_task_id:
             doc = mpr.tasks.get_data_by_id(material_id_or_task_id, fields=["structure"])
             task_id = material_id_or_task_id

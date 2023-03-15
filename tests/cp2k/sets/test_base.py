@@ -1,5 +1,4 @@
 def test_cp2k_input_set(cp2k_test_dir, cp2k_test_inputs):
-
     from atomate2.cp2k.sets.base import Cp2kInputSet
 
     for input_dir in cp2k_test_inputs:
@@ -8,7 +7,6 @@ def test_cp2k_input_set(cp2k_test_dir, cp2k_test_inputs):
 
 
 def test_recursive_update():
-
     from atomate2.cp2k.sets.base import recursive_update
 
     d = {"activate_hybrid": {"hybrid_functional": "HSE06"}}

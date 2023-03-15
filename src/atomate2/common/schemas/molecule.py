@@ -66,7 +66,7 @@ class MoleculeMetadata(BaseModel):
         cls: Type[T],
         composition: Composition,
         fields: Optional[List[str]] = None,
-        **kwargs
+        **kwargs,
     ) -> T:
         """
         Create a MoleculeMetadata model from a composition.
@@ -118,7 +118,7 @@ class MoleculeMetadata(BaseModel):
         molecule: Molecule,
         fields: Optional[List[str]] = None,
         include_molecule: bool = False,
-        **kwargs
+        **kwargs,
     ) -> T:
         """
         Create schema from a molecule.
