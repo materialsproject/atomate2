@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 import numpy as np
+from emmet.core.tasks import TaskDoc
 from jobflow import Flow, Response, job
 from numpy.typing import NDArray
 from pydantic import BaseModel
@@ -19,7 +20,6 @@ from pymatgen.core import Lattice, Structure
 
 from atomate2.common.schemas.defects import CCDDocument
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
-from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ def spawn_energy_curve_calcs(
         static_job.append_name(f"{suffix}")
         jobs.append(static_job)
         # outputs.append(static_job.output)
-        task_doc: TaskDocument = static_job.output
+        task_doc: TaskDoc = static_job.output
         outputs.append(
             dict(
                 structure=task_doc.output.structure,
@@ -264,7 +264,7 @@ def bulk_supercell_calculation(
     relax_job.update_maker_kwargs(
         {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
     )
-    relax_output: TaskDocument = relax_job.output
+    relax_output: TaskDoc = relax_job.output
     summary_d = dict(
         uc_structure=uc_structure,
         sc_entry=relax_output.entry,
@@ -350,7 +350,7 @@ def spawn_defect_q_jobs(
             {"_set": {"write_additional_data->info:json": info}}, dict_mod=True
         )
         defect_q_jobs.append(charged_relax)
-        charged_output: TaskDocument = charged_relax.output
+        charged_output: TaskDoc = charged_relax.output
         all_chg_outputs[qq] = {
             "structure": charged_output.structure,
             "entry": charged_output.entry,

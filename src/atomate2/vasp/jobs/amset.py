@@ -59,7 +59,7 @@ class DenseUniformMaker(NonSCFMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -100,7 +100,7 @@ class StaticDeformationMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -142,7 +142,7 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -180,7 +180,7 @@ class HSEDenseUniformMaker(HSEBSMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
