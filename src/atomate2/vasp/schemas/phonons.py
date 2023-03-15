@@ -383,7 +383,6 @@ class PhononBSDOSDoc(BaseModel):
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
         if kwargs["create_thermal_displacements"]:
-
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
