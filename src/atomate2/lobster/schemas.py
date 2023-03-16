@@ -217,58 +217,55 @@ class CondensedBondingAnalysis(BaseModel):
         icobilist_path = dir_name / "ICOBILIST.lobster.gz"
         icooplist_path = dir_name / "ICOOPLIST.lobster.gz"
 
-        try:
-            # cation anion-mode
-            start = time.time()
-            analyse = Analysis(
-                path_to_poscar=structure_path,
-                path_to_icohplist=icohplist_path,
-                path_to_cohpcar=cohpcar_path,
-                path_to_charge=charge_path,
-                summed_spins=True,
-                cutoff_icohp=0.10,
-                whichbonds="cation-anion",
-            )
-            cba_run_time = time.time() - start
-        except ValueError:
-            # all bonds
-            start = time.time()
-            analyse = Analysis(
-                path_to_poscar=structure_path,
-                path_to_icohplist=icohplist_path,
-                path_to_cohpcar=cohpcar_path,
-                path_to_charge=charge_path,
-                summed_spins=True,
-                cutoff_icohp=0.10,
-                whichbonds="all",
-            )
-            cba_run_time = time.time() - start
+        # replace this by both cation-anion mode
+        # and all
+        # try:
+        #     # cation anion-mode
+        #     start = time.time()
+        #     analyse = Analysis(
+        #         path_to_poscar=structure_path,
+        #         path_to_icohplist=icohplist_path,
+        #         path_to_cohpcar=cohpcar_path,
+        #         path_to_charge=charge_path,
+        #         summed_spins=True,
+        #         cutoff_icohp=0.10,
+        #         whichbonds="cation-anion",
+        #     )
+        #     cba_run_time = time.time() - start
+        # except ValueError:
+        #     # all bonds
+        start = time.time()
+        analyse = Analysis(
+            path_to_poscar=structure_path,
+            path_to_icohplist=icohplist_path,
+            path_to_cohpcar=cohpcar_path,
+            path_to_charge=charge_path,
+            summed_spins=True,
+            cutoff_icohp=0.10,
+            whichbonds="all",
+        )
+        cba_run_time = time.time() - start
 
         # initialize lobsterpy condensed bonding analysis
         cba = analyse.condensed_bonding_analysis
+
+
         cba_cohp_plot_data = {}  # Initialize dict to store plot data
 
         set_cohps = analyse.set_cohps
         set_labels_cohps = analyse.set_labels_cohps
         set_inequivalent_cations = analyse.set_inequivalent_ions
         struct = analyse.structure
+
+
         for _iplot, (ication, labels, cohps) in enumerate(
             zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
         ):
             label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
             for label, cohp in zip(labels, cohps):
                 if label is not None:
-                    cba_cohp_plot_data.update(
-                        {
-                            label_str
-                            + label: {
-                                "COHP": list(cohp.get_cohp()[Spin.up]),
-                                "ICOHP": list(cohp.get_icohp()[Spin.up]),
-                                "Energies": list(cohp.energies),
-                                "Efermi": cohp.efermi,
-                            }
-                        }
-                    )
+                    cba_cohp_plot_data[label_str+label]=cohp
+
 
         describe = Description(analysis_object=analyse)
 
