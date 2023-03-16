@@ -68,7 +68,7 @@ class StructureMetadata(BaseModel):
         cls: Type[T],
         composition: Composition,
         fields: Optional[List[str]] = None,
-        **kwargs
+        **kwargs,
     ) -> T:
         """
         Create a StructureMetadata model from a composition.
@@ -120,7 +120,7 @@ class StructureMetadata(BaseModel):
         structure: Structure,
         fields: Optional[List[str]] = None,
         include_structure: bool = False,
-        **kwargs
+        **kwargs,
     ) -> T:
         """
         Create schema from a structure.

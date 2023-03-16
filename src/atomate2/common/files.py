@@ -119,9 +119,8 @@ def delete_files(
     )
 
     for file in files:
-        file = directory / file
         try:
-            file_client.remove(file, host=host)
+            file_client.remove(directory / file, host=host)
         except FileNotFoundError:
             if not allow_missing:
                 raise

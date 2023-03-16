@@ -824,7 +824,6 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
 def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
     mock_vasp, clean_dir, kpathscheme
 ):
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -841,7 +840,6 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     with pytest.raises(ValueError):
-
         PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,
@@ -857,7 +855,6 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
     "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
 def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpathscheme):
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],

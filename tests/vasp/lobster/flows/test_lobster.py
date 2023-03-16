@@ -73,6 +73,18 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         LobsterTaskDocument,
     )
 
+    for key, value in (
+        responses[job.jobs[-1].uuid][1]
+        .replace.output["lobster_task_documents"][0]
+        .resolve(memory_jobstore)
+        .dict()
+        .items()
+    ):
+        if key == "lso_dos":
+            assert value is None
+        else:
+            assert value is not None
+
 
 def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files

@@ -266,7 +266,6 @@ def fit_elastic_tensor(
     uuids = []
     job_dirs = []
     for data in deformation_data:
-
         # stress could be none if the deformation calculation failed
         if data["stress"] is None:
             continue

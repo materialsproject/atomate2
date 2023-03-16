@@ -56,7 +56,6 @@ class ElasticBuilder(Builder):
         structure_match_tol: float = 1e-5,
         **kwargs,
     ):
-
         self.tasks = tasks
         self.elasticity = elasticity
         self.query = query if query else {}
