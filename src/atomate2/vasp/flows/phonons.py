@@ -21,6 +21,7 @@ from atomate2.vasp.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 __all__ = ["PhononMaker"]
 
@@ -131,7 +132,9 @@ class PhononMaker(Maker):
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    static_energy_maker: BaseVaspMaker | None = field(default_factory=StaticMaker)
+    static_energy_maker: BaseVaspMaker | None = field(
+        default_factory=lambda: StaticMaker(StaticSetGenerator(auto_ispin=True))
+    )
     born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
