@@ -33,6 +33,7 @@ dependencies = [
     "PyYAML",
     "numpy",
     "click",
+    "emmet",
 ]
 
 [project.optional-dependencies]
@@ -67,7 +68,8 @@ strict = [
     "mp-api==0.30.10",
     "dscribe==1.2.2",
     "pymatgen-analysis-defects==2023.3.3",
-     "lobsterpy==0.2.8"
+    "lobsterpy==0.2.8",
+    "emmet-core==0.50.0"
 ]
 
 [project.scripts]
