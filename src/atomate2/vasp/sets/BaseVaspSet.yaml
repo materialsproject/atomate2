@@ -10,7 +10,6 @@ INCAR:
   ISIF: 3
   ISPIN: 2
   ISMEAR: 0
-  KSPACING: 0.44
   LORBIT: 11
   LASPH: True
   LDAU: true
@@ -115,6 +114,9 @@ INCAR:
   NSW: 99
   PREC: Accurate
   SIGMA: 0.05
+KPOINTS:
+  reciprocal_density: 64
+  reciprocal_density_metal: 200
 POTCAR_FUNCTIONAL: PBE_54
 POTCAR:
   Ac: Ac

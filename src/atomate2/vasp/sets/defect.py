@@ -43,7 +43,7 @@ class ChargeStateRelaxSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -100,7 +100,7 @@ class ChargeStateStaticSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -156,7 +156,7 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -220,7 +220,7 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
