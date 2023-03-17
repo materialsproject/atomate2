@@ -1,39 +1,12 @@
 Change log
 ==========
 
-v0.0.11
--------
+Unreleased
+----------
 
-Emmet new labels:
-- Potcar
-  - pot_type
-- InputDoc
-  - parameters
-  - psuedo_potentials
-  - potcar_spec
-  - xc_override
-  - is_lasph
-  - is_hubbard
-  - hubbards
-- OutputDoc
-  - energy_per_atom
-  - bandgap
-- TaskDoc
-  - Now subclasses StructureMetadata
-  - structure
-  - included_objects
-  - vasp_objects
-  - entry
-  - author
-  - icsd_id
-  - transformations
-  - additional_json
-  - dir_name
-- TaskType now imported from emmet.core.vasp.enums (existed already)
-- CalcsReversedDoc -> Calculation from emmet.core.vasp.calculation (added in this PR)
- - Existing fields remain the same, lots of new fields added.
+Merge atomate2 VASP task document with the one in emmet. The changes to the atomate2
+schemas are:
 
-Schema changes:
 - PsuedoPotentialSummary -> Potcar
   - labels -> symbols
 - AnalysisSymmary -> AnalysisDoc
