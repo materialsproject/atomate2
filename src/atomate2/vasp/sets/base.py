@@ -238,7 +238,7 @@ class VaspInputGenerator(InputGenerator):
     auto_ismear
         If true, the values for ISMEAR and SIGMA will be set automatically depending
         on the bandgap of the system. If the bandgap is not known (e.g., there is no
-        previous VASP directory then ISMEAR=0 and SIGMA=0.2; if the bandgap is zero (a
+        previous VASP directory) then ISMEAR=0 and SIGMA=0.2; if the bandgap is zero (a
         metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator,
         then ISMEAR=-5 (tetrahedron smearing). Note, this only works when generating the
         input set from a previous VASP directory.
