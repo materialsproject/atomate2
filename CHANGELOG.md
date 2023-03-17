@@ -1,6 +1,28 @@
 Change log
 ==========
 
+Unreleased
+----------
+
+The VASP input sets have been reconfigured based on user feedback.
+The ``auto_kspacing`` option has been removed and KSPACING is no longer used in the
+atomate2 input sets by default. We have returned to using ``reciprocal_density`` as in
+atomate1. These changes mean the k-point mesh is no longer dependent on the precise
+band gap of the system. Instead, there are now two k-points settings, one for insulators
+and one for metals. This should remove issues when changing function from PBEsol -> HSE,
+in which the band gap increases but the k-point mesh would be expected to stay the same.
+
+Two new options have been added to the ``BaseVaspInputSetGenerator``:
+
+- ``auto_metal_kpoints``: If true and the system is metallic, try and use ``
+  reciprocal_density_metal`` instead of ``reciprocal_density`` for metallic systems.
+- ``auto_ismear``: If true, the values for ISMEAR and SIGMA will be set automatically
+  depending on the bandgap of the system. If the bandgap is not known (e.g., there is no
+  previous VASP directory then ISMEAR=0 and SIGMA=0.2; if the bandgap is zero (a
+  metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator, then
+  ISMEAR=-5 (tetrahedron smearing).
+
+
 v0.0.10
 -------
 
