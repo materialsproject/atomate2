@@ -460,10 +460,8 @@ class LobsterTaskDocument(BaseModel):
         sb_icoop = None
         struct = None
         describe = None
-        # structure should be read from file
         struct = Structure.from_file(structure_path)
 
-        # will remove structure here
         # will perform two condensed bonding analysis computations
         if icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists():
             (
