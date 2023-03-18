@@ -48,11 +48,6 @@ class Atomate2Settings(BaseSettings):
     VASP_INCAR_UPDATES: dict = Field(
         default_factory=dict, description="Updates to apply to VASP INCAR files."
     )
-    VASP_RELAX_MAX_FORCE: float = Field(
-        0.25,
-        description="Maximum force allowed on each atom for successful structure "
-        "optimization",
-    )
     VASP_VOLUME_CHANGE_WARNING_TOL: float = Field(
         0.2,
         description="Maximum volume change allowed in VASP relaxations before the "
