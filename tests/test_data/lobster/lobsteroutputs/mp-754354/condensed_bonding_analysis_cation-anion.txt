@@ -1,2 +1,0 @@
-The compound Ba4OF6 has 1 symmetry-independent cation(s) with relevant cation-anion interactions: Ba1.
-Ba1 has a face-capped octahedron (CN=7) coordination environment. It has 1 Ba-O (mean ICOHP: -0.56 eV, 100.0 percent antibonding interaction below EFermi), and 6 Ba-F (mean ICOHP: -0.41 eV, 100.0 percent antibonding interaction below EFermi) bonds.

@@ -1,5 +1,0 @@
-The compound Ba4OF6 has 4 symmetry-independent atoms(s) with relevant bonds: Ba1, O9, F11, F13.
-Ba1 has a face-capped octahedron (CN=7) coordination environment. It has 1 Ba-O (mean ICOHP: -0.56 eV, 100.0 percent antibonding interaction below EFermi), and 6 Ba-F (mean ICOHP: -0.41 eV, 100.0 percent antibonding interaction below EFermi) bonds.
-O9 has a tetrahedral (CN=4) coordination environment. It has 4 O-Ba (mean ICOHP: -0.56 eV, 100.0 percent antibonding interaction below EFermi) bonds.
-F11 has a tetrahedral (CN=4) coordination environment. It has 4 F-Ba (mean ICOHP: -0.4 eV, 100.0 percent antibonding interaction below EFermi) bonds.
-F13 has a tetrahedral (CN=4) coordination environment. It has 4 F-Ba (mean ICOHP: -0.41 eV, 100.0 percent antibonding interaction below EFermi) bonds.
