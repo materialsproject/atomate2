@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -262,6 +263,7 @@ def run_phonon_displacements(
     structure: Structure,
     supercell_matrix,
     phonon_maker: BaseVaspMaker = None,
+    prev_vasp_dir: str | Path = None,
 ):
     """
     Run phonon displacements.
@@ -277,6 +279,8 @@ def run_phonon_displacements(
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
+    prev_vasp_dir : str or Path or None
+        A previous vasp calculation directory to use for copying outputs.
     """
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()
@@ -290,7 +294,7 @@ def run_phonon_displacements(
     }
 
     for i, displacement in enumerate(displacements):
-        phonon_job = phonon_maker.make(displacement)
+        phonon_job = phonon_maker.make(displacement, prev_vasp_dir=prev_vasp_dir)
         phonon_job.append_name(f" {i + 1}/{len(displacements)}")
 
         # we will add some meta data
