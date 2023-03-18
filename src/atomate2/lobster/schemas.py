@@ -211,7 +211,6 @@ class CondensedBondingAnalysis(BaseModel):
         """
         plot_kwargs = {} if plot_kwargs is None else plot_kwargs
         dir_name = Path(dir_name)
-        print(dir_name)
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
         charge_path = dir_name / "CHARGE.lobster.gz"
         structure_path = dir_name / "POSCAR.gz"
