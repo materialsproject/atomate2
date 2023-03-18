@@ -98,5 +98,9 @@ def test_LobsterTaskDocument(lobster_test_dir):
     doc2 = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-754354", save_cohp_plots=False
     )
-    assert np.isclose(doc2.strongest_bonds_icohp.strongest_bonds["Ba-O"]["ICOHP"], -0.55689)
-    assert np.isclose(doc2.strongest_bonds_icohp.strongest_bonds["Ba-F"]["ICOHP"], -0.44806)
+    assert np.isclose(
+        doc2.strongest_bonds_icohp.strongest_bonds["Ba-O"]["ICOHP"], -0.55689
+    )
+    assert np.isclose(
+        doc2.strongest_bonds_icohp.strongest_bonds["Ba-F"]["ICOHP"], -0.44806
+    )
