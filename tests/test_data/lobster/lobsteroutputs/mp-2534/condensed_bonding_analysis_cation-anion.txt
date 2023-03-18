@@ -1,2 +1,0 @@
-The compound GaAs has 1 symmetry-independent cation(s) with relevant cation-anion interactions: Ga1.
-Ga1 has a tetrahedral (CN=4) coordination environment. It has 4 Ga-As (mean ICOHP: -4.33 eV, 0.0 percent antibonding interaction below EFermi) bonds.

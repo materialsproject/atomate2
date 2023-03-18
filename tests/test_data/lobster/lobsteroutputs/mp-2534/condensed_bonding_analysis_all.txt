@@ -1,3 +1,0 @@
-The compound GaAs has 2 symmetry-independent atoms(s) with relevant bonds: Ga1, As5.
-Ga1 has a tetrahedral (CN=4) coordination environment. It has 4 Ga-As (mean ICOHP: -4.33 eV, 0.0 percent antibonding interaction below EFermi) bonds.
-As5 has a tetrahedral (CN=4) coordination environment. It has 4 As-Ga (mean ICOHP: -4.33 eV, 0.0 percent antibonding interaction below EFermi) bonds.
