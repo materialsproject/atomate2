@@ -157,7 +157,7 @@ class CondensedBondingAnalysis(BaseModel):
         " relative to strongest ICOHP",
     )
     summed_spins: bool = Field(
-        None, description="Bool stating whether to sum spin channels during analysis"
+        None, description="Bool that states if the spin channels in the cohp_plot_data are summed."
     )
     start: Optional[float] = Field(
         None,
@@ -259,7 +259,7 @@ class CondensedBondingAnalysis(BaseModel):
                 type_charges=analyse.type_charge,
                 cohp_plot_data=cba_cohp_plot_data,
                 cutoff_icohp=analyse.cutoff_icohp,
-                summed_spins=True,
+                summed_spins=False,
                 which_bonds=analyse.whichbonds,
                 final_dict_bonds=analyse.final_dict_bonds,
                 final_dict_ions=analyse.final_dict_ions,
