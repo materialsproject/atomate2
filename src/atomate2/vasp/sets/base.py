@@ -378,14 +378,9 @@ class VaspInputGenerator(InputGenerator):
         VaspInputSet
             A VASP input set.
         """
-        (
-            structure,
-            prev_incar,
-            bandgap,
-            ispin,
-            vasprun,
-            outcar,
-        ) = self._get_previous(structure, prev_dir)
+        structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
+            structure, prev_dir
+        )
         incar_updates = self.get_incar_updates(
             structure,
             prev_incar=prev_incar,
