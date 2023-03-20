@@ -106,10 +106,7 @@ class AnalysisSummary(BaseModel):
 
 
 class AtomicKind(BaseModel):
-    """
-    A representation of the most important information about each
-    type of species used in the calculation.
-    """
+    """A representation of the most important information about each type of species."""
 
     element: str = Field(None, description="Element assigned to this atom kind")
     basis: str = Field(None, description="Basis set for this atom kind")
@@ -595,9 +592,9 @@ def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Statu
 def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
     """Get summary of runtime statistics for each calculation in this task."""
     run_stats = {}
-    total = dict(
-        total_time=0.0,
-    )
+    total = {
+        "total_time": 0.0,
+    }
     for calc_doc in calc_docs:
         stats = calc_doc.output.run_stats
         run_stats[calc_doc.task_name] = stats

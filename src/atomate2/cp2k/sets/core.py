@@ -29,9 +29,7 @@ __all__ = [
 
 @dataclass
 class StaticSetGenerator(Cp2kInputGenerator):
-    """
-    Class to generate CP2K static input sets.
-    """
+    """Class to generate CP2K static input sets."""
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a static job."""
@@ -42,8 +40,10 @@ class StaticSetGenerator(Cp2kInputGenerator):
 @dataclass
 class RelaxSetGenerator(Cp2kInputGenerator):
     """
-    Class to generate CP2K relax sets, i.e. sets for optimization
-    of internal coordinates without cell parameter optimization.
+    Class to generate CP2K relax sets.
+
+    I.e., sets for optimization of internal coordinates without cell parameter
+    optimization.
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
@@ -58,9 +58,9 @@ class RelaxSetGenerator(Cp2kInputGenerator):
 @dataclass
 class CellOptSetGenerator(Cp2kInputGenerator):
     """
-    Class to generate CP2K cell optimization sets, i.e. sets
-    for optimization of both internal coordinates and the
-    lattice vectors.
+    Class to generate CP2K cell optimization sets.
+
+    I.e., sets for optimization of both internal coordinates and the lattice vectors.
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
@@ -74,9 +74,7 @@ class CellOptSetGenerator(Cp2kInputGenerator):
 
 @dataclass
 class HybridStaticSetGenerator(Cp2kInputGenerator):
-    """
-    Class for generating static hybrid input sets.
-    """
+    """Class for generating static hybrid input sets."""
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
@@ -100,9 +98,7 @@ class HybridStaticSetGenerator(Cp2kInputGenerator):
 
 @dataclass
 class HybridRelaxSetGenerator(Cp2kInputGenerator):
-    """
-    Class for generating hybrid relaxation input sets.
-    """
+    """Class for generating hybrid relaxation input sets."""
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
@@ -127,9 +123,7 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
 
 @dataclass
 class HybridCellOptSetGenerator(Cp2kInputGenerator):
-    """
-    Class for generating hybrid cell optimization input sets.
-    """
+    """Class for generating hybrid cell optimization input sets."""
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
@@ -240,9 +234,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
 
 @dataclass
 class MDSetGenerator(Cp2kInputGenerator):
-    """
-    Class to generate molecular dynamics input sets.
-    """
+    """Class to generate molecular dynamics input sets."""
 
     def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """Get input updates for running a MD calculation."""

@@ -1,6 +1,4 @@
-"""
-Functions to run CP2K.
-"""
+"""Functions to run CP2K."""
 
 from __future__ import annotations
 

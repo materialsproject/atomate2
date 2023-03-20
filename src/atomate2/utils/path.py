@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import socket
 from pathlib import Path
@@ -27,10 +28,8 @@ def get_uri(dir_name: str | Path) -> str:
     """
     fullpath = Path(dir_name).absolute()
     hostname = socket.gethostname()
-    try:
+    with contextlib.suppress(socket.gaierror, socket.herror):
         hostname = socket.gethostbyaddr(hostname)[0]
-    except (socket.gaierror, socket.herror):
-        pass
     return f"{hostname}:{fullpath}"
 
 

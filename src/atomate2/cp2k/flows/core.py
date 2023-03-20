@@ -245,8 +245,10 @@ class HybridFlowMaker(Maker):
 
     def __post_init__(self):
         """
-        Set the user-specified hybrid_functional and activate initial
-        density matrix screening if restarting from a PBE calculation.
+        Post init updates.
+
+        Set the user-specified hybrid_functional and activate initial density matrix
+        screening if restarting from a PBE calculation.
 
         Initializing with PBE allows CP2K to screen exchange integrals using
         the PBE density matrix, which creates huge speed-ups. Rarely causes

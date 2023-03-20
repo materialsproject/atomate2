@@ -69,9 +69,7 @@ class Cp2kObject(ValueEnum):
 
 
 class CalculationInput(BaseModel):
-    """
-    Summary of inputs for a CP2K calculation.
-    """
+    """Summary of inputs for a CP2K calculation."""
 
     structure: Union[Structure, Molecule] = Field(
         None, description="The input structure/molecule object"
@@ -217,16 +215,16 @@ class CalculationOutput(BaseModel):
 
         if output.band_structure:
             bandgap_info = output.band_structure.get_band_gap()
-            electronic_output = dict(
-                efermi=output.band_structure.efermi,
-                vbm=output.band_structure.get_vbm()["energy"],
-                cbm=output.band_structure.get_cbm()["energy"],
-                bandgap=bandgap_info["energy"],
-                is_gap_direct=bandgap_info["direct"],
-                is_metal=output.band_structure.is_metal(),
-                direct_gap=output.band_structure.get_direct_band_gap(),
-                transition=bandgap_info["transition"],
-            )
+            electronic_output = {
+                "efermi": output.band_structure.efermi,
+                "vbm": output.band_structure.get_vbm()["energy"],
+                "cbm": output.band_structure.get_cbm()["energy"],
+                "bandgap": bandgap_info["energy"],
+                "is_gap_direct": bandgap_info["direct"],
+                "is_metal": output.band_structure.is_metal(),
+                "direct_gap": output.band_structure.get_direct_band_gap(),
+                "transition": bandgap_info["transition"],
+            }
         else:
             electronic_output = {
                 "efermi": output.efermi,
@@ -473,8 +471,9 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]
 
 def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]:
     """
-    Get the path of the basis and potential files, so exact info
-    about the basis set /potential used can be retrieved.
+    Get the path of the basis and potential files.
+
+    This enables the exact info about the basis set /potential used can be retrieved.
 
     Calculation summaries will only have metadata (i.e. the name) that matches to
     the basis/potential contained in these files.
@@ -523,8 +522,8 @@ def _get_volumetric_data(
             continue
         try:
             volumetric_data[file_type] = VolumetricData.from_cube(dir_name / file)
-        except Exception:
-            raise ValueError(f"Failed to parse {file_type} at {file}.")
+        except Exception as err:
+            raise ValueError(f"Failed to parse {file_type} at {file}.") from err
 
     for file_type in volumetric_data:
         if file_type.name in __is_stored_in_Ha__:

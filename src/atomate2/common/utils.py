@@ -13,8 +13,7 @@ from monty.serialization import loadfn
 def get_transformations(
     transformations: tuple[str, ...], params: tuple[dict, ...] | None
 ) -> list:
-    """Get instantiated transformation objects from their names
-    and parameters.
+    """Get instantiated transformation objects from their names and parameters.
 
     Parameters
     ----------

@@ -189,6 +189,7 @@ class FormationEnergyMaker(Maker, ABC):
     name: str = "formation energy"
 
     def __post_init__(self):
+        """Apply post init updates."""
         self.validate_maker()
         if self.bulk_relax_maker is None:
             self.bulk_relax_maker = self.defect_relax_maker
