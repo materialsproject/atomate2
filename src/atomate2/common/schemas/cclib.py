@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-from emmet.core.molecules import MoleculeMetadata
 from monty.dev import requires
 from monty.json import jsanitize
 from pydantic import Field
@@ -13,6 +12,7 @@ from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
 
 from atomate2 import __version__
+from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
 
