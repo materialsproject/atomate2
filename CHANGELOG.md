@@ -4,6 +4,25 @@ Change log
 Unreleased
 ----------
 
+### Task Document Changes
+
+Merge atomate2 VASP task document with the one in emmet. The changes to the atomate2
+schemas are:
+
+- PsuedoPotentialSummary -> Potcar
+  - labels -> symbols
+- AnalysisSymmary -> AnalysisDoc
+  - delta_volume_as_percent -> delta_volume_percent
+- InputSummary -> InputDoc
+- OutputSummary -> OutputDoc
+  - density added
+- Status -> TaskState
+- TaskDocument -> TaskDoc
+  - task_type added
+- Status -> TaskState
+
+### VASP input set updates
+
 The VASP input sets have been reconfigured based on user feedback.
 The ``auto_kspacing`` option has been removed and KSPACING is no longer used in the
 atomate2 input sets by default. We have returned to using ``reciprocal_density`` as in
@@ -22,7 +41,6 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
   previous VASP directory) then ISMEAR=0 and SIGMA=0.2; if the bandgap is zero (a
   metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator, then
   ISMEAR=-5 (tetrahedron smearing).
-
 
 v0.0.10
 -------

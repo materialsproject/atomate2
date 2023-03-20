@@ -10,7 +10,6 @@ from monty.dev import requires
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.cohp import CompleteCohp
-from pymatgen.electronic_structure.core import Spin
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import (
     Charge,
@@ -158,7 +157,9 @@ class CondensedBondingAnalysis(BaseModel):
         " relative to strongest ICOHP",
     )
     summed_spins: bool = Field(
-        None, description="Bool stating whether to sum spin channels during analysis"
+        None,
+        description="Bool that states if the spin channels in the "
+        "cohp_plot_data are summed.",
     )
     start: Optional[float] = Field(
         None,
@@ -193,6 +194,7 @@ class CondensedBondingAnalysis(BaseModel):
         dir_name: Union[str, Path],
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
+        which_bonds: str = "all",
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -206,10 +208,11 @@ class CondensedBondingAnalysis(BaseModel):
             from lobsterpy will be generated.
         plot_kwargs : dict
             kwargs to change plotting options in lobsterpy.
+        which_bonds: str
+            mode for condensed bonding analysis: "cation-anion" and "all".
         """
         plot_kwargs = {} if plot_kwargs is None else plot_kwargs
         dir_name = Path(dir_name)
-
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
         charge_path = dir_name / "CHARGE.lobster.gz"
         structure_path = dir_name / "POSCAR.gz"
@@ -218,106 +221,97 @@ class CondensedBondingAnalysis(BaseModel):
         icooplist_path = dir_name / "ICOOPLIST.lobster.gz"
 
         try:
-            # cation anion-mode
             start = time.time()
             analyse = Analysis(
                 path_to_poscar=structure_path,
                 path_to_icohplist=icohplist_path,
                 path_to_cohpcar=cohpcar_path,
                 path_to_charge=charge_path,
-                summed_spins=True,
+                summed_spins=False,  # we will always use spin polarization here
                 cutoff_icohp=0.10,
-                whichbonds="cation-anion",
+                whichbonds=which_bonds,
             )
             cba_run_time = time.time() - start
+            # initialize lobsterpy condensed bonding analysis
+            cba = analyse.condensed_bonding_analysis
+
+            cba_cohp_plot_data = {}  # Initialize dict to store plot data
+
+            set_cohps = analyse.set_cohps
+            set_labels_cohps = analyse.set_labels_cohps
+            set_inequivalent_cations = analyse.set_inequivalent_ions
+            struct = analyse.structure
+
+            for _iplot, (ication, labels, cohps) in enumerate(
+                zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
+            ):
+                label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
+                for label, cohp in zip(labels, cohps):
+                    if label is not None:
+                        cba_cohp_plot_data[label_str + label] = cohp
+
+            describe = Description(analysis_object=analyse)
+
+            condensed_bonding_analysis = CondensedBondingAnalysis(
+                formula=cba["formula"],
+                max_considered_bond_length=cba["max_considered_bond_length"],
+                limit_icohp=cba["limit_icohp"],
+                number_of_considered_ions=cba["number_of_considered_ions"],
+                sites=cba["sites"],
+                type_charges=analyse.type_charge,
+                cohp_plot_data=cba_cohp_plot_data,
+                cutoff_icohp=analyse.cutoff_icohp,
+                summed_spins=False,
+                which_bonds=analyse.whichbonds,
+                final_dict_bonds=analyse.final_dict_bonds,
+                final_dict_ions=analyse.final_dict_ions,
+                run_time=cba_run_time,
+            )
+            if save_cohp_plots:
+                describe.plot_cohps(
+                    save=True,
+                    filename="automatic_cohp_plots_" + which_bonds + ".pdf",
+                    skip_show=True,
+                    **plot_kwargs,
+                )
+                import json
+
+                with open(
+                    dir_name
+                    / str("condensed_bonding_analysis_" + which_bonds + ".json"),
+                    "w",
+                ) as fp:
+                    json.dump(analyse.condensed_bonding_analysis, fp)
+                with open(
+                    dir_name
+                    / str("condensed_bonding_analysis_" + which_bonds + ".txt"),
+                    "w",
+                ) as fp:
+                    for line in describe.text:
+                        fp.write(line + "\n")
+
+            # Read in strongest icohp values
+            sb_icohp, sb_icobi, sb_icoop = _identify_strongest_bonds(
+                analyse=analyse,
+                icobilist_path=icobilist_path,
+                icohplist_path=icohplist_path,
+                icooplist_path=icooplist_path,
+            )
+            return (
+                condensed_bonding_analysis,
+                describe,
+                sb_icobi,
+                sb_icohp,
+                sb_icoop,
+            )
         except ValueError:
-            # all bonds
-            start = time.time()
-            analyse = Analysis(
-                path_to_poscar=structure_path,
-                path_to_icohplist=icohplist_path,
-                path_to_cohpcar=cohpcar_path,
-                path_to_charge=charge_path,
-                summed_spins=True,
-                cutoff_icohp=0.10,
-                whichbonds="all",
-            )
-            cba_run_time = time.time() - start
-
-        # initialize lobsterpy condensed bonding analysis
-        cba = analyse.condensed_bonding_analysis
-        cba_cohp_plot_data = {}  # Initialize dict to store plot data
-
-        set_cohps = analyse.set_cohps
-        set_labels_cohps = analyse.set_labels_cohps
-        set_inequivalent_cations = analyse.set_inequivalent_ions
-        struct = analyse.structure
-        for _iplot, (ication, labels, cohps) in enumerate(
-            zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
-        ):
-            label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
-            for label, cohp in zip(labels, cohps):
-                if label is not None:
-                    cba_cohp_plot_data.update(
-                        {
-                            label_str
-                            + label: {
-                                "COHP": list(cohp.get_cohp()[Spin.up]),
-                                "ICOHP": list(cohp.get_icohp()[Spin.up]),
-                                "Energies": list(cohp.energies),
-                                "Efermi": cohp.efermi,
-                            }
-                        }
-                    )
-
-        describe = Description(analysis_object=analyse)
-
-        condensed_bonding_analysis = CondensedBondingAnalysis(
-            formula=cba["formula"],
-            max_considered_bond_length=cba["max_considered_bond_length"],
-            limit_icohp=cba["limit_icohp"],
-            number_of_considered_ions=cba["number_of_considered_ions"],
-            sites=cba["sites"],
-            type_charges=analyse.type_charge,
-            cohp_plot_data=cba_cohp_plot_data,
-            cutoff_icohp=analyse.cutoff_icohp,
-            summed_spins=True,
-            which_bonds=analyse.whichbonds,
-            final_dict_bonds=analyse.final_dict_bonds,
-            final_dict_ions=analyse.final_dict_ions,
-            run_time=cba_run_time,
-        )
-        if save_cohp_plots:
-            describe.plot_cohps(
-                save=True,
-                filename="automatic_cohp_plots.pdf",
-                skip_show=True,
-                **plot_kwargs,
-            )
-            import json
-
-            with open(dir_name / "condensed_bonding_analysis.json", "w") as fp:
-                json.dump(analyse.condensed_bonding_analysis, fp)
-            with open(dir_name / "condensed_bonding_analysis.txt", "w") as fp:
-                for line in describe.text:
-                    fp.write(line + "\n")
-
-        # Read in strongest icohp values
-        sb_icobi, sb_icohp, sb_icoop = _identify_strongest_bonds(
-            analyse, icobilist_path, icohplist_path, icooplist_path
-        )
-        return (
-            condensed_bonding_analysis,
-            struct,
-            describe,
-            sb_icobi,
-            sb_icohp,
-            sb_icoop,
-        )
+            return (None, None, None, None, None)
 
 
 class StrongestBonds(BaseModel):
-    """Strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST from LOBSTER."""
+    """Strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST from LOBSTER.
+    LobsterPy is used for the extraction.
+    """
 
     which_bonds: str = Field(
         None,
@@ -332,8 +326,7 @@ class StrongestBonds(BaseModel):
     )
     strongest_bonds: dict = Field(
         None,
-        description="Dict with infos on bond strength,"
-        " length between cation-anion pairs",
+        description="Dict with infos on bond strength and bond length,.",
     )
 
 
@@ -356,7 +349,7 @@ class LobsterTaskDocument(BaseModel):
     lobsterpy_data: CondensedBondingAnalysis = Field(
         None, description="Model describing the LobsterPy data"
     )
-    lobsterpy_summary_text: str = Field(
+    lobsterpy_text: str = Field(
         None,
         description="Stores LobsterPy automatic analysis summary text",
     )
@@ -369,6 +362,23 @@ class LobsterTaskDocument(BaseModel):
     strongest_bonds_icobi: StrongestBonds = Field(
         None, description="Describes the strongest cation-anion ICOBI bonds"
     )
+    lobsterpy_data_cation_anion: CondensedBondingAnalysis = Field(
+        None, description="Model describing the LobsterPy data"
+    )
+    lobsterpy_text_cation_anion: str = Field(
+        None,
+        description="Stores LobsterPy automatic analysis summary text",
+    )
+    strongest_bonds_icohp_cation_anion: StrongestBonds = Field(
+        None, description="Describes the strongest cation-anion ICOHP bonds"
+    )
+    strongest_bonds_icoop_cation_anion: StrongestBonds = Field(
+        None, description="Describes the strongest cation-anion ICOOP bonds"
+    )
+    strongest_bonds_icobi_cation_anion: StrongestBonds = Field(
+        None, description="Describes the strongest cation-anion ICOBI bonds"
+    )
+
     cohp_data: CompleteCohp = Field(
         None, description="pymatgen CompleteCohp object with COHP data"
     )
@@ -452,17 +462,33 @@ class LobsterTaskDocument(BaseModel):
         sb_icoop = None
         struct = None
         describe = None
+        struct = Structure.from_file(structure_path)
 
+        # will perform two condensed bonding analysis computations
         if icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists():
             (
                 condensed_bonding_analysis,
-                struct,
                 describe,
                 sb_icobi,
                 sb_icohp,
                 sb_icoop,
             ) = CondensedBondingAnalysis.from_directory(
-                dir_name, save_cohp_plots=save_cohp_plots, plot_kwargs=plot_kwargs
+                dir_name,
+                save_cohp_plots=save_cohp_plots,
+                plot_kwargs=plot_kwargs,
+                which_bonds="all",
+            )
+            (
+                condensed_bonding_analysis_ionic,
+                describe_ionic,
+                sb_icobi_ionic,
+                sb_icohp_ionic,
+                sb_icoop_ionic,
+            ) = CondensedBondingAnalysis.from_directory(
+                dir_name,
+                save_cohp_plots=save_cohp_plots,
+                plot_kwargs=plot_kwargs,
+                which_bonds="cation-anion",
             )
         # Read in charges
         charges = None
@@ -504,9 +530,7 @@ class LobsterTaskDocument(BaseModel):
         # Read in DOS
         dos = None
         if doscar_path.exists():
-            doscar_lobster = Doscar(
-                doscar="DOSCAR.lobster.gz", structure_file="POSCAR.gz"
-            )
+            doscar_lobster = Doscar(doscar=doscar_path, structure_file=structure_path)
             dos = doscar_lobster.completedos
 
         # Read in LSO DOS
@@ -534,11 +558,18 @@ class LobsterTaskDocument(BaseModel):
             dir_name=dir_name,
             lobsterin=lobster_in,
             lobsterout=lobster_out,
+            # include additional fields for cation-anion
             lobsterpy_data=condensed_bonding_analysis,
-            lobsterpy_summary_text=" ".join(describe.text),
+            lobsterpy_text=" ".join(describe.text),
             strongest_bonds_icohp=sb_icohp,
             strongest_bonds_icoop=sb_icoop,
             strongest_bonds_icobi=sb_icobi,
+            lobsterpy_data_cation_anion=condensed_bonding_analysis_ionic,
+            lobsterpy_text_cation_anion=" ".join(describe_ionic.text),
+            strongest_bonds_icohp_cation_anion=sb_icohp_ionic,
+            strongest_bonds_icoop_cation_anion=sb_icoop_ionic,
+            strongest_bonds_icobi_cation_anion=sb_icobi_ionic,
+            # include additional fields for all bonds
             cohp_data=cohp_obj,
             coop_data=coop_obj,
             cobi_data=cobi_obj,
@@ -585,7 +616,7 @@ def _identify_strongest_bonds(
     for file, are_cobis, are_coops in data:
         if file.exists():
             icohplist = Icohplist(
-                filename=icohplist_path,
+                filename=file,
                 are_cobis=are_cobis,
                 are_coops=are_coops,
             )
@@ -608,6 +639,7 @@ def _identify_strongest_bonds(
     return output
 
 
+# Don't we have this in pymatgen somewhere?
 def _get_strong_bonds(
     bondlist: dict, are_cobis: bool, are_coops: bool, relevant_bonds: dict
 ):
