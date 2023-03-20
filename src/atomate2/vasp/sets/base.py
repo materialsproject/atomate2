@@ -383,7 +383,6 @@ class VaspInputGenerator(InputGenerator):
             prev_incar,
             bandgap,
             ispin,
-            lreal,
             vasprun,
             outcar,
         ) = self._get_previous(structure, prev_dir)
@@ -517,7 +516,6 @@ class VaspInputGenerator(InputGenerator):
         outcar = None
         bandgap = None
         ispin = None
-        lreal = None
         if prev_dir:
             vasprun, outcar = get_vasprun_outcar(prev_dir)
 
@@ -550,10 +548,8 @@ class VaspInputGenerator(InputGenerator):
 
         structure = structure if structure is not None else prev_structure
         structure = self._get_structure(structure)
-        if self.auto_lreal:
-            lreal = _get_recommended_lreal(structure)
 
-        return structure, prev_incar, bandgap, ispin, lreal, vasprun, outcar
+        return structure, prev_incar, bandgap, ispin, vasprun, outcar
 
     def _get_structure(self, structure):
         """Get the standardized structure."""
@@ -659,6 +655,9 @@ class VaspInputGenerator(InputGenerator):
                 incar.update({"SIGMA": 0.2, "ISMEAR": 2})  # metal
             else:
                 incar.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
+
+        if self.auto_lreal:
+            incar.update({"LREAL": _get_recommended_lreal(structure)})
 
         if kpoints is not None:
             # unset KSPACING as we are using a KPOINTS file and ensure adequate number

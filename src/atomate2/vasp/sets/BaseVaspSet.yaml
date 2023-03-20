@@ -72,7 +72,7 @@ INCAR:
       V: 3.25
       W: 6.2
   LDAUPRINT: 1
-  LREAL: Auto
+  LREAL: False
   LMIXTAU: True
   LCHARG: True  # Output CHGCAR
   LAECHG: True  # Output AECCAR
