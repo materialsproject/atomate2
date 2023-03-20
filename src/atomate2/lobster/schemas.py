@@ -310,6 +310,7 @@ class CondensedBondingAnalysis(BaseModel):
 
 class StrongestBonds(BaseModel):
     """Strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST from LOBSTER.
+
     LobsterPy is used for the extraction.
     """
 
@@ -665,7 +666,7 @@ def _get_strong_bonds(
     bonds = []
     icohp_all = []
     lengths = []
-    for a, b, c, l in zip(
+    for a, b, c, length in zip(
         bondlist["list_atom1"],
         bondlist["list_atom2"],
         bondlist["list_icohp"],
@@ -673,7 +674,7 @@ def _get_strong_bonds(
     ):
         bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
         icohp_all.append(sum(c.values()))
-        lengths.append(l)
+        lengths.append(length)
 
     bond_labels_unique = list(set(bonds))
     sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]

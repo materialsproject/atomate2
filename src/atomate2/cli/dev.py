@@ -3,12 +3,12 @@
 import click
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
 def dev():
     """Tools for atomate2 developers."""
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
 def vasp_test_data(test_dir):
     """Generate test data for VASP unit tests.

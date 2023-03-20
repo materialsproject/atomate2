@@ -906,9 +906,7 @@ class MDSetGenerator(VaspInputGenerator):
 
     @staticmethod
     def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
-        """
-        Get default params for the ensemble.
-        """
+        """Get default params for the ensemble."""
         defaults = {
             "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
@@ -924,11 +922,11 @@ class MDSetGenerator(VaspInputGenerator):
 
         try:
             return defaults[ensemble.lower()]  # type: ignore
-        except KeyError:
+        except KeyError as err:
             supported = tuple(defaults.keys())
             raise ValueError(
                 f"Expect `ensemble` to be one of {supported}; got {ensemble}."
-            )
+            ) from err
 
 
 def _get_nedos(vasprun: Vasprun | None, dedos: float):

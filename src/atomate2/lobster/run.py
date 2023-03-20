@@ -1,7 +1,4 @@
-"""
-Functions to run LOBSTER.
-
-"""
+"""Functions to run LOBSTER."""
 
 from __future__ import annotations
 
@@ -50,6 +47,7 @@ def run_lobster(
 ):
     """
     Run Lobster.
+
     Supports running Lobster with or without custodian (see :obj:`JobType`).
 
     Parameters

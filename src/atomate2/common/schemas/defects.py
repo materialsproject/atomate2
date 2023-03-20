@@ -1,3 +1,5 @@
+"""General schemas for defect workflow outputs."""
+
 import logging
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
@@ -14,10 +16,10 @@ logger = logging.getLogger(__name__)
 
 class FormationEnergyDiagramDocument(BaseModel):
     """A document for storing a formation energy diagram.
-    Basically a PyDantic version of the `FormationEnergyDiagram` dataclass
-    with some additional data fields.
-    The `pd_entries` field is now optional since the workflow will not necessarily
-    have all the entries in the phase diagram computed.
+
+    Basically a PyDantic version of the `FormationEnergyDiagram` dataclass with some
+    additional data fields. The `pd_entries` field is now optional since the workflow
+    will not necessarily have all the entries in the phase diagram computed.
     """
 
     bulk_entry: ComputedStructureEntry = Field(
