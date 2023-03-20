@@ -16,6 +16,11 @@ def vasp_test_dir(test_dir):
     return test_dir / "vasp"
 
 
+@pytest.fixture(scope="session")
+def lobster_test_dir(test_dir):
+    return test_dir / "lobster"
+
+
 @pytest.fixture(scope="function")
 def mock_vasp(monkeypatch, vasp_test_dir):
     """
