@@ -1,6 +1,25 @@
 Change log
 ==========
 
+Unreleased
+----------
+
+Merge atomate2 VASP task document with the one in emmet. The changes to the atomate2
+schemas are:
+
+- PsuedoPotentialSummary -> Potcar
+  - labels -> symbols
+- AnalysisSymmary -> AnalysisDoc
+  - delta_volume_as_percent -> delta_volume_percent
+- InputSummary -> InputDoc
+- OutputSummary -> OutputDoc
+  - density added
+- Status -> TaskState
+- TaskDocument -> TaskDoc
+  - task_type added
+- Status -> TaskState
+
+
 v0.0.10
 -------
 

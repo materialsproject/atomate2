@@ -6,9 +6,8 @@ import logging
 import os
 from pathlib import Path
 
+from emmet.core.tasks import TaskDoc
 from pymatgen.apps.borg.hive import AbstractDrone
-
-from atomate2.vasp.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +21,13 @@ class VaspDrone(AbstractDrone):
     Parameters
     ----------
     **task_document_kwargs
-        Additional keyword args passed to :obj:`.TaskDocument.from_directory`.
+        Additional keyword args passed to :obj:`.TaskDoc.from_directory`.
     """
 
     def __init__(self, **task_document_kwargs):
         self.task_document_kwargs = task_document_kwargs
 
-    def assimilate(self, path: str | Path | None = None) -> TaskDocument:
+    def assimilate(self, path: str | Path | None = None) -> TaskDoc:
         """
         Parse VASP output files and return the output document.
 
@@ -39,14 +38,14 @@ class VaspDrone(AbstractDrone):
 
         Returns
         -------
-        TaskDocument
+        TaskDoc
             A VASP task document.
         """
         if path is None:
             path = Path.cwd()
 
         try:
-            doc = TaskDocument.from_directory(path, **self.task_document_kwargs)
+            doc = TaskDoc.from_directory(path, **self.task_document_kwargs)
         except Exception:
             import traceback
 

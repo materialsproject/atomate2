@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 import numpy as np
+from emmet.core.math import Matrix3D, Vector3D
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
@@ -12,9 +14,7 @@ from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
 
 from atomate2 import SETTINGS, __version__
-from atomate2.common.schemas.math import Matrix3D, Vector3D
 from atomate2.common.schemas.molecule import MoleculeMetadata
-from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.common.utils import (
     parse_additional_json,
     parse_custodian,
@@ -382,12 +382,14 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             attr = "from_structure"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
                 "include_structure": True,
             }
         elif isinstance(calcs_reversed[-1].output.structure, Molecule):
             attr = "from_molecule"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
                 "molecule": calcs_reversed[-1].output.structure,
                 "include_molecule": True,
             }
@@ -396,6 +398,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         ddict = doc.dict()
         data = {
             "structure": calcs_reversed[-1].output.structure,
+            "meta_structure": calcs_reversed[-1].output.structure,
             "dir_name": dir_name,
             "calcs_reversed": calcs_reversed,
             "analysis": analysis,

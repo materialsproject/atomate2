@@ -6,6 +6,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from emmet.core.vasp.calculation import VaspObject
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
@@ -17,7 +18,6 @@ from atomate2.vasp.jobs.core import (
     RelaxMaker,
     StaticMaker,
 )
-from atomate2.vasp.schemas.calculation import VaspObject
 from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 
 __all__ = [

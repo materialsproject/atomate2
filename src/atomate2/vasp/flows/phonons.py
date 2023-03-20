@@ -5,11 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from emmet.core.math import Matrix3D
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
-from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker

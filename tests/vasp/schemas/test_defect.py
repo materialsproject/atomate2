@@ -5,22 +5,23 @@ def test_CCDDocument(vasp_test_dir):
     """
     from collections import defaultdict
 
+    from emmet.core.tasks import TaskDoc
+
     from atomate2.common.schemas.defects import CCDDocument
-    from atomate2.vasp.schemas.task import TaskDocument
 
     def is_strict_minimum(min_index, arr):
         min_val = arr[min_index]
         return all(not (i != min_index and val < min_val) for i, val in enumerate(arr))
 
-    static_tasks1: list[TaskDocument] = []
-    static_tasks2: list[TaskDocument] = []
+    static_tasks1: list[TaskDoc] = []
+    static_tasks2: list[TaskDoc] = []
     static_dirs1: list[str] = []
     static_dirs2: list[str] = []
     for i in range(5):
         sdir1 = vasp_test_dir / "Si_config_coord" / f"static_q1_{i}" / "outputs"
         sdir2 = vasp_test_dir / "Si_config_coord" / f"static_q2_{i}" / "outputs"
-        static_tasks1.append(TaskDocument.from_directory(sdir1))
-        static_tasks2.append(TaskDocument.from_directory(sdir2))
+        static_tasks1.append(TaskDoc.from_directory(sdir1))
+        static_tasks2.append(TaskDoc.from_directory(sdir2))
         static_dirs1.append(str(sdir1))
         static_dirs2.append(str(sdir2))
 

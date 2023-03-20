@@ -2,11 +2,11 @@ import pytest
 
 
 def test_double_relax(mock_vasp, clean_dir, si_structure):
+    from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
     from atomate2.vasp.flows.core import DoubleRelaxMaker
     from atomate2.vasp.jobs.core import RelaxMaker
-    from atomate2.vasp.schemas.task import TaskDocument
     from atomate2.vasp.sets.core import RelaxSetGenerator
 
     # mapping from job name to directory containing test files
@@ -34,7 +34,7 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     output1 = responses[flow.jobs[0].uuid][1].output
     output2 = responses[flow.jobs[1].uuid][1].output
 
-    assert isinstance(output1, TaskDocument)
+    assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85043620)
     assert output2.output.energy == pytest.approx(-10.84177648)
 
@@ -77,6 +77,7 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
 
 
 def test_band_structure(mock_vasp, clean_dir, si_structure):
+    from emmet.core.vasp.calculation import VaspObject
     from jobflow import run_locally
     from pymatgen.electronic_structure.bandstructure import (
         BandStructure,
@@ -84,7 +85,6 @@ def test_band_structure(mock_vasp, clean_dir, si_structure):
     )
 
     from atomate2.vasp.flows.core import BandStructureMaker
-    from atomate2.vasp.schemas.calculation import VaspObject
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -130,11 +130,11 @@ def test_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_uniform_band_structure(mock_vasp, clean_dir, si_structure):
+    from emmet.core.vasp.calculation import VaspObject
     from jobflow import run_locally
     from pymatgen.electronic_structure.bandstructure import BandStructure
 
     from atomate2.vasp.flows.core import UniformBandStructureMaker
-    from atomate2.vasp.schemas.calculation import VaspObject
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -173,11 +173,11 @@ def test_uniform_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
+    from emmet.core.vasp.calculation import VaspObject
     from jobflow import run_locally
     from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
 
     from atomate2.vasp.flows.core import LineModeBandStructureMaker
-    from atomate2.vasp.schemas.calculation import VaspObject
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -212,6 +212,7 @@ def test_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
+    from emmet.core.vasp.calculation import VaspObject
     from jobflow import run_locally
     from pymatgen.electronic_structure.bandstructure import (
         BandStructure,
@@ -219,7 +220,6 @@ def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
     )
 
     from atomate2.vasp.flows.core import HSEBandStructureMaker
-    from atomate2.vasp.schemas.calculation import VaspObject
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -267,11 +267,11 @@ def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_uniform_band_structure(mock_vasp, clean_dir, si_structure):
+    from emmet.core.vasp.calculation import VaspObject
     from jobflow import run_locally
     from pymatgen.electronic_structure.bandstructure import BandStructure
 
     from atomate2.vasp.flows.core import HSEUniformBandStructureMaker
-    from atomate2.vasp.schemas.calculation import VaspObject
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -312,11 +312,11 @@ def test_hse_uniform_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
+    from emmet.core.vasp.calculation import VaspObject
     from jobflow import run_locally
     from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
 
     from atomate2.vasp.flows.core import HSELineModeBandStructureMaker
-    from atomate2.vasp.schemas.calculation import VaspObject
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -352,10 +352,10 @@ def test_hse_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_optics(mock_vasp, clean_dir, si_structure):
+    from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
     from atomate2.vasp.flows.core import OpticsMaker
-    from atomate2.vasp.schemas.task import TaskDocument
 
     # mapping from job name to directory containing test files
     ref_paths = {"optics": "Si_optics/optics", "static": "Si_optics/static"}
@@ -378,8 +378,8 @@ def test_optics(mock_vasp, clean_dir, si_structure):
     # validation on the outputs
     output1 = responses[flow.jobs[0].uuid][1].output
     output2 = responses[flow.jobs[1].uuid][1].output
-    assert isinstance(output1, TaskDocument)
-    assert isinstance(output2, TaskDocument)
+    assert isinstance(output1, TaskDoc)
+    assert isinstance(output2, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
     assert output2.calcs_reversed[0].output.frequency_dependent_dielectric.real[0] == [
         13.6062,
@@ -392,10 +392,10 @@ def test_optics(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_optics(mock_vasp, clean_dir, si_structure):
+    from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
     from atomate2.vasp.flows.core import HSEOpticsMaker
-    from atomate2.vasp.schemas.task import TaskDocument
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -425,8 +425,8 @@ def test_hse_optics(mock_vasp, clean_dir, si_structure):
     # validation on the outputs
     output1 = responses[flow.jobs[0].uuid][1].output
     output2 = responses[flow.jobs[1].uuid][1].output
-    assert isinstance(output1, TaskDocument)
-    assert isinstance(output2, TaskDocument)
+    assert isinstance(output1, TaskDoc)
+    assert isinstance(output2, TaskDoc)
     assert output1.output.energy == pytest.approx(-12.41767353)
     assert output2.calcs_reversed[0].output.frequency_dependent_dielectric.real[0] == [
         13.8738,
