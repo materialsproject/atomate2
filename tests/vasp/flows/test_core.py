@@ -49,18 +49,16 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     }
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
     my_custom_maker = RelaxMaker(
-        input_set_generator=RelaxSetGenerator(user_incar_settings={"LREAL": False})
+        input_set_generator=RelaxSetGenerator(user_incar_settings={"LREAL": "Auto"})
     )
     flow = DoubleRelaxMaker(
         relax_maker1=my_custom_maker, relax_maker2=my_custom_maker
     ).make(si_structure)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
-    output1 = responses[flow.jobs[0].uuid][1].output
-    output2 = responses[flow.jobs[1].uuid][1].output
+    run_locally(flow, create_folders=True, ensure_success=True)
 
     # Try the same as above but with the .from_relax_maker() class method
     flow = DoubleRelaxMaker.from_relax_maker(my_custom_maker).make(si_structure)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    run_locally(flow, create_folders=True, ensure_success=True)
 
     # Try DoubleRelaxMaker with a non-default second maker only
     ref_paths = {
@@ -73,7 +71,7 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
     }
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
     flow = DoubleRelaxMaker(relax_maker2=my_custom_maker).make(si_structure)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    run_locally(flow, create_folders=True, ensure_success=True)
 
 
 def test_band_structure(mock_vasp, clean_dir, si_structure):

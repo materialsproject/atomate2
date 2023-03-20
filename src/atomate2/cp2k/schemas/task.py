@@ -379,12 +379,14 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             attr = "from_structure"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
                 "include_structure": True,
             }
         elif isinstance(calcs_reversed[-1].output.structure, Molecule):
             attr = "from_molecule"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
                 "molecule": calcs_reversed[-1].output.structure,
                 "include_molecule": True,
             }
