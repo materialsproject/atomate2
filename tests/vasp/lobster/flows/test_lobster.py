@@ -23,7 +23,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
         "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
         "static preconverge": {
-            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"],
+            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM", "NBANDS"],
         },
         "static_run": {
             "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],
@@ -88,7 +88,7 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
         "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
         "static preconverge": {
-            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM"],
+            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM", "NBANDS"],
         },
         "static_run": {
             "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],

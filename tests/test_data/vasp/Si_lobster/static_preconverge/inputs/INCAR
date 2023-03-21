@@ -20,3 +20,4 @@ NPAR = 4
 NSW = 0
 PREC = Accurate
 SIGMA = 0.05
+NBANDS =8
