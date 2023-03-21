@@ -25,14 +25,15 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "pymatgen>=2022.8.23",
-    "custodian>=2022.5.26",
+    "pymatgen>=2023.1.9",
+    "custodian>=2023.3.10",
     "pydantic",
     "monty",
-    "jobflow>=0.1.9",
+    "jobflow>=0.1.11",
     "PyYAML",
     "numpy",
     "click",
+    "emmet-core>=0.51.0",
 ]
 
 [project.optional-dependencies]
@@ -57,7 +58,7 @@ strict = [
     "pymatgen==2023.3.10",
     "custodian==2023.3.10",
     "monty==2022.9.9",
-    "jobflow==0.1.10",
+    "jobflow==0.1.11",
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
@@ -67,7 +68,8 @@ strict = [
     "mp-api==0.30.10",
     "dscribe==1.2.2",
     "pymatgen-analysis-defects==2023.3.3",
-     "lobsterpy==0.2.8"
+    "lobsterpy==0.2.8",
+    "emmet-core==0.51.0"
 ]
 
 [project.scripts]
@@ -82,7 +84,9 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 [tool.setuptools.package-data]
 atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
+"atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.vasp.schemas.calc_types" = ["*.yaml"]
+"atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"
@@ -145,25 +149,6 @@ select = [
     "UP",  # pyupgrade
     "W",   # pycodestyle
     "YTT", # flake8-2020
-]
-ignore = [
-    "B019",    # functools.lru_cache on methods can lead to memory leaks
-    "B023",    # Function definition does not bind loop variable
-    "B904",    # Within an except clause, raise exceptions with ...
-    "D100",    # Missing docstring in public module
-    "D104",    # Missing docstring in public package
-    "D105",    # Missing docstring in magic method
-    "D107",    # Missing docstring in __init__
-    "D200",    # One-line docstring should fit on one line with quotes
-    "D205",    # 1 blank line required between summary line and description
-    "D212",    # Multi-line docstring summary should start at the first line
-    "D415",    # First line should end with a period, question mark, or exclamation point
-    "E741",    # tmp: we should fix all ambiguous variable names
-    "PLR2004", # Magic number
-    "PLW0120", # awaiting bug fix https://github.com/charliermarsh/ruff/issues/3019
-    "C408",    # Unnecessary dict call - rewrite as a literal
-    "D416",    # Section name should end with a colon
-    "SIM105",  # Use contextlib.suppress(socket.gaierror, socket.herror) instead of try-except-pass
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]

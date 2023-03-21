@@ -1,24 +1,25 @@
+"""General schemas for defect workflow outputs."""
+
 import logging
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+from emmet.core.tasks import TaskDoc
 from pydantic import BaseModel, Field
 from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.thermo import DefectEntry, FormationEnergyDiagram
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
 
-from atomate2.vasp.schemas.task import TaskDocument
-
 logger = logging.getLogger(__name__)
 
 
 class FormationEnergyDiagramDocument(BaseModel):
     """A document for storing a formation energy diagram.
-    Basically a PyDantic version of the `FormationEnergyDiagram` dataclass
-    with some additional data fields.
-    The `pd_entries` field is now optional since the workflow will not necessarily
-    have all the entries in the phase diagram computed.
+
+    Basically a PyDantic version of the `FormationEnergyDiagram` dataclass with some
+    additional data fields. The `pd_entries` field is now optional since the workflow
+    will not necessarily have all the entries in the phase diagram computed.
     """
 
     bulk_entry: ComputedStructureEntry = Field(
@@ -321,11 +322,11 @@ class CCDDocument(BaseModel):
 
         return [
             [
-                TaskDocument.from_directory(remove_host_name(dir_name))
+                TaskDoc.from_directory(remove_host_name(dir_name))
                 for dir_name in self.static_dirs1
             ],
             [
-                TaskDocument.from_directory(remove_host_name(dir_name))
+                TaskDoc.from_directory(remove_host_name(dir_name))
                 for dir_name in self.static_dirs2
             ],
         ]

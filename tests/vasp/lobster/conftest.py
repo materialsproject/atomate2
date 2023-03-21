@@ -84,7 +84,7 @@ def fake_run_lobster(
     ref_path: Union[str, Path],
     check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
     check_dft_inputs: Sequence[Literal["WAVECAR", "POSCAR"]] = _DFT_FILES,
-    lobsterin_settings: Sequence[str] = tuple(),
+    lobsterin_settings: Sequence[str] = (),
 ):
     """
     Emulate running LOBSTER and validate LOBSTER input files.

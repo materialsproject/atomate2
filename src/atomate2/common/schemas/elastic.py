@@ -3,6 +3,7 @@
 from copy import deepcopy
 from typing import List, Optional
 
+from emmet.core.math import Matrix3D, MatrixVoigt
 from pydantic import BaseModel, Field
 from pymatgen.analysis.elasticity import (
     Deformation,
@@ -15,7 +16,6 @@ from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
-from atomate2.common.schemas.math import Matrix3D, MatrixVoigt
 
 __all__ = [
     "DerivedProperties",

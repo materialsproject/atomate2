@@ -16,6 +16,11 @@ def vasp_test_dir(test_dir):
     return test_dir / "vasp"
 
 
+@pytest.fixture(scope="session")
+def lobster_test_dir(test_dir):
+    return test_dir / "lobster"
+
+
 @pytest.fixture(scope="function")
 def mock_vasp(monkeypatch, vasp_test_dir):
     """
@@ -103,7 +108,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
 def fake_run_vasp(
     ref_path: Union[str, Path],
-    incar_settings: Sequence[str] = tuple(),
+    incar_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
 ):

@@ -19,3 +19,4 @@ Name,Type,Maker
 `Optics`_,flow,:obj:`.OpticsMaker`
 `HSE06 Optics`_,flow,:obj:`.HSEOpticsMaker`
 `Phonons`_,flow,:obj:`.PhononMaker`
+`Lobster`_,flow,:obj:`.VaspLobsterMaker`

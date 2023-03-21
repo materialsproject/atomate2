@@ -5,6 +5,7 @@ import logging
 from typing import Dict, List, Optional, Union
 
 import numpy as np
+from emmet.core.math import Matrix3D
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
@@ -23,8 +24,6 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
-
-from atomate2.common.schemas.math import Matrix3D
 
 logger = logging.getLogger(__name__)
 
@@ -383,7 +382,6 @@ class PhononBSDOSDoc(BaseModel):
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
         if kwargs["create_thermal_displacements"]:
-
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
