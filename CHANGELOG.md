@@ -42,6 +42,11 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
   metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator, then
   ISMEAR=-5 (tetrahedron smearing).
 
+
+Bug fixes:
+
+- Fix default value of `Atomate2Settings.VASP_HANDLE_UNSUCCESSFUL`
+
 v0.0.10
 -------
 
