@@ -1,14 +1,9 @@
 """Schemas for Ferroelectric wflow."""
 
-from typing import Any, Dict, List
+from typing import List
 
-from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, spglib
-from pymatgen.core.structure import Structure
-
-from atomate2 import SETTINGS
 
 __all__ = ["PolarizationDocument"]
 
@@ -22,9 +17,7 @@ class PolarizationDocument(BaseModel):
         description="Cleaned representation of the formula",
     )
 
-    wfid: str = Field(
-        None, title="WF id", description="The workflow id"
-    )
+    wfid: str = Field(None, title="WF id", description="The workflow id")
 
     task_label_order: List[str] = Field(
         None,
@@ -44,57 +37,68 @@ class PolarizationDocument(BaseModel):
         description="The norm of the polarization vector",
     )
 
-    same_branch_polarization: Dict = Field(
-        None, title="Same Branch Polarization Vectors",
+    same_branch_polarization: List[List[float]] = Field(
+        None,
+        title="Same Branch Polarization Vectors",
         description="Polarization vectors in the same branch",
     )
 
-    raw_electron_polarization:  Dict = Field(
-        None, title="Raw Electron Polarization",
+    raw_electron_polarization: List[float] = Field(
+        None,
+        title="Raw Electron Polarization",
         description="Electronic contribution to the polarization",
     )
 
-    raw_ion_polarization:  Dict = Field(
-        None, title="Raw Ions Polarization",
+    raw_ion_polarization: List[float] = Field(
+        None,
+        title="Raw Ions Polarization",
         description="Ionic contribution to the polarization",
     )
 
-    polarization_quanta: Dict = Field(
-        None, title="Polarization Quanta",
+    polarization_quanta: List[List[float]] = Field(
+        None,
+        title="Polarization Quanta",
         description="Quanta of polarization for each structure and direction",
     )
 
     zval_dict: dict = Field(
-        None, title="Atomic Z values",
+        None,
+        title="Atomic Z values",
         description="Charge of the atoms as in pseudopotentials",
     )
 
     energies: List[float] = Field(
-        None, title="Energies",
+        None,
+        title="Energies",
         description="Total energy of each structure",
     )
 
     energies_per_atom: List[float] = Field(
-        None, title="Total energy per atom of each structure",
-        description=""
+        None, title="Total energy per atom of each structure", description=""
     )
 
     outcars: List[dict] = Field(
-        None, title="Outcars",
+        None,
+        title="Outcars",
         description="VASP Outcar for each structure",
     )
 
     structures: List[Structure] = Field(
-        None, title="Structures",
+        None,
+        title="Structures",
         description="All the interpolated structures",
     )
 
     polarization_max_spline_jumps: List[float] = Field(
-        None, title="Polarization Max Spline Jump",
-        description="Maximum jump of the spline that interpolate the polarization branch",
+        None,
+        title="Polarization Max Spline Jump",
+        description="Maximum jump of the spline that interpolate \
+                     the polarization branch",
     )
 
     energy_per_atom_max_spline_jumps: float = Field(
-        None, title="Energy Max Spline Jump",
-        description="Maximum jump of the spline that interpolate the energy per atom profile",
+        None,
+        title="Energy Max Spline Jump",
+        description="Maximum jump of the spline that interpolate \
+                     the energy per atom profile",
     )

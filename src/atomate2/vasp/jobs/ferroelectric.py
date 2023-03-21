@@ -3,43 +3,47 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from pathlib import Path
 
 import numpy as np
 from jobflow import Flow, Response, job
+
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
 from pymatgen.analysis.ferroelectricity.polarization import (
     EnergyTrend,
     Polarization,
     get_total_ionic_dipole,
 )
 
-from atomate2 import SETTINGS
-from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
 from atomate2.vasp.jobs.core import PolarizationMaker
+from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["polarization_analysis"]
+
 
 @job(output_schema=PolarizationDocument)
 def polarization_analysis(lcalcpol_outputs):
     """
     Recovers the same branch polarization and the spontaneous polarization
     for a ferroelectric workflow.
-    """
 
+    Parameters
+    ----------
+    lcalcpol_outputs: output jobflow objects from previous lcalcpol jobs
+    """  # noqa: D205
     # order previous calculations from nonpolar to polar
-    ordered_keys = [f'interpolation_{i}' for i in reversed(range(len(lcalcpol_outputs[2])))]
+    ordered_keys = [
+        f"interpolation_{i}" for i in reversed(range(len(lcalcpol_outputs[2])))
+    ]
 
-
-    polarization_tasks = [lcalcpol_outputs[0].dict()]    
+    polarization_tasks = [lcalcpol_outputs[0].dict()]
     polarization_tasks += [lcalcpol_outputs[2][k].dict() for k in ordered_keys]
     polarization_tasks += [lcalcpol_outputs[1].dict()]
-    
+
     tasks = []
     outcars = []
     structures = []
@@ -55,7 +59,6 @@ def polarization_analysis(lcalcpol_outputs):
         structures.append(p["calcs_reversed"][0]["input"]["structure"])
         zval_dicts.append(p["calcs_reversed"][0]["output"]["outcar"]["zval_dict"])
 
-
     # structures = [Structure.from_dict(structure) for structure in structure_dicts]
 
     # If LCALCPOL = True then Outcar will parse and store the pseudopotential zvals.
@@ -65,9 +68,7 @@ def polarization_analysis(lcalcpol_outputs):
     # VASP's ionic contribution is sometimes strange.
     # See pymatgen.analysis.ferroelectricity.polarization.Polarization for details.
     p_elecs = [outcar["p_elec"] for outcar in outcars]
-    p_ions = [
-        get_total_ionic_dipole(structure, zval_dict) for structure in structures
-    ]
+    p_ions = [get_total_ionic_dipole(structure, zval_dict) for structure in structures]
 
     polarization = Polarization(p_elecs, p_ions, structures)
 
@@ -99,7 +100,7 @@ def polarization_analysis(lcalcpol_outputs):
     polarization_dict.update(
         {"pretty_formula": structures[0].composition.reduced_formula}
     )
-    #polarization_dict.update({"wfid": wfid})
+    # polarization_dict.update({"wfid": wfid})
     polarization_dict.update({"task_label_order": tasks})
 
     # Polarization information
@@ -128,10 +129,9 @@ def polarization_analysis(lcalcpol_outputs):
 
 
 @job
-def interpolate_structures(p_st,np_st,nimages):
+def interpolate_structures(p_st, np_st, nimages):
     """
-    Interpolate linearly the polar and the nonpolar structures with nimages structures
-
+    Interpolate linearly the polar and the nonpolar structures with nimages structures.
 
     Parameters
     ----------
@@ -140,20 +140,20 @@ def interpolate_structures(p_st,np_st,nimages):
     nonpolar_structure : .Structure
         A pymatgen structure of nonpolar phase.
     nimages: int
-        Number of interpolations calculated from polar to nonpolar structures, including the nonpolar.
+        Number of interpolations calculated from polar to nonpolar structures,
+        including the nonpolar.
     """
-    
-    interp_structures = p_st.interpolate(np_st,nimages,True)
+    interp_structures = p_st.interpolate(np_st, nimages, True)
 
     jobs = []
     outputs = {}
-    
-    for i,interp_structure in enumerate(interp_structures[1:]):
-        interpolation = PolarizationMaker().make(interp_structure)
-        interpolation.append_name(f' interpolation_{i}')
-        jobs.append(interpolation)
-        
-        outputs.update({f'interpolation_{i}':interpolation.output})
 
-    interp_flow = Flow(jobs,outputs)
+    for i, interp_structure in enumerate(interp_structures[1:]):
+        interpolation = PolarizationMaker().make(interp_structure)
+        interpolation.append_name(f" interpolation_{i}")
+        jobs.append(interpolation)
+
+        outputs.update({f"interpolation_{i}": interpolation.output})
+
+    interp_flow = Flow(jobs, outputs)
     return Response(replace=interp_flow)
