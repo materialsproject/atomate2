@@ -113,20 +113,6 @@ class VaspLobsterMaker(Maker):
             optimization_uuid = optimization.output.uuid
             prev_vasp_dir = optimization_dir
 
-        # do a static WAVECAR computation with symmetry and standard number of bands
-        # first to preconverge the WAVECAR
-        preconverge_static_dir = None
-        preconverge_static_uuid = None
-        if self.preconverge_static_maker is not None:
-            preconverge = self.preconverge_static_maker.make(
-                structure, prev_vasp_dir=prev_vasp_dir
-            )
-            preconverge.append_name(" preconverge")
-            jobs.append(preconverge)
-            preconverge_static_dir = preconverge.output.dir_name
-            preconverge_static_uuid = preconverge.output.uuid
-            prev_vasp_dir = preconverge.output.dir_name
-
         # Information about the basis is collected
         basis_infos = get_basis_infos(
             structure=structure,
@@ -135,6 +121,25 @@ class VaspLobsterMaker(Maker):
             address_max_basis=self.address_max_basis,
         )
         jobs.append(basis_infos)
+
+
+        # do a static WAVECAR computation with symmetry and standard number of bands
+        # first to preconverge the WAVECAR
+        preconverge_static_dir = None
+        preconverge_static_uuid = None
+        if self.preconverge_static_maker is not None:
+            preconverge = update_user_incar_settings_maker(
+            self.preconverge_static_maker,
+            basis_infos.output["nbands"],
+            structure,
+            prev_vasp_dir,
+            )
+            preconverge.append_name(" preconverge")
+            jobs.append(preconverge)
+            preconverge_static_dir = preconverge.output.dir_name
+            preconverge_static_uuid = preconverge.output.uuid
+            prev_vasp_dir = preconverge.output.dir_name
+
 
         # Maker needs to be updated here. If the job itself is updated, no further
         # updates on the job are possible
