@@ -119,9 +119,8 @@ def delete_files(
     )
 
     for file in files:
-        file = directory / file
         try:
-            file_client.remove(file, host=host)
+            file_client.remove(directory / file, host=host)
         except FileNotFoundError:
             if not allow_missing:
                 raise
@@ -357,11 +356,7 @@ def get_zfile(
         found, then ``None`` will be returned.
     """
     for file in directory_listing:
-        if base_name == file.name:
-            return file
-        elif base_name + ".gz" == file.name:
-            return file
-        elif base_name + ".GZ" == file.name:
+        if file.name in [base_name, base_name + ".gz", base_name + ".GZ"]:
             return file
 
     if allow_missing:

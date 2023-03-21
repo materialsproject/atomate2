@@ -1,9 +1,12 @@
+"""Jobs for running phonon calculations."""
+
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
 
 import numpy as np
+from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
@@ -15,7 +18,6 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
 from atomate2.vasp.sets.base import VaspInputGenerator
@@ -91,10 +93,7 @@ def get_supercell_size(
         transformation.apply_transformation(structure=structure)
 
     else:
-        if "max_atoms" not in kwargs:
-            max_atoms = 1000
-        else:
-            max_atoms = kwargs["max_atoms"]
+        max_atoms = 1000 if "max_atoms" not in kwargs else kwargs["max_atoms"]
         if "angle_tolerance" not in kwargs:
             kwargs["angle_tolerance"] = 1e-2
         try:
@@ -337,7 +336,7 @@ class PhononDisplacementMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
