@@ -59,7 +59,7 @@ class Atomate2Settings(BaseSettings):
         "calculation is tagged with a warning",
     )
     VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
-        "fizzle",
+        "error",
         description="Three-way toggle on what to do if the job looks OK but is actually"
         " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
         "stop children. - False: do nothing, continue with workflow as normal. 'error':"
