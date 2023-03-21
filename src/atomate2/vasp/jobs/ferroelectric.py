@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 from jobflow import Flow, Response, job
+from monty.serialization import dumpfn
 from pymatgen.core.structure import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.analysis.ferroelectricity.polarization import (
@@ -46,10 +47,10 @@ def polarization_analysis(lcalcpol_outputs):
     energies = []
     zval_dicts = []
 
-    for p in polarization_tasks:
+    for i,p in enumerate(polarization_tasks):
         energies_per_atom.append(p["calcs_reversed"][0]["output"]["energy_per_atom"])
         energies.append(p["calcs_reversed"][0]["output"]["energy"])
-        tasks.append(p["task_label"])
+        tasks.append(p["task_label"] or str(i))
         outcars.append(p["calcs_reversed"][0]["output"]["outcar"])
         structures.append(p["calcs_reversed"][0]["input"]["structure"])
         zval_dicts.append(p["calcs_reversed"][0]["output"]["outcar"]["zval_dict"])
@@ -72,22 +73,26 @@ def polarization_analysis(lcalcpol_outputs):
 
     p_change = np.ravel(polarization.get_polarization_change()).tolist()
     p_norm = polarization.get_polarization_change_norm()
-    polarization_max_spline_jumps = polarization.max_spline_jumps()
     same_branch = polarization.get_same_branch_polarization_data(
         convert_to_muC_per_cm2=True
     )
     raw_elecs, raw_ions = polarization.get_pelecs_and_pions()
     quanta = polarization.get_lattice_quanta(convert_to_muC_per_cm2=True)
 
-    energy_trend = EnergyTrend(energies_per_atom)
-    energy_max_spline_jumps = energy_trend.max_spline_jump()
-
+    if len(structures) > 3:
+        energy_trend = EnergyTrend(energies_per_atom)
+        energy_max_spline_jumps = energy_trend.max_spline_jump()
+        polarization_max_spline_jumps = polarization.max_spline_jumps()
+    else:
+        energy_max_spline_jumps = None
+        polarization_max_spline_jumps = None
+                
     polarization_dict = {}
 
-    def split_abc(var, var_name):
+    def split_abc(var):
         d = {}
         for i, j in enumerate("abc"):
-            d.update({var_name + f"_{j}": np.ravel(var[:, i]).tolist()})
+            d.update({f"{j}": np.ravel(var[:, i]).tolist()})
         return d
 
     # General information
@@ -103,10 +108,10 @@ def polarization_analysis(lcalcpol_outputs):
     polarization_dict.update(
         {"polarization_max_spline_jumps": polarization_max_spline_jumps}
     )
-    polarization_dict.update(split_abc(same_branch, "same_branch_polarization"))
-    polarization_dict.update(split_abc(raw_elecs, "raw_electron_polarization"))
-    polarization_dict.update(split_abc(raw_ions, "raw_ion_polarization"))
-    polarization_dict.update(split_abc(quanta, "polarization_quanta"))
+    polarization_dict.update({"same_branch_polarization": split_abc(same_branch)})
+    polarization_dict.update({"raw_electron_polarization": split_abc(raw_elecs)})
+    polarization_dict.update({"raw_ion_polarization": split_abc(raw_ions)})
+    polarization_dict.update({"polarization_quanta": split_abc(quanta)})
     polarization_dict.update({"zval_dict": zval_dict})
 
     # Energy information
@@ -118,6 +123,7 @@ def polarization_analysis(lcalcpol_outputs):
     polarization_dict.update({"outcars": outcars})
     polarization_dict.update({"structures": structures})
 
+    dumpfn(polarization_dict,'polarization_doc.json')
     return PolarizationDocument(**polarization_dict)
 
 
