@@ -133,8 +133,9 @@ class VaspLobsterMaker(Maker):
             basis_infos.output["nbands"],
             structure,
             prev_vasp_dir,
+            " preconverge"
             )
-            preconverge.append_name(" preconverge")
+
             jobs.append(preconverge)
             preconverge_static_dir = preconverge.output.dir_name
             preconverge_static_uuid = preconverge.output.uuid
@@ -148,6 +149,7 @@ class VaspLobsterMaker(Maker):
             basis_infos.output["nbands"],
             structure,
             prev_vasp_dir,
+            None
         )
         jobs.append(lobster_static)
         lobster_static_dir = lobster_static.output.dir_name
