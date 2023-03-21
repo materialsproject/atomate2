@@ -136,7 +136,7 @@ def update_user_incar_settings_maker(
     nbands: int,
     structure: Structure,
     prev_vasp_dir: Path | str,
-    append_name: str|None,
+    append_name: str | None,
 ):
     """
     Update the INCAR settings of a maker.
@@ -153,7 +153,8 @@ def update_user_incar_settings_maker(
     prev_vasp_dir : Path or str
         Path or string to vasp files.
     append_name: str or None
-        job name that will be appened if not None.
+        job name that will be added if not None.
+
     Returns
     -------
     .BaseVaspMaker

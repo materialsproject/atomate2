@@ -272,17 +272,24 @@ store.connect()
 
 result = store.query_one(
     {"name": "lobster_run_0"},
-    properties=["output.lobsterpy_data.cohp_plot_data", "output.lobsterpy_data_cation_anion.cohp_plot_data", ],
+    properties=[
+        "output.lobsterpy_data.cohp_plot_data",
+        "output.lobsterpy_data_cation_anion.cohp_plot_data",
+    ],
     load=True,
 )
 
-for number, (key, cohp) in enumerate(result["output"]["lobsterpy_data"]["cohp_plot_data"].items()):
+for number, (key, cohp) in enumerate(
+    result["output"]["lobsterpy_data"]["cohp_plot_data"].items()
+):
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)
     plotter.save_plot("plots_all_bonds" + str(number) + ".pdf")
 
-for number, (key, cohp) in enumerate(result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()):
+for number, (key, cohp) in enumerate(
+    result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()
+):
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)

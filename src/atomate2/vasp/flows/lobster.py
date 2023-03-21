@@ -74,7 +74,7 @@ class VaspLobsterMaker(Maker):
         default_factory=lambda: StaticMaker(
             input_set_generator=StaticSetGenerator(
                 user_incar_settings={"LWAVE": True},
-                user_kpoints_settings={"reciprocal_density": 100}
+                user_kpoints_settings={"reciprocal_density": 100},
             ),
         )
     )
@@ -122,25 +122,23 @@ class VaspLobsterMaker(Maker):
         )
         jobs.append(basis_infos)
 
-
         # do a static WAVECAR computation with symmetry and standard number of bands
         # first to preconverge the WAVECAR
         preconverge_static_dir = None
         preconverge_static_uuid = None
         if self.preconverge_static_maker is not None:
             preconverge = update_user_incar_settings_maker(
-            self.preconverge_static_maker,
-            basis_infos.output["nbands"],
-            structure,
-            prev_vasp_dir,
-            " preconverge"
+                self.preconverge_static_maker,
+                basis_infos.output["nbands"],
+                structure,
+                prev_vasp_dir,
+                " preconverge",
             )
 
             jobs.append(preconverge)
             preconverge_static_dir = preconverge.output.dir_name
             preconverge_static_uuid = preconverge.output.uuid
             prev_vasp_dir = preconverge.output.dir_name
-
 
         # Maker needs to be updated here. If the job itself is updated, no further
         # updates on the job are possible
@@ -149,7 +147,7 @@ class VaspLobsterMaker(Maker):
             basis_infos.output["nbands"],
             structure,
             prev_vasp_dir,
-            None
+            None,
         )
         jobs.append(lobster_static)
         lobster_static_dir = lobster_static.output.dir_name
