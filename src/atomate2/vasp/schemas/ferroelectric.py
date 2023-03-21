@@ -1,6 +1,6 @@
 """Schemas for Ferroelectric wflow."""
 
-from typing import List
+from typing import Dict, List
 
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
@@ -38,22 +38,26 @@ class PolarizationDocument(BaseModel):
     )
 
     same_branch_polarization: Dict = Field(
-        None, title="Same Branch Polarization Vectors",
+        None,
+        title="Same Branch Polarization Vectors",
         description="Polarization vectors in the same branch",
     )
 
-    raw_electron_polarization:  Dict = Field(
-        None, title="Raw Electron Polarization",
+    raw_electron_polarization: Dict = Field(
+        None,
+        title="Raw Electron Polarization",
         description="Electronic contribution to the polarization",
     )
 
-    raw_ion_polarization:  Dict = Field(
-        None, title="Raw Ions Polarization",
+    raw_ion_polarization: Dict = Field(
+        None,
+        title="Raw Ions Polarization",
         description="Ionic contribution to the polarization",
     )
 
     polarization_quanta: Dict = Field(
-        None, title="Polarization Quanta",
+        None,
+        title="Polarization Quanta",
         description="Quanta of polarization for each structure and direction",
     )
 

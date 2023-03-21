@@ -7,8 +7,6 @@ import logging
 import numpy as np
 from jobflow import Flow, Response, job
 from monty.serialization import dumpfn
-from pymatgen.core.structure import Structure
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.analysis.ferroelectricity.polarization import (
     EnergyTrend,
     Polarization,
@@ -49,7 +47,7 @@ def polarization_analysis(lcalcpol_outputs):
     energies = []
     zval_dicts = []
 
-    for i,p in enumerate(polarization_tasks):
+    for i, p in enumerate(polarization_tasks):
         energies_per_atom.append(p["calcs_reversed"][0]["output"]["energy_per_atom"])
         energies.append(p["calcs_reversed"][0]["output"]["energy"])
         tasks.append(p["task_label"] or str(i))
@@ -85,7 +83,7 @@ def polarization_analysis(lcalcpol_outputs):
     else:
         energy_max_spline_jumps = None
         polarization_max_spline_jumps = None
-                
+
     polarization_dict = {}
 
     def split_abc(var):
@@ -122,7 +120,7 @@ def polarization_analysis(lcalcpol_outputs):
     polarization_dict.update({"outcars": outcars})
     polarization_dict.update({"structures": structures})
 
-    dumpfn(polarization_dict,'polarization_doc.json')
+    dumpfn(polarization_dict, "polarization_doc.json")
     return PolarizationDocument(**polarization_dict)
 
 
