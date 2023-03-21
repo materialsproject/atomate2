@@ -1,11 +1,11 @@
 def test_my_flow(mock_vasp, clean_dir, test_dir):
+    from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.ferroelectric import FerroelectricMaker
     from atomate2.vasp.powerups import update_user_incar_settings
     from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
-    from atomate2.vasp.schemas.task import TaskDocument
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -51,7 +51,7 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
 
     # !!! validation on the energy
     output1 = responses[flow.jobs[0].uuid][1].output
-    assert isinstance(output1, TaskDocument)
+    assert isinstance(output1, TaskDoc)
     assert output1.output.energy == -40.65766597
 
     # !!! validation on the polarization change
