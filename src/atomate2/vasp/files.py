@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 def copy_vasp_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
-    additional_vasp_files: Sequence[str] = tuple(),
+    additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
     file_client: FileClient | None = None,
 ):
@@ -61,7 +61,7 @@ def copy_vasp_outputs(
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
     # find required files
-    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml") + tuple(additional_vasp_files)
+    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml", *additional_vasp_files)
     required_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
 
     # find optional files; do not fail if KPOINTS is missing, this might be KSPACING

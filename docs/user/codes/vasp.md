@@ -223,6 +223,44 @@ if the material needs magnetism set, and ii) the total number of bands (the unif
 contains 1.3 * number of bands in the static calculation) as often the highest bands are
 not properly converged in VASP.
 
+### Phonons
+
+Calculate the harmonic phonons of a material.
+
+Initially, a tight structural relaxation is performed to obtain a structure without forces
+on the atoms. Subsequently, supercells with one displaced atom are generated and accurate
+forces are computed for these structures. With the help of phonopy, these forces are then
+converted into a dynamical matrix. To correct for polarization effects, a correction of the
+dynamical matrix based on BORN charges can be performed. Finally, phonon densities of states,
+phonon band structures and thermodynamic properties are computed.
+
+```{note}
+It is heavily recommended to symmetrize the structure before passing it to
+this flow. Otherwise, a different space group might be detected and too
+many displacement calculations will be generated.
+It is recommended to check the convergence parameters here and
+adjust them if necessary. The default might not be strict enough
+for your specific case.
+```
+
+## Lobster
+
+Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
+
+Initially, a structural relaxation is performed. Within a static run, the wave function is pre-converged
+with symmetry switched on. Then, another static run with the correct number of bands and without
+symmetry will be performed. The wave function will then be used for LOBSTER runs with all
+available basis functions in Lobster. Then, [LobsterPy](https://github.com/jageo/lobsterpy) will perform an automatic
+analysis of the output files from LOBSTER.
+
+Please add the LOBSTER command to the `atomate2.yaml` file:
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: <<LOBSTER_CMD>>
+```
+
+
 
 (modifying_input_sets)=
 Modifying input sets

@@ -25,11 +25,12 @@ Lawrence Livermore National Laboratory
 [jmmshn]: https://github.com/jmmshn
 [0000-0002-2743-7531]: https://orcid.org/0000-0002-2743-7531
 
-**Janosh Riebesell** [![gh]][janosh] \
+**Janosh Riebesell** [![gh]][janosh] [![orc]][0000-0001-5233-3462]\
 PhD Student \
 Cambridge University
 
 [janosh]: https://github.com/janosh
+[0000-0001-5233-3462]: https://orcid.org/0000-0001-5233-3462
 
 **Ryan Kingsbury** [![gh]][rkingsbury] [![orc]][0000-0002-7168-3967] \
 Incoming Assistant Professor \
@@ -52,3 +53,32 @@ University of Houston
 
 [mjwen]: https://github.com/mjwen
 [0000-0003-0013-575X]: https://orcid.org0000-0003-0013-575X/
+
+**Christina Ertural** [![gh]][QuantumChemist] [![orc]][0000-0002-7696-5824] \
+Postdoctoral Researcher \
+Federal Institute for Materials Research and Testing (Berlin)
+
+[QuantumChemist]: https://github.com/QuantumChemist
+[0000-0002-7696-5824]: https://orcid.org/0000-0002-7696-5824
+
+**Matthew Horton** [![gh]][mkhorton] [![orc]][0000-0001-7777-8871] \
+Senior Research Software Engineer \
+Microsoft Research
+
+[mkhorton]: https://github.com/mkhorton
+[0000-0001-7777-8871]: https://orcid.org/0000-0001-7777-8871
+
+**Zhuoying Zhu** [![gh]][zhuoying] [![orc]][0000-0003-1775-7651] \
+Postdoctoral researcher\
+Lawrence Berkeley National Laboratory
+
+[zhuoying]: https://github.com/zhuoying
+[0000-0003-1775-7651]: https://orcid.org/0000-0003-1775-7651
+
+**Aakash Ashok Naik** [![gh]][naik-aakash] [![orc]][0000-0002-6071-6786] \
+PhD student\
+Federal Institute for Materials Research and Testing (Berlin) \
+Friedrich Schiller University Jena
+
+[naik-aakash]: https://github.com/naik-aakash
+[0000-0002-6071-6786]: https://orcid.org/0000-0002-6071-6786

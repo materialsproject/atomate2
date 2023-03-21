@@ -1,49 +1,27 @@
-def test_sort_pos_dist():
-    """
-    Test the sorting algorithm with a list of 2D positions.
-    The algorithm should sort the list into a straight line depending on the direction of s1 and s2
-    """
-    import numpy as np
-
-    from atomate2.vasp.schemas.defect import sort_pos_dist
-
-    def abs_d(s1, s2):
-        return np.linalg.norm(np.array(s1) - np.array(s2))
-
-    points_on_line_2d = [(1, 1), (-2, -2), (0, 0), (2, 2), (-1, -1)]
-    r, d = sort_pos_dist(points_on_line_2d, s1=(0, 0), s2=(1.5, 1.5), dist=abs_d)
-    assert r == [(-2, -2), (-1, -1), (0, 0), (1, 1), (2, 2)]
-
-    r, d = sort_pos_dist(points_on_line_2d, s1=(0, 0), s2=(-2.5, -2.5), dist=abs_d)
-    assert r == [(2, 2), (1, 1), (0, 0), (-1, -1), (-2, -2)]
-
-
 def test_CCDDocument(vasp_test_dir):
     """
-    Test the CCDDocument schema
+    Test the CCDDocument schema, this test needs to be placed here
+    since we are using the VASP TaskDocuments for testing.
     """
     from collections import defaultdict
 
-    from atomate2.vasp.schemas.defect import CCDDocument
-    from atomate2.vasp.schemas.task import TaskDocument
+    from emmet.core.tasks import TaskDoc
+
+    from atomate2.common.schemas.defects import CCDDocument
 
     def is_strict_minimum(min_index, arr):
         min_val = arr[min_index]
-        for i, val in enumerate(arr):
-            if i != min_index:
-                if val < min_val:
-                    return False
-        return True
+        return all(not (i != min_index and val < min_val) for i, val in enumerate(arr))
 
-    static_tasks1: list[TaskDocument] = []
-    static_tasks2: list[TaskDocument] = []
+    static_tasks1: list[TaskDoc] = []
+    static_tasks2: list[TaskDoc] = []
     static_dirs1: list[str] = []
     static_dirs2: list[str] = []
     for i in range(5):
         sdir1 = vasp_test_dir / "Si_config_coord" / f"static_q1_{i}" / "outputs"
         sdir2 = vasp_test_dir / "Si_config_coord" / f"static_q2_{i}" / "outputs"
-        static_tasks1.append(TaskDocument.from_directory(sdir1))
-        static_tasks2.append(TaskDocument.from_directory(sdir2))
+        static_tasks1.append(TaskDoc.from_directory(sdir1))
+        static_tasks2.append(TaskDoc.from_directory(sdir2))
         static_dirs1.append(str(sdir1))
         static_dirs2.append(str(sdir2))
 

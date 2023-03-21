@@ -16,6 +16,11 @@ def vasp_test_dir(test_dir):
     return test_dir / "vasp"
 
 
+@pytest.fixture(scope="session")
+def lobster_test_dir(test_dir):
+    return test_dir / "lobster"
+
+
 @pytest.fixture(scope="function")
 def mock_vasp(monkeypatch, vasp_test_dir):
     """
@@ -103,7 +108,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
 def fake_run_vasp(
     ref_path: Union[str, Path],
-    incar_settings: Sequence[str] = tuple(),
+    incar_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
 ):
@@ -119,7 +124,7 @@ def fake_run_vasp(
         A list of INCAR settings to check.
     check_inputs
         A list of vasp input files to check. Supported options are "incar", "kpoints",
-        "poscar", "potcar".
+        "poscar", "potcar", "wavecar".
     clear_inputs
         Whether to clear input files before copying in the reference VASP outputs.
     """
@@ -138,6 +143,10 @@ def fake_run_vasp(
 
     if "potcar" in check_inputs:
         check_potcar(ref_path)
+
+    # This is useful to check if the WAVECAR has been copied
+    if "wavecar" in check_inputs and not Path("WAVECAR").exists():
+        raise ValueError("WAVECAR was not correctly copied")
 
     logger.info("Verified inputs successfully")
 
