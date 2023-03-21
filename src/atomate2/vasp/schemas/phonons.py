@@ -1,8 +1,11 @@
+"""Schemas for phonon documents."""
+
 import copy
 import logging
 from typing import Dict, List, Optional, Union
 
 import numpy as np
+from emmet.core.math import Matrix3D
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
@@ -21,8 +24,6 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
-
-from atomate2.common.schemas.math import Matrix3D
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +59,8 @@ class ThermalDisplacementData(BaseModel):
     )
     thermal_displacement_matrix: List[List[Matrix3D]] = Field(
         None,
-        description="field including thermal displacement matrices in Cartesian coordinate system",
+        description="field including thermal displacement matrices in Cartesian "
+        "coordinate system",
     )
     temperatures_thermal_displacements: List[int] = Field(
         None,
@@ -156,7 +158,8 @@ class PhononBSDOSDoc(BaseModel):
 
     born: List[Matrix3D] = Field(
         None,
-        description="born charges as computed from phonopy. Only for symmetrically different atoms",
+        description="born charges as computed from phonopy. Only for symmetrically "
+        "different atoms",
     )
 
     epsilon_static: Matrix3D = Field(
@@ -271,13 +274,12 @@ class PhononBSDOSDoc(BaseModel):
                 raise ValueError(
                     "Number of born charges does not agree with number of atoms"
                 )
-            if code == "vasp":
-                if not np.all(np.isclose(borns, 0.0)):
-                    phonon.nac_params = {
-                        "born": borns,
-                        "dielectric": epsilon,
-                        "factor": 14.399652,
-                    }
+            if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
+                phonon.nac_params = {
+                    "born": borns,
+                    "dielectric": epsilon,
+                    "factor": 14.399652,
+                }
             # Other codes could be added here
         else:
             borns = None
@@ -380,7 +382,6 @@ class PhononBSDOSDoc(BaseModel):
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
         if kwargs["create_thermal_displacements"]:
-
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -422,10 +423,9 @@ class PhononBSDOSDoc(BaseModel):
             / structure.composition.reduced_composition.num_atoms
         )
 
-        if total_dft_energy is not None:
-            total_dft_energy_per_formula_unit = total_dft_energy / formula_units
-        else:
-            total_dft_energy_per_formula_unit = None
+        total_dft_energy_per_formula_unit = (
+            total_dft_energy / formula_units if total_dft_energy is not None else None
+        )
 
         return cls(
             structure=structure,
@@ -447,7 +447,7 @@ class PhononBSDOSDoc(BaseModel):
             primitive_matrix=phonon.primitive_matrix.tolist(),
             code="vasp",
             thermal_displacement_data={
-                "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),
+                "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
                 "thermal_displacement_matrix_cif": tdisp_mat_cif,
                 "thermal_displacement_matrix": tdisp_mat,
                 "freq_min_thermal_displacements": freq_min_thermal_displacements,

@@ -8,7 +8,6 @@ IBRION = 8
 ISIF = 3
 ISMEAR = -5
 ISPIN = 2
-KSPACING = 0.22
 LAECHG = True
 LASPH = True
 LCHARG = True

@@ -8,11 +8,11 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+from emmet.core.math import Vector3D
 from pymatgen.core import Structure
 from pymatgen.core.periodic_table import Element
 from pymatgen.io.vasp import Outcar, Vasprun
 
-from atomate2.common.schemas.math import Vector3D
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class RelaxSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -76,7 +76,7 @@ class TightRelaxSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -138,7 +138,7 @@ class StaticSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -194,6 +194,9 @@ class NonSCFSetGenerator(VaspInputGenerator):
         Energy difference used to set NEDOS, based on the total energy range.
     reciprocal_density
         Density of k-mesh by reciprocal volume.
+    reciprocal_density_metal
+        Density of k-mesh by reciprocal volume for use when the system is metallic
+        and ``auto_metal_kpoints=True`` (the default).
     line_density
         Line density for line mode band structure.
     optics
@@ -208,6 +211,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
     mode: str = "line"
     dedos: float = 0.02
     reciprocal_density: float = 100
+    reciprocal_density_metal: float = 400
     line_density: float = 20
     optics: bool = False
     nbands_factor: float = 1.2
@@ -259,13 +263,16 @@ class NonSCFSetGenerator(VaspInputGenerator):
         elif self.mode == "boltztrap":
             return {"explicit": True, "reciprocal_density": self.reciprocal_density}
 
-        return {"reciprocal_density": self.reciprocal_density}
+        return {
+            "reciprocal_density": self.reciprocal_density,
+            "reciprocal_density_metal": self.reciprocal_density_metal,
+        }
 
     def get_incar_updates(
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -315,7 +322,9 @@ class NonSCFSetGenerator(VaspInputGenerator):
         elif self.mode in ("line", "boltztrap"):
             # if line mode or explicit k-points (boltztrap) can't use ISMEAR=-5
             # use small sigma to avoid partial occupancies for small band gap materials
-            updates.update({"ISMEAR": 0, "SIGMA": 0.01})
+            # use a larger sigma if the material is a metal
+            sigma = 0.2 if bandgap == 0 else 0.01
+            updates.update({"ISMEAR": 0, "SIGMA": sigma})
 
         if self.optics:
             # LREAL not supported with LOPTICS = True; automatic NEDOS usually
@@ -344,7 +353,7 @@ class HSERelaxSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -397,7 +406,7 @@ class HSETightRelaxSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -457,7 +466,7 @@ class HSEStaticSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -626,7 +635,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -729,7 +738,7 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -840,7 +849,7 @@ class MDSetGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -886,21 +895,18 @@ class MDSetGenerator(VaspInputGenerator):
             }
         )
 
-        if Element("H") in structure.species:
-            if updates["POTIM"] > 0.5:
-                logger.warning(
-                    f"Molecular dynamics time step is {updates['POTIM']}, which is "
-                    "typically too large for a structure containing H. Consider set it "
-                    "to a value of 0.5 or smaller."
-                )
+        if Element("H") in structure.species and updates["POTIM"] > 0.5:
+            logger.warning(
+                f"Molecular dynamics time step is {updates['POTIM']}, which is "
+                "typically too large for a structure containing H. Consider set it "
+                "to a value of 0.5 or smaller."
+            )
 
         return updates
 
     @staticmethod
     def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
-        """
-        Get default params for the ensemble.
-        """
+        """Get default params for the ensemble."""
         defaults = {
             "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
@@ -916,11 +922,11 @@ class MDSetGenerator(VaspInputGenerator):
 
         try:
             return defaults[ensemble.lower()]  # type: ignore
-        except KeyError:
+        except KeyError as err:
             supported = tuple(defaults.keys())
             raise ValueError(
                 f"Expect `ensemble` to be one of {supported}; got {ensemble}."
-            )
+            ) from err
 
 
 def _get_nedos(vasprun: Vasprun | None, dedos: float):

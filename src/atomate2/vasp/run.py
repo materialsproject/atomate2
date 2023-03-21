@@ -31,10 +31,10 @@ from custodian.vasp.handlers import (
 )
 from custodian.vasp.jobs import VaspJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
+from emmet.core.tasks import TaskDoc
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
-from atomate2.vasp.schemas.task import TaskDocument
 
 __all__ = [
     "JobType",
@@ -152,7 +152,7 @@ def run_vasp(
         raise ValueError(f"Unsupported job type: {job_type}")
 
     if wall_time is not None:
-        handlers = list(handlers) + [WalltimeHandler(wall_time=wall_time)]
+        handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
     c = Custodian(
         handlers,
@@ -168,7 +168,7 @@ def run_vasp(
 
 
 def should_stop_children(
-    task_document: TaskDocument,
+    task_document: TaskDoc,
     handle_unsuccessful: bool | str = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """
@@ -176,7 +176,7 @@ def should_stop_children(
 
     Parameters
     ----------
-    task_document : .TaskDocument
+    task_document : .TaskDoc
         A VASP task document.
     handle_unsuccessful : bool or str
         This is a three-way toggle on what to do if your job looks OK, but is actually
