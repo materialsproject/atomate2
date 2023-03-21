@@ -74,7 +74,7 @@ class VaspLobsterMaker(Maker):
         default_factory=lambda: StaticMaker(
             input_set_generator=StaticSetGenerator(
                 user_incar_settings={"LWAVE": True},
-                user_kpoints_settings={"reciprocal_density": 100},
+                user_kpoints_settings={"reciprocal_density": 200},
             ),
         )
     )
