@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 def copy_vasp_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
-    additional_vasp_files: Sequence[str] = tuple(),
+    additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
     file_client: FileClient | None = None,
 ):

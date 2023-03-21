@@ -6,6 +6,7 @@ import logging
 from dataclasses import dataclass, field
 
 import numpy as np
+from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
@@ -17,7 +18,6 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
 from atomate2.vasp.sets.base import VaspInputGenerator
@@ -336,7 +336,7 @@ class PhononDisplacementMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
