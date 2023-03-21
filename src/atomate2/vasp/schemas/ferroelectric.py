@@ -1,6 +1,6 @@
 """Schemas for Ferroelectric wflow."""
 
-from typing import List
+from typing import Dict, List
 
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
