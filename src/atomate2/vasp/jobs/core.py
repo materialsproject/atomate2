@@ -41,8 +41,6 @@ __all__ = [
     "RelaxMaker",
     "NonSCFMaker",
     "DielectricMaker",
-    "PolarizationMaker"
-    "HSEBSMaker",
     "HSERelaxMaker",
     "HSEStaticMaker",
     "TightRelaxMaker",
@@ -456,7 +454,7 @@ class DielectricMaker(BaseVaspMaker):
         default_factory=lambda: StaticSetGenerator(lepsilon=True, auto_ispin=True)
     )
 
-    
+
 @dataclass
 class PolarizationMaker(BaseVaspMaker):
     """
