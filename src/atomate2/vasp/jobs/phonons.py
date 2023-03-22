@@ -365,7 +365,6 @@ class PhononDisplacementMaker(BaseVaspMaker):
                 "ALGO": "Normal",
                 "NSW": 0,
                 "LCHARG": False,
-                "ISMEAR": 0,
             },
             auto_ispin=True,
         )
