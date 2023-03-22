@@ -6,7 +6,6 @@ import os
 import traceback
 
 from monty.json import MontyDecoder, MSONable, jsanitize
-from pymatgen.util.serialization import pmg_serialize
 
 from atomate2.abinit.utils.common import OUTDIR_NAME
 
@@ -25,11 +24,15 @@ class JobHistory(collections.deque, MSONable):
     track of the full history of the job.
     """
 
-    @pmg_serialize
     def as_dict(self):
         """Create dictionary representation of the history."""
         items = [i.as_dict() if hasattr(i, "as_dict") else i for i in self]
-        return dict(items=items)
+        d = {
+            "items": items,
+            "@module": type(self).__module__,
+            "@class": type(self).__name__,
+        }
+        return d
 
     @classmethod
     def from_dict(cls, d):
@@ -61,7 +64,7 @@ class JobHistory(collections.deque, MSONable):
         self.append(
             JobEvent(
                 JobEvent.START,
-                details=dict(workdir=workdir, start_time=start_time),
+                details={"workdir": workdir, "start_time": start_time},
             )
         )
 
@@ -70,7 +73,7 @@ class JobHistory(collections.deque, MSONable):
         self.append(
             JobEvent(
                 JobEvent.END,
-                details=dict(workdir=workdir),
+                details={"workdir": workdir},
             )
         )
 
@@ -87,6 +90,7 @@ class JobHistory(collections.deque, MSONable):
 
     @property
     def run_number(self):
+        """Get the number of the run."""
         return len(self.get_events_by_types(JobEvent.START))
 
     @property
@@ -121,7 +125,7 @@ class JobHistory(collections.deque, MSONable):
 
     def log_finalized(self, final_input=None):
         """Log that the job is finalized."""
-        details = dict(total_run_time=self.get_total_run_time())
+        details = {"total_run_time": self.get_total_run_time()}
         if final_input:
             details["final_input"] = final_input
         self.append(JobEvent(JobEvent.FINALIZED, details=details))
@@ -133,15 +137,16 @@ class JobHistory(collections.deque, MSONable):
         """
         params = {}
         for param, new_value in unconverged_params.items():
-            params[param] = dict(
-                old_value=abiinput.get(param, "Default"), new_value=new_value
-            )
+            params[param] = {
+                "old_value": abiinput.get(param, "Default"),
+                "new_value": new_value,
+            }
         self.append(JobEvent(JobEvent.UNCONVERGED_PARAMS, details={"params": params}))
 
     def log_error(self, exc):
         """Log an error in the job."""
         tb = traceback.format_exc()
-        event_details = dict(stacktrace=tb)
+        event_details = {"stacktrace": tb}
         # If the exception is serializable, save its details
         try:
             exception_details = exc.to_dict()
@@ -204,13 +209,13 @@ class JobEvent(MSONable):
         self.event_type = event_type
         self.details = details
 
-    @pmg_serialize
     def as_dict(self):
         """Create dictionary representation of the job event."""
-        d = dict(event_type=self.event_type)
+        d = {"event_type": self.event_type}
         if self.details:
             d["details"] = jsanitize(self.details, strict=True)
-
+        d["@module"] = type(self).__module__
+        d["@class"] = type(self).__name__
         return d
 
     @classmethod
