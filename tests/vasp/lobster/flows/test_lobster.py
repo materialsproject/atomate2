@@ -50,7 +50,8 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         species=["Si", "Si"],
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
-    job = VaspLobsterMaker(lobster_static_maker=LobsterStaticMaker(),
+    job = VaspLobsterMaker(
+        lobster_static_maker=LobsterStaticMaker(),
         lobster_maker=LobsterMaker(
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
@@ -128,7 +129,8 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         species=["Si", "Si"],
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
-    job = VaspLobsterMaker(lobster_static_maker=LobsterStaticMaker(),
+    job = VaspLobsterMaker(
+        lobster_static_maker=LobsterStaticMaker(),
         lobster_maker=LobsterMaker(
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,

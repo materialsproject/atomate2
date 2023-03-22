@@ -79,7 +79,6 @@ class LobsterStaticMaker(BaseVaspMaker):
     )
 
 
-
 @job
 def get_basis_infos(
     structure: Structure,
