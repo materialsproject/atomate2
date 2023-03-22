@@ -61,24 +61,19 @@ class LobsterStaticMaker(BaseVaspMaker):
     name: str = "static_run"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 6000},
+            auto_ispin=True,
+            user_kpoints_settings={"reciprocal_density": 400},
             user_incar_settings={
-                "IBRION": 2,
-                "ISIF": 2,
-                "ENCUT": 680,
                 "EDIFF": 1e-7,
                 "LAECHG": False,
                 "LREAL": False,
+                "LVTOT": False,
                 "ALGO": "Normal",
-                "NSW": 0,
                 "LCHARG": False,
                 "LWAVE": True,
                 "ISYM": 0,
             },
         )
-    )
-    copy_vasp_kwargs: dict = field(
-        default_factory=lambda: {"additional_vasp_files": ["WAVECAR"]}
     )
 
 
@@ -108,9 +103,16 @@ def get_basis_infos(
     dict
         Dictionary including number of bands and basis set information.
     """
-    potcar_symbols = vasp_maker.input_set_generator._get_potcar(
-        structure=structure, potcar_spec=True
-    )
+    # this logic enables handling of a flow or a simple maker
+    try:
+        potcar_symbols = vasp_maker.static_maker.input_set_generator._get_potcar(
+            structure=structure, potcar_spec=True
+        )
+
+    except AttributeError:
+        potcar_symbols = vasp_maker.input_set_generator._get_potcar(
+            structure=structure, potcar_spec=True
+        )
 
     # get data from LobsterInput
     list_basis_dict = Lobsterin.get_all_possible_basis_functions(
@@ -170,8 +172,6 @@ def get_lobster_jobs(
     optimization_uuid: str,
     static_dir: Path | str,
     static_uuid: str,
-    preconverge_static_dir: Path | str,
-    preconverge_static_uuid: str,
 ):
     """
     Create a list of Lobster jobs with different basis sets.
@@ -190,10 +190,6 @@ def get_lobster_jobs(
         Path to static VASP calculation containing the WAVECAR.
     static_uuid : str
         Uuid of static run.
-    preconverge_static_dir : Path or str
-        Path to preconvergence step.
-    preconverge_static_uuid : str
-        uuid of preconvergence step.
 
     Returns
     -------
@@ -206,8 +202,6 @@ def get_lobster_jobs(
         "optimization_uuid": optimization_uuid,
         "static_dir": static_dir,
         "static_uuid": static_uuid,
-        "preconverge_static_dir": preconverge_static_dir,
-        "preconverge_static_uuid": preconverge_static_uuid,
         "lobster_uuids": [],
         "lobster_dirs": [],
         "lobster_task_documents": [],
@@ -232,7 +226,6 @@ def get_lobster_jobs(
 def delete_lobster_wavecar(
     dirs: list[Path | str],
     lobster_static_dir: Path | str = None,
-    preconverge_static_dir: Path | str = None,
 ):
     """
     Delete all WAVECARs.
@@ -243,14 +236,9 @@ def delete_lobster_wavecar(
         Path to directories of lobster jobs.
     lobster_static_dir : Path or str
         Path to directory of static VASP run.
-    preconverge_static_dir : Path or str
-        Path to directory of preconvergence run.
     """
     if lobster_static_dir:
         dirs.append(lobster_static_dir)
-
-    if preconverge_static_dir:
-        dirs.append(preconverge_static_dir)
 
     for dir_name in dirs:
         delete_files(

@@ -561,12 +561,14 @@ class LobsterTaskDocument(BaseModel):
             lobsterout=lobster_out,
             # include additional fields for cation-anion
             lobsterpy_data=condensed_bonding_analysis,
-            lobsterpy_text=" ".join(describe.text),
+            lobsterpy_text=" ".join(describe.text) if describe is not None else None,
             strongest_bonds_icohp=sb_icohp,
             strongest_bonds_icoop=sb_icoop,
             strongest_bonds_icobi=sb_icobi,
             lobsterpy_data_cation_anion=condensed_bonding_analysis_ionic,
-            lobsterpy_text_cation_anion=" ".join(describe_ionic.text),
+            lobsterpy_text_cation_anion=" ".join(describe_ionic.text)
+            if describe_ionic is not None
+            else None,
             strongest_bonds_icohp_cation_anion=sb_icohp_ionic,
             strongest_bonds_icoop_cation_anion=sb_icoop_ionic,
             strongest_bonds_icobi_cation_anion=sb_icobi_ionic,

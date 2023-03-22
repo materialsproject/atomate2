@@ -260,7 +260,41 @@ VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: <<LOBSTER_CMD>>
 ```
 
+Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 
+```python
+from jobflow import SETTINGS
+from pymatgen.electronic_structure.cohp import Cohp
+from pymatgen.electronic_structure.plotter import CohpPlotter
+
+store = SETTINGS.JOB_STORE
+store.connect()
+
+result = store.query_one(
+    {"name": "lobster_run_0"},
+    properties=[
+        "output.lobsterpy_data.cohp_plot_data",
+        "output.lobsterpy_data_cation_anion.cohp_plot_data",
+    ],
+    load=True,
+)
+
+for number, (key, cohp) in enumerate(
+    result["output"]["lobsterpy_data"]["cohp_plot_data"].items()
+):
+    plotter = CohpPlotter()
+    cohp = Cohp.from_dict(cohp)
+    plotter.add_cohp(key, cohp)
+    plotter.save_plot("plots_all_bonds" + str(number) + ".pdf")
+
+for number, (key, cohp) in enumerate(
+    result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()
+):
+    plotter = CohpPlotter()
+    cohp = Cohp.from_dict(cohp)
+    plotter.add_cohp(key, cohp)
+    plotter.save_plot("plots_cation_anion_bonds" + str(number) + ".pdf")
+```
 
 (modifying_input_sets)=
 Modifying input sets
