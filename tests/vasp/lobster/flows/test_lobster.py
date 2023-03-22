@@ -13,7 +13,6 @@ from atomate2.vasp.powerups import (
 def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "static preconverge": "Si_lobster/static_preconverge",
         "relax 1": "Si_lobster/relax_1",
         "relax 2": "Si_lobster/relax_2",
         "static_run": "Si_lobster/static_run",
@@ -23,11 +22,8 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     fake_run_vasp_kwargs = {
         "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
         "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static preconverge": {
-            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM", "NBANDS"],
-        },
         "static_run": {
-            "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],
+            "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS", "ISPIN"],
             "check_inputs": ["poscar", "potcar", "kpoints", "incar"],
         },
     }
@@ -91,7 +87,6 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
 def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "static preconverge": "Si_lobster/static_preconverge",
         "relax 1": "Si_lobster/relax_1",
         "relax 2": "Si_lobster/relax_2",
         "static_run": "Si_lobster/static_run",
@@ -101,11 +96,8 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
     fake_run_vasp_kwargs = {
         "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
         "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static preconverge": {
-            "incar_settings": ["NSW", "ISMEAR", "LWAVE", "ISYM", "NBANDS"],
-        },
         "static_run": {
-            "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],
+            "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS", "ISPIN"],
             "check_inputs": ["poscar", "potcar", "kpoints", "incar"],
         },
     }

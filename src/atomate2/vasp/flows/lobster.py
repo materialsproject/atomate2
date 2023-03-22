@@ -180,14 +180,11 @@ class LobsterUniformMaker(Maker):
             input_set_generator=StaticSetGenerator(
                 user_kpoints_settings={"reciprocal_density": 100},
                 user_incar_settings={
-                    "IBRION": 2,
-                    "ISIF": 2,
                     "EDIFF": 1e-7,
                     "LAECHG": False,
                     "LVTOT": False,
                     "LREAL": False,
                     "ALGO": "Normal",
-                    "NSW": 0,
                     "LCHARG": True,
                     "LWAVE": False,
                 },
@@ -200,7 +197,6 @@ class LobsterUniformMaker(Maker):
                 user_kpoints_settings={"reciprocal_density": 400},
                 user_incar_settings={
                     "LWAVE": True,
-                    "NSW": 0,
                     "ISYM": 0,
                     "ICHARG": 11,
                 },

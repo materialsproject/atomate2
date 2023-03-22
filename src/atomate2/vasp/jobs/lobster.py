@@ -61,16 +61,14 @@ class LobsterStaticMaker(BaseVaspMaker):
     name: str = "static_run"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
+            auto_ispin=True,
             user_kpoints_settings={"reciprocal_density": 400},
             user_incar_settings={
-                "IBRION": 2,
-                "ISIF": 2,
                 "EDIFF": 1e-7,
                 "LAECHG": False,
                 "LREAL": False,
                 "LVTOT": False,
                 "ALGO": "Normal",
-                "NSW": 0,
                 "LCHARG": False,
                 "LWAVE": True,
                 "ISYM": 0,
