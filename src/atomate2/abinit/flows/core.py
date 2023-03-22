@@ -127,6 +127,7 @@ class LineBandStructureMaker(Maker):
         scf_job = self.scf_maker.make(structure, restart_from=restart_from)
         line_job = self.bs_maker.make(
             prev_outputs=scf_job.output.dir_name,
+            mode="line",
         )
         jobs = [scf_job, line_job]
         return Flow(jobs, line_job.output, name=self.name)
@@ -146,7 +147,12 @@ class RelaxFlowMaker(Maker):
     """
 
     name: str = "relaxation"
-    relaxation_makers: Union[Maker, List[Maker]] = field(default_factory=RelaxMaker)
+    relaxation_makers: List[Maker] = field(
+        default_factory=lambda: [
+            RelaxMaker.ionic_relaxation(),
+            RelaxMaker.full_relaxation(),
+        ]
+    )
 
     def make(
         self,
@@ -168,15 +174,11 @@ class RelaxFlowMaker(Maker):
         Flow
             A relaxation flow.
         """
-        if isinstance(self.relaxation_makers, Maker):
-            relaxation_makers = [self.relaxation_makers]
-        else:
-            relaxation_makers = self.relaxation_makers
-        relax_job1 = relaxation_makers[0].make(
+        relax_job1 = self.relaxation_makers[0].make(
             structure=structure, restart_from=restart_from
         )
         jobs = [relax_job1]
-        for rlx_maker in relaxation_makers[1:]:
+        for rlx_maker in self.relaxation_makers[1:]:
             rlx_job = rlx_maker.make(
                 # structure=jobs[-1].output.structure, restart_from=jobs[-1].output
                 restart_from=jobs[-1].output.dir_name

@@ -41,10 +41,12 @@ def run_abinit(
 
     max_end_time = 0.0
     if wall_time is not None:
-        mytimelimit = wall_time
-        if mytimelimit > 240:
-            mytimelimit -= 120
-        command.extend(["--timelimit", time2slurm(mytimelimit)])
+        abinit_timelimit = wall_time
+        if abinit_timelimit > 480:
+            # TODO: allow tuning this timelimit buffer for abinit,
+            #  e.g. using a config variable or possibly per job
+            abinit_timelimit -= 240
+        command.extend(["--timelimit", time2slurm(abinit_timelimit)])
         max_end_time = start_time + wall_time
 
     command.append(INPUT_FILE_NAME)

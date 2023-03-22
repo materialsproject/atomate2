@@ -59,7 +59,7 @@ class NonSCFMaker(BaseAbinitMaker):
         prev_outputs: str | list[str] | None = None,
         restart_from: str | list[str] | None = None,
         history: JobHistory | None = None,
-        mode: str = "line",
+        mode: str = "uniform",
     ):
         """
         Run a non-scf ABINIT job.

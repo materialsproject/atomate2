@@ -323,22 +323,6 @@ class AbinitInputGenerator(InputGenerator):
             params[param] = val
         return params
 
-    def _get_prev_abinit_input(self, restart_from):
-        if self.restart_from_deps is None:
-            raise RuntimeError(f"Restart not allowed for {self.__class__.__name__}")
-        if len(restart_from) > 1:
-            raise RuntimeError("Restart from multiple jobs is not possible.")
-        prev_abinit_input = load_abinit_input(restart_from[0])
-        allow_restart_from = set(self.restart_from_deps[0].split(":")[0].split("|"))
-        if len(allow_restart_from.intersection(prev_abinit_input.runlevel)) == 0:
-            raise RuntimeError(
-                f"Restart is not allowed. "
-                f'For "{self.__class__.__name__}" input generator, the '
-                f"allowed previous calculations for restart are: "
-                f'{" ".join(allow_restart_from)}'
-            )
-        return prev_abinit_input
-
     def get_input_set(  # type: ignore
         self,
         structure=None,
@@ -365,16 +349,16 @@ class AbinitInputGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
-        pseudos = self.pseudos
-        if "pseudos" in kwargs:
-            pseudos = kwargs.pop("pseudos")
-        pseudos = as_pseudo_table(pseudos)
-        extra_abivars = self.extra_abivars or {}
-        if "extra_abivars" in kwargs:
-            extra_mod = kwargs.pop("extra_abivars")
-            extra_abivars.update(extra_mod)
-            # Remove additional variables when their value is set to None
-            extra_abivars = {k: v for k, v in extra_abivars.items() if v is not None}
+        # pseudos = self.pseudos
+        # if "pseudos" in kwargs:
+        #     pseudos = kwargs.pop("pseudos")
+        pseudos = as_pseudo_table(self.pseudos)
+        # extra_abivars = self.extra_abivars or {}
+        # if "extra_abivars" in kwargs:
+        #     extra_mod = kwargs.pop("extra_abivars")
+        #     extra_abivars.update(extra_mod)
+        #     # Remove additional variables when their value is set to None
+        #     extra_abivars = {k: v for k, v in extra_abivars.items() if v is not None}
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
@@ -420,7 +404,7 @@ class AbinitInputGenerator(InputGenerator):
 
         # Set ird variables and extra variables.
         abinit_input.set_vars(all_irdvars)
-        abinit_input.set_vars(extra_abivars)
+        abinit_input.set_vars(self.extra_abivars)
 
         if restart_from is not None:
             self.on_restart(abinit_input=abinit_input)

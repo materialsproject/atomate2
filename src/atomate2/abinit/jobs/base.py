@@ -21,7 +21,7 @@ from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
 from atomate2.abinit.sets.base import AbinitInputGenerator, get_extra_abivars
-from atomate2.abinit.utils.common import InitializationError, UnconvergedError
+from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -122,6 +122,7 @@ class BaseAbinitMaker(Maker):
         cls,
         name=None,
         wall_time=wall_time,
+        run_abinit_kwargs=run_abinit_kwargs,
         **params,
     ):
         """Create maker from generator parameters.
@@ -130,6 +131,7 @@ class BaseAbinitMaker(Maker):
         ----------
         name
         wall_time
+        run_abinit_kwargs
         params
 
         Returns
@@ -137,7 +139,7 @@ class BaseAbinitMaker(Maker):
 
         """
         name = name or cls.name
-        maker = cls(name=name, wall_time=wall_time)
+        maker = cls(name=name, wall_time=wall_time, run_abinit_kwargs=run_abinit_kwargs)
         allowed_params = [f.name for f in fields(maker.input_set_generator)]
         for param, value in params.items():
             if param not in allowed_params:
@@ -153,6 +155,7 @@ class BaseAbinitMaker(Maker):
         prev_maker,
         name=None,
         wall_time=wall_time,
+        run_abinit_kwargs=run_abinit_kwargs,
         input_set_generator=None,
         **params,
     ):
@@ -175,7 +178,7 @@ class BaseAbinitMaker(Maker):
         if input_set_generator is None:
             # Subclasses must define an input_set_generator.
             # The default input_set_generator is only initialized at instance creation.
-            input_set_generator = input_set_generator or cls().input_set_generator
+            input_set_generator = cls().input_set_generator
         # Deal with extra_abivars.
         # First take extra_abivars from the input_set_generator of the current maker.
         # Update with those from the input_set_generator of the previous maker.
@@ -215,7 +218,10 @@ class BaseAbinitMaker(Maker):
                 input_set_generator.__setattr__(param, prev_gen.__getattribute__(param))
         name = name or cls.name
         maker = cls(
-            input_set_generator=input_set_generator, name=name, wall_time=wall_time
+            input_set_generator=input_set_generator,
+            name=name,
+            wall_time=wall_time,
+            run_abinit_kwargs=run_abinit_kwargs,
         )
         return maker
 
@@ -224,8 +230,6 @@ class BaseAbinitMaker(Maker):
         self.critical_events = [
             as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
         ]
-        if self.input_set_generator is None:
-            raise InitializationError("Input set generator is not set.")
 
     @property
     def calc_type(self):
