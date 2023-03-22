@@ -8,6 +8,7 @@ from typing import Type, TypeVar, Union
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
+from emmet.core.structure import StructureMetadata
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 
@@ -19,7 +20,6 @@ from atomate2.abinit.utils.common import (
     get_event_report,
     get_final_structure,
 )
-from atomate2.common.schemas.structure import StructureMetadata
 
 _T = TypeVar("_T", bound="AbinitTaskDocument")
 

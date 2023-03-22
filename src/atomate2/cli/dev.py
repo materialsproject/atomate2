@@ -3,12 +3,12 @@
 import click
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
 def dev():
     """Tools for atomate2 developers."""
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
 def vasp_test_data(test_dir):
     """Generate test data for VASP unit tests.
@@ -22,11 +22,11 @@ def vasp_test_data(test_dir):
     from pathlib import Path
     from pprint import pformat
 
+    from emmet.core.tasks import TaskDoc
     from monty.serialization import loadfn
 
     from atomate2.common.files import copy_files, delete_files, gunzip_files
     from atomate2.utils.path import strip_hostname
-    from atomate2.vasp.schemas.task import TaskDocument
 
     warnings.filterwarnings("ignore", module="pymatgen")
 
@@ -40,9 +40,7 @@ def vasp_test_data(test_dir):
 
     outputs = loadfn("outputs.json")
 
-    task_labels = [
-        o["output"].task_label for o in outputs if isinstance(o, TaskDocument)
-    ]
+    task_labels = [o["output"].task_label for o in outputs if isinstance(o, TaskDoc)]
 
     if len(task_labels) != len(set(task_labels)):
         raise ValueError("Not all jobs have unique names")
@@ -50,7 +48,7 @@ def vasp_test_data(test_dir):
     original_mapping = {}
     mapping = {}
     for output in outputs:
-        if not isinstance(output["output"], TaskDocument):
+        if not isinstance(output["output"], TaskDoc):
             # this is not a VASP job
             continue
 
@@ -115,7 +113,7 @@ def vasp_test_data(test_dir):
         [f"  {v}  ->  {k}" for k, v in original_mapping.items()]
     )
 
-    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping.keys()}
+    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping}
     run_vasp_kwargs_str = pformat(run_vasp_kwargs).replace("\n", "\n    ")
 
     test_function_str = f"""Test files generated in test_data.
@@ -134,6 +132,7 @@ tests in atomate2/tests/vasp/jobs.
 
 def test_my_flow(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
+    from emmet.core.tasks import TaskDoc
 
     # mapping from job name to directory containing test files
     ref_paths = {mapping_str}
@@ -152,7 +151,7 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
 
     # !!! validation on the outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, TaskDocument)
+    assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
@@ -167,7 +166,7 @@ def _potcar_to_potcar_spec(potcar_filename, output_filename):
     output_filename.write_text("\n".join(potcar.symbols))
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 def abinit_script_maker():
     """Generate template script for abinit makers."""
     import os
@@ -197,7 +196,7 @@ def abinit_script_maker():
         f.write("\n".join(out))
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("structure_file", required=False)
 @click.option("--make-kwargs", "-mk", required=False)
 def abinit_generate_reference(structure_file, make_kwargs):
@@ -240,7 +239,7 @@ def abinit_generate_reference(structure_file, make_kwargs):
     dumpfn(outputs, "outputs.json")
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_name")
 @click.option("--test-data-dir", required=False)
 @click.option(
@@ -282,7 +281,8 @@ def abinit_test_data(test_name, test_data_dir, force):
 
     if not abinit_test_data_dir.exists():
         click.echo(
-            f"The following test_data/abinit directory does not exist: {abinit_test_data_dir}"
+            "The following test_data/abinit "
+            f"directory does not exist: {abinit_test_data_dir}"
         )
         sys.exit()
 
@@ -376,7 +376,7 @@ def abinit_test_data(test_name, test_data_dir, force):
         force_overwrite=False,
         allow_missing=True,
     ):
-        for (dirdata_name, data_files, data_fake_files) in zip(
+        for dirdata_name, data_files, data_fake_files in zip(
             ("indata", "outdata", "tmpdata"),
             (indata_files, outdata_files, tmpdata_files),
             (indata_fake_files, outdata_fake_files, tmpdata_fake_files),
@@ -420,14 +420,16 @@ def abinit_test_data(test_name, test_data_dir, force):
         )
         if len(indices) != 1:
             raise RuntimeError(
-                "Could not find job_test's atomate2/tests/test_data/abinit-based root dir"
+                "Could not find job_test's "
+                "atomate2/tests/test_data/abinit-based root dir"
             )
         job_index_dir_for_mapping = Path(*job_index_dir_parts[indices[0][1] :])
         if job_name not in mapping:
             mapping[job_name] = {}
         if index_job in mapping[job_name]:
             raise RuntimeError(
-                f"Job index {index_job} for {job_name} Job is already present in the mapping"
+                f"Job index {index_job} for "
+                f"{job_name} Job is already present in the mapping"
             )
         mapping[job_name][index_job] = str(job_index_dir_for_mapping)
         original_mapping[str(job_index_dir)] = orig_job_dir
@@ -495,10 +497,10 @@ def abinit_test_data(test_name, test_data_dir, force):
     test_function_str = f"""Test files generated in test_data.
 
 Please ensure that all other necessary files are included in the test_data, such as
-run.abi, run.abo, run.log, etc. as well as indata, outdata and tmpdata directories with
-their respective relevant reference files.
-Include additional files only if they are absolutely necessary otherwise they will increase
-the size of the atomate2 repository.
+run.abi, run.abo, run.log, etc. as well as indata, outdata and tmpdata directories
+with their respective relevant reference files.
+Include additional files only if they are absolutely necessary otherwise they will
+increase the size of the atomate2 repository.
 
 A mapping from the original job folders to the formatted folders is:
 {original_mapping_str}
@@ -515,7 +517,9 @@ class Test{maker_name}:
         from atomate2.abinit.schemas.core import AbinitTaskDocument
 
         # load the initial structure, the maker and the ref_paths from the test_dir
-        test_dir = abinit_test_dir / {" / ".join([f'"{part}"' for part in test_dir.parts[-3:]])}
+        test_dir = abinit_test_dir / {" / ".join(
+        [f'"{part}"' for part in test_dir.parts[-3:]]
+    )}
         structure = Structure.from_file(test_dir / "initial_structure.json")
         maker_info = loadfn(test_dir / "maker.json")
         maker = maker_info["maker"]

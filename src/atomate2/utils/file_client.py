@@ -514,7 +514,7 @@ def get_ssh_connection(
         # try reading ssh config file
         ssh_config = paramiko.SSHConfig().from_path(str(config_filename))
 
-        host_config = ssh_config.lookup(hostname)
+        host_config = ssh_config.lookup(hostname)  # type: ignore[attr-defined]
         for k in ("hostname", "user", "port"):
             if k in host_config:
                 config[k.replace("user", "username")] = host_config[k]

@@ -19,6 +19,7 @@ from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.structure import Structure
 
+from atomate2.common.utils import get_transformations
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
 from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
@@ -68,7 +69,7 @@ class StaticMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -101,7 +102,7 @@ class RelaxMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -134,7 +135,7 @@ class TightRelaxMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -169,7 +170,7 @@ class NonSCFMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -238,7 +239,7 @@ class HSERelaxMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -271,7 +272,7 @@ class HSETightRelaxMaker(BaseVaspMaker):
     run_vasp_kwargs
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -306,7 +307,7 @@ class HSEStaticMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -348,7 +349,7 @@ class HSEBSMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -438,7 +439,7 @@ class DielectricMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -483,7 +484,7 @@ class TransmuterMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -515,7 +516,7 @@ class TransmuterMaker(BaseVaspMaker):
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
         """
-        transformations = _get_transformations(
+        transformations = get_transformations(
             self.transformations, self.transformation_params
         )
         ts = TransformedStructure(structure)
@@ -548,7 +549,7 @@ class MDMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -584,39 +585,3 @@ class MDMaker(BaseVaspMaker):
     task_document_kwargs: dict = field(
         default_factory=lambda: {"store_trajectory": True}
     )
-
-
-def _get_transformations(
-    transformations: tuple[str, ...], params: tuple[dict, ...] | None
-):
-    """Get instantiated transformation objects from their names and parameters."""
-    params = ({},) * len(transformations) if params is None else params
-
-    if len(params) != len(transformations):
-        raise ValueError("Number of transformations and parameters must be the same.")
-
-    transformation_objects = []
-    for transformation, transformation_params in zip(transformations, params):
-        found = False
-        for m in (
-            "advanced_transformations",
-            "site_transformations",
-            "standard_transformations",
-        ):
-            from importlib import import_module
-
-            mod = import_module(f"pymatgen.transformations.{m}")
-
-            try:
-                t_cls = getattr(mod, transformation)
-                found = True
-                continue
-            except AttributeError:
-                pass
-
-        if not found:
-            raise ValueError(f"Could not find transformation: {transformation}")
-
-        t_obj = t_cls(**transformation_params)
-        transformation_objects.append(t_obj)
-    return transformation_objects

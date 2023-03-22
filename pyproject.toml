@@ -23,16 +23,17 @@ classifiers = [
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = '>="3.8"'
-dependencies =[
-    "pymatgen>=2022.8.23",
-    "custodian>=2022.5.26",
+requires-python = ">=3.8"
+dependencies = [
+    "pymatgen>=2023.1.9",
+    "custodian>=2023.3.10",
     "pydantic",
     "monty",
-    "jobflow>=0.1.5",
+    "jobflow>=0.1.11",
     "PyYAML",
     "numpy",
     "click",
+    "emmet-core>=0.51.0",
 ]
 
 [project.optional-dependencies]
@@ -41,33 +42,35 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
+lobster = ["lobsterpy"]
+defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
 docs = [
-    "numpydoc==1.4.0",
-    "ipython==8.5.0",
+    "numpydoc==1.5.0",
+    "ipython==8.11.0",
     "FireWorks==2.0.3",
-    "autodoc_pydantic==1.7.2",
-    "jupyter-book==0.13.1",
+    "autodoc_pydantic==1.8.0",
+    "jupyter-book==0.14.0",
+    "jsonschema[format]",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = [
-    "pytest==7.1.3",
-    "pytest-cov==4.0.0",
-    "pytest-mock==3.6.1",
-    "FireWorks==2.0.3",
-]
+tests = ["pytest==7.2.2", "pytest-cov==4.0.0", "FireWorks==2.0.3", "pytest-mock==3.6.1"]
 strict = [
-    "pydantic==1.10.2",
-    "pymatgen==2022.9.21",
-    "custodian==2022.5.26",
+    "pydantic==1.10.6",
+    "pymatgen==2023.3.10",
+    "custodian==2023.3.10",
     "monty==2022.9.9",
-    "jobflow==0.1.9",
+    "jobflow==0.1.11",
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "phonopy==2.16.2",
+    "phonopy==2.17.2",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.27.5"
+    "mp-api==0.30.10",
+    "dscribe==1.2.2",
+    "pymatgen-analysis-defects==2023.3.3",
+    "lobsterpy==0.2.8",
+    "emmet-core==0.51.0"
 ]
 
 [project.scripts]
@@ -75,26 +78,25 @@ atm = "atomate2.cli:cli"
 
 [project.urls]
 homepage = "https://materialsproject.github.io/atomate2/"
-repository = "https://github.com/hackingmaterials/atomate2"
+repository = "https://github.com/materialsproject/atomate2"
 documentation = "https://materialsproject.github.io/atomate2/"
-changelog = "https://github.com/hackingmaterials/atomate2/blob/main/CHANGELOG.md"
+changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [tool.setuptools.package-data]
 atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
+"atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.vasp.schemas.calc_types" = ["*.yaml"]
+"atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"
 default-tag = "0.0.1"
 
-[tool.isort]
-profile = "black"
-
 [tool.flake8]
 max-line-length = 88
 max-doc-length = 88
-select = "C, E, F, W, B, B950"
+select = "C, E, F, W, B"
 extend-ignore = "E203, W503, E501, F401, RST21"
 min-python-version = "3.8.0"
 docstring-convention = "numpy"
@@ -130,9 +132,28 @@ exclude_lines = [
     '^\s*@overload( |$)',
 ]
 
-[tool.autoflake]
-in-place = true
-remove-all-unused-imports = true
-remove-unused-variables = true
-ignore-init-module-imports = true
-expand-star-imports = true
+[tool.ruff]
+target-version = "py38"
+select = [
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "D",   # pydocstyle
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+    "PLE", # pylint error
+    "PLW", # pylint warning
+    "Q",   # flake8-quotes
+    "RUF", # Ruff-specific rules
+    "SIM", # flake8-simplify
+    "TID", # tidy imports
+    "UP",  # pyupgrade
+    "W",   # pycodestyle
+    "YTT", # flake8-2020
+]
+pydocstyle.convention = "numpy"
+isort.known-first-party = ["atomate2"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"**/tests/*" = ["D"]

@@ -89,7 +89,7 @@ def memory_jobstore():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def log_to_stdout():
+def log_to_stdout_auto_use():
     from atomate2.utils.log import initialize_logger
 
     initialize_logger()
