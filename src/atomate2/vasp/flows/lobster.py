@@ -185,7 +185,6 @@ class LobsterUniformMaker(Maker):
                     "LVTOT": False,
                     "LREAL": False,
                     "ALGO": "Normal",
-                    "LCHARG": True,
                     "LWAVE": False,
                 },
             )
@@ -198,7 +197,6 @@ class LobsterUniformMaker(Maker):
                 user_incar_settings={
                     "LWAVE": True,
                     "ISYM": 0,
-                    "ICHARG": 11,
                 },
             )
         )
