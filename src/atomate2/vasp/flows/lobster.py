@@ -9,7 +9,7 @@ from jobflow import Flow, Maker
 from pymatgen.core import Structure
 
 from atomate2.lobster.jobs import LobsterMaker
-from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import (
     NonSCFMaker,
@@ -28,6 +28,32 @@ from atomate2.vasp.sets.core import (
 )
 
 __all__ = ["VaspLobsterMaker"]
+
+LOBSTER_UNIFORM_MAKER = UniformBandStructureMaker(
+    name="uniform lobster structure",
+    static_maker=StaticMaker(
+        input_set_generator=StaticSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 100},
+            user_incar_settings={
+                "EDIFF": 1e-7,
+                "LAECHG": False,
+                "LVTOT": False,
+                "LREAL": False,
+                "ALGO": "Normal",
+                "LWAVE": False,
+            },
+        )
+    ),
+    bs_maker=NonSCFMaker(
+        input_set_generator=NonSCFSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 400},
+            user_incar_settings={
+                "LWAVE": True,
+                "ISYM": 0,
+            },
+        )
+    ),
+)
 
 
 @dataclass
@@ -58,7 +84,7 @@ class VaspLobsterMaker(Maker):
         without symmetry
     lobster_static_maker : .BaseVaspMaker
         A maker to perform the computation of the wavefunction before the static run.
-        Cannot be skipped. It can be LosterUniformMaker or LobsterStaticMaker
+        Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
     lobster_maker : .LobsterMaker
         A maker to perform the Lobster run.
     delete_wavecars : bool
@@ -74,7 +100,7 @@ class VaspLobsterMaker(Maker):
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
     lobster_static_maker: BaseVaspMaker = field(
-        default_factory=lambda: LobsterUniformMaker()
+        default_factory=lambda: LOBSTER_UNIFORM_MAKER
     )
     lobster_maker: LobsterMaker | None = field(default_factory=lambda: LobsterMaker())
     delete_wavecars: bool = True
@@ -152,78 +178,3 @@ class VaspLobsterMaker(Maker):
             jobs.append(delete_wavecars)
 
         return Flow(jobs, output=lobster_jobs.output)
-
-
-@dataclass
-class LobsterUniformMaker(Maker):
-    """
-    Maker to generate uniform VASP band structure run specifically adapted to Lobster.
-
-    This is a static calculation with settings for Lobster runs
-    followed by a uniform non-self-consistent field
-    calculation that generates a WAVECAR.
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    static_maker : .BaseVaspMaker
-        The maker to use for the static calculation with special lobster settings.
-    bs_maker : .BaseVaspMaker
-        The maker to use for the non-self-consistent field calculations
-         with special lobster settings.
-    """
-
-    name: str = "uniform lobster structure"
-    static_maker: BaseVaspMaker = field(
-        default_factory=lambda: StaticMaker(
-            input_set_generator=StaticSetGenerator(
-                user_kpoints_settings={"reciprocal_density": 100},
-                user_incar_settings={
-                    "EDIFF": 1e-7,
-                    "LAECHG": False,
-                    "LVTOT": False,
-                    "LREAL": False,
-                    "ALGO": "Normal",
-                    "LWAVE": False,
-                },
-            )
-        )
-    )
-    bs_maker: BaseVaspMaker = field(
-        default_factory=lambda: NonSCFMaker(
-            input_set_generator=NonSCFSetGenerator(
-                user_kpoints_settings={"reciprocal_density": 400},
-                user_incar_settings={
-                    "LWAVE": True,
-                    "ISYM": 0,
-                },
-            )
-        )
-    )
-
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Create a uniform Lobster flow.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
-
-        Returns
-        -------
-        Flow
-            A uniform band structure flow.
-        """
-        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-        uniform_job = self.bs_maker.make(
-            static_job.output.structure,
-            prev_vasp_dir=static_job.output.dir_name,
-            mode="uniform",
-        )
-        uniform_job.name += " uniform"
-        jobs = [static_job, uniform_job]
-        return Flow(jobs, uniform_job.output, name=self.name)
