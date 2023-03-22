@@ -77,9 +77,7 @@ class LobsterStaticMaker(BaseVaspMaker):
             },
         )
     )
-    copy_vasp_kwargs: dict = field(
-        default_factory=lambda: {"additional_vasp_files": ["WAVECAR"]}
-    )
+
 
 
 @job

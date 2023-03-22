@@ -28,7 +28,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         },
         "static_run": {
             "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],
-            "check_inputs": ["poscar", "potcar", "kpoints", "incar", "wavecar"],
+            "check_inputs": ["poscar", "potcar", "kpoints", "incar"],
         },
     }
 
@@ -105,7 +105,7 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         },
         "static_run": {
             "incar_settings": ["NSW", "LWAVE", "ISMEAR", "ISYM", "NBANDS"],
-            "check_inputs": ["poscar", "potcar", "kpoints", "incar", "wavecar"],
+            "check_inputs": ["poscar", "potcar", "kpoints", "incar"],
         },
     }
 

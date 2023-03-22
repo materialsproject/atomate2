@@ -127,7 +127,6 @@ class VaspLobsterMaker(Maker):
             basis_infos.output["nbands"],
             structure,
             prev_vasp_dir,
-            None,
         )
         jobs.append(lobster_static)
         lobster_static_dir = lobster_static.output.dir_name
