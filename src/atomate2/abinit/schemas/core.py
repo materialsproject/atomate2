@@ -11,6 +11,7 @@ from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
+from pymatgen.core.structure import Structure
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.utils.common import (
@@ -56,6 +57,7 @@ class AbinitTaskDocument(StructureMetadata):
     abinit_input: AbinitInput = Field(
         None, description="AbinitInput used to perform calculation."
     )
+    structure: Structure = Field(None, description="Final structure.")
 
     @classmethod
     def from_directory(
@@ -98,12 +100,13 @@ class AbinitTaskDocument(StructureMetadata):
         structure = get_final_structure(dir_name=dir_name)
 
         doc = cls.from_structure(
-            structure=structure,
+            meta_structure=structure,
             include_structure=True,
             dir_name=dir_name,
             event_report=report,
             state=state,
             run_number=run_number,
             abinit_input=abinit_input,
+            structure=structure,
         )
         return doc
