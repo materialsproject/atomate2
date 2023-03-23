@@ -42,6 +42,7 @@ def setup_job(
     history,
     wall_time,
 ):
+    """Set up job."""
     # Get the start time.
     start_time = time.time()
 
@@ -136,7 +137,8 @@ class BaseAbinitMaker(Maker):
 
         Returns
         -------
-
+        BaseAbinitMaker
+            Maker for a given type of calculation.
         """
         name = name or cls.name
         maker = cls(name=name, wall_time=wall_time, run_abinit_kwargs=run_abinit_kwargs)
@@ -144,7 +146,8 @@ class BaseAbinitMaker(Maker):
         for param, value in params.items():
             if param not in allowed_params:
                 raise TypeError(
-                    f"{cls.__name__}.from_params() got an unexpected keyword argument '{param}'"
+                    f"{cls.__name__}.from_params() got an unexpected "
+                    f"keyword argument '{param}'"
                 )
             maker.input_set_generator.__setattr__(param, value)
         return maker
@@ -169,7 +172,8 @@ class BaseAbinitMaker(Maker):
 
         Returns
         -------
-
+        BaseAbinitMaker
+            Maker for a given type of calculation.
         """
         # TODO: check that the params are allowed in the input_set_generator ?
         #  Another solution is to make sure params is empty at the end ?
@@ -233,6 +237,7 @@ class BaseAbinitMaker(Maker):
 
     @property
     def calc_type(self):
+        """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
     @job
@@ -328,7 +333,7 @@ class BaseAbinitMaker(Maker):
                 stored_data={"error": unconverged_error},
             )
 
-        logger.info(msg="Getting restart job.")
+        logger.info("Getting restart job.")
 
         new_job = self.make(
             structure=task_document.structure,
