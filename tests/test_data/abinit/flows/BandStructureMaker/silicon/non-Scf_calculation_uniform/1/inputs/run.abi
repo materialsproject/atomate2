@@ -1,0 +1,64 @@
+##############################################
+####                SECTION: basic               
+##############################################
+ ecut 4.0
+ ngkpt 2 2 2
+ shiftk    0.5    0.5    0.5
+ nshiftk 1
+ kptopt 1
+ nsppol 1
+ nband 5
+ occopt 3
+ iscf -2
+ tolwfr 1e-17
+##############################################
+####                SECTION: files               
+##############################################
+ indata_prefix "indata/in"
+ outdata_prefix "outdata/out"
+ tmpdata_prefix "tmpdata/tmp"
+ irdden 1
+ pseudos "/home/davidwaroquiers/.abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4/Si/Si.psp8"
+##############################################
+####               SECTION: gstate               
+##############################################
+ chksymbreak 0
+ nspinor 1
+ nspden 1
+ charge 0.0
+ tsmear 0.0036749322175655
+##############################################
+####                  STRUCTURE                  
+##############################################
+ natom 2
+ ntypat 1
+ typat 1 1
+ znucl 14
+ xred
+    0.2500000000    0.2500000000    0.2500000000
+    0.0000000000    0.0000000000    0.0000000000
+ acell    1.0    1.0    1.0
+ rprim
+    6.3285005735    0.0000000000    3.6537615097
+    2.1095001912    5.9665675604    3.6537615097
+    0.0000000000    0.0000000000    7.3075230194
+
+
+#<JSON>
+#{
+#    "pseudos": [
+#        {
+#            "basename": "Si.psp8",
+#            "type": "NcAbinitPseudo",
+#            "symbol": "Si",
+#            "Z": 14,
+#            "Z_val": 4.0,
+#            "l_max": 2,
+#            "md5": "45c393525680abc7b25445b8ec62bf83",
+#            "filepath": "/home/davidwaroquiers/.abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4/Si/Si.psp8",
+#            "@module": "pymatgen.io.abinit.pseudos",
+#            "@class": "NcAbinitPseudo"
+#        }
+#    ]
+#}
+#</JSON>

@@ -184,6 +184,8 @@ class NonSCFSetGenerator(AbinitInputGenerator):
         #  assume that abinit will make the same symmetrization ?
         #  Or should we always symmetrize the structure before ?
         #  Or should we always set tolsym to 1.0e-8 ?
+        #  GP's comment: It seems that setting the final structure as done here
+        #                is the safest option.
         previous_abinit_input.set_structure(previous_structure)
         if structure is not None and structure != previous_structure:
             raise RuntimeError(

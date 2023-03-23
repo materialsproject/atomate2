@@ -12,8 +12,6 @@ from typing import ClassVar, Sequence
 import jobflow
 from abipy.flowtk.events import as_event_class
 from jobflow import Maker, Response, job
-from monty.json import jsanitize
-from monty.serialization import dumpfn
 from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
@@ -294,8 +292,6 @@ class BaseAbinitMaker(Maker):
             run_status=run_status,
         )
         task_doc.task_label = self.name
-
-        dumpfn(jsanitize(task_doc.dict()), fn="task_document.json", indent=2)
 
         return self.get_response(
             task_document=task_doc,

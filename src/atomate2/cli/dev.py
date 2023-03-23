@@ -261,7 +261,6 @@ def abinit_test_data(test_name, test_data_dir, force):
 
     from monty.serialization import dumpfn, loadfn
 
-    from atomate2.abinit.jobs.base import BaseAbinitMaker
     from atomate2.abinit.schemas.core import AbinitTaskDocument
     from atomate2.common.files import copy_files
     from atomate2.utils.path import strip_hostname
@@ -295,10 +294,7 @@ def abinit_test_data(test_name, test_data_dir, force):
     maker_dir = abinit_test_data_dir / "jobs" / maker_name
     if not maker_dir.exists():
         maker_dir.mkdir()
-    if isinstance(maker, BaseAbinitMaker):
-        test_dir = maker_dir / test_name
-    else:
-        test_dir = maker_dir / test_name
+    test_dir = maker_dir / test_name
 
     def _makedir(directory, force_overwrite):
         if not directory.exists():

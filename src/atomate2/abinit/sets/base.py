@@ -373,16 +373,7 @@ class AbinitInputGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
-        # pseudos = self.pseudos
-        # if "pseudos" in kwargs:
-        #     pseudos = kwargs.pop("pseudos")
         pseudos = as_pseudo_table(self.pseudos)
-        # extra_abivars = self.extra_abivars or {}
-        # if "extra_abivars" in kwargs:
-        #     extra_mod = kwargs.pop("extra_abivars")
-        #     extra_abivars.update(extra_mod)
-        #     # Remove additional variables when their value is set to None
-        #     extra_abivars = {k: v for k, v in extra_abivars.items() if v is not None}
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
