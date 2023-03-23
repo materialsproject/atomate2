@@ -34,10 +34,7 @@ def run_abinit(
     abinit_cmd = abinit_cmd or SETTINGS.ABINIT_CMD
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
     start_time = start_time or time.time()
-    if mpirun_cmd is not None:
-        command = [mpirun_cmd, abinit_cmd]
-    else:
-        command = [abinit_cmd]
+    command = [mpirun_cmd, abinit_cmd] if mpirun_cmd is not None else [abinit_cmd]
 
     max_end_time = 0.0
     if wall_time is not None:

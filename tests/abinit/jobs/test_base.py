@@ -56,14 +56,12 @@ class SomeAISG2(AbinitInputGenerator):
 
 @dataclass
 class SomeMaker1(BaseAbinitMaker):
-
     name: str = "SomeMaker1 calculation"
     input_set_generator: SomeAISG1 = field(default_factory=lambda: SomeAISG1())
 
 
 @dataclass
 class SomeMaker2(BaseAbinitMaker):
-
     name: str = "SomeMaker2 calculation"
     input_set_generator: SomeAISG2 = field(default_factory=lambda: SomeAISG2())
 
@@ -72,7 +70,8 @@ class TestBaseAbinitMaker:
     def test_from_params(self):
         with pytest.raises(
             TypeError,
-            match=r"SomeMaker1.from_params\(\) got an unexpected keyword argument 'param8'",
+            match=r"SomeMaker1.from_params\(\) got "
+            r"an unexpected keyword argument 'param8'",
         ):
             SomeMaker1.from_params(param8=2)
         maker1_1 = SomeMaker1.from_params(param2=3.0, param3=[1, 2])

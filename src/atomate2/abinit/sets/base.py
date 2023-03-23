@@ -96,8 +96,11 @@ class AbinitInputSet(InputSet):
             )
 
     def validate(self) -> bool:
-        """Validate the input set. Check that all files in the input directory
-        have their corresponding ird variables."""
+        """Validate the input set.
+
+        Check that all files in the input directory
+        have their corresponding ird variables.
+        """
         if not self.input_files:
             return True
         for _out_filepath, in_file in self.input_files:
@@ -215,7 +218,8 @@ def as_pseudo_table(pseudos):
             repo = get_repo_from_name(pseudo_repo_name)
             if not repo.is_installed():
                 msg = (
-                    f"Pseudo repository {pseudo_repo_name} is not installed in {repo.dirpath}) "
+                    f"Pseudo repository {pseudo_repo_name} is not installed "
+                    f"in {repo.dirpath}. "
                     f"Use abips.py to install it."
                 )
                 raise RuntimeError(msg)
@@ -262,6 +266,24 @@ class AbinitInputGenerator(InputGenerator):
 
     @classmethod
     def from_prev_generator(cls, prev_input_generator, **kwargs):
+        """Instantiate an input generator from a previous one.
+
+        It loops over all the generator's fields and gets the value of each parameter
+        from the keyword arguments if it is there, then from the previous generator
+        if it is provided and it has the attribute, then from the instance or class.
+
+        Parameters
+        ----------
+        instance_or_class
+        kwargs
+        prev_gen
+
+        Returns
+        -------
+        AbinitInputGenerator
+            The new (possibly modified) AbinitInputGenerator object based on the
+            previous one.
+        """
         # Get the calc_type (current input generator or user-specified through kwargs)
         try:
             calc_type = kwargs.pop("calc_type")
@@ -301,7 +323,9 @@ class AbinitInputGenerator(InputGenerator):
 
         Returns
         -------
-
+        dict
+            The dictionary of parameters to be used as arguments to the
+            AbinitInputGenerator instantiation.
         """
         params = {}
         for fld in fields(instance_or_class):

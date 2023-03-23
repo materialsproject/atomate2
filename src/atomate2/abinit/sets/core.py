@@ -185,12 +185,11 @@ class NonSCFSetGenerator(AbinitInputGenerator):
         #  Or should we always symmetrize the structure before ?
         #  Or should we always set tolsym to 1.0e-8 ?
         previous_abinit_input.set_structure(previous_structure)
-        if structure is not None:
-            if structure != previous_structure:
-                raise RuntimeError(
-                    "Structure is provided in non-SCF input set generator but "
-                    "is not the same as the one from the previous (SCF) input set."
-                )
+        if structure is not None and structure != previous_structure:
+            raise RuntimeError(
+                "Structure is provided in non-SCF input set generator but "
+                "is not the same as the one from the previous (SCF) input set."
+            )
         nband = previous_abinit_input.get(
             "nband",
             previous_abinit_input.structure.num_valence_electrons(
@@ -282,6 +281,7 @@ class DdkInputGenerator(AbinitInputGenerator):
     def get_abinit_input(
         self, structure=None, pseudos=None, prev_outputs=None, **kwargs
     ):
+        """Get the abinit input for Ddk calculation."""
         raise NotImplementedError()
 
 
@@ -313,6 +313,7 @@ class RelaxSetGenerator(GroundStateSetGenerator):
         tolmxf=tolmxf,
         **kwargs,
     ):
+        """Get the abinit input for relaxation calculation."""
         if structure is None:
             raise RuntimeError("Structure is mandatory for RelaxSet generation.")
         if prev_outputs is not None:

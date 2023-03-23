@@ -73,7 +73,6 @@ def out_to_in(
     dest_dir = file_client.abspath(indir, host=None)
 
     for out_filepath, in_file in out_files:
-
         src_file = file_client.abspath(out_filepath, host=src_host)
         dest_file = os.path.join(dest_dir, in_file)
         if link_files and src_host is None:
