@@ -536,7 +536,7 @@ class LobsterTaskDocument(BaseModel):
 
         # Read in LSO DOS
         lso_dos = None
-        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster"
+        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster.gz"
         if store_lso_dos and doscar_lso_path.exists():
             doscar_lso_lobster = Doscar(
                 doscar=doscar_lso_path, structure_file=structure_path
