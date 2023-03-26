@@ -36,9 +36,7 @@ __all__ = ["Cp2kInputSet", "Cp2kInputGenerator", "Cp2kAllElectronInputGenerator"
 
 
 class Cp2kInputSet(InputSet):
-    """
-    A class to represent a set of CP2K inputs.
-    """
+    """A class to represent a set of CP2K inputs."""
 
     def __init__(
         self,
@@ -363,9 +361,10 @@ class Cp2kInputGenerator(InputGenerator):
 
     def _get_basis_file(self, cp2k_input: Cp2kInput):
         """
-        Get the basis sets for the input object and convert them to a
-        basis file object. Allows calculation to execute if the basis sets
-        are not available on the execution resource.
+        Get the basis sets for the input object and convert them to a basis file object.
+
+        Allows calculation to execute if the basis sets are not available on the
+        execution resource.
         """
         basis_sets = []
         for el in cp2k_input.structure.symbol_set:
@@ -379,9 +378,10 @@ class Cp2kInputGenerator(InputGenerator):
 
     def _get_potential_file(self, cp2k_input: Cp2kInput):
         """
-        Get the potentials for the input object and convert them to a
-        potential file object. Allows calculation to execute if the potentials
-        are not available on the execution resource.
+        Get the potentials and convert them to a potential file object.
+
+        Allows calculation to execute if the potentials are not available on the
+        execution resource.
         """
         potentials = []
         for el in cp2k_input.structure.symbol_set:

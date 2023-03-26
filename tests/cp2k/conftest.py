@@ -127,7 +127,7 @@ def mock_cp2k(monkeypatch, cp2k_test_dir):
 
 def fake_run_cp2k(
     ref_path: Union[str, Path],
-    input_settings: Sequence[str] = tuple(),
+    input_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["cp2k.inp"]] = _VFILES,
     clear_inputs: bool = True,
 ):

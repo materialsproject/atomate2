@@ -32,8 +32,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LobsterStaticMaker(BaseVaspMaker):
     """
-    Maker that performs a VASP computation with
-     settings that are required for Lobter runs.
+    Maker that performs a VASP computation with settings that are required for Lobster.
 
     Parameters
     ----------
@@ -48,7 +47,7 @@ class LobsterStaticMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -254,7 +253,8 @@ def delete_lobster_wavecar(
         dirs.append(preconverge_static_dir)
 
     for dir_name in dirs:
-        dir_name = strip_hostname(dir_name)
         delete_files(
-            dir_name, include_files=["WAVECAR", "WAVECAR.gz"], allow_missing=True
+            strip_hostname(dir_name),
+            include_files=["WAVECAR", "WAVECAR.gz"],
+            allow_missing=True,
         )

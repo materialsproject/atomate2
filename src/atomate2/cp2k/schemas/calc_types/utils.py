@@ -12,7 +12,8 @@ _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").res
 
 def run_type(inputs: Dict) -> RunType:
     """
-    Determine the run_type from the CP2K input dict
+    Determine the run_type from the CP2K input dict.
+
     This is adapted from pymatgen to be far less unstable.
 
     Args:

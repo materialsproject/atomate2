@@ -3,12 +3,12 @@
 import click
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
 def dev():
     """Tools for atomate2 developers."""
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
 def vasp_test_data(test_dir):
     """Generate test data for VASP unit tests.
@@ -22,11 +22,11 @@ def vasp_test_data(test_dir):
     from pathlib import Path
     from pprint import pformat
 
+    from emmet.core.tasks import TaskDoc
     from monty.serialization import loadfn
 
     from atomate2.common.files import copy_files, delete_files, gunzip_files
     from atomate2.utils.path import strip_hostname
-    from atomate2.vasp.schemas.task import TaskDocument
 
     warnings.filterwarnings("ignore", module="pymatgen")
 
@@ -40,9 +40,7 @@ def vasp_test_data(test_dir):
 
     outputs = loadfn("outputs.json")
 
-    task_labels = [
-        o["output"].task_label for o in outputs if isinstance(o, TaskDocument)
-    ]
+    task_labels = [o["output"].task_label for o in outputs if isinstance(o, TaskDoc)]
 
     if len(task_labels) != len(set(task_labels)):
         raise ValueError("Not all jobs have unique names")
@@ -50,7 +48,7 @@ def vasp_test_data(test_dir):
     original_mapping = {}
     mapping = {}
     for output in outputs:
-        if not isinstance(output["output"], TaskDocument):
+        if not isinstance(output["output"], TaskDoc):
             # this is not a VASP job
             continue
 
@@ -134,6 +132,7 @@ tests in atomate2/tests/vasp/jobs.
 
 def test_my_flow(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
+    from emmet.core.tasks import TaskDoc
 
     # mapping from job name to directory containing test files
     ref_paths = {mapping_str}
@@ -152,7 +151,7 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
 
     # !!! validation on the outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, TaskDocument)
+    assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
