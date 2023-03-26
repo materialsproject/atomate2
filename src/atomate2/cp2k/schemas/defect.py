@@ -176,7 +176,7 @@ class DefectDoc(StructureMetadata):
             "intrinsic"
             if all(
                 el in defect_entries[rt].defect.structure.composition
-                for el in defect_entries[rt].defect.element_changes.keys()
+                for el in defect_entries[rt].defect.element_changes
             )
             else "extrinsic"
         )
@@ -265,7 +265,7 @@ class DefectDoc(StructureMetadata):
     @classmethod
     def get_freysoldt_correction(cls, parameters) -> Tuple[Dict, Dict]:
         if parameters["charge_state"] and not parameters.get("2d"):
-            es, pot, met = get_freysoldt_correction(
+            result = get_freysoldt_correction(
                 q=parameters["charge_state"],
                 dielectric=np.array(
                     parameters["dielectric"]
@@ -274,7 +274,7 @@ class DefectDoc(StructureMetadata):
                 bulk_locpot=parameters["bulk_v_hartree"],
                 defect_frac_coords=parameters["defect_frac_sc_coords"],
             )
-            return {"electrostatic": es, "potential_alignment": pot}, met
+            return {"freysoldt": result.correction_energy}, result.metadata
         return {}, {}
 
     @classmethod
@@ -310,7 +310,7 @@ class DefectDoc(StructureMetadata):
                 lref.write_file("LOCPOT.ref")
                 ldef.write_file("LOCPOT.def")
 
-                es, pot, met = get_freysoldt2d_correction(
+                result = get_freysoldt2d_correction(
                     q=parameters["charge_state"],
                     dielectric=dielectric,
                     defect_locpot=ldef,
@@ -319,7 +319,7 @@ class DefectDoc(StructureMetadata):
                     energy_cutoff=520,
                     slab_buffer=2,
                 )
-                return {"electrostatic": es, "potential_alignment": pot}, met
+                return {"freysoldt": result.correction_energy}, result.metadata
         return {}, {}
 
     @classmethod
@@ -339,7 +339,7 @@ class DefectDoc(StructureMetadata):
         task dicts
         Args:
             defect_task: task dict for the defect calculation
-            bulk_task: task dict for the bulk calculation
+            bulk_task: task dict for the bulk calculation.
         """
         final_defect_structure = defect_task.structure
         final_bulk_structure = bulk_task.structure
@@ -380,7 +380,7 @@ class DefectDoc(StructureMetadata):
 
 
 class DefectValidation(BaseModel):
-    """Validate a task document for defect processing"""
+    """Validate a task document for defect processing."""
 
     MAX_ATOMIC_RELAXATION: float = Field(
         0.02,
@@ -445,7 +445,7 @@ class DefectValidation(BaseModel):
 
 
 class DefectiveMaterialDoc(StructureMetadata):
-    """Document containing all / many defect tasks for a single material ID"""
+    """Document containing all / many defect tasks for a single material ID."""
 
     property_name: ClassVar[str] = "defective material"
 
