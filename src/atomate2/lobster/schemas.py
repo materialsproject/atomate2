@@ -706,13 +706,24 @@ def _get_strong_bonds(
             rel_bnd_list = rel_bnd.split("-")
             rel_bnd_list.sort()
             if label == rel_bnd_list:
-                index = np.argmin(sep_icohp[i])
-                bond_dict.update(
-                    {
-                        rel_bnd: {
-                            prop: min(sep_icohp[i]),
-                            "length": sep_lengths[i][index],
+                if prop == "ICOHP":
+                    index = np.argmin(sep_icohp[i])
+                    bond_dict.update(
+                        {
+                            rel_bnd: {
+                                prop: min(sep_icohp[i]),
+                                "length": sep_lengths[i][index],
+                            }
                         }
-                    }
-                )
+                    )
+                else:
+                    index = np.argmax(sep_icohp[i])
+                    bond_dict.update(
+                        {
+                            rel_bnd: {
+                                prop: max(sep_icohp[i]),
+                                "length": sep_lengths[i][index],
+                            }
+                        }
+                    )
     return bond_dict

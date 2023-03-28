@@ -30,10 +30,10 @@ def test_LobsterTaskDocument(lobster_test_dir):
         doc.strongest_bonds_icohp.strongest_bonds["As-Ga"]["ICOHP"], -4.32971
     )
     assert np.isclose(
-        doc.strongest_bonds_icobi.strongest_bonds["As-Ga"]["ICOBI"], 0.8269299999999999
+        doc.strongest_bonds_icobi.strongest_bonds["As-Ga"]["ICOBI"], 0.82707
     )
     assert np.isclose(
-        doc.strongest_bonds_icoop.strongest_bonds["As-Ga"]["ICOOP"], 0.31381
+        doc.strongest_bonds_icoop.strongest_bonds["As-Ga"]["ICOOP"], 0.31405
     )
     assert np.isclose(
         doc.strongest_bonds_icohp.strongest_bonds["As-Ga"]["length"], 2.4899
@@ -53,11 +53,11 @@ def test_LobsterTaskDocument(lobster_test_dir):
     )
     assert np.isclose(
         doc.strongest_bonds_icobi_cation_anion.strongest_bonds["As-Ga"]["ICOBI"],
-        0.8269299999999999,
+        0.82707,
     )
     assert np.isclose(
         doc.strongest_bonds_icoop_cation_anion.strongest_bonds["As-Ga"]["ICOOP"],
-        0.31381,
+        0.31405,
     )
     assert np.isclose(
         doc.strongest_bonds_icohp_cation_anion.strongest_bonds["As-Ga"]["length"],
