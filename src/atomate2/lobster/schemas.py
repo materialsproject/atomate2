@@ -65,6 +65,9 @@ class LobsteroutModel(BaseModel):
         None, description="list of strings with additional info lines"
     )
     has_doscar: bool = Field(None, description="Bool indicating if DOSCAR is present.")
+    has_doscar_lso: bool = Field(
+        None, description="Bool indicating if DOSCAR.LSO is present."
+    )
     has_cohpcar: bool = Field(
         None, description="Bool indicating if COHPCAR is present."
     )
