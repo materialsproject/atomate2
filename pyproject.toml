@@ -45,7 +45,7 @@ lobster = ["lobsterpy"]
 defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
 docs = [
     "numpydoc==1.5.0",
-    "ipython==8.11.0",
+    "ipython==8.12.0",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
     "jupyter-book==0.14.0",
@@ -62,7 +62,7 @@ strict = [
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "phonopy==2.17.2",
+    "phonopy==2.18.0",
     "seekpath==2.0.1",
     "numpy",
     "mp-api==0.30.10",
