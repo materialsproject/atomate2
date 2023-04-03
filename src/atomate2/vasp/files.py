@@ -27,8 +27,8 @@ def copy_vasp_outputs(
     src_host: str | None = None,
     additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
-    file_client: FileClient | None = None,
     force_overwrite: bool = False,
+    file_client: FileClient | None = None,
 ):
     """
     Copy VASP output files to the current directory.
@@ -51,6 +51,8 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
+    force_overwrite : bool
+        If True, overwrite existing files during the copy step.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
