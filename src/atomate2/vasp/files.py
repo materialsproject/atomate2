@@ -28,6 +28,7 @@ def copy_vasp_outputs(
     additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
     file_client: FileClient | None = None,
+    force_overwrite: bool = False,
 ):
     """
     Copy VASP output files to the current directory.
@@ -87,6 +88,7 @@ def copy_vasp_outputs(
         include_files=required_files + optional_files,
         allow_missing=True,
         file_client=file_client,
+        force=force_overwrite,
     )
 
     # rename files to remove relax extension
