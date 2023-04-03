@@ -285,7 +285,6 @@ class VaspInputGenerator(InputGenerator):
     user_potcar_functional: str = None
     auto_metal_kpoints: bool = True
     auto_ismear: bool = True
-    auto_kspacing: bool = False
     constrain_total_magmom: bool = False
     validate_magmom: bool = True
     use_structure_charge: bool = False
