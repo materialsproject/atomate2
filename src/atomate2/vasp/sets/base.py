@@ -1029,5 +1029,4 @@ def _get_recommended_lreal(structure: Structure):
     """Get recommended LREAL flag based on the structure."""
     if structure.num_sites > 16:
         return "Auto"
-    elif structure.num_sites <= 8:
-        return False
+    return False
