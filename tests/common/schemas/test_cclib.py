@@ -1,7 +1,4 @@
-import gzip
 import os
-import shutil
-
 import pytest
 
 try:
