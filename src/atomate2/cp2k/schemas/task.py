@@ -14,7 +14,7 @@ from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
 
 from atomate2 import SETTINGS, __version__
-from atomate2.common.schemas.molecule import MoleculeMetadata
+from emmet.core.structure import MoleculeMetadata
 from atomate2.common.utils import (
     parse_additional_json,
     parse_custodian,
