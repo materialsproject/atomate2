@@ -167,7 +167,7 @@ class TaskDocument(MoleculeMetadata):
         if (
             store_input_orientation
             and cclib_obj.metadata.get("coord_type", None) == "xyz"
-            and cclib_obj.metadata.geet("coords", None) is not None
+            and cclib_obj.metadata.get("coords", None) is not None
         ):
             input_species = [Element(e) for e in cclib_obj.metadata["coords"][:, 0]]
             input_coords = cclib_obj.metadata["coords"][:, 1:]
@@ -245,8 +245,7 @@ class TaskDocument(MoleculeMetadata):
                     attributes[analysis_name] = None
 
         doc = cls.from_molecule(
-            molecule=final_molecule,
-            include_molecule=True,
+            final_molecule,
             energy=energy,
             dir_name=get_uri(dir_name),
             logfile=get_uri(logfile),

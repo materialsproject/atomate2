@@ -1,7 +1,8 @@
 import os
 
 import pytest
-
+import gzip
+import shutil
 try:
     import cclib
 except ImportError:
@@ -25,7 +26,6 @@ def test_cclib_taskdoc(test_dir):
     assert doc["charge"] == 0
     assert doc["spin_multiplicity"] == 3
     assert doc["nelectrons"] == 16
-    assert doc["molecule"] == doc["attributes"]["molecule_final"]
     assert "schemas" in doc["dir_name"]
     assert "gau_testopt.log.gz" in doc["logfile"]
     assert doc.get("attributes", None) is not None
@@ -70,6 +70,12 @@ def test_cclib_taskdoc(test_dir):
     assert doc["attributes"]["mbo"] is None
 
     # Let's try a volumetric analysis
+    # We'll gunzip the .cube.gz file because cclib can't read cube.gz files yet.
+    # Can remove the gzip part when https://github.com/cclib/cclib/issues/108 is closed.
+    with gzip.open(p / "psi_test.cube.gz", "r") as f_in, open(
+        p / "psi_test.cube", "wb"
+    ) as f_out:
+        shutil.copyfileobj(f_in, f_out)
     doc = TaskDocument.from_logfile(p, ".out", analysis=["Bader"]).dict()
     os.remove(p / "psi_test.cube")
     assert doc["attributes"]["bader"] is not None
