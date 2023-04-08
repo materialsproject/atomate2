@@ -68,7 +68,6 @@ class TaskDocument(MoleculeMetadata):
         dir_name: Union[str, Path],
         logfile_extensions: Union[str, List[str]],
         store_trajectory: bool = False,
-        store_input_orientation: bool = False,
         additional_fields: Dict[str, Any] = None,
         analysis: Union[str, List[str]] = None,
         proatom_dir: Union[Path, str] = None,
@@ -91,11 +90,6 @@ class TaskDocument(MoleculeMetadata):
         store_trajectory
             Whether to store the molecule objects along the course of the relaxation
             trajectory.
-        store_input_orientation
-            Whether to store the molecule object as specified in the input file. Note
-            that the initial molecule object is already stored, but it may be
-            re-oriented compared to the input file if the code reorients the input
-            geometry.
         additional_fields
             Dictionary of additional fields to add to TaskDocument.
         analysis
@@ -165,8 +159,7 @@ class TaskDocument(MoleculeMetadata):
         # the input if it is XYZ-formatted though since the Molecule object
         # does not support internal coordinates or Gaussian Z-matrix.
         if (
-            store_input_orientation
-            and cclib_obj.metadata.get("coord_type", None) == "xyz"
+            cclib_obj.metadata.get("coord_type", None) == "xyz"
             and cclib_obj.metadata.get("coords", None) is not None
         ):
             input_species = [Element(e) for e in cclib_obj.metadata["coords"][:, 0]]
