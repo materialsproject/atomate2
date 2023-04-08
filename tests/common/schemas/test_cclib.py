@@ -21,7 +21,7 @@ def test_cclib_taskdoc(test_dir):
     # added and some important ones.
     doc = TaskDocument.from_logfile(p, ".log.gz").dict()
     assert doc["energy"] == pytest.approx(-4091.763)
-    assert doc["nsites"] == 2
+    assert doc["natoms"] == 2
     assert doc["charge"] == 0
     assert doc["spin_multiplicity"] == 3
     assert doc["nelectrons"] == 16

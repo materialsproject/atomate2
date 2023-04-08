@@ -132,8 +132,7 @@ class TaskDocument(MoleculeMetadata):
         additional_fields = {} if additional_fields is None else additional_fields
 
         # Let's parse the log file with cclib
-        # str conversion due to cclib bug: https://github.com/cclib/cclib/issues/1096
-        cclib_obj = ccread(str(logfile), logging.ERROR)
+        cclib_obj = ccread(logfile, logging.ERROR)
         if not cclib_obj:
             raise ValueError(f"Could not parse {logfile}")
 
