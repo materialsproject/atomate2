@@ -1,8 +1,9 @@
+import gzip
 import os
+import shutil
 
 import pytest
-import gzip
-import shutil
+
 try:
     import cclib
 except ImportError:
