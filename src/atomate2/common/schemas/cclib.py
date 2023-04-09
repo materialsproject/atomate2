@@ -5,17 +5,16 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-from emmet.core.structure import MoleculeMetadata
-from monty.dev import requires
-from monty.json import jsanitize
 import numpy as np
-from pydantic import Field
-from pymatgen.core import Molecule
-from pymatgen.core.periodic_table import Element
-
 from atomate2 import __version__
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
+from emmet.core.structure import MoleculeMetadata
+from monty.dev import requires
+from monty.json import jsanitize
+from pydantic import Field
+from pymatgen.core import Molecule
+from pymatgen.core.periodic_table import Element
 
 try:
     import cclib
@@ -164,7 +163,7 @@ class TaskDocument(MoleculeMetadata):
             and cclib_obj.metadata.get("coords", None) is not None
         ):
             coords_obj = np.array(cclib_obj.metadata["coords"])
-            input_species = [Element(e) for e in coords_obj[:,0]]
+            input_species = [Element(e) for e in coords_obj[:, 0]]
             input_coords = coords_obj[:, 1:]
             input_molecule = Molecule(
                 input_species,
