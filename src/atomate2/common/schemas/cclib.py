@@ -246,6 +246,7 @@ class TaskDocument(MoleculeMetadata):
             attributes=attributes,
             metadata=metadata,
         )
+        doc.builder_meta.build_date = str(doc.builder_meta.build_date)
         doc = doc.copy(update=additional_fields)
         return doc
 
