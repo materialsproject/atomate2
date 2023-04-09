@@ -23,11 +23,10 @@ def test_cclib_taskdoc(test_dir):
     # added and some important ones.
     doc = TaskDocument.from_logfile(p, ".log.gz").dict()
     assert doc["energy"] == pytest.approx(-4091.763)
-    assert doc["nsites"] == 2
+    assert doc["natoms"] == 2
     assert doc["charge"] == 0
     assert doc["spin_multiplicity"] == 3
     assert doc["nelectrons"] == 16
-    assert doc["molecule"] == doc["attributes"]["molecule_final"]
     assert "schemas" in doc["dir_name"]
     assert "gau_testopt.log.gz" in doc["logfile"]
     assert doc.get("attributes", None) is not None
@@ -73,7 +72,7 @@ def test_cclib_taskdoc(test_dir):
 
     # Let's try a volumetric analysis
     # We'll gunzip the .cube.gz file because cclib can't read cube.gz files yet.
-    # Can remove the gzip part when https://github.com/cclib/cclib/issues/109 is closed.
+    # Can remove the gzip part when https://github.com/cclib/cclib/issues/108 is closed.
     with gzip.open(p / "psi_test.cube.gz", "r") as f_in, open(
         p / "psi_test.cube", "wb"
     ) as f_out:
@@ -93,7 +92,7 @@ def test_cclib_taskdoc(test_dir):
     assert doc.dict()["test"] == "hi"
 
     # test document can be jsanitized
-    d = jsanitize(doc, strict=True, enum_values=True)
+    d = jsanitize(doc, enum_values=True)
 
     # and decoded
     MontyDecoder().process_decoded(d)

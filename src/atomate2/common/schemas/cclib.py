@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
+from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
 from monty.json import jsanitize
 from pydantic import Field
@@ -12,7 +13,6 @@ from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
 
 from atomate2 import __version__
-from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
 
@@ -68,7 +68,6 @@ class TaskDocument(MoleculeMetadata):
         dir_name: Union[str, Path],
         logfile_extensions: Union[str, List[str]],
         store_trajectory: bool = False,
-        store_input_orientation: bool = False,
         additional_fields: Dict[str, Any] = None,
         analysis: Union[str, List[str]] = None,
         proatom_dir: Union[Path, str] = None,
@@ -91,11 +90,6 @@ class TaskDocument(MoleculeMetadata):
         store_trajectory
             Whether to store the molecule objects along the course of the relaxation
             trajectory.
-        store_input_orientation
-            Whether to store the molecule object as specified in the input file. Note
-            that the initial molecule object is already stored, but it may be
-            re-oriented compared to the input file if the code reorients the input
-            geometry.
         additional_fields
             Dictionary of additional fields to add to TaskDocument.
         analysis
@@ -132,8 +126,7 @@ class TaskDocument(MoleculeMetadata):
         additional_fields = {} if additional_fields is None else additional_fields
 
         # Let's parse the log file with cclib
-        # str conversion due to cclib bug: https://github.com/cclib/cclib/issues/1096
-        cclib_obj = ccread(str(logfile), logging.ERROR)
+        cclib_obj = ccread(logfile, logging.ERROR)
         if not cclib_obj:
             raise ValueError(f"Could not parse {logfile}")
 
@@ -166,9 +159,8 @@ class TaskDocument(MoleculeMetadata):
         # the input if it is XYZ-formatted though since the Molecule object
         # does not support internal coordinates or Gaussian Z-matrix.
         if (
-            store_input_orientation
-            and cclib_obj.metadata.get("coord_type", None) == "xyz"
-            and cclib_obj.metadata.geet("coords", None) is not None
+            cclib_obj.metadata.get("coord_type", None) == "xyz"
+            and cclib_obj.metadata.get("coords", None) is not None
         ):
             input_species = [Element(e) for e in cclib_obj.metadata["coords"][:, 0]]
             input_coords = cclib_obj.metadata["coords"][:, 1:]
@@ -246,8 +238,7 @@ class TaskDocument(MoleculeMetadata):
                     attributes[analysis_name] = None
 
         doc = cls.from_molecule(
-            molecule=final_molecule,
-            include_molecule=True,
+            final_molecule,
             energy=energy,
             dir_name=get_uri(dir_name),
             logfile=get_uri(logfile),

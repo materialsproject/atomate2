@@ -11,21 +11,14 @@ from pymatgen.core import Structure
 from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import (
-    NonSCFMaker,
-    RelaxMaker,
-    StaticMaker,
-)
+from atomate2.vasp.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.lobster import (
     delete_lobster_wavecar,
     get_basis_infos,
     get_lobster_jobs,
     update_user_incar_settings_maker,
 )
-from atomate2.vasp.sets.core import (
-    NonSCFSetGenerator,
-    StaticSetGenerator,
-)
+from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
 
 __all__ = ["VaspLobsterMaker"]
 
