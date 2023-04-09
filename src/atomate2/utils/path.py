@@ -53,4 +53,3 @@ def strip_hostname(uri_path: str | Path) -> str:
     if ":" in dir_name:
         dir_name = dir_name.split(":", 1)[1]
     return dir_name
-
