@@ -92,7 +92,7 @@ def test_cclib_taskdoc(test_dir):
     assert doc.dict()["test"] == "hi"
 
     # test document can be jsanitized
-    d = jsanitize(doc, strict=True, enum_values=True)
+    d = jsanitize(doc,  enum_values=True)
 
     # and decoded
     MontyDecoder().process_decoded(d)

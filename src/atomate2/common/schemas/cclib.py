@@ -48,7 +48,7 @@ class TaskDocument(MoleculeMetadata):
     metadata: Dict = Field(
         None,
         description="Calculation metadata, including input parameters and runtime "
-        "stats",
+        "statistics",
     )
     task_label: str = Field(None, description="A description of the task")
     tags: List[str] = Field(None, description="Optional tags for this task document")
@@ -247,7 +247,6 @@ class TaskDocument(MoleculeMetadata):
             attributes=attributes,
             metadata=metadata,
         )
-        doc.builder_meta.build_date = str(doc.builder_meta.build_date)
         doc = doc.copy(update=additional_fields)
         return doc
 
