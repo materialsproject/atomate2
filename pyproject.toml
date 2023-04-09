@@ -38,7 +38,6 @@ dependencies = [
 
 [project.optional-dependencies]
 amset = ["amset>=0.4.15", "pydash"]
-cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["lobsterpy"]
