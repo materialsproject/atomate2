@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
 from monty.json import jsanitize
+import numpy as np
 from pydantic import Field
 from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
@@ -162,7 +163,7 @@ class TaskDocument(MoleculeMetadata):
             cclib_obj.metadata.get("coord_type", None) == "xyz"
             and cclib_obj.metadata.get("coords", None) is not None
         ):
-            input_species = [Element(e) for e in cclib_obj.metadata["coords"][:, 0]]
+            input_species = [Element(e) for e in np.array(cclib_obj.metadata["coords"][:, 0])]
             input_coords = cclib_obj.metadata["coords"][:, 1:]
             input_molecule = Molecule(
                 input_species,
