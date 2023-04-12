@@ -6,21 +6,23 @@ Need to implement a Task Document equivalent. Possibly import from emmet
 """ Core definition of a Q-Chem Task Document """
 from typing import Any, Callable, Dict, List, Optional
 
-from emmet.core.qchem.calc_types import (
-    CalcType,
+from pydantic import BaseModel, Field
+from pymatgen.core.structure import Molecule
+
+from emmet.core.structure import MoleculeMetadata
+from emmet.core.task import BaseTaskDocument
+from jobflow.utils import ValueEnum
+
+from atomate2.qchem.schemas.calc_types import (
     LevelOfTheory,
+    CalcType,
     TaskType,
     calc_type,
     level_of_theory,
-    lot_solvent_string,
-    solvent,
     task_type,
+    solvent,
+    lot_solvent_string,
 )
-from emmet.core.structure import MoleculeMetadata
-from emmet.core.task import BaseTaskDocument
-from emmet.core.utils import ValueEnum
-from pydantic import BaseModel, Field
-from pymatgen.core.structure import Molecule
 
 __author__ = "Evan Spotte-Smith <ewcspottesmith@lbl.gov>"
 
@@ -32,6 +34,44 @@ class QChemStatus(ValueEnum):
 
     SUCCESS = "successful"
     FAILED = "unsuccessful"
+
+
+class InputSummary(BaseModel):
+    """Summary of inputs for a QChem calculation"""
+
+    molecule: Molecule = Field(None, description="The input molecule geometry")
+
+    rem: Dict[str, Any] = Field(
+        None, description="A dictionary of all the input parameters of the QChem input file"
+    )
+
+    pcm: Dict[str, Any] = Field(
+        None, description="A dictionary of the pcm solvent section defining its behavior"
+    )
+
+    solvent: Dict[str, Any] = Field(
+        None, description="A dictionary defining the solvent parameters used with PCM"
+    )
+
+    smx: Dict[str, Any] = Field(
+        None, description="A dictionary defining solvent parameters used with the SMD solvent method"
+    )
+
+    geom_opt: Dict[str, Any] = Field(
+        None, description="A dictionary of input parameters for the geom_opt section of the QChem input file"
+    )
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
+            "molecule": self.molecule,
+            "rem": self.rem,
+            "pcm": self.pcm,
+            "solvent": self.solvent,
+            "smx": self.smx,
+            "geom_opt": self.geom_opt,
+        }
 
 
 class OutputSummary(BaseModel):
@@ -106,6 +146,7 @@ class TaskDocument(BaseTaskDocument, MoleculeMetadata):
     orig: Dict[str, Any] = Field(
         {}, description="Summary of the original Q-Chem inputs"
     )
+    input = Field(InputSummary())
     output = Field(OutputSummary())
 
     critic2: Dict[str, Any] = Field(
