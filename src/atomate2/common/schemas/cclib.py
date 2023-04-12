@@ -69,9 +69,9 @@ class TaskDocument(MoleculeMetadata):
         dir_name: Union[str, Path],
         logfile_extensions: Union[str, List[str]],
         store_trajectory: bool = False,
-        additional_fields: Dict[str, Any] = None,
-        analysis: Union[str, List[str]] = None,
-        proatom_dir: Union[Path, str] = None,
+        additional_fields: Optional[Dict[str, Any]] = None,
+        analysis: Optional[Union[str, List[str]]] = None,
+        proatom_dir: Optional[Union[Path, str]] = None,
     ) -> _T:
         """
         Create a TaskDocument from a log file.
@@ -165,7 +165,7 @@ class TaskDocument(MoleculeMetadata):
         ):
             coords_obj = np.array(cclib_obj.metadata["coords"])
             input_species = [Element(e) for e in coords_obj[:, 0]]
-            input_coords = coords_obj[:, 1:]
+            input_coords = coords_obj[:, 1:].tolist()
             input_molecule = Molecule(
                 input_species,
                 input_coords,
@@ -210,15 +210,17 @@ class TaskDocument(MoleculeMetadata):
                 cclib_obj.moenergies, cclib_obj.homos
             )
             attributes["homo_energies"] = homo_energies
-            attributes["lumo_energies"] = lumo_energies
-            attributes["homo_lumo_gaps"] = homo_lumo_gaps
+            if lumo_energies:
+                attributes["lumo_energies"] = lumo_energies
+            if homo_lumo_gaps:
+                attributes["homo_lumo_gaps"] = homo_lumo_gaps
 
-            # The HOMO-LUMO gap for a spin-polarized system is ill-defined.
-            # This is why we report both the alpha and beta channel gaps
-            # above. Here, we report min(LUMO_alpha-HOMO_alpha,LUMO_beta-HOMO_beta)
-            # in case the user wants to easily query by this too. For restricted
-            # systems, this will always be the same as above.
-            attributes["min_homo_lumo_gap"] = min(homo_lumo_gaps)
+                # The HOMO-LUMO gap for a spin-polarized system is ill-defined.
+                # This is why we report both the alpha and beta channel gaps
+                # above. Here, we report min(LUMO_alpha-HOMO_alpha,LUMO_beta-HOMO_beta)
+                # in case the user wants to easily query by this too. For restricted
+                # systems, this will always be the same as above.
+                attributes["min_homo_lumo_gap"] = min(homo_lumo_gaps)
 
         # Calculate any properties
         if analysis:
