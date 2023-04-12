@@ -30,7 +30,7 @@ class SinglePointSetGenerator(QChemInputGenerator):
         molecule: Molecule,
     ) -> dict:
         """
-        Get updates to the basis set for a single point calculation.
+        Get updates to the input dict for a single point calculation.
         """
         return {"basis_set": "def2-tzvppd", "scf_algorithm": "diis", "job_type": "sp"}
 
@@ -39,17 +39,12 @@ class SinglePointSetGenerator(QChemInputGenerator):
 class OptSetGenerator(QChemInputGenerator):
     """Class to generate QChem Optimization input sets."""
 
-    def get_basis_set_updates(
+    def get_input_set_updates(
         self,
         molecule: Molecule,
-        prev_basis: str = None,
-        prev_scf: str = None,
-        new_geom_opt: dict = None,
-        nbo_params: dict = None,
-        overwrite_inputs: dict = None,
     ) -> dict:
         """
-        Get updates to the basis set for a geometry optimization calculation.
+        Get updates to the input dict for a geometry optimization calculation.
         """
         return {"basis_set": "def2-tzvppd", "scf_algorithm": "diis", "job_type": "opt"}
 
@@ -61,14 +56,9 @@ class TransitionStateSetGenerator(QChemInputGenerator):
     def get_basis_set_updates(
         self,
         molecule: Molecule,
-        prev_basis: str = None,
-        prev_scf: str = None,
-        new_geom_opt: dict = None,
-        nbo_params: dict = None,
-        overwrite_inputs: dict = None,
     ) -> dict:
         """
-        Get updates to the basis set for a transition state calculation.
+        Get updates to the input dict for a transition state calculation.
         """
         return {"basis_set": "def2-tzvppd", "scf_algorithm": "diis", "job_type": "ts"}
 
@@ -80,14 +70,9 @@ class ForceSetGenerator(QChemInputGenerator):
     def get_basis_set_updates(
         self,
         molecule: Molecule,
-        prev_basis: str = None,
-        prev_scf: str = None,
-        new_geom_opt: dict = None,
-        nbo_params: dict = None,
-        overwrite_inputs: dict = None,
     ) -> dict:
         """
-        Get updates to the basis set for a force(gradient) calculation.
+        Get updates to the input dict for a force(gradient) calculation.
         """
         return {
             "basis_set": "def2-tzvppd",
@@ -103,14 +88,9 @@ class FreqSetGenerator(QChemInputGenerator):
     def get_basis_set_updates(
         self,
         molecule: Molecule,
-        prev_basis: str = None,
-        prev_scf: str = None,
-        new_geom_opt: dict = None,
-        nbo_params: dict = None,
-        overwrite_inputs: dict = None,
     ) -> dict:
         """
-        Get updates to the basis set for a frequency calculation.
+        Get updates to the input dict for a frequency calculation.
         """
         return {"basis_set": "def2-tzvppd", "scf_algorithm": "diis", "job_type": "freq"}
 
@@ -122,14 +102,9 @@ class PESScanSetGenerator(QChemInputGenerator):
     def get_basis_set_updates(
         self,
         molecule: Molecule,
-        prev_basis: str = None,
-        prev_scf: str = None,
-        new_geom_opt: dict = None,
-        nbo_params: dict = None,
-        overwrite_inputs: dict = None,
     ) -> dict:
         """
-        Get updates to the basis set for a pes scan calculation.
+        Get updates to the input dict for a pes scan calculation.
         """
         return {
             "basis_set": "def2-tzvppd",
