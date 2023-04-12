@@ -55,7 +55,7 @@ __all__ = [
 ]
 
 
-_BADER_EXE_EXISTS = True if (which("bader") or which("bader.exe")) else False
+_BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 
 
 class Status(ValueEnum):
@@ -70,16 +70,16 @@ class VaspObject(ValueEnum):
 
     BANDSTRUCTURE = "bandstructure"
     DOS = "dos"
-    CHGCAR = "chg"
-    AECCAR0 = "aec0"
-    AECCAR1 = "aec1"
-    AECCAR2 = "aec2"
-    TRAJECTORY = "traj"
-    ELFCAR = "elf"
-    WAVECAR = "wave"
+    CHGCAR = "chgcar"
+    AECCAR0 = "aeccar0"
+    AECCAR1 = "aeccar1"
+    AECCAR2 = "aeccar2"
+    TRAJECTORY = "trajectory"
+    ELFCAR = "elfcar"
+    WAVECAR = "wavecar"
     LOCPOT = "locpot"
     OPTIC = "optic"
-    PROCAR = "proj"
+    PROCAR = "procar"
 
 
 class PotcarSpec(BaseModel):
@@ -499,7 +499,10 @@ class CalculationOutput(BaseModel):
 
         # use structure from CONTCAR as it is written to
         # greater precision than in the vasprun
+        # but still need to copy the charge over
         structure = contcar.structure
+        structure._charge = vasprun.final_structure._charge
+
         mag_density = outcar.total_mag / structure.volume if outcar.total_mag else None
 
         if len(outcar.magnetization) != 0:
@@ -793,7 +796,10 @@ def _get_volumetric_data(
     output_file_paths
         A dictionary mapping the data type to file path relative to dir_name.
     store_volumetric_data
-        The volumetric data files to load. E.g., `("chgcar", "locpot")
+        The volumetric data files to load. E.g., `("chgcar", "locpot")`.
+        Provided as a list of strings note you can use either the keys or the
+        values available in the `VaspObject` enum (e.g., "locpot" or "LOCPOT")
+        are both valid.
 
     Returns
     -------
@@ -808,8 +814,11 @@ def _get_volumetric_data(
 
     volumetric_data = {}
     for file_type, file in output_file_paths.items():
-        if file_type.name not in store_volumetric_data:
-            pass
+        if (
+            file_type.name not in store_volumetric_data
+            and file_type.value not in store_volumetric_data
+        ):
+            continue
 
         try:
             # assume volumetric data is all in CHGCAR format

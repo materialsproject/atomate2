@@ -115,7 +115,7 @@ def vasp_test_data(test_dir):
         [f"  {v}  ->  {k}" for k, v in original_mapping.items()]
     )
 
-    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping.keys()}
+    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping}
     run_vasp_kwargs_str = pformat(run_vasp_kwargs).replace("\n", "\n    ")
 
     test_function_str = f"""Test files generated in test_data.
