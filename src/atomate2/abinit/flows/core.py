@@ -1,14 +1,19 @@
 """Core abinit flow makers."""
+from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional, Union
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.jobs.core import RelaxMaker, StaticMaker, LineNonSCFMaker, UniformNonSCFMaker
+from atomate2.abinit.jobs.core import (
+    LineNonSCFMaker,
+    RelaxMaker,
+    StaticMaker,
+    UniformNonSCFMaker,
+)
 
 
 @dataclass
@@ -37,7 +42,7 @@ class BandStructureMaker(Maker):
     def make(
         self,
         structure: Structure,
-        restart_from: Optional[Union[str, Path]] = None,
+        restart_from: str | Path | None = None,
     ):
         """
         Create a band structure flow.
@@ -86,7 +91,7 @@ class RelaxFlowMaker(Maker):
     """
 
     name: str = "relaxation"
-    relaxation_makers: List[Maker] = field(
+    relaxation_makers: list[Maker] = field(
         default_factory=lambda: [
             RelaxMaker.ionic_relaxation(),
             RelaxMaker.full_relaxation(),
@@ -95,8 +100,8 @@ class RelaxFlowMaker(Maker):
 
     def make(
         self,
-        structure: Optional[Structure] = None,
-        restart_from: Optional[Union[str, Path]] = None,
+        structure: Structure | None = None,
+        restart_from: str | Path | None = None,
     ):
         """
         Create a relaxation flow.

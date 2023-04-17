@@ -1,9 +1,9 @@
 import os
-import numpy as np
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
+import numpy as np
 import pytest
 from abipy.abio.input_tags import SCF
 from abipy.abio.inputs import AbinitInput
@@ -22,6 +22,7 @@ from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, Initialization
 
 def mocked_factory(structure, pseudos):
     from abipy.abio.inputs import AbinitInput
+
     return AbinitInput(structure, pseudos)
 
 

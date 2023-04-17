@@ -12,12 +12,12 @@ from pymatgen.core.structure import Structure
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.sets.base import AbinitInputGenerator
 from atomate2.abinit.sets.core import (
+    LineNonSCFSetGenerator,
     NonSCFSetGenerator,
     NonScfWfqInputGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
-    LineNonSCFSetGenerator,
-    UniformNonSCFSetGenerator
+    UniformNonSCFSetGenerator,
 )
 from atomate2.abinit.utils.history import JobHistory
 
@@ -38,7 +38,9 @@ class StaticMaker(BaseAbinitMaker):
 
     calc_type: str = "scf"
     name: str = "Scf calculation"
-    input_set_generator: AbinitInputGenerator = field(default_factory=StaticSetGenerator)
+    input_set_generator: AbinitInputGenerator = field(
+        default_factory=StaticSetGenerator
+    )
 
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
 
@@ -55,7 +57,9 @@ class LineNonSCFMaker(BaseAbinitMaker):
 
     calc_type: str = "nscf_line"
     name: str = "Line non-Scf calculation"
-    input_set_generator: AbinitInputGenerator = field(default_factory=LineNonSCFSetGenerator)
+    input_set_generator: AbinitInputGenerator = field(
+        default_factory=LineNonSCFSetGenerator
+    )
 
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
 
@@ -72,7 +76,9 @@ class UniformNonSCFMaker(BaseAbinitMaker):
 
     calc_type: str = "nscf_uniform"
     name: str = "Uniform non-Scf calculation"
-    input_set_generator: AbinitInputGenerator = field(default_factory=UniformNonSCFSetGenerator)
+    input_set_generator: AbinitInputGenerator = field(
+        default_factory=UniformNonSCFSetGenerator
+    )
 
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
 
@@ -84,7 +90,9 @@ class NonSCFMaker(BaseAbinitMaker):
     calc_type: str = "nscf"
     name: str = "non-Scf calculation"
 
-    input_set_generator: AbinitInputGenerator = field(default_factory=NonSCFSetGenerator)
+    input_set_generator: AbinitInputGenerator = field(
+        default_factory=NonSCFSetGenerator
+    )
 
     # Non dataclass variables:
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
@@ -128,7 +136,9 @@ class NonSCFWfqMaker(NonSCFMaker):
     calc_type: str = "nscf_wfq"
     name: str = "non-Scf calculation"
 
-    input_set_generator: AbinitInputGenerator = field(default_factory=NonScfWfqInputGenerator)
+    input_set_generator: AbinitInputGenerator = field(
+        default_factory=NonScfWfqInputGenerator
+    )
 
     # Non dataclass variables:
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)

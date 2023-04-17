@@ -1,6 +1,5 @@
 import pytest
 
-from pymatgen.io.abinit.abiobjects import KSampling
 
 @pytest.mark.parametrize(
     "powerup,attribute,settings",
@@ -54,7 +53,9 @@ def test_update_user_settings(powerup, attribute, settings):
     drm = RelaxFlowMaker()
     flow = drm.make(1)
     print(flow)
-    flow = powerup_func(flow, settings, name_filter="Relaxation calculation (ions only)")
+    flow = powerup_func(
+        flow, settings, name_filter="Relaxation calculation (ions only)"
+    )
     assert (
         getattr(flow.jobs[0].function.__self__.input_set_generator, attribute)
         == settings
@@ -66,9 +67,9 @@ def test_update_user_settings(powerup, attribute, settings):
 
 
 def test_update_generator_attributes():
-    from atomate2.abinit.powerups import update_generator_attributes
     from atomate2.abinit.flows.core import RelaxFlowMaker
     from atomate2.abinit.jobs.core import RelaxMaker
+    from atomate2.abinit.powerups import update_generator_attributes
 
     settings = {"pseudos": "ONCVPSP-PBE-SR-PDv0.3:standard"}
 
@@ -108,7 +109,9 @@ def test_update_generator_attributes():
     # test name filter
     drm = RelaxFlowMaker()
     flow = drm.make(1)
-    flow = update_generator_attributes(flow, settings, name_filter="Relaxation calculation (ions only)")
+    flow = update_generator_attributes(
+        flow, settings, name_filter="Relaxation calculation (ions only)"
+    )
     for attribute, value in settings.items():
         assert (
             getattr(flow.jobs[0].function.__self__.input_set_generator, attribute)
@@ -118,4 +121,3 @@ def test_update_generator_attributes():
             getattr(flow.jobs[1].function.__self__.input_set_generator, attribute)
             != value
         )
-

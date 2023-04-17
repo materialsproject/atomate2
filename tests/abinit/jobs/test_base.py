@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-import pytest
 from abipy.abio.input_tags import SCF
 from abipy.abio.inputs import AbinitInput
 
@@ -18,7 +17,9 @@ class SomeAISG1(AbinitInputGenerator):
     param3: List[int] = field(default_factory=list)
     param4: str = "test_string1"
 
-    user_abinit_settings: dict = field(default_factory=lambda: {"extra1": 1, "extra2": 2})
+    user_abinit_settings: dict = field(
+        default_factory=lambda: {"extra1": 1, "extra2": 2}
+    )
 
     restart_from_deps: tuple = (f"{SCF}:WFK|DEN",)
 

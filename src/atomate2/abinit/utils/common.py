@@ -353,7 +353,6 @@ def get_final_structure(dir_name):
         except Exception:
             pass
 
-
     out_path = File(os.path.join(dir_name, OUTPUT_FILE_NAME))
     if out_path.exists:
         try:

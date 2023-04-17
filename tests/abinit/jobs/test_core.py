@@ -26,8 +26,9 @@ def test_static_run_silicon_standard(mock_abinit, abinit_test_dir, clean_dir):
 
 def test_static_run_silicon_restarts(mock_abinit, abinit_test_dir, clean_dir):
     from jobflow import run_locally
-    from pymatgen.core.structure import Structure
     from monty.serialization import loadfn
+    from pymatgen.core.structure import Structure
+
     from atomate2.abinit.schemas.core import AbinitTaskDocument
 
     # load the initial structure, the maker and the ref_paths from the test_dir
@@ -54,12 +55,15 @@ def test_static_run_silicon_restarts(mock_abinit, abinit_test_dir, clean_dir):
 
 def test_relax_run_silicon_scaled1p2_standard(mock_abinit, abinit_test_dir, clean_dir):
     from jobflow import run_locally
-    from pymatgen.core.structure import Structure
     from monty.serialization import loadfn
+    from pymatgen.core.structure import Structure
+
     from atomate2.abinit.schemas.core import AbinitTaskDocument
 
     # load the initial structure, the maker and the ref_paths from the test_dir
-    test_dir = abinit_test_dir / "jobs" / "core" / "RelaxMaker" / "silicon_scaled1p2_standard"
+    test_dir = (
+        abinit_test_dir / "jobs" / "core" / "RelaxMaker" / "silicon_scaled1p2_standard"
+    )
     structure = Structure.from_file(test_dir / "initial_structure.json.gz")
     maker_info = loadfn(test_dir / "maker.json.gz")
     maker = maker_info["maker"]
@@ -79,12 +83,15 @@ def test_relax_run_silicon_scaled1p2_standard(mock_abinit, abinit_test_dir, clea
 
 def test_relax_run_silicon_scaled1p2_restart(mock_abinit, abinit_test_dir, clean_dir):
     from jobflow import run_locally
-    from pymatgen.core.structure import Structure
     from monty.serialization import loadfn
+    from pymatgen.core.structure import Structure
+
     from atomate2.abinit.schemas.core import AbinitTaskDocument
 
     # load the initial structure, the maker and the ref_paths from the test_dir
-    test_dir = abinit_test_dir / "jobs" / "core" / "RelaxMaker" / "silicon_scaled1p2_restart"
+    test_dir = (
+        abinit_test_dir / "jobs" / "core" / "RelaxMaker" / "silicon_scaled1p2_restart"
+    )
     structure = Structure.from_file(test_dir / "initial_structure.json.gz")
     maker_info = loadfn(test_dir / "maker.json.gz")
     maker = maker_info["maker"]

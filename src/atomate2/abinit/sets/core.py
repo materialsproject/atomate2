@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional, Union, Callable
+from typing import Callable
 
 import numpy as np
 from abipy.abio.factories import (
@@ -19,7 +19,6 @@ from pymatgen.io.abinit import PseudoTable
 from pymatgen.io.abinit.abiobjects import KSampling
 
 from atomate2.abinit.sets.base import AbinitInputGenerator
-from atomate2.abinit.utils.common import get_final_structure
 
 __all__ = [
     "StaticSetGenerator",
@@ -49,8 +48,13 @@ class StaticSetGenerator(AbinitInputGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None
+        input_index: int | None = None,
     ) -> AbinitInput:
+        """
+        Generate the AbinitInput for the input set.
+
+        Removes some standard variables related to relaxation.
+        """
         # disable relax options in case they are present (from a restart)
         scf_abinit_settings = {
             "ionmov": None,
@@ -60,9 +64,14 @@ class StaticSetGenerator(AbinitInputGenerator):
         if abinit_settings:
             scf_abinit_settings.update(abinit_settings)
 
-        return super().get_abinit_input(structure=structure, pseudos=pseudos, prev_outputs=prev_outputs,
-                                        abinit_settings=scf_abinit_settings, factory_kwargs=factory_kwargs,
-                                        kpoints_settings=kpoints_settings)
+        return super().get_abinit_input(
+            structure=structure,
+            pseudos=pseudos,
+            prev_outputs=prev_outputs,
+            abinit_settings=scf_abinit_settings,
+            factory_kwargs=factory_kwargs,
+            kpoints_settings=kpoints_settings,
+        )
 
 
 @dataclass
@@ -77,7 +86,9 @@ class NonSCFSetGenerator(AbinitInputGenerator):
     nbands_factor: float = 1.2
     factory_kwargs: dict = field(default_factory=dict)
 
-    factory_prev_inputs_kwargs: dict | None = field(default_factory=lambda: {"gs_input": (SCF,)})
+    factory_prev_inputs_kwargs: dict | None = field(
+        default_factory=lambda: {"gs_input": (SCF,)}
+    )
 
     def get_abinit_input(
         self,
@@ -87,18 +98,25 @@ class NonSCFSetGenerator(AbinitInputGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None
+        input_index: int | None = None,
     ) -> AbinitInput:
         """Get AbinitInput object for Non-SCF calculation."""
         factory_kwargs = dict(factory_kwargs) if factory_kwargs else {}
         factory_kwargs["nband"] = self._get_nband(prev_outputs)
 
-        return super().get_abinit_input(structure=structure, pseudos=pseudos, prev_outputs=prev_outputs,
-                                        abinit_settings=abinit_settings, factory_kwargs=factory_kwargs,
-                                        kpoints_settings=kpoints_settings)
+        return super().get_abinit_input(
+            structure=structure,
+            pseudos=pseudos,
+            prev_outputs=prev_outputs,
+            abinit_settings=abinit_settings,
+            factory_kwargs=factory_kwargs,
+            kpoints_settings=kpoints_settings,
+        )
 
     def _get_nband(self, prev_outputs):
-        abinit_inputs = self.resolve_prev_inputs(prev_outputs, self.factory_prev_inputs_kwargs)
+        abinit_inputs = self.resolve_prev_inputs(
+            prev_outputs, self.factory_prev_inputs_kwargs
+        )
         if len(abinit_inputs) != 1:
             raise RuntimeError(
                 f"Should have exactly one previous output. Found {len(abinit_inputs)}"
@@ -148,7 +166,7 @@ class NonScfWfqInputGenerator(AbinitInputGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None
+        input_index: int | None = None,
     ) -> AbinitInput:
         """Get AbinitInput object for Non-SCF Wfq calculation."""
         raise NotImplementedError
@@ -168,7 +186,7 @@ class DdkInputGenerator(AbinitInputGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None
+        input_index: int | None = None,
     ) -> AbinitInput:
         """Get the abinit input for Ddk calculation."""
         raise NotImplementedError()
@@ -194,15 +212,26 @@ class RelaxSetGenerator(AbinitInputGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None
+        input_index: int | None = None,
     ) -> AbinitInput:
+        """
+        Generate the AbinitInput for the input set.
+
+        Sets tolmxf and determines the index of the MultiDataset.
+        """
         abinit_settings = abinit_settings or {}
         # TODO move tolmxf to the factory?
         abinit_settings["tolmxf"] = self.tolmxf
         if input_index is None:
             input_index = 1 if self.relax_cell else 0
-        abinit_input = super().get_abinit_input(structure=structure, pseudos=pseudos, prev_outputs=prev_outputs,
-                                        abinit_settings=abinit_settings, factory_kwargs=factory_kwargs,
-                                        kpoints_settings=kpoints_settings, input_index=input_index)
+        abinit_input = super().get_abinit_input(
+            structure=structure,
+            pseudos=pseudos,
+            prev_outputs=prev_outputs,
+            abinit_settings=abinit_settings,
+            factory_kwargs=factory_kwargs,
+            kpoints_settings=kpoints_settings,
+            input_index=input_index,
+        )
 
         return abinit_input

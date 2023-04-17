@@ -1,8 +1,7 @@
-
 def test_band_structure_run_silicon(mock_abinit, abinit_test_dir, clean_dir):
     from jobflow import run_locally
-    from pymatgen.core.structure import Structure
     from monty.serialization import loadfn
+    from pymatgen.core.structure import Structure
 
     # load the initial structure, the maker and the ref_paths from the test_dir
     test_dir = abinit_test_dir / "flows" / "core" / "BandStructureMaker" / "silicon"
@@ -25,11 +24,13 @@ def test_band_structure_run_silicon(mock_abinit, abinit_test_dir, clean_dir):
 
 def test_relax_run_silicon_standard(mock_abinit, abinit_test_dir, clean_dir):
     from jobflow import run_locally
-    from pymatgen.core.structure import Structure
     from monty.serialization import loadfn
+    from pymatgen.core.structure import Structure
 
     # load the initial structure, the maker and the ref_paths from the test_dir
-    test_dir = abinit_test_dir / "flows" / "core" / "RelaxFlowMaker" / "silicon_standard"
+    test_dir = (
+        abinit_test_dir / "flows" / "core" / "RelaxFlowMaker" / "silicon_standard"
+    )
     structure = Structure.from_file(test_dir / "initial_structure.json.gz")
     maker_info = loadfn(test_dir / "maker.json.gz")
     maker = maker_info["maker"]
@@ -46,12 +47,16 @@ def test_relax_run_silicon_standard(mock_abinit, abinit_test_dir, clean_dir):
     for job, _parents in flow_or_job.iterflow():
         assert len(responses[job.uuid]) == 1
 
+
 def test_relax_ion_ioncell_relaxation():
     from atomate2.abinit.flows.core import RelaxFlowMaker
 
     settings = {"nband": 100}
     maker = RelaxFlowMaker.ion_ioncell_relaxation(user_abinit_settings=settings)
     assert len(maker.relaxation_makers) == 2
-    assert maker.relaxation_makers[0].input_set_generator.user_abinit_settings == settings
-    assert maker.relaxation_makers[1].input_set_generator.user_abinit_settings == settings
-
+    assert (
+        maker.relaxation_makers[0].input_set_generator.user_abinit_settings == settings
+    )
+    assert (
+        maker.relaxation_makers[1].input_set_generator.user_abinit_settings == settings
+    )

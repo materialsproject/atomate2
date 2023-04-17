@@ -180,16 +180,16 @@ def abinit_script_maker():
     out = [
         "from atomate2.abinit.flows.core import BandStructureMaker",
         "from atomate2.abinit.jobs.core import StaticMaker, LineNonSCFMaker",
-        "from atomate2.abinit.powerups import update_factory_kwargs, update_generator_attributes",
+        "from atomate2.abinit.powerups import update_factory_kwargs, update_generator_attributes",  # noqa: E501
         "from atomate2.cli.dev import save_abinit_maker",
         "",
         "",
         "# The following lines define the maker.",
         "# Adapt for specific job/flow maker test.",
         "maker = BandStructureMaker()",
-        "maker = update_factory_kwargs(maker, dict(kppa=10, ecut=4.0, nband=4), class_filter=StaticMaker)",
-        "maker = update_factory_kwargs(maker, dict(ndivsm=2), class_filter=LineNonSCFMaker)",
-        "maker = update_generator_attributes(maker, dict(nbands_factor=1.5), class_filter=LineNonSCFMaker)",
+        "maker = update_factory_kwargs(maker, dict(kppa=10, ecut=4.0, nband=4), class_filter=StaticMaker)",  # noqa: E501
+        "maker = update_factory_kwargs(maker, dict(ndivsm=2), class_filter=LineNonSCFMaker)",  # noqa: E501
+        "maker = update_generator_attributes(maker, dict(nbands_factor=1.5), class_filter=LineNonSCFMaker)",  # noqa: E501
         "",
         "# Save the maker and metadata to maker.json",
         "save_abinit_maker(maker)",
@@ -213,7 +213,6 @@ def abinit_generate_reference(structure_file, make_kwargs):
     NB: note that all the files in the folder will be compressed, in light of a copy to
     the test folder, unless the --no-compress is selected.
     """
-    import os
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
     from monty.serialization import dumpfn, loadfn
@@ -504,7 +503,7 @@ def abinit_test_data(test_name, test_data_dir, force):
     compress_dir(test_dir)
 
     # starting index of the parts of the test_dir that needs to be used in the
-    # example script. Looks for the last occurence of the "abinit" part of the path.
+    # example script. Looks for the last occurrence of the "abinit" part of the path.
     for i, p in enumerate(reversed(test_dir.parts)):
         if p == "abinit":
             index_part = -i
@@ -586,14 +585,16 @@ def save_abinit_maker(maker):
         else:
             warnings.warn(
                 "Author could not be detected from git. "
-                "You may want to manually set it in the 'maker.json' file."
+                "You may want to manually set it in the 'maker.json' file.",
+                stacklevel=2,
             )
         if mail.returncode == 0:
             author_mail = mail.stdout.strip()
         else:
             warnings.warn(
                 "Author email could not be detected from git. "
-                "You may want to manually set it in the 'maker.json' file."
+                "You may want to manually set it in the 'maker.json' file.",
+                stacklevel=2,
             )
     with open("maker.json", "w") as f:
         json.dump(

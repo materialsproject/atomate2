@@ -154,6 +154,7 @@ def clear_abinit_files():
 
 def copy_abinit_outputs(ref_path: Union[str, Path]):
     import shutil
+
     from monty.shutil import decompress_file
 
     ref_path = Path(ref_path)

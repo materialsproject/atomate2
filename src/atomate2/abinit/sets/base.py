@@ -8,7 +8,7 @@ import os
 from collections import namedtuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, Callable
+from typing import Any, Callable, Iterable
 
 import numpy as np
 from abipy.abio.inputs import AbinitInput, MultiDataset
@@ -85,7 +85,9 @@ class AbinitInputSet(InputSet):
         # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
         #  the abinit input set also sets up links to previous files, sets up the
         #  indir, outdir and tmpdir, ...
-        self.inputs["abinit_input.json"] = json.dumps(jsanitize(self.abinit_input.as_dict()))
+        self.inputs["abinit_input.json"] = json.dumps(
+            jsanitize(self.abinit_input.as_dict())
+        )
         super().write_input(
             directory=directory,
             make_dir=make_dir,
@@ -309,9 +311,9 @@ class AbinitInputGenerator(InputGenerator):
 
     def get_input_set(  # type: ignore
         self,
-        structure=None,
-        restart_from=None,
-        prev_outputs=None,
+        structure: Structure = None,
+        restart_from: str | tuple | list | Path | None = None,
+        prev_outputs: str | tuple | list | Path | None = None,
     ) -> AbinitInputSet:
         """Generate an AbinitInputSet object.
 
@@ -332,10 +334,7 @@ class AbinitInputGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
-        if self.pseudos:
-            pseudos = as_pseudo_table(self.pseudos)
-        else:
-            pseudos = None
+        pseudos = as_pseudo_table(self.pseudos) if self.pseudos else None
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
@@ -390,7 +389,9 @@ class AbinitInputGenerator(InputGenerator):
             link_files=True,
         )
 
-    def check_format_prev_dirs(self, prev_dirs: str | tuple | list | Path | None) -> list[str] | None:
+    def check_format_prev_dirs(
+        self, prev_dirs: str | tuple | list | Path | None
+    ) -> list[str] | None:
         """Check and format the prev_dirs (restart or dependency)."""
         if prev_dirs is None:
             return None
@@ -399,10 +400,7 @@ class AbinitInputGenerator(InputGenerator):
         return [str(prev_dir) for prev_dir in prev_dirs]
 
     def resolve_deps(
-        self,
-        prev_dirs: list[str],
-        deps: str | tuple,
-        check_runlevel: bool = True
+        self, prev_dirs: list[str], deps: str | tuple, check_runlevel: bool = True
     ) -> tuple[dict, list]:
         """Resolve dependencies.
 
@@ -416,7 +414,7 @@ class AbinitInputGenerator(InputGenerator):
                 abinit_input = load_abinit_input(prev_dir)
             for dep in deps:
                 runlevel = set(dep.split(":")[0].split("|"))
-                exts = tuple(dep.split(":")[1].split("|"))
+                exts = list(dep.split(":")[1].split("|"))
                 if not check_runlevel or runlevel.intersection(abinit_input.runlevel):
                     irdvars, inp_files = self.resolve_dep_exts(
                         prev_dir=prev_dir, exts=exts
@@ -427,12 +425,11 @@ class AbinitInputGenerator(InputGenerator):
         return deps_irdvars, input_files
 
     def resolve_prev_inputs(
-        self,
-        prev_dirs: list[str],
-        prev_inputs_kwargs: dict
+        self, prev_dirs: list[str], prev_inputs_kwargs: dict
     ) -> dict[str, AbinitInput]:
         """
         Find suitable abinit inputs from the previous outputs.
+
         Also retrieves the final structure from the previous outputs
         and replace it in the selected abinit input.
 
@@ -443,9 +440,14 @@ class AbinitInputGenerator(InputGenerator):
         for prev_dir in prev_dirs:
             abinit_input = load_abinit_input(prev_dir)
             for var_name, runlevels in prev_inputs_kwargs.items():
-                if abinit_input.runlevel and abinit_input.runlevel.intersection(runlevels):
+                if abinit_input.runlevel and abinit_input.runlevel.intersection(
+                    runlevels
+                ):
                     if var_name in abinit_inputs:
-                        msg = "Multiple previous inputs match the requirements as inputs for the factory"
+                        msg = (
+                            "Multiple previous inputs match the "
+                            "requirements as inputs for the factory"
+                        )
                         raise RuntimeError(msg)
                     final_structure = get_final_structure(prev_dir)
                     abinit_input.set_structure(final_structure)
@@ -489,10 +491,10 @@ class AbinitInputGenerator(InputGenerator):
                 else:
                     raise RuntimeError("Should not occur.")
                 if files is not None:
-                    inp_files = (
+                    inp_files = [
                         (f.path, AbinitInputGenerator._get_in_file_name(f.path))
                         for f in files
-                    )
+                    ]
                     irdvars = irdvars_for_ext(ext)
                     break
             elif ext == "DEN":
@@ -538,11 +540,13 @@ class AbinitInputGenerator(InputGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None
+        input_index: int | None = None,
     ) -> AbinitInput:
         """
-        Generates the AbinitInput for the input set using the defined factory
-        and additional parameters.
+        Generate the AbinitInput for the input set.
+
+        Uses the defined factory function and additional parameters from user
+        and subclasses.
 
         Parameters
         ----------
@@ -562,6 +566,8 @@ class AbinitInputGenerator(InputGenerator):
         input_index
             The index to be used to select the AbinitInput in case a factory
             returns a MultiDataset.
+
+
         Returns
         -------
             An AbinitInput
@@ -576,22 +582,30 @@ class AbinitInputGenerator(InputGenerator):
             # TODO consider cases where structure might be defined even if
             # factory_prev_inputs_kwargs is present.
             if structure is not None:
-                raise RuntimeError("Structure not supported if factory_prev_inputs_kwargs is defined")
+                raise RuntimeError(
+                    "Structure not supported if factory_prev_inputs_kwargs is defined"
+                )
 
-            abinit_inputs = self.resolve_prev_inputs(prev_outputs, self.factory_prev_inputs_kwargs)
+            abinit_inputs = self.resolve_prev_inputs(
+                prev_outputs, self.factory_prev_inputs_kwargs
+            )
             total_factory_kwargs.update(abinit_inputs)
 
         else:
             # TODO check if this should be removed or the check be improved
             if structure is None:
-                msg = f"Structure is mandatory for {self.__class__.__name__} " \
-                      f"generation since no previous output is used."
+                msg = (
+                    f"Structure is mandatory for {self.__class__.__name__} "
+                    f"generation since no previous output is used."
+                )
                 raise RuntimeError(msg)
 
         if not self.prev_outputs_deps and prev_outputs:
-            msg = f"Previous outputs not allowed for {self.__class__.__name__} " \
-                  "Consider if restart_from argument of get_input_set method " \
-                  "can fit your needs instead."
+            msg = (
+                f"Previous outputs not allowed for {self.__class__.__name__} "
+                "Consider if restart_from argument of get_input_set method "
+                "can fit your needs instead."
+            )
             raise RuntimeError(msg)
 
         if structure:
@@ -621,10 +635,10 @@ class AbinitInputGenerator(InputGenerator):
     def _set_kpt_vars(
         self,
         abinit_input: AbinitInput | MultiDataset,
-        kpoints_settings: dict | KSampling | None
+        kpoints_settings: dict | KSampling | None,
     ) -> None:
         """
-        Updates the kpoints variables, according to the options selected.
+        Update the kpoints variables, according to the options selected.
 
         Parameters
         ----------
@@ -636,22 +650,22 @@ class AbinitInputGenerator(InputGenerator):
         ksampling = self._get_kpoints(abinit_input.structure, kpoints_settings)
         if ksampling:
             kpt_related_vars = [
-                'kpt',
-                'kptbounds',
-                'kptnrm',
-                'kptns',
-                'kptns_hf',
-                'kptopt',
-                'kptrlatt',
-                'kptrlen',
-                'ndivk',
-                'ndivsm',
-                'ngkpt',
-                'nkpath',
-                'nkpt',
-                'nshiftk',
-                'shiftk',
-                'wtk'
+                "kpt",
+                "kptbounds",
+                "kptnrm",
+                "kptns",
+                "kptns_hf",
+                "kptopt",
+                "kptrlatt",
+                "kptrlen",
+                "ndivk",
+                "ndivsm",
+                "ngkpt",
+                "nkpath",
+                "nkpt",
+                "nshiftk",
+                "shiftk",
+                "wtk",
             ]
             abinit_input.pop_vars(kpt_related_vars)
             abinit_input.set_vars(**ksampling.abivars)
@@ -770,9 +784,7 @@ class AbinitInputGenerator(InputGenerator):
 
         # do some sanity checking
         if not (base_kpoints or added_kpoints):
-            raise ValueError(
-                "Invalid k-point generation algo."
-            )
+            raise ValueError("Invalid k-point generation algo.")
 
         return _combine_kpoints(base_kpoints, added_kpoints)
 
@@ -800,4 +812,3 @@ def _combine_kpoints(*kpoints_objects: KSampling) -> KSampling:
         kpts_weights=weights,
         comment="Combined k-points",
     )
-

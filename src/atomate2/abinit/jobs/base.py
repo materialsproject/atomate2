@@ -6,7 +6,7 @@ import logging
 import os
 import time
 from collections import namedtuple
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import ClassVar, Sequence
 
@@ -195,7 +195,7 @@ class BaseAbinitMaker(Maker):
         task_document: AbinitTaskDocument,
         history: JobHistory,
         max_restarts: int = 5,
-        prev_outputs: list[str] | None = None,
+        prev_outputs: str | tuple | list | Path | None = None,
     ):
         """Get new job to restart abinit calculation."""
         if task_document.state == Status.SUCCESS:
