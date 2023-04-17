@@ -163,6 +163,7 @@ class VaspInputSet(InputSet):
                 "Large KSPACING value detected with ISMEAR=-5. Ensure that VASP "
                 "generates enough KPOINTS, lower KSPACING, or set ISMEAR=0",
                 BadInputSetWarning,
+                stacklevel=1,
             )
 
         if (
@@ -174,6 +175,7 @@ class VaspInputSet(InputSet):
                 "Relaxation of likely metal with ISMEAR < 1 detected. Please see VASP "
                 "recommendations on ISMEAR for metals.",
                 BadInputSetWarning,
+                stacklevel=1,
             )
 
         if self.incar.get("LHFCALC", False) is True and self.incar.get(
@@ -186,6 +188,7 @@ class VaspInputSet(InputSet):
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
+                stacklevel=1,
             )
 
         if not self.incar.get("LASPH", False) and (
@@ -197,6 +200,7 @@ class VaspInputSet(InputSet):
             warnings.warn(
                 "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT",
                 BadInputSetWarning,
+                stacklevel=1,
             )
 
         return True
@@ -304,6 +308,7 @@ class VaspInputGenerator(InputGenerator):
                 "KSPACING. Remove the `user_kpoints_settings` argument to enable "
                 "KSPACING.",
                 BadInputSetWarning,
+                stacklevel=1,
             )
 
         if self.vdw:
@@ -332,6 +337,7 @@ class VaspInputGenerator(InputGenerator):
                 "Note that some POTCAR symbols specified in the configuration file may "
                 "not be available in the selected functional.",
                 BadInputSetWarning,
+                stacklevel=1,
             )
             self.potcar_functional = self.user_potcar_functional
 
@@ -344,6 +350,7 @@ class VaspInputGenerator(InputGenerator):
                 " override the POTCAR in the subclass to be explicit on the "
                 "differences.",
                 BadInputSetWarning,
+                stacklevel=1,
             )
             for k, v in self.user_potcar_settings.items():
                 self.config_dict["POTCAR"][k] = v
@@ -582,6 +589,7 @@ class VaspInputGenerator(InputGenerator):
                     f" functionals {psingle.identify_potcar(mode='data')[0]}. Please "
                     "verify that you are using the right POTCARs!",
                     BadInputSetWarning,
+                    stacklevel=1,
                 )
         return potcar
 
@@ -631,6 +639,7 @@ class VaspInputGenerator(InputGenerator):
                     "better off changing the values of MAGMOM or simply setting "
                     "NUPDOWN directly in your INCAR settings.",
                     UserWarning,
+                    stacklevel=1,
                 )
             incar["NUPDOWN"] = nupdown
 
@@ -854,11 +863,11 @@ def _get_magmoms(magmoms, structure):
             mag.append(site.specie.spin)
         elif str(site.specie) in magmoms:
             if site.specie.symbol == "Co" and magmoms[str(site.specie)] <= 1.0:
-                warnings.warn(msg)
+                warnings.warn(msg, stacklevel=2)
             mag.append(magmoms.get(str(site.specie)))
         else:
             if site.specie.symbol == "Co":
-                warnings.warn(msg)
+                warnings.warn(msg, stacklevel=2)
             mag.append(magmoms.get(site.specie.symbol, 0.6))
     return mag
 
@@ -1020,5 +1029,4 @@ def _get_recommended_lreal(structure: Structure):
     """Get recommended LREAL flag based on the structure."""
     if structure.num_sites > 16:
         return "Auto"
-    elif structure.num_sites <= 8:
-        return False
+    return False

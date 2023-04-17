@@ -65,6 +65,9 @@ class LobsteroutModel(BaseModel):
         None, description="list of strings with additional info lines"
     )
     has_doscar: bool = Field(None, description="Bool indicating if DOSCAR is present.")
+    has_doscar_lso: bool = Field(
+        None, description="Bool indicating if DOSCAR.LSO is present."
+    )
     has_cohpcar: bool = Field(
         None, description="Bool indicating if COHPCAR is present."
     )
@@ -536,7 +539,7 @@ class LobsterTaskDocument(BaseModel):
 
         # Read in LSO DOS
         lso_dos = None
-        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster"
+        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster.gz"
         if store_lso_dos and doscar_lso_path.exists():
             doscar_lso_lobster = Doscar(
                 doscar=doscar_lso_path, structure_file=structure_path
@@ -561,12 +564,14 @@ class LobsterTaskDocument(BaseModel):
             lobsterout=lobster_out,
             # include additional fields for cation-anion
             lobsterpy_data=condensed_bonding_analysis,
-            lobsterpy_text=" ".join(describe.text),
+            lobsterpy_text=" ".join(describe.text) if describe is not None else None,
             strongest_bonds_icohp=sb_icohp,
             strongest_bonds_icoop=sb_icoop,
             strongest_bonds_icobi=sb_icobi,
             lobsterpy_data_cation_anion=condensed_bonding_analysis_ionic,
-            lobsterpy_text_cation_anion=" ".join(describe_ionic.text),
+            lobsterpy_text_cation_anion=" ".join(describe_ionic.text)
+            if describe_ionic is not None
+            else None,
             strongest_bonds_icohp_cation_anion=sb_icohp_ionic,
             strongest_bonds_icoop_cation_anion=sb_icoop_ionic,
             strongest_bonds_icobi_cation_anion=sb_icobi_ionic,
@@ -701,13 +706,24 @@ def _get_strong_bonds(
             rel_bnd_list = rel_bnd.split("-")
             rel_bnd_list.sort()
             if label == rel_bnd_list:
-                index = np.argmin(sep_icohp[i])
-                bond_dict.update(
-                    {
-                        rel_bnd: {
-                            prop: min(sep_icohp[i]),
-                            "length": sep_lengths[i][index],
+                if prop == "ICOHP":
+                    index = np.argmin(sep_icohp[i])
+                    bond_dict.update(
+                        {
+                            rel_bnd: {
+                                prop: min(sep_icohp[i]),
+                                "length": sep_lengths[i][index],
+                            }
                         }
-                    }
-                )
+                    )
+                else:
+                    index = np.argmax(sep_icohp[i])
+                    bond_dict.update(
+                        {
+                            rel_bnd: {
+                                prop: max(sep_icohp[i]),
+                                "length": sep_lengths[i][index],
+                            }
+                        }
+                    )
     return bond_dict

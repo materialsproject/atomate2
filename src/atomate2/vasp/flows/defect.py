@@ -135,6 +135,8 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         structure: Structure
         """
         fc = FileClient()
+        # strip off the `hostname:` prefix
+        previous_dir = previous_dir.split(":")[-1]
         files = fc.listdir(previous_dir)
         vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
         vasprun = Vasprun(vasprun_file)

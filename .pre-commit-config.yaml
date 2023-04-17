@@ -3,7 +3,7 @@ default_language_version:
 exclude: ^(src/atomate2/vasp/schemas/calc_types/|tests/test_data/abinit/)
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.256
+  rev: v0.0.259
   hooks:
   - id: ruff
     args: [--fix]

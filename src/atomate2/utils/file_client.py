@@ -257,7 +257,7 @@ class FileClient:
             ssh = self.get_ssh(src_host)
             _, _, stderr = ssh.exec_command(f"cp {src_filename} {dest_filename}")
             if len(stderr.readlines()) > 0:
-                warnings.warn(f"Copy command gave error: {stderr}")
+                warnings.warn(f"Copy command gave error: {stderr}", stacklevel=2)
         else:
             # copying between two remote hosts; this is a pain and it is unlikely anyone
             # will want to do it.
@@ -404,11 +404,11 @@ class FileClient:
         path_gz = path.parent / f"{path.name}.gz"
 
         if str(path).lower().endswith("gz"):
-            warnings.warn(f"{path} is already gzipped, skipping...")
+            warnings.warn(f"{path} is already gzipped, skipping...", stacklevel=1)
             return None
 
         if self.is_dir(path, host=host):
-            warnings.warn(f"{path} is a directory, skipping...")
+            warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
             return None
 
         if self.exists(path_gz, host=host) and not force:
@@ -447,7 +447,7 @@ class FileClient:
         path_nongz = path.with_suffix("")
 
         if not str(path).lower().endswith("gz"):
-            warnings.warn(f"{path} is not gzipped, skipping...")
+            warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
             return None
 
         if self.exists(path_nongz, host=host) and not force:
