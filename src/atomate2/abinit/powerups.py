@@ -6,13 +6,35 @@ from copy import deepcopy
 from typing import Any
 
 from jobflow import Flow, Job, Maker
-from pymatgen.io.abinit import PseudoTable
 from pymatgen.io.abinit.abiobjects import KSampling
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 
 
 def update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter):
+    """
+    Update an object inside a Job, a Flow or a Maker.
+
+    A generic method to be shared for more specific updates that will
+    build the dict_mod_updates.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    dict_mod_updates : dict
+        The updates to apply.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the class used to generate the flows. Note the class
+        filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input modified flow/job/maker.
+    """
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
         updated_flow = updated_flow.update_kwargs(
@@ -56,8 +78,8 @@ def update_user_abinit_settings(
     name_filter : str or None
         A filter for the name of the jobs.
     class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the class
-        filter will match any subclasses.
+        A filter for the BaseAbinitMaker class used to generate the flows. Note the
+        class filter will match any subclasses.
 
     Returns
     -------
@@ -68,7 +90,9 @@ def update_user_abinit_settings(
         f"input_set_generator->user_abinit_settings->{k}": v
         for k, v in abinit_updates.items()
     }
-    updated_flow = update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+    updated_flow = update_maker_kwargs(
+        class_filter, dict_mod_updates, flow, name_filter
+    )
     return updated_flow
 
 
@@ -97,8 +121,8 @@ def update_factory_kwargs(
     name_filter : str or None
         A filter for the name of the jobs.
     class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the class
-        filter will match any subclasses.
+        A filter for the BaseAbinitMaker class used to generate the flows. Note the
+        class filter will match any subclasses.
 
     Returns
     -------
@@ -109,7 +133,9 @@ def update_factory_kwargs(
         f"input_set_generator->factory_kwargs->{k}": v
         for k, v in factory_updates.items()
     }
-    updated_flow = update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+    updated_flow = update_maker_kwargs(
+        class_filter, dict_mod_updates, flow, name_filter
+    )
     return updated_flow
 
 
@@ -139,8 +165,8 @@ def update_user_kpoints_settings(
     name_filter : str or None
         A filter for the name of the jobs.
     class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the class
-        filter will match any subclasses.
+        A filter for the BaseAbinitMaker class used to generate the flows. Note the
+        class filter will match any subclasses.
 
     Returns
     -------
@@ -157,7 +183,9 @@ def update_user_kpoints_settings(
             for k, v in kpoints_updates.items()
         }
 
-    updated_flow = update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+    updated_flow = update_maker_kwargs(
+        class_filter, dict_mod_updates, flow, name_filter
+    )
     return updated_flow
 
 
@@ -181,12 +209,12 @@ def update_generator_attributes(
     flow : .Job or .Flow or .Maker
         A job, flow or Maker.
     generator_updates : dict
-        The updates to apply to the input genrator.
+        The updates to apply to the input generator.
     name_filter : str or None
         A filter for the name of the jobs.
     class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the class
-        filter will match any subclasses.
+        A filter for the BaseAbinitMaker class used to generate the flows. Note the
+        class filter will match any subclasses.
 
     Returns
     -------
@@ -194,8 +222,9 @@ def update_generator_attributes(
         A copy of the input flow/job/maker modified to use the updated factory settings.
     """
     dict_mod_updates = {
-        f"input_set_generator->{k}": v
-        for k, v in generator_updates.items()
+        f"input_set_generator->{k}": v for k, v in generator_updates.items()
     }
-    updated_flow = update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+    updated_flow = update_maker_kwargs(
+        class_filter, dict_mod_updates, flow, name_filter
+    )
     return updated_flow
