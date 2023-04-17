@@ -141,7 +141,7 @@ class Atomate2Settings(BaseSettings):
     )
 
     # ABINIT settings
-    ABINIT_MPIRUN_CMD: str = Field("mpirun", description="Mpirun command.")
+    ABINIT_MPIRUN_CMD: str = Field(None, description="Mpirun command.")
     ABINIT_CMD: str = Field("abinit", description="Abinit command.")
     ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
     ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")

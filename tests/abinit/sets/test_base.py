@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
@@ -17,6 +18,11 @@ from atomate2.abinit.sets.base import (
     as_pseudo_table,
 )
 from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, InitializationError
+
+
+def mocked_factory(structure, pseudos):
+    from abipy.abio.inputs import AbinitInput
+    return AbinitInput(structure, pseudos)
 
 
 def test_abinit_input_set_init(abinit_test_dir):
@@ -195,7 +201,7 @@ class SomeAbinitInputSetGenerator(AbinitInputGenerator):
     param3: List[int] = field(default_factory=list)
     param4: str = "test_string"
 
-    extra_abivars: dict = field(default_factory=dict)
+    user_abinit_settings: dict = field(default_factory=dict)
 
     restart_from_deps: tuple = (f"{SCF}:WFK|DEN",)
 
@@ -208,36 +214,8 @@ class SomeAbinitInputSetGenerator(AbinitInputGenerator):
         )
 
 
-def test_generator_from_prev_generator():
-    saisg1 = SomeAbinitInputSetGenerator(
-        param1=2,
-        param3=[1, 2, 3],
-        extra_abivars={"ecut": 5.0, "nstep": 25, "fake": 1},
-    )
-    saisg2 = SomeAbinitInputSetGenerator.from_prev_generator(
-        prev_input_generator=saisg1,
-        param2=1.5,
-        param1=10,
-        extra_abivars={"ntime": 1, "nstep": None, "fake": 3},
-    )
-    assert saisg2.calc_type == "some_calc"
-    assert saisg2.param1 == 10
-    assert saisg2.param2 == 1.5
-    assert saisg2.param3 == [1, 2, 3]
-    assert saisg2.param4 == "test_string"
-    assert saisg2.extra_abivars == {"ecut": 5.0, "fake": 3, "ntime": 1}
-    saisg3 = SomeAbinitInputSetGenerator.from_prev_generator(
-        prev_input_generator=saisg1, calc_type="new_calc"
-    )
-    assert saisg3.calc_type == "new_calc"
-    with pytest.raises(RuntimeError, match=r"Cannot change pseudos."):
-        SomeAbinitInputSetGenerator.from_prev_generator(
-            prev_input_generator=saisg1, pseudos="some_pseudo"
-        )
-
-
 def test_generator_check_format_prev_dirs():
-    aisg = AbinitInputGenerator()
+    aisg = AbinitInputGenerator(factory=mocked_factory)
     prev_outputs = aisg.check_format_prev_dirs(None)
     assert prev_outputs is None
     prev_outputs = aisg.check_format_prev_dirs("/some/path")
@@ -249,7 +227,7 @@ def test_generator_check_format_prev_dirs():
 
 
 def test_generator_resolve_dep():
-    aisg = AbinitInputGenerator()
+    aisg = AbinitInputGenerator(factory=mocked_factory)
     with ScratchDir(".") as tmpdir:
         prev_output_dir = os.path.join(tmpdir, "prev_output")
         prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
@@ -305,7 +283,7 @@ def test_generator_resolve_dep():
 
 
 def test_generator_resolve_deps():
-    aisg = AbinitInputGenerator()
+    aisg = AbinitInputGenerator(factory=mocked_factory)
     with ScratchDir(".") as tmpdir1:
         prev_output_dir1 = os.path.join(tmpdir1, "prev_output")
         prev_outdata1 = os.path.join(prev_output_dir1, OUTDIR_NAME)
@@ -330,7 +308,7 @@ def test_generator_resolve_deps():
 
 def test_generator_get_input_set(si_structure, mocker):
     with ScratchDir(".") as tmpdir:
-        saisg = SomeAbinitInputSetGenerator()
+        saisg = SomeAbinitInputSetGenerator(factory=mocked_factory)
         abinit_input_set = saisg.get_input_set(
             structure=si_structure,
         )
@@ -380,3 +358,16 @@ def test_generator_get_input_set(si_structure, mocker):
         in_den2b = os.path.join(output2b, INDIR_NAME, "in_DEN")
         assert os.path.islink(in_den2b)
         assert os.readlink(in_den2b) == str(out_den1b)
+
+
+def test_generator_set_kpt_vars(abinit_test_dir):
+    aig = AbinitInputGenerator(factory=mocked_factory)
+    abinit_input = load_abinit_input(
+        os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
+    )
+    aig._set_kpt_vars(abinit_input, {"grid_density": 300})
+    assert np.array_equal(abinit_input["ngkpt"], [5, 5, 5])
+
+    aig._set_kpt_vars(abinit_input, {"line_density": 10})
+    assert abinit_input["nkpt"] == 92
+    assert "ngkpt" not in abinit_input

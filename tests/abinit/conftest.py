@@ -121,10 +121,13 @@ def check_abinit_inputs(
 
 def check_run_abi(ref_path: Union[str, Path]):
     from abipy.abio.abivars import AbinitInputFile
+    from monty.io import zopen
 
     user = AbinitInputFile.from_file("run.abi")
     assert user.ndtset == 1, f"'run.abi' has multiple datasets (ndtset={user.ndtset})."
-    ref = AbinitInputFile.from_file(ref_path / "inputs" / "run.abi")
+    with zopen(ref_path / "inputs" / "run.abi.gz") as f:
+        ref_str = f.read()
+    ref = AbinitInputFile.from_string(ref_str.decode("utf-8"))
     # Ignore the pseudos as the directory depends on the pseudo root directory
     diffs = user.get_differences(ref, ignore_vars=["pseudos"])
     # TODO: should we still add some check on the pseudos here ?
@@ -137,7 +140,7 @@ def check_abinit_input_json(ref_path: Union[str, Path]):
 
     user = loadfn("abinit_input.json")
     assert isinstance(user, AbinitInput)
-    ref = loadfn(ref_path / "inputs" / "abinit_input.json")
+    ref = loadfn(ref_path / "inputs" / "abinit_input.json.gz")
     assert user.structure == ref.structure
     assert user.runlevel == ref.runlevel
 
@@ -151,13 +154,17 @@ def clear_abinit_files():
 
 def copy_abinit_outputs(ref_path: Union[str, Path]):
     import shutil
+    from monty.shutil import decompress_file
 
+    ref_path = Path(ref_path)
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
+            decompress_file(output_file.name)
     for datadir in ["indata", "outdata", "tmpdata"]:
         refdatadir = output_path / datadir
         for file in refdatadir.iterdir():
             if file.is_file():
                 shutil.copy(file, datadir)
+                decompress_file(str(Path(datadir, file.name)))

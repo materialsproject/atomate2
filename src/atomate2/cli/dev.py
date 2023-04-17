@@ -1,6 +1,7 @@
 """Module containing command line scripts for developers."""
 
 import click
+from monty.json import jsanitize
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -178,15 +179,17 @@ def abinit_script_maker():
         sys.exit()
     out = [
         "from atomate2.abinit.flows.core import BandStructureMaker",
-        "from atomate2.abinit.jobs.core import StaticMaker, NonSCFMaker",
+        "from atomate2.abinit.jobs.core import StaticMaker, LineNonSCFMaker",
+        "from atomate2.abinit.powerups import update_factory_kwargs, update_generator_attributes",
         "from atomate2.cli.dev import save_abinit_maker",
         "",
         "",
         "# The following lines define the maker.",
         "# Adapt for specific job/flow maker test.",
-        "static_maker = StaticMaker.from_params(kppa=10, ecut=4.0, nband=4)",
-        "bs_maker = NonSCFMaker.from_prev_maker(static_maker, nband_factor=1.5)",
-        "maker = BandStructureMaker(static_maker=static_maker, bs_maker=bs_maker)",
+        "maker = BandStructureMaker()",
+        "maker = update_factory_kwargs(maker, dict(kppa=10, ecut=4.0, nband=4), class_filter=StaticMaker)",
+        "maker = update_factory_kwargs(maker, dict(ndivsm=2), class_filter=LineNonSCFMaker)",
+        "maker = update_generator_attributes(maker, dict(nbands_factor=1.5), class_filter=LineNonSCFMaker)",
         "",
         "# Save the maker and metadata to maker.json",
         "save_abinit_maker(maker)",
@@ -206,7 +209,11 @@ def abinit_generate_reference(structure_file, make_kwargs):
     file can either be "initial_structure.json" or another file that can be opened by
     pymatgen. Keyword arguments can also be passed down to the Maker's make method
     through the make_kwargs option.
+
+    NB: note that all the files in the folder will be compressed, in light of a copy to
+    the test folder, unless the --no-compress is selected.
     """
+    import os
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
     from monty.serialization import dumpfn, loadfn
@@ -260,6 +267,7 @@ def abinit_test_data(test_name, test_data_dir, force):
     from pathlib import Path
 
     from monty.serialization import dumpfn, loadfn
+    from monty.shutil import compress_dir
 
     from atomate2.abinit.schemas.core import AbinitTaskDocument
     from atomate2.common.files import copy_files
@@ -291,9 +299,12 @@ def abinit_test_data(test_name, test_data_dir, force):
     maker = maker_info["maker"]
 
     maker_name = maker.__class__.__name__
-    maker_dir = abinit_test_data_dir / "jobs" / maker_name
+    # take the module path and exclude the first two elements
+    # (i.e. "atomate2" and "abinit")
+    module_path = maker.__module__.split(".")[2:]
+    maker_dir = abinit_test_data_dir / Path(*module_path) / maker_name
     if not maker_dir.exists():
-        maker_dir.mkdir()
+        maker_dir.mkdir(parents=True)
     test_dir = maker_dir / test_name
 
     def _makedir(directory, force_overwrite):
@@ -472,7 +483,7 @@ def abinit_test_data(test_name, test_data_dir, force):
             src_dir=orig_job_dir,
             dest_dir=output_dir,
             indata_files=None,
-            outdata_files=None,
+            outdata_files=["out_GSR.nc", "out_FATBANDS.nc"],
             tmpdata_files=None,
             indata_fake_files=None,
             outdata_fake_files=["out_DEN", "out_WFK"],
@@ -490,6 +501,16 @@ def abinit_test_data(test_name, test_data_dir, force):
         [f"  {v}  ->  {k}" for k, v in original_mapping.items()]
     )
 
+    compress_dir(test_dir)
+
+    # starting index of the parts of the test_dir that needs to be used in the
+    # example script. Looks for the last occurence of the "abinit" part of the path.
+    for i, p in enumerate(reversed(test_dir.parts)):
+        if p == "abinit":
+            index_part = -i
+            break
+    else:
+        raise RuntimeError("Did not find 'abinit' in the test path")
     test_function_str = f"""Test files generated in test_data.
 
 Please ensure that all other necessary files are included in the test_data, such as
@@ -514,12 +535,12 @@ class Test{maker_name}:
 
         # load the initial structure, the maker and the ref_paths from the test_dir
         test_dir = abinit_test_dir / {" / ".join(
-        [f'"{part}"' for part in test_dir.parts[-3:]]
+        [f'"{part}"' for part in test_dir.parts[index_part:]]
     )}
-        structure = Structure.from_file(test_dir / "initial_structure.json")
-        maker_info = loadfn(test_dir / "maker.json")
+        structure = Structure.from_file(test_dir / "initial_structure.json.gz")
+        maker_info = loadfn(test_dir / "maker.json.gz")
         maker = maker_info["maker"]
-        ref_paths = loadfn(test_dir / "ref_paths.json")
+        ref_paths = loadfn(test_dir / "ref_paths.json.gz")
 
         mock_abinit(ref_paths)
 
@@ -580,7 +601,7 @@ def save_abinit_maker(maker):
                 "author": author,
                 "author_mail": author_mail,
                 "created_on": str(datetime.datetime.now()),
-                "maker": maker.as_dict(),
+                "maker": jsanitize(maker.as_dict()),
                 "script": script_str,
             },
             f,

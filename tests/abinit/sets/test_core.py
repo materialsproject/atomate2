@@ -11,39 +11,19 @@ def test_init_static_generator():
     StaticSetGenerator()
 
 
-def test_static_generator_on_restart(si_structure, abinit_test_dir):
-    si_pseudo = os.path.join(abinit_test_dir, "pseudos", "14si.fhi")
-    abinit_input = AbinitInput(si_structure, pseudos=si_pseudo)
-    assert "ntime" not in abinit_input
-    assert "ionmov" not in abinit_input
-    assert "optcell" not in abinit_input
-    abinit_input_mov = abinit_input.new_with_vars(ntime=10, ionmov=2, optcell=2)
-    assert "ntime" in abinit_input_mov
-    assert "ionmov" in abinit_input_mov
-    assert "optcell" in abinit_input_mov
-    ssg = StaticSetGenerator()
-    ssg.on_restart(abinit_input=abinit_input_mov)
-    assert "ntime" not in abinit_input_mov
-    assert "ionmov" not in abinit_input_mov
-    assert "optcell" not in abinit_input_mov
-
-
 def test_static_generator_get_abinit_input(si_structure, abinit_test_dir):
     ssg = StaticSetGenerator()
     si_pseudo = os.path.join(abinit_test_dir, "pseudos", "14si.fhi")
     abinit_input = ssg.get_abinit_input(structure=si_structure, pseudos=si_pseudo)
     assert isinstance(abinit_input, AbinitInput)
     with pytest.raises(
-        RuntimeError, match=r"Structure is mandatory for StaticSet generation."
+        RuntimeError, match=r"Structure is mandatory.*"
     ):
         ssg.get_abinit_input()
 
     with pytest.raises(
         RuntimeError,
-        match=r"Previous outputs not allowed for StaticSetGenerator. "
-        r"To restart from a previous static or otherwise scf "
-        r"\(e.g. relaxation\) calculation, use restart_from argument of "
-        r"get_input_set method instead.",
+        match=r"Previous outputs not allowed.*",
     ):
         ssg.get_abinit_input(structure=si_structure, prev_outputs="prev_fake_dir")
 
