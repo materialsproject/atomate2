@@ -3,7 +3,7 @@ default_language_version:
 exclude: '^src/atomate2/vasp/schemas/calc_types/'
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.259
+  rev: v0.0.263
   hooks:
   - id: ruff
     args: [--fix]
@@ -16,7 +16,7 @@ repos:
   - id: end-of-file-fixer
   - id: trailing-whitespace
 - repo: https://github.com/psf/black
-  rev: 23.1.0
+  rev: 23.3.0
   hooks:
   - id: black
 - repo: https://github.com/asottile/blacken-docs
@@ -46,7 +46,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.1.1
+  rev: v1.2.0
   hooks:
   - id: mypy
     files: ^src/
