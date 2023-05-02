@@ -74,9 +74,9 @@ INCAR:
   LDAUPRINT: 1
   LREAL: False
   LMIXTAU: True
-  LCHARG: True  # Output CHGCAR
-  LAECHG: True  # Output AECCAR
-  LELF: False  # Don't output ELFCAR by default as it breaks KPAR
+  LCHARG: True # Output CHGCAR
+  LAECHG: True # Output AECCAR
+  LELF: False # Don't output ELFCAR by default as it breaks KPAR
   LWAVE: False # Don't output WAVECAR
   LVTOT: True # Output LOCPOT
   MAGMOM:
@@ -213,6 +213,6 @@ POTCAR:
   W: W_sv
   Xe: Xe
   Y: Y_sv
-  Yb: Yb_2
+  Yb: Yb_3
   Zn: Zn
   Zr: Zr_sv
