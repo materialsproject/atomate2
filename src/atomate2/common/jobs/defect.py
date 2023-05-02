@@ -285,6 +285,7 @@ def spawn_defect_q_jobs(
     sc_mat: NDArray | None = None,
     defect_index: int | str = "",
     add_info: dict | None = None,
+    validate_charge: bool = True,
 ) -> Response:
     """Perform charge defect supercell calculations.
 
@@ -357,9 +358,32 @@ def spawn_defect_q_jobs(
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
         }
-        # TODO: check that the charge state was set correctly
+        # check that the charge state was set correctly
+        if validate_charge:
+            validation_job = check_charge_state(qq, charged_output.structure)
+            defect_q_jobs.append(validation_job)
     replace_flow = Flow(defect_q_jobs, output=all_chg_outputs)
     return Response(replace=replace_flow)
 
 
-# TODO: add charge state validation job
+@job
+def check_charge_state(charge_state: int, task_structure: Structure) -> Response:
+    """Check that the charge state of a defect calculation is correct.
+
+    Parameters
+    ----------
+    chargestate : int
+        The charge state to check.
+    task_doc : TaskDoc
+        The task document to check.
+
+    Returns
+    -------
+    True if the charge state is correct, otherwise raises a ValueError.
+    """
+    if int(charge_state) != int(task_structure.charge):
+        raise ValueError(
+            f"The charge state of the structure is {task_structure.charge}, "
+            f"but the charge state of the calculation is {charge_state}."
+        )
+    return True
