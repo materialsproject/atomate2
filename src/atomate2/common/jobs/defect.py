@@ -16,7 +16,9 @@ from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
+from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 from atomate2.common.schemas.defects import CCDDocument
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
@@ -272,6 +274,7 @@ def bulk_supercell_calculation(
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
         "uuid": relax_job.uuid,
+        "locpot_plnr": relax_job.calcs_reversed[0].output.locpot,
     }
     flow = Flow([relax_job], output=summary_d)
     return Response(replace=flow)
@@ -353,10 +356,12 @@ def spawn_defect_q_jobs(
         defect_q_jobs.append(charged_relax)
         charged_output: TaskDoc = charged_relax.output
         all_chg_outputs[qq] = {
+            "defect": defect,
             "structure": charged_output.structure,
             "entry": charged_output.entry,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
+            "locpot_plnr": charged_output.calcs_reversed[0].output.locpot,
         }
         # check that the charge state was set correctly
         if validate_charge:
@@ -387,3 +392,40 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
             f"but the charge state of the calculation is {charge_state}."
         )
     return True
+
+
+@job
+def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
+    """Get a defect entry from a defect calculation and a bulk calculation."""
+    bulk_c_entry = bulk_summary["sc_entry"]
+    bulk_struct_entry = ComputedStructureEntry(
+        structure=bulk_summary["sc_struct"],
+        energy=bulk_c_entry.energy,
+    )
+    bulk_dir_name = bulk_summary["dir_name"]
+    bulk_locpot = bulk_summary["locpot_plnr"]
+    defect_ent_res = []
+    for qq, qq_summary in charge_state_summary.items():
+        defect_c_entry = qq_summary["entry"]
+        defect_struct_entry = ComputedStructureEntry(
+            structure=qq_summary["structure"],
+            energy=defect_c_entry.energy,
+        )
+        defect_dir_name = qq_summary["dir_name"]
+        defect_locpot = qq_summary["locpot_plnr"]
+        defect_entry = DefectEntry(
+            defect=qq_summary["defect"],
+            charge_state=qq,
+            sc_entry=defect_struct_entry,
+            bulk_entry=bulk_struct_entry,
+        )
+        defect_ent_res.append(
+            {
+                "defect_entry": defect_entry,
+                "defect_dir_name": defect_dir_name,
+                "defect_locpot": defect_locpot,
+                "bulk_dir_name": bulk_dir_name,
+                "bulk_locpot": bulk_locpot,
+            }
+        )
+    return defect_ent_res
