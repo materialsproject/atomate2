@@ -33,7 +33,7 @@ dependencies = [
     "PyYAML",
     "numpy",
     "click",
-    "emmet-core>=0.51.0",
+    "emmet-core>=0.51.11",
 ]
 
 [project.optional-dependencies]
