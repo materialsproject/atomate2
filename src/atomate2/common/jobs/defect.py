@@ -289,6 +289,7 @@ def spawn_defect_q_jobs(
     defect_index: int | str = "",
     add_info: dict | None = None,
     validate_charge: bool = True,
+    relax_radius: float | str | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations.
 
@@ -313,6 +314,15 @@ def spawn_defect_q_jobs(
         The lattice of the relaxed supercell. If provided, the lattice parameters
         of the supercell will be set to value specified.  Otherwise, the lattice it will
         only by set by `defect.structure` and `sc_mat`.
+    validate_charge:
+        Whether to validate the charge states of the defect after the atomic relaxation.
+        Assuming the final output of the relaxation is a TaskDoc, we should make sure
+        that the charge state is set properly and matches the expected charge state from
+        the input defect object.
+    relax_radius:
+        The radius to include around the defect site for the relaxation.
+        If "auto", the radius will be set to the maximum that will fit inside a periodic
+        cell. If None, all atoms will be relaxed.
 
     Returns
     -------
@@ -322,7 +332,9 @@ def spawn_defect_q_jobs(
     """
     defect_q_jobs = []
     all_chg_outputs = {}
-    sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
+    sc_def_struct = defect.get_supercell_structure(
+        sc_mat=sc_mat, relax_radius=relax_radius
+    )
     sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
