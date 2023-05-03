@@ -31,7 +31,7 @@ class CHGNetRelaxMaker(Maker):
     
     """
     
-    name: str = "CHGNet relax" ################# This is not currently setting the job name properly--unsure what I'm doing wrong
+    name: str = "CHGNet relax"
     relax_cell: bool = False
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
