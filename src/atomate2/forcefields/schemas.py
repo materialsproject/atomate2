@@ -55,6 +55,9 @@ class OutputDoc(BaseModel):
 class FFStructureRelaxDocument(BaseModel):
     """Document containing information on structure relaxation using a force field/interatomic potential."""
 
+    structure: Structure = Field(
+        None, description="Final output structure from the task"
+    )
     input: InputDoc = Field(
         None, description="The inputted information used to run this job."
     )
@@ -139,6 +142,7 @@ class FFStructureRelaxDocument(BaseModel):
         version = chgnet.__version__
         
         return cls(
+            structure=output_structure,
             input=input_doc,
             output=output_doc,
             MD_potential='CHGNet',

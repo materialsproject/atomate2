@@ -1,7 +1,5 @@
 """Job to relax a structure using a force field (aka an interatomic potential)."""
 
-# from typing import List
-# from pydantic import BaseModel, Field
 from dataclasses import dataclass, field
 import logging
 
