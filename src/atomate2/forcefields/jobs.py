@@ -1,11 +1,16 @@
 """Job to relax a structure using a force field (aka an interatomic potential)."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 import logging
 
 from jobflow import Maker, job
+
 from pymatgen.core.structure import Structure
+
 from atomate2.forcefields.schemas import FFStructureRelaxDocument
+
 
 logger = logging.getLogger(__name__)
 
