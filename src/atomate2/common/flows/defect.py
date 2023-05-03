@@ -16,6 +16,7 @@ from atomate2.common.jobs.defect import (
     bulk_supercell_calculation,
     get_ccd_documents,
     get_charged_structures,
+    get_defect_entry,
     get_supercell_from_prv_calc,
     spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
@@ -200,6 +201,7 @@ class FormationEnergyMaker(Maker, ABC):
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: npt.NDArray | None = None,
         defect_index: int | str = "",
+        collect_defect_entry_data: bool = False,
     ):
         """Make a flow to calculate the formation energy diagram.
 
@@ -261,6 +263,19 @@ class FormationEnergyMaker(Maker, ABC):
             },
         )
         jobs.extend([get_sc_job, spawn_output])
+
+        if collect_defect_entry_data:
+            if bulk_supercell_dir is not None:
+                raise NotImplementedError(
+                    "DefectEntery creation only works when you are explicitly "
+                    "calculating the bulk supercell. This is because the bulk "
+                    "SC energy parsing from previous calculations is not implemented."
+                )
+            collection_job = get_defect_entry(
+                charge_state_summary=spawn_defect_q_jobs.output,
+                bulk_summary=get_sc_job.output,
+            )
+            jobs.append(collection_job)
 
         return Flow(
             jobs=jobs,
