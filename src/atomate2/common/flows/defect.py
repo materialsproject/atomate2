@@ -222,6 +222,8 @@ class FormationEnergyMaker(Maker, ABC):
         defect_index : int | str
             Additional index to give unique names to the defect calculations.
             Useful for external bookkeeping of symmetry distinct defects.
+        collect_defect_entry_data: bool
+            Whether to collect the defect entry data at the end of the flow.
 
         Returns
         -------
@@ -279,6 +281,7 @@ class FormationEnergyMaker(Maker, ABC):
 
         return Flow(
             jobs=jobs,
+            output=spawn_output.output,
             name=self.name,
         )
 
