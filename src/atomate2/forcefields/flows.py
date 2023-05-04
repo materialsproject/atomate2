@@ -23,7 +23,7 @@ class CHGNetToVaspMaker(Maker):
         Name of the flow produced by this maker.
     chgnet_maker : .CHGNetRelaxMaker
         Maker to generate a CHGNet relaxation job.
-    VASP_maker : .BaseVaspMaker
+    vasp_maker : .BaseVaspMaker
         Maker to generate a VASP relaxation job.
 
     """
