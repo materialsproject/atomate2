@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class CHGNetRelaxMaker(Maker):
     """
-    CHGNet relax maker.
+    Maker to perform a relaxation using the CHGNet universal machine learning force field. 
 
     Parameters
     ----------
