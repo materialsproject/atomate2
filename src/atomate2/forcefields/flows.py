@@ -48,7 +48,7 @@ class CHGNetToVaspMaker(Maker):
 
         """
         CHGNet_relax_job = self.CHGNet_maker.make(structure)
-        CHGNet_relax_job.name = "CHGNet pre-relax job"
+        CHGNet_relax_job.name = "CHGNet pre-relax"
 
         VASP_job = self.VASP_maker.make(CHGNet_relax_job.output.structure)
 
