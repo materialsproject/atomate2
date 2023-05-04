@@ -74,7 +74,7 @@ class FFStructureRelaxDocument(BaseModel):
         None, description="The outputted information from this relaxation job."
     )
 
-    MD_potential: str = Field(
+    md_potential: str = Field(
         None,
         description="name of the interatomic potential used for relaxation.",
     )
