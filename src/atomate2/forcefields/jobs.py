@@ -20,7 +20,7 @@ class CHGNetRelaxMaker(Maker):
 
     Parameters
     ----------
-    name: str
+    name : str
         The job name.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
