@@ -202,6 +202,7 @@ class FormationEnergyMaker(Maker, ABC):
         supercell_matrix: npt.NDArray | None = None,
         defect_index: int | str = "",
         collect_defect_entry_data: bool = False,
+        relax_radius: float | str | None = None,
     ):
         """Make a flow to calculate the formation energy diagram.
 
@@ -224,6 +225,10 @@ class FormationEnergyMaker(Maker, ABC):
             Useful for external bookkeeping of symmetry distinct defects.
         collect_defect_entry_data: bool
             Whether to collect the defect entry data at the end of the flow.
+        relax_radius:
+            The radius to include around the defect site for the relaxation.
+            If "auto", the radius will be set to the maximum that will fit inside
+            a periodic cell. If None, all atoms will be relaxed.
 
         Returns
         -------
@@ -263,6 +268,7 @@ class FormationEnergyMaker(Maker, ABC):
                 "bulk_supercell_matrix": sc_mat,
                 "bulk_supercell_uuid": get_sc_job.uuid,
             },
+            relax_radius=relax_radius,
         )
         jobs.extend([get_sc_job, spawn_output])
 
