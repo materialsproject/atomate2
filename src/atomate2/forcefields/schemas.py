@@ -79,7 +79,7 @@ class FFStructureRelaxDocument(BaseModel):
         description="name of the interatomic potential used for relaxation.",
     )
 
-    MD_potential_version: str = Field(
+    md_potential_version: str = Field(
         None,
         description="version of the interatomic potential used for relaxation.",
     )
