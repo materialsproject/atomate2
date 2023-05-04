@@ -38,7 +38,7 @@ class CHGNetToVaspMaker(Maker):
 
         Parameters
         ----------
-        structure: ~pymatgen.core.structure.Structure
+        structure : .Structure
             A pymatgen structure.
 
         Returns
