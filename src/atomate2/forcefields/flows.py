@@ -30,7 +30,7 @@ class CHGNetToVaspMaker(Maker):
 
     name: str = "CHGNet relax to VASP relax"
     chgnet_maker: CHGNetRelaxMaker = field(default_factory=CHGNetRelaxMaker)
-    VASP_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
+    vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure):
         """
