@@ -165,6 +165,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         defects[0],
         supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]],
         defect_index=0,
+        relax_radius="auto",
     )
 
     # run the flow and ensure that it finished running successfully

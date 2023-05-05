@@ -274,7 +274,7 @@ def bulk_supercell_calculation(
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
         "uuid": relax_job.uuid,
-        "locpot_plnr": relax_job.calcs_reversed[0].output.locpot,
+        "locpot_plnr": relax_output.calcs_reversed[0].output.locpot,
     }
     flow = Flow([relax_job], output=summary_d)
     return Response(replace=flow)
@@ -400,8 +400,8 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
     """
     if int(charge_state) != int(task_structure.charge):
         raise ValueError(
-            f"The charge state of the structure is {task_structure.charge}, "
-            f"but the charge state of the calculation is {charge_state}."
+            f"The charge of the output structure is {task_structure.charge}, "
+            f"but expect charge state from the Defect object is {charge_state}."
         )
     return True
 
@@ -438,6 +438,8 @@ def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
                 "defect_locpot": defect_locpot,
                 "bulk_dir_name": bulk_dir_name,
                 "bulk_locpot": bulk_locpot,
+                "bulk_uuid": bulk_summary.get("uuid", None),
+                "defect_uuid": qq_summary.get("uuid", None),
             }
         )
     return defect_ent_res
