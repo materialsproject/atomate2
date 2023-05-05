@@ -13,7 +13,7 @@ from atomate2.vasp.jobs.core import RelaxMaker
 
 
 @dataclass
-class CHGNetRelaxVaspMaker(Maker):
+class CHGNetVaspRelaxMaker(Maker):
     """
     Maker to (pre)relax a structure using CHGNet and then run VASP.
 
