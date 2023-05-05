@@ -103,7 +103,7 @@ class ForceFieldTaskDocument(BaseModel):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
-        **task_document_kwargs,
+        keep_info: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
     ):
         """
         Create a ForceFieldTaskDocument for a CHGNet Task.
@@ -120,9 +120,8 @@ class ForceFieldTaskDocument(BaseModel):
             Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
         optimizer_kwargs : dict
             Keyword arguments that will get passed to :obj:`StructOptimizer()`.
-        **task_document_kwargs : dict
-            Additional keyword args passed to
-            :obj:`.ForceFieldTaskDocument.from_chgnet_result`.
+        keep_info : tuple
+            Which information to save from each ionic step.
         """
         trajectory = result["trajectory"].__dict__
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -155,13 +154,6 @@ class ForceFieldTaskDocument(BaseModel):
         n_steps = len(trajectory["energies"])
 
         ionic_steps = []
-
-        if "keep_info" not in task_document_kwargs:
-            keep_info = ("energy", "forces", "magmoms", "stress", "structure")
-        # try:
-        #     keep_info = task_document_kwargs['keep_info']
-        # except:
-        #     keep_info = ()
 
         for i in range(0, n_steps):
             cur_energy = trajectory["energies"][i] if "energy" in keep_info else None
