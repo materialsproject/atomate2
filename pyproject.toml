@@ -37,7 +37,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-abinit = ["abipy @ git+https://github.com/abinit/abipy.git@develop"]
+abinit = ["abipy>=0.9.3"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
@@ -46,31 +46,31 @@ lobster = ["lobsterpy"]
 defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
 docs = [
     "numpydoc==1.5.0",
-    "ipython==8.11.0",
+    "ipython==8.12.0",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
     "jupyter-book==0.14.0",
     "jsonschema[format]",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["pytest==7.2.2", "pytest-cov==4.0.0", "FireWorks==2.0.3", "pytest-mock==3.6.1"]
+tests = ["pytest==7.3.0", "pytest-cov==4.0.0", "FireWorks==2.0.3", "pytest-mock==3.10.0"]
 strict = [
-    "pydantic==1.10.6",
-    "pymatgen==2023.3.10",
+    "pydantic==1.10.7",
+    "pymatgen==2023.3.23",
     "custodian==2023.3.10",
     "monty==2022.9.9",
     "jobflow==0.1.11",
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "phonopy==2.17.2",
+    "phonopy==2.18.0",
     "seekpath==2.0.1",
     "numpy",
     "mp-api==0.30.10",
     "dscribe==1.2.2",
-    "pymatgen-analysis-defects==2023.3.3",
-    "lobsterpy==0.2.8",
-    "emmet-core==0.51.0"
+    "pymatgen-analysis-defects==2023.4.5",
+    "lobsterpy==0.2.9",
+    "emmet-core==0.51.6"
 ]
 
 [project.scripts]

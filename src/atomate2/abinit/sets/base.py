@@ -1,22 +1,29 @@
 """Module defining base abinit input set and generator."""
+from __future__ import annotations
+
 import copy
 import json
 import logging
 import os
 from collections import namedtuple
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, List, Optional, Tuple, Union
+from typing import Any, Callable, Iterable
 
-from abipy.abio.inputs import AbinitInput
+import numpy as np
+from abipy.abio.inputs import AbinitInput, MultiDataset
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
-from monty.json import MontyEncoder
+from monty.json import MontyEncoder, jsanitize
 from pymatgen.core.structure import Structure
-from pymatgen.io.abinit.abiobjects import KSampling
+from pymatgen.io.abinit.abiobjects import KSampling, KSamplingModes
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
+from pymatgen.io.vasp import Kpoints
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatgen.symmetry.bandstructure import HighSymmKpath
 
+from atomate2 import SETTINGS
 from atomate2.abinit.files import fname2ext, load_abinit_input, out_to_in
 from atomate2.abinit.utils.common import (
     INDATA_PREFIX,
@@ -53,7 +60,7 @@ class AbinitInputSet(InputSet):
     def __init__(
         self,
         abinit_input: AbinitInput,
-        input_files: Optional[Iterable[Tuple[str, str]]] = None,
+        input_files: Iterable[tuple[str, str]] | None = None,
         link_files: bool = True,
     ):
         self.input_files = input_files
@@ -69,7 +76,7 @@ class AbinitInputSet(InputSet):
 
     def write_input(
         self,
-        directory: Union[str, Path],
+        directory: str | Path,
         make_dir: bool = True,
         overwrite: bool = True,
         zip_inputs: bool = False,
@@ -78,7 +85,9 @@ class AbinitInputSet(InputSet):
         # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
         #  the abinit input set also sets up links to previous files, sets up the
         #  indir, outdir and tmpdir, ...
-        self.inputs["abinit_input.json"] = json.dumps(self.abinit_input.as_dict())
+        self.inputs["abinit_input.json"] = json.dumps(
+            jsanitize(self.abinit_input.as_dict())
+        )
         super().write_input(
             directory=directory,
             make_dir=make_dir,
@@ -156,7 +165,7 @@ class AbinitInputSet(InputSet):
         """
         return self.abinit_input.set_vars(*args, **kwargs)
 
-    def remove_vars(self, keys: Union[Iterable[str], str], strict: bool = True) -> dict:
+    def remove_vars(self, keys: Iterable[str] | str, strict: bool = True) -> dict:
         """Remove the abinit variables listed in keys.
 
         This removes the abinit variables from the abipy AbinitInput object.
@@ -227,132 +236,84 @@ def as_pseudo_table(pseudos):
     return PseudoTable(pseudos)
 
 
-def get_extra_abivars(extra_abivars, extra_mod):
-    """Update and get extra_abivars.
-
-    Parameters
-    ----------
-    extra_abivars
-        Current additional abinit variables.
-    extra_mod
-        Modifications to the additional abinit variables. To remove one
-        of the additional variables, set the variable to None.
-
-    Returns
-    -------
-    dict
-        The updated additional abinit variables.
-    """
-    extra_abivars.update(extra_mod)
-    # Remove additional variables when their value is set to None
-    return {k: v for k, v in extra_abivars.items() if v is not None}
-
-
 PrevOutput = namedtuple("PrevOutput", "dirname exts")
 
 
 @dataclass
 class AbinitInputGenerator(InputGenerator):
-    """A class to generate Abinit input sets."""
+    """
+    A class to generate Abinit input sets.
 
+    Parameters
+    ----------
+    factory
+        A callable that generates an AbinitInput or MultiDataset object.
+    calc_type
+        A short description of the calculation type
+    pseudos
+        Define the pseudopotentials that should be used for the calculation.
+        Can be an instance of a PseudoTable, a list of strings with the paths of
+        the pseudopotential files or a string with the name of a PseudoDojo table
+        (https://github.com/PseudoDojo/), followed by the accuracy of the pseudos
+        in that table, separated by a colon. This requires that the PseudoTable
+        is installed in the system.
+        Set to None if no pseudopotentials should be set, as coming from a previous
+        AbinitInput.
+    factory_kwargs
+        A dictionary to customize the values for the arguments of the factory
+        function.
+    user_abinit_settings
+        A dictionary that allows to set any Abinit variable in the AbinitInput
+        after it has been generated from the factory function. This will override
+        any value or default previously set. Set a value to None to remove it
+        from the input.
+    user_kpoints_settings
+        Allow user to override kpoints setting by supplying a dict. E.g.,
+        ``{"reciprocal_density": 1000}``. User can also supply a KSampling object.
+    restart_from_deps:
+        Defines the files that needs to be linked from previous calculations in
+        case of restart. The format is a tuple where each element is a list of
+        "|" separated runelevels (as defined in the AbinitInput object) followed
+        by a colon and a list of "|" list of extensions of files that needs to
+        be linked. The runlevel defines the type of calculations from which the
+        file can be linked. An example is (f"{NSCF}:WFK",).
+    prev_outputs_deps
+        Defines the files that needs to be linked from previous calculations and
+        are required for the execution of the current calculation.
+        The format is a tuple where each element is a list of  "|" separated
+        runelevels (as defined in the AbinitInput object) followed by a colon and
+        a list of "|" list of extensions of files that needs to be linked.
+        The runlevel defines the type of calculations from which the file can
+        be linked. An example is (f"{NSCF}:WFK",).
+    factory_prev_inputs_kwargs
+        A dictionary defining the source of the of one or more previous
+        AbinitInput in case they are required by a factory to build a new
+        AbinitInput. The key should match the name of the argument of the factory
+        function and the value should be a tuple with the runlevels of the
+        compatible types of AbinitInput that can be used.
+    force_gamma
+        Force gamma centered kpoint generation.
+    symprec
+        Tolerance for symmetry finding, used for line mode band structure k-points.
+    """
+
+    factory: Callable
     calc_type: str = "abinit_calculation"
-
-    pseudos: Union[str, List[str], PseudoTable] = "ONCVPSP-PBE-SR-PDv0.4:standard"
-
-    extra_abivars: dict = field(default_factory=dict)
-
-    restart_from_deps: Optional[Union[str, tuple]] = None
-    prev_outputs_deps: Optional[Union[str, tuple]] = None
-
-    @classmethod
-    def from_prev_generator(cls, prev_input_generator, **kwargs):
-        """Instantiate an input generator from a previous one.
-
-        It loops over all the generator's fields and gets the value of each parameter
-        from the keyword arguments if it is there, then from the previous generator
-        if it is provided and it has the attribute, then from the instance or class.
-
-        Parameters
-        ----------
-        instance_or_class
-        kwargs
-        prev_gen
-
-        Returns
-        -------
-        AbinitInputGenerator
-            The new (possibly modified) AbinitInputGenerator object based on the
-            previous one.
-        """
-        # Get the calc_type (current input generator or user-specified through kwargs)
-        try:
-            calc_type = kwargs.pop("calc_type")
-        except KeyError:
-            calc_type = cls.calc_type
-        # Do not allow to change pseudopotentials
-        if "pseudos" in kwargs:
-            raise RuntimeError("Cannot change pseudos.")
-        pseudos = prev_input_generator.pseudos
-        # Get the additional abinit variables
-        extra_abivars = prev_input_generator.extra_abivars or {}
-        if "extra_abivars" in kwargs:
-            extra_abivars = get_extra_abivars(
-                extra_abivars=extra_abivars, extra_mod=kwargs.pop("extra_abivars")
-            )
-        # Update the parameters
-        params = cls.get_params(
-            instance_or_class=cls, kwargs=kwargs, prev_gen=prev_input_generator
-        )
-        return cls(
-            calc_type=calc_type, pseudos=pseudos, extra_abivars=extra_abivars, **params
-        )
-
-    @staticmethod
-    def get_params(instance_or_class, kwargs, prev_gen=None):
-        """Get the parameters to generate the AbinitInputSet.
-
-        It loops over all the generator's fields and gets the value of each parameter
-        from the keyword arguments if it is there, then from the previous generator
-        if it is provided and it has the attribute, then from the instance or class.
-
-        Parameters
-        ----------
-        instance_or_class
-        kwargs
-        prev_gen
-
-        Returns
-        -------
-        dict
-            The dictionary of parameters to be used as arguments to the
-            AbinitInputGenerator instantiation.
-        """
-        params = {}
-        for fld in fields(instance_or_class):
-            param = fld.name
-            if param in [
-                "calc_type",
-                "pseudos",
-                "extra_abivars",
-                "restart_from_deps",
-                "prev_outputs_deps",
-            ]:
-                continue
-            if param in kwargs:
-                val = kwargs[param]
-            elif prev_gen is not None and hasattr(prev_gen, param):
-                val = prev_gen.__getattribute__(param)
-            else:
-                val = instance_or_class.__getattribute__(param)
-            params[param] = val
-        return params
+    pseudos: str | list[str] | PseudoTable | None = "ONCVPSP-PBE-SR-PDv0.4:standard"
+    factory_kwargs: dict = field(default_factory=dict)
+    user_abinit_settings: dict = field(default_factory=dict)
+    user_kpoints_settings: dict | KSampling = field(default_factory=dict)
+    restart_from_deps: str | tuple | None = None
+    prev_outputs_deps: str | tuple | None = None
+    factory_prev_inputs_kwargs: dict | None = None
+    force_gamma: bool = True
+    symprec: float = SETTINGS.SYMPREC
 
     def get_input_set(  # type: ignore
         self,
-        structure=None,
-        restart_from=None,
-        prev_outputs=None,
-        **kwargs,
+        structure: Structure = None,
+        restart_from: str | tuple | list | Path | None = None,
+        prev_outputs: str | tuple | list | Path | None = None,
     ) -> AbinitInputSet:
         """Generate an AbinitInputSet object.
 
@@ -373,7 +334,7 @@ class AbinitInputGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
-        pseudos = as_pseudo_table(self.pseudos)
+        pseudos = as_pseudo_table(self.pseudos) if self.pseudos else None
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
@@ -394,9 +355,6 @@ class AbinitInputGenerator(InputGenerator):
             all_irdvars.update(irdvars)
             input_files.extend(files)
         else:
-            params = self.get_params(
-                instance_or_class=self, kwargs=kwargs, prev_gen=None
-            )
             if prev_outputs is not None and not self.prev_outputs_deps:
                 raise RuntimeError(
                     f"Previous outputs not allowed for {self.__class__.__name__}."
@@ -405,7 +363,6 @@ class AbinitInputGenerator(InputGenerator):
                 structure=structure,
                 pseudos=pseudos,
                 prev_outputs=prev_outputs,
-                **params,
             )
         # Always reset the ird variables.
         abinit_input.pop_irdvars()
@@ -419,10 +376,7 @@ class AbinitInputGenerator(InputGenerator):
 
         # Set ird variables and extra variables.
         abinit_input.set_vars(all_irdvars)
-        abinit_input.set_vars(self.extra_abivars)
-
-        if restart_from is not None:
-            self.on_restart(abinit_input=abinit_input)
+        abinit_input.set_vars(self.user_abinit_settings)
 
         abinit_input["indata_prefix"] = (f'"{INDATA_PREFIX}"',)
         abinit_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
@@ -435,7 +389,9 @@ class AbinitInputGenerator(InputGenerator):
             link_files=True,
         )
 
-    def check_format_prev_dirs(self, prev_dirs):
+    def check_format_prev_dirs(
+        self, prev_dirs: str | tuple | list | Path | None
+    ) -> list[str] | None:
         """Check and format the prev_dirs (restart or dependency)."""
         if prev_dirs is None:
             return None
@@ -443,7 +399,9 @@ class AbinitInputGenerator(InputGenerator):
             return [str(prev_dirs)]
         return [str(prev_dir) for prev_dir in prev_dirs]
 
-    def resolve_deps(self, prev_dirs, deps, check_runlevel=True):
+    def resolve_deps(
+        self, prev_dirs: list[str], deps: str | tuple, check_runlevel: bool = True
+    ) -> tuple[dict, list]:
         """Resolve dependencies.
 
         This method assumes that prev_dirs is in the correct format, i.e.
@@ -456,7 +414,7 @@ class AbinitInputGenerator(InputGenerator):
                 abinit_input = load_abinit_input(prev_dir)
             for dep in deps:
                 runlevel = set(dep.split(":")[0].split("|"))
-                exts = tuple(dep.split(":")[1].split("|"))
+                exts = list(dep.split(":")[1].split("|"))
                 if not check_runlevel or runlevel.intersection(abinit_input.runlevel):
                     irdvars, inp_files = self.resolve_dep_exts(
                         prev_dir=prev_dir, exts=exts
@@ -466,15 +424,53 @@ class AbinitInputGenerator(InputGenerator):
 
         return deps_irdvars, input_files
 
+    def resolve_prev_inputs(
+        self, prev_dirs: list[str], prev_inputs_kwargs: dict
+    ) -> dict[str, AbinitInput]:
+        """
+        Find suitable abinit inputs from the previous outputs.
+
+        Also retrieves the final structure from the previous outputs
+        and replace it in the selected abinit input.
+
+        This method assumes that prev_dirs is in the correct format, i.e.
+        a list of directories as str or Path.
+        """
+        abinit_inputs = {}
+        for prev_dir in prev_dirs:
+            abinit_input = load_abinit_input(prev_dir)
+            for var_name, runlevels in prev_inputs_kwargs.items():
+                if abinit_input.runlevel and abinit_input.runlevel.intersection(
+                    runlevels
+                ):
+                    if var_name in abinit_inputs:
+                        msg = (
+                            "Multiple previous inputs match the "
+                            "requirements as inputs for the factory"
+                        )
+                        raise RuntimeError(msg)
+                    final_structure = get_final_structure(prev_dir)
+                    abinit_input.set_structure(final_structure)
+                    abinit_inputs[var_name] = abinit_input
+
+        n_found = len(abinit_inputs)
+        n_required = len(self.factory_prev_inputs_kwargs)
+        if n_found != n_required:
+            raise RuntimeError(
+                f"Should have exactly {n_found} previous output. Found {n_required}"
+            )
+
+        return abinit_inputs
+
     @staticmethod
-    def _get_in_file_name(out_filepath):
+    def _get_in_file_name(out_filepath: str) -> str:
         in_file = os.path.basename(out_filepath)
         in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
         in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
         return in_file
 
     @staticmethod
-    def resolve_dep_exts(prev_dir, exts):
+    def resolve_dep_exts(prev_dir: str, exts: list[str]) -> tuple:
         """Return irdvars and corresponding file for a given dependency.
 
         This method assumes that prev_dir is in the correct format,
@@ -495,10 +491,10 @@ class AbinitInputGenerator(InputGenerator):
                 else:
                     raise RuntimeError("Should not occur.")
                 if files is not None:
-                    inp_files = (
+                    inp_files = [
                         (f.path, AbinitInputGenerator._get_in_file_name(f.path))
                         for f in files
-                    )
+                    ]
                     irdvars = irdvars_for_ext(ext)
                     break
             elif ext == "DEN":
@@ -537,24 +533,282 @@ class AbinitInputGenerator(InputGenerator):
         return irdvars, inp_files
 
     def get_abinit_input(
-        self, structure=None, pseudos=None, prev_outputs=None, **params
-    ):
-        """Get AbinitInput object."""
-        raise NotImplementedError
+        self,
+        structure: Structure | None = None,
+        pseudos: PseudoTable | None = None,
+        prev_outputs: list[str] | None = None,
+        abinit_settings: dict | None = None,
+        factory_kwargs: dict | None = None,
+        kpoints_settings: dict | KSampling | None = None,
+        input_index: int | None = None,
+    ) -> AbinitInput:
+        """
+        Generate the AbinitInput for the input set.
 
-    def _get_shift_mode(self, shifts):
-        if isinstance(shifts, str):
-            return shifts
+        Uses the defined factory function and additional parameters from user
+        and subclasses.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        pseudos
+            A pseudopotential table.
+        prev_outputs
+            A list of previous output directories.
+        abinit_settings
+            A dictionary with additional abinit keywords to set.
+        factory_kwargs
+            A dictionary with additional factory keywords to set.
+        kpoints_settings
+            A dictionary or a KSampling object with additional settings
+            for the k-points.
+        input_index
+            The index to be used to select the AbinitInput in case a factory
+            returns a MultiDataset.
+
+
+        Returns
+        -------
+            An AbinitInput
+        """
+        total_factory_kwargs = dict(self.factory_kwargs) if self.factory_kwargs else {}
+        if self.factory_prev_inputs_kwargs:
+            if not prev_outputs:
+                raise RuntimeError(
+                    f"No previous_outputs. Required for {self.__class__.__name__}."
+                )
+
+            # TODO consider cases where structure might be defined even if
+            # factory_prev_inputs_kwargs is present.
+            if structure is not None:
+                raise RuntimeError(
+                    "Structure not supported if factory_prev_inputs_kwargs is defined"
+                )
+
+            abinit_inputs = self.resolve_prev_inputs(
+                prev_outputs, self.factory_prev_inputs_kwargs
+            )
+            total_factory_kwargs.update(abinit_inputs)
+
         else:
-            return "Gamma"  # Dummy shift mode, shifts will be overwritten
+            # TODO check if this should be removed or the check be improved
+            if structure is None:
+                msg = (
+                    f"Structure is mandatory for {self.__class__.__name__} "
+                    f"generation since no previous output is used."
+                )
+                raise RuntimeError(msg)
+
+        if not self.prev_outputs_deps and prev_outputs:
+            msg = (
+                f"Previous outputs not allowed for {self.__class__.__name__} "
+                "Consider if restart_from argument of get_input_set method "
+                "can fit your needs instead."
+            )
+            raise RuntimeError(msg)
+
+        if structure:
+            total_factory_kwargs["structure"] = structure
+        if pseudos:
+            total_factory_kwargs["pseudos"] = pseudos
+        if factory_kwargs:
+            total_factory_kwargs.update(factory_kwargs)
+
+        generated_input = self.factory(**total_factory_kwargs)
+        if input_index is not None:
+            generated_input = generated_input[input_index]
+
+        self._set_kpt_vars(generated_input, kpoints_settings)
+
+        if abinit_settings:
+            generated_input.set_vars(abinit_settings)
+        if self.user_abinit_settings:
+            generated_input.set_vars(self.user_abinit_settings)
+
+        # remove the None values. They will not be printed in the input file
+        # but can cause issues when checking if the values are present in the input.
+        self._clean_none(generated_input)
+
+        return generated_input
+
+    def _set_kpt_vars(
+        self,
+        abinit_input: AbinitInput | MultiDataset,
+        kpoints_settings: dict | KSampling | None,
+    ) -> None:
+        """
+        Update the kpoints variables, according to the options selected.
+
+        Parameters
+        ----------
+        abinit_input
+            An AbinitInput to be updated.
+        kpoints_settings
+            The options to set the kpoints variable.
+        """
+        ksampling = self._get_kpoints(abinit_input.structure, kpoints_settings)
+        if ksampling:
+            kpt_related_vars = [
+                "kpt",
+                "kptbounds",
+                "kptnrm",
+                "kptns",
+                "kptns_hf",
+                "kptopt",
+                "kptrlatt",
+                "kptrlen",
+                "ndivk",
+                "ndivsm",
+                "ngkpt",
+                "nkpath",
+                "nkpt",
+                "nshiftk",
+                "shiftk",
+                "wtk",
+            ]
+            abinit_input.pop_vars(kpt_related_vars)
+            abinit_input.set_vars(**ksampling.abivars)
 
     @staticmethod
-    def _set_shifts_kpoints(abinit_input, structure, kppa, shifts):
-        if not isinstance(shifts, str):
-            ksampling = KSampling.automatic_density(
-                structure, kppa, chksymbreak=0, shifts=shifts
-            )
-            abinit_input.set_vars(ksampling.to_abivars())
+    def _clean_none(abinit_input: AbinitInput | MultiDataset):
+        """
+        Remove the variables whose value is set to None from the AbinitInput.
 
-    def on_restart(self, abinit_input):
-        """Perform updates of AbinitInput upon restart of a previous calculation."""
+        Parameters
+        ----------
+        abinit_input
+            An AbinitInput to modify.
+        """
+        if not isinstance(abinit_input, MultiDataset):
+            abinit_input = [abinit_input]
+
+        for ai in abinit_input:
+            for k, v in list(ai.items()):
+                if v is None:
+                    ai.remove_vars(k)
+
+    def _get_kpoints(
+        self,
+        structure: Structure,
+        kpoints_updates: dict[str, Any] | None,
+    ) -> KSampling | None:
+        """Get the kpoints file."""
+        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
+
+        # use user setting if set otherwise default to base config settings
+        if self.user_kpoints_settings != {}:
+            kconfig = copy.deepcopy(self.user_kpoints_settings)
+        elif kpoints_updates:
+            kconfig = kpoints_updates
+        else:
+            return None
+
+        if isinstance(kconfig, KSampling):
+            return kconfig
+
+        explicit = (
+            kconfig.get("explicit")
+            or len(kconfig.get("added_kpoints", [])) > 0
+            or "zero_weighted_reciprocal_density" in kconfig
+            or "zero_weighted_line_density" in kconfig
+        )
+
+        base_kpoints = None
+        if kconfig.get("line_density"):
+            # handle line density generation
+            kpath = HighSymmKpath(structure, **kconfig.get("kpath_kwargs", {}))
+            frac_k_points, k_points_labels = kpath.get_kpoints(
+                line_density=kconfig["line_density"], coords_are_cartesian=False
+            )
+            base_kpoints = KSampling(
+                mode=KSamplingModes.automatic,
+                num_kpts=len(frac_k_points),
+                kpts=frac_k_points,
+                kpts_weights=[1] * len(frac_k_points),
+                comment="Non SCF run along symmetry lines",
+            )
+        elif kconfig.get("grid_density") or kconfig.get("reciprocal_density"):
+            # handle regular weighted k-point grid generation
+            if kconfig.get("grid_density"):
+                vasp_kpoints = Kpoints.automatic_density(
+                    structure, int(kconfig["grid_density"]), self.force_gamma
+                )
+                base_kpoints = KSampling(
+                    mode=KSamplingModes.monkhorst,
+                    num_kpts=0,
+                    kpts=vasp_kpoints.kpts,
+                    kpt_shifts=vasp_kpoints.kpts_shift,
+                    comment=vasp_kpoints.comment,
+                )
+            elif kconfig.get("reciprocal_density"):
+                vasp_kpoints = Kpoints.automatic_density_by_vol(
+                    structure, kconfig["reciprocal_density"], self.force_gamma
+                )
+                base_kpoints = KSampling(
+                    mode=KSamplingModes.monkhorst,
+                    num_kpts=0,
+                    kpts=vasp_kpoints.kpts,
+                    kpt_shifts=vasp_kpoints.kpts_shift,
+                    comment=vasp_kpoints.comment,
+                )
+            if explicit:
+                sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
+                mesh = sga.get_ir_reciprocal_mesh(base_kpoints.kpts[0])
+                base_kpoints = KSampling(
+                    mode=KSamplingModes.automatic,
+                    num_kpts=len(mesh),
+                    kpts=[i[0] for i in mesh],
+                    kpts_weights=[i[1] for i in mesh],
+                    comment="Uniform grid",
+                )
+            else:
+                # if not explicit that means no other options have been specified
+                # so we can return the k-points as is
+                return base_kpoints
+
+        added_kpoints = None
+        if kconfig.get("added_kpoints"):
+            added_kpoints = KSampling(
+                mode=KSamplingModes.automatic,
+                num_kpts=len(kconfig.get("added_kpoints")),
+                kpts=kconfig.get("added_kpoints"),
+                kpts_weights=[0] * len(kconfig.get("added_kpoints")),
+                comment="Specified k-points only",
+            )
+
+        if base_kpoints and not added_kpoints:
+            return base_kpoints
+        elif added_kpoints and not base_kpoints:
+            return added_kpoints
+
+        # do some sanity checking
+        if not (base_kpoints or added_kpoints):
+            raise ValueError("Invalid k-point generation algo.")
+
+        return _combine_kpoints(base_kpoints, added_kpoints)
+
+
+def _combine_kpoints(*kpoints_objects: KSampling) -> KSampling:
+    """Combine k-points files together."""
+    kpoints = []
+    weights = []
+
+    for kpoints_object in filter(None, kpoints_objects):
+        if not kpoints_object.mode == KSamplingModes.automatic:
+            raise ValueError(
+                "Can only combine kpoints with mode=KSamplingModes.automatic"
+            )
+
+        weights.append(kpoints_object.kpts_weights)
+        kpoints.append(kpoints_object.kpts)
+
+    weights = np.concatenate(weights).tolist()
+    kpoints = np.concatenate(kpoints)
+    return KSampling(
+        mode=KSamplingModes.automatic,
+        num_kpts=len(kpoints),
+        kpts=kpoints,
+        kpts_weights=weights,
+        comment="Combined k-points",
+    )

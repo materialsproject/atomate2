@@ -4,6 +4,7 @@ import logging
 import os
 
 from abipy.abio.outputs import AbinitOutputFile
+from abipy.dfpt.ddb import DdbFile
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import Directory, File
@@ -334,13 +335,6 @@ def get_final_structure(dir_name):
     1. from the output file of abinit (run.abo).
     2. from the gsr file of abinit (out_GSR.nc).
     """
-    out_path = File(os.path.join(dir_name, OUTPUT_FILE_NAME))
-    if out_path.exists:
-        try:
-            ab_out = AbinitOutputFile.from_file(out_path.path)
-            return ab_out.final_structure
-        except Exception:
-            pass
     gsr_path = Directory(os.path.join(dir_name, OUTDIR_NAME)).has_abiext("GSR")
     if gsr_path:
         # Open the GSR file.
@@ -349,6 +343,24 @@ def get_final_structure(dir_name):
             return gsr_file.structure
         except Exception:
             pass
+
+    ddb_path = Directory(os.path.join(dir_name, OUTDIR_NAME)).has_abiext("DDB")
+    if ddb_path:
+        # Open the GSR file.
+        try:
+            ddb_file = DdbFile(ddb_path)
+            return ddb_file.structure
+        except Exception:
+            pass
+
+    out_path = File(os.path.join(dir_name, OUTPUT_FILE_NAME))
+    if out_path.exists:
+        try:
+            ab_out = AbinitOutputFile.from_file(out_path.path)
+            return ab_out.final_structure
+        except Exception:
+            pass
+
     raise RuntimeError("Could not get final structure.")
 
 

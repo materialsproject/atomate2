@@ -27,6 +27,7 @@ def copy_vasp_outputs(
     src_host: str | None = None,
     additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
+    force_overwrite: bool = False,
     file_client: FileClient | None = None,
 ):
     """
@@ -50,6 +51,8 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
+    force_overwrite : bool
+        If True, overwrite existing files during the copy step.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
@@ -87,6 +90,7 @@ def copy_vasp_outputs(
         include_files=required_files + optional_files,
         allow_missing=True,
         file_client=file_client,
+        force=force_overwrite,
     )
 
     # rename files to remove relax extension
