@@ -103,7 +103,7 @@ class ForceFieldTaskDocument(BaseModel):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
-        keep_info: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
+        ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
     ):
         """
         Create a ForceFieldTaskDocument for a CHGNet Task.
@@ -120,8 +120,8 @@ class ForceFieldTaskDocument(BaseModel):
             Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
         optimizer_kwargs : dict
             Keyword arguments that will get passed to :obj:`StructOptimizer()`.
-        keep_info : tuple
-            Which information to save from each ionic step.
+        ionic_step_data : tuple
+            Which data to save from each ionic step.
         """
         trajectory = result["trajectory"].__dict__
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -156,18 +156,26 @@ class ForceFieldTaskDocument(BaseModel):
         ionic_steps = []
 
         for i in range(0, n_steps):
-            cur_energy = trajectory["energies"][i] if "energy" in keep_info else None
+            cur_energy = (
+                trajectory["energies"][i] if "energy" in ionic_step_data else None
+            )
             cur_forces = (
-                trajectory["forces"][i].tolist() if "forces" in keep_info else None
+                trajectory["forces"][i].tolist()
+                if "forces" in ionic_step_data
+                else None
             )
             cur_magmoms = (
-                trajectory["magmoms"][i].tolist() if "magmoms" in keep_info else None
+                trajectory["magmoms"][i].tolist()
+                if "magmoms" in ionic_step_data
+                else None
             )
             cur_stress = (
-                trajectory["stresses"][i].tolist() if "stress" in keep_info else None
+                trajectory["stresses"][i].tolist()
+                if "stress" in ionic_step_data
+                else None
             )
 
-            if "structure" in keep_info:
+            if "structure" in ionic_step_data:
                 cur_structure = Structure(
                     lattice=trajectory["cells"][i],
                     coords=trajectory["atom_positions"][i],
