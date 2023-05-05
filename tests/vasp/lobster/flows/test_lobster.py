@@ -5,9 +5,7 @@ from atomate2.lobster.jobs import LobsterMaker
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.jobs.lobster import LobsterStaticMaker
-from atomate2.vasp.powerups import (
-    update_user_incar_settings,
-)
+from atomate2.vasp.powerups import update_user_incar_settings
 
 
 def test_lobsteruniformmaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
