@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from jobflow import Maker, job
 from pymatgen.core.structure import Structure
 
-from atomate2.forcefields.schemas import FFStructureRelaxDocument
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class CHGNetRelaxMaker(Maker):
     """
-    Maker to perform a relaxation using the CHGNet universal machine learning force field. 
+    Maker to perform a relaxation using the CHGNet universal ML force field.
 
     Parameters
     ----------
@@ -24,58 +24,48 @@ class CHGNetRelaxMaker(Maker):
         The job name.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
         Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`StructOptimizer()`.
-    keep_info : list
-        Which information from the relaxation trajectory to save using
-        the :obj:`.FFStructureRelaxDocument.from_chgnet_result`.
-
+    task_document_kwargs : dict
+        Additional keyword args passed to
+        :obj:`.ForceFieldTaskDocument.from_chgnet_result`.
     """
 
     name: str = "CHGNet relax"
     relax_cell: bool = False
+    steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
-    keep_info: list = field(
-        default_factory=lambda: [
-            "energies",
-            "forces",
-            "stresses",
-            "magmoms",
-            "atom_positions",
-            "cells",
-        ]
-    )
-    # NOTE: the 'atoms' field will always be removed later because it is not
-    # serializable (as of May 2023)
+    task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=FFStructureRelaxDocument)
+    @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
         """
         Perform a relaxation of a structure using CHGNet.
 
         Parameters
         ----------
-        structure: ~pymatgen.core.structure.Structure
+        structure: .Structure
             A pymatgen structure.
-
         """
         from chgnet.model import StructOptimizer
 
         relaxer = StructOptimizer(**self.optimizer_kwargs)
         result = relaxer.relax(
-            structure, relax_cell=self.relax_cell, **self.relax_kwargs
+            structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
         )
 
-        ff_structure_relax_doc = FFStructureRelaxDocument.from_chgnet_result(
-            structure,
+        ff_task_doc = ForceFieldTaskDocument.from_chgnet_result(
+            result,
             self.relax_cell,
+            self.steps,
             self.relax_kwargs,
             self.optimizer_kwargs,
-            result,
-            self.keep_info,
+            **self.task_document_kwargs,
         )
 
-        return ff_structure_relax_doc
+        return ff_task_doc

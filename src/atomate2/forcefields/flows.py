@@ -13,7 +13,7 @@ from atomate2.vasp.jobs.core import RelaxMaker
 
 
 @dataclass
-class CHGNetToVaspMaker(Maker):
+class CHGNetRelaxVaspMaker(Maker):
     """
     Maker to (pre)relax a structure using CHGNet and then run VASP.
 
@@ -28,7 +28,7 @@ class CHGNetToVaspMaker(Maker):
 
     """
 
-    name: str = "CHGNet relax to VASP relax"
+    name: str = "CHGNet relax followed by a VASP relax"
     chgnet_maker: CHGNetRelaxMaker = field(default_factory=CHGNetRelaxMaker)
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
@@ -47,9 +47,9 @@ class CHGNetToVaspMaker(Maker):
             A flow containing a CHGNet relaxation followed by a VASP relaxation
 
         """
-        CHGNet_relax_job = self.CHGNet_maker.make(structure)
-        CHGNet_relax_job.name = "CHGNet pre-relax"
+        chgnet_relax_job = self.chgnet_maker.make(structure)
+        chgnet_relax_job.name = "CHGNet pre-relax"
 
-        VASP_job = self.VASP_maker.make(CHGNet_relax_job.output.structure)
+        vasp_job = self.vasp_maker.make(chgnet_relax_job.output.structure)
 
-        return Flow([CHGNet_relax_job, VASP_job], VASP_job.output, name=self.name)
+        return Flow([chgnet_relax_job, vasp_job], vasp_job.output, name=self.name)

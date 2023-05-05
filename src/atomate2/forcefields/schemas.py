@@ -1,12 +1,19 @@
 """Job to prerelax a structure using an MD Potential."""
 
-import logging
 from typing import List
 
-from pydantic import BaseModel, Field
-
-# from jobflow import Maker, job
+from pydantic import BaseModel, Extra, Field
 from pymatgen.core.structure import Structure
+from pymatgen.io.ase import AseAtomsAdaptor
+
+
+class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
+    """Document defining the information at each ionic step."""
+
+    energy: float = Field(None, description="The free energy.")
+    forces: List[List[float]] = Field(None, description="The forces on each atom.")
+    stress: List[float] = Field(None, description="The stress on the lattice.")
+    structure: Structure = Field(None, description="The structure at this step.")
 
 
 class InputDoc(BaseModel):
@@ -16,6 +23,10 @@ class InputDoc(BaseModel):
     relax_cell: bool = Field(
         None,
         description="Whether cell lattice was allowed to change during relaxation.",
+    )
+    steps: int = Field(
+        None,
+        description="Maximum number of steps allowed during relaxation.",
     )
     relax_kwargs: dict = Field(
         None,
@@ -44,22 +55,22 @@ class OutputDoc(BaseModel):
         description="The force on each atom in units of eV/A for the final structure.",
     )
 
-    # NOTE: units for stresses were converted to kbar
-    # (* -10 from standard output) to comply with MP convention
+    # NOTE: units for stresses were converted to kbar (* -10 from standard output)
+    #       to comply with MP convention
     stress: List[float] = Field(
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
-    trajectory: dict = Field(
+    ionic_steps: List[IonicStep] = Field(
         None, description="Step-by-step trajectory of the structural relaxation."
     )
 
-    steps: int = Field(
+    n_steps: int = Field(
         None, description="total number of steps needed to relax the structure."
     )
 
 
-class FFStructureRelaxDocument(BaseModel):
+class ForceFieldTaskDocument(BaseModel):
     """Document containing information on structure relaxation using a force field."""
 
     structure: Structure = Field(
@@ -87,41 +98,51 @@ class FFStructureRelaxDocument(BaseModel):
     @classmethod
     def from_chgnet_result(
         cls,
-        input_structure: Structure,
-        relax_cell: bool,
-        relax_kwargs: dict,
-        optimizer_kwargs: dict,
         result: dict,
-        keep_info: list,
+        relax_cell: bool,
+        steps: int,
+        relax_kwargs: dict = None,
+        optimizer_kwargs: dict = None,
+        **task_document_kwargs,
     ):
         """
-        Create a FFStructureRelaxDocument for a CHGNet relaxation.
+        Create a ForceFieldTaskDocument for a CHGNet Task.
 
         Parameters
         ----------
-        input_structure : .Structure
-            The inputted pymatgen structure.
-        relax_cell: bool
-            Whether the cell shape/volume was allowed to change during pre-relaxation.
+        result : dict
+            The outputted results from the task.
+        relax_cell : bool
+            Whether the cell shape/volume was allowed to change during the task.
+        steps : int
+            Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
             Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
         optimizer_kwargs : dict
             Keyword arguments that will get passed to :obj:`StructOptimizer()`.
-        result : dict
-            The outputted results from relaxation.
-        keep_info : list
-            List of which pieces of information from the trajectory is saved in this
-            FFStructureRelaxDocument.
+        **task_document_kwargs : dict
+            Additional keyword args passed to
+            :obj:`.ForceFieldTaskDocument.from_chgnet_result`.
         """
+        trajectory = result["trajectory"].__dict__
+        species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
+
+        input_structure = Structure(
+            lattice=trajectory["cells"][0],
+            coords=trajectory["atom_positions"][0],
+            species=species,
+            coords_are_cartesian=True,
+        )
+
         input_doc = InputDoc(
             structure=input_structure,
             relax_cell=relax_cell,
+            steps=steps,
             relax_kwargs=relax_kwargs,
             optimizer_kwargs=optimizer_kwargs,
         )
 
         output_structure = result["final_structure"]
-        trajectory = result["trajectory"].__dict__
         # NOTE: units for stresses were converted to kbar (* -10 from standard output)
         # to comply with MP convention
         for i in range(0, len(trajectory["stresses"])):
@@ -131,18 +152,48 @@ class FFStructureRelaxDocument(BaseModel):
         final_forces = trajectory["forces"][-1].tolist()
         final_stress = trajectory["stresses"][-1].tolist()
 
-        trajectory_to_save = {key: trajectory[key] for key in keep_info}
-        if "atoms" in keep_info:
-            warning_msg = """
-                WARNING: `Atoms` objects can't be serialized (as of May 2023) and
-                thus are automatically removed.
-                """
-            logging.warning(warning_msg)
-            trajectory_to_save.pop(
-                "atoms"
-            )  # can't serialize `AseAtoms` objects, so remove them from trajectory.
+        n_steps = len(trajectory["energies"])
 
-        steps = len(result["trajectory"])
+        ionic_steps = []
+
+        if "keep_info" not in task_document_kwargs:
+            keep_info = ("energy", "forces", "magmoms", "stress", "structure")
+        # try:
+        #     keep_info = task_document_kwargs['keep_info']
+        # except:
+        #     keep_info = ()
+
+        for i in range(0, n_steps):
+            cur_energy = trajectory["energies"][i] if "energy" in keep_info else None
+            cur_forces = (
+                trajectory["forces"][i].tolist() if "forces" in keep_info else None
+            )
+            cur_magmoms = (
+                trajectory["magmoms"][i].tolist() if "magmoms" in keep_info else None
+            )
+            cur_stress = (
+                trajectory["stresses"][i].tolist() if "stress" in keep_info else None
+            )
+
+            if "structure" in keep_info:
+                cur_structure = Structure(
+                    lattice=trajectory["cells"][i],
+                    coords=trajectory["atom_positions"][i],
+                    species=species,
+                    coords_are_cartesian=True,
+                )
+            else:
+                cur_structure = None
+
+            ionic_steps.append(
+                IonicStep(
+                    energy=cur_energy,
+                    forces=cur_forces,
+                    magmoms=cur_magmoms,
+                    stress=cur_stress,
+                    structure=cur_structure,
+                )
+            )
 
         output_doc = OutputDoc(
             structure=output_structure,
@@ -150,8 +201,8 @@ class FFStructureRelaxDocument(BaseModel):
             energy_per_atom=final_energy_per_atom,
             forces=final_forces,
             stress=final_stress,
-            trajectory=trajectory_to_save,
-            steps=steps,
+            ionic_steps=ionic_steps,
+            n_steps=n_steps,
         )
 
         import chgnet
