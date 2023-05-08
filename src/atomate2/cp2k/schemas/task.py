@@ -580,9 +580,7 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
 
 def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
-    all_calcs_completed = all(
-        [c.has_cp2k_completed == Status.SUCCESS for c in calc_docs]
-    )
+    all_calcs_completed = all(c.has_cp2k_completed == Status.SUCCESS for c in calc_docs)
     if len(analysis.errors) == 0 and all_calcs_completed:
         return Status.SUCCESS  # type: ignore
     return Status.FAILED  # type: ignore
