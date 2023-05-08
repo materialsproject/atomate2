@@ -22,7 +22,7 @@ jobs:
 
       - name: Run pre-commit autoupdate
         run: pre-commit autoupdate
-    
+
       - name: Run pre-commit
         run: pre-commit run --all || true
 
