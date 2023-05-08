@@ -23,7 +23,7 @@ jobs:
         run: pre-commit autoupdate
     
       - name: Run pre-commit
-        run: pre-commit run --all
+        run: pre-commit run --all || true
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
