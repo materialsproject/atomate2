@@ -3,6 +3,7 @@ name: pre-commit-auto-update
 on:
   schedule:
     - cron: '0 0 1,14,28 * *'
+  workflow_dispatch:
 
 jobs:
   auto-update:
@@ -20,6 +21,9 @@ jobs:
 
       - name: Run pre-commit autoupdate
         run: pre-commit autoupdate
+    
+      - name: Run pre-commit
+        run: pre-commit run --all
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
