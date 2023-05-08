@@ -57,7 +57,7 @@ strict = [
     "pydantic==1.10.7",
     "pymatgen==2023.3.23",
     "custodian==2023.5.7",
-    "monty==2023.4.10",
+    "monty==2023.5.8",
     "jobflow==0.1.11",
     "click==8.1.3",
     "PyYAML==6.0",
@@ -65,11 +65,11 @@ strict = [
     "phonopy==2.18.0",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.30.10",
+    "mp-api==0.33.1",
     "dscribe==1.2.2",
-    "pymatgen-analysis-defects==2023.4.5",
+    "pymatgen-analysis-defects==2023.04.05",
     "lobsterpy==0.2.9",
-    "emmet-core==0.52.1"
+    "emmet-core==0.54.3"
 ]
 
 [project.scripts]
