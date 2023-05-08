@@ -31,8 +31,7 @@ class CHGNetRelaxMaker(Maker):
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`StructOptimizer()`.
     task_document_kwargs : dict
-        Additional keyword args passed to
-        :obj:`.ForceFieldTaskDocument.from_chgnet_result`.
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
     name: str = "CHGNet relax"
@@ -69,3 +68,33 @@ class CHGNetRelaxMaker(Maker):
         )
 
         return ff_task_doc
+
+
+@dataclass
+class CHGNetStaticMaker(CHGNetRelaxMaker):
+    """
+    Maker to calculate forces and stresses using the CHGNet force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`StructOptimizer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+
+    """
+
+    name: str = "CHGNet static"
+    relax_cell: bool = False
+    steps: int = 1
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
