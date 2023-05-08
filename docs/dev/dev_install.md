@@ -85,5 +85,5 @@ pip install .[docs]
 Next, the docs can be built to the `docs_build` directory:
 
 ```bash
-jupyter-book build docs --path-output docs_build
+sphinx-build docs docs_build
 ```
