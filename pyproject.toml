@@ -51,6 +51,7 @@ docs = [
     "myst_parser==1.0.0",
     "furo==2023.03.27",
     "jsonschema[format]",
+    "sphinx_design==0.4.1",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.3.1", "pytest-cov==4.0.0", "FireWorks==2.0.3"]

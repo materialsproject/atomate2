@@ -40,7 +40,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.autosummary",
     "myst_parser",
-    "nbsphinx",
     "sphinxcontrib.autodoc_pydantic",
     "numpydoc",
     "sphinx_design",
@@ -138,20 +137,6 @@ autodoc_pydantic_settings_show_validator_members = False
 autodoc_pydantic_settings_member_order = "bysource"
 autodoc_pydantic_field_list_validators = False
 autodoc_pydantic_field_show_constraints = False
-
-# Config nbsphinx
-nbsphinx_prolog = r"""
-{% set docpath = env.doc2path(env.docname, base=False) %}
-
-.. only:: html
-
-    .. role:: raw-html(raw)
-        :format: html
-
-    .. nbinfo::
-        This page is available as a Jupyter notebook: `{{ docpath }}`__.
-
-    __ https://github.com/materialsproject/atomate2/tree/main/docs/{{ docpath }}"""
 
 
 # -- Options for HTML output -------------------------------------------------
