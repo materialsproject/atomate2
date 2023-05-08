@@ -33,7 +33,7 @@ jobs:
           pip install .[strict,docs]
 
       - name: Build
-        run: jupyter-book build docs --path-output docs_build
+        run: sphinx-build docs docs_build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
