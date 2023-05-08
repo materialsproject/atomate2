@@ -81,7 +81,7 @@ class VaspDrone(AbstractDrone):
         if set(task_names).intersection(subdirs):
             return [parent]
         if (
-            not any([parent.endswith(os.sep + r) for r in task_names])
+            not any(parent.endswith(os.sep + r) for r in task_names)
             and len(list(Path(parent).glob("vasprun.xml*"))) > 0
         ):
             return [parent]
