@@ -76,3 +76,14 @@ jobs:
 
       - name: Build
         run: jupyter-book build docs --path-output docs_build
+   
+  automerge:
+    needs: [lint, test, docs]
+    runs-on: ubuntu-latest
+  
+    permissions:
+      pull-requests: write
+      contents: write
+  
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
