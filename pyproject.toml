@@ -56,7 +56,7 @@ tests = ["pytest==7.3.1", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
     "pydantic==1.10.7",
     "pymatgen==2023.3.23",
-    "custodian==2023.3.10",
+    "custodian==2023.5.7",
     "monty==2023.4.10",
     "jobflow==0.1.11",
     "click==8.1.3",
