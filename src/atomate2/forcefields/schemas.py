@@ -2,6 +2,7 @@
 
 from typing import List
 
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Extra, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -30,11 +31,11 @@ class InputDoc(BaseModel):
     )
     relax_kwargs: dict = Field(
         None,
-        description="Keyword arguments that passed to :obj:`StructOptimizer.relax`.",
+        description="Keyword arguments that passed to the relaxer function.",
     )
     optimizer_kwargs: dict = Field(
         None,
-        description="Keyword arguments that passed to :obj:`StructOptimizer`.",
+        description="Keyword arguments passed to the relaxer's optimizer.",
     )
 
 
@@ -70,7 +71,7 @@ class OutputDoc(BaseModel):
     )
 
 
-class ForceFieldTaskDocument(BaseModel):
+class ForceFieldTaskDocument(StructureMetadata):
     """Document containing information on structure relaxation using a force field."""
 
     structure: Structure = Field(
@@ -124,6 +125,12 @@ class ForceFieldTaskDocument(BaseModel):
             Which data to save from each ionic step.
         """
         trajectory = result["trajectory"].__dict__
+
+        # NOTE: units for stresses were converted to kbar (* -10 from standard output)
+        # to comply with MP convention
+        for i in range(0, len(trajectory["stresses"])):
+            trajectory["stresses"][i] = trajectory["stresses"][i] * -10
+
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
 
         input_structure = Structure(
@@ -141,20 +148,24 @@ class ForceFieldTaskDocument(BaseModel):
             optimizer_kwargs=optimizer_kwargs,
         )
 
-        output_structure = result["final_structure"]
-        # NOTE: units for stresses were converted to kbar (* -10 from standard output)
-        # to comply with MP convention
-        for i in range(0, len(trajectory["stresses"])):
-            trajectory["stresses"][i] = trajectory["stresses"][i] * -10
+        # Workaround for cases where the ASE optimizer does not correctly limit the
+        # number of steps for static calculations.
+        if steps <= 1:
+            steps = 1
+            for key in trajectory:
+                trajectory[key] = [trajectory[key][0]]
+            output_structure = input_structure
+        else:
+            output_structure = result["final_structure"]
+
         final_energy = trajectory["energies"][-1]
-        final_energy_per_atom = trajectory["energies"][-1] / output_structure.num_sites
+        final_energy_per_atom = trajectory["energies"][-1] / input_structure.num_sites
         final_forces = trajectory["forces"][-1].tolist()
         final_stress = trajectory["stresses"][-1].tolist()
 
         n_steps = len(trajectory["energies"])
 
         ionic_steps = []
-
         for i in range(0, n_steps):
             cur_energy = (
                 trajectory["energies"][i] if "energy" in ionic_step_data else None
@@ -209,7 +220,8 @@ class ForceFieldTaskDocument(BaseModel):
 
         version = chgnet.__version__
 
-        return cls(
+        return cls.from_structure(
+            meta_structure=output_structure,
             structure=output_structure,
             input=input_doc,
             output=output_doc,

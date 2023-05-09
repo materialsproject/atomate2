@@ -53,6 +53,12 @@ class CHGNetRelaxMaker(Maker):
         """
         from chgnet.model import StructOptimizer
 
+        if self.steps < 0:
+            logger.warning(
+                "WARNING: A negative number of steps is not possible. "
+                "Behavior may vary..."
+            )
+
         relaxer = StructOptimizer(**self.optimizer_kwargs)
         result = relaxer.relax(
             structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
@@ -89,7 +95,6 @@ class CHGNetStaticMaker(CHGNetRelaxMaker):
         Keyword arguments that will get passed to :obj:`StructOptimizer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-
     """
 
     name: str = "CHGNet static"
