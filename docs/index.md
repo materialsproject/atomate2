@@ -1,3 +1,35 @@
+```{toctree}
+:caption: User Guide
+:hidden:
+user/index
+user/install
+user/running-workflows
+user/fireworks
+user/codes/index
+```
+
+```{toctree}
+:caption: Reference
+:hidden:
+reference/index
+```
+
+```{toctree}
+:caption: Developer Guide
+:hidden:
+dev/dev_install
+dev/vasp_tests
+```
+
+```{toctree}
+:caption: About
+:hidden:
+about/changelog
+about/contributors
+about/contributing
+about/license
+```
+
 # atomate2 documentation
 
 **Date**: {sub-ref}`today`
