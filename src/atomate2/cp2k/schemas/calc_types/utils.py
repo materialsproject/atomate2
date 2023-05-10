@@ -49,10 +49,8 @@ def run_type(inputs: Dict) -> RunType:
     for functional_class in _RUN_TYPE_DATA:
         for special_type, params in _RUN_TYPE_DATA[functional_class].items():
             if all(
-                [
-                    _variant_equal(parameters.get(param, True), value)
-                    for param, value in params.items()
-                ]
+                _variant_equal(parameters.get(param, True), value)
+                for param, value in params.items()
             ):
                 return RunType(f"{special_type}{vdw}{is_hubbard}")
 
