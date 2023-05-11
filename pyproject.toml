@@ -43,7 +43,7 @@ mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["lobsterpy"]
 defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
-chgnet = ["chgnet"]
+chgnet = ["chgnet==0.1.3"]
 docs = [
     "numpydoc==1.5.0",
     "ipython==8.13.2",
