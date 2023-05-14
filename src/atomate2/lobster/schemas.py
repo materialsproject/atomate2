@@ -248,7 +248,7 @@ class CondensedBondingAnalysis(BaseModel):
             for _iplot, (ication, labels, cohps) in enumerate(
                 zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
             ):
-                label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
+                label_str = f"{struct[ication].specie!s}{ication + 1!s}: "
                 for label, cohp in zip(labels, cohps):
                     if label is not None:
                         cba_cohp_plot_data[label_str + label] = cohp

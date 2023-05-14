@@ -397,7 +397,7 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gzip -f {str(path)}")
+            _, stdout, _ = ssh.exec_command(f"gzip -f {path!s}")
 
     def gunzip(
         self,
@@ -433,7 +433,7 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gunzip -f {str(path)}")
+            _, stdout, _ = ssh.exec_command(f"gunzip -f {path!s}")
 
     def close(self):
         """Close all connections."""
