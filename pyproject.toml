@@ -58,21 +58,21 @@ dev = ["pre-commit>=2.12.1"]
 tests = ["pytest==7.3.1", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
 strict = [
     "pydantic==1.10.7",
-    "pymatgen==2023.3.23",
-    "custodian==2023.5.7",
+    "pymatgen==2023.5.10",
+    "custodian==2023.5.12",
     "monty==2023.5.8",
     "jobflow==0.1.11",
     "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "phonopy==2.18.0",
+    "phonopy==2.19.0",
     "seekpath==2.0.1",
     "numpy",
-    "mp-api==0.33.1",
+    "mp-api==0.33.2",
     "dscribe==1.2.2",
-    "pymatgen-analysis-defects==2023.04.05",
+    "pymatgen-analysis-defects==2023.5.8",
     "lobsterpy==0.2.9",
-    "emmet-core==0.54.3",
+    "emmet-core==0.55.0",
     "chgnet==0.1.3"
 ]
 
