@@ -42,5 +42,7 @@ def test_relax_maker(si_structure):
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-10.745235443115234, rel=1e-4)
-    assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.002112872898578644, rel=1e-4)
+    assert output1.output.ionic_steps[-1].magmoms[0] == approx(
+        0.002112872898578644, rel=1e-4
+    )
     assert output1.output.n_steps == 12
