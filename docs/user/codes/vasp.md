@@ -10,7 +10,6 @@ differences are:
 
 - Use of the PBEsol exchange–correlation functional instead of PBE.
 - Use of up-to-date pseudopotentials (PBE_54 instead of PBE_52).
-- Use of KSPACING for most calculations.
 
 ```{warning}
 The different input sets used in atomate2 mean total energies cannot be compared
