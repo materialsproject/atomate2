@@ -86,12 +86,12 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="The outputted information from this relaxation job."
     )
 
-    md_potential: str = Field(
+    forcefield_name: str = Field(
         None,
         description="name of the interatomic potential used for relaxation.",
     )
 
-    md_potential_version: str = Field(
+    forcefield_version: str = Field(
         None,
         description="version of the interatomic potential used for relaxation.",
     )
@@ -225,6 +225,6 @@ class ForceFieldTaskDocument(StructureMetadata):
             structure=output_structure,
             input=input_doc,
             output=output_doc,
-            MD_potential="CHGNet",
-            MD_potential_version=version,
+            forcefield_name="CHGNet",
+            forcefield_version=version,
         )
