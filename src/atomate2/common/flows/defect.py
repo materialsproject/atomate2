@@ -203,6 +203,7 @@ class FormationEnergyMaker(Maker, ABC):
         defect_index: int | str = "",
         collect_defect_entry_data: bool = False,
         relax_radius: float | str | None = None,
+        perturb: float | None = None,
     ):
         """Make a flow to calculate the formation energy diagram.
 
@@ -229,6 +230,10 @@ class FormationEnergyMaker(Maker, ABC):
             The radius to include around the defect site for the relaxation.
             If "auto", the radius will be set to the maximum that will fit inside
             a periodic cell. If None, all atoms will be relaxed.
+        perturb:
+            The amount to perturb the sites in the supercell. Only perturb the
+            sites with selective dynamics set to True. So this setting only works
+            with `relax_radius`.
 
         Returns
         -------
@@ -269,6 +274,7 @@ class FormationEnergyMaker(Maker, ABC):
                 "bulk_supercell_uuid": get_sc_job.uuid,
             },
             relax_radius=relax_radius,
+            perturb=perturb,
         )
         jobs.extend([get_sc_job, spawn_output])
 
