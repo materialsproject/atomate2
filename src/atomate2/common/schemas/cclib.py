@@ -248,7 +248,7 @@ class TaskDocument(MoleculeMetadata):
             attributes=attributes,
             metadata=metadata,
         )
-        doc["molecule"] = final_molecule
+        doc.molecule = final_molecule
         doc = doc.copy(update=additional_fields)
         return doc
 
