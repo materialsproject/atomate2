@@ -290,6 +290,7 @@ def spawn_defect_q_jobs(
     add_info: dict | None = None,
     validate_charge: bool = True,
     relax_radius: float | str | None = None,
+    perturb: float | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations.
 
@@ -323,6 +324,9 @@ def spawn_defect_q_jobs(
         The radius to include around the defect site for the relaxation.
         If "auto", the radius will be set to the maximum that will fit inside a periodic
         cell. If None, all atoms will be relaxed.
+    perturb:
+        The amount to perturb the sites in the supercell. Only perturb the sites with
+        selective dynamics set to True. So this setting only works with `relax_radius`.
 
     Returns
     -------
@@ -333,7 +337,7 @@ def spawn_defect_q_jobs(
     defect_q_jobs = []
     all_chg_outputs = {}
     sc_def_struct = defect.get_supercell_structure(
-        sc_mat=sc_mat, relax_radius=relax_radius
+        sc_mat=sc_mat, relax_radius=relax_radius, perturb=perturb
     )
     sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
