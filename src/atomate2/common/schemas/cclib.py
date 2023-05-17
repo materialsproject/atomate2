@@ -200,7 +200,6 @@ class TaskDocument(MoleculeMetadata):
         initial_molecule = molecules[0]
         final_molecule = molecules[-1]
         attributes["molecule_initial"] = initial_molecule
-        attributes["molecule_final"] = final_molecule
         if store_trajectory:
             attributes["trajectory"] = molecules
 
