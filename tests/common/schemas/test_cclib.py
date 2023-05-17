@@ -33,9 +33,7 @@ def test_cclib_taskdoc(test_dir):
     assert doc.get("metadata", None) is not None
     assert doc["metadata"]["success"] is True
     assert doc["attributes"]["molecule_initial"][0].coords == pytest.approx([0, 0, 0])
-    assert doc["molecule"][0].coords == pytest.approx(
-        [0.397382, 0.0, 0.0]
-    )
+    assert doc["molecule"][0].coords == pytest.approx([0.397382, 0.0, 0.0])
     assert doc["last_updated"] is not None
     assert doc["attributes"]["homo_energies"] == pytest.approx(
         [-7.054007346511501, -11.618445074798501]
