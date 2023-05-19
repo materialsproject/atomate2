@@ -156,14 +156,19 @@ select = [
     "RSE", # flake8-raise
     "RUF", # Ruff-specific rules
     "SIM", # flake8-simplify
-    "TCH", # flake8-type-checking
     "TID", # tidy imports
     "UP",  # pyupgrade
     "W",   # pycodestyle warning
     "YTT", # flake8-2020
 ]
 ignore = [
-    "PT006", # pytest-parametrize-names-wrong-type
+    "PD011",   # pandas-use-of-dot-values
+    "PLC1901", # compare-to-empty-string
+    "PLR",     # pylint-refactor
+    "PT006",   # pytest-parametrize-names-wrong-type
+    # TODO remove PT011, pytest.raises() should always check err msg
+    "PT011", # pytest-raises-too-broad
+    "PT013", # pytest-incorrect-pytest-import
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]

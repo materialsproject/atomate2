@@ -72,8 +72,8 @@ def task_type(
         try:
             kpt_labels = kpts.get("labels") or []
             num_kpt_labels = len(list(filter(None.__ne__, kpt_labels)))
-        except Exception as e:
-            raise Exception(f"Couldn't identify total number of kpt labels: {e}")
+        except Exception as exc:
+            raise Exception("Couldn't identify total number of kpt labels") from exc
 
         if num_kpt_labels > 0:
             acalc_type.append("NSCF Line")

@@ -137,7 +137,7 @@ class CondensedBondingAnalysis(BaseModel):
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
-        None, description="Maximum bond length considered " "in bonding analysis"
+        None, description="Maximum bond length considered in bonding analysis"
     )
     limit_icohp: list = Field(
         None, description="ICOHP range considered in co-ordination environment analysis"
