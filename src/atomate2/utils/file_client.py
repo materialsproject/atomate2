@@ -379,11 +379,11 @@ class FileClient:
 
         if str(path).lower().endswith("gz"):
             warnings.warn(f"{path} is already gzipped, skipping...", stacklevel=1)
-            return None
+            return
 
         if self.is_dir(path, host=host):
             warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
-            return None
+            return
 
         if self.exists(path_gz, host=host) and not force:
             raise FileExistsError(f"{path_gz} file already exists.")
@@ -397,7 +397,7 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gzip -f {str(path)}")
+            _, stdout, _ = ssh.exec_command(f"gzip -f {path!s}")
 
     def gunzip(
         self,
@@ -422,7 +422,7 @@ class FileClient:
 
         if not str(path).lower().endswith("gz"):
             warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
-            return None
+            return
 
         if self.exists(path_nongz, host=host) and not force:
             raise FileExistsError(f"{path_nongz} file already exists")
@@ -433,7 +433,7 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gunzip -f {str(path)}")
+            _, stdout, _ = ssh.exec_command(f"gunzip -f {path!s}")
 
     def close(self):
         """Close all connections."""

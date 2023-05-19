@@ -41,10 +41,8 @@ def run_type(vasp_parameters: Dict) -> RunType:
     for functional_class in ["HF", "VDW", "METAGGA", "GGA"]:
         for special_type, params in _RUN_TYPE_DATA[functional_class].items():
             if all(
-                [
-                    _variant_equal(vasp_parameters.get(param, None), value)
+                _variant_equal(vasp_parameters.get(param, None), value)
                     for param, value in params.items()
-                ]
             ):
                 return RunType(f"{special_type}{is_hubbard}")
 
