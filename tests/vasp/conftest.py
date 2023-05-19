@@ -184,12 +184,12 @@ def check_kpoints(ref_path: Union[str, Path]):
             "atomate2 generated a KPOINTS file but the reference calculation is using "
             "KSPACING"
         )
-    elif not user_kpoints_exists and ref_kpoints_exists:
+    if not user_kpoints_exists and ref_kpoints_exists:
         raise ValueError(
             "atomate2 is using KSPACING but the reference calculation is using "
             "a KPOINTS file"
         )
-    elif user_kpoints_exists and ref_kpoints_exists:
+    if user_kpoints_exists and ref_kpoints_exists:
         user = Kpoints.from_file("KPOINTS")
         ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
         if user.style != ref.style or user.num_kpts != ref.num_kpts:

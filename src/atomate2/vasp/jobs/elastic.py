@@ -277,7 +277,7 @@ def fit_elastic_tensor(
 
     logger.info("Analyzing stress/strain data")
 
-    elastic_doc = ElasticDocument.from_stresses(
+    return ElasticDocument.from_stresses(
         structure,
         stresses,
         deformations,
@@ -288,4 +288,3 @@ def fit_elastic_tensor(
         equilibrium_stress=equilibrium_stress,
         symprec=symprec,
     )
-    return elastic_doc

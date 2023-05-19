@@ -34,15 +34,14 @@ def run_type(vasp_parameters: Dict) -> RunType:
         """Check two strings equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()
-        else:
-            return v1 == v2
+        return v1 == v2
 
     # This is to force an order of evaluation
     for functional_class in ["HF", "VDW", "METAGGA", "GGA"]:
         for special_type, params in _RUN_TYPE_DATA[functional_class].items():
             if all(
                 _variant_equal(vasp_parameters.get(param, None), value)
-                    for param, value in params.items()
+                for param, value in params.items()
             ):
                 return RunType(f"{special_type}{is_hubbard}")
 

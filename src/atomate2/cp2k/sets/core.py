@@ -33,8 +33,7 @@ class StaticSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a static job."""
-        updates = {"run_type": "ENERGY_FORCE"}
-        return updates
+        return {"run_type": "ENERGY_FORCE"}
 
 
 @dataclass
@@ -48,11 +47,10 @@ class RelaxSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a relax job."""
-        updates = {
+        return {
             "run_type": "GEO_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
         }
-        return updates
 
 
 @dataclass
@@ -65,11 +63,10 @@ class CellOptSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a cell opt job."""
-        updates = {
+        return {
             "run_type": "CELL_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
         }
-        return updates
 
 
 @dataclass
@@ -219,7 +216,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
         cp2k_output: Cp2kOutput = None,
     ) -> dict:
         """Get input updates for a non scf calculation."""
-        updates = {
+        return {
             "max_scf": 1,
             "print_bandstructure": True,
             "kpoints_line_density": self.line_density if self.mode == "line" else 1,
@@ -229,8 +226,6 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
             "run_type": "ENERGY_FORCE",
         }
 
-        return updates
-
 
 @dataclass
 class MDSetGenerator(Cp2kInputGenerator):
@@ -238,7 +233,7 @@ class MDSetGenerator(Cp2kInputGenerator):
 
     def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """Get input updates for running a MD calculation."""
-        updates = {
+        return {
             "run_type": "MD",
             "activate_motion": {
                 "ensemble": "NVT",
@@ -254,5 +249,3 @@ class MDSetGenerator(Cp2kInputGenerator):
             "print_e_density": False,
             "print_mo_cubes": False,
         }
-
-        return updates
