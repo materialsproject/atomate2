@@ -13,7 +13,7 @@ _FAKE_RUN_CP2K_KWARGS = {}
 
 
 @pytest.fixture(autouse=True)
-def _patch_settings(monkeypatch, test_dir):
+def patch_settings(monkeypatch, test_dir):
     settings = {
         "PMG_CP2K_DATA_DIR": Path(test_dir / "cp2k/data"),
         "PMG_DEFAULT_CP2K_FUNCTIONAL": "PBE",

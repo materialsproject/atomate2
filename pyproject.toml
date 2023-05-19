@@ -167,6 +167,7 @@ ignore = [
     "PLR",     # pylint-refactor
     "PT006",   # pytest-parametrize-names-wrong-type
     # TODO remove PT011, pytest.raises() should always check err msg
+    "PT004", # pytest-missing-fixture-name-underscore
     "PT011", # pytest-raises-too-broad
     "PT013", # pytest-incorrect-pytest-import
 ]

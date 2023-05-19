@@ -11,7 +11,7 @@ def test_dir():
 
 
 @pytest.fixture(scope="session")
-def _log_to_stdout():
+def log_to_stdout():
     import logging
     import sys
 
@@ -27,7 +27,7 @@ def _log_to_stdout():
 
 
 @pytest.fixture(scope="session")
-def _clean_dir(debug_mode):
+def clean_dir(debug_mode):
     import os
     import shutil
     import tempfile
@@ -44,7 +44,7 @@ def _clean_dir(debug_mode):
 
 
 @pytest.fixture()
-def _tmp_dir():
+def tmp_dir():
     """Same as clean_dir but is fresh for every test"""
     import os
     import shutil
@@ -89,7 +89,7 @@ def memory_jobstore():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _log_to_stdout_auto_use():
+def log_to_stdout_auto_use():
     from atomate2.utils.log import initialize_logger
 
     initialize_logger()
@@ -103,7 +103,7 @@ def si_structure(test_dir):
 
 
 @pytest.fixture(autouse=True)
-def _mock_jobflow_settings(memory_jobstore):
+def mock_jobflow_settings(memory_jobstore):
     """Mock the jobflow settings to use our specific jobstore (with data store)."""
     from unittest import mock
 
