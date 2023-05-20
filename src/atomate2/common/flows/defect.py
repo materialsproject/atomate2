@@ -312,14 +312,14 @@ class FormationEnergyMaker(Maker, ABC):
         jobs.extend([get_sc_job, spawn_output])
 
         if self.collect_defect_entry_data:
-            if bulk_supercell_dir is not None:
+            if isinstance(bulk_supercell_dir, (str, Path)):
                 raise NotImplementedError(
                     "DefectEntery creation only works when you are explicitly "
                     "calculating the bulk supercell. This is because the bulk "
                     "SC energy parsing from previous calculations is not implemented."
                 )
             collection_job = get_defect_entry(
-                charge_state_summary=spawn_defect_q_jobs.output,
+                charge_state_summary=spawn_output.output,
                 bulk_summary=get_sc_job.output,
             )
             jobs.append(collection_job)
