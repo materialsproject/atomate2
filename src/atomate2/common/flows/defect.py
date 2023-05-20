@@ -204,6 +204,12 @@ class FormationEnergyMaker(Maker, ABC):
         phase diagram data from the materials project API to create the formation
         energy diagrams.
 
+        .. note::
+        Once we remove the requirement for explicit bulk supercell calculations,
+        this setting will be removed.  It is only needed because the bulk supercell
+        locpot is currently needed for the finite-size correction calculation.
+
+        Output format for the DefectEntry data:
         .. code-block:: python
         [
             {
