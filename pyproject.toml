@@ -71,7 +71,7 @@ strict = [
     "dscribe==1.2.2",
     "pymatgen-analysis-defects==2023.5.8",
     "lobsterpy==0.2.9",
-    "emmet-core==0.55.0"
+    "emmet-core==0.55.2"
 ]
 
 [project.scripts]
