@@ -68,7 +68,7 @@ strict = [
     "seekpath==2.1.0",
     "numpy",
     "mp-api==0.33.3",
-    "dscribe==1.2.2",
+    "dscribe==2.0.0",
     "pymatgen-analysis-defects==2023.5.8",
     "lobsterpy==0.2.9",
     "emmet-core==0.55.2"
