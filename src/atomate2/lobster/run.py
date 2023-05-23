@@ -79,7 +79,7 @@ def run_lobster(
         logger.info(f"{lobster_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [LobsterJob(split_lobster_cmd, **lobster_job_kwargs)]
     else:
         raise ValueError(f"Unsupported job type: {job_type}")

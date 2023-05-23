@@ -811,7 +811,7 @@ class VaspInputGenerator(InputGenerator):
 
         if base_kpoints and not (added_kpoints or zero_weighted_kpoints):
             return base_kpoints
-        elif added_kpoints and not (base_kpoints or zero_weighted_kpoints):
+        if added_kpoints and not (base_kpoints or zero_weighted_kpoints):
             return added_kpoints
 
         # do some sanity checking
@@ -819,12 +819,12 @@ class VaspInputGenerator(InputGenerator):
             raise ValueError(
                 "Cannot combined line_density and zero weighted k-points options"
             )
-        elif zero_weighted_kpoints and not base_kpoints:
+        if zero_weighted_kpoints and not base_kpoints:
             raise ValueError(
                 "Zero weighted k-points must be used with reciprocal_density or "
                 "grid_density options"
             )
-        elif not (base_kpoints or zero_weighted_kpoints or added_kpoints):
+        if not (base_kpoints or zero_weighted_kpoints or added_kpoints):
             raise ValueError(
                 "Invalid k-point generation algo. Supported Keys are 'grid_density' "
                 "for Kpoints.automatic_density generation, 'reciprocal_density' for "
@@ -882,24 +882,22 @@ def _get_u_param(lda_param, lda_config, structure):
     if hasattr(structure[0], lda_param.lower()):
         m = {site.specie.symbol: getattr(site, lda_param.lower()) for site in structure}
         return [m[sym] for sym in poscar.site_symbols]
-    elif isinstance(lda_config.get(most_electroneg, 0), dict):
+    if isinstance(lda_config.get(most_electroneg, 0), dict):
         # lookup specific LDAU if specified for most_electroneg atom
         return [lda_config[most_electroneg].get(sym, 0) for sym in poscar.site_symbols]
-    else:
-        return [
-            lda_config.get(sym, 0)
-            if isinstance(lda_config.get(sym, 0), (float, int))
-            else 0
-            for sym in poscar.site_symbols
-        ]
+    return [
+        lda_config.get(sym, 0)
+        if isinstance(lda_config.get(sym, 0), (float, int))
+        else 0
+        for sym in poscar.site_symbols
+    ]
 
 
 def _get_ediff(param, value, structure, incar_settings):
     """Get EDIFF."""
     if incar_settings.get("EDIFF", None) is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
-    else:
-        return float(incar_settings["EDIFF"])
+    return float(incar_settings["EDIFF"])
 
 
 def _set_u_params(incar, incar_settings, structure):
@@ -1020,7 +1018,7 @@ def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
         # Turn off spin when magmom for every site is smaller than 0.02.
         site_magmom = np.array([i["tot"] for i in outcar.magnetization])
         return 2 if np.any(np.abs(site_magmom) > 0.02) else 1
-    elif vasprun is not None:
+    if vasprun is not None:
         return 2 if vasprun.is_spin else 1
     return 2
 

@@ -124,7 +124,7 @@ def get_basis_infos(
 
     nband_list = []
     for dict_for_basis in list_basis_dict:
-        basis = [key + " " + value for key, value in dict_for_basis.items()]
+        basis = [f"{key} {value}" for key, value in dict_for_basis.items()]
         lobsterin = Lobsterin(settingsdict={"basisfunctions": basis})
         nbands = lobsterin._get_nbands(structure=structure)
         nband_list.append(nbands)

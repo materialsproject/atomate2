@@ -120,8 +120,7 @@ def get_supercell_size(
             )
             transformation.apply_transformation(structure=structure)
 
-    supercell_matrix = transformation.transformation_matrix.tolist()
-    return supercell_matrix
+    return transformation.transformation_matrix.tolist()
 
 
 @job
@@ -237,7 +236,7 @@ def generate_frequencies_eigenvectors(
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
 
     """
-    phonon_doc = PhononBSDOSDoc.from_forces_born(
+    return PhononBSDOSDoc.from_forces_born(
         structure=structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
@@ -252,8 +251,6 @@ def generate_frequencies_eigenvectors(
         born=born,
         **kwargs,
     )
-
-    return phonon_doc
 
 
 @job

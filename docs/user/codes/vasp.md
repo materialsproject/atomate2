@@ -284,7 +284,7 @@ for number, (key, cohp) in enumerate(
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)
-    plotter.save_plot("plots_all_bonds" + str(number) + ".pdf")
+    plotter.save_plot(f"plots_all_bonds{number}.pdf")
 
 for number, (key, cohp) in enumerate(
     result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()
@@ -292,7 +292,7 @@ for number, (key, cohp) in enumerate(
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)
-    plotter.save_plot("plots_cation_anion_bonds" + str(number) + ".pdf")
+    plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
 
 (modifying_input_sets)=
