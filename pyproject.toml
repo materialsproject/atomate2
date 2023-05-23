@@ -46,7 +46,7 @@ defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
-    "furo==2023.03.27",
+    "furo==2023.5.20",
     "ipython==8.13.2",
     "jsonschema[format]",
     "myst_parser==1.0.0",
