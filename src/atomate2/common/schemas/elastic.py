@@ -148,6 +148,7 @@ class ElasticDocument(BaseModel):
         order: Optional[int] = None,
         equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
+        allow_elastically_unstable_materials: bool = True
     ):
         """
         Create an elastic document from strains and stresses.
@@ -177,6 +178,9 @@ class ElasticDocument(BaseModel):
         symprec : float
             Symmetry precision for deriving symmetry equivalent deformations. If
             ``symprec=None``, then no symmetry operations will be applied.
+        allow_elastically_unstable_materials : bool
+            Whether to allow the ElasticDocument to still complete in the event that
+            the structure is elastically unstable.
         """
         if symprec is not None:
             deformations, stresses, uuids, job_dirs = _expand_deformations(
@@ -213,7 +217,14 @@ class ElasticDocument(BaseModel):
         ieee = result.convert_to_ieee(structure)
         property_tensor = ieee if order == 2 else ElasticTensor(ieee[0])
         property_dict = property_tensor.get_structure_property_dict(structure)
-        derived_properties = DerivedProperties(**property_dict)
+
+        if allow_elastically_unstable_materials:
+            try: # try to get Derived Properties
+                derived_properties = DerivedProperties(**property_dict)
+            else: # allow this method to error for elastically unstable structures
+                derived_properties = None
+        else:
+            derived_properties = DerivedProperties(**property_dict)
 
         eq_stress = eq_stress.tolist() if eq_stress is not None else eq_stress
 
