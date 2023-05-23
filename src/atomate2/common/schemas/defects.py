@@ -297,7 +297,7 @@ class CCDDocument(BaseModel):
         sdirs1 = [e.data["dir_name"] for e in s_entries1]
         sdirs2 = [e.data["dir_name"] for e in s_entries2]
 
-        obj = cls(
+        return cls(
             q1=ent_r1.structure.charge,
             q2=ent_r2.structure.charge,
             structure1=ent_r1.structure,
@@ -311,8 +311,6 @@ class CCDDocument(BaseModel):
             relaxed_index1=idx1,
             relaxed_index2=idx2,
         )
-
-        return obj
 
     def get_taskdocs(self):
         """Get the distorted task documents."""

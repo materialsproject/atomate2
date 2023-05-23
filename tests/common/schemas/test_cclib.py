@@ -33,9 +33,7 @@ def test_cclib_taskdoc(test_dir):
     assert doc.get("metadata", None) is not None
     assert doc["metadata"]["success"] is True
     assert doc["attributes"]["molecule_initial"][0].coords == pytest.approx([0, 0, 0])
-    assert doc["attributes"]["molecule_final"][0].coords == pytest.approx(
-        [0.397382, 0.0, 0.0]
-    )
+    assert doc["molecule"][0].coords == pytest.approx([0.397382, 0.0, 0.0])
     assert doc["last_updated"] is not None
     assert doc["attributes"]["homo_energies"] == pytest.approx(
         [-7.054007346511501, -11.618445074798501]
@@ -85,7 +83,7 @@ def test_cclib_taskdoc(test_dir):
     doc = TaskDocument.from_logfile(p, ".log", store_trajectory=True).dict()
     assert len(doc["attributes"]["trajectory"]) == 7
     assert doc["attributes"]["trajectory"][0] == doc["attributes"]["molecule_initial"]
-    assert doc["attributes"]["trajectory"][-1] == doc["attributes"]["molecule_final"]
+    assert doc["attributes"]["trajectory"][-1] == doc["molecule"]
 
     # Make sure additional fields can be stored
     doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})

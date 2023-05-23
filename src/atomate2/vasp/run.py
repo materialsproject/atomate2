@@ -140,7 +140,7 @@ def run_vasp(
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [VaspJob(split_vasp_cmd, **vasp_job_kwargs)]
     elif job_type == JobType.DOUBLE_RELAXATION:
         jobs = VaspJob.double_relaxation_run(split_vasp_cmd, **vasp_job_kwargs)

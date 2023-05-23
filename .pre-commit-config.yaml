@@ -3,7 +3,7 @@ default_language_version:
 exclude: '^src/atomate2/vasp/schemas/calc_types/|^.github/'
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.265
+  rev: v0.0.269
   hooks:
   - id: ruff
     args: [--fix]
@@ -46,7 +46,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.2.0
+  rev: v1.3.0
   hooks:
   - id: mypy
     files: ^src/

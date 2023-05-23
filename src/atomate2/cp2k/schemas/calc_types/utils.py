@@ -25,10 +25,9 @@ def run_type(inputs: Dict) -> RunType:
         """Determine if two run_types are equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()
-        elif isinstance(v1, Iterable) and isinstance(v2, Iterable):
+        if isinstance(v1, Iterable) and isinstance(v2, Iterable):
             return set(v1) == set(v2)
-        else:
-            return v1 == v2
+        return v1 == v2
 
     is_hubbard = "+U" if dft.get("dft_plus_u") else ""
     vdw = f"-{dft.get('vdw')}" if dft.get("vdw") else ""

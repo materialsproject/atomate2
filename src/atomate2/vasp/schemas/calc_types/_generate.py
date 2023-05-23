@@ -49,12 +49,7 @@ class {enum_name}(ValueEnum):
 run_type_enum = get_enum_source(
     "RunType",
     "Vasp calculation run types.",
-    dict(
-        {
-            "_".join(rt.split()).replace("+", "_").replace("-", "_"): rt
-            for rt in _RUN_TYPES
-        }
-    ),
+    {"_".join(rt.split()).replace("+", "_").replace("-", "_"): rt for rt in _RUN_TYPES},
 )
 task_type_enum = get_enum_source(
     "TaskType",
@@ -65,7 +60,8 @@ calc_type_enum = get_enum_source(
     "CalcType",
     "Vasp calculation types.",
     {
-        f"{'_'.join(rt.split()).replace('+','_').replace('-','_')}_{'_'.join(tt.split())}": f"{rt} {tt}"
+        f"{'_'.join(rt.split()).replace('+','_').replace('-','_')}"
+        f"_{'_'.join(tt.split())}": f"{rt} {tt}"
         for rt, tt in product(_RUN_TYPES, _TASK_TYPES)
     },
 )

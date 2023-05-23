@@ -107,7 +107,7 @@ def run_cp2k(
         return_code = subprocess.call(cp2k_cmd, shell=True)
         logger.info(f"{cp2k_cmd} finished running with returncode: {return_code}")
         return
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [Cp2kJob(split_cp2k_cmd, **cp2k_job_kwargs)]
     else:
         raise ValueError(f"Unsupported job type: {job_type}")
