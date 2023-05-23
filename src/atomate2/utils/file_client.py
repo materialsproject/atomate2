@@ -135,13 +135,12 @@ class FileClient:
         """
         if host is None:
             return Path(path).exists()
-        else:
-            path = str(self.abspath(path, host=host))
-            try:
-                self.get_sftp(host).stat(path)
-                return True
-            except FileNotFoundError:
-                return False
+        path = str(self.abspath(path, host=host))
+        try:
+            self.get_sftp(host).stat(path)
+            return True
+        except FileNotFoundError:
+            return False
 
     def is_file(self, path: str | Path, host: str | None = None) -> bool:
         """
@@ -161,12 +160,11 @@ class FileClient:
         """
         if host is None:
             return Path(path).is_file()
-        else:
-            path = str(self.abspath(path, host=host))
-            try:
-                return stat.S_ISREG(self.get_sftp(host).lstat(path).st_mode)
-            except FileNotFoundError:
-                return False
+        path = str(self.abspath(path, host=host))
+        try:
+            return stat.S_ISREG(self.get_sftp(host).lstat(path).st_mode)
+        except FileNotFoundError:
+            return False
 
     def is_dir(self, path: str | Path, host: str | None = None) -> bool:
         """
@@ -186,12 +184,11 @@ class FileClient:
         """
         if host is None:
             return Path(path).is_dir()
-        else:
-            path = str(self.abspath(path, host=host))
-            try:
-                return stat.S_ISDIR(self.get_sftp(host).lstat(path).st_mode)
-            except FileNotFoundError:
-                return False
+        path = str(self.abspath(path, host=host))
+        try:
+            return stat.S_ISDIR(self.get_sftp(host).lstat(path).st_mode)
+        except FileNotFoundError:
+            return False
 
     def listdir(self, path: str | Path, host: str | None = None) -> list[Path]:
         """
@@ -213,9 +210,8 @@ class FileClient:
             path = self.abspath(path, host=host)
             return [p.relative_to(path) for p in Path(path).iterdir()]
 
-        else:
-            path = str(self.abspath(path, host=host))
-            return [Path(p) for p in self.get_sftp(host).listdir(path)]
+        path = str(self.abspath(path, host=host))
+        return [Path(p) for p in self.get_sftp(host).listdir(path)]
 
     def copy(
         self,
@@ -323,10 +319,9 @@ class FileClient:
         """
         if host is None:
             return Path(path).absolute()
-        else:
-            ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
-            return Path([o.split("\n")[0] for o in stdout][0])
+        ssh = self.get_ssh(host)
+        _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
+        return Path([o.split("\n")[0] for o in stdout][0])
 
     def glob(self, path: str | Path, host: str | None = None) -> list[Path]:
         """
@@ -379,11 +374,11 @@ class FileClient:
 
         if str(path).lower().endswith("gz"):
             warnings.warn(f"{path} is already gzipped, skipping...", stacklevel=1)
-            return None
+            return
 
         if self.is_dir(path, host=host):
             warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
-            return None
+            return
 
         if self.exists(path_gz, host=host) and not force:
             raise FileExistsError(f"{path_gz} file already exists.")
@@ -422,7 +417,7 @@ class FileClient:
 
         if not str(path).lower().endswith("gz"):
             warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
-            return None
+            return
 
         if self.exists(path_nongz, host=host) and not force:
             raise FileExistsError(f"{path_nongz} file already exists")

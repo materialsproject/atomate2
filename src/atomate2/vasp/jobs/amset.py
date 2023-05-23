@@ -447,7 +447,7 @@ def _extract_ibands(log: str) -> tuple[list[int], ...]:
             if "up" in result_splits[i + 1]:
                 # up listed first
                 return aibands, bibands
-            else:
+            else:  # noqa: RET505
                 # down listed first
                 return bibands, aibands
     raise ValueError("Could not find ibands in log.")

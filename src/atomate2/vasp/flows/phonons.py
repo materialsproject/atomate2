@@ -338,5 +338,4 @@ class PhononMaker(Maker):
 
         jobs.append(phonon_collect)
         # create a flow including all jobs for a phonon computation
-        flow = Flow(jobs, phonon_collect.output)
-        return flow
+        return Flow(jobs, phonon_collect.output)

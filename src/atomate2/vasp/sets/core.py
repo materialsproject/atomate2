@@ -260,7 +260,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.mode == "line":
             return {"line_density": self.line_density}
 
-        elif self.mode == "boltztrap":
+        if self.mode == "boltztrap":
             return {"explicit": True, "reciprocal_density": self.reciprocal_density}
 
         return {

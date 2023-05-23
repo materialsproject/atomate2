@@ -130,9 +130,8 @@ class ElasticMaker(Maker):
 
         jobs += [deformations, vasp_deformation_calcs, fit_tensor]
 
-        flow = Flow(
+        return Flow(
             jobs=jobs,
             output=fit_tensor.output,
             name=self.name,
         )
-        return flow

@@ -377,7 +377,9 @@ class CalcType(ValueEnum):
     R2SCAN_rVV10_DFPT = "R2SCAN-rVV10 DFPT"
     R2SCAN_rVV10_DFPT_Dielectric = "R2SCAN-rVV10 DFPT Dielectric"
     R2SCAN_rVV10_NMR_Nuclear_Shielding = "R2SCAN-rVV10 NMR Nuclear Shielding"
-    R2SCAN_rVV10_NMR_Electric_Field_Gradient = "R2SCAN-rVV10 NMR Electric Field Gradient"
+    R2SCAN_rVV10_NMR_Electric_Field_Gradient = (
+        "R2SCAN-rVV10 NMR Electric Field Gradient"
+    )
     R2SCAN_rVV10_Static = "R2SCAN-rVV10 Static"
     R2SCAN_rVV10_Structure_Optimization = "R2SCAN-rVV10 Structure Optimization"
     R2SCAN_rVV10_Deformation = "R2SCAN-rVV10 Deformation"
@@ -521,7 +523,9 @@ class CalcType(ValueEnum):
     RevPBE_PADE_U_DFPT = "RevPBE+PADE+U DFPT"
     RevPBE_PADE_U_DFPT_Dielectric = "RevPBE+PADE+U DFPT Dielectric"
     RevPBE_PADE_U_NMR_Nuclear_Shielding = "RevPBE+PADE+U NMR Nuclear Shielding"
-    RevPBE_PADE_U_NMR_Electric_Field_Gradient = "RevPBE+PADE+U NMR Electric Field Gradient"
+    RevPBE_PADE_U_NMR_Electric_Field_Gradient = (
+        "RevPBE+PADE+U NMR Electric Field Gradient"
+    )
     RevPBE_PADE_U_Static = "RevPBE+PADE+U Static"
     RevPBE_PADE_U_Structure_Optimization = "RevPBE+PADE+U Structure Optimization"
     RevPBE_PADE_U_Deformation = "RevPBE+PADE+U Deformation"
@@ -749,7 +753,9 @@ class CalcType(ValueEnum):
     R2SCAN_rVV10_U_DFPT = "R2SCAN-rVV10+U DFPT"
     R2SCAN_rVV10_U_DFPT_Dielectric = "R2SCAN-rVV10+U DFPT Dielectric"
     R2SCAN_rVV10_U_NMR_Nuclear_Shielding = "R2SCAN-rVV10+U NMR Nuclear Shielding"
-    R2SCAN_rVV10_U_NMR_Electric_Field_Gradient = "R2SCAN-rVV10+U NMR Electric Field Gradient"
+    R2SCAN_rVV10_U_NMR_Electric_Field_Gradient = (
+        "R2SCAN-rVV10+U NMR Electric Field Gradient"
+    )
     R2SCAN_rVV10_U_Static = "R2SCAN-rVV10+U Static"
     R2SCAN_rVV10_U_Structure_Optimization = "R2SCAN-rVV10+U Structure Optimization"
     R2SCAN_rVV10_U_Deformation = "R2SCAN-rVV10+U Deformation"
@@ -761,7 +767,9 @@ class CalcType(ValueEnum):
     SCAN_rVV10_U_DFPT = "SCAN-rVV10+U DFPT"
     SCAN_rVV10_U_DFPT_Dielectric = "SCAN-rVV10+U DFPT Dielectric"
     SCAN_rVV10_U_NMR_Nuclear_Shielding = "SCAN-rVV10+U NMR Nuclear Shielding"
-    SCAN_rVV10_U_NMR_Electric_Field_Gradient = "SCAN-rVV10+U NMR Electric Field Gradient"
+    SCAN_rVV10_U_NMR_Electric_Field_Gradient = (
+        "SCAN-rVV10+U NMR Electric Field Gradient"
+    )
     SCAN_rVV10_U_Static = "SCAN-rVV10+U Static"
     SCAN_rVV10_U_Structure_Optimization = "SCAN-rVV10+U Structure Optimization"
     SCAN_rVV10_U_Deformation = "SCAN-rVV10+U Deformation"
@@ -773,7 +781,9 @@ class CalcType(ValueEnum):
     optB86b_vdW_U_DFPT = "optB86b-vdW+U DFPT"
     optB86b_vdW_U_DFPT_Dielectric = "optB86b-vdW+U DFPT Dielectric"
     optB86b_vdW_U_NMR_Nuclear_Shielding = "optB86b-vdW+U NMR Nuclear Shielding"
-    optB86b_vdW_U_NMR_Electric_Field_Gradient = "optB86b-vdW+U NMR Electric Field Gradient"
+    optB86b_vdW_U_NMR_Electric_Field_Gradient = (
+        "optB86b-vdW+U NMR Electric Field Gradient"
+    )
     optB86b_vdW_U_Static = "optB86b-vdW+U Static"
     optB86b_vdW_U_Structure_Optimization = "optB86b-vdW+U Structure Optimization"
     optB86b_vdW_U_Deformation = "optB86b-vdW+U Deformation"
@@ -785,7 +795,9 @@ class CalcType(ValueEnum):
     optB88_vdW_U_DFPT = "optB88-vdW+U DFPT"
     optB88_vdW_U_DFPT_Dielectric = "optB88-vdW+U DFPT Dielectric"
     optB88_vdW_U_NMR_Nuclear_Shielding = "optB88-vdW+U NMR Nuclear Shielding"
-    optB88_vdW_U_NMR_Electric_Field_Gradient = "optB88-vdW+U NMR Electric Field Gradient"
+    optB88_vdW_U_NMR_Electric_Field_Gradient = (
+        "optB88-vdW+U NMR Electric Field Gradient"
+    )
     optB88_vdW_U_Static = "optB88-vdW+U Static"
     optB88_vdW_U_Structure_Optimization = "optB88-vdW+U Structure Optimization"
     optB88_vdW_U_Deformation = "optB88-vdW+U Deformation"
@@ -797,7 +809,9 @@ class CalcType(ValueEnum):
     optPBE_vdW_U_DFPT = "optPBE-vdW+U DFPT"
     optPBE_vdW_U_DFPT_Dielectric = "optPBE-vdW+U DFPT Dielectric"
     optPBE_vdW_U_NMR_Nuclear_Shielding = "optPBE-vdW+U NMR Nuclear Shielding"
-    optPBE_vdW_U_NMR_Electric_Field_Gradient = "optPBE-vdW+U NMR Electric Field Gradient"
+    optPBE_vdW_U_NMR_Electric_Field_Gradient = (
+        "optPBE-vdW+U NMR Electric Field Gradient"
+    )
     optPBE_vdW_U_Static = "optPBE-vdW+U Static"
     optPBE_vdW_U_Structure_Optimization = "optPBE-vdW+U Structure Optimization"
     optPBE_vdW_U_Deformation = "optPBE-vdW+U Deformation"
@@ -809,7 +823,9 @@ class CalcType(ValueEnum):
     rev_vdW_DF2_U_DFPT = "rev-vdW-DF2+U DFPT"
     rev_vdW_DF2_U_DFPT_Dielectric = "rev-vdW-DF2+U DFPT Dielectric"
     rev_vdW_DF2_U_NMR_Nuclear_Shielding = "rev-vdW-DF2+U NMR Nuclear Shielding"
-    rev_vdW_DF2_U_NMR_Electric_Field_Gradient = "rev-vdW-DF2+U NMR Electric Field Gradient"
+    rev_vdW_DF2_U_NMR_Electric_Field_Gradient = (
+        "rev-vdW-DF2+U NMR Electric Field Gradient"
+    )
     rev_vdW_DF2_U_Static = "rev-vdW-DF2+U Static"
     rev_vdW_DF2_U_Structure_Optimization = "rev-vdW-DF2+U Structure Optimization"
     rev_vdW_DF2_U_Deformation = "rev-vdW-DF2+U Deformation"
@@ -821,7 +837,9 @@ class CalcType(ValueEnum):
     revPBE_vdW_U_DFPT = "revPBE-vdW+U DFPT"
     revPBE_vdW_U_DFPT_Dielectric = "revPBE-vdW+U DFPT Dielectric"
     revPBE_vdW_U_NMR_Nuclear_Shielding = "revPBE-vdW+U NMR Nuclear Shielding"
-    revPBE_vdW_U_NMR_Electric_Field_Gradient = "revPBE-vdW+U NMR Electric Field Gradient"
+    revPBE_vdW_U_NMR_Electric_Field_Gradient = (
+        "revPBE-vdW+U NMR Electric Field Gradient"
+    )
     revPBE_vdW_U_Static = "revPBE-vdW+U Static"
     revPBE_vdW_U_Structure_Optimization = "revPBE-vdW+U Structure Optimization"
     revPBE_vdW_U_Deformation = "revPBE-vdW+U Deformation"

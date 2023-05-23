@@ -225,7 +225,7 @@ def _get_structure() -> Structure:
         from pymatgen.io.vasp import BSVasprun
 
         return BSVasprun(str(vr_files[0])).get_band_structure().structure
-    elif len(bs_files) > 0:
+    if len(bs_files) > 0:
         return loadfn(bs_files[0])["band_structure"].structure
 
     raise ValueError("Could not find amset input in current directory.")
