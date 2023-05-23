@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
@@ -17,11 +17,9 @@ from custodian.vasp.handlers import (
 )
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
-from pymatgen.core.structure import Structure
 
 from atomate2.common.utils import get_transformations
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSERelaxSetGenerator,
@@ -33,6 +31,14 @@ from atomate2.vasp.sets.core import (
     StaticSetGenerator,
     TightRelaxSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
+
 
 logger = logging.getLogger(__name__)
 

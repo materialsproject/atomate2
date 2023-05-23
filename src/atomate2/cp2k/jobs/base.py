@@ -4,14 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -29,6 +28,9 @@ from atomate2.cp2k.files import (
 from atomate2.cp2k.run import run_cp2k, should_stop_children
 from atomate2.cp2k.schemas.task import TaskDocument
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = ["BaseCp2kMaker", "cp2k_job"]
 

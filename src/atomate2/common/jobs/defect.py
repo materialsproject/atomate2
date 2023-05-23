@@ -3,15 +3,11 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
-from typing import Callable, Iterable
+from typing import TYPE_CHECKING, Callable, Iterable
 
 import numpy as np
-from emmet.core.tasks import TaskDoc
 from jobflow import Flow, Response, job
-from numpy.typing import NDArray
 from pydantic import BaseModel
-from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
@@ -19,7 +15,15 @@ from pymatgen.analysis.defects.supercells import (
 from pymatgen.core import Lattice, Structure
 
 from atomate2.common.schemas.defects import CCDDocument
-from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.tasks import TaskDoc
+    from numpy.typing import NDArray
+    from pymatgen.analysis.defects.core import Defect
+
+    from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 logger = logging.getLogger(__name__)
 

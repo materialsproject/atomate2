@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Maker, OnMissing
-from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.elastic import (
     ElasticRelaxMaker,
@@ -19,6 +16,14 @@ from atomate2.vasp.jobs.elastic import (
     generate_elastic_deformations,
     run_elastic_deformations,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["ElasticMaker"]
 

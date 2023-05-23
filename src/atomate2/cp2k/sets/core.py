@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from pymatgen.core import Structure
-from pymatgen.io.cp2k.inputs import Cp2kInput
-from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+    from pymatgen.io.cp2k.inputs import Cp2kInput
+    from pymatgen.io.cp2k.outputs import Cp2kOutput
 
 logger = logging.getLogger(__name__)
 

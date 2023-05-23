@@ -12,10 +12,9 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from custodian import Custodian
-from custodian.custodian import ErrorHandler, Validator
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -31,10 +30,14 @@ from custodian.vasp.handlers import (
 )
 from custodian.vasp.jobs import VaspJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
-from emmet.core.tasks import TaskDoc
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from custodian.custodian import ErrorHandler, Validator
+    from emmet.core.tasks import TaskDoc
+
 
 __all__ = [
     "JobType",

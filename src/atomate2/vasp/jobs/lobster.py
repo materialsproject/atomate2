@@ -4,11 +4,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
 from pymatgen.io.lobster import Lobsterin
 
 from atomate2.common.files import delete_files
@@ -16,8 +14,15 @@ from atomate2.lobster.jobs import LobsterMaker
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
+
 
 __all__ = [
     "LobsterStaticMaker",

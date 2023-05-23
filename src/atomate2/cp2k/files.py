@@ -5,16 +5,19 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
 
-from pymatgen.core import Structure
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+
+    from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 __all__ = ["copy_cp2k_outputs", "write_cp2k_input_set"]
 

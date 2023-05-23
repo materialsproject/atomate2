@@ -4,12 +4,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Job, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2.cp2k.jobs.base import BaseCp2kMaker
 from atomate2.cp2k.jobs.core import (
     HybridCellOptMaker,
     HybridRelaxMaker,
@@ -20,6 +18,13 @@ from atomate2.cp2k.jobs.core import (
 )
 from atomate2.cp2k.schemas.calculation import Cp2kObject
 from atomate2.cp2k.sets.base import recursive_update
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.cp2k.jobs.base import BaseCp2kMaker
 
 __all__ = [
     "DoubleRelaxMaker",
