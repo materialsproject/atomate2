@@ -221,7 +221,7 @@ class ElasticDocument(BaseModel):
         if allow_elastically_unstable_materials:
             try: # try to get Derived Properties
                 derived_properties = DerivedProperties(**property_dict)
-            else: # allow this method to error for elastically unstable structures
+            except: # allow this method to error for elastically unstable structures
                 derived_properties = None
         else:
             derived_properties = DerivedProperties(**property_dict)
