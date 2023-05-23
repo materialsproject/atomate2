@@ -64,7 +64,7 @@ class CHGNetRelaxMaker(Maker):
             structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
         )
 
-        ff_task_doc = ForceFieldTaskDocument.from_chgnet_result(
+        return ForceFieldTaskDocument.from_chgnet_result(
             result,
             self.relax_cell,
             self.steps,
@@ -72,8 +72,6 @@ class CHGNetRelaxMaker(Maker):
             self.optimizer_kwargs,
             **self.task_document_kwargs,
         )
-
-        return ff_task_doc
 
 
 @dataclass
