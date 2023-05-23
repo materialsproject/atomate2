@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
-from pymatgen.core.structure import Structure
 
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+
+if TYPE_CHECKING:
+    from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 

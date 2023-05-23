@@ -5,13 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import which
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -24,6 +23,9 @@ from atomate2 import SETTINGS
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = ["BaseVaspMaker", "vasp_job"]
 

@@ -6,7 +6,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from custodian import Custodian
 from custodian.cp2k.handlers import (
@@ -21,11 +21,14 @@ from custodian.cp2k.handlers import (
 )
 from custodian.cp2k.jobs import Cp2kJob
 from custodian.cp2k.validators import Cp2kOutputValidator
-from custodian.custodian import ErrorHandler, Validator
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
-from atomate2.cp2k.schemas.task import TaskDocument
+
+if TYPE_CHECKING:
+    from custodian.custodian import ErrorHandler, Validator
+
+    from atomate2.cp2k.schemas.task import TaskDocument
 
 __all__ = [
     "JobType",

@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from jobflow import Response, job
-from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = [
     "structure_to_primitive",

@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from click.testing import CliRunner
-from emmet.core.math import Vector3D
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
 from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
@@ -21,13 +20,18 @@ from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import HSEBSMaker, NonSCFMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSEStaticSetGenerator,
     NonSCFSetGenerator,
     StaticSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from emmet.core.math import Vector3D
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = [
     "DenseUniformMaker",

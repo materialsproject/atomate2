@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from custodian.cp2k.handlers import (
     AbortHandler,
@@ -15,11 +15,9 @@ from custodian.cp2k.handlers import (
 )
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
-from pymatgen.core.structure import Structure
 
 from atomate2.common.utils import get_transformations
 from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
     CellOptSetGenerator,
     HybridCellOptSetGenerator,
@@ -30,6 +28,14 @@ from atomate2.cp2k.sets.core import (
     RelaxSetGenerator,
     StaticSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.cp2k.sets.base import Cp2kInputGenerator
+
 
 logger = logging.getLogger(__name__)
 

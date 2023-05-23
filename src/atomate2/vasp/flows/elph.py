@@ -4,17 +4,15 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OnMissing
-from pymatgen.core import Structure
 
 from atomate2.vasp.flows.core import (
     DoubleRelaxMaker,
     HSEUniformBandStructureMaker,
     UniformBandStructureMaker,
 )
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import (
     HSEBSMaker,
     HSEStaticMaker,
@@ -35,6 +33,14 @@ from atomate2.vasp.sets.core import (
     NonSCFSetGenerator,
     StaticSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 
 __all__ = ["ElectronPhononMaker"]
 

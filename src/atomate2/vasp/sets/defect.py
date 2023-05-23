@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-from pymatgen.core import Structure
-from pymatgen.io.vasp import Outcar, Vasprun
 from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
 
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+    from pymatgen.io.vasp import Outcar, Vasprun
 
 SPECIAL_KPOINT = Kpoints(
     comment="special k-point",
