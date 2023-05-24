@@ -47,7 +47,7 @@ class StaticMaker(BaseAbinitMaker):
 
 @dataclass
 class LineNonSCFMaker(BaseAbinitMaker):
-    """Maker to create a jobs with a non-scf ABINIT calculation along a line.
+    """Maker to create a job with a non-scf ABINIT calculation along a line.
 
     Parameters
     ----------
@@ -66,7 +66,7 @@ class LineNonSCFMaker(BaseAbinitMaker):
 
 @dataclass
 class UniformNonSCFMaker(BaseAbinitMaker):
-    """Maker to create a jobs with a non-scf ABINIT calculation along a line.
+    """Maker to create a job with a non-scf ABINIT calculation.
 
     Parameters
     ----------
