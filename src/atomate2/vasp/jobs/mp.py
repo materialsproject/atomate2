@@ -15,7 +15,6 @@ from pkg_resources import resource_filename
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputGenerator
-from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
 __all__ = ["MPPrelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
 
