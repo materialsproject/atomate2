@@ -32,7 +32,9 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-_BASE_M_PR2_SCAN_RELAX_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseMPr2SCANRelaxSet.yaml"))
+_BASE_M_PR2_SCAN_RELAX_SET = loadfn(
+    resource_filename("atomate2.vasp.sets", "BaseMPr2SCANRelaxSet.yaml")
+)
 
 __all__ = ["MPr2SCANInputSet", "VaspInputGenerator"]
 
