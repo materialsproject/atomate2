@@ -113,8 +113,8 @@ class MPRelaxMaker(BaseVaspMaker):
             ismear = -5
             sigma = 0.05
 
-        self.input_set_generator.config_dict["user_incar_settings"].update(
-            KSPACING=min(kspacing, 0.44), ISMEAR=ismear, SIGMA=sigma
+        self.input_set_generator.config_dict["INCAR"].update(
+            {"KSPACING": min(kspacing, 0.44), "ISMEAR": ismear, "SIGMA": sigma}
         )
 
 
