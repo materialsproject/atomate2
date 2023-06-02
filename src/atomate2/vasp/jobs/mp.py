@@ -16,7 +16,7 @@ from pkg_resources import resource_filename
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.base import VaspInputGenerator
 
-__all__ = ["MPPrelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
+__all__ = ["MPPreRelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
 
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
     resource_filename("atomate2.vasp.sets", "BaseMPr2SCANRelaxSet.yaml")
