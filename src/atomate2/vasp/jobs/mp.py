@@ -14,7 +14,11 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
+from atomate2.vasp.jobs.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from atomate2.vasp.sets.base import VaspInputGenerator
+
 
 __all__ = ["MPPreRelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
 
