@@ -216,7 +216,7 @@ def get_supercell_from_prv_calc(
         Output containing the supercell transformation and the dir_name
     """
     sc_structure = structure_from_prv(prv_calc_dir)
-    (sc_mat_prv, _) = get_matched_structure_mapping(
+    sc_mat_prv, _ = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
 
