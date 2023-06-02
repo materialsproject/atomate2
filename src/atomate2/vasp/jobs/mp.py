@@ -59,7 +59,7 @@ class MPPreRelaxMaker(BaseVaspMaker):
     name: str = "MP PreRelax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxR2SCANGenerator(
-            {"user_incar_settings": {"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}}
+            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
         )
     )
 
