@@ -1,5 +1,5 @@
 """
-Module defining flows for Materials Project r2SCAN workflows
+Module defining flows for Materials Project r2SCAN workflows.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 """
@@ -14,9 +14,9 @@ from jobflow import Flow, Maker
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-
     from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker
 
