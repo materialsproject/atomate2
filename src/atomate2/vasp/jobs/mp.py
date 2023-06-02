@@ -7,7 +7,6 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 import numpy as np
 from monty.serialization import loadfn
@@ -15,10 +14,7 @@ from pkg_resources import resource_filename
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import StaticSetGenerator
-
-if TYPE_CHECKING:
-    from atomate2.vasp.sets.base import VaspInputGenerator
-
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = ["MPPreRelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
 
@@ -28,7 +24,7 @@ _BASE_MP_R2SCAN_RELAX_SET = loadfn(
 
 
 class MPRelaxR2SCANGenerator(VaspInputGenerator):
-    config_dict: dict = field(lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    config_dict: dict = _BASE_MP_R2SCAN_RELAX_SET
 
 
 @dataclass
@@ -106,6 +102,7 @@ class MPRelaxMaker(BaseVaspMaker):
     )
 
     def __post_init__(self):
+        """Set correct k-point density, smearing and sigma based on bandgap estimate."""
         if self.bandgap < 1e-4:
             kspacing = 0.22
             ismear = 2
