@@ -117,9 +117,7 @@ class MPRelaxMaker(BaseVaspMaker):
             sigma = 0.05
 
         self.input_set_generator.config_dict["user_incar_settings"].update(
-            KSPACING=kspacing if 0.22 < kspacing < 0.44 else 0.44,
-            ISMEAR=ismear,
-            SIGMA=sigma,
+            KSPACING=min(kspacing, 0.44), ISMEAR=ismear, SIGMA=sigma
         )
 
 
