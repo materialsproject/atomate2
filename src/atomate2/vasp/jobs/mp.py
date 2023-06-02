@@ -104,12 +104,18 @@ class MPRelaxMaker(BaseVaspMaker):
     def __post_init__(self):
         if self.bandgap < 1e-4:
             kspacing = 0.22
+            ismear = 2
+            sigma = 0.2
         else:
             rmin = 25.22 - 2.87 * self.bandgap
             kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
+            ismear = -5
+            sigma = 0.05
 
         self.input_set_generator.config_dict["user_incar_settings"].update(
-            KSPACING=kspacing if 0.22 < kspacing < 0.44 else 0.44, ISMEAR=0.05, SIGMA=-5
+            KSPACING=kspacing if 0.22 < kspacing < 0.44 else 0.44,
+            ISMEAR=ismear,
+            SIGMA=sigma,
         )
 
 
