@@ -46,6 +46,7 @@ class RelaxSetGenerator(VaspInputGenerator):
         bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
+        **kwargs: Any,
     ) -> dict:
         """
         Get updates to the INCAR for a relaxation job.
@@ -68,7 +69,7 @@ class RelaxSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2}
+        return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2, **kwargs}
 
 
 @dataclass

@@ -1,84 +1,31 @@
-# Default VASP settings for atomate2 calculations.
+# Default VASP settings for calculations in the Materials Project
+# using the Regularized-Restored Strongly Constrained and Appropriately
+# Normed functional (r2SCAN).
 INCAR:
-  ALGO: Fast
-  EDIFF: 1.0e-05
+  ALGO: ALL
+  EDIFF: 1.e-05
   EDIFFG: -0.02
   ENAUG: 1360
   ENCUT: 680
-  GGA: PS
   IBRION: 2
   ISIF: 3
+  ISMEAR: 2
   ISPIN: 2
-  ISMEAR: 0
-  LORBIT: 11
-  LASPH: True
-  LDAU: True
-  LDAUJ:
-    F:
-      Co: 0
-      Cr: 0
-      Fe: 0
-      Mn: 0
-      Mo: 0
-      Ni: 0
-      V: 0
-      W: 0
-    O:
-      Co: 0
-      Cr: 0
-      Fe: 0
-      Mn: 0
-      Mo: 0
-      Ni: 0
-      V: 0
-      W: 0
-  LDAUL:
-    F:
-      Co: 2
-      Cr: 2
-      Fe: 2
-      Mn: 2
-      Mo: 2
-      Ni: 2
-      V: 2
-      W: 2
-    O:
-      Co: 2
-      Cr: 2
-      Fe: 2
-      Mn: 2
-      Mo: 2
-      Ni: 2
-      V: 2
-      W: 2
-  LDAUTYPE: 2
-  LDAUU:
-    F:
-      Co: 3.32
-      Cr: 3.7
-      Fe: 5.3
-      Mn: 3.9
-      Mo: 4.38
-      Ni: 6.2
-      V: 3.25
-      W: 6.2
-    O:
-      Co: 3.32
-      Cr: 3.7
-      Fe: 5.3
-      Mn: 3.9
-      Mo: 4.38
-      Ni: 6.2
-      V: 3.25
-      W: 6.2
-  LDAUPRINT: 1
-  LREAL: False
-  LMIXTAU: True
-  LCHARG: True # Output CHGCAR
+  KSPACING: 0.22
   LAECHG: True # Output AECCAR
-  LELF: False # Don't output ELFCAR by default as it breaks KPAR
-  LWAVE: False # Don't output WAVECAR
+  LASPH: True
+  LCHARG: True # Output CHGCAR
+  LELF: True # Output ELFCAR
+  LMIXTAU: True
+  LORBIT: 11
+  LREAL: Auto
   LVTOT: True # Output LOCPOT
+  LWAVE: False # Don't output WAVECAR
+  METAGGA: R2SCAN
+  NELM: 200
+  NSW: 99
+  PREC: Accurate
+  SIGMA: 0.2
   MAGMOM:
     Ce: 5
     Ce3+: 1
@@ -110,13 +57,6 @@ INCAR:
     V: 5
     W: 5
     Yb3+: 1
-  NELM: 200
-  NSW: 99
-  PREC: Accurate
-  SIGMA: 0.05
-KPOINTS:
-  reciprocal_density: 64
-  reciprocal_density_metal: 200
 POTCAR_FUNCTIONAL: PBE_54
 POTCAR:
   Ac: Ac
@@ -129,8 +69,8 @@ POTCAR:
   Au: Au
   B: B
   Ba: Ba_sv
-  Be: Be
-  Bi: Bi_d
+  Be: Be_sv
+  Bi: Bi
   Br: Br
   C: C
   Ca: Ca_sv
@@ -142,15 +82,15 @@ POTCAR:
   Co: Co
   Cr: Cr_pv
   Cs: Cs_sv
-  Cu: Cu
+  Cu: Cu_pv
   Dy: Dy_3
   Er: Er_3
-  Eu: Eu_2
+  Eu: Eu
   F: F
-  Fe: Fe
+  Fe: Fe_pv
   Fr: Fr_sv
   Ga: Ga_d
-  Gd: Gd_3
+  Gd: Gd
   Ge: Ge_d
   H: H
   He: He
@@ -165,18 +105,18 @@ POTCAR:
   La: La
   Li: Li_sv
   Lu: Lu_3
-  Mg: Mg
+  Mg: Mg_pv
   Mn: Mn_pv
-  Mo: Mo_sv
+  Mo: Mo_pv
   N: N
   Na: Na_pv
-  Nb: Nb_sv
+  Nb: Nb_pv
   Nd: Nd_3
   Ne: Ne
-  Ni: Ni
+  Ni: Ni_pv
   Np: Np
   O: O
-  Os: Os
+  Os: Os_pv
   P: P
   Pa: Pa
   Pb: Pb_d
@@ -188,7 +128,7 @@ POTCAR:
   Pu: Pu
   Ra: Ra_sv
   Rb: Rb_sv
-  Re: Re
+  Re: Re_pv
   Rh: Rh_pv
   Rn: Rn
   Ru: Ru_pv
@@ -205,11 +145,11 @@ POTCAR:
   Tc: Tc_pv
   Te: Te
   Th: Th
-  Ti: Ti_sv
+  Ti: Ti_pv
   Tl: Tl_d
   Tm: Tm_3
   U: U
-  V: V_sv
+  V: V_pv
   W: W_sv
   Xe: Xe
   Y: Y_sv
