@@ -32,14 +32,14 @@ class MP2023RelaxMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    prerelax_maker : .BaseVaspMaker
+    pre_relax_maker : .BaseVaspMaker
         Maker to generate the first relaxation.
     relax_maker : .BaseVaspMaker
         Maker to generate the second relaxation.
     """
 
     name: str = "MP 2023 Relax"
-    prerelax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
+    pre_relax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
     relax_maker: BaseVaspMaker = field(default_factory=MPRelaxMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
@@ -58,8 +58,8 @@ class MP2023RelaxMaker(Maker):
         Flow
             A flow containing two relaxations.
         """
-        prerelax = self.prerelax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-        relax = self.relax_maker(bandgap=prerelax.output.bandgap).make(
-            prerelax.output.structure, prev_vasp_dir=prerelax.output.dir_name
+        pre_relax = self.pre_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        relax = self.relax_maker(bandgap=pre_relax.output.bandgap).make(
+            pre_relax.output.structure, prev_vasp_dir=pre_relax.output.dir_name
         )
-        return Flow([prerelax, relax], relax.output, name=self.name)
+        return Flow([pre_relax, relax], relax.output, name=self.name)

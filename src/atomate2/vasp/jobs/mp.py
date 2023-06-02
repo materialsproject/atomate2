@@ -56,7 +56,7 @@ class MPPreRelaxMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP-PreRelax"
+    name: str = "MP PreRelax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxR2SCANGenerator(
             {"user_incar_settings": {"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}}
@@ -95,7 +95,7 @@ class MPRelaxMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP-Relax"
+    name: str = "MP Relax"
     bandgap: float = 0.0
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPRelaxR2SCANGenerator
@@ -149,5 +149,5 @@ class MPStaticMaker(MPRelaxMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP-Static"
+    name: str = "MP Static"
     input_set_generator: VaspInputGenerator = field(default_factory=StaticSetGenerator)

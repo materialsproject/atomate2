@@ -33,14 +33,14 @@ def clean_dir(debug_mode):
     import tempfile
 
     old_cwd = os.getcwd()
-    newpath = tempfile.mkdtemp()
-    os.chdir(newpath)
+    new_path = tempfile.mkdtemp()
+    os.chdir(new_path)
     yield
     if debug_mode:
-        print(f"Tests ran in {newpath}")
+        print(f"Tests ran in {new_path}")
     else:
         os.chdir(old_cwd)
-        shutil.rmtree(newpath)
+        shutil.rmtree(new_path)
 
 
 @pytest.fixture()
@@ -51,11 +51,11 @@ def tmp_dir():
     import tempfile
 
     old_cwd = os.getcwd()
-    newpath = tempfile.mkdtemp()
-    os.chdir(newpath)
+    new_path = tempfile.mkdtemp()
+    os.chdir(new_path)
     yield
     os.chdir(old_cwd)
-    shutil.rmtree(newpath)
+    shutil.rmtree(new_path)
 
 
 @pytest.fixture(scope="session")
