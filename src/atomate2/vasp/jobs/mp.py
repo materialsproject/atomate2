@@ -1,5 +1,5 @@
 """
-Module defining jobs for Materials Project r2SCAN workflows
+Module defining jobs for Materials Project r2SCAN workflows.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 """
@@ -153,4 +153,4 @@ class MPStaticMaker(MPRelaxMaker):
     """
 
     name: str = "MP-Static"
-    input_set_generator: VaspInputGenerator = field(StaticSetGenerator)
+    input_set_generator: VaspInputGenerator = field(default_factory=StaticSetGenerator)
