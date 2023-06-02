@@ -59,7 +59,7 @@ class MP2023RelaxMaker(Maker):
             A flow containing two relaxations.
         """
         pre_relax = self.pre_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-        relax = self.relax_maker(bandgap=pre_relax.output.bandgap).make(
-            pre_relax.output.structure, prev_vasp_dir=pre_relax.output.dir_name
+        relax = self.relax_maker.make(
+            structure=pre_relax.output.structure, bandgap=pre_relax.output.bandgap
         )
         return Flow([pre_relax, relax], relax.output, name=self.name)

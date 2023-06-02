@@ -7,6 +7,7 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 import numpy as np
 from monty.serialization import loadfn
@@ -15,6 +16,9 @@ from pkg_resources import resource_filename
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import StaticSetGenerator
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = ["MPPreRelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
 
@@ -96,19 +100,18 @@ class MPRelaxMaker(BaseVaspMaker):
     """
 
     name: str = "MP Relax"
-    bandgap: float = 0.0
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPRelaxR2SCANGenerator
     )
 
-    def __post_init__(self):
+    def make(self, structure: Structure, bandgap: float = 0.0) -> MPRelaxMaker:
         """Set correct k-point density, smearing and sigma based on bandgap estimate."""
-        if self.bandgap < 1e-4:
+        if bandgap < 1e-4:
             kspacing = 0.22
             ismear = 2
             sigma = 0.2
         else:
-            rmin = 25.22 - 2.87 * self.bandgap
+            rmin = 25.22 - 2.87 * bandgap
             kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
             ismear = -5
             sigma = 0.05
@@ -116,6 +119,8 @@ class MPRelaxMaker(BaseVaspMaker):
         self.input_set_generator.config_dict["INCAR"].update(
             {"KSPACING": min(kspacing, 0.44), "ISMEAR": ismear, "SIGMA": sigma}
         )
+
+        return super().make(structure=structure)
 
 
 @dataclass
