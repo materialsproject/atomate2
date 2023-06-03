@@ -120,7 +120,9 @@ class BaseVaspMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
 
     @vasp_job
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Response:
         """
         Run a VASP calculation.
 
@@ -130,6 +132,11 @@ class BaseVaspMaker(Maker):
             A pymatgen structure object.
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+            Response: A response object containing the output, detours and stop
+                commands of the VASP run.
         """
         # copy previous inputs
         from_prev = prev_vasp_dir is not None
