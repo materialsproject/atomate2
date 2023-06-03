@@ -77,8 +77,6 @@ class MPRelaxMaker(BaseVaspMaker):
     ----------
     name : str
         The job name.
-    bandgap : float
-        The bandgap of the material in eV. Used to determine the k-point density.
     input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
@@ -104,9 +102,28 @@ class MPRelaxMaker(BaseVaspMaker):
         default_factory=MPRelaxR2SCANGenerator
     )
 
-    def make(self, structure: Structure, bandgap: float = 0.0) -> MPRelaxMaker:
-        """Set correct k-point density, smearing and sigma based on bandgap estimate."""
-        if bandgap < 1e-4:
+    def make(
+        self, structure: Structure, bandgap: float = 0.0, bandgap_tol: float = 1e-4
+    ):
+        """Set correct k-point density, smearing and sigma based on bandgap estimate.
+
+        Parameters
+        ----------
+        structure : pymatgen.Structure
+            The structure to relax.
+        bandgap : float
+            The bandgap of the material in eV. Used to determine the k-point density.
+        bandgap_tol : float
+            The tolerance for the bandgap. If the bandgap is less than this value, the
+            k-point density will be set to 0.22, otherwise it will be set to a value
+            based on the bandgap.
+
+        Returns
+        -------
+        MPRelaxMaker
+            The maker.
+        """
+        if bandgap < bandgap_tol:
             kspacing = 0.22
             ismear = 2
             sigma = 0.2
@@ -132,8 +149,6 @@ class MPStaticMaker(MPRelaxMaker):
     ----------
     name : str
         The job name.
-    bandgap : float
-        The bandgap of the material in eV. Used to determine the k-point density.
     input_set_generator : .VaspInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
