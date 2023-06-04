@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker, MPStaticMaker
+from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker
 
 __all__ = ["MPMetaGGARelax"]
 
@@ -38,15 +38,12 @@ class MPMetaGGARelax(Maker):
         Maker to generate the static calculation before the relaxation.
     final_relax_maker : .BaseVaspMaker
         Maker to generate the second relaxation.
-    final_static_maker : .BaseVaspMaker
-        Maker to generate the static calculation after the relaxation.
     """
 
     name: str = "MP Meta-GGA Relax"
     initial_relax_maker: BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
     initial_static_maker: BaseVaspMaker | None = None
     final_relax_maker: BaseVaspMaker | None = field(default_factory=MPRelaxMaker)
-    final_static_maker: BaseVaspMaker | None = field(default_factory=MPStaticMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -107,16 +104,5 @@ class MPMetaGGARelax(Maker):
             bandgap = output.bandgap
             prev_vasp_dir = output.dir_name
             jobs += [final_relax]
-
-        # Run a final static calculation (typically r2SCAN)
-        if self.final_static_maker:
-            final_static = self.final_static_maker.make(
-                structure, bandgap=bandgap, prev_vasp_dir=prev_vasp_dir
-            )
-            output = final_static.output
-            structure = output.structure
-            bandgap = output.bandgap
-            prev_vasp_dir = output.dir_name
-            jobs += [final_static]
 
         return Flow(jobs, output, name=self.name)

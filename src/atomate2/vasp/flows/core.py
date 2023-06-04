@@ -352,7 +352,7 @@ class HSELineModeBandStructureMaker(LineModeBandStructureMaker):
 @dataclass
 class RelaxBandStructureMaker(Maker):
     """
-    Make to create a flow with a relaxation and then band structure calculations.
+    Maker to create a flow with a relaxation and then band structure calculations.
 
     By default, this workflow generates relaxations using the :obj:`.DoubleRelaxMaker`.
 
