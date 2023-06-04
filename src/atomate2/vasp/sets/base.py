@@ -935,7 +935,11 @@ def _set_lmaxtau(incar, incar_settings, structure):
     # Note that if the user explicitly sets LMAXMIX in settings it will override this logic.
     # See VASP manual for more details.
     blocks = [site.specie.block for site in structure]
-    if "LMAXMIX" not in incar_settings and incar_settings.get("LASPH", False) is True and "f" in blocks:
+    if (
+        "LMAXMIX" not in incar_settings
+        and incar_settings.get("LASPH", False)
+        and "f" in blocks
+    ):
         incar["LMAXTAU"] = 8
 
 
