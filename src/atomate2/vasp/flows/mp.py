@@ -60,6 +60,8 @@ class MP2023RelaxMaker(Maker):
         """
         pre_relax = self.pre_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
         relax = self.relax_maker.make(
-            structure=pre_relax.output.structure, bandgap=pre_relax.output.bandgap
+            structure=pre_relax.output.structure,
+            bandgap=pre_relax.output.bandgap,
+            prev_vasp_dir=pre_relax.output.dir_name,
         )
         return Flow([pre_relax, relax], relax.output, name=self.name)
