@@ -77,7 +77,7 @@ class MPMetaGGARelax(Maker):
         jobs += [initial_relax]
 
         # Run a static calculation (typically r2SCAN) before the relaxation.
-        # See https://doi.org/10.1038/s41524-022-00881-w
+        # Useful for the mixing scheme in https://doi.org/10.1038/s41524-022-00881-w
         if self.initial_static_maker:
             initial_static = self.initial_static_maker.make(
                 structure,
