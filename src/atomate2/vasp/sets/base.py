@@ -625,6 +625,7 @@ class VaspInputGenerator(InputGenerator):
             else:
                 incar[k] = v
         _set_u_params(incar, incar_settings, structure)
+        _set_lmaxtau(incar, incar_settings, structure)
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
@@ -925,6 +926,13 @@ def _set_u_params(incar, incar_settings, structure):
         # contains d-electrons
         elif any(el.Z > 20 for el in structure.composition):
             incar["LMAXMIX"] = 4
+
+
+def _set_lmaxtau(incar, incar_settings, structure):
+    if incar_settings.get("LASPH", False) is True and any(
+        el.Z > 56 for el in structure.composition
+    ):
+        incar["LMAXTAU"] = 8
 
 
 def _apply_incar_updates(incar, updates, skip=None):
