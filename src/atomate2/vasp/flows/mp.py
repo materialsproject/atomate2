@@ -32,21 +32,21 @@ class MPMetaGGARelax(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    pre_relax_maker : .BaseVaspMaker
+    initial_relax_maker : .BaseVaspMaker
         Maker to generate the first relaxation.
-    pre_static_maker : .BaseVaspMaker
+    initial_static_maker : .BaseVaspMaker
         Maker to generate the static calculation before the relaxation.
-    relax_maker : .BaseVaspMaker
+    final_relax_maker : .BaseVaspMaker
         Maker to generate the second relaxation.
-    static_maker : .BaseVaspMaker
+    final_static_maker : .BaseVaspMaker
         Maker to generate the static calculation after the relaxation.
     """
 
     name: str = "MP Meta-GGA Relax"
-    pre_relax_maker: BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
-    pre_static_maker: BaseVaspMaker | None = None
-    relax_maker: BaseVaspMaker | None = field(default_factory=MPRelaxMaker)
-    static_maker: BaseVaspMaker | None = field(default_factory=MPStaticMaker)
+    initial_relax_maker: BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
+    initial_static_maker: BaseVaspMaker | None = None
+    final_relax_maker: BaseVaspMaker | None = field(default_factory=MPRelaxMaker)
+    final_static_maker: BaseVaspMaker | None = field(default_factory=MPStaticMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -71,11 +71,11 @@ class MPMetaGGARelax(Maker):
         jobs = []
 
         # Run a pre-relaxation (typically PBEsol)
-        if self.pre_relax_maker:
-            pre_relax = self.pre_relax_maker.make(
+        if self.initial_relax_maker:
+            initial_relax = self.initial_relax_maker.make(
                 structure, prev_vasp_dir=prev_vasp_dir
             )
-            output = pre_relax.output
+            output = initial_relax.output
             structure = output.structure
             bandgap = output.bandgap
             prev_vasp_dir = output.dir_name
@@ -83,40 +83,40 @@ class MPMetaGGARelax(Maker):
 
         # Run a static calculation (typically r2SCAN) before the relaxation.
         # See https://doi.org/10.1038/s41524-022-00881-w
-        if self.pre_static_maker:
-            pre_static = self.pre_static_maker.make(
+        if self.initial_static_maker:
+            initial_static = self.initial_static_maker.make(
                 structure,
                 bandgap=bandgap,
                 prev_vasp_dir=prev_vasp_dir,
             )
-            output = pre_static.output
+            output = initial_static.output
             structure = output.structure
             bandgap = output.bandgap
             prev_vasp_dir = output.dir_name
-            jobs += [pre_static]
+            jobs += [initial_static]
 
         # Run a relaxation (typically r2SCAN)
-        if self.relax_maker:
-            relax = self.relax_maker.make(
+        if self.final_relax_maker:
+            final_relax = self.final_relax_maker.make(
                 structure=structure,
                 bandgap=bandgap,
                 prev_vasp_dir=prev_vasp_dir,
             )
-            output = relax.output
+            output = final_relax.output
             structure = output.structure
             bandgap = output.bandgap
             prev_vasp_dir = output.dir_name
-            jobs += [relax]
+            jobs += [final_relax]
 
         # Run a final static calculation (typically r2SCAN)
-        if self.static_maker:
-            static = self.static_maker.make(
+        if self.final_static_maker:
+            final_static = self.final_static_maker.make(
                 structure, bandgap=bandgap, prev_vasp_dir=prev_vasp_dir
             )
-            output = static.output
+            output = final_static.output
             structure = output.structure
             bandgap = output.bandgap
             prev_vasp_dir = output.dir_name
-            jobs += [static]
+            jobs += [final_static]
 
         return Flow(jobs, output, name=self.name)
