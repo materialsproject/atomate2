@@ -50,7 +50,9 @@ class MPMetaGGARelax(Maker):
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
-        Create a flow with two chained relaxations.
+        Create a flow consisting of a cheap pre-relaxation step and a high-quality
+        relaxation step. An optional static calculation can be performed before and
+        after the relaxation.
 
         Parameters
         ----------
