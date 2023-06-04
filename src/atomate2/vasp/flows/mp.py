@@ -41,7 +41,7 @@ class MPMetaGGARelax(Maker):
     """
 
     name: str = "MP Meta-GGA Relax"
-    initial_relax_maker: BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
+    initial_relax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
     initial_static_maker: BaseVaspMaker | None = None
     final_relax_maker: BaseVaspMaker | None = field(default_factory=MPRelaxMaker)
 
@@ -64,19 +64,17 @@ class MPMetaGGARelax(Maker):
             A flow containing the MP relaxation workflow.
         """
         # Define initial parameters
-        bandgap = 0.0
         jobs = []
 
         # Run a pre-relaxation (typically PBEsol)
-        if self.initial_relax_maker:
-            initial_relax = self.initial_relax_maker.make(
-                structure, prev_vasp_dir=prev_vasp_dir
-            )
-            output = initial_relax.output
-            structure = output.structure
-            bandgap = output.bandgap
-            prev_vasp_dir = output.dir_name
-            jobs += [initial_relax]
+        initial_relax = self.initial_relax_maker.make(
+            structure, prev_vasp_dir=prev_vasp_dir
+        )
+        output = initial_relax.output
+        structure = output.structure
+        bandgap = output.bandgap
+        prev_vasp_dir = output.dir_name
+        jobs += [initial_relax]
 
         # Run a static calculation (typically r2SCAN) before the relaxation.
         # See https://doi.org/10.1038/s41524-022-00881-w
