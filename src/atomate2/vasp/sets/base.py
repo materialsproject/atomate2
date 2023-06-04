@@ -936,7 +936,7 @@ def _set_lmaxtau(incar, incar_settings, structure):
     # See VASP manual for more details.
     blocks = [site.specie.block for site in structure]
     if (
-        "LMAXMIX" not in incar_settings
+        "LMAXTAU" not in incar_settings
         and incar_settings.get("LASPH", False)
         and "f" in blocks
     ):
