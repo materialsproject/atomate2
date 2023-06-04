@@ -919,12 +919,13 @@ def _set_u_params(incar, incar_settings, structure):
     # investigation it was determined that this would lead to a significant difference
     # between SCF -> NonSCF even without Hubbard U enabled. Thanks to Andrew Rosen for
     # investigating and reporting.
+    blocks = [site.specie.block for site in struct]
     if "LMAXMIX" not in incar_settings.keys():
         # contains f-electrons
-        if any(el.Z > 56 for el in structure.composition):
+        if "d" in blocks:
             incar["LMAXMIX"] = 6
         # contains d-electrons
-        elif any(el.Z > 20 for el in structure.composition):
+        elif "p" in blocks:
             incar["LMAXMIX"] = 4
 
 
@@ -933,9 +934,8 @@ def _set_lmaxtau(incar, incar_settings, structure):
 
     # Set LMAXTAU = 8 if LASPH = True and there are f-electrons present
     # See VASP manual for more details.
-    if incar_settings.get("LASPH", False) is True and any(
-        el.Z > 56 for el in structure.composition
-    ):
+    blocks = [site.specie.block for site in struct]
+    if incar_settings.get("LASPH", False) is True and "f" in blocks:
         incar["LMAXTAU"] = 8
 
 
