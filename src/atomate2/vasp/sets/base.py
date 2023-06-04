@@ -321,7 +321,7 @@ class VaspInputGenerator(InputGenerator):
             if self.vdw not in vdw_par:
                 raise KeyError(
                     "Invalid or unsupported van-der-Waals functional. Supported "
-                    f"functionals are {vdw_par.keys()}"
+                    f"functionals are {vdw_par}"
                 )
             self.config_dict["INCAR"].update(vdw_par[self.vdw])
 
@@ -629,7 +629,7 @@ class VaspInputGenerator(InputGenerator):
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
-        skip = list(self.user_incar_settings.keys())
+        skip = list(self.user_incar_settings)
         skip += ["MAGMOM", "NUPDOWN", "LDAUU", "LDAUL", "LDAUJ", "LMAXMIX"]
         _apply_incar_updates(incar, previous_incar, skip=skip)
 
@@ -675,10 +675,10 @@ class VaspInputGenerator(InputGenerator):
                 incar["ISMEAR"] = 0
 
         # apply specified updates, be careful not to override user_incar_settings
-        _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings.keys())
+        _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings)
 
         # Remove unused INCAR parameters
-        _remove_unused_incar_params(incar, skip=self.user_incar_settings.keys())
+        _remove_unused_incar_params(incar, skip=self.user_incar_settings)
 
         return incar
 
@@ -906,10 +906,10 @@ def _get_ediff(param, value, structure, incar_settings):
 
 def _set_u_params(incar, incar_settings, structure):
     """Modify INCAR for use with U parameters."""
-    has_u = incar_settings.get("LDAU", False) and sum(incar["LDAUU"]) > 0
+    has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
     if not has_u:
-        for key in list(incar.keys()):
+        for key in list(incar):
             if key.startswith("LDAU"):
                 del incar[key]
 

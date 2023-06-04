@@ -372,7 +372,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         cp2k_objects = all_cp2k_objects[-1]
         included_objects = None
         if cp2k_objects:
-            included_objects = list(cp2k_objects.keys())
+            included_objects = list(cp2k_objects)
 
         if isinstance(calcs_reversed[-1].output.structure, Structure):
             attr = "from_structure"
