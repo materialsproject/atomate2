@@ -190,7 +190,7 @@ class MPStaticMaker(BaseVaspMaker):
         return super().make(structure=structure)
 
 
-def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> dict[str, float]:
+def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> dict[str, int | float]:
     """Get the k-point density, smearing and sigma based on bandgap estimate.
 
     Parameters
@@ -198,22 +198,17 @@ def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> dict[str, float]
     bandgap : float
         The bandgap of the material in eV. Used to determine the k-point density.
     bandgap_tol : float
-        The tolerance for the bandgap. If the bandgap is less than this value, the
-        k-point density will be set to 0.22, otherwise it will be set to a value
-        based on the bandgap.
+        Tolerance for metallic bandgap. If bandgap < bandgap_tol, KSPACING will be 0.22,
+        otherwise it will increase with bandgap up to a max of 0.44.
 
     Returns
     -------
     Dict
         {"KSPACING": float, "ISMEAR": int, "SIGMA": float}
     """
-    if bandgap < bandgap_tol:
-        kspacing = 0.22
-        ismear = 2
-        sigma = 0.2
-    else:
-        rmin = 25.22 - 2.87 * bandgap
-        kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
-        ismear = -5
-        sigma = 0.05
-    return {"KSPACING": min(kspacing, 0.44), "ISMEAR": ismear, "SIGMA": sigma}
+    if bandgap < bandgap_tol:  # metallic
+        return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}
+
+    rmin = 25.22 - 2.87 * bandgap
+    kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
+    return {"KSPACING": min(kspacing, 0.44), "ISMEAR": -5, "SIGMA": 0.05}
