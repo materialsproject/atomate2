@@ -98,9 +98,6 @@ class MPMetaGGARelax(Maker):
                 prev_vasp_dir=prev_vasp_dir,
             )
             output = final_relax.output
-            structure = output.structure
-            bandgap = output.bandgap
-            prev_vasp_dir = output.dir_name
             jobs += [final_relax]
 
         return Flow(jobs, output, name=self.name)
