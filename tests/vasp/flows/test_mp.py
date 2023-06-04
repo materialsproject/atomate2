@@ -1,51 +1,85 @@
 import pytest
+from pytest import approx
 
 from atomate2.vasp.flows.mp import MPMetaGGARelax
-from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker
+from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker, _get_kspacing_params
+
+expected_incar = {
+    "ISIF": 3,
+    "IBRION": 2,
+    "NSW": 99,
+    "ISMEAR": 0,
+    "SIGMA": 0.05,
+    "LREAL": False,
+    "LWAVE": False,
+    "LCHARG": True,
+    "EDIFF": 1e-05,
+    "EDIFFG": -0.02,
+    "GGA": "PS",
+}
 
 
-def test_MPMetaGGARelax_default_values():
-    job = MPMetaGGARelax()
+def test_MPPreRelaxMaker_default_values():
+    maker = MPPreRelaxMaker()
+    assert maker.name == "MP PreRelax"
+    assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
+    for key, expected in expected_incar.items():
+        actual = maker.input_set_generator.config_dict["INCAR"][key]
+        assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
-    assert isinstance(job.pre_relax_maker, MPPreRelaxMaker)
-    assert job.pre_relax_maker.name == "MP PreRelax"
 
-    assert isinstance(job.relax_maker, MPRelaxMaker)
-    assert job.relax_maker.name == "MP Relax"
+def test_MPRelaxMaker_default_values():
+    maker = MPRelaxMaker()
+    assert maker.name == "MP Relax"
+    assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
+    for key, expected in expected_incar.items():
+        actual = maker.input_set_generator.config_dict["INCAR"][key]
+        assert actual == expected, f"{key=}, {actual=}, {expected=}"
+
+
+@pytest.mark.parametrize(
+    "initial_static_maker,final_relax_maker",
+    [
+        (MPPreRelaxMaker(), MPRelaxMaker()),
+        (MPPreRelaxMaker(), None),
+        (None, MPRelaxMaker()),
+        (None, None),  # test it works without optional makers
+    ],
+)
+def test_MPMetaGGARelax_default_values(initial_static_maker, final_relax_maker):
+    job = MPMetaGGARelax(
+        initial_relax_maker=initial_static_maker, final_relax_maker=final_relax_maker
+    )
+    assert isinstance(job.initial_relax_maker, type(initial_static_maker))
+    if initial_static_maker:
+        assert job.initial_relax_maker.name == "MP PreRelax"
+
+    assert isinstance(job.final_relax_maker, type(final_relax_maker))
+    if final_relax_maker:
+        assert job.final_relax_maker.name == "MP Relax"
 
     assert job.name == "MP Meta-GGA Relax"
 
 
-@pytest.mark.parametrize(
-    "name, pre_relax_maker, relax_maker",
-    [
-        ("Test", MPPreRelaxMaker(), MPRelaxMaker()),
-        ("Relax", MPPreRelaxMaker(), MPRelaxMaker()),
-    ],
-)
-def test_MPMetaGGARelax_custom_values(name, pre_relax_maker, relax_maker):
-    maker = MPMetaGGARelax(
-        name=name, pre_relax_maker=pre_relax_maker, relax_maker=relax_maker
+def test_MPMetaGGARelax_custom_values():
+    initial_relax_maker = MPPreRelaxMaker()
+    final_relax_maker = MPRelaxMaker()
+    job = MPMetaGGARelax(
+        name="Test",
+        initial_relax_maker=initial_relax_maker,
+        final_relax_maker=final_relax_maker,
     )
-    assert maker.name == name
-    assert maker.pre_relax_maker == pre_relax_maker
-    assert maker.relax_maker == relax_maker
+    assert job.name == "Test"
+    assert job.initial_relax_maker == initial_relax_maker
+    assert job.final_relax_maker == final_relax_maker
 
 
-# @pytest.mark.parametrize("prev_vasp_dir", [None, "/dummy/dir", Path("/dummy/dir")])
-# def test_make(si_structure, dummy_flow, prev_vasp_dir):
-#     # Mock the make method to return a dummy flow
-#     maker = MPMetaGGARelax()
-#     flow = maker.make(si_structure, prev_vasp_dir)
+def test_get_kspacing_params():
+    bandgap = 0.05
+    bandgap_tol = 0.1
+    params = _get_kspacing_params(bandgap, bandgap_tol)
+    assert params["KSPACING"] == 0.22
 
-#     assert len(flow.jobs) == 2
-#     assert flow.jobs[0].output == dummy_flow.output
-#     assert flow.output == dummy_flow.output
-#     assert flow.name == maker.name
-
-#     MPPreRelaxMaker.make.assert_called_once_with(
-#         si_structure, prev_vasp_dir=prev_vasp_dir
-#     )
-#     MPRelaxMaker.make.assert_called_once_with(
-#         dummy_flow.output.structure, prev_vasp_dir=dummy_flow.output.dir_name
-#     )
+    bandgap = 1.0
+    params = _get_kspacing_params(bandgap, bandgap_tol)
+    assert params["KSPACING"] == approx(0.30235235)
