@@ -922,10 +922,10 @@ def _set_u_params(incar, incar_settings, structure):
     blocks = [site.specie.block for site in structure]
     if "LMAXMIX" not in incar_settings:
         # contains f-electrons
-        if "d" in blocks:
+        if "f" in blocks:
             incar["LMAXMIX"] = 6
         # contains d-electrons
-        elif "p" in blocks:
+        elif "d" in blocks:
             incar["LMAXMIX"] = 4
 
 
