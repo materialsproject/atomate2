@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker
 
-__all__ = ["MP2023RelaxMaker"]
+__all__ = ["MPMetaGGARelax"]
 
 
 @dataclass
