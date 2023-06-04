@@ -79,7 +79,7 @@ class MPMetaGGARelax(Maker):
             structure = output.structure
             bandgap = output.bandgap
             prev_vasp_dir = output.dir_name
-            jobs += [pre_relax]
+            jobs += [initial_relax]
 
         # Run a static calculation (typically r2SCAN) before the relaxation.
         # See https://doi.org/10.1038/s41524-022-00881-w
