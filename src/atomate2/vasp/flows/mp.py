@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker
+from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker, MPStaticMaker
 
 __all__ = ["MPMetaGGARelax"]
 
@@ -34,13 +34,19 @@ class MPMetaGGARelax(Maker):
         Name of the flows produced by this maker.
     pre_relax_maker : .BaseVaspMaker
         Maker to generate the first relaxation.
+    pre_static_maker : .BaseVaspMaker
+        Maker to generate the static calculation before the relaxation.
     relax_maker : .BaseVaspMaker
         Maker to generate the second relaxation.
+    static_maker : .BaseVaspMaker
+        Maker to generate the static calculation after the relaxation.
     """
 
     name: str = "MP Meta-GGA Relax"
-    pre_relax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
-    relax_maker: BaseVaspMaker = field(default_factory=MPRelaxMaker)
+    pre_relax_maker: BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
+    pre_static_maker: BaseVaspMaker | None = None
+    relax_maker: BaseVaspMaker | None = field(default_factory=MPRelaxMaker)
+    static_maker: BaseVaspMaker | None = field(default_factory=MPStaticMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -58,10 +64,57 @@ class MPMetaGGARelax(Maker):
         Flow
             A flow containing two relaxations.
         """
-        pre_relax = self.pre_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-        relax = self.relax_maker.make(
-            structure=pre_relax.output.structure,
-            bandgap=pre_relax.output.bandgap,
-            prev_vasp_dir=pre_relax.output.dir_name,
-        )
-        return Flow([pre_relax, relax], relax.output, name=self.name)
+        # Define initial parameters
+        bandgap = 0.0
+        jobs = []
+
+        # Run a pre-relaxation (typically PBEsol)
+        if self.pre_relax_maker:
+            pre_relax = self.pre_relax_maker.make(
+                structure, prev_vasp_dir=prev_vasp_dir
+            )
+            output = pre_relax.output
+            structure = output.structure
+            bandgap = output.bandgap
+            prev_vasp_dir = output.dir_name
+            jobs += [pre_relax]
+
+        # Run a static calculation (typically r2SCAN) before the relaxation.
+        # See https://doi.org/10.1038/s41524-022-00881-w
+        if self.pre_static_maker:
+            pre_static = self.pre_static_maker.make(
+                structure,
+                bandgap=bandgap,
+                prev_vasp_dir=prev_vasp_dir,
+            )
+            output = pre_static.output
+            structure = output.structure
+            bandgap = output.bandgap
+            prev_vasp_dir = output.dir_name
+            jobs += [pre_static]
+
+        # Run a relaxation (typically r2SCAN)
+        if self.relax_maker:
+            relax = self.relax_maker.make(
+                structure=structure,
+                bandgap=bandgap,
+                prev_vasp_dir=prev_vasp_dir,
+            )
+            output = relax.output
+            structure = output.structure
+            bandgap = output.bandgap
+            prev_vasp_dir = output.dir_name
+            jobs += [relax]
+
+        # Run a final static calculation (typically r2SCAN)
+        if self.static_maker:
+            static = self.static_maker.make(
+                structure, bandgap=bandgap, prev_vasp_dir=prev_vasp_dir
+            )
+            output = static.output
+            structure = output.structure
+            bandgap = output.bandgap
+            prev_vasp_dir = output.dir_name
+            jobs += [static]
+
+        return Flow(jobs, output, name=self.name)

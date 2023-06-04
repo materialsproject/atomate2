@@ -7,7 +7,7 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 import numpy as np
 from monty.serialization import loadfn
@@ -123,25 +123,15 @@ class MPRelaxMaker(BaseVaspMaker):
         MPRelaxMaker
             The maker.
         """
-        if bandgap < bandgap_tol:
-            kspacing = 0.22
-            ismear = 2
-            sigma = 0.2
-        else:
-            rmin = 25.22 - 2.87 * bandgap
-            kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
-            ismear = -5
-            sigma = 0.05
-
         self.input_set_generator.config_dict["INCAR"].update(
-            {"KSPACING": min(kspacing, 0.44), "ISMEAR": ismear, "SIGMA": sigma}
+            _get_kspacing_params(bandgap, bandgap_tol)
         )
 
         return super().make(structure=structure)
 
 
 @dataclass
-class MPStaticMaker(MPRelaxMaker):
+class MPStaticMaker(BaseVaspMaker):
     """
     Maker to create VASP static job using r2SCAN by default.
 
@@ -171,3 +161,60 @@ class MPStaticMaker(MPRelaxMaker):
 
     name: str = "MP Static"
     input_set_generator: VaspInputGenerator = field(default_factory=StaticSetGenerator)
+
+    def make(
+        self, structure: Structure, bandgap: float = 0.0, bandgap_tol: float = 1e-4
+    ):
+        """Set correct k-point density, smearing and sigma based on bandgap estimate.
+
+        Parameters
+        ----------
+        structure : pymatgen.Structure
+            The structure to relax.
+        bandgap : float
+            The bandgap of the material in eV. Used to determine the k-point density.
+        bandgap_tol : float
+            The tolerance for the bandgap. If the bandgap is less than this value, the
+            k-point density will be set to 0.22, otherwise it will be set to a value
+            based on the bandgap.
+
+        Returns
+        -------
+        MPRelaxMaker
+            The maker.
+        """
+
+        self.input_set_generator.config_dict["INCAR"].update(
+            _get_kspacing_params(bandgap, bandgap_tol)
+        )
+
+        return super().make(structure=structure)
+
+
+def _get_kspacing_params(bandgap, bandgap_tol) -> Dict:
+    """Get the k-point density, smearing and sigma based on bandgap estimate.
+
+    Parameters
+    ----------
+    bandgap : float
+        The bandgap of the material in eV. Used to determine the k-point density.
+    bandgap_tol : float
+        The tolerance for the bandgap. If the bandgap is less than this value, the
+        k-point density will be set to 0.22, otherwise it will be set to a value
+        based on the bandgap.
+
+    Returns
+    -------
+    Dict
+        {"KSPACING": float, "ISMEAR": int, "SIGMA": float}
+    """
+    if bandgap < bandgap_tol:
+        kspacing = 0.22
+        ismear = 2
+        sigma = 0.2
+    else:
+        rmin = 25.22 - 2.87 * bandgap
+        kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
+        ismear = -5
+        sigma = 0.05
+    return {"KSPACING": min(kspacing, 0.44), "ISMEAR": ismear, "SIGMA": sigma}
