@@ -7,7 +7,7 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
 import numpy as np
 from monty.serialization import loadfn
@@ -180,10 +180,9 @@ class MPStaticMaker(BaseVaspMaker):
 
         Returns
         -------
-        MPRelaxMaker
-            The maker.
+            Response: A response object containing the output, detours and stop
+                commands of the VASP run.
         """
-
         self.input_set_generator.config_dict["INCAR"].update(
             _get_kspacing_params(bandgap, bandgap_tol)
         )
@@ -191,7 +190,7 @@ class MPStaticMaker(BaseVaspMaker):
         return super().make(structure=structure)
 
 
-def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> Dict:
+def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> dict[str, float]:
     """Get the k-point density, smearing and sigma based on bandgap estimate.
 
     Parameters
