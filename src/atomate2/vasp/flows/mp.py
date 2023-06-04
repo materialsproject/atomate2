@@ -64,7 +64,7 @@ class MPMetaGGARelax(Maker):
         Returns
         -------
         Flow
-            A flow containing two relaxations.
+            A flow containing the MP relaxation workflow.
         """
         # Define initial parameters
         bandgap = 0.0
