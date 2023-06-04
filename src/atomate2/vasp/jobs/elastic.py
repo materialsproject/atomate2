@@ -163,9 +163,9 @@ def generate_elastic_deformations(
         deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
         logger.info(
             f"Using symmetry to reduce number of deformations from {len(deformations)} "
-            f"to {len(list(deformation_mapping.keys()))}"
+            f"to {len(deformation_mapping)}"
         )
-        deformations = list(deformation_mapping.keys())
+        deformations = list(deformation_mapping)
 
     return deformations
 
