@@ -24,7 +24,7 @@ __all__ = ["MP2023RelaxMaker"]
 
 
 @dataclass
-class MP2023RelaxMaker(Maker):
+class MPMetaGGARelax(Maker):
     """
     Maker to perform a VASP r2SCAN relaxation workflow with MP settings.
 
@@ -38,7 +38,7 @@ class MP2023RelaxMaker(Maker):
         Maker to generate the second relaxation.
     """
 
-    name: str = "MP 2023 Relax"
+    name: str = "MP Meta-GGA Relax"
     pre_relax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
     relax_maker: BaseVaspMaker = field(default_factory=MPRelaxMaker)
 
