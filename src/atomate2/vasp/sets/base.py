@@ -929,6 +929,10 @@ def _set_u_params(incar, incar_settings, structure):
 
 
 def _set_lmaxtau(incar, incar_settings, structure):
+    "Modify LMAXTAU for use with LASPH."
+
+    # Set LMAXTAU = 8 if LASPH = True and there are f-electrons present
+    # See VASP manual for more details.
     if incar_settings.get("LASPH", False) is True and any(
         el.Z > 56 for el in structure.composition
     ):
