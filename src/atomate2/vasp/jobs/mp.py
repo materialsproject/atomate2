@@ -191,7 +191,7 @@ class MPStaticMaker(BaseVaspMaker):
         return super().make(structure=structure)
 
 
-def _get_kspacing_params(bandgap, bandgap_tol) -> Dict:
+def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> Dict:
     """Get the k-point density, smearing and sigma based on bandgap estimate.
 
     Parameters
