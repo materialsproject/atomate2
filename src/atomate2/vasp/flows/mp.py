@@ -14,6 +14,7 @@ from jobflow import Flow, Maker
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Job
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -47,9 +48,9 @@ class MPMetaGGARelax(Maker):
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
-        Create a flow consisting of a cheap pre-relaxation step and a high-quality
-        relaxation step. An optional static calculation can be performed before and
-        after the relaxation.
+        Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
+
+        An optional static calculation can be performed before the relaxation.
 
         Parameters
         ----------
@@ -64,7 +65,7 @@ class MPMetaGGARelax(Maker):
             A flow containing the MP relaxation workflow.
         """
         # Define initial parameters
-        jobs = []
+        jobs: list[Job] = []
 
         # Run a pre-relaxation (typically PBEsol)
         initial_relax = self.initial_relax_maker.make(

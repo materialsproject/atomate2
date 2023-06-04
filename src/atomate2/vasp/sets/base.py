@@ -930,8 +930,7 @@ def _set_u_params(incar, incar_settings, structure):
 
 
 def _set_lmaxtau(incar, incar_settings, structure):
-    "Modify LMAXTAU for use with LASPH."
-
+    """Modify LMAXTAU for use with LASPH."""
     # Set LMAXTAU = 8 if LASPH = True and there are f-electrons present
     # See VASP manual for more details.
     blocks = [site.specie.block for site in struct]
