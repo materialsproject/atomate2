@@ -947,7 +947,7 @@ def _set_lmaxtau(incar, incar_settings, structure):
 
 def _set_efermi(incar, incar_settings, vasp_min_version):
     """Set EFERMI = MIDGAP if VASP >= 6.4."""
-    if "EFERMI" not in incar_settings and vasp_min_version>=6.4:
+    if "EFERMI" not in incar_settings and vasp_min_version >= 6.4:
         incar["EFERMI"] = "MIDGAP"
     elif isinstance(incar_settings.get("EFERMI"), str) and vasp_min_version < 6.4:
         del incar["EFERMI"]
