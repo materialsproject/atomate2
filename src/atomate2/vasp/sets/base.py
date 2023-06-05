@@ -949,7 +949,7 @@ def _set_efermi(incar, incar_settings, vasp_min_version):
     """Set EFERMI = MIDGAP if VASP >= 6.4."""
     if "EFERMI" not in incar_settings and vasp_min_version>=6.4:
         incar["EFERMI"] = "MIDGAP"
-    elif isinstance(efermi_setting, str) and vasp_min_version < 6.4:
+    elif isinstance(incar_settings.get("EFERMI"), str) and vasp_min_version < 6.4:
         del incar["EFERMI"]
 
 
