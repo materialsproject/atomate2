@@ -71,7 +71,7 @@ strict = [
     "numpy",
     "phonopy==2.19.1",
     "pydantic==1.10.8",
-    "pymatgen-analysis-defects==2023.5.8",
+    "pymatgen-analysis-defects==2023.6.1",
     "pymatgen==2023.5.31",
     "seekpath==2.1.0",
     "typing-extensions==4.6.3",
