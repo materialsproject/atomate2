@@ -505,10 +505,7 @@ class VaspInputGenerator(InputGenerator):
         comp = structure.composition.element_composition
         nelect = sum(num_atoms * nelec[str(el)] for el, num_atoms in comp.items())
 
-        if self.use_structure_charge:
-            return nelect - structure.charge
-
-        return nelect
+        return nelect - structure.charge if self.use_structure_charge else nelect
 
     def _get_previous(self, structure: Structure = None, prev_dir: str | Path = None):
         """Load previous calculation outputs and decide which structure to use."""
@@ -626,6 +623,7 @@ class VaspInputGenerator(InputGenerator):
                 incar[k] = v
         _set_u_params(incar, incar_settings, structure)
         _set_lmaxtau(incar, incar_settings, structure)
+        _set_efermi(incar, incar_settings, vasp_min_version)
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
@@ -938,10 +936,15 @@ def _set_lmaxtau(incar, incar_settings, structure):
     if (
         "LMAXTAU" not in incar_settings
         and incar_settings.get("LASPH", False)
-        and incar_settings.get("METAGGA") 
+        and incar_settings.get("METAGGA")
         and "f" in blocks
     ):
         incar["LMAXTAU"] = 8
+
+
+def _set_efermi(incar, incar_settings, vasp_min_version):
+    if "EFERMI" not in incar_settings and vasp_min_version >= 6.4:
+        incar["EFERMI"] = "MIDGAP"
 
 
 def _apply_incar_updates(incar, updates, skip=None):
@@ -1007,7 +1010,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
     weights = []
 
     for kpoints_object in filter(None, kpoints_objects):
-        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != Kpoints.supported_modes.Reciprocal:
             raise ValueError(
                 "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
             )
@@ -1045,6 +1048,4 @@ def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
 
 def _get_recommended_lreal(structure: Structure):
     """Get recommended LREAL flag based on the structure."""
-    if structure.num_sites > 16:
-        return "Auto"
-    return False
+    return "Auto" if structure.num_sites > 16 else False
