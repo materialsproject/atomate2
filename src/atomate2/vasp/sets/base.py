@@ -280,6 +280,8 @@ class VaspInputGenerator(InputGenerator):
         If True, automatically use the VASP recommended LREAL based on cell size.
     config_dict
         The config dictionary to use containing the base input set settings.
+    vasp_min_version
+        The minimum version of VASP that the input set is compatible with.
     """
 
     user_incar_settings: dict = field(default_factory=dict)
@@ -298,6 +300,7 @@ class VaspInputGenerator(InputGenerator):
     auto_ispin: bool = False
     auto_lreal: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
+    vasp_min_version: float = SETTINGS.VASP_MIN_VERSION
 
     def __post_init__(self):
         """Post init formatting of arguments."""
@@ -623,7 +626,7 @@ class VaspInputGenerator(InputGenerator):
                 incar[k] = v
         _set_u_params(incar, incar_settings, structure)
         _set_lmaxtau(incar, incar_settings, structure)
-        _set_efermi(incar, incar_settings, vasp_min_version)
+        _set_efermi(incar, incar_settings, self.vasp_min_version)
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
