@@ -938,6 +938,7 @@ def _set_lmaxtau(incar, incar_settings, structure):
     if (
         "LMAXTAU" not in incar_settings
         and incar_settings.get("LASPH", False)
+        and incar_settings.get("METAGGA") 
         and "f" in blocks
     ):
         incar["LMAXTAU"] = 8
