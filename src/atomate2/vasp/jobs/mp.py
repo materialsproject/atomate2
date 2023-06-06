@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 __all__ = ["MPPreRelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
 
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
-    resource_filename("atomate2.vasp.sets", "BaseMPr2SCANRelaxSet.yaml")
+    resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
 )
 
 
