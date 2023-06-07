@@ -1,4 +1,5 @@
 (running_workflows)=
+
 # Running Workflows
 
 ## Introduction
@@ -44,9 +45,9 @@ jobs. You'll keep all of the files for this tutorial there.
 
 Workflows in atomate2 are composed of two objects:
 
-- Jobs: A single unit of computation. Roughly speaking, each `job` corresponds to one
+* Jobs: A single unit of computation. Roughly speaking, each `job` corresponds to one
   VASP calculation.
-- Flows: A collection of `jobs` connected together. The band structure workflow we are
+* Flows: A collection of `jobs` connected together. The band structure workflow we are
   running is an example of a `flow`. `Flows` can be nested, for example, you could
   have multiple band structure `flows` in a single workflow.
 
@@ -79,6 +80,7 @@ run_locally(bandstructure_flow, create_folders=True)
 ```
 
 (running_the_workflow)=
+
 ### Running the workflow
 
 Similar, to the installation tutorial, now create a job script to execute the workflow.
@@ -155,18 +157,18 @@ If you open the saved figures, you should see a plot of your DOS and bandstructu
 
 ![MgO density of states](../_static/MgO-dos.png)
 
-![MgO band structure](../_static/MgO-bandstructure.png)
+![MgO bandstructure](../_static/MgO-bandstructure.png)
 
 ## Conclusion
 
-In this tutorial you learned how to run a band structure workflow and plot the outputs.
+In this tutorial, you learned how to run a band structure workflow and plot the outputs.
 
 To see what workflows can be run, see the [](vasp_workflows). They
-can be set up and  run in the same way as in this tutorial.
+can be set up and run in the same way as in this tutorial.
 
 At this point, you might:
 
-- Learn how to chain workflows together: [](connecting_vasp_jobs).
-- Learn how to customise VASP input settings: [](modifying_input_sets).
-- Configure atomate2 with FireWorks to manage and execute many workflows at once:
+* Learn how to chain workflows together: [](connecting_vasp_jobs).
+* Learn how to customise VASP input settings: [](modifying_input_sets).
+* Configure atomate2 with FireWorks to manage and execute many workflows at once:
   [](atomate2_FireWorks).
