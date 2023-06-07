@@ -1,14 +1,14 @@
 import logging
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import Final, Literal, Sequence
 
 import pytest
 
 logger = logging.getLogger("atomate2")
 
-_VFILES = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS = {}
-_FAKE_RUN_VASP_KWARGS = {}
+_VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
+_REF_PATHS: dict[str, str | Path] = {}
+_FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 
 
 @pytest.fixture(scope="session")
@@ -107,7 +107,7 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
 
 def fake_run_vasp(
-    ref_path: Union[str, Path],
+    ref_path: Path,
     incar_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
@@ -129,8 +129,6 @@ def fake_run_vasp(
         Whether to clear input files before copying in the reference VASP outputs.
     """
     logger.info("Running fake VASP.")
-
-    ref_path = Path(ref_path)
 
     if "incar" in check_inputs:
         check_incar(ref_path, incar_settings)
@@ -159,7 +157,7 @@ def fake_run_vasp(
     logger.info("Generated fake vasp outputs")
 
 
-def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
+def check_incar(ref_path: Path, incar_settings: Sequence[str]):
     from pymatgen.io.vasp import Incar
 
     user = Incar.from_file("INCAR")
@@ -173,7 +171,7 @@ def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
             )
 
 
-def check_kpoints(ref_path: Union[str, Path]):
+def check_kpoints(ref_path: Path):
     from pymatgen.io.vasp import Incar, Kpoints
 
     user_kpoints_exists = Path("KPOINTS").exists()
@@ -206,7 +204,7 @@ def check_kpoints(ref_path: Union[str, Path]):
             )
 
 
-def check_poscar(ref_path: Union[str, Path]):
+def check_poscar(ref_path: Path):
     import numpy as np
     from pymatgen.io.vasp import Poscar
     from pymatgen.util.coord import pbc_diff
@@ -225,7 +223,7 @@ def check_poscar(ref_path: Union[str, Path]):
         raise ValueError("POSCAR files are inconsistent")
 
 
-def check_potcar(ref_path: Union[str, Path]):
+def check_potcar(ref_path: Path):
     from pymatgen.io.vasp import Potcar
 
     if Path(ref_path / "inputs" / "POTCAR").exists():
@@ -262,7 +260,7 @@ def clear_vasp_inputs():
     logger.info("Cleared vasp inputs")
 
 
-def copy_vasp_outputs(ref_path: Union[str, Path]):
+def copy_vasp_outputs(ref_path: Path):
     import shutil
 
     output_path = ref_path / "outputs"
