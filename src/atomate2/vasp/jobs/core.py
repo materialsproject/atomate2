@@ -529,7 +529,7 @@ class TransmuterMaker(BaseVaspMaker):
         transmuter = StandardTransmuter([ts], transformations)
         structure = transmuter.transformed_structures[-1].final_structure
 
-        # to avoid mongoDB errors, ":" is automatically converted to "."
+        # to avoid MongoDB errors, ":" is automatically converted to "."
         if "transformations:json" not in self.write_additional_data:
             tjson = transmuter.transformed_structures[-1]
             self.write_additional_data["transformations:json"] = tjson

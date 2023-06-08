@@ -3,7 +3,7 @@ default_language_version:
 exclude: '^src/atomate2/vasp/schemas/calc_types/|^.github/'
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.270
+  rev: v0.0.271
   hooks:
   - id: ruff
     args: [--fix]

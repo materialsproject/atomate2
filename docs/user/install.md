@@ -163,7 +163,7 @@ install it by following the installation instructions for
    conda environment folder.
 3. Consider adding `conda activate atomate2` to your .bashrc or .bash_profile file so
    that it is run whenever you log in. Otherwise, note that you must call this command
-   after every log in before you can do work on your atomate project.
+   after every login before you can do work on your atomate project.
 
 ## Install Python packages
 
@@ -177,7 +177,7 @@ pip install atomate2
 
 ## Configure calculation output database
 
-The next step is to configure your mongoDB database that will be used to store
+The next step is to configure your MongoDB database that will be used to store
 calculation outputs.
 
 ```{note}
@@ -224,7 +224,7 @@ JOB_STORE:
 ```
 
 ````{note}
-If you're using a mongoDB hosted on Atlas (using the free plan linked above) the
+If you're using a MongoDB hosted on Atlas (using the free plan linked above) the
 connection format is slightly different. Instead your `jobflow.yaml` file should
 contain the following.
 
@@ -279,21 +279,21 @@ Write the `atomate2.yaml` file with the following content,
 VASP_CMD: <<VASP_CMD>>
 ```
 
-The is the command that you would use to run VASP with parallelization
+This is the command that you would use to run VASP with parallelization
 (`srun -n 16 vasp`, `ibrun -n 16 vasp`, `mpirun -n 16 vasp`, ...).
 
 ### Finishing up
 
 The directory structure of `<<INSTALL_DIR>>/config` should now look like
 
-```
+```txt
 config
 ├── jobflow.yaml
 └── atomate2.yaml
 ```
 
-The last thing we need to do to configure atomate2 is add the following lines to your
-.bashrc / .bash_profile file to set an environment variable telling atomate2 and jobflow
+The last thing to configure atomate2 is to add the following lines to your
+.bashrc / .bash_profile file to set an environment variable telling atomate2 and `jobflow`
 where to find the config files.
 
 ```bash
@@ -305,14 +305,14 @@ where `<<INSTALL_DIR>>` is your installation directory.
 
 ## Configure pymatgen
 
-If you're planning to run VASP, the last configuration step is to configure pymatgen to
+If you're planning to run VASP, the last configuration step is to configure `pymatgen` to
 (required) find the pseudopotentials for VASP and (optional) set up your API key from
 the [Materials Project].
 
 ### Pseudopotentials
 
-The psuedopotentials should be available on the compute machine. Follow the
-[pseudopotential installation instructions in the pymatgen documentation](https://pymatgen.org/installation.html#potcar-setup)
+The pseudopotentials should be available on the compute machine. Follow the
+[pseudopotential installation instructions in the `pymatgen` documentation](https://pymatgen.org/installation.html#potcar-setup)
 and then return to this tutorial.
 
 ### Materials Project API key
@@ -331,7 +331,7 @@ PMG_MAPI_KEY: <<YOUR_API_KEY>>
 ## Run a test workflow
 
 To make sure that everything is set up correctly and in place, we'll finally run a
-simple (but real) test workflow. We will first define a python script to run the
+simple (but real) test workflow. We will first define a Python script to run the
 workflow. Next, we'll submit a job to run the script. Finally, we'll examine the
 database to check the job output. In this tutorial, we will be submitting an individual
 workflow manually. If you want to manage and execute many workflows simultaneously
@@ -344,8 +344,8 @@ workflows.
 
 ### Define the workflow
 
-Workflows are written using the jobflow software. Essentially, individual stages of
-a workflow are simple python functions. Jobflow provides a way to connect jobs together
+Workflows are written using the `jobflow` software. Essentially, individual stages of
+a workflow are simple Python functions. Jobflow provides a way to connect jobs together
 in a natural way. For more details on connecting jobs together see:
 [](connecting_vasp_jobs).
 
@@ -371,7 +371,7 @@ relax_job = RelaxMaker().make(si_structure)
 run_locally(relax_job, create_folders=True)
 ```
 
-The `run_locally` function is a jobflow command that will execute the workflow on
+The `run_locally` function is a `jobflow` command that will execute the workflow on
 the current computing resource.
 
 ### Submit the workflow
@@ -425,7 +425,7 @@ result = store.query_one(
 print(result)
 ```
 
-We query the database using the mongoDB query language. You can also connect to the
+We query the database using the MongoDB query language. You can also connect to the
 database using graphical tools, such as [Robo3T](https://robomongo.org) to explore your
 results.
 
@@ -446,12 +446,12 @@ See the following pages for more information on the topics we covered here:
 
 ## Troubleshooting and FAQ
 
-### My job failed!
+### My job failed
 
 Check the job error files in the launch directory for any errors. Also check the job
 standard output for a full log of the workflow execution and to check for a Python
 traceback.
 
-### I honestly tried everything I can to solve my problem. I still need help!
+### I honestly tried everything I can to solve my problem. I still need help
 
 There is a [support forum for atomate2](https://discuss.matsci.org/c/atomate).
