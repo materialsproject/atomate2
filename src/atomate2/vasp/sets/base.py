@@ -860,14 +860,14 @@ def _get_magmoms(magmoms, structure):
         "magmom on the site directly to ensure correct initialization."
     )
     for site in structure:
-        if hasattr(site, "magmom"):
-            mag.append(site.magmom)
-        elif hasattr(site.specie, "spin"):
-            mag.append(site.specie.spin)
-        elif str(site.specie) in magmoms:
+        if str(site.specie) in magmoms:
             if site.specie.symbol == "Co" and magmoms[str(site.specie)] <= 1.0:
                 warnings.warn(msg, stacklevel=2)
             mag.append(magmoms.get(str(site.specie)))
+        elif hasattr(site, "magmom"):
+            mag.append(site.magmom)
+        elif hasattr(site.specie, "spin"):
+            mag.append(site.specie.spin)
         else:
             if site.specie.symbol == "Co":
                 warnings.warn(msg, stacklevel=2)
