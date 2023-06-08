@@ -1,14 +1,14 @@
 import logging
 from pathlib import Path
-from typing import Final, Literal, Sequence, Union
+from typing import Dict, Final, Literal, Sequence, Union
 
 import pytest
 
 logger = logging.getLogger("atomate2")
 
 _VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS: dict[str, Union[str, Path]] = {}
-_FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
+_REF_PATHS: Dict[str, Union[str, Path]] = {}
+_FAKE_RUN_VASP_KWARGS: Dict[str, dict] = {}
 
 
 @pytest.fixture(scope="session")
