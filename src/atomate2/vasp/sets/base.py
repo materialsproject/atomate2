@@ -9,7 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Sequence
 
 import numpy as np
 from monty.io import zopen
@@ -598,32 +598,33 @@ class VaspInputGenerator(InputGenerator):
 
     def _get_incar(
         self,
-        structure: Structure,
+        structure,
         kpoints: Kpoints,
         previous_incar: dict = None,
         incar_updates: dict = None,
         bandgap: float = None,
         ispin: int = None,
-    ) -> Incar:
+    ):
         """Get the INCAR."""
         previous_incar = {} if previous_incar is None else previous_incar
         incar_updates = {} if incar_updates is None else incar_updates
         incar_settings = dict(self.config_dict["INCAR"])
+        base_magmoms = incar_settings.get("MAGMOM", {})
 
         # apply user incar settings to SETTINGS not to INCAR
         _apply_incar_updates(incar_settings, self.user_incar_settings)
 
         # generate incar
         incar = Incar()
-        for key, val in incar_settings.items():
-            if key == "MAGMOM":
-                incar[key] = _get_magmoms(val, structure)
-            elif key in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU"):
-                incar[key] = _get_u_param(key, val, structure)
-            elif key.startswith("EDIFF") and key != "EDIFFG":
-                incar["EDIFF"] = _get_ediff(key, val, structure, incar_settings)
+        for k, v in incar_settings.items():
+            if k == "MAGMOM":
+                incar[k] = _get_magmoms(structure, base_magmoms=base_magmoms, magmoms=v)
+            elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
+                incar[k] = _get_u_param(k, v, structure)
+            elif k.startswith("EDIFF") and k != "EDIFFG":
+                incar["EDIFF"] = _get_ediff(k, v, structure, incar_settings)
             else:
-                incar[key] = val
+                incar[k] = v
         _set_u_params(incar, incar_settings, structure)
 
         # apply previous incar settings, be careful not to override user_incar_settings
@@ -851,8 +852,14 @@ class VaspInputGenerator(InputGenerator):
         return None
 
 
-def _get_magmoms(magmoms, structure):
+def _get_magmoms(
+    structure: Structure,
+    magmoms: dict[str, float] = None,
+    base_magmoms: dict[str, float] = None,
+) -> list[float]:
     """Get the mamgoms."""
+    magmoms = magmoms or {}
+    base_magmoms = base_magmoms or {}
     mag = []
     msg = (
         "Co without an oxidation state is initialized as low spin by default in "
@@ -860,14 +867,19 @@ def _get_magmoms(magmoms, structure):
         "magmom on the site directly to ensure correct initialization."
     )
     for site in structure:
-        if str(site.specie) in magmoms:
-            if site.specie.symbol == "Co" and magmoms[str(site.specie)] <= 1.0:
+        specie = str(site.specie)
+        if specie in magmoms:
+            if site.specie.symbol == "Co" and magmoms[specie] <= 1.0:
                 warnings.warn(msg, stacklevel=2)
-            mag.append(magmoms.get(str(site.specie)))
+            mag.append(magmoms.get(specie))
         elif hasattr(site, "magmom"):
             mag.append(site.magmom)
         elif hasattr(site.specie, "spin"):
             mag.append(site.specie.spin)
+        elif specie in base_magmoms:
+            if site.specie.symbol == "Co" and base_magmoms[specie] <= 1.0:
+                warnings.warn(msg, stacklevel=2)
+            mag.append(base_magmoms.get(specie))
         else:
             if site.specie.symbol == "Co":
                 warnings.warn(msg, stacklevel=2)
@@ -927,7 +939,7 @@ def _set_u_params(incar, incar_settings, structure):
             incar["LMAXMIX"] = 4
 
 
-def _apply_incar_updates(incar, updates, skip=None):
+def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
     """
     Apply updates to an INCAR file.
 
@@ -940,7 +952,6 @@ def _apply_incar_updates(incar, updates, skip=None):
     skip
         Keys to skip.
     """
-    skip = () if skip is None else skip
     for k, v in updates.items():
         if k in skip:
             continue
@@ -951,7 +962,7 @@ def _apply_incar_updates(incar, updates, skip=None):
             incar[k] = v
 
 
-def _remove_unused_incar_params(incar, skip=None):
+def _remove_unused_incar_params(incar, skip: Sequence[str] = ()):
     """
     Remove INCAR parameters that are not actively used by VASP.
 
@@ -962,8 +973,6 @@ def _remove_unused_incar_params(incar, skip=None):
     skip
         Keys to skip.
     """
-    skip = () if skip is None else skip
-
     # Turn off IBRION/ISIF/POTIM if NSW = 0
     opt_flags = ["EDIFFG", "IBRION", "ISIF", "POTIM"]
     if incar.get("NSW", 0) == 0:

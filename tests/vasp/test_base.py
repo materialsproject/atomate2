@@ -4,7 +4,8 @@ from pymatgen.core import Lattice, Structure
 from atomate2.vasp.sets.base import _get_magmoms
 
 
-def test_get_magmoms():
+@pytest.mark.parametrize("base_magmoms", [None, {"Co": 0.9, "Fe": 2}])
+def test_get_magmoms(base_magmoms: dict[str, float]) -> None:
     magmoms = {"Co": 0.8, "Fe": 2.2}  # dummy magmoms
 
     # structure with Co that will be assigned magmoms
@@ -22,7 +23,9 @@ def test_get_magmoms():
     # check there are no warnings
     for struct in [structure_with_magmoms, structure_without_magmoms]:
         with pytest.warns(UserWarning) as warns:
-            mag_values = _get_magmoms(magmoms, struct)
-        assert mag_values == list(magmoms.values())
+            out = _get_magmoms(struct, magmoms=magmoms, base_magmoms=base_magmoms)
+
+        expected_magmoms = list((magmoms or base_magmoms).values())
+        assert out == expected_magmoms
         assert len(warns) == 1
         assert str(warns[0].message).startswith(msg)
