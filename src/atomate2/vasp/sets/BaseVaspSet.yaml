@@ -3,7 +3,6 @@ INCAR:
   ALGO: Fast
   EDIFF: 1.0e-05
   EDIFFG: -0.02
-  EFERMI: Midgap
   ENAUG: 1360
   ENCUT: 680
   GGA: PS
