@@ -620,7 +620,7 @@ class VaspInputGenerator(InputGenerator):
         previous_incar = {} if previous_incar is None else previous_incar
         incar_updates = {} if incar_updates is None else incar_updates
         incar_settings = dict(self.config_dict["INCAR"])
-        base_magmoms = incar_settings.get("MAGMOM", {})
+        config_magmoms = incar_settings.get("MAGMOM", {})
 
         # apply user incar settings to SETTINGS not to INCAR
         _apply_incar_updates(incar_settings, self.user_incar_settings)
@@ -629,7 +629,9 @@ class VaspInputGenerator(InputGenerator):
         incar = Incar()
         for k, v in incar_settings.items():
             if k == "MAGMOM":
-                incar[k] = _get_magmoms(structure, base_magmoms=base_magmoms, magmoms=v)
+                incar[k] = _get_magmoms(
+                    structure, config_magmoms=config_magmoms, magmoms=v
+                )
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
                 incar[k] = _get_u_param(k, v, structure)
             elif k.startswith("EDIFF") and k != "EDIFFG":
@@ -866,7 +868,7 @@ class VaspInputGenerator(InputGenerator):
 def _get_magmoms(
     structure: Structure,
     magmoms: dict[str, float] = None,
-    base_magmoms: dict[str, float] = None,
+    config_magmoms: dict[str, float] = None,
 ) -> list[float]:
     """Get the mamgoms using the following precedence.
 
@@ -877,7 +879,7 @@ def _get_magmoms(
     5. set all magmoms to 0.6
     """
     magmoms = magmoms or {}
-    base_magmoms = base_magmoms or {}
+    config_magmoms = config_magmoms or {}
     mag = []
     msg = (
         "Co without an oxidation state is initialized as low spin by default in "
@@ -892,10 +894,10 @@ def _get_magmoms(
             mag.append(site.magmom)
         elif hasattr(site.specie, "spin"):
             mag.append(site.specie.spin)
-        elif specie in base_magmoms:
-            if site.specie.symbol == "Co" and base_magmoms[specie] <= 1.0:
+        elif specie in config_magmoms:
+            if site.specie.symbol == "Co" and config_magmoms[specie] <= 1.0:
                 warnings.warn(msg, stacklevel=2)
-            mag.append(base_magmoms.get(specie))
+            mag.append(config_magmoms.get(specie))
         else:
             if site.specie.symbol == "Co":
                 warnings.warn(msg, stacklevel=2)
