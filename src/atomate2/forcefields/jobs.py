@@ -104,3 +104,86 @@ class CHGNetStaticMaker(CHGNetRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+
+
+@dataclass
+class M3GNetRelaxMaker(Maker):
+    """
+    Maker to perform a relaxation using the M3GNet universal ML force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "M3GNet relax"
+    relax_cell: bool = False
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    @job(output_schema=ForceFieldTaskDocument)
+    def make(self, structure: Structure):
+        """
+        Perform a relaxation of a structure using M3GNet.
+
+        Parameters
+        ----------
+        structure: .Structure
+            A pymatgen structure.
+        """
+        from matgl.apps.pes import Potential
+        from matgl.ext.ase import Relaxer
+        from matgl.models._m3gnet import M3GNet
+        from pymatgen.io.ase import AseAtomsAdaptor
+
+        if self.steps < 0:
+            logger.warning(
+                "WARNING: A negative number of steps is not possible. "
+                "Behavior may vary..."
+            )
+
+        # Note: the below code was taken from the matgl repo examples.
+        # Load pre-trained M3GNet model (defaults to MP-2021.2.8 database)
+        model, d = M3GNet.load("M3GNet-MP-2021.2.8-EFS", include_json=True)
+        metadata = d["metadata"]
+        data_std = metadata["data_std"]
+        metadata["data_mean"]
+        element_refs = metadata["element_refs"]
+
+        ff = Potential(model, data_std=data_std, element_refs=element_refs)
+
+        AseAtomsAdaptor()
+
+        relaxer = Relaxer(
+            potential=ff,
+            relax_cell=self.relax_cell,
+            **self.optimizer_kwargs,
+        )
+
+        result = relaxer.relax(
+            structure,
+            steps=self.steps,
+            **self.relax_kwargs,
+        )
+
+        return ForceFieldTaskDocument.from_m3gnet_result(
+            result,
+            self.relax_cell,
+            self.steps,
+            self.relax_kwargs,
+            self.optimizer_kwargs,
+            **self.task_document_kwargs,
+        )

@@ -218,6 +218,7 @@ class ForceFieldTaskDocument(StructureMetadata):
 
         import chgnet
 
+        forcefield_name = "CHGNet"
         version = chgnet.__version__
 
         return cls.from_structure(
@@ -225,6 +226,140 @@ class ForceFieldTaskDocument(StructureMetadata):
             structure=output_structure,
             input=input_doc,
             output=output_doc,
-            forcefield_name="CHGNet",
+            forcefield_name=forcefield_name,
+            forcefield_version=version,
+        )
+
+    @classmethod
+    def from_m3gnet_result(
+        cls,
+        result: dict,
+        relax_cell: bool,
+        steps: int,
+        relax_kwargs: dict = None,
+        optimizer_kwargs: dict = None,
+        ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
+    ):
+        """
+        Create a ForceFieldTaskDocument for a M3GNet Task.
+
+        Parameters
+        ----------
+        result : dict
+            The outputted results from the task.
+        relax_cell : bool
+            Whether the cell shape/volume was allowed to change during the task.
+        steps : int
+            Maximum number of ionic steps allowed during relaxation.
+        relax_kwargs : dict
+            Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        optimizer_kwargs : dict
+            Keyword arguments that will get passed to :obj:`Relaxer()`.
+        ionic_step_data : tuple
+            Which data to save from each ionic step.
+        """
+        trajectory = result["trajectory"].__dict__
+
+        # NOTE: units for stresses were converted to kbar (* -10 from standard output)
+        # to comply with MP convention
+        for i in range(0, len(trajectory["stresses"])):
+            trajectory["stresses"][i] = trajectory["stresses"][i] * -10
+
+        species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
+
+        input_structure = Structure(
+            lattice=trajectory["cells"][0],
+            coords=trajectory["atom_positions"][0],
+            species=species,
+            coords_are_cartesian=True,
+        )
+
+        input_doc = InputDoc(
+            structure=input_structure,
+            relax_cell=relax_cell,
+            steps=steps,
+            relax_kwargs=relax_kwargs,
+            optimizer_kwargs=optimizer_kwargs,
+        )
+
+        # Workaround for cases where the ASE optimizer does not correctly limit the
+        # number of steps for static calculations.
+        if steps <= 1:
+            steps = 1
+            for key in trajectory:
+                trajectory[key] = [trajectory[key][0]]
+            output_structure = input_structure
+        else:
+            output_structure = result["final_structure"]
+
+        final_energy = trajectory["energies"][-1]
+        final_energy_per_atom = trajectory["energies"][-1] / input_structure.num_sites
+        final_forces = trajectory["forces"][-1].tolist()
+        final_stress = trajectory["stresses"][-1].tolist()
+
+        n_steps = len(trajectory["energies"])
+
+        ionic_steps = []
+        for i in range(0, n_steps):
+            cur_energy = (
+                trajectory["energies"][i] if "energy" in ionic_step_data else None
+            )
+            cur_forces = (
+                trajectory["forces"][i].tolist()
+                if "forces" in ionic_step_data
+                else None
+            )
+            cur_magmoms = (
+                trajectory["magmoms"][i].tolist()
+                if "magmoms" in ionic_step_data
+                else None
+            )
+            cur_stress = (
+                trajectory["stresses"][i].tolist()
+                if "stress" in ionic_step_data
+                else None
+            )
+
+            if "structure" in ionic_step_data:
+                cur_structure = Structure(
+                    lattice=trajectory["cells"][i],
+                    coords=trajectory["atom_positions"][i],
+                    species=species,
+                    coords_are_cartesian=True,
+                )
+            else:
+                cur_structure = None
+
+            ionic_steps.append(
+                IonicStep(
+                    energy=cur_energy,
+                    forces=cur_forces,
+                    magmoms=cur_magmoms,
+                    stress=cur_stress,
+                    structure=cur_structure,
+                )
+            )
+
+        output_doc = OutputDoc(
+            structure=output_structure,
+            energy=final_energy,
+            energy_per_atom=final_energy_per_atom,
+            forces=final_forces,
+            stress=final_stress,
+            ionic_steps=ionic_steps,
+            n_steps=n_steps,
+        )
+
+        import matgl
+
+        forcefield_name = "M3GNet"
+        version = matgl.__version__
+
+        return cls.from_structure(
+            meta_structure=output_structure,
+            structure=output_structure,
+            input=input_doc,
+            output=output_doc,
+            forcefield_name=forcefield_name,
             forcefield_version=version,
         )
