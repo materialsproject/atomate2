@@ -214,6 +214,15 @@ class VaspInputGenerator(InputGenerator):
     """
     A class to generate VASP input sets.
 
+    .. Note::
+       Get the magmoms using the following precedence.
+
+        1. user incar settings
+        2. magmoms in input struct
+        3. spins in input struct
+        4. job config dict
+        5. set all magmoms to 0.6
+
     Parameters
     ----------
     user_incar_settings
@@ -227,6 +236,8 @@ class VaspInputGenerator(InputGenerator):
         so these keys can be defined in one of two ways, e.g. either
         {"LDAUU":{"O":{"Fe":5}}} to set LDAUU for Fe to 5 in an oxide, or
         {"LDAUU":{"Fe":5}} to set LDAUU to 5 regardless of the input structure.
+        To set magmoms, pass a dict mapping element symbols to magnetic moments, e.g.
+        {"MAGMOM": {"Co": 1}}.
         If None is given, that key is unset. For example, {"ENCUT": None} will remove
         ENCUT from the incar settings.
     user_kpoints_settings
@@ -857,7 +868,14 @@ def _get_magmoms(
     magmoms: dict[str, float] = None,
     base_magmoms: dict[str, float] = None,
 ) -> list[float]:
-    """Get the mamgoms."""
+    """Get the mamgoms using the following precedence.
+
+    1. user incar settings
+    2. magmoms in input struct
+    3. spins in input struct
+    4. job config dict
+    5. set all magmoms to 0.6
+    """
     magmoms = magmoms or {}
     base_magmoms = base_magmoms or {}
     mag = []
@@ -869,8 +887,6 @@ def _get_magmoms(
     for site in structure:
         specie = str(site.specie)
         if specie in magmoms:
-            if site.specie.symbol == "Co" and magmoms[specie] <= 1.0:
-                warnings.warn(msg, stacklevel=2)
             mag.append(magmoms.get(specie))
         elif hasattr(site, "magmom"):
             mag.append(site.magmom)
