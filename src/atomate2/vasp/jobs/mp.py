@@ -160,7 +160,11 @@ class MPStaticMaker(BaseVaspMaker):
     """
 
     name: str = "MP Static"
-    input_set_generator: VaspInputGenerator = field(default_factory=StaticSetGenerator)
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: MPRelaxR2SCANGenerator(
+            user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False}
+        )
+    )
 
     def make(
         self, structure: Structure, bandgap: float = 0.0, bandgap_tol: float = 1e-4
