@@ -19,13 +19,13 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker
+from atomate2.vasp.jobs.mp import MPMetaRelaxMaker, MPPreRelaxMaker
 
-__all__ = ["MPMetaGGARelax"]
+__all__ = ["MPMetaRelax"]
 
 
 @dataclass
-class MPMetaGGARelax(Maker):
+class MPMetaRelax(Maker):
     """
     Maker to perform a VASP r2SCAN relaxation workflow with MP settings.
 
@@ -44,7 +44,7 @@ class MPMetaGGARelax(Maker):
     name: str = "MP Meta-GGA Relax"
     initial_relax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
     initial_static_maker: BaseVaspMaker | None = None
-    final_relax_maker: BaseVaspMaker | None = field(default_factory=MPRelaxMaker)
+    final_relax_maker: BaseVaspMaker | None = field(default_factory=MPMetaRelaxMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """

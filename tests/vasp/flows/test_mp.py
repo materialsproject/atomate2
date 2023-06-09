@@ -1,8 +1,12 @@
 import pytest
 from pytest import approx
 
-from atomate2.vasp.flows.mp import MPMetaGGARelax
-from atomate2.vasp.jobs.mp import MPPreRelaxMaker, MPRelaxMaker, _get_kspacing_params
+from atomate2.vasp.flows.mp import MPMetaRelax
+from atomate2.vasp.jobs.mp import (
+    MPMetaRelaxMaker,
+    MPPreRelaxMaker,
+    _get_kspacing_params,
+)
 
 expected_incar = {
     "ISIF": 3,
@@ -28,8 +32,8 @@ def test_MPPreRelaxMaker_default_values():
         assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
 
-def test_MPRelaxMaker_default_values():
-    maker = MPRelaxMaker()
+def test_MPMetaRelaxMaker_default_values():
+    maker = MPMetaRelaxMaker()
     assert maker.name == "MP Relax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
     for key, expected in expected_incar.items():
@@ -40,14 +44,14 @@ def test_MPRelaxMaker_default_values():
 @pytest.mark.parametrize(
     "initial_static_maker,final_relax_maker",
     [
-        (MPPreRelaxMaker(), MPRelaxMaker()),
+        (MPPreRelaxMaker(), MPMetaRelaxMaker()),
         (MPPreRelaxMaker(), None),
-        (None, MPRelaxMaker()),
+        (None, MPMetaRelaxMaker()),
         (None, None),  # test it works without optional makers
     ],
 )
-def test_MPMetaGGARelax_default_values(initial_static_maker, final_relax_maker):
-    job = MPMetaGGARelax(
+def test_MPMetaRelax_default_values(initial_static_maker, final_relax_maker):
+    job = MPMetaRelax(
         initial_relax_maker=initial_static_maker, final_relax_maker=final_relax_maker
     )
     assert isinstance(job.initial_relax_maker, type(initial_static_maker))
@@ -61,10 +65,10 @@ def test_MPMetaGGARelax_default_values(initial_static_maker, final_relax_maker):
     assert job.name == "MP Meta-GGA Relax"
 
 
-def test_MPMetaGGARelax_custom_values():
+def test_MPMetaRelax_custom_values():
     initial_relax_maker = MPPreRelaxMaker()
-    final_relax_maker = MPRelaxMaker()
-    job = MPMetaGGARelax(
+    final_relax_maker = MPMetaRelaxMaker()
+    job = MPMetaRelax(
         name="Test",
         initial_relax_maker=initial_relax_maker,
         final_relax_maker=final_relax_maker,

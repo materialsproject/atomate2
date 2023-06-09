@@ -27,7 +27,7 @@ _BASE_MP_R2SCAN_RELAX_SET = loadfn(
 )
 
 
-class MPRelaxR2SCANGenerator(VaspInputGenerator):
+class MPMetaRelaxGenerator(VaspInputGenerator):
     config_dict: dict = _BASE_MP_R2SCAN_RELAX_SET
 
 
@@ -62,14 +62,14 @@ class MPPreRelaxMaker(BaseVaspMaker):
 
     name: str = "MP PreRelax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPRelaxR2SCANGenerator(
+        default_factory=lambda: MPMetaRelaxGenerator(
             user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
         )
     )
 
 
 @dataclass
-class MPRelaxMaker(BaseVaspMaker):
+class MPMetaRelaxMaker(BaseVaspMaker):
     """
     Maker to create VASP relaxation job using r2SCAN by default.
 
@@ -99,7 +99,7 @@ class MPRelaxMaker(BaseVaspMaker):
 
     name: str = "MP Relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPRelaxR2SCANGenerator
+        default_factory=MPMetaRelaxGenerator
     )
 
     def make(
@@ -131,7 +131,7 @@ class MPRelaxMaker(BaseVaspMaker):
 
 
 @dataclass
-class MPStaticMaker(BaseVaspMaker):
+class MPMetaStaticMaker(BaseVaspMaker):
     """
     Maker to create VASP static job using r2SCAN by default.
 
@@ -161,7 +161,7 @@ class MPStaticMaker(BaseVaspMaker):
 
     name: str = "MP Static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPRelaxR2SCANGenerator(
+        default_factory=lambda: MPMetaRelaxGenerator(
             user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False}
         )
     )
