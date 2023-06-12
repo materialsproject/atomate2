@@ -50,9 +50,13 @@ class DfptFlowMaker(Maker):
     use_dde_sym : bool
         True if only the irreducible DDE perturbations should be considered,
             False otherwise.
-    use_dte_sym : bool
-        True if only the irreducible DTE perturbations should be considered,
-            False otherwise.
+    dte_skip_permutations: Since the current version of abinit always performs
+        all the permutations of the perturbations, even if only one is asked,
+        if True avoids the creation of inputs that will produce duplicated outputs.
+    dte_phonon_pert: is True also the phonon perturbations will be considered.
+        Default False.
+    dte_ixc: Value of ixc variable. Used to overwrite the default value read
+        from pseudos.
     """
 
     name: str = "DFPT"
@@ -64,7 +68,9 @@ class DfptFlowMaker(Maker):
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
     use_ddk_sym: bool | None = False
     use_dde_sym: bool | None = False
-    use_dte_sym: bool | None = False
+    dte_skip_permutations: bool | None = False
+    dte_phonon_pert: bool | None = False
+    dte_ixc: int | None = None
 
     def make(
         self,
@@ -92,15 +98,15 @@ class DfptFlowMaker(Maker):
         if self.ddk_maker:
             # generate the perturbations for the DDK calculations
             ddk_perts = generate_ddk_perts(
-                structure=structure,
+                gsinput=static_job.output.abinit_input,  # TODO: is that possible?
                 use_symmetries=self.use_ddk_sym,
             )
             jobs.append(ddk_perts)
 
             # perform the DDK calculations
             ddk_calcs = run_ddk_rf(
-                prev_outputs=static_job.output.dir_name,
                 perturbations=ddk_perts.output,
+                prev_outputs=static_job.output.dir_name,
                 structure=structure,
             )
             jobs.append(ddk_calcs)
@@ -108,15 +114,15 @@ class DfptFlowMaker(Maker):
         if self.dde_maker:
             # generate the perturbations for the DDE calculations
             dde_perts = generate_dde_perts(
-                structure=structure,
+                gsinput=static_job.output.abinit_input,  # TODO: is that possible?
                 use_symmetries=self.use_dde_sym,
             )
             jobs.append(dde_perts)
 
             # perform the DDE calculations
             dde_calcs = run_dde_rf(
-                prev_outputs=[static_job.output.dir_name, ddk_calcs.output.dir_name],
                 perturbations=dde_perts.output,
+                prev_outputs=[static_job.output.dir_name, ddk_calcs.output.dir_name],
                 structure=structure,
             )
             jobs.append(dde_calcs)
@@ -124,19 +130,21 @@ class DfptFlowMaker(Maker):
         if self.dte_maker:
             # generate the perturbations for the DTE calculations
             dte_perts = generate_dte_perts(
-                structure=structure,
-                use_symmetries=self.use_dte_sym,
+                gsinput=static_job.output.abinit_input,  # TODO: is that possible?
+                skip_permutations=self.dte_skip_permutations,
+                phonon_pert=self.dte_phonon_pert,
+                ixc=self.dte_ixc,
             )
             jobs.append(dte_perts)
 
             # perform the DTE calculations
             dte_calcs = run_dte_rf(
+                perturbations=dte_perts.output,
                 prev_outputs=[
                     static_job.output.dir_name,
                     ddk_calcs.output.dir_name,
                     dde_calcs.output.dir_name,
                 ],
-                perturbations=dte_perts.output,
                 structure=structure,
             )
             jobs.append(dte_calcs)
@@ -165,5 +173,7 @@ class DfptFlowMaker(Maker):
             dte_maker=dte_maker,
             use_ddk_sym=False,
             use_dde_sym=False,
-            use_dte_sym=True,
+            dte_skip_permutations=False,
+            dte_phonon_pert=False,
+            dte_ixc=None,  # TODO: enforce LDA?
         )
