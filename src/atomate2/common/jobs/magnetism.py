@@ -1,9 +1,9 @@
-"""Jobs used in the calculation of magnetic orderings and other magnetism related tasks."""
+"""Jobs used for enumeration, calculation, and analysis of magnetic orderings."""
 
 from __future__ import annotations
 
 import logging
-from typing import Optional, Dict, Sequence, Literal
+from typing import Literal, Optional, Sequence
 
 from jobflow import Flow, Response, job
 from pymatgen.analysis.magnetism import MagneticStructureEnumerator
@@ -15,61 +15,46 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 logger = logging.getLogger(__name__)
 
 __all__ = [
-    "generate_magnetic_orderings",
+    "enumerate_magnetic_orderings",
     "run_ordering_calculations",
     "analyze_orderings",
 ]
 
 
 @job
-def generate_magnetic_orderings(
-    structure,
-    default_magmoms: Optional[Dict[Element, float]] = None,
-    strategies: Sequence[
-        Literal["ferromagnetic", "antiferromagnetic", "antiferromagnetic_by_motif", ""]
-    ] = ("ferromagnetic", "antiferromagnetic"),
+def enumerate_magnetic_orderings(
+    structure: Structure,
+    default_magmoms: dict[str, float] | None = None,
+    strategies: list[str] | tuple[str, ...] = ("ferromagnetic", "antiferromagnetic"),
     automatic: bool = True,
     truncate_by_symmetry: bool = True,
-    enumerator_kwargs: Optional[Dict] = None,
+    transformation_kwargs: dict | None = None,
 ):
+
+    """ 
     """
-
-    Parameters
-    ----------
-    structure
-    default_magmoms
-    strategies
-    automatic
-    truncate_by_symmetry
-    enumerator_kwargs
-
-    Returns
-    -------
-
-    """
-
     enumerator = MagneticStructureEnumerator(
         structure,
         default_magmoms=default_magmoms,
         strategies=tuple(strategies),  # TODO: this type hint could be changed in pymatgen
         automatic=automatic,
         truncate_by_symmetry=truncate_by_symmetry,
-        transformation_kwargs=enumerator_kwargs,
+        transformation_kwargs=transformation_kwargs
     )
 
     return enumerator.ordered_structures
 
+
 @job
 def run_ordering_calculations(
-    orderings: List[Structure],
+    orderings: list[Structure],
     # prev_vasp_dir: str | Path | None = None,  # TODO: find out how to handle N prev_vasp_dirs
     maker: BaseVaspMaker,
 ):
     """
     Run magnetic ordering calculations.
 
-    Note, this job will replace itself with N calculations, where N is
-    the number of orderings.
+    This job will automatically replace itself with calculation 
 
     Parameters
     ----------

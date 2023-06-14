@@ -15,7 +15,7 @@ from atomate2.vasp.jobs.core import TightRelaxMaker, StaticMaker
 
 __all__ = ["MagneticOrderingsMaker"]
 
-from atomate2.vasp.jobs.magnetism import generate_magnetic_orderings, run_ordering_calculations, analyze_orderings
+from atomate2.common.jobs.magnetism import generate_magnetic_orderings, run_ordering_calculations, analyze_orderings
 
 
 @dataclass
