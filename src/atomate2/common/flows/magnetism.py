@@ -3,19 +3,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional, Dict, Sequence, Literal
+from typing import Dict, Literal, Optional, Sequence
 
-from jobflow import Flow, Maker, Response, Job
+from jobflow import Flow, Job, Maker, Response
 from pymatgen.core import Element
 from pymatgen.core.structure import Structure
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import TightRelaxMaker, StaticMaker
+from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 
 __all__ = ["MagneticOrderingsMaker"]
 
-from atomate2.common.jobs.magnetism import generate_magnetic_orderings, run_ordering_calculations, analyze_orderings
+from atomate2.common.jobs.magnetism import (analyze_orderings,
+                                            generate_magnetic_orderings,
+                                            run_ordering_calculations)
 
 
 @dataclass
