@@ -9,7 +9,8 @@ from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
 
 if TYPE_CHECKING:
-    from pymatgen.core import Element
+    from pathlib import Path
+
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ __all__ = [
 ]
 
 
-@job
+@job("enumerate orderings")
 def enumerate_magnetic_orderings(
     structure: Structure,
     default_magmoms: dict[str, float] | None = None,
@@ -81,21 +82,24 @@ def enumerate_magnetic_orderings(
     return enumerator.ordered_structures
 
 
-@job
+@job(name="run orderings")
 def run_ordering_calculations(
-    orderings: list[Structure],
     maker: Maker,
+    orderings: Sequence[Structure],
+    origins: Sequence[str],
+    prev_calc_dir_argname: str,
+    prev_calc_dirs: Sequence[str] | Sequence[Path] | None = None,
 ):
     """
     Run calculations for a list of enumerated orderings. This job will automatically
-    replace itself with calculations.
+    replace itself with calculations. These can either be static or relax calculations.
 
     Parameters
     ----------
     orderings : List[Structure]
         A list of pymatgen structures.
-    maker : .BaseVaspMaker
-        A VaspMaker to use to calculate the energies of the orderings.
+    maker : .Maker
+        A Maker to use to calculate the energies of the orderings.
 
     Returns
     -------
@@ -103,27 +107,25 @@ def run_ordering_calculations(
         A response with a flow of the calculations.
     """
 
-    jobs = []
-    outputs = []
-    for idx, ordering in enumerate(orderings):
-        job = maker.make(ordering)  # , prev_vasp_dir=prev_vasp_dir
-        job.append_name(f" {i + 1}/{len(orderings)}")
-        jobs.append(job)
+    jobs, outputs = [], []
+    for idx, (ordering, origin, prev_calc_dir) in enumerate(
+        zip(orderings, origins, prev_calc_dirs)
+    ):
+        job = maker.make(ordering, **{prev_calc_dir_argname: prev_calc_dir})
+        job.append_name(f" {idx + 1}/{len(orderings)} ({origin})")
 
-        # extract the outputs we want
         output = {
-            # TODO: check output format here
-            "energy": job.output.output.energy,
             "uuid": job.output.uuid,
+            "energy": job.output.output.energy,
             "job_dir": job.output.dir_name,
         }
-
+        jobs.append(job)
         outputs.append(output)
 
     flow = Flow(jobs, outputs)
     return Response(replace=flow)
 
 
-@job  # (output_schema=...)
+@job(name="analyze orderings")  # (output_schema=...)
 def analyze_orderings(*args):
     raise NotImplementedError

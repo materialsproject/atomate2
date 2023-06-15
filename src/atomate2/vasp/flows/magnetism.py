@@ -1,17 +1,19 @@
-"""Flows for calculating magnetic orderings and other magnetism-related tasks."""
+"""VASP-specific flows for calculating magnetic orderings and other magnetism-related tasks."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal, Sequence
 
-from jobflow import Flow, Maker,
+from jobflow import Flow, Maker
 
+from atomate2.common.flows import magnetism as magnetism_flows
 from atomate2.common.jobs.magnetism import (
     analyze_orderings,
     generate_magnetic_orderings,
     run_ordering_calculations,
 )
+from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
     from pymatgen.core import Element
@@ -21,9 +23,9 @@ __all__ = ["MagneticOrderingsMaker"]
 
 
 @dataclass
-class MagneticOrderingsMaker(Maker):
+class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
     """
-    Maker to calculate possible collinear magnetic orderings for a material.
+    Maker to calculate possible collinear magnetic orderings for a material in VASP.
 
     Given an input structure, possible magnetic orderings will be enumerated and ranked based
     on symmetry up to a maximum number of orderings. Each ordering will be
@@ -48,13 +50,11 @@ class MagneticOrderingsMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this Maker.
-    static_maker : Maker
-        Maker used to peform static calculations for total energy (e.g.,
-        atomate2.vasp.jobs.StaticMaker).
-    relax_maker : Maker | None
-        Maker used to perform relaxations of the enumerated structures (e.g.,
-        atomate2.vasp.jobs.RelaxMaker). If None, relaxations will be skipped (i.e., only
-        static calculations).
+    static_maker : StaticMaker
+        Maker used to peform static calculations for total energy.
+    relax_maker : RelaxMaker | None
+        Maker used to perform relaxations of the enumerated structures. If None,
+        relaxations will be skipped (i.e., only static calculations).
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
         in µB. Generally these are chosen to be high-spin, since they can relax to a
@@ -75,8 +75,8 @@ class MagneticOrderingsMaker(Maker):
     """
 
     name: str = "magnetic_orderings"
-    static_maker: Maker
-    relax_maker: Maker | None = None
+    static_maker: StaticMaker
+    relax_maker: RelaxMaker | None = None
     default_magmoms: dict[Element, float] | None = None
     strategies: Sequence[
         Literal[
@@ -92,66 +92,11 @@ class MagneticOrderingsMaker(Maker):
     truncate_by_symmetry: bool = True
     transformation_kwargs: dict | None = None
 
-    def __post_init__(self):
-        if self.relax_maker is not None:
-            static_base_maker_name = self.static_maker.__class__.__mro__[1].__name__
-            relax_base_maker_name = self.relax_maker.__class__.__mro__[1].__name__
-            assert relax_base_maker_name == static_base_maker_name , "relax and static makers must come from the same base maker (e.g., BaseVaspMaker)!"
-
     @property
     def prev_calc_dir_argname():
         """
         Name of the argument that informs the static maker of the previous calculation
-        directory. As this differs between different DFT codes (e.g., VASP, CP2K), it
-        has been left as a property to be implemented by the inheriting class.
-
-        This only applies if a relax_maker is specified and two calculations are
+        directory. This only applies if a relax_maker is specified and two calculations are
         performed for each ordering (i.e., relax -> static)
         """
-        raise NotImplementedError
-
-    def make(
-        self,
-        structure: Structure,
-    ):
-        """
-        Make a flow to calculate possible ground-state collinear magnetic orderings for
-        a given input structure.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure object.
-
-        Returns
-        -------
-        flow: Flow
-            The magnetic ordering worfklow.
-        """
-        jobs = []
-
-        orderings = generate_magnetic_orderings(
-            structure,
-            default_magmoms=self.default_magmoms,
-            strategies=self.strategies,
-            automatic=self.automatic,
-            truncate_by_symmetry=self.truncate_by_symmetry,
-            transformation_kwargs=self.transformation_kwargs,
-        )
-        jobs.append(orderings)
-
-        if self.relax_maker is not None:
-            relaxation_calcs = run_ordering_calculations(
-                orderings.output, prev_calc_dir_argname, maker=self.relax_maker
-            )
-            jobs.append(relaxation_calcs)
-
-        static_calcs = run_ordering_calculations(
-            relaxation_calcs.output if self.relax_maker else orderings.output,
-            maker=self.static_maker,
-        )
-
-        analyze_job = analyze_orderings(static_calcs.output)
-
-        flow = Flow(jobs=jobs, output=analyze_job.output, name=self.name)
-        return flow
+        return "prev_vasp_dir"
