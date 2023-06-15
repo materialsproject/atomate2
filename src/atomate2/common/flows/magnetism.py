@@ -99,7 +99,7 @@ class MagneticOrderingsMaker(Maker):
             assert relax_base_maker_name == static_base_maker_name , "relax and static makers must come from the same base maker (e.g., BaseVaspMaker)!"
 
     @property
-    def prev_calc_dir_argname():
+    def prev_calc_dir_argname(self):
         """
         Name of the argument that informs the static maker of the previous calculation
         directory. As this differs between different DFT codes (e.g., VASP, CP2K), it
@@ -141,8 +141,8 @@ class MagneticOrderingsMaker(Maker):
         jobs.append(orderings)
 
         if self.relax_maker is not None:
-            relaxation_calcs = run_ordering_calculations(
-                orderings.output, prev_calc_dir_argname, maker=self.relax_maker
+            relaxation_calcs = run_ordering_calculations(self.relax_maker
+                orderings.output, self.prev_calc_dir_argname, maker=self.relax_maker
             )
             jobs.append(relaxation_calcs)
 

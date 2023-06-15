@@ -5,19 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal, Sequence
 
-from jobflow import Flow, Maker
-
 from atomate2.common.flows import magnetism as magnetism_flows
-from atomate2.common.jobs.magnetism import (
-    analyze_orderings,
-    generate_magnetic_orderings,
-    run_ordering_calculations,
-)
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
     from pymatgen.core import Element
-    from pymatgen.core.structure import Structure
 
 __all__ = ["MagneticOrderingsMaker"]
 
@@ -93,7 +85,7 @@ class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
     transformation_kwargs: dict | None = None
 
     @property
-    def prev_calc_dir_argname():
+    def prev_calc_dir_argname(self):
         """
         Name of the argument that informs the static maker of the previous calculation
         directory. This only applies if a relax_maker is specified and two calculations are
