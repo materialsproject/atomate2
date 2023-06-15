@@ -67,7 +67,8 @@ class CHGNetRelaxMaker(Maker):
             structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
         )
 
-        return ForceFieldTaskDocument.from_chgnet_result(
+        return ForceFieldTaskDocument.from_ase_compatible_result(
+            "CHGNet",
             result,
             self.relax_cell,
             self.steps,
@@ -144,10 +145,8 @@ class M3GNetRelaxMaker(Maker):
         structure: .Structure
             A pymatgen structure.
         """
-        from matgl.apps.pes import Potential
+        import matgl
         from matgl.ext.ase import Relaxer
-        from matgl.models._m3gnet import M3GNet
-        from pymatgen.io.ase import AseAtomsAdaptor
 
         if self.steps < 0:
             logger.warning(
@@ -156,21 +155,11 @@ class M3GNetRelaxMaker(Maker):
             )
 
         # Note: the below code was taken from the matgl repo examples.
-        # Load pre-trained M3GNet model (defaults to MP-2021.2.8 database)
-        model, d = M3GNet.load("M3GNet-MP-2021.2.8-EFS", include_json=True)
-        metadata = d["metadata"]
-        data_std = metadata["data_std"]
-        data_mean = metadata["data_mean"]
-        element_refs = metadata["element_refs"]
-
-        ff = Potential(
-            model, data_std=data_std, data_mean=data_mean, element_refs=element_refs
-        )
-
-        AseAtomsAdaptor()
+        # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
+        pot = matgl.load_model("M3GNet-MP-2021.2.8-PES")
 
         relaxer = Relaxer(
-            potential=ff,
+            potential=pot,
             relax_cell=self.relax_cell,
             **self.optimizer_kwargs,
         )
@@ -181,7 +170,8 @@ class M3GNetRelaxMaker(Maker):
             **self.relax_kwargs,
         )
 
-        return ForceFieldTaskDocument.from_m3gnet_result(
+        return ForceFieldTaskDocument.from_ase_compatible_result(
+            "M3GNet",
             result,
             self.relax_cell,
             self.steps,
