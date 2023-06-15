@@ -238,7 +238,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
-        ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
+        ionic_step_data: tuple = ("energy", "forces", "stress", "structure"),
     ):
         """
         Create a ForceFieldTaskDocument for a M3GNet Task.
@@ -309,11 +309,6 @@ class ForceFieldTaskDocument(StructureMetadata):
                 if "forces" in ionic_step_data
                 else None
             )
-            cur_magmoms = (
-                trajectory["magmoms"][i].tolist()
-                if "magmoms" in ionic_step_data
-                else None
-            )
             cur_stress = (
                 trajectory["stresses"][i].tolist()
                 if "stress" in ionic_step_data
@@ -334,7 +329,6 @@ class ForceFieldTaskDocument(StructureMetadata):
                 IonicStep(
                     energy=cur_energy,
                     forces=cur_forces,
-                    magmoms=cur_magmoms,
                     stress=cur_stress,
                     structure=cur_structure,
                 )

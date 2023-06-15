@@ -160,10 +160,12 @@ class M3GNetRelaxMaker(Maker):
         model, d = M3GNet.load("M3GNet-MP-2021.2.8-EFS", include_json=True)
         metadata = d["metadata"]
         data_std = metadata["data_std"]
-        metadata["data_mean"]
+        data_mean = metadata["data_mean"]
         element_refs = metadata["element_refs"]
 
-        ff = Potential(model, data_std=data_std, element_refs=element_refs)
+        ff = Potential(
+            model, data_std=data_std, data_mean=data_mean, element_refs=element_refs
+        )
 
         AseAtomsAdaptor()
 
@@ -187,3 +189,32 @@ class M3GNetRelaxMaker(Maker):
             self.optimizer_kwargs,
             **self.task_document_kwargs,
         )
+
+
+@dataclass
+class M3GNetStaticMaker(M3GNetRelaxMaker):
+    """
+    Maker to calculate forces and stresses using the M3GNet force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "M3GNet static"
+    relax_cell: bool = False
+    steps: int = 1
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
