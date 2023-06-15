@@ -39,7 +39,7 @@ def enumerate_magnetic_orderings(
     automatic: bool = True,
     truncate_by_symmetry: bool = True,
     transformation_kwargs: dict | None = None,
-) -> list[Structure]:
+) -> tuple[list[Structure], list[str]]:
     """
     Enumerate possible collinear magnetic orderings for a given structure.
 
@@ -66,8 +66,8 @@ def enumerate_magnetic_orderings(
 
     Returns
     -------
-    Tuple:
-        Ordered structures
+    Tuple[List[Structure], List[str]]:
+        Ordered structures, origins (e.g., "fm", "afm")
 
     """
     enumerator = MagneticStructureEnumerator(
@@ -79,14 +79,13 @@ def enumerate_magnetic_orderings(
         transformation_kwargs=transformation_kwargs,
     )
 
-    return enumerator.ordered_structures
+    return enumerator.ordered_structures, enumerator.ordered_structure_origins
 
 
 @job(name="run orderings")
 def run_ordering_calculations(
+    orderings: tuple[Sequence[Structure], Sequence[str]],
     maker: Maker,
-    orderings: Sequence[Structure],
-    origins: Sequence[str],
     prev_calc_dir_argname: str,
     prev_calc_dirs: Sequence[str] | Sequence[Path] | None = None,
 ):
@@ -108,10 +107,9 @@ def run_ordering_calculations(
     """
 
     jobs, outputs = [], []
-    for idx, (ordering, origin, prev_calc_dir) in enumerate(
-        zip(orderings, origins, prev_calc_dirs)
-    ):
-        job = maker.make(ordering, **{prev_calc_dir_argname: prev_calc_dir})
+    for idx, (ordering, prev_calc_dir) in enumerate(zip(orderings, prev_calc_dirs)):
+        struct, origin = ordering
+        job = maker.make(struct, **{prev_calc_dir_argname: prev_calc_dir})
         job.append_name(f" {idx + 1}/{len(orderings)} ({origin})")
 
         output = {
