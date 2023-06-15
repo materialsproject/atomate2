@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal, Optional, Sequence
+from typing import TYPE_CHECKING, Literal, Optional, Sequence
 
-from jobflow import Flow, Response, job
-from pymatgen.analysis.magnetism import MagneticStructureEnumerator
-from pymatgen.core import Element
-from pymatgen.core.structure import Structure
+from jobflow import Flow, Maker, Response, job
+from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
 
-from atomate2.vasp.jobs.base import BaseVaspMaker
+if TYPE_CHECKING:
+    from pymatgen.core import Element
+    from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -25,21 +25,57 @@ __all__ = [
 def enumerate_magnetic_orderings(
     structure: Structure,
     default_magmoms: dict[str, float] | None = None,
-    strategies: list[str] | tuple[str, ...] = ("ferromagnetic", "antiferromagnetic"),
+    strategies: Sequence[
+        Literal[
+            "ferromagnetic",
+            "antiferromagnetic",
+            "antiferromagnetic_by_motif",
+            "ferrimagnetic_by_motif",
+            "ferrimagnetic_by_species",
+            "nonmagnetic",
+        ]
+    ] = ("ferromagnetic", "antiferromagnetic"),
     automatic: bool = True,
     truncate_by_symmetry: bool = True,
     transformation_kwargs: dict | None = None,
-):
+) -> list[Structure]:
+    """
+    Enumerate possible collinear magnetic orderings for a given structure.
 
-    """ 
+    This method is a wrapper around pymatgen's `MagneticStructureEnumerator`. Please see
+    that class's documentation for more details.
+
+    Parameters
+    ----------
+    structure: input structure
+    default_magmoms: Optional default mapping of magnetic elements to their initial magnetic moments
+        in µB. Generally these are chosen to be high-spin, since they can relax to a
+        low-spin configuration during a DFT electronic configuration. If None, will use
+        the default values provided in pymatgen/analysis/magnetism/default_magmoms.yaml.
+    strategies: different ordering strategies to use, choose from:
+        ferromagnetic, antiferromagnetic, antiferromagnetic_by_motif,
+        ferrimagnetic_by_motif and ferrimagnetic_by_species (here, "motif",
+        means to use a different ordering parameter for symmetry inequivalent
+        sites)
+    automatic: if True, will automatically choose sensible strategies
+    truncate_by_symmetry: if True, will remove very unsymmetrical
+        orderings that are likely physically implausible
+    transformation_kwargs: keyword arguments to pass to
+        MagOrderingTransformation, to change automatic cell size limits, etc.
+
+    Returns
+    -------
+    Tuple:
+        Ordered structures
+
     """
     enumerator = MagneticStructureEnumerator(
         structure,
         default_magmoms=default_magmoms,
-        strategies=tuple(strategies),  # TODO: this type hint could be changed in pymatgen
+        strategies=strategies,
         automatic=automatic,
         truncate_by_symmetry=truncate_by_symmetry,
-        transformation_kwargs=transformation_kwargs
+        transformation_kwargs=transformation_kwargs,
     )
 
     return enumerator.ordered_structures
@@ -48,13 +84,11 @@ def enumerate_magnetic_orderings(
 @job
 def run_ordering_calculations(
     orderings: list[Structure],
-    # prev_vasp_dir: str | Path | None = None,  # TODO: find out how to handle N prev_vasp_dirs
-    maker: BaseVaspMaker,
+    maker: Maker,
 ):
     """
-    Run magnetic ordering calculations.
-
-    This job will automatically replace itself with calculation 
+    Run calculations for a list of enumerated orderings. This job will automatically
+    replace itself with calculations.
 
     Parameters
     ----------
@@ -62,19 +96,17 @@ def run_ordering_calculations(
         A list of pymatgen structures.
     maker : .BaseVaspMaker
         A VaspMaker to use to calculate the energies of the orderings.
+
+    Returns
+    -------
+    Response:
+        A response with a flow of the calculations.
     """
 
     jobs = []
     outputs = []
-    for i, ordering in enumerate(orderings):
-
-        # TODO: think about additional data here from enumerator? c.f. elastic:
-        # elastic_relax_maker.write_additional_data["transformations:json"] = ts
-
-        # create the job
-        job = maker.make(
-            ordering#, prev_vasp_dir=prev_vasp_dir
-        )
+    for idx, ordering in enumerate(orderings):
+        job = maker.make(ordering)  # , prev_vasp_dir=prev_vasp_dir
         job.append_name(f" {i + 1}/{len(orderings)}")
         jobs.append(job)
 
@@ -91,6 +123,7 @@ def run_ordering_calculations(
     flow = Flow(jobs, outputs)
     return Response(replace=flow)
 
-@job#(output_schema=...)
+
+@job  # (output_schema=...)
 def analyze_orderings(*args):
     raise NotImplementedError
