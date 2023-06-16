@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Literal, Sequence
 from jobflow import Flow, Maker
 
 from atomate2.common.jobs.magnetism import (
-    analyze_orderings,
-    generate_magnetic_orderings,
+    analyze_ordering_calculations,
+    enumerate_magnetic_orderings,
     run_ordering_calculations,
 )
 
@@ -74,7 +74,6 @@ class MagneticOrderingsMaker(Maker):
         Keyword arguments provided to MagOrderingTransformation in pymatgen.
     """
 
-    name: str = "magnetic_orderings"
     static_maker: Maker
     relax_maker: Maker | None = None
     default_magmoms: dict[Element, float] | None = None
@@ -91,6 +90,7 @@ class MagneticOrderingsMaker(Maker):
     automatic: bool = True
     truncate_by_symmetry: bool = True
     transformation_kwargs: dict | None = None
+    name: str = "magnetic_orderings"
 
     def __post_init__(self):
         if self.relax_maker is not None:
@@ -133,7 +133,7 @@ class MagneticOrderingsMaker(Maker):
         """
         jobs = []
 
-        orderings = generate_magnetic_orderings(
+        orderings = enumerate_magnetic_orderings(
             structure,
             default_magmoms=self.default_magmoms,
             strategies=self.strategies,
@@ -154,15 +154,22 @@ class MagneticOrderingsMaker(Maker):
                 orderings.output, maker=self.relax_maker
             )
             jobs.append(relaxation_calcs)
+            new_ordering_structs, new_ordering_names = [], []
+            for calc in relaxation_calcs.output:
+                new_ordering_structs.append(calc["structure"])
+                new_ordering_names.append(["ordering"])
 
             static_calcs = run_ordering_calculations(
-                relaxation_calcs.output,
+                (new_ordering_structs, new_ordering_names),
                 maker=self.static_maker,
                 prev_calc_dir_argname=self.prev_calc_dir_argname,
-                prev_calc_dirs=[calc["job_dir"] for calc in relaxation_calcs.output],
+                prev_calc_dirs=[calc["dir_name"] for calc in relaxation_calcs.output],
             )
         jobs.append(static_calcs)
-        analyze_job = analyze_ordering_calculations(static_calcs.output)
+        analyze_job = analyze_ordering_calculations(
+            static_calcs.output, parent_structure=structure
+        )
+        jobs.append(analyze_job)
 
         flow = Flow(jobs=jobs, output=analyze_job.output, name=self.name)
         return flow
