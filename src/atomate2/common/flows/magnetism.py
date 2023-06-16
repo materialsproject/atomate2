@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal, Sequence
 
-from jobflow import Flow, Maker,
+from jobflow import Flow, Maker
 
 from atomate2.common.jobs.magnetism import (
     analyze_orderings,
@@ -96,7 +96,10 @@ class MagneticOrderingsMaker(Maker):
         if self.relax_maker is not None:
             static_base_maker_name = self.static_maker.__class__.__mro__[1].__name__
             relax_base_maker_name = self.relax_maker.__class__.__mro__[1].__name__
-            assert relax_base_maker_name == static_base_maker_name , "relax and static makers must come from the same base maker (e.g., BaseVaspMaker)!"
+            assert relax_base_maker_name == static_base_maker_name, (
+                "relax and static makers must come from the same base maker (e.g.,"
+                " BaseVaspMaker)!"
+            )
 
     @property
     def prev_calc_dir_argname(self):
@@ -105,8 +108,8 @@ class MagneticOrderingsMaker(Maker):
         directory. As this differs between different DFT codes (e.g., VASP, CP2K), it
         has been left as a property to be implemented by the inheriting class.
 
-        This only applies if a relax_maker is specified and two calculations are
-        performed for each ordering (i.e., relax -> static)
+        Note: this is only applicable if a relax_maker is specified; i.e., two
+        calculations are performed for each ordering (relax -> static)
         """
         raise NotImplementedError
 
@@ -140,18 +143,26 @@ class MagneticOrderingsMaker(Maker):
         )
         jobs.append(orderings)
 
-        if self.relax_maker is not None:
-            relaxation_calcs = run_ordering_calculations(self.relax_maker
-                orderings.output, self.prev_calc_dir_argname, maker=self.relax_maker
+        if self.relax_maker is None:  # run static calculations only
+            static_calcs = run_ordering_calculations(
+                orderings.output,
+                prev_calc_dir_argname=self.prev_calc_dir_argname,
+                maker=self.static_maker,
+            )
+        else:
+            relaxation_calcs = run_ordering_calculations(
+                orderings.output, maker=self.relax_maker
             )
             jobs.append(relaxation_calcs)
 
-        static_calcs = run_ordering_calculations(
-            relaxation_calcs.output if self.relax_maker else orderings.output,
-            maker=self.static_maker,
-        )
-
-        analyze_job = analyze_orderings(static_calcs.output)
+            static_calcs = run_ordering_calculations(
+                relaxation_calcs.output,
+                maker=self.static_maker,
+                prev_calc_dir_argname=self.prev_calc_dir_argname,
+                prev_calc_dirs=[calc["job_dir"] for calc in relaxation_calcs.output],
+            )
+        jobs.append(static_calcs)
+        analyze_job = analyze_ordering_calculations(static_calcs.output)
 
         flow = Flow(jobs=jobs, output=analyze_job.output, name=self.name)
         return flow
