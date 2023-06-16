@@ -19,7 +19,7 @@ class MagnetismInput(BaseModel):
             "as defined in pymatgen.analysis.magnetism.analyzer."
         ),
     )
-    symmetry: str = Field(None, "Detected space group symbol.")
+    symmetry: str = Field(None, description="Detected space group symbol.")
 
 
 class MagnetismOutput(BaseModel):
@@ -55,15 +55,13 @@ class MagnetismOutput(BaseModel):
     total_magnetization_per_unit_volume: float = Field(
         None, description="Total magnetiation noramlized to per unit volume."
     )
-    symmetry: str = Field(None, "Detected space group symbol.")
+    symmetry: str = Field(None, description="Detected space group symbol.")
     energy: float = Field(None, description="Final energy result from the calculation.")
     energy_per_atom: float = Field(None, description="Final energy per atom.")
-    energy_diff_relax_static: str | float = Field(
-        None,
+    relax_output: MagnetismOutput = Field(
         description=(
-            "Difference in energy between relaxation and final static calculation, if "
-            "relaxation performed (useful for benchmarking)."
-        ),
+            "Output of relaxation calculation; only applies if relaxation performed."
+        )
     )
 
     @classmethod
@@ -130,4 +128,11 @@ class MagnetismDocument(BaseModel):
     )
     energy_above_ground_state_per_atom: float = Field(
         None, description="Energy per atom above the calculated ground state ordering."
+    )
+    energy_diff_relax_static: str | float = Field(
+        None,
+        description=(
+            "Difference in energy between relaxation and final static calculation, if "
+            "relaxation performed (useful for benchmarking)."
+        ),
     )

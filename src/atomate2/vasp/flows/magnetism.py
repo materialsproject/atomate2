@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal, Sequence
 
 from atomate2.common.flows import magnetism as magnetism_flows
@@ -10,6 +10,8 @@ from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
     from pymatgen.core import Element
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["MagneticOrderingsMaker"]
 
@@ -67,8 +69,8 @@ class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
     """
 
     name: str = "magnetic_orderings"
-    static_maker: StaticMaker
-    relax_maker: RelaxMaker | None = None
+    static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+    relax_maker: BaseVaspMaker | None = None
     default_magmoms: dict[Element, float] | None = None
     strategies: Sequence[
         Literal[
