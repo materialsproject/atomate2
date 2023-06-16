@@ -17,7 +17,7 @@ def lobster_test_dir(test_dir):
     return test_dir / "lobster"
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def mock_lobster(monkeypatch, lobster_test_dir):
     """
     This fixture allows one to mock (fake) running LOBSTER.
@@ -84,7 +84,7 @@ def fake_run_lobster(
     ref_path: Union[str, Path],
     check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
     check_dft_inputs: Sequence[Literal["WAVECAR", "POSCAR"]] = _DFT_FILES,
-    lobsterin_settings: Sequence[str] = tuple(),
+    lobsterin_settings: Sequence[str] = (),
 ):
     """
     Emulate running LOBSTER and validate LOBSTER input files.

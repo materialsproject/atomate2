@@ -23,20 +23,17 @@ def test_cclib_taskdoc(test_dir):
     # added and some important ones.
     doc = TaskDocument.from_logfile(p, ".log.gz").dict()
     assert doc["energy"] == pytest.approx(-4091.763)
-    assert doc["nsites"] == 2
+    assert doc["natoms"] == 2
     assert doc["charge"] == 0
     assert doc["spin_multiplicity"] == 3
     assert doc["nelectrons"] == 16
-    assert doc["molecule"] == doc["attributes"]["molecule_final"]
     assert "schemas" in doc["dir_name"]
     assert "gau_testopt.log.gz" in doc["logfile"]
     assert doc.get("attributes", None) is not None
     assert doc.get("metadata", None) is not None
     assert doc["metadata"]["success"] is True
     assert doc["attributes"]["molecule_initial"][0].coords == pytest.approx([0, 0, 0])
-    assert doc["attributes"]["molecule_final"][0].coords == pytest.approx(
-        [0.397382, 0.0, 0.0]
-    )
+    assert doc["molecule"][0].coords == pytest.approx([0.397382, 0.0, 0.0])
     assert doc["last_updated"] is not None
     assert doc["attributes"]["homo_energies"] == pytest.approx(
         [-7.054007346511501, -11.618445074798501]
@@ -73,7 +70,7 @@ def test_cclib_taskdoc(test_dir):
 
     # Let's try a volumetric analysis
     # We'll gunzip the .cube.gz file because cclib can't read cube.gz files yet.
-    # Can remove the gzip part when https://github.com/cclib/cclib/issues/109 is closed.
+    # Can remove the gzip part when https://github.com/cclib/cclib/issues/108 is closed.
     with gzip.open(p / "psi_test.cube.gz", "r") as f_in, open(
         p / "psi_test.cube", "wb"
     ) as f_out:
@@ -86,14 +83,14 @@ def test_cclib_taskdoc(test_dir):
     doc = TaskDocument.from_logfile(p, ".log", store_trajectory=True).dict()
     assert len(doc["attributes"]["trajectory"]) == 7
     assert doc["attributes"]["trajectory"][0] == doc["attributes"]["molecule_initial"]
-    assert doc["attributes"]["trajectory"][-1] == doc["attributes"]["molecule_final"]
+    assert doc["attributes"]["trajectory"][-1] == doc["molecule"]
 
     # Make sure additional fields can be stored
     doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
     assert doc.dict()["test"] == "hi"
 
     # test document can be jsanitized
-    d = jsanitize(doc, strict=True, enum_values=True)
+    d = jsanitize(doc, enum_values=True)
 
     # and decoded
     MontyDecoder().process_decoded(d)

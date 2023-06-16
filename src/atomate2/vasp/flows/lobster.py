@@ -3,25 +3,55 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core import Structure
 
 from atomate2.lobster.jobs import LobsterMaker
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
+from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
+from atomate2.vasp.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.lobster import (
-    LobsterStaticMaker,
     delete_lobster_wavecar,
     get_basis_infos,
     get_lobster_jobs,
     update_user_incar_settings_maker,
 )
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["VaspLobsterMaker"]
+
+LOBSTER_UNIFORM_MAKER = UniformBandStructureMaker(
+    name="uniform lobster structure",
+    static_maker=StaticMaker(
+        input_set_generator=StaticSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 100},
+            user_incar_settings={
+                "EDIFF": 1e-7,
+                "LAECHG": False,
+                "LVTOT": False,
+                "LREAL": False,
+                "ALGO": "Normal",
+                "LWAVE": False,
+            },
+        )
+    ),
+    bs_maker=NonSCFMaker(
+        input_set_generator=NonSCFSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 400},
+            user_incar_settings={
+                "LWAVE": True,
+                "ISYM": 0,
+            },
+        )
+    ),
+)
 
 
 @dataclass
@@ -52,7 +82,7 @@ class VaspLobsterMaker(Maker):
         without symmetry
     lobster_static_maker : .BaseVaspMaker
         A maker to perform the computation of the wavefunction before the static run.
-        Cannot be skipped.
+        Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
     lobster_maker : .LobsterMaker
         A maker to perform the Lobster run.
     delete_wavecars : bool
@@ -68,15 +98,7 @@ class VaspLobsterMaker(Maker):
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
     lobster_static_maker: BaseVaspMaker = field(
-        default_factory=lambda: LobsterStaticMaker()
-    )
-    preconverge_static_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: StaticMaker(
-            input_set_generator=StaticSetGenerator(
-                user_incar_settings={"LWAVE": True},
-                user_kpoints_settings={"grid_density": 6000},
-            ),
-        )
+        default_factory=lambda: LOBSTER_UNIFORM_MAKER
     )
     lobster_maker: LobsterMaker | None = field(default_factory=lambda: LobsterMaker())
     delete_wavecars: bool = True
@@ -113,20 +135,6 @@ class VaspLobsterMaker(Maker):
             optimization_uuid = optimization.output.uuid
             prev_vasp_dir = optimization_dir
 
-        # do a static WAVECAR computation with symmetry and standard number of bands
-        # first to preconverge the WAVECAR
-        preconverge_static_dir = None
-        preconverge_static_uuid = None
-        if self.preconverge_static_maker is not None:
-            preconverge = self.preconverge_static_maker.make(
-                structure, prev_vasp_dir=prev_vasp_dir
-            )
-            preconverge.append_name(" preconverge")
-            jobs.append(preconverge)
-            preconverge_static_dir = preconverge.output.dir_name
-            preconverge_static_uuid = preconverge.output.uuid
-            prev_vasp_dir = preconverge.output.dir_name
-
         # Information about the basis is collected
         basis_infos = get_basis_infos(
             structure=structure,
@@ -155,17 +163,15 @@ class VaspLobsterMaker(Maker):
             optimization_uuid=optimization_uuid,
             static_dir=lobster_static_dir,
             static_uuid=lobster_static_uuid,
-            preconverge_static_dir=preconverge_static_dir,
-            preconverge_static_uuid=preconverge_static_uuid,
         )
         jobs.append(lobster_jobs)
 
         # delete all WAVECARs that have been copied
+        # TODO:  this has to be adapted as well
         if self.delete_wavecars:
             delete_wavecars = delete_lobster_wavecar(
                 dirs=lobster_jobs.output["lobster_dirs"],
                 lobster_static_dir=lobster_static.output.dir_name,
-                preconverge_static_dir=preconverge_static_dir,
             )
             jobs.append(delete_wavecars)
 

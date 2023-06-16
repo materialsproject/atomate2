@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from jobflow import Response, job
-from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = [
     "structure_to_primitive",
@@ -68,20 +72,19 @@ def retrieve_structure_from_materials_project(
     reset_magnetic_moments: bool = False,
 ) -> Response[Structure]:
     """
-    Retrieve a Structure from Materials Project. This job is
-    useful for constructing a Flow that always will retrieve
-    the most up-to-date data at the time the Flow runs.
+    Retrieve a Structure from Materials Project.
 
-    The retrieved Structure will change between subsequent
-    Materials Project database releases as old calculation tasks
-    are removed and new, better, calculation tasks (e.g. with
-    more accurate lattice parameters) are added.
+    This job is useful for constructing a Flow that always will retrieve the most
+    up-to-date data at the time the Flow runs.
 
-    Using this job requires that the system where the job
-    runs has a connection to the outside internet. It also
-    requires the Materials Project API key to be set appropriately
-    via an environment variable or otherwise. Consult the
-    Materials Project API documentation for more information.
+    The retrieved Structure will change between subsequent Materials Project database
+    releases as old calculation tasks are removed and new, better, calculation tasks
+    (e.g. with more accurate lattice parameters) are added.
+
+    Using this job requires that the system where the job runs has a connection to the
+    outside internet. It also requires the Materials Project API key to be set
+    appropriately via an environment variable or otherwise. Consult the Materials
+    Project API documentation for more information.
 
     Parameters
     ----------
@@ -113,7 +116,7 @@ def retrieve_structure_from_materials_project(
         raise ImportError(
             "This job requires the Materials Project API client "
             "to be installed, via `pip install mp-api` or similar."
-        )
+        ) from None
 
     with MPRester() as mpr:
         if use_task_id:

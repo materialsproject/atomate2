@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 import numpy as np
+from emmet.core.math import Matrix3D, Vector3D
+from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
@@ -12,9 +14,6 @@ from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
 
 from atomate2 import SETTINGS, __version__
-from atomate2.common.schemas.math import Matrix3D, Vector3D
-from atomate2.common.schemas.molecule import MoleculeMetadata
-from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.common.utils import (
     parse_additional_json,
     parse_custodian,
@@ -106,10 +105,7 @@ class AnalysisSummary(BaseModel):
 
 
 class AtomicKind(BaseModel):
-    """
-    A representation of the most important information about each
-    type of species used in the calculation.
-    """
+    """A representation of the most important information about each type of species."""
 
     element: str = Field(None, description="Element assigned to this atom kind")
     basis: str = Field(None, description="Basis set for this atom kind")
@@ -382,12 +378,14 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             attr = "from_structure"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
                 "include_structure": True,
             }
         elif isinstance(calcs_reversed[-1].output.structure, Molecule):
             attr = "from_molecule"
             dat = {
                 "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
                 "molecule": calcs_reversed[-1].output.structure,
                 "include_molecule": True,
             }
@@ -396,6 +394,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         ddict = doc.dict()
         data = {
             "structure": calcs_reversed[-1].output.structure,
+            "meta_structure": calcs_reversed[-1].output.structure,
             "dir_name": dir_name,
             "calcs_reversed": calcs_reversed,
             "analysis": analysis,
@@ -581,9 +580,7 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
 
 def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
-    all_calcs_completed = all(
-        [c.has_cp2k_completed == Status.SUCCESS for c in calc_docs]
-    )
+    all_calcs_completed = all(c.has_cp2k_completed == Status.SUCCESS for c in calc_docs)
     if len(analysis.errors) == 0 and all_calcs_completed:
         return Status.SUCCESS  # type: ignore
     return Status.FAILED  # type: ignore
@@ -592,9 +589,9 @@ def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Statu
 def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
     """Get summary of runtime statistics for each calculation in this task."""
     run_stats = {}
-    total = dict(
-        total_time=0.0,
-    )
+    total = {
+        "total_time": 0.0,
+    }
     for calc_doc in calc_docs:
         stats = calc_doc.output.run_stats
         run_stats[calc_doc.task_name] = stats

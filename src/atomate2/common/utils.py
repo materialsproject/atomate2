@@ -4,17 +4,18 @@ from __future__ import annotations
 
 import re
 from importlib import import_module
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def get_transformations(
     transformations: tuple[str, ...], params: tuple[dict, ...] | None
 ) -> list:
-    """Get instantiated transformation objects from their names
-    and parameters.
+    """Get instantiated transformation objects from their names and parameters.
 
     Parameters
     ----------

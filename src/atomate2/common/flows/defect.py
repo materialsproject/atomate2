@@ -5,12 +5,9 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-import numpy.typing as npt
 from jobflow import Flow, Job, Maker, OutputReference
-from pymatgen.analysis.defects.core import Defect
-from pymatgen.core.structure import Structure
 
 from atomate2.common.jobs.defect import (
     bulk_supercell_calculation,
@@ -20,6 +17,13 @@ from atomate2.common.jobs.defect import (
     spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import numpy.typing as npt
+    from pymatgen.analysis.defects.core import Defect
+    from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -189,6 +193,7 @@ class FormationEnergyMaker(Maker, ABC):
     name: str = "formation energy"
 
     def __post_init__(self):
+        """Apply post init updates."""
         self.validate_maker()
         if self.bulk_relax_maker is None:
             self.bulk_relax_maker = self.defect_relax_maker

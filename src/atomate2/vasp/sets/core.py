@@ -5,15 +5,18 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from pymatgen.core import Structure
 from pymatgen.core.periodic_table import Element
-from pymatgen.io.vasp import Outcar, Vasprun
 
-from atomate2.common.schemas.math import Vector3D
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from emmet.core.math import Vector3D
+    from pymatgen.core import Structure
+    from pymatgen.io.vasp import Outcar, Vasprun
+
 
 logger = logging.getLogger(__name__)
 
@@ -260,7 +263,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.mode == "line":
             return {"line_density": self.line_density}
 
-        elif self.mode == "boltztrap":
+        if self.mode == "boltztrap":
             return {"explicit": True, "reciprocal_density": self.reciprocal_density}
 
         return {
@@ -906,9 +909,7 @@ class MDSetGenerator(VaspInputGenerator):
 
     @staticmethod
     def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
-        """
-        Get default params for the ensemble.
-        """
+        """Get default params for the ensemble."""
         defaults = {
             "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
@@ -924,11 +925,11 @@ class MDSetGenerator(VaspInputGenerator):
 
         try:
             return defaults[ensemble.lower()]  # type: ignore
-        except KeyError:
+        except KeyError as err:
             supported = tuple(defaults.keys())
             raise ValueError(
                 f"Expect `ensemble` to be one of {supported}; got {ensemble}."
-            )
+            ) from err
 
 
 def _get_nedos(vasprun: Vasprun | None, dedos: float):

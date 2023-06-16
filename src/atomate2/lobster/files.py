@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 LOBSTEROUTPUT_FILES = [
     "lobsterout",

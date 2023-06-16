@@ -5,15 +5,17 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence
-
-from pymatgen.core import Structure
+from typing import TYPE_CHECKING, Sequence
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
 
@@ -25,8 +27,9 @@ logger = logging.getLogger(__name__)
 def copy_vasp_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
-    additional_vasp_files: Sequence[str] = tuple(),
+    additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
+    force_overwrite: bool = False,
     file_client: FileClient | None = None,
 ):
     """
@@ -50,6 +53,8 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
+    force_overwrite : bool
+        If True, overwrite existing files during the copy step.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
@@ -87,6 +92,7 @@ def copy_vasp_outputs(
         include_files=required_files + optional_files,
         allow_missing=True,
         file_client=file_client,
+        force=force_overwrite,
     )
 
     # rename files to remove relax extension

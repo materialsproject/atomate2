@@ -1,7 +1,4 @@
-"""
-Functions to run LOBSTER.
-
-"""
+"""Functions to run LOBSTER."""
 
 from __future__ import annotations
 
@@ -9,15 +6,17 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from custodian import Custodian
-from custodian.custodian import Validator
 from custodian.lobster.handlers import EnoughBandsValidator, LobsterFilesValidator
 from custodian.lobster.jobs import LobsterJob
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from custodian.custodian import Validator
 
 __all__ = ["JobType", "run_lobster"]
 
@@ -50,6 +49,7 @@ def run_lobster(
 ):
     """
     Run Lobster.
+
     Supports running Lobster with or without custodian (see :obj:`JobType`).
 
     Parameters
@@ -81,7 +81,7 @@ def run_lobster(
         logger.info(f"{lobster_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [LobsterJob(split_lobster_cmd, **lobster_job_kwargs)]
     else:
         raise ValueError(f"Unsupported job type: {job_type}")

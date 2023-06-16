@@ -4,11 +4,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
 from pymatgen.io.lobster import Lobsterin
 
 from atomate2.common.files import delete_files
@@ -16,8 +14,15 @@ from atomate2.lobster.jobs import LobsterMaker
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
+
 
 __all__ = [
     "LobsterStaticMaker",
@@ -32,8 +37,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LobsterStaticMaker(BaseVaspMaker):
     """
-    Maker that performs a VASP computation with
-     settings that are required for Lobter runs.
+    Maker that performs a VASP computation with settings that are required for Lobster.
 
     Parameters
     ----------
@@ -48,7 +52,7 @@ class LobsterStaticMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -62,24 +66,19 @@ class LobsterStaticMaker(BaseVaspMaker):
     name: str = "static_run"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 6000},
+            auto_ispin=True,
+            user_kpoints_settings={"reciprocal_density": 400},
             user_incar_settings={
-                "IBRION": 2,
-                "ISIF": 2,
-                "ENCUT": 680,
                 "EDIFF": 1e-7,
                 "LAECHG": False,
                 "LREAL": False,
+                "LVTOT": False,
                 "ALGO": "Normal",
-                "NSW": 0,
                 "LCHARG": False,
                 "LWAVE": True,
                 "ISYM": 0,
             },
         )
-    )
-    copy_vasp_kwargs: dict = field(
-        default_factory=lambda: {"additional_vasp_files": ["WAVECAR"]}
     )
 
 
@@ -109,9 +108,16 @@ def get_basis_infos(
     dict
         Dictionary including number of bands and basis set information.
     """
-    potcar_symbols = vasp_maker.input_set_generator._get_potcar(
-        structure=structure, potcar_spec=True
-    )
+    # this logic enables handling of a flow or a simple maker
+    try:
+        potcar_symbols = vasp_maker.static_maker.input_set_generator._get_potcar(
+            structure=structure, potcar_spec=True
+        )
+
+    except AttributeError:
+        potcar_symbols = vasp_maker.input_set_generator._get_potcar(
+            structure=structure, potcar_spec=True
+        )
 
     # get data from LobsterInput
     list_basis_dict = Lobsterin.get_all_possible_basis_functions(
@@ -123,7 +129,7 @@ def get_basis_infos(
 
     nband_list = []
     for dict_for_basis in list_basis_dict:
-        basis = [key + " " + value for key, value in dict_for_basis.items()]
+        basis = [f"{key} {value}" for key, value in dict_for_basis.items()]
         lobsterin = Lobsterin(settingsdict={"basisfunctions": basis})
         nbands = lobsterin._get_nbands(structure=structure)
         nband_list.append(nbands)
@@ -171,8 +177,6 @@ def get_lobster_jobs(
     optimization_uuid: str,
     static_dir: Path | str,
     static_uuid: str,
-    preconverge_static_dir: Path | str,
-    preconverge_static_uuid: str,
 ):
     """
     Create a list of Lobster jobs with different basis sets.
@@ -191,10 +195,6 @@ def get_lobster_jobs(
         Path to static VASP calculation containing the WAVECAR.
     static_uuid : str
         Uuid of static run.
-    preconverge_static_dir : Path or str
-        Path to preconvergence step.
-    preconverge_static_uuid : str
-        uuid of preconvergence step.
 
     Returns
     -------
@@ -207,8 +207,6 @@ def get_lobster_jobs(
         "optimization_uuid": optimization_uuid,
         "static_dir": static_dir,
         "static_uuid": static_uuid,
-        "preconverge_static_dir": preconverge_static_dir,
-        "preconverge_static_uuid": preconverge_static_uuid,
         "lobster_uuids": [],
         "lobster_dirs": [],
         "lobster_task_documents": [],
@@ -233,7 +231,6 @@ def get_lobster_jobs(
 def delete_lobster_wavecar(
     dirs: list[Path | str],
     lobster_static_dir: Path | str = None,
-    preconverge_static_dir: Path | str = None,
 ):
     """
     Delete all WAVECARs.
@@ -244,14 +241,9 @@ def delete_lobster_wavecar(
         Path to directories of lobster jobs.
     lobster_static_dir : Path or str
         Path to directory of static VASP run.
-    preconverge_static_dir : Path or str
-        Path to directory of preconvergence run.
     """
     if lobster_static_dir:
         dirs.append(lobster_static_dir)
-
-    if preconverge_static_dir:
-        dirs.append(preconverge_static_dir)
 
     for dir_name in dirs:
         delete_files(

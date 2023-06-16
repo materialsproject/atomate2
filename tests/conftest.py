@@ -33,17 +33,17 @@ def clean_dir(debug_mode):
     import tempfile
 
     old_cwd = os.getcwd()
-    newpath = tempfile.mkdtemp()
-    os.chdir(newpath)
+    new_path = tempfile.mkdtemp()
+    os.chdir(new_path)
     yield
     if debug_mode:
-        print(f"Tests ran in {newpath}")
+        print(f"Tests ran in {new_path}")
     else:
         os.chdir(old_cwd)
-        shutil.rmtree(newpath)
+        shutil.rmtree(new_path)
 
 
-@pytest.fixture
+@pytest.fixture()
 def tmp_dir():
     """Same as clean_dir but is fresh for every test"""
     import os
@@ -77,7 +77,7 @@ def lpad(database, debug_mode):
             lpad.db[coll].drop()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def memory_jobstore():
     from jobflow import JobStore
     from maggma.stores import MemoryStore
@@ -95,7 +95,7 @@ def log_to_stdout_auto_use():
     initialize_logger()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def si_structure(test_dir):
     from pymatgen.core import Structure
 

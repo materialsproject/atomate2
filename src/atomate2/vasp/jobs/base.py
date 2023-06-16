@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from shutil import which
+from typing import TYPE_CHECKING, Callable
 
+from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -18,14 +19,18 @@ from pymatgen.electronic_structure.bandstructure import (
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
+from atomate2 import SETTINGS
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
-from atomate2.vasp.schemas.task import TaskDocument
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = ["BaseVaspMaker", "vasp_job"]
 
 
+_BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 _DATA_OBJECTS = [
     BandStructure,
     BandStructureSymmLine,
@@ -49,7 +54,7 @@ def vasp_job(method: Callable):
     settings for all VASP jobs. For example, it ensures that large data objects
     (band structures, density of states, LOCPOT, CHGCAR, etc) are all stored in the
     atomate2 data store. It also configures the output schema to be a VASP
-    :obj:`.TaskDocument`.
+    :obj:`.TaskDoc`.
 
     Any makers that return VASP jobs (not flows) should decorate the ``make`` method
     with @vasp_job. For example:
@@ -73,7 +78,7 @@ def vasp_job(method: Callable):
     callable
         A decorated version of the make function that will generate VASP jobs.
     """
-    return job(method, data=_DATA_OBJECTS, output_schema=TaskDocument)
+    return job(method, data=_DATA_OBJECTS, output_schema=TaskDoc)
 
 
 @dataclass
@@ -94,7 +99,7 @@ class BaseVaspMaker(Maker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -147,7 +152,7 @@ class BaseVaspMaker(Maker):
         run_vasp(**self.run_vasp_kwargs)
 
         # parse vasp outputs
-        task_doc = TaskDocument.from_directory(Path.cwd(), **self.task_document_kwargs)
+        task_doc = get_vasp_task_document(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
         # decide whether child jobs should proceed
@@ -161,3 +166,23 @@ class BaseVaspMaker(Maker):
             stored_data={"custodian": task_doc.custodian},
             output=task_doc,
         )
+
+
+def get_vasp_task_document(
+    path: Path | str,
+    **kwargs,
+):
+    """Get VASP Task Document using atomate2 settings."""
+    if "store_additional_json" not in kwargs:
+        kwargs["store_additional_json"] = SETTINGS.VASP_STORE_ADDITIONAL_JSON
+
+    if "volume_change_warning_tol" not in kwargs:
+        kwargs["volume_change_warning_tol"] = SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+
+    if "run_bader" not in kwargs:
+        kwargs["run_bader"] = SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS
+
+    if "store_volumetric_data" not in kwargs:
+        kwargs["store_volumetric_data"] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA
+
+    return TaskDoc.from_directory(path, **kwargs)

@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from click.testing import CliRunner
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
 from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
@@ -16,18 +16,22 @@ from pymatgen.transformations.standard_transformations import (
 
 from atomate2 import SETTINGS
 from atomate2.common.files import get_zfile
-from atomate2.common.schemas.math import Vector3D
 from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import HSEBSMaker, NonSCFMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSEStaticSetGenerator,
     NonSCFSetGenerator,
     StaticSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from emmet.core.math import Vector3D
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 __all__ = [
     "DenseUniformMaker",
@@ -59,7 +63,7 @@ class DenseUniformMaker(NonSCFMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -100,7 +104,7 @@ class StaticDeformationMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -142,7 +146,7 @@ class HSEStaticDeformationMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -180,7 +184,7 @@ class HSEDenseUniformMaker(HSEBSMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -447,7 +451,7 @@ def _extract_ibands(log: str) -> tuple[list[int], ...]:
             if "up" in result_splits[i + 1]:
                 # up listed first
                 return aibands, bibands
-            else:
+            else:  # noqa: RET505
                 # down listed first
                 return bibands, aibands
     raise ValueError("Could not find ibands in log.")

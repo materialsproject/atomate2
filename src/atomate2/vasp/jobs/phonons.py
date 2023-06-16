@@ -5,12 +5,11 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import numpy as np
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
-from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
@@ -18,11 +17,16 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.schemas.math import Matrix3D
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    import numpy as np
+    from emmet.core.math import Matrix3D
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -121,8 +125,7 @@ def get_supercell_size(
             )
             transformation.apply_transformation(structure=structure)
 
-    supercell_matrix = transformation.transformation_matrix.tolist()
-    return supercell_matrix
+    return transformation.transformation_matrix.tolist()
 
 
 @job
@@ -238,7 +241,7 @@ def generate_frequencies_eigenvectors(
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
 
     """
-    phonon_doc = PhononBSDOSDoc.from_forces_born(
+    return PhononBSDOSDoc.from_forces_born(
         structure=structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
@@ -253,8 +256,6 @@ def generate_frequencies_eigenvectors(
         born=born,
         **kwargs,
     )
-
-    return phonon_doc
 
 
 @job
@@ -340,7 +341,7 @@ class PhononDisplacementMaker(BaseVaspMaker):
     run_vasp_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_vasp`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict

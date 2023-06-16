@@ -1,3 +1,35 @@
+```{toctree}
+:caption: User Guide
+:hidden:
+user/index
+user/install
+user/running-workflows
+user/fireworks
+user/codes/index
+```
+
+```{toctree}
+:caption: Reference
+:hidden:
+reference/index
+```
+
+```{toctree}
+:caption: Developer Guide
+:hidden:
+dev/dev_install
+dev/vasp_tests
+```
+
+```{toctree}
+:caption: About
+:hidden:
+about/changelog
+about/contributors
+about/contributing
+about/license
+```
+
 # atomate2 documentation
 
 **Date**: {sub-ref}`today`
@@ -7,8 +39,8 @@
 [Issues & Ideas](https://github.com/materialsproject/atomate2/issues) |
 [Q&A Support](https://matsci.org/c/atomate)
 
-Atomate2 is an open source library providing computational workflows for
-automating first principles calculations.
+Atomate2 is an open-source library providing computational workflows for
+automating first-principles calculations.
 
 ::::{grid} 1 1 2 2
 :class-container: text-center

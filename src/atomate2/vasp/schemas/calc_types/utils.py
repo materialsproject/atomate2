@@ -34,17 +34,14 @@ def run_type(vasp_parameters: Dict) -> RunType:
         """Check two strings equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()
-        else:
-            return v1 == v2
+        return v1 == v2
 
     # This is to force an order of evaluation
     for functional_class in ["HF", "VDW", "METAGGA", "GGA"]:
         for special_type, params in _RUN_TYPE_DATA[functional_class].items():
             if all(
-                [
-                    _variant_equal(vasp_parameters.get(param, None), value)
-                    for param, value in params.items()
-                ]
+                _variant_equal(vasp_parameters.get(param, None), value)
+                for param, value in params.items()
             ):
                 return RunType(f"{special_type}{is_hubbard}")
 
@@ -75,8 +72,8 @@ def task_type(
         try:
             kpt_labels = kpts.get("labels") or []
             num_kpt_labels = len(list(filter(None.__ne__, kpt_labels)))
-        except Exception as e:
-            raise Exception(f"Couldn't identify total number of kpt labels: {e}")
+        except Exception as exc:
+            raise Exception("Couldn't identify total number of kpt labels") from exc
 
         if num_kpt_labels > 0:
             acalc_type.append("NSCF Line")

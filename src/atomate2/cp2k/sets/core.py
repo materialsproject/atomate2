@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from pymatgen.core import Structure
-from pymatgen.io.cp2k.inputs import Cp2kInput
-from pymatgen.io.cp2k.outputs import Cp2kOutput
 from pymatgen.io.cp2k.utils import get_truncated_coulomb_cutoff
 
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+    from pymatgen.io.cp2k.inputs import Cp2kInput
+    from pymatgen.io.cp2k.outputs import Cp2kOutput
 
 logger = logging.getLogger(__name__)
 
@@ -29,54 +32,49 @@ __all__ = [
 
 @dataclass
 class StaticSetGenerator(Cp2kInputGenerator):
-    """
-    Class to generate CP2K static input sets.
-    """
+    """Class to generate CP2K static input sets."""
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a static job."""
-        updates = {"run_type": "ENERGY_FORCE"}
-        return updates
+        return {"run_type": "ENERGY_FORCE"}
 
 
 @dataclass
 class RelaxSetGenerator(Cp2kInputGenerator):
     """
-    Class to generate CP2K relax sets, i.e. sets for optimization
-    of internal coordinates without cell parameter optimization.
+    Class to generate CP2K relax sets.
+
+    I.e., sets for optimization of internal coordinates without cell parameter
+    optimization.
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a relax job."""
-        updates = {
+        return {
             "run_type": "GEO_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
         }
-        return updates
 
 
 @dataclass
 class CellOptSetGenerator(Cp2kInputGenerator):
     """
-    Class to generate CP2K cell optimization sets, i.e. sets
-    for optimization of both internal coordinates and the
-    lattice vectors.
+    Class to generate CP2K cell optimization sets.
+
+    I.e., sets for optimization of both internal coordinates and the lattice vectors.
     """
 
     def get_input_updates(self, *args, **kwargs) -> dict:
         """Get updates to the input for a cell opt job."""
-        updates = {
+        return {
             "run_type": "CELL_OPT",
             "activate_motion": {"optimizer": "BFGS", "trust_radius": 0.1},
         }
-        return updates
 
 
 @dataclass
 class HybridStaticSetGenerator(Cp2kInputGenerator):
-    """
-    Class for generating static hybrid input sets.
-    """
+    """Class for generating static hybrid input sets."""
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
@@ -100,9 +98,7 @@ class HybridStaticSetGenerator(Cp2kInputGenerator):
 
 @dataclass
 class HybridRelaxSetGenerator(Cp2kInputGenerator):
-    """
-    Class for generating hybrid relaxation input sets.
-    """
+    """Class for generating hybrid relaxation input sets."""
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
@@ -127,9 +123,7 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
 
 @dataclass
 class HybridCellOptSetGenerator(Cp2kInputGenerator):
-    """
-    Class for generating hybrid cell optimization input sets.
-    """
+    """Class for generating hybrid cell optimization input sets."""
 
     def get_input_updates(self, structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
@@ -225,7 +219,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
         cp2k_output: Cp2kOutput = None,
     ) -> dict:
         """Get input updates for a non scf calculation."""
-        updates = {
+        return {
             "max_scf": 1,
             "print_bandstructure": True,
             "kpoints_line_density": self.line_density if self.mode == "line" else 1,
@@ -235,18 +229,14 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
             "run_type": "ENERGY_FORCE",
         }
 
-        return updates
-
 
 @dataclass
 class MDSetGenerator(Cp2kInputGenerator):
-    """
-    Class to generate molecular dynamics input sets.
-    """
+    """Class to generate molecular dynamics input sets."""
 
     def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """Get input updates for running a MD calculation."""
-        updates = {
+        return {
             "run_type": "MD",
             "activate_motion": {
                 "ensemble": "NVT",
@@ -262,5 +252,3 @@ class MDSetGenerator(Cp2kInputGenerator):
             "print_e_density": False,
             "print_mo_cubes": False,
         }
-
-        return updates

@@ -5,18 +5,16 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OutputReference
 from jobflow.core.maker import recursive_call
-from pymatgen.core.structure import Structure
 from pymatgen.io.vasp.outputs import Vasprun
 
 from atomate2.common.files import get_zfile
 from atomate2.common.flows import defect as defect_flows
-from atomate2.common.schemas.defects import CCDDocument
 from atomate2.utils.file_client import FileClient
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
 from atomate2.vasp.sets.defect import (
@@ -25,6 +23,12 @@ from atomate2.vasp.sets.defect import (
     ChargeStateStaticSetGenerator,
     HSEChargeStateRelaxSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core.structure import Structure
+
+    from atomate2.common.schemas.defects import CCDDocument
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 logger = logging.getLogger(__name__)
 
@@ -135,6 +139,8 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         structure: Structure
         """
         fc = FileClient()
+        # strip off the `hostname:` prefix
+        previous_dir = previous_dir.split(":")[-1]
         files = fc.listdir(previous_dir)
         vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
         vasprun = Vasprun(vasprun_file)

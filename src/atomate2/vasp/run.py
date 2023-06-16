@@ -12,10 +12,9 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from custodian import Custodian
-from custodian.custodian import ErrorHandler, Validator
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -34,7 +33,11 @@ from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
-from atomate2.vasp.schemas.task import TaskDocument
+
+if TYPE_CHECKING:
+    from custodian.custodian import ErrorHandler, Validator
+    from emmet.core.tasks import TaskDoc
+
 
 __all__ = [
     "JobType",
@@ -140,7 +143,7 @@ def run_vasp(
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [VaspJob(split_vasp_cmd, **vasp_job_kwargs)]
     elif job_type == JobType.DOUBLE_RELAXATION:
         jobs = VaspJob.double_relaxation_run(split_vasp_cmd, **vasp_job_kwargs)
@@ -168,7 +171,7 @@ def run_vasp(
 
 
 def should_stop_children(
-    task_document: TaskDocument,
+    task_document: TaskDoc,
     handle_unsuccessful: bool | str = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """
@@ -176,7 +179,7 @@ def should_stop_children(
 
     Parameters
     ----------
-    task_document : .TaskDocument
+    task_document : .TaskDoc
         A VASP task document.
     handle_unsuccessful : bool or str
         This is a three-way toggle on what to do if your job looks OK, but is actually
