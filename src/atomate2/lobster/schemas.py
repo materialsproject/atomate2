@@ -1,4 +1,4 @@
-"""Module defining amset document schemas."""
+"""Module defining lobster document schemas."""
 
 import logging
 import time
