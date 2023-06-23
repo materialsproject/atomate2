@@ -181,7 +181,7 @@ class PhononBSDOSDoc(BaseModel):
         "Includes all data of the computation of the thermal displacements"
     )
 
-    jobdirs: PhononJobDirs = Field("Field including all relevant job directories")
+    jobdirs: Optional[PhononJobDirs] = Field("Field including all relevant job directories")
 
     uuids: PhononUUIDs = Field("Field including all relevant uuids")
 

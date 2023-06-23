@@ -301,13 +301,19 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structure": displacement,
         }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
+        try:
+            phonon_job.update_maker_kwargs(
+                {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
+            )
+        except:
+            pass
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"].append(i)
         outputs["uuids"].append(phonon_job.output.uuid)
-        outputs["dirs"].append(phonon_job.output.dir_name)
+        try:
+            outputs["dirs"].append(phonon_job.output.dir_name)
+        except:
+            outputs["dirs"]=None
         outputs["forces"].append(phonon_job.output.output.forces)
         outputs["displaced_structures"].append(displacement)
 
