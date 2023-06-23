@@ -34,6 +34,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v4
         with:
@@ -46,16 +48,22 @@ jobs:
           python -m pip install --upgrade pip
             pip install .[strict,tests]
 
-      - name: Test
+      - name: Upload to Codecov
+        run: |
+          codecovcli create-commit
+          codecovcli create-report
+          codecovcli static-analysis --token=${{ env.STATIC_TOKEN }}
+          BASE_COMMIT=$(git merge-base ${{ github.sha }}^ origin/main)
+          codecovcli label-analysis --token=${{ env.STATIC_TOKEN }} --base-sha=${BASE_COMMIT}
+          codecovcli --codecov-yml-path=codecov_cli.yml do-upload --plugin pycoverage --plugin compress-pycoverage --flag smart-tests --fail-on-error
         env:
-          MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: pytest --cov=atomate2 --cov-report=xml
-
-      - uses: codecov/codecov-action@v1
-        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          STATIC_TOKEN: ${{ secrets.CODECOV_STATIC_TOKEN }}
+      ## - uses: codecov/codecov-action@v3
+      ##  if: matrix.python-version == '3.10'
+      ##  with:
+      ##    token: ${{ secrets.CODECOV_TOKEN }}
+      ##    file: ./coverage.xml
 
   docs:
     runs-on: ubuntu-latest

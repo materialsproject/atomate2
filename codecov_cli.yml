@@ -1,0 +1,4 @@
+cli:
+  plugins:
+      pycoverage:
+        report_type: "json"
