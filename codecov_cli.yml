@@ -2,3 +2,8 @@ cli:
   plugins:
       pycoverage:
         report_type: "json"
+
+runners:
+  python:
+    collect_tests_options:
+      - --cov=atomate2
