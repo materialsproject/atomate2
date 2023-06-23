@@ -580,8 +580,7 @@ class LobsterTaskDocument(BaseModel):
             charges=charges,
             madelung_energies=madelung_energies,
         )
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
 
 def _identify_strongest_bonds(

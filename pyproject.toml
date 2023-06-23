@@ -141,39 +141,41 @@ exclude_lines = [
 [tool.ruff]
 target-version = "py38"
 select = [
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "D",   # pydocstyle
-    "E",   # pycodestyle error
-    "EXE", # flake8-executable
-    "F",   # pyflakes
-    "FLY", # flynt
-    "I",   # isort
-    "ICN", # flake8-import-conventions
-    "ISC", # flake8-implicit-str-concat
-    "PD",  # pandas-vet
-    "PIE", # flake8-pie
-    "PL",  # pylint
-    "PT",  # flake8-pytest-style
-    "PYI", # flakes8-pyi
-    "Q",   # flake8-quotes
-    "RET", # flake8-return
-    "RSE", # flake8-raise
-    "RUF", # Ruff-specific rules
-    "SIM", # flake8-simplify
-    "TCH", # flake8-type-checking
-    "TID", # tidy imports
-    "TID", # flake8-tidy-imports
-    "UP",  # pyupgrade
-    "W",   # pycodestyle warning
-    "YTT", # flake8-2020
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "D",    # pydocstyle
+    "E",    # pycodestyle error
+    "EXE",  # flake8-executable
+    "F",    # pyflakes
+    "FLY",  # flynt
+    "I",    # isort
+    "ICN",  # flake8-import-conventions
+    "ISC",  # flake8-implicit-str-concat
+    "PD",   # pandas-vet
+    "PERF", # perflint
+    "PIE",  # flake8-pie
+    "PL",   # pylint
+    "PT",   # flake8-pytest-style
+    "PYI",  # flakes8-pyi
+    "Q",    # flake8-quotes
+    "RET",  # flake8-return
+    "RSE",  # flake8-raise
+    "RUF",  # Ruff-specific rules
+    "SIM",  # flake8-simplify
+    "SLOT", # flake8-slots
+    "TCH",  # flake8-type-checking
+    "TID",  # tidy imports
+    "TID",  # flake8-tidy-imports
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warning
+    "YTT",  # flake8-2020
 ]
 ignore = [
-    "PD011",   # pandas-use-of-dot-values
-    "PLC1901", # compare-to-empty-string
-    "PLR",     # pylint-refactor
-    "PT004",   # pytest-missing-fixture-name-underscore
-    "PT006",   # pytest-parametrize-names-wrong-type
+    "PD011",  # pandas-use-of-dot-values
+    "PLR",    # pylint-refactor
+    "PT004",  # pytest-missing-fixture-name-underscore
+    "PT006",  # pytest-parametrize-names-wrong-type
+    "RUF013", # implicit-optional
     # TODO remove PT011, pytest.raises() should always check err msg
     "PT011", # pytest-raises-too-broad
     "PT013", # pytest-incorrect-pytest-import
