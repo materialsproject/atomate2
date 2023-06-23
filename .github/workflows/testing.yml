@@ -48,6 +48,14 @@ jobs:
           python -m pip install --upgrade pip
             pip install .[strict,tests]
 
+      - name: Test
+        run: pytest --cov=atomate2 --cov-report=xml
+
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+
       - name: Upload to Codecov
         run: |
           codecovcli create-commit
@@ -58,11 +66,6 @@ jobs:
           codecovcli --codecov-yml-path=codecov_cli.yml do-upload --plugin pycoverage --plugin compress-pycoverage --flag smart-tests --fail-on-error
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      ## - uses: codecov/codecov-action@v3
-      ##  if: matrix.python-version == '3.10'
-      ##  with:
-      ##    token: ${{ secrets.CODECOV_TOKEN }}
-      ##    file: ./coverage.xml
 
   docs:
     runs-on: ubuntu-latest
