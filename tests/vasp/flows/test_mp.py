@@ -23,7 +23,7 @@ expected_incar = {
 }
 
 
-def test_MPPreRelaxMaker_default_values():
+def test_mp_pre_relax_maker_default_values():
     maker = MPPreRelaxMaker()
     assert maker.name == "MP PreRelax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
@@ -32,7 +32,7 @@ def test_MPPreRelaxMaker_default_values():
         assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
 
-def test_MPMetaGGARelaxMaker_default_values():
+def test_mp_relax_maker_default_values():
     maker = MPMetaGGARelaxMaker()
     assert maker.name == "MP Relax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
@@ -42,15 +42,15 @@ def test_MPMetaGGARelaxMaker_default_values():
 
 
 @pytest.mark.parametrize(
-    "initial_static_maker,final_relax_maker",
+    "initial_static_maker, final_relax_maker",
     [
         (MPPreRelaxMaker(), MPMetaGGARelaxMaker()),
         (MPPreRelaxMaker(), None),
         (None, MPMetaGGARelaxMaker()),
-        (None, None),  # test it works without optional makers
+        (None, None),  # test it doesn't raise without optional makers
     ],
 )
-def test_MPMetaGGARelax_default_values(initial_static_maker, final_relax_maker):
+def test_mp_meta_gga_relax_default_values(initial_static_maker, final_relax_maker):
     job = MPMetaGGARelax(
         initial_relax_maker=initial_static_maker, final_relax_maker=final_relax_maker
     )
@@ -65,7 +65,7 @@ def test_MPMetaGGARelax_default_values(initial_static_maker, final_relax_maker):
     assert job.name == "MP Meta-GGA Relax"
 
 
-def test_MPMetaGGARelax_custom_values():
+def test_mp_meta_gga_relax_custom_values():
     initial_relax_maker = MPPreRelaxMaker()
     final_relax_maker = MPMetaGGARelaxMaker()
     job = MPMetaGGARelax(

@@ -1,8 +1,9 @@
 import logging
 from pathlib import Path
-from typing import Dict, Final, Literal, Sequence, Union
+from typing import Any, Callable, Dict, Final, Generator, Literal, Sequence, Union
 
 import pytest
+from pytest import MonkeyPatch
 
 logger = logging.getLogger("atomate2")
 
@@ -22,7 +23,9 @@ def lobster_test_dir(test_dir):
 
 
 @pytest.fixture()
-def mock_vasp(monkeypatch, vasp_test_dir):
+def mock_vasp(
+    monkeypatch: MonkeyPatch, vasp_test_dir: Path
+) -> Generator[Callable[[Any, Any], Any], None, None]:
     """
     This fixture allows one to mock (fake) running VASP.
 
