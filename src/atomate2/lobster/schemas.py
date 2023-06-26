@@ -12,15 +12,15 @@ from pymatgen.core import Structure
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import (
+    Bandoverlaps,
     Charge,
     Doscar,
+    Grosspop,
     Icohplist,
     Lobsterin,
     Lobsterout,
     MadelungEnergies,
     SitePotential,
-    Bandoverlaps,
-    Grosspop,
 )
 
 from atomate2 import __version__
