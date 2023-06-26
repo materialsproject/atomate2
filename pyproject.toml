@@ -74,7 +74,7 @@ strict = [
     "phonopy==2.19.1",
     "pydantic==1.10.9",
     "pymatgen-analysis-defects==2023.6.1",
-    "pymatgen==2023.5.31",
+    "pymatgen==2023.6.23",
     "seekpath==2.1.0",
     "typing-extensions==4.6.3",
 ]
