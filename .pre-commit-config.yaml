@@ -1,6 +1,6 @@
 default_language_version:
   python: python3
-exclude: '^src/atomate2/vasp/schemas/calc_types/|^.github/'
+exclude: '^.github/'
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
   rev: v0.0.275
