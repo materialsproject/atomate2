@@ -163,9 +163,9 @@ class TaskDocument(MoleculeMetadata):
             cclib_obj.metadata.get("coord_type", None) == "xyz"
             and cclib_obj.metadata.get("coords", None) is not None
         ):
-            coords_obj = np.array(cclib_obj.metadata["coords"])
-            input_species = [Element(e) for e in coords_obj[:, 0]]
-            input_coords = coords_obj[:, 1:].tolist()
+            coords_obj = cclib_obj.metadata["coords"]
+            input_species = [Element(row[0]) for row in coords_obj]
+            input_coords = [row[1:] for row in coords_obj]
             input_molecule = Molecule(
                 input_species,
                 input_coords,
