@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-import numpy as np
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
 from monty.json import jsanitize
