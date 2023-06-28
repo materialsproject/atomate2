@@ -66,6 +66,8 @@ class ElasticMaker(Maker):
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
     fit_elastic_tensor_kwargs : dict
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
     """
 
     name: str = "elastic"
@@ -78,6 +80,7 @@ class ElasticMaker(Maker):
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
 
     def make(
         self,
@@ -128,6 +131,7 @@ class ElasticMaker(Maker):
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
             **self.fit_elastic_tensor_kwargs,
+            **self.task_document_kwargs,
         )
 
         # allow some of the deformations to fail
