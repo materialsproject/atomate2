@@ -89,6 +89,11 @@ def test_cclib_taskdoc(test_dir):
     doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
     assert doc.dict()["test"] == "hi"
 
+    # Test that the dict printing works
+
+    task = TaskDocument.from_logfile(p, "orca.out")
+    task.dict()
+
     # test document can be jsanitized
     d = jsanitize(doc, enum_values=True)
 
