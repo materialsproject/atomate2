@@ -90,7 +90,6 @@ def test_cclib_taskdoc(test_dir):
     assert doc.dict()["test"] == "hi"
 
     # Test that the dict printing works
-
     task = TaskDocument.from_logfile(p, "orca.out")
     task.dict()
 
