@@ -116,9 +116,12 @@ def run_ordering_calculations(
     """
 
     jobs, outputs = [], []
-    for idx, (ordering, prev_calc_dir) in enumerate(zip(orderings, prev_calc_dirs)):
-        struct, origin = ordering
-        kwargs = {prev_calc_dir_argname: prev_calc_dir} if prev_calc_dir_argname else {}
+    for idx, (struct, origin) in enumerate(zip(*orderings)):
+        kwargs = {}
+        if prev_calc_dir_argname and prev_calc_dirs:
+            prev_calc_dir = prev_calc_dirs[idx]
+            kwargs = {prev_calc_dir_argname: prev_calc_dir}
+
         job = maker.make(struct, **kwargs)
         job.append_name(f" {idx + 1}/{len(orderings)} ({origin})")
         jobs.append(job)
