@@ -8,7 +8,6 @@ In the context of computational materials science, `Flow ` objects are most easi
 
 ```python
 class ExampleMaker(Maker):
-    
     def make(self, coordinates: Structure) -> Flow:
         # take the input coordinates and return a `Flow `
         return Flow(...)
@@ -21,7 +20,6 @@ have a method `get_input_set()` that typically takes atomic coordinates (e.g., a
 
 ```python
 class ExampleInputGenerator(InputGenerator):
-    
     def get_input_set(self, coordinates: Structure) -> InputSet:
         # take the input coordinates, determine appropriate
         # input file contents, and return an `InputSet`
@@ -34,7 +32,9 @@ class ExampleInputGenerator(InputGenerator):
 
 ```python
 class ExampleMaker(Maker):
-    input_set_generator: ExampleInputGenerator = field(default_factory=ExampleInputGenerator)
+    input_set_generator: ExampleInputGenerator = field(
+        default_factory=ExampleInputGenerator
+    )
 
     def make(self, coordinates: Structure) -> Flow:
         # create an`InputSet`
