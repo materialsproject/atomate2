@@ -249,10 +249,6 @@ class VaspInputGenerator(InputGenerator):
         Functional to use. Default is to use the functional in the config dictionary.
         Valid values: "PBE", "PBE_52", "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91",
         "LDA_US", "PW91_US".
-    auto_metal_kpoints
-        If true and the system is metallic, try and use ``reciprocal_density_metal``
-        instead of ``reciprocal_density`` for metallic systems. Note, this only works
-        when generating the input set from a previous VASP directory.
     auto_ismear
         If true, the values for ISMEAR and SIGMA will be set automatically depending
         on the bandgap of the system. If the bandgap is not known (e.g., there is no
@@ -260,6 +256,16 @@ class VaspInputGenerator(InputGenerator):
         metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator,
         then ISMEAR=-5 (tetrahedron smearing). Note, this only works when generating the
         input set from a previous VASP directory.
+    auto_ispin
+        If generating input set from a previous calculation, this controls whether
+        to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
+        moments are less than 0.02.
+    auto_lreal
+        If True, automatically use the VASP recommended LREAL based on cell size.
+    auto_metal_kpoints
+        If true and the system is metallic, try and use ``reciprocal_density_metal``
+        instead of ``reciprocal_density`` for metallic systems. Note, this only works
+        when generating the input set from a previous VASP directory.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
         initial MAGMOM guess for all species.
@@ -283,12 +289,6 @@ class VaspInputGenerator(InputGenerator):
         optB86b and rVV10.
     symprec
         Tolerance for symmetry finding, used for line mode band structure k-points.
-    auto_ispin
-        If generating input set from a previous calculation, this controls whether
-        to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
-        moments are less than 0.02.
-    auto_lreal
-        If True, automatically use the VASP recommended LREAL based on cell size.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -297,8 +297,10 @@ class VaspInputGenerator(InputGenerator):
     user_kpoints_settings: dict | Kpoints = field(default_factory=dict)
     user_potcar_settings: dict = field(default_factory=dict)
     user_potcar_functional: str = None
+    auto_ismear: bool = False
+    auto_ispin: bool = False
+    auto_lreal: bool = False
     auto_metal_kpoints: bool = True
-    auto_ismear: bool = True
     constrain_total_magmom: bool = False
     validate_magmom: bool = True
     use_structure_charge: bool = False
@@ -306,8 +308,6 @@ class VaspInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
-    auto_ispin: bool = False
-    auto_lreal: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
@@ -692,6 +692,10 @@ class VaspInputGenerator(InputGenerator):
 
         # Remove unused INCAR parameters
         _remove_unused_incar_params(incar, skip=list(self.user_incar_settings))
+
+        # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
+        # overwritten settings are changed back to the intended values.
+        _apply_incar_updates(incar, self.user_incar_settings)
 
         return incar
 
