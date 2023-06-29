@@ -240,6 +240,7 @@ def fit_elastic_tensor(
     order: int = 2,
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
+    allow_elastically_unstable_structs: bool = True,
 ):
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.
@@ -265,6 +266,9 @@ def fit_elastic_tensor(
     symprec : float
         Symmetry precision for deriving symmetry equivalent deformations. If
         ``symprec=None``, then no symmetry operations will be applied.
+    allow_elastically_unstable_structs : bool
+        Whether to allow the ElasticDocument to still complete in the event that
+        the structure is elastically unstable.
     """
     stresses = []
     deformations = []
@@ -292,4 +296,5 @@ def fit_elastic_tensor(
         order=order,
         equilibrium_stress=equilibrium_stress,
         symprec=symprec,
+        allow_elastically_unstable_structs=allow_elastically_unstable_structs,
     )

@@ -249,8 +249,7 @@ class TaskDocument(MoleculeMetadata):
             metadata=metadata,
         )
         doc.molecule = final_molecule
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
 
 @requires(cclib, "cclib_calculate requires cclib to be installed.")
