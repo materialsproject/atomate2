@@ -658,34 +658,34 @@ class VaspInputGenerator(InputGenerator):
                     UserWarning,
                     stacklevel=1,
                 )
-            incar["NUPDOWN"] = nupdown
+            incar_updates["NUPDOWN"] = nupdown
 
         if self.use_structure_charge:
-            incar["NELECT"] = self.get_nelect(structure)
+            incar_updates["NELECT"] = self.get_nelect(structure)
 
         # handle auto ISPIN
         if ispin is not None and "ISPIN" not in self.user_incar_settings:
-            incar["ISPIN"] = ispin
+            incar_updates["ISPIN"] = ispin
 
         if self.auto_ismear:
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
-                incar.update({"SIGMA": 0.2, "ISMEAR": 0})
+                incar_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
             elif bandgap == 0:
-                incar.update({"SIGMA": 0.2, "ISMEAR": 2})  # metal
+                incar_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
             else:
-                incar.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
+                incar_updates.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
 
         if self.auto_lreal:
-            incar.update({"LREAL": _get_recommended_lreal(structure)})
+            incar_updates["LREAL"] = _get_recommended_lreal(structure)
 
         if kpoints is not None:
             # unset KSPACING as we are using a KPOINTS file and ensure adequate number
             # of KPOINTS are present for the tetrahedron method (ISMEAR=-5).
             incar.pop("KSPACING", None)
             if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
-                incar["ISMEAR"] = 0
+                incar_updates["ISMEAR"] = 0
 
         # apply specified updates, be careful not to override user_incar_settings
         _apply_incar_updates(incar, incar_updates, skip=list(self.user_incar_settings))
