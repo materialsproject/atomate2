@@ -121,7 +121,7 @@ def run_ordering_calculations(
         Replaces the job with a Flow that will run all calculations.
     """
 
-    jobs, outputs = [], []
+    jobs = []
     num_orderings = len(orderings[0])
     for idx, (struct, origin) in enumerate(zip(*orderings)):
         name = f"{idx + 1}/{num_orderings} ({origin})"
@@ -139,15 +139,12 @@ def run_ordering_calculations(
             kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
             struct = relax_job.output.structure
             jobs.append(relax_job)
-            outputs.append(relax_job.output)
 
         static_job = static_maker.make(struct, **kwargs)
         static_job.append_name(" " + name)
         static_job.metadata.update(metadata)
 
         jobs.append(static_job)
-        outputs.append(static_job.output)
 
-    flow = Flow(jobs, output=outputs)
-
+    flow = Flow(jobs)
     return Response(replace=flow)
