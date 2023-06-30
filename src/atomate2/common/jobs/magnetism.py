@@ -122,8 +122,9 @@ def run_ordering_calculations(
     """
 
     jobs, outputs = [], []
+    num_orderings = len(orderings[0])
     for idx, (struct, origin) in enumerate(zip(*orderings)):
-        name = f"{idx + 1}/{len(orderings)} ({origin})"
+        name = f"{idx + 1}/{num_orderings} ({origin})"
 
         parent_structure = struct.copy()
         parent_structure.remove_spin()
@@ -132,7 +133,7 @@ def run_ordering_calculations(
         kwargs = {}
         if relax_maker is not None:
             relax_job = relax_maker.make(struct, **kwargs)
-            relax_job.append_name(f"Relax {name}")
+            relax_job.append_name(" " + name)
             relax_job.metadata.update(metadata)
 
             kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
@@ -141,7 +142,7 @@ def run_ordering_calculations(
             outputs.append(relax_job.output)
 
         static_job = static_maker.make(struct, **kwargs)
-        static_job.append_name(f"Static {name}")
+        static_job.append_name(" " + name)
         static_job.metadata.update(metadata)
 
         jobs.append(static_job)
