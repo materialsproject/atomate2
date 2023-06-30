@@ -151,5 +151,9 @@ class MagneticOrderingsMaker(Maker):
 
         jobs.append(calculations)
 
-        flow = Flow(jobs=jobs, output=calculations.output, name=self.name)
+        flow = Flow(
+            jobs=jobs,
+            output=calculations.output,
+            name=f"{self.name} ({structure.composition.reduced_formula})",
+        )
         return flow
