@@ -1,7 +1,7 @@
 """Settings for atomate2."""
 
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Literal, Optional, Tuple, Union
 
 from pydantic import BaseSettings, Field, root_validator
 
@@ -58,7 +58,7 @@ class Atomate2Settings(BaseSettings):
         description="Maximum volume change allowed in VASP relaxations before the "
         "calculation is tagged with a warning",
     )
-    VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
+    VASP_HANDLE_UNSUCCESSFUL: Union[bool, Literal["error"]] = Field(
         "error",
         description="Three-way toggle on what to do if the job looks OK but is actually"
         " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
@@ -80,6 +80,13 @@ class Atomate2Settings(BaseSettings):
         False,
         description="Whether to run the Bader program when parsing VASP calculations."
         "Requires the bader executable to be on the path.",
+    )
+
+    VASP_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
     )
 
     LOBSTER_CMD: str = Field(

@@ -20,6 +20,7 @@ from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2 import SETTINGS
+from atomate2.utils.shutil import gzip_files
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.base import VaspInputGenerator
@@ -44,6 +45,69 @@ _DATA_OBJECTS = [
     "force_constants",
     "normalmode_eigenvecs",
 ]
+
+# Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
+# Exclude those that are also outputs
+_INPUT_FILES = [
+    "DYNMATFULL",
+    "ICONST",
+    "INCAR",
+    "KPOINTS",
+    "KPOINTS OPT",
+    "ML_AB",
+    "ML_FF",
+    "PENALTYPOT",
+    "POSCAR",
+    "POTCAR",
+    "QPOINTS",
+]
+
+# Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
+_OUTPUT_FILES = [
+    "AECCAR0",
+    "AECCAR1",
+    "AECCAR2",
+    "BSEFATBAND",
+    "CHG",
+    "CHGCAR",
+    "CONTCAR",
+    "DOSCAR",
+    "EIGENVAL",
+    "ELFCAR",
+    "HILLSPOT",
+    "IBZKPT",
+    "LOCPOT",
+    "ML_ABN",
+    "ML_FFN",
+    "ML_HIS",
+    "ML_LOGFILE",
+    "ML_REG",
+    "OSZICAR",
+    "OUTCAR",
+    "PARCHG",
+    "PCDAT",
+    "POT",
+    "PROCAR",
+    "PROOUT",
+    "REPORT",
+    "TMPCAR",
+    "vasprun.xml",
+    "vaspout.h5",
+    "vaspwave.h5",
+    "W*.tmp",
+    "WAVECAR",
+    "WAVEDER",
+    "WFULL*.tmp",
+    "XDATCAR",
+]
+
+# Files to zip: inputs, outputs and additionally generated files
+_FILES_TO_ZIP = (
+    _INPUT_FILES
+    + _OUTPUT_FILES
+    + [f"{name}.orig" for name in _INPUT_FILES]
+    + ["vasp.out", "custodian.json"]
+)
 
 
 def vasp_job(method: Callable):
@@ -159,7 +223,10 @@ class BaseVaspMaker(Maker):
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
-        gzip_dir(".")
+        if SETTINGS.VASP_ZIP_FILES == "atomate":
+            gzip_files(_FILES_TO_ZIP)
+        elif SETTINGS.VASP_ZIP_FILES:
+            gzip_dir(".")
 
         return Response(
             stop_children=stop_children,
