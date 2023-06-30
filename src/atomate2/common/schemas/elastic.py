@@ -9,6 +9,7 @@ from pymatgen.analysis.elasticity import (
     Deformation,
     ElasticTensor,
     ElasticTensorExpansion,
+    Strain,
     Stress,
 )
 from pymatgen.core import Structure
@@ -182,17 +183,21 @@ class ElasticDocument(BaseModel):
             Whether to allow the ElasticDocument to still complete in the event that
             the structure is elastically unstable.
         """
+        strains = [d.green_lagrange_strain for d in deformations]
+
         if symprec is not None:
-            deformations, stresses, uuids, job_dirs = _expand_deformations(
-                structure, deformations, stresses, uuids, job_dirs, symprec
+            strains, stresses, uuids, job_dirs = _expand_strains(
+                structure, strains, stresses, uuids, job_dirs, symprec
             )
 
+        deformations = [s.get_deformation_matrix() for s in strains]
+
+        # -0.1 to convert units from kBar to GPa and stress direction
+        stresses = [-0.1 * s for s in stresses]
         eq_stress = None
         if equilibrium_stress:
             eq_stress = -0.1 * Stress(equilibrium_stress)
 
-        strains = [d.green_lagrange_strain for d in deformations]
-        stresses = [-0.1 * s for s in stresses]
         pk_stresses = [s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations)]
 
         if order is None:
@@ -247,39 +252,42 @@ class ElasticDocument(BaseModel):
         )
 
 
-def _expand_deformations(structure, deformations, stresses, uuids, job_dirs, symprec):
-    """Use symmetry to expand deformations."""
+def _expand_strains(
+    structure: Structure,
+    strains: list[Strain],
+    stresses: list[Stress],
+    uuids: list[str],
+    job_dirs: list[str],
+    symprec: float,
+):
+    """Use symmetry to expand strains."""
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     symmops = sga.get_symmetry_operations(cartesian=True)
 
-    full_deformations = deepcopy(deformations)
+    full_strains = deepcopy(strains)
     full_stresses = deepcopy(stresses)
     full_uuids = deepcopy(uuids)
     full_job_dirs = deepcopy(job_dirs)
 
     mapping = TensorMapping()
-    for i, deformation in enumerate(deformations):
-        mapping[deformation] = True
+    for i, strain in enumerate(strains):
+        mapping[strain] = True
 
         for symmop in symmops:
-            # rotate the deformation
-            rotated_deformation = deformation.transform(symmop)
+            # rotate the strain
+            rotated_strain = strain.transform(symmop)
 
             # check if we have seen it before
-            if rotated_deformation in mapping:
-                continue
-
-            # check it is a valid deformation
-            if not Deformation(rotated_deformation).is_independent():
+            if rotated_strain in mapping:
                 continue
 
             # store the rotated deformation so we know we've seen it
-            mapping[rotated_deformation] = True
+            mapping[rotated_strain] = True
 
             # expand the other properties
-            full_deformations.append(rotated_deformation)
+            full_strains.append(rotated_strain)
             full_stresses.append(stresses[i].transform(symmop))
             full_uuids.append(uuids[i])
             full_job_dirs.append(job_dirs[i])
 
-    return full_deformations, full_stresses, full_uuids, full_job_dirs
+    return full_strains, full_stresses, full_uuids, full_job_dirs
