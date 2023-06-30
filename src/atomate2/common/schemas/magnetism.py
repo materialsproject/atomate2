@@ -75,8 +75,8 @@ class MagnetismOutput(BaseModel):
 
 class MagnetismDocument(BaseModel):
     """
-    Final document containing information about calculations single magnetic ordering
-    of a given material.
+    Final document containing information about a single magnetic ordering of a given
+    material in the context of a magnetic ordering workflow.
     """
 
     formula: str = Field(
@@ -100,7 +100,7 @@ class MagnetismDocument(BaseModel):
     output: MagnetismOutput = Field(
         None, description="Calculation results for this magnetic ordering."
     )
-    stable: bool = Field(
+    is_ground_state: bool = Field(
         None,
         description=(
             "Specifies whether or not this is the calculated ground state ordering,"
