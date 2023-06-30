@@ -70,7 +70,7 @@ class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
 
     name: str = "magnetic_orderings"
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
-    relax_maker: BaseVaspMaker | None = None
+    relax_maker: BaseVaspMaker | None = field(default_factory=RelaxMaker)
     default_magmoms: dict[Element, float] | None = None
     strategies: Sequence[
         Literal[

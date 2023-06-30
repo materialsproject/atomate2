@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Literal, Sequence
 from jobflow import Flow, Maker
 
 from atomate2.common.jobs.magnetism import (
-    analyze_ordering_calculations,
     enumerate_magnetic_orderings,
     run_ordering_calculations,
 )
@@ -143,33 +142,14 @@ class MagneticOrderingsMaker(Maker):
         )
         jobs.append(orderings)
 
-        if self.relax_maker is None:  # run static calculations only
-            static_calcs = run_ordering_calculations(
-                orderings.output,
-                prev_calc_dir_argname=self.prev_calc_dir_argname,
-                maker=self.static_maker,
-            )
-        else:
-            relaxation_calcs = run_ordering_calculations(
-                orderings.output, maker=self.relax_maker
-            )
-            jobs.append(relaxation_calcs)
-            new_ordering_structs, new_ordering_names = [], []
-            for calc in relaxation_calcs.output:
-                new_ordering_structs.append(calc["structure"])
-                new_ordering_names.append(["ordering"])
-
-            static_calcs = run_ordering_calculations(
-                (new_ordering_structs, new_ordering_names),
-                maker=self.static_maker,
-                prev_calc_dir_argname=self.prev_calc_dir_argname,
-                prev_calc_dirs=[calc["dir_name"] for calc in relaxation_calcs.output],
-            )
-        jobs.append(static_calcs)
-        analyze_job = analyze_ordering_calculations(
-            static_calcs.output, parent_structure=structure
+        calculations = run_ordering_calculations(
+            orderings.output,
+            static_maker=self.static_maker,
+            relax_maker=self.relax_maker,
+            prev_calc_dir_argname=self.prev_calc_dir_argname,
         )
-        jobs.append(analyze_job)
 
-        flow = Flow(jobs=jobs, output=analyze_job.output, name=self.name)
+        jobs.append(calculations)
+
+        flow = Flow(jobs=jobs, output=calculations.output, name=self.name)
         return flow
