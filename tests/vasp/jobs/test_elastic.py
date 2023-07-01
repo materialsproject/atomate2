@@ -9,9 +9,13 @@ from atomate2.common.schemas.elastic import _expand_strains
 from atomate2.vasp.jobs.elastic import generate_elastic_deformations
 
 
-# @pytest.mark.parametrize("conventional", [True, False])
-def test_reduce_expand_deformation(clean_dir, full_strains_non_conventional):
-    """Test for all space groups"""
+@pytest.mark.parametrize("conventional", [False, True])
+def test_reduce_expand_deformation(clean_dir, si_structure, conventional):
+    """Test reduced and expanded strains are the same
+
+    all space groups."""
+
+    full_strains = _get_strains(si_structure, conventional, sym_reduce=False)
 
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -19,7 +23,7 @@ def test_reduce_expand_deformation(clean_dir, full_strains_non_conventional):
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
 
-    _test_one_structure(structure, full_strains_non_conventional, conventional=False)
+    _test_one_structure(structure, full_strains, conventional)
 
 
 def _test_one_structure(structure: Structure, full_strains, conventional):
@@ -56,15 +60,3 @@ def _get_strains(structure, conventional, sym_reduce):
     response = run_locally(job, ensure_success=True)
     deformations = response[job.uuid][1].output
     return [d.green_lagrange_strain for d in deformations]
-
-
-@pytest.fixture()
-def full_strains_conventional(si_structure):
-    # can use any structure here
-    return _get_strains(si_structure, conventional=True, sym_reduce=False)
-
-
-@pytest.fixture()
-def full_strains_non_conventional(si_structure):
-    # can use any structure here
-    return _get_strains(si_structure, conventional=False, sym_reduce=False)
