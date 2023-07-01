@@ -157,17 +157,15 @@ def generate_elastic_deformations(
         # TODO: check for sufficiency of input for nth order
         raise ValueError("strain list is insufficient to fit an elastic tensor")
 
-    deformations = [s.get_deformation_matrix() for s in strains]
-
     if sym_reduce:
-        deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
+        strain_mapping = symmetry_reduce(strains, structure, symprec=symprec)
         logger.info(
-            f"Using symmetry to reduce number of deformations from {len(deformations)} "
-            f"to {len(list(deformation_mapping.keys()))}"
+            f"Using symmetry to reduce number of strains from {len(strains)} to "
+            f"{len(list(strain_mapping.keys()))}"
         )
-        deformations = list(deformation_mapping.keys())
+        strains = list(strain_mapping.keys())
 
-    return deformations
+    return [s.get_deformation_matrix() for s in strains]
 
 
 @job
