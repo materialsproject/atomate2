@@ -76,7 +76,7 @@ strict = [
     "pymatgen-analysis-defects==2023.6.1",
     "pymatgen==2023.5.31",
     "seekpath==2.1.0",
-    "typing-extensions==4.6.3",
+    "typing-extensions==4.7.1",
 ]
 
 [project.scripts]
