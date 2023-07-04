@@ -51,7 +51,7 @@ class ConfigurationCoordinateMaker(Maker):
 
     relax_maker: Maker
     static_maker: Maker
-    name: str = "config. coordinate"
+    name: str = "config coordinate"
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
 
     def make(

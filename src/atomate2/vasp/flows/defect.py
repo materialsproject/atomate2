@@ -203,7 +203,7 @@ class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
     )
-    name: str = "config. coordinate"
+    name: str = "config coordinate"
 
 
 @dataclass
