@@ -87,3 +87,42 @@ def test_get_kspacing_params():
     bandgap = 1.0
     params = _get_kspacing_params(bandgap, bandgap_tol)
     assert params["KSPACING"] == approx(0.30235235)
+
+
+def test_mp_relax(mock_vasp, clean_dir, si_structure):
+    from emmet.core.tasks import TaskDoc
+    from jobflow import run_locally
+
+    # mapping from job name to directory containing test files
+    ref_paths = {"relax": "Si_mp_relax/relax"}
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        "relax": {"incar_settings": ["EDIFFG", "METAGGA", "GGA"]},
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate flow
+    flow = MPMetaGGARelaxMaker().make(si_structure)
+
+    # Run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # validate output
+    output = responses[flow.jobs[0].uuid][1].output
+
+    assert isinstance(output, TaskDoc)
+    assert output.output.energy == pytest.approx(-10.85043620)
+
+    # # Now try with a custom maker
+    ref_paths = {"relax": "Si_mp_relax_custom/relax"}
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    custom_maker = MPMetaGGARelaxMaker(
+        input_set_generator=MPMetaGGARelaxMaker(
+            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
+        )
+    )
+    flow = MPMetaGGARelaxMaker(relax_maker2=custom_maker).make(si_structure)
+    run_locally(flow, create_folders=True, ensure_success=True)
