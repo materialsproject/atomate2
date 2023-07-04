@@ -185,10 +185,7 @@ def generate_phonon_displacements(
 
     supercells = phonon.supercells_with_displacements
 
-    displacements = []
-    for cell in supercells:
-        displacements.append(get_pmg_structure(cell))
-    return displacements
+    return [get_pmg_structure(cell) for cell in supercells]
 
 
 @job(output_schema=PhononBSDOSDoc, data=[PhononDos, PhononBandStructureSymmLine])
