@@ -14,13 +14,12 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticSetGenerator
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = ["MPPreRelaxMaker", "MPRelaxMaker", "MPStaticMaker"]
+__all__ = ["MPPreRelaxMaker", "MPMetaGGARelaxMaker", "MPMetaGGAStaticMaker"]
 
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
     resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
@@ -120,7 +119,7 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
 
         Returns
         -------
-        MPRelaxMaker
+        MPMetaGGARelaxMaker
             The maker.
         """
         self.input_set_generator.config_dict["INCAR"].update(
