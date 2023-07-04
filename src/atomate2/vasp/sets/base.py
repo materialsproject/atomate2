@@ -686,10 +686,10 @@ class VaspInputGenerator(InputGenerator):
                 incar["ISMEAR"] = 0
 
         # apply specified updates, be careful not to override user_incar_settings
-        _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings)
+        _apply_incar_updates(incar, incar_updates, skip=list(self.user_incar_settings))
 
         # Remove unused INCAR parameters
-        _remove_unused_incar_params(incar, skip=self.user_incar_settings)
+        _remove_unused_incar_params(incar, skip=list(self.user_incar_settings))
 
         return incar
 
@@ -969,6 +969,7 @@ def _set_lmaxtau(incar, incar_settings, structure):
         and "f" in blocks
     ):
         incar["LMAXTAU"] = 8
+
 
 def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
     """
