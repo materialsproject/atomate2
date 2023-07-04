@@ -177,8 +177,9 @@ ignore = [
     "PT006",  # pytest-parametrize-names-wrong-type
     "RUF013", # implicit-optional
     # TODO remove PT011, pytest.raises() should always check err msg
-    "PT011", # pytest-raises-too-broad
-    "PT013", # pytest-incorrect-pytest-import
+    "PERF203", # try-except-in-loop
+    "PT011",   # pytest-raises-too-broad
+    "PT013",   # pytest-incorrect-pytest-import
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]
