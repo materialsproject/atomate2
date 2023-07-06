@@ -318,12 +318,18 @@ and then return to this tutorial.
 ### Materials Project API key
 
 You can get an API key from the [Materials Project] by logging in and going to your
-[Dashboard](https://materialsproject.org/dashboard). Add this also to
-your `~/.pmgrc.yaml` so that it looks like the following
+[Dashboard](materials project). Add this also to
+your `~/.config/.pmgrc.yaml` so that it looks like the following
 
 ```yaml
 PMG_VASP_PSP_DIR: <<INSTALL_DIR>>/pps
 PMG_MAPI_KEY: <<YOUR_API_KEY>>
+```
+
+You can generate this file and set these values using the `pymatgen` CLI:
+
+```bash
+pmg config --add PMG_VASP_PSP_DIR /abs/path/to/psp PMG_MAPI_KEY your_api_key
 ```
 
 [materials project]: https://materialsproject.org/dashboard
