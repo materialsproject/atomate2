@@ -17,7 +17,7 @@ def lobster_test_dir(test_dir):
     return test_dir / "lobster"
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def mock_lobster(monkeypatch, lobster_test_dir):
     """
     This fixture allows one to mock (fake) running LOBSTER.

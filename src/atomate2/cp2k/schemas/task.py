@@ -416,8 +416,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         }
         doc = cls(**ddict)
         doc = doc.copy(update=data)
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
     @staticmethod
     def get_entry(

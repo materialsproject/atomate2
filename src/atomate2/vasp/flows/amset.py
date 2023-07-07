@@ -4,11 +4,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import Flow, Maker, job
-from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
 from atomate2.amset.jobs import AmsetMaker
@@ -24,7 +23,6 @@ from atomate2.vasp.jobs.amset import (
     generate_wavefunction_coefficients,
     run_amset_deformations,
 )
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import (
     DielectricMaker,
     HSEBSMaker,
@@ -34,6 +32,13 @@ from atomate2.vasp.jobs.core import (
     TightRelaxMaker,
 )
 from atomate2.vasp.sets.core import HSEBSSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["VaspAmsetMaker", "DeformationPotentialMaker", "HSEVaspAmsetMaker"]
 

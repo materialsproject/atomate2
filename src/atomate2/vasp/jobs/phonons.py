@@ -4,13 +4,11 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-import numpy as np
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
-from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
@@ -20,8 +18,14 @@ from pymatgen.transformations.advanced_transformations import (
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    import numpy as np
+    from emmet.core.math import Matrix3D
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -120,8 +124,7 @@ def get_supercell_size(
             )
             transformation.apply_transformation(structure=structure)
 
-    supercell_matrix = transformation.transformation_matrix.tolist()
-    return supercell_matrix
+    return transformation.transformation_matrix.tolist()
 
 
 @job
@@ -182,10 +185,7 @@ def generate_phonon_displacements(
 
     supercells = phonon.supercells_with_displacements
 
-    displacements = []
-    for cell in supercells:
-        displacements.append(get_pmg_structure(cell))
-    return displacements
+    return [get_pmg_structure(cell) for cell in supercells]
 
 
 @job(output_schema=PhononBSDOSDoc, data=[PhononDos, PhononBandStructureSymmLine])
@@ -237,7 +237,7 @@ def generate_frequencies_eigenvectors(
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
 
     """
-    phonon_doc = PhononBSDOSDoc.from_forces_born(
+    return PhononBSDOSDoc.from_forces_born(
         structure=structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
@@ -252,8 +252,6 @@ def generate_frequencies_eigenvectors(
         born=born,
         **kwargs,
     )
-
-    return phonon_doc
 
 
 @job

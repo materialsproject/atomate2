@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Maker, OnMissing
-from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.elastic import (
     ElasticRelaxMaker,
@@ -19,6 +16,14 @@ from atomate2.vasp.jobs.elastic import (
     generate_elastic_deformations,
     run_elastic_deformations,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["ElasticMaker"]
 
@@ -61,6 +66,8 @@ class ElasticMaker(Maker):
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
     fit_elastic_tensor_kwargs : dict
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
     """
 
     name: str = "elastic"
@@ -73,6 +80,7 @@ class ElasticMaker(Maker):
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
 
     def make(
         self,
@@ -123,6 +131,7 @@ class ElasticMaker(Maker):
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
             **self.fit_elastic_tensor_kwargs,
+            **self.task_document_kwargs,
         )
 
         # allow some of the deformations to fail
@@ -130,9 +139,8 @@ class ElasticMaker(Maker):
 
         jobs += [deformations, vasp_deformation_calcs, fit_tensor]
 
-        flow = Flow(
+        return Flow(
             jobs=jobs,
             output=fit_tensor.output,
             name=self.name,
         )
-        return flow

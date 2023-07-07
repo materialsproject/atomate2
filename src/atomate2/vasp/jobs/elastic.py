@@ -4,14 +4,12 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
-from pymatgen.core.structure import Structure
 from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import (
@@ -22,8 +20,15 @@ from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -235,6 +240,7 @@ def fit_elastic_tensor(
     order: int = 2,
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
+    allow_elastically_unstable_structs: bool = True,
 ):
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.
@@ -260,6 +266,9 @@ def fit_elastic_tensor(
     symprec : float
         Symmetry precision for deriving symmetry equivalent deformations. If
         ``symprec=None``, then no symmetry operations will be applied.
+    allow_elastically_unstable_structs : bool
+        Whether to allow the ElasticDocument to still complete in the event that
+        the structure is elastically unstable.
     """
     stresses = []
     deformations = []
@@ -277,7 +286,7 @@ def fit_elastic_tensor(
 
     logger.info("Analyzing stress/strain data")
 
-    elastic_doc = ElasticDocument.from_stresses(
+    return ElasticDocument.from_stresses(
         structure,
         stresses,
         deformations,
@@ -287,5 +296,5 @@ def fit_elastic_tensor(
         order=order,
         equilibrium_stress=equilibrium_stress,
         symprec=symprec,
+        allow_elastically_unstable_structs=allow_elastically_unstable_structs,
     )
-    return elastic_doc

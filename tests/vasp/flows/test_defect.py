@@ -1,8 +1,14 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from atomate2.common.schemas.defects import CCDDocument
+    from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
+
+
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import run_locally
     from pymatgen.core import Structure
 
-    from atomate2.common.schemas.defects import CCDDocument
     from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
 
     # mapping from job name to directory containing test files
@@ -65,7 +71,6 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         ConfigurationCoordinateMaker,
         NonRadiativeMaker,
     )
-    from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
     # mapping from job name to directory containing test files
     ref_paths = {

@@ -6,11 +6,9 @@ import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import numpy.typing as npt
 from jobflow import Flow, Job, Maker, OutputReference
-from pymatgen.analysis.defects.core import Defect
-from pymatgen.core.structure import Structure
 
 from atomate2.common.jobs.defect import (
     bulk_supercell_calculation,
@@ -21,6 +19,11 @@ from atomate2.common.jobs.defect import (
     spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
 )
+
+if TYPE_CHECKING:
+    import numpy.typing as npt
+    from pymatgen.analysis.defects.core import Defect
+    from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 

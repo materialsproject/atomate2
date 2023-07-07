@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.phonons import (
     PhononDisplacementMaker,
@@ -21,6 +18,15 @@ from atomate2.vasp.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 
 __all__ = ["PhononMaker"]
 
@@ -338,5 +344,4 @@ class PhononMaker(Maker):
 
         jobs.append(phonon_collect)
         # create a flow including all jobs for a phonon computation
-        flow = Flow(jobs, phonon_collect.output)
-        return flow
+        return Flow(jobs, phonon_collect.output)

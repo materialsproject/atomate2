@@ -6,34 +6,34 @@ build-backend = "setuptools.build_meta"
 name = "atomate2"
 description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
-keywords = ["high-throughput", "automated", "workflow", "dft", "vasp"]
+keywords = ["automated", "dft", "high-throughput", "vasp", "workflow"]
 license = { text = "modified BSD" }
 authors = [{ name = "Alex Ganose", email = "alexganose@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "Intended Audience :: System Administrators",
-    "Intended Audience :: Information Technology",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "pymatgen>=2023.1.9",
-    "custodian>=2023.3.10",
-    "pydantic",
-    "monty",
-    "jobflow>=0.1.11",
     "PyYAML",
-    "numpy",
     "click",
+    "custodian>=2023.3.10",
     "emmet-core>=0.51.11",
+    "jobflow>=0.1.11",
+    "monty",
+    "numpy",
+    "pydantic",
+    "pymatgen>=2023.1.9",
 ]
 
 [project.optional-dependencies]
@@ -42,36 +42,41 @@ cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["lobsterpy"]
-defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
+defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
+forcefields = ["chgnet==0.1.4", "matgl==0.7.0"]
 docs = [
-    "numpydoc==1.5.0",
-    "ipython==8.13.2",
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.8.0",
-    "myst_parser==1.0.0",
-    "furo==2023.03.27",
+    "furo==2023.5.20",
+    "ipython==8.14.0",
     "jsonschema[format]",
+    "myst_parser==2.0.0",
+    "numpydoc==1.5.0",
+    "sphinx-copybutton==0.5.2",
     "sphinx_design==0.4.1",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["pytest==7.2.2", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.0"]
 strict = [
-    "pydantic==1.10.7",
-    "pymatgen==2023.3.23",
-    "custodian==2023.5.7",
-    "monty==2023.5.8",
-    "jobflow==0.1.11",
-    "click==8.1.3",
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "phonopy==2.17.2",
-    "seekpath==2.0.1",
-    "numpy",
-    "mp-api==0.33.1",
-    "dscribe==1.2.2",
-    "pymatgen-analysis-defects==2023.04.05",
+    "chgnet==0.1.4",
+    "click==8.1.3",
+    "custodian==2023.6.5",
+    "dscribe==2.0.0",
+    "emmet-core==0.58.0",
+    "jobflow==0.1.11",
     "lobsterpy==0.2.9",
-    "emmet-core==0.54.3"
+    "matgl==0.7.0",
+    "monty==2023.5.8",
+    "mp-api==0.33.3",
+    "numpy",
+    "phonopy==2.20.0",
+    "pydantic==1.10.9",
+    "pymatgen-analysis-defects==2023.6.1",
+    "pymatgen==2023.5.31",
+    "seekpath==2.1.0",
+    "typing-extensions==4.7.1",
 ]
 
 [project.scripts]
@@ -110,9 +115,9 @@ no_strict_optional = true
 [tool.pytest.ini_options]
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
-    "ignore:.*magmom.*:UserWarning",
-    "ignore:.*is not gzipped.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
+    "ignore:.*is not gzipped.*:UserWarning",
+    "ignore:.*magmom.*:UserWarning",
     "ignore::DeprecationWarning",
 ]
 
@@ -128,29 +133,53 @@ source = ["src/"]
 skip_covered = true
 show_missing = true
 exclude_lines = [
+    '^\s*@overload( |$)',
     '^\s*assert False(,|$)',
     'if typing.TYPE_CHECKING:',
-    '^\s*@overload( |$)',
 ]
 
 [tool.ruff]
 target-version = "py38"
 select = [
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "D",   # pydocstyle
-    "E",   # pycodestyle
-    "F",   # pyflakes
-    "I",   # isort
-    "PLE", # pylint error
-    "PLW", # pylint warning
-    "Q",   # flake8-quotes
-    "RUF", # Ruff-specific rules
-    "SIM", # flake8-simplify
-    "TID", # tidy imports
-    "UP",  # pyupgrade
-    "W",   # pycodestyle
-    "YTT", # flake8-2020
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "D",    # pydocstyle
+    "E",    # pycodestyle error
+    "EXE",  # flake8-executable
+    "F",    # pyflakes
+    "FLY",  # flynt
+    "I",    # isort
+    "ICN",  # flake8-import-conventions
+    "ISC",  # flake8-implicit-str-concat
+    "PD",   # pandas-vet
+    "PERF", # perflint
+    "PIE",  # flake8-pie
+    "PL",   # pylint
+    "PT",   # flake8-pytest-style
+    "PYI",  # flakes8-pyi
+    "Q",    # flake8-quotes
+    "RET",  # flake8-return
+    "RSE",  # flake8-raise
+    "RUF",  # Ruff-specific rules
+    "SIM",  # flake8-simplify
+    "SLOT", # flake8-slots
+    "TCH",  # flake8-type-checking
+    "TID",  # tidy imports
+    "TID",  # flake8-tidy-imports
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warning
+    "YTT",  # flake8-2020
+]
+ignore = [
+    "PD011",  # pandas-use-of-dot-values
+    "PLR",    # pylint-refactor
+    "PT004",  # pytest-missing-fixture-name-underscore
+    "PT006",  # pytest-parametrize-names-wrong-type
+    "RUF013", # implicit-optional
+    # TODO remove PT011, pytest.raises() should always check err msg
+    "PERF203", # try-except-in-loop
+    "PT011",   # pytest-raises-too-broad
+    "PT013",   # pytest-incorrect-pytest-import
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]

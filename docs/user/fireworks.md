@@ -1,13 +1,12 @@
 (atomate2_fireworks)=
 
-Using atomate2 with FireWorks
-=============================
+# Using atomate2 with FireWorks
 
-This tutorial will document how to configure atomate2 with [FireWorks][fireworks].
+This tutorial will document how to use atomate2 with [FireWorks][fireworks].
 FireWorks allows you to easily submit and manage thousands of jobs at once.
 
-For now, follow the [FireWorks instructions][fireworks_instructions]
-in the atomate1 documentation but ignore the parts pertaining to atomate1.
+Follow the [FireWorks Setup][fireworks_instructions]
+in the Jobflow documentation to install FireWorks.
 
 Once you have constructed your workflow using atomate2, you can convert it to a
 FireWorks workflow using the {obj}`~jobflow.managers.fireworks.flow_to_workflow` function.
@@ -38,5 +37,8 @@ lpad = LaunchPad.auto_load()
 lpad.add_wf(wf)
 ```
 
-[fireworks]: <https://materialsproject.github.io/fireworks/>
-[fireworks_instructions]: <https://atomate.org/installation.html#configure-database-connections-and-computing-center-parameters>
+Additional details about interfacing Jobflow-based packages with FireWorks can be found in the [Running Jobflow with FireWorks](fw_guide) guide.
+
+[fireworks]: https://materialsproject.github.io/fireworks/
+[fireworks_instructions]: https://materialsproject.github.io/jobflow/install_fireworks.html
+[fw_guide]: https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html

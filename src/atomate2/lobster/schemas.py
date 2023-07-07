@@ -1,4 +1,4 @@
-"""Module defining amset document schemas."""
+"""Module defining lobster document schemas."""
 
 import logging
 import time
@@ -137,7 +137,7 @@ class CondensedBondingAnalysis(BaseModel):
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
-        None, description="Maximum bond length considered " "in bonding analysis"
+        None, description="Maximum bond length considered in bonding analysis"
     )
     limit_icohp: list = Field(
         None, description="ICOHP range considered in co-ordination environment analysis"
@@ -248,7 +248,7 @@ class CondensedBondingAnalysis(BaseModel):
             for _iplot, (ication, labels, cohps) in enumerate(
                 zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
             ):
-                label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
+                label_str = f"{struct[ication].specie!s}{ication + 1!s}: "
                 for label, cohp in zip(labels, cohps):
                     if label is not None:
                         cba_cohp_plot_data[label_str + label] = cohp
@@ -273,25 +273,21 @@ class CondensedBondingAnalysis(BaseModel):
             if save_cohp_plots:
                 describe.plot_cohps(
                     save=True,
-                    filename="automatic_cohp_plots_" + which_bonds + ".pdf",
+                    filename=f"automatic_cohp_plots_{which_bonds}.pdf",
                     skip_show=True,
                     **plot_kwargs,
                 )
                 import json
 
                 with open(
-                    dir_name
-                    / str("condensed_bonding_analysis_" + which_bonds + ".json"),
-                    "w",
+                    dir_name / f"condensed_bonding_analysis_{which_bonds}.json", "w"
                 ) as fp:
                     json.dump(analyse.condensed_bonding_analysis, fp)
                 with open(
-                    dir_name
-                    / str("condensed_bonding_analysis_" + which_bonds + ".txt"),
-                    "w",
+                    dir_name / f"condensed_bonding_analysis_{which_bonds}.txt", "w"
                 ) as fp:
                     for line in describe.text:
-                        fp.write(line + "\n")
+                        fp.write(f"{line}\n")
 
             # Read in strongest icohp values
             sb_icohp, sb_icobi, sb_icoop = _identify_strongest_bonds(
@@ -584,8 +580,7 @@ class LobsterTaskDocument(BaseModel):
             charges=charges,
             madelung_energies=madelung_energies,
         )
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
 
 def _identify_strongest_bonds(
@@ -677,7 +672,7 @@ def _get_strong_bonds(
         bondlist["list_icohp"],
         bondlist["list_length"],
     ):
-        bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
+        bonds.append(f"{a.rstrip('0123456789')}-{b.rstrip('0123456789')}")
         icohp_all.append(sum(c.values()))
         lengths.append(length)
 

@@ -5,15 +5,18 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from emmet.core.math import Vector3D
-from pymatgen.core import Structure
 from pymatgen.core.periodic_table import Element
-from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from emmet.core.math import Vector3D
+    from pymatgen.core import Structure
+    from pymatgen.io.vasp import Outcar, Vasprun
+
 
 logger = logging.getLogger(__name__)
 
@@ -260,7 +263,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.mode == "line":
             return {"line_density": self.line_density}
 
-        elif self.mode == "boltztrap":
+        if self.mode == "boltztrap":
             return {"explicit": True, "reciprocal_density": self.reciprocal_density}
 
         return {

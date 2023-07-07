@@ -9,13 +9,12 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, Sequence
 
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
-from pymatgen.core import Structure
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
@@ -28,6 +27,10 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
@@ -211,6 +214,15 @@ class VaspInputGenerator(InputGenerator):
     """
     A class to generate VASP input sets.
 
+    .. Note::
+       Get the magmoms using the following precedence.
+
+        1. user incar settings
+        2. magmoms in input struct
+        3. spins in input struct
+        4. job config dict
+        5. set all magmoms to 0.6
+
     Parameters
     ----------
     user_incar_settings
@@ -224,6 +236,8 @@ class VaspInputGenerator(InputGenerator):
         so these keys can be defined in one of two ways, e.g. either
         {"LDAUU":{"O":{"Fe":5}}} to set LDAUU for Fe to 5 in an oxide, or
         {"LDAUU":{"Fe":5}} to set LDAUU to 5 regardless of the input structure.
+        To set magmoms, pass a dict mapping element symbols to magnetic moments, e.g.
+        {"MAGMOM": {"Co": 1}}.
         If None is given, that key is unset. For example, {"ENCUT": None} will remove
         ENCUT from the incar settings.
     user_kpoints_settings
@@ -606,6 +620,7 @@ class VaspInputGenerator(InputGenerator):
         previous_incar = {} if previous_incar is None else previous_incar
         incar_updates = {} if incar_updates is None else incar_updates
         incar_settings = dict(self.config_dict["INCAR"])
+        config_magmoms = incar_settings.get("MAGMOM", {})
 
         # apply user incar settings to SETTINGS not to INCAR
         _apply_incar_updates(incar_settings, self.user_incar_settings)
@@ -614,7 +629,9 @@ class VaspInputGenerator(InputGenerator):
         incar = Incar()
         for k, v in incar_settings.items():
             if k == "MAGMOM":
-                incar[k] = _get_magmoms(v, structure)
+                incar[k] = _get_magmoms(
+                    structure, config_magmoms=config_magmoms, magmoms=v
+                )
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
                 incar[k] = _get_u_param(k, v, structure)
             elif k.startswith("EDIFF") and k != "EDIFFG":
@@ -671,10 +688,10 @@ class VaspInputGenerator(InputGenerator):
                 incar["ISMEAR"] = 0
 
         # apply specified updates, be careful not to override user_incar_settings
-        _apply_incar_updates(incar, incar_updates, skip=self.user_incar_settings.keys())
+        _apply_incar_updates(incar, incar_updates, skip=list(self.user_incar_settings))
 
         # Remove unused INCAR parameters
-        _remove_unused_incar_params(incar, skip=self.user_incar_settings.keys())
+        _remove_unused_incar_params(incar, skip=list(self.user_incar_settings))
 
         return incar
 
@@ -811,7 +828,7 @@ class VaspInputGenerator(InputGenerator):
 
         if base_kpoints and not (added_kpoints or zero_weighted_kpoints):
             return base_kpoints
-        elif added_kpoints and not (base_kpoints or zero_weighted_kpoints):
+        if added_kpoints and not (base_kpoints or zero_weighted_kpoints):
             return added_kpoints
 
         # do some sanity checking
@@ -819,12 +836,12 @@ class VaspInputGenerator(InputGenerator):
             raise ValueError(
                 "Cannot combined line_density and zero weighted k-points options"
             )
-        elif zero_weighted_kpoints and not base_kpoints:
+        if zero_weighted_kpoints and not base_kpoints:
             raise ValueError(
                 "Zero weighted k-points must be used with reciprocal_density or "
                 "grid_density options"
             )
-        elif not (base_kpoints or zero_weighted_kpoints or added_kpoints):
+        if not (base_kpoints or zero_weighted_kpoints or added_kpoints):
             raise ValueError(
                 "Invalid k-point generation algo. Supported Keys are 'grid_density' "
                 "for Kpoints.automatic_density generation, 'reciprocal_density' for "
@@ -848,8 +865,21 @@ class VaspInputGenerator(InputGenerator):
         return None
 
 
-def _get_magmoms(magmoms, structure):
-    """Get the mamgoms."""
+def _get_magmoms(
+    structure: Structure,
+    magmoms: dict[str, float] = None,
+    config_magmoms: dict[str, float] = None,
+) -> list[float]:
+    """Get the mamgoms using the following precedence.
+
+    1. user incar settings
+    2. magmoms in input struct
+    3. spins in input struct
+    4. job config dict
+    5. set all magmoms to 0.6
+    """
+    magmoms = magmoms or {}
+    config_magmoms = config_magmoms or {}
     mag = []
     msg = (
         "Co without an oxidation state is initialized as low spin by default in "
@@ -857,14 +887,17 @@ def _get_magmoms(magmoms, structure):
         "magmom on the site directly to ensure correct initialization."
     )
     for site in structure:
-        if hasattr(site, "magmom"):
+        specie = str(site.specie)
+        if specie in magmoms:
+            mag.append(magmoms.get(specie))
+        elif hasattr(site, "magmom"):
             mag.append(site.magmom)
         elif hasattr(site.specie, "spin"):
             mag.append(site.specie.spin)
-        elif str(site.specie) in magmoms:
-            if site.specie.symbol == "Co" and magmoms[str(site.specie)] <= 1.0:
+        elif specie in config_magmoms:
+            if site.specie.symbol == "Co" and config_magmoms[specie] <= 1.0:
                 warnings.warn(msg, stacklevel=2)
-            mag.append(magmoms.get(str(site.specie)))
+            mag.append(config_magmoms.get(specie))
         else:
             if site.specie.symbol == "Co":
                 warnings.warn(msg, stacklevel=2)
@@ -882,24 +915,22 @@ def _get_u_param(lda_param, lda_config, structure):
     if hasattr(structure[0], lda_param.lower()):
         m = {site.specie.symbol: getattr(site, lda_param.lower()) for site in structure}
         return [m[sym] for sym in poscar.site_symbols]
-    elif isinstance(lda_config.get(most_electroneg, 0), dict):
+    if isinstance(lda_config.get(most_electroneg, 0), dict):
         # lookup specific LDAU if specified for most_electroneg atom
         return [lda_config[most_electroneg].get(sym, 0) for sym in poscar.site_symbols]
-    else:
-        return [
-            lda_config.get(sym, 0)
-            if isinstance(lda_config.get(sym, 0), (float, int))
-            else 0
-            for sym in poscar.site_symbols
-        ]
+    return [
+        lda_config.get(sym, 0)
+        if isinstance(lda_config.get(sym, 0), (float, int))
+        else 0
+        for sym in poscar.site_symbols
+    ]
 
 
 def _get_ediff(param, value, structure, incar_settings):
     """Get EDIFF."""
     if incar_settings.get("EDIFF", None) is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
-    else:
-        return float(incar_settings["EDIFF"])
+    return float(incar_settings["EDIFF"])
 
 
 def _set_u_params(incar, incar_settings, structure):
@@ -926,7 +957,7 @@ def _set_u_params(incar, incar_settings, structure):
             incar["LMAXMIX"] = 4
 
 
-def _apply_incar_updates(incar, updates, skip=None):
+def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
     """
     Apply updates to an INCAR file.
 
@@ -939,7 +970,6 @@ def _apply_incar_updates(incar, updates, skip=None):
     skip
         Keys to skip.
     """
-    skip = () if skip is None else skip
     for k, v in updates.items():
         if k in skip:
             continue
@@ -950,7 +980,7 @@ def _apply_incar_updates(incar, updates, skip=None):
             incar[k] = v
 
 
-def _remove_unused_incar_params(incar, skip=None):
+def _remove_unused_incar_params(incar, skip: Sequence[str] = ()):
     """
     Remove INCAR parameters that are not actively used by VASP.
 
@@ -961,8 +991,6 @@ def _remove_unused_incar_params(incar, skip=None):
     skip
         Keys to skip.
     """
-    skip = () if skip is None else skip
-
     # Turn off IBRION/ISIF/POTIM if NSW = 0
     opt_flags = ["EDIFFG", "IBRION", "ISIF", "POTIM"]
     if incar.get("NSW", 0) == 0:
@@ -1020,7 +1048,7 @@ def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
         # Turn off spin when magmom for every site is smaller than 0.02.
         site_magmom = np.array([i["tot"] for i in outcar.magnetization])
         return 2 if np.any(np.abs(site_magmom) > 0.02) else 1
-    elif vasprun is not None:
+    if vasprun is not None:
         return 2 if vasprun.is_spin else 1
     return 2
 

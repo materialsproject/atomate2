@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core import Structure
 
 from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.lobster import (
     delete_lobster_wavecar,
@@ -19,6 +17,13 @@ from atomate2.vasp.jobs.lobster import (
     update_user_incar_settings_maker,
 )
 from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["VaspLobsterMaker"]
 
