@@ -8,7 +8,7 @@ This guide will get you up and running in an environment for running high-throug
 workflows with atomate2. atomate2 is built on the pymatgen, custodian, jobflow, and
 FireWorks libraries. Briefly:
 
-- [pymatgen] is used create input files and analyze the output of materials science codes.
+- [pymatgen] is used to create input files and analyze the output of materials science codes.
 - [custodian] runs your simulation code (e.g., VASP) and performs error checking/handling
   and checkpointing.
 - [jobflow] is used to design computational workflows.
@@ -22,9 +22,9 @@ Note that this installation tutorial is VASP-centric since almost all functional
 currently in atomate2 pertains to VASP.
 
 [pymatgen]: http://pymatgen.org
-[custodian]: https://materialsproject.github.io/custodian/
-[fireworks]: https://materialsproject.github.io/fireworks/
-[jobflow]: https://materialsproject.github.io/jobflow/
+[custodian]: https://materialsproject.github.io/custodian
+[fireworks]: https://materialsproject.github.io/fireworks
+[jobflow]: https://materialsproject.github.io/jobflow
 
 ### Objectives
 

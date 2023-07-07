@@ -111,10 +111,10 @@ class CalculationInput(BaseModel):
         """Initialize from Cp2kOutput object."""
         return cls(
             structure=output.initial_structure,
-            atomic_kind_info=output.data.get("atomic_kind_info", None),
+            atomic_kind_info=output.data.get("atomic_kind_info"),
             cp2k_input=output.input.as_dict(),
-            dft=output.data.get("dft", None),
-            cp2k_global=output.data.get("global", None),
+            dft=output.data.get("dft"),
+            cp2k_global=output.data.get("global"),
         )
 
 
