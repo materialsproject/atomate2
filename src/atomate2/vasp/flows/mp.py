@@ -7,9 +7,16 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 
 from jobflow import Flow, Maker
+
+from atomate2.vasp.jobs.mp import (
+    MPMetaGGARelaxMaker,
+    MPMetaGGAStaticMaker,
+    MPPreRelaxMaker,
+    _get_kspacing_params,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -19,7 +26,6 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-from atomate2.vasp.jobs.mp import MPMetaGGARelaxMaker, MPPreRelaxMaker
 
 __all__ = ["MPMetaGGARelax"]
 
@@ -42,11 +48,20 @@ class MPMetaGGARelax(Maker):
     """
 
     name: str = "MP Meta-GGA Relax"
-    initial_relax_maker: BaseVaspMaker = field(default_factory=MPPreRelaxMaker)
-    initial_static_maker: BaseVaspMaker | None = None
-    final_relax_maker: BaseVaspMaker | None = field(default_factory=MPMetaGGARelaxMaker)
+    initial_maker: BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
+    final_relax_maker: BaseVaspMaker = field(default_factory=MPMetaGGARelaxMaker)
+    final_static_maker: BaseVaspMaker | None = field(
+        default_factory=MPMetaGGAStaticMaker
+    )
+    copy_vasp_files: Sequence[str] = ("WAVECAR", "CHGCAR")
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self,
+        structure: Structure,
+        bandgap: float = 0,
+        prev_vasp_dir: str | Path | None = None,
+        bandgap_tol: float = 1e-4,
+    ):
         """
         Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
 
@@ -64,41 +79,61 @@ class MPMetaGGARelax(Maker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        # Define initial parameters
         jobs: list[Job] = []
 
         # Run a pre-relaxation (typically PBEsol)
-        initial_relax = self.initial_relax_maker.make(
-            structure, prev_vasp_dir=prev_vasp_dir
-        )
-        output = initial_relax.output
-        structure = output.structure
-        bandgap = output.bandgap
-        prev_vasp_dir = output.dir_name
-        jobs += [initial_relax]
-
-        # Run a static calculation (typically r2SCAN) before the relaxation.
-        # Useful for the mixing scheme in https://doi.org/10.1038/s41524-022-00881-w
-        if self.initial_static_maker:
-            initial_static = self.initial_static_maker.make(
-                structure,
-                bandgap=bandgap,
-                prev_vasp_dir=prev_vasp_dir,
+        if self.initial_maker:
+            initial_relax = self.initial_maker.make(
+                structure, prev_vasp_dir=prev_vasp_dir
             )
-            output = initial_static.output
+            output = initial_relax.output
             structure = output.structure
-            bandgap = output.bandgap
+            bandgap = output.output.bandgap
             prev_vasp_dir = output.dir_name
-            jobs += [initial_static]
+            jobs += [initial_relax]
 
-        # Run a relaxation (typically r2SCAN)
-        if self.final_relax_maker:
-            final_relax = self.final_relax_maker.make(
-                structure=structure,
-                bandgap=bandgap,
-                prev_vasp_dir=prev_vasp_dir,
+        kspace_job = _get_kspacing_params(bandgap, bandgap_tol)
+        jobs += [kspace_job]
+
+        self.final_relax_maker.input_set_generator.config_dict["INCAR"]["ISTART"] = 1
+
+        keys = ["KSPACING", "ISMEAR", "SIGMA"]
+        for key in keys:
+            self.final_relax_maker.input_set_generator.config_dict["INCAR"][
+                key
+            ] = kspace_job.output[key]
+
+        self.final_relax_maker.input_set_generator.additional_vasp_files = (
+            self.copy_vasp_files
+        )
+        final_relax = self.final_relax_maker.make(
+            structure=structure,
+            prev_vasp_dir=prev_vasp_dir,
+        )
+        output = final_relax.output
+        jobs += [final_relax]
+
+        bandgap = final_relax.output.output.bandgap
+        kspace_job_static = _get_kspacing_params(bandgap, bandgap_tol)
+        jobs += [kspace_job_static]
+
+        if self.final_static_maker:
+            # Run a static calculation (typically r2SCAN)
+            self.final_static_maker.input_set_generator.additional_vasp_files = (
+                self.copy_vasp_files
             )
-            output = final_relax.output
-            jobs += [final_relax]
+            self.final_static_maker.input_set_generator.config_dict["INCAR"].update(
+                {"ISTART": 1 if self.final_relax_maker is not None else 0}
+            )
+            for key in keys:
+                self.final_static_maker.input_set_generator.config_dict["INCAR"][
+                    key
+                ] = kspace_job.output[key]
+            final_static = self.final_static_maker.make(
+                structure=output.structure,
+                prev_vasp_dir=output.dir_name,
+            )
+            output = final_static.output
+            jobs += [final_static]
 
         return Flow(jobs, output, name=self.name)

@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
+from jobflow import job
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
@@ -18,6 +19,7 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+    from pymatgen.io.vasp import Outcar, Vasprun
 
 __all__ = ["MPPreRelaxMaker", "MPMetaGGARelaxMaker", "MPMetaGGAStaticMaker"]
 
@@ -27,7 +29,38 @@ _BASE_MP_R2SCAN_RELAX_SET = loadfn(
 
 
 class MPMetaGGARelaxGenerator(VaspInputGenerator):
-    config_dict: dict = _BASE_MP_R2SCAN_RELAX_SET
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a relaxation job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
 
 
 @dataclass
@@ -59,11 +92,9 @@ class MPPreRelaxMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP PreRelax"
+    name: str = "MP pre-relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxGenerator(
-            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
-        )
+        default_factory=MPMetaGGARelaxGenerator
     )
 
 
@@ -100,33 +131,6 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPMetaGGARelaxGenerator
     )
-
-    def make(
-        self, structure: Structure, bandgap: float = 0.0, bandgap_tol: float = 1e-4
-    ):
-        """Set correct k-point density, smearing and sigma based on bandgap estimate.
-
-        Parameters
-        ----------
-        structure : pymatgen.Structure
-            The structure to relax.
-        bandgap : float
-            The bandgap of the material in eV. Used to determine the k-point density.
-        bandgap_tol : float
-            The tolerance for the bandgap. If the bandgap is less than this value, the
-            k-point density will be set to 0.22, otherwise it will be set to a value
-            based on the bandgap.
-
-        Returns
-        -------
-        MPMetaGGARelaxMaker
-            The maker.
-        """
-        self.input_set_generator.config_dict["INCAR"].update(
-            _get_kspacing_params(bandgap, bandgap_tol)
-        )
-
-        return super().make(structure=structure)
 
 
 @dataclass
@@ -165,34 +169,8 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
         )
     )
 
-    def make(
-        self, structure: Structure, bandgap: float = 0.0, bandgap_tol: float = 1e-4
-    ):
-        """Set correct k-point density, smearing and sigma based on bandgap estimate.
 
-        Parameters
-        ----------
-        structure : pymatgen.Structure
-            The structure to relax.
-        bandgap : float
-            The bandgap of the material in eV. Used to determine the k-point density.
-        bandgap_tol : float
-            The tolerance for the bandgap. If the bandgap is less than this value, the
-            k-point density will be set to 0.22, otherwise it will be set to a value
-            based on the bandgap.
-
-        Returns
-        -------
-            Response: A response object containing the output, detours and stop
-                commands of the VASP run.
-        """
-        self.input_set_generator.config_dict["INCAR"].update(
-            _get_kspacing_params(bandgap, bandgap_tol)
-        )
-
-        return super().make(structure=structure)
-
-
+@job
 def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> dict[str, int | float]:
     """Get the k-point density, smearing and sigma based on bandgap estimate.
 
