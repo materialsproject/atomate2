@@ -143,10 +143,10 @@ class TaskDocument(MoleculeMetadata):
         metadata = jsanitize(cclib_obj.metadata)
 
         # monty datetime bug workaround: github.com/materialsvirtuallab/monty/issues/275
-        if metadata.get("wall_time", None):
-            metadata["wall_time"] = [str(m) for m in metadata["wall_time"]]
-        if metadata.get("cpu_time", None):
-            metadata["cpu_time"] = [str(m) for m in metadata["cpu_time"]]
+        if wall_time := metadata.get("wall_time"):
+            metadata["wall_time"] = [*map(str, wall_time)]
+        if cpu_time := metadata.get("cpu_time"):
+            metadata["cpu_time"] = [*map(str, cpu_time)]
 
         # Get the final energy to store as its own key/value pair
         energy = (
@@ -159,8 +159,8 @@ class TaskDocument(MoleculeMetadata):
         # the input if it is XYZ-formatted though since the Molecule object
         # does not support internal coordinates or Gaussian Z-matrix.
         if (
-            cclib_obj.metadata.get("coord_type", None) == "xyz"
-            and cclib_obj.metadata.get("coords", None) is not None
+            cclib_obj.metadata.get("coord_type") == "xyz"
+            and cclib_obj.metadata.get("coords") is not None
         ):
             coords_obj = cclib_obj.metadata["coords"]
             input_species = [Element(row[0]) for row in coords_obj]
