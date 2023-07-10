@@ -197,11 +197,9 @@ def check_kpoints(ref_path: Path):
         user = Incar.from_file("INCAR")
         ref = Incar.from_file(ref_path / "inputs" / "INCAR")
 
-        if user.get("KSPACING", None) != ref.get("KSPACING", None):
-            raise ValueError(
-                "KSPACING is not consistent: "
-                f"{user.get('KSPACING', None)} != {ref.get('KSPACING', None)}"
-            )
+        user_ksp, ref_ksp = user.get("KSPACING"), ref.get("KSPACING")
+        if user_ksp != ref_ksp:
+            raise ValueError(f"KSPACING is not consistent: {user_ksp} != {ref_ksp}")
 
 
 def check_poscar(ref_path: Path):
