@@ -48,8 +48,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install .[strict,tests]
 
-        run: pytest --cov=atomate2 --cov-report=xml
-
       - name: Test
         run: pytest --cov=atomate2 --cov-report=xml
 
