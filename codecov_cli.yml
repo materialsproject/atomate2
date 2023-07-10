@@ -3,7 +3,8 @@ cli:
       pycoverage:
         report_type: "json"
 
-runners:
-  python:
-    collect_tests_options:
-      - --cov=atomate2
+
+  runners:
+    python:
+      process_labelanalysis_result_command:
+        - --cov=atomate2
