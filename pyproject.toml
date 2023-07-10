@@ -72,7 +72,7 @@ strict = [
     "mp-api==0.33.3",
     "numpy",
     "phonopy==2.20.0",
-    "pydantic==1.10.9",
+    "pydantic==2.0.2",
     "pymatgen-analysis-defects==2023.6.1",
     "pymatgen==2023.5.31",
     "seekpath==2.1.0",
