@@ -926,7 +926,7 @@ def _get_u_param(lda_param, lda_config, structure):
 
 def _get_ediff(param, value, structure, incar_settings):
     """Get EDIFF."""
-    if incar_settings.get("EDIFF", None) is None and param == "EDIFF_PER_ATOM":
+    if incar_settings.get("EDIFF") is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
     return float(incar_settings["EDIFF"])
 

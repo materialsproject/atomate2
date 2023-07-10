@@ -275,10 +275,10 @@ class CCDDocument(BaseModel):
             return get_dQ(e1.structure, e2.structure)
 
         # ensure the "dir_name" is provided for each entry
-        if any(e.data.get("dir_name", None) is None for e in entries1 + entries2):
+        if any(entry.data.get("dir_name") is None for entry in entries1 + entries2):
             raise ValueError("[dir_name] must be provided for all entries.")
 
-        if any(e.data.get("uuid", None) is None for e in entries1 + entries2):
+        if any(entry.data.get("uuid") is None for entry in entries1 + entries2):
             raise ValueError("[uuid] must be provided for all entries.")
 
         idx1, ent_r1 = find_entry(entries1, relaxed_uuid1)

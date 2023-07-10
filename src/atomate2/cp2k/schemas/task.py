@@ -220,8 +220,8 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         if calc_doc.output.ionic_steps:
-            forces = calc_doc.output.ionic_steps[-1].get("forces", None)
-            stress = calc_doc.output.ionic_steps[-1].get("stress", None)
+            forces = calc_doc.output.ionic_steps[-1].get("forces")
+            stress = calc_doc.output.ionic_steps[-1].get("stress")
         else:
             forces = None
             stress = None

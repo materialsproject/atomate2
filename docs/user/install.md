@@ -8,7 +8,7 @@ This guide will get you up and running in an environment for running high-throug
 workflows with atomate2. atomate2 is built on the pymatgen, custodian, jobflow, and
 FireWorks libraries. Briefly:
 
-- [pymatgen] is used create input files and analyze the output of materials science codes.
+- [pymatgen] is used to create input files and analyze the output of materials science codes.
 - [custodian] runs your simulation code (e.g., VASP) and performs error checking/handling
   and checkpointing.
 - [jobflow] is used to design computational workflows.
@@ -22,9 +22,9 @@ Note that this installation tutorial is VASP-centric since almost all functional
 currently in atomate2 pertains to VASP.
 
 [pymatgen]: http://pymatgen.org
-[custodian]: https://materialsproject.github.io/custodian/
-[fireworks]: https://materialsproject.github.io/fireworks/
-[jobflow]: https://materialsproject.github.io/jobflow/
+[custodian]: https://materialsproject.github.io/custodian
+[fireworks]: https://materialsproject.github.io/fireworks
+[jobflow]: https://materialsproject.github.io/jobflow
 
 ### Objectives
 
@@ -64,8 +64,8 @@ tutorial.
 
 ### MongoDB
 
-[MongoDB](https://docs.mongodb.com/manual/) is a NoSQL database that stores each database
-entry as a document, which is represented in the JSON format (the formatting is similar to
+[MongoDB](https://docs.mongodb.com/manual) is a NoSQL database that stores each database
+entry as a document, which is represented in JSON format (the formatting is similar to
 a dictionary in Python). Atomate2 uses MongoDB to:
 
 - Create a database of calculation results.
@@ -77,7 +77,7 @@ workflows. Thus, it is strongly recommended that you have a server to run MongoD
 (simpler) use a hosting service. Your options are:
 
 - Use a commercial service to host your MongoDB instance. These are typically the
-  easiest to use and offer high quality service but require payment for larger
+  easiest to use and offer high-quality service but require payment for larger
   databases. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) offers a free 500 MB
   server which is certainly enough to get started for small to medium size projects, and
   it is easy to upgrade or migrate your database if you exceed the free allocation.
@@ -90,7 +90,7 @@ If you're just starting, we suggest the first (with a free plan) or second optio
 accept outside connections properly which can sometimes be tricky.
 
 Next, create a new database and set up an account with admin access. Keep a record of
-your credentials - we will configure jobflow to connect to them in a later step. Also
+your credentials - we will configure `jobflow` to connect to them in a later step. Also,
 make sure you note down the hostname and port for the MongoDB instance.
 
 ```{note}
@@ -151,7 +151,7 @@ Python codes using a conda virtual environment. Some of the main benefits are:
   this solves permissions issues with installing and modifying packages.
 
 The easiest way to get a Python virtual environment is to use the `conda` tool.
-Most clusters (e.g., NESRC) have [Anaconda](https://www.continuum.io) installed already
+Most clusters (e.g., NESRC) have [Anaconda](https://continuum.io) installed already
 which provides access to the `conda` binary. If the `conda` tool is not available, you can
 install it by following the installation instructions for
 [Miniconda](https://docs.conda.io/en/latest/miniconda.html). To set up your conda environment:
@@ -199,7 +199,7 @@ Create the following files in `<<INSTALL_DIR>>/config`.
 The `jobflow.yaml` file contains the credentials of the MongoDB server that will store
 calculation outputs. The `jobflow.yaml` file requires you to enter the basic database
 information as well as what to call the main collection that results are kept in (e.g.
-`ouputs`). Note that you should replace the whole `<<PROPERTY>>` definition with
+`outputs`). Note that you should replace the whole `<<PROPERTY>>` definition with
 your own settings.
 
 ```yaml
@@ -318,12 +318,18 @@ and then return to this tutorial.
 ### Materials Project API key
 
 You can get an API key from the [Materials Project] by logging in and going to your
-[Dashboard](https://materialsproject.org/dashboard). Add this also to
-your `~/.pmgrc.yaml` so that it looks like the following
+[Dashboard](materials project). Add this also to
+your `~/.config/.pmgrc.yaml` so that it looks like the following
 
 ```yaml
 PMG_VASP_PSP_DIR: <<INSTALL_DIR>>/pps
 PMG_MAPI_KEY: <<YOUR_API_KEY>>
+```
+
+You can generate this file and set these values using the `pymatgen` CLI:
+
+```bash
+pmg config --add PMG_VASP_PSP_DIR /abs/path/to/psp PMG_MAPI_KEY your_api_key
 ```
 
 [materials project]: https://materialsproject.org/dashboard
@@ -336,7 +342,7 @@ workflow. Next, we'll submit a job to run the script. Finally, we'll examine the
 database to check the job output. In this tutorial, we will be submitting an individual
 workflow manually. If you want to manage and execute many workflows simultaneously
 this can be achieved using the FireWorks package and is covered in
-[](atomate2_FireWorks).
+[](atomate2_fireWorks).
 
 This particular workflow will only run a single calculation that optimizes a crystal
 structure (not very exciting). In the subsequent tutorials, we'll run more complex
@@ -442,13 +448,13 @@ See the following pages for more information on the topics we covered here:
 - To see how to run and customize the existing Workflows in atomate2, try the
   [](running_workflows) tutorial (suggested next step).
 - To see how to manage and execute many workflows at once, try the
-  [](atomate2_FireWorks) tutorial.
+  [](atomate2_fireWorks) tutorial.
 
 ## Troubleshooting and FAQ
 
 ### My job failed
 
-Check the job error files in the launch directory for any errors. Also check the job
+Check the job error files in the launch directory for any errors. Also, check the job
 standard output for a full log of the workflow execution and to check for a Python
 traceback.
 
