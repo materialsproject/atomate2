@@ -3,23 +3,12 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Literal, Optional, Sequence
+from typing import TYPE_CHECKING, Literal, Sequence
 
 from jobflow import Flow, Maker, Response, job
-from pymatgen.analysis.magnetism.analyzer import (
-    CollinearMagneticStructureAnalyzer,
-    MagneticStructureEnumerator,
-)
-
-from atomate2.common.schemas.magnetism import (
-    MagnetismDocument,
-    MagnetismInput,
-    MagnetismOutput,
-)
+from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
