@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "enumerate_magnetic_orderings",
     "run_ordering_calculations",
-    "analyze_ordering_calculations",
 ]
 
 
@@ -130,6 +129,7 @@ def run_ordering_calculations(
         parent_structure.remove_spin()
         metadata = {"parent_structure": parent_structure, "ordering": origin}
 
+        parent_uuid = None
         kwargs = {}
         if relax_maker is not None:
             relax_job = relax_maker.make(struct, **kwargs)
@@ -137,9 +137,12 @@ def run_ordering_calculations(
             relax_job.metadata.update(metadata)
 
             kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
+
             struct = relax_job.output.structure
+            parent_uuid = relax_job.output.uuid
             jobs.append(relax_job)
 
+        metadata["parent_uuid"] = parent_uuid
         static_job = static_maker.make(struct, **kwargs)
         static_job.append_name(" " + name)
         static_job.metadata.update(metadata)

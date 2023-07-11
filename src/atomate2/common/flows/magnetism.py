@@ -27,9 +27,11 @@ class MagneticOrderingsMaker(Maker):
     Given an input structure, possible magnetic orderings will be enumerated and ranked based
     on symmetry up to a maximum number of orderings. Each ordering will be
     relaxed and a higher quality static calculation performed to obtain a total energy.
-    The lowest energy ordering is the predicted ground-state collinear ordering.
+    The lowest energy ordering is the predicted ground-state collinear ordering. Note:
+    to analyze the results of this workflow, use the corresponding builder for
+    your DFT code (e.g., atomate2.vasp.builders.magnetism.MagneticOrderingsBuilder).
 
-    This approach performed decently using VASP for a wide range of test materials in a
+    This workflow showed decent performance using VASP for a wide range of test materials in a
     benchmark. It was originally implemented in atomate (v1) for VASP as the MagneticOrderingsWF.
     Please refer to the following paper for more information and cite appropriately:
 
