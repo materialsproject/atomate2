@@ -1,3 +1,4 @@
+"""Schemas for collinear magnetic ordering flows."""
 from __future__ import annotations
 
 from pydantic import BaseModel, Field
@@ -50,7 +51,7 @@ class MagneticOrderingRelaxation(BaseModel):
     energy_per_atom: float = Field(None, description="Final energy per atom.")
 
     @classmethod
-    def from_task_document(cls, task_document) -> MagneticOrderingOutput:
+    def from_task_document(cls, task_document, uuid=None) -> MagneticOrderingOutput:
         """
         Construct a MagneticOrderingRelaxation output doc from a task document. This is
         to be implemented for the DFT code of choice.
@@ -113,19 +114,20 @@ class MagneticOrderingOutput(BaseModel):
     energy_above_ground_state_per_atom: float = Field(
         None, description="Energy per atom above the calculated ground state ordering."
     )
-    relax_output: MagneticOrderingRelaxation = Field(
+    relax_output: MagneticOrderingRelaxation | None = Field(
         None, description="Relaxation output, if relaxation performed."
     )
-    energy_diff_relax_static: str | float = Field(
+    energy_diff_relax_static: str | float | None = Field(
         None,
         description=(
-            "Difference in energy between relaxation and final static calculation, if "
-            "relaxation performed (useful for benchmarking)."
+            "Difference in energy between relaxation and final static calculation, if"
+            " relaxation performed (useful for benchmarking). Specifically, this is"
+            " calculated as energy[static] - energy[relax]."
         ),
     )
 
     @classmethod
-    def from_task_document(cls, task_document) -> MagneticOrderingOutput:
+    def from_task_document(cls, task_document, uuid=None) -> MagneticOrderingOutput:
         """
         Construct a MagnetismOutput from a task document. This is to be implemented for
         the DFT code of choice.
@@ -180,7 +182,8 @@ class MagneticOrderingDocument(BaseModel):
         parent_structure: Structure,
     ) -> MagneticOrderingDocument:
         """
-        Construct a MagnetismDocument from a list of MagneticOrderingOutputs.
+        Construct a MagneticOrderingDocument from a list of MagneticOrderingOutput docs.
+        This is general and should not need to be implemented for a specific DFT code.
         """
         formula = outputs[0].structure.formula
         formula_pretty = outputs[0].structure.composition.reduced_formula
