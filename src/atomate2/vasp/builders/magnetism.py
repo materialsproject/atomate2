@@ -135,7 +135,7 @@ class MagneticOrderingBuilder(Builder):
 
         outputs = []
         for task in static_tasks:
-            relax_output = None
+            relax_output, energy_diff = None, None
             for r_task in relax_tasks:
                 if r_task["uuid"] == task["metadata"]["parent_uuid"]:
                     relax_output = MagneticOrderingRelaxation.from_task_document(
@@ -148,10 +148,9 @@ class MagneticOrderingBuilder(Builder):
                 uuid=task["uuid"],
             )
             if relax_output is not None:
-                output.relax_output = relax_output
-                output.energy_diff_relax_static = (
-                    output.energy_per_atom - relax_output.energy_per_atom
-                )
+                energy_diff = output.energy_per_atom - relax_output.energy_per_atom
+            output.relax_output = relax_output
+            output.energy_diff_relax_static = energy_diff
             outputs.append(output)
 
         doc = jsanitize(
