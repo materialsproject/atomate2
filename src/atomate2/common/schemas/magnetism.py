@@ -135,7 +135,7 @@ class MagneticOrderingOutput(BaseModel):
         raise NotImplementedError
 
 
-class MagneticOrderingDocument(BaseModel):
+class MagneticOrderingsDocument(BaseModel):
     """
     Final document containing information about calculated magnetic orderings of a
     structure, including description of the ground state ordering.
@@ -180,7 +180,7 @@ class MagneticOrderingDocument(BaseModel):
         cls,
         outputs: list[MagneticOrderingOutput],
         parent_structure: Structure,
-    ) -> MagneticOrderingDocument:
+    ) -> MagneticOrderingsDocument:
         """
         Construct a MagneticOrderingDocument from a list of MagneticOrderingOutput docs.
         This is general and should not need to be implemented for a specific DFT code.

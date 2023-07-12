@@ -9,7 +9,7 @@ from emmet.core.utils import jsanitize
 from maggma.builders import Builder
 from monty.serialization import MontyDecoder
 
-from atomate2.common.schemas.magnetism import MagneticOrderingDocument
+from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 from atomate2.vasp.schemas.magnetism import (
     MagneticOrderingOutput,
     MagneticOrderingRelaxation,
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from maggma.core import Store
 
 
-class MagneticOrderingBuilder(Builder):
+class MagneticOrderingsBuilder(Builder):
     """
     Builder to analyze the results of magnetic orderings calculations in VASP. This job
     will process the output documents of the calculations and return new documents
