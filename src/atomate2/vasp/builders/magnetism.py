@@ -102,7 +102,7 @@ class MagneticOrderingsBuilder(Builder):
                 )
                 yield group
 
-    def process_item(self, tasks: list[dict]) -> list[MagneticOrderingDocument]:
+    def process_item(self, tasks: list[dict]) -> list[MagneticOrderingsDocument]:
         """
         Process magnetic ordering relaxation/static calculations into magnetic ordering documents.
 
@@ -116,7 +116,7 @@ class MagneticOrderingsBuilder(Builder):
 
         Returns
         -------
-        list of .MagneticOrderingDocument
+        list of .MagneticOrderingsDocument
             A list of magnetic ordering documents (one for each unique parent structure).
         """
         self.logger.debug(f"Processing {tasks[0]['output'].formula_pretty}")
@@ -154,7 +154,7 @@ class MagneticOrderingsBuilder(Builder):
             outputs.append(output)
 
         doc = jsanitize(
-            MagneticOrderingDocument.from_outputs(
+            MagneticOrderingsDocument.from_outputs(
                 outputs, parent_structure=parent_structure
             ).dict(),
             allow_bson=True,
@@ -162,13 +162,13 @@ class MagneticOrderingsBuilder(Builder):
 
         return doc
 
-    def update_targets(self, items: list[MagneticOrderingDocument]):
+    def update_targets(self, items: list[MagneticOrderingsDocument]):
         """
         Insert new magnetic orderings into the magnetic orderings Store.
 
         Parameters
         ----------
-        items : list of .MagneticOrderingDocument
+        items : list of .MagneticOrderingsDocument
             A list of magnetic ordering documents to add to the database.
         """
         self.logger.info(f"Updating {len(items)} magnetic orderings documents")
