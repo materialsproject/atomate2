@@ -1,4 +1,4 @@
-"""Jobs used for enumeration and calculation of collinear magnetic orderings."""
+"""Jobs used for enumeration/calculation of collinear magnetic orderings."""
 
 from __future__ import annotations
 
@@ -46,10 +46,11 @@ def enumerate_magnetic_orderings(
     Parameters
     ----------
     structure: input structure
-    default_magmoms: Optional default mapping of magnetic elements to their initial magnetic moments
-        in µB. Generally these are chosen to be high-spin, since they can relax to a
-        low-spin configuration during a DFT electronic configuration. If None, will use
-        the default values provided in pymatgen/analysis/magnetism/default_magmoms.yaml.
+    default_magmoms: Optional default mapping of magnetic elements to their initial
+        magnetic moments in µB. Generally these are chosen to be high-spin, since they
+        can relax to a low-spin configuration during a DFT electronic configuration. If
+        None, will use the default values provided in
+        pymatgen/analysis/magnetism/default_magmoms.yaml.
     strategies: different ordering strategies to use, choose from:
         ferromagnetic, antiferromagnetic, antiferromagnetic_by_motif,
         ferrimagnetic_by_motif and ferrimagnetic_by_species (here, "motif",
@@ -101,7 +102,8 @@ def run_ordering_calculations(
         An optional Maker to use to relax the structures before calculating energies.
     prev_calc_dir_argname : str | None
         The name of the argument to pass to the static_maker to indicate the previous
-        calculation directory if relax_maker is not None (e.g., for VASP: "prev_vasp_dir").
+        calculation directory if relax_maker is not None (e.g., for VASP:
+        "prev_vasp_dir").
 
     Returns
     -------
