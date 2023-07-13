@@ -105,7 +105,7 @@ class MagneticOrderingsBuilder(Builder):
             n_groups = len(grouped_tasks)
             for n, group in enumerate(grouped_tasks):
                 self.logger.debug(
-                    f"Found {len(group)} structures for {formula} (Parent structure"
+                    f"Found {len(group)} tasks for {formula} (Parent structure"
                     f" {n+1} of {n_groups})"
                 )
                 yield group
