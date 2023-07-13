@@ -10,7 +10,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
-from jobflow import job
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
@@ -30,6 +29,10 @@ _BASE_MP_R2SCAN_RELAX_SET = loadfn(
 
 class MPMetaGGARelaxGenerator(VaspInputGenerator):
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    # Tolerance for metallic bandgap. If bandgap < bandgap_tol, KSPACING will be 0.22,
+    # otherwise it will increase with bandgap up to a max of 0.44.
+    bandgap_tol: float = 1e-4
+    bandgap_override: float | None = None
 
     def get_incar_updates(
         self,
@@ -60,7 +63,15 @@ class MPMetaGGARelaxGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
+        updates = {"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
+        bandgap = self.bandgap_override or bandgap
+
+        if bandgap < self.bandgap_tol:  # metallic
+            return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2, **updates}
+
+        rmin = 25.22 - 2.87 * bandgap
+        kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
+        return {"KSPACING": min(kspacing, 0.44), "ISMEAR": -5, "SIGMA": 0.05, **updates}
 
 
 @dataclass
@@ -168,28 +179,3 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
             user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False}
         )
     )
-
-
-@job
-def _get_kspacing_params(bandgap: float, bandgap_tol: float) -> dict[str, int | float]:
-    """Get the k-point density, smearing and sigma based on bandgap estimate.
-
-    Parameters
-    ----------
-    bandgap : float
-        The bandgap of the material in eV. Used to determine the k-point density.
-    bandgap_tol : float
-        Tolerance for metallic bandgap. If bandgap < bandgap_tol, KSPACING will be 0.22,
-        otherwise it will increase with bandgap up to a max of 0.44.
-
-    Returns
-    -------
-    Dict
-        {"KSPACING": float, "ISMEAR": int, "SIGMA": float}
-    """
-    if bandgap < bandgap_tol:  # metallic
-        return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}
-
-    rmin = 25.22 - 2.87 * bandgap
-    kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
-    return {"KSPACING": min(kspacing, 0.44), "ISMEAR": -5, "SIGMA": 0.05}
