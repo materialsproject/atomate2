@@ -5,7 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal, Sequence
 
-from atomate2.common.flows import magnetism as magnetism_flows
+from atomate2.common.flows.magnetism import (
+    MagneticOrderingsMaker as MagneticOrderingsMakerBase,
+)
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
@@ -17,7 +19,7 @@ __all__ = ["MagneticOrderingsMaker"]
 
 
 @dataclass
-class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
+class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
     """
     Maker to calculate possible collinear magnetic orderings for a material in VASP.
 
