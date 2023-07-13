@@ -27,7 +27,9 @@ class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
     The lowest energy ordering is the predicted ground-state collinear ordering.
 
     This approach performed decently using VASP for a wide range of test materials in a
-    benchmark. It was originally implemented in atomate (v1) for VASP as the MagneticOrderingsWF.
+    benchmark. It was originally implemented in atomate (v1) for VASP as the
+    MagneticOrderingsWF.
+
     Please refer to the following paper for more information and cite appropriately:
 
         Horton, M.K., Montoya, J.H., Liu, M. et al. High-throughput prediction of the
@@ -91,6 +93,6 @@ class MagneticOrderingsMaker(magnetism_flows.MagneticOrderingsMaker):
         """
         Name of the argument that informs the static maker of the previous calculation
         directory. This only applies if a relax_maker is specified and two calculations are
-        performed for each ordering (i.e., relax -> static)
+        performed for each ordering (i.e., relax -> static).
         """
         return "prev_vasp_dir"

@@ -1,3 +1,9 @@
+"""Schemas for magnetic ordering calculations in VASP."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 from pymatgen.analysis.magnetism.analyzer import CollinearMagneticStructureAnalyzer
 
@@ -9,6 +15,9 @@ from atomate2.common.schemas.magnetism import (
     MagneticOrderingRelaxation as MagneticOrderingRelaxationBase,
 )
 
+if TYPE_CHECKING:
+    from emmet.core.tasks import TaskDoc
+
 
 class MagneticOrderingRelaxation(MagneticOrderingRelaxationBase):
     """
@@ -19,7 +28,7 @@ class MagneticOrderingRelaxation(MagneticOrderingRelaxationBase):
     """
 
     @classmethod
-    def from_task_document(cls, task_document, uuid=None):
+    def from_task_document(cls, task_document: TaskDoc, uuid: str | None = None):
         """
         Construct a MagneticOrderingRelaxation from a task document. This does not include
         the uuid, which must be set separately.
@@ -78,7 +87,7 @@ class MagneticOrderingOutput(MagneticOrderingOutputBase):
     """
 
     @classmethod
-    def from_task_document(cls, task_document, uuid=None):
+    def from_task_document(cls, task_document: TaskDoc, uuid: str | None = None):
         """
         Construct a MagneticOrderingOutput from a task document. This does not include
         the uuid, which must be set separately.

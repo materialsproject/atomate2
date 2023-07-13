@@ -1,9 +1,13 @@
-"""Schemas for collinear magnetic ordering flows."""
+"""Schemas for magnetic ordering calculations."""
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, Field
-from pymatgen.analysis.magnetism.analyzer import Ordering
-from pymatgen.core.structure import Structure
+
+if TYPE_CHECKING:
+    from pymatgen.analysis.magnetism.analyzer import Ordering
+    from pymatgen.core.structure import Structure
 
 
 class MagneticOrderingInput(BaseModel):
@@ -51,7 +55,9 @@ class MagneticOrderingRelaxation(BaseModel):
     energy_per_atom: float = Field(None, description="Final energy per atom.")
 
     @classmethod
-    def from_task_document(cls, task_document, uuid=None) -> MagneticOrderingOutput:
+    def from_task_document(
+        cls, task_document, uuid: str | None = None
+    ) -> MagneticOrderingOutput:
         """
         Construct a MagneticOrderingRelaxation output doc from a task document. This is
         to be implemented for the DFT code of choice.
@@ -127,7 +133,9 @@ class MagneticOrderingOutput(BaseModel):
     )
 
     @classmethod
-    def from_task_document(cls, task_document, uuid=None) -> MagneticOrderingOutput:
+    def from_task_document(
+        cls, task_document, uuid: str | None = None
+    ) -> MagneticOrderingOutput:
         """
         Construct a MagnetismOutput from a task document. This is to be implemented for
         the DFT code of choice.
