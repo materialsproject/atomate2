@@ -122,6 +122,11 @@ def run_ordering_calculations(
         parent_uuid = None
         static_job_kwargs = {}  # previous calc dir only
         if relax_maker is not None:
+            relax_maker = relax_maker.update_kwargs(
+                {
+                    "run_vasp_kwargs": {"vasp_job_kwargs": {"copy_magmom": True}}
+                }  # ensure magmoms are copied from relax->static
+            )
             relax_job = relax_maker.make(struct)
             relax_job.append_name(" " + name)
             relax_job.metadata.update(metadata)
@@ -129,11 +134,6 @@ def run_ordering_calculations(
 
             struct = relax_job.output.structure
             parent_uuid = relax_job.output.uuid
-            static_maker = static_maker.update_kwargs(
-                {
-                    "run_vasp_kwargs": {"vasp_job_kwargs": {"copy_magmom": True}}
-                }  # ensure magmoms are copied from relax job
-            )
             static_job_kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
 
         static_job = static_maker.make(struct, **static_job_kwargs)
