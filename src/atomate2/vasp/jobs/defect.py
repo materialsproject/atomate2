@@ -45,7 +45,7 @@ def calculate_finite_diff(
 ):
     """Run a post-processing VASP job for the finite difference overlap.
 
-    Reads the WAVECAR file and computs the desired quantities. This can be used in
+    Reads the WAVECAR file and computes the desired quantities. This can be used in
     cases where data from the same calculation is used multiple times.
 
     Since all of the standard outputs are presumably already stored in the database,

@@ -8,7 +8,7 @@ from atomate2.vasp.jobs.lobster import LobsterStaticMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 
-def test_lobsteruniformmaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
+def test_lobster_uniform_maker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files
     ref_paths = {
         "relax 1": "Si_lobster_uniform/relax_1",

@@ -39,7 +39,7 @@ class MPGGARelaxGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = None,
+        bandgap: float = 0,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -80,7 +80,7 @@ class MPMetaGGARelaxGenerator(VaspInputGenerator):
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = None,
+        bandgap: float = 0,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
@@ -105,7 +105,7 @@ class MPMetaGGARelaxGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        bandgap = self.bandgap_override or bandgap
+        bandgap = self.bandgap_override or bandgap or 0
 
         if bandgap < self.bandgap_tol:  # metallic
             return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}

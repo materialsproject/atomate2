@@ -1,11 +1,9 @@
 import pytest
-from pytest import approx
 
 from atomate2.vasp.flows.mp import MPMetaGGARelax
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
-    _get_kspacing_params,
 )
 
 expected_incar = {
@@ -25,7 +23,7 @@ expected_incar = {
 
 def test_mp_pre_relax_maker_default_values():
     maker = MPPreRelaxMaker()
-    assert maker.name == "MP PreRelax"
+    assert maker.name == "MP pre-relax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
     for key, expected in expected_incar.items():
         actual = maker.input_set_generator.config_dict["INCAR"][key]
@@ -34,7 +32,7 @@ def test_mp_pre_relax_maker_default_values():
 
 def test_mp_relax_maker_default_values():
     maker = MPMetaGGARelaxMaker()
-    assert maker.name == "MP Relax"
+    assert maker.name == "MP meta-GGA Relax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
     for key, expected in expected_incar.items():
         actual = maker.input_set_generator.config_dict["INCAR"][key]
@@ -52,41 +50,30 @@ def test_mp_relax_maker_default_values():
 )
 def test_mp_meta_gga_relax_default_values(initial_static_maker, final_relax_maker):
     job = MPMetaGGARelax(
-        initial_relax_maker=initial_static_maker, final_relax_maker=final_relax_maker
+        initial_maker=initial_static_maker, final_relax_maker=final_relax_maker
     )
-    assert isinstance(job.initial_relax_maker, type(initial_static_maker))
+    assert isinstance(job.initial_maker, type(initial_static_maker))
     if initial_static_maker:
-        assert job.initial_relax_maker.name == "MP PreRelax"
+        assert job.initial_maker.name == "MP pre-relax"
 
     assert isinstance(job.final_relax_maker, type(final_relax_maker))
     if final_relax_maker:
-        assert job.final_relax_maker.name == "MP Relax"
+        assert job.final_relax_maker.name == "MP meta-GGA Relax"
 
     assert job.name == "MP Meta-GGA Relax"
 
 
 def test_mp_meta_gga_relax_custom_values():
-    initial_relax_maker = MPPreRelaxMaker()
+    initial_maker = MPPreRelaxMaker()
     final_relax_maker = MPMetaGGARelaxMaker()
     job = MPMetaGGARelax(
         name="Test",
-        initial_relax_maker=initial_relax_maker,
+        initial_maker=initial_maker,
         final_relax_maker=final_relax_maker,
     )
     assert job.name == "Test"
-    assert job.initial_relax_maker == initial_relax_maker
+    assert job.initial_maker == initial_maker
     assert job.final_relax_maker == final_relax_maker
-
-
-def test_get_kspacing_params():
-    bandgap = 0.05
-    bandgap_tol = 0.1
-    params = _get_kspacing_params(bandgap, bandgap_tol)
-    assert params["KSPACING"] == 0.22
-
-    bandgap = 1.0
-    params = _get_kspacing_params(bandgap, bandgap_tol)
-    assert params["KSPACING"] == approx(0.30235235)
 
 
 def test_mp_relax(mock_vasp, clean_dir, si_structure):
@@ -105,13 +92,13 @@ def test_mp_relax(mock_vasp, clean_dir, si_structure):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    flow = MPMetaGGARelaxMaker().make(si_structure)
+    job = MPMetaGGARelaxMaker().make(si_structure)
 
     # Run the flow or job and ensure that it finished running successfully
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[0].uuid][1].output
+    output = responses[job.jobs[0].uuid][1].output
 
     assert isinstance(output, TaskDoc)
     assert output.output.energy == pytest.approx(-10.85043620)
@@ -124,5 +111,5 @@ def test_mp_relax(mock_vasp, clean_dir, si_structure):
             user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
         )
     )
-    flow = MPMetaGGARelaxMaker(relax_maker2=custom_maker).make(si_structure)
-    run_locally(flow, create_folders=True, ensure_success=True)
+    job = MPMetaGGARelaxMaker(relax_maker2=custom_maker).make(si_structure)
+    run_locally(job, create_folders=True, ensure_success=True)
