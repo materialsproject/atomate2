@@ -1,4 +1,4 @@
-"""Module defining VASP magnetic orderings builder."""
+"""Module defining DFT code agnostic magnetic orderings builder."""
 
 from __future__ import annotations
 
@@ -25,12 +25,13 @@ class MagneticOrderingsBuilder(Builder):
     Builder to analyze the results of magnetic orderings calculations. This job
     will process the output documents of the calculations and return new documents
     with relevant parameters (such as the total magnetization, whether the ordering
-    changed, whether the particular ordering is the ground state, etc.)
+    changed, whether the particular ordering is the ground state, etc.).
 
-    NOTE: This builder can be trivially implemented for your DFT code of choice by
-    adding functionality for constructing the static/relax outputs (see schema for
-    details) and implementing the 1) _build_relax_output, 2) _build_static_output, and
-    3) _dft_code_criterion methods.
+    .. Note::
+        This builder can be trivially implemented for your DFT code of choice by
+        adding functionality for constructing the static/relax outputs (see schema for
+        details) and implementing the 1) _build_relax_output, 2) _build_static_output, and
+        3) _dft_code_query methods.
 
     Parameters
     ----------

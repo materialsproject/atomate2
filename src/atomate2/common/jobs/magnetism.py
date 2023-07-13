@@ -110,7 +110,6 @@ def run_ordering_calculations(
     Response:
         Replaces the job with a Flow that will run all calculations.
     """
-
     jobs = []
     num_orderings = len(orderings[0])
     for idx, (struct, origin) in enumerate(zip(*orderings)):
@@ -128,6 +127,7 @@ def run_ordering_calculations(
             relax_job.metadata.update(metadata)
 
             kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
+            kwargs["run_vasp_kwargs"] = {"vasp_job_kwargs": {"copy_magmom": True}}
 
             struct = relax_job.output.structure
             parent_uuid = relax_job.output.uuid
