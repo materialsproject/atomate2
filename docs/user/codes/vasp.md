@@ -284,7 +284,7 @@ run_locally(lobster, create_folders=True, store=store)
 ```
 
 
-It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallized differently (MPI vs. OpenMP).
+It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
 [FireWorks](https://github.com/materialsproject/fireworks) allows to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
