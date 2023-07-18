@@ -241,7 +241,7 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-## Lobster
+### Lobster
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
 
