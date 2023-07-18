@@ -43,7 +43,7 @@ mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["lobsterpy"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
-forcefields = ["chgnet==0.1.4", "matgl==0.7.0"]
+forcefields = ["chgnet==0.1.4", "matgl==0.7.1"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
@@ -61,19 +61,19 @@ strict = [
     "PyYAML==6.0",
     "cclib==1.7.2",
     "chgnet==0.1.4",
-    "click==8.1.4",
+    "click==8.1.5",
     "custodian==2023.6.5",
     "dscribe==2.0.0",
-    "emmet-core==0.58.2",
+    "emmet-core==0.60.1",
     "jobflow==0.1.11",
     "lobsterpy==0.2.9",
-    "matgl==0.7.0",
+    "matgl==0.7.1",
     "monty==2023.5.8",
     "mp-api==0.33.3",
     "numpy",
     "phonopy==2.20.0",
     "pydantic==1.10.9",
-    "pymatgen-analysis-defects==2023.6.1",
+    "pymatgen-analysis-defects==2023.7.12",
     "pymatgen==2023.5.31",
     "seekpath==2.1.0",
     "typing-extensions==4.7.1",
