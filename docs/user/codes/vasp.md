@@ -295,6 +295,7 @@ for job, _ in lobster.iterflow():
         job.update_config({"manager_config": {"_fworker": "worker"}})
 ```
 
+Don't forget to set VASP and Lobster commands in the configuration files of the workers and their `env` as well.
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 
