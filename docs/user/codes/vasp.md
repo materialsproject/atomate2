@@ -287,7 +287,7 @@ It is, however,  computationally very beneficial to define two different types o
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
-```
+```Python
 for job, _ in lobster.iterflow():
     if "get_lobster" in  job.name:
         job.update_config({"manager_config": {"_fworker": "worker"}, "response_manager_config":  {"_fworker": "lobster"}})
