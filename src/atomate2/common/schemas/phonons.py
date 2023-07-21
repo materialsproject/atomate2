@@ -91,16 +91,16 @@ class ForceConstants(MSONable):
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: List[str | None] = Field(
+    displacements_job_dirs: List[Optional[str]] = Field(
         None, description="The directories where the displacement jobs were run."
     )
-    static_run_job_dir: str | None = Field(
+    static_run_job_dir: Optional[str] = Field(
         None, description="Directory where static run was performed."
     )
-    born_run_job_dir: str | None = Field(
+    born_run_job_dir: Optional[str] = Field(
         None, description="Directory where born run was performed."
     )
-    optimization_run_job_dir: str | None = Field(
+    optimization_run_job_dir: Optional[str] = Field(
         None, description="Directory where optimization run was performed."
     )
 
