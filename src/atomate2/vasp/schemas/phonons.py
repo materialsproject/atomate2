@@ -305,8 +305,10 @@ class PhononBSDOSDoc(BaseModel):
 
         # phonon band structures will always be cmouted
         filename_band_yaml = "phonon_band_structure.yaml"
+
+        # TODO: potentially add kwargs to avoid computation of eigenvectors
         phonon.run_band_structure(
-            qpoints, path_connections=connections, with_eigenvectors=True
+            qpoints, path_connections=connections, with_eigenvectors=kwargs.get("band_structure_eigenvectors", True), is_band_connection=kwargs.get("band_structure_eigenvectors", True),
         )
         phonon.write_yaml_band_structure(filename=filename_band_yaml)
         bs_symm_line = get_ph_bs_symm_line(
@@ -326,7 +328,8 @@ class PhononBSDOSDoc(BaseModel):
         )
 
         # gets data for visualization on website - yaml is also enough
-        bs_symm_line.write_phononwebsite("phonon_website.json")
+        if kwargs.get("band_structure_eigenvectors", True):
+            bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
