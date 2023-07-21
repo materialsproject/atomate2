@@ -96,6 +96,10 @@ class ForceFieldTaskDocument(StructureMetadata):
         description="version of the interatomic potential used for relaxation.",
     )
 
+    dir_name: str | None = Field(
+        None, description="Directory where the force field calculations are performed."
+    )
+
     @classmethod
     def from_ase_compatible_result(
         cls,

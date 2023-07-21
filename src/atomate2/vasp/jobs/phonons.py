@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -16,8 +17,8 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -191,7 +192,10 @@ def generate_phonon_displacements(
     return displacements
 
 
-@job(output_schema=PhononBSDOSDoc, data=[PhononDos, PhononBandStructureSymmLine])
+@job(
+    output_schema=PhononBSDOSDoc,
+    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants],
+)
 def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
@@ -301,19 +305,16 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structure": displacement,
         }
-        try:
+        with contextlib.suppress(Exception):
             phonon_job.update_maker_kwargs(
-                {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
+                {"_set": {"write_additional_data->phonon_info:json": info}},
+                dict_mod=True,
             )
-        except:
-            pass
+
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"].append(i)
         outputs["uuids"].append(phonon_job.output.uuid)
-        try:
-            outputs["dirs"].append(phonon_job.output.dir_name)
-        except:
-            outputs["dirs"]=None
+        outputs["dirs"].append(phonon_job.output.dir_name)
         outputs["forces"].append(phonon_job.output.output.forces)
         outputs["displaced_structures"].append(displacement)
 

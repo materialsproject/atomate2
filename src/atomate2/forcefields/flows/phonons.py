@@ -8,11 +8,8 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
-from atomate2.forcefields.jobs import CHGNetStaticMaker, CHGNetRelaxMaker
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
+from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
 from atomate2.vasp.jobs.phonons import (
-    PhononDisplacementMaker,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
     get_supercell_size,
@@ -21,8 +18,6 @@ from atomate2.vasp.jobs.phonons import (
 )
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
@@ -134,13 +129,9 @@ class PhononMaker(Maker):
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
-    bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory= CHGNetRelaxMaker
-    )
+    bulk_relax_maker: BaseVaspMaker | None = field(default_factory=CHGNetRelaxMaker)
     static_energy_maker: BaseVaspMaker | None = field(default_factory=CHGNetStaticMaker)
-    phonon_displacement_maker: BaseVaspMaker = field(
-        default_factory=CHGNetStaticMaker
-    )
+    phonon_displacement_maker: BaseVaspMaker = field(default_factory=CHGNetStaticMaker)
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
@@ -229,8 +220,8 @@ class PhononMaker(Maker):
             bulk = self.bulk_relax_maker.make(structure)
             jobs.append(bulk)
             structure = bulk.output.structure
-            optimization_run_job_dir = None # TODO: should we save something?
-            #bulk.output.dir_name
+            optimization_run_job_dir = None  # TODO: should we save something?
+            # bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
         else:
             optimization_run_job_dir = None
@@ -278,7 +269,7 @@ class PhononMaker(Maker):
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
-            #static_run_job_dir = static_job.output.dir_name
+            # static_run_job_dir = static_job.output.dir_name
             static_run_job_dir = None
             static_run_uuid = static_job.output.uuid
         else:
@@ -293,8 +284,6 @@ class PhononMaker(Maker):
                 total_dft_energy = None
             static_run_job_dir = None
             static_run_uuid = None
-
-
 
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,

@@ -4,14 +4,14 @@ from pymatgen.core.structure import Structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
-from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.schemas.phonons import (
+from atomate2.common.schemas.phonons import (
     PhononBSDOSDoc,
     PhononComputationalSettings,
     PhononJobDirs,
     PhononUUIDs,
     ThermalDisplacementData,
 )
+from atomate2.vasp.flows.phonons import PhononMaker
 
 
 def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
