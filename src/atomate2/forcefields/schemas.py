@@ -1,6 +1,6 @@
 """Job to prerelax a structure using an MD Potential."""
 
-from typing import List
+from typing import List, Optional
 
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Extra, Field
@@ -96,7 +96,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         description="version of the interatomic potential used for relaxation.",
     )
 
-    dir_name: str | None = Field(
+    dir_name: Optional[str] = Field(
         None, description="Directory where the force field calculations are performed."
     )
 
