@@ -111,5 +111,5 @@ class MPMetaGGARelaxGenerator(VaspInputGenerator):
             return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}
 
         rmin = 25.22 - 2.87 * bandgap
-        k_spacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
-        return {"KSPACING": np.clip(k_spacing, 0.22, 0.44), "ISMEAR": -5, "SIGMA": 0.05}
+        kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
+        return {"KSPACING": np.clip(kspacing, 0.22, 0.44), "ISMEAR": -5, "SIGMA": 0.05}
