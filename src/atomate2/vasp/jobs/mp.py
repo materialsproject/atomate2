@@ -192,6 +192,7 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
     name: str = "MP meta-GGA Static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
-            user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False}
+            user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False},
+            auto_ismear=False,
         )
     )
