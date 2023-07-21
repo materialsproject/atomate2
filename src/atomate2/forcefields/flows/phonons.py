@@ -30,7 +30,7 @@ __all__ = ["PhononMaker"]
 @dataclass
 class PhononMaker(Maker):
     """
-    Maker to calculate harmonic phonons with VASP and Phonopy.
+    Maker to calculate harmonic phonons with a force field.
 
     Calculate the harmonic phonons of a material. Initially, a tight structural
     relaxation is performed to obtain a structure without forces on the atoms.

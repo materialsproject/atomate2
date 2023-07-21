@@ -204,7 +204,7 @@ class M3GNetStaticMaker(M3GNetRelaxMaker):
 
     name: str = "M3GNet static"
     relax_cell: bool = False
-    steps: int = 0
+    steps: int = 1
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
