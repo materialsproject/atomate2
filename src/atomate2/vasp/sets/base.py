@@ -936,7 +936,7 @@ def _set_u_params(incar, incar_settings, structure):
     has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
     if not has_u:
-        for key in list(incar):
+        for key in incar:
             if key.startswith("LDAU"):
                 del incar[key]
 

@@ -158,7 +158,7 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP meta-GGA Relax"
+    name: str = "MP meta-GGA relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(auto_ismear=False)
     )
@@ -193,7 +193,7 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP meta-GGA Static"
+    name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
             user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False},
