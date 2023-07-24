@@ -39,11 +39,19 @@ def test_phonon_wf_only_displacements3(clean_dir):
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert np.allclose(
-        np.array(responses[job.jobs[-1].uuid][1].output.free_energies)/1000.0,
-        np.array([
-            5058.45217527524, 4907.495751683517, 3966.5493299635937, 2157.8178928940474, -357.5054580420707
-        ])/1000.0,
-    2)
+        np.array(responses[job.jobs[-1].uuid][1].output.free_energies) / 1000.0,
+        np.array(
+            [
+                5058.45217527524,
+                4907.495751683517,
+                3966.5493299635937,
+                2157.8178928940474,
+                -357.5054580420707,
+            ]
+        )
+        / 1000.0,
+        2,
+    )
 
     assert isinstance(
         responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
@@ -59,7 +67,7 @@ def test_phonon_wf_only_displacements3(clean_dir):
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert np.isclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy,-5.372457981109619
+        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.372457981109619
     )
     assert responses[job.jobs[-1].uuid][1].output.born is None
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
@@ -91,15 +99,38 @@ def test_phonon_wf_only_displacements3(clean_dir):
     )
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 4.783939817386235, 13.993186953791708, 21.88641334781562, 28.19110667148253],3
+        [
+            0.0,
+            4.783939817386235,
+            13.993186953791708,
+            21.88641334781562,
+            28.19110667148253,
+        ],
+        3,
     )
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 8.860605865667427, 17.55758943495313, 21.089039169564796, 22.625872713428905],3
+        [
+            0.0,
+            8.860605865667427,
+            17.55758943495313,
+            21.089039169564796,
+            22.625872713428905,
+        ],
+        3,
     )
 
     assert np.allclose(
-        np.array(responses[job.jobs[-1].uuid][1].output.internal_energies)/1000.0,
-        np.array([5058.441587914012, 5385.880585798466, 6765.198541655172, 8723.78588089732, 10919.019940938391])/1000.0,3
+        np.array(responses[job.jobs[-1].uuid][1].output.internal_energies) / 1000.0,
+        np.array(
+            [
+                5058.441587914012,
+                5385.880585798466,
+                6765.198541655172,
+                8723.78588089732,
+                10919.019940938391,
+            ]
+        )
+        / 1000.0,
+        3,
     )
-
