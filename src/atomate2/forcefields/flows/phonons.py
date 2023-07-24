@@ -130,7 +130,7 @@ class PhononMaker(Maker):
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
     bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.0005})
+        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
     static_energy_maker: BaseVaspMaker | None = field(default_factory=CHGNetStaticMaker)
     phonon_displacement_maker: BaseVaspMaker = field(default_factory=CHGNetStaticMaker)

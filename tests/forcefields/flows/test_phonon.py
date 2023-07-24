@@ -12,7 +12,7 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-def test_phonon_wf_only_displacements3(clean_dir):
+def test_phonon_wf(clean_dir):
     from jobflow import run_locally
 
     structure = Structure(
