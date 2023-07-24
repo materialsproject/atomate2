@@ -6,7 +6,7 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
 from __future__ import annotations
 
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -30,6 +30,7 @@ _BASE_MP_GGA_RELAX_SET = loadfn(
 )
 
 
+@dataclass
 class MPGGARelaxGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP GGA relaxation input sets."""
 
@@ -67,6 +68,7 @@ class MPGGARelaxGenerator(VaspInputGenerator):
         return {}
 
 
+@dataclass
 class MPMetaGGARelaxGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP metaGGA relaxation input sets."""
 

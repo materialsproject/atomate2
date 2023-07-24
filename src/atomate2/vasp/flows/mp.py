@@ -80,13 +80,14 @@ class MPGGARelax(Maker):
                 structure, prev_vasp_dir=prev_vasp_dir
             )
             jobs += [initial_relax]
+            structure = initial_relax.output.structure
+            prev_vasp_dir = initial_relax.output.dir_name
 
         self.final_relax_maker.input_set_generator.additional_vasp_files = (
             self.copy_vasp_files
         )
         final_relax = self.final_relax_maker.make(
-            structure=initial_relax.output.structure,
-            prev_vasp_dir=initial_relax.output.dir_name,
+            structure=structure, prev_vasp_dir=prev_vasp_dir
         )
         output = final_relax.output
         jobs += [final_relax]
@@ -157,13 +158,14 @@ class MPMetaGGARelax(Maker):
                 structure, prev_vasp_dir=prev_vasp_dir
             )
             jobs += [initial_relax]
+            structure = initial_relax.output.structure
+            prev_vasp_dir = initial_relax.output.dir_name
 
         self.final_relax_maker.input_set_generator.additional_vasp_files = (
             self.copy_vasp_files
         )
         final_relax = self.final_relax_maker.make(
-            structure=initial_relax.output.structure,
-            prev_vasp_dir=initial_relax.output.dir_name,
+            structure=structure, prev_vasp_dir=prev_vasp_dir
         )
         output = final_relax.output
         jobs += [final_relax]
