@@ -63,7 +63,7 @@ strict = [
     "chgnet==0.1.4",
     "click==8.1.5",
     "custodian==2023.6.5",
-    "dscribe==2.0.0",
+    "dscribe==2.0.1",
     "emmet-core==0.60.1",
     "jobflow==0.1.11",
     "lobsterpy==0.2.9",
