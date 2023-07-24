@@ -29,8 +29,8 @@ def test_cclib_taskdoc(test_dir):
     assert doc["nelectrons"] == 16
     assert "schemas" in doc["dir_name"]
     assert "gau_testopt.log.gz" in doc["logfile"]
-    assert doc.get("attributes", None) is not None
-    assert doc.get("metadata", None) is not None
+    assert doc.get("attributes") is not None
+    assert doc.get("metadata") is not None
     assert doc["metadata"]["success"] is True
     assert doc["attributes"]["molecule_initial"][0].coords == pytest.approx([0, 0, 0])
     assert doc["molecule"][0].coords == pytest.approx([0.397382, 0.0, 0.0])
@@ -56,11 +56,13 @@ def test_cclib_taskdoc(test_dir):
     assert "Could not parse" in str(e.value)
 
     # Test a population analysis
-    doc = TaskDocument.from_logfile(p, ".out", analysis="MBO").dict()
+    doc = TaskDocument.from_logfile(p, "psi_test.out", analysis="MBO").dict()
     assert doc["attributes"]["mbo"] is not None
 
     # Let's try with two analysis (also check case-insensitivity)
-    doc = TaskDocument.from_logfile(p, ".out", analysis=["mbo", "density"]).dict()
+    doc = TaskDocument.from_logfile(
+        p, "psi_test.out", analysis=["mbo", "density"]
+    ).dict()
     assert doc["attributes"]["mbo"] is not None
     assert doc["attributes"]["density"] is not None
 
@@ -75,7 +77,7 @@ def test_cclib_taskdoc(test_dir):
         p / "psi_test.cube", "wb"
     ) as f_out:
         shutil.copyfileobj(f_in, f_out)
-    doc = TaskDocument.from_logfile(p, ".out", analysis=["Bader"]).dict()
+    doc = TaskDocument.from_logfile(p, "psi_test.out", analysis=["Bader"]).dict()
     os.remove(p / "psi_test.cube")
     assert doc["attributes"]["bader"] is not None
 
@@ -88,6 +90,10 @@ def test_cclib_taskdoc(test_dir):
     # Make sure additional fields can be stored
     doc = TaskDocument.from_logfile(p, ".log", additional_fields={"test": "hi"})
     assert doc.dict()["test"] == "hi"
+
+    # Test that the dict printing works
+    task = TaskDocument.from_logfile(p, "orca.out")
+    task.dict()
 
     # test document can be jsanitized
     d = jsanitize(doc, enum_values=True)
