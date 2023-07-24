@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from pymatgen.core.structure import Structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
@@ -9,7 +8,6 @@ from atomate2.common.schemas.phonons import (
     PhononComputationalSettings,
     PhononJobDirs,
     PhononUUIDs,
-    ThermalDisplacementData,
 )
 from atomate2.forcefields.flows.phonons import PhononMaker
 
