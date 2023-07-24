@@ -636,7 +636,6 @@ class VaspInputGenerator(InputGenerator):
             else:
                 incar[k] = v
         _set_u_params(incar, incar_settings, structure)
-        _set_lmaxtau(incar, incar_settings, structure)
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
@@ -954,21 +953,6 @@ def _set_u_params(incar, incar_settings, structure):
         # contains d-electrons
         elif "d" in blocks:
             incar["LMAXMIX"] = 4
-
-
-def _set_lmaxtau(incar, incar_settings, structure):
-    """Modify LMAXTAU for use with LASPH."""
-    # Set LMAXTAU = 8 if LASPH = True and there are f-electrons present.
-    # Note that if the user explicitly sets LMAXTAU in settings it will
-    # override this logic. See VASP manual for more details.
-    blocks = [site.specie.block for site in structure]
-    if (
-        "LMAXTAU" not in incar_settings
-        and incar_settings.get("LASPH", False)
-        and incar_settings.get("METAGGA")
-        and "f" in blocks
-    ):
-        incar["LMAXTAU"] = 8
 
 
 def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
