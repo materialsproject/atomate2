@@ -43,7 +43,7 @@ mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["lobsterpy"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
-forcefields = ["chgnet==0.1.4", "matgl==0.7.1"]
+forcefields = ["chgnet==0.2.0", "matgl==0.7.1"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
@@ -60,7 +60,7 @@ tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.0"]
 strict = [
     "PyYAML==6.0",
     "cclib==1.7.2",
-    "chgnet==0.1.4",
+    "chgnet==0.2.0",
     "click==8.1.5",
     "custodian==2023.6.5",
     "dscribe==2.0.1",
