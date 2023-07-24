@@ -48,7 +48,9 @@ class MPGGARelaxMaker(BaseVaspMaker):
     """
 
     name: str = "MP GGA Relax"
-    input_set_generator: VaspInputGenerator = field(default_factory=MPGGARelaxGenerator)
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: MPGGARelaxGenerator(auto_ismear=False)
+    )
 
 
 @dataclass
@@ -83,7 +85,8 @@ class MPGGAStaticMaker(BaseVaspMaker):
     name: str = "MP GGA Static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPGGARelaxGenerator(
-            user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False}
+            user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False},
+            auto_ismear=False,
         )
     )
 
@@ -120,7 +123,8 @@ class MPPreRelaxMaker(BaseVaspMaker):
     name: str = "MP pre-relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
-            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
+            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"},
+            auto_ismear=False,
         )
     )
 
@@ -156,7 +160,7 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA Relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPMetaGGARelaxGenerator
+        default_factory=lambda: MPMetaGGARelaxGenerator(auto_ismear=False)
     )
 
 
