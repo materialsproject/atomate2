@@ -49,7 +49,6 @@ class QChemInputSet(InputSet):
     def write_input(
         self,
         directory: Union[str, Path],
-        make_dir: bool = True,
         overwrite: bool = True,
     ):
         """
@@ -59,18 +58,13 @@ class QChemInputSet(InputSet):
         ----------
         directory
             Directory to write input files to.
-        make_dir
-            Whether to create the directory if it does not already exist.
         overwrite
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
 
-        inputs = {
-            "Input_Dict": self.qcinput,
-        }
+        inputs = {"Input_Dict": self.qcinput}
         inputs.update(self.optional_files)
 
         for k, v in inputs.items():
@@ -160,7 +154,7 @@ class QChemInputGenerator(InputGenerator):
         Refer to the QChem manual for further details.
 
     opt_variables : dict
-        A dictionary of opt sections, where each opt section is a key 
+        A dictionary of opt sections, where each opt section is a key
         and the corresponding values are a list of strings. Strings must be formatted
         as instructed by the QChem manual. The different opt sections are: CONSTRAINT, FIXED,
         DUMMY, and CONNECT.
@@ -192,7 +186,7 @@ class QChemInputGenerator(InputGenerator):
         A dict containing parameters for the $geom_opt section of the QChem
         input file, which control the new geometry optimizer available starting in version 5.4.2.
         Note that the new optimizer remains under development and not officially released.
-        Further note that even passig an empty dictionary will trigger the new optimizer.
+        Further note that even passing an empty dictionary will trigger the new optimizer.
         (Default: False)
 
     overwrite_inputs : dict
@@ -435,21 +429,12 @@ class QChemInputGenerator(InputGenerator):
             self.nbo_dict = nbo_dict
             self.geom_opt_dict = geom_opt_dict
 
-    def get_input_set(
-        self,
-        molecule: Molecule = None,
-        # prev_dir: Union[str, Path] = None,
-        overwrite_inputs: dict = None,
-    ) -> QChemInputSet:
+    def get_input_set(self) -> QChemInputSet:
         """
         Get a QChem Input Set as a dictionary for a molecule
 
         Parameters
         ----------
-        molecule
-            A pymatgen molecule.
-        prev_dir
-            A previous directory to generate the input set from.
 
         Returns
         -------
@@ -499,17 +484,12 @@ class QChemInputGenerator(InputGenerator):
             )
         )
 
-    def get_input_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_input_set_updates(self) -> dict:
         """
         Get updates to the input set for this calculation type.
 
         Parameters
         ----------
-        molecule
-            A molecule.
 
         Returns
         -------

@@ -25,10 +25,7 @@ __all__ = [
 class SinglePointSetGenerator(QChemInputGenerator):
     """Class to generate QChem Single Point input sets."""
 
-    def get_input_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_input_set_updates(self) -> dict:
         """
         Get updates to the input dict for a single point calculation.
         """
@@ -39,10 +36,7 @@ class SinglePointSetGenerator(QChemInputGenerator):
 class OptSetGenerator(QChemInputGenerator):
     """Class to generate QChem Optimization input sets."""
 
-    def get_input_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_input_set_updates(self) -> dict:
         """
         Get updates to the input dict for a geometry optimization calculation.
         """
@@ -53,10 +47,7 @@ class OptSetGenerator(QChemInputGenerator):
 class TransitionStateSetGenerator(QChemInputGenerator):
     """Class to generate QChem Transition State calculation input sets."""
 
-    def get_basis_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_basis_set_updates(self) -> dict:
         """
         Get updates to the input dict for a transition state calculation.
         """
@@ -67,10 +58,7 @@ class TransitionStateSetGenerator(QChemInputGenerator):
 class ForceSetGenerator(QChemInputGenerator):
     """Class to generate QChem force input sets."""
 
-    def get_basis_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_basis_set_updates(self) -> dict:
         """
         Get updates to the input dict for a force(gradient) calculation.
         """
@@ -85,10 +73,7 @@ class ForceSetGenerator(QChemInputGenerator):
 class FreqSetGenerator(QChemInputGenerator):
     """Class to generate QChem frequency calculation input sets."""
 
-    def get_basis_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_basis_set_updates(self) -> dict:
         """
         Get updates to the input dict for a frequency calculation.
         """
@@ -99,10 +84,7 @@ class FreqSetGenerator(QChemInputGenerator):
 class PESScanSetGenerator(QChemInputGenerator):
     """Class to generate QChem PES scan input sets."""
 
-    def get_basis_set_updates(
-        self,
-        molecule: Molecule,
-    ) -> dict:
+    def get_basis_set_updates(self) -> dict:
         """
         Get updates to the input dict for a pes scan calculation.
         """

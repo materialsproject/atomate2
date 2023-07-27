@@ -23,7 +23,6 @@ __all__ = [
 
 @dataclass
 class FrequencyFlatteningOptimizeMaker(Maker):
-
     # need to incorporate iterations and perturb geometry
     """
     Maker to iteratively optimize given structure and flatten imaginary frequencies to ensure that
@@ -96,7 +95,6 @@ class FrequencyFlatteningOptimizeMaker(Maker):
 
 @dataclass
 class FrequencyFlatteningTransitionStateMaker(Maker):
-
     # need to incorporate iterations and perturb geometry
     """
     Maker to iteratively optimize transition state structure and flatten imaginary frequencies to ensure that
