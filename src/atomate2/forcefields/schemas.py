@@ -203,11 +203,7 @@ class ForceFieldTaskDocument(StructureMetadata):
                 cur_ionic_step = IonicStep(
                     energy=cur_energy,
                     forces=cur_forces,
-                    magmoms=(
-                        trajectory["magmoms"][i].tolist()
-                        if "magmoms" in ionic_step_data
-                        else None
-                    ),
+                    magmoms=(None), #(trajectory["magmoms"][i].tolist() if "magmoms" in ionic_step_data else None)
                     stress=cur_stress,
                     structure=cur_structure,
                 )
@@ -241,7 +237,8 @@ class ForceFieldTaskDocument(StructureMetadata):
             import chgnet
 
             version = chgnet.__version__
-
+        else:
+            version="0.0"
         return cls.from_structure(
             meta_structure=output_structure,
             structure=output_structure,

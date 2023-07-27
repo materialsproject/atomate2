@@ -27,6 +27,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
     from atomate2.vasp.sets.base import VaspInputGenerator
+    from atomate2.forcefields.jobs import ForceFieldStaticMaker
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,8 @@ __all__ = [
     "generate_frequencies_eigenvectors",
     "PhononDisplacementMaker",
 ]
+
+# TODO: move more parts to common
 
 
 @job
@@ -263,7 +266,7 @@ def run_phonon_displacements(
     displacements,
     structure: Structure,
     supercell_matrix,
-    phonon_maker: BaseVaspMaker = None,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
 ):
     """
     Run phonon displacements.
@@ -274,11 +277,11 @@ def run_phonon_displacements(
     ----------
     displacements
     structure: Structure object
-        Fully optimized structure used for phonon computations
+        Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
-        A VaspMaker to use to generate the elastic relaxation jobs.
+        A VaspMaker to use to generate the phonon jobs.
     """
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()

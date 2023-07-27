@@ -320,8 +320,8 @@ class PhononBSDOSDoc(BaseModel):
         phonon.run_band_structure(
             qpoints,
             path_connections=connections,
-            with_eigenvectors=kwargs.get("band_structure_eigenvectors", True),
-            is_band_connection=kwargs.get("band_structure_eigenvectors", True),
+            with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
+            is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         )
         phonon.write_yaml_band_structure(filename=filename_band_yaml)
         bs_symm_line = get_ph_bs_symm_line(
@@ -341,7 +341,7 @@ class PhononBSDOSDoc(BaseModel):
         )
 
         # gets data for visualization on website - yaml is also enough
-        if kwargs.get("band_structure_eigenvectors", True):
+        if kwargs.get("band_structure_eigenvectors", False):
             bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
@@ -397,7 +397,7 @@ class PhononBSDOSDoc(BaseModel):
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
-        if kwargs["create_thermal_displacements"]:
+        if kwargs.get("create_thermal_displacements", False):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -468,7 +468,7 @@ class PhononBSDOSDoc(BaseModel):
                 "thermal_displacement_matrix": tdisp_mat,
                 "freq_min_thermal_displacements": freq_min_thermal_displacements,
             }
-            if kwargs["create_thermal_displacements"]
+            if kwargs.get("create_thermal_displacements", False)
             else None,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],

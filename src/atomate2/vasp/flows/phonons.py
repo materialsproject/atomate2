@@ -10,7 +10,7 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
-from atomate2.vasp.jobs.phonons import (
+from atomate2.common.jobs.phonons import (
     PhononDisplacementMaker,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
