@@ -203,7 +203,7 @@ class ForceFieldTaskDocument(StructureMetadata):
                 cur_ionic_step = IonicStep(
                     energy=cur_energy,
                     forces=cur_forces,
-                    magmoms=(None), #(trajectory["magmoms"][i].tolist() if "magmoms" in ionic_step_data else None)
+                    magmoms=(trajectory["magmoms"][i].tolist() if "magmoms" in ionic_step_data else None),
                     stress=cur_stress,
                     structure=cur_structure,
                 )
