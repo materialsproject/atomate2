@@ -132,8 +132,7 @@ def run_vasp(
     split_vasp_cmd = shlex.split(vasp_cmd)
     split_vasp_gamma_cmd = shlex.split(vasp_gamma_cmd)
 
-    if "auto_npar" not in vasp_job_kwargs:
-        vasp_job_kwargs["auto_npar"] = False
+    vasp_job_kwargs.setdefault("auto_npar", False)
 
     vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
 
