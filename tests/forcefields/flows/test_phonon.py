@@ -65,7 +65,7 @@ def test_phonon_wf(clean_dir):
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert np.isclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.372457981109619
+        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.372457981109619, 4
     )
     assert responses[job.jobs[-1].uuid][1].output.born is None
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None

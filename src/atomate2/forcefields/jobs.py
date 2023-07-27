@@ -104,10 +104,10 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
             result,
-            self.relax_cell,
-            self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
+            False,
+            1,
+            None,
+            None,
             **self.task_document_kwargs,
         )
 
