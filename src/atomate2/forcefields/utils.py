@@ -153,7 +153,7 @@ class Relaxer:
         **kwargs,
     ):
         """
-        Relax the struture.
+        Relax the structure.
 
         Parameters
         ----------
