@@ -12,6 +12,8 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
@@ -317,7 +319,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
         args_str for :obj: quippy.potential.Potential()'.
-    potential_param_filename: str
+    potential_param_filename: str|Path
         param_file_name for :obj: quippy.potential.Potential()'.
     potential_kwargs: dict
         Further kwargs for :obj: quippy.potential.Potential()'.
@@ -330,7 +332,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-    potential_args_str: str = "IP GAP"
+    potential_args_str: str | Path = "IP GAP"
     potential_param_file_name: str = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
 
@@ -339,7 +341,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
 
         calculator = Potential(
             args_str=self.potential_args_str,
-            param_filename=self.potential_param_file_name,
+            param_filename=str(self.potential_param_file_name),
             **self.potential_kwargs,
         )
         relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
@@ -361,7 +363,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
         args_str for :obj: quippy.potential.Potential()'.
-    potential_param_filename: str
+    potential_param_filename: str | Path
         param_file_name for :obj: quippy.potential.Potential()'.
     potential_kwargs: dict
         Further kwargs for :obj: quippy.potential.Potential()'.
@@ -370,7 +372,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     name: str = "GAP static"
     force_field_name: str = "GAP"
     potential_args_str: str = "IP GAP"
-    potential_param_file_name: str = "gap.xml"
+    potential_param_file_name: str | Path = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure):
@@ -378,7 +380,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
 
         calculator = Potential(
             args_str=self.potential_args_str,
-            param_filename=self.potential_param_file_name,
+            param_filename=str(self.potential_param_file_name),
             **self.potential_kwargs,
         )
         relaxer = Relaxer(calculator, relax_cell=False)
