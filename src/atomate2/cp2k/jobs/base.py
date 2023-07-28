@@ -147,9 +147,8 @@ class BaseCp2kMaker(Maker):
             structure = transmuter.transformed_structures[-1].final_structure
 
             # to avoid MongoDB errors, ":" is automatically converted to "."
-            if "transformations:json" not in self.write_additional_data:
-                tjson = transmuter.transformed_structures[-1]
-                self.write_additional_data["transformations:json"] = tjson
+            t_json = transmuter.transformed_structures[-1]
+            self.write_additional_data.setdefault("transformations:json", t_json)
 
         # copy previous inputs
         from_prev = prev_cp2k_dir is not None

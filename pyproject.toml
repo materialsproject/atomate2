@@ -187,5 +187,7 @@ isort.known-first-party = ["atomate2"]
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
 "**/tests/*" = ["D"]
-# things inside TYPE_CHECKING aren't available at runtime and so can't be used by pydantic models
-"**/schemas/*" = ["TCH"]
+# flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
+#     at runtime and so can't be used by pydantic models
+# flake8-future-annotations (FA): future annotations only work in pydantic models in python 3.10+
+"**/schemas/*" = ["FA", "TCH"]
