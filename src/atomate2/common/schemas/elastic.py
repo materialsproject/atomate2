@@ -1,7 +1,6 @@
 """Schemas for elastic tensor fitting and related properties."""
-from __future__ import annotations
-
 from copy import deepcopy
+from typing import List
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -84,20 +83,20 @@ class DerivedProperties(BaseModel):
 class FittingData(BaseModel):
     """Data used to fit elastic tensors."""
 
-    cauchy_stresses: list[Matrix3D] = Field(
+    cauchy_stresses: List[Matrix3D] = Field(
         None, description="The Cauchy stresses used to fit the elastic tensor."
     )
-    strains: list[Matrix3D] = Field(
+    strains: List[Matrix3D] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: list[Matrix3D] = Field(
+    pk_stresses: List[Matrix3D] = Field(
         None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations: list[Matrix3D] = Field(
+    deformations: List[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."
     )
-    uuids: list[str] = Field(None, description="The uuids of the deformation jobs.")
-    job_dirs: list[str] = Field(
+    uuids: List[str] = Field(None, description="The uuids of the deformation jobs.")
+    job_dirs: List[str] = Field(
         None, description="The directories where the deformation jobs were run."
     )
 
@@ -142,10 +141,10 @@ class ElasticDocument(BaseModel):
     def from_stresses(
         cls,
         structure: Structure,
-        stresses: list[Stress],
-        deformations: list[Deformation],
-        uuids: list[str],
-        job_dirs: list[str],
+        stresses: List[Stress],
+        deformations: List[Deformation],
+        uuids: List[str],
+        job_dirs: List[str],
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
         order: int | None = None,
         equilibrium_stress: Matrix3D | None = None,
@@ -255,10 +254,10 @@ class ElasticDocument(BaseModel):
 
 def _expand_strains(
     structure: Structure,
-    strains: list[Strain],
-    stresses: list[Stress],
-    uuids: list[str],
-    job_dirs: list[str],
+    strains: List[Strain],
+    stresses: List[Stress],
+    uuids: List[str],
+    job_dirs: List[str],
     symprec: float,
     tol: float = 1e-3,
 ):
