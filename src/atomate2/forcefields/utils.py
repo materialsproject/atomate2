@@ -79,7 +79,8 @@ class TrajectoryObserver:
         """
         Calculate the energy, here we just use the potential energy.
 
-        Returns:
+        Returns
+        -------
             energy (float)
         """
         return self.atoms.get_potential_energy()
