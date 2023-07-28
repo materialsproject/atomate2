@@ -11,6 +11,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Molecule
+from collections import OrderedDict
 
 from emmet.core.structure import MoleculeMetadata
 from emmet.core.task import BaseTaskDocument
@@ -30,12 +31,14 @@ from atomate2.qchem.schemas.calc_types import (
 from atomate2.qchem.schemas.calculation import (
     Calculation,
     QChemObject,
+    Status,
 )
 
 __author__ = "Evan Spotte-Smith <ewcspottesmith@lbl.gov>"
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")
+_GRAD_HESS_FILES = ("GRAD", "HESS")
 
 
 class QChemStatus(ValueEnum):
@@ -285,4 +288,41 @@ class TaskDocument(BaseTaskDocument, MoleculeMetadata):
             calc_doc, qchem_objects = Calculation.from_qchem_files(
                 dir_name, task_name, **files, **qchem_calculation_kwargs
             )
+
+def _find_qchem_files(
+        path: Union[str, Path],
+        grad_hess_files: Tuple[str, ...] = _GRAD_HESS_FILES,
+) -> Dict[str, Any]:
+    """
+    Find QChem files in a directory.
+
+    Only files in folders with names matching a task name (mol.qout.*) will be returned.
+
+    Parameters
+    ----------
+    path
+        Path to a directory to search.
+    
+    Returns
+    -------
+    dict[str, Any]
+        The filenames of the calculation outputs for each QChem task, given as a ordered
+        dictionary of::
+            {
+                task_name:{
+                    "qchem_out_file": qout_filename,
+                    "qchem_log_file": qclog_filename,   
+                }
+                ...
+            }
+    """
+    #task_names = ["mol"] + [f""]
+    path = Path(path)
+    task_file = OrderedDict()
+
+    # def _get_task_files(files, suffix=""):
+    #     qchem_files = {}
+    #     grad_hess_files = []
+    #     for file in files:
+    #         if file.match()
         
