@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import TYPE_CHECKING
 
+import numpy as np
 from pydantic import BaseModel, Field
 from pymatgen.analysis.elasticity import (
     Deformation,
@@ -262,8 +263,21 @@ def _expand_strains(
     uuids: list[str],
     job_dirs: list[str],
     symprec: float,
+    tol: float = 1e-3,
 ):
-    """Use symmetry to expand strains."""
+    """
+    Use symmetry to expand strains.
+
+    Args:
+         tol: tolerance to determine if a strain component is zero. This should be
+            smaller than the smallest strain magnitude used to deform the structure.
+
+    Warning:
+        This function assumes that each deformed structure is generated from strain
+        state with only one non-zero component. If this is not the case, the expanded
+        strains will not contain the ones with other strain states. Also see:
+        `generate_elastic_deformations()`.
+    """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     symmops = sga.get_symmetry_operations(cartesian=True)
 
@@ -272,19 +286,20 @@ def _expand_strains(
     full_uuids = deepcopy(uuids)
     full_job_dirs = deepcopy(job_dirs)
 
-    mapping = TensorMapping()
+    mapping = TensorMapping(full_strains, [True for _ in full_strains])
     for i, strain in enumerate(strains):
-        mapping[strain] = True
-
         for symmop in symmops:
-            # rotate the strain
             rotated_strain = strain.transform(symmop)
+
+            # check if we have more than one perturbed strain component
+            if sum(np.abs(rotated_strain.voigt) > tol) > 1:
+                continue
 
             # check if we have seen it before
             if rotated_strain in mapping:
                 continue
 
-            # store the rotated deformation so we know we've seen it
+            # store the rotated strain so we know we've seen it
             mapping[rotated_strain] = True
 
             # expand the other properties
