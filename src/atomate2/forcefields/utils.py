@@ -5,6 +5,7 @@ The code has been released under BSD 3-Clause License
 and the following copyright applies:
 Copyright (c) 2022, Materials Virtual Lab.
 """
+from __future__ import annotations
 
 import contextlib
 import io

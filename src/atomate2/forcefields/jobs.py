@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
 
-from atomate2.forcefields.flows.utils import Relaxer
+from atomate2.forcefields.utils import Relaxer
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 if TYPE_CHECKING:
