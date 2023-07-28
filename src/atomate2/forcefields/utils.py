@@ -52,8 +52,11 @@ class TrajectoryObserver:
 
     def __init__(self, atoms: Atoms):
         """
-        Args:
-            atoms (Atoms): the structure to observe.
+
+        Parameters
+        ----------
+        atoms (Atoms): the structure to observe.
+
         """
         self.atoms = atoms
         self.energies: list[float] = []
@@ -64,6 +67,7 @@ class TrajectoryObserver:
 
     def __call__(self):
         """The logic for saving the properties of an Atoms during the relaxation."""
+        # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
         self.stresses.append(self.atoms.get_stress())
@@ -79,10 +83,15 @@ class TrajectoryObserver:
 
     def save(self, filename: str):
         """
-        Save the trajectory to file
-        Args:
-            filename (str): filename to save the trajectory
-        Returns:
+        Save the trajectory file.
+
+        Parameters
+        ----------
+        filename (str): filename to save the trajectory.
+
+        Returns
+        -------
+
         """
         with open(filename, "wb") as f:
             pickle.dump(
@@ -109,13 +118,11 @@ class Relaxer:
     ):
         """
 
-        Args:
-            calculator.
-
-            optimizer (str or ase Optimizer): the optimization algorithm.
-                Defaults to "FIRE"
-            relax_cell (bool): whether to relax the lattice cell
-            stress_weight (float): the stress weight for relaxation
+        Parameters
+        ----------
+        calculator (ase Calculatur): an ase calculator
+        optimizer (str or ase Optimizer): the optimization algorithm.
+        relax_cell (bool): if True, cell parameters will be opitimized.
         """
         self.calculator = calculator
 
@@ -142,15 +149,19 @@ class Relaxer:
     ):
         """
 
-        Args:
-            atoms (Atoms): the atoms for relaxation
-            fmax (float): total force tolerance for relaxation convergence.
-                Here fmax is a sum of force and stress forces
-            steps (int): max number of steps for relaxation
-            traj_file (str): the trajectory file for saving
-            interval (int): the step interval for saving the trajectories
-            **kwargs:
-        Returns:
+        Parameters
+        ----------
+        atoms (Atoms): the atoms for relaxation
+        fmax (float): total force tolerance for relaxation convergence.
+        steps (int): max number of steps for relaxation
+        traj_file (str): the trajectory file for saving
+        interval (int): the step interval for saving the trajectories
+        verbose (bool): if True, screenoutput will be shown.
+        kwargs: further kwargs.
+
+        Returns
+        -------
+            dict including optimized structure and the trajectory
         """
         if isinstance(atoms, (Structure, Molecule)):
             atoms = self.ase_adaptor.get_atoms(atoms)
