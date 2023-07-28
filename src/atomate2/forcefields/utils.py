@@ -52,12 +52,15 @@ class TrajectoryObserver:
 
     def __init__(self, atoms: Atoms):
         """
-        Initializes the Observer.
+        Initialize the Observer.
 
         Parameters
         ----------
         atoms (Atoms): the structure to observe.
 
+        Returns
+        -------
+            None
         """
         self.atoms = atoms
         self.energies: list[float] = []
