@@ -94,7 +94,6 @@ class TrajectoryObserver:
             )
 
 
-
 class Relaxer:
     """
     Relaxer is a class for structural relaxation
@@ -172,4 +171,3 @@ class Relaxer:
             "final_structure": self.ase_adaptor.get_structure(atoms),
             "trajectory": obs,
         }
-

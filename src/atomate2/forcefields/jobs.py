@@ -17,7 +17,16 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-__all__ = ["ForceFieldStaticMaker", "ForceFieldRelaxMaker", "CHGNetStaticMaker", "CHGNetRelaxMaker", "M3GNetStaticMaker", "M3GNetRelaxMaker"]
+__all__ = [
+    "ForceFieldStaticMaker",
+    "ForceFieldRelaxMaker",
+    "CHGNetStaticMaker",
+    "CHGNetRelaxMaker",
+    "M3GNetStaticMaker",
+    "M3GNetRelaxMaker",
+]
+
+
 @dataclass
 class ForceFieldRelaxMaker(Maker):
     """
@@ -40,6 +49,7 @@ class ForceFieldRelaxMaker(Maker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
+
     name: str = "Forcefield relax"
     force_field_name: str = "Forcefield"
     relax_cell: bool = False
@@ -55,7 +65,6 @@ class ForceFieldRelaxMaker(Maker):
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
-
 
         result = self._relax(structure)
 
@@ -89,7 +98,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
 
     name: str = "ForceField static"
-    force_field_name : str = "Forcefield"
+    force_field_name: str = "Forcefield"
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
@@ -114,6 +123,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
 
     def _evaluate_static(self, structure):
         raise NotImplementedError
+
 
 @dataclass
 class CHGNetRelaxMaker(ForceFieldRelaxMaker):
@@ -144,9 +154,9 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-
     def _relax(self, structure):
         from chgnet.model import StructOptimizer
+
         relaxer = StructOptimizer(**self.optimizer_kwargs)
         result = relaxer.relax(
             structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
@@ -170,13 +180,14 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     name: str = "CHGNet static"
     force_field_name = "CHGNet"
     task_document_kwargs: dict = field(default_factory=dict)
+
     def _evaluate_static(self, structure):
         from chgnet.model import StructOptimizer
+
         relaxer = StructOptimizer()
-        result = relaxer.relax(
-            structure, steps=1
-        )
+        result = relaxer.relax(structure, steps=1)
         return result
+
 
 @dataclass
 class M3GNetRelaxMaker(ForceFieldRelaxMaker):
@@ -261,7 +272,6 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
         relaxer = Relaxer(
             potential=pot,
             relax_cell=False,
-
         )
 
         result = relaxer.relax(
@@ -269,7 +279,6 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
             steps=1,
         )
         return result
-
 
 
 @dataclass
@@ -300,6 +309,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     potential_kwargs: dict
         Further kwargs for :obj: quippy.potential.Potential()'.
     """
+
     name: str = "GAP relax"
     force_field_name: str = "GAP"
     relax_cell: bool = False
@@ -311,14 +321,16 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     potential_param_file_name: str = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
 
-
     def _relax(self, structure):
         from quippy.potential import Potential
-        calculator=Potential(args_str=self.potential_args_str, param_filename=self.potential_param_file_name,**self.potential_kwargs)
-        relaxer=Relaxer(calculator, relax_cell=self.relax_cell)
-        result = relaxer.relax(
-            structure, steps=self.steps, **self.relax_kwargs
+
+        calculator = Potential(
+            args_str=self.potential_args_str,
+            param_filename=self.potential_param_file_name,
+            **self.potential_kwargs,
         )
+        relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
+        result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
         return result
 
 
@@ -342,18 +354,21 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     potential_kwargs: dict
         Further kwargs for :obj: quippy.potential.Potential()'.
     """
+
     name: str = "GAP static"
     force_field_name: str = "GAP"
     potential_args_str: str = "IP GAP"
     potential_param_file_name: str = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
 
-
     def _evaluate_static(self, structure):
         from quippy.potential import Potential
-        calculator=Potential(args_str=self.potential_args_str, param_filename=self.potential_param_file_name,**self.potential_kwargs)
-        relaxer=Relaxer(calculator, relax_cell=False)
-        result = relaxer.relax(
-            structure, steps=1
+
+        calculator = Potential(
+            args_str=self.potential_args_str,
+            param_filename=self.potential_param_file_name,
+            **self.potential_kwargs,
         )
+        relaxer = Relaxer(calculator, relax_cell=False)
+        result = relaxer.relax(structure, steps=1)
         return result
