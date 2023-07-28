@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
-from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
 from atomate2.common.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -16,6 +14,8 @@ from atomate2.common.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
+from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D

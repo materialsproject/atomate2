@@ -7,9 +7,9 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
+
 from atomate2.forcefields.flows.utils import Relaxer
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
@@ -158,10 +158,9 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         from chgnet.model import StructOptimizer
 
         relaxer = StructOptimizer(**self.optimizer_kwargs)
-        result = relaxer.relax(
+        return relaxer.relax(
             structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
         )
-        return result
 
 
 @dataclass
@@ -185,8 +184,7 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
         from chgnet.model import StructOptimizer
 
         relaxer = StructOptimizer()
-        result = relaxer.relax(structure, steps=1)
-        return result
+        return relaxer.relax(structure, steps=1)
 
 
 @dataclass
@@ -234,12 +232,11 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
             **self.optimizer_kwargs,
         )
 
-        result = relaxer.relax(
+        return relaxer.relax(
             structure,
             steps=self.steps,
             **self.relax_kwargs,
         )
-        return result
 
 
 @dataclass
@@ -274,11 +271,10 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
             relax_cell=False,
         )
 
-        result = relaxer.relax(
+        return relaxer.relax(
             structure,
             steps=1,
         )
-        return result
 
 
 @dataclass
@@ -330,8 +326,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
             **self.potential_kwargs,
         )
         relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
-        result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
-        return result
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -370,5 +365,4 @@ class GAPStaticMaker(ForceFieldStaticMaker):
             **self.potential_kwargs,
         )
         relaxer = Relaxer(calculator, relax_cell=False)
-        result = relaxer.relax(structure, steps=1)
-        return result
+        return relaxer.relax(structure, steps=1)

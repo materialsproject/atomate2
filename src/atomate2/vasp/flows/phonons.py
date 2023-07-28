@@ -7,9 +7,6 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
 from atomate2.common.jobs.phonons import (
     PhononDisplacementMaker,
     generate_frequencies_eigenvectors,
@@ -18,6 +15,9 @@ from atomate2.common.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
+from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
 
 if TYPE_CHECKING:
     from pathlib import Path

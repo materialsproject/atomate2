@@ -26,8 +26,8 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from pymatgen.core import Structure
 
-    from atomate2.vasp.sets.base import VaspInputGenerator
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
 

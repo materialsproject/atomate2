@@ -1,15 +1,20 @@
-""" Utils for using a force field (aka an interatomic potential)."""
+"""Utils for using a force field (aka an interatomic potential).
+The following code has been taken and modified from
+https://github.com/materialsvirtuallab/m3gnet
+The code has been released under BSD 3-Clause License
+and the following copyright applies:
+Copyright (c) 2022, Materials Virtual Lab.
+"""
 
 import contextlib
 import io
 import pickle
 import sys
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Union
 
-import numpy as np
 from ase import Atoms
-from ase.constraints import ExpCellFilter
 from ase.calculators.calculator import Calculator
+from ase.constraints import ExpCellFilter
 from ase.optimize.bfgs import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.optimize.fire import FIRE
@@ -20,9 +25,9 @@ from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
-# The following code has been taken and modified from https://github.com/materialsvirtuallab/m3gnet
-# The code has been released under BSD 3-Clause License and the following copyright applys:
-# Copyright (c) 2022, Materials Virtual Lab
+if TYPE_CHECKING:
+    import numpy as np
+
 
 OPTIMIZERS = {
     "FIRE": FIRE,
@@ -39,13 +44,13 @@ OPTIMIZERS = {
 class TrajectoryObserver:
     """
     Trajectory observer is a hook in the relaxation process that saves the
-    intermediate structures
+    intermediate structures.
     """
 
     def __init__(self, atoms: Atoms):
         """
         Args:
-            atoms (Atoms): the structure to observe
+            atoms (Atoms): the structure to observe.
         """
         self.atoms = atoms
         self.energies: list[float] = []
@@ -70,8 +75,7 @@ class TrajectoryObserver:
         calculate the energy, here we just use the potential energy
         Returns:
         """
-        energy = self.atoms.get_potential_energy()
-        return energy
+        return self.atoms.get_potential_energy()
 
     def save(self, filename: str):
         """
@@ -95,9 +99,7 @@ class TrajectoryObserver:
 
 
 class Relaxer:
-    """
-    Relaxer is a class for structural relaxation
-    """
+    """Relaxer is a class for structural relaxation."""
 
     def __init__(
         self,
@@ -108,7 +110,7 @@ class Relaxer:
         """
 
         Args:
-            calculator
+            calculator.
 
             optimizer (str or ase Optimizer): the optimization algorithm.
                 Defaults to "FIRE"
