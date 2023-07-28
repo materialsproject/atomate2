@@ -7,8 +7,9 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
-
+from atomate2.forcefields.flows.utils import Relaxer
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
@@ -56,7 +57,7 @@ class ForceFieldRelaxMaker(Maker):
             )
 
 
-        result = self._relax(structure, self.relax_cell, self.steps, self.relax_kwargs, self.optimizer_kwargs)
+        result = self._relax(structure)
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
@@ -68,7 +69,7 @@ class ForceFieldRelaxMaker(Maker):
             **self.task_document_kwargs,
         )
 
-    def _relax(self, structure, relax_cell, steps, relax_kwargs, optimizer_kwargs):
+    def _relax(self, structure):
         raise NotImplementedError
 
 
@@ -144,11 +145,11 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     task_document_kwargs: dict = field(default_factory=dict)
 
 
-    def _relax(self, structure, relax_cell, steps, relax_kwargs, optimizer_kwargs):
+    def _relax(self, structure):
         from chgnet.model import StructOptimizer
-        relaxer = StructOptimizer(**optimizer_kwargs)
+        relaxer = StructOptimizer(**self.optimizer_kwargs)
         result = relaxer.relax(
-            structure, relax_cell=relax_cell, steps=steps, **relax_kwargs
+            structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
         )
         return result
 
@@ -208,7 +209,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def _relax(self, structure, relax_cell, steps, relax_kwargs, optimizer_kwargs):
+    def _relax(self, structure):
         import matgl
         from matgl.ext.ase import Relaxer
 
@@ -218,14 +219,14 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
         relaxer = Relaxer(
             potential=pot,
-            relax_cell=relax_cell,
-            **optimizer_kwargs,
+            relax_cell=self.relax_cell,
+            **self.optimizer_kwargs,
         )
 
         result = relaxer.relax(
             structure,
-            steps=steps,
-            **relax_kwargs,
+            steps=self.steps,
+            **self.relax_kwargs,
         )
         return result
 
@@ -272,7 +273,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
 
 
 @dataclass
-class QuippyRelaxMaker(Maker):
+class GAPRelaxMaker(ForceFieldRelaxMaker):
     """
     Base Maker to calculate forces and stresses using a GAP potential.
 
@@ -292,6 +293,12 @@ class QuippyRelaxMaker(Maker):
         Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    potential_args_str: str
+        args_str for :obj: quippy.potential.Potential()'.
+    potential_param_filename: str
+        param_file_name for :obj: quippy.potential.Potential()'.
+    potential_kwargs: dict
+        Further kwargs for :obj: quippy.potential.Potential()'.
     """
     name: str = "GAP relax"
     force_field_name: str = "GAP"
@@ -300,102 +307,53 @@ class QuippyRelaxMaker(Maker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-
-    @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure):
-        if self.steps < 0:
-            logger.warning(
-                "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
-            )
+    potential_args_str: str = "IP GAP"
+    potential_param_file_name: str = "gap.xml"
+    potential_kwargs: dict = field(default_factory=dict)
 
 
-        result = self._relax(structure, self.relax_cell, self.steps, self.relax_kwargs, self.optimizer_kwargs)
-
-        return ForceFieldTaskDocument.from_ase_compatible_result(
-            self.force_field_name,
-            result,
-            self.relax_cell,
-            self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
-            **self.task_document_kwargs,
+    def _relax(self, structure):
+        from quippy.potential import Potential
+        calculator=Potential(args_str=self.potential_args_str, param_filename=self.potential_param_file_name,**self.potential_kwargs)
+        relaxer=Relaxer(calculator, relax_cell=self.relax_cell)
+        result = relaxer.relax(
+            structure, steps=self.steps, **self.relax_kwargs
         )
-
-    def _relax(self, structure, relax_cell, steps, relax_kwargs, optimizer_kwargs):
-        pass
+        return result
 
 
-# @dataclass
-# class QuippyRelaxMaker(Maker):
-#     """
-#     Maker to perform a relaxation using the Quippy with a GAP potetial.
-#
-#     Parameters
-#     ----------
-#     name : str
-#         The job name.
-#     relax_cell : bool
-#         Whether to allow the cell shape/volume to change during relaxation.
-#     steps : int
-#         Maximum number of ionic steps allowed during relaxation.
-#     relax_kwargs : dict
-#         Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
-#     optimizer_kwargs : dict
-#         Keyword arguments that will get passed to :obj:`StructOptimizer()`.
-#     task_document_kwargs : dict
-#         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-#     """
-#
-#     name: str = "GAP relax"
-#     relax_cell: bool = False
-#     steps: int = 500
-#     relax_kwargs: dict = field(default_factory=dict)
-#     optimizer_kwargs: dict = field(default_factory=dict)
-#     task_document_kwargs: dict = field(default_factory=dict)
-#     potential: Potential =field(default_factory=Potential)
-#
-#
-#
-#     @job(output_schema=ForceFieldTaskDocument)
-#     def make(self, structure: Structure):
-#         """
-#         Perform a relaxation of a structure using CHGNet.
-#
-#         Parameters
-#         ----------
-#         structure: .Structure
-#             A pymatgen structure.
-#         potential: .Potental
-#             A GAP potential
-#         """
-#         #from chgnet.model import StructOptimizer
-#
-#         if self.steps < 0:
-#             logger.warning(
-#                 "WARNING: A negative number of steps is not possible. "
-#                 "Behavior may vary..."
-#             )
-#         atoms = AseAtomsAdaptor.get_atoms(structure)
-#
-#         # include the quippy part to the computation
-#         atoms.set_calculator(self.potential)
-#
-#
-#
-#         stream = io.StringIO()
-#         with contextlib.redirect_stdout(stream):
-#             obs = TrajectoryObserver(atoms)
-#             if self.relax_cell:
-#                 atoms = ExpCellFilter(atoms)
-#             # make optimizer more flexible
-#             optimizer = BFGS(atoms)
-#             optimizer.attach(obs)
-#             optimizer.run(fmax=0.0001, steps=self.steps)
-#             obs()
-#         if isinstance(atoms, ExpCellFilter):
-#             atoms = atoms.atoms
-#
+@dataclass
+class GAPStaticMaker(ForceFieldStaticMaker):
+    """
+    Base Maker to calculate forces and stresses using a GAP potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    potential_args_str: str
+        args_str for :obj: quippy.potential.Potential()'.
+    potential_param_filename: str
+        param_file_name for :obj: quippy.potential.Potential()'.
+    potential_kwargs: dict
+        Further kwargs for :obj: quippy.potential.Potential()'.
+    """
+    name: str = "GAP static"
+    force_field_name: str = "GAP"
+    potential_args_str: str = "IP GAP"
+    potential_param_file_name: str = "gap.xml"
+    potential_kwargs: dict = field(default_factory=dict)
 
 
-
+    def _evaluate_static(self, structure):
+        from quippy.potential import Potential
+        calculator=Potential(args_str=self.potential_args_str, param_filename=self.potential_param_file_name,**self.potential_kwargs)
+        relaxer=Relaxer(calculator, relax_cell=False)
+        result = relaxer.relax(
+            structure, steps=1
+        )
+        return result

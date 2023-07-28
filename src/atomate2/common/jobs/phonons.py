@@ -40,8 +40,6 @@ __all__ = [
     "PhononDisplacementMaker",
 ]
 
-# TODO: move more parts to common
-
 
 @job
 def get_total_energy_per_cell(
