@@ -183,11 +183,7 @@ class VaspInputSet(InputSet):
 
         if self.incar.get("LHFCALC", False) is True and self.incar.get(
             "ALGO", "Normal"
-        ) not in [
-            "Normal",
-            "All",
-            "Damped",
-        ]:
+        ) not in ["Normal", "All", "Damped"]:
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -332,7 +328,7 @@ class VaspInputGenerator(InputGenerator):
             if self.vdw not in vdw_par:
                 raise KeyError(
                     "Invalid or unsupported van-der-Waals functional. Supported "
-                    f"functionals are {vdw_par.keys()}"
+                    f"functionals are {list(vdw_par)}"
                 )
             self.config_dict["INCAR"].update(vdw_par[self.vdw])
 
@@ -642,7 +638,7 @@ class VaspInputGenerator(InputGenerator):
 
         # apply previous incar settings, be careful not to override user_incar_settings
         # also skip LDAU/MAGMOM as structure may have changed.
-        skip = list(self.user_incar_settings.keys())
+        skip = list(self.user_incar_settings)
         skip += ["MAGMOM", "NUPDOWN", "LDAUU", "LDAUL", "LDAUJ", "LMAXMIX"]
         _apply_incar_updates(incar, previous_incar, skip=skip)
 
@@ -938,7 +934,7 @@ def _set_u_params(incar, incar_settings, structure):
     has_u = incar_settings.get("LDAU", False) and sum(incar["LDAUU"]) > 0
 
     if not has_u:
-        for key in list(incar.keys()):
+        for key in list(incar):
             if key.startswith("LDAU"):
                 del incar[key]
 
@@ -948,7 +944,7 @@ def _set_u_params(incar, incar_settings, structure):
     # investigation it was determined that this would lead to a significant difference
     # between SCF -> NonSCF even without Hubbard U enabled. Thanks to Andrew Rosen for
     # investigating and reporting.
-    if "LMAXMIX" not in incar_settings.keys():
+    if "LMAXMIX" not in incar_settings:
         # contains f-electrons
         if any(el.Z > 56 for el in structure.composition):
             incar["LMAXMIX"] = 6
