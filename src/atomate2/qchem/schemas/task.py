@@ -4,7 +4,10 @@ Need to implement a Task Document equivalent. Possibly import from emmet
 """
 
 """ Core definition of a Q-Chem Task Document """
-from typing import Any, Callable, Dict, List, Optional
+import logging
+
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from pathlib import Path
 
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Molecule
@@ -13,6 +16,7 @@ from emmet.core.structure import MoleculeMetadata
 from emmet.core.task import BaseTaskDocument
 from jobflow.utils import ValueEnum
 
+from atomate2 import SETTINGS, __version__
 from atomate2.qchem.schemas.calc_types import (
     LevelOfTheory,
     CalcType,
@@ -23,8 +27,15 @@ from atomate2.qchem.schemas.calc_types import (
     solvent,
     lot_solvent_string,
 )
+from atomate2.qchem.schemas.calculation import (
+    Calculation,
+    QChemObject,
+)
 
 __author__ = "Evan Spotte-Smith <ewcspottesmith@lbl.gov>"
+
+logger = logging.getLogger(__name__)
+_T = TypeVar("_T", bound="TaskDocument")
 
 
 class QChemStatus(ValueEnum):
@@ -232,22 +243,46 @@ class TaskDocument(BaseTaskDocument, MoleculeMetadata):
         return entry_dict
 
 
-def filter_task_type(
-    entries: List[Dict[str, Any]],
-    task_type: TaskType,
-    sort_by: Optional[Callable] = None,
-) -> List[Dict[str, Any]]:
-    """
-    Filter (and sort) TaskDocument entries based on task type
-    :param entries: List of TaskDocument entry dicts
-    :param TaskType: TaskType to accept
-    :param sort_by: Function used to sort (default None)
-    :return: Filtered (sorted) list of entries
-    """
+    @classmethod
+    def from_directory(
+        cls: Type[_T],
+        dir_name: Union[Path, str],
+        store_additional_json: bool = SETTINGS.QCHEM_STORE_ADDITIONAL_JSON,
+        additional_fields: Dict[str, Any] = None,
+        **qchem_calculation_kwargs,
+    ) -> _T:
+        """
+        Create a task document from a directory containing QChem files.
 
-    filtered = [f for f in entries if f["task_type"] == task_type]
+        Parameters
+        ----------
+        dir_name
+            The path to the folder containing the calculation outputs.
+        stor_additional_json
+            Whether to store additional json files found in the calculation directory.
+        additional_fields
+            Dictionary of additional fields to add to output document.
+        **qchem_calculation_kwargs
+            Additional parsing options that will be passed to the
+            :obj: `.Calculation.from_qchem_files` function. This is to do
+        
+        Returns
+        -------
+        QChem Task Document
+        """
+        logger.info(f"Getting task doc in: {dir_name}")
 
-    if sort_by is not None:
-        return sorted(filtered, key=sort_by)
-    else:
-        return filtered
+        additional_fields = {} if additional_fields is None else additional_fields
+        dir_name = Path(dir_name)
+        task_files = _find_qchem_files(dir_name) #have to implement this method
+
+        if len(task_files) == 0:
+            raise FileNotFoundError("No QChem files found!")
+        
+        calcs_reversed = []
+        all_qchem_objects = []
+        for task_name, files in task_files.items():
+            calc_doc, qchem_objects = Calculation.from_qchem_files(
+                dir_name, task_name, **files, **qchem_calculation_kwargs
+            )
+        
