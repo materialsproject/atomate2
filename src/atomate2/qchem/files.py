@@ -93,8 +93,8 @@ def get_largest_opt_extension(
     """
     Get the largest numbered opt extension of files in a directory.
 
-    For example, if listdir gives ["qchemrun.xml.opt1.gz", "qchemrun.xml.opt2.gz"],
-    this function will return ".opt2".
+    For example, if listdir gives ["mol.qout.opt_0.gz", "mol.qout.opt_1.gz"],
+    this function will return ".opt_1".
 
     Parameters
     ----------
