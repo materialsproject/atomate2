@@ -1,6 +1,6 @@
 """Schemas for elastic tensor fitting and related properties."""
 from copy import deepcopy
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -146,8 +146,8 @@ class ElasticDocument(BaseModel):
         uuids: List[str],
         job_dirs: List[str],
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
-        order: int | None = None,
-        equilibrium_stress: Matrix3D | None = None,
+        order: Optional[int] = None,
+        equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
     ):
