@@ -62,8 +62,7 @@ class TrajectoryObserver:
 
     def __call__(self):
         """
-        The logic for saving the properties of an Atoms during the relaxation
-        Returns:
+        The logic for saving the properties of an Atoms during the relaxation.
         """
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
