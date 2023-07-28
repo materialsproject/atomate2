@@ -60,6 +60,14 @@ class ForceFieldRelaxMaker(Maker):
 
     @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
+        """
+        Perform a relaxation of a structure using a forcefield.
+
+        Parameters
+        ----------
+        structure: .Structure
+             pymatgen structure.
+        """
         if self.steps < 0:
             logger.warning(
                 "WARNING: A negative number of steps is not possible. "
@@ -103,6 +111,15 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
 
     @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
+        """
+        Perform a static evaluation of energies, forces, stresses
+        using a forcefield.
+
+        Parameters
+        ----------
+        structure: .Structure
+            pymatgen structure.
+        """
         if self.steps < 0:
             logger.warning(
                 "WARNING: A negative number of steps is not possible. "

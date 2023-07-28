@@ -1,4 +1,5 @@
 """Utils for using a force field (aka an interatomic potential).
+
 The following code has been taken and modified from
 https://github.com/materialsvirtuallab/m3gnet
 The code has been released under BSD 3-Clause License
@@ -44,8 +45,7 @@ OPTIMIZERS = {
 
 class TrajectoryObserver:
     """
-    Trajectory observer is a hook in the relaxation process that saves the
-    intermediate structures.
+    Trajectory observer is a hook in the relaxation process that saves the intermediate structures.
     """
 
     def __init__(self, atoms: Atoms):
