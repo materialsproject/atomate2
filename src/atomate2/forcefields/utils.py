@@ -44,8 +44,10 @@ OPTIMIZERS = {
 
 
 class TrajectoryObserver:
-    """
-    Trajectory observer is a hook in the relaxation process that saves the intermediate structures.
+    """Trajectory observer.
+
+    This is a hook in the relaxation process that saves the intermediate structures.
+
     """
 
     def __init__(self, atoms: Atoms):
@@ -61,9 +63,7 @@ class TrajectoryObserver:
         self.cells: list[np.ndarray] = []
 
     def __call__(self):
-        """
-        The logic for saving the properties of an Atoms during the relaxation.
-        """
+        """The logic for saving the properties of an Atoms during the relaxation."""
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
         self.stresses.append(self.atoms.get_stress())
