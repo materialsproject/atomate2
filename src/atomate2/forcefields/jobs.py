@@ -114,8 +114,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
         """
-        Perform a static evaluation of energies, forces, stresses
-        using a forcefield.
+        Perform a static evaluation using a forcefield.
 
         Parameters
         ----------

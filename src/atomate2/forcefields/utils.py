@@ -52,6 +52,7 @@ class TrajectoryObserver:
 
     def __init__(self, atoms: Atoms):
         """
+        Initializes the Observer.
 
         Parameters
         ----------
@@ -66,7 +67,7 @@ class TrajectoryObserver:
         self.cells: list[np.ndarray] = []
 
     def __call__(self):
-        """The logic for saving the properties of an Atoms during the relaxation."""
+        """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
@@ -76,8 +77,10 @@ class TrajectoryObserver:
 
     def compute_energy(self) -> float:
         """
-        calculate the energy, here we just use the potential energy
+        Calculate the energy, here we just use the potential energy.
+
         Returns:
+            energy (float)
         """
         return self.atoms.get_potential_energy()
 
@@ -117,6 +120,7 @@ class Relaxer:
         relax_cell: bool = True,
     ):
         """
+        Initialize the Relaxer.
 
         Parameters
         ----------
@@ -148,6 +152,7 @@ class Relaxer:
         **kwargs,
     ):
         """
+        Relax the struture.
 
         Parameters
         ----------
