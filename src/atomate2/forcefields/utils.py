@@ -98,7 +98,7 @@ class TrajectoryObserver:
 
         Returns
         -------
-
+            None
         """
         with open(filename, "wb") as f:
             pickle.dump(
