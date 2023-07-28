@@ -158,6 +158,12 @@ class Atomate2Settings(BaseSettings):
         " throw an error",
     )
 
+    QCHEM_STORE_ADDITIONAL_JSON: bool = Field(
+        True,
+        description="Ingest any additional JSON data present into database when "
+        "parsing QChem directories useful for storing duplicate of FW.json",
+    )
+
     class Config:
         """Pydantic config settings."""
 
