@@ -288,12 +288,12 @@ It is, however,  computationally very beneficial to define two different types o
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
 ```python
-from pymatgen.core.structure import Structure
 from fireworks import LaunchPad
+from jobflow.managers.fireworks import flow_to_workflow
+from pymatgen.core.structure import Structure
 
 from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.powerups import update_user_incar_settings
-from jobflow.managers.fireworks import flow_to_workflow
 
 structure = Structure(
     lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
@@ -306,12 +306,10 @@ lobster = update_user_incar_settings(lobster, {"NPAR": 4})
 
 # update the fireworker of the Lobster jobs
 for job, _ in lobster.iterflow():
+    config = {"manager_config": {"_fworker": "worker"}}
     if "get_lobster" in job.name:
-        job.update_config(
-            {"manager_config": {"_fworker": "worker"}, "response_manager_config": {"_fworker": "lobster"}}
-        )
-    else:
-        job.update_config({"manager_config": {"_fworker": "worker"}})
+        config["response_manager_config"] = {"_fworker": "lobster"}
+    job.update_config(config)
 
 # convert the flow to a fireworks WorkFlow object
 wf = flow_to_workflow(lobster)
