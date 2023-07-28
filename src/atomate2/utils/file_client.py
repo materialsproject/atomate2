@@ -516,7 +516,7 @@ def auto_fileclient(method: Callable | None = None):
     def decorator(func):
         @wraps(func)
         def gen_fileclient(*args, **kwargs):
-            file_client = kwargs.get("file_client", None)
+            file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
                     kwargs["file_client"] = file_client
