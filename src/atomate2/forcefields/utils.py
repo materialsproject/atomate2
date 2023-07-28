@@ -11,23 +11,23 @@ import contextlib
 import io
 import pickle
 import sys
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
-from ase import Atoms
-from ase.calculators.calculator import Calculator
 from ase.constraints import ExpCellFilter
 from ase.optimize.bfgs import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.optimize.fire import FIRE
 from ase.optimize.lbfgs import LBFGS, LBFGSLineSearch
 from ase.optimize.mdmin import MDMin
-from ase.optimize.optimize import Optimizer
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 if TYPE_CHECKING:
     import numpy as np
+    from ase import Atoms
+    from ase.calculators.calculator import Calculator
+    from ase.optimize.optimize import Optimizer
 
 
 OPTIMIZERS = {
@@ -105,7 +105,7 @@ class Relaxer:
     def __init__(
         self,
         calculator: Calculator,
-        optimizer: Union[Optimizer, str] = "FIRE",
+        optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
     ):
         """

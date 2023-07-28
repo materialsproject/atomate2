@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
 
-from atomate2.forcefields.utils import Relaxer
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.utils import Relaxer
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
