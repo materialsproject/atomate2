@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import TYPE_CHECKING
 
 import numpy as np
+from emmet.core.math import Matrix3D, MatrixVoigt
 from pydantic import BaseModel, Field
 from pymatgen.analysis.elasticity import (
     Deformation,
@@ -13,14 +13,11 @@ from pymatgen.analysis.elasticity import (
     Strain,
     Stress,
 )
+from pymatgen.core import Structure
 from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
-
-if TYPE_CHECKING:
-    from emmet.core.math import Matrix3D, MatrixVoigt
-    from pymatgen.core import Structure
 
 __all__ = [
     "DerivedProperties",
