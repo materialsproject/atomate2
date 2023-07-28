@@ -295,7 +295,7 @@ def cclib_calculate(
             f"A cube file must be provided for {method}. Returning None."
         )
     if method in ["ddec6", "hirshfeld"] and not proatom_dir:
-        if "PROATOM_DIR" not in os.environ:
+        if os.getenv("PROATOM_DIR") is None:
             raise OSError("PROATOM_DIR environment variable not set. Returning None.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
     if proatom_dir and not os.path.exists(proatom_dir):

@@ -209,7 +209,7 @@ class ForceFieldTaskDocument(StructureMetadata):
                 )
 
             # otherwise do not include "magmoms" in :obj:`cur_ionic_step`
-            elif "magmoms" not in trajectory.keys():
+            elif "magmoms" not in trajectory:
                 cur_ionic_step = IonicStep(
                     energy=cur_energy,
                     forces=cur_forces,
