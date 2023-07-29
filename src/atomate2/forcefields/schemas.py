@@ -242,7 +242,7 @@ class ForceFieldTaskDocument(StructureMetadata):
 
             version = chgnet.__version__
         else:
-            version = "0.0"
+            version = "Unknown"
         return cls.from_structure(
             meta_structure=output_structure,
             structure=output_structure,
