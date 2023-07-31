@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -16,8 +17,8 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -25,6 +26,7 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from pymatgen.core import Structure
 
+    from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -183,7 +185,10 @@ def generate_phonon_displacements(
     return [get_pmg_structure(cell) for cell in supercells]
 
 
-@job(output_schema=PhononBSDOSDoc, data=[PhononDos, PhononBandStructureSymmLine])
+@job(
+    output_schema=PhononBSDOSDoc,
+    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants],
+)
 def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
@@ -254,7 +259,7 @@ def run_phonon_displacements(
     displacements,
     structure: Structure,
     supercell_matrix,
-    phonon_maker: BaseVaspMaker = None,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
 ):
     """
     Run phonon displacements.
@@ -265,11 +270,11 @@ def run_phonon_displacements(
     ----------
     displacements
     structure: Structure object
-        Fully optimized structure used for phonon computations
+        Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
-        A VaspMaker to use to generate the elastic relaxation jobs.
+        A VaspMaker to use to generate the phonon jobs.
     """
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()
@@ -293,9 +298,12 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structure": displacement,
         }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
+        with contextlib.suppress(Exception):
+            phonon_job.update_maker_kwargs(
+                {"_set": {"write_additional_data->phonon_info:json": info}},
+                dict_mod=True,
+            )
+
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"].append(i)
         outputs["uuids"].append(phonon_job.output.uuid)
