@@ -185,7 +185,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         plnr_locpot = SETTINGS.JOB_STORE.query_one({"output.task_label": name})[
             "output"
         ]["calcs_reversed"][0]["output"]["locpot"]
-        assert set(plnr_locpot.keys()) == {"0", "1", "2"}
+        assert set(plnr_locpot) == {"0", "1", "2"}
 
     for k in ref_paths:
         _check_plnr_locpot(k)
