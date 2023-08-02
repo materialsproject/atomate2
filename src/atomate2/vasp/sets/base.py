@@ -888,7 +888,7 @@ def _get_magmoms(
             mag.append(magmoms.get(specie))
         elif hasattr(site, "magmom"):
             mag.append(site.magmom)
-        elif hasattr(site.specie, "spin"):
+        elif hasattr(site.specie, "spin") and site.specie.spin is not None:
             mag.append(site.specie.spin)
         elif specie in config_magmoms:
             if site.specie.symbol == "Co" and config_magmoms[specie] <= 1.0:
