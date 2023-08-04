@@ -13,6 +13,7 @@ from phonopy.units import VaspToTHz
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
+from pymatgen.core import Structure
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
@@ -24,7 +25,6 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     import numpy as np
     from emmet.core.math import Matrix3D
-    from pymatgen.core import Structure
 
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -129,7 +129,7 @@ def get_supercell_size(
     return transformation.transformation_matrix.tolist()
 
 
-@job
+@job(data=[Structure])
 def generate_phonon_displacements(
     structure: Structure,
     supercell_matrix: np.array,
