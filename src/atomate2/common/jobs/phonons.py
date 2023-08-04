@@ -81,14 +81,11 @@ def get_supercell_size(
     **kwargs:
         Additional parameters that can be set.
     """
-    if "min_atoms" not in kwargs:
-        kwargs["min_atoms"] = None
-    if "force_diagonal" not in kwargs:
-        kwargs["force_diagonal"] = False
+    kwargs.setdefault("min_atoms", None)
+    kwargs.setdefault("force_diagonal", False)
 
     if not prefer_90_degrees:
-        if "max_atoms" not in kwargs:
-            kwargs["max_atoms"] = None
+        kwargs.setdefault("max_atoms", None)
         transformation = CubicSupercellTransformation(
             min_length=min_length,
             min_atoms=kwargs["min_atoms"],
@@ -99,9 +96,8 @@ def get_supercell_size(
         transformation.apply_transformation(structure=structure)
 
     else:
-        max_atoms = 1000 if "max_atoms" not in kwargs else kwargs["max_atoms"]
-        if "angle_tolerance" not in kwargs:
-            kwargs["angle_tolerance"] = 1e-2
+        max_atoms = kwargs.get("max_atoms", 1000)
+        kwargs.setdefault("angle_tolerance", 1e-2)
         try:
             transformation = CubicSupercellTransformation(
                 min_length=min_length,
@@ -114,8 +110,7 @@ def get_supercell_size(
             transformation.apply_transformation(structure=structure)
 
         except AttributeError:
-            if "max_atoms" not in kwargs:
-                kwargs["max_atoms"] = None
+            kwargs.setdefault("max_atoms", None)
 
             transformation = CubicSupercellTransformation(
                 min_length=min_length,

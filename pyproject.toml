@@ -47,13 +47,13 @@ forcefields = ["chgnet==0.2.0", "matgl==0.7.1", "quippy-ase==0.9.14"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
-    "furo==2023.5.20",
+    "furo==2023.7.26",
     "ipython==8.14.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.5.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx_design==0.4.1",
+    "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.0"]
@@ -73,7 +73,7 @@ strict = [
     "numpy",
     "phonopy==2.20.0",
     "pydantic==1.10.9",
-    "pymatgen-analysis-defects==2023.7.12",
+    "pymatgen-analysis-defects==2023.7.24",
     "pymatgen==2023.5.31",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
