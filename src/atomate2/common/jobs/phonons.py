@@ -10,10 +10,10 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
+from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
-from pymatgen.core import Structure
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
