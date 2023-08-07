@@ -15,7 +15,7 @@ INCAR:
   LAECHG: True
   LASPH: True
   LCHARG: True
-  LELF: True
+  LELF: False # LELF = True restricts calculation to KPAR = 1
   LMIXTAU: True
   LORBIT: 11
   LREAL: Auto
