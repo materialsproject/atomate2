@@ -222,7 +222,7 @@ class PhononMaker(Maker):
             bulk = self.bulk_relax_maker.make(structure)
             jobs.append(bulk)
             structure = bulk.output.structure
-            optimization_run_job_dir = None  # TODO: should we save something?
+            optimization_run_job_dir = bulk.output.dir_name
             # bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
         else:
@@ -271,8 +271,7 @@ class PhononMaker(Maker):
             static_job = self.static_energy_maker.make(structure=structure)
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
-            # static_run_job_dir = static_job.output.dir_name
-            static_run_job_dir = None
+            static_run_job_dir = static_job.output.dir_name
             static_run_uuid = static_job.output.uuid
         else:
             if total_dft_energy_per_formula_unit is not None:
