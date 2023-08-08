@@ -935,9 +935,9 @@ def _set_u_params(incar, incar_settings, structure):
     has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
     if not has_u:
-        for key in incar:
-            if key.startswith("LDAU"):
-                del incar[key]
+        ldau_keys = [key for key in incar if key.startswith("LDAU")]
+        for key in ldau_keys:
+            incar.pop(key, None)
 
     # Modify LMAXMIX if you have d or f electrons present. Note that if the user
     # explicitly sets LMAXMIX in settings it will override this logic. Previously, this
