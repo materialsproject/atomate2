@@ -123,7 +123,13 @@ class MPPreRelaxMaker(BaseVaspMaker):
     name: str = "MP pre-relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
-            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS", "LWAVE": True, "LCHARG": True},
+            user_incar_settings={
+                "EDIFFG": -0.05,
+                "METAGGA": None,
+                "GGA": "PS",
+                "LWAVE": True,
+                "LCHARG": True,
+            },
             auto_ismear=False,
         )
     )
@@ -161,8 +167,7 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
     name: str = "MP meta-GGA relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
-            user_incar_settings = {"LWAVE": True, "LCHARG": True},
-            auto_ismear=False
+            user_incar_settings={"LWAVE": True, "LCHARG": True}, auto_ismear=False
         )
     )
 
@@ -199,7 +204,14 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
     name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
-            user_incar_settings={"NSW": 0, "ISMEAR": -5, "ALGO": "FAST", "LREAL": False, "LCHARG": True, "LWAVE": False},
-            auto_ismear=False
+            user_incar_settings={
+                "NSW": 0,
+                "ISMEAR": -5,
+                "ALGO": "FAST",
+                "LREAL": False,
+                "LCHARG": True,
+                "LWAVE": False,
+            },
+            auto_ismear=False,
         )
     )

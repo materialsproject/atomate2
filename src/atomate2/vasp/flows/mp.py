@@ -84,7 +84,7 @@ class MPGGARelax(Maker):
             prev_vasp_dir = initial_relax.output.dir_name
 
         self.final_relax_maker.copy_vasp_kwargs = {
-            'additional_vasp_files' : self.copy_vasp_files               
+            "additional_vasp_files": self.copy_vasp_files
         }
         final_relax = self.final_relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
@@ -95,7 +95,7 @@ class MPGGARelax(Maker):
         if self.final_static_maker:
             # Run a static calculation
             self.final_static_maker.copy_vasp_kwargs = {
-                'additional_vasp_files' : self.copy_vasp_files               
+                "additional_vasp_files": self.copy_vasp_files
             }
 
             final_static = self.final_static_maker.make(
@@ -162,7 +162,7 @@ class MPMetaGGARelax(Maker):
             prev_vasp_dir = initial_relax.output.dir_name
 
         self.final_relax_maker.copy_vasp_kwargs = {
-            'additional_vasp_files' : self.copy_vasp_files               
+            "additional_vasp_files": self.copy_vasp_files
         }
         final_relax = self.final_relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
@@ -173,7 +173,7 @@ class MPMetaGGARelax(Maker):
         if self.final_static_maker:
             # Run a static calculation (typically r2SCAN)
             self.final_static_maker.copy_vasp_kwargs = {
-                'additional_vasp_files' : self.copy_vasp_files               
+                "additional_vasp_files": self.copy_vasp_files
             }
             final_static = self.final_static_maker.make(
                 structure=output.structure, prev_vasp_dir=output.dir_name
@@ -181,4 +181,4 @@ class MPMetaGGARelax(Maker):
             output = final_static.output
             jobs += [final_static]
 
-        return Flow(jobs, output = output, name=self.name)
+        return Flow(jobs, output=output, name=self.name)
