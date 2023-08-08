@@ -183,11 +183,7 @@ class VaspInputSet(InputSet):
 
         if self.incar.get("LHFCALC", False) is True and self.incar.get(
             "ALGO", "Normal"
-        ) not in [
-            "Normal",
-            "All",
-            "Damped",
-        ]:
+        ) not in ["Normal", "All", "Damped"]:
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -332,7 +328,7 @@ class VaspInputGenerator(InputGenerator):
             if self.vdw not in vdw_par:
                 raise KeyError(
                     "Invalid or unsupported van-der-Waals functional. Supported "
-                    f"functionals are {vdw_par}"
+                    f"functionals are {list(vdw_par)}"
                 )
             self.config_dict["INCAR"].update(vdw_par[self.vdw])
 

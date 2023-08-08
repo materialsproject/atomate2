@@ -96,7 +96,7 @@ def test_lobster_uniform_maker(mock_vasp, mock_lobster, clean_dir, memory_jobsto
         .dict()
         .items()
     ):
-        if key == "lso_dos":
+        if key == "lso_dos" or key == "band_overlaps":
             assert value is None
         else:
             assert value is not None
@@ -170,7 +170,7 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         .dict()
         .items()
     ):
-        if key == "lso_dos":
+        if key == "lso_dos" or key == "band_overlaps":
             assert value is None
         else:
             assert value is not None
