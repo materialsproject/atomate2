@@ -34,6 +34,7 @@ jobs:
         run: sphinx-build docs docs_build
 
       - name: Deploy
+        if: github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' 
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
