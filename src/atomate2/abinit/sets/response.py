@@ -32,7 +32,7 @@ class DdkSetGenerator(NonSCFSetGenerator):
 
     calc_type: str = "DDK"
     factory: Callable = ddkpert_from_gsinput
-    restart_from_deps: tuple = (f"{DDK}:DDK",)
+    restart_from_deps: tuple = (f"{DDK}:1WF",)
     prev_outputs_deps: tuple = (f"{SCF}:WFK",)
     nbands_factor: float = 1.0  # TODO: to decide if nbdbuf or not
 
@@ -43,8 +43,9 @@ class DdeSetGenerator(StaticSetGenerator):
 
     calc_type: str = "DDE"
     factory: Callable = ddepert_from_gsinput
-    restart_from_deps: tuple = (f"{DDE}:DDE",)
-    prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDK}:DDK")
+    pseudos: str | list[str] | PseudoTable | None = None
+    restart_from_deps: tuple = (f"{DDE}:1WF|1DEN",)
+    prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDK}:1WF")
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}
     )
@@ -56,8 +57,9 @@ class DteSetGenerator(StaticSetGenerator):
 
     calc_type: str = "DTE"
     factory: Callable = dtepert_from_gsinput
-    restart_from_deps: tuple = (f"{DTE}:DTE",)
-    prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDE}:1WF|1DEN")
+    pseudos: str | list[str] | PseudoTable | None = None
+    restart_from_deps: tuple = (f"{DTE}:1WF|1DEN",)
+    prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDE}:1WF", f"{DDE}:1DEN")
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}
     )

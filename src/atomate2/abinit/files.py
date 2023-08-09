@@ -19,6 +19,7 @@ __all__ = [
     "fname2ext",
     "load_abinit_input",
     "write_abinit_input_set",
+    "write_mrgddb_input_set",
 ]
 
 
@@ -37,6 +38,8 @@ def fname2ext(filepath):
     if "_" not in filename:
         return None
     ext = filename.split("_")[-1].replace(".nc", "")
+    if "1WF" in ext: #VT
+        ext = "1WF"  #VT
     if ext not in ALL_ABIEXTS:
         return None
     return ext
@@ -97,6 +100,8 @@ def load_abinit_input(dirpath, fname="abinit_input.json"):
         The AbinitInput object.
     """
     abinit_input_file = os.path.join(dirpath, f"{fname}")
+    print("LOAD ABINIT INPUT VT modif:") #VT
+    print(abinit_input_file) #VT
     if not os.path.exists(abinit_input_file):
         raise NotImplementedError(
             f"Cannot load AbinitInput from directory without {fname} file."
@@ -137,3 +142,35 @@ def write_abinit_input_set(
         raise RuntimeError("AbinitInputSet is not valid.")
 
     ais.write_input(directory=directory, make_dir=True, overwrite=False)
+
+
+def write_mrgddb_input_set(
+    input_set_generator,
+    prev_outputs=None,
+    restart_from=None,
+    directory: str | Path = ".",
+):
+    """Write the mrgddb input using a given generator.
+
+    Parameters
+    ----------
+    input_set_generator
+        The input generator used to write the mrgddb inputs.
+    prev_outputs
+        The list of previous directories needed for the calculation.
+    restart_from
+        The previous directory of the same calculation (in case of a restart).
+        Note that this should be provided as a list of one directory.
+    directory
+        Directory in which to write the abinit inputs.
+    """
+    mis = input_set_generator.get_input_set(
+        restart_from=restart_from,
+        prev_outputs=prev_outputs,
+        workdir=directory,
+    )
+    if not mis.validate():
+        raise RuntimeError("MrgddbInputSet is not valid. Some previous outputs \
+        do not exist.")
+
+    mis.write_input(directory=directory, make_dir=True, overwrite=False)

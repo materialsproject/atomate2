@@ -11,11 +11,12 @@ from abipy.flowtk.qutils import time2slurm
 from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import (
     INPUT_FILE_NAME,
+    MRGDDB_INPUT_FILE_NAME,
     LOG_FILE_NAME,
     STDERR_FILE_NAME,
 )
 
-__all__ = ["run_abinit"]
+__all__ = ["run_abinit", "run_mrgddb"]
 
 
 SLEEP_TIME_STEP = 30
@@ -52,6 +53,53 @@ def run_abinit(
 
     with open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
         process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
+
+        if wall_time is not None:
+            while True:
+                time.sleep(SLEEP_TIME_STEP)
+                if process.poll() is not None:
+                    break
+                current_time = time.time()
+                remaining_time = max_end_time - current_time
+                if remaining_time < 5 * SLEEP_TIME_STEP:
+                    process.terminate()
+                    status = "killed"
+
+        process.wait()
+    return status
+
+
+def run_mrgddb(
+    mrgddb_cmd: str = None,
+    mpirun_cmd: str = None,
+    wall_time: int = None,
+    start_time: float = None,
+):
+    """Run mrgddb."""
+    mrgddb_cmd = mrgddb_cmd or SETTINGS.ABINIT_MRGDDB_CMD
+    mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
+    start_time = start_time or time.time()
+    command = [mpirun_cmd, "-n", "1", mrgddb_cmd, "--nostrict"] if mpirun_cmd is not None else [mrgddb_cmd]
+
+
+    max_end_time = 0.0
+    if wall_time is not None:
+        mrgddb_timelimit = wall_time
+        if mrgddb_timelimit > 480:
+            # TODO: allow tuning this timelimit buffer for mrgddb,
+            #  e.g. using a config variable or possibly per job
+            mrgddb_timelimit -= 240
+        command.extend(["--timelimit", time2slurm(mrgddb_timelimit)])
+        max_end_time = start_time + wall_time
+
+    #command.append("< "+MRGDDB_INPUT_FILE_NAME)
+    print("MODIF RUN_MRGDDB VT")
+    print(command) #VT
+
+    status = "completed"
+
+    with open(MRGDDB_INPUT_FILE_NAME, "r") as stdin, open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
+        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
 
         if wall_time is not None:
             while True:

@@ -25,13 +25,47 @@ from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["BaseAbinitMaker"]
+__all__ = ["abinit_job", "setup_job", "BaseAbinitMaker"]
 
 
 JobSetupVars = namedtuple(
     "JobSetupVars",
     ["start_time", "history", "workdir", "abipy_manager", "wall_time"],
 )
+
+def abinit_job(method: Callable):
+    """
+    Decorate the ``make`` method of abinit job makers.
+    
+    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    settings for all abinit jobs. For example, it ensures that large data objects
+    (band structures, density of states, LOCPOT, CHGCAR, etc) are all stored in the
+    atomate2 data store. It also configures the output schema to be a abinit
+    :obj:`.TaskDoc`.
+    
+    Any makers that return abinit jobs (not flows) should decorate the ``make`` method
+    with @abinit_job. For example:
+    
+    .. code-block:: python
+    
+        class MyabinitMaker(BaseabinitMaker):
+            @abinit_job
+            def make(structure):
+                # code to run abinit job.
+                pass
+    
+    Parameters
+    ----------
+    method : callable
+        A BaseabinitMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+    
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate abinit jobs.
+    """
+    return job(method, output_schema=AbinitTaskDocument)
 
 
 def setup_job(
@@ -128,7 +162,7 @@ class BaseAbinitMaker(Maker):
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
-    @job
+    @abinit_job
     def make(
         self,
         structure: Structure | None = None,
