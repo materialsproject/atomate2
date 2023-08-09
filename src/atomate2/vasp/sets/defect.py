@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from pymatgen.io.vasp.inputs import Kpoints, Kpoints_supported_modes
+from pymatgen.io.vasp.inputs import Kpoints, KpointsSupportedModes
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 SPECIAL_KPOINT = Kpoints(
     comment="special k-point",
     num_kpts=1,
-    style=Kpoints_supported_modes.Reciprocal,
+    style=KpointsSupportedModes.Reciprocal,
     kpts=((0.25, 0.25, 0.25),),
     kpts_shift=(0, 0, 0),
     kpts_weights=[1],
@@ -25,7 +25,7 @@ SPECIAL_KPOINT = Kpoints(
 SPECIAL_KPOINT_GAMMA = Kpoints(
     comment="special k-point",
     num_kpts=2,
-    style=Kpoints_supported_modes.Reciprocal,
+    style=KpointsSupportedModes.Reciprocal,
     kpts=((0.25, 0.25, 0.25), (0.0, 0.0, 0.0)),
     kpts_shift=(0, 0, 0),
     kpts_weights=[1, 0],
