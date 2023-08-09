@@ -34,3 +34,19 @@ def test_get_magmoms(
         if magmoms is None:
             assert len(warns) == 1
             assert str(warns[0].message).startswith(msg)
+
+
+def test_get_magmoms_with_specie() -> None:
+    # Setting the species to Co2+ and Fe3+ will change the `site.specie` to
+    # `Specie` instead of `Element`.  This will allow us to test the part of
+    # the code that checks for `Specie.spin`.
+    struct = Structure(
+        lattice=Lattice.cubic(3),
+        species=["Co2+", "Fe3+"],
+        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+    )
+    site = struct.sites[0]
+    assert not hasattr(site, "magmom")
+    assert struct[0].specie.spin is None
+    out = _get_magmoms(struct)
+    assert out == [0.6, 0.6]
