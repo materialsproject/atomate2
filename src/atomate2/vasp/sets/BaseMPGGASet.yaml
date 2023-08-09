@@ -111,7 +111,7 @@ INCAR:
 KPOINTS:
   reciprocal_density: 64
   reciprocal_density_metal: 200
-POTCAR_FUNCTIONAL: PBE
+POTCAR_FUNCTIONAL: PBE_54
 POTCAR:
   Ac: Ac
   Ag: Ag
