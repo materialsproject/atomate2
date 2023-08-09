@@ -936,19 +936,16 @@ def _set_u_params(incar, incar_settings, structure):
             incar.pop(key, None)
 
     # Modify LMAXMIX if you have d or f electrons present. Note that if the user
-    # explicitly sets LMAXMIX in settings it will override this logic. Previously, this
-    # was only set if Hubbard U was enabled as per the VASP manual but following an
-    # investigation it was determined that this would lead to a significant difference
-    # between SCF -> NonSCF even without Hubbard U enabled. Thanks to Andrew Rosen for
-    # investigating and reporting.
+    # explicitly sets LMAXMIX in settings it will override this logic (setdefault keeps
+    # current value). Previously, this was only set if Hubbard U was enabled as per the
+    # VASP manual but following an investigation it was determined that this would lead
+    # to a significant difference between SCF -> NonSCF even without Hubbard U enabled.
+    # Thanks to Andrew Rosen for investigating and reporting.
     blocks = [site.specie.block for site in structure]
-    if "LMAXMIX" not in incar_settings:
-        # contains f-electrons
-        if "f" in blocks:
-            incar["LMAXMIX"] = 6
-        # contains d-electrons
-        elif "d" in blocks:
-            incar["LMAXMIX"] = 4
+    if "f" in blocks:  # contains f-electrons
+        incar.setdefault("LMAXMIX", 6)
+    elif "d" in blocks:  # contains d-electrons
+        incar.setdefault("LMAXMIX", 4)
 
 
 def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
