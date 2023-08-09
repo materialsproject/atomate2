@@ -77,7 +77,13 @@ def mock_vasp(
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
-        ref_path = vasp_test_dir / _REF_PATHS[name]
+        try:
+            ref_path = vasp_test_dir / _REF_PATHS[name]
+        except KeyError:
+            raise ValueError(
+                f"no reference directory found for job {name}; "
+                f"available jobs are: {list(_REF_PATHS)}"
+            ) from None
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
     get_input_set_orig = VaspInputGenerator.get_input_set
@@ -96,11 +102,8 @@ def mock_vasp(
     monkeypatch.setattr(VaspInputGenerator, "get_nelect", mock_get_nelect)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
-        if fake_run_vasp_kwargs is None:
-            fake_run_vasp_kwargs = {}
-
         _REF_PATHS.update(ref_paths)
-        _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs)
+        _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs or {})
 
     yield _run
 

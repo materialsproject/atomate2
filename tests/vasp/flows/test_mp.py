@@ -76,40 +76,32 @@ def test_mp_meta_gga_relax_custom_values():
     assert job.final_relax_maker == final_relax_maker
 
 
-def test_mp_relax(mock_vasp, clean_dir, si_structure):
+def test_mp_meta_gga_relax(mock_vasp, clean_dir, si_structure):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
-    # mapping from job name to directory containing test files
-    ref_paths = {"relax": "Si_mp_relax/relax"}
-
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        "relax": {"incar_settings": ["EDIFFG", "METAGGA", "GGA"]},
+    # map from job name to directory containing reference output files
+    ref_paths = {
+        "MP pre-relax": "Si_mp_metagga_relax/pbesol_pre_relax",
+        "MP meta-GGA relax": "Si_mp_metagga_relax/r2scan_relax",
+        "MP meta-GGA static": "Si_mp_metagga_relax/r2scan_final_static",
     }
 
-    # automatically use fake VASP and write POTCAR.spec during the test
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = dict.fromkeys(
+        ref_paths, {"incar_settings": ["LWAVE", "LCHARG"]}
+    )
+
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MPMetaGGARelaxMaker().make(si_structure)
+    maker = MPMetaGGARelax()
+    flow = maker.make(si_structure)
 
-    # Run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, create_folders=True, ensure_success=True)
+    # ensure flow runs successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[job.jobs[0].uuid][1].output
-
+    output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(output, TaskDoc)
     assert output.output.energy == pytest.approx(-10.85043620)
-
-    # # Now try with a custom maker
-    ref_paths = {"relax": "Si_mp_relax_custom/relax"}
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
-    custom_maker = MPMetaGGARelaxMaker(
-        input_set_generator=MPMetaGGARelaxMaker(
-            user_incar_settings={"EDIFFG": -0.05, "METAGGA": None, "GGA": "PS"}
-        )
-    )
-    job = MPMetaGGARelaxMaker(relax_maker2=custom_maker).make(si_structure)
-    run_locally(job, create_folders=True, ensure_success=True)
