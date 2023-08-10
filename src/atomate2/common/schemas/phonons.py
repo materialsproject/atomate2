@@ -233,7 +233,7 @@ class PhononBSDOSDoc(BaseModel):
         code: str
             which code was used for computation
         displacement_data:
-            output of the VASP displacement data
+            output of the VASP displacement runs
         total_dft_energy: float
             total energy in eV per cell
         epsilon_static: Matrix3D
@@ -268,7 +268,6 @@ class PhononBSDOSDoc(BaseModel):
         )
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(

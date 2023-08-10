@@ -254,7 +254,7 @@ def generate_frequencies_eigenvectors(
     )
 
 
-@job
+@job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
     displacements,
     structure: Structure,
@@ -279,12 +279,12 @@ def run_phonon_displacements(
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()
     phonon_jobs = []
-    outputs: dict[str, list] = {
+    outputs = {
         "displacement_number": [],
         "forces": [],
         "uuids": [],
         "dirs": [],
-        "displaced_structures": [],
+        # "displaced_structures": [],
     }
 
     for i, displacement in enumerate(displacements):
@@ -309,7 +309,7 @@ def run_phonon_displacements(
         outputs["uuids"].append(phonon_job.output.uuid)
         outputs["dirs"].append(phonon_job.output.dir_name)
         outputs["forces"].append(phonon_job.output.output.forces)
-        outputs["displaced_structures"].append(displacement)
+        # outputs["displaced_structures"].append(displacement)
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)
