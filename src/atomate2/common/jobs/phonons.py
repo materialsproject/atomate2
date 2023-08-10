@@ -279,7 +279,7 @@ def run_phonon_displacements(
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()
     phonon_jobs = []
-    outputs = {
+    outputs: dict[str, list] = {
         "displacement_number": [],
         "forces": [],
         "uuids": [],
