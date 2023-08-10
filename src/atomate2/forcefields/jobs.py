@@ -26,6 +26,8 @@ __all__ = [
     "CHGNetRelaxMaker",
     "M3GNetStaticMaker",
     "M3GNetRelaxMaker",
+    "GAPRelaxMaker",
+    "GAPStaticMaker",
 ]
 
 
