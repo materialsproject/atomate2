@@ -15,7 +15,12 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker, CHGNetRelaxMaker, CHGNetStaticMaker
+from atomate2.forcefields.jobs import (
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+    CHGNetRelaxMaker,
+    CHGNetStaticMaker,
+)
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
@@ -132,8 +137,12 @@ class PhononMaker(Maker):
     bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
-    static_energy_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(default_factory=CHGNetStaticMaker)
-    phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker = field(default_factory=CHGNetStaticMaker)
+    static_energy_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
+        default_factory=CHGNetStaticMaker
+    )
+    phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker = field(
+        default_factory=CHGNetStaticMaker
+    )
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
