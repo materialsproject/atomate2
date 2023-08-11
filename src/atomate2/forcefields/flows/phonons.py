@@ -16,10 +16,10 @@ from atomate2.common.jobs.phonons import (
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from atomate2.forcefields.jobs import (
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
     CHGNetRelaxMaker,
     CHGNetStaticMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
 )
 
 if TYPE_CHECKING:
@@ -27,7 +27,6 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
-
 
 __all__ = ["PhononMaker"]
 
