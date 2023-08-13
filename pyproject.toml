@@ -66,7 +66,7 @@ strict = [
     "dscribe==2.0.1",
     "emmet-core==0.60.1",
     "jobflow==0.1.11",
-    "lobsterpy==0.2.9",
+    "lobsterpy==0.3.0",
     "matgl==0.8.0",
     "monty==2023.5.8",
     "mp-api==0.33.3",
