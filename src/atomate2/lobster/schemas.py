@@ -278,7 +278,7 @@ class CondensedBondingAnalysis(BaseModel):
                 describe.plot_cohps(
                     save=True,
                     filename=f"automatic_cohp_plots_{which_bonds}.pdf",
-                    skip_show=True,
+                    hide=True,
                     **plot_kwargs,
                 )
                 import json
