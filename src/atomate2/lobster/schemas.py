@@ -245,7 +245,7 @@ class CondensedBondingAnalysis(BaseModel):
             cba_cohp_plot_data = {}  # Initialize dict to store plot data
 
             seq_cohps = analyse.seq_cohps
-            seq_labels_cohps = analyse.seq_labels_cohps 
+            seq_labels_cohps = analyse.seq_labels_cohps
             seq_ineq_cations = analyse.seq_ineq_ions
             struct = analyse.structure
 
