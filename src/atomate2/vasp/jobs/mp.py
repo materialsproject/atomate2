@@ -205,13 +205,13 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPMetaGGARelaxGenerator(
             user_incar_settings={
-                "NSW": 0,
-                "ISMEAR": -5,
+                "NSW": 0,  # zero ionic steps
+                "ISMEAR": -5,  # orbital occupancies use tetrahedron method with Blöchl
                 "ALGO": "FAST",
-                "LREAL": False,
-                "LCHARG": True,
-                "LWAVE": False,
+                "LREAL": False,  # no real space projection
+                "LCHARG": True,  # write CHGCAR
+                "LWAVE": False,  # do not write WAVECAR
             },
-            auto_ismear=False,
+            auto_ismear=False,  # don't auto-set ISMEAR and SIGMA based on bandgap
         )
     )

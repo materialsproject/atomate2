@@ -110,8 +110,14 @@ class MPMetaGGARelaxGenerator(VaspInputGenerator):
         bandgap = self.bandgap_override or bandgap or 0
 
         if bandgap < self.bandgap_tol:  # metallic
-            return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}
+            return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2, "GGA": None}
 
         rmin = 25.22 - 2.87 * bandgap
         kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
-        return {"KSPACING": np.clip(kspacing, 0.22, 0.44), "ISMEAR": 0, "SIGMA": 0.05}
+        return {
+            "KSPACING": np.clip(kspacing, 0.22, 0.44),
+            "ISMEAR": 0,
+            "SIGMA": 0.05,
+            "GGA": None,  # VASP 6.4+ errors if both GGA and METAGGA tag are set
+            # GGA tag might come form prev job INCAR inheritance, unset it to be safe
+        }
