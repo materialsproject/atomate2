@@ -41,7 +41,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["lobsterpy"]
+lobster = ["lobsterpy>=0.3.0"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = ["chgnet==0.2.0", "matgl==0.8.2"]
 docs = [
@@ -66,7 +66,7 @@ strict = [
     "dscribe==2.0.1",
     "emmet-core==0.60.1",
     "jobflow==0.1.11",
-    "lobsterpy==0.2.9",
+    "lobsterpy==0.3.0",
     "matgl==0.8.2",
     "monty==2023.5.8",
     "mp-api==0.33.3",
