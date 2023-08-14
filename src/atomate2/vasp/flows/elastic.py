@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OnMissing
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -87,6 +88,7 @@ class ElasticMaker(Maker):
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
         equilibrium_stress: Matrix3D = None,
+        conventional: bool = False,
     ):
         """
         Make flow to calculate the elastic constant.
@@ -99,6 +101,8 @@ class ElasticMaker(Maker):
             A previous vasp calculation directory to use for copying outputs.
         equilibrium_stress : tuple of tuple of float
             The equilibrium stress of the (relaxed) structure, if known.
+        conventional : bool
+            Whether to transform the structure into the conventional cell.
         """
         jobs = []
 
@@ -110,6 +114,10 @@ class ElasticMaker(Maker):
             prev_vasp_dir = bulk.output.dir_name
             if equilibrium_stress is None:
                 equilibrium_stress = bulk.output.output.stress
+
+        if conventional:
+            sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
+            structure = sga.get_conventional_standard_structure()
 
         deformations = generate_elastic_deformations(
             structure,
