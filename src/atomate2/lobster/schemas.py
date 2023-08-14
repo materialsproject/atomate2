@@ -244,13 +244,13 @@ class CondensedBondingAnalysis(BaseModel):
 
             cba_cohp_plot_data = {}  # Initialize dict to store plot data
 
-            set_cohps = analyse.set_cohps
-            set_labels_cohps = analyse.set_labels_cohps
-            set_inequivalent_cations = analyse.set_inequivalent_ions
+            seq_cohps = analyse.seq_cohps
+            seq_labels_cohps = analyse.seq_labels_cohps
+            seq_ineq_cations = analyse.seq_ineq_ions
             struct = analyse.structure
 
             for _iplot, (ication, labels, cohps) in enumerate(
-                zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
+                zip(seq_ineq_cations, seq_labels_cohps, seq_cohps)
             ):
                 label_str = f"{struct[ication].specie!s}{ication + 1!s}: "
                 for label, cohp in zip(labels, cohps):
@@ -278,7 +278,7 @@ class CondensedBondingAnalysis(BaseModel):
                 describe.plot_cohps(
                     save=True,
                     filename=f"automatic_cohp_plots_{which_bonds}.pdf",
-                    skip_show=True,
+                    hide=True,
                     **plot_kwargs,
                 )
                 import json
