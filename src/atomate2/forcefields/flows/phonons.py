@@ -14,7 +14,6 @@ from atomate2.common.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
-
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from atomate2.forcefields.jobs import (
     CHGNetRelaxMaker,
