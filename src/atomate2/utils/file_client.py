@@ -398,7 +398,7 @@ class FileClient:
         self,
         path: str | Path,
         host: str | None = None,
-        force: bool = False,
+        force: bool | str = False,
     ):
         """
         Ungzip a file.
@@ -411,6 +411,9 @@ class FileClient:
             A remote file system host on which to perform file operations.
         force : bool
             Overwrite non-gzipped file if it already exists.
+            - `force` Overwrite non-gzipped file if it already exists.
+            - `skip` Skip file if it already exists.
+            - `raise` Raise an error if file already exists.
         """
         path = self.abspath(path, host=host)
         path_nongz = path.with_suffix("")
@@ -419,8 +422,21 @@ class FileClient:
             warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
             return
 
-        if self.exists(path_nongz, host=host) and not force:
-            raise FileExistsError(f"{path_nongz} file already exists")
+        if self.exists(path_nongz, host=host):
+            if force is False or force == "raise":
+                raise FileExistsError(f"{path_nongz} file already exists")
+            if force is True or force == "force":
+                pass
+            elif force == "skip":
+                warnings.warn(
+                    f"{path_nongz} file already exists, skipping...", stacklevel=2
+                )
+                return
+            else:
+                raise ValueError(
+                    f"Invalid value for force: {force} "
+                    "(must be True, False, 'raise', 'force', or 'skip'))"
+                )
 
         if host is None:
             with open(path_nongz, "wb") as f_out, zopen(path, "rb") as f_in:

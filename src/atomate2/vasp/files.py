@@ -29,7 +29,7 @@ def copy_vasp_outputs(
     src_host: str | None = None,
     additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
-    force_overwrite: bool = False,
+    force_overwrite: bool | str = False,
     file_client: FileClient | None = None,
 ):
     """
@@ -53,8 +53,10 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
-    force_overwrite : bool
-        If True, overwrite existing files during the copy step.
+    force_overwrite : bool or str
+        If True, overwrite existing files during the copy step. Alternatively, a string
+        can be given to specify "raise" (same as False), "force" (same as True)
+        / or "skip" which will not overwrite existing files and will not raise an error.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
