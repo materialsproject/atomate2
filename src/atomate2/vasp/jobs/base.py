@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Callable
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from monty.shutil import gzip_dir
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -20,7 +19,7 @@ from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2 import SETTINGS
-from atomate2.utils.shutil import gzip_files
+from atomate2.common.files import gzip_files
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.base import VaspInputGenerator
@@ -223,9 +222,9 @@ class BaseVaspMaker(Maker):
 
         # gzip folder
         if SETTINGS.VASP_ZIP_FILES == "atomate":
-            gzip_files(_FILES_TO_ZIP)
+            gzip_files(include_files=_FILES_TO_ZIP, allow_missing=True, force=True)
         elif SETTINGS.VASP_ZIP_FILES:
-            gzip_dir(".")
+            gzip_files(force=True)
 
         return Response(
             stop_children=stop_children,
