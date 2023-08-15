@@ -241,7 +241,7 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-## Lobster
+### Lobster
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
 
@@ -258,7 +258,66 @@ VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: <<LOBSTER_CMD>>
 ```
 
+The corresponding flow could, for example, be started with the following code:
+
+```Python
+from jobflow import SETTINGS
+from jobflow import run_locally
+from pymatgen.core.structure import Structure
+
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
+from atomate2.vasp.powerups import update_user_incar_settings
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+lobster = VaspLobsterMaker().make(structure)
+
+# update the incar
+lobster = update_user_incar_settings(lobster, {"NPAR": 4})
+# run the job
+run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
+```
+
+It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
 [FireWorks](https://github.com/materialsproject/fireworks) allows to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
+
+Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
+
+```python
+from fireworks import LaunchPad
+from jobflow.managers.fireworks import flow_to_workflow
+from pymatgen.core.structure import Structure
+
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
+from atomate2.vasp.powerups import update_user_incar_settings
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+lobster = VaspLobsterMaker().make(structure)
+lobster = update_user_incar_settings(lobster, {"NPAR": 4})
+
+# update the fireworker of the Lobster jobs
+for job, _ in lobster.iterflow():
+    config = {"manager_config": {"_fworker": "worker"}}
+    if "get_lobster" in job.name:
+        config["response_manager_config"] = {"_fworker": "lobster"}
+    job.update_config(config)
+
+# convert the flow to a fireworks WorkFlow object
+wf = flow_to_workflow(lobster)
+
+# submit the workflow to the FireWorks launchpad
+lpad = LaunchPad.auto_load()
+lpad.add_wf(wf)
+```
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 

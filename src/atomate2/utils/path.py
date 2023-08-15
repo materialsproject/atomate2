@@ -75,7 +75,7 @@ def find_recent_logfile(dir_name: Path | str, logfile_extensions: str | list[str
     """
     mod_time = 0.0
     logfile = None
-    if type(logfile_extensions) == str:
+    if isinstance(logfile_extensions, str):
         logfile_extensions = [logfile_extensions]
     for f in os.listdir(dir_name):
         f_path = os.path.join(dir_name, f)
