@@ -200,8 +200,7 @@ class BaseVaspMaker(Maker):
         if prev_vasp_dir is not None:
             copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
 
-        if "from_prev" not in self.write_input_set_kwargs:
-            self.write_input_set_kwargs["from_prev"] = from_prev
+        self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
         # write vasp input files
         write_vasp_input_set(
@@ -240,16 +239,14 @@ def get_vasp_task_document(
     **kwargs,
 ):
     """Get VASP Task Document using atomate2 settings."""
-    if "store_additional_json" not in kwargs:
-        kwargs["store_additional_json"] = SETTINGS.VASP_STORE_ADDITIONAL_JSON
+    kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 
-    if "volume_change_warning_tol" not in kwargs:
-        kwargs["volume_change_warning_tol"] = SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+    kwargs.setdefault(
+        "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+    )
 
-    if "run_bader" not in kwargs:
-        kwargs["run_bader"] = SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS
+    kwargs.setdefault("run_bader", SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS)
 
-    if "store_volumetric_data" not in kwargs:
-        kwargs["store_volumetric_data"] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA
+    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
     return TaskDoc.from_directory(path, **kwargs)

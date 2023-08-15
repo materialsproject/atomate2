@@ -321,7 +321,7 @@ class FileClient:
             return Path(path).absolute()
         ssh = self.get_ssh(host)
         _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
-        return Path([o.split("\n")[0] for o in stdout][0])
+        return Path(next(o.split("\n")[0] for o in stdout))
 
     def glob(self, path: str | Path, host: str | None = None) -> list[Path]:
         """
@@ -516,7 +516,7 @@ def auto_fileclient(method: Callable | None = None):
     def decorator(func):
         @wraps(func)
         def gen_fileclient(*args, **kwargs):
-            file_client = kwargs.get("file_client", None)
+            file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
                     kwargs["file_client"] = file_client
