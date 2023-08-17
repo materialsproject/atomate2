@@ -224,7 +224,12 @@ def check_poscar(ref_path: Path):
             > 1e-3
         )
     ):
-        raise ValueError("POSCAR files are inconsistent")
+        ref_poscar_path = ref_path / "inputs" / "POSCAR"
+        user_poscar_path = Path("POSCAR").absolute()
+        raise ValueError(
+            f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref}"
+            f"\n\n{user_poscar_path!s}\n{user}"
+        )
 
 
 def check_potcar(ref_path: Path):
