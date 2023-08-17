@@ -56,7 +56,7 @@ def copy_vasp_outputs(
     force_overwrite : bool or str
         How to handle overwriting existing files during the copy step. Accepts
         either a string or bool:
-            
+
             - `"force"` or `True`: Overwrite existing files if they already exist.
             - `"raise"` or `False`: Raise an error if files already exist.
             - `"skip"` Skip files they already exist.
