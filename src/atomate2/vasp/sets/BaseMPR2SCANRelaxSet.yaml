@@ -9,7 +9,7 @@ INCAR:
   ENCUT: 680
   IBRION: 2
   ISIF: 3
-  ISMEAR: 2 # included to have some reasonable default
+  ISMEAR: 0 # included to have some reasonable default
   ISPIN: 2
   KSPACING: 0.22 # included to have some reasonable default
   LAECHG: True
@@ -25,7 +25,7 @@ INCAR:
   NELM: 200
   NSW: 99
   PREC: Accurate
-  SIGMA: 0.2 # included to have some reasonable default
+  SIGMA: 0.05 # included to have some reasonable default
   MAGMOM:
     Ce: 5
     Ce3+: 1
