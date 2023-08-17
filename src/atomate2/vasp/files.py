@@ -54,9 +54,12 @@ def copy_vasp_outputs(
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
     force_overwrite : bool or str
-        If True, overwrite existing files during the copy step. Alternatively, a string
-        can be given to specify "raise" (same as False), "force" (same as True)
-        / or "skip" which will not overwrite existing files and will not raise an error.
+        How to handle overwriting existing files during the copy step. Accepts
+        either a string or bool:
+            
+            - `"force"` or `True`: Overwrite existing files if they already exist.
+            - `"raise"` or `False`: Raise an error if files already exist.
+            - `"skip"` Skip files they already exist.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
