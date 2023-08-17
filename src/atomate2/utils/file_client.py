@@ -369,7 +369,7 @@ class FileClient:
         force : bool
             How to handle writing a gzipped file if it already exists. Accepts
             either a string or bool:
-            
+
             - `"force"` or `True`: Overwrite gzipped file if it already exists.
             - `"raise"` or `False`: Raise an error if file already exists.
             - `"skip"` Skip file if it already exists.
@@ -430,7 +430,7 @@ class FileClient:
         force : bool
             How to handle writing a non-gzipped file if it already exists. Accepts
             either a string or bool:
-            
+
             - `"force"` or `True`: Overwrite non-gzipped file if it already exists.
             - `"raise"` or `False`: Raise an error if file already exists.
             - `"skip"` Skip file if it already exists.
