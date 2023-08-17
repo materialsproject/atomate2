@@ -1,4 +1,5 @@
 import pytest
+from pymatgen.core import Structure
 
 from atomate2.vasp.flows.mp import MPMetaGGARelax
 from atomate2.vasp.jobs.mp import (
@@ -76,27 +77,28 @@ def test_mp_meta_gga_relax_custom_values():
     assert job.final_relax_maker == final_relax_maker
 
 
-def test_mp_meta_gga_relax(mock_vasp, clean_dir, si_structure):
+def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
     # map from job name to directory containing reference output files
+    pre_relax_dir = "Si_mp_metagga_relax/pbesol_pre_relax"
     ref_paths = {
-        "MP pre-relax": "Si_mp_metagga_relax/pbesol_pre_relax",
+        "MP pre-relax": pre_relax_dir,
         "MP meta-GGA relax": "Si_mp_metagga_relax/r2scan_relax",
         "MP meta-GGA static": "Si_mp_metagga_relax/r2scan_final_static",
     }
+    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = dict.fromkeys(
-        ref_paths, {"incar_settings": ["LWAVE", "LCHARG"]}
-    )
+    fake_run_vasp_kwargs = {
+        key: {"incar_settings": ["LWAVE", "LCHARG"]} for key in ref_paths
+    }
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    maker = MPMetaGGARelax()
-    flow = maker.make(si_structure)
+    flow = MPMetaGGARelax().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
