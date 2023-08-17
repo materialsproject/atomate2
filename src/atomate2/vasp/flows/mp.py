@@ -28,11 +28,11 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-__all__ = ["MPGGARelax", "MPMetaGGARelax"]
+__all__ = ["MPGGADoubleRelaxStatic", "MPMetaGGADoubleRelaxStatic"]
 
 
 @dataclass
-class MPGGARelax(Maker):
+class MPGGADoubleRelaxStatic(Maker):
     """
     Maker to perform a VASP GGA relaxation workflow with MP settings.
 
@@ -110,7 +110,7 @@ class MPGGARelax(Maker):
 
 
 @dataclass
-class MPMetaGGARelax(Maker):
+class MPMetaGGADoubleRelaxStatic(Maker):
     """
     Maker to perform a VASP r2SCAN relaxation workflow with MP settings.
 
