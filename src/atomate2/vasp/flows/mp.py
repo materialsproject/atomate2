@@ -46,6 +46,8 @@ class MPGGARelax(Maker):
         Maker to generate the static calculation before the relaxation.
     final_relax_maker : .BaseVaspMaker
         Maker to generate the second relaxation.
+    copy_vasp_files : Sequence[str] or None
+        VASP files to copy from the previous calculation directory.
     """
 
     name: str = "MP GGA Relax"
@@ -122,6 +124,8 @@ class MPMetaGGARelax(Maker):
         Maker to generate the static calculation before the relaxation.
     final_relax_maker : .BaseVaspMaker
         Maker to generate the second relaxation.
+    copy_vasp_files : Sequence[str] or None
+        VASP files to copy from the previous calculation directory.
     """
 
     name: str = "MP Meta-GGA Relax"
