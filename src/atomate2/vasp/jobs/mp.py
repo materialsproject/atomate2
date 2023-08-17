@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.mp import MPGGARelaxGenerator, MPMetaGGARelaxGenerator
+from atomate2.vasp.sets.mp import MPGGARelaxSetGenerator, MPMetaGGARelaxSetGenerator
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -48,9 +48,7 @@ class MPGGARelaxMaker(BaseVaspMaker):
     """
 
     name: str = "MP GGA Relax"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPGGARelaxGenerator(auto_ismear=False)
-    )
+    input_set_generator: VaspInputGenerator = field(MPGGARelaxSetGenerator)
 
 
 @dataclass
@@ -84,9 +82,8 @@ class MPGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP GGA Static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPGGARelaxGenerator(
+        default_factory=lambda: MPGGARelaxSetGenerator(
             user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False},
-            auto_ismear=False,
         )
     )
 
@@ -122,7 +119,7 @@ class MPPreRelaxMaker(BaseVaspMaker):
 
     name: str = "MP pre-relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxGenerator(
+        default_factory=lambda: MPMetaGGARelaxSetGenerator(
             user_incar_settings={
                 "EDIFFG": -0.05,
                 "METAGGA": None,
@@ -166,7 +163,7 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxGenerator(
+        default_factory=lambda: MPMetaGGARelaxSetGenerator(
             user_incar_settings={"LWAVE": True, "LCHARG": True}, auto_ismear=False
         )
     )
@@ -203,7 +200,7 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxGenerator(
+        default_factory=lambda: MPMetaGGARelaxSetGenerator(
             user_incar_settings={
                 "NSW": 0,  # zero ionic steps
                 "ISMEAR": -5,  # orbital occupancies use tetrahedron method with Blöchl

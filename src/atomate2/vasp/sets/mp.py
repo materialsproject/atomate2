@@ -31,50 +31,25 @@ _BASE_MP_GGA_RELAX_SET = loadfn(
 
 
 @dataclass
-class MPGGARelaxGenerator(VaspInputGenerator):
+class MPGGARelaxSetGenerator(RelaxSetGenerator):
     """Class to generate MP-compatible VASP GGA relaxation input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
-
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = 0,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-        return {}
+    auto_ismear: bool = False
 
 
 @dataclass
-class MPMetaGGARelaxGenerator(VaspInputGenerator):
+class MPGGAStaticSetGenerator(StaticSetGenerator):
+    """Class to generate MP-compatible VASP GGA static input sets."""
+
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+
+
+@dataclass
+class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP metaGGA relaxation input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
-    # Tolerance for metallic bandgap. If bandgap < bandgap_tol, KSPACING will be 0.22,
-    # otherwise it will increase with bandgap up to a max of 0.44.
     bandgap_tol: float = 1e-4
     bandgap_override: float | None = None
 
