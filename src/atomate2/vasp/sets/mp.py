@@ -14,19 +14,18 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
 from atomate2.vasp.sets.base import VaspInputGenerator
+from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.io.vasp import Outcar, Vasprun
 
 
-_BASE_MP_R2SCAN_RELAX_SET = loadfn(
-    resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
-)
-
-
 _BASE_MP_GGA_RELAX_SET = loadfn(
     resource_filename("atomate2.vasp.sets", "BaseMPGGASet.yaml")
+)
+_BASE_MP_R2SCAN_RELAX_SET = loadfn(
+    resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
 )
 
 
@@ -47,7 +46,18 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
 
 @dataclass
 class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
-    """Class to generate MP-compatible VASP metaGGA relaxation input sets."""
+    """Class to generate MP-compatible VASP metaGGA relaxation input sets.
+
+    Parameters
+    ----------
+    config_dict: dict
+        The config dict.
+    bandgap_tol: float
+        Tolerance for metallic bandgap. If bandgap < bandgap_tol, KSPACING will be 0.22,
+        otherwise it will increase with bandgap up to a max of 0.44.
+    bandgap_override: float | None
+        Override the bandgap with a fixed value. Defaults to None.
+    """
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     bandgap_tol: float = 1e-4
