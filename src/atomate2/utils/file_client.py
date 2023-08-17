@@ -353,7 +353,7 @@ class FileClient:
         path: str | Path,
         host: str | None = None,
         compresslevel: int = 6,
-        force: bool = False,
+        force: bool | str = False,
     ):
         """
         Gzip a file.
@@ -367,7 +367,12 @@ class FileClient:
         compresslevel : bool
             Level of compression, 1-9. 9 is default for GzipFile, 6 is default for gzip.
         force : bool
-            Overwrite gzipped file if it already exists.
+            How to handle writing a gzipped file if it already exists. Accepts
+            either a string or bool:
+            
+            - `"force"` or `True`: Overwrite gzipped file if it already exists.
+            - `"raise"` or `False`: Raise an error if file already exists.
+            - `"skip"` Skip file if it already exists.
         """
         path = self.abspath(path, host=host)
         path_gz = path.parent / f"{path.name}.gz"
@@ -380,8 +385,21 @@ class FileClient:
             warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
             return
 
-        if self.exists(path_gz, host=host) and not force:
-            raise FileExistsError(f"{path_gz} file already exists.")
+        if self.exists(path_gz, host=host):
+            if force is False or force == "raise":
+                raise FileExistsError(f"{path_gz} file already exists")
+            if force is True or force == "force":
+                pass
+            elif force == "skip":
+                warnings.warn(
+                    f"{path_gz} file already exists, skipping...", stacklevel=2
+                )
+                return
+            else:
+                raise ValueError(
+                    f"Invalid value for force: {force} "
+                    "(must be True, False, 'raise', 'force', or 'skip'))"
+                )
 
         if host is None:
             with open(path, "rb") as f_in, GzipFile(
@@ -410,10 +428,12 @@ class FileClient:
         host : str or None
             A remote file system host on which to perform file operations.
         force : bool
-            Overwrite non-gzipped file if it already exists.
-            - `force` Overwrite non-gzipped file if it already exists.
-            - `skip` Skip file if it already exists.
-            - `raise` Raise an error if file already exists.
+            How to handle writing a non-gzipped file if it already exists. Accepts
+            either a string or bool:
+            
+            - `"force"` or `True`: Overwrite non-gzipped file if it already exists.
+            - `"raise"` or `False`: Raise an error if file already exists.
+            - `"skip"` Skip file if it already exists.
         """
         path = self.abspath(path, host=host)
         path_nongz = path.with_suffix("")
