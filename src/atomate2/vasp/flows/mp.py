@@ -22,6 +22,8 @@ from atomate2.vasp.jobs.mp import (
     MPPreRelaxMaker,
 )
 
+from atomate2.vasp.sets.base import VaspInputGenerator
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -31,36 +33,38 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-__all__ = ["MPGGARelax", "MPGGADoubleRelaxMaker", "MPMetaGGARelax", "MPMetaGGADoubleRelaxMaker"]
+__all__ = ["MPGGADoubleRelaxMaker", "MPGGARelax" , "MPMetaGGADoubleRelaxMaker", "MPMetaGGARelax"]
 
 
 @dataclass
-class _MPGenericThreeStep(Maker):
+class MPGGADoubleRelaxMaker(Maker):
     """
-    - Generic maker for three-step Materials Project-adjacent jobs
-    - Only one maker is required
-    - Used to define GGA, meta-GGA workflows
+    - Double relaxation using Materials Project GGA parameters
+    - Only one maker is optional
+    - Also used as base class to define further GGA and meta-GGA workflows
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    initial_relax_maker : .BaseVaspMaker
+    inital_relax_maker : .BaseVaspMaker
         Maker to generate the first relaxation.
-    initial_static_maker : .BaseVaspMaker
-        Maker to generate the static calculation before the relaxation.
     final_relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
+        Maker to generate the second/final relaxation
+    optional_final_static_maker : .BaseVaspMaker = None by default
+        Optional maker to generate a final static
+    GGA_plus_U : bool = False, used to easily enable/disable +U corrections
     """
-    name : str = 'MP generic three-step'
-    optional_maker_1 : BaseVaspMaker | None = None
-    required_maker : BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
-    optional_maker_2 : BaseVaspMaker | None = None
+    name : str = 'MP GGA Double Relax Maker'
+    inital_relax_maker : BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
+    final_relax_maker : BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
+    optional_final_static_maker : BaseVaspMaker | None = None
     copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
+    GGA_plus_U : bool = False
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
-        Create a 3-step flow with two optional steps (usually an optional relax, and final high-quality static)
+        Create a 3-step flow with one optional step (usually an optional, final, high-quality static)
 
         Parameters
         ----------
@@ -76,148 +80,116 @@ class _MPGenericThreeStep(Maker):
         """
         jobs: list[Job] = []
 
-        # Run first optional maker
-        if self.optional_maker_1:
-            optional_job_1 = self.optional_maker_1.make(
-                structure, prev_vasp_dir=prev_vasp_dir
-            )
-            jobs += [optional_job_1]
-            structure = optional_job_1.output.structure
-            prev_vasp_dir = optional_job_1.output.dir_name
+        # Required initial relaxation        
+        initial_relax = self.inital_relax_maker.make(
+            structure, prev_vasp_dir=prev_vasp_dir
+        )
+        jobs += [initial_relax]
+        structure = initial_relax.output.structure
+        prev_vasp_dir = initial_relax.output.dir_name
 
-        self.required_maker.copy_vasp_kwargs = {
+        # Required second/final relaxation   
+        self.final_relax_maker.copy_vasp_kwargs = {
             "additional_vasp_files": self.copy_vasp_files
         }
-        required_job = self.required_maker.make(
+        final_relax = self.final_relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
         )
-        output = required_job.output
-        jobs += [required_job]
+        output = final_relax.output
+        jobs += [final_relax]
 
-        if self.optional_maker_2:
-            # Run second optional job
-            self.optional_maker_2.copy_vasp_kwargs = {
+        if self.optional_final_static_maker:
+            # Run optional final static
+            self.optional_final_static_maker.copy_vasp_kwargs = {
                 "additional_vasp_files": self.copy_vasp_files
             }
 
-            optional_job_2 = self.optional_maker_2.make(
+            optional_static = self.optional_final_static_maker.make(
                 structure=output.structure, prev_vasp_dir=output.dir_name
             )
-            output = optional_job_2.output
-            jobs += [optional_job_2]
+            output = optional_static.output
+            jobs += [optional_static]
+
+        for mkr in jobs:
+            mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
 
         return Flow(jobs, output, name=self.name)
 
 @dataclass
-class MPGGARelax(_MPGenericThreeStep):
+class MPGGARelax(MPGGADoubleRelaxMaker):
 
     """
-    Maker to perform a VASP GGA relaxation workflow with MP settings.
-    Additional kwarg GGA_plus_U to enable / disable GGA + U calculations
-    By default, only do GGA (LDAU = False)
+    - Double relaxation + final static using Materials Project GGA parameters
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    initial_relax_maker : .BaseVaspMaker
-        Maker to generate the first relaxation.
-    initial_static_maker : .BaseVaspMaker
-        Maker to generate the static calculation before the relaxation.
+    inital_relax_maker : .BaseVaspMaker
+        Maker to generate the first relaxation. (PBE GGA relax)
     final_relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
+        Maker to generate the second/final relaxation
+    optional_final_static_maker : .BaseVaspMaker = .BaseVaspMaker by default
+        Optional maker to generate a final static
+    GGA_plus_U : bool = False, used to easily enable/disable +U corrections
     """
 
     name: str = "MP GGA Relax"
-    optional_maker_1 : BaseVaspMaker | None = field(default_factory=MPGGARelaxMaker)
-    required_maker : BaseVaspMaker | None = field(default_factory=MPGGARelaxMaker)
-    optional_maker_2 : BaseVaspMaker | None = field(default_factory=MPGGAStaticMaker)
+    inital_relax_maker : BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
+    final_relax_maker : BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
+    optional_final_static_maker : BaseVaspMaker | None = field(default_factory=MPGGAStaticMaker)
     copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
     GGA_plus_U : bool = False
 
-    def make(self,structure : Structure, **kwargs):            
-        for mkr in [self.optional_maker_1, self.required_maker, self.optional_maker_2]:
-            if mkr:
-                mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
-        return super().make(structure, **kwargs)
 
 @dataclass
-class MPGGADoubleRelaxMaker(_MPGenericThreeStep):
-
+class MPMetaGGADoubleRelaxMaker(MPGGADoubleRelaxMaker):
     """
-    Maker to perform a VASP GGA relaxation workflow with MP settings.
-    Additional kwarg GGA_plus_U to enable / disable GGA + U calculations
-    By default, only do GGA (LDAU = False)
+    - Double relaxation using Materials Project r2SCAN Meta-GGA parameters
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    initial_relax_maker : .BaseVaspMaker
-        Maker to generate the first relaxation.
-    initial_static_maker : .BaseVaspMaker
-        Maker to generate the static calculation before the relaxation.
+    inital_relax_maker : .BaseVaspMaker
+        Maker to generate the first relaxation (PBEsol GGA relax)
     final_relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
-    """
-
-    name: str = "MP GGA Double Relax"
-    optional_maker_1 : BaseVaspMaker | None = field(default_factory=MPGGARelaxMaker)
-    required_maker : BaseVaspMaker | None = field(default_factory=MPGGARelaxMaker)
-    optional_maker_2 : BaseVaspMaker | None = None
-    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
-    GGA_plus_U : bool = False
-
-    def make(self,structure : Structure, **kwargs):
-        for mkr in [self.optional_maker_1, self.required_maker, self.optional_maker_2]:
-            if mkr:
-                mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
-        return super().make(structure, **kwargs)
-
-
-@dataclass
-class MPMetaGGARelax(_MPGenericThreeStep):
-    """
-    Maker to perform a VASP r2SCAN relaxation workflow with MP settings.
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    initial_relax_maker : .BaseVaspMaker
-        Maker to generate the first relaxation.
-    initial_static_maker : .BaseVaspMaker
-        Maker to generate the static calculation before the relaxation.
-    final_relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
-    """
-
-    name: str = "MP Meta-GGA Relax"
-    optional_maker_1 : BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
-    required_maker : BaseVaspMaker | None = field(default_factory=MPMetaGGARelaxMaker)
-    optional_maker_2 : BaseVaspMaker | None = field(default_factory=MPMetaGGAStaticMaker)
-    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
-
-
-@dataclass
-class MPMetaGGADoubleRelaxMaker(_MPGenericThreeStep):
-    """
-    Maker to perform a VASP r2SCAN relaxation workflow with MP settings.
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    initial_relax_maker : .BaseVaspMaker
-        Maker to generate the first relaxation.
-    initial_static_maker : .BaseVaspMaker
-        Maker to generate the static calculation before the relaxation.
-    final_relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
+        Maker to generate the second/final relaxation (r2SCAN meta-GGA relax)
+    optional_final_static_maker : .BaseVaspMaker = .BaseVaspMaker by default
+        Optional maker to generate a final static
+    GGA_plus_U : bool = False, used to easily enable/disable +U corrections
     """
 
     name: str = "MP Meta-GGA Double Relax"
-    optional_maker_1 : BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
-    required_maker : BaseVaspMaker | None = field(default_factory=MPMetaGGARelaxMaker)
-    optional_maker_2 : BaseVaspMaker | None = None
+    inital_relax_maker : BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
+    final_relax_maker : BaseVaspMaker | None = field(default_factory=MPMetaGGARelaxMaker)
+    optional_final_static_maker : BaseVaspMaker | None = None
     copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
+    GGA_plus_U : bool = False
+
+
+@dataclass
+class MPMetaGGARelax(MPGGADoubleRelaxMaker):
+    """
+    - Double relaxation + final static using Materials Project r2SCAN Meta-GGA parameters
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    inital_relax_maker : .BaseVaspMaker
+        Maker to generate the first relaxation. (PBEsol GGA relax)
+    final_relax_maker : .BaseVaspMaker
+        Maker to generate the second/final relaxation (r2SCAN meta-GGA relax)
+    optional_final_static_maker : .BaseVaspMaker = .BaseVaspMaker by default
+        Optional maker to generate a final static (r2SCAN meta-GGA static)
+    GGA_plus_U : bool = False, used to easily enable/disable +U corrections
+    """
+
+    name: str = "MP Meta-GGA Relax"
+    inital_relax_maker : BaseVaspMaker | None = field(default_factory=MPPreRelaxMaker)
+    final_relax_maker : BaseVaspMaker | None = field(default_factory=MPMetaGGARelaxMaker)
+    optional_final_static_maker : BaseVaspMaker | None = field(default_factory=MPMetaGGAStaticMaker)
+    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
+    GGA_plus_U : bool = False
+
