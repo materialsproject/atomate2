@@ -236,6 +236,7 @@ class VaspInputGenerator(InputGenerator):
         {"MAGMOM": {"Co": 1}}.
         If None is given, that key is unset. For example, {"ENCUT": None} will remove
         ENCUT from the incar settings.
+    auto_kspacing: dummy for database backwards compatibility
     user_kpoints_settings
         Allow user to override kpoints setting by supplying a dict. E.g.,
         ``{"reciprocal_density": 1000}``. User can also supply a Kpoints object.
@@ -293,6 +294,7 @@ class VaspInputGenerator(InputGenerator):
     user_kpoints_settings: dict | Kpoints = field(default_factory=dict)
     user_potcar_settings: dict = field(default_factory=dict)
     user_potcar_functional: str = None
+    auto_kspacing: bool = None
     auto_metal_kpoints: bool = True
     auto_ismear: bool = True
     constrain_total_magmom: bool = False

@@ -26,8 +26,10 @@ __all__ = [
     "CHGNetRelaxMaker",
     "M3GNetStaticMaker",
     "M3GNetRelaxMaker",
-    "GAPRelaxMaker",
-    "GAPStaticMaker",
+    "NequipStaticMaker",
+    "NequipRelaxMaker",
+    "DeepMDRelaxMaker",
+    "DeepMDStaticMaker",
 ]
 
 
@@ -208,9 +210,9 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
 
 
 @dataclass
-class M3GNetRelaxMaker(ForceFieldRelaxMaker):
+class NequipRelaxMaker(ForceFieldRelaxMaker):
     """
-    Maker to perform a relaxation using the M3GNet universal ML force field.
+    Maker to perform a relaxation using the Nequip.
 
     Parameters
     ----------
@@ -230,17 +232,73 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
+    name: str = "Nequip relax"
+    force_field_name: str = "/scratch/snx3000/jschmidt/mirror/atomate2_ff/EuTiO3_energy_forces_lmax_3_bs_3_fp32_weights_2_to_1.ckpt"
+    relax_cell: bool = True
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+    def _relax(self, structure):
+        from nequip.ase import Relaxer
+        # Note: the below code was taken from the matgl repo examples.
+        relaxer = Relaxer(self.force_field_name, device ='cuda',
+            relax_cell=self.relax_cell,
+            **self.optimizer_kwargs,
+        )
+
+        return relaxer.relax(
+            structure,
+            steps=self.steps,
+            **self.relax_kwargs,
+        )
+
+
+class M3GNetRelaxMaker(Maker):
+    """
+    Maker to perform a relaxation using the M3GNet universal ML force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
     name: str = "M3GNet relax"
-    force_field_name: str = "M3GNet"
     relax_cell: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def _relax(self, structure):
+    @job(output_schema=ForceFieldTaskDocument)
+    def make(self, structure: Structure):
+        """
+        Perform a relaxation of a structure using M3GNet.
+
+        Parameters
+        ----------
+        structure: .Structure
+            A pymatgen structure.
+        """
         import matgl
         from matgl.ext.ase import Relaxer
+
+        if self.steps < 0:
+            logger.warning(
+                "WARNING: A negative number of steps is not possible. "
+                "Behavior may vary..."
+            )
 
         # Note: the below code was taken from the matgl repo examples.
         # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
@@ -252,10 +310,20 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
             **self.optimizer_kwargs,
         )
 
-        return relaxer.relax(
+        result = relaxer.relax(
             structure,
             steps=self.steps,
             **self.relax_kwargs,
+        )
+
+        return ForceFieldTaskDocument.from_ase_compatible_result(
+            "M3GNet",
+            result,
+            self.relax_cell,
+            self.steps,
+            self.relax_kwargs,
+            self.optimizer_kwargs,
+            **self.task_document_kwargs,
         )
 
 
@@ -290,6 +358,37 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
             potential=pot,
             relax_cell=False,
         )
+
+        return relaxer.relax(
+            structure,
+            steps=1,
+        )
+
+@dataclass
+class NequipStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate forces and stresses using Nequip.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "Nequip static"
+    force_field_name: str = "/scratch/snx3000/jschmidt/mirror/atomate2_ff/EuTiO3/EuTiO3_energy_forces_lmax_3_bs_3_fp32_weights_2_to_1.ckpt"
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure):
+
+        from nequip.ase import Relaxer
+
+        # Note: the below code was taken from the matgl repo examples.
+        relaxer = Relaxer(self.force_field_name, device="cuda", relax_cell=False)
 
         return relaxer.relax(
             structure,
@@ -367,7 +466,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     potential_param_filename: str | Path
         param_file_name for :obj: quippy.potential.Potential()'.
     potential_kwargs: dict
-        Further kwargs for :obj: quippy.potential.Potential()'.
+       Further kwargs for :obj: quippy.potential.Potential()'.
     """
 
     name: str = "GAP static"
@@ -385,4 +484,59 @@ class GAPStaticMaker(ForceFieldStaticMaker):
             **self.potential_kwargs,
         )
         relaxer = Relaxer(calculator, relax_cell=False)
+        return relaxer.relax(structure, steps=1)
+
+@dataclass
+class DeepMDRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Maker to calculate forces and stresses using the DeepMD force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "DeepMD Relax"
+    force_field_name: str = "DeepMD"
+    relax_cell: bool = True
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+    def _relax(self, structure):
+        from deepmd.calculator import DP
+        # Note: the below code was taken from the matgl repo examples.
+        calculator=DP(model=self.force_field_name)
+        relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+
+@dataclass
+class DeepMDStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate forces and stresses using the DeepMD force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "DeepMD Static"
+    force_field_name: str = "DeepMD"
+    task_document_kwargs: dict = field(default_factory=dict)
+    def _evaluate_static(self, structure):
+        from deepmd.calculator import DP
+        # Note: the below code was taken from the matgl repo examples.
+        calculator=DP(model=self.force_field_name)
+
+        relaxer = Relaxer(calculator)
         return relaxer.relax(structure, steps=1)
