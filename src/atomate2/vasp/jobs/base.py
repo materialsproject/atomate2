@@ -19,7 +19,7 @@ from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2 import SETTINGS
-from atomate2.common.files import gzip_files
+from atomate2.common.files import gzip_output_folder
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.base import VaspInputGenerator
@@ -221,10 +221,11 @@ class BaseVaspMaker(Maker):
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
-        if SETTINGS.VASP_ZIP_FILES == "atomate":
-            gzip_files(include_files=_FILES_TO_ZIP, allow_missing=True, force=True)
-        elif SETTINGS.VASP_ZIP_FILES:
-            gzip_files(force=True)
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.VASP_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
 
         return Response(
             stop_children=stop_children,

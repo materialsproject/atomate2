@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from monty.shutil import gzip_dir
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 from pymatgen.core.trajectory import Trajectory
@@ -19,6 +18,8 @@ from pymatgen.electronic_structure.bandstructure import (
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.common import VolumetricData
 
+from atomate2 import SETTINGS
+from atomate2.common.files import gzip_files, gzip_output_folder
 from atomate2.common.utils import get_transformations
 from atomate2.cp2k.files import (
     cleanup_cp2k_outputs,
@@ -44,6 +45,9 @@ _DATA_OBJECTS = [
     VolumetricData,
     Trajectory,
 ]
+
+
+_FILES_TO_ZIP = ["cp2k.inp", "cp2k.out"]
 
 
 def cp2k_job(method: Callable):
@@ -179,7 +183,16 @@ class BaseCp2kMaker(Maker):
         cleanup_cp2k_outputs(directory=Path.cwd())
 
         # gzip folder
-        gzip_dir(".")
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.CP2K_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
+
+        if SETTINGS.CP2K_ZIP_FILES == "atomate":
+            gzip_files(include_files=_FILES_TO_ZIP, allow_missing=True, force=True)
+        elif SETTINGS.CP2K_ZIP_FILES:
+            gzip_files(force=True)
 
         return Response(
             stop_children=stop_children,

@@ -255,3 +255,27 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     # simply check a frame property can be converted to an IonicStep
     for frame in traj.frame_properties:
         IonicStep(**frame)
+
+
+# def test_zip(mock_vasp, clean_dir, si_structure):
+#     import jobflow
+#     from emmet.core.tasks import TaskDoc
+#     from jobflow import run_locally
+#
+#     from atomate2.vasp.jobs.core import StaticMaker
+#
+#     jstore = jobflow.SETTINGS.JOB_STORE
+#
+#     # mapping from job name to directory containing test files
+#     ref_paths = {"static": "Si_empty_output/static"}
+#
+#     # automatically use fake VASP and write POTCAR.spec during the test
+#     mock_vasp(ref_paths)
+#
+#     # generate job
+#     job = StaticMaker().make(
+#         si_structure
+#     )
+#
+#     # run the flow or job and ensure that it finished running successfully
+#     responses = run_locally(job, create_folders=True, ensure_success=True)

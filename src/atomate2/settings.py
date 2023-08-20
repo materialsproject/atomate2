@@ -92,6 +92,13 @@ class Atomate2Settings(BaseSettings):
         5, description="Maximum number of errors to correct before custodian gives up"
     )
 
+    LOBSTER_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
+    )
+
     CP2K_CMD: str = Field(
         "cp2k.psmp", description="Command to run the MPI version of cp2k"
     )
@@ -130,6 +137,13 @@ class Atomate2Settings(BaseSettings):
         True,
         description="Ingest any additional JSON data present into database when "
         "parsing CP2K directories useful for storing duplicate of FW.json",
+    )
+
+    CP2K_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        True,
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
     )
 
     # Elastic constant settings
