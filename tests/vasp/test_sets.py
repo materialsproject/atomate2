@@ -33,7 +33,7 @@ def test_user_incar_settings():
     }
 
     static_set_generator = StaticSetGenerator(user_incar_settings=uis)
-    incar = static_set_generator.get_input_set(structure).incar
+    incar = static_set_generator.get_input_set(structure, potcar_spec=True).incar
 
     for key in uis:
         if isinstance(incar[key], str):
