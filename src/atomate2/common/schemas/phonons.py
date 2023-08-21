@@ -25,6 +25,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
+from atomate2.common.utils import magnetic_get_phonopy_structure, magnetic_get_pmg_structure
 
 logger = logging.getLogger(__name__)
 
@@ -241,14 +242,14 @@ class PhononBSDOSDoc(BaseModel):
         born: Matrix3D
             born charges
         **kwargs:
-            additional arguments
+            additional arguments, Right now thermal displacements are removed later in the code
         """
         if code == "vasp":
             factor = VaspToTHz
         # This opens the opportunity to add support for other codes
         # that are supported by phonopy
 
-        cell = get_phonopy_structure(structure)
+        cell = magnetic_get_phonopy_structure(structure)
 
         if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
             primitive_matrix: Union[List[List[float]], str] = [
@@ -258,6 +259,8 @@ class PhononBSDOSDoc(BaseModel):
             ]
         else:
             primitive_matrix = "auto"
+
+        primitive_matrix = np.eye(3)        
         phonon = Phonopy(
             cell,
             supercell_matrix,
@@ -302,7 +305,7 @@ class PhononBSDOSDoc(BaseModel):
 
         # get phonon band structure
         kpath_dict, kpath_concrete = cls.get_kpath(
-            structure=get_pmg_structure(phonon.primitive),
+            structure=magnetic_get_pmg_structure(phonon.primitive),
             kpath_scheme=kpath_scheme,
             symprec=symprec,
         )
@@ -348,7 +351,7 @@ class PhononBSDOSDoc(BaseModel):
 
         kpoint_density_dos = kwargs.get("kpoint_density_dos", 7000)
         kpoint = Kpoints.automatic_density(
-            structure=get_pmg_structure(phonon.primitive),
+            structure=magnetic_get_pmg_structure(phonon.primitive),
             kppa=kpoint_density_dos,
             force_gamma=True,
         )
@@ -371,31 +374,32 @@ class PhononBSDOSDoc(BaseModel):
 
         free_energies = [
             dos.helmholtz_free_energy(
-                structure=get_pmg_structure(phonon.primitive), t=temperature
+                structure=magnetic_get_pmg_structure(phonon.primitive), t=temperature
             )
             for temperature in temperature_range
         ]
 
         entropies = [
-            dos.entropy(structure=get_pmg_structure(phonon.primitive), t=temperature)
+            dos.entropy(structure=magnetic_get_pmg_structure(phonon.primitive), t=temperature)
             for temperature in temperature_range
         ]
 
         internal_energies = [
             dos.internal_energy(
-                structure=get_pmg_structure(phonon.primitive), t=temperature
+                structure=magnetic_get_pmg_structure(phonon.primitive), t=temperature
             )
             for temperature in temperature_range
         ]
 
         heat_capacities = [
-            dos.cv(structure=get_pmg_structure(phonon.primitive), t=temperature)
+            dos.cv(structure=magnetic_get_pmg_structure(phonon.primitive), t=temperature)
             for temperature in temperature_range
         ]
 
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
+        kwargs['create_thermal_displacements'] = False
         if kwargs.get("create_thermal_displacements", False):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False

@@ -17,10 +17,13 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
+from pymatgen.io.phonopy import get_phonopy_structure
+from phonopy.structure.atoms import PhonopyAtoms
 
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.common.utils import magnetic_get_phonopy_structure, magnetic_get_pmg_structure
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -61,7 +64,6 @@ def get_total_energy_per_cell(
         structure.composition.num_atoms
         / structure.composition.reduced_composition.num_atoms
     )
-
     return total_dft_energy_per_formula_unit * formula_units
 
 
@@ -159,19 +161,19 @@ def generate_phonon_displacements(
     code:
         code to perform the computations
     """
-    cell = get_phonopy_structure(structure)
+    cell = magnetic_get_phonopy_structure(structure)
     if code == "vasp":
         factor = VaspToTHz
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
-    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: list[list[float]] | str = [
+#    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
+    primitive_matrix: list[list[float]] | str = [
             [1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],
             [0.0, 0.0, 1.0],
         ]
-    else:
-        primitive_matrix = "auto"
+#    else:
+#        primitive_matrix = "auto"
     phonon = Phonopy(
         cell,
         supercell_matrix,
@@ -184,7 +186,7 @@ def generate_phonon_displacements(
 
     supercells = phonon.supercells_with_displacements
 
-    return [get_pmg_structure(cell) for cell in supercells]
+    return [magnetic_get_pmg_structure(cell) for cell in supercells]
 
 
 @job(

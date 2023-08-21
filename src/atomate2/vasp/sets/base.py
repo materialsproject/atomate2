@@ -862,7 +862,6 @@ class VaspInputGenerator(InputGenerator):
             return self.config_dict["INCAR"]["KSPACING"]
         return None
 
-
 def _get_magmoms(
     structure: Structure,
     magmoms: dict[str, float] = None,
@@ -886,10 +885,12 @@ def _get_magmoms(
     )
     for site in structure:
         specie = str(site.specie)
-        if specie in magmoms:
-            mag.append(magmoms.get(specie))
-        elif hasattr(site, "magmom"):
+        if hasattr(site, "magmom")
             mag.append(site.magmom)
+        elif specie in magmoms:
+            mag.append(magmoms.get(specie))
+#        elif hasattr(site, "magmom"):
+#            mag.append(site.magmom)
         elif hasattr(site.specie, "spin") and site.specie.spin is not None:
             mag.append(site.specie.spin)
         elif specie in config_magmoms:

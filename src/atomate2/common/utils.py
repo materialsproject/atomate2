@@ -11,6 +11,57 @@ from monty.serialization import loadfn
 if TYPE_CHECKING:
     from pathlib import Path
 
+from pymatgen.io.phonopy import get_phonopy_structure
+from phonopy.structure.atoms import PhonopyAtoms
+from pymatgen.core.structure import Structure
+
+if TYPE_CHECKING:
+    from pathlib import Path
+    import numpy as np
+
+
+
+def magnetic_get_phonopy_structure(pmg_structure: Structure) -> PhonopyAtoms:
+    """
+    Convert a pymatgen Structure object to a PhonopyAtoms object.
+
+    Args:
+        pmg_structure (pymatgen Structure): A Pymatgen structure object.
+    """
+    symbols = [site.specie.symbol for site in pmg_structure]
+    if 'magmom' in pmg_structure.site_properties:
+        magmoms = pmg_structure.site_properties['magmom']
+        return PhonopyAtoms(
+            symbols=symbols,
+            cell=pmg_structure.lattice.matrix,
+            scaled_positions=pmg_structure.frac_coords,
+            magnetic_moments= magmoms
+        )
+    else:
+        return get_phonopy_structure(pmg_structure)
+
+        
+def magnetic_get_pmg_structure(phonopy_structure: PhonopyAtoms) -> Structure:
+    """
+    Convert a PhonopyAtoms object to pymatgen Structure object.
+
+    Args:
+        phonopy_structure (PhonopyAtoms): A phonopy structure object.
+    """
+    lattice = phonopy_structure.cell
+    frac_coords = phonopy_structure.scaled_positions
+    symbols = phonopy_structure.symbols
+    masses = phonopy_structure.masses
+    magnetic_moments = phonopy_structure._magmoms
+    
+    return Structure(
+        lattice,
+        symbols,
+        frac_coords,
+        site_properties={"phonopy_masses": masses, "magmom": magnetic_moments},
+    )
+
+
 
 def get_transformations(
     transformations: tuple[str, ...], params: tuple[dict, ...] | None
