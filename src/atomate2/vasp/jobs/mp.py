@@ -48,7 +48,7 @@ class MPGGARelaxMaker(BaseVaspMaker):
     """
 
     name: str = "MP GGA Relax"
-    input_set_generator: VaspInputGenerator = field(MPGGARelaxSetGenerator)
+    input_set_generator: VaspInputGenerator = field(default_factory=MPGGARelaxSetGenerator)
 
 
 @dataclass
