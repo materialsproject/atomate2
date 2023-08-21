@@ -297,7 +297,7 @@ class VaspInputGenerator(InputGenerator):
     user_kpoints_settings: dict | Kpoints = field(default_factory=dict)
     user_potcar_settings: dict = field(default_factory=dict)
     user_potcar_functional: str = None
-    auto_ismear: bool = False
+    auto_ismear: bool = True
     auto_ispin: bool = False
     auto_lreal: bool = False
     auto_metal_kpoints: bool = True
@@ -621,6 +621,7 @@ class VaspInputGenerator(InputGenerator):
         incar_updates = {} if incar_updates is None else incar_updates
         incar_settings = dict(self.config_dict["INCAR"])
         config_magmoms = incar_settings.get("MAGMOM", {})
+        auto_updates = {}
 
         # apply user incar settings to SETTINGS not to INCAR
         _apply_incar_updates(incar_settings, self.user_incar_settings)
@@ -658,36 +659,39 @@ class VaspInputGenerator(InputGenerator):
                     UserWarning,
                     stacklevel=1,
                 )
-            incar_updates["NUPDOWN"] = nupdown
+            auto_updates["NUPDOWN"] = nupdown
 
         if self.use_structure_charge:
-            incar_updates["NELECT"] = self.get_nelect(structure)
+            auto_updates["NELECT"] = self.get_nelect(structure)
 
         # handle auto ISPIN
         if ispin is not None and "ISPIN" not in self.user_incar_settings:
-            incar_updates["ISPIN"] = ispin
+            auto_updates["ISPIN"] = ispin
 
         if self.auto_ismear:
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
-                incar_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
+                auto_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
             elif bandgap == 0:
-                incar_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
+                auto_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
             else:
-                incar_updates.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
+                auto_updates.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
 
         if self.auto_lreal:
-            incar_updates["LREAL"] = _get_recommended_lreal(structure)
+            auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
         if kpoints is not None:
             # unset KSPACING as we are using a KPOINTS file and ensure adequate number
             # of KPOINTS are present for the tetrahedron method (ISMEAR=-5).
             incar.pop("KSPACING", None)
             if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
-                incar_updates["ISMEAR"] = 0
+                auto_updates["ISMEAR"] = 0
 
-        # apply specified updates, be careful not to override user_incar_settings
+        # apply updates from auto options, careful not to override user_incar_settings
+        _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
+
+        # apply updates from inputset generator
         _apply_incar_updates(incar, incar_updates, skip=list(self.user_incar_settings))
 
         # Remove unused INCAR parameters
