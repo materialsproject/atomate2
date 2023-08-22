@@ -1,6 +1,6 @@
 """Job to prerelax a structure using an MD Potential."""
 
-from typing import List
+from typing import List, Optional
 
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Extra, Field
@@ -94,6 +94,10 @@ class ForceFieldTaskDocument(StructureMetadata):
     forcefield_version: str = Field(
         None,
         description="version of the interatomic potential used for relaxation.",
+    )
+
+    dir_name: Optional[str] = Field(
+        None, description="Directory where the force field calculations are performed."
     )
 
     @classmethod
@@ -209,7 +213,7 @@ class ForceFieldTaskDocument(StructureMetadata):
                 )
 
             # otherwise do not include "magmoms" in :obj:`cur_ionic_step`
-            elif "magmoms" not in trajectory.keys():
+            elif "magmoms" not in trajectory:
                 cur_ionic_step = IonicStep(
                     energy=cur_energy,
                     forces=cur_forces,
@@ -237,7 +241,8 @@ class ForceFieldTaskDocument(StructureMetadata):
             import chgnet
 
             version = chgnet.__version__
-
+        else:
+            version = "Unknown"
         return cls.from_structure(
             meta_structure=output_structure,
             structure=output_structure,

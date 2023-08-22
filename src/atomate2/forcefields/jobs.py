@@ -9,35 +9,53 @@ from typing import TYPE_CHECKING
 from jobflow import Maker, job
 
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.utils import Relaxer
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 
 
+__all__ = [
+    "ForceFieldStaticMaker",
+    "ForceFieldRelaxMaker",
+    "CHGNetStaticMaker",
+    "CHGNetRelaxMaker",
+    "M3GNetStaticMaker",
+    "M3GNetRelaxMaker",
+    "GAPRelaxMaker",
+    "GAPStaticMaker",
+]
+
+
 @dataclass
-class CHGNetRelaxMaker(Maker):
+class ForceFieldRelaxMaker(Maker):
     """
-    Maker to perform a relaxation using the CHGNet universal ML force field.
+    Base Maker to calculate forces and stresses using any force field.
 
     Parameters
     ----------
     name : str
         The job name.
+    force_field_name : str
+        The name of the forcefield.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`StructOptimizer()`.
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "CHGNet relax"
+    name: str = "Forcefield relax"
+    force_field_name: str = "Forcefield"
     relax_cell: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -47,28 +65,23 @@ class CHGNetRelaxMaker(Maker):
     @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
         """
-        Perform a relaxation of a structure using CHGNet.
+        Perform a relaxation of a structure using a forcefield.
 
         Parameters
         ----------
         structure: .Structure
-            A pymatgen structure.
+             pymatgen structure.
         """
-        from chgnet.model import StructOptimizer
-
         if self.steps < 0:
             logger.warning(
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
 
-        relaxer = StructOptimizer(**self.optimizer_kwargs)
-        result = relaxer.relax(
-            structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
-        )
+        result = self._relax(structure)
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
-            "CHGNet",
+            self.force_field_name,
             result,
             self.relax_cell,
             self.steps,
@@ -77,9 +90,12 @@ class CHGNetRelaxMaker(Maker):
             **self.task_document_kwargs,
         )
 
+    def _relax(self, structure):
+        raise NotImplementedError
+
 
 @dataclass
-class CHGNetStaticMaker(CHGNetRelaxMaker):
+class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
     Maker to calculate forces and stresses using the CHGNet force field.
 
@@ -87,28 +103,112 @@ class CHGNetStaticMaker(CHGNetRelaxMaker):
     ----------
     name : str
         The job name.
+    force_field_name : str
+        The name of the force field.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "ForceField static"
+    force_field_name: str = "Forcefield"
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    @job(output_schema=ForceFieldTaskDocument)
+    def make(self, structure: Structure):
+        """
+        Perform a static evaluation using a forcefield.
+
+        Parameters
+        ----------
+        structure: .Structure
+            pymatgen structure.
+        """
+        if self.steps < 0:
+            logger.warning(
+                "WARNING: A negative number of steps is not possible. "
+                "Behavior may vary..."
+            )
+
+        result = self._evaluate_static(structure)
+
+        return ForceFieldTaskDocument.from_ase_compatible_result(
+            self.force_field_name,
+            result,
+            False,
+            1,
+            None,
+            None,
+            **self.task_document_kwargs,
+        )
+
+    def _evaluate_static(self, structure):
+        raise NotImplementedError
+
+
+@dataclass
+class CHGNetRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Maker to perform a relaxation using the CHGNet universal ML force field.
+
+    Parameters
+    ----------
+    force_field_name : str
+        The name of the forcefield.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`StructOptimizer()`.
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "CHGNet relax"
+    force_field_name = "CHGNet"
+    relax_cell: bool = False
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    def _relax(self, structure):
+        from chgnet.model import StructOptimizer
+
+        relaxer = StructOptimizer(**self.optimizer_kwargs)
+        return relaxer.relax(
+            structure, relax_cell=self.relax_cell, steps=self.steps, **self.relax_kwargs
+        )
+
+
+@dataclass
+class CHGNetStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate forces and stresses using the CHGNet force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
     name: str = "CHGNet static"
-    relax_cell: bool = False
-    steps: int = 1
-    relax_kwargs: dict = field(default_factory=dict)
-    optimizer_kwargs: dict = field(default_factory=dict)
+    force_field_name = "CHGNet"
     task_document_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure):
+        from chgnet.model import StructOptimizer
+
+        relaxer = StructOptimizer()
+        return relaxer.relax(structure, steps=1)
 
 
 @dataclass
-class M3GNetRelaxMaker(Maker):
+class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     """
     Maker to perform a relaxation using the M3GNet universal ML force field.
 
@@ -116,6 +216,8 @@ class M3GNetRelaxMaker(Maker):
     ----------
     name : str
         The job name.
+    force_field_name : str
+        The name of the forcefield.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
@@ -129,30 +231,16 @@ class M3GNetRelaxMaker(Maker):
     """
 
     name: str = "M3GNet relax"
+    force_field_name: str = "M3GNet"
     relax_cell: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure):
-        """
-        Perform a relaxation of a structure using M3GNet.
-
-        Parameters
-        ----------
-        structure: .Structure
-            A pymatgen structure.
-        """
+    def _relax(self, structure):
         import matgl
         from matgl.ext.ase import Relaxer
-
-        if self.steps < 0:
-            logger.warning(
-                "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
-            )
 
         # Note: the below code was taken from the matgl repo examples.
         # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
@@ -164,25 +252,15 @@ class M3GNetRelaxMaker(Maker):
             **self.optimizer_kwargs,
         )
 
-        result = relaxer.relax(
+        return relaxer.relax(
             structure,
             steps=self.steps,
             **self.relax_kwargs,
         )
 
-        return ForceFieldTaskDocument.from_ase_compatible_result(
-            "M3GNet",
-            result,
-            self.relax_cell,
-            self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
-            **self.task_document_kwargs,
-        )
-
 
 @dataclass
-class M3GNetStaticMaker(M3GNetRelaxMaker):
+class M3GNetStaticMaker(ForceFieldStaticMaker):
     """
     Maker to calculate forces and stresses using the M3GNet force field.
 
@@ -190,6 +268,46 @@ class M3GNetStaticMaker(M3GNetRelaxMaker):
     ----------
     name : str
         The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "M3GNet static"
+    force_field_name: str = "M3GNet"
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure):
+        import matgl
+        from matgl.ext.ase import Relaxer
+
+        # Note: the below code was taken from the matgl repo examples.
+        # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
+        pot = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+
+        relaxer = Relaxer(
+            potential=pot,
+            relax_cell=False,
+        )
+
+        return relaxer.relax(
+            structure,
+            steps=1,
+        )
+
+
+@dataclass
+class GAPRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Base Maker to calculate forces and stresses using a GAP potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
@@ -200,11 +318,71 @@ class M3GNetStaticMaker(M3GNetRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    potential_args_str: str
+        args_str for :obj: quippy.potential.Potential()'.
+    potential_param_filename: str|Path
+        param_file_name for :obj: quippy.potential.Potential()'.
+    potential_kwargs: dict
+        Further kwargs for :obj: quippy.potential.Potential()'.
     """
 
-    name: str = "M3GNet static"
+    name: str = "GAP relax"
+    force_field_name: str = "GAP"
     relax_cell: bool = False
-    steps: int = 1
+    steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+    potential_args_str: str | Path = "IP GAP"
+    potential_param_file_name: str = "gap.xml"
+    potential_kwargs: dict = field(default_factory=dict)
+
+    def _relax(self, structure):
+        from quippy.potential import Potential
+
+        calculator = Potential(
+            args_str=self.potential_args_str,
+            param_filename=str(self.potential_param_file_name),
+            **self.potential_kwargs,
+        )
+        relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+
+
+@dataclass
+class GAPStaticMaker(ForceFieldStaticMaker):
+    """
+    Base Maker to calculate forces and stresses using a GAP potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    potential_args_str: str
+        args_str for :obj: quippy.potential.Potential()'.
+    potential_param_filename: str | Path
+        param_file_name for :obj: quippy.potential.Potential()'.
+    potential_kwargs: dict
+        Further kwargs for :obj: quippy.potential.Potential()'.
+    """
+
+    name: str = "GAP static"
+    force_field_name: str = "GAP"
+    potential_args_str: str = "IP GAP"
+    potential_param_file_name: str | Path = "gap.xml"
+    potential_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure):
+        from quippy.potential import Potential
+
+        calculator = Potential(
+            args_str=self.potential_args_str,
+            param_filename=str(self.potential_param_file_name),
+            **self.potential_kwargs,
+        )
+        relaxer = Relaxer(calculator, relax_cell=False)
+        return relaxer.relax(structure, steps=1)

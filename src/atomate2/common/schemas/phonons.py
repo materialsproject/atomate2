@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
+from monty.json import MSONable
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
@@ -80,19 +81,26 @@ class PhononUUIDs(BaseModel):
     born_run_uuid: str = Field(None, description="born run uuid")
 
 
+class ForceConstants(MSONable):
+    """A force constants class."""
+
+    def __init__(self, force_constants: List[List[Matrix3D]]):
+        self.force_constants = force_constants
+
+
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: List[str] = Field(
+    displacements_job_dirs: List[Optional[str]] = Field(
         None, description="The directories where the displacement jobs were run."
     )
-    static_run_job_dir: str = Field(
+    static_run_job_dir: Optional[str] = Field(
         None, description="Directory where static run was performed."
     )
-    born_run_job_dir: str = Field(
+    born_run_job_dir: Optional[str] = Field(
         None, description="Directory where born run was performed."
     )
-    optimization_run_job_dir: str = Field(
+    optimization_run_job_dir: Optional[str] = Field(
         None, description="Directory where optimization run was performed."
     )
 
@@ -152,7 +160,7 @@ class PhononBSDOSDoc(BaseModel):
     )
 
     # needed, e.g. to compute Grueneisen parameter etc
-    force_constants: List[List[Matrix3D]] = Field(
+    force_constants: ForceConstants = Field(
         None, description="Force constants between every pair of atoms in the structure"
     )
 
@@ -181,7 +189,9 @@ class PhononBSDOSDoc(BaseModel):
         "Includes all data of the computation of the thermal displacements"
     )
 
-    jobdirs: PhononJobDirs = Field("Field including all relevant job directories")
+    jobdirs: Optional[PhononJobDirs] = Field(
+        "Field including all relevant job directories"
+    )
 
     uuids: PhononUUIDs = Field("Field including all relevant uuids")
 
@@ -223,7 +233,7 @@ class PhononBSDOSDoc(BaseModel):
         code: str
             which code was used for computation
         displacement_data:
-            output of the VASP displacement data
+            output of the VASP displacement runs
         total_dft_energy: float
             total energy in eV per cell
         epsilon_static: Matrix3D
@@ -258,7 +268,6 @@ class PhononBSDOSDoc(BaseModel):
         )
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(
@@ -305,8 +314,13 @@ class PhononBSDOSDoc(BaseModel):
 
         # phonon band structures will always be cmouted
         filename_band_yaml = "phonon_band_structure.yaml"
+
+        # TODO: potentially add kwargs to avoid computation of eigenvectors
         phonon.run_band_structure(
-            qpoints, path_connections=connections, with_eigenvectors=True
+            qpoints,
+            path_connections=connections,
+            with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
+            is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         )
         phonon.write_yaml_band_structure(filename=filename_band_yaml)
         bs_symm_line = get_ph_bs_symm_line(
@@ -326,7 +340,8 @@ class PhononBSDOSDoc(BaseModel):
         )
 
         # gets data for visualization on website - yaml is also enough
-        bs_symm_line.write_phononwebsite("phonon_website.json")
+        if kwargs.get("band_structure_eigenvectors", False):
+            bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
@@ -381,7 +396,7 @@ class PhononBSDOSDoc(BaseModel):
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
-        if kwargs["create_thermal_displacements"]:
+        if kwargs.get("create_thermal_displacements", False):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -438,7 +453,7 @@ class PhononBSDOSDoc(BaseModel):
             temperatures=temperature_range.tolist(),
             total_dft_energy=total_dft_energy_per_formula_unit,
             has_imaginary_modes=imaginary_modes,
-            force_constants=phonon.force_constants.tolist()
+            force_constants={"force_constants": phonon.force_constants.tolist()}
             if kwargs["store_force_constants"]
             else None,
             born=borns.tolist() if borns is not None else None,
@@ -452,7 +467,7 @@ class PhononBSDOSDoc(BaseModel):
                 "thermal_displacement_matrix": tdisp_mat,
                 "freq_min_thermal_displacements": freq_min_thermal_displacements,
             }
-            if kwargs["create_thermal_displacements"]
+            if kwargs.get("create_thermal_displacements", False)
             else None,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],
