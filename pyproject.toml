@@ -70,7 +70,7 @@ strict = [
     "lobsterpy==0.3.0",
     "matgl==0.8.2",
     "monty==2023.8.8",
-    "mp-api==0.33.3",
+    "mp-api==0.34.3",
     "numpy",
     "phonopy==2.20.0",
     "pydantic==1.10.9",
