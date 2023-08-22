@@ -47,7 +47,7 @@ forcefields = ["chgnet==0.2.0", "matgl==0.8.2", "quippy-ase==0.9.14"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
-    "furo==2023.7.26",
+    "furo==2023.8.19",
     "ipython==8.14.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
