@@ -668,7 +668,7 @@ class VaspInputGenerator(InputGenerator):
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
-                auto_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
+                auto_updates.update({"ISMEAR": 0, "SIGMA": 0.05})
             elif bandgap == 0:
                 auto_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
             else:
