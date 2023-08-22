@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2023.3.10",
-    "emmet-core>=0.51.11",
+    "emmet-core>=0.65.0",
     "jobflow>=0.1.11",
     "monty",
     "numpy",
@@ -65,7 +65,7 @@ strict = [
     "click==8.1.7",
     "custodian==2023.7.22",
     "dscribe==2.0.1",
-    "emmet-core==0.64.4",
+    "emmet-core==0.65.0",
     "jobflow==0.1.11",
     "lobsterpy==0.3.0",
     "matgl==0.8.2",
@@ -94,7 +94,6 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
 "atomate2.cp2k.sets" = ["*.yaml"]
-"atomate2.vasp.schemas.calc_types" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
 
 [tool.versioningit.vcs]
