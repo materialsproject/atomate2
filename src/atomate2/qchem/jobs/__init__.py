@@ -1,1 +1,1 @@
-"""Jobs for running QChem calculations"""
+"""Jobs for running QChem calculations."""

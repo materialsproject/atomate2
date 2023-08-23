@@ -1,16 +1,20 @@
-"""Core QChem Flows"""
+"""Core QChem Flows."""
 
 from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Molecule
 
 from atomate2.qchem.jobs.base import BaseQChemMaker
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, TransitionStateMaker
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Molecule
 
 # from atomate2.qchem.schemas.calculation import VaspObject
 # from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator

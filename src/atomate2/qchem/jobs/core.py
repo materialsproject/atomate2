@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from atomate2.qchem.jobs.base import BaseQChemMaker
-from atomate2.qchem.sets.base import QChemInputGenerator
 from atomate2.qchem.sets.core import (
     ForceSetGenerator,
     FreqSetGenerator,
@@ -15,6 +15,9 @@ from atomate2.qchem.sets.core import (
     SinglePointSetGenerator,
     TransitionStateSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from atomate2.qchem.sets.base import QChemInputGenerator
 
 # from custodian.qchem.handlers import (
 #     QChemErrorHandler,
@@ -104,7 +107,7 @@ class OptMaker(BaseQChemMaker):
 @dataclass
 class ForceMaker(BaseQChemMaker):
     """
-    Maker to create QChem job to converge electron density and calculate the gradient and atomic forces
+    Maker to create QChem job to converge electron density and calculate the gradient and atomic forces.
 
     Parameters
     ----------

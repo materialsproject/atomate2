@@ -1,15 +1,13 @@
-""" Utilities to determine level of theory, task type, and calculation type for Q-Chem calculations"""
+"""Utilities to determine level of theory, task type, and calculation type for Q-Chem calculations."""
 from typing import Any, Dict, Optional
-from jobflow.utils import ValueEnum
-from atomate2.qchem.schemas.calc_types import LevelOfTheory, CalcType, TaskType
+
+from atomate2.qchem.schemas.calc_types import CalcType, LevelOfTheory, TaskType
 from atomate2.qchem.schemas.calc_types.calc_types import (
-    FUNCTIONALS,
     BASIS_SETS,
-    SOLVENTS,
+    FUNCTIONALS,
     PCM_DIELECTRICS,
     SMD_PARAMETERS,
 )
-
 
 __author__ = "Evan Spotte-Smith <ewcspottesmith@lbl.gov>"
 
@@ -27,8 +25,9 @@ smd_synonyms = {
     "SOLVENT=WATER": "water",
     "SOLVENT=THF": "thf",
     "DIELECTRIC=7,230;N=1,410;ALPHA=0,000;BETA=0,859;GAMMA=36,830;PHI=0,000;PSI=0,000": "diglyme",
-    "DIELECTRIC=18,500;N=1,415;ALPHA=0,000;BETA=0,735;GAMMA=20,200;PHI=0,000;PSI=0,143": "3:7 EC:EMC"
+    "DIELECTRIC=18,500;N=1,415;ALPHA=0,000;BETA=0,735;GAMMA=20,200;PHI=0,000;PSI=0,143": "3:7 EC:EMC",
 }
+
 
 def level_of_theory(
     parameters: Dict[str, Any], custom_smd: Optional[str] = None
@@ -36,7 +35,7 @@ def level_of_theory(
     """
 
     Returns the level of theory for a calculation,
-    based on the input parameters given to Q-Chem
+    based on the input parameters given to Q-Chem.
 
     Args:
         parameters: Dict of Q-Chem input parameters
@@ -44,7 +43,6 @@ def level_of_theory(
         non-stadard solvent
 
     """
-
     funct_raw = parameters["rem"].get("method")
     basis_raw = parameters["rem"].get("basis")
 
@@ -65,17 +63,17 @@ def level_of_theory(
 
     basis_lower = basis_raw.lower()
 
-    functional = [f for f in FUNCTIONALS if f.lower() == funct_lower]
-    if not functional:
+    functional_list = [f for f in FUNCTIONALS if f.lower() == funct_lower]
+    if not functional_list:
         raise ValueError(f"Unexpected functional {funct_lower}!")
 
-    functional = functional[0]
+    functional = functional_list[0]
 
-    basis = [b for b in BASIS_SETS if b.lower() == basis_lower]
-    if not basis:
+    basis_list = [b for b in BASIS_SETS if b.lower() == basis_lower]
+    if not basis_list:
         raise ValueError(f"Unexpected basis set {basis_lower}!")
 
-    basis = basis[0]
+    basis = basis_list[0]
 
     solvent_method = parameters["rem"].get("solvent_method")
     if solvent_method is None:
@@ -117,15 +115,15 @@ def level_of_theory(
 
     return LevelOfTheory(lot)
 
+
 def solvent(parameters: Dict[str, Any], custom_smd: Optional[str] = None) -> str:
     """
     Returns the solvent used for this calculation.
     Args:
         parameters: Dict of Q-Chem input parameters
         custom_smd: (Optional) string representing SMD parameters for a
-        non-standard solvent
+        non-standard solvent.
     """
-
     lot = level_of_theory(parameters)
     solvation = lot.value.split("/")[-1]
 
@@ -186,12 +184,12 @@ def lot_solvent_string(
     Args:
         parameters: Dict of Q-Chem input parameters
         custom_smd: (Optional) string representing SMD parameters for a
-        non-standard solvent
+        non-standard solvent.
     """
-
     lot = level_of_theory(parameters).value
     solv = solvent(parameters, custom_smd=custom_smd)
     return f"{lot}({solv})"
+
 
 def task_type(orig: Dict[str, Any], special_run_type: Optional[str] = None) -> TaskType:
     if special_run_type == "frequency_flattener":
@@ -215,7 +213,7 @@ def calc_type(
     special_run_type: str, orig: Dict[str, Any], custom_smd: Optional[str] = None
 ) -> CalcType:
     """
-    Determines the calc type
+    Determines the calc type.
 
     Args:
         inputs: inputs dict with an incar, kpoints, potcar, and poscar dictionaries
@@ -225,6 +223,7 @@ def calc_type(
     tt = task_type(orig, special_run_type=special_run_type).value
     return CalcType(f"{rt} {tt}")
 
+
 def get_enum_source(enum_name, doc, items):
     header = f"""
 class {enum_name}(ValueEnum):
@@ -233,5 +232,3 @@ class {enum_name}(ValueEnum):
     items = [f'    {const} = "{val}"' for const, val in items.items()]
 
     return header + "\n".join(items)
-
-

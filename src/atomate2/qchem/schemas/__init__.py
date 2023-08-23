@@ -1,3 +1,1 @@
-"""
-Output schemas for QChem calculations
-"""
+"""Output schemas for QChem calculations."""

@@ -1,1 +1,1 @@
-"""Flows for running QChem calculations"""
+"""Flows for running QChem calculations."""

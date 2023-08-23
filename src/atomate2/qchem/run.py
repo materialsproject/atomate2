@@ -1,7 +1,4 @@
-"""
-Functions to run QChem in atomate 2.
-
-"""
+"""Functions to run QChem in atomate 2."""
 
 from __future__ import annotations
 
@@ -9,16 +6,19 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from custodian import Custodian
-from custodian.custodian import ErrorHandler
 from custodian.qchem.handlers import QChemErrorHandler
 from custodian.qchem.jobs import QCJob
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
-from atomate2.qchem.schemas.task import TaskDocument
+
+if TYPE_CHECKING:
+    from custodian.custodian import ErrorHandler
+
+    from atomate2.qchem.schemas.task import TaskDocument
 
 __all__ = [
     "JobType",

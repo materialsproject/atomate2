@@ -1,22 +1,20 @@
-""" Module to define various calculation types as Enums for Q-Chem"""
+"""Module to define various calculation types as Enums for Q-Chem."""
 from itertools import product
 from pathlib import Path
 
-from monty.serialization import loadfn
-from atomate2.qchem.schemas.calc_types.utils import get_enum_source
 from atomate2.qchem.schemas.calc_types.calc_types import (
-    TASK_TYPES,
-    FUNCTIONALS,
     BASIS_SETS,
+    FUNCTIONALS,
     SOLVENT_MODELS,
     SOLVENTS,
+    TASK_TYPES,
 )
-
+from atomate2.qchem.schemas.calc_types.utils import get_enum_source
 
 __author__ = "Evan Spotte-Smith <ewcspottesmith@lbl.gov>"
 
 
-_LOTS = list()
+_LOTS = []
 
 for funct in FUNCTIONALS:
     for basis in BASIS_SETS:
@@ -30,18 +28,16 @@ for funct in FUNCTIONALS:
 lot_enum = get_enum_source(
     "LevelOfTheory",
     "Levels of theory for calculations in Q-Chem",
-    dict(
-        {
-            "_".join(lot.split())
-            .replace("+", "_")
-            .replace("-", "_")
-            .replace("(", "_")
-            .replace(")", "_")
-            .replace("/", "_")
-            .replace("*", "_d"): lot
-            for lot in _LOTS
-        }
-    ),
+    {
+        "_".join(lot.split())
+        .replace("+", "_")
+        .replace("-", "_")
+        .replace("(", "_")
+        .replace(")", "_")
+        .replace("/", "_")
+        .replace("*", "_d"): lot
+        for lot in _LOTS
+    },
 )
 
 task_type_enum = get_enum_source(

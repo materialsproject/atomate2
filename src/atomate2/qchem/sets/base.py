@@ -5,13 +5,15 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Literal, Optional, Union
+from typing import TYPE_CHECKING, Literal
 
 from monty.io import zopen
-from pymatgen.core.structure import Molecule
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.qchem.inputs import QCInput
 from pymatgen.io.qchem.utils import lower_and_check_unique
+
+if TYPE_CHECKING:
+    from pymatgen.core.structure import Molecule
 
 # from pymatgen.io.qchem.sets import QChemDictSet
 
@@ -41,14 +43,14 @@ class QChemInputSet(InputSet):
     def __init__(
         self,
         qcinput: QCInput,
-        optional_files: Optional[Dict] = None,
+        optional_files: dict | None = None,
     ):
         self.qcinput = qcinput
         self.optional_files = {} if optional_files is None else optional_files
 
     def write_input(
         self,
-        directory: Union[str, Path],
+        directory: str | Path,
         overwrite: bool = True,
     ):
         """
@@ -75,7 +77,7 @@ class QChemInputSet(InputSet):
                 raise FileExistsError(f"{directory / k} already exists.")
 
     @staticmethod
-    def from_directory(directory: Union[str, Path], optional_files: Dict = None):
+    def from_directory(directory: str | Path, optional_files: dict = None):
         """
         Load a set of QChem inputs from a directory.
 
@@ -264,15 +266,9 @@ class QChemInputGenerator(InputGenerator):
 
         plots_defaults = {"grid_spacing": "0.05", "total_density": "0"}
 
-        if self.opt_variables is None:
-            opt_dict = {}
-        else:
-            opt_dict = self.opt_variables
+        opt_dict = {} if self.opt_variables is None else self.opt_variables
 
-        if self.scan_variables is None:
-            scan_dict = {}
-        else:
-            scan_dict = self.scan_variables
+        scan_dict = {} if self.scan_variables is None else self.scan_variables
 
         pcm_dict = pcm_dict or {}
         solv_dict = solv_dict or {}
@@ -294,7 +290,7 @@ class QChemInputGenerator(InputGenerator):
         }
 
         func_list = ["b3lyp", "b3lyp", "wb97xd", "wb97xv", "wb97mv"]
-        qc_method = dict((i + 1, e) for i, e in enumerate(func_list))
+        qc_method = {i + 1: e for i, e in enumerate(func_list)}
 
         if qc_method.get(self.dft_rung) is not None:
             rem_dict["method"] = qc_method.get(self.dft_rung)
@@ -322,14 +318,13 @@ class QChemInputGenerator(InputGenerator):
                 smx_dict["solvent"] = self.smd_solvent
             rem_dict["solvent_method"] = "smd"
             rem_dict["ideriv"] = "1"
-            if self.smd_solvent in ("custom", "other"):
-                if self.custom_smd is None:
-                    raise ValueError(
-                        "A user-defined SMD requires passing custom_smd, a string"
-                        + " of seven comma separated values in the following order:"
-                        + " dielectric, refractive index, acidity, basicity, surface"
-                        + " tension, aromaticity, electronegative halogenicity"
-                    )
+            if self.smd_solvent in ("custom", "other") and self.custom_smd is None:
+                raise ValueError(
+                    "A user-defined SMD requires passing custom_smd, a string"
+                    + " of seven comma separated values in the following order:"
+                    + " dielectric, refractive index, acidity, basicity, surface"
+                    + " tension, aromaticity, electronegative halogenicity"
+                )
 
         if self.plot_cubes:
             plots_dict = plots_defaults
@@ -431,7 +426,7 @@ class QChemInputGenerator(InputGenerator):
 
     def get_input_set(self) -> QChemInputSet:
         """
-        Get a QChem Input Set as a dictionary for a molecule
+        Get a QChem Input Set as a dictionary for a molecule.
 
         Parameters
         ----------
@@ -441,7 +436,6 @@ class QChemInputGenerator(InputGenerator):
         QchemInputSet
             A QChem input set
         """
-
         # molecule, prev_basis, prev_scf, new_geom_opt, overwrite_inputs, nbo_params = self._get_previous(
         #     molecule, prev_dir
         # )
@@ -495,5 +489,7 @@ class QChemInputGenerator(InputGenerator):
         -------
         dict
             A dictionary of updates to apply.
+
+        Is this something which is even necessary in context of QChem? Will have to discuss
         """
         raise NotImplementedError

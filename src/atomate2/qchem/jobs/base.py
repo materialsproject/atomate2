@@ -1,21 +1,23 @@
-"""Definition of a base QChem Maker"""
+"""Definition of a base QChem Maker."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
+from emmet.core.qc_tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
-from pymatgen.core.structure import Molecule
 from pymatgen.io.qchem.inputs import QCInput
 
 from atomate2.qchem.files import copy_qchem_outputs, write_qchem_input_set
 from atomate2.qchem.run import run_qchem, should_stop_children
-from atomate2.qchem.schemas.task import TaskDocument
 from atomate2.qchem.sets.base import QChemInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core.structure import Molecule
 
 __all__ = ["BaseQChemMaker", "qchem_job"]
 
@@ -42,7 +44,7 @@ def qchem_job(method: Callable):
 
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all QChem jobs. It also configures the output schema to be a QChem
-    :obj:`.TaskDocument`.
+    :obj:`.TaskDoc`.
 
     Any makers that return QChem jobs (not flows) should decorate the ``make`` method
     with @qchem_job. For example:
@@ -66,7 +68,7 @@ def qchem_job(method: Callable):
     callable
         A decorated version of the make function that will generate QChem jobs.
     """
-    return job(method, data=QCInput, output_schema=TaskDocument)
+    return job(method, data=QCInput, output_schema=TaskDoc)
 
 
 @dataclass
@@ -87,7 +89,7 @@ class BaseQChemMaker(Maker):
     run_qchem_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_qchem`.
     task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict
@@ -99,7 +101,7 @@ class BaseQChemMaker(Maker):
     """
 
     name: str = "base qchem job"
-    input_set_generator: QChemInputGenerator = field(
+    input_set_generator: Callable[[], QChemInputGenerator] = field(
         default_factory=QChemInputGenerator
     )
     write_input_set_kwargs: dict = field(default_factory=dict)
@@ -142,7 +144,7 @@ class BaseQChemMaker(Maker):
         run_qchem(**self.run_qchem_kwargs)
 
         # parse qchem outputs
-        task_doc = TaskDocument.from_directory(Path.cwd(), **self.task_document_kwargs)
+        task_doc = TaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
         # decide whether child jobs should proceed
