@@ -110,8 +110,9 @@ class MPGGADoubleRelaxMaker(Maker):
             output = optional_static.output
             jobs += [optional_static]
 
-        for mkr in jobs:
-            mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
+        for mkr in [self.inital_relax_maker,self.final_relax_maker,self.optional_final_static_maker]:
+            if mkr:
+                mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
 
         return Flow(jobs, output, name=self.name)
 
