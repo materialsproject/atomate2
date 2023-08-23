@@ -80,6 +80,10 @@ class MPGGADoubleRelaxMaker(Maker):
         """
         jobs: list[Job] = []
 
+        for mkr in [self.inital_relax_maker,self.final_relax_maker,self.optional_final_static_maker]:
+            if mkr:
+                mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
+
         # Required initial relaxation        
         initial_relax = self.inital_relax_maker.make(
             structure, prev_vasp_dir=prev_vasp_dir
@@ -109,10 +113,6 @@ class MPGGADoubleRelaxMaker(Maker):
             )
             output = optional_static.output
             jobs += [optional_static]
-
-        for mkr in [self.inital_relax_maker,self.final_relax_maker,self.optional_final_static_maker]:
-            if mkr:
-                mkr.input_set_generator.config_dict['INCAR']['LDAU'] = self.GGA_plus_U
 
         return Flow(jobs, output, name=self.name)
 
