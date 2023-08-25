@@ -15,6 +15,7 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import PolarizationMaker, RelaxMaker
 from atomate2.vasp.jobs.ferroelectric import (
     interpolate_structures,
+    add_interpolation_flow,
     polarization_analysis,
 )
 
@@ -35,13 +36,17 @@ class FerroelectricMaker(Maker):
     nimages: int
         Number of interpolations calculated from polar to nonpolar structures,
         including the nonpolar.
+    relax_maker: BaseVaspMaker or None or tuple
+        None to avoid relaxation of both polar and nonpolar structures
+        BaseVaspMaker to relax both structures (default)
+        tuple of BaseVaspMaker and None to control relaxation for each structure
+    lcalcpol_maker: BaseVaspMaker
+       Vasp maker to compute the polarization of each structure
     """
 
     name: str = "ferroelectric"
     nimages: int = 9
-    symprec: float = SETTINGS.SYMPREC
-    relax: bool | tuple = False
-    bulk_relax_maker: BaseVaspMaker | None = field(
+    relax_maker: BaseVaspMaker | None | tuple = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
     lcalcpol_maker: BaseVaspMaker = field(default_factory=PolarizationMaker)
@@ -67,12 +72,12 @@ class FerroelectricMaker(Maker):
         jobs = []
         prev_vasp_dir_p, prev_vasp_dir_np = None, None
 
-        if isinstance(self.relax, bool):
-            self.relax = (self.relax, self.relax)
+        if not isinstance(self.relax_maker, tuple):
+            self.relax_maker = (self.relax_maker, self.relax_maker)
 
-        if self.relax[0]:
+        if self.relax_maker[0]:
             # optionally relax the polar structure
-            relax_p = self.bulk_relax_maker.make(polar_structure)
+            relax_p = self.relax_maker[0].make(polar_structure)
             relax_p.append_name(" polar")
             jobs.append(relax_p)
             polar_structure = relax_p.output.structure
@@ -83,13 +88,13 @@ class FerroelectricMaker(Maker):
         polar_lcalcpol = self.lcalcpol_maker.make(
             polar_structure, prev_vasp_dir=prev_vasp_dir_p
         )
-        polar_lcalcpol.name += " polar"
+        polar_lcalcpol.append_name(" polar")
         jobs.append(polar_lcalcpol)
         polar_structure = polar_lcalcpol.output.structure
 
-        if self.relax[1]:
+        if self.relax_maker[1]:
             # optionally relax the nonpolar structure
-            relax_np = self.bulk_relax_maker.make(nonpolar_structure)
+            relax_np = self.relax_maker[1].make(nonpolar_structure)
             relax_np.append_name(" nonpolar")
             jobs.append(relax_np)
             nonpolar_structure = relax_np.output.structure
@@ -102,18 +107,22 @@ class FerroelectricMaker(Maker):
         jobs.append(nonpolar_lcalcpol)
         nonpolar_structure = nonpolar_lcalcpol.output.structure
 
-        interp_lcalcpol = interpolate_structures(
+        interp_structs_job = interpolate_structures(
             polar_structure, nonpolar_structure, self.nimages
         )
-        jobs.append(interp_lcalcpol)
+        jobs.append(interp_structs_job)
+
+        prev_interp_dir = interp_structs_job.output
+        add_interp_flow = add_interpolation_flow(prev_interp_dir,
+                                                 self.lcalcpol_maker)
+        jobs.append(add_interp_flow)
 
         pol_analysis = polarization_analysis(
-            [nonpolar_lcalcpol.output, polar_lcalcpol.output, interp_lcalcpol.output]
+            nonpolar_lcalcpol.output,
+            polar_lcalcpol.output,
+            add_interp_flow.output
         )
         jobs.append(pol_analysis)
-
-        # allow some of the deformations to fail
-        # fit_tensor.config.on_missing_references = OnMissing.NONE
 
         flow = Flow(
             jobs=jobs,

@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import logging
-
 import numpy as np
+from pathlib import Path
 from jobflow import Flow, Response, job
-
-from monty.serialization import dumpfn
+from monty.serialization import dumpfn,loadfn
 
 from pymatgen.analysis.ferroelectricity.polarization import (
     EnergyTrend,
@@ -24,23 +23,28 @@ __all__ = ["polarization_analysis"]
 
 
 @job(output_schema=PolarizationDocument)
-def polarization_analysis(lcalcpol_outputs):
+def polarization_analysis(np_lcalcpol_output,
+                          p_lcalcpol_output,
+                          interp_lcalcpol_outputs):
     """
     Recovers the same branch polarization and the spontaneous polarization
     for a ferroelectric workflow.
 
     Parameters
     ----------
-    lcalcpol_outputs: output jobflow objects from previous lcalcpol jobs
+    np_lcalcpol_outputs: output from previous nonpolar lcalcpol job
+    p_lcalcpol_outputs: output from previous polar lcalcpol job
+    interp_lcalcpol_outputs: output from previous interpolation lcalcpol jobs
+   
     """  # noqa: D205
     # order previous calculations from nonpolar to polar
     ordered_keys = [
-        f"interpolation_{i}" for i in reversed(range(len(lcalcpol_outputs[2])))
+        f"interpolation_{i}" for i in reversed(range(len(interp_lcalcpol_outputs)))
     ]
 
-    polarization_tasks = [lcalcpol_outputs[0].dict()]
-    polarization_tasks += [lcalcpol_outputs[2][k].dict() for k in ordered_keys]
-    polarization_tasks += [lcalcpol_outputs[1].dict()]
+    polarization_tasks = [np_lcalcpol_output.dict()]
+    polarization_tasks += [interp_lcalcpol_outputs[k].dict() for k in ordered_keys]
+    polarization_tasks += [p_lcalcpol_output.dict()]
 
     tasks = []
     outcars = []
@@ -48,7 +52,7 @@ def polarization_analysis(lcalcpol_outputs):
     energies_per_atom = []
     energies = []
     zval_dicts = []
-
+            
     for i, p in enumerate(polarization_tasks):
         energies_per_atom.append(p["calcs_reversed"][0]["output"]["energy_per_atom"])
         energies.append(p["calcs_reversed"][0]["output"]["energy"])
@@ -68,63 +72,12 @@ def polarization_analysis(lcalcpol_outputs):
     p_elecs = [outcar["p_elec"] for outcar in outcars]
     p_ions = [get_total_ionic_dipole(structure, zval_dict) for structure in structures]
 
-    polarization = Polarization(p_elecs, p_ions, structures)
-
-    p_change = np.ravel(polarization.get_polarization_change()).tolist()
-    p_norm = polarization.get_polarization_change_norm()
-    same_branch = polarization.get_same_branch_polarization_data(
-        convert_to_muC_per_cm2=True
+    polarization_doc = PolarizationDocument.from_pol_output(
+        p_elecs, p_ion, structures, energies,
+        energies_per_atom, zval_dicts, tasks,
     )
-    raw_elecs, raw_ions = polarization.get_pelecs_and_pions()
-    quanta = polarization.get_lattice_quanta(convert_to_muC_per_cm2=True)
 
-    if len(structures) > 3:
-        energy_trend = EnergyTrend(energies_per_atom)
-        energy_max_spline_jumps = energy_trend.max_spline_jump()
-        polarization_max_spline_jumps = polarization.max_spline_jumps()
-    else:
-        energy_max_spline_jumps = None
-        polarization_max_spline_jumps = None
-
-    polarization_dict = {}
-
-    def split_abc(var):
-        d = {}
-        for i, j in enumerate("abc"):
-            d.update({f"{j}": np.ravel(var[:, i]).tolist()})
-        return d
-
-    # General information
-    polarization_dict.update(
-        {"pretty_formula": structures[0].composition.reduced_formula}
-    )
-    # polarization_dict.update({"wfid": wfid})
-    polarization_dict.update({"task_label_order": tasks})
-
-    # Polarization information
-    polarization_dict.update({"polarization_change": p_change})
-    polarization_dict.update({"polarization_change_norm": p_norm})
-    polarization_dict.update(
-        {"polarization_max_spline_jumps": polarization_max_spline_jumps}
-    )
-    polarization_dict.update({"same_branch_polarization": split_abc(same_branch)})
-    polarization_dict.update({"raw_electron_polarization": split_abc(raw_elecs)})
-    polarization_dict.update({"raw_ion_polarization": split_abc(raw_ions)})
-    polarization_dict.update({"polarization_quanta": split_abc(quanta)})
-    polarization_dict.update({"zval_dict": zval_dict})
-
-    # Energy information
-    polarization_dict.update(
-        {"energy_per_atom_max_spline_jumps": energy_max_spline_jumps}
-    )
-    polarization_dict.update({"energies": energies})
-    polarization_dict.update({"energies_per_atom": energies_per_atom})
-    polarization_dict.update({"outcars": outcars})
-    polarization_dict.update({"structures": structures})
-
-    dumpfn(polarization_dict, "polarization_doc.json")
-    return PolarizationDocument(**polarization_dict)
-
+    return polarization_doc
 
 @job
 def interpolate_structures(p_st, np_st, nimages):
@@ -142,12 +95,30 @@ def interpolate_structures(p_st, np_st, nimages):
         including the nonpolar.
     """
     interp_structures = p_st.interpolate(np_st, nimages, True)
+    dumpfn(interp_structures, "interp_structures.json")
 
+    return Path.cwd()
+
+@job
+def add_interpolation_flow(prev_dir,lcalcpol_maker):
+    """
+    Generate the interpolations jobs and add them to the main ferroelectric flow
+
+    Parameters
+    ----------
+    prev_dir: str
+        Previous directory where interpolated structures were created
+    lcalcpol_maker: BaseVaspMaker
+       Vasp maker to compute the polarization of each structure        
+    """    
+
+    interp_structures = loadfn(f"{prev_dir}/interp_structures.json")
+    
     jobs = []
     outputs = {}
 
     for i, interp_structure in enumerate(interp_structures[1:]):
-        interpolation = PolarizationMaker().make(interp_structure)
+        interpolation = lcalcpol_maker.make(interp_structure)
         interpolation.append_name(f" interpolation_{i}")
         jobs.append(interpolation)
 

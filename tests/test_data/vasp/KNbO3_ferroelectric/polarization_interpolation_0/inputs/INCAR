@@ -5,7 +5,6 @@ ENCUT = 680
 GGA = Ps
 ISMEAR = -5
 ISPIN = 2
-KSPACING = 0.22
 LAECHG = True
 LASPH = True
 LCALCPOL = True
