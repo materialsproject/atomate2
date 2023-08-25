@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from emmet.core.vasp.calculation import VaspObject
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, OutputReference
 
 from atomate2.vasp.jobs.core import (
     HSEBSMaker,
@@ -16,6 +16,7 @@ from atomate2.vasp.jobs.core import (
     RelaxMaker,
     StaticMaker,
 )
+from atomate2.vasp.jobs.md import MDMaker, md_output
 from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 
 if TYPE_CHECKING:
@@ -506,3 +507,94 @@ class HSEOpticsMaker(Maker):
             static_job.output.structure, prev_vasp_dir=static_job.output.dir_name
         )
         return Flow([static_job, bs_job], bs_job.output, name=self.name)
+
+
+@dataclass
+class MultiMDMaker(Maker):
+    """
+    Maker to perform an MD run split in several steps.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    md_maker : .BaseVaspMaker
+        Maker to use to generate the first relaxation.
+    """
+
+    name: str = "multi md"
+    md_maker: BaseVaspMaker = field(default_factory=MDMaker)
+    n_runs: int = 5
+
+    def make(
+        self,
+        structure: Structure,
+        prev_vasp_dir: str | Path | None = None,
+        traj_ids: list[str] | None = None,
+    ):
+        """
+        Create a flow with several chained MD runs.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        prev_vasp_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+        traj_ids: a list of ids of job identifying previous steps of the
+            MD trajectory.
+
+        Returns
+        -------
+        Flow
+            A flow containing n_runs MD calculations.
+        """
+        md_job = None
+        md_jobs = []
+        for i in range(1, self.n_runs + 1):
+            if md_job is None:
+                md_structure = structure
+                md_prev_vasp_dir = prev_vasp_dir
+            else:
+                md_structure = md_job.output.structure
+                md_prev_vasp_dir = md_job.output.dir_name
+            md_job = self.md_maker.make(md_structure, prev_vasp_dir=md_prev_vasp_dir)
+            md_job.name += f" {i}"
+            md_jobs.append(md_job)
+
+        output_job = md_output(
+            structure=md_jobs[-1].output.structure,
+            vasp_dir=md_jobs[-1].output.dir_name,
+            traj_ids=[j.uuid for j in md_jobs],
+            prev_traj_ids=traj_ids,
+        )
+        output_job.name = "molecular dynamics output"
+
+        md_jobs.append(output_job)
+
+        return Flow(md_jobs, output_job.output, name=self.name)
+
+    def restart_from_uuid(self, md_ref: str | OutputReference):
+        """
+        Create a flow from the output reference of another MultiMDMaker.
+
+        The last output will be used as the starting point and the reference to
+        all the previous steps will be included in the final document.
+
+        Parameters
+        ----------
+        md_ref: str or OutputReference
+            The reference to the output of another MultiMDMaker
+
+        Returns
+        -------
+            A flow containing n_runs MD calculations.
+        """
+        if isinstance(md_ref, str):
+            md_ref = OutputReference(md_ref)
+
+        return self.make(
+            structure=md_ref.structure,
+            prev_vasp_dir=md_ref.vasp_dir,
+            traj_ids=md_ref.traj_ids,
+        )
