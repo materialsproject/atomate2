@@ -42,7 +42,7 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
         / "POSCAR"
     )
 
-    flow = FerroelectricMaker(relax=False, nimages=1).make(st_p, st_np)
+    flow = FerroelectricMaker(relax_maker=False, nimages=1).make(st_p, st_np)
 
     flow = update_user_incar_settings(flow, {"ENCUT": 400, "ISPIN": 1})
 
