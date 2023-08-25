@@ -1,9 +1,15 @@
 """Schemas for Ferroelectric wflow."""
 
 from typing import Dict, List
-
+import numpy as np
+from monty.serialization import dumpfn,loadfn
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from pymatgen.analysis.ferroelectricity.polarization import (
+    EnergyTrend,
+    Polarization,
+    get_total_ionic_dipole,
+)
 
 __all__ = ["PolarizationDocument"]
 
@@ -95,15 +101,24 @@ class PolarizationDocument(BaseModel):
                      the energy per atom profile",
     )
 
+    uuids: List[str] = Field(None, description="The uuids of the polarization jobs.")
+    
+    job_dirs: List[str] = Field(
+        None, description="The directories where the polarization jobs were run.")
+
+        
     @classmethod
     def from_pol_output(
+            cls,
             p_elecs: List[float],
-            p_ion: List[float],
+            p_ions: List[float],
             structures: List[Structure],
             energies: List[float],
             energies_per_atom: List[float],
-            zval_dicts: List[float],
+            zval_dict: dict,
             tasks: List[str],
+            job_dirs: List[str],
+            uuids: List[str],
     ):
 
         """
@@ -111,22 +126,25 @@ class PolarizationDocument(BaseModel):
 
         Parameters
         ----------
-        p_elecs : List[float]
-            electronic dipoles
-        p_ion : List[float]
-            ionic dipoles
+        p_elecs: List[float]
+            Electronic dipoles
+        p_ions: List[float]
+            Ionic dipoles
         structures: List[Structure]
             Structures in the order nonpolar, interpolated, polar
         energies: List[float]
             total energy for each calculation
         energies_per_atom: List[float]
-            total energy per atom for each calculation        
+            Total energy per atom for each calculation        
         zval_dicts: Dict
             zvals from pseudopotentials
         tasks: List[str],
-            labels of each polarization task calculation
+            Labels of each polarization task calculation
+        job_dirs: List[str],
+            The directories where the polarization jobs were run.
+        uuids: List[str],
+            The uuids of the polarization jobs.
         """    
-
 
         polarization = Polarization(p_elecs, p_ions, structures)
 

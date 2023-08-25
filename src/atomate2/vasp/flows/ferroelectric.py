@@ -115,13 +115,14 @@ class FerroelectricMaker(Maker):
         prev_interp_dir = interp_structs_job.output
         add_interp_flow = add_interpolation_flow(prev_interp_dir,
                                                  self.lcalcpol_maker)
-        jobs.append(add_interp_flow)
 
         pol_analysis = polarization_analysis(
             nonpolar_lcalcpol.output,
             polar_lcalcpol.output,
             add_interp_flow.output
         )
+        
+        jobs.append(add_interp_flow)
         jobs.append(pol_analysis)
 
         flow = Flow(

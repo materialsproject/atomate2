@@ -8,14 +8,10 @@ from pathlib import Path
 from jobflow import Flow, Response, job
 from monty.serialization import dumpfn,loadfn
 
-from pymatgen.analysis.ferroelectricity.polarization import (
-    EnergyTrend,
-    Polarization,
-    get_total_ionic_dipole,
-)
-
 from atomate2.vasp.jobs.core import PolarizationMaker
 from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
+
+from pymatgen.analysis.ferroelectricity.polarization import get_total_ionic_dipole
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +37,7 @@ def polarization_analysis(np_lcalcpol_output,
     ordered_keys = [
         f"interpolation_{i}" for i in reversed(range(len(interp_lcalcpol_outputs)))
     ]
-
+    #logger.info(np_lcalcpol_output.uuid)
     polarization_tasks = [np_lcalcpol_output.dict()]
     polarization_tasks += [interp_lcalcpol_outputs[k].dict() for k in ordered_keys]
     polarization_tasks += [p_lcalcpol_output.dict()]
@@ -51,20 +47,20 @@ def polarization_analysis(np_lcalcpol_output,
     structures = []
     energies_per_atom = []
     energies = []
-    zval_dicts = []
-            
+    job_dirs = []
+    uuids = []
+    
     for i, p in enumerate(polarization_tasks):
         energies_per_atom.append(p["calcs_reversed"][0]["output"]["energy_per_atom"])
         energies.append(p["calcs_reversed"][0]["output"]["energy"])
         tasks.append(p["task_label"] or str(i))
         outcars.append(p["calcs_reversed"][0]["output"]["outcar"])
         structures.append(p["calcs_reversed"][0]["input"]["structure"])
-        zval_dicts.append(p["calcs_reversed"][0]["output"]["outcar"]["zval_dict"])
-
-    # structures = [Structure.from_dict(structure) for structure in structure_dicts]
+        job_dirs.append(p["dir_name"])
+        #uuids.append(p["uuid"])
 
     # If LCALCPOL = True then Outcar will parse and store the pseudopotential zvals.
-    zval_dict = zval_dicts.pop()
+    zval_dict = p["calcs_reversed"][0]["output"]["outcar"]["zval_dict"]
 
     # Assumes that we want to calculate the ionic contribution to the dipole moment.
     # VASP's ionic contribution is sometimes strange.
@@ -73,9 +69,9 @@ def polarization_analysis(np_lcalcpol_output,
     p_ions = [get_total_ionic_dipole(structure, zval_dict) for structure in structures]
 
     polarization_doc = PolarizationDocument.from_pol_output(
-        p_elecs, p_ion, structures, energies,
-        energies_per_atom, zval_dicts, tasks,
-    )
+        p_elecs, p_ions, structures, energies,
+        energies_per_atom, zval_dict,
+        tasks, job_dirs, uuids)
 
     return polarization_doc
 
