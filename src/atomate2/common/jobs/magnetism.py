@@ -124,7 +124,9 @@ def run_ordering_calculations(
         if relax_maker is not None:
             relax_maker = relax_maker.update_kwargs(
                 {
-                    "run_vasp_kwargs": {"vasp_job_kwargs": {"copy_magmom": True}}
+                    "run_vasp_kwargs": {
+                        "vasp_job_kwargs": {"copy_magmom": True, "final": False}
+                    }
                 }  # ensure magmoms are copied from relax->static
             )
             relax_job = relax_maker.make(struct)
