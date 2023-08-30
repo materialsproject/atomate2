@@ -158,5 +158,8 @@ class Atomate2Settings(BaseSettings):
         if Path(config_file_path).expanduser().exists():
             new_values.update(loadfn(Path(config_file_path).expanduser()))
 
+        if not new_values:
+            return {}
+
         new_values.update(values)
         return new_values
