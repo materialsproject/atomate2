@@ -7,18 +7,22 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from jobflow import Maker, job
-from monty.shutil import gzip_dir
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import Lobsterin
 
-from atomate2.lobster.files import copy_lobster_files
+from atomate2 import SETTINGS
+from atomate2.common.files import gzip_output_folder
+from atomate2.lobster.files import LOBSTEROUTPUT_FILES, copy_lobster_files
 from atomate2.lobster.run import run_lobster
 from atomate2.lobster.schemas import LobsterTaskDocument
 
 __all__ = ["LobsterMaker"]
 
 logger = logging.getLogger(__name__)
+
+
+_FILES_TO_ZIP = [*LOBSTEROUTPUT_FILES, "lobsterin"]
 
 
 @dataclass
@@ -87,7 +91,11 @@ class LobsterMaker(Maker):
         run_lobster(**self.run_lobster_kwargs)
 
         # gzip folder
-        gzip_dir(".")
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.LOBSTER_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
 
         # parse lobster outputs
         return LobsterTaskDocument.from_directory(
