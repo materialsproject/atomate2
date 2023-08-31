@@ -100,7 +100,7 @@ class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
         rmin = 25.22 - 2.87 * bandgap
         kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
         return {
-            "KSPACING": np.clip(kspacing, 0.22, 0.44),
+            "KSPACING": kspacing if 0.22 < kspacing < 0.44 else 0.44,
             "ISMEAR": 0,
             "SIGMA": 0.05,
             "GGA": None,  # VASP 6.4+ errors if both GGA and METAGGA tag are set
