@@ -64,9 +64,7 @@ def enumerate_magnetic_orderings(
 
     Returns
     -------
-    Tuple[List[Structure], List[str]]:
-        Ordered structures, origins (e.g., "fm", "afm")
-
+    Ordered structures, origins (e.g., "fm", "afm")
     """
     enumerator = MagneticStructureEnumerator(
         structure,
@@ -97,9 +95,11 @@ def run_ordering_calculations(
         A tuple containing a sequence of ordered structures and another sequence of
         strings indicating the origin of each structure (e.g., "fm", "afm").
     static_maker : .Maker
-        A Maker to use to calculate the energies of the orderings. This is required.
+        A Maker to use to generate jobs for calculating the energies of the orderings.
+        This is required.
     relax_maker : .Maker | None
-        An optional Maker to use to relax the structures before calculating energies.
+        An optional Maker to use to generate jobs for relaxing the structures (before
+        static calculations).
     prev_calc_dir_argname : str | None
         The name of the argument to pass to the static_maker to indicate the previous
         calculation directory if relax_maker is not None (e.g., for VASP:
@@ -107,8 +107,7 @@ def run_ordering_calculations(
 
     Returns
     -------
-    Response:
-        Replaces the job with a Flow that will run all calculations.
+    Replaces the job with a Flow that will run all calculations.
     """
     jobs = []
     num_orderings = len(orderings[0])
@@ -122,13 +121,6 @@ def run_ordering_calculations(
         parent_uuid = None
         static_job_kwargs = {}  # previous calc dir only
         if relax_maker is not None:
-            relax_maker = relax_maker.update_kwargs(
-                {
-                    "run_vasp_kwargs": {
-                        "vasp_job_kwargs": {"copy_magmom": True, "final": False}
-                    }
-                }  # ensure magmoms are copied from relax->static
-            )
             relax_job = relax_maker.make(struct)
             relax_job.append_name(" " + name)
             relax_job.metadata.update(metadata)
