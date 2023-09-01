@@ -1,7 +1,7 @@
 import pytest
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStatic
+from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker, MPMetaGGARelax
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
@@ -98,7 +98,7 @@ def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    flow = MPMetaGGADoubleRelaxStatic().make(si_struct)
+    flow = MPGGADoubleRelaxMaker().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
