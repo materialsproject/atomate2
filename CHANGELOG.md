@@ -2,24 +2,24 @@ Change log
 ==========
 
 v0.0.11
---------
+-------
 
 ### Task Document Changes
 
 Merge atomate2 VASP task document with the one in emmet. The changes to the atomate2
 schemas are:
 
-- PsuedoPotentialSummary -> Potcar
-  - labels -> symbols
-- AnalysisSymmary -> AnalysisDoc
-  - delta_volume_as_percent -> delta_volume_percent
-- InputSummary -> InputDoc
-- OutputSummary -> OutputDoc
-  - density added
-- Status -> TaskState
-- TaskDocument -> TaskDoc
-  - task_type added
-- Status -> TaskState
+- `PsuedoPotentialSummary` -> Potcar`
+  - `labels` -> symbols`
+- `AnalysisSymmary` -> `AnalysisDoc`
+  - `delta_volume_as_percent` -> `delta_volume_percent`
+- `InputSummary` -> `InputDoc`
+- `OutputSummary` -> `OutputDoc`
+  - `density` added
+- `Status` -> `TaskState`
+- `TaskDocument` -> `TaskDoc`
+  - `task_type added`
+- `Status` -> `TaskState`
 
 ### VASP input set updates
 
@@ -53,7 +53,7 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
 ### Bug Fixes 🐛
 * Fix Lobster Schema by @JaGeo in https://github.com/materialsproject/atomate2/pull/266
 * fix lso dos of lobster being not saved in schema by @naik-aakash in https://github.com/materialsproject/atomate2/pull/279
-* fix _get_strong_bonds function by @naik-aakash in https://github.com/materialsproject/atomate2/pull/289
+* fix `_get_strong_bonds` function by @naik-aakash in https://github.com/materialsproject/atomate2/pull/289
 * [Bug Fix] For stringing defect calculations together by @jmmshn in https://github.com/materialsproject/atomate2/pull/292
 * BUGFIX `auto_lreal` by @jmmshn in https://github.com/materialsproject/atomate2/pull/297
 * Fix `Yb` PSP: change `Yb_2` to `Yb_3` by @janosh in https://github.com/materialsproject/atomate2/pull/319
@@ -63,14 +63,14 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
 * [FIX] fix elastic tensor flow  by @mjwen in https://github.com/materialsproject/atomate2/pull/415
 * [BUG FIX] Edge case for Magmoms by @jmmshn in https://github.com/materialsproject/atomate2/pull/460
 * [FIX] Fix major bug that caused `user_incar_settings` to be overwritten in some cases by @matthewkuner in https://github.com/materialsproject/atomate2/pull/412
-* Test for zip_outputs by @gpetretto in https://github.com/materialsproject/atomate2/pull/503
+* Test for `zip_outputs` by @gpetretto in https://github.com/materialsproject/atomate2/pull/503
 ### Enhancements 🛠
 * Extension of Lobster schema and additional tests by @JaGeo in https://github.com/materialsproject/atomate2/pull/272
 * Use emmet VASP task document by @utf in https://github.com/materialsproject/atomate2/pull/269
 * VASP inputset updates by @utf in https://github.com/materialsproject/atomate2/pull/270
 * Linting by @utf in https://github.com/materialsproject/atomate2/pull/274
 * Improve Lobster workflow preconverge step, kpoints, docs by @JaGeo in https://github.com/materialsproject/atomate2/pull/277
-* add has_doscar_lso field to Lobsterout schema model and update lobsterpy version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/286
+* add `has_doscar_lso` field to Lobsterout schema model and update lobsterpy version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/286
 * added simple chg check by @jmmshn in https://github.com/materialsproject/atomate2/pull/320
 * Switch to emmet's `MoleculeMetadata` by @arosen93 in https://github.com/materialsproject/atomate2/pull/301
 * Update update-precommit.yml by @utf in https://github.com/materialsproject/atomate2/pull/330
