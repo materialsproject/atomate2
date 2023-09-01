@@ -1,3 +1,19 @@
 changelog:
   exclude:
-    authors: [dependabot[bot]]
+    authors: [ dependabot[bot] ]
+  categories:
+    - title: New Features 🎉
+      labels:
+        - feature
+    - title: Bug Fixes 🐛
+      labels:
+        - fix
+    - title: Enhancements 🛠
+      labels:
+        - enhancement
+    - title: Documentation 📖
+      labels:
+        - documentation
+    - title: Other Changes
+      labels:
+        - "*"
