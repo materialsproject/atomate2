@@ -1,8 +1,8 @@
 Change log
 ==========
 
-Unreleased
-----------
+v0.0.11
+--------
 
 ### Task Document Changes
 
@@ -43,9 +43,74 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
   ISMEAR=-5 (tetrahedron smearing).
 
 
-Bug fixes:
+### New Features 🎉
 
-- Fix default value of `Atomate2Settings.VASP_HANDLE_UNSUCCESSFUL`
+* CP2K Support by @nwinner in https://github.com/materialsproject/atomate2/pull/157
+* Add forcefield schemas/makers to atomate2 by @matthewkuner in https://github.com/materialsproject/atomate2/pull/322
+* Add `m3gnet` support to Atomate2 by @matthewkuner in https://github.com/materialsproject/atomate2/pull/380
+* Phonons for forcefields by @JaGeo in https://github.com/materialsproject/atomate2/pull/398
+
+### Bug Fixes 🐛
+* Fix Lobster Schema by @JaGeo in https://github.com/materialsproject/atomate2/pull/266
+* fix lso dos of lobster being not saved in schema by @naik-aakash in https://github.com/materialsproject/atomate2/pull/279
+* fix _get_strong_bonds function by @naik-aakash in https://github.com/materialsproject/atomate2/pull/289
+* [Bug Fix] For stringing defect calculations together by @jmmshn in https://github.com/materialsproject/atomate2/pull/292
+* BUGFIX `auto_lreal` by @jmmshn in https://github.com/materialsproject/atomate2/pull/297
+* Fix `Yb` PSP: change `Yb_2` to `Yb_3` by @janosh in https://github.com/materialsproject/atomate2/pull/319
+* Fix typo by @janosh in https://github.com/materialsproject/atomate2/pull/321
+* Fix overriding `magmoms` in `update_user_incar_settings(` by @janosh in https://github.com/materialsproject/atomate2/pull/375
+* Fix encoding of input `Molecule` coordinates in cclib `TaskDocument` by @arosen93 in https://github.com/materialsproject/atomate2/pull/411
+* [FIX] fix elastic tensor flow  by @mjwen in https://github.com/materialsproject/atomate2/pull/415
+* [BUG FIX] Edge case for Magmoms by @jmmshn in https://github.com/materialsproject/atomate2/pull/460
+* [FIX] Fix major bug that caused `user_incar_settings` to be overwritten in some cases by @matthewkuner in https://github.com/materialsproject/atomate2/pull/412
+* Test for zip_outputs by @gpetretto in https://github.com/materialsproject/atomate2/pull/503
+### Enhancements 🛠
+* Extension of Lobster schema and additional tests by @JaGeo in https://github.com/materialsproject/atomate2/pull/272
+* Use emmet VASP task document by @utf in https://github.com/materialsproject/atomate2/pull/269
+* VASP inputset updates by @utf in https://github.com/materialsproject/atomate2/pull/270
+* Linting by @utf in https://github.com/materialsproject/atomate2/pull/274
+* Improve Lobster workflow preconverge step, kpoints, docs by @JaGeo in https://github.com/materialsproject/atomate2/pull/277
+* add has_doscar_lso field to Lobsterout schema model and update lobsterpy version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/286
+* added simple chg check by @jmmshn in https://github.com/materialsproject/atomate2/pull/320
+* Switch to emmet's `MoleculeMetadata` by @arosen93 in https://github.com/materialsproject/atomate2/pull/301
+* Update update-precommit.yml by @utf in https://github.com/materialsproject/atomate2/pull/330
+* Update dependencies by @utf in https://github.com/materialsproject/atomate2/pull/329
+* Add missing molecule field to cclib TaskDocument by @arosen93 in https://github.com/materialsproject/atomate2/pull/353
+* allow elastically unstable structures by @matthewkuner in https://github.com/materialsproject/atomate2/pull/355
+* update lobstertask schema: add bandoverlaps,grosspop and sitepotentials fields by @naik-aakash in https://github.com/materialsproject/atomate2/pull/404
+* Update CondensedBondingAnalysis schema by @naik-aakash in https://github.com/materialsproject/atomate2/pull/469
+* Phonon tweaks by @utf in https://github.com/materialsproject/atomate2/pull/276
+* Update to Defects WF by @jmmshn in https://github.com/materialsproject/atomate2/pull/430
+* Small change to `gunzip` to allow better restarting by @jmmshn in https://github.com/materialsproject/atomate2/pull/476
+* Remove VASP calc types schema  by @mjwen in https://github.com/materialsproject/atomate2/pull/407
+* Optionally zip files at the end of jobs by @gpetretto in https://github.com/materialsproject/atomate2/pull/414
+### Documentation 📖
+* Add more documentation for Lobster by @JaGeo in https://github.com/materialsproject/atomate2/pull/267
+* Use furo for docs theme by @utf in https://github.com/materialsproject/atomate2/pull/331
+* Update Lobster documentation by @JaGeo in https://github.com/materialsproject/atomate2/pull/376
+* Fix docs typos by @janosh in https://github.com/materialsproject/atomate2/pull/373
+* Update FireWorks section of docs by @arosen93 in https://github.com/materialsproject/atomate2/pull/378
+* Add a copy button to code blocks by @arosen93 in https://github.com/materialsproject/atomate2/pull/382
+* clean up doc, remove left-overs from amset example by @JaGeo in https://github.com/materialsproject/atomate2/pull/394
+* More details for lobster documentation by @JaGeo in https://github.com/materialsproject/atomate2/pull/431
+* Deploy docs on every commit to `main` by @janosh in https://github.com/materialsproject/atomate2/pull/422
+* Add clearer documentation on lobster worker by @JaGeo in https://github.com/materialsproject/atomate2/pull/440
+* Docs: add basic workflow tutorial by @rkingsbury in https://github.com/materialsproject/atomate2/pull/408
+* Use GitHub's `deploy-pages` action to deploy docs by @janosh in https://github.com/materialsproject/atomate2/pull/475
+### House-Keeping 🧹
+* More `ruff` by @janosh in https://github.com/materialsproject/atomate2/pull/344
+* Move all type-hint only imports behind `if TYPE_CHECKING` by @janosh in https://github.com/materialsproject/atomate2/pull/354
+* `ruff` select `perflint` `flake8-slots` by @janosh in https://github.com/materialsproject/atomate2/pull/395
+* Bump `ruff` and fix `PERF401`: Use a list comprehension to create transformed list by @janosh in https://github.com/materialsproject/atomate2/pull/421
+* Simplify: `dict.get(key, None)` -> `dict.get(key)` by @janosh in https://github.com/materialsproject/atomate2/pull/429
+* `dict.setdefault` instead of `if key not in dict: dict[key] = ...` by @janosh in https://github.com/materialsproject/atomate2/pull/452
+
+## New Contributors
+* @naik-aakash made their first contribution in https://github.com/materialsproject/atomate2/pull/279
+* @matthewkuner made their first contribution in https://github.com/materialsproject/atomate2/pull/322
+* @gpetretto made their first contribution in https://github.com/materialsproject/atomate2/pull/414
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.10...v0.0.11)
 
 v0.0.10
 -------
