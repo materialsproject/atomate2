@@ -1,7 +1,7 @@
 import pytest
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker, MPMetaGGARelax
+from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker, MPMetaGGADoubleRelaxStatic
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
@@ -50,7 +50,7 @@ def test_mp_relax_maker_default_values():
     ],
 )
 def test_mp_meta_gga_relax_default_values(initial_static_maker, final_relax_maker):
-    job = MPMetaGGARelax(
+    job = MPMetaGGADoubleRelaxStatic(
         initial_maker=initial_static_maker, final_relax_maker=final_relax_maker
     )
     assert isinstance(job.initial_maker, type(initial_static_maker))
@@ -67,7 +67,7 @@ def test_mp_meta_gga_relax_default_values(initial_static_maker, final_relax_make
 def test_mp_meta_gga_relax_custom_values():
     initial_maker = MPPreRelaxMaker()
     final_relax_maker = MPMetaGGARelaxMaker()
-    job = MPMetaGGARelax(
+    job = MPMetaGGADoubleRelaxStatic(
         name="Test",
         initial_maker=initial_maker,
         final_relax_maker=final_relax_maker,

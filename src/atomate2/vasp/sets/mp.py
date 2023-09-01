@@ -104,5 +104,5 @@ class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
             "ISMEAR": 0,
             "SIGMA": 0.05,
             "GGA": None,  # VASP 6.4+ errors if both GGA and METAGGA tag are set
-            # GGA tag might come form prev job INCAR inheritance, unset it to be safe
+            # GGA tag might come from prev job INCAR inheritance, unset it to be safe
         }
