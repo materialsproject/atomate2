@@ -1,0 +1,22 @@
+changelog:
+  exclude:
+    authors: [ dependabot, github-actions ]
+  categories:
+    - title: New Features 🎉
+      labels:
+        - feature
+    - title: Bug Fixes 🐛
+      labels:
+        - fix
+    - title: Enhancements 🛠
+      labels:
+        - enhancement
+    - title: Documentation 📖
+      labels:
+        - documentation
+    - title: House-Keeping 🧹
+      labels:
+        - house-keeping
+    - title: Other Changes
+      labels:
+        - "*"
