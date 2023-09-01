@@ -398,20 +398,15 @@ class VaspInputGenerator(InputGenerator):
         structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
             structure, prev_dir
         )
-        incar_updates = self.get_incar_updates(
-            structure,
-            prev_incar=prev_incar,
-            bandgap=bandgap,
-            vasprun=vasprun,
-            outcar=outcar,
-        )
-        kpoints_updates = self.get_kpoints_updates(
-            structure,
-            prev_incar=prev_incar,
-            bandgap=bandgap,
-            vasprun=vasprun,
-            outcar=outcar,
-        )
+        kwds = {
+            "structure": structure,
+            "prev_incar": prev_incar,
+            "bandgap": bandgap,
+            "vasprun": vasprun,
+            "outcar": outcar,
+        }
+        incar_updates = self.get_incar_updates(**kwds)
+        kpoints_updates = self.get_kpoints_updates(**kwds)
         kspacing = self._kspacing(incar_updates)
         kpoints = self._get_kpoints(structure, kpoints_updates, kspacing, bandgap)
         incar = self._get_incar(
@@ -665,11 +660,11 @@ class VaspInputGenerator(InputGenerator):
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
-                auto_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
+                auto_updates.update(ISMEAR=0, SIGMA=0.2)
             elif bandgap == 0:
-                auto_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
+                auto_updates.update(ISMEAR=2, SIGMA=0.2)  # metal
             else:
-                auto_updates.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
+                auto_updates.update(ISMEAR=-5, SIGMA=0.05)  # insulator
 
         if self.auto_lreal:
             auto_updates["LREAL"] = _get_recommended_lreal(structure)

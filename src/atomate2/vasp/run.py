@@ -134,7 +134,7 @@ def run_vasp(
 
     vasp_job_kwargs.setdefault("auto_npar", False)
 
-    vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
+    vasp_job_kwargs.update(gamma_vasp_cmd=split_vasp_gamma_cmd)
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {vasp_cmd}")
