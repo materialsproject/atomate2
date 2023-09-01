@@ -81,9 +81,10 @@ def mock_vasp(
             ref_path = vasp_test_dir / _REF_PATHS[name]
         except KeyError:
             raise ValueError(
-                f"no reference directory found for job {name}; "
-                f"available jobs are: {list(_REF_PATHS)}"
+                f"no reference directory found for job {name!r}; "
+                f"reference paths received={_REF_PATHS}"
             ) from None
+
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
     get_input_set_orig = VaspInputGenerator.get_input_set
@@ -195,17 +196,25 @@ def check_kpoints(ref_path: Path):
         )
     if user_kpoints_exists and ref_kpoints_exists:
         user = Kpoints.from_file("KPOINTS")
-        ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
+        ref_kpt_path = ref_path / "inputs" / "KPOINTS"
+        ref = Kpoints.from_file(ref_kpt_path)
         if user.style != ref.style or user.num_kpts != ref.num_kpts:
-            raise ValueError("KPOINTS files are inconsistent")
+            raise ValueError(
+                f"KPOINTS files are inconsistent: {user.style} != {ref.style} "
+                f"or {user.num_kpts} != {ref.num_kpts} in ref file {ref_kpt_path}"
+            )
     else:
         # check k-spacing
         user = Incar.from_file("INCAR")
-        ref = Incar.from_file(ref_path / "inputs" / "INCAR")
+        ref_incar_path = ref_path / "inputs" / "INCAR"
+        ref = Incar.from_file(ref_incar_path)
 
         user_ksp, ref_ksp = user.get("KSPACING"), ref.get("KSPACING")
         if user_ksp != ref_ksp:
-            raise ValueError(f"KSPACING is not consistent: {user_ksp} != {ref_ksp}")
+            raise ValueError(
+                f"KSPACING is inconsistent: {user_ksp} != {ref_ksp} "
+                f"in ref file {ref_incar_path}"
+            )
 
 
 def check_poscar(ref_path: Path):
