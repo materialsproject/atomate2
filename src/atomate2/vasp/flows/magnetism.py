@@ -11,7 +11,7 @@ from atomate2.common.flows.magnetism import (
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
-    from pymatgen.core import Element
+    from pymatgen.core.periodic_table import Element
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -52,7 +52,8 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
         Maker used to peform static calculations for total energy.
     relax_maker : RelaxMaker | None
         Maker used to perform relaxations of the enumerated structures. If None,
-        relaxations will be skipped (i.e., only static calculations).
+        relaxations will be skipped (i.e., only static calculations). By default, the
+        RelaxMaker is provided.
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
         in µB. Generally these are chosen to be high-spin, since they can relax to a

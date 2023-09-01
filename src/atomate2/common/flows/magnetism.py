@@ -25,7 +25,7 @@ class MagneticOrderingsMaker(Maker):
     Maker to calculate possible collinear magnetic orderings for a material.
 
     Given an input structure, possible magnetic orderings will be enumerated and ranked based
-    on symmetry up to a maximum number of orderings. Each ordering will be
+    on symmetry up to a maximum number of orderings. Each ordering will be optionally
     relaxed and a higher quality static calculation performed to obtain a total energy.
     The lowest energy ordering is the predicted ground-state collinear ordering. Note:
     to analyze the results of this workflow, use the corresponding builder for
