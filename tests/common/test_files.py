@@ -28,3 +28,33 @@ def test_gunzip_force_overwrites(tmp_path):
     for fname in files:
         f = tmp_path / fname
         assert f.read_text() == f"{fname} overwritten"
+
+
+def test_zip_outputs(tmp_dir):
+    from pathlib import Path
+
+    from atomate2.common.files import gzip_output_folder
+
+    for file_name in ["a", "b"]:
+        (Path.cwd() / file_name).touch()
+
+    gzip_output_folder(directory=Path.cwd(), setting=False, files_list=["a"])
+
+    assert (Path.cwd() / "a").exists()
+    assert not (Path.cwd() / "a.gz").exists()
+    assert (Path.cwd() / "b").exists()
+    assert not (Path.cwd() / "b.gz").exists()
+
+    gzip_output_folder(directory=Path.cwd(), setting="atomate", files_list=["a"])
+
+    assert not (Path.cwd() / "a").exists()
+    assert (Path.cwd() / "a.gz").exists()
+    assert (Path.cwd() / "b").exists()
+    assert not (Path.cwd() / "b.gz").exists()
+
+    gzip_output_folder(directory=Path.cwd(), setting=True, files_list=["a"])
+
+    assert not (Path.cwd() / "a").exists()
+    assert (Path.cwd() / "a.gz").exists()
+    assert not (Path.cwd() / "b").exists()
+    assert (Path.cwd() / "b.gz").exists()
