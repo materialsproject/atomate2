@@ -1,6 +1,6 @@
 changelog:
   exclude:
-    authors: [ dependabot ]
+    authors: [ dependabot, github-actions ]
   categories:
     - title: New Features 🎉
       labels:
