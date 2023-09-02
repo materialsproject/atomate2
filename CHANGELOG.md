@@ -64,7 +64,9 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
 * [BUG FIX] Edge case for Magmoms by @jmmshn in https://github.com/materialsproject/atomate2/pull/460
 * [FIX] Fix major bug that caused `user_incar_settings` to be overwritten in some cases by @matthewkuner in https://github.com/materialsproject/atomate2/pull/412
 * Test for `zip_outputs` by @gpetretto in https://github.com/materialsproject/atomate2/pull/503
+
 ### Enhancements 🛠
+
 * Extension of Lobster schema and additional tests by @JaGeo in https://github.com/materialsproject/atomate2/pull/272
 * Use emmet VASP task document by @utf in https://github.com/materialsproject/atomate2/pull/269
 * VASP inputset updates by @utf in https://github.com/materialsproject/atomate2/pull/270
@@ -84,7 +86,9 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
 * Small change to `gunzip` to allow better restarting by @jmmshn in https://github.com/materialsproject/atomate2/pull/476
 * Remove VASP calc types schema  by @mjwen in https://github.com/materialsproject/atomate2/pull/407
 * Optionally zip files at the end of jobs by @gpetretto in https://github.com/materialsproject/atomate2/pull/414
+
 ### Documentation 📖
+
 * Add more documentation for Lobster by @JaGeo in https://github.com/materialsproject/atomate2/pull/267
 * Use furo for docs theme by @utf in https://github.com/materialsproject/atomate2/pull/331
 * Update Lobster documentation by @JaGeo in https://github.com/materialsproject/atomate2/pull/376
@@ -97,7 +101,9 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
 * Add clearer documentation on lobster worker by @JaGeo in https://github.com/materialsproject/atomate2/pull/440
 * Docs: add basic workflow tutorial by @rkingsbury in https://github.com/materialsproject/atomate2/pull/408
 * Use GitHub's `deploy-pages` action to deploy docs by @janosh in https://github.com/materialsproject/atomate2/pull/475
+
 ### House-Keeping 🧹
+
 * More `ruff` by @janosh in https://github.com/materialsproject/atomate2/pull/344
 * Move all type-hint only imports behind `if TYPE_CHECKING` by @janosh in https://github.com/materialsproject/atomate2/pull/354
 * `ruff` select `perflint` `flake8-slots` by @janosh in https://github.com/materialsproject/atomate2/pull/395
@@ -106,6 +112,7 @@ Two new options have been added to the ``BaseVaspInputSetGenerator``:
 * `dict.setdefault` instead of `if key not in dict: dict[key] = ...` by @janosh in https://github.com/materialsproject/atomate2/pull/452
 
 ## New Contributors
+
 * @naik-aakash made their first contribution in https://github.com/materialsproject/atomate2/pull/279
 * @matthewkuner made their first contribution in https://github.com/materialsproject/atomate2/pull/322
 * @gpetretto made their first contribution in https://github.com/materialsproject/atomate2/pull/414
