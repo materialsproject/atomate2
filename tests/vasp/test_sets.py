@@ -20,12 +20,11 @@ def struct_with_spin() -> Structure:
     fe = Species("Fe2+", spin=4)
     o = Species("O2-", spin=0.63)
 
-    struct = Structure(
+    return Structure(
         lattice=Lattice.cubic(3),
         species=[fe, o],
         coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
     )
-    return struct
 
 
 @pytest.fixture(scope="module")
