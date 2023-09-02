@@ -9,8 +9,8 @@ v0.0.11
 Merge atomate2 VASP task document with the one in emmet. The changes to the atomate2
 schemas are:
 
-- `PsuedoPotentialSummary` -> Potcar`
-  - `labels` -> symbols`
+- `PsuedoPotentialSummary` -> `Potcar`
+  - `labels` -> `symbols`
 - `AnalysisSymmary` -> `AnalysisDoc`
   - `delta_volume_as_percent` -> `delta_volume_percent`
 - `InputSummary` -> `InputDoc`
