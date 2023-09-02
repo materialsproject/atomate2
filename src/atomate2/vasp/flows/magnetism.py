@@ -91,6 +91,8 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
     truncate_by_symmetry: bool = True
     transformation_kwargs: dict | None = None
 
+    def __post_init__()
+
     @property
     def prev_calc_dir_argname(self):
         """

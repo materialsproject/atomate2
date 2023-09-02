@@ -928,18 +928,13 @@ def get_magmoms(
     )
     for site in structure:
         specie = str(site.specie)
-        print(site.as_dict())
         if specie in magmoms:
-            print("0")
             mag.append(magmoms.get(specie))
         elif hasattr(site, "magmom"):
-            print("1")
             mag.append(site.magmom)
         elif hasattr(site.specie, "spin") and site.specie.spin is not None:
-            print("2")
             mag.append(site.specie.spin)
         elif specie in config_magmoms:
-            print("3")
             if site.specie.symbol == "Co" and config_magmoms[specie] <= 1.0:
                 warnings.warn(msg, stacklevel=2)
             mag.append(config_magmoms.get(specie))
