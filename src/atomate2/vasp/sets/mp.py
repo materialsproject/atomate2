@@ -20,7 +20,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.io.vasp import Outcar, Vasprun
 
-
 _BASE_MP_GGA_RELAX_SET = loadfn(
     resource_filename("atomate2.vasp.sets", "BaseMPGGASet.yaml")
 )
@@ -45,6 +44,45 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
 
 
 @dataclass
+class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
+    """Class to generate MP-compatible VASP GGA static input sets."""
+
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    auto_ismear: bool = False
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for this calculation type.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {"ALGO": "FAST"}
+
+
+@dataclass
 class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP metaGGA relaxation input sets.
 
@@ -62,6 +100,7 @@ class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     bandgap_tol: float = 1e-4
     bandgap_override: float | None = None
+    auto_ismear: bool = False
 
     def get_incar_updates(
         self,
@@ -100,6 +139,8 @@ class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
         rmin = 25.22 - 2.87 * bandgap
         kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
         return {
+            "LWAVE": True,
+            "LCHARG": True,
             "KSPACING": kspacing if 0.22 < kspacing < 0.44 else 0.44,
             "ISMEAR": 0,
             "SIGMA": 0.05,
