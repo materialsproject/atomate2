@@ -30,7 +30,7 @@ def struct_with_spin() -> Structure:
 
 @pytest.fixture(scope="module")
 def struct_with_magmoms(struct_no_magmoms) -> Structure:
-    """Dummy FeO structure with magnetic moments defined."""
+    """Dummy FeO structure with magmoms defined."""
     struct = struct_no_magmoms.copy()
     struct.add_site_property("magmom", [4.7, 0.0])
     return struct
@@ -86,7 +86,7 @@ def test_user_incar_settings():
         ("struct_with_spin", {"MAGMOM": [3.7, 0.8]}),
     ],
 )
-def test_incar_magmoms_precedence(structure, user_incar_settings, request):
+def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> None:
     """
     According to VaspInputGenerator._get_magmoms, the magmoms for a new input set are
     determined given the following precedence:
@@ -97,9 +97,8 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request):
     4. job config dict
     5. set all magmoms to 0.6
 
-    Here, we use the StaticSetGenerator as an example,
-    but any input generator that has an implemented get_incar_updates() method could be
-    used.
+    Here, we use the StaticSetGenerator as an example, but any input generator that has
+    an implemented get_incar_updates() method could be used.
     """
     structure = request.getfixturevalue(structure)
 
