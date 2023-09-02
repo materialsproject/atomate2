@@ -7,7 +7,7 @@ Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
@@ -25,8 +25,6 @@ if TYPE_CHECKING:
     from jobflow import Job
     from pymatgen.core.structure import Structure
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-
 
 @dataclass
 class MPGGADoubleRelaxMaker(DoubleRelaxMaker):
@@ -36,24 +34,19 @@ class MPGGADoubleRelaxMaker(DoubleRelaxMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    pre_relax_maker : .BaseVaspMaker
+    relax_maker1 : .BaseVaspMaker
         Maker to generate the first relaxation.
-    relax_maker : .BaseVaspMaker
+    relax_maker2 : .BaseVaspMaker
         Maker to generate the second relaxation.
-    copy_vasp_files : Sequence[str] or None
-        VASP files to copy from the previous calculation directory.
     """
 
     name: str = "MP GGA double relax"
-    pre_relax_maker: BaseVaspMaker | None = field(default_factory=MPGGARelaxMaker)
-    relax_maker: BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
-    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
-
-    def __post_init__(self):
-        """Set the copy_vasp_kwargs for the relax_maker."""
-        self.relax_maker.copy_vasp_kwargs.setdefault(
-            "additional_vasp_files", self.copy_vasp_files
+    relax_maker1: Maker | None = field(default_factory=MPGGARelaxMaker)
+    relax_maker2: Maker = field(
+        default_factory=lambda: MPGGARelaxMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
         )
+    )
 
 
 @dataclass
@@ -64,24 +57,19 @@ class MPMetaGGADoubleRelaxMaker(DoubleRelaxMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    pre_relax_maker : .BaseVaspMaker
+    relax_maker1 : .BaseVaspMaker
         Maker to generate the first relaxation.
-    relax_maker : .BaseVaspMaker
+    relax_maker2 : .BaseVaspMaker
         Maker to generate the second relaxation.
-    copy_vasp_files : Sequence[str] or None
-        VASP files to copy from the previous calculation directory.
     """
 
     name: str = "MP GGA double relax"
-    pre_relax_maker: BaseVaspMaker | None = field(default_factory=MPMetaGGARelaxMaker)
-    relax_maker: BaseVaspMaker = field(default_factory=MPMetaGGARelaxMaker)
-    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
-
-    def __post_init__(self):
-        """Set the copy_vasp_kwargs for the relax_maker."""
-        self.relax_maker.copy_vasp_kwargs.setdefault(
-            "additional_vasp_files", self.copy_vasp_files
+    relax_maker1: Maker | None = field(default_factory=MPMetaGGARelaxMaker)
+    relax_maker2: Maker = field(
+        default_factory=lambda: MPMetaGGARelaxMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
         )
+    )
 
 
 @dataclass
@@ -93,21 +81,19 @@ class MPGGADoubleRelaxStatic(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    pre_relax_maker : .BaseVaspMaker
-        Maker to generate the first relaxation.
     relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
+        Maker to generate the relaxation.
     static_maker : .BaseVaspMaker
         Maker to generate the static calculation before the relaxation.
-    copy_vasp_files : Sequence[str] or None
-        VASP files to copy from the previous calculation directory.
     """
 
     name: str = "MP GGA relax"
-    relax_maker: BaseVaspMaker = field(default_factory=MPGGADoubleRelaxMaker)
-    static_maker: BaseVaspMaker | None = field(default_factory=MPGGAStaticMaker)
-    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
-    GGA_plus_U: bool = False
+    relax_maker: Maker = field(default_factory=MPGGADoubleRelaxMaker)
+    static_maker: Maker | None = field(
+        default_factory=lambda: MPGGAStaticMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
+        )
+    )
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -125,14 +111,8 @@ class MPGGADoubleRelaxStatic(Maker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        self.relax_maker.copy_vasp_kwargs.setdefault(
-            "additional_vasp_files", self.copy_vasp_files
-        )
         jobs: list[Job] = []
 
-        self.relax_maker.copy_vasp_kwargs = {
-            "additional_vasp_files": self.copy_vasp_files
-        }
         relax_job = self.relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
         )
@@ -141,10 +121,6 @@ class MPGGADoubleRelaxStatic(Maker):
 
         if self.static_maker:
             # Run a static calculation
-            self.static_maker.copy_vasp_kwargs = {
-                "additional_vasp_files": self.copy_vasp_files
-            }
-
             static_job = self.static_maker.make(
                 structure=output.structure, prev_vasp_dir=output.dir_name
             )
@@ -163,20 +139,19 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    pre_relax_maker : .BaseVaspMaker
-        Maker to generate the first relaxation.
     relax_maker : .BaseVaspMaker
-        Maker to generate the second relaxation.
+        Maker to generate the relaxation.
     static_maker : .BaseVaspMaker
         Maker to generate the static calculation before the relaxation.
-    copy_vasp_files : Sequence[str] or None
-        VASP files to copy from the previous calculation directory.
     """
 
     name: str = "MP Meta-GGA relax"
-    relax_maker: BaseVaspMaker = field(default_factory=MPMetaGGADoubleRelaxMaker)
-    static_maker: BaseVaspMaker | None = field(default_factory=MPMetaGGAStaticMaker)
-    copy_vasp_files: Sequence[str] | None = ("WAVECAR", "CHGCAR")
+    relax_maker: Maker = field(default_factory=MPMetaGGADoubleRelaxMaker)
+    static_maker: Maker | None = field(
+        default_factory=lambda: MPMetaGGAStaticMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
+        )
+    )
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
         """
@@ -196,14 +171,8 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        self.relax_maker.copy_vasp_kwargs.setdefault(
-            "additional_vasp_files", self.copy_vasp_files
-        )
         jobs: list[Job] = []
 
-        self.relax_maker.copy_vasp_kwargs = {
-            "additional_vasp_files": self.copy_vasp_files
-        }
         relax_job = self.relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
         )
@@ -212,9 +181,6 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
 
         if self.static_maker:
             # Run a static calculation (typically r2SCAN)
-            self.static_maker.copy_vasp_kwargs = {
-                "additional_vasp_files": self.copy_vasp_files
-            }
             static_job = self.static_maker.make(
                 structure=output.structure, prev_vasp_dir=output.dir_name
             )

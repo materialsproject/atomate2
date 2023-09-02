@@ -10,7 +10,7 @@ INCAR:
   ISMEAR: -5
   ISPIN: 2
   LASPH: true
-  LDAU: true
+  LDAU: true # atomate2 automatically sets LDAU to false if none of the LDAUJ elements are present
   LDAUJ:
     F:
       Co: 0

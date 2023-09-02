@@ -48,7 +48,9 @@ class MPGGARelaxMaker(BaseVaspMaker):
     """
 
     name: str = "MP GGA Relax"
-    input_set_generator: VaspInputGenerator = field(default_factory=MPGGARelaxSetGenerator)
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=MPGGARelaxSetGenerator
+    )
 
 
 @dataclass
@@ -82,9 +84,7 @@ class MPGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP GGA Static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPGGARelaxSetGenerator(
-            user_incar_settings={"NSW": 0, "ISMEAR": -5, "LREAL": False},
-        )
+        default_factory=MPGGARelaxSetGenerator
     )
 
 
@@ -119,15 +119,13 @@ class MPPreRelaxMaker(BaseVaspMaker):
 
     name: str = "MP pre-relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxSetGenerator(
+        default_factory=lambda: MPGGARelaxSetGenerator(
             user_incar_settings={
                 "EDIFFG": -0.05,
-                "METAGGA": None,
                 "GGA": "PS",
                 "LWAVE": True,
                 "LCHARG": True,
             },
-            auto_ismear=False,
         )
     )
 
@@ -163,9 +161,7 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxSetGenerator(
-            user_incar_settings={"LWAVE": True, "LCHARG": True}, auto_ismear=False
-        )
+        default_factory=MPMetaGGARelaxSetGenerator
     )
 
 
@@ -200,15 +196,5 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxSetGenerator(
-            user_incar_settings={
-                "NSW": 0,  # zero ionic steps
-                "ISMEAR": -5,  # orbital occupancies use tetrahedron method with Blöchl
-                "ALGO": "FAST",
-                "LREAL": False,  # no real space projection
-                "LCHARG": True,  # write CHGCAR
-                "LWAVE": False,  # do not write WAVECAR
-            },
-            auto_ismear=False,  # don't auto-set ISMEAR and SIGMA based on bandgap
-        )
+        default_factory=MPMetaGGARelaxSetGenerator
     )
