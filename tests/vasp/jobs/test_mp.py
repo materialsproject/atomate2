@@ -2,6 +2,7 @@ import pytest
 from pymatgen.core import Structure
 
 from atomate2.vasp.flows.mp import MPMetaGGARelaxMaker, MPMetaGGAStaticMaker
+from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 expected_incar = {
     "ISIF": 3,
@@ -38,7 +39,9 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MPMetaGGAStaticMaker().make(si_struct)  # , bandgap=0.8249
+    job = MPMetaGGAStaticMaker(
+        input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.8249)
+    ).make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -46,7 +49,7 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # validate output
     output = responses[job.uuid][1].output
     assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.85043620)
+    assert output.output.energy == pytest.approx(-46.8613738)
 
 
 def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -69,13 +72,14 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MPMetaGGARelaxMaker().make(si_struct)
+    job = MPMetaGGARelaxMaker(
+        input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.4786)
+    ).make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
     output = responses[job.uuid][1].output
-    print(f"{output.output.bandgap=}")
     assert isinstance(output, TaskDoc)
     assert output.output.energy == pytest.approx(-46.86703814)
