@@ -10,7 +10,11 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.mp import MPGGARelaxSetGenerator, MPMetaGGARelaxSetGenerator
+from atomate2.vasp.sets.mp import (
+    MPGGARelaxSetGenerator,
+    MPMetaGGARelaxSetGenerator,
+    MPMetaGGAStaticSetGenerator,
+)
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -196,5 +200,5 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPMetaGGARelaxSetGenerator
+        default_factory=MPMetaGGAStaticSetGenerator
     )
