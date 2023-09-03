@@ -168,13 +168,16 @@ def check_incar(ref_path: Path, incar_settings: Sequence[str]):
     from pymatgen.io.vasp import Incar
 
     user = Incar.from_file("INCAR")
-    ref = Incar.from_file(ref_path / "inputs" / "INCAR")
+    ref_incar_path = ref_path / "inputs" / "INCAR"
+    ref = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
     for p in incar_settings:
         if user.get(p, defaults.get(p)) != ref.get(p, defaults.get(p)):
             raise ValueError(
                 f"INCAR value of {p} is inconsistent: "
-                f"{user.get(p, defaults.get(p))} != {ref.get(p, defaults.get(p))}"
+                f"expected {ref.get(p, defaults.get(p))}, "
+                f"got {user.get(p, defaults.get(p))}"
+                f"\n\tin ref file {ref_incar_path}"
             )
 
 
@@ -201,7 +204,7 @@ def check_kpoints(ref_path: Path):
         if user.style != ref.style or user.num_kpts != ref.num_kpts:
             raise ValueError(
                 f"KPOINTS files are inconsistent: {user.style} != {ref.style} "
-                f"or {user.num_kpts} != {ref.num_kpts} in ref file {ref_kpt_path}"
+                f"or {user.num_kpts} != {ref.num_kpts}\n\tin ref file {ref_kpt_path}"
             )
     else:
         # check k-spacing
@@ -213,7 +216,7 @@ def check_kpoints(ref_path: Path):
         if user_ksp != ref_ksp:
             raise ValueError(
                 f"KSPACING is inconsistent: {user_ksp} != {ref_ksp} "
-                f"in ref file {ref_incar_path}"
+                f"\n\tin ref file {ref_incar_path}"
             )
 
 
