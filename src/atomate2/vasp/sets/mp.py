@@ -9,7 +9,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-import numpy as np
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
@@ -34,6 +33,7 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
     auto_ismear: bool = False
+    auto_kspacing: bool = True
 
 
 @dataclass
@@ -41,6 +41,7 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    auto_kspacing: bool = True
 
 
 @dataclass
@@ -49,6 +50,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     auto_ismear: bool = False
+    auto_kspacing: bool = True
 
     def get_incar_updates(
         self,
@@ -101,17 +103,18 @@ class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
     bandgap_tol: float = 1e-4
     bandgap_override: float | None = None
     auto_ismear: bool = False
+    auto_kspacing: bool = True
 
     def get_incar_updates(
         self,
         structure: Structure,
         prev_incar: dict = None,
-        bandgap: float = 0,
+        bandgap: float = None,
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
         """
-        Get updates to the INCAR for a relaxation job.
+        Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
@@ -131,19 +134,4 @@ class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        bandgap = self.bandgap_override or bandgap or 0
-
-        if bandgap < self.bandgap_tol:  # metallic
-            return {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2, "GGA": None}
-
-        rmin = 25.22 - 2.87 * bandgap
-        kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)
-        return {
-            "LWAVE": True,
-            "LCHARG": True,
-            "KSPACING": kspacing if 0.22 < kspacing < 0.44 else 0.44,
-            "ISMEAR": 0,
-            "SIGMA": 0.05,
-            "GGA": None,  # VASP 6.4+ errors if both GGA and METAGGA tag are set
-            # GGA tag might come from prev job INCAR inheritance, unset it to be safe
-        }
+        return {"LCHARGE": True, "LWAVE": True}
