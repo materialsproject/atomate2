@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -85,7 +84,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
 
 
 @dataclass
-class MPMetaGGARelaxSetGenerator(VaspInputGenerator):
+class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
     """Class to generate MP-compatible VASP metaGGA relaxation input sets.
 
     Parameters
