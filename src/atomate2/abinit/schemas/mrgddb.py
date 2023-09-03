@@ -2,8 +2,10 @@
 
 import logging
 import os
+import numpy as np
 from pathlib import Path
-from typing import Type, TypeVar, Union
+#from typing import Type, TypeVar, Union, Optional, List
+from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 from abipy.abilab import abiopen
 from abipy.abio.inputs import AbinitInput
@@ -56,6 +58,8 @@ class MrgddbTaskDocument(StructureMetadata):
     )
     task_label: str = Field(None, description="The label for this job/task.")
     structure: Structure = Field(None, description="Final structure.")
+    dijk: Any = Field(None, description="Conventional SHG tensor in pm/V")
+    epsij: Any = Field(None, description="Dielectric tensor")
 
     @classmethod
     def from_directory(
