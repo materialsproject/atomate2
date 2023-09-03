@@ -262,6 +262,11 @@ class VaspInputGenerator(InputGenerator):
         If true and the system is metallic, try and use ``reciprocal_density_metal``
         instead of ``reciprocal_density`` for metallic systems. Note, this only works
         when generating the input set from a previous VASP directory.
+    auto_kspacing
+        If true, automatically use the VASP recommended KSPACING based on bandgap,
+        i.e. higher kpoint spacing for insulators than metals. Can be boolean or float.
+        If float, then the value will interpreted as the bandgap in eV to use for the
+        KSPACING calculation.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
         initial MAGMOM guess for all species.
@@ -296,6 +301,7 @@ class VaspInputGenerator(InputGenerator):
     auto_ismear: bool = True
     auto_ispin: bool = False
     auto_lreal: bool = False
+    auto_kspacing: bool | float = False
     auto_metal_kpoints: bool = True
     constrain_total_magmom: bool = False
     validate_magmom: bool = True
@@ -669,13 +675,14 @@ class VaspInputGenerator(InputGenerator):
         if self.auto_lreal:
             auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
-        if kpoints is not None:
-            # unset KSPACING as we are using a KPOINTS file and ensure adequate number
-            # of KPOINTS are present for the tetrahedron method (ISMEAR=-5).
-            incar.pop("KSPACING", None)
-            if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
-                auto_updates["ISMEAR"] = 0
-
+        _set_kspacing(
+            incar,
+            incar_settings,
+            self.user_incar_settings,
+            self.auto_kspacing if isinstance(self.auto_kspacing, float) else bandgap,
+            kpoints,
+            previous_incar is None,
+        )
         # apply updates from auto options, careful not to override user_incar_settings
         _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
 
@@ -1050,3 +1057,67 @@ def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
 def _get_recommended_lreal(structure: Structure):
     """Get recommended LREAL flag based on the structure."""
     return "Auto" if structure.num_sites > 16 else False
+
+
+def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
+    """Get KSPACING based on a band gap."""
+    if bandgap <= tol:  # metallic
+        return 0.22
+
+    rmin = max(1.5, 25.22 - 2.87 * bandgap)  # Eq. 25
+    kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
+
+    # cap kspacing at a max of 0.44, per internal benchmarking
+    return kspacing if 0.22 < kspacing < 0.44 else 0.44
+
+
+def _set_kspacing(
+    incar,
+    incar_settings,
+    user_incar_settings,
+    bandgap,
+    kpoints,
+    from_prev,
+):
+    """
+    Set KSPACING in an INCAR.
+
+    if kpoints is not None then unset any KSPACING
+    if kspacing set in user_incar_settings then use that
+    if auto_kspacing then do that
+    if kspacing is set in config use that.
+    if from_prev is True, ISMEAR will be set according to the band gap.
+    """
+    if kpoints is not None:
+        # unset KSPACING as we are using a KPOINTS file
+        incar.pop("KSPACING", None)
+
+        # Ensure adequate number of KPOINTS are present for the tetrahedron method
+        # (ISMEAR=-5). If KSPACING is in the INCAR file the number of kpoints is not
+        # known before calling VASP, but a warning is raised when the KSPACING value is
+        # > 0.5 (2 reciprocal Angstrom). An error handler in Custodian is available to
+        # correct overly large KSPACING values (small number of kpoints) if necessary.
+        if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
+            incar["ISMEAR"] = 0
+
+    elif "KSPACING" in user_incar_settings:
+        incar["KSPACING"] = user_incar_settings["KSPACING"]
+    elif incar_settings.get("KSPACING") and bandgap:
+        # will always default to 0.22 in first run as one
+        # cannot be sure if one treats a metal or
+        # semiconductor/insulator
+        incar["KSPACING"] = _get_kspacing(bandgap)
+        # This should default to ISMEAR=0 if band gap is not known (first computation)
+        # if not from_prev:
+        #     # be careful to not override user_incar_settings
+        if not from_prev:
+            if bandgap == 0:
+                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
+                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
+            else:
+                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
+                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
+    elif incar_settings.get("KSPACING"):
+        incar["KSPACING"] = incar_settings["KSPACING"]
+
+    return incar
