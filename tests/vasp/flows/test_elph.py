@@ -69,3 +69,4 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
         -0.488900000000001,
         -0.48850000000000104,
     }
+    assert renorm_output.chemsys == "Si"
