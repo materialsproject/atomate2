@@ -1,4 +1,4 @@
-"""VASP-specific flows for calculating magnetic orderings and other magnetism-related tasks."""
+"""VASP-specific flows for magnetism-related calculations."""
 
 from __future__ import annotations
 
@@ -20,13 +20,12 @@ __all__ = ["MagneticOrderingsMaker"]
 
 @dataclass
 class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
-    """
-    Maker to calculate possible collinear magnetic orderings for a material in VASP.
+    """Maker to calculate possible collinear magnetic orderings for a material in VASP.
 
-    Given an input structure, possible magnetic orderings will be enumerated and ranked based
-    on symmetry up to a maximum number of orderings. Each ordering will be
-    relaxed and a higher quality static calculation performed to obtain a total energy.
-    The lowest energy ordering is the predicted ground-state collinear ordering.
+    Given an input structure, possible magnetic orderings will be enumerated and ranked
+    based on symmetry up to a maximum number of orderings. Each ordering will be relaxed
+    and a higher quality static calculation performed to obtain a total energy. The
+    lowest energy ordering is the predicted ground-state collinear ordering.
 
     This approach performed decently using VASP for a wide range of test materials in a
     benchmark. It was originally implemented in atomate (v1) for VASP as the
@@ -36,7 +35,7 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
 
         Horton, M.K., Montoya, J.H., Liu, M. et al. High-throughput prediction of the
         ground-state collinear magnetic order of inorganic materials using Density
-        Functional Theory. npj Comput Mater 5, 64 (2019).
+        Functional Theory. npj Computational Materials 5, 64 (2019).
         https://doi.org/10.1038/s41524-019-0199-7
 
     .. Note::
@@ -49,7 +48,7 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
     name : str
         Name of the flows produced by this Maker.
     static_maker : StaticMaker
-        Maker used to peform static calculations for total energy.
+        Maker used to perform static calculations for total energy.
     relax_maker : RelaxMaker | None
         Maker used to perform relaxations of the enumerated structures. If None,
         relaxations will be skipped (i.e., only static calculations). By default, the
@@ -92,10 +91,13 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
     transformation_kwargs: dict | None = None
 
     @property
-    def prev_calc_dir_argname(self):
-        """
-        Name of the argument that informs the static maker of the previous calculation
-        directory. This only applies if a relax_maker is specified and two calculations are
-        performed for each ordering (i.e., relax -> static).
+    def prev_calc_dir_argname(self) -> str:
+        """Argument name informing static maker of previous calculation directory.
+
+        This only applies if a relax_maker is specified and two calculations
+        are performed for each ordering (i.e., relax -> static).
+
+        This is necessary because different DFT codes have different previous directory
+        argnames.
         """
         return "prev_vasp_dir"
