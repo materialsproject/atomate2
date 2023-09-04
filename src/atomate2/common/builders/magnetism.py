@@ -21,17 +21,17 @@ if TYPE_CHECKING:
 
 
 class MagneticOrderingsBuilder(Builder):
-    """
-    Builder to analyze the results of magnetic orderings calculations. This job
-    will process the output documents of the calculations and return new documents
-    with relevant parameters (such as the total magnetization, whether the ordering
-    changed, whether the particular ordering is the ground state, etc.).
+    """Builder to analyze the results of magnetic orderings calculations.
+
+    This job will process the output documents of the calculations and return new
+    documents with relevant parameters (such as the total magnetization, whether the
+    ordering changed, whether the particular ordering is the ground state, etc.).
 
     .. Note::
         This builder can be trivially implemented for your DFT code of choice by
         adding functionality for constructing the static/relax outputs (see schema for
-        details) and implementing the 1) _build_relax_output, 2) _build_static_output, and
-        3) _dft_code_query methods.
+        details) and implementing the 1) _build_relax_output, 2) _build_static_output,
+        and 3) _dft_code_query methods.
 
     Parameters
     ----------
@@ -70,10 +70,10 @@ class MagneticOrderingsBuilder(Builder):
         self.magnetic_orderings.ensure_index("last_updated")
 
     def get_items(self):
-        """
-        Get all items to process into magnetic ordering documents. This step does a
-        first grouping by formula (which is fast) and then the magnetic orderings are
-        grouped by parent structure.
+        """Get all items to process into magnetic ordering documents.
+
+        This step does a first grouping by formula (which is fast) and then the magnetic
+        orderings are grouped by parent structure.
 
         Yields
         ------
@@ -93,27 +93,29 @@ class MagneticOrderingsBuilder(Builder):
             }
         )
         self.logger.info("Grouping by formula...")
-        nformulas = len(self.tasks.distinct("output.formula_pretty", criteria=criteria))
+        num_formulas = len(
+            self.tasks.distinct("output.formula_pretty", criteria=criteria)
+        )
         results = self.tasks.groupby("output.formula_pretty", criteria=criteria)
         self.logger.info("Aggregation complete")
 
-        for n, (keys, docs) in enumerate(results):
+        for n_formula, (keys, docs) in enumerate(results):
             formula = keys["output"]["formula_pretty"]
-            self.logger.debug(f"Getting {formula} (Formula {n + 1} of {nformulas})")
+            self.logger.debug(
+                f"Getting {formula} (Formula {n_formula + 1} of {num_formulas})"
+            )
             decoded_docs = MontyDecoder().process_decoded(docs)
             grouped_tasks = _group_orderings(decoded_docs, self.structure_match_tol)
             n_groups = len(grouped_tasks)
-            for n, group in enumerate(grouped_tasks):
+            for n_group, group in enumerate(grouped_tasks):
                 self.logger.debug(
                     f"Found {len(group)} tasks for {formula} (Parent structure"
-                    f" {n+1} of {n_groups})"
+                    f" {n_group+1} of {n_groups})"
                 )
                 yield group
 
     def process_item(self, tasks: list[dict]) -> list[MagneticOrderingsDocument]:
-        """
-        Process magnetic ordering relaxation/static calculations into magnetic ordering
-        documents.
+        """Process magnetic ordering relaxation/static calculations into documents.
 
         The magnetic ordering tasks will be grouped based on their parent structure
         (i.e., the structure before the magnetic ordering transformation was applied).
@@ -145,7 +147,7 @@ class MagneticOrderingsBuilder(Builder):
 
         outputs = []
         for task in static_tasks:
-            relax_output, energy_diff = None, None
+            relax_output = None
             for r_task in relax_tasks:
                 if r_task["uuid"] == task["metadata"]["parent_uuid"]:
                     relax_output = self._build_relax_output(
@@ -156,11 +158,8 @@ class MagneticOrderingsBuilder(Builder):
             output = self._build_static_output(
                 task["output"],
                 uuid=task["uuid"],
+                relax_output=relax_output,
             )
-            if relax_output is not None:
-                energy_diff = output.energy_per_atom - relax_output.energy_per_atom
-            output.relax_output = relax_output
-            output.energy_diff_relax_static = energy_diff
             outputs.append(output)
 
         return jsanitize(
@@ -171,8 +170,7 @@ class MagneticOrderingsBuilder(Builder):
         )
 
     def update_targets(self, items: list[MagneticOrderingsDocument]):
-        """
-        Insert new magnetic orderings into the magnetic orderings Store.
+        """Insert new magnetic orderings into the magnetic orderings Store.
 
         Parameters
         ----------
@@ -183,27 +181,27 @@ class MagneticOrderingsBuilder(Builder):
         self.magnetic_orderings.update(items, key="ground_state_uuid")
 
     def _build_relax_output(self, relax_task, uuid=None) -> MagneticOrderingRelaxation:
-        """Wrapper for MagneticOrderingRelaxation.from_task_document."""
+        """Wrap the function MagneticOrderingRelaxation.from_task_document."""
         raise NotImplementedError
 
-    def _build_static_output(self, static_task, uuid=None) -> MagneticOrderingOutput:
-        """Wrapper for MagneticOrderingOutput.from_task_document."""
+    def _build_static_output(
+        self, static_task, uuid=None, relax_output=None
+    ) -> MagneticOrderingOutput:
+        """Warp the function MagneticOrderingOutput.from_task_document."""
         raise NotImplementedError
 
     @property
     def _dft_code_query(self):
-        """
-        Return a query criterion for querying the tasks collection for DFT code-specific
-        tasks. This is to be implemented for the DFT code of choice.
+        """Return a query criterion for querying the tasks collection for tasks.
 
-        This prevents mixing of tasks from different DFT codes in the same builder.
+        This is to be implemented for the DFT code of choice. This prevents mixing of
+        tasks from different DFT codes in the same builder.
         """
         raise NotImplementedError
 
 
 def _group_orderings(tasks: list[dict], tol: float) -> list[list[dict]]:
-    """
-    Group deformation tasks by their parent structure.
+    """Group deformation tasks by their parent structure.
 
     Parameters
     ----------
