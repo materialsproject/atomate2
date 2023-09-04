@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class FormationEnergyDiagramDocument(BaseModel):
     """A document for storing a formation energy diagram.
 
-    Basically a PyDantic version of the `FormationEnergyDiagram` dataclass with some
+    Basically a pydantic version of the `FormationEnergyDiagram` dataclass with some
     additional data fields. The `pd_entries` field is now optional since the workflow
     will not necessarily have all the entries in the phase diagram computed.
     """
@@ -275,10 +275,10 @@ class CCDDocument(BaseModel):
             return get_dQ(e1.structure, e2.structure)
 
         # ensure the "dir_name" is provided for each entry
-        if any(e.data.get("dir_name", None) is None for e in entries1 + entries2):
+        if any(entry.data.get("dir_name") is None for entry in entries1 + entries2):
             raise ValueError("[dir_name] must be provided for all entries.")
 
-        if any(e.data.get("uuid", None) is None for e in entries1 + entries2):
+        if any(entry.data.get("uuid") is None for entry in entries1 + entries2):
             raise ValueError("[uuid] must be provided for all entries.")
 
         idx1, ent_r1 = find_entry(entries1, relaxed_uuid1)
@@ -297,7 +297,7 @@ class CCDDocument(BaseModel):
         sdirs1 = [e.data["dir_name"] for e in s_entries1]
         sdirs2 = [e.data["dir_name"] for e in s_entries2]
 
-        obj = cls(
+        return cls(
             q1=ent_r1.structure.charge,
             q2=ent_r2.structure.charge,
             structure1=ent_r1.structure,
@@ -311,8 +311,6 @@ class CCDDocument(BaseModel):
             relaxed_index1=idx1,
             relaxed_index2=idx2,
         )
-
-        return obj
 
     def get_taskdocs(self):
         """Get the distorted task documents."""

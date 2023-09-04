@@ -4,17 +4,21 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
-from pymatgen.electronic_structure.bandstructure import BandStructure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
 from atomate2.vasp.jobs.core import TransmuterMaker
 from atomate2.vasp.schemas.elph import ElectronPhononRenormalisationDoc
 from atomate2.vasp.sets.core import ElectronPhononSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+    from pymatgen.electronic_structure.bandstructure import BandStructure
 
 __all__ = [
     "DEFAULT_ELPH_TEMPERATURES",

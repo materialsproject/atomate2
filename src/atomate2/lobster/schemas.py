@@ -1,4 +1,4 @@
-"""Module defining amset document schemas."""
+"""Module defining lobster document schemas."""
 
 import logging
 import time
@@ -12,12 +12,15 @@ from pymatgen.core import Structure
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import (
+    Bandoverlaps,
     Charge,
     Doscar,
+    Grosspop,
     Icohplist,
     Lobsterin,
     Lobsterout,
     MadelungEnergies,
+    SitePotential,
 )
 
 from atomate2 import __version__
@@ -79,19 +82,20 @@ class LobsteroutModel(BaseModel):
     )
     has_charge: bool = Field(None, description="Bool indicating if CHARGE is present.")
     has_madelung: bool = Field(
-        None, description="Bool indicating if Madelung file is present."
+        None,
+        description="Bool indicating if Site Potentials and Madelung file is present.",
     )
     has_projection: bool = Field(
         None, description="Bool indicating if projection file is present."
     )
     has_bandoverlaps: bool = Field(
-        None, description="Bool indicating if BANDOVERLAPS file is presetn"
+        None, description="Bool indicating if BANDOVERLAPS file is present"
     )
     has_fatbands: bool = Field(
         None, description="Bool indicating if Fatbands are present."
     )
     has_grosspopulation: bool = Field(
-        None, description="Bool indicating if GrossPopulations file is present."
+        None, description="Bool indicating if GROSSPOP file is present."
     )
     has_density_of_energies: bool = Field(
         None, description="Bool indicating if DensityofEnergies is present"
@@ -137,7 +141,7 @@ class CondensedBondingAnalysis(BaseModel):
 
     formula: str = Field(None, description="Pretty formula of the structure")
     max_considered_bond_length: Any = Field(
-        None, description="Maximum bond length considered " "in bonding analysis"
+        None, description="Maximum bond length considered in bonding analysis"
     )
     limit_icohp: list = Field(
         None, description="ICOHP range considered in co-ordination environment analysis"
@@ -240,15 +244,15 @@ class CondensedBondingAnalysis(BaseModel):
 
             cba_cohp_plot_data = {}  # Initialize dict to store plot data
 
-            set_cohps = analyse.set_cohps
-            set_labels_cohps = analyse.set_labels_cohps
-            set_inequivalent_cations = analyse.set_inequivalent_ions
+            seq_cohps = analyse.seq_cohps
+            seq_labels_cohps = analyse.seq_labels_cohps
+            seq_ineq_cations = analyse.seq_ineq_ions
             struct = analyse.structure
 
             for _iplot, (ication, labels, cohps) in enumerate(
-                zip(set_inequivalent_cations, set_labels_cohps, set_cohps)
+                zip(seq_ineq_cations, seq_labels_cohps, seq_cohps)
             ):
-                label_str = f"{str(struct[ication].specie)}{str(ication + 1)}: "
+                label_str = f"{struct[ication].specie!s}{ication + 1!s}: "
                 for label, cohp in zip(labels, cohps):
                     if label is not None:
                         cba_cohp_plot_data[label_str + label] = cohp
@@ -273,25 +277,21 @@ class CondensedBondingAnalysis(BaseModel):
             if save_cohp_plots:
                 describe.plot_cohps(
                     save=True,
-                    filename="automatic_cohp_plots_" + which_bonds + ".pdf",
-                    skip_show=True,
+                    filename=f"automatic_cohp_plots_{which_bonds}.pdf",
+                    hide=True,
                     **plot_kwargs,
                 )
                 import json
 
                 with open(
-                    dir_name
-                    / str("condensed_bonding_analysis_" + which_bonds + ".json"),
-                    "w",
+                    dir_name / f"condensed_bonding_analysis_{which_bonds}.json", "w"
                 ) as fp:
                     json.dump(analyse.condensed_bonding_analysis, fp)
                 with open(
-                    dir_name
-                    / str("condensed_bonding_analysis_" + which_bonds + ".txt"),
-                    "w",
+                    dir_name / f"condensed_bonding_analysis_{which_bonds}.txt", "w"
                 ) as fp:
                     for line in describe.text:
-                        fp.write(line + "\n")
+                        fp.write(f"{line}\n")
 
             # Read in strongest icohp values
             sb_icohp, sb_icobi, sb_icoop = _identify_strongest_bonds(
@@ -403,6 +403,24 @@ class LobsterTaskDocument(BaseModel):
         description="Madelung energies dict from"
         " LOBSTER based on Mulliken and Loewdin charges",
     )
+    site_potentials: dict = Field(
+        None,
+        description="Site potentials dict from"
+        " LOBSTER based on Mulliken and Loewdin charges",
+    )
+
+    gross_populations: dict = Field(
+        None,
+        description="Gross populations dict from"
+        " LOBSTER based on Mulliken and Loewdin charges with"
+        "each site as a key and the gross population as a value.",
+    )
+
+    band_overlaps: dict = Field(
+        None,
+        description="Band overlaps data for each k-point from"
+        " bandOverlaps.lobster file if it exists",
+    )
 
     _schema: str = Field(
         __version__,
@@ -458,6 +476,9 @@ class LobsterTaskDocument(BaseModel):
         doscar_path = dir_name / "DOSCAR.lobster.gz"
         structure_path = dir_name / "POSCAR.gz"
         madelung_energies_path = dir_name / "MadelungEnergies.lobster.gz"
+        site_potentials_path = dir_name / "SitePotentials.lobster.gz"
+        gross_populations_path = dir_name / "GROSSPOP.lobster.gz"
+        band_overlaps_path = dir_name / "bandOverlaps.lobster.gz"
 
         # Do automatic bonding analysis with LobsterPy
         condensed_bonding_analysis = None
@@ -557,6 +578,37 @@ class LobsterTaskDocument(BaseModel):
                 "Ewald_splitting": madelung_obj.ewald_splitting,
             }
 
+        # Read in Site Potentials
+        site_potentials = None
+        if site_potentials_path.exists():
+            site_potentials_obj = SitePotential(filename=site_potentials_path)
+
+            site_potentials = {
+                "Mulliken": site_potentials_obj.sitepotentials_Mulliken,
+                "Loewdin": site_potentials_obj.sitepotentials_Loewdin,
+                "Ewald_splitting": site_potentials_obj.ewald_splitting,
+            }
+
+        # Read in Gross Populations
+        gross_populations = None
+        if gross_populations_path.exists():
+            gross_populations_obj = Grosspop(filename=gross_populations_path)
+
+            gross_populations = {}
+            for atom_index, gross_pop in enumerate(
+                gross_populations_obj.list_dict_grosspop
+            ):
+                gross_populations[atom_index] = gross_pop
+
+        # Read in Band overlaps
+        band_overlaps = None
+        if band_overlaps_path.exists():
+            band_overlaps_obj = Bandoverlaps(filename=band_overlaps_path)
+
+            band_overlaps = {}
+            for spin, value in band_overlaps_obj.bandoverlapsdict.items():
+                band_overlaps[str(spin.value)] = value
+
         doc = cls(
             structure=struct,
             dir_name=dir_name,
@@ -583,9 +635,11 @@ class LobsterTaskDocument(BaseModel):
             lso_dos=lso_dos,
             charges=charges,
             madelung_energies=madelung_energies,
+            site_potentials=site_potentials,
+            gross_populations=gross_populations,
+            band_overlaps=band_overlaps,
         )
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
 
 def _identify_strongest_bonds(
@@ -677,7 +731,7 @@ def _get_strong_bonds(
         bondlist["list_icohp"],
         bondlist["list_length"],
     ):
-        bonds.append(a.rstrip("0123456789") + "-" + b.rstrip("0123456789"))
+        bonds.append(f"{a.rstrip('0123456789')}-{b.rstrip('0123456789')}")
         icohp_all.append(sum(c.values()))
         lengths.append(length)
 

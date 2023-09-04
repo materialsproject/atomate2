@@ -4,13 +4,11 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from emmet.core.vasp.calculation import VaspObject
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import (
     HSEBSMaker,
     HSEStaticMaker,
@@ -19,6 +17,14 @@ from atomate2.vasp.jobs.core import (
     StaticMaker,
 )
 from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 
 __all__ = [
     "DoubleRelaxMaker",

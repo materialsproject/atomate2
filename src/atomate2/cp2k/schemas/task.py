@@ -220,8 +220,8 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         if calc_doc.output.ionic_steps:
-            forces = calc_doc.output.ionic_steps[-1].get("forces", None)
-            stress = calc_doc.output.ionic_steps[-1].get("stress", None)
+            forces = calc_doc.output.ionic_steps[-1].get("forces")
+            stress = calc_doc.output.ionic_steps[-1].get("stress")
         else:
             forces = None
             stress = None
@@ -372,7 +372,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         cp2k_objects = all_cp2k_objects[-1]
         included_objects = None
         if cp2k_objects:
-            included_objects = list(cp2k_objects.keys())
+            included_objects = list(cp2k_objects)
 
         if isinstance(calcs_reversed[-1].output.structure, Structure):
             attr = "from_structure"
@@ -416,8 +416,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         }
         doc = cls(**ddict)
         doc = doc.copy(update=data)
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
     @staticmethod
     def get_entry(
@@ -580,9 +579,7 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
 
 def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
-    all_calcs_completed = all(
-        [c.has_cp2k_completed == Status.SUCCESS for c in calc_docs]
-    )
+    all_calcs_completed = all(c.has_cp2k_completed == Status.SUCCESS for c in calc_docs)
     if len(analysis.errors) == 0 and all_calcs_completed:
         return Status.SUCCESS  # type: ignore
     return Status.FAILED  # type: ignore

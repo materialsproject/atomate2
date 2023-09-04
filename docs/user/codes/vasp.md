@@ -10,7 +10,6 @@ differences are:
 
 - Use of the PBEsol exchange–correlation functional instead of PBE.
 - Use of up-to-date pseudopotentials (PBE_54 instead of PBE_52).
-- Use of KSPACING for most calculations.
 
 ```{warning}
 The different input sets used in atomate2 mean total energies cannot be compared
@@ -109,7 +108,7 @@ Calculate the electronic band structure. This flow consists of three calculation
 
 ```{note}
 Band structure objects are automatically stored in the `data` store due to
-limitations on mongoDB collection sizes.
+limitations on MongoDB collection sizes.
 ```
 
 ### Uniform Band Structure
@@ -121,7 +120,7 @@ Calculate a uniform electronic band structure. This flow consists of two calcula
 
 ```{note}
    Band structure objects are automatically stored in the `data` store due to
-   limitations on mongoDB collection sizes.
+   limitations on MongoDB collection sizes.
 ```
 
 ### Line-Mode Band Structure
@@ -134,7 +133,7 @@ Calculate a line-mode electronic band structure. This flow consists of two calcu
 
 ```{note}
 Band structure objects are automatically stored in the `data` store due to
-limitations on mongoDB collection sizes.
+limitations on MongoDB collection sizes.
 ```
 
 ### HSE06 Band Structure
@@ -148,7 +147,7 @@ calculations:
 
 ```{note}
 Band structure objects are automatically stored in the `data` store due to
-limitations on mongoDB collection sizes.
+limitations on MongoDB collection sizes.
 ```
 
 ### HSE06 Uniform Band Structure
@@ -161,7 +160,7 @@ calculations:
 
 ```{note}
 Band structure objects are automatically stored in the `data` store due to
-limitations on mongoDB collection sizes.
+limitations on MongoDB collection sizes.
 ```
 
 ### HSE06 Line-Mode Band Structure
@@ -175,7 +174,7 @@ calculations:
 
 ```{note}
 Band structure objects are automatically stored in the `data` store due to
-limitations on mongoDB collection sizes.
+limitations on MongoDB collection sizes.
 ```
 
 ### Relax and Band Structure
@@ -202,10 +201,9 @@ Otherwise, the symmetry reduction routines will not be as effective at reducing 
 number of deformations needed.
 ```
 
-
 ### Optics
 
-Calculate the frequency dependent dielectric response of a material.
+Calculate the frequency-dependent dielectric response of a material.
 
 This workflow contains an initial static calculation, and then a non-self-consistent
 field calculation with LOPTICS set. The purpose of the static calculation is to
@@ -215,7 +213,7 @@ the highest bands are not properly converged in VASP.
 
 ### HSE06 Optics
 
-Calculate the frequency dependent dielectric response of a material using HSE06.
+Calculate the frequency-dependent dielectric response of a material using HSE06.
 
 This workflow contains an initial static calculation, and then a uniform band structure
 calculation with LOPTICS set. The purpose of the static calculation is to determine i)
@@ -243,7 +241,7 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-## Lobster
+### Lobster
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
 
@@ -258,6 +256,67 @@ Please add the LOBSTER command to the `atomate2.yaml` file:
 ```yaml
 VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: <<LOBSTER_CMD>>
+```
+
+The corresponding flow could, for example, be started with the following code:
+
+```Python
+from jobflow import SETTINGS
+from jobflow import run_locally
+from pymatgen.core.structure import Structure
+
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
+from atomate2.vasp.powerups import update_user_incar_settings
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+lobster = VaspLobsterMaker().make(structure)
+
+# update the incar
+lobster = update_user_incar_settings(lobster, {"NPAR": 4})
+# run the job
+run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
+```
+
+It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
+[FireWorks](https://github.com/materialsproject/fireworks) allows to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
+
+Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
+
+```python
+from fireworks import LaunchPad
+from jobflow.managers.fireworks import flow_to_workflow
+from pymatgen.core.structure import Structure
+
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
+from atomate2.vasp.powerups import update_user_incar_settings
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+lobster = VaspLobsterMaker().make(structure)
+lobster = update_user_incar_settings(lobster, {"NPAR": 4})
+
+# update the fireworker of the Lobster jobs
+for job, _ in lobster.iterflow():
+    config = {"manager_config": {"_fworker": "worker"}}
+    if "get_lobster" in job.name:
+        config["response_manager_config"] = {"_fworker": "lobster"}
+    job.update_config(config)
+
+# convert the flow to a fireworks WorkFlow object
+wf = flow_to_workflow(lobster)
+
+# submit the workflow to the FireWorks launchpad
+lpad = LaunchPad.auto_load()
+lpad.add_wf(wf)
 ```
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
@@ -285,7 +344,7 @@ for number, (key, cohp) in enumerate(
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)
-    plotter.save_plot("plots_all_bonds" + str(number) + ".pdf")
+    plotter.save_plot(f"plots_all_bonds{number}.pdf")
 
 for number, (key, cohp) in enumerate(
     result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()
@@ -293,7 +352,7 @@ for number, (key, cohp) in enumerate(
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)
-    plotter.save_plot("plots_cation_anion_bonds" + str(number) + ".pdf")
+    plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
 
 (modifying_input_sets)=

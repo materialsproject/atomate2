@@ -4,14 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from monty.shutil import gzip_dir
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -20,6 +18,8 @@ from pymatgen.electronic_structure.bandstructure import (
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.common import VolumetricData
 
+from atomate2 import SETTINGS
+from atomate2.common.files import gzip_files, gzip_output_folder
 from atomate2.common.utils import get_transformations
 from atomate2.cp2k.files import (
     cleanup_cp2k_outputs,
@@ -29,6 +29,9 @@ from atomate2.cp2k.files import (
 from atomate2.cp2k.run import run_cp2k, should_stop_children
 from atomate2.cp2k.schemas.task import TaskDocument
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = ["BaseCp2kMaker", "cp2k_job"]
 
@@ -42,6 +45,9 @@ _DATA_OBJECTS = [
     VolumetricData,
     Trajectory,
 ]
+
+
+_FILES_TO_ZIP = ["cp2k.inp", "cp2k.out"]
 
 
 def cp2k_job(method: Callable):
@@ -144,10 +150,9 @@ class BaseCp2kMaker(Maker):
             transmuter = StandardTransmuter([ts], transformations)
             structure = transmuter.transformed_structures[-1].final_structure
 
-            # to avoid mongoDB errors, ":" is automatically converted to "."
-            if "transformations:json" not in self.write_additional_data:
-                tjson = transmuter.transformed_structures[-1]
-                self.write_additional_data["transformations:json"] = tjson
+            # to avoid MongoDB errors, ":" is automatically converted to "."
+            t_json = transmuter.transformed_structures[-1]
+            self.write_additional_data.setdefault("transformations:json", t_json)
 
         # copy previous inputs
         from_prev = prev_cp2k_dir is not None
@@ -178,7 +183,16 @@ class BaseCp2kMaker(Maker):
         cleanup_cp2k_outputs(directory=Path.cwd())
 
         # gzip folder
-        gzip_dir(".")
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.CP2K_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
+
+        if SETTINGS.CP2K_ZIP_FILES == "atomate":
+            gzip_files(include_files=_FILES_TO_ZIP, allow_missing=True, force=True)
+        elif SETTINGS.CP2K_ZIP_FILES:
+            gzip_files(force=True)
 
         return Response(
             stop_children=stop_children,

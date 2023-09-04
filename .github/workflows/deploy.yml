@@ -10,7 +10,7 @@ jobs:
   deploy-docs:
 
     # only run if commit is a push to master and the testing finished
-    if: github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.')
+    if: ${{ github.repository_owner == 'materialsproject' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && startsWith(github.event.workflow_run.head_branch, 'v0.') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -33,13 +33,13 @@ jobs:
           pip install .[strict,docs]
 
       - name: Build
-        run: jupyter-book build docs --path-output docs_build
+        run: sphinx-build docs docs_build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./docs_build/_build/html
+          publish_dir: ./docs_build/
 
   deploy-pypi:
 

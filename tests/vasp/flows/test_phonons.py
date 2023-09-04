@@ -4,14 +4,14 @@ from pymatgen.core.structure import Structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
-from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.schemas.phonons import (
+from atomate2.common.schemas.phonons import (
     PhononBSDOSDoc,
     PhononComputationalSettings,
     PhononJobDirs,
     PhononUUIDs,
     ThermalDisplacementData,
 )
+from atomate2.vasp.flows.phonons import PhononMaker
 
 
 def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
@@ -382,7 +382,10 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
         responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
     )
     assert np.isclose(
-        responses[job.jobs[-1].uuid][1].output.force_constants[0][0][0][0], 13.032324
+        responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
+            0
+        ],
+        13.032324,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
@@ -444,21 +447,20 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     ]
     total_dft_energy_per_formula_unit = -5
 
+    job = PhononMaker(
+        min_length=3.0,
+        bulk_relax_maker=None,
+        static_energy_maker=None,
+        born_maker=None,
+        use_symmetrized_structure="primitive",
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+    ).make(
+        structure=structure,
+        total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
+        born=born,
+        epsilon_static=epsilon_static,
+    )
     with pytest.raises(RuntimeError):
-        job = PhononMaker(
-            min_length=3.0,
-            bulk_relax_maker=None,
-            static_energy_maker=None,
-            born_maker=None,
-            use_symmetrized_structure="primitive",
-            generate_frequencies_eigenvectors_kwargs={"tstep": 100},
-        ).make(
-            structure=structure,
-            total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
-            born=born,
-            epsilon_static=epsilon_static,
-        )
-
         run_locally(job, create_folders=True, ensure_success=True)
 
 
@@ -540,7 +542,10 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
     )
     assert np.isclose(
-        responses[job.jobs[-1].uuid][1].output.force_constants[0][0][0][0], 13.032324
+        responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
+            0
+        ],
+        13.032324,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
@@ -770,7 +775,9 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
         responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
     )
     assert np.isclose(
-        responses[job.jobs[-1].uuid][1].output.force_constants[0][0][0][0],
+        responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
+            0
+        ],
         13.411855999999997,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)

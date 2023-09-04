@@ -1,7 +1,7 @@
 """Settings for atomate2."""
 
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Literal, Optional, Tuple, Union
 
 from pydantic import BaseSettings, Field, root_validator
 
@@ -48,17 +48,12 @@ class Atomate2Settings(BaseSettings):
     VASP_INCAR_UPDATES: dict = Field(
         default_factory=dict, description="Updates to apply to VASP INCAR files."
     )
-    VASP_RELAX_MAX_FORCE: float = Field(
-        0.25,
-        description="Maximum force allowed on each atom for successful structure "
-        "optimization",
-    )
     VASP_VOLUME_CHANGE_WARNING_TOL: float = Field(
         0.2,
         description="Maximum volume change allowed in VASP relaxations before the "
         "calculation is tagged with a warning",
     )
-    VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
+    VASP_HANDLE_UNSUCCESSFUL: Union[bool, Literal["error"]] = Field(
         "error",
         description="Three-way toggle on what to do if the job looks OK but is actually"
         " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
@@ -82,12 +77,26 @@ class Atomate2Settings(BaseSettings):
         "Requires the bader executable to be on the path.",
     )
 
+    VASP_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
+    )
+
     LOBSTER_CMD: str = Field(
         default="lobster", description="Command to run standard version of VASP."
     )
 
     LOBSTER_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
+    )
+
+    LOBSTER_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
     )
 
     CP2K_CMD: str = Field(
@@ -128,6 +137,13 @@ class Atomate2Settings(BaseSettings):
         True,
         description="Ingest any additional JSON data present into database when "
         "parsing CP2K directories useful for storing duplicate of FW.json",
+    )
+
+    CP2K_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        True,
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
     )
 
     # Elastic constant settings

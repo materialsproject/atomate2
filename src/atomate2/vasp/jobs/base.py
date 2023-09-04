@@ -5,13 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import which
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from monty.shutil import gzip_dir
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -21,9 +19,13 @@ from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2 import SETTINGS
+from atomate2.common.files import gzip_output_folder
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.base import VaspInputGenerator
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 __all__ = ["BaseVaspMaker", "vasp_job"]
 
@@ -42,6 +44,69 @@ _DATA_OBJECTS = [
     "force_constants",
     "normalmode_eigenvecs",
 ]
+
+# Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
+# Exclude those that are also outputs
+_INPUT_FILES = [
+    "DYNMATFULL",
+    "ICONST",
+    "INCAR",
+    "KPOINTS",
+    "KPOINTS OPT",
+    "ML_AB",
+    "ML_FF",
+    "PENALTYPOT",
+    "POSCAR",
+    "POTCAR",
+    "QPOINTS",
+]
+
+# Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
+_OUTPUT_FILES = [
+    "AECCAR0",
+    "AECCAR1",
+    "AECCAR2",
+    "BSEFATBAND",
+    "CHG",
+    "CHGCAR",
+    "CONTCAR",
+    "DOSCAR",
+    "EIGENVAL",
+    "ELFCAR",
+    "HILLSPOT",
+    "IBZKPT",
+    "LOCPOT",
+    "ML_ABN",
+    "ML_FFN",
+    "ML_HIS",
+    "ML_LOGFILE",
+    "ML_REG",
+    "OSZICAR",
+    "OUTCAR",
+    "PARCHG",
+    "PCDAT",
+    "POT",
+    "PROCAR",
+    "PROOUT",
+    "REPORT",
+    "TMPCAR",
+    "vasprun.xml",
+    "vaspout.h5",
+    "vaspwave.h5",
+    "W*.tmp",
+    "WAVECAR",
+    "WAVEDER",
+    "WFULL*.tmp",
+    "XDATCAR",
+]
+
+# Files to zip: inputs, outputs and additionally generated files
+_FILES_TO_ZIP = (
+    _INPUT_FILES
+    + _OUTPUT_FILES
+    + [f"{name}.orig" for name in _INPUT_FILES]
+    + ["vasp.out", "custodian.json"]
+)
 
 
 def vasp_job(method: Callable):
@@ -134,8 +199,7 @@ class BaseVaspMaker(Maker):
         if prev_vasp_dir is not None:
             copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
 
-        if "from_prev" not in self.write_input_set_kwargs:
-            self.write_input_set_kwargs["from_prev"] = from_prev
+        self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
         # write vasp input files
         write_vasp_input_set(
@@ -157,7 +221,11 @@ class BaseVaspMaker(Maker):
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
 
         # gzip folder
-        gzip_dir(".")
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.VASP_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
 
         return Response(
             stop_children=stop_children,
@@ -171,16 +239,14 @@ def get_vasp_task_document(
     **kwargs,
 ):
     """Get VASP Task Document using atomate2 settings."""
-    if "store_additional_json" not in kwargs:
-        kwargs["store_additional_json"] = SETTINGS.VASP_STORE_ADDITIONAL_JSON
+    kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 
-    if "volume_change_warning_tol" not in kwargs:
-        kwargs["volume_change_warning_tol"] = SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+    kwargs.setdefault(
+        "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+    )
 
-    if "run_bader" not in kwargs:
-        kwargs["run_bader"] = SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS
+    kwargs.setdefault("run_bader", SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS)
 
-    if "store_volumetric_data" not in kwargs:
-        kwargs["store_volumetric_data"] = SETTINGS.VASP_STORE_VOLUMETRIC_DATA
+    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
     return TaskDoc.from_directory(path, **kwargs)

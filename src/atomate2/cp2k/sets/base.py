@@ -370,7 +370,7 @@ class Cp2kInputGenerator(InputGenerator):
         for el in cp2k_input.structure.symbol_set:
             for data in cp2k_input.basis_and_potential[el].values():
                 if isinstance(data, GaussianTypeOrbitalBasisSet):
-                    basis_sets.append(data)
+                    basis_sets.append(data)  # noqa: PERF401
         if not basis_sets:
             return None
         cp2k_input.safeset({"force_eval": {"dft": {"BASIS_SET_FILE_NAME": "BASIS"}}})
@@ -387,7 +387,7 @@ class Cp2kInputGenerator(InputGenerator):
         for el in cp2k_input.structure.symbol_set:
             for data in cp2k_input.basis_and_potential[el].values():
                 if isinstance(data, GthPotential):
-                    potentials.append(data)
+                    potentials.append(data)  # noqa: PERF401
         if not potentials:
             return None
         cp2k_input.safeset(
@@ -513,7 +513,7 @@ class Cp2kInputGenerator(InputGenerator):
 
         if base_kpoints and not (added_kpoints or zero_weighted_kpoints):
             return base_kpoints
-        elif added_kpoints and not (base_kpoints or zero_weighted_kpoints):
+        if added_kpoints and not (base_kpoints or zero_weighted_kpoints):
             return added_kpoints
 
         # do some sanity checking
@@ -521,12 +521,12 @@ class Cp2kInputGenerator(InputGenerator):
             raise ValueError(
                 "Cannot combined line_density and zero weighted k-points options"
             )
-        elif zero_weighted_kpoints and not base_kpoints:
+        if zero_weighted_kpoints and not base_kpoints:
             raise ValueError(
                 "Zero weighted k-points must be used with reciprocal_density or "
                 "grid_density options"
             )
-        elif not (base_kpoints or zero_weighted_kpoints or added_kpoints):
+        if not (base_kpoints or zero_weighted_kpoints or added_kpoints):
             return None
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)

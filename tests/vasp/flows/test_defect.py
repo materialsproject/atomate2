@@ -1,8 +1,14 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from atomate2.common.schemas.defects import CCDDocument
+    from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
+
+
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     from jobflow import run_locally
     from pymatgen.core import Structure
 
-    from atomate2.common.schemas.defects import CCDDocument
     from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
 
     # mapping from job name to directory containing test files
@@ -65,7 +71,6 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         ConfigurationCoordinateMaker,
         NonRadiativeMaker,
     )
-    from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -160,7 +165,9 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     )
 
     # rmaker = RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator())
-    maker = FormationEnergyMaker()
+    maker = FormationEnergyMaker(
+        relax_radius="auto", perturb=0.1, collect_defect_entry_data=True
+    )
     flow = maker.make(
         defects[0],
         supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]],
@@ -178,7 +185,7 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         plnr_locpot = SETTINGS.JOB_STORE.query_one({"output.task_label": name})[
             "output"
         ]["calcs_reversed"][0]["output"]["locpot"]
-        assert set(plnr_locpot.keys()) == {"0", "1", "2"}
+        assert set(plnr_locpot) == {"0", "1", "2"}
 
     for k in ref_paths:
         _check_plnr_locpot(k)

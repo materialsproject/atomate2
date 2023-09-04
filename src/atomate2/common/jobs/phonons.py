@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-import numpy as np
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
@@ -18,10 +18,18 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.schemas.phonons import PhononBSDOSDoc
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import numpy as np
+    from emmet.core.math import Matrix3D
+
+    from atomate2.forcefields.jobs import ForceFieldStaticMaker
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -75,14 +83,11 @@ def get_supercell_size(
     **kwargs:
         Additional parameters that can be set.
     """
-    if "min_atoms" not in kwargs:
-        kwargs["min_atoms"] = None
-    if "force_diagonal" not in kwargs:
-        kwargs["force_diagonal"] = False
+    kwargs.setdefault("min_atoms", None)
+    kwargs.setdefault("force_diagonal", False)
 
     if not prefer_90_degrees:
-        if "max_atoms" not in kwargs:
-            kwargs["max_atoms"] = None
+        kwargs.setdefault("max_atoms", None)
         transformation = CubicSupercellTransformation(
             min_length=min_length,
             min_atoms=kwargs["min_atoms"],
@@ -93,9 +98,8 @@ def get_supercell_size(
         transformation.apply_transformation(structure=structure)
 
     else:
-        max_atoms = 1000 if "max_atoms" not in kwargs else kwargs["max_atoms"]
-        if "angle_tolerance" not in kwargs:
-            kwargs["angle_tolerance"] = 1e-2
+        max_atoms = kwargs.get("max_atoms", 1000)
+        kwargs.setdefault("angle_tolerance", 1e-2)
         try:
             transformation = CubicSupercellTransformation(
                 min_length=min_length,
@@ -108,8 +112,7 @@ def get_supercell_size(
             transformation.apply_transformation(structure=structure)
 
         except AttributeError:
-            if "max_atoms" not in kwargs:
-                kwargs["max_atoms"] = None
+            kwargs.setdefault("max_atoms", None)
 
             transformation = CubicSupercellTransformation(
                 min_length=min_length,
@@ -120,11 +123,10 @@ def get_supercell_size(
             )
             transformation.apply_transformation(structure=structure)
 
-    supercell_matrix = transformation.transformation_matrix.tolist()
-    return supercell_matrix
+    return transformation.transformation_matrix.tolist()
 
 
-@job
+@job(data=[Structure])
 def generate_phonon_displacements(
     structure: Structure,
     supercell_matrix: np.array,
@@ -182,13 +184,13 @@ def generate_phonon_displacements(
 
     supercells = phonon.supercells_with_displacements
 
-    displacements = []
-    for cell in supercells:
-        displacements.append(get_pmg_structure(cell))
-    return displacements
+    return [get_pmg_structure(cell) for cell in supercells]
 
 
-@job(output_schema=PhononBSDOSDoc, data=[PhononDos, PhononBandStructureSymmLine])
+@job(
+    output_schema=PhononBSDOSDoc,
+    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants],
+)
 def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
@@ -237,7 +239,7 @@ def generate_frequencies_eigenvectors(
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
 
     """
-    phonon_doc = PhononBSDOSDoc.from_forces_born(
+    return PhononBSDOSDoc.from_forces_born(
         structure=structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
@@ -253,15 +255,14 @@ def generate_frequencies_eigenvectors(
         **kwargs,
     )
 
-    return phonon_doc
 
-
-@job
+@job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
     displacements,
     structure: Structure,
     supercell_matrix,
-    phonon_maker: BaseVaspMaker = None,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
+    prev_vasp_dir: str | Path = None,
 ):
     """
     Run phonon displacements.
@@ -272,11 +273,13 @@ def run_phonon_displacements(
     ----------
     displacements
     structure: Structure object
-        Fully optimized structure used for phonon computations
+        Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
+    prev_vasp_dir : str or Path or None
+        A previous vasp calculation directory to use for copying outputs.
     """
     if phonon_maker is None:
         phonon_maker = PhononDisplacementMaker()
@@ -286,11 +289,13 @@ def run_phonon_displacements(
         "forces": [],
         "uuids": [],
         "dirs": [],
-        "displaced_structures": [],
     }
 
     for i, displacement in enumerate(displacements):
-        phonon_job = phonon_maker.make(displacement)
+        if prev_vasp_dir is not None:
+            phonon_job = phonon_maker.make(displacement, prev_vasp_dir=prev_vasp_dir)
+        else:
+            phonon_job = phonon_maker.make(displacement)
         phonon_job.append_name(f" {i + 1}/{len(displacements)}")
 
         # we will add some meta data
@@ -300,15 +305,17 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structure": displacement,
         }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
+        with contextlib.suppress(Exception):
+            phonon_job.update_maker_kwargs(
+                {"_set": {"write_additional_data->phonon_info:json": info}},
+                dict_mod=True,
+            )
+
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"].append(i)
         outputs["uuids"].append(phonon_job.output.uuid)
         outputs["dirs"].append(phonon_job.output.dir_name)
         outputs["forces"].append(phonon_job.output.output.forces)
-        outputs["displaced_structures"].append(displacement)
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)
@@ -348,10 +355,9 @@ class PhononDisplacementMaker(BaseVaspMaker):
     """
 
     name: str = "phonon static"
-
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 7000},
+            user_kpoints_settings={"reciprocal_density": 100},
             user_incar_settings={
                 "IBRION": 2,
                 "ISIF": 3,
@@ -362,7 +368,7 @@ class PhononDisplacementMaker(BaseVaspMaker):
                 "ALGO": "Normal",
                 "NSW": 0,
                 "LCHARG": False,
-                "ISMEAR": 0,
             },
+            auto_ispin=True,
         )
     )

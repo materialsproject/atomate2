@@ -12,10 +12,9 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from custodian import Custodian
-from custodian.custodian import ErrorHandler, Validator
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -31,10 +30,14 @@ from custodian.vasp.handlers import (
 )
 from custodian.vasp.jobs import VaspJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
-from emmet.core.tasks import TaskDoc
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from custodian.custodian import ErrorHandler, Validator
+    from emmet.core.tasks import TaskDoc
+
 
 __all__ = [
     "JobType",
@@ -129,8 +132,7 @@ def run_vasp(
     split_vasp_cmd = shlex.split(vasp_cmd)
     split_vasp_gamma_cmd = shlex.split(vasp_gamma_cmd)
 
-    if "auto_npar" not in vasp_job_kwargs:
-        vasp_job_kwargs["auto_npar"] = False
+    vasp_job_kwargs.setdefault("auto_npar", False)
 
     vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
 
@@ -140,7 +142,7 @@ def run_vasp(
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [VaspJob(split_vasp_cmd, **vasp_job_kwargs)]
     elif job_type == JobType.DOUBLE_RELAXATION:
         jobs = VaspJob.double_relaxation_run(split_vasp_cmd, **vasp_job_kwargs)

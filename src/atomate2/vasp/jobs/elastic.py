@@ -4,16 +4,13 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
-from pymatgen.core.structure import Structure
 from pymatgen.core.tensors import symmetry_reduce
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
@@ -22,8 +19,15 @@ from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +98,6 @@ def generate_elastic_deformations(
     order: int = 2,
     strain_states: list[tuple[int, int, int, int, int, int]] | None = None,
     strain_magnitudes: list[float] | list[list[float]] | None = None,
-    conventional: bool = False,
     symprec: float = SETTINGS.SYMPREC,
     sym_reduce: bool = True,
 ):
@@ -114,8 +117,7 @@ def generate_elastic_deformations(
         A list of strain magnitudes to multiply by for each strain state, e.g. ``[-0.01,
         -0.005, 0.005, 0.01]``. Alternatively, a list of lists can be specified, where
         each inner list corresponds to a specific strain state.
-    conventional : bool
-        Whether to transform the structure into the conventional cell.
+
     symprec : float
         Symmetry precision.
     sym_reduce : bool
@@ -126,10 +128,6 @@ def generate_elastic_deformations(
     List[Deformation]
         A list of deformations.
     """
-    if conventional:
-        sga = SpacegroupAnalyzer(structure, symprec=symprec)
-        structure = sga.get_conventional_standard_structure()
-
     if strain_states is None:
         strain_states = get_default_strain_states(order)
 
@@ -152,17 +150,15 @@ def generate_elastic_deformations(
         # TODO: check for sufficiency of input for nth order
         raise ValueError("strain list is insufficient to fit an elastic tensor")
 
-    deformations = [s.get_deformation_matrix() for s in strains]
-
     if sym_reduce:
-        deformation_mapping = symmetry_reduce(deformations, structure, symprec=symprec)
+        strain_mapping = symmetry_reduce(strains, structure, symprec=symprec)
         logger.info(
-            f"Using symmetry to reduce number of deformations from {len(deformations)} "
-            f"to {len(list(deformation_mapping.keys()))}"
+            f"Using symmetry to reduce number of strains from {len(strains)} to "
+            f"{len(list(strain_mapping.keys()))}"
         )
-        deformations = list(deformation_mapping.keys())
+        strains = list(strain_mapping.keys())
 
-    return deformations
+    return [s.get_deformation_matrix() for s in strains]
 
 
 @job
@@ -235,6 +231,7 @@ def fit_elastic_tensor(
     order: int = 2,
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
+    allow_elastically_unstable_structs: bool = True,
 ):
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.
@@ -260,6 +257,9 @@ def fit_elastic_tensor(
     symprec : float
         Symmetry precision for deriving symmetry equivalent deformations. If
         ``symprec=None``, then no symmetry operations will be applied.
+    allow_elastically_unstable_structs : bool
+        Whether to allow the ElasticDocument to still complete in the event that
+        the structure is elastically unstable.
     """
     stresses = []
     deformations = []
@@ -277,7 +277,7 @@ def fit_elastic_tensor(
 
     logger.info("Analyzing stress/strain data")
 
-    elastic_doc = ElasticDocument.from_stresses(
+    return ElasticDocument.from_stresses(
         structure,
         stresses,
         deformations,
@@ -287,5 +287,5 @@ def fit_elastic_tensor(
         order=order,
         equilibrium_stress=equilibrium_stress,
         symprec=symprec,
+        allow_elastically_unstable_structs=allow_elastically_unstable_structs,
     )
-    return elastic_doc

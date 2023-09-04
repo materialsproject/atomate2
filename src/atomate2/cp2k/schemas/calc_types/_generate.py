@@ -20,7 +20,7 @@ for functional_class in _RUN_TYPE_DATA:
     for rt in _RUN_TYPE_DATA[functional_class]:
         for vdw in ["", "-RVV10", "-LMKLL", "-DRSLL", "-D3", "-D2", "-D3(BJ)"]:
             for u in ["", "+U"]:
-                _RUN_TYPES.append(f"{rt}{vdw}{u}")
+                _RUN_TYPES.append(f"{rt}{vdw}{u}")  # noqa: PERF401
 
 
 def get_enum_source(enum_name, doc, items):
@@ -36,16 +36,14 @@ class {enum_name}(ValueEnum):
 run_type_enum = get_enum_source(
     "RunType",
     "CP2K calculation run types",
-    dict(
-        {
-            "_".join(rt.split())
-            .replace("+", "_")
-            .replace("-", "_")
-            .replace("(", "_")
-            .replace(")", ""): rt
-            for rt in _RUN_TYPES
-        }
-    ),
+    {
+        "_".join(rt.split())
+        .replace("+", "_")
+        .replace("-", "_")
+        .replace("(", "_")
+        .replace(")", ""): rt
+        for rt in _RUN_TYPES
+    },
 )
 task_type_enum = get_enum_source(
     "TaskType",
