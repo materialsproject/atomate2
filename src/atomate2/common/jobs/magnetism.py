@@ -85,9 +85,9 @@ def run_ordering_calculations(
     relax_maker: Maker | None = None,
     prev_calc_dir_argname: str | None = None,
 ):
-    """
-    Run calculations for a list of enumerated orderings. This job will automatically
-    replace itself with calculations.
+    """Run calculations for a list of enumerated orderings.
+
+    This job will automatically replace itself with calculations.
 
     Parameters
     ----------
@@ -126,11 +126,11 @@ def run_ordering_calculations(
             relax_job.metadata.update(metadata)
             jobs.append(relax_job)
 
-            struct = relax_job.output.structure
+            structure = relax_job.output.structure
             parent_uuid = relax_job.output.uuid
             static_job_kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
 
-        static_job = static_maker.make(struct, **static_job_kwargs)
+        static_job = static_maker.make(structure, **static_job_kwargs)
         static_job.append_name(" " + name)
 
         metadata["parent_uuid"] = parent_uuid
