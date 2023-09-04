@@ -24,20 +24,22 @@ class MagneticOrderingsMaker(Maker):
     """
     Maker to calculate possible collinear magnetic orderings for a material.
 
-    Given an input structure, possible magnetic orderings will be enumerated and ranked based
-    on symmetry up to a maximum number of orderings. Each ordering will be optionally
-    relaxed and a higher quality static calculation performed to obtain a total energy.
-    The lowest energy ordering is the predicted ground-state collinear ordering. Note:
-    to analyze the results of this workflow, use the corresponding builder for
-    your DFT code (e.g., atomate2.vasp.builders.magnetism.MagneticOrderingsBuilder).
+    Given an input structure, possible magnetic orderings will be enumerated and ranked
+    based on symmetry up to a maximum number of orderings. Each ordering will be
+    optionally relaxed and a higher quality static calculation performed to obtain a
+    total energy. The lowest energy ordering is the predicted ground-state collinear
+    ordering. Note: to analyze the results of this workflow, use the corresponding
+    builder for your DFT code (e.g.,
+    atomate2.vasp.builders.magnetism.MagneticOrderingsBuilder).
 
-    This workflow showed decent performance using VASP for a wide range of test materials in a
-    benchmark. It was originally implemented in atomate (v1) for VASP as the MagneticOrderingsWF.
-    Please refer to the following paper for more information and cite appropriately:
+    This workflow showed decent performance using VASP for a wide range of test
+    materials in a benchmark. It was originally implemented in atomate (v1) for VASP as
+    the MagneticOrderingsWF. Please refer to the following paper for more information
+    and cite appropriately:
 
         Horton, M.K., Montoya, J.H., Liu, M. et al. High-throughput prediction of the
         ground-state collinear magnetic order of inorganic materials using Density
-        Functional Theory. npj Comput Mater 5, 64 (2019).
+        Functional Theory. npj Computational Materials 5, 64 (2019).
         https://doi.org/10.1038/s41524-019-0199-7
 
     .. Note::
@@ -50,7 +52,7 @@ class MagneticOrderingsMaker(Maker):
     name : str
         Name of the flows produced by this Maker.
     static_maker : Maker
-        Maker used to peform static calculations for total energy (e.g.,
+        Maker used to perform static calculations for total energy (e.g.,
         atomate2.vasp.jobs.StaticMaker).
     relax_maker : Maker | None
         Maker used to perform relaxations of the enumerated structures (e.g.,
@@ -94,6 +96,10 @@ class MagneticOrderingsMaker(Maker):
     name: str = "magnetic_orderings"
 
     def __post_init__(self):
+        """Ensure that the static and relax makers come from the same base maker.
+
+        This ensures that the same DFT code is used for both calculations.
+        """
         if self.relax_maker is not None:
             static_base_maker_name = self.static_maker.__class__.__mro__[1].__name__
             relax_base_maker_name = self.relax_maker.__class__.__mro__[1].__name__
@@ -104,9 +110,9 @@ class MagneticOrderingsMaker(Maker):
 
     @property
     def prev_calc_dir_argname(self):
-        """
-        Name of the argument that informs the static maker of the previous calculation
-        directory. As this differs between different DFT codes (e.g., VASP, CP2K), it
+        """Name of argument informing static maker of previous calculation directory.
+
+        As this differs between different DFT codes (e.g., VASP, CP2K), it
         has been left as a property to be implemented by the inheriting class.
 
         Note: this is only applicable if a relax_maker is specified; i.e., two
@@ -118,9 +124,7 @@ class MagneticOrderingsMaker(Maker):
         self,
         structure: Structure,
     ):
-        """
-        Make a flow to calculate possible ground-state collinear magnetic orderings for
-        a given input structure.
+        """Make a flow to calculate collinear magnetic orderings for a given structure.
 
         Parameters
         ----------
@@ -130,7 +134,7 @@ class MagneticOrderingsMaker(Maker):
         Returns
         -------
         flow: Flow
-            The magnetic ordering worfklow.
+            The magnetic ordering workflow.
         """
         jobs = []
 

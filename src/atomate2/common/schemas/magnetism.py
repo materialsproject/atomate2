@@ -319,7 +319,7 @@ def _compare_ordering_and_symmetry(
     input = MagneticOrderingInput(
         structure=input_structure,
         ordering=input_ordering,
-        magmoms=input_magmoms,
+        magmoms=list(input_magmoms),
         symmetry=input_symmetry,
     )
 
