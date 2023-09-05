@@ -333,7 +333,7 @@ class MagneticOrderingsDocument(BaseModel):
     def _build_static_output(
         static_task, uuid=None, relax_output=None
     ) -> MagneticOrderingOutput:
-        """Warp the function MagneticOrderingOutput.from_task_document."""
+        """Wrap the function MagneticOrderingOutput.from_task_document."""
         raise NotImplementedError
 
 

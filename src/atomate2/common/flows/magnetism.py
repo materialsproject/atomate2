@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal, Sequence
 
@@ -21,14 +22,18 @@ __all__ = ["MagneticOrderingsMaker"]
 
 
 @dataclass
-class MagneticOrderingsMaker(Maker):
+class MagneticOrderingsMaker(Maker, ABC):
     """Maker to calculate possible collinear magnetic orderings for a material.
 
     Given an input structure, possible magnetic orderings will be enumerated and ranked
     based on symmetry up to a maximum number of orderings. Each ordering will be
     optionally relaxed and a higher quality static calculation performed to obtain a
     total energy. The lowest energy ordering is the predicted ground-state collinear
-    ordering. Note: to analyze the results of this workflow, use the corresponding
+    ordering.
+
+    Note: to use this common workflow, you must first implement
+
+       use the corresponding
     builder for your DFT code (e.g.,
     atomate2.vasp.builders.magnetism.MagneticOrderingsBuilder).
 
@@ -52,27 +57,27 @@ class MagneticOrderingsMaker(Maker):
     name : str
         Name of the flows produced by this Maker.
     static_maker : Maker
-        Maker used to perform static calculations for total energy (e.g.,
-        atomate2.vasp.jobs.StaticMaker).
+        Maker used to perform static calculations for total energy (e.g., with VASP this
+        would be atomate2.vasp.jobs.StaticMaker).
     relax_maker : Maker | None
-        Maker used to perform relaxations of the enumerated structures (e.g.,
-        atomate2.vasp.jobs.RelaxMaker). If None, relaxations will be skipped (i.e., only
-        static calculations).
+        Maker used to perform relaxations of the enumerated structures (e.g., with VASP
+        this would be atomate2.vasp.jobs.RelaxMaker). If None, relaxations will be
+        skipped (i.e., only static calculations).
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
         in µB. Generally these are chosen to be high-spin, since they can relax to a
         low-spin configuration during a DFT electronic configuration. If None, will use
         the default values provided in pymatgen/analysis/magnetism/default_magmoms.yaml.
-    strategies : tuple
+    strategies : tuple[str]
         Different ordering strategies to use. Choose from ferromagnetic,
         antiferromagnetic, antiferromagnetic_by_motif, ferrimagnetic_by_motif,
         ferrimagnetic_by_species, or nonmagnetic. Here, "motif", means to use a
         different ordering parameter for symmetry inequivalent sites.
     automatic : bool
-        If True, will automatically choose sensible strategies.
+        If True, will automatically choose sensible strategies. Defaults to True.
     truncate_by_symmetry : bool
         If True, will remove very unsymmetrical orderings that are likely physically
-        implausible.
+        implausible. Defaults to True.
     transformation_kwargs : dict | None
         Keyword arguments provided to MagOrderingTransformation in pymatgen.
     """
@@ -151,7 +156,12 @@ class MagneticOrderingsMaker(Maker):
             name=f"{self.name} ({structure.composition.reduced_formula})",
         )
 
+    @abstractmethod
+    def _build_doc_fn(self, tasks):
+        """Wrap the function MagneticOrderingsDocument.from_tasks."""
+
     @property
+    @abstractmethod
     def prev_calc_dir_argname(self):
         """Name of argument informing static maker of previous calculation directory.
 
@@ -161,8 +171,3 @@ class MagneticOrderingsMaker(Maker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        raise NotImplementedError
-
-    def _build_doc_fn(self, tasks):
-        """Wrap the function MagneticOrderingRelaxation.from_task_document."""
-        raise NotImplementedError

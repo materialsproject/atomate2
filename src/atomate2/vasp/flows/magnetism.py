@@ -59,16 +59,16 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
         in µB. Generally these are chosen to be high-spin, since they can relax to a
         low-spin configuration during a DFT electronic configuration. If None, will use
         the default values provided in pymatgen/analysis/magnetism/default_magmoms.yaml.
-    strategies : tuple
+    strategies : tuple[str]
         Different ordering strategies to use. Choose from ferromagnetic,
         antiferromagnetic, antiferromagnetic_by_motif, ferrimagnetic_by_motif,
         ferrimagnetic_by_species, or nonmagnetic. Here, "motif", means to use a
         different ordering parameter for symmetry inequivalent sites.
     automatic : bool
-        If True, will automatically choose sensible strategies.
+        If True, will automatically choose sensible strategies. Defaults to True.
     truncate_by_symmetry : bool
         If True, will remove very unsymmetrical orderings that are likely physically
-        implausible.
+        implausible. Defaults to True.
     transformation_kwargs : dict | None
         Keyword arguments provided to MagOrderingTransformation in pymatgen.
     """
