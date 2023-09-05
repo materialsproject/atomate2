@@ -20,7 +20,8 @@ class MagneticOrderingsBuilder(Builder):
 
     This job will process the output documents of the calculations and return new
     documents with relevant parameters (such as the total magnetization, whether the
-    ordering changed, whether the particular ordering is the ground state, etc.).
+    ordering changed, whether the particular ordering is the ground state, etc.). This
+    is especially useful for performing postprocessing of magnetic ordering calculations
 
     .. Note::
         This builder can be trivially implemented for your DFT code of choice by
