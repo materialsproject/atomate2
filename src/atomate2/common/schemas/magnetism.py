@@ -283,12 +283,17 @@ class MagneticOrderingsDocument(BaseModel):
         )
 
     @classmethod
-    def from_tasks(cls, tasks):
-        """Construct a MagneticOrderingsDocument from a list of tasks.
+    def from_tasks(cls, tasks: list[dict]):
+        """Construct a MagneticOrderingsDocument from a list of task dicts.
 
         This uses the _build_relax_output and _build_static_output methods to construct
         the MagneticOrderingRelaxation and MagneticOrderingOutput docs, respectively.
         These methods need to be implemented for the DFT code of choice.
+
+        Note: this function assumes the tasks contain the keys "output" and "metadata".
+        These keys are automatically constructed when jobflow stores its outputs;
+        however, you may need to put the data in this format if using this manually (as
+        in a postprocessing job).
 
         """
         parent_structure = tasks[0]["metadata"]["parent_structure"]

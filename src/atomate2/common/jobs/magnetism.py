@@ -9,6 +9,7 @@ from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
 
 if TYPE_CHECKING:
+    from emmet.core.tasks import TaskDoc
     from pymatgen.core.structure import Structure
 
     from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
@@ -59,7 +60,8 @@ def enumerate_magnetic_orderings(
         Different ordering strategies to use, choose from: ferromagnetic,
         antiferromagnetic, antiferromagnetic_by_motif, ferrimagnetic_by_motif and
         ferrimagnetic_by_species (here, "motif", means to use a different ordering
-        parameter for symmetry inequivalent sites)
+        parameter for symmetry inequivalent sites). Defaults to
+        ("ferromagnetic", "antiferromagnetic).
     automatic : bool
         If True, will automatically choose sensible strategies
     truncate_by_symmetry: : bool
@@ -145,13 +147,13 @@ def run_ordering_calculations(
 
         jobs.append(static_job)
 
-    flow = Flow(jobs)
+    flow = Flow(jobs, output=[(j.output, j.metadata, j.uuid) for j in jobs])
     return Response(replace=flow)
 
 
 @job(name="postprocess orderings")
 def postprocess_orderings(
-    tasks: list[dict],
+    tasks_metadata_uuids: list[tuple[TaskDoc, dict, str]],
     build_doc_fn: Callable[[list[dict]], MagneticOrderingsDocument] = None,
 ) -> MagneticOrderingsDocument:
     """Identify ground state ordering and build summary document.
@@ -162,11 +164,21 @@ def postprocess_orderings(
 
     Parameters
     ----------
-    output
+    tasks_metadata_uuids : list[tuple[TaskDoc, dict, str]]
+        A list of tuples containing the output task document, metadata, and uuid for
+        each job. This format is used to construct a dict that mimics how job data is
+        stored and provided to the builder input.
+    build_doc_fn : Callable[[list[dict]], MagneticOrderingsDocument]
+        A function to build the summary document from a list of dicts. This function
+        depends on the DFT code of choice.
 
     Returns
     -------
     MagneticOrderingsDocument
         A summary document containing the ground state ordering and other information.
     """
+    tasks = [
+        {"output": output, "metadata": metadata, "uuid": uuid}  # mimic builder input
+        for output, metadata, uuid in tasks_metadata_uuids
+    ]
     return build_doc_fn(tasks)
