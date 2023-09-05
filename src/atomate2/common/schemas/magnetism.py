@@ -71,16 +71,6 @@ class MagneticOrderingRelaxation(BaseModel):
     )
 
     @classmethod
-    def from_task_document(
-        cls, task_document, uuid: str | None = None
-    ) -> MagneticOrderingRelaxation:
-        """Construct a MagneticOrderingRelaxation output doc from a task document.
-
-        This is to be implemented for the DFT code of choice.
-        """
-        raise NotImplementedError
-
-    @classmethod
     def from_structures_and_energies(
         cls,
         input_structure,
@@ -98,6 +88,16 @@ class MagneticOrderingRelaxation(BaseModel):
             energy_per_atom=output_energy / output_structure.num_sites,
             **_compare_ordering_and_symmetry(input_structure, output_structure),
         )
+
+    @classmethod
+    def from_task_document(
+        cls, task_document, uuid: str | None = None
+    ) -> MagneticOrderingRelaxation:
+        """Construct a MagneticOrderingRelaxation output doc from a task document.
+
+        This is to be implemented for the DFT code of choice.
+        """
+        raise NotImplementedError
 
 
 class MagneticOrderingOutput(BaseModel):
@@ -169,16 +169,6 @@ class MagneticOrderingOutput(BaseModel):
     )
 
     @classmethod
-    def from_task_document(
-        cls, task_document, uuid: str | None = None
-    ) -> MagneticOrderingOutput:
-        """Construct a MagnetismOutput from a task document.
-
-        This is to be implemented for the DFT code of choice.
-        """
-        raise NotImplementedError
-
-    @classmethod
     def from_structures_and_energies(
         cls,
         input_structure: Structure,
@@ -210,6 +200,16 @@ class MagneticOrderingOutput(BaseModel):
             energy_above_ground_state_per_atom=energy_above_ground_state_per_atom,
             **_compare_ordering_and_symmetry(input_structure, output_structure),
         )
+
+    @classmethod
+    def from_task_document(
+        cls, task_document, uuid: str | None = None
+    ) -> MagneticOrderingOutput:
+        """Construct a MagnetismOutput from a task document.
+
+        This is to be implemented for the DFT code of choice.
+        """
+        raise NotImplementedError
 
 
 class MagneticOrderingsDocument(BaseModel):
@@ -281,6 +281,55 @@ class MagneticOrderingsDocument(BaseModel):
             ground_state_energy=ground_state.energy,
             ground_state_energy_per_atom=ground_state.energy_per_atom,
         )
+
+    @classmethod
+    def from_tasks(cls, tasks):
+        """Construct a MagneticOrderingsDocument from a list of tasks.
+
+        This uses the _build_relax_output and _build_static_output methods to construct
+        the MagneticOrderingRelaxation and MagneticOrderingOutput docs, respectively.
+        These methods need to be implemented for the DFT code of choice.
+
+        """
+        parent_structure = tasks[0]["metadata"]["parent_structure"]
+
+        relax_tasks, static_tasks = [], []
+        for task in tasks:
+            if task["output"].task_type.value.lower() == "structure optimization":
+                relax_tasks.append(task)
+            elif task["output"].task_type.value.lower() == "static":
+                static_tasks.append(task)
+
+        outputs = []
+        for task in static_tasks:
+            relax_output = None
+            for r_task in relax_tasks:
+                if r_task["uuid"] == task["metadata"]["parent_uuid"]:
+                    relax_output = cls._build_relax_output(
+                        r_task["output"],
+                        uuid=r_task["uuid"],
+                    )
+                    break
+            output = cls._build_static_output(
+                task["output"],
+                uuid=task["uuid"],
+                relax_output=relax_output,
+            )
+            outputs.append(output)
+
+        return cls.from_outputs(outputs, parent_structure=parent_structure)
+
+    @staticmethod
+    def _build_relax_output(relax_task, uuid=None) -> MagneticOrderingRelaxation:
+        """Wrap the function MagneticOrderingRelaxation.from_task_document."""
+        raise NotImplementedError
+
+    @staticmethod
+    def _build_static_output(
+        static_task, uuid=None, relax_output=None
+    ) -> MagneticOrderingOutput:
+        """Warp the function MagneticOrderingOutput.from_task_document."""
+        raise NotImplementedError
 
 
 def _compare_ordering_and_symmetry(

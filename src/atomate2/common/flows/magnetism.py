@@ -9,6 +9,7 @@ from jobflow import Flow, Maker
 
 from atomate2.common.jobs.magnetism import (
     enumerate_magnetic_orderings,
+    postprocess_orderings,
     run_ordering_calculations,
 )
 
@@ -21,8 +22,7 @@ __all__ = ["MagneticOrderingsMaker"]
 
 @dataclass
 class MagneticOrderingsMaker(Maker):
-    """
-    Maker to calculate possible collinear magnetic orderings for a material.
+    """Maker to calculate possible collinear magnetic orderings for a material.
 
     Given an input structure, possible magnetic orderings will be enumerated and ranked
     based on symmetry up to a maximum number of orderings. Each ordering will be
@@ -108,18 +108,6 @@ class MagneticOrderingsMaker(Maker):
                 " BaseVaspMaker)!"
             )
 
-    @property
-    def prev_calc_dir_argname(self):
-        """Name of argument informing static maker of previous calculation directory.
-
-        As this differs between different DFT codes (e.g., VASP, CP2K), it
-        has been left as a property to be implemented by the inheriting class.
-
-        Note: this is only applicable if a relax_maker is specified; i.e., two
-        calculations are performed for each ordering (relax -> static)
-        """
-        raise NotImplementedError
-
     def make(
         self,
         structure: Structure,
@@ -146,7 +134,6 @@ class MagneticOrderingsMaker(Maker):
             truncate_by_symmetry=self.truncate_by_symmetry,
             transformation_kwargs=self.transformation_kwargs,
         )
-        jobs.append(orderings)
 
         calculations = run_ordering_calculations(
             orderings.output,
@@ -155,10 +142,27 @@ class MagneticOrderingsMaker(Maker):
             prev_calc_dir_argname=self.prev_calc_dir_argname,
         )
 
-        jobs.append(calculations)
+        postprocessing = postprocess_orderings(calculations.output, self._build_doc_fn)
+        jobs = [orderings, calculations, postprocessing]
 
         return Flow(
             jobs=jobs,
-            output=calculations.output,
+            output=postprocessing.output,
             name=f"{self.name} ({structure.composition.reduced_formula})",
         )
+
+    @property
+    def prev_calc_dir_argname(self):
+        """Name of argument informing static maker of previous calculation directory.
+
+        As this differs between different DFT codes (e.g., VASP, CP2K), it
+        has been left as a property to be implemented by the inheriting class.
+
+        Note: this is only applicable if a relax_maker is specified; i.e., two
+        calculations are performed for each ordering (relax -> static)
+        """
+        raise NotImplementedError
+
+    def _build_doc_fn(self, tasks):
+        """Wrap the function MagneticOrderingRelaxation.from_task_document."""
+        raise NotImplementedError

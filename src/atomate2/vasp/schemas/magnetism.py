@@ -10,6 +10,9 @@ from atomate2.common.schemas.magnetism import (
 from atomate2.common.schemas.magnetism import (
     MagneticOrderingRelaxation as MagneticOrderingRelaxationBase,
 )
+from atomate2.common.schemas.magnetism import (
+    MagneticOrderingsDocument as MagneticOrderingsDocumentBase,
+)
 
 if TYPE_CHECKING:
     from emmet.core.tasks import TaskDoc
@@ -81,4 +84,22 @@ class MagneticOrderingOutput(MagneticOrderingOutputBase):
             uuid=uuid,
             dir_name=dir_name,
             relax_output=relax_output,
+        )
+
+
+class MagneticOrderingsDocument(MagneticOrderingsDocumentBase):
+    """Defines the static output for a magnetic ordering calculation.
+
+    The construction of this document is implemented here for VASP. See base class for
+    more details.
+    """
+
+    @staticmethod
+    def _build_relax_output(relax_task, uuid=None):
+        return MagneticOrderingRelaxation.from_task_document(relax_task, uuid=uuid)
+
+    @staticmethod
+    def _build_static_output(static_task, uuid=None, relax_output=None):
+        return MagneticOrderingOutput.from_task_document(
+            static_task, uuid=uuid, relax_output=relax_output
         )
