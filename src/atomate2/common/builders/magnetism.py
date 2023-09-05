@@ -114,6 +114,7 @@ class MagneticOrderingsBuilder(Builder):
 
         The magnetic ordering tasks will be grouped based on their parent structure
         (i.e., the structure before the magnetic ordering transformation was applied).
+        See _group_orderings for more details.
 
         Parameters
         ----------
@@ -149,6 +150,12 @@ class MagneticOrderingsBuilder(Builder):
 
     @staticmethod
     def _build_doc_fn(tasks):
+        """Build a magnetic ordering document from a list of tasks.
+
+        This is to be implemented for the DFT code of choice. The implementation can be
+        completed by fully implementing the MagneticOrderingsDocument class for your DFT
+        code and then wrapping the MagneticOrderingsDocument.from_tasks method.
+        """
         raise NotImplementedError
 
     @property
@@ -157,12 +164,18 @@ class MagneticOrderingsBuilder(Builder):
 
         This is to be implemented for the DFT code of choice. This prevents mixing of
         tasks from different DFT codes in the same builder.
+
+        For example, for VASP, this query is:
+            {"output.orig_inputs.incar": {"$exists": True}}
         """
         raise NotImplementedError
 
 
 def _group_orderings(tasks: list[dict], tol: float) -> list[list[dict]]:
     """Group ordering tasks by their parent structure.
+
+    This is done by comparing the lattice and coordinates of the parent structure for
+    each task. If both are close, then the tasks are grouped together.
 
     Parameters
     ----------
