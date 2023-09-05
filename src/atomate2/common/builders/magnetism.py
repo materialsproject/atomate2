@@ -9,15 +9,10 @@ from emmet.core.utils import jsanitize
 from maggma.builders import Builder
 from monty.serialization import MontyDecoder
 
-from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
-
 if TYPE_CHECKING:
     from maggma.core import Store
 
-    from atomate2.common.schemas.magnetism import (
-        MagneticOrderingOutput,
-        MagneticOrderingRelaxation,
-    )
+    from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 
 
 class MagneticOrderingsBuilder(Builder):
@@ -43,7 +38,7 @@ class MagneticOrderingsBuilder(Builder):
         Dictionary query to limit tasks to be analyzed.
     structure_match_tol : float
         Numerical tolerance for structure equivalence.
-    **kwargs
+    **kwargs : dict
         Keyword arguments that will be passed to the Builder init.
     """
 
@@ -63,7 +58,7 @@ class MagneticOrderingsBuilder(Builder):
 
         super().__init__(sources=[tasks], targets=[magnetic_orderings], **kwargs)
 
-    def ensure_indexes(self):
+    def ensure_indexes(self) -> None:
         """Ensure indices on the tasks and magnetic orderings collections."""
         self.tasks.ensure_index("output.formula_pretty")
         self.tasks.ensure_index("last_updated")
@@ -122,7 +117,7 @@ class MagneticOrderingsBuilder(Builder):
 
         Parameters
         ----------
-        tasks : list of dict
+        tasks : list[dict]
             A list of magnetic ordering tasks grouped by same formula.
 
         Returns
@@ -136,40 +131,12 @@ class MagneticOrderingsBuilder(Builder):
         if not tasks:
             return []
 
-        parent_structure = tasks[0]["metadata"]["parent_structure"]
-
-        relax_tasks, static_tasks = [], []
-        for task in tasks:
-            if task["output"].task_type.value.lower() == "structure optimization":
-                relax_tasks.append(task)
-            elif task["output"].task_type.value.lower() == "static":
-                static_tasks.append(task)
-
-        outputs = []
-        for task in static_tasks:
-            relax_output = None
-            for r_task in relax_tasks:
-                if r_task["uuid"] == task["metadata"]["parent_uuid"]:
-                    relax_output = self._build_relax_output(
-                        r_task["output"],
-                        uuid=r_task["uuid"],
-                    )
-                    break
-            output = self._build_static_output(
-                task["output"],
-                uuid=task["uuid"],
-                relax_output=relax_output,
-            )
-            outputs.append(output)
-
         return jsanitize(
-            MagneticOrderingsDocument.from_outputs(
-                outputs, parent_structure=parent_structure
-            ).dict(),
+            self._build_doc_fn(tasks).dict(),
             allow_bson=True,
         )
 
-    def update_targets(self, items: list[MagneticOrderingsDocument]):
+    def update_targets(self, items: list[MagneticOrderingsDocument]) -> None:
         """Insert new magnetic orderings into the magnetic orderings Store.
 
         Parameters
@@ -180,14 +147,8 @@ class MagneticOrderingsBuilder(Builder):
         self.logger.info(f"Updating {len(items)} magnetic orderings documents")
         self.magnetic_orderings.update(items, key="ground_state_uuid")
 
-    def _build_relax_output(self, relax_task, uuid=None) -> MagneticOrderingRelaxation:
-        """Wrap the function MagneticOrderingRelaxation.from_task_document."""
-        raise NotImplementedError
-
-    def _build_static_output(
-        self, static_task, uuid=None, relax_output=None
-    ) -> MagneticOrderingOutput:
-        """Warp the function MagneticOrderingOutput.from_task_document."""
+    @staticmethod
+    def _build_doc_fn(tasks):
         raise NotImplementedError
 
     @property
@@ -201,19 +162,19 @@ class MagneticOrderingsBuilder(Builder):
 
 
 def _group_orderings(tasks: list[dict], tol: float) -> list[list[dict]]:
-    """Group deformation tasks by their parent structure.
+    """Group ordering tasks by their parent structure.
 
     Parameters
     ----------
-    tasks : list of dict
-        A list of deformation tasks.
+    tasks : list[dict]
+        A list of ordering tasks.
     tol : float
         Numerical tolerance for structure equivalence.
 
     Returns
     -------
-    list of list of dict
-        The tasks grouped by their parent (undeformed structure).
+    list[list[dict]]
+        The tasks grouped by their parent structure.
     """
     grouped_tasks = [[tasks[0]]]
 
@@ -224,7 +185,7 @@ def _group_orderings(tasks: list[dict], tol: float) -> list[list[dict]]:
         for group in grouped_tasks:
             group_parent_structure = task["metadata"]["parent_structure"]
 
-            # parent structure should really be exactly identical (from same workflow)
+            # parent struct should really be exactly identical (from same workflow)
             lattice_match = np.allclose(
                 parent_structure.lattice.matrix,
                 group_parent_structure.lattice.matrix,

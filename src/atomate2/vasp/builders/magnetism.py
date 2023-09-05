@@ -5,25 +5,18 @@ from __future__ import annotations
 from atomate2.common.builders.magnetism import (
     MagneticOrderingsBuilder as MagneticOrderingsBuilderBase,
 )
-from atomate2.vasp.schemas.magnetism import (
-    MagneticOrderingOutput,
-    MagneticOrderingRelaxation,
-)
+from atomate2.vasp.schemas.magnetism import MagneticOrderingsDocument
 
 
 class MagneticOrderingsBuilder(MagneticOrderingsBuilderBase):
     """Builder to analyze the results of magnetic orderings calculations.
 
-    This is implemented for VASP by defining methods below.
+    This is implemented for VASP by defining the methods below.
     """
 
-    def _build_relax_output(self, relax_task, uuid=None):
-        return MagneticOrderingRelaxation.from_task_document(relax_task, uuid=uuid)
-
-    def _build_static_output(self, static_task, uuid=None, relax_output=None):
-        return MagneticOrderingOutput.from_task_document(
-            static_task, uuid=uuid, relax_output=relax_output
-        )
+    @staticmethod
+    def _build_doc_fn(tasks):
+        return MagneticOrderingsDocument.from_tasks(tasks)
 
     @property
     def _dft_code_query(self):

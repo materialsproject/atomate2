@@ -9,6 +9,7 @@ from atomate2.common.flows.magnetism import (
     MagneticOrderingsMaker as MagneticOrderingsMakerBase,
 )
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
+from atomate2.vasp.schemas.magnetism import MagneticOrderingsDocument
 
 if TYPE_CHECKING:
     from pymatgen.core.periodic_table import Element
@@ -101,3 +102,8 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
         argnames.
         """
         return "prev_vasp_dir"
+
+    @staticmethod
+    def _build_doc_fn(tasks):
+        """Wrap the function MagneticOrderingsDocument.from_tasks."""
+        return MagneticOrderingsDocument.from_tasks(tasks)
