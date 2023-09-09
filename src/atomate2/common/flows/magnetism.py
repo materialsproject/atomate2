@@ -31,12 +31,6 @@ class MagneticOrderingsMaker(Maker, ABC):
     total energy. The lowest energy ordering is the predicted ground-state collinear
     ordering.
 
-    Note: to use this common workflow, you must first implement
-
-       use the corresponding
-    builder for your DFT code (e.g.,
-    atomate2.vasp.builders.magnetism.MagneticOrderingsBuilder).
-
     This workflow showed decent performance using VASP for a wide range of test
     materials in a benchmark. It was originally implemented in atomate (v1) for VASP as
     the MagneticOrderingsWF. Please refer to the following paper for more information
@@ -158,7 +152,11 @@ class MagneticOrderingsMaker(Maker, ABC):
 
     @abstractmethod
     def _build_doc_fn(self, tasks):
-        """Wrap the function MagneticOrderingsDocument.from_tasks."""
+        """Wrap the function MagneticOrderingsDocument.from_tasks.
+
+        The specific MagneticOrderingsDocument class used will depend on the DFT code,
+        so this has been left to be implemented by the inheriting class.
+        """
 
     @property
     @abstractmethod
