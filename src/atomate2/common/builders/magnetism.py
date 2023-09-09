@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import numpy as np
 from emmet.core.utils import jsanitize
 from maggma.builders import Builder
 from monty.serialization import MontyDecoder
+from pymatgen.analysis.structure_matcher import StructureMatcher
 
 if TYPE_CHECKING:
     from maggma.core import Store
@@ -48,13 +48,18 @@ class MagneticOrderingsBuilder(Builder):
         tasks: Store,
         magnetic_orderings: Store,
         query: dict = None,
-        structure_match_tol: float = 1e-5,
+        structure_match_stol: float = 0.2,
+        structure_match_ltol: float = 0.3,
+        structure_match_angle_tol: float = 5,
         **kwargs,
     ):
         self.tasks = tasks
         self.magnetic_orderings = magnetic_orderings
         self.query = query if query else {}
-        self.structure_match_tol = structure_match_tol
+        self.structure_match_stol = structure_match_stol
+        self.structure_match_ltol = structure_match_ltol
+        self.structure_match_angle_tol = structure_match_angle_tol
+
         self.kwargs = kwargs
 
         super().__init__(sources=[tasks], targets=[magnetic_orderings], **kwargs)
@@ -101,7 +106,12 @@ class MagneticOrderingsBuilder(Builder):
                 f"Getting {formula} (Formula {n_formula + 1} of {num_formulas})"
             )
             decoded_docs = MontyDecoder().process_decoded(docs)
-            grouped_tasks = _group_orderings(decoded_docs, self.structure_match_tol)
+            grouped_tasks = _group_orderings(
+                decoded_docs,
+                self.structure_match_ltol,
+                self.structure_match_stol,
+                self.structure_match_angle_tol,
+            )
             n_groups = len(grouped_tasks)
             for n_group, group in enumerate(grouped_tasks):
                 self.logger.debug(
@@ -172,11 +182,12 @@ class MagneticOrderingsBuilder(Builder):
         raise NotImplementedError
 
 
-def _group_orderings(tasks: list[dict], tol: float) -> list[list[dict]]:
+def _group_orderings(
+    tasks: list[dict], ltol: float, stol: float, angle_tol: float
+) -> list[list[dict]]:
     """Group ordering tasks by their parent structure.
 
-    This is done by comparing the lattice and coordinates of the parent structure for
-    each task. If both are close, then the tasks are grouped together.
+    This is useful for distinguishing between different polymorphs (i.e., same formula).
 
     Parameters
     ----------
@@ -191,26 +202,18 @@ def _group_orderings(tasks: list[dict], tol: float) -> list[list[dict]]:
         The tasks grouped by their parent structure.
     """
     grouped_tasks = [[tasks[0]]]
+    sm = StructureMatcher(ltol=ltol, stol=stol, angle_tol=angle_tol)
 
     for task in tasks[1:]:
         parent_structure = task["metadata"]["parent_structure"]
 
         match = False
         for group in grouped_tasks:
-            group_parent_structure = task["metadata"]["parent_structure"]
+            group_parent_structure = group[0]["metadata"]["parent_structure"]
 
-            # parent struct should really be exactly identical (from same workflow)
-            lattice_match = np.allclose(
-                parent_structure.lattice.matrix,
-                group_parent_structure.lattice.matrix,
-                atol=tol,
-            )
-            coords_match = np.allclose(
-                parent_structure.frac_coords,
-                group_parent_structure.frac_coords,
-                atol=tol,
-            )
-            if lattice_match and coords_match:
+            #  parent structure lattice/coords may be same but in different order
+            #  so we need to be more rigorous in checking equivalence
+            if sm.fit(parent_structure, group_parent_structure):
                 group.append(task)
                 match = True
                 break
