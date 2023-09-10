@@ -277,6 +277,6 @@ Initial release.
 [QuantumChemist]: https://github.com/QuantumChemist
 [janosh]: https://github.com/janosh
 [mjwen]: https://github.com/mjwen
-[arosen]: https://github.com/arosen93
+[arosen]: https://github.com/Andrew-S-Rosen
 [rkingsbury]: https://github.com/rkingsbury
 [naik-aakash]: https://github.com/naik-aakash
