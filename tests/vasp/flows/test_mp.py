@@ -1,7 +1,7 @@
 import pytest
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker, MPMetaGGADoubleRelaxStatic
+from atomate2.vasp.flows.mp import MPGGADoubleRelaxStatic, MPMetaGGADoubleRelaxStatic
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
@@ -84,8 +84,8 @@ def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_metagga_relax/pbesol_pre_relax"
     ref_paths = {
-        "MP pre-relax": pre_relax_dir,
-        "MP meta-GGA relax": "Si_mp_metagga_relax/r2scan_relax",
+        "MP GGA Relax 1": pre_relax_dir,
+        "MP meta-GGA relax 2": "Si_mp_metagga_relax/r2scan_relax",
         "MP meta-GGA static": "Si_mp_metagga_relax/r2scan_final_static",
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
@@ -98,7 +98,7 @@ def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    flow = MPGGADoubleRelaxMaker().make(si_struct)
+    flow = MPGGADoubleRelaxStatic().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

@@ -4,20 +4,6 @@ from pymatgen.core import Structure
 from atomate2.vasp.flows.mp import MPMetaGGARelaxMaker, MPMetaGGAStaticMaker
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
-expected_incar = {
-    "ISIF": 3,
-    "IBRION": 2,
-    "NSW": 99,
-    "ISMEAR": 0,
-    "SIGMA": 0.05,
-    "LREAL": False,
-    "LWAVE": False,
-    "LCHARG": True,
-    "EDIFF": 1e-05,
-    "EDIFFG": -0.02,
-    "GGA": "PS",
-}
-
 
 def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc

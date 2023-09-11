@@ -79,6 +79,8 @@ class MPGGADoubleRelaxStatic(Maker):
     """
     Maker to perform a VASP GGA relaxation workflow with MP settings.
 
+    Only the middle job performing a PBE relaxation is non-optional.
+
     Parameters
     ----------
     name : str
@@ -135,7 +137,9 @@ class MPGGADoubleRelaxStatic(Maker):
 @dataclass
 class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
     """
-    1, 2 or 3-step flow with optional pre-relax and final static jobs.
+    Flow with optional pre-relax and final static jobs.
+
+    Only the middle job performing a meta-GGA relaxation is non-optional.
 
     Parameters
     ----------
