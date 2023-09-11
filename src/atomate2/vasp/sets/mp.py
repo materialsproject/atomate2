@@ -135,4 +135,4 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {"LCHARGE": True, "LWAVE": True}
+        return {"LCHARG": True, "LWAVE": True}
