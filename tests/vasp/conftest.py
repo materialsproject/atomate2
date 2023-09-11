@@ -171,13 +171,13 @@ def check_incar(ref_path: Path, incar_settings: Sequence[str]):
     ref_incar_path = ref_path / "inputs" / "INCAR"
     ref = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
-    for p in incar_settings:
-        if user.get(p, defaults.get(p)) != ref.get(p, defaults.get(p)):
+    for key in incar_settings:
+        user_val = user.get(key, defaults.get(key))
+        ref_val = ref.get(key, defaults.get(key))
+        if user_val != ref_val:
             raise ValueError(
-                f"INCAR value of {p} is inconsistent: "
-                f"expected {ref.get(p, defaults.get(p))}, "
-                f"got {user.get(p, defaults.get(p))}"
-                f"\n\tin ref file {ref_incar_path}"
+                f"\n\nINCAR value of {key} is inconsistent: expected {ref_val}, "
+                f"got {user_val} \nin ref file {ref_incar_path}"
             )
 
 
@@ -203,8 +203,8 @@ def check_kpoints(ref_path: Path):
         ref = Kpoints.from_file(ref_kpt_path)
         if user.style != ref.style or user.num_kpts != ref.num_kpts:
             raise ValueError(
-                f"KPOINTS files are inconsistent: {user.style} != {ref.style} "
-                f"or {user.num_kpts} != {ref.num_kpts}\n\tin ref file {ref_kpt_path}"
+                f"\n\nKPOINTS files are inconsistent: {user.style} != {ref.style} "
+                f"or {user.num_kpts} != {ref.num_kpts}\nin ref file {ref_kpt_path}"
             )
     else:
         # check k-spacing
@@ -215,8 +215,8 @@ def check_kpoints(ref_path: Path):
         user_ksp, ref_ksp = user.get("KSPACING"), ref.get("KSPACING")
         if user_ksp != ref_ksp:
             raise ValueError(
-                f"KSPACING is inconsistent: {user_ksp} != {ref_ksp} "
-                f"\n\tin ref file {ref_incar_path}"
+                f"\n\nKSPACING is inconsistent: {user_ksp} != {ref_ksp} "
+                f"\nin ref file {ref_incar_path}"
             )
 
 
