@@ -2,6 +2,8 @@
 Module defining jobs for Materials Project r2SCAN workflows.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
+
+In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 """
 
 from __future__ import annotations
