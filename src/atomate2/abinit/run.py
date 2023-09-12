@@ -93,8 +93,6 @@ def run_mrgddb(
         max_end_time = start_time + wall_time
 
     #command.append("< "+MRGDDB_INPUT_FILE_NAME)
-    print("MODIF RUN_MRGDDB VT")
-    print(command) #VT
 
     status = "completed"
 

@@ -100,8 +100,6 @@ def load_abinit_input(dirpath, fname="abinit_input.json"):
         The AbinitInput object.
     """
     abinit_input_file = os.path.join(dirpath, f"{fname}")
-    print("LOAD ABINIT INPUT VT modif:") #VT
-    print(abinit_input_file) #VT
     if not os.path.exists(abinit_input_file):
         raise NotImplementedError(
             f"Cannot load AbinitInput from directory without {fname} file."

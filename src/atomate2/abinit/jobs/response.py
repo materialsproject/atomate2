@@ -312,7 +312,7 @@ def run_ddk_rf(
             #   factory_prev_inputs_kwargs already used
         )
         ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
-        ddk_job = update_user_abinit_settings(ddk_job, {'tolwfr': 1e-8}) #VT TO REMOVE, ONLY FOR TESTING
+        #ddk_job = update_user_abinit_settings(ddk_job, {'tolwfr': 1e-8}) #VT TO REMOVE, ONLY FOR TESTING
 
         ddk_jobs.append(ddk_job)
         outputs["dirs"].append(ddk_job.output.dir_name)  # TODO: determine outputs
@@ -360,7 +360,7 @@ def run_dde_rf(
             #structure=structure,
         )
         dde_job.append_name(f"{ipert+1}/{len(perturbations)}")
-        dde_job = update_user_abinit_settings(dde_job, {'irdddk': 1, 'ird1wf': 0, 'tolvrs': 1e-8}) #VT TO REMOVE TOLVRS ONLY FOR TESTING
+        dde_job = update_user_abinit_settings(dde_job, {'irdddk': 1, 'ird1wf': 0})#, 'tolvrs': 1e-8}) #VT TO REMOVE TOLVRS ONLY FOR TESTING
 
         dde_jobs.append(dde_job)
         outputs["dirs"].append(dde_job.output.dir_name)  # TODO: determine outputs

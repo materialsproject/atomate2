@@ -100,8 +100,6 @@ class MrgddbInputSet(InputSet):
             return False
         for _out_filepath, in_file in self.input_files:
             if not os.path.isfile(_out_filepath) or in_file!='in_DDB':
-                print("MODIF in_file") #VT
-                print(in_file) #VT
                 return False
         return True
 
@@ -245,24 +243,15 @@ class MrgddbInputGenerator(InputGenerator):
         input_files = []
         deps_irdvars = {}
         for prev_dir in prev_dirs:
-            print("MODIF RESOLVE_DEP PREV_DIR") #VT
-            print(prev_dir) #VT
             if check_runlevel:
                 abinit_input = load_abinit_input(prev_dir)
             for dep in deps:
                 runlevel = set(dep.split(":")[0].split("|"))
                 exts = list(dep.split(":")[1].split("|"))
-                print("MODIF RESOLVE_DEP DEP") #VT
-                print(runlevel) #VT
-                print(exts) #VT
                 if not check_runlevel or runlevel.intersection(abinit_input.runlevel):
-                    print("MODIF RESOLVE_DEP RUNLEVEL") #VT
-                    print(runlevel.intersection(abinit_input.runlevel)) #VT
                     irdvars, inp_files = self.resolve_dep_exts(
                         prev_dir=prev_dir, exts=exts
                     )
-                    print("MODIF RESOLVE_DEP INP_FILES") #VT
-                    print(inp_files) #VT
                     input_files.extend(inp_files)
                     deps_irdvars.update(irdvars)
 
@@ -370,11 +359,7 @@ class MrgddbInputGenerator(InputGenerator):
             )
             raise RuntimeError(msg)
 
-        print('MODIF PREV_OUTPUTS') #VT
-        print(prev_outputs) #VT
         irdvars, files = self.resolve_deps(prev_outputs, self.prev_outputs_deps)
-        print('MODIF FILES') #VT
-        print(files) #VT
 
         workdir = os.path.abspath(workdir)
         outdir = Directory(os.path.join(workdir, OUTDIR_NAME, 'out_DDB'))

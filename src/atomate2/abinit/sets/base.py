@@ -115,8 +115,6 @@ class AbinitInputSet(InputSet):
         if not self.input_files:
             return True
         for _out_filepath, in_file in self.input_files:
-            print("MODIF SETS/BASE INPUT_FILES VT") #VT
-            print(self.input_files) #VT
             ext = fname2ext(in_file)
             if ext is None:
                 return False
@@ -127,8 +125,6 @@ class AbinitInputSet(InputSet):
                     return (self.abinit_input["ird1wf"] == 1 or \
                             self.abinit_input["irdddk"] == 1)    #VT
             irdvars = irdvars_for_ext(ext)
-            print("MODIF SETS/BASE IRDVARS VT") #VT
-            print(irdvars) #VT
             for irdvar, irdval in irdvars.items():
                 if irdvar not in self.abinit_input:
                     return False
@@ -346,11 +342,7 @@ class AbinitInputGenerator(InputGenerator):
             or Path) needed as dependencies for the AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
-        print('MODIF VT SELFPSEUDOS') #VT
-        print(self.pseudos) #VT
         pseudos = as_pseudo_table(self.pseudos) if self.pseudos else None
-        print('MODIF VT PSEUDOS') #VT
-        print(pseudos) #VT
 
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
@@ -455,8 +447,6 @@ class AbinitInputGenerator(InputGenerator):
         abinit_inputs = {}
         for prev_dir in prev_dirs:
             abinit_input = load_abinit_input(prev_dir)
-            print('MODIF VT load_abinit_input') #VT
-            print(abinit_input) #VT
             for var_name, runlevels in prev_inputs_kwargs.items():
                 if abinit_input.runlevel and abinit_input.runlevel.intersection(
                     runlevels
@@ -474,8 +464,6 @@ class AbinitInputGenerator(InputGenerator):
         n_found = len(abinit_inputs)
         n_required = len(self.factory_prev_inputs_kwargs)
         if n_found != n_required:
-            print('MODIF VT factory_prev_inputs_kwargs')
-            print(self.factory_prev_inputs_kwargs) #VT
             raise RuntimeError(
                 f"Should have exactly {n_found} previous output. Found {n_required}"
             )
@@ -635,9 +623,6 @@ class AbinitInputGenerator(InputGenerator):
         if factory_kwargs:
             total_factory_kwargs.update(factory_kwargs)
 
-        #print("MODIF SELF.FACTORY VT") #VT
-        #print(self) #VT
-        #print(self.factory()) #VT
         if isinstance(self.factory, str):   #needed bc the factory is stored as a
                                             #str in the MongoDB
             generated_input = eval('abifact.'+self.factory.split()[1]+'(**total_factory_kwargs)')

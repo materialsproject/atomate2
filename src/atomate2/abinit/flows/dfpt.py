@@ -100,12 +100,10 @@ class DfptFlowMaker(Maker):
             A DFPT flow
         """
         static_job = self.static_maker.make(structure, restart_from=restart_from)
-        #To avoid metallic case=occopt=3 which is not okay wrt. DFPT andV occopt 1 with spin polarization requires spinmagntarget
+        #To avoid metallic case=occopt=3 which is not okay wrt. DFPT and occopt 1 with spin polarization requires spinmagntarget
         static_job = update_factory_kwargs(static_job, {'smearing': 'nosmearing', 'spin_mode': 'unpolarized'})
-        static_job = update_user_abinit_settings(static_job, {'nstep': 20}) # TO DO: modify to 500
+        static_job = update_user_abinit_settings(static_job, {'nstep': 500, 'toldfe': 1e-22}) # TO DO: modify to 500
         jobs = [static_job]
-
-        print("OK STATIC")
 
         if self.ddk_maker:
             # generate the perturbations for the DDK calculations
@@ -123,8 +121,6 @@ class DfptFlowMaker(Maker):
             )
             jobs.append(ddk_calcs)
 
-        print("OK DDK")
-
         if self.dde_maker:
             # generate the perturbations for the DDE calculations
             dde_perts = generate_dde_perts(
@@ -140,8 +136,6 @@ class DfptFlowMaker(Maker):
                 structure=structure,
             )
             jobs.append(dde_calcs)
-
-        print("OK DDE")
 
         if self.dte_maker:
             # generate the perturbations for the DTE calculations
@@ -163,8 +157,6 @@ class DfptFlowMaker(Maker):
                 structure=structure,
             )
             jobs.append(dte_calcs)
-
-        print("OK DTE")
 
         if self.mrgddb_maker:
             #merge the DDE and DTE DDB.
