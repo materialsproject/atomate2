@@ -1,5 +1,6 @@
 """Settings for atomate2."""
 
+import warnings
 from pathlib import Path
 from typing import Literal, Optional, Tuple, Union
 
@@ -177,7 +178,17 @@ class Atomate2Settings(BaseSettings):
 
         new_values = {}
         if Path(config_file_path).expanduser().exists():
-            new_values.update(loadfn(Path(config_file_path).expanduser()))
+            if Path(config_file_path).stat().st_size == 0:
+                warnings.warn(
+                    f"Using atomate2 config file at {config_file_path} but it's empty",
+                    stacklevel=2,
+                )
+            else:
+                try:
+                    new_values.update(loadfn(config_file_path))
+                except ValueError:
+                    raise SyntaxError(
+                        f"atomate2 config file at {config_file_path} is unparsable"
+                    ) from None
 
-        new_values.update(values)
-        return new_values
+        return {**new_values, **values}
