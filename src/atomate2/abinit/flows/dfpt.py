@@ -102,7 +102,9 @@ class DfptFlowMaker(Maker):
         static_job = self.static_maker.make(structure, restart_from=restart_from)
         #To avoid metallic case=occopt=3 which is not okay wrt. DFPT and occopt 1 with spin polarization requires spinmagntarget
         static_job = update_factory_kwargs(static_job, {'smearing': 'nosmearing', 'spin_mode': 'unpolarized'})
-        static_job = update_user_abinit_settings(static_job, {'nstep': 500, 'toldfe': 1e-22, 'chksymbreak': 0}) # TO DO: modify to 500
+        static_job = update_user_abinit_settings(static_job, {  'nstep': 500,
+                                                                'toldfe': 1e-22,
+                                                                'chksymbreak': '0'}) # TO DO: modify to 500
         jobs = [static_job]
 
         if self.ddk_maker:
