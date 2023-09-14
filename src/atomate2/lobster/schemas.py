@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, List, Optional, Union
 
 import numpy as np
+from emmet.core.structure import StructureMetadata
 from monty.dev import requires
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
@@ -334,7 +335,7 @@ class StrongestBonds(BaseModel):
     )
 
 
-class LobsterTaskDocument(BaseModel):
+class LobsterTaskDocument(StructureMetadata):
     """Definition of LOBSTER task document."""
 
     structure: Structure = Field(None, description="The structure used in this task")
@@ -609,8 +610,9 @@ class LobsterTaskDocument(BaseModel):
             for spin, value in band_overlaps_obj.bandoverlapsdict.items():
                 band_overlaps[str(spin.value)] = value
 
-        doc = cls(
+        doc = cls.from_structure(
             structure=struct,
+            meta_structure=struct,
             dir_name=dir_name,
             lobsterin=lobster_in,
             lobsterout=lobster_out,

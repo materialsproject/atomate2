@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
+from emmet.core.structure import StructureMetadata
 from monty.json import MSONable
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
@@ -105,7 +106,7 @@ class PhononJobDirs(BaseModel):
     )
 
 
-class PhononBSDOSDoc(BaseModel):
+class PhononBSDOSDoc(StructureMetadata):
     """Collection of all data produced by the phonon workflow."""
 
     structure: Structure = Field(
@@ -442,8 +443,9 @@ class PhononBSDOSDoc(BaseModel):
             total_dft_energy / formula_units if total_dft_energy is not None else None
         )
 
-        return cls(
+        return cls.from_structure(
             structure=structure,
+            meta_structure=structure,
             phonon_bandstructure=bs_symm_line,
             phonon_dos=dos,
             free_energies=free_energies,

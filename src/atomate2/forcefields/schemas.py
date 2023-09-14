@@ -135,7 +135,7 @@ class ForceFieldTaskDocument(StructureMetadata):
 
         # NOTE: units for stresses were converted to kbar (* -10 from standard output)
         # to comply with MP convention
-        for i in range(0, len(trajectory["stresses"])):
+        for i in range(len(trajectory["stresses"])):
             trajectory["stresses"][i] = trajectory["stresses"][i] * -10
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -173,7 +173,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         n_steps = len(trajectory["energies"])
 
         ionic_steps = []
-        for i in range(0, n_steps):
+        for i in range(n_steps):
             cur_energy = (
                 trajectory["energies"][i] if "energy" in ionic_step_data else None
             )
