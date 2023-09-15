@@ -10,7 +10,6 @@ INCAR:
   ISIF: 3
   ISPIN: 2
   ISMEAR: 0
-  KSPACING: 0.44
   LORBIT: 11
   LASPH: True
   LDAU: true
@@ -73,11 +72,11 @@ INCAR:
       V: 3.25
       W: 6.2
   LDAUPRINT: 1
-  LREAL: Auto
+  LREAL: False
   LMIXTAU: True
-  LCHARG: True  # Output CHGCAR
-  LAECHG: True  # Output AECCAR
-  LELF: False  # Don't output ELFCAR by default as it breaks KPAR
+  LCHARG: True # Output CHGCAR
+  LAECHG: True # Output AECCAR
+  LELF: False # Don't output ELFCAR by default as it breaks KPAR
   LWAVE: False # Don't output WAVECAR
   LVTOT: True # Output LOCPOT
   MAGMOM:
@@ -115,6 +114,9 @@ INCAR:
   NSW: 99
   PREC: Accurate
   SIGMA: 0.05
+KPOINTS:
+  reciprocal_density: 64
+  reciprocal_density_metal: 200
 POTCAR_FUNCTIONAL: PBE_54
 POTCAR:
   Ac: Ac
@@ -211,6 +213,8 @@ POTCAR:
   W: W_sv
   Xe: Xe
   Y: Y_sv
-  Yb: Yb_2
+  # 2023-05-02: change Yb_2 to Yb_3 as Yb_2 gives incorrect thermodynamics for most systems with Yb3+
+  # https://github.com/materialsproject/pymatgen/issues/2968
+  Yb: Yb_3
   Zn: Zn
   Zr: Zr_sv

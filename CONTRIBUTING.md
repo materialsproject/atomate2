@@ -53,7 +53,7 @@ The basic procedure for making a PR is:
 
 We have a few tips for writing good PRs that are accepted into the main repo:
 
-- Use the Numpy Code style for all of your code. Find an example [here](hhttps://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy).
+- Use the Numpy Code style for all of your code. Find an example [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy).
 - Your code should have (4) spaces instead of tabs.
 - If needed, update the documentation.
 - **Write tests** for new features! Good tests are 100%, absolutely necessary

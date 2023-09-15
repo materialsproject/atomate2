@@ -6,14 +6,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
+from emmet.core.math import Matrix3D, Vector3D
+from emmet.core.structure import StructureMetadata
 from monty.dev import requires
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 
 from atomate2 import __version__
-from atomate2.common.schemas.math import Matrix3D, Vector3D
-from atomate2.common.schemas.structure import StructureMetadata
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 
@@ -132,7 +132,7 @@ class AmsetTaskDocument(StructureMetadata):
     scattering_labels: List[str] = Field(
         None, description="The scattering types used in the calculation"
     )
-    soc: bool = Field(None, description="Whether spin–orbit coupling was included")
+    soc: bool = Field(None, description="Whether spin-orbit coupling was included")
     structure: Structure = Field(None, description="The structure used in this task")
     _schema: str = Field(
         __version__,
@@ -197,8 +197,10 @@ class AmsetTaskDocument(StructureMetadata):
 
                 mesh_kwargs["mesh"] = cast_dict_list(mesh)
 
+        structure = _get_structure()
         doc = cls.from_structure(
-            structure=_get_structure(),
+            structure=structure,
+            meta_structure=structure,
             include_structure=True,
             dir_name=get_uri(dir_name),
             completed_at=datetime_str(),
@@ -223,7 +225,7 @@ def _get_structure() -> Structure:
         from pymatgen.io.vasp import BSVasprun
 
         return BSVasprun(str(vr_files[0])).get_band_structure().structure
-    elif len(bs_files) > 0:
+    if len(bs_files) > 0:
         return loadfn(bs_files[0])["band_structure"].structure
 
     raise ValueError("Could not find amset input in current directory.")

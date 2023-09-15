@@ -1,14 +1,14 @@
 import logging
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import Dict, Final, Literal, Sequence, Union
 
 import pytest
 
 logger = logging.getLogger("atomate2")
 
-_VFILES = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS = {}
-_FAKE_RUN_VASP_KWARGS = {}
+_VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
+_REF_PATHS: Dict[str, Union[str, Path]] = {}
+_FAKE_RUN_VASP_KWARGS: Dict[str, dict] = {}
 
 
 @pytest.fixture(scope="session")
@@ -16,7 +16,12 @@ def vasp_test_dir(test_dir):
     return test_dir / "vasp"
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
+def lobster_test_dir(test_dir):
+    return test_dir / "lobster"
+
+
+@pytest.fixture()
 def mock_vasp(monkeypatch, vasp_test_dir):
     """
     This fixture allows one to mock (fake) running VASP.
@@ -29,8 +34,8 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     reference files will be copied into the directory instead. As we do not want to
     test whether VASP is giving the correct output rather that the calculation inputs
     are generated correctly and that the outputs are parsed properly, this should be
-    sufficient for our needs. An other potential issue is that the POTCAR files
-    distribute with VASP are not present on the testing server due to licensing
+    sufficient for our needs. Another potential issue is that the POTCAR files
+    distributed with VASP are not present on the testing server due to licensing
     constraints. Accordingly, VaspInputSet.write_inputs will fail unless the
     "potcar_spec" option is set to True, in which case a POTCAR.spec file will be
     written instead. This fixture solves both of these issues.
@@ -102,8 +107,8 @@ def mock_vasp(monkeypatch, vasp_test_dir):
 
 
 def fake_run_vasp(
-    ref_path: Union[str, Path],
-    incar_settings: Sequence[str] = tuple(),
+    ref_path: Path,
+    incar_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
 ):
@@ -119,13 +124,11 @@ def fake_run_vasp(
         A list of INCAR settings to check.
     check_inputs
         A list of vasp input files to check. Supported options are "incar", "kpoints",
-        "poscar", "potcar".
+        "poscar", "potcar", "wavecar".
     clear_inputs
         Whether to clear input files before copying in the reference VASP outputs.
     """
     logger.info("Running fake VASP.")
-
-    ref_path = Path(ref_path)
 
     if "incar" in check_inputs:
         check_incar(ref_path, incar_settings)
@@ -139,6 +142,10 @@ def fake_run_vasp(
     if "potcar" in check_inputs:
         check_potcar(ref_path)
 
+    # This is useful to check if the WAVECAR has been copied
+    if "wavecar" in check_inputs and not Path("WAVECAR").exists():
+        raise ValueError("WAVECAR was not correctly copied")
+
     logger.info("Verified inputs successfully")
 
     if clear_inputs:
@@ -150,7 +157,7 @@ def fake_run_vasp(
     logger.info("Generated fake vasp outputs")
 
 
-def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
+def check_incar(ref_path: Path, incar_settings: Sequence[str]):
     from pymatgen.io.vasp import Incar
 
     user = Incar.from_file("INCAR")
@@ -164,7 +171,7 @@ def check_incar(ref_path: Union[str, Path], incar_settings: Sequence[str]):
             )
 
 
-def check_kpoints(ref_path: Union[str, Path]):
+def check_kpoints(ref_path: Path):
     from pymatgen.io.vasp import Incar, Kpoints
 
     user_kpoints_exists = Path("KPOINTS").exists()
@@ -175,12 +182,12 @@ def check_kpoints(ref_path: Union[str, Path]):
             "atomate2 generated a KPOINTS file but the reference calculation is using "
             "KSPACING"
         )
-    elif not user_kpoints_exists and ref_kpoints_exists:
+    if not user_kpoints_exists and ref_kpoints_exists:
         raise ValueError(
             "atomate2 is using KSPACING but the reference calculation is using "
             "a KPOINTS file"
         )
-    elif user_kpoints_exists and ref_kpoints_exists:
+    if user_kpoints_exists and ref_kpoints_exists:
         user = Kpoints.from_file("KPOINTS")
         ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
         if user.style != ref.style or user.num_kpts != ref.num_kpts:
@@ -190,14 +197,12 @@ def check_kpoints(ref_path: Union[str, Path]):
         user = Incar.from_file("INCAR")
         ref = Incar.from_file(ref_path / "inputs" / "INCAR")
 
-        if user.get("KSPACING", None) != ref.get("KSPACING", None):
-            raise ValueError(
-                "KSPACING is not consistent: "
-                f"{user.get('KSPACING', None)} != {ref.get('KSPACING', None)}"
-            )
+        user_ksp, ref_ksp = user.get("KSPACING"), ref.get("KSPACING")
+        if user_ksp != ref_ksp:
+            raise ValueError(f"KSPACING is not consistent: {user_ksp} != {ref_ksp}")
 
 
-def check_poscar(ref_path: Union[str, Path]):
+def check_poscar(ref_path: Path):
     import numpy as np
     from pymatgen.io.vasp import Poscar
     from pymatgen.util.coord import pbc_diff
@@ -216,7 +221,7 @@ def check_poscar(ref_path: Union[str, Path]):
         raise ValueError("POSCAR files are inconsistent")
 
 
-def check_potcar(ref_path: Union[str, Path]):
+def check_potcar(ref_path: Path):
     from pymatgen.io.vasp import Potcar
 
     if Path(ref_path / "inputs" / "POTCAR").exists():
@@ -253,7 +258,7 @@ def clear_vasp_inputs():
     logger.info("Cleared vasp inputs")
 
 
-def copy_vasp_outputs(ref_path: Union[str, Path]):
+def copy_vasp_outputs(ref_path: Path):
     import shutil
 
     output_path = ref_path / "outputs"

@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 from itertools import chain
+from typing import TYPE_CHECKING
 
 import numpy as np
 from maggma.builders import Builder
-from maggma.core import Store
 from pydash import get
 from pymatgen.analysis.elasticity import Deformation, Stress
 
 from atomate2 import SETTINGS
 from atomate2.common.schemas.elastic import ElasticDocument
+
+if TYPE_CHECKING:
+    from maggma.core import Store
 
 
 class ElasticBuilder(Builder):
@@ -56,7 +59,6 @@ class ElasticBuilder(Builder):
         structure_match_tol: float = 1e-5,
         **kwargs,
     ):
-
         self.tasks = tasks
         self.elasticity = elasticity
         self.query = query if query else {}

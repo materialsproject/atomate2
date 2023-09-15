@@ -110,6 +110,7 @@ INCAR:
   SIGMA: 0.05
 KPOINTS:
   reciprocal_density: 64
+  reciprocal_density_metal: 200
 POTCAR_FUNCTIONAL: PBE
 POTCAR:
   Ac: Ac
@@ -198,6 +199,8 @@ POTCAR:
   W: W_pv
   Xe: Xe
   Y: Y_sv
-  Yb: Yb_2
+  # 2023-05-02: change Yb_2 to Yb_3 as Yb_2 gives incorrect thermodynamics for most systems with Yb3+
+  # https://github.com/materialsproject/pymatgen/issues/2968
+  Yb: Yb_3
   Zn: Zn
   Zr: Zr_sv

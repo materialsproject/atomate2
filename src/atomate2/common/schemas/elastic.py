@@ -1,13 +1,16 @@
 """Schemas for elastic tensor fitting and related properties."""
-
 from copy import deepcopy
 from typing import List, Optional
 
+import numpy as np
+from emmet.core.math import Matrix3D, MatrixVoigt
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.analysis.elasticity import (
     Deformation,
     ElasticTensor,
     ElasticTensorExpansion,
+    Strain,
     Stress,
 )
 from pymatgen.core import Structure
@@ -15,7 +18,6 @@ from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
-from atomate2.common.schemas.math import Matrix3D, MatrixVoigt
 
 __all__ = [
     "DerivedProperties",
@@ -44,15 +46,18 @@ class DerivedProperties(BaseModel):
     homogeneous_poisson: float = Field(None, description="Homogeneous poisson ratio.")
     y_mod: float = Field(
         None,
-        description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of the bulk and shear moduli.",
+        description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of "
+        "the bulk and shear moduli.",
     )
     trans_v: float = Field(
         None,
-        description="Transverse sound velocity (SI units) obtained from the Voigt-Reuss-Hill average bulk modulus.",
+        description="Transverse sound velocity (SI units) obtained from the "
+        "Voigt-Reuss-Hill average bulk modulus.",
     )
     long_v: float = Field(
         None,
-        description="Longitudinal sound velocity (SI units) obtained from the Voigt-Reuss-Hill average bulk modulus.",
+        description="Longitudinal sound velocity (SI units) obtained from the "
+        "Voigt-Reuss-Hill average bulk modulus.",
     )
     snyder_ac: float = Field(
         None, description="Synder's acoustic sound velocity (SI units)."
@@ -71,7 +76,8 @@ class DerivedProperties(BaseModel):
     )
     debye_temperature: float = Field(
         None,
-        description="Debye temperature from longitudinal and transverse sound velocities (SI units).",
+        description="Debye temperature from longitudinal and transverse sound "
+        "velocities (SI units).",
     )
 
 
@@ -85,7 +91,7 @@ class FittingData(BaseModel):
         None, description="The strains used to fit the elastic tensor."
     )
     pk_stresses: List[Matrix3D] = Field(
-        None, description="The Piola–Kirchoff stresses used to fit the elastic tensor."
+        None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
     deformations: List[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."
@@ -103,7 +109,7 @@ class ElasticTensorDocument(BaseModel):
     ieee_format: MatrixVoigt = Field(None, description="Elastic tensor in IEEE format.")
 
 
-class ElasticDocument(BaseModel):
+class ElasticDocument(StructureMetadata):
     """Document containing elastic tensor information and related properties."""
 
     structure: Structure = Field(
@@ -117,10 +123,6 @@ class ElasticDocument(BaseModel):
     )
     derived_properties: DerivedProperties = Field(
         None, description="Properties derived from the elastic tensor."
-    )
-    formula_pretty: str = Field(
-        None,
-        description="Cleaned representation of the formula",
     )
     fitting_data: FittingData = Field(
         None, description="Data used to fit the elastic tensor."
@@ -144,6 +146,7 @@ class ElasticDocument(BaseModel):
         order: Optional[int] = None,
         equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
+        allow_elastically_unstable_structs: bool = True,
     ):
         """
         Create an elastic document from strains and stresses.
@@ -173,18 +176,25 @@ class ElasticDocument(BaseModel):
         symprec : float
             Symmetry precision for deriving symmetry equivalent deformations. If
             ``symprec=None``, then no symmetry operations will be applied.
+        allow_elastically_unstable_structs : bool
+            Whether to allow the ElasticDocument to still complete in the event that
+            the structure is elastically unstable.
         """
+        strains = [d.green_lagrange_strain for d in deformations]
+
         if symprec is not None:
-            deformations, stresses, uuids, job_dirs = _expand_deformations(
-                structure, deformations, stresses, uuids, job_dirs, symprec
+            strains, stresses, uuids, job_dirs = _expand_strains(
+                structure, strains, stresses, uuids, job_dirs, symprec
             )
 
+        deformations = [s.get_deformation_matrix() for s in strains]
+
+        # -0.1 to convert units from kBar to GPa and stress direction
+        stresses = [-0.1 * s for s in stresses]
         eq_stress = None
         if equilibrium_stress:
             eq_stress = -0.1 * Stress(equilibrium_stress)
 
-        strains = [d.green_lagrange_strain for d in deformations]
-        stresses = [-0.1 * s for s in stresses]
         pk_stresses = [s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations)]
 
         if order is None:
@@ -208,16 +218,21 @@ class ElasticDocument(BaseModel):
 
         ieee = result.convert_to_ieee(structure)
         property_tensor = ieee if order == 2 else ElasticTensor(ieee[0])
-        property_dict = property_tensor.get_structure_property_dict(structure)
+
+        ignore_errors = bool(allow_elastically_unstable_structs)
+        property_dict = property_tensor.get_structure_property_dict(
+            structure, ignore_errors=ignore_errors
+        )
+
         derived_properties = DerivedProperties(**property_dict)
 
         eq_stress = eq_stress.tolist() if eq_stress is not None else eq_stress
 
-        return cls(
+        return cls.from_structure(
             structure=structure,
+            meta_structure=structure,
             eq_stress=eq_stress,
             derived_properties=derived_properties,
-            formula_pretty=structure.composition.reduced_formula,
             fitting_method=fitting_method,
             order=order,
             elastic_tensor=ElasticTensorDocument(
@@ -234,39 +249,56 @@ class ElasticDocument(BaseModel):
         )
 
 
-def _expand_deformations(structure, deformations, stresses, uuids, job_dirs, symprec):
-    """Use symmetry to expand deformations."""
+def _expand_strains(
+    structure: Structure,
+    strains: List[Strain],
+    stresses: List[Stress],
+    uuids: List[str],
+    job_dirs: List[str],
+    symprec: float,
+    tol: float = 1e-3,
+):
+    """
+    Use symmetry to expand strains.
+
+    Args:
+         tol: tolerance to determine if a strain component is zero. This should be
+            smaller than the smallest strain magnitude used to deform the structure.
+
+    Warning:
+        This function assumes that each deformed structure is generated from strain
+        state with only one non-zero component. If this is not the case, the expanded
+        strains will not contain the ones with other strain states. Also see:
+        `generate_elastic_deformations()`.
+    """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     symmops = sga.get_symmetry_operations(cartesian=True)
 
-    full_deformations = deepcopy(deformations)
+    full_strains = deepcopy(strains)
     full_stresses = deepcopy(stresses)
     full_uuids = deepcopy(uuids)
     full_job_dirs = deepcopy(job_dirs)
 
-    mapping = TensorMapping()
-    for i, deformation in enumerate(deformations):
-        mapping[deformation] = True
-
+    mapping = TensorMapping(full_strains, [True for _ in full_strains])
+    for i, strain in enumerate(strains):
         for symmop in symmops:
-            # rotate the deformation
-            rotated_deformation = deformation.transform(symmop)
+            rotated_strain = strain.transform(symmop)
+
+            # check if we have more than one perturbed strain component
+            if sum(np.abs(rotated_strain.voigt) > tol) > 1:
+                continue
 
             # check if we have seen it before
-            if rotated_deformation in mapping:
+            if rotated_strain in mapping:
                 continue
 
-            # check it is a valid deformation
-            if not Deformation(rotated_deformation).is_independent():
-                continue
-
-            # store the rotated deformation so we know we've seen it
-            mapping[rotated_deformation] = True
+            # store the rotated strain so we know we've seen it
+            mapping[rotated_strain] = True
 
             # expand the other properties
-            full_deformations.append(rotated_deformation)
+            full_strains.append(rotated_strain)
             full_stresses.append(stresses[i].transform(symmop))
             full_uuids.append(uuids[i])
             full_job_dirs.append(job_dirs[i])
 
-    return full_deformations, full_stresses, full_uuids, full_job_dirs
+    return full_strains, full_stresses, full_uuids, full_job_dirs

@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
+from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
 from monty.json import jsanitize
 from pydantic import Field
@@ -12,7 +13,6 @@ from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
 
 from atomate2 import __version__
-from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import find_recent_logfile, get_uri
 
@@ -46,7 +46,8 @@ class TaskDocument(MoleculeMetadata):
     )
     metadata: Dict = Field(
         None,
-        description="Calculation metadata, including input parameters and runtime statistics",
+        description="Calculation metadata, including input parameters and runtime "
+        "statistics",
     )
     task_label: str = Field(None, description="A description of the task")
     tags: List[str] = Field(None, description="Optional tags for this task document")
@@ -67,10 +68,9 @@ class TaskDocument(MoleculeMetadata):
         dir_name: Union[str, Path],
         logfile_extensions: Union[str, List[str]],
         store_trajectory: bool = False,
-        store_input_orientation: bool = False,
-        additional_fields: Dict[str, Any] = None,
-        analysis: Union[str, List[str]] = None,
-        proatom_dir: Union[Path, str] = None,
+        additional_fields: Optional[Dict[str, Any]] = None,
+        analysis: Optional[Union[str, List[str]]] = None,
+        proatom_dir: Optional[Union[Path, str]] = None,
     ) -> _T:
         """
         Create a TaskDocument from a log file.
@@ -90,11 +90,6 @@ class TaskDocument(MoleculeMetadata):
         store_trajectory
             Whether to store the molecule objects along the course of the relaxation
             trajectory.
-        store_input_orientation
-            Whether to store the molecule object as specified in the input file. Note
-            that the initial molecule object is already stored, but it may be
-            re-oriented compared to the input file if the code reorients the input
-            geometry.
         additional_fields
             Dictionary of additional fields to add to TaskDocument.
         analysis
@@ -115,7 +110,7 @@ class TaskDocument(MoleculeMetadata):
         from cclib.io import ccread
 
         logger.info(
-            f"Searching for the most recent log file with extensions {logfile_extensions}"
+            f"Searching for most recent log file with extensions {logfile_extensions}"
         )
 
         # Find the most recent log file with the given extension in the
@@ -131,8 +126,7 @@ class TaskDocument(MoleculeMetadata):
         additional_fields = {} if additional_fields is None else additional_fields
 
         # Let's parse the log file with cclib
-        # str conversion due to cclib bug: https://github.com/cclib/cclib/issues/1096
-        cclib_obj = ccread(str(logfile), logging.ERROR)
+        cclib_obj = ccread(logfile, logging.ERROR)
         if not cclib_obj:
             raise ValueError(f"Could not parse {logfile}")
 
@@ -149,16 +143,15 @@ class TaskDocument(MoleculeMetadata):
         metadata = jsanitize(cclib_obj.metadata)
 
         # monty datetime bug workaround: github.com/materialsvirtuallab/monty/issues/275
-        if metadata.get("wall_time", None):
-            metadata["wall_time"] = [str(m) for m in metadata["wall_time"]]
-        if metadata.get("cpu_time", None):
-            metadata["cpu_time"] = [str(m) for m in metadata["cpu_time"]]
+        if wall_time := metadata.get("wall_time"):
+            metadata["wall_time"] = [*map(str, wall_time)]
+        if cpu_time := metadata.get("cpu_time"):
+            metadata["cpu_time"] = [*map(str, cpu_time)]
 
         # Get the final energy to store as its own key/value pair
-        if cclib_obj.scfenergies is not None:
-            energy = cclib_obj.scfenergies[-1]
-        else:
-            energy = None
+        energy = (
+            cclib_obj.scfenergies[-1] if cclib_obj.scfenergies is not None else None
+        )
 
         # Now we construct the input molecule. Note that this is not necessarily
         # the same as the initial molecule from the relaxation because the
@@ -166,12 +159,12 @@ class TaskDocument(MoleculeMetadata):
         # the input if it is XYZ-formatted though since the Molecule object
         # does not support internal coordinates or Gaussian Z-matrix.
         if (
-            store_input_orientation
-            and cclib_obj.metadata.get("coord_type", None) == "xyz"
-            and cclib_obj.metadata.geet("coords", None) is not None
+            cclib_obj.metadata.get("coord_type") == "xyz"
+            and cclib_obj.metadata.get("coords") is not None
         ):
-            input_species = [Element(e) for e in cclib_obj.metadata["coords"][:, 0]]
-            input_coords = cclib_obj.metadata["coords"][:, 1:]
+            coords_obj = cclib_obj.metadata["coords"]
+            input_species = [Element(row[0]) for row in coords_obj]
+            input_coords = [row[1:] for row in coords_obj]
             input_molecule = Molecule(
                 input_species,
                 input_coords,
@@ -206,7 +199,6 @@ class TaskDocument(MoleculeMetadata):
         initial_molecule = molecules[0]
         final_molecule = molecules[-1]
         attributes["molecule_initial"] = initial_molecule
-        attributes["molecule_final"] = final_molecule
         if store_trajectory:
             attributes["trajectory"] = molecules
 
@@ -216,19 +208,21 @@ class TaskDocument(MoleculeMetadata):
                 cclib_obj.moenergies, cclib_obj.homos
             )
             attributes["homo_energies"] = homo_energies
-            attributes["lumo_energies"] = lumo_energies
-            attributes["homo_lumo_gaps"] = homo_lumo_gaps
+            if lumo_energies:
+                attributes["lumo_energies"] = lumo_energies
+            if homo_lumo_gaps:
+                attributes["homo_lumo_gaps"] = homo_lumo_gaps
 
-            # The HOMO-LUMO gap for a spin-polarized system is ill-defined.
-            # This is why we report both the alpha and beta channel gaps
-            # above. Here, we report min(LUMO_alpha-HOMO_alpha,LUMO_beta-HOMO_beta)
-            # in case the user wants to easily query by this too. For restricted
-            # systems, this will always be the same as above.
-            attributes["min_homo_lumo_gap"] = min(homo_lumo_gaps)
+                # The HOMO-LUMO gap for a spin-polarized system is ill-defined.
+                # This is why we report both the alpha and beta channel gaps
+                # above. Here, we report min(LUMO_alpha-HOMO_alpha,LUMO_beta-HOMO_beta)
+                # in case the user wants to easily query by this too. For restricted
+                # systems, this will always be the same as above.
+                attributes["min_homo_lumo_gap"] = min(homo_lumo_gaps)
 
         # Calculate any properties
         if analysis:
-            if type(analysis) == str:
+            if isinstance(analysis, str):
                 analysis = [analysis]
             analysis = [a.lower() for a in analysis]
 
@@ -246,16 +240,15 @@ class TaskDocument(MoleculeMetadata):
                     attributes[analysis_name] = None
 
         doc = cls.from_molecule(
-            molecule=final_molecule,
-            include_molecule=True,
+            final_molecule,
             energy=energy,
             dir_name=get_uri(dir_name),
             logfile=get_uri(logfile),
             attributes=attributes,
             metadata=metadata,
         )
-        doc = doc.copy(update=additional_fields)
-        return doc
+        doc.molecule = final_molecule
+        return doc.copy(update=additional_fields)
 
 
 @requires(cclib, "cclib_calculate requires cclib to be installed.")
@@ -302,7 +295,7 @@ def cclib_calculate(
             f"A cube file must be provided for {method}. Returning None."
         )
     if method in ["ddec6", "hirshfeld"] and not proatom_dir:
-        if "PROATOM_DIR" not in os.environ:
+        if os.getenv("PROATOM_DIR") is None:
             raise OSError("PROATOM_DIR environment variable not set. Returning None.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
     if proatom_dir and not os.path.exists(proatom_dir):

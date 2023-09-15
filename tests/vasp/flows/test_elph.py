@@ -4,16 +4,18 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
     from atomate2.vasp.flows.elph import ElectronPhononMaker
     from atomate2.vasp.schemas.elph import ElectronPhononRenormalisationDoc
 
-    # mapping from job name to directory containing test files
+    # map job name to directory containing test files
     ref_paths = {
         "non-scf uniform T=0.0": "Si_elph_renorm/non-scf_uniform_T=0.0",
         "non-scf uniform T=100.0": "Si_elph_renorm/non-scf_uniform_T=100.0",
-        "non-scf uniform bulk supercell": "Si_elph_renorm/non-scf_uniform_bulk_supercell",
+        "non-scf uniform bulk supercell": "Si_elph_renorm/"
+        "non-scf_uniform_bulk_supercell",
         "static": "Si_elph_renorm/static",
         "static T=0.0": "Si_elph_renorm/static_T=0.0",
         "static T=100.0": "Si_elph_renorm/static_T=100.0",
         "static bulk supercell": "Si_elph_renorm/static_bulk_supercell",
-        "supercell electron phonon displacements": "Si_elph_renorm/supercell_electron_phonon_displacements",
+        "supercell electron phonon displacements": "Si_elph_renorm/"
+        "supercell_electron_phonon_displacements",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -67,3 +69,4 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
         -0.488900000000001,
         -0.48850000000000104,
     }
+    assert renorm_output.chemsys == "Si"
