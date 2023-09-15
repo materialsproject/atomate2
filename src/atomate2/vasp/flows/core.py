@@ -530,7 +530,7 @@ class MultiMDMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-        traj_ids: list[str] | None = None,
+        prev_traj_ids: list[str] | None = None,
     ):
         """
         Create a flow with several chained MD runs.
@@ -541,7 +541,7 @@ class MultiMDMaker(Maker):
             A pymatgen structure object.
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
-        traj_ids: a list of ids of job identifying previous steps of the
+        prev_traj_ids: a list of ids of job identifying previous steps of the
             MD trajectory.
 
         Returns
@@ -566,7 +566,7 @@ class MultiMDMaker(Maker):
             structure=md_jobs[-1].output.structure,
             vasp_dir=md_jobs[-1].output.dir_name,
             traj_ids=[j.uuid for j in md_jobs],
-            prev_traj_ids=traj_ids,
+            prev_traj_ids=prev_traj_ids,
         )
         output_job.name = "molecular dynamics output"
 
@@ -596,5 +596,5 @@ class MultiMDMaker(Maker):
         return self.make(
             structure=md_ref.structure,
             prev_vasp_dir=md_ref.vasp_dir,
-            traj_ids=md_ref.traj_ids,
+            prev_traj_ids=md_ref.full_traj_ids,
         )

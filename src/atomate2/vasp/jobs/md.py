@@ -107,17 +107,24 @@ def md_output(
         The final structure to be stored.
     vasp_dir: str or Path
         The path to the folder containing the last calculation of a MultiMDMaker.
-    traj_ids: list of strings
+    traj_ids: list of str
         List of the uuids of the jobs that will compose the trajectory.
+    prev_traj_ids: list of str
+        List of the uuids of the jobs coming from previous flow that will be
+        added to the trajectory.
 
     Returns
     -------
     The output dictionary.
     """
+    full_traj_ids = list(traj_ids)
     if prev_traj_ids:
-        # not += to not modify the original list
-        traj_ids = traj_ids + prev_traj_ids
-    output = MultiMDOutput(
-        structure=structure, vasp_dir=str(vasp_dir), traj_ids=traj_ids
+        full_traj_ids = prev_traj_ids + full_traj_ids
+    output = MultiMDOutput.from_structure(
+        structure=structure,
+        meta_structure=structure,
+        vasp_dir=str(vasp_dir),
+        traj_ids=traj_ids,
+        full_traj_ids=full_traj_ids,
     )
     return Response(output=output)
