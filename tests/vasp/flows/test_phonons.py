@@ -145,6 +145,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
             11255.660261586278,
         ],
     )
+    assert responses[job.jobs[-1].uuid][1].output.chemsys == "Si"
 
 
 # structure will be kept in the format that was transferred

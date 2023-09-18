@@ -4,6 +4,7 @@ import logging
 from typing import Dict, List, Tuple
 
 import numpy as np
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.bandstructure import BandStructure
@@ -71,17 +72,13 @@ class RawElectronicData(BaseModel):
     )
 
 
-class ElectronPhononRenormalisationDoc(BaseModel):
+class ElectronPhononRenormalisationDoc(StructureMetadata):
     """Electron-phonon band gap renormalisation document."""
 
     structure: Structure = Field(
         None,
         description="The primitive structure for which the electron-phonon was"
         " calculated",
-    )
-    formula_pretty: str = Field(
-        None,
-        description="Cleaned representation of the formula",
     )
     temperatures: List[float] = Field(
         None, description="Temperatures at which electron-phonon coupling was obtained"
@@ -214,9 +211,9 @@ class ElectronPhononRenormalisationDoc(BaseModel):
         band_gaps = cbms - vbms
         delta_band_gaps = band_gaps - bulk_band_gap
 
-        return cls(
+        return cls.from_structure(
             structure=original_structure,
-            formula_pretty=original_structure.composition.reduced_formula,
+            meta_structure=original_structure,
             temperatures=temperatures,
             band_gaps=band_gaps.tolist(),
             vbms=vbms.tolist(),
