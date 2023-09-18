@@ -78,7 +78,7 @@ strict = [
     "pymatgen==2023.8.10",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "typing-extensions==4.7.1",
+    "typing-extensions==4.8.0",
 ]
 
 [project.scripts]
