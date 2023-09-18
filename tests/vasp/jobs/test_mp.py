@@ -1,8 +1,44 @@
 import pytest
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.mp import MPMetaGGARelaxMaker, MPMetaGGAStaticMaker
+from atomate2.vasp.jobs.mp import (
+    MPMetaGGARelaxMaker,
+    MPMetaGGAStaticMaker,
+    MPPreRelaxMaker,
+)
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
+
+expected_incar = {
+    "ISIF": 3,
+    "IBRION": 2,
+    "NSW": 99,
+    "ISMEAR": 0,
+    "SIGMA": 0.05,
+    "LREAL": False,
+    "LWAVE": False,
+    "LCHARG": True,
+    "EDIFF": 1e-05,
+    "EDIFFG": -0.02,
+    "GGA": "PS",
+}
+
+
+def test_mp_pre_relax_maker_default_values():
+    maker = MPPreRelaxMaker()
+    assert maker.name == "MP pre-relax"
+    assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
+    for key, expected in expected_incar.items():
+        actual = maker.input_set_generator.config_dict["INCAR"][key]
+        assert actual == expected, f"{key=}, {actual=}, {expected=}"
+
+
+def test_mp_relax_maker_default_values():
+    maker = MPMetaGGARelaxMaker()
+    assert maker.name == "MP meta-GGA relax"
+    assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
+    for key, expected in expected_incar.items():
+        actual = maker.input_set_generator.config_dict["INCAR"][key]
+        assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
 
 def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):

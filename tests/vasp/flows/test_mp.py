@@ -1,4 +1,5 @@
 import pytest
+from jobflow import Maker
 from pymatgen.core import Structure
 
 from atomate2.vasp.flows.mp import MPGGADoubleRelaxStatic, MPMetaGGADoubleRelaxStatic
@@ -7,74 +8,35 @@ from atomate2.vasp.jobs.mp import (
     MPPreRelaxMaker,
 )
 
-expected_incar = {
-    "ISIF": 3,
-    "IBRION": 2,
-    "NSW": 99,
-    "ISMEAR": 0,
-    "SIGMA": 0.05,
-    "LREAL": False,
-    "LWAVE": False,
-    "LCHARG": True,
-    "EDIFF": 1e-05,
-    "EDIFFG": -0.02,
-    "GGA": "PS",
-}
 
-
-def test_mp_pre_relax_maker_default_values():
-    maker = MPPreRelaxMaker()
-    assert maker.name == "MP pre-relax"
-    assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
-    for key, expected in expected_incar.items():
-        actual = maker.input_set_generator.config_dict["INCAR"][key]
-        assert actual == expected, f"{key=}, {actual=}, {expected=}"
-
-
-def test_mp_relax_maker_default_values():
-    maker = MPMetaGGARelaxMaker()
-    assert maker.name == "MP meta-GGA Relax"
-    assert {*maker.input_set_generator.config_dict} >= {"INCAR", "KPOINTS", "POTCAR"}
-    for key, expected in expected_incar.items():
-        actual = maker.input_set_generator.config_dict["INCAR"][key]
-        assert actual == expected, f"{key=}, {actual=}, {expected=}"
-
-
+@pytest.mark.parametrize("name", ["test", None])
 @pytest.mark.parametrize(
-    "initial_static_maker, final_relax_maker",
+    "relax_maker, static_maker",
     [
         (MPPreRelaxMaker(), MPMetaGGARelaxMaker()),
         (MPPreRelaxMaker(), None),
         (None, MPMetaGGARelaxMaker()),
-        (None, None),  # test it doesn't raise without optional makers
+        (None, None),  # shouldn't raise without optional makers
     ],
 )
-def test_mp_meta_gga_relax_default_values(initial_static_maker, final_relax_maker):
-    job = MPMetaGGADoubleRelaxStatic(
-        initial_maker=initial_static_maker, final_relax_maker=final_relax_maker
+def test_mp_meta_gga_relax_custom_values(
+    name: str, relax_maker: Maker | None, static_maker: Maker | None
+):
+    kwargs = {}
+    if name:
+        kwargs["name"] = name
+    flow = MPMetaGGADoubleRelaxStatic(
+        relax_maker=relax_maker, static_maker=static_maker, **kwargs
     )
-    assert isinstance(job.initial_maker, type(initial_static_maker))
-    if initial_static_maker:
-        assert job.initial_maker.name == "MP pre-relax"
+    assert isinstance(flow.relax_maker, type(relax_maker))
+    if relax_maker:
+        assert flow.relax_maker.name == "MP pre-relax"
 
-    assert isinstance(job.final_relax_maker, type(final_relax_maker))
-    if final_relax_maker:
-        assert job.final_relax_maker.name == "MP meta-GGA Relax"
+    assert isinstance(flow.static_maker, type(static_maker))
+    if static_maker:
+        assert flow.static_maker.name == "MP meta-GGA relax"
 
-    assert job.name == "MP Meta-GGA Relax"
-
-
-def test_mp_meta_gga_relax_custom_values():
-    initial_maker = MPPreRelaxMaker()
-    final_relax_maker = MPMetaGGARelaxMaker()
-    job = MPMetaGGADoubleRelaxStatic(
-        name="Test",
-        initial_maker=initial_maker,
-        final_relax_maker=final_relax_maker,
-    )
-    assert job.name == "Test"
-    assert job.initial_maker == initial_maker
-    assert job.final_relax_maker == final_relax_maker
+    assert flow.name == (name or "MP meta-GGA relax")
 
 
 def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):

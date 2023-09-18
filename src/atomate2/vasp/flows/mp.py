@@ -151,7 +151,7 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
         Maker to generate the static calculation before the relaxation.
     """
 
-    name: str = "MP Meta-GGA relax"
+    name: str = "MP meta-GGA relax"
     relax_maker: Maker = field(default_factory=MPMetaGGADoubleRelaxMaker)
     static_maker: Maker | None = field(
         default_factory=lambda: MPMetaGGAStaticMaker(
