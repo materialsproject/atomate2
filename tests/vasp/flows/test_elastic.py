@@ -63,3 +63,4 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
         ],
         atol=1e-3,
     )
+    assert elastic_output.chemsys == "Si"

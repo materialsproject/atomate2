@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.analysis.elasticity import (
     Deformation,
@@ -108,7 +109,7 @@ class ElasticTensorDocument(BaseModel):
     ieee_format: MatrixVoigt = Field(None, description="Elastic tensor in IEEE format.")
 
 
-class ElasticDocument(BaseModel):
+class ElasticDocument(StructureMetadata):
     """Document containing elastic tensor information and related properties."""
 
     structure: Structure = Field(
@@ -122,10 +123,6 @@ class ElasticDocument(BaseModel):
     )
     derived_properties: DerivedProperties = Field(
         None, description="Properties derived from the elastic tensor."
-    )
-    formula_pretty: str = Field(
-        None,
-        description="Cleaned representation of the formula",
     )
     fitting_data: FittingData = Field(
         None, description="Data used to fit the elastic tensor."
@@ -231,11 +228,11 @@ class ElasticDocument(BaseModel):
 
         eq_stress = eq_stress.tolist() if eq_stress is not None else eq_stress
 
-        return cls(
+        return cls.from_structure(
             structure=structure,
+            meta_structure=structure,
             eq_stress=eq_stress,
             derived_properties=derived_properties,
-            formula_pretty=structure.composition.reduced_formula,
             fitting_method=fitting_method,
             order=order,
             elastic_tensor=ElasticTensorDocument(

@@ -246,10 +246,6 @@ class VaspInputGenerator(InputGenerator):
         Functional to use. Default is to use the functional in the config dictionary.
         Valid values: "PBE", "PBE_52", "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91",
         "LDA_US", "PW91_US".
-    auto_metal_kpoints
-        If true and the system is metallic, try and use ``reciprocal_density_metal``
-        instead of ``reciprocal_density`` for metallic systems. Note, this only works
-        when generating the input set from a previous VASP directory.
     auto_ismear
         If true, the values for ISMEAR and SIGMA will be set automatically depending
         on the bandgap of the system. If the bandgap is not known (e.g., there is no
@@ -257,6 +253,16 @@ class VaspInputGenerator(InputGenerator):
         metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator,
         then ISMEAR=-5 (tetrahedron smearing). Note, this only works when generating the
         input set from a previous VASP directory.
+    auto_ispin
+        If generating input set from a previous calculation, this controls whether
+        to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
+        moments are less than 0.02.
+    auto_lreal
+        If True, automatically use the VASP recommended LREAL based on cell size.
+    auto_metal_kpoints
+        If true and the system is metallic, try and use ``reciprocal_density_metal``
+        instead of ``reciprocal_density`` for metallic systems. Note, this only works
+        when generating the input set from a previous VASP directory.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
         initial MAGMOM guess for all species.
@@ -280,12 +286,6 @@ class VaspInputGenerator(InputGenerator):
         optB86b and rVV10.
     symprec
         Tolerance for symmetry finding, used for line mode band structure k-points.
-    auto_ispin
-        If generating input set from a previous calculation, this controls whether
-        to disable magnetisation (ISPIN = 1) if the absolute value of all magnetic
-        moments are less than 0.02.
-    auto_lreal
-        If True, automatically use the VASP recommended LREAL based on cell size.
     config_dict
         The config dictionary to use containing the base input set settings.
     """
@@ -295,8 +295,10 @@ class VaspInputGenerator(InputGenerator):
     user_potcar_settings: dict = field(default_factory=dict)
     user_potcar_functional: str = None
     auto_kspacing: bool = None
-    auto_metal_kpoints: bool = True
     auto_ismear: bool = True
+    auto_ispin: bool = False
+    auto_lreal: bool = False
+    auto_metal_kpoints: bool = True
     constrain_total_magmom: bool = False
     validate_magmom: bool = True
     use_structure_charge: bool = False
@@ -304,8 +306,6 @@ class VaspInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
-    auto_ispin: bool = False
-    auto_lreal: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
 
     def __post_init__(self):
@@ -619,6 +619,7 @@ class VaspInputGenerator(InputGenerator):
         incar_updates = {} if incar_updates is None else incar_updates
         incar_settings = dict(self.config_dict["INCAR"])
         config_magmoms = incar_settings.get("MAGMOM", {})
+        auto_updates = {}
 
         # apply user incar settings to SETTINGS not to INCAR
         _apply_incar_updates(incar_settings, self.user_incar_settings)
@@ -628,7 +629,9 @@ class VaspInputGenerator(InputGenerator):
         for k, v in incar_settings.items():
             if k == "MAGMOM":
                 incar[k] = _get_magmoms(
-                    structure, config_magmoms=config_magmoms, magmoms=v
+                    structure,
+                    magmoms=self.user_incar_settings.get("MAGMOMS", {}),
+                    config_magmoms=config_magmoms,
                 )
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
                 incar[k] = _get_u_param(k, v, structure)
@@ -656,40 +659,47 @@ class VaspInputGenerator(InputGenerator):
                     UserWarning,
                     stacklevel=1,
                 )
-            incar["NUPDOWN"] = nupdown
+            auto_updates["NUPDOWN"] = nupdown
 
         if self.use_structure_charge:
-            incar["NELECT"] = self.get_nelect(structure)
+            auto_updates["NELECT"] = self.get_nelect(structure)
 
         # handle auto ISPIN
         if ispin is not None and "ISPIN" not in self.user_incar_settings:
-            incar["ISPIN"] = ispin
+            auto_updates["ISPIN"] = ispin
 
         if self.auto_ismear:
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
-                incar.update({"SIGMA": 0.2, "ISMEAR": 0})
+                auto_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
             elif bandgap == 0:
-                incar.update({"SIGMA": 0.2, "ISMEAR": 2})  # metal
+                auto_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
             else:
-                incar.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
+                auto_updates.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
 
         if self.auto_lreal:
-            incar.update({"LREAL": _get_recommended_lreal(structure)})
+            auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
         if kpoints is not None:
             # unset KSPACING as we are using a KPOINTS file and ensure adequate number
             # of KPOINTS are present for the tetrahedron method (ISMEAR=-5).
             incar.pop("KSPACING", None)
             if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
-                incar["ISMEAR"] = 0
+                auto_updates["ISMEAR"] = 0
 
-        # apply specified updates, be careful not to override user_incar_settings
+        # apply updates from auto options, careful not to override user_incar_settings
+        _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
+
+        # apply updates from inputset generator
         _apply_incar_updates(incar, incar_updates, skip=list(self.user_incar_settings))
 
         # Remove unused INCAR parameters
         _remove_unused_incar_params(incar, skip=list(self.user_incar_settings))
+
+        # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
+        # overwritten settings are changed back to the intended values.
+        _apply_incar_updates(incar, self.user_incar_settings)
 
         return incar
 

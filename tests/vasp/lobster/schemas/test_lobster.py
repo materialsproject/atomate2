@@ -113,6 +113,8 @@ def test_LobsterTaskDocument(lobster_test_dir):
     )
     assert len(doc.band_overlaps["1"]) + len(doc.band_overlaps["-1"]) == 12
 
+    assert doc.chemsys == "As-Ga"
+
     doc2 = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-754354", save_cohp_plots=False
     )
