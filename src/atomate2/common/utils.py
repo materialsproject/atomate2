@@ -53,13 +53,21 @@ def magnetic_get_pmg_structure(phonopy_structure: PhonopyAtoms) -> Structure:
     symbols = phonopy_structure.symbols
     masses = phonopy_structure.masses
     magnetic_moments = phonopy_structure._magmoms
-    
-    return Structure(
+    if not isinstance(magnetic_moments, type(None)):
+        return Structure(
         lattice,
         symbols,
         frac_coords,
         site_properties={"phonopy_masses": masses, "magmom": magnetic_moments},
-    )
+        )
+    else:
+        #print("non-magnetic")
+        return Structure(
+            lattice,
+            symbols,
+            frac_coords,
+            site_properties={"phonopy_masses":masses},
+        )
 
 
 

@@ -361,10 +361,10 @@ class PhononDisplacementMaker(BaseVaspMaker):
                 "EDIFF": 1e-7,
                 "LAECHG": False,
                 "LREAL": False,
-                "ALGO": "Normal",
+                #"ALGO": "Normal",
                 "NSW": 0,
                 "LCHARG": False,
-                "ISMEAR": 0,
+                #"ISMEAR": 0,
             },
             auto_ismear=False,
         )
