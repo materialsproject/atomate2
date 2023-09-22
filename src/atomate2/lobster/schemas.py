@@ -383,16 +383,6 @@ class LobsterTaskDocument(StructureMetadata):
     strongest_bonds_icobi_cation_anion: StrongestBonds = Field(
         None, description="Describes the strongest cation-anion ICOBI bonds"
     )
-
-    cohp_data: CompleteCohp = Field(
-        None, description="pymatgen CompleteCohp object with COHP data"
-    )
-    coop_data: CompleteCohp = Field(
-        None, description="pymatgen CompleteCohp object with COOP data"
-    )
-    cobi_data: CompleteCohp = Field(
-        None, description="pymatgen CompleteCohp object with COBI data"
-    )
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
@@ -409,18 +399,25 @@ class LobsterTaskDocument(StructureMetadata):
         description="Site potentials dict from"
         " LOBSTER based on Mulliken and Loewdin charges",
     )
-
     gross_populations: dict = Field(
         None,
         description="Gross populations dict from"
         " LOBSTER based on Mulliken and Loewdin charges with"
         "each site as a key and the gross population as a value.",
     )
-
     band_overlaps: dict = Field(
         None,
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
+    )
+    cohp_data: CompleteCohp = Field(
+        None, description="pymatgen CompleteCohp object with COHP data"
+    )
+    coop_data: CompleteCohp = Field(
+        None, description="pymatgen CompleteCohp object with COOP data"
+    )
+    cobi_data: CompleteCohp = Field(
+        None, description="pymatgen CompleteCohp object with COBI data"
     )
 
     _schema: str = Field(
@@ -522,37 +519,6 @@ class LobsterTaskDocument(StructureMetadata):
             charge = Charge(charge_path)
             charges = {"Mulliken": charge.Mulliken, "Loewdin": charge.Loewdin}
 
-        # Read in COHP, COBI, COOP plots
-        cohp_obj = None
-        if cohpcar_path.exists():
-            cohp_obj = CompleteCohp.from_file(
-                fmt="LOBSTER",
-                structure_file=structure_path,
-                filename=cohpcar_path,
-                are_coops=False,
-                are_cobis=False,
-            )
-
-        coop_obj = None
-        if coopcar_path.exists():
-            coop_obj = CompleteCohp.from_file(
-                fmt="LOBSTER",
-                structure_file=structure_path,
-                filename=coopcar_path,
-                are_coops=True,
-                are_cobis=False,
-            )
-
-        cobi_obj = None
-        if cobicar_path.exists():
-            cobi_obj = CompleteCohp.from_file(
-                fmt="LOBSTER",
-                structure_file=structure_path,
-                filename=cobicar_path,
-                are_coops=False,
-                are_cobis=True,
-            )
-
         # Read in DOS
         dos = None
         if doscar_path.exists():
@@ -610,6 +576,37 @@ class LobsterTaskDocument(StructureMetadata):
             for spin, value in band_overlaps_obj.bandoverlapsdict.items():
                 band_overlaps[str(spin.value)] = value
 
+        # Read in COHP, COBI, COOP plots
+        cohp_obj = None
+        if cohpcar_path.exists():
+            cohp_obj = CompleteCohp.from_file(
+                fmt="LOBSTER",
+                structure_file=structure_path,
+                filename=cohpcar_path,
+                are_coops=False,
+                are_cobis=False,
+            )
+
+        coop_obj = None
+        if coopcar_path.exists():
+            coop_obj = CompleteCohp.from_file(
+                fmt="LOBSTER",
+                structure_file=structure_path,
+                filename=coopcar_path,
+                are_coops=True,
+                are_cobis=False,
+            )
+
+        cobi_obj = None
+        if cobicar_path.exists():
+            cobi_obj = CompleteCohp.from_file(
+                fmt="LOBSTER",
+                structure_file=structure_path,
+                filename=cobicar_path,
+                are_coops=False,
+                are_cobis=True,
+            )
+
         doc = cls.from_structure(
             structure=struct,
             meta_structure=struct,
@@ -629,10 +626,6 @@ class LobsterTaskDocument(StructureMetadata):
             strongest_bonds_icohp_cation_anion=sb_icohp_ionic,
             strongest_bonds_icoop_cation_anion=sb_icoop_ionic,
             strongest_bonds_icobi_cation_anion=sb_icobi_ionic,
-            # include additional fields for all bonds
-            cohp_data=cohp_obj,
-            coop_data=coop_obj,
-            cobi_data=cobi_obj,
             dos=dos,
             lso_dos=lso_dos,
             charges=charges,
@@ -640,6 +633,10 @@ class LobsterTaskDocument(StructureMetadata):
             site_potentials=site_potentials,
             gross_populations=gross_populations,
             band_overlaps=band_overlaps,
+            # include additional fields for all bonds
+            cohp_data=cohp_obj,
+            coop_data=coop_obj,
+            cobi_data=cobi_obj,
         )
         return doc.copy(update=additional_fields)
 
