@@ -90,7 +90,7 @@ class DoubleRelaxMaker(Maker):
         )
         relax2.name += " 2"
 
-        return Flow([relax1, relax2], relax2.output, name=self.name)
+        return Flow([relax1, relax2], output=relax2.output, name=self.name)
 
     @classmethod
     def from_relax_maker(cls, relax_maker: BaseVaspMaker):

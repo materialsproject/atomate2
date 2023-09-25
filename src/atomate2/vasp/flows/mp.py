@@ -19,6 +19,7 @@ from atomate2.vasp.jobs.mp import (
     MPGGAStaticMaker,
     MPMetaGGARelaxMaker,
     MPMetaGGAStaticMaker,
+    MPPreRelaxMaker,
 )
 
 if TYPE_CHECKING:
@@ -65,8 +66,8 @@ class MPMetaGGADoubleRelaxMaker(DoubleRelaxMaker):
         Maker to generate the second relaxation.
     """
 
-    name: str = "MP GGA double relax"
-    relax_maker1: Maker | None = field(default_factory=MPMetaGGARelaxMaker)
+    name: str = "MP meta-GGA double relax"
+    relax_maker1: Maker | None = field(default_factory=MPPreRelaxMaker)
     relax_maker2: Maker = field(
         default_factory=lambda: MPMetaGGARelaxMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
@@ -184,7 +185,6 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
         )
         output = relax_job.output
         jobs += [relax_job]
-
         if self.static_maker:
             # Run a static calculation (typically r2SCAN)
             static_job = self.static_maker.make(
@@ -192,5 +192,6 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
             )
             output = static_job.output
             jobs += [static_job]
+        print(f"{jobs=}")
 
         return Flow(jobs, output=output, name=self.name)
