@@ -44,11 +44,11 @@ def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     from jobflow import run_locally
 
     # map from job name to directory containing reference output files
-    pre_relax_dir = "Si_mp_metagga_relax/pbesol_pre_relax"
+    pre_relax_dir = "Si_mp_meta_gga_relax/pbesol_pre_relax"
     ref_paths = {
         "MP pre-relax 1": pre_relax_dir,
-        "MP meta-GGA relax 2": "Si_mp_metagga_relax/r2scan_relax",
-        "MP meta-GGA static": "Si_mp_metagga_relax/r2scan_final_static",
+        "MP meta-GGA relax 2": "Si_mp_meta_gga_relax/r2scan_relax",
+        "MP meta-GGA static": "Si_mp_meta_gga_relax/r2scan_final_static",
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 

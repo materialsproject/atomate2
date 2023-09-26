@@ -70,7 +70,7 @@ class JobType(ValueEnum):
     - ``NORMAL``: Normal custodian :obj:`.VaspJob`.
     - ``DOUBLE_RELAXATION``: Custodian double relaxation run from
       :obj:`.VaspJob.double_relaxation_run`.
-    - ``METAGGA_OPT``: Custodian metagga optimization run from
+    - ``METAGGA_OPT``: Custodian meta-GGA optimization run from
       :obj:`.VaspJob.metagga_opt_run`.
     - ``FULL_OPT``: Custodian full optimization run from
       :obj:`.VaspJob.full_opt_run`.

@@ -47,10 +47,10 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     # map from job name to directory containing reference output files
     ref_paths = {
-        "MP meta-GGA static": "Si_mp_metagga_relax/r2scan_final_static",
+        "MP meta-GGA static": "Si_mp_meta_gga_relax/r2scan_final_static",
     }
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/Si_mp_metagga_relax/r2scan_final_static/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_mp_meta_gga_relax/r2scan_final_static/inputs/POSCAR"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -80,10 +80,10 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     # map from job name to directory containing reference output files
     ref_paths = {
-        "MP meta-GGA relax": "Si_mp_metagga_relax/r2scan_relax",
+        "MP meta-GGA relax": "Si_mp_meta_gga_relax/r2scan_relax",
     }
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/Si_mp_metagga_relax/r2scan_final_static/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_mp_meta_gga_relax/r2scan_final_static/inputs/POSCAR"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
