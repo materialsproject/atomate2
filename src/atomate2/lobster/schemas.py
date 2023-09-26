@@ -1,5 +1,7 @@
 """Module defining lobster document schemas."""
 
+import gzip
+import json
 import logging
 import time
 from pathlib import Path
@@ -312,6 +314,73 @@ class CondensedBondingAnalysis(BaseModel):
             return (None, None, None, None, None)
 
 
+class CalcQualitySummary(BaseModel):
+    """Model describing the calculation quality of lobster run."""
+
+    minimal_basis: bool = Field(
+        None,
+        description="Denotes whether the calculation used minimal basis for the LOBSTER"
+        " computation",
+    )
+    charge_spilling: dict = Field(
+        None,
+        description="Dict Contains the absolute charge spilling value",
+    )
+    band_overlaps: dict = Field(
+        None,
+        description="Dict summarizing important information from the "
+        "bandOverlaps.lobster file to evaluate the quality of the projection, "
+        "namely whether the file is generated during projection (i.e., larger "
+        "deviations exist), the maximum deviation observed, percent of k-points "
+        "above the threshold set in pymatgen parser (during data generation the "
+        "value was set to 0.1)",
+    )
+    dos_comparisons: dict = Field(
+        None,
+        description="Dict with Tanimoto index values obtained from comparing "
+        "VASP and LOBSTER projected DOS fingerprints",
+    )
+
+    @classmethod
+    @requires(Analysis, "lobsterpy must be installed to create an CalcQualitySummary.")
+    def from_directory(
+        cls,
+        dir_name: Union[Path, str],
+        calc_quality_kwargs: dict = None,
+    ):
+        dir_name = Path(dir_name)
+        band_overlaps_path = dir_name / "bandOverlaps.lobster.gz"
+        charge_path = dir_name / "CHARGE.lobster.gz"
+        doscar_path = (
+            dir_name / "DOSCAR.LSO.lobster.gz"
+            if (dir_name / "DOSCAR.LSO.lobster.gz").exists()
+            else dir_name / "DOSCAR.lobster.gz"
+        )
+        lobsterin_path = dir_name / "lobsterin.gz"
+        lobsterout_path = dir_name / "lobsterout.gz"
+        potcar_path = dir_name / "POTCAR.gz"
+        structure_path = dir_name / "POSCAR.gz"
+        vasprun_path = dir_name / "vasprun.xml.gz"
+
+        calc_quality_kwargs = {} if calc_quality_kwargs is None else calc_quality_kwargs
+        cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
+            path_to_poscar=structure_path,
+            path_to_vasprun=vasprun_path,
+            path_to_charge=charge_path,
+            path_to_potcar=potcar_path,
+            path_to_doscar=doscar_path,
+            path_to_lobsterin=lobsterin_path,
+            path_to_lobsterout=lobsterout_path,
+            path_to_bandoverlaps=band_overlaps_path,
+            # dos_comparison=True,
+            # bva_comp=True,
+            # e_range=[-20, 0],
+            # n_bins=256,
+            **calc_quality_kwargs,
+        )
+        return CalcQualitySummary(**cal_quality_dict)
+
+
 class StrongestBonds(BaseModel):
     """Strongest bonds extracted from ICOHPLIST/ICOOPLIST/ICOBILIST from LOBSTER.
 
@@ -357,6 +426,16 @@ class LobsterTaskDocument(StructureMetadata):
     lobsterpy_text: str = Field(
         None,
         description="Stores LobsterPy automatic analysis summary text",
+    )
+    calc_quality_summary: CalcQualitySummary = Field(
+        None,
+        description="Model summarizing results of lobster runs like charge spillings, "
+        "band overlaps, DOS comparisons with VASP runs and quantum chemical LOBSTER "
+        "charge sign comparisons with BVA method",
+    )
+    calc_quality_text: str = Field(
+        None,
+        description="Stores calculation quality analysis summary text",
     )
     strongest_bonds_icohp: StrongestBonds = Field(
         None, description="Describes the strongest cation-anion ICOHP bonds"
@@ -435,6 +514,10 @@ class LobsterTaskDocument(StructureMetadata):
         store_lso_dos: bool = False,
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
+        calc_quality_kwargs: dict = None,
+        save_cba_jsons: bool = True,
+        add_coxxcar_to_task_document: bool = True,
+        save_computational_data_jsons: bool = True,
     ):
         """
         Create a task document from a directory containing LOBSTER files.
@@ -452,6 +535,15 @@ class LobsterTaskDocument(StructureMetadata):
             from lobsterpy will be generated.
         plot_kwargs : dict
             kwargs to change plotting options in lobsterpy.
+        save_cba_jsons : bool
+            Bool to indicate whether condensed bonding analysis jsons
+            should be saved
+        add_coxxcar_to_task_document : bool
+            Bool to indicate whether to add COHPCAR, COOPCAR, COBICAR data objects
+            to the task document
+        save_computational_data_jsons : bool
+            Bool to indicate whether computational data jsons
+            should be saved
 
         Returns
         -------
@@ -513,6 +605,15 @@ class LobsterTaskDocument(StructureMetadata):
                 plot_kwargs=plot_kwargs,
                 which_bonds="cation-anion",
             )
+        # Get lobster calculation quality summary data
+        calc_quality_summary = CalcQualitySummary.from_directory(
+            dir_name, calc_quality_kwargs=calc_quality_kwargs
+        )
+
+        calc_quality_text = Description.get_calc_quality_description(
+            calc_quality_summary.dict()
+        )
+
         # Read in charges
         charges = None
         if charge_path.exists():
@@ -576,36 +677,38 @@ class LobsterTaskDocument(StructureMetadata):
             for spin, value in band_overlaps_obj.bandoverlapsdict.items():
                 band_overlaps[str(spin.value)] = value
 
-        # Read in COHP, COBI, COOP plots
+        # Read in COHPCAR, COBICAR, COOPCAR
         cohp_obj = None
-        if cohpcar_path.exists():
-            cohp_obj = CompleteCohp.from_file(
-                fmt="LOBSTER",
-                structure_file=structure_path,
-                filename=cohpcar_path,
-                are_coops=False,
-                are_cobis=False,
-            )
-
         coop_obj = None
-        if coopcar_path.exists():
-            coop_obj = CompleteCohp.from_file(
-                fmt="LOBSTER",
-                structure_file=structure_path,
-                filename=coopcar_path,
-                are_coops=True,
-                are_cobis=False,
-            )
-
         cobi_obj = None
-        if cobicar_path.exists():
-            cobi_obj = CompleteCohp.from_file(
-                fmt="LOBSTER",
-                structure_file=structure_path,
-                filename=cobicar_path,
-                are_coops=False,
-                are_cobis=True,
-            )
+
+        if add_coxxcar_to_task_document:
+            if cohpcar_path.exists():
+                cohp_obj = CompleteCohp.from_file(
+                    fmt="LOBSTER",
+                    structure_file=structure_path,
+                    filename=cohpcar_path,
+                    are_coops=False,
+                    are_cobis=False,
+                )
+
+            if coopcar_path.exists():
+                coop_obj = CompleteCohp.from_file(
+                    fmt="LOBSTER",
+                    structure_file=structure_path,
+                    filename=coopcar_path,
+                    are_coops=True,
+                    are_cobis=False,
+                )
+
+            if cobicar_path.exists():
+                cobi_obj = CompleteCohp.from_file(
+                    fmt="LOBSTER",
+                    structure_file=structure_path,
+                    filename=cobicar_path,
+                    are_coops=False,
+                    are_cobis=True,
+                )
 
         doc = cls.from_structure(
             structure=struct,
@@ -626,6 +729,8 @@ class LobsterTaskDocument(StructureMetadata):
             strongest_bonds_icohp_cation_anion=sb_icohp_ionic,
             strongest_bonds_icoop_cation_anion=sb_icoop_ionic,
             strongest_bonds_icobi_cation_anion=sb_icobi_ionic,
+            calc_quality_summary=calc_quality_summary,
+            calc_quality_text=" ".join(calc_quality_text),
             dos=dos,
             lso_dos=lso_dos,
             charges=charges,
@@ -638,6 +743,86 @@ class LobsterTaskDocument(StructureMetadata):
             coop_data=coop_obj,
             cobi_data=cobi_obj,
         )
+
+        if save_cba_jsons:
+            cba_json_save_dir = dir_name / "cba.json.gz"
+            with gzip.open(cba_json_save_dir, "wt", encoding="UTF-8") as f:
+                f.write("[")
+                if (
+                    doc.lobsterpy_data_cation_anion is not None
+                ):  # check if cation-anion analysis failed
+                    lobsterpy_analysis_type = (
+                        doc.lobsterpy_data_cation_anion.which_bonds.replace("-", "_")
+                    )
+                    cation_anion_bonds_dict = {
+                        f"{lobsterpy_analysis_type}_bonds": {
+                            "lobsterpy_data": doc.lobsterpy_data_cation_anion.dict(),
+                            "lobsterpy_text": [
+                                "".join(doc.lobsterpy_text_cation_anion)
+                            ],
+                            "sb_icobi": doc.strongest_bonds_icobi_cation_anion.dict(),
+                            "sb_icohp": doc.strongest_bonds_icohp_cation_anion.dict(),
+                            "sb_icoop": doc.strongest_bonds_icoop_cation_anion.dict(),
+                        }
+                    }
+
+                    for item in cation_anion_bonds_dict[
+                        f"{lobsterpy_analysis_type}_bonds"
+                    ]["lobsterpy_data"]["cohp_plot_data"].items():
+                        plot_label, cohps = item
+                        # check if item has a `as_dict` method
+                        # (i.e. it is a pymatgen object)
+                        if hasattr(cohps, "as_dict"):
+                            cation_anion_bonds_dict[f"{lobsterpy_analysis_type}_bonds"][
+                                "lobsterpy_data"
+                            ]["cohp_plot_data"][plot_label] = cohps.as_dict()
+                    json.dump(cation_anion_bonds_dict, f)
+                    f.write(",")  # add comma separator between two dicts
+                else:
+                    lobsterpy_analysis_type = "cation_anion"
+                    cation_anion_bonds_dict = {f"{lobsterpy_analysis_type}_bonds": {}}
+                    json.dump(cation_anion_bonds_dict, f)
+                    f.write(",")  # add comma separator between two dicts
+
+                # add all-bonds data
+                lobsterpy_analysis_type = doc.lobsterpy_data.which_bonds
+                all_bonds_data = {
+                    f"{lobsterpy_analysis_type}_bonds": {
+                        "lobsterpy_data": doc.lobsterpy_data.dict(),
+                        "lobsterpy_text": ["".join(doc.lobsterpy_text)],
+                        "sb_icobi": doc.strongest_bonds_icobi.dict(),
+                        "sb_icohp": doc.strongest_bonds_icohp.dict(),
+                        "sb_icoop": doc.strongest_bonds_icoop.dict(),
+                    }
+                }
+
+                for item in all_bonds_data[f"{lobsterpy_analysis_type}_bonds"][
+                    "lobsterpy_data"
+                ]["cohp_plot_data"].items():
+                    plot_label, cohps = item
+                    # check if item has a `as_dict` method
+                    # (i.e. it is a pymatgen object)
+                    if hasattr(cohps, "as_dict"):
+                        all_bonds_data[f"{lobsterpy_analysis_type}_bonds"][
+                            "lobsterpy_data"
+                        ]["cohp_plot_data"][plot_label] = cohps.as_dict()
+                json.dump(all_bonds_data, f)
+                f.write(",")  # add comma separator between two dicts
+                json.dump(
+                    {"madelung_energies": doc.madelung_energies}, f
+                )  # add madelung energies
+                f.write(",")
+                json.dump({"charges": doc.charges}, f)  # add charges
+                f.write(",")
+                json.dump(
+                    {"calc_quality_summary": doc.calc_quality_summary.dict()}, f
+                )  # add calc quality summary dict
+                f.write(",")
+                json.dump(
+                    {"calc_quality_text": ["".join(doc.calc_quality_text)]}, f
+                )  # add calc quality text
+                f.write("]")
+
         return doc.copy(update=additional_fields)
 
 
