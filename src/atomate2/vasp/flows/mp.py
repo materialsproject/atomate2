@@ -192,6 +192,5 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
             )
             output = static_job.output
             jobs += [static_job]
-        print(f"{jobs=}")
 
         return Flow(jobs, output=output, name=self.name)

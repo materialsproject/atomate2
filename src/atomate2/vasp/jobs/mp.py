@@ -53,7 +53,7 @@ class MPGGARelaxMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP GGA Relax"
+    name: str = "MP GGA relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPGGARelaxSetGenerator
     )
