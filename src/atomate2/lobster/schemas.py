@@ -324,7 +324,11 @@ class CalcQualitySummary(BaseModel):
     )
     charge_spilling: dict = Field(
         None,
-        description="Dict Contains the absolute charge spilling value",
+        description="Dict contains the absolute charge spilling value",
+    )
+    charges: dict = Field(
+        None,
+        description="Dict contains the LOBSTER and BVA charge sign comparison results",
     )
     band_overlaps: dict = Field(
         None,
@@ -372,10 +376,6 @@ class CalcQualitySummary(BaseModel):
             path_to_lobsterin=lobsterin_path,
             path_to_lobsterout=lobsterout_path,
             path_to_bandoverlaps=band_overlaps_path,
-            # dos_comparison=True,
-            # bva_comp=True,
-            # e_range=[-20, 0],
-            # n_bins=256,
             **calc_quality_kwargs,
         )
         return CalcQualitySummary(**cal_quality_dict)
@@ -575,7 +575,6 @@ class LobsterTaskDocument(StructureMetadata):
         sb_icobi = None
         sb_icohp = None
         sb_icoop = None
-        struct = None
         describe = None
         struct = Structure.from_file(structure_path)
 
@@ -606,8 +605,17 @@ class LobsterTaskDocument(StructureMetadata):
                 which_bonds="cation-anion",
             )
         # Get lobster calculation quality summary data
+        calc_quality_kwargs_default = {
+            "e_range": [-20, 0],
+            "dos_comparison": True,
+            "n_bins": 256,
+            "bva_comp": True,
+        }
+        for args, values in calc_quality_kwargs.items():
+            calc_quality_kwargs_default[args] = values
+
         calc_quality_summary = CalcQualitySummary.from_directory(
-            dir_name, calc_quality_kwargs=calc_quality_kwargs
+            dir_name, calc_quality_kwargs=calc_quality_kwargs_default
         )
 
         calc_quality_text = Description.get_calc_quality_description(
@@ -823,7 +831,109 @@ class LobsterTaskDocument(StructureMetadata):
                 )  # add calc quality text
                 f.write("]")
 
+        if save_computational_data_jsons:
+            computational_data_json_save_dir = dir_name / "computational_data.json.gz"
+            fields_to_exclude = [
+                "builder_meta",
+                "nsites",
+                "elements",
+                "nelements",
+                "composition",
+                "composition_reduced",
+                "formula_pretty",
+                "formula_anonymous",
+                "chemsys",
+                "volume",
+                "density",
+                "density_atomic",
+                "symmetry",
+                "dir_name",
+                "last_updated",
+            ]
+            with gzip.open(
+                computational_data_json_save_dir, "wt", encoding="UTF-8"
+            ) as f:
+                f.write("[")
+                for attribute in doc.__fields__:
+                    if attribute not in fields_to_exclude:
+                        if hasattr(doc.__getattribute__(attribute), "dict"):
+                            if "lobsterpy_data" in attribute:
+                                data = doc.__getattribute__(attribute).dict()
+                                for item in data["cohp_plot_data"].items():
+                                    key, value = item
+                                    if hasattr(
+                                        value, "as_dict"
+                                    ):  # check if item has a `as_dict` method
+                                        # (i.e. it is a pymatgen object)
+                                        data["cohp_plot_data"][key] = value.as_dict()
+                                data_new = {attribute: data}
+                                _replace_inf_values(data_new)
+                                json.dump(data_new, f)
+                                if (
+                                    attribute != list(doc.__fields__.keys())[-1]
+                                ):  # add comma separator between two dicts
+                                    f.write(",")
+                            else:
+                                data = {
+                                    attribute: doc.__getattribute__(attribute).dict()
+                                }
+                                json.dump(data, f)
+                                if (
+                                    attribute != list(doc.__fields__.keys())[-1]
+                                ):  # add comma separator between two dicts
+                                    f.write(",")
+                        elif hasattr(doc.__getattribute__(attribute), "as_dict"):
+                            data = {
+                                attribute: doc.__getattribute__(attribute).as_dict()
+                            }
+                            json.dump(data, f)
+                            if (
+                                attribute != list(doc.__fields__.keys())[-1]
+                            ):  # add comma separator between two dicts
+                                f.write(",")
+                        else:
+                            data = {attribute: doc.__getattribute__(attribute)}
+                            json.dump(data, f)
+                            if (
+                                attribute != list(doc.__fields__.keys())[-1]
+                            ):  # add comma separator between two dicts
+                                f.write(",")
+                f.write("]")
+
         return doc.copy(update=additional_fields)
+
+
+def _replace_inf_values(data):
+    """
+    Replace the -inf value in dictionary and with the string representation '-Infinity'.
+
+    Parameters
+    ----------
+    data : dict
+        dictionary to recursively iterate over
+
+    Returns
+    -------
+    data
+        Dictionary with replaced -inf values.
+
+    """
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if isinstance(value, (dict, list)):
+                _replace_inf_values(
+                    value
+                )  # Recursively process nested dictionaries and lists
+            elif value == float("-inf"):
+                data[key] = "-Infinity"  # Replace -inf with a string representation
+    elif isinstance(data, list):
+        for index, item in enumerate(data):
+            if isinstance(item, (dict, list)):
+                _replace_inf_values(
+                    item
+                )  # Recursively process nested dictionaries and lists
+            elif item == float("-inf"):
+                data[index] = "-Infinity"  # Replace -inf with a string representation
 
 
 def _identify_strongest_bonds(
