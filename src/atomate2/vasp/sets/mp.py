@@ -26,6 +26,9 @@ _BASE_MP_GGA_RELAX_SET = loadfn(
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
     resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
 )
+_BASE_MATPES_PBE_STATIC_SET = loadfn(
+    resource_filename("pymatgen.io.vasp", "MatPESStaticSet.yaml")
+)
 
 
 @dataclass
