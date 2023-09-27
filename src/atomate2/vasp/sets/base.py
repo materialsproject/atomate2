@@ -311,6 +311,7 @@ class VaspInputGenerator(InputGenerator):
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
+    inherit_incar: bool = None
 
     def __post_init__(self):
         """Post init formatting of arguments."""
@@ -371,6 +372,9 @@ class VaspInputGenerator(InputGenerator):
             for k, v in self.user_potcar_settings.items():
                 self.config_dict["POTCAR"][k] = v
 
+        if self.inherit_incar is None:
+            self.inherit_incar = SETTINGS.VASP_INHERIT_INCAR
+
     def get_input_set(  # type: ignore
         self,
         structure: Structure = None,
@@ -404,6 +408,7 @@ class VaspInputGenerator(InputGenerator):
         structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
             structure, prev_dir
         )
+        prev_incar = prev_incar if self.inherit_incar else {}
         kwds = {
             "structure": structure,
             "prev_incar": prev_incar,
