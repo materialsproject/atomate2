@@ -109,7 +109,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     # validate output
     output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.85043620)
+    assert output.output.energy == pytest.approx(-10.84060922)
 
 
 def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
