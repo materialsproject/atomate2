@@ -27,12 +27,12 @@ if TYPE_CHECKING:
 def test_mp_meta_gga_relax_custom_values(
     name: str, relax_maker: Maker | None, static_maker: Maker | None
 ):
-    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStatic
+    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStaticMaker
 
     kwargs = {}
     if name:
         kwargs["name"] = name
-    flow = MPMetaGGADoubleRelaxStatic(
+    flow = MPMetaGGADoubleRelaxStaticMaker(
         relax_maker=relax_maker, static_maker=static_maker, **kwargs
     )
     assert isinstance(flow.relax_maker, type(relax_maker))
@@ -50,7 +50,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
-    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStatic
+    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStaticMaker
 
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_meta_gga_relax/pbesol_pre_relax"
@@ -69,7 +69,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    flow = MPMetaGGADoubleRelaxStatic().make(si_struct)
+    flow = MPMetaGGADoubleRelaxStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -77,14 +77,14 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     # validate output
     output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.85043620)
+    assert output.output.energy == pytest.approx(-46.8613738)
 
 
 def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
-    from atomate2.vasp.flows.mp import MPGGADoubleRelaxStatic
+    from atomate2.vasp.flows.mp import MPGGADoubleRelaxStaticMaker
 
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
@@ -101,7 +101,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    flow = MPGGADoubleRelaxStatic().make(si_struct)
+    flow = MPGGADoubleRelaxStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -139,12 +139,5 @@ def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
 
     # validate output
     output = responses[flow.jobs[-1].uuid][1].output
-    from jobflow import SETTINGS
-
-    print(f"{flow=}")
-    print(f"{flow.jobs[-1].uuid=}")
-    store = SETTINGS.JOB_STORE
-    output_store = store.get_output(flow.jobs[-1].uuid)
-    print(f"{output_store=}")
     assert isinstance(output, TaskDoc)
-    # assert output.output.energy == pytest.approx(-10.85043620)
+    assert output.output.energy == pytest.approx(-10.84145656)

@@ -76,7 +76,7 @@ class MPMetaGGADoubleRelaxMaker(DoubleRelaxMaker):
 
 
 @dataclass
-class MPGGADoubleRelaxStatic(Maker):
+class MPGGADoubleRelaxStaticMaker(Maker):
     """
     Maker to perform a VASP GGA relaxation workflow with MP settings.
 
@@ -136,7 +136,7 @@ class MPGGADoubleRelaxStatic(Maker):
 
 
 @dataclass
-class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
+class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
     """
     Flow with optional pre-relax and final static jobs.
 
