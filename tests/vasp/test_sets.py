@@ -12,8 +12,8 @@ def test_user_incar_settings():
         "ALGO": "VeryFast",
         "EDIFF": 1e-30,
         "EDIFFG": -1e-10,
-        "ENAUG": 20000,
-        "ENCUT": 15000,
+        "ENAUG": 20_000,
+        "ENCUT": 15_000,
         "GGA": "PE",
         "IBRION": 1,
         "ISIF": 1,
@@ -27,7 +27,7 @@ def test_user_incar_settings():
         "MAGMOM": {"H": 100},
         "NELM": 5,
         "NELMIN": 10,  # should not be greater than NELM
-        "NSW": 5000,
+        "NSW": 5_000,
         "PREC": 10,  # wrong type, should be string.
         "SIGMA": 20,
     }

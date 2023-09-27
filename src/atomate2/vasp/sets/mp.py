@@ -44,6 +44,44 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
     auto_kspacing: bool = True
 
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for this calculation type.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {
+            "ALGO": "FAST",
+            "NSW": 0,
+            "LCHARG": True,
+            "LWAVE": False,
+            "LREAL": False,
+            "ISMEAR": -5,
+        }
+
 
 @dataclass
 class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
@@ -82,7 +120,15 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {"ALGO": "FAST"}
+        return {
+            "ALGO": "FAST",
+            "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
+            "NSW": 0,
+            "LCHARG": True,
+            "LWAVE": False,
+            "LREAL": False,
+            "ISMEAR": -5,
+        }
 
 
 @dataclass
@@ -135,4 +181,5 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {"LCHARG": True, "LWAVE": True}
+        # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
+        return {"LCHARG": True, "LWAVE": True, "GGA": None}
