@@ -85,12 +85,11 @@ class DoubleRelaxMaker(Maker):
             structure = relax1.output.structure
             prev_vasp_dir = relax1.output.dir_name
 
-        relax2 = self.relax_maker2.make(
-            relax1.output.structure, prev_vasp_dir=relax1.output.dir_name
-        )
+        relax2 = self.relax_maker2.make(structure, prev_vasp_dir=prev_vasp_dir)
         relax2.name += " 2"
+        jobs += [relax2]
 
-        return Flow([relax1, relax2], output=relax2.output, name=self.name)
+        return Flow(jobs, output=relax2.output, name=self.name)
 
     @classmethod
     def from_relax_maker(cls, relax_maker: BaseVaspMaker):
