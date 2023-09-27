@@ -118,11 +118,11 @@ class MPGGADoubleRelaxStatic(Maker):
         """
         jobs: list[Job] = []
 
-        relax_job = self.relax_maker.make(
+        relax_flow = self.relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
         )
-        output = relax_job.output
-        jobs += [relax_job]
+        output = relax_flow.output
+        jobs += [relax_flow]
 
         if self.static_maker:
             # Run a static calculation
@@ -180,11 +180,11 @@ class MPMetaGGADoubleRelaxStatic(MPGGADoubleRelaxMaker):
         """
         jobs: list[Job] = []
 
-        relax_job = self.relax_maker.make(
+        relax_flow = self.relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
         )
-        output = relax_job.output
-        jobs += [relax_job]
+        output = relax_flow.output
+        jobs += [relax_flow]
         if self.static_maker:
             # Run a static calculation (typically r2SCAN)
             static_job = self.static_maker.make(
