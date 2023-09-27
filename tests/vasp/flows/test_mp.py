@@ -1,12 +1,17 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pytest
-from jobflow import Maker
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.mp import MPGGADoubleRelaxStatic, MPMetaGGADoubleRelaxStatic
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
 )
+
+if TYPE_CHECKING:
+    from jobflow import Maker
 
 
 @pytest.mark.parametrize("name", ["test", None])
@@ -22,6 +27,8 @@ from atomate2.vasp.jobs.mp import (
 def test_mp_meta_gga_relax_custom_values(
     name: str, relax_maker: Maker | None, static_maker: Maker | None
 ):
+    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStatic
+
     kwargs = {}
     if name:
         kwargs["name"] = name
@@ -39,9 +46,11 @@ def test_mp_meta_gga_relax_custom_values(
     assert flow.name == (name or "MP meta-GGA relax")
 
 
-def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
+def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
+
+    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStatic
 
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_meta_gga_relax/pbesol_pre_relax"
@@ -71,9 +80,11 @@ def test_mp_meta_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     assert output.output.energy == pytest.approx(-10.85043620)
 
 
-def test_mp_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
+def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
+
+    from atomate2.vasp.flows.mp import MPGGADoubleRelaxStatic
 
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
@@ -99,3 +110,41 @@ def test_mp_gga_relax(mock_vasp, clean_dir, vasp_test_dir):
     output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(output, TaskDoc)
     assert output.output.energy == pytest.approx(-10.85043620)
+
+
+def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
+    from emmet.core.tasks import TaskDoc
+    from jobflow import run_locally
+
+    from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker
+
+    # map from job name to directory containing reference output files
+    pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
+    ref_paths = {
+        "MP GGA relax 1": pre_relax_dir,
+        "MP GGA relax 2": "Si_mp_gga_relax/GGA_Relax_2",
+    }
+    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {key: {"incar_settings": []} for key in ref_paths}
+
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    # generate flow
+    flow = MPGGADoubleRelaxMaker().make(si_struct)
+
+    # ensure flow runs successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # validate output
+    output = responses[flow.jobs[-1].uuid][1].output
+    from jobflow import SETTINGS
+
+    print(f"{flow=}")
+    print(f"{flow.jobs[-1].uuid=}")
+    store = SETTINGS.JOB_STORE
+    output_store = store.get_output(flow.jobs[-1].uuid)
+    print(f"{output_store=}")
+    assert isinstance(output, TaskDoc)
+    # assert output.output.energy == pytest.approx(-10.85043620)
