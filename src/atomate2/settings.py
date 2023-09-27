@@ -83,6 +83,12 @@ class Atomate2Settings(BaseSettings):
         "all the files are compressed. If 'atomate' only a selection of files related "
         "to the simulation will be compressed. If False no file is compressed.",
     )
+    VASP_INHERIT_INCAR: bool = Field(
+        False,
+        description="Whether to inherit INCAR settings from previous calculation. "
+        "This might be useful to port Custodian fixes to child jobs but can also be "
+        "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs.",
+    )
 
     LOBSTER_CMD: str = Field(
         default="lobster", description="Command to run standard version of VASP."
