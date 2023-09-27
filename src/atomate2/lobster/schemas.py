@@ -362,7 +362,9 @@ class CalcQualitySummary(BaseModel):
         )
         lobsterin_path = dir_name / "lobsterin.gz"
         lobsterout_path = dir_name / "lobsterout.gz"
-        potcar_path = dir_name / "POTCAR.gz"
+        potcar_path = (
+            dir_name / "POTCAR.gz" if (dir_name / "POTCAR.gz").exists() else None
+        )
         structure_path = dir_name / "POSCAR.gz"
         vasprun_path = dir_name / "vasprun.xml.gz"
 
@@ -535,6 +537,8 @@ class LobsterTaskDocument(StructureMetadata):
             from lobsterpy will be generated.
         plot_kwargs : dict
             kwargs to change plotting options in lobsterpy.
+        calc_quality_kwargs : dict
+            kwargs to change calc quality summary options in lobsterpy.
         save_cba_jsons : bool
             Bool to indicate whether condensed bonding analysis jsons
             should be saved
@@ -611,8 +615,9 @@ class LobsterTaskDocument(StructureMetadata):
             "n_bins": 256,
             "bva_comp": True,
         }
-        for args, values in calc_quality_kwargs.items():
-            calc_quality_kwargs_default[args] = values
+        if calc_quality_kwargs:
+            for args, values in calc_quality_kwargs.items():
+                calc_quality_kwargs_default[args] = values
 
         calc_quality_summary = CalcQualitySummary.from_directory(
             dir_name, calc_quality_kwargs=calc_quality_kwargs_default

@@ -17,7 +17,11 @@ def test_LobsterTaskDocument(lobster_test_dir):
     )
 
     doc = LobsterTaskDocument.from_directory(
-        dir_name=lobster_test_dir / "lobsteroutputs/mp-2534", save_cohp_plots=False
+        dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
+        save_cohp_plots=False,
+        calc_quality_kwargs={"n_bins": 100},
+        save_cba_jsons=False,
+        save_computational_data_jsons=False,
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
@@ -116,7 +120,11 @@ def test_LobsterTaskDocument(lobster_test_dir):
     assert doc.chemsys == "As-Ga"
 
     doc2 = LobsterTaskDocument.from_directory(
-        dir_name=lobster_test_dir / "lobsteroutputs/mp-754354", save_cohp_plots=False
+        dir_name=lobster_test_dir / "lobsteroutputs/mp-754354",
+        save_cohp_plots=False,
+        calc_quality_kwargs={"n_bins": 100},
+        save_cba_jsons=False,
+        save_computational_data_jsons=False,
     )
     assert np.isclose(
         doc2.strongest_bonds_icohp.strongest_bonds["Ba-O"]["ICOHP"], -0.55689
