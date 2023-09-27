@@ -391,7 +391,6 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             }
 
         doc = getattr(cls, attr)(**dat)
-        ddict = doc.dict()
         data = {
             "structure": calcs_reversed[0].output.structure,
             "meta_structure": calcs_reversed[0].output.structure,
@@ -414,7 +413,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             "cp2k_objects": cp2k_objects,
             "included_objects": included_objects,
         }
-        doc = cls(**ddict)
+        doc = cls(**doc.dict())
         doc = doc.copy(update=data)
         return doc.copy(update=additional_fields)
 
