@@ -26,9 +26,6 @@ _BASE_MP_GGA_RELAX_SET = loadfn(
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
     resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
 )
-_BASE_MATPES_PBE_STATIC_SET = loadfn(
-    resource_filename("pymatgen.io.vasp", "MatPESStaticSet.yaml")
-)
 
 
 @dataclass
@@ -190,6 +187,17 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
         """
         # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
         return {"LCHARG": True, "LWAVE": True, "GGA": None}
+
+
+# POTCAR section comes from PARENT but atomate2 does not support inheritance yet
+_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR = loadfn(
+    resource_filename("pymatgen.io.vasp", "MatPESStaticSet.yaml")
+)
+_BASE_PBE54_SET = loadfn(resource_filename("pymatgen.io.vasp", "PBE54Base.yaml"))
+_BASE_MATPES_PBE_STATIC_SET = {
+    **_BASE_PBE54_SET,
+    **_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR,
+}
 
 
 @dataclass
