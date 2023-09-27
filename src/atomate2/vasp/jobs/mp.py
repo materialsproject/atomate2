@@ -21,7 +21,13 @@ from atomate2.vasp.sets.mp import (
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
-__all__ = ["MPPreRelaxMaker", "MPMetaGGARelaxMaker", "MPMetaGGAStaticMaker"]
+__all__ = [
+    "MPGGARelaxMaker",
+    "MPGGAStaticMaker",
+    "MPPreRelaxMaker",
+    "MPMetaGGARelaxMaker",
+    "MPMetaGGAStaticMaker",
+]
 
 
 @dataclass
@@ -88,7 +94,7 @@ class MPGGAStaticMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MP GGA Static"
+    name: str = "MP GGA static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPGGARelaxSetGenerator
     )
