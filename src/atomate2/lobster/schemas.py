@@ -320,8 +320,8 @@ class CalcQualitySummary(BaseModel):
 
     minimal_basis: bool = Field(
         None,
-        description="Denotes whether the calculation used minimal basis for the LOBSTER"
-        " computation",
+        description="Denotes whether the calculation used the minimal basis for the "
+        "LOBSTER computation",
     )
     charge_spilling: dict = Field(
         None,
@@ -337,7 +337,7 @@ class CalcQualitySummary(BaseModel):
         "bandOverlaps.lobster file to evaluate the quality of the projection, "
         "namely whether the file is generated during projection (i.e., larger "
         "deviations exist), the maximum deviation observed, percent of k-points "
-        "above the threshold set in pymatgen parser (during data generation the "
+        "above the threshold set in the pymatgen parser (during data generation the "
         "value was set to 0.1)",
     )
     dos_comparisons: dict = Field(

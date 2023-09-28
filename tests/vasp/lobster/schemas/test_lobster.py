@@ -189,7 +189,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
         read_saved_json,
     )
 
-    # Test cba saved jsons and reading
+    # Generate condensed bonding analysis (cba) json using lobstertaskdoc
 
     _ = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
@@ -213,11 +213,13 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
     ]
 
     for cba_key in expected_cba_keys_json:
+        # read data from saved json as pymatgen objects
         json_data = read_saved_json(
             filename=lobster_test_dir / "lobsteroutputs/mp-2534/cba.json.gz",
             pymatgen_objs=True,
             query=cba_key,
         )
+
         if "dos" in cba_key and json_data[cba_key]:
             assert isinstance(json_data[cba_key], LobsterCompleteDos)
 
@@ -229,28 +231,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
             ].values():
                 assert isinstance(cohp_data, Cohp)
 
-    # Test cba saved jsons and non pymatgen objects
-
-    _ = LobsterTaskDocument.from_directory(
-        dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
-        save_cohp_plots=False,
-        calc_quality_kwargs={"n_bins": 100},
-        save_cba_jsons=True,
-        add_coxxcar_to_task_document=False,
-        save_computational_data_jsons=False,
-    )
-
-    expected_cba_keys_json = [
-        "cation_anion_bonds",
-        "all_bonds",
-        "madelung_energies",
-        "charges",
-        "calc_quality_summary",
-        "calc_quality_text",
-        "dos",
-        "lso_dos",
-        "builder_meta",
-    ]
+    # read cba saved jsons without converting it to non pymatgen objects (read as dict)
 
     for cba_key in expected_cba_keys_json:
         json_data = read_saved_json(
@@ -269,11 +250,10 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
             ].values():
                 assert isinstance(cohp_data, dict)
 
-    # delete json after the test
+    # delete the cba json after the test
     os.remove(lobster_test_dir / "lobsteroutputs/mp-2534/cba.json.gz")
 
-    # Test computational data json and reading
-
+    # Generate computational data json from lobstertaskdoc
     _ = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-754354",
         save_cohp_plots=False,
@@ -312,6 +292,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
         "cobi_data",
     ]
 
+    # Read the data from saved computational data json as pymatgen objects
     for taskdoc_key in expected_computational_data_keys_json:
         json_data = read_saved_json(
             filename=lobster_test_dir
@@ -333,5 +314,5 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
         ) and json_data[taskdoc_key]:
             assert isinstance(json_data[taskdoc_key], CompleteCohp)
 
-    # delete json after the test
+    # delete the computational data json after the test
     os.remove(lobster_test_dir / "lobsteroutputs/mp-754354/computational_data.json.gz")
