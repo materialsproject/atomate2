@@ -41,7 +41,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["lobsterpy>=0.3.1"]
+lobster = ["lobsterpy>=0.3.1", "ijson>=3.2.2"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = ["chgnet==0.2.0", "matgl==0.8.3", "quippy-ase==0.9.14"]
 docs = [
@@ -79,6 +79,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.8.0",
+    "ijson==3.2.2"
 ]
 
 [project.scripts]
