@@ -173,3 +173,165 @@ def test_LobsterTaskDocument(lobster_test_dir):
     }
     gross_popp_here = doc2.gross_populations[10]["Mulliken GP"]
     assert expected_gross_popp == gross_popp_here
+
+
+def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
+    """
+    Test if jsons are saved are valid
+    """
+    import os
+
+    from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
+    from pymatgen.electronic_structure.dos import LobsterCompleteDos
+
+    from atomate2.lobster.schemas import (
+        LobsterTaskDocument,
+        read_saved_json,
+    )
+
+    # Test cba saved jsons and reading
+
+    _ = LobsterTaskDocument.from_directory(
+        dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
+        save_cohp_plots=False,
+        calc_quality_kwargs={"n_bins": 100},
+        save_cba_jsons=True,
+        add_coxxcar_to_task_document=False,
+        save_computational_data_jsons=False,
+    )
+
+    expected_cba_keys_json = [
+        "cation_anion_bonds",
+        "all_bonds",
+        "madelung_energies",
+        "charges",
+        "calc_quality_summary",
+        "calc_quality_text",
+        "dos",
+        "lso_dos",
+        "builder_meta",
+    ]
+
+    for cba_key in expected_cba_keys_json:
+        json_data = read_saved_json(
+            filename=lobster_test_dir / "lobsteroutputs/mp-2534/cba.json.gz",
+            pymatgen_objs=True,
+            query=cba_key,
+        )
+        if "dos" in cba_key and json_data[cba_key]:
+            assert isinstance(json_data[cba_key], LobsterCompleteDos)
+
+        if (cba_key == "all_bonds" or cba_key == "cation_anion_bonds") and json_data[
+            cba_key
+        ]:
+            for cohp_data in json_data[cba_key]["lobsterpy_data"][
+                "cohp_plot_data"
+            ].values():
+                assert isinstance(cohp_data, Cohp)
+
+    # Test cba saved jsons and non pymatgen objects
+
+    _ = LobsterTaskDocument.from_directory(
+        dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
+        save_cohp_plots=False,
+        calc_quality_kwargs={"n_bins": 100},
+        save_cba_jsons=True,
+        add_coxxcar_to_task_document=False,
+        save_computational_data_jsons=False,
+    )
+
+    expected_cba_keys_json = [
+        "cation_anion_bonds",
+        "all_bonds",
+        "madelung_energies",
+        "charges",
+        "calc_quality_summary",
+        "calc_quality_text",
+        "dos",
+        "lso_dos",
+        "builder_meta",
+    ]
+
+    for cba_key in expected_cba_keys_json:
+        json_data = read_saved_json(
+            filename=lobster_test_dir / "lobsteroutputs/mp-2534/cba.json.gz",
+            pymatgen_objs=False,
+            query=cba_key,
+        )
+        if "dos" in cba_key and json_data[cba_key]:
+            assert isinstance(json_data[cba_key], dict)
+
+        if (cba_key == "all_bonds" or cba_key == "cation_anion_bonds") and json_data[
+            cba_key
+        ]:
+            for cohp_data in json_data[cba_key]["lobsterpy_data"][
+                "cohp_plot_data"
+            ].values():
+                assert isinstance(cohp_data, dict)
+
+    # delete json after the test
+    os.remove(lobster_test_dir / "lobsteroutputs/mp-2534/cba.json.gz")
+
+    # Test computational data json and reading
+
+    _ = LobsterTaskDocument.from_directory(
+        dir_name=lobster_test_dir / "lobsteroutputs/mp-754354",
+        save_cohp_plots=False,
+        calc_quality_kwargs={"n_bins": 100},
+        save_cba_jsons=False,
+        add_coxxcar_to_task_document=False,
+        save_computational_data_jsons=True,
+    )
+
+    expected_computational_data_keys_json = [
+        "builder_meta",
+        "structure",
+        "charges",
+        "lobsterout",
+        "lobsterin",
+        "lobsterpy_data",
+        "lobsterpy_text",
+        "calc_quality_summary",
+        "calc_quality_text",
+        "strongest_bonds_icohp",
+        "strongest_bonds_icoop",
+        "strongest_bonds_icobi",
+        "lobsterpy_data_cation_anion",
+        "lobsterpy_text_cation_anion",
+        "strongest_bonds_icohp_cation_anion",
+        "strongest_bonds_icoop_cation_anion",
+        "strongest_bonds_icobi_cation_anion",
+        "dos",
+        "lso_dos",
+        "madelung_energies",
+        "site_potentials",
+        "gross_populations",
+        "band_overlaps",
+        "cohp_data",
+        "coop_data",
+        "cobi_data",
+    ]
+
+    for taskdoc_key in expected_computational_data_keys_json:
+        json_data = read_saved_json(
+            filename=lobster_test_dir
+            / "lobsteroutputs/mp-754354/computational_data.json.gz",
+            pymatgen_objs=True,
+            query=taskdoc_key,
+        )
+        if "dos" in taskdoc_key and json_data[taskdoc_key]:
+            assert isinstance(json_data[taskdoc_key], LobsterCompleteDos)
+
+        if "lobsterpy_data" in taskdoc_key and json_data[taskdoc_key]:
+            for cohp_data in json_data[taskdoc_key]["cohp_plot_data"].values():
+                assert isinstance(cohp_data, Cohp)
+
+        if (
+            taskdoc_key == "cohp_data"
+            or taskdoc_key == "cobi_data"
+            or taskdoc_key == "coop_data"
+        ) and json_data[taskdoc_key]:
+            assert isinstance(json_data[taskdoc_key], CompleteCohp)
+
+    # delete json after the test
+    os.remove(lobster_test_dir / "lobsteroutputs/mp-754354/computational_data.json.gz")
