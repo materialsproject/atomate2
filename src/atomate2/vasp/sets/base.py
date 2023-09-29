@@ -292,6 +292,10 @@ class VaspInputGenerator(InputGenerator):
         Tolerance for symmetry finding, used for line mode band structure k-points.
     config_dict
         The config dictionary to use containing the base input set settings.
+    inherit_incar
+        Whether to inherit INCAR settings from previous calculation. This might be
+        useful to port Custodian fixes to child jobs but can also be dangerous e.g.
+        when switching from GGA to meta-GGA or relax to static jobs. Defaults to True.
     """
 
     user_incar_settings: dict = field(default_factory=dict)
