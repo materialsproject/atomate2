@@ -84,10 +84,12 @@ class Atomate2Settings(BaseSettings):
         "to the simulation will be compressed. If False no file is compressed.",
     )
     VASP_INHERIT_INCAR: bool = Field(
-        False,
+        True,
         description="Whether to inherit INCAR settings from previous calculation. "
         "This might be useful to port Custodian fixes to child jobs but can also be "
-        "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs.",
+        "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs."
+        "Can be overridden on a per-job basis via the inherit_incar keyword of "
+        "VaspInputGenerator.",
     )
 
     LOBSTER_CMD: str = Field(
