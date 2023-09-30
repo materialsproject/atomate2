@@ -68,6 +68,9 @@ def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-193.39161102270234)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 1
+    assert output1.calcs_reversed[0].output.structure.lattice.abc == approx(
+        si_structure.lattice.abc
+    )
 
 
 def test_transmuter(tmp_path, mock_cp2k, basis_and_potential, si_structure):
