@@ -17,8 +17,6 @@ from atomate2.lobster.files import LOBSTEROUTPUT_FILES, copy_lobster_files
 from atomate2.lobster.run import run_lobster
 from atomate2.lobster.schemas import LobsterTaskDocument
 
-__all__ = ["LobsterMaker"]
-
 logger = logging.getLogger(__name__)
 
 

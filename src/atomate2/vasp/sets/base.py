@@ -34,8 +34,6 @@ if TYPE_CHECKING:
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
 
-__all__ = ["VaspInputSet", "VaspInputGenerator"]
-
 
 class VaspInputSet(InputSet):
     """

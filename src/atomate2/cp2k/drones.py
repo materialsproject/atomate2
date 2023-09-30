@@ -12,8 +12,6 @@ from atomate2.cp2k.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["Cp2kDrone"]
-
 
 class Cp2kDrone(AbstractDrone):
     """

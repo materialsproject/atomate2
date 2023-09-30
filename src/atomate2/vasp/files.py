@@ -17,8 +17,6 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.sets.base import VaspInputGenerator
 
-__all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
-
 
 logger = logging.getLogger(__name__)
 

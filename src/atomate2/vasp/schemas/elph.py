@@ -12,8 +12,6 @@ from pymatgen.electronic_structure.core import Spin
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["RawElectronicData", "ElectronPhononRenormalisationDoc"]
-
 
 class RawElectronicData(BaseModel):
     """Raw data used to fit electron-phonon renormalisation."""

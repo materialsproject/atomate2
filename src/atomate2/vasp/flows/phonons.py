@@ -29,9 +29,6 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-__all__ = ["PhononMaker"]
-
-
 @dataclass
 class PhononMaker(Maker):
     """

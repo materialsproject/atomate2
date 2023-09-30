@@ -9,7 +9,7 @@ from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
 
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
-from atomate2.common.jobs.defect import (
+from atomate2.common.jobs.defect import (  # noqa: F401
     bulk_supercell_calculation,
     get_ccd_documents,
     get_charged_structures,
@@ -25,17 +25,6 @@ from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "bulk_supercell_calculation",
-    "calculate_finite_diff",
-    "get_ccd_documents",
-    "get_charged_structures",
-    "get_supercell_from_prv_calc",
-    "spawn_defect_q_jobs",
-    "spawn_energy_curve_calcs",
-]
-# sort the list above
-
 
 @job(data=WSWQ, output_schema=FiniteDifferenceDocument)
 def calculate_finite_diff(
@@ -45,7 +34,7 @@ def calculate_finite_diff(
 ):
     """Run a post-processing VASP job for the finite difference overlap.
 
-    Reads the WAVECAR file and computs the desired quantities. This can be used in
+    Reads the WAVECAR file and computes the desired quantities. This can be used in
     cases where data from the same calculation is used multiple times.
 
     Since all of the standard outputs are presumably already stored in the database,

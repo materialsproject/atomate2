@@ -16,8 +16,6 @@ import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
 
-__all__ = ["FileClient", "auto_fileclient"]
-
 
 class FileClient:
     """

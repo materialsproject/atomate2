@@ -47,7 +47,6 @@ VASP_OUTPUT_FILES = [
     "WAVECAR",
     "XDATCAR",
 ]
-__all__ = ["copy_lobster_files"]
 
 logger = logging.getLogger(__name__)
 
