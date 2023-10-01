@@ -11,8 +11,6 @@ from pymatgen.apps.borg.hive import AbstractDrone
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["VaspDrone"]
-
 
 class VaspDrone(AbstractDrone):
     """

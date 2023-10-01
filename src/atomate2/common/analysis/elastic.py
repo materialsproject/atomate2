@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-__all__ = ["get_default_strain_states"]
-
 
 def get_default_strain_states(order: int) -> list[tuple[int, int, int, int, int, int]]:
     """
