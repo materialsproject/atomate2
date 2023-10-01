@@ -77,7 +77,7 @@ class Cp2kInputSet(InputSet):
 
         """
         self.cp2k_input = cp2k_input
-        self.optional_files = {} if optional_files is None else optional_files
+        self.optional_files = optional_files or {}
 
     def write_input(
         self,
@@ -327,8 +327,8 @@ class Cp2kInputGenerator(InputGenerator):
         input_updates: dict = None,
     ):
         """Get the input."""
-        previous_input = {} if previous_input is None else previous_input
-        input_updates = {} if input_updates is None else input_updates
+        previous_input = previous_input or {}
+        input_updates = input_updates or {}
         input_settings = dict(self.config_dict["cp2k_input"])
 
         # Generate base input but override with user input settings
@@ -397,7 +397,7 @@ class Cp2kInputGenerator(InputGenerator):
         kpoints_updates: dict[str, Any] | None,
     ) -> Kpoints | None:
         """Get the kpoints object."""
-        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
+        kpoints_updates = kpoints_updates or {}
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:

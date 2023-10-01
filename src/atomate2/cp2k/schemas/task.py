@@ -328,7 +328,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
         task_files = _find_cp2k_files(dir_name, volumetric_files=volumetric_files)
 

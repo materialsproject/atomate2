@@ -94,8 +94,8 @@ def run_cp2k(
     custodian_kwargs : dict
         Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    cp2k_job_kwargs = {} if cp2k_job_kwargs is None else cp2k_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    cp2k_job_kwargs = cp2k_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     cp2k_cmd = expandvars(cp2k_cmd)
     split_cp2k_cmd = shlex.split(cp2k_cmd)
