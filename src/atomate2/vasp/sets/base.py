@@ -89,8 +89,8 @@ class VaspInputSet(InputSet):
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        if make_dir:
+            os.makedirs(directory, exist_ok=True)
 
         inputs = {
             "INCAR": self.incar,

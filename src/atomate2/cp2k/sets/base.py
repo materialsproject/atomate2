@@ -98,8 +98,8 @@ class Cp2kInputSet(InputSet):
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        if make_dir:
+            os.makedirs(directory, exist_ok=True)
 
         inputs = {
             "input": {"filename": "cp2k.inp", "object": self.cp2k_input},
@@ -270,9 +270,7 @@ class Cp2kInputGenerator(InputGenerator):
         raise NotImplementedError
 
     def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
+        self, structure: Structure, prev_input: Cp2kInput = None
     ) -> dict:
         """
         Get updates to the kpoints configuration for this calculation type.
@@ -349,9 +347,9 @@ class Cp2kInputGenerator(InputGenerator):
                 and input_settings[setting]
                 and callable(getattr(cp2k_input, setting))
             ):
-                subsettings = input_settings.get(setting)
+                sub_settings = input_settings.get(setting)
                 getattr(cp2k_input, setting)(
-                    **subsettings if isinstance(subsettings, dict) else {}
+                    **sub_settings if isinstance(sub_settings, dict) else {}
                 )
 
         cp2k_input.update(overrides)
