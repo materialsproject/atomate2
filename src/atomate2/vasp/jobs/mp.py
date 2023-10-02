@@ -24,14 +24,6 @@ from atomate2.vasp.sets.mp import (
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
-__all__ = [
-    "MPGGARelaxMaker",
-    "MPGGAStaticMaker",
-    "MPPreRelaxMaker",
-    "MPMetaGGARelaxMaker",
-    "MPMetaGGAStaticMaker",
-]
-
 
 @dataclass
 class MPGGARelaxMaker(BaseVaspMaker):
