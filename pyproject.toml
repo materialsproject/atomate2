@@ -48,7 +48,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
     "furo==2023.9.10",
-    "ipython==8.15.0",
+    "ipython==8.16.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.5.0",
