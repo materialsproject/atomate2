@@ -1,5 +1,5 @@
 """
-Module defining Materials Project input sets.
+Module defining Materials Project input set generators.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
@@ -187,63 +187,3 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
         """
         # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
         return {"LCHARG": True, "LWAVE": True, "GGA": None}
-
-
-# POTCAR section comes from PARENT but atomate2 does not support inheritance yet
-_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR = loadfn(
-    resource_filename("pymatgen.io.vasp", "MatPESStaticSet.yaml")
-)
-_BASE_PBE54_SET = loadfn(resource_filename("pymatgen.io.vasp", "PBE54Base.yaml"))
-_BASE_MATPES_PBE_STATIC_SET = {
-    **_BASE_PBE54_SET,
-    **_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR,
-}
-
-
-@dataclass
-class MatPESGGAStaticSetGenerator(StaticSetGenerator):
-    """Class to generate MP-compatible VASP GGA static input sets."""
-
-    config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
-    auto_ismear: bool = False
-    auto_kspacing: bool = True
-
-
-@dataclass
-class MatPESMetaGGAStaticSetGenerator(StaticSetGenerator):
-    """Class to generate MP-compatible VASP GGA static input sets."""
-
-    config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
-    auto_ismear: bool = False
-    auto_kspacing: bool = True
-
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-        return {"METAGGA": "R2SCAN", "ALGO": "ALL", "GGA": "--"}  # unset GGA
