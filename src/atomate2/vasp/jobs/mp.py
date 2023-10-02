@@ -13,6 +13,8 @@ from typing import TYPE_CHECKING
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.mp import (
+    MatPESGGAStaticSetGenerator,
+    MatPESMetaGGAStaticSetGenerator,
     MPGGARelaxSetGenerator,
     MPGGAStaticSetGenerator,
     MPMetaGGARelaxSetGenerator,
@@ -211,4 +213,74 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
     name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPMetaGGAStaticSetGenerator
+    )
+
+
+@dataclass
+class MatPESGGAStaticMaker(BaseVaspMaker):
+    """
+    Maker to create VASP static job using r2SCAN by default.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "MatPES GGA static"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=MatPESGGAStaticSetGenerator
+    )
+
+
+@dataclass
+class MatPESMetaGGAStaticMaker(BaseVaspMaker):
+    """
+    Maker to create VASP static job using r2SCAN by default.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "MatPES meta-GGA static"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=MatPESMetaGGAStaticSetGenerator
     )
