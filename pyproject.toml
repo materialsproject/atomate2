@@ -30,9 +30,10 @@ dependencies = [
     "custodian>=2023.3.10",
     "emmet-core>=0.65.0",
     "jobflow>=0.1.11",
-    "monty",
+    "monty>=2023.9.25",
     "numpy",
-    "pydantic",
+    "pydantic>=2.0.1",
+    "pydantic-settings>=2.0.3",
     "pymatgen>=2023.1.9",
 ]
 
@@ -46,7 +47,7 @@ defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = ["chgnet==0.2.0", "matgl==0.8.3", "quippy-ase==0.9.14"]
 docs = [
     "FireWorks==2.0.3",
-    "autodoc_pydantic==1.9.0",
+    "autodoc_pydantic==2.0.1",
     "furo==2023.9.10",
     "ipython==8.16.0",
     "jsonschema[format]",
@@ -61,21 +62,22 @@ tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.2"]
 strict = [
     "PyYAML==6.0.1",
     "cclib==1.8",
-    "chgnet==0.2.0",
+    "chgnet==0.2.1",
     "click==8.1.7",
     "custodian==2023.7.22",
     "dscribe==2.1.0",
-    "emmet-core==0.68.0",
-    "jobflow==0.1.13",
+    "emmet-core==0.69.5",
+    "jobflow==0.1.14",
     "lobsterpy==0.3.1",
     "matgl==0.8.3",
-    "monty==2023.9.5",
+    "monty==2023.9.25",
     "mp-api==0.35.1",
     "numpy",
     "phonopy==2.20.0",
-    "pydantic==1.10.9",
+    "pydantic==2.4.1",
+    "pydantic-settings==2.0.3",
     "pymatgen-analysis-defects==2023.8.22",
-    "pymatgen==2023.9.10",
+    "pymatgen==2023.9.25",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.8.0",
@@ -187,7 +189,7 @@ isort.known-first-party = ["atomate2"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = ["D"]
+"**/tests/*" = ["D", "B018"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
 # flake8-future-annotations (FA): future annotations only work in pydantic models in python 3.10+
