@@ -1,5 +1,5 @@
 """
-Module defining jobs for Materials Project r2SCAN workflows.
+Module defining Materials Project input sets.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
