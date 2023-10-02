@@ -4,7 +4,8 @@ import warnings
 from pathlib import Path
 from typing import Literal, Optional, Tuple, Union
 
-from pydantic import BaseSettings, Field, root_validator
+from pydantic import Field, model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
 
@@ -29,7 +30,7 @@ class Atomate2Settings(BaseSettings):
     SYMPREC: float = Field(
         0.1, description="Symmetry precision for spglib symmetry finding."
     )
-    CUSTODIAN_SCRATCH_DIR: str = Field(
+    CUSTODIAN_SCRATCH_DIR: Optional[str] = Field(
         None, description="Path to scratch directory used by custodian."
     )
 
@@ -43,7 +44,9 @@ class Atomate2Settings(BaseSettings):
     VASP_NCL_CMD: str = Field(
         "vasp_ncl", description="Command to run non-collinear version of VASP."
     )
-    VASP_VDW_KERNEL_DIR: str = Field(None, description="Path to VDW VASP kernel.")
+    VASP_VDW_KERNEL_DIR: Optional[str] = Field(
+        None, description="Path to VDW VASP kernel."
+    )
     VASP_INCAR_UPDATES: dict = Field(
         default_factory=dict, description="Updates to apply to VASP INCAR files."
     )
@@ -151,16 +154,14 @@ class Atomate2Settings(BaseSettings):
     )
 
     # AMSET settings
-    AMSET_SETTINGS_UPDATE: dict = Field(
+    AMSET_SETTINGS_UPDATE: Optional[dict] = Field(
         None, description="Additional settings applied to AMSET settings file."
     )
 
-    class Config:
-        """Pydantic config settings."""
+    model_config = SettingsConfigDict(env_prefix="atomate2_")
 
-        env_prefix = "atomate2_"
-
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def load_default_settings(cls, values):
         """
         Load settings from file or environment variables.
@@ -172,11 +173,12 @@ class Atomate2Settings(BaseSettings):
         """
         from monty.serialization import loadfn
 
-        config_file_path: str = values.get("CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
+        config_file_path = values.get("CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
+        config_file_path = Path(config_file_path).expanduser()
 
         new_values = {}
-        if Path(config_file_path).expanduser().exists():
-            if Path(config_file_path).stat().st_size == 0:
+        if config_file_path.exists():
+            if config_file_path.stat().st_size == 0:
                 warnings.warn(
                     f"Using atomate2 config file at {config_file_path} but it's empty",
                     stacklevel=2,
