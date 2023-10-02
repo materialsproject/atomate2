@@ -62,9 +62,7 @@ HSE_DOUBLE_RELAX = DoubleRelaxMaker(
             user_kpoints_settings=SPECIAL_KPOINT
         ),
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
-        copy_vasp_kwargs={
-            "additional_vasp_files": ("WAVECAR",),
-        },
+        copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
     ),
 )
 GRID_KEYS = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
@@ -251,7 +249,7 @@ class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
     )
-    name: str = "config. coordinate"
+    name: str = "config coordinate"
 
 
 @dataclass

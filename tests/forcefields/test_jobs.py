@@ -15,7 +15,7 @@ def test_chgnet_static_maker(si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-10.745277404785156, rel=1e-4)
@@ -38,13 +38,11 @@ def test_chgnet_relax_maker(si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validating the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.745235443115234, rel=1e-4)
-    assert output1.output.ionic_steps[-1].magmoms[0] == approx(
-        0.002112872898578644, rel=1e-4
-    )
+    assert output1.output.energy == approx(-10.74523544, rel=1e-4)
+    assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00211287, rel=1e-4)
     assert output1.output.n_steps == 12
 
 
@@ -62,10 +60,10 @@ def test_m3gnet_static_maker(si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.711267471313477, rel=1e-4)
+    assert output1.output.energy == approx(-10.71126747, rel=1e-4)
     assert output1.output.n_steps == 1
 
 
@@ -84,7 +82,7 @@ def test_m3gnet_relax_maker(si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validating the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-10.710836410522461, rel=1e-4)
