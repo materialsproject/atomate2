@@ -66,7 +66,7 @@ strict = [
     "custodian==2023.7.22",
     "dscribe==2.1.0",
     "emmet-core==0.68.0",
-    "jobflow==0.1.13",
+    "jobflow==0.1.14",
     "lobsterpy==0.3.1",
     "matgl==0.8.3",
     "monty==2023.9.5",
