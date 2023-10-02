@@ -26,8 +26,6 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-__all__ = ["ElasticMaker"]
-
 
 @dataclass
 class ElasticMaker(Maker):

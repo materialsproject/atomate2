@@ -8,8 +8,6 @@ from pydantic import BaseSettings, Field, root_validator
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
 
-__all__ = ["Atomate2Settings"]
-
 
 class Atomate2Settings(BaseSettings):
     """

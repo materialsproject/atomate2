@@ -17,13 +17,13 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.10",
-    # "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
@@ -48,10 +48,10 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
     "furo==2023.9.10",
-    "ipython==8.15.0",
+    "ipython==8.16.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
-    "numpydoc==1.5.0",
+    "numpydoc==1.6.0",
     "sphinx==7.2.6",
     "sphinx-copybutton==0.5.2",
     "sphinx_design==0.5.0",

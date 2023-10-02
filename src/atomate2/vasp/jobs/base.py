@@ -27,8 +27,6 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = ["BaseVaspMaker", "vasp_job"]
-
 
 _BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 _DATA_OBJECTS = [

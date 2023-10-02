@@ -26,20 +26,6 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-__all__ = [
-    "DoubleRelaxMaker",
-    "BandStructureMaker",
-    "UniformBandStructureMaker",
-    "LineModeBandStructureMaker",
-    "HSEBandStructureMaker",
-    "HSEUniformBandStructureMaker",
-    "HSELineModeBandStructureMaker",
-    "RelaxBandStructureMaker",
-    "OpticsMaker",
-    "HSEOpticsMaker",
-]
-
-
 @dataclass
 class DoubleRelaxMaker(Maker):
     """

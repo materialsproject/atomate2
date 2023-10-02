@@ -18,7 +18,6 @@ from atomate2 import SETTINGS
 if TYPE_CHECKING:
     from custodian.custodian import Validator
 
-__all__ = ["JobType", "run_lobster"]
 
 _DEFAULT_VALIDATORS = (LobsterFilesValidator(), EnoughBandsValidator())
 _DEFAULT_HANDLERS = ()

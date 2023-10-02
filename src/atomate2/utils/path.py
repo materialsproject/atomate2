@@ -7,8 +7,6 @@ import os
 import socket
 from pathlib import Path
 
-__all__ = ["get_uri", "strip_hostname"]
-
 
 def get_uri(dir_name: str | Path) -> str:
     """
