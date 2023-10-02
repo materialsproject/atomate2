@@ -29,7 +29,7 @@ def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-214.23651374775685)
@@ -63,7 +63,7 @@ def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-193.39161102270234)

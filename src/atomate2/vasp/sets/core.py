@@ -913,9 +913,7 @@ class MDSetGenerator(VaspInputGenerator):
             return defaults[ensemble.lower()]  # type: ignore
         except KeyError as err:
             supported = tuple(defaults)
-            raise ValueError(
-                f"Expect `ensemble` to be one of {supported}; got {ensemble}."
-            ) from err
+            raise ValueError(f"Expect {ensemble=} to be one of {supported}") from err
 
 
 def _get_nedos(vasprun: Vasprun | None, dedos: float):
