@@ -19,7 +19,6 @@ LREAL = Auto
 LVTOT = True
 LWAVE = True
 MAGMOM = 2*0.0
-METAGGA = R2scan
 NELM = 200
 NSW = 99
 PREC = Accurate
