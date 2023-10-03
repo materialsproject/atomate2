@@ -3,6 +3,10 @@ from pymatgen.core import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.matpes import MatPESGGAStaticMaker, MatPESMetaGGAStaticMaker
+from atomate2.vasp.sets.matpes import (
+    MatPESGGAStaticSetGenerator,
+    MatPESMetaGGAStaticSetGenerator,
+)
 
 expected_incar = {
     "ALGO": "Normal",
@@ -60,11 +64,13 @@ expected_incar = {
 
 
 @pytest.mark.parametrize("maker_cls", [MatPESGGAStaticMaker, MatPESMetaGGAStaticMaker])
-def test_matpes_gga_static_maker_default_values(maker_cls: BaseVaspMaker):
+def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
     maker = maker_cls()
-    assert (
-        maker.name
-        == f"MatPES {'meta-' if 'Meta' in maker_cls.__name__ else ''}GGA static"
+    is_meta = "Meta" in maker_cls.__name__
+    assert maker.name == f"MatPES {'meta-' if is_meta else ''}GGA static"
+    assert isinstance(
+        maker.input_set_generator,
+        MatPESMetaGGAStaticSetGenerator if is_meta else MatPESGGAStaticSetGenerator,
     )
     config = maker.input_set_generator.config_dict
     assert {*config} == {"INCAR", "POTCAR", "PARENT", "POTCAR_FUNCTIONAL"}
@@ -75,7 +81,7 @@ def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     ref_paths = {
         # TODO should be using GGA-specific reference files here but since they only
         # differ in "GGA", "METAGGA", "ALGO" settings, we avoid a lot of mostly
@@ -107,7 +113,7 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     from emmet.core.tasks import TaskDoc
     from jobflow import run_locally
 
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     ref_paths = {
         "MatPES meta-GGA static": "matpes_metagga_static",
     }
