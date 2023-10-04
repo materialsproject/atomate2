@@ -117,7 +117,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         Parameters
         ----------
         forcefield_name : str
-            Name of the forcefield used.
+            Name of the force field used.
         result : dict
             The outputted results from the task.
         relax_cell : bool

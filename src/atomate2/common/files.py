@@ -7,15 +7,6 @@ from pathlib import Path
 
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
-__all__ = [
-    "copy_files",
-    "delete_files",
-    "rename_files",
-    "gzip_files",
-    "gunzip_files",
-    "get_zfile",
-]
-
 
 @auto_fileclient
 def copy_files(

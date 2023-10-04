@@ -12,12 +12,6 @@ from atomate2 import SETTINGS
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = [
-    "structure_to_primitive",
-    "structure_to_conventional",
-    "retrieve_structure_from_materials_project",
-]
-
 
 @job
 def structure_to_primitive(

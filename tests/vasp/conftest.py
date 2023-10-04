@@ -1,8 +1,9 @@
 import logging
 from pathlib import Path
-from typing import Dict, Final, Literal, Sequence, Union
+from typing import Any, Callable, Dict, Final, Generator, Literal, Sequence, Union
 
 import pytest
+from pytest import MonkeyPatch
 
 logger = logging.getLogger("atomate2")
 
@@ -22,7 +23,9 @@ def lobster_test_dir(test_dir):
 
 
 @pytest.fixture()
-def mock_vasp(monkeypatch, vasp_test_dir):
+def mock_vasp(
+    monkeypatch: MonkeyPatch, vasp_test_dir: Path
+) -> Generator[Callable[[Any, Any], Any], None, None]:
     """
     This fixture allows one to mock (fake) running VASP.
 
@@ -74,7 +77,14 @@ def mock_vasp(monkeypatch, vasp_test_dir):
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
-        ref_path = vasp_test_dir / _REF_PATHS[name]
+        try:
+            ref_path = vasp_test_dir / _REF_PATHS[name]
+        except KeyError:
+            raise ValueError(
+                f"no reference directory found for job {name!r}; "
+                f"reference paths received={_REF_PATHS}"
+            ) from None
+
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
     get_input_set_orig = VaspInputGenerator.get_input_set
@@ -93,11 +103,8 @@ def mock_vasp(monkeypatch, vasp_test_dir):
     monkeypatch.setattr(VaspInputGenerator, "get_nelect", mock_get_nelect)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
-        if fake_run_vasp_kwargs is None:
-            fake_run_vasp_kwargs = {}
-
         _REF_PATHS.update(ref_paths)
-        _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs)
+        _FAKE_RUN_VASP_KWARGS.update(fake_run_vasp_kwargs or {})
 
     yield _run
 
@@ -161,13 +168,16 @@ def check_incar(ref_path: Path, incar_settings: Sequence[str]):
     from pymatgen.io.vasp import Incar
 
     user = Incar.from_file("INCAR")
-    ref = Incar.from_file(ref_path / "inputs" / "INCAR")
+    ref_incar_path = ref_path / "inputs" / "INCAR"
+    ref = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
-    for p in incar_settings:
-        if user.get(p, defaults.get(p)) != ref.get(p, defaults.get(p)):
+    for key in incar_settings:
+        user_val = user.get(key, defaults.get(key))
+        ref_val = ref.get(key, defaults.get(key))
+        if user_val != ref_val:
             raise ValueError(
-                f"INCAR value of {p} is inconsistent: "
-                f"{user.get(p, defaults.get(p))} != {ref.get(p, defaults.get(p))}"
+                f"\n\nINCAR value of {key} is inconsistent: expected {ref_val}, "
+                f"got {user_val} \nin ref file {ref_incar_path}"
             )
 
 
@@ -189,17 +199,25 @@ def check_kpoints(ref_path: Path):
         )
     if user_kpoints_exists and ref_kpoints_exists:
         user = Kpoints.from_file("KPOINTS")
-        ref = Kpoints.from_file(ref_path / "inputs" / "KPOINTS")
+        ref_kpt_path = ref_path / "inputs" / "KPOINTS"
+        ref = Kpoints.from_file(ref_kpt_path)
         if user.style != ref.style or user.num_kpts != ref.num_kpts:
-            raise ValueError("KPOINTS files are inconsistent")
+            raise ValueError(
+                f"\n\nKPOINTS files are inconsistent: {user.style} != {ref.style} "
+                f"or {user.num_kpts} != {ref.num_kpts}\nin ref file {ref_kpt_path}"
+            )
     else:
         # check k-spacing
         user = Incar.from_file("INCAR")
-        ref = Incar.from_file(ref_path / "inputs" / "INCAR")
+        ref_incar_path = ref_path / "inputs" / "INCAR"
+        ref = Incar.from_file(ref_incar_path)
 
         user_ksp, ref_ksp = user.get("KSPACING"), ref.get("KSPACING")
         if user_ksp != ref_ksp:
-            raise ValueError(f"KSPACING is not consistent: {user_ksp} != {ref_ksp}")
+            raise ValueError(
+                f"\n\nKSPACING is inconsistent: {user_ksp} != {ref_ksp} "
+                f"\nin ref file {ref_incar_path}"
+            )
 
 
 def check_poscar(ref_path: Path):
@@ -218,7 +236,12 @@ def check_poscar(ref_path: Path):
             > 1e-3
         )
     ):
-        raise ValueError("POSCAR files are inconsistent")
+        ref_poscar_path = ref_path / "inputs" / "POSCAR"
+        user_poscar_path = Path("POSCAR").absolute()
+        raise ValueError(
+            f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref}"
+            f"\n\n{user_poscar_path!s}\n{user}"
+        )
 
 
 def check_potcar(ref_path: Path):

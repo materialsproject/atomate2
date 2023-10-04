@@ -21,7 +21,6 @@ try:
 except ImportError:
     cclib = None
 
-__all__ = ["TaskDocument"]
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")

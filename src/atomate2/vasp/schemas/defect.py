@@ -9,8 +9,6 @@ from pymatgen.io.vasp.outputs import WSWQ
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["FiniteDifferenceDocument"]
-
 
 class FiniteDifferenceDocument(BaseModel):
     """Collection of computed wavefunction overlap objects.

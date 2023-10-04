@@ -17,13 +17,13 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
@@ -41,18 +41,18 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.27.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["lobsterpy>=0.3.0"]
+lobster = ["lobsterpy>=0.3.1"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = ["chgnet==0.2.0", "matgl==0.8.3", "quippy-ase==0.9.14"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==1.9.0",
     "furo==2023.9.10",
-    "ipython==8.15.0",
+    "ipython==8.16.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
-    "numpydoc==1.5.0",
-    "sphinx==7.2.5",
+    "numpydoc==1.6.0",
+    "sphinx==7.2.6",
     "sphinx-copybutton==0.5.2",
     "sphinx_design==0.5.0",
 ]
@@ -65,9 +65,9 @@ strict = [
     "click==8.1.7",
     "custodian==2023.7.22",
     "dscribe==2.1.0",
-    "emmet-core==0.67.5",
+    "emmet-core==0.68.0",
     "jobflow==0.1.13",
-    "lobsterpy==0.3.0",
+    "lobsterpy==0.3.1",
     "matgl==0.8.3",
     "monty==2023.9.5",
     "mp-api==0.35.1",
@@ -75,10 +75,10 @@ strict = [
     "phonopy==2.20.0",
     "pydantic==1.10.9",
     "pymatgen-analysis-defects==2023.8.22",
-    "pymatgen==2023.8.10",
+    "pymatgen==2023.9.10",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "typing-extensions==4.7.1",
+    "typing-extensions==4.8.0",
 ]
 
 [project.scripts]

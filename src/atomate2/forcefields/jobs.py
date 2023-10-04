@@ -19,18 +19,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-__all__ = [
-    "ForceFieldStaticMaker",
-    "ForceFieldRelaxMaker",
-    "CHGNetStaticMaker",
-    "CHGNetRelaxMaker",
-    "M3GNetStaticMaker",
-    "M3GNetRelaxMaker",
-    "GAPRelaxMaker",
-    "GAPStaticMaker",
-]
-
-
 @dataclass
 class ForceFieldRelaxMaker(Maker):
     """
@@ -41,7 +29,7 @@ class ForceFieldRelaxMaker(Maker):
     name : str
         The job name.
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
@@ -65,7 +53,7 @@ class ForceFieldRelaxMaker(Maker):
     @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
         """
-        Perform a relaxation of a structure using a forcefield.
+        Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
@@ -116,7 +104,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     @job(output_schema=ForceFieldTaskDocument)
     def make(self, structure: Structure):
         """
-        Perform a static evaluation using a forcefield.
+        Perform a static evaluation using a force field.
 
         Parameters
         ----------
@@ -153,7 +141,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     Parameters
     ----------
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
@@ -217,7 +205,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     name : str
         The job name.
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
@@ -269,7 +257,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
     name : str
         The job name.
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -307,7 +295,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     name : str
         The job name.
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     relax_cell : bool
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
@@ -359,7 +347,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     name : str
         The job name.
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str

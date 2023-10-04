@@ -84,7 +84,7 @@ def copy_vasp_outputs(
 
     # check at least one type of POTCAR file is included
     if len([f for f in optional_files if "POTCAR" in f.name]) == 0:
-        raise FileNotFoundError("Could not find POTCAR file to copy.")
+        raise FileNotFoundError(f"Could not find a POTCAR file in {src_dir!r} to copy")
 
     copy_files(
         src_dir,

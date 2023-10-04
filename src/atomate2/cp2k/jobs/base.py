@@ -33,8 +33,6 @@ from atomate2.cp2k.sets.base import Cp2kInputGenerator
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = ["BaseCp2kMaker", "cp2k_job"]
-
 
 _DATA_OBJECTS = [
     BandStructure,

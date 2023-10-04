@@ -8,8 +8,6 @@ from pydantic import BaseSettings, Field, root_validator
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
 
-__all__ = ["Atomate2Settings"]
-
 
 class Atomate2Settings(BaseSettings):
     """
@@ -83,6 +81,14 @@ class Atomate2Settings(BaseSettings):
         description="Determine if the files in folder are being compressed. If True "
         "all the files are compressed. If 'atomate' only a selection of files related "
         "to the simulation will be compressed. If False no file is compressed.",
+    )
+    VASP_INHERIT_INCAR: bool = Field(
+        True,
+        description="Whether to inherit INCAR settings from previous calculation. "
+        "This might be useful to port Custodian fixes to child jobs but can also be "
+        "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs."
+        "Can be overridden on a per-job basis via the inherit_incar keyword of "
+        "VaspInputGenerator.",
     )
 
     LOBSTER_CMD: str = Field(

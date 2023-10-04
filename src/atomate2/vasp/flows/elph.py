@@ -42,9 +42,6 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-__all__ = ["ElectronPhononMaker"]
-
-
 @dataclass
 class ElectronPhononMaker(Maker):
     """

@@ -14,8 +14,6 @@ from atomate2.amset.files import copy_amset_files, write_amset_settings
 from atomate2.amset.run import check_converged, run_amset
 from atomate2.amset.schemas import AmsetTaskDocument
 
-__all__ = ["AmsetMaker"]
-
 logger = logging.getLogger(__name__)
 
 
