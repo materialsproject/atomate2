@@ -168,13 +168,13 @@ def fake_run_vasp(
 def check_incar(ref_path: Path, incar_settings: Sequence[str]):
     from pymatgen.io.vasp import Incar
 
-    user = Incar.from_file("INCAR")
+    user_incar = Incar.from_file("INCAR")
     ref_incar_path = ref_path / "inputs" / "INCAR"
-    ref = Incar.from_file(ref_incar_path)
+    ref_incar = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
-    for key in list(user) if incar_settings is None else incar_settings:
-        user_val = user.get(key, defaults.get(key))
-        ref_val = ref.get(key, defaults.get(key))
+    for key in list(user_incar) if incar_settings is None else incar_settings:
+        user_val = user_incar.get(key, defaults.get(key))
+        ref_val = ref_incar.get(key, defaults.get(key))
         if user_val != ref_val:
             raise ValueError(
                 f"\n\nINCAR value of {key} is inconsistent: expected {ref_val}, "
@@ -199,21 +199,22 @@ def check_kpoints(ref_path: Path):
             "a KPOINTS file"
         )
     if user_kpoints_exists and ref_kpoints_exists:
-        user = Kpoints.from_file("KPOINTS")
+        user_kpts = Kpoints.from_file("KPOINTS")
         ref_kpt_path = ref_path / "inputs" / "KPOINTS"
-        ref = Kpoints.from_file(ref_kpt_path)
-        if user.style != ref.style or user.num_kpts != ref.num_kpts:
+        ref_kpts = Kpoints.from_file(ref_kpt_path)
+        if user_kpts.style != ref_kpts.style or user_kpts.num_kpts != ref_kpts.num_kpts:
             raise ValueError(
-                f"\n\nKPOINTS files are inconsistent: {user.style} != {ref.style} "
-                f"or {user.num_kpts} != {ref.num_kpts}\nin ref file {ref_kpt_path}"
+                f"\n\nKPOINTS files are inconsistent: {user_kpts.style} != "
+                f"{ref_kpts.style} or {user_kpts.num_kpts} != {ref_kpts.num_kpts}\nin "
+                f"ref file {ref_kpt_path}"
             )
     else:
         # check k-spacing
-        user = Incar.from_file("INCAR")
+        user_incar = Incar.from_file("INCAR")
         ref_incar_path = ref_path / "inputs" / "INCAR"
-        ref = Incar.from_file(ref_incar_path)
+        ref_incar = Incar.from_file(ref_incar_path)
 
-        user_ksp, ref_ksp = user.get("KSPACING"), ref.get("KSPACING")
+        user_ksp, ref_ksp = user_incar.get("KSPACING"), ref_incar.get("KSPACING")
         if user_ksp != ref_ksp:
             raise ValueError(
                 f"\n\nKSPACING is inconsistent: {user_ksp} != {ref_ksp} "
@@ -226,22 +227,21 @@ def check_poscar(ref_path: Path):
     from pymatgen.io.vasp import Poscar
     from pymatgen.util.coord import pbc_diff
 
-    user = Poscar.from_file("POSCAR")
-    ref = Poscar.from_file(ref_path / "inputs" / "POSCAR")
+    user_poscar = Poscar.from_file("POSCAR")
+    ref_poscar = Poscar.from_file(ref_path / "inputs" / "POSCAR")
 
+    user_frac_coords = user_poscar.structure.frac_coords
+    ref_frac_coords = ref_poscar.structure.frac_coords
     if (
-        user.natoms != ref.natoms
-        or user.site_symbols != ref.site_symbols
-        or np.any(
-            np.abs(pbc_diff(user.structure.frac_coords, ref.structure.frac_coords))
-            > 1e-3
-        )
+        user_poscar.natoms != ref_poscar.natoms
+        or user_poscar.site_symbols != ref_poscar.site_symbols
+        or np.any(np.abs(pbc_diff(user_frac_coords, ref_frac_coords)) > 1e-3)
     ):
         ref_poscar_path = ref_path / "inputs" / "POSCAR"
         user_poscar_path = Path("POSCAR").absolute()
         raise ValueError(
-            f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref}"
-            f"\n\n{user_poscar_path!s}\n{user}"
+            f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref_poscar}"
+            f"\n\n{user_poscar_path!s}\n{user_poscar}"
         )
 
 
@@ -249,21 +249,25 @@ def check_potcar(ref_path: Path):
     from pymatgen.io.vasp import Potcar
 
     if Path(ref_path / "inputs" / "POTCAR").exists():
-        ref = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
+        ref_potcar = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
     elif Path(ref_path / "inputs" / "POTCAR.spec").exists():
-        ref = Path(ref_path / "inputs" / "POTCAR.spec").read_text().strip().split("\n")
+        ref_potcar = (
+            Path(ref_path / "inputs" / "POTCAR.spec").read_text().strip().split("\n")
+        )
     else:
         raise FileNotFoundError("no reference POTCAR or POTCAR.spec file found")
 
     if Path("POTCAR").exists():
-        user = Potcar.from_file("POTCAR").symbols
+        user_potcar = Potcar.from_file("POTCAR").symbols
     elif Path("POTCAR.spec").exists():
-        user = Path("POTCAR.spec").read_text().strip().split("\n")
+        user_potcar = Path("POTCAR.spec").read_text().strip().split("\n")
     else:
         raise FileNotFoundError("no POTCAR or POTCAR.spec file found")
 
-    if user != ref:
-        raise ValueError(f"POTCAR files are inconsistent: {user} != {ref}")
+    if user_potcar != ref_potcar:
+        raise ValueError(
+            f"POTCAR files are inconsistent: {user_potcar} != {ref_potcar}"
+        )
 
 
 def clear_vasp_inputs():
