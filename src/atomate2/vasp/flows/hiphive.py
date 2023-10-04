@@ -136,7 +136,7 @@ class HiphiveMaker(Maker):
     # If renormalization is performed,
     # T_RENORM overrides T_KLAT for lattice thermal conductivity
     # T_KLAT = {"t_min":100,"t_max":1500,"t_step":100} #[i*100 for i in range(0,11)]
-    T_KLAT: ClassVar[list[int]] = [300]  # [i*100 for i in range(0,11)]
+    T_KLAT: ClassVar[list[int]] = [100, 200, 300, 400]  # [i*100 for i in range(0,11)]
     T_THERMAL_CONDUCTIVITY: ClassVar[list[int]] = [
         0,
         100,
@@ -483,6 +483,12 @@ class HiphiveMaker(Maker):
                     pass
                 elif type(temperatures) in [list, np.ndarray]:
                     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+                    # if len(temperatures) == 0:
+                    #     # Handle the case when temperatures is empty
+                    #     pass
+                    # elif type(temperatures) in [list, np.ndarray]:
+                    #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+
                 lattice_thermal_conductivity = run_lattice_thermal_conductivity(
                     shengbte_cmd=shengbte_cmd,
                     renormalized=renormalize,
