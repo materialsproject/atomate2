@@ -2,13 +2,13 @@
 
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
 from shutil import which
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, validator
-from pydantic.datetime_parse import datetime
 from pymatgen.command_line.bader_caller import BaderAnalysis
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
