@@ -335,7 +335,6 @@ class HSERelaxSetGenerator(VaspInputGenerator):
         By default the hybrid input sets use ALGO = Normal which is only efficient for
         VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
         details.
-
     """
 
     def get_incar_updates(
@@ -448,7 +447,6 @@ class HSEStaticSetGenerator(VaspInputGenerator):
         By default the hybrid input sets use ALGO = Normal which is only efficient for
         VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
         details.
-
     """
 
     def get_incar_updates(
