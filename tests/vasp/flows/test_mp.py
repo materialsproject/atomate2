@@ -9,6 +9,7 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
 )
+from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 if TYPE_CHECKING:
     from jobflow import Maker
@@ -69,7 +70,13 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    flow = MPMetaGGADoubleRelaxStaticMaker().make(si_struct)
+    flow = MPMetaGGADoubleRelaxStaticMaker(
+        relax_maker2=MPMetaGGARelaxMaker(
+            # TODO better test for bandgap_tol, isn't actually run by mock_vasp
+            # this just tests it can be passed without error
+            input_set_generator=MPMetaGGARelaxSetGenerator(bandgap_tol=0.1)
+        )
+    ).make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

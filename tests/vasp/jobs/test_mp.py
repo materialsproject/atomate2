@@ -32,7 +32,7 @@ def test_mp_pre_relax_maker_default_values():
         assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
 
-def test_mp_relax_maker_default_values():
+def test_mp_meta_gga_relax_maker_default_values():
     maker = MPMetaGGARelaxMaker()
     assert maker.name == "MP meta-GGA relax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "POTCAR"}
