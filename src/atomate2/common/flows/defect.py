@@ -234,7 +234,6 @@ class FormationEnergyMaker(Maker, ABC):
                 'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
             }
         ]
-
     """
 
     defect_relax_maker: Maker

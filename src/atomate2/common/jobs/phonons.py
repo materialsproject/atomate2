@@ -228,7 +228,6 @@ def generate_frequencies_eigenvectors(
         Born charges
     kwargs: dict
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
-
     """
     return PhononBSDOSDoc.from_forces_born(
         structure=structure,
