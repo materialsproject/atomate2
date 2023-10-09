@@ -1,4 +1,4 @@
-def test_LobsterTaskDocument(lobster_test_dir):
+def test_lobster_task_document(lobster_test_dir):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
