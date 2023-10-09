@@ -28,14 +28,6 @@ from atomate2.cp2k.schemas.calculation import (
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 
-__all__ = [
-    "AnalysisSummary",
-    "AtomicKindSummary",
-    "InputSummary",
-    "OutputSummary",
-    "TaskDocument",
-]
-
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")
 _VOLUMETRIC_FILES = ("v_hartree", "ELECTRON_DENSITY", "SPIN_DENSITY")
@@ -220,8 +212,8 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         if calc_doc.output.ionic_steps:
-            forces = calc_doc.output.ionic_steps[-1].get("forces", None)
-            stress = calc_doc.output.ionic_steps[-1].get("stress", None)
+            forces = calc_doc.output.ionic_steps[-1].get("forces")
+            stress = calc_doc.output.ionic_steps[-1].get("stress")
         else:
             forces = None
             stress = None
@@ -372,29 +364,28 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         cp2k_objects = all_cp2k_objects[-1]
         included_objects = None
         if cp2k_objects:
-            included_objects = list(cp2k_objects.keys())
+            included_objects = list(cp2k_objects)
 
-        if isinstance(calcs_reversed[-1].output.structure, Structure):
+        if isinstance(calcs_reversed[0].output.structure, Structure):
             attr = "from_structure"
             dat = {
-                "structure": calcs_reversed[-1].output.structure,
-                "meta_structure": calcs_reversed[-1].output.structure,
+                "structure": calcs_reversed[0].output.structure,
+                "meta_structure": calcs_reversed[0].output.structure,
                 "include_structure": True,
             }
-        elif isinstance(calcs_reversed[-1].output.structure, Molecule):
+        elif isinstance(calcs_reversed[0].output.structure, Molecule):
             attr = "from_molecule"
             dat = {
-                "structure": calcs_reversed[-1].output.structure,
-                "meta_structure": calcs_reversed[-1].output.structure,
-                "molecule": calcs_reversed[-1].output.structure,
+                "structure": calcs_reversed[0].output.structure,
+                "meta_structure": calcs_reversed[0].output.structure,
+                "molecule": calcs_reversed[0].output.structure,
                 "include_molecule": True,
             }
 
         doc = getattr(cls, attr)(**dat)
-        ddict = doc.dict()
         data = {
-            "structure": calcs_reversed[-1].output.structure,
-            "meta_structure": calcs_reversed[-1].output.structure,
+            "structure": calcs_reversed[0].output.structure,
+            "meta_structure": calcs_reversed[0].output.structure,
             "dir_name": dir_name,
             "calcs_reversed": calcs_reversed,
             "analysis": analysis,
@@ -405,19 +396,18 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             "icsd_id": icsd_id,
             "tags": tags,
             "author": author,
-            "completed_at": calcs_reversed[-1].completed_at,
+            "completed_at": calcs_reversed[0].completed_at,
             "input": InputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
-            "output": OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
+            "output": OutputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
             "state": _get_state(calcs_reversed, analysis),
             "entry": cls.get_entry(calcs_reversed),
             "run_stats": _get_run_stats(calcs_reversed),
             "cp2k_objects": cp2k_objects,
             "included_objects": included_objects,
         }
-        doc = cls(**ddict)
+        doc = cls(**doc.dict())
         doc = doc.copy(update=data)
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
     @staticmethod
     def get_entry(

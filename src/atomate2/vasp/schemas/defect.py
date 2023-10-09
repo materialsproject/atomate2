@@ -9,8 +9,6 @@ from pymatgen.io.vasp.outputs import WSWQ
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["FiniteDifferenceDocument"]
-
 
 class FiniteDifferenceDocument(BaseModel):
     """Collection of computed wavefunction overlap objects.
@@ -59,9 +57,7 @@ class FiniteDifferenceDocument(BaseModel):
         wswq_dir = Path(directory)
         files = list(Path(wswq_dir).glob("WSWQ.[0-9]*"))
         ordered_files = sorted(files, key=lambda x: int(x.name.split(".")[1]))
-        wswq_documents = []
-        for f in ordered_files:
-            wswq_documents.append(WSWQ.from_file(f))
+        wswq_documents = [WSWQ.from_file(file) for file in ordered_files]
 
         return cls(
             wswqs=wswq_documents,

@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OnMissing
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -24,8 +25,6 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
-
-__all__ = ["ElasticMaker"]
 
 
 @dataclass
@@ -66,6 +65,8 @@ class ElasticMaker(Maker):
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
     fit_elastic_tensor_kwargs : dict
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
     """
 
     name: str = "elastic"
@@ -78,12 +79,14 @@ class ElasticMaker(Maker):
     elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
 
     def make(
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
         equilibrium_stress: Matrix3D = None,
+        conventional: bool = False,
     ):
         """
         Make flow to calculate the elastic constant.
@@ -96,6 +99,8 @@ class ElasticMaker(Maker):
             A previous vasp calculation directory to use for copying outputs.
         equilibrium_stress : tuple of tuple of float
             The equilibrium stress of the (relaxed) structure, if known.
+        conventional : bool
+            Whether to transform the structure into the conventional cell.
         """
         jobs = []
 
@@ -107,6 +112,10 @@ class ElasticMaker(Maker):
             prev_vasp_dir = bulk.output.dir_name
             if equilibrium_stress is None:
                 equilibrium_stress = bulk.output.output.stress
+
+        if conventional:
+            sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
+            structure = sga.get_conventional_standard_structure()
 
         deformations = generate_elastic_deformations(
             structure,
@@ -128,6 +137,7 @@ class ElasticMaker(Maker):
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
             **self.fit_elastic_tensor_kwargs,
+            **self.task_document_kwargs,
         )
 
         # allow some of the deformations to fail

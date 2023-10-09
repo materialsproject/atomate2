@@ -12,7 +12,9 @@ from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
+from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 from atomate2.common.schemas.defects import CCDDocument
 
@@ -26,15 +28,6 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 logger = logging.getLogger(__name__)
-
-__all__ = [
-    "get_charged_structures",
-    "spawn_energy_curve_calcs",
-    "get_ccd_documents",
-    "get_supercell_from_prv_calc",
-    "bulk_supercell_calculation",
-    "spawn_defect_q_jobs",
-]
 
 
 class CCDInput(BaseModel):
@@ -216,7 +209,7 @@ def get_supercell_from_prv_calc(
         Output containing the supercell transformation and the dir_name
     """
     sc_structure = structure_from_prv(prv_calc_dir)
-    (sc_mat_prv, _) = get_matched_structure_mapping(
+    sc_mat_prv, _ = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
 
@@ -276,6 +269,7 @@ def bulk_supercell_calculation(
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
         "uuid": relax_job.uuid,
+        "locpot_plnr": relax_output.calcs_reversed[0].output.locpot,
     }
     flow = Flow([relax_job], output=summary_d)
     return Response(replace=flow)
@@ -290,6 +284,8 @@ def spawn_defect_q_jobs(
     defect_index: int | str = "",
     add_info: dict | None = None,
     validate_charge: bool = True,
+    relax_radius: float | str | None = None,
+    perturb: float | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations.
 
@@ -314,6 +310,18 @@ def spawn_defect_q_jobs(
         The lattice of the relaxed supercell. If provided, the lattice parameters
         of the supercell will be set to value specified.  Otherwise, the lattice it will
         only by set by `defect.structure` and `sc_mat`.
+    validate_charge:
+        Whether to validate the charge states of the defect after the atomic relaxation.
+        Assuming the final output of the relaxation is a TaskDoc, we should make sure
+        that the charge state is set properly and matches the expected charge state from
+        the input defect object.
+    relax_radius:
+        The radius to include around the defect site for the relaxation.
+        If "auto", the radius will be set to the maximum that will fit inside a periodic
+        cell. If None, all atoms will be relaxed.
+    perturb:
+        The amount to perturb the sites in the supercell. Only perturb the sites with
+        selective dynamics set to True. So this setting only works with `relax_radius`.
 
     Returns
     -------
@@ -323,7 +331,9 @@ def spawn_defect_q_jobs(
     """
     defect_q_jobs = []
     all_chg_outputs = {}
-    sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
+    sc_def_struct = defect.get_supercell_structure(
+        sc_mat=sc_mat, relax_radius=relax_radius, perturb=perturb
+    )
     sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
@@ -357,10 +367,12 @@ def spawn_defect_q_jobs(
         defect_q_jobs.append(charged_relax)
         charged_output: TaskDoc = charged_relax.output
         all_chg_outputs[qq] = {
+            "defect": defect,
             "structure": charged_output.structure,
             "entry": charged_output.entry,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
+            "locpot_plnr": charged_output.calcs_reversed[0].output.locpot,
         }
         # check that the charge state was set correctly
         if validate_charge:
@@ -387,7 +399,46 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
     """
     if int(charge_state) != int(task_structure.charge):
         raise ValueError(
-            f"The charge state of the structure is {task_structure.charge}, "
-            f"but the charge state of the calculation is {charge_state}."
+            f"The charge of the output structure is {task_structure.charge}, "
+            f"but expect charge state from the Defect object is {charge_state}."
         )
     return True
+
+
+@job
+def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
+    """Get a defect entry from a defect calculation and a bulk calculation."""
+    bulk_c_entry = bulk_summary["sc_entry"]
+    bulk_struct_entry = ComputedStructureEntry(
+        structure=bulk_summary["sc_struct"],
+        energy=bulk_c_entry.energy,
+    )
+    bulk_dir_name = bulk_summary["dir_name"]
+    bulk_locpot = bulk_summary["locpot_plnr"]
+    defect_ent_res = []
+    for qq, qq_summary in charge_state_summary.items():
+        defect_c_entry = qq_summary["entry"]
+        defect_struct_entry = ComputedStructureEntry(
+            structure=qq_summary["structure"],
+            energy=defect_c_entry.energy,
+        )
+        defect_dir_name = qq_summary["dir_name"]
+        defect_locpot = qq_summary["locpot_plnr"]
+        defect_entry = DefectEntry(
+            defect=qq_summary["defect"],
+            charge_state=qq,
+            sc_entry=defect_struct_entry,
+            bulk_entry=bulk_struct_entry,
+        )
+        defect_ent_res.append(
+            {
+                "defect_entry": defect_entry,
+                "defect_dir_name": defect_dir_name,
+                "defect_locpot": defect_locpot,
+                "bulk_dir_name": bulk_dir_name,
+                "bulk_locpot": bulk_locpot,
+                "bulk_uuid": bulk_summary.get("uuid", None),
+                "defect_uuid": qq_summary.get("uuid", None),
+            }
+        )
+    return defect_ent_res

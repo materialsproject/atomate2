@@ -14,8 +14,6 @@ from atomate2.amset.files import copy_amset_files, write_amset_settings
 from atomate2.amset.run import check_converged, run_amset
 from atomate2.amset.schemas import AmsetTaskDocument
 
-__all__ = ["AmsetMaker"]
-
 logger = logging.getLogger(__name__)
 
 
@@ -102,8 +100,7 @@ class AmsetMaker(Maker):
                 transport_data = loadfn(next(Path().glob("transport_*.json")))
                 converged = check_converged(transport_data, loadfn(prev_transport_file))
 
-        if "include_mesh" not in self.task_document_kwargs:
-            self.task_document_kwargs["include_mesh"] = converged is not False
+        self.task_document_kwargs.setdefault("include_mesh", converged is not False)
 
         # parse amset outputs
         task_doc = AmsetTaskDocument.from_directory(

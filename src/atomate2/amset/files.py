@@ -15,8 +15,6 @@ from atomate2.utils.path import strip_hostname
 if TYPE_CHECKING:
     from pathlib import Path
 
-__all__ = ["copy_amset_files"]
-
 
 logger = logging.getLogger(__name__)
 

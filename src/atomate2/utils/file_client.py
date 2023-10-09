@@ -16,8 +16,6 @@ import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
 
-__all__ = ["FileClient", "auto_fileclient"]
-
 
 class FileClient:
     """
@@ -321,7 +319,7 @@ class FileClient:
             return Path(path).absolute()
         ssh = self.get_ssh(host)
         _, stdout, _ = ssh.exec_command(f"readlink -f {path}")
-        return Path([o.split("\n")[0] for o in stdout][0])
+        return Path(next(o.split("\n")[0] for o in stdout))
 
     def glob(self, path: str | Path, host: str | None = None) -> list[Path]:
         """
@@ -353,7 +351,7 @@ class FileClient:
         path: str | Path,
         host: str | None = None,
         compresslevel: int = 6,
-        force: bool = False,
+        force: bool | str = False,
     ):
         """
         Gzip a file.
@@ -367,7 +365,12 @@ class FileClient:
         compresslevel : bool
             Level of compression, 1-9. 9 is default for GzipFile, 6 is default for gzip.
         force : bool
-            Overwrite gzipped file if it already exists.
+            How to handle writing a gzipped file if it already exists. Accepts
+            either a string or bool:
+
+            - `"force"` or `True`: Overwrite gzipped file if it already exists.
+            - `"raise"` or `False`: Raise an error if file already exists.
+            - `"skip"` Skip file if it already exists.
         """
         path = self.abspath(path, host=host)
         path_gz = path.parent / f"{path.name}.gz"
@@ -380,8 +383,21 @@ class FileClient:
             warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
             return
 
-        if self.exists(path_gz, host=host) and not force:
-            raise FileExistsError(f"{path_gz} file already exists.")
+        if self.exists(path_gz, host=host):
+            if force is False or force == "raise":
+                raise FileExistsError(f"{path_gz} file already exists")
+            if force is True or force == "force":
+                pass
+            elif force == "skip":
+                warnings.warn(
+                    f"{path_gz} file already exists, skipping...", stacklevel=2
+                )
+                return
+            else:
+                raise ValueError(
+                    f"Invalid value for force: {force} "
+                    "(must be True, False, 'raise', 'force', or 'skip'))"
+                )
 
         if host is None:
             with open(path, "rb") as f_in, GzipFile(
@@ -398,7 +414,7 @@ class FileClient:
         self,
         path: str | Path,
         host: str | None = None,
-        force: bool = False,
+        force: bool | str = False,
     ):
         """
         Ungzip a file.
@@ -410,7 +426,12 @@ class FileClient:
         host : str or None
             A remote file system host on which to perform file operations.
         force : bool
-            Overwrite non-gzipped file if it already exists.
+            How to handle writing a non-gzipped file if it already exists. Accepts
+            either a string or bool:
+
+            - `"force"` or `True`: Overwrite non-gzipped file if it already exists.
+            - `"raise"` or `False`: Raise an error if file already exists.
+            - `"skip"` Skip file if it already exists.
         """
         path = self.abspath(path, host=host)
         path_nongz = path.with_suffix("")
@@ -419,8 +440,21 @@ class FileClient:
             warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
             return
 
-        if self.exists(path_nongz, host=host) and not force:
-            raise FileExistsError(f"{path_nongz} file already exists")
+        if self.exists(path_nongz, host=host):
+            if force is False or force == "raise":
+                raise FileExistsError(f"{path_nongz} file already exists")
+            if force is True or force == "force":
+                pass
+            elif force == "skip":
+                warnings.warn(
+                    f"{path_nongz} file already exists, skipping...", stacklevel=2
+                )
+                return
+            else:
+                raise ValueError(
+                    f"Invalid value for force: {force} "
+                    "(must be True, False, 'raise', 'force', or 'skip'))"
+                )
 
         if host is None:
             with open(path_nongz, "wb") as f_out, zopen(path, "rb") as f_in:
@@ -516,7 +550,7 @@ def auto_fileclient(method: Callable | None = None):
     def decorator(func):
         @wraps(func)
         def gen_fileclient(*args, **kwargs):
-            file_client = kwargs.get("file_client", None)
+            file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
                     kwargs["file_client"] = file_client

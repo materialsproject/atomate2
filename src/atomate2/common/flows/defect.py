@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Job, Maker, OutputReference
@@ -13,14 +14,13 @@ from atomate2.common.jobs.defect import (
     bulk_supercell_calculation,
     get_ccd_documents,
     get_charged_structures,
+    get_defect_entry,
     get_supercell_from_prv_calc,
     spawn_defect_q_jobs,
     spawn_energy_curve_calcs,
 )
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     import numpy.typing as npt
     from pymatgen.analysis.defects.core import Defect
     from pymatgen.core.structure import Structure
@@ -51,7 +51,7 @@ class ConfigurationCoordinateMaker(Maker):
 
     relax_maker: Maker
     static_maker: Maker
-    name: str = "config. coordinate"
+    name: str = "config coordinate"
     distortions: tuple[float, ...] = DEFAULT_DISTORTIONS
 
     def make(
@@ -167,6 +167,7 @@ class FormationEnergyMaker(Maker, ABC):
         messy, it is recommended for each implementation of this maker to check
         some of the most important settings in the `relax_maker`.  Please see
         `FormationEnergyMaker.validate_maker` for more details.
+
     bulk_relax_maker: Maker
         If None, the same `defect_relax_maker` will be used for the bulk supercell.
         A maker to used to perform the bulk supercell calculation. For marginally
@@ -184,13 +185,64 @@ class FormationEnergyMaker(Maker, ABC):
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
             ng_settings = dict(zip(params, ng + ngf))
             relax_maker = update_user_incar_settings(relax_maker, ng_settings)
+
     name: str
         The name of the flow created by this maker.
+
+    relax_radius:
+        The radius to include around the defect site for the relaxation.
+        If "auto", the radius will be set to the maximum that will fit inside
+        a periodic cell. If None, all atoms will be relaxed.
+
+    perturb:
+        The amount to perturb the sites in the supercell. Only perturb the
+        sites with selective dynamics set to True. So this setting only works
+        with `relax_radius`.
+
+    collect_defect_entry_data: bool
+        Whether to collect the defect entry data at the end of the flow.
+        If True, the output of all the charge states for each symmetry distinct
+        defect will be collected into a list of dictionaries that can be used
+        to create a DefectEntry. The data here can be trivially combined with
+        phase diagram data from the materials project API to create the formation
+        energy diagrams.
+
+        .. note::
+        Once we remove the requirement for explicit bulk supercell calculations,
+        this setting will be removed.  It is only needed because the bulk supercell
+        locpot is currently needed for the finite-size correction calculation.
+
+        Output format for the DefectEntry data:
+        .. code-block:: python
+        [
+            {
+                'bulk_dir_name': 'computer1:/folder1',
+                'bulk_locpot': {...},
+                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
+                'defect_dir_name': 'computer1:/folder2',
+                'defect_entry': {...},
+                'defect_locpot': {...},
+                'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
+            },
+            {
+                'bulk_dir_name': 'computer1:/folder3',
+                'bulk_locpot': {...},
+                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
+                'defect_dir_name': 'computer1:/folder4',
+                'defect_entry': {...},
+                'defect_locpot': {...},
+                'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
+            }
+        ]
+
     """
 
     defect_relax_maker: Maker
     bulk_relax_maker: Maker | None = None
     name: str = "formation energy"
+    relax_radius: float | str | None = None
+    perturb: float | None = None
+    collect_defect_entry_data: bool = False
 
     def __post_init__(self):
         """Apply post init updates."""
@@ -263,11 +315,27 @@ class FormationEnergyMaker(Maker, ABC):
                 "bulk_supercell_matrix": sc_mat,
                 "bulk_supercell_uuid": get_sc_job.uuid,
             },
+            relax_radius=self.relax_radius,
+            perturb=self.perturb,
         )
         jobs.extend([get_sc_job, spawn_output])
 
+        if self.collect_defect_entry_data:
+            if isinstance(bulk_supercell_dir, (str, Path)):
+                raise NotImplementedError(
+                    "DefectEntery creation only works when you are explicitly "
+                    "calculating the bulk supercell. This is because the bulk "
+                    "SC energy parsing from previous calculations is not implemented."
+                )
+            collection_job = get_defect_entry(
+                charge_state_summary=spawn_output.output,
+                bulk_summary=get_sc_job.output,
+            )
+            jobs.append(collection_job)
+
         return Flow(
             jobs=jobs,
+            output=spawn_output.output,
             name=self.name,
         )
 

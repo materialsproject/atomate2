@@ -39,18 +39,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "StaticMaker",
-    "RelaxMaker",
-    "CellOptMaker",
-    "HybridStaticMaker",
-    "HybridRelaxMaker",
-    "HybridCellOptMaker",
-    "NonSCFMaker",
-    "TransmuterMaker",
-    "MDMaker",
-]
-
 
 @dataclass
 class StaticMaker(BaseCp2kMaker):
@@ -331,16 +319,11 @@ class NonSCFMaker(BaseCp2kMaker):
         """
         self.input_set_generator.mode = mode
 
-        if "parse_dos" not in self.task_document_kwargs:
-            # parse DOS only for uniform band structure
-            self.task_document_kwargs["parse_dos"] = mode == "uniform"
-
-        if "parse_bandstructure" not in self.task_document_kwargs:
-            self.task_document_kwargs["parse_bandstructure"] = mode
-
+        # parse DOS only for uniform band structure
+        self.task_document_kwargs.setdefault("parse_dos", mode == "uniform")
+        self.task_document_kwargs.setdefault("parse_bandstructure", mode)
         # copy previous inputs
-        if "additional_cp2k_files" not in self.copy_cp2k_kwargs:
-            self.copy_cp2k_kwargs["additional_cp2k_files"] = ("wfn",)
+        self.copy_cp2k_kwargs.setdefault("additional_cp2k_files", ("wfn",))
 
         return super().make.original(self, structure, prev_cp2k_dir)
 
@@ -413,9 +396,8 @@ class TransmuterMaker(BaseCp2kMaker):
         structure = transmuter.transformed_structures[-1].final_structure
 
         # to avoid MongoDB errors, ":" is automatically converted to "."
-        if "transformations:json" not in self.write_additional_data:
-            tjson = transmuter.transformed_structures[-1]
-            self.write_additional_data["transformations:json"] = tjson
+        tjson = transmuter.transformed_structures[-1]
+        self.write_additional_data.setdefault("transformations:json", tjson)
 
         return super().make.original(self, structure, prev_cp2k_dir)
 

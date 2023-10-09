@@ -1,4 +1,5 @@
 import pytest
+from monty.serialization import loadfn
 
 
 @pytest.fixture(scope="session")
@@ -51,11 +52,11 @@ def tmp_dir():
     import tempfile
 
     old_cwd = os.getcwd()
-    newpath = tempfile.mkdtemp()
-    os.chdir(newpath)
+    new_path = tempfile.mkdtemp()
+    os.chdir(new_path)
     yield
     os.chdir(old_cwd)
-    shutil.rmtree(newpath)
+    shutil.rmtree(new_path)
 
 
 @pytest.fixture(scope="session")
@@ -113,3 +114,43 @@ def mock_jobflow_settings(memory_jobstore):
 
     with mock.patch("jobflow.SETTINGS", settings):
         yield
+
+
+@pytest.fixture(
+    params=[
+        "Si_227",
+        "Fe_229",
+        "S_58",
+        "Rb2P3_69",
+        "K2Au3_71",
+        "LaI3_63",
+        "KCeF4_123",
+        "RbO2_129",
+        "BaN2_15",
+        "TiNi_11",
+        "CaC2_2",
+        "KNO3_160",
+        "ZnO_186",
+    ],
+    ids=[
+        "F cubic",
+        "I cubic",
+        "P orth",
+        "I orth",
+        "F orth",
+        "C orth",
+        "P tet",
+        "I tet",
+        "C mono",
+        "P mono",
+        "tri",
+        "rhom",
+        "hex",
+    ],
+    scope="session",
+)
+def symmetry_structure(test_dir, request):
+    """The structures are copied from amset.
+    See https://github.com/hackingmaterials/amset/blob/main/tests/conftest.py
+    """
+    return loadfn(test_dir / "symmetry_structures" / f"{request.param}.json.gz")

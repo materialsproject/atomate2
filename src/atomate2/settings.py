@@ -1,13 +1,12 @@
 """Settings for atomate2."""
 
+import warnings
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Literal, Optional, Tuple, Union
 
 from pydantic import BaseSettings, Field, root_validator
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
-
-__all__ = ["Atomate2Settings"]
 
 
 class Atomate2Settings(BaseSettings):
@@ -48,17 +47,12 @@ class Atomate2Settings(BaseSettings):
     VASP_INCAR_UPDATES: dict = Field(
         default_factory=dict, description="Updates to apply to VASP INCAR files."
     )
-    VASP_RELAX_MAX_FORCE: float = Field(
-        0.25,
-        description="Maximum force allowed on each atom for successful structure "
-        "optimization",
-    )
     VASP_VOLUME_CHANGE_WARNING_TOL: float = Field(
         0.2,
         description="Maximum volume change allowed in VASP relaxations before the "
         "calculation is tagged with a warning",
     )
-    VASP_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
+    VASP_HANDLE_UNSUCCESSFUL: Union[bool, Literal["error"]] = Field(
         "error",
         description="Three-way toggle on what to do if the job looks OK but is actually"
         " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
@@ -82,12 +76,34 @@ class Atomate2Settings(BaseSettings):
         "Requires the bader executable to be on the path.",
     )
 
+    VASP_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
+    )
+    VASP_INHERIT_INCAR: bool = Field(
+        True,
+        description="Whether to inherit INCAR settings from previous calculation. "
+        "This might be useful to port Custodian fixes to child jobs but can also be "
+        "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs."
+        "Can be overridden on a per-job basis via the inherit_incar keyword of "
+        "VaspInputGenerator.",
+    )
+
     LOBSTER_CMD: str = Field(
         default="lobster", description="Command to run standard version of VASP."
     )
 
     LOBSTER_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
+    )
+
+    LOBSTER_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
     )
 
     CP2K_CMD: str = Field(
@@ -130,6 +146,13 @@ class Atomate2Settings(BaseSettings):
         "parsing CP2K directories useful for storing duplicate of FW.json",
     )
 
+    CP2K_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+        True,
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
+    )
+
     # Elastic constant settings
     ELASTIC_FITTING_METHOD: str = Field(
         "finite_difference", description="Elastic constant fitting method"
@@ -161,7 +184,17 @@ class Atomate2Settings(BaseSettings):
 
         new_values = {}
         if Path(config_file_path).expanduser().exists():
-            new_values.update(loadfn(Path(config_file_path).expanduser()))
+            if Path(config_file_path).stat().st_size == 0:
+                warnings.warn(
+                    f"Using atomate2 config file at {config_file_path} but it's empty",
+                    stacklevel=2,
+                )
+            else:
+                try:
+                    new_values.update(loadfn(config_file_path))
+                except ValueError:
+                    raise SyntaxError(
+                        f"atomate2 config file at {config_file_path} is unparsable"
+                    ) from None
 
-        new_values.update(values)
-        return new_values
+        return {**new_values, **values}

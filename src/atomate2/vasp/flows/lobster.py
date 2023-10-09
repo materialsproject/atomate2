@@ -25,7 +25,6 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-__all__ = ["VaspLobsterMaker"]
 
 LOBSTER_UNIFORM_MAKER = UniformBandStructureMaker(
     name="uniform lobster structure",

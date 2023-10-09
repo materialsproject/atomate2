@@ -29,7 +29,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-10.85037078)
@@ -61,7 +61,7 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-10.85043620)
@@ -159,7 +159,7 @@ def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-12.52887403)

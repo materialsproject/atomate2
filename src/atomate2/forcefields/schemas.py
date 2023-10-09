@@ -1,6 +1,6 @@
 """Job to prerelax a structure using an MD Potential."""
 
-from typing import List
+from typing import List, Optional
 
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Extra, Field
@@ -96,9 +96,14 @@ class ForceFieldTaskDocument(StructureMetadata):
         description="version of the interatomic potential used for relaxation.",
     )
 
+    dir_name: Optional[str] = Field(
+        None, description="Directory where the force field calculations are performed."
+    )
+
     @classmethod
-    def from_chgnet_result(
+    def from_ase_compatible_result(
         cls,
+        forcefield_name: str,
         result: dict,
         relax_cell: bool,
         steps: int,
@@ -107,10 +112,12 @@ class ForceFieldTaskDocument(StructureMetadata):
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
     ):
         """
-        Create a ForceFieldTaskDocument for a CHGNet Task.
+        Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
 
         Parameters
         ----------
+        forcefield_name : str
+            Name of the force field used.
         result : dict
             The outputted results from the task.
         relax_cell : bool
@@ -118,9 +125,9 @@ class ForceFieldTaskDocument(StructureMetadata):
         steps : int
             Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
-            Keyword arguments that will get passed to :obj:`StructOptimizer.relax`.
+            Keyword arguments that will get passed to :obj:`Relaxer.relax`.
         optimizer_kwargs : dict
-            Keyword arguments that will get passed to :obj:`StructOptimizer()`.
+            Keyword arguments that will get passed to :obj:`Relaxer()`.
         ionic_step_data : tuple
             Which data to save from each ionic step.
         """
@@ -128,7 +135,7 @@ class ForceFieldTaskDocument(StructureMetadata):
 
         # NOTE: units for stresses were converted to kbar (* -10 from standard output)
         # to comply with MP convention
-        for i in range(0, len(trajectory["stresses"])):
+        for i in range(len(trajectory["stresses"])):
             trajectory["stresses"][i] = trajectory["stresses"][i] * -10
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -166,18 +173,13 @@ class ForceFieldTaskDocument(StructureMetadata):
         n_steps = len(trajectory["energies"])
 
         ionic_steps = []
-        for i in range(0, n_steps):
+        for i in range(n_steps):
             cur_energy = (
                 trajectory["energies"][i] if "energy" in ionic_step_data else None
             )
             cur_forces = (
                 trajectory["forces"][i].tolist()
                 if "forces" in ionic_step_data
-                else None
-            )
-            cur_magmoms = (
-                trajectory["magmoms"][i].tolist()
-                if "magmoms" in ionic_step_data
                 else None
             )
             cur_stress = (
@@ -196,15 +198,30 @@ class ForceFieldTaskDocument(StructureMetadata):
             else:
                 cur_structure = None
 
-            ionic_steps.append(
-                IonicStep(
+            # include "magmoms" in :obj:`cur_ionic_step` if the trajectory has "magmoms"
+            if "magmoms" in trajectory:
+                cur_ionic_step = IonicStep(
                     energy=cur_energy,
                     forces=cur_forces,
-                    magmoms=cur_magmoms,
+                    magmoms=(
+                        trajectory["magmoms"][i].tolist()
+                        if "magmoms" in ionic_step_data
+                        else None
+                    ),
                     stress=cur_stress,
                     structure=cur_structure,
                 )
-            )
+
+            # otherwise do not include "magmoms" in :obj:`cur_ionic_step`
+            elif "magmoms" not in trajectory:
+                cur_ionic_step = IonicStep(
+                    energy=cur_energy,
+                    forces=cur_forces,
+                    stress=cur_stress,
+                    structure=cur_structure,
+                )
+
+            ionic_steps.append(cur_ionic_step)
 
         output_doc = OutputDoc(
             structure=output_structure,
@@ -216,15 +233,21 @@ class ForceFieldTaskDocument(StructureMetadata):
             n_steps=n_steps,
         )
 
-        import chgnet
+        if forcefield_name == "M3GNet":
+            import matgl
 
-        version = chgnet.__version__
+            version = matgl.__version__
+        elif forcefield_name == "CHGNet":
+            import chgnet
 
+            version = chgnet.__version__
+        else:
+            version = "Unknown"
         return cls.from_structure(
             meta_structure=output_structure,
             structure=output_structure,
             input=input_doc,
             output=output_doc,
-            forcefield_name="CHGNet",
+            forcefield_name=forcefield_name,
             forcefield_version=version,
         )
