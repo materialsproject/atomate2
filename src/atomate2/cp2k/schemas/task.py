@@ -189,8 +189,8 @@ class OutputSummary(BaseModel):
     bandgap: Optional[float] = Field(
         None, description="The DFT bandgap for the last calculation"
     )
-    cbm: float = Field(None, description="CBM for this calculation")
-    vbm: float = Field(None, description="VBM for this calculation")
+    cbm: Optional[float] = Field(None, description="CBM for this calculation")
+    vbm: Optional[float] = Field(None, description="VBM for this calculation")
     forces: List[Vector3D] = Field(
         None, description="Forces on atoms from the last calculation"
     )
