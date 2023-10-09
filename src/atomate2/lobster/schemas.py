@@ -103,14 +103,14 @@ class LobsterinModel(BaseModel):
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
 
-    gaussiansmearingwidth: float = Field(
+    gaussiansmearingwidth: Optional[float] = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    usedecimalplaces: int = Field(
+    usedecimalplaces: Optional[int] = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    cohpsteps: float = Field(
+    cohpsteps: Optional[float] = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
     basisset: str = Field(None, description="basis set of computation")
@@ -121,7 +121,7 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    lsodos: bool = Field(
+    lsodos: Optional[bool] = Field(
         None, description="Writes DOS output from the orthonormalized LCAO basis"
     )
     basisfunctions: list = Field(
