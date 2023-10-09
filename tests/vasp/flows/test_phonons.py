@@ -890,7 +890,7 @@ def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpathsc
         ).make(structure)
 
 
-def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
+def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
     from jobflow import run_locally
     from pymatgen.core.structure import Structure
 
@@ -948,7 +948,7 @@ def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
         ],
     )
 
-    def test_phonon_wf_all_steps_NaCl(mock_vasp, clean_dir):
+    def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
         from jobflow import run_locally
         from pymatgen.core.structure import Structure
 

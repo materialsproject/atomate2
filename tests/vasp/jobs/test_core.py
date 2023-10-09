@@ -236,8 +236,8 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
 
     # generate job
     job = MDMaker().make(si_structure)
-    NSW = 3
-    job.maker.input_set_generator.user_incar_settings["NSW"] = NSW
+    nsw = 3
+    job.maker.input_set_generator.user_incar_settings["NSW"] = nsw
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -251,7 +251,7 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     # check ionic steps stored as pymatgen Trajectory
     assert output1.calcs_reversed[0].output.ionic_steps is None
     traj = output1.vasp_objects[VaspObject.TRAJECTORY]
-    assert len(traj.frame_properties) == NSW
+    assert len(traj.frame_properties) == nsw
     # simply check a frame property can be converted to an IonicStep
     for frame in traj.frame_properties:
         IonicStep(**frame)
