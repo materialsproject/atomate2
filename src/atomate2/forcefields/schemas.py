@@ -12,8 +12,12 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
     """Document defining the information at each ionic step."""
 
     energy: float = Field(None, description="The free energy.")
-    forces: List[List[float]] = Field(None, description="The forces on each atom.")
-    stress: List[float] = Field(None, description="The stress on the lattice.")
+    forces: Optional[List[List[float]]] = Field(
+        None, description="The forces on each atom."
+    )
+    stress: Optional[List[float]] = Field(
+        None, description="The stress on the lattice."
+    )
     structure: Structure = Field(None, description="The structure at this step.")
 
 
@@ -26,16 +30,13 @@ class InputDoc(BaseModel):
         description="Whether cell lattice was allowed to change during relaxation.",
     )
     steps: int = Field(
-        None,
-        description="Maximum number of steps allowed during relaxation.",
+        None, description="Maximum number of steps allowed during relaxation."
     )
-    relax_kwargs: dict = Field(
-        None,
-        description="Keyword arguments that passed to the relaxer function.",
+    relax_kwargs: Optional[dict] = Field(
+        None, description="Keyword arguments that passed to the relaxer function."
     )
-    optimizer_kwargs: dict = Field(
-        None,
-        description="Keyword arguments passed to the relaxer's optimizer.",
+    optimizer_kwargs: Optional[dict] = Field(
+        None, description="Keyword arguments passed to the relaxer's optimizer."
     )
 
 

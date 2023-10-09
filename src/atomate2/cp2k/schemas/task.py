@@ -104,7 +104,7 @@ class AtomicKind(BaseModel):
     potential: str = Field(
         None, description="Name of pseudopotential for this atom kind"
     )
-    auxiliary_basis: str = Field(
+    auxiliary_basis: Optional[str] = Field(
         None, description="Auxiliary basis for this (if any) for this atom kind"
     )
     ghost: bool = Field(None, description="Whether this atom kind is a ghost")
@@ -186,13 +186,15 @@ class OutputSummary(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
-    bandgap: float = Field(None, description="The DFT bandgap for the last calculation")
+    bandgap: Optional[float] = Field(
+        None, description="The DFT bandgap for the last calculation"
+    )
     cbm: float = Field(None, description="CBM for this calculation")
     vbm: float = Field(None, description="VBM for this calculation")
     forces: List[Vector3D] = Field(
         None, description="Forces on atoms from the last calculation"
     )
-    stress: Matrix3D = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
 
