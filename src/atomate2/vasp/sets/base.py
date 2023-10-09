@@ -1079,7 +1079,7 @@ def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
     kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
 
     # cap kspacing at a max of 0.44, per internal benchmarking
-    return kspacing if 0.22 < kspacing < 0.44 else 0.44
+    return min(kspacing, 0.44)
 
 
 def _set_kspacing(
