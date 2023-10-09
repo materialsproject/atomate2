@@ -409,7 +409,7 @@ class LobsterTaskDocument(StructureMetadata):
         "each site as a key and the gross population as a value.",
     )
 
-    band_overlaps: dict = Field(
+    band_overlaps: Optional[dict] = Field(
         None,
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
