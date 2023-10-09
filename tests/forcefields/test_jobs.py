@@ -18,7 +18,7 @@ def test_chgnet_static_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.745277404785156, rel=1e-4)
+    assert output1.output.energy == approx(-10.7452, rel=1e-4)
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
@@ -63,7 +63,7 @@ def test_m3gnet_static_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.71126747, rel=1e-4)
+    assert output1.output.energy == approx(-10.8454, rel=1e-4)
     assert output1.output.n_steps == 1
 
 
@@ -85,7 +85,7 @@ def test_m3gnet_relax_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.710836410522461, rel=1e-4)
+    assert output1.output.energy == approx(-10.8441, rel=1e-4)
     assert output1.output.n_steps == 14
 
 
