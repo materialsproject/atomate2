@@ -83,7 +83,7 @@ class CalculationInput(BaseModel):
     )
 
     @validator("atomic_kind_info")
-    def remove_unnecessary(cls, atomic_kind_info):
+    def remove_unnecessary(self, atomic_kind_info):
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
             if "total_pseudopotential_energy" in atomic_kind_info[k]:
@@ -91,7 +91,7 @@ class CalculationInput(BaseModel):
         return atomic_kind_info
 
     @validator("dft")
-    def cleanup_dft(cls, dft):
+    def cleanup_dft(self, dft):
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
             dft["UKS"] = True
