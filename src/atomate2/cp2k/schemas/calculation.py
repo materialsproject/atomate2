@@ -583,7 +583,7 @@ def _parse_trajectory(cp2k_output: Cp2kOutput) -> Optional[Trajectory]:
         if cp2k_output.filenames.get("ener")
         else None
     )
-    data = parse_energy_file(ener) if ener else None
+    data = parse_energy_file(ener) or None
     constant_lattice = all(
         s.lattice == cp2k_output.initial_structure.lattice
         for s in cp2k_output.structures

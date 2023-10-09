@@ -152,13 +152,7 @@ class StaticSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        updates = {
-            "NSW": 0,
-            "ISMEAR": -5,
-            "LCHARG": True,
-            "LORBIT": 11,
-            "LREAL": False,
-        }
+        updates = {"NSW": 0, "ISMEAR": -5, "LCHARG": True, "LORBIT": 11, "LREAL": False}
         if self.lepsilon:
             # LPEAD=T: numerical evaluation of overlap integral prevents LRF_COMMUTATOR
             # errors and can lead to better expt. agreement but produces slightly
@@ -297,16 +291,16 @@ class NonSCFSetGenerator(VaspInputGenerator):
         }
 
         if vasprun is not None:
-            # set nbands
-            nbands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
-            updates["NBANDS"] = nbands
+            # set NBANDS
+            n_bands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
+            updates["NBANDS"] = n_bands
 
         if self.mode == "uniform":
-            # automatic setting of nedos using the energy range and the energy step
-            nedos = _get_nedos(vasprun, self.dedos)
+            # automatic setting of NEDOS using the energy range and the energy step
+            n_edos = _get_nedos(vasprun, self.dedos)
 
             # use tetrahedron method for DOS and optics calculations
-            updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": nedos})
+            updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": n_edos})
 
         elif self.mode in ("line", "boltztrap"):
             # if line mode or explicit k-points (boltztrap) can't use ISMEAR=-5
