@@ -388,7 +388,7 @@ class LobsterTaskDocument(StructureMetadata):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    lso_dos: LobsterCompleteDos = Field(
+    lso_dos: Optional[LobsterCompleteDos] = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
     madelung_energies: dict = Field(
