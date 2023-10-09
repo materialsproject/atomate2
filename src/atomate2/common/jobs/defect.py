@@ -400,7 +400,7 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
     if int(charge_state) != int(task_structure.charge):
         raise ValueError(
             f"The charge of the output structure is {task_structure.charge}, "
-            f"but expect charge state from the Defect object is {charge_state}."
+            f"but expected charge state from the Defect object is {charge_state}."
         )
     return True
 
