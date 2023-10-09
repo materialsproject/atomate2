@@ -150,7 +150,7 @@ def run_vasp(
     if wall_time is not None:
         handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
-    c = Custodian(
+    custodian_manager = Custodian(
         handlers,
         jobs,
         validators=validators,
@@ -160,7 +160,7 @@ def run_vasp(
     )
 
     logger.info("Running VASP using custodian.")
-    c.run()
+    custodian_manager.run()
 
 
 def should_stop_children(

@@ -44,11 +44,7 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     flow = ccd_maker.make(si_defect, charge_state1=0, charge_state2=1)
 
     # run the flow and ensure that it finished running successfully
-    responses = run_locally(
-        flow,
-        create_folders=True,
-        ensure_success=True,
-    )
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     ccd: CCDDocument = responses[flow.jobs[-1].uuid][1].output
 
@@ -185,9 +181,8 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     )
 
     def _check_plnr_locpot(name):
-        plnr_locpot = SETTINGS.JOB_STORE.query_one({"output.task_label": name})[
-            "output"
-        ]["calcs_reversed"][0]["output"]["locpot"]
+        job = SETTINGS.JOB_STORE.query_one({"output.task_label": name})
+        plnr_locpot = job["output"]["calcs_reversed"][0]["output"]["locpot"]
         assert set(plnr_locpot) == {"0", "1", "2"}
 
     for k in ref_paths:

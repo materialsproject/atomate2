@@ -516,11 +516,13 @@ class VaspInputGenerator(InputGenerator):
             Number of electrons for the structure.
         """
         potcar = self._get_potcar(structure, potcar_spec=False)
-        nelec = {p.element: p.nelectrons for p in potcar}
+        map_elem_electrons = {p.element: p.nelectrons for p in potcar}
         comp = structure.composition.element_composition
-        nelect = sum(num_atoms * nelec[str(el)] for el, num_atoms in comp.items())
+        n_electrons = sum(
+            num_atoms * map_elem_electrons[str(el)] for el, num_atoms in comp.items()
+        )
 
-        return nelect - structure.charge if self.use_structure_charge else nelect
+        return n_electrons - (structure.charge if self.use_structure_charge else 0)
 
     def _get_previous(self, structure: Structure = None, prev_dir: str | Path = None):
         """Load previous calculation outputs and decide which structure to use."""
