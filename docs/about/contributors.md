@@ -24,7 +24,7 @@ Lawrence Livermore National Laboratory
 [jmmshn]: https://github.com/jmmshn
 [0000-0002-2743-7531]: https://orcid.org/0000-0002-2743-7531
 
-**Janosh Riebesell** [![gh]][janosh] [![orc]][0000-0001-5233-3462]\
+**Janosh Riebesell** [![gh]][janosh] [![orc]][0000-0001-5233-3462] \
 PhD Student \
 Cambridge University
 
@@ -68,16 +68,30 @@ Microsoft Research
 [0000-0001-7777-8871]: https://orcid.org/0000-0001-7777-8871
 
 **Zhuoying Zhu** [![gh]][zhuoying] [![orc]][0000-0003-1775-7651] \
-Postdoctoral researcher\
+Postdoctoral Researcher \
 Lawrence Berkeley National Laboratory
 
 [zhuoying]: https://github.com/zhuoying
 [0000-0003-1775-7651]: https://orcid.org/0000-0003-1775-7651
 
 **Aakash Ashok Naik** [![gh]][naik-aakash] [![orc]][0000-0002-6071-6786] \
-PhD student\
+PhD student \
 Federal Institute for Materials Research and Testing (Berlin) \
 Friedrich Schiller University Jena
 
 [naik-aakash]: https://github.com/naik-aakash
 [0000-0002-6071-6786]: https://orcid.org/0000-0002-6071-6786
+
+**Aaron Kaplan** [![gh]][esoteric-ephemera] [![orc]][0000-0003-3439-4856] \
+Postdoctoral Researcher \
+Lawrence Berkeley National Laboratory
+
+[esoteric-ephemera]: https://github.com/esoteric-ephemera
+[0000-0003-3439-4856]: https://orcid.org/0000-0003-3439-4856
+
+**Matthew McDermott** [![gh]][mattmcdermott] [![orc]][0000-0002-4071-3000] \
+PhD student \
+University of California, Berkeley
+
+[mattmcdermott]: https://github.com/mattmcdermott
+[0000-0002-4071-3000]: https://orcid.org/0000-0002-4071-3000
