@@ -8,7 +8,7 @@ from shutil import which
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from jobflow.utils import ValueEnum
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from pymatgen.command_line.bader_caller import BaderAnalysis
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
@@ -82,16 +82,16 @@ class CalculationInput(BaseModel):
         description="CP2K global parameters used in the last calc of this task.",
     )
 
-    @validator("atomic_kind_info")
-    def remove_unnecessary(self, atomic_kind_info):
+    @field_validator("atomic_kind_info", mode="before")
+    def remove_unnecessary(cls, atomic_kind_info):
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
             if "total_pseudopotential_energy" in atomic_kind_info[k]:
                 del atomic_kind_info[k]["total_pseudopotential_energy"]
         return atomic_kind_info
 
-    @validator("dft")
-    def cleanup_dft(self, dft):
+    @field_validator("dft", mode="before")
+    def cleanup_dft(cls, dft):
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
             dft["UKS"] = True

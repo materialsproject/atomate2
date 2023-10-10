@@ -103,14 +103,14 @@ class LobsterinModel(BaseModel):
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
 
-    gaussiansmearingwidth: float = Field(
+    gaussiansmearingwidth: Optional[float] = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    usedecimalplaces: int = Field(
+    usedecimalplaces: Optional[int] = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    cohpsteps: float = Field(
+    cohpsteps: Optional[float] = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
     basisset: str = Field(None, description="basis set of computation")
@@ -121,7 +121,7 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    lsodos: bool = Field(
+    lsodos: Optional[bool] = Field(
         None, description="Writes DOS output from the orthonormalized LCAO basis"
     )
     basisfunctions: list = Field(
@@ -388,7 +388,7 @@ class LobsterTaskDocument(StructureMetadata):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    lso_dos: LobsterCompleteDos = Field(
+    lso_dos: Optional[LobsterCompleteDos] = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
     madelung_energies: dict = Field(
@@ -409,7 +409,7 @@ class LobsterTaskDocument(StructureMetadata):
         "each site as a key and the gross population as a value.",
     )
 
-    band_overlaps: dict = Field(
+    band_overlaps: Optional[dict] = Field(
         None,
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
