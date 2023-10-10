@@ -19,7 +19,7 @@ def test_LobsterTaskDocument(lobster_test_dir):
     doc = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
         save_cohp_plots=False,
-        calc_quality_kwargs={"n_bins": 100},
+        calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
     )
@@ -122,7 +122,7 @@ def test_LobsterTaskDocument(lobster_test_dir):
     doc2 = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-754354",
         save_cohp_plots=False,
-        calc_quality_kwargs={"n_bins": 100},
+        calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ba_sv", "O", "F"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
     )
@@ -194,7 +194,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
     _ = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
         save_cohp_plots=False,
-        calc_quality_kwargs={"n_bins": 100},
+        calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=True,
         add_coxxcar_to_task_document=False,
         save_computational_data_jsons=False,
@@ -257,7 +257,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
     _ = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-754354",
         save_cohp_plots=False,
-        calc_quality_kwargs={"n_bins": 100},
+        calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ba_sv", "O", "F"]},
         save_cba_jsons=False,
         add_coxxcar_to_task_document=False,
         save_computational_data_jsons=True,
