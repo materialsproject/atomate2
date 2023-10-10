@@ -232,7 +232,7 @@ class CondensedBondingAnalysis(BaseModel):
                 path_to_charge=charge_path,
                 summed_spins=False,  # we will always use spin polarization here
                 cutoff_icohp=0.10,
-                whichbonds=which_bonds,
+                which_bonds=which_bonds,
             )
             cba_run_time = time.time() - start
             # initialize lobsterpy condensed bonding analysis
@@ -265,7 +265,7 @@ class CondensedBondingAnalysis(BaseModel):
                 cohp_plot_data=cba_cohp_plot_data,
                 cutoff_icohp=analyse.cutoff_icohp,
                 summed_spins=False,
-                which_bonds=analyse.whichbonds,
+                which_bonds=analyse.which_bonds,
                 final_dict_bonds=analyse.final_dict_bonds,
                 final_dict_ions=analyse.final_dict_ions,
                 run_time=cba_run_time,
@@ -345,6 +345,21 @@ class CalcQualitySummary(BaseModel):
         dir_name: Union[Path, str],
         calc_quality_kwargs: dict = None,
     ):
+        """
+        Create a LOBSTER calculation quality summary from directory with LOBSTER files.
+
+        Parameters
+        ----------
+        dir_name : path or str
+            The path to the folder containing the calculation outputs.
+        calc_quality_kwargs : dict
+            kwargs to change calc quality analysis options in lobsterpy..
+
+        Returns
+        -------
+        CalcQualitySummary
+            A task document summarizing quality of the lobster calculation.
+        """
         dir_name = Path(dir_name)
         band_overlaps_path = dir_name / "bandOverlaps.lobster.gz"
         charge_path = dir_name / "CHARGE.lobster.gz"
@@ -1046,7 +1061,7 @@ def _identify_strongest_bonds(
                     are_cobis=are_cobis,
                     are_coops=are_coops,
                     strongest_bonds=bond_dict,
-                    which_bonds=analyse.whichbonds,
+                    which_bonds=analyse.which_bonds,
                 )
             )
         else:
