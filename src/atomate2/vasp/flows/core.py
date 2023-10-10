@@ -21,6 +21,7 @@ from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Job
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -42,7 +43,7 @@ class DoubleRelaxMaker(Maker):
     """
 
     name: str = "double relax"
-    relax_maker1: BaseVaspMaker = field(default_factory=RelaxMaker)
+    relax_maker1: BaseVaspMaker | None = field(default_factory=RelaxMaker)
     relax_maker2: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
@@ -61,15 +62,20 @@ class DoubleRelaxMaker(Maker):
         Flow
             A flow containing two relaxations.
         """
-        relax1 = self.relax_maker1.make(structure, prev_vasp_dir=prev_vasp_dir)
-        relax1.name += " 1"
+        jobs: list[Job] = []
+        if self.relax_maker1:
+            # Run a pre-relaxation
+            relax1 = self.relax_maker1.make(structure, prev_vasp_dir=prev_vasp_dir)
+            relax1.name += " 1"
+            jobs += [relax1]
+            structure = relax1.output.structure
+            prev_vasp_dir = relax1.output.dir_name
 
-        relax2 = self.relax_maker2.make(
-            relax1.output.structure, prev_vasp_dir=relax1.output.dir_name
-        )
+        relax2 = self.relax_maker2.make(structure, prev_vasp_dir=prev_vasp_dir)
         relax2.name += " 2"
+        jobs += [relax2]
 
-        return Flow([relax1, relax2], relax2.output, name=self.name)
+        return Flow(jobs, output=relax2.output, name=self.name)
 
     @classmethod
     def from_relax_maker(cls, relax_maker: BaseVaspMaker):
@@ -338,7 +344,7 @@ class HSELineModeBandStructureMaker(LineModeBandStructureMaker):
 @dataclass
 class RelaxBandStructureMaker(Maker):
     """
-    Make to create a flow with a relaxation and then band structure calculations.
+    Maker to create a flow with a relaxation and then band structure calculations.
 
     By default, this workflow generates relaxations using the :obj:`.DoubleRelaxMaker`.
 
