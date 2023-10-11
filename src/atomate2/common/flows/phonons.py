@@ -172,32 +172,28 @@ class BasePhononMaker(Maker):
         prev_dir : str or Path or None
             A previous calculation directory to use for copying outputs.
         born: Matrix3D
-            Instead of recomputing born charges and epsilon,
-            these values can also be provided manually.
-            if born, epsilon_static are provided, the born
-            run will be skipped
-            it can be provided in the VASP convention with information for
-            every atom in unit cell. Please be careful when converting
-            structures within in this workflow as this could lead to errors
+            Instead of recomputing born charges and epsilon, these values can also be
+            provided manually. If born and epsilon_static are provided, the born run
+            will be skipped it can be provided in the VASP convention with information
+            for every atom in unit cell. Please be careful when converting structures
+            within in this workflow as this could lead to errors
         epsilon_static: Matrix3D
-            The high-frequency dielectric constant
-            Instead of recomputing born charges and epsilon,
-            these values can also be provided.
-            if born, epsilon_static are provided, the born
-            run will be skipped
+            The high-frequency dielectric constant to use instead of recomputing born
+            charges and epsilon. If born, epsilon_static are provided, the born run
+            will be skipped
         total_dft_energy_per_formula_unit: float
-            It has to be given per formula unit (as a result in corresponding Doc)
-            Instead of recomputing the energy of the bulk structure every time,
-            this value can also be provided in eV. If it is provided,
-            the static run will be skipped. This energy is the typical
-            output dft energy of the dft workflow. No conversion needed.
+            It has to be given per formula unit (as a result in corresponding Doc).
+            Instead of recomputing the energy of the bulk structure every time, this
+            value can also be provided in eV. If it is provided, the static run will be
+            skipped. This energy is the typical output dft energy of the dft workflow.
+            No conversion needed.
         supercell_matrix: list
-            instead of min_length, also a supercell_matrix can
-            be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
+            Instead of min_length, also a supercell_matrix can be given, e.g.
+            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         """
-        if self.code is None:
+        if self.code is None or self.code not in SUPPORTED_CODES:
             raise ValueError(
-                "The code variable must be passed upon construction."
+                "The code variable must be passed and it must be a supported code."
                 f" Supported codes are: {SUPPORTED_CODES}"
             )
 
@@ -228,11 +224,9 @@ class BasePhononMaker(Maker):
 
         jobs = []
 
-        # TODO: should this be after or before structural
-        # optimization as the optimization could change
-        # the symmetry
-        # we could add a tutorial and point out that the structure
-        # should be nearly optimized before the phonon workflow
+        # TODO: should this be after or before structural optimization as the
+        #  optimization could change the symmetry we could add a tutorial and point out
+        #  that the structure should be nearly optimized before the phonon workflow
         if self.use_symmetrized_structure == "primitive":
             # These structures are compatible with many
             # of the kpath algorithms that are used for Materials Project
@@ -240,12 +234,14 @@ class BasePhononMaker(Maker):
             jobs.append(prim_job)
             structure = prim_job.output
         elif self.use_symmetrized_structure == "conventional":
-            # it could be beneficial to use conventional
-            # standard structures to arrive faster at supercells with right
-            # angles
+            # it could be beneficial to use conventional standard structures to arrive
+            # faster at supercells with right angles
             conv_job = structure_to_conventional(structure, self.symprec)
             jobs.append(conv_job)
             structure = conv_job.output
+
+        optimization_run_job_dir = None
+        optimization_run_uuid = None
 
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
@@ -254,13 +250,9 @@ class BasePhononMaker(Maker):
             structure = bulk.output.structure.pymatgen
             optimization_run_job_dir = bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
-        else:
-            optimization_run_job_dir = None
-            optimization_run_uuid = None
 
-        # if supercell_matrix is None, supercell size will be determined
-        # after relax maker to ensure that cell lengths are really larger
-        # than threshold
+        # if supercell_matrix is None, supercell size will be determined after relax
+        # maker to ensure that cell lengths are really larger than threshold
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
                 structure,
