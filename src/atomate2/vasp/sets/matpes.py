@@ -31,7 +31,7 @@ _BASE_MATPES_PBE_STATIC_SET = {
 
 
 @dataclass
-class MatPESGGAStaticSetGenerator(StaticSetGenerator):
+class MatPesGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
@@ -40,7 +40,7 @@ class MatPESGGAStaticSetGenerator(StaticSetGenerator):
 
 
 @dataclass
-class MatPESMetaGGAStaticSetGenerator(StaticSetGenerator):
+class MatPesMetaGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)

@@ -11,8 +11,8 @@ from typing import TYPE_CHECKING
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.matpes import (
-    MatPESGGAStaticSetGenerator,
-    MatPESMetaGGAStaticSetGenerator,
+    MatPesGGAStaticSetGenerator,
+    MatPesMetaGGAStaticSetGenerator,
 )
 
 if TYPE_CHECKING:
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class MatPESGGAStaticMaker(BaseVaspMaker):
+class MatPesGGAStaticMaker(BaseVaspMaker):
     """
     Maker to create VASP static job using r2SCAN by default.
 
@@ -50,12 +50,12 @@ class MatPESGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MatPES GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MatPESGGAStaticSetGenerator
+        default_factory=MatPesGGAStaticSetGenerator
     )
 
 
 @dataclass
-class MatPESMetaGGAStaticMaker(BaseVaspMaker):
+class MatPesMetaGGAStaticMaker(BaseVaspMaker):
     """
     Maker to create VASP static job using r2SCAN by default.
 
@@ -85,5 +85,5 @@ class MatPESMetaGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MatPES meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MatPESMetaGGAStaticSetGenerator
+        default_factory=MatPesMetaGGAStaticSetGenerator
     )
