@@ -2,6 +2,7 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Union
 
 from jobflow import Flow
 from pymatgen.core import Molecule, Structure
@@ -46,8 +47,8 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
 
     def make(
         self,
-        structure: MSONableAtoms | Structure | Molecule,
-        prev_dir: str | Path | None = None,
+        structure: Union[MSONableAtoms, Structure, Molecule],
+        prev_dir: Union[str, Path, None] = None,
     ) -> Flow:
         """
         Create a flow from the DFT ground state and subsequent GW calculation.

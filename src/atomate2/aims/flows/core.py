@@ -2,7 +2,7 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from jobflow import Flow, Maker
 from pymatgen.core import Molecule, Structure
@@ -40,8 +40,8 @@ class DoubleRelaxMaker(Maker):
 
     def make(
         self,
-        structure: MSONableAtoms | Structure | Molecule,
-        prev_dir: str | Path | None = None,
+        structure: Union[MSONableAtoms, Structure, Molecule],
+        prev_dir: Union[str, Path, None] = None,
     ) -> Flow:
         """
         Create a flow with two chained relaxations.
@@ -67,7 +67,7 @@ class DoubleRelaxMaker(Maker):
     def from_parameters(
         cls,
         parameters: Dict[str, Any],
-        species_defaults: list | tuple = ("light", "tight"),
+        species_defaults: Union[list[str], tuple[str, str]] = ("light", "tight"),
     ):
         """Create the maker from an ASE parameter set.
 

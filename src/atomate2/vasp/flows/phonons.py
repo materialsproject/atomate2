@@ -1,5 +1,6 @@
 """Define the VASP PhononMaker."""
 from dataclasses import dataclass, field
+from typing import Union
 
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -33,15 +34,15 @@ class PhononMaker(BasePhononMaker):
     """
 
     code: str = "vasp"
-    bulk_relax_maker: BaseVaspMaker | None = field(
+    bulk_relax_maker: Union[BaseVaspMaker, None] = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    static_energy_maker: BaseVaspMaker | None = field(
+    static_energy_maker: Union[BaseVaspMaker, None] = field(
         default_factory=lambda: StaticMaker(
             input_set_generator=StaticSetGenerator(auto_ispin=True)
         )
     )
-    born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
+    born_maker: Union[BaseVaspMaker, None] = field(default_factory=DielectricMaker)
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
     )

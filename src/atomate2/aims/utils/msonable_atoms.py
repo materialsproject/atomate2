@@ -1,6 +1,6 @@
 """A MSONable ASE Atoms Object."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import numpy as np
 from ase.atoms import Atoms
@@ -56,7 +56,7 @@ class MSONableAtoms(Atoms, MSONable):
         return cls(atoms, calculator=calculator)
 
     @classmethod
-    def from_pymatgen(cls, structure: Structure | Molecule):
+    def from_pymatgen(cls, structure: Union[Structure, Molecule]):
         """Create an Atoms object from a pymatgen object."""
         return ASE_ADAPTOR.get_atoms(structure)
 
@@ -66,7 +66,7 @@ class MSONableAtoms(Atoms, MSONable):
         return ASE_ADAPTOR.get_structure(self)
 
     @property
-    def pymatgen(self) -> Structure | Molecule:
+    def pymatgen(self) -> Union[Structure, Molecule]:
         """The pymatgen Structure or Molecule of the Atoms object."""
         if np.any(self.pbc):
             return ASE_ADAPTOR.get_structure(self)

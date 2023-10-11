@@ -1,6 +1,7 @@
 """Defines the phonon workflows for FHI-aims."""
 
 from dataclasses import dataclass, field
+from typing import Union
 
 from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
@@ -35,12 +36,12 @@ class PhononMaker(BasePhononMaker):
     """
 
     code: str = "aims"
-    bulk_relax_maker: BaseAimsMaker | None = field(
+    bulk_relax_maker: Union[BaseAimsMaker, None] = field(
         default_factory=lambda: RelaxMaker.full_relaxation()
     )
-    static_energy_maker: BaseAimsMaker | None = field(default_factory=StaticMaker)
-    born_maker: BaseAimsMaker | None = None
-    phonon_displacement_maker: BaseAimsMaker | None = None
+    static_energy_maker: Union[BaseAimsMaker, None] = field(default_factory=StaticMaker)
+    born_maker: Union[BaseAimsMaker, None] = None
+    phonon_displacement_maker: Union[BaseAimsMaker, None] = None
 
     def __post_init__(self):
         """Set the default phonon_displacement_maker.
