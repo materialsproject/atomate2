@@ -34,6 +34,7 @@ dependencies = [
     "numpy",
     "pydantic",
     "pymatgen>=2023.1.9",
+    "ase@git+https://gitlab.com/ase/ase.git@793179f4#egg=ase",
 ]
 
 [project.optional-dependencies]
