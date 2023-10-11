@@ -408,10 +408,10 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
 @job
 def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
     """Get a defect entry from a defect calculation and a bulk calculation."""
-    bulk_c_entry = bulk_summary["sc_entry"]
+    bulk_sc_entry = bulk_summary["sc_entry"]
     bulk_struct_entry = ComputedStructureEntry(
         structure=bulk_summary["sc_struct"],
-        energy=bulk_c_entry.energy,
+        energy=bulk_sc_entry.energy,
     )
     bulk_dir_name = bulk_summary["dir_name"]
     bulk_locpot = bulk_summary["locpot_plnr"]

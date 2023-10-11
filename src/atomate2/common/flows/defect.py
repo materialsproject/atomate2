@@ -199,6 +199,13 @@ class FormationEnergyMaker(Maker, ABC):
         sites with selective dynamics set to True. So this setting only works
         with `relax_radius`.
 
+    validate_charge: bool
+        Whether to validate the charge of the defect. If True (default), the charge
+        of the output structure will have to match the charge of the input defect.
+        This helps catch situations where the charge of the output defect is either
+        improperly set or improperly parsed before the data is stored in the
+        database.
+
     collect_defect_entry_data: bool
         Whether to collect the defect entry data at the end of the flow.
         If True, the output of all the charge states for each symmetry distinct
@@ -241,6 +248,7 @@ class FormationEnergyMaker(Maker, ABC):
     name: str = "formation energy"
     relax_radius: float | str | None = None
     perturb: float | None = None
+    validate_charge: bool = True
     collect_defect_entry_data: bool = False
 
     def __post_init__(self):
@@ -316,6 +324,7 @@ class FormationEnergyMaker(Maker, ABC):
             },
             relax_radius=self.relax_radius,
             perturb=self.perturb,
+            validate_charge=self.validate_charge,
         )
         jobs.extend([get_sc_job, spawn_output])
 
