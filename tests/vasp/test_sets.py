@@ -165,3 +165,61 @@ def test_set_u_params(structure, request) -> None:
         # if no sites have a nonzero U value in the config_dict,
         # ensure that no keys starting with LDAU are in the INCAR
         assert len([key for key in incar if key.startswith("LDAU")]) == 0
+
+
+@pytest.mark.parametrize(
+    "structure, bandgap, expected_params",
+    [
+        (
+            "struct_no_magmoms",
+            0,
+            {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2},
+        ),
+        (
+            "struct_no_magmoms",
+            0.1,
+            {"KSPACING": 0.2697, "ISMEAR": 0, "SIGMA": 0.05},
+        ),
+        (
+            "struct_no_magmoms",
+            1,
+            {"KSPACING": 0.30235, "ISMEAR": 0, "SIGMA": 0.05},
+        ),
+        (
+            "struct_no_magmoms",
+            2,
+            {"KSPACING": 0.34936, "ISMEAR": 0, "SIGMA": 0.05},
+        ),
+        (
+            "struct_no_magmoms",
+            5,
+            {"KSPACING": 0.44, "ISMEAR": 0, "SIGMA": 0.05},
+        ),
+        (
+            "struct_no_magmoms",
+            10,
+            {"KSPACING": 0.44, "ISMEAR": 0, "SIGMA": 0.05},
+        ),
+    ],
+)
+def test_set_kspacing(structure, bandgap, expected_params, request):
+    keys_to_check = {"KSPACING", "ISMEAR", "SIGMA"}
+    tol = 1.0e-5
+
+    structure = request.getfixturevalue(structure)
+
+    static_set = StaticSetGenerator(auto_ismear=False)
+    static_set.config_dict["INCAR"][
+        "KSPACING"
+    ] = 0.1  # need to indicate to atomate2 to use KSPACING
+
+    incar = static_set._get_incar(
+        structure=structure,
+        kpoints=None,
+        previous_incar=None,
+        incar_updates={},
+        bandgap=bandgap,
+    )
+    assert all(
+        abs(incar.get(key, None) - expected_params[key] < tol) for key in keys_to_check
+    )
