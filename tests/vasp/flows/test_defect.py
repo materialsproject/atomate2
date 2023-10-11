@@ -166,7 +166,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
     # rmaker = RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator())
     maker = FormationEnergyMaker(
-        relax_radius="auto", perturb=0.1, collect_defect_entry_data=True
+        relax_radius="auto",
+        perturb=0.1,
+        collect_defect_entry_data=True,
+        validate_charge=False,
     )
     flow = maker.make(
         defects[0],
