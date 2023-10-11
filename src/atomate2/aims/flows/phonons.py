@@ -15,7 +15,7 @@ from atomate2.common.flows.phonons import BasePhononMaker
 @dataclass
 class PhononMaker(BasePhononMaker):
     """
-    Maker to calculate harmonic phonons with VASP and Phonopy.
+    Maker to calculate harmonic phonons with FHI-aims and Phonopy.
 
     Calculate the harmonic phonons of a material. Initially, a tight structural
     relaxation is performed to obtain a structure without forces on the atoms.
@@ -23,7 +23,7 @@ class PhononMaker(BasePhononMaker):
     forces are computed for these structures. With the help of phonopy, these
     forces are then converted into a dynamical matrix. To correct for polarization
     effects, a correction of the dynamical matrix based on BORN charges can
-    be performed.     Finally, phonon densities of states, phonon band structures
+    be performed. Finally, phonon densities of states, phonon band structures
     and thermodynamic properties are computed.
 
     .. Note::
@@ -73,17 +73,17 @@ class PhononMaker(BasePhononMaker):
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
           We will however use seekpath and primitive structures
           as determined by from phonopy to compute the phonon band structure
-    bulk_relax_maker : .BaseVaspMaker or None
+    bulk_relax_maker : .BaseAimsMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
-    static_energy_maker : .BaseVaspMaker or None
+    static_energy_maker : .BaseAimsMaker or None
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .BaseVaspMaker or None
+    born_maker: .BaseAimsMaker or None
         Maker to compute the BORN charges.
-    phonon_displacement_maker : .BaseVaspMaker or None
+    phonon_displacement_maker : .BaseAimsMaker or None
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
@@ -100,11 +100,11 @@ class PhononMaker(BasePhononMaker):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft code. currently only vasp is implemented.
-        This keyword might enable the implementation of other codes
-        in the future
+        determines the dft or forcefield code.
     store_force_constants: bool
         if True, force constants will be stored
+    socket: bool
+        If True, use the socket for the calculation
     """
 
     name: str = "phonon"

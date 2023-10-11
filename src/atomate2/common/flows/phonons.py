@@ -24,15 +24,19 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.forcefields.jobs import (
+        ForceFieldRelaxMaker,
+        ForceFieldStaticMaker,
+    )
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-SUPPORTED_CODES = ["vasp", "aims"]
+SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
 
 
 @dataclass
 class BasePhononMaker(Maker):
     """
-    Maker to calculate harmonic phonons with VASP or FHI-aims and Phonopy.
+    Maker to calculate harmonic phonons with a DFT/force field code and Phonopy.
 
     Calculate the harmonic phonons of a material. Initially, a tight structural
     relaxation is performed to obtain a structure without forces on the atoms.
@@ -90,17 +94,17 @@ class BasePhononMaker(Maker):
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
           We will however use seekpath and primitive structures
           as determined by from phonopy to compute the phonon band structure
-    bulk_relax_maker : .BaseAimsMaker or .BaseVaspMaker or None
+    bulk_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
-    static_energy_maker : .BaseAimsMaker or .BaseVaspMaker or None
+    static_energy_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .BaseVaspMaker or None
+    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker, or None
         Maker to compute the BORN charges.
-    phonon_displacement_maker : .BaseAimsMaker or .BaseVaspMaker or None
+    phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
@@ -117,9 +121,7 @@ class BasePhononMaker(Maker):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft code. currently only aims is implemented.
-        This keyword might enable the implementation of other codes
-        in the future
+        determines the dft or force field code.
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
@@ -134,10 +136,14 @@ class BasePhononMaker(Maker):
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
-    bulk_relax_maker: BaseVaspMaker | BaseAimsMaker | None = None
-    static_energy_maker: BaseVaspMaker | BaseAimsMaker | None = None
-    born_maker: BaseVaspMaker | None = None
-    phonon_displacement_maker: BaseVaspMaker | BaseAimsMaker = None
+    bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
+    static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = (
+        None
+    )
+    born_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
+        None
+    )
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
@@ -160,11 +166,11 @@ class BasePhononMaker(Maker):
         Parameters
         ----------
         structure : .Structure or MSONableAtoms
-            A pymatgen structure. Please start with a structure
+            A pymatgen structure or MSONableAtoms object. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
         prev_dir : str or Path or None
-            A previous vasp calculation directory to use for copying outputs.
+            A previous calculation directory to use for copying outputs.
         born: Matrix3D
             Instead of recomputing born charges and epsilon,
             these values can also be provided manually.
@@ -320,7 +326,9 @@ class BasePhononMaker(Maker):
             jobs.append(born_job)
 
             # I am not happy how we currently access "born" charges
-            # This is very vasp specific code
+            # This is very vasp specific code aims and forcefields
+            # do not support this at the moment, if this changes we have
+            # to update this section
             epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
             born = born_job.output.calcs_reversed[0].output.outcar["born"]
             born_run_job_dir = born_job.output.dir_name

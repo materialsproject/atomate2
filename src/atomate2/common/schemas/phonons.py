@@ -225,7 +225,7 @@ class PhononBSDOSDoc(StructureMetadata):
         code: str
             which code was used for computation
         displacement_data:
-            output of the VASP displacement data
+            output of the displacement data
         total_dft_energy: float
             total energy in eV per cell
         epsilon_static: Matrix3D
