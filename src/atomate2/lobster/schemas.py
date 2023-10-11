@@ -211,7 +211,7 @@ class CondensedBondingAnalysis(BaseModel):
         which_bonds: str
             mode for condensed bonding analysis: "cation-anion" and "all".
         """
-        plot_kwargs = {} if plot_kwargs is None else plot_kwargs
+        plot_kwargs = plot_kwargs or {}
         dir_name = Path(dir_name)
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
         charge_path = dir_name / "CHARGE.lobster.gz"
@@ -453,7 +453,7 @@ class LobsterTaskDocument(StructureMetadata):
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
         # Read in lobsterout and lobsterin
