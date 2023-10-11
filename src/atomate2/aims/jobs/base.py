@@ -9,18 +9,14 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any, Dict
 
 from jobflow import Flow, Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.core import Molecule, Structure
 
-from typing import Dict, Any
-
-from atomate2.aims.files import (
-    cleanup_aims_outputs,
-    copy_aims_outputs,
-    write_aims_input_set,
-)
+from atomate2.aims.files import (cleanup_aims_outputs, copy_aims_outputs,
+                                 write_aims_input_set)
 from atomate2.aims.run import run_aims, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDocument, ConvergenceSummary
 from atomate2.aims.sets.base import AimsInputGenerator

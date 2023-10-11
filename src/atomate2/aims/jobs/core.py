@@ -9,22 +9,16 @@ from jobflow import Response, job
 from monty.serialization import dumpfn
 from pymatgen.core import Structure
 
-from atomate2.aims.files import (
-    cleanup_aims_outputs,
-    copy_aims_outputs,
-    write_aims_input_set,
-)
+from atomate2.aims.files import (cleanup_aims_outputs, copy_aims_outputs,
+                                 write_aims_input_set)
 from atomate2.aims.io.parsers import read_aims_output
 from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDocument
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
-from atomate2.aims.sets.core import (
-    RelaxSetGenerator,
-    SocketIOSetGenerator,
-    StaticSetGenerator,
-)
+from atomate2.aims.sets.core import (RelaxSetGenerator, SocketIOSetGenerator,
+                                     StaticSetGenerator)
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 logger = logging.getLogger(__name__)

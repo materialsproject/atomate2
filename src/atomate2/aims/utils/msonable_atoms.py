@@ -1,11 +1,11 @@
+from typing import Any, Dict
+
 import numpy as np
 from ase.atoms import Atoms
 from ase.calculators.singlepoint import SinglePointDFTCalculator
 from monty.json import MontyDecoder, MSONable
 from pymatgen.core import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
-
-from typing import Dict, Any
 
 ASE_ADAPTOR = AseAtomsAdaptor()
 

@@ -4,9 +4,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 from atomate2.aims.sets.base import AimsInputGenerator
+from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 __all__ = [
     "StaticSetGenerator",

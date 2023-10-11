@@ -2,11 +2,9 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.aims.jobs.base import BaseAimsMaker
-from atomate2.aims.jobs.core import StaticMaker, RelaxMaker
-from atomate2.aims.jobs.phonons import (
-    PhononDisplacementMaker,
-    PhononDisplacementMakerSocket,
-)
+from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
+from atomate2.aims.jobs.phonons import (PhononDisplacementMaker,
+                                        PhononDisplacementMakerSocket)
 from atomate2.common.flows.phonons import BasePhononMaker
 
 

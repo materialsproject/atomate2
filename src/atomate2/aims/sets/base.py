@@ -10,19 +10,15 @@ from typing import Any, Dict, Iterable, List, Sequence, Tuple
 from warnings import warn
 
 import numpy as np
-from ase.cell import Cell
 from ase.calculators.aims import AimsTemplate
+from ase.cell import Cell
 from monty.json import MontyDecoder, MontyEncoder
 from pymatgen.io.core import InputFile, InputGenerator, InputSet
 
 from atomate2.aims.io.parsers import AimsParseError, read_aims_output
-from atomate2.aims.utils.common import (
-    CONTROL_FILE_NAME,
-    GEOMETRY_FILE_NAME,
-    PARAMS_JSON_FILE_NAME,
-    TMPDIR_NAME,
-    cwd,
-)
+from atomate2.aims.utils.common import (CONTROL_FILE_NAME, GEOMETRY_FILE_NAME,
+                                        PARAMS_JSON_FILE_NAME, TMPDIR_NAME,
+                                        cwd)
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 DEFAULT_AIMS_PROPERTIES = [

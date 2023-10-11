@@ -1,4 +1,4 @@
-"""Functions dealing with FHI-aims files"""
+"""Functions dealing with FHI-aims files."""
 from __future__ import annotations
 
 import logging
@@ -6,12 +6,11 @@ from glob import glob
 from pathlib import Path
 from typing import Sequence
 
+from atomate2.aims.sets.base import AimsInputGenerator
+from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-
-from atomate2.aims.sets.base import AimsInputGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 logger = logging.getLogger(__name__)
 

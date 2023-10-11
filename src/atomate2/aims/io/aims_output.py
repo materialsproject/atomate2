@@ -2,10 +2,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, Sequence, List
+from typing import Any, Dict, List, Sequence
 
 from emmet.core.math import Matrix3D, Vector3D
-
 from monty.json import MontyDecoder, MSONable
 
 from atomate2.aims.io.parsers import read_aims_header_info, read_aims_output
