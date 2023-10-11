@@ -7,6 +7,7 @@ import os
 cwd = os.getcwd()
 
 
+@pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
 def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
     from jobflow import run_locally
 

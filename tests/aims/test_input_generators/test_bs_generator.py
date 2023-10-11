@@ -1,7 +1,7 @@
 """Tests the band structure input set generator"""
 
 from atomate2.aims.sets.bs import BandStructureSetGenerator
-from tests import compare_files
+from tests.aims import compare_files
 
 
 def comp_system(atoms, user_params, test_name, work_path, ref_path):

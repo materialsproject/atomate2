@@ -1,5 +1,5 @@
 from atomate2.aims.sets.core import StaticSetGenerator
-from tests import compare_files
+from tests.aims import compare_files
 
 import os
 

@@ -1,8 +1,6 @@
 """Tests the GW input set generator"""
-from pathlib import Path
-
 from atomate2.aims.sets.bs import GWSetGenerator
-from tests import compare_files
+from tests.aims import compare_files
 
 
 def comp_system(atoms, user_params, test_name, work_path, ref_path):

@@ -1,9 +1,9 @@
 {
-  "@module": "atomate2_temp.aims.io.aims_output",
+  "@module": "atomate2.aims.io.aims_output",
   "@class": "AimsOutput",
   "results": [
     {
-      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@module": "atomate2.aims.utils.msonable_atoms",
       "@class": "MSONableAtoms",
       "numbers": {
         "@module": "numpy",
@@ -103,7 +103,7 @@
       "@version": null
     },
     {
-      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@module": "atomate2.aims.utils.msonable_atoms",
       "@class": "MSONableAtoms",
       "numbers": {
         "@module": "numpy",
@@ -203,7 +203,7 @@
       "@version": null
     },
     {
-      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@module": "atomate2.aims.utils.msonable_atoms",
       "@class": "MSONableAtoms",
       "numbers": {
         "@module": "numpy",
@@ -328,7 +328,7 @@
   },
   "atoms_summary": {
     "initial_atoms": {
-      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@module": "atomate2.aims.utils.msonable_atoms",
       "@class": "MSONableAtoms",
       "numbers": {
         "@module": "numpy",

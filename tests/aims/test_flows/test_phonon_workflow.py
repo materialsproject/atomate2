@@ -2,6 +2,7 @@
 import os
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+import pytest
 
 cwd = os.getcwd()
 
@@ -75,6 +76,7 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
     assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 14.41
 
 
+@pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
 def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     import numpy as np
 
@@ -206,6 +208,7 @@ def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
         os.environ["AIMS_SPECIES_DIR"] = aims_sd
 
 
+@pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
 def test_phonon_default_socket_flow(Si, tmp_path, mock_aims, species_dir):
     import numpy as np
 

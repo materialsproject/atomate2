@@ -1,8 +1,7 @@
 from atomate2.aims.sets.core import RelaxSetGenerator
 
 import os
-from tests import compare_files
-from pathlib import Path
+from tests.aims import compare_files
 
 
 def comp_system(atoms, user_params, test_name, work_path, ref_path):

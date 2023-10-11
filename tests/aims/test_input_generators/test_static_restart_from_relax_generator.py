@@ -3,13 +3,11 @@
 import json
 import os
 import shutil
-from functools import wraps
 from pathlib import Path
 
-import pytest
 
 from atomate2.aims.sets.core import StaticSetGenerator
-from tests import compare_files
+from tests.aims import compare_files
 
 
 def comp_system(atoms, prev_dir, test_name, work_path, ref_path, species_dir):

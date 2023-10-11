@@ -98,7 +98,7 @@ def mock_aims(monkeypatch, ref_path, should_mock_aims):
     get_input_set_orig = AimsInputGenerator.get_input_set
 
     def generate_test_data(*args, **kwargs):
-        """A monkey patch for atomate2_temp.aims.run.run_aims that runs the actual executable and copies
+        """A monkey patch for atomate2.aims.run.run_aims that runs the actual executable and copies
         inputs and outputs to the test data directory"""
         import shutil
         from jobflow import CURRENT_JOB

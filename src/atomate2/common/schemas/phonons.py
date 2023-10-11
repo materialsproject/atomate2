@@ -11,7 +11,6 @@ from monty.json import MSONable
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
-from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
@@ -27,7 +26,17 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
+from atomate2.common.utils.phonons import get_factor
+
 logger = logging.getLogger(__name__)
+
+__all__ = [
+    "PhononBSDOSDoc",
+    "PhononComputationalSettings",
+    "PhononUUIDs",
+    "PhononJobDirs",
+    "ThermalDisplacementData",
+]
 
 
 class PhononComputationalSettings(BaseModel):
@@ -84,16 +93,16 @@ class ForceConstants(MSONable):
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: List[Optional[str]] = Field(
+    displacements_job_dirs: List[str] = Field(
         None, description="The directories where the displacement jobs were run."
     )
-    static_run_job_dir: Optional[str] = Field(
+    static_run_job_dir: str = Field(
         None, description="Directory where static run was performed."
     )
-    born_run_job_dir: Optional[str] = Field(
+    born_run_job_dir: str = Field(
         None, description="Directory where born run was performed."
     )
-    optimization_run_job_dir: Optional[str] = Field(
+    optimization_run_job_dir: str = Field(
         None, description="Directory where optimization run was performed."
     )
 
@@ -182,9 +191,7 @@ class PhononBSDOSDoc(StructureMetadata):
         "Includes all data of the computation of the thermal displacements"
     )
 
-    jobdirs: Optional[PhononJobDirs] = Field(
-        "Field including all relevant job directories"
-    )
+    jobdirs: PhononJobDirs = Field("Field including all relevant job directories")
 
     uuids: PhononUUIDs = Field("Field including all relevant uuids")
 
@@ -226,7 +233,7 @@ class PhononBSDOSDoc(StructureMetadata):
         code: str
             which code was used for computation
         displacement_data:
-            output of the VASP displacement runs
+            output of the VASP displacement data
         total_dft_energy: float
             total energy in eV per cell
         epsilon_static: Matrix3D
@@ -236,8 +243,7 @@ class PhononBSDOSDoc(StructureMetadata):
         **kwargs:
             additional arguments
         """
-        if code == "vasp":
-            factor = VaspToTHz
+        factor = get_factor(code)
         # This opens the opportunity to add support for other codes
         # that are supported by phonopy
 
@@ -261,6 +267,7 @@ class PhononBSDOSDoc(StructureMetadata):
         )
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
+
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(
@@ -454,7 +461,7 @@ class PhononBSDOSDoc(StructureMetadata):
             epsilon_static=epsilon.tolist() if epsilon is not None else None,
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
-            code="vasp",
+            code=code,
             thermal_displacement_data={
                 "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
                 "thermal_displacement_matrix_cif": tdisp_mat_cif,
