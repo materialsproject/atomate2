@@ -263,10 +263,10 @@ def run_phonon_displacements(
 
     Parameters
     ----------
-    displacements: Iterable
+    displacements: Sequence
         All displacements to calculate
     structure: Structure object
-        Fully optimized structure used for phonon computations
+        Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
