@@ -277,7 +277,7 @@ def run_phonon_displacements(
         Fully optimized structure used for phonon computations
     supercell_matrix: Matrix3D
         supercell matrix for meta data
-    phonon_maker : BaseVaspMaker or ForceFieldStaticMaker or BaseAimsMaker
+    phonon_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
         A maker to use to generate dispacement calculations
     prev_dir: str or Path
         The previous working directory
