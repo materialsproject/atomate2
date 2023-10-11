@@ -124,7 +124,7 @@ def get_supercell_size(
     return transformation.transformation_matrix.tolist()
 
 
-@job
+@job(data=[Structure])
 def generate_phonon_displacements(
     structure: Structure,
     supercell_matrix: np.array,
