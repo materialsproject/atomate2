@@ -23,7 +23,8 @@ def get_factor(code: str):
     ValueError
         If code is not defined
     """
-    if code == "vasp":
+    # TARP: This is based on self.code == "vasp" in the old forcefields workflow
+    if code in ["forcefields", "vasp"]:
         return VaspToTHz
     if code == "aims":
         return omega_to_THz  # Based on CODATA 2002
