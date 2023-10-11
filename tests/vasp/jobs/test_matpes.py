@@ -2,10 +2,10 @@ import pytest
 from pymatgen.core import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.matpes import MatPESGGAStaticMaker, MatPESMetaGGAStaticMaker
+from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker
 from atomate2.vasp.sets.matpes import (
-    MatPESGGAStaticSetGenerator,
-    MatPESMetaGGAStaticSetGenerator,
+    MatPesGGAStaticSetGenerator,
+    MatPesMetaGGAStaticSetGenerator,
 )
 
 expected_incar = {
@@ -63,14 +63,14 @@ expected_incar = {
 }
 
 
-@pytest.mark.parametrize("maker_cls", [MatPESGGAStaticMaker, MatPESMetaGGAStaticMaker])
+@pytest.mark.parametrize("maker_cls", [MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker])
 def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
     maker = maker_cls()
     is_meta = "Meta" in maker_cls.__name__
     assert maker.name == f"MatPES {'meta-' if is_meta else ''}GGA static"
     assert isinstance(
         maker.input_set_generator,
-        MatPESMetaGGAStaticSetGenerator if is_meta else MatPESGGAStaticSetGenerator,
+        MatPesMetaGGAStaticSetGenerator if is_meta else MatPesGGAStaticSetGenerator,
     )
     config = maker.input_set_generator.config_dict
     assert {*config} == {"INCAR", "POTCAR", "PARENT", "POTCAR_FUNCTIONAL"}
@@ -98,7 +98,7 @@ def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MatPESGGAStaticMaker().make(si_struct)
+    job = MatPesGGAStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -129,7 +129,7 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MatPESMetaGGAStaticMaker().make(si_struct)
+    job = MatPesMetaGGAStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
