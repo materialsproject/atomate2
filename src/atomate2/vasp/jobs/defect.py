@@ -51,7 +51,7 @@ def calculate_finite_diff(
         previous calculations).
     """
     ref_calc_dir = distorted_calc_dirs[ref_calc_index]
-    run_vasp_kwargs = {} if run_vasp_kwargs is None else run_vasp_kwargs
+    run_vasp_kwargs = run_vasp_kwargs or {}
     fc = FileClient()
     copy_vasp_outputs(ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc)
 

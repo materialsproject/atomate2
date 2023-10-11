@@ -1,4 +1,6 @@
-from pytest import approx
+from pytest import approx, importorskip
+
+importorskip("quippy")
 
 
 def test_chgnet_static_maker(si_structure):
