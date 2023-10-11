@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING, Callable, Iterable
 
 import numpy as np
+from emmet.core.tasks import TaskDoc
 from jobflow import Flow, Response, job
 from pydantic import BaseModel
 from pymatgen.analysis.defects.supercells import (
@@ -21,7 +22,6 @@ from atomate2.common.schemas.defects import CCDDocument
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from emmet.core.tasks import TaskDoc
     from numpy.typing import NDArray
     from pymatgen.analysis.defects.core import Defect
 
@@ -224,7 +224,12 @@ def get_supercell_from_prv_calc(
                 "The supercell matrix extracted from the previous calculation "
                 "does not match the the desired supercell shape."
             )
-    return {"sc_mat": sc_mat_prv, "lattice": Lattice(sc_structure.lattice.matrix)}
+    relax_output = TaskDoc.from_directory(prv_calc_dir)
+    return {
+        "sc_mat": sc_mat_prv,
+        "lattice": Lattice(sc_structure.lattice.matrix),
+        "calcs_reversed": relax_output.calcs_reversed,
+    }
 
 
 @job(name="bulk supercell")
@@ -264,7 +269,7 @@ def bulk_supercell_calculation(
     relax_output: TaskDoc = relax_job.output
     summary_d = {
         "uc_structure": uc_structure,
-        "sc_entry": relax_output.entry,
+        "calcs_reversed": relax_output.calcs_reversed,
         "sc_struct": relax_output.structure,
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
@@ -369,7 +374,7 @@ def spawn_defect_q_jobs(
         all_chg_outputs[qq] = {
             "defect": defect,
             "structure": charged_output.structure,
-            "entry": charged_output.entry,
+            "calcs_reversed": charged_output.calcs_reversed,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
             "locpot_plnr": charged_output.calcs_reversed[0].output.locpot,
@@ -408,7 +413,8 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
 @job
 def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
     """Get a defect entry from a defect calculation and a bulk calculation."""
-    bulk_sc_entry = bulk_summary["sc_entry"]
+    calcs_reversed = bulk_summary["calcs_reversed"]
+    bulk_sc_entry = TaskDoc.get_entry(calcs_reversed)
     bulk_struct_entry = ComputedStructureEntry(
         structure=bulk_summary["sc_struct"],
         energy=bulk_sc_entry.energy,
@@ -417,7 +423,7 @@ def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
     bulk_locpot = bulk_summary["locpot_plnr"]
     defect_ent_res = []
     for qq, qq_summary in charge_state_summary.items():
-        defect_c_entry = qq_summary["entry"]
+        defect_c_entry = TaskDoc.get_entry(qq_summary["calcs_reversed"])
         defect_struct_entry = ComputedStructureEntry(
             structure=qq_summary["structure"],
             energy=defect_c_entry.energy,
