@@ -200,10 +200,10 @@ class FormationEnergyMaker(Maker, ABC):
         with `relax_radius`.
 
     validate_charge: bool
-        Whether to validate the charge of the defect. If True, the charge of the
-        output structure will have to match the charge of the input defect. This
-        help catch situations where the charge of the output defect is either
-        improperly set of improperly parsed before the data is stored in the
+        Whether to validate the charge of the defect. If True (default), the charge
+        of the output structure will have to match the charge of the input defect.
+        This helps catch situations where the charge of the output defect is either
+        improperly set or improperly parsed before the data is stored in the
         database.
 
     collect_defect_entry_data: bool
