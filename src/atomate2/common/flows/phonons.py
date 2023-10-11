@@ -26,8 +26,6 @@ if TYPE_CHECKING:
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-__all__ = ["BasePhononMaker"]
-
 SUPPORTED_CODES = ["vasp", "aims"]
 
 
@@ -92,17 +90,17 @@ class BasePhononMaker(Maker):
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
           We will however use seekpath and primitive structures
           as determined by from phonopy to compute the phonon band structure
-    bulk_relax_maker : .BaseAimsMaker or None
+    bulk_relax_maker : .BaseAimsMaker or .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
-    static_energy_maker : .BaseAimsMaker or None
+    static_energy_maker : .BaseAimsMaker or .BaseVaspMaker or None
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .BaseAimsMaker or None
+    born_maker: .BaseVaspMaker or None
         Maker to compute the BORN charges.
-    phonon_displacement_maker : .BaseAimsMaker or None
+    phonon_displacement_maker : .BaseAimsMaker or .BaseVaspMaker or None
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
@@ -161,7 +159,7 @@ class BasePhononMaker(Maker):
 
         Parameters
         ----------
-        structure : .Structure
+        structure : .Structure or MSONableAtoms
             A pymatgen structure. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
