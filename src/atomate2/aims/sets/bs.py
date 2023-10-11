@@ -1,4 +1,4 @@
-"""Input sets for band structure calculations"""
+"""Input sets for band structure calculations."""
 
 from dataclasses import dataclass
 from typing import Any, Dict, Sequence
@@ -10,7 +10,7 @@ from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 @dataclass
 class BandStructureSetGenerator(AimsInputGenerator):
-    """A generator for the band structure calculation input set
+    """A generator for the band structure calculation input set.
 
     Parameters
     ----------
@@ -26,7 +26,7 @@ class BandStructureSetGenerator(AimsInputGenerator):
     def get_parameter_updates(
         self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
     ) -> Dict[str, Sequence[str]]:
-        """Get the parameter updates for the calculation
+        """Get the parameter updates for the calculation.
 
         Parameters
         ----------
@@ -39,7 +39,7 @@ class BandStructureSetGenerator(AimsInputGenerator):
         -------
         The updated for the parameters for the output section of FHI-aims
         """
-        updated_outputs = prev_parameters.get("output", list())
+        updated_outputs = prev_parameters.get("output", [])
         updated_outputs += prepare_band_input(atoms.cell, self.k_point_density)
         return {"output": updated_outputs}
 
@@ -47,7 +47,7 @@ class BandStructureSetGenerator(AimsInputGenerator):
 @dataclass
 class GWSetGenerator(AimsInputGenerator):
     """
-    A generator for the input set for calculations employing GW self-energy correction
+    A generator for the input set for calculations employing GW self-energy correction.
 
     Parameters
     ----------
@@ -63,7 +63,7 @@ class GWSetGenerator(AimsInputGenerator):
     def get_parameter_updates(
         self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Get the parameter updates for the calculation
+        """Get the parameter updates for the calculation.
 
         Parameters
         ----------
@@ -77,7 +77,7 @@ class GWSetGenerator(AimsInputGenerator):
         The updated for the parameters for the output section of FHI-aims
         """
         updates = {"anacon_type": "two-pole"}
-        current_output = prev_parameters.get("output", list())
+        current_output = prev_parameters.get("output", [])
         if all(atoms.pbc):
             updates.update(
                 {

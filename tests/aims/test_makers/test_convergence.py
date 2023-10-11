@@ -1,8 +1,9 @@
 """ A test for AIMS convergence maker (used for GW, for instance)
 """
 
-import pytest
 import os
+
+import pytest
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
@@ -14,8 +15,8 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
 
     from jobflow import run_locally
 
-    from atomate2.aims.jobs.core import StaticMaker, StaticSetGenerator
     from atomate2.aims.jobs.base import ConvergenceMaker
+    from atomate2.aims.jobs.core import StaticMaker, StaticSetGenerator
     from atomate2.aims.schemas.task import ConvergenceSummary
 
     # mapping from job name to directory containing test files

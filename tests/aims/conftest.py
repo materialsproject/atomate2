@@ -1,10 +1,9 @@
 import logging
 import os
 from pathlib import Path
-from typing import Union, Sequence, Literal
+from typing import Literal, Sequence, Union
 
 import pytest
-
 from ase.build import bulk, molecule
 
 import atomate2.aims.jobs.base
@@ -23,16 +22,17 @@ def pytest_addoption(parser):
     parser.addoption(
         "--generate-test-data",
         action="store_true",
-        help="Runs FHI-aims to create test data; runs tests against the created outputs",
+        help="Runs FHI-aims to create test data;"
+        " runs tests against the created outputs",
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def Si():
     return bulk("Si")
 
 
-@pytest.fixture
+@pytest.fixture()
 def O2():
     return molecule("O2")
 
@@ -51,7 +51,7 @@ def ref_path():
     return test_dir.resolve()
 
 
-@pytest.fixture
+@pytest.fixture()
 def should_mock_aims(request):
     return not request.config.getoption("--generate-test-data")
 
@@ -77,8 +77,9 @@ def mock_aims(monkeypatch, ref_path, should_mock_aims):
     4. Optional (does not work yet): create a dictionary mapping each job name to
        custom keyword arguments that will be supplied to fake_run_aims.
        This way you can configure which control.in settings are expected for each job.
-       For example, if your calculation has one job named "static" and you wish to validate
-       that "xc" is set correctly in the control.in, your dictionary would look like
+       For example, if your calculation has one job named "static" and you wish to
+       validate that "xc" is set correctly in the control.in, your dictionary would
+       look like
        ``{"static": {"input_settings": {"relativistic": "atomic_zora scalar"}}``.
     5. Inside the test function, call `mock_aims(ref_paths, fake_aims_kwargs)`, where
        ref_paths is the dictionary created in step 3 and fake_aims_kwargs is the
@@ -98,9 +99,13 @@ def mock_aims(monkeypatch, ref_path, should_mock_aims):
     get_input_set_orig = AimsInputGenerator.get_input_set
 
     def generate_test_data(*args, **kwargs):
-        """A monkey patch for atomate2.aims.run.run_aims that runs the actual executable and copies
-        inputs and outputs to the test data directory"""
+        """A monkey patch for atomate2.aims.run.run_aims
+
+        Runs the actual executable and copies inputs and outputs to the
+        test data directory
+        """
         import shutil
+
         from jobflow import CURRENT_JOB
 
         input_files = ["control.in", "geometry.in", "parameters.json"]

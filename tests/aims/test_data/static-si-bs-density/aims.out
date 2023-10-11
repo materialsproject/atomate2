@@ -73,19 +73,19 @@
   Task        7 on host andrey-Latitude-5411 reporting.
 
   Obtaining array dimensions for all initial allocations:
-  
+
   -----------------------------------------------------------------------
   Parsing control.in (first pass over file, find array dimensions only).
   The contents of control.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of control.in .
   -----------------------------------------------------------------------
-  
+
   #===============================================================================
   # Created using the Atomic Simulation Environment (ASE)
-  
+
   # Thu Jun 29 16:18:56 2023
-  
+
   #===============================================================================
   xc                                 pbe
   relativistic                       atomic_zora scalar
@@ -101,7 +101,7 @@
   output                             band   0.62500  0.25000  0.62500   0.50000  0.00000  0.50000   16 U  X
   k_grid                             8 8 8
   #===============================================================================
-  
+
   ################################################################################
   #
   #  FHI-aims code project
@@ -189,35 +189,35 @@
   #     hydro 4 d 6.6
   #     hydro 5 g 16.4
   #     hydro 4 d 9
-  
+
   -----------------------------------------------------------------------
   Completed first pass over input file control.in .
   -----------------------------------------------------------------------
-  
-  
+
+
   -----------------------------------------------------------------------
   Parsing geometry.in (first pass over file, find array dimensions only).
   The contents of geometry.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of geometry.in .
   -----------------------------------------------------------------------
-  
+
   #===============================================================================
   # Created using the Atomic Simulation Environment (ASE)
-  
+
   # Thu Jun 29 16:18:56 2023
-  
+
   #=======================================================
   lattice_vector 0.0000000000000000 2.7149999999999999 2.7149999999999999
   lattice_vector 2.7149999999999999 0.0000000000000000 2.7149999999999999
   lattice_vector 2.7149999999999999 2.7149999999999999 0.0000000000000000
   atom_frac 0.0000000000000000 0.0000000000000000 -0.0000000000000000 Si
   atom_frac 0.2500000000000000 0.2500000000000000 0.2500000000000000 Si
-  
+
   -----------------------------------------------------------------------
   Completed first pass over input file geometry.in .
   -----------------------------------------------------------------------
-  
+
 
   Basic array size parameters:
   | Number of species                 :        1
@@ -233,33 +233,33 @@
   | Max. angular grid division number :        8
   | Radial grid for Hartree potential :     1346
   | Number of spin channels           :        1
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
  BEGIN:            3           3           0           0
  BEGIN:            3           3           0           0
  BEGIN:            3           3           0           0
- READING VALENCE:            3           0   2.00000000000000     
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
 
 ------------------------------------------------------------
@@ -268,7 +268,7 @@
 ------------------------------------------------------------
  BEGIN:            3           3           0           0
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  BEGIN:            3           3           0           0
  VALENCE_N_MAX:            3           3           0           0
   XC: Using PBE gradient-corrected functionals.
@@ -325,7 +325,7 @@
   | end    0.500000  0.000000  0.500000
   | number of points:   16
   Found k-point grid:         8         8         8
- 
+
   Reading configuration options for species Si                  .
   | Found nuclear charge :  14.0000
   | Found atomic mass :    28.0855000000000      amu
@@ -337,10 +337,10 @@
   | Found angular grid specification: user-specified.
   | Specified grid contains     5 separate shells.
   | Check grid settings after all constraints further below.
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
   | Found free-atom valence shell :  3 s   2.000
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
   | Found free-atom valence shell :  3 p   2.000
   | Found free-ion valence shell :  3 s   1.000
@@ -360,9 +360,9 @@
   Species Si                  : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species Si                  : Default cutoff onset for free atom density etc. : 0.35000000E+01 AA.
   Species Si                  : Basic radial grid will be enhanced according to radial_multiplier =   1, to contain    42 grid points.
- 
+
   Finished reading input file 'control.in'.
- 
+
 ------------------------------------------------------------
 
 
@@ -409,13 +409,13 @@
        atom_frac         0.00000000        0.00000000        0.00000000  Si
        atom_frac         0.25000000        0.25000000        0.25000000  Si
 
- 
-  Finished reading input file 'geometry.in'.
- 
 
- 
+  Finished reading input file 'geometry.in'.
+
+
+
   Consistency checks for stacksize environment parameter are next.
- 
+
   | Maximum stacksize for task 0: unlimited
   | Maximum stacksize for task 1: unlimited
   | Maximum stacksize for task 2: unlimited
@@ -432,9 +432,9 @@
   | Current stacksize for task 5: unlimited
   | Current stacksize for task 6: unlimited
   | Current stacksize for task 7: unlimited
- 
+
   Consistency checks for the contents of control.in are next.
- 
+
   MPI_IN_PLACE appears to work with this MPI implementation.
   | Keeping use_mpi_in_place .true. (see manual).
   Target number of points in a grid batch is not set. Defaulting to  100
@@ -518,9 +518,9 @@
   Use the "compensate_multipole_errors" flag to change this behaviour.
   Set 'collect_eigenvectors' to be '.true.' for all serial calculations. This is mandatory.
   Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
 
   Range separation radius for Ewald summation (hartree_convergence_parameter):      3.88818726 bohr.
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
@@ -530,7 +530,7 @@
   | Number of empty states (old):   12.00000
   | Number of empty states (new):   22.00000
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        9
   | Maximum number of basis functions            :       50
   | Number of Kohn-Sham states (occupied + empty):       25
@@ -570,7 +570,7 @@
 
   Adding cutoff potential to free-atom effective potential.
   Creating fixed part of basis set: Ionic, confined, hydrogenic.
- 
+
   Si                   ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -586,15 +586,15 @@
     n    l      energy [Ha]    energy [eV]    outer radius [A]
     3    0        -1.073857       -29.2211       4.214062
 
- 
+
   Si                   hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     3    2         4.200000       -26.6624           1.139231           1.139231           4.534782
     2    1         1.400000        -6.4613           1.472672           1.472672           4.590560
     4    3         6.200000       -32.6778           1.368518           1.368518           4.534782
- 
+
   Creating atomic-like basis functions for current effective potential.
 
   Species Si                  :
@@ -617,11 +617,11 @@
   | Species Si :    hydro orbital   2 p accepted.
   | Species Si :    hydro orbital   3 d accepted.
   | Species Si :    hydro orbital   4 f accepted.
- 
+
   Basis size parameters after reduction:
   | Total number of radial functions:        9
   | Total number of basis functions :       50
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |           3.102808MB.
   Testing on-site integration grid accuracy.
@@ -2314,22 +2314,22 @@
   | Total energy corrected        :         -0.158026474520444E+05 eV  <-- do not rely on this value for anything but (periodic) metals
   | Electronic free energy        :         -0.158026474520444E+05 eV
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.682202981 Ha          -1107.019067629 eV
   C Energy            :         -1.094463612 Ha            -29.781870156 eV
   XC Energy w/o HF    :        -41.776666593 Ha          -1136.800937785 eV
   Total XC Energy     :        -41.776666593 Ha          -1136.800937785 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.629127793 Ha          -1023.940664763 eV
   C Energy LDA        :         -2.146353435 Ha            -58.405248583 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
 

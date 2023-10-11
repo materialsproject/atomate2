@@ -1,4 +1,4 @@
-"""An FHI-aims jobflow runner"""
+"""An FHI-aims jobflow runner."""
 from __future__ import annotations
 
 import json
@@ -6,14 +6,14 @@ import logging
 import os
 import subprocess
 from os.path import expandvars
-from typing import Iterable
+from typing import TYPE_CHECKING
 
 from ase.calculators.aims import Aims
-from ase.calculators.socketio import SocketIOCalculator
 from monty.json import MontyDecoder
 
-from atomate2.aims.schemas.task import AimsTaskDocument
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+if TYPE_CHECKING:
+    from atomate2.aims.schemas.task import AimsTaskDocument
+    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 logger = logging.getLogger(__name__)
 
@@ -75,8 +75,8 @@ def should_stop_children(
     raise RuntimeError(f"Unknown option for handle_unsuccessful: {handle_unsuccessful}")
 
 
-def run_aims_socket(atoms_to_calculate: Iterable[MSONableAtoms], aims_cmd: str = None):
-    """Uses the ASE interface to run FHI-aims from the socket
+def run_aims_socket(atoms_to_calculate: list[MSONableAtoms], aims_cmd: str = None):
+    """Use the ASE interface to run FHI-aims from the socket.
 
     Parameters
     ----------
@@ -85,8 +85,9 @@ def run_aims_socket(atoms_to_calculate: Iterable[MSONableAtoms], aims_cmd: str =
     aims_cmd:
         The aims command to use
     """
+    with open("parameters.json") as param_file:
+        parameters = json.load(param_file, cls=MontyDecoder)
 
-    parameters = json.load(open("parameters.json", "rt"), cls=MontyDecoder)
     if aims_cmd:
         parameters["aims_command"] = aims_cmd
     elif "aims_command" not in parameters:

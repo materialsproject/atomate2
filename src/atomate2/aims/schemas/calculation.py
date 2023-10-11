@@ -1,11 +1,10 @@
-"""Schemas for FHI-aims calculation objects"""
+"""Schemas for FHI-aims calculation objects."""
 
 import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import numpy as np
 from ase.spectrum.band_structure import BandStructure
 from ase.stress import voigt_6_to_full_3x3_stress
 from emmet.core.math import Matrix3D, Vector3D
@@ -92,10 +91,6 @@ class CalculationOutput(BaseModel):
     stress: Matrix3D = Field(None, description="The stress on the cell")
     stresses: List[Matrix3D] = Field(None, description="The stress on the cell")
 
-    all_forces: List[List[Vector3D]] = Field(
-        None, description="Forces acting on each atom for all images in the calculation"
-    )
-
     is_metal: bool = Field(None, description="Whether the system is metallic")
     bandgap: float = Field(None, description="The band gap from the calculation in eV")
     cbm: float = Field(
@@ -129,7 +124,6 @@ class CalculationOutput(BaseModel):
         -------
             The FHI-aims calculation output document.
         """
-
         structure = output.final_structure
 
         electronic_output = {
@@ -142,7 +136,7 @@ class CalculationOutput(BaseModel):
 
         forces = None
         if output.forces is not None:
-            forces = output.forces.tolist()
+            forces = output.forces
 
         stress = None
         if output.stress is not None:
@@ -155,10 +149,8 @@ class CalculationOutput(BaseModel):
             ]
 
         all_forces = None
-        if not any([ff is None for ff in output.all_forces]):
-            all_forces = [
-                f.tolist() if (f is not None) else None for f in output.all_forces
-            ]
+        if not any(ff is None for ff in output.all_forces):
+            all_forces = [f if (f is not None) else None for f in output.all_forces]
 
         return cls(
             structure=structure,
@@ -303,9 +295,7 @@ class Calculation(BaseModel):
 
 
 def _get_output_file_paths(volumetric_files: List[str]) -> Dict[AimsObject, str]:
-    """
-    Get the output file paths for FHI-aims output files from the list
-    of volumetric files.
+    """Get the output file paths for FHI-aims output files.
 
     Parameters
     ----------
@@ -407,8 +397,5 @@ def _parse_bandstructure(
 
 
 def _parse_trajectory(aims_output: AimsOutput) -> Optional[Trajectory]:
-    """
-    Grab a Trajectory object given an FHI-aims output object.
-    """
-
+    """Grab a Trajectory object given an FHI-aims output object."""
     return aims_output.structures

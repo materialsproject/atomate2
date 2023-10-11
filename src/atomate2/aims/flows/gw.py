@@ -1,6 +1,4 @@
-"""
-GW workflows for FHI-aims with automatic convergence
-"""
+"""GW workflows for FHI-aims with automatic convergence."""
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -57,11 +55,10 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
         Parameters
         ----------
         structure : .MSONableAtoms, Structure, or Molecule
-            The strcuture to calculate
+            The structure to calculate
         prev_dir : str or Path or None
             A previous FHI-aims calculation directory to copy output files from.
         """
-
         parameters = self.input_set_generator.user_parameters
         parameters["elsi_restart"] = ["read_and_write", 1]
         # the first calculation
@@ -89,5 +86,7 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
             convergence_field=self.convergence_field,
             convergence_steps=self.convergence_steps,
         )
-        gw = convergence.make(static.output.structure, prev_dir=static.output.dir_name)
+        gw = convergence.convergence_iteration(
+            static.output.structure, prev_dir=static.output.dir_name
+        )
         return Flow([static, gw], gw.output, name=self.name)

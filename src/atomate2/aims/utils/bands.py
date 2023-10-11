@@ -1,5 +1,7 @@
-"""Some utilities of dealing with bands. Copied from GIMS as of now; should be in its
-own dedicated FHI-aims python package (with the parsers, plotters etc.)"""
+"""Some utilities of dealing with bands.
+
+Copied from GIMS as of now; should be in its own dedicated FHI-aims python package.
+"""
 
 import numpy as np
 from ase.cell import Cell
@@ -9,11 +11,10 @@ from ase.dft.kpoints import kpoint_convert, resolve_kpt_path_string
 
 
 def prepare_band_input(cell: Cell, density=20):
-    """
-    Prepares the band information needed for the FHI-aims control.in file.
+    """Prepare the band information needed for the FHI-aims control.in file.
 
-    Parameters:
-
+    Parameters
+    ----------
     cell: object
         ASE cell object
     density: float

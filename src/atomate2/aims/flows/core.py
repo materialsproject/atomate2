@@ -1,9 +1,8 @@
-""" (Work)flows for FHI-aims
-"""
+"""(Work)flows for FHI-aims."""
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 from jobflow import Flow, Maker
 from pymatgen.core import Molecule, Structure
@@ -20,9 +19,10 @@ __all__ = [
 
 @dataclass
 class DoubleRelaxMaker(Maker):
-    """
+    """Double relaxation maker for FHI-aims.
+
     A maker to perform a double relaxation in FHI-aims (first with light,
-    and then with tight species_defaults)
+    and then with tight species_defaults).
 
     Parameters
     ----------
@@ -66,10 +66,11 @@ class DoubleRelaxMaker(Maker):
     @classmethod
     def from_parameters(
         cls,
-        parameters: Dict[str, any],
+        parameters: Dict[str, Any],
         species_defaults: list | tuple = ("light", "tight"),
     ):
-        """
+        """Create the maker from an ASE parameter set.
+
         Creates a DoubleRelaxFlow for the same parameters with two different
         species defaults.
 
@@ -84,15 +85,16 @@ class DoubleRelaxMaker(Maker):
         # various checks
         if len(species_defaults) != 2:
             raise ValueError(
-                "Two species defaults directories should be provided for DoubleRelaxFlow"
+                "Two species defaults directories must be provided for DoubleRelaxFlow"
             )
         if "species_dir" not in parameters:
             raise KeyError("Provided parameters do not include species_dir")
         species_dir = Path(parameters["species_dir"])
         for basis_set in species_defaults:
             if not (species_dir / basis_set).exists():
+                basis_set_dir = (species_dir / basis_set).as_posix()
                 raise OSError(
-                    f"The species defaults directory {(species_dir / basis_set).as_posix()} does not exist"
+                    f"The species defaults directory {basis_set_dir} does not exist"
                 )
 
         # now the actual work begins

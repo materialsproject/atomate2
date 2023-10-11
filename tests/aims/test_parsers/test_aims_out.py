@@ -151,20 +151,23 @@ def test_parse_dfpt_dielectric(tmpdir):
 
     assert np.allclose(diel, diel_0)
 
+
 def test_parse_polarization(tmpdir):
     outfile = parent / "test_data/aims_out/polarization.out"
     atoms = read(outfile, format="aims-output")
 
     polar = atoms.calc.results["polarization"]
 
-    polar_0 = [-51.045557E-03, -51.045557E-03, -51.458008E-03]
+    polar_0 = [-51.045557e-03, -51.045557e-03, -51.458008e-03]
 
     assert np.allclose(polar, polar_0)
 
+
 def test_preamble_failed(tmpdir):
     outfile = parent / "test_data/aims_out/preamble_fail.out"
-    with pytest.raises(ParseError, match='No SCF steps'):
+    with pytest.raises(ParseError, match="No SCF steps"):
         read(outfile, format="aims-output")
+
 
 def test_numerical_stress(tmpdir):
     outfile = parent / "test_data/aims_out/numerical_stress.out"
@@ -172,7 +175,12 @@ def test_numerical_stress(tmpdir):
     atoms = read(outfile, format="aims-output")
     stress = atoms.get_stress()
     stress_actual = [
-        0.00244726, 0.00267442, 0.00258710, 0.00000005, -0.00000026, -0.00000007
+        0.00244726,
+        0.00267442,
+        0.00258710,
+        0.00000005,
+        -0.00000026,
+        -0.00000007,
     ]
 
     assert np.allclose(stress, stress_actual)

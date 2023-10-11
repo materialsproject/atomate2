@@ -1,6 +1,7 @@
 """Test core FHI-aims workflows"""
-import pytest
 import os
+
+import pytest
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 

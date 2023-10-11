@@ -1,8 +1,8 @@
+import os
+
 import pytest
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-import os
-
 
 cwd = os.getcwd()
 

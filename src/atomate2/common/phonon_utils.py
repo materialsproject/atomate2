@@ -1,3 +1,4 @@
+"""Define utilities for the phonon workflow."""
 from phonopy.units import VaspToTHz
 
 from atomate2.aims.utils.units import omega_to_THz
@@ -5,7 +6,7 @@ from atomate2.aims.utils.units import omega_to_THz
 
 def get_factor(code: str):
     """
-    Get the frequency conversion factor to THz for each code
+    Get the frequency conversion factor to THz for each code.
 
     Parameters
     ----------
@@ -24,7 +25,6 @@ def get_factor(code: str):
     """
     if code == "vasp":
         return VaspToTHz
-    elif code == "aims":
+    if code == "aims":
         return omega_to_THz  # Based on CODATA 2002
-    else:
-        raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
+    raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")

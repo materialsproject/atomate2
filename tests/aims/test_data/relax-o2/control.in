@@ -56,7 +56,7 @@ relax_geometry                     trm 1.000000e-03
     ion_occ      2  p   3.
 ################################################################################
 #
-#  Suggested additional basis functions. For production calculations, 
+#  Suggested additional basis functions. For production calculations,
 #  uncomment them one after another (the most important basis functions are
 #  listed first).
 #

@@ -5,7 +5,6 @@ import os
 import shutil
 from pathlib import Path
 
-
 from atomate2.aims.sets.core import StaticSetGenerator
 from tests.aims import compare_files
 

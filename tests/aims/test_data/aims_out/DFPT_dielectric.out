@@ -260,7 +260,7 @@
   | (MP2,GW,RPA et al.), will use the full Hamiltonian size (see below)
   | as the max. possible number of states (occupied plus empty).
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        7
   | Maximum number of basis functions            :       11
   | Number of Kohn-Sham states (occupied + empty):       11

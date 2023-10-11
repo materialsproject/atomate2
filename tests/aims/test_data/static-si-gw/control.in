@@ -8,16 +8,16 @@ xc                                 pbe
 relativistic                       atomic_zora scalar
 anacon_type                        two-pole
 qpe_calc                           gw_expt
-output                             band   0.00000  0.00000  0.00000   0.50000  0.00000  0.50000   12 G  X  
-output                             band   0.50000  0.00000  0.50000   0.50000  0.25000  0.75000    6 X  W  
-output                             band   0.50000  0.25000  0.75000   0.37500  0.37500  0.75000    4 W  K  
-output                             band   0.37500  0.37500  0.75000   0.00000  0.00000  0.00000   12 K  G  
-output                             band   0.00000  0.00000  0.00000   0.50000  0.50000  0.50000   10 G  L  
-output                             band   0.50000  0.50000  0.50000   0.62500  0.25000  0.62500    7 L  U  
-output                             band   0.62500  0.25000  0.62500   0.50000  0.25000  0.75000    4 U  W  
-output                             band   0.50000  0.25000  0.75000   0.50000  0.50000  0.50000    8 W  L  
-output                             band   0.50000  0.50000  0.50000   0.37500  0.37500  0.75000    7 L  K  
-output                             band   0.62500  0.25000  0.62500   0.50000  0.00000  0.50000    4 U  X  
+output                             band   0.00000  0.00000  0.00000   0.50000  0.00000  0.50000   12 G  X
+output                             band   0.50000  0.00000  0.50000   0.50000  0.25000  0.75000    6 X  W
+output                             band   0.50000  0.25000  0.75000   0.37500  0.37500  0.75000    4 W  K
+output                             band   0.37500  0.37500  0.75000   0.00000  0.00000  0.00000   12 K  G
+output                             band   0.00000  0.00000  0.00000   0.50000  0.50000  0.50000   10 G  L
+output                             band   0.50000  0.50000  0.50000   0.62500  0.25000  0.62500    7 L  U
+output                             band   0.62500  0.25000  0.62500   0.50000  0.25000  0.75000    4 U  W
+output                             band   0.50000  0.25000  0.75000   0.50000  0.50000  0.50000    8 W  L
+output                             band   0.50000  0.50000  0.50000   0.37500  0.37500  0.75000    7 L  K
+output                             band   0.62500  0.25000  0.62500   0.50000  0.00000  0.50000    4 U  X
 k_grid                             2 2 2
 #===============================================================================
 
@@ -74,7 +74,7 @@ k_grid                             2 2 2
     ion_occ      3  p   1.
 ################################################################################
 #
-#  Suggested additional basis functions. For production calculations, 
+#  Suggested additional basis functions. For production calculations,
 #  uncomment them one after another (the most important basis functions are
 #  listed first).
 #

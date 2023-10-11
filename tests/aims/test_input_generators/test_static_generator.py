@@ -1,7 +1,7 @@
+import os
+
 from atomate2.aims.sets.core import StaticSetGenerator
 from tests.aims import compare_files
-
-import os
 
 
 def comp_system(atoms, user_params, test_name, work_path, ref_path):

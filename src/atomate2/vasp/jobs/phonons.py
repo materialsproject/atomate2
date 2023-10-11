@@ -1,3 +1,4 @@
+"""Define the PhononDisplacementMaker for VASP."""
 from dataclasses import dataclass, field
 
 from atomate2.vasp.jobs.base import BaseVaspMaker

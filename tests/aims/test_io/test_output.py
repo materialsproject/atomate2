@@ -1,15 +1,17 @@
-from atomate2.aims.io.aims_output import AimsOutput
+import json
 from pathlib import Path
 
 from monty.json import MontyDecoder
-import json
+
+from atomate2.aims.io.aims_output import AimsOutput
 
 outfile_dir = Path(__file__).parent / "aims_output_files"
 
 
 def test_output_si():
     si = AimsOutput.from_outfile(f"{outfile_dir}/si.out")
-    si_ref = json.load(open(f"{outfile_dir}/si_out.json", "rb"), cls=MontyDecoder)
+    with open(f"{outfile_dir}/si_out.json") as ref_file:
+        si_ref = json.load(ref_file, cls=MontyDecoder)
 
     assert si_ref.metadata == si.metadata
     assert si_ref.atoms_summary == si.atoms_summary
@@ -23,7 +25,8 @@ def test_output_si():
 
 def test_output_h2o():
     h2o = AimsOutput.from_outfile(f"{outfile_dir}/h2o.out")
-    h2o_ref = json.load(open(f"{outfile_dir}/h2o_out.json", "rb"), cls=MontyDecoder)
+    with open(f"{outfile_dir}/h2o_out.json") as ref_file:
+        h2o_ref = json.load(ref_file, cls=MontyDecoder)
 
     assert h2o_ref.metadata == h2o.metadata
     assert h2o_ref.atoms_summary == h2o.atoms_summary

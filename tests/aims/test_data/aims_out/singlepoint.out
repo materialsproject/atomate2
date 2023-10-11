@@ -19,9 +19,9 @@
   |    2: Species H             0.95840000        0.00000000        0.00000000
   |    3: Species H            -0.24000000        0.92790000        0.00000000
 
- 
+
   Finished reading input file 'control.in'.
- 
+
 
 ------------------------------------------------------------
           Reading geometry description geometry.in.
@@ -31,9 +31,9 @@
 
   | Maximum stacksize for task 0: unlimited
   | Current stacksize for task 0: unlimited
- 
+
   Consistency checks for the contents of control.in are next.
- 
+
   MPI_IN_PLACE appears to work with this MPI implementation.
   | Keeping use_mpi_in_place .true. (see manual).
   Target number of points in a grid batch is not set. Defaulting to  100
@@ -98,14 +98,14 @@
   Set 'collect_eigenvectors' to be '.true.' for all serial calculations. This is mandatory.
   Set 'collect_eigenvectors' to be '.true.' for use_density_matrix .false.
   Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
   | Total number of empty states used during s.c.f. cycle:        6
   If you use a very high smearing, use empty_states (per atom!) in control.in to increase this value.
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        4
   | Maximum number of basis functions            :        7
   | Number of Kohn-Sham states (occupied + empty):       11

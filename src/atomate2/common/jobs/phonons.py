@@ -6,8 +6,6 @@ import contextlib
 import logging
 from typing import TYPE_CHECKING
 
-import numpy as np
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from pymatgen.core import Structure
@@ -18,17 +16,18 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2.common.phonon_utils import get_factor
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
-from atomate2.common.utils.phonons import get_factor
-
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+    import numpy as np
+    from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.forcefields.jobs import ForceFieldStaticMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 logger = logging.getLogger(__name__)
@@ -238,7 +237,7 @@ def generate_frequencies_eigenvectors(
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
 
     """
-    phonon_doc = PhononBSDOSDoc.from_forces_born(
+    return PhononBSDOSDoc.from_forces_born(
         structure=structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
@@ -254,8 +253,6 @@ def generate_frequencies_eigenvectors(
         **kwargs,
     )
 
-    return phonon_doc
-
 
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
@@ -270,7 +267,7 @@ def run_phonon_displacements(
     Run phonon displacements.
 
     Note, this job will replace itself with N displacement calculations,
-    or a single socket calculation for all displacments.
+    or a single socket calculation for all displacements.
 
     Parameters
     ----------

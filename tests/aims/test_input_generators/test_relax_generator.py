@@ -1,6 +1,6 @@
-from atomate2.aims.sets.core import RelaxSetGenerator
-
 import os
+
+from atomate2.aims.sets.core import RelaxSetGenerator
 from tests.aims import compare_files
 
 

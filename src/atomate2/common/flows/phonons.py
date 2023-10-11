@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from jobflow import Flow, Maker
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
@@ -16,15 +15,16 @@ from atomate2.common.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
+from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 __all__ = ["BasePhononMaker"]
 
@@ -193,7 +193,8 @@ class BasePhononMaker(Maker):
         """
         if self.code is None:
             raise ValueError(
-                f"The code variable must be passed upon construction. Supported codes are: {SUPPORTED_CODES}"
+                "The code variable must be passed upon construction."
+                f" Supported codes are: {SUPPORTED_CODES}"
             )
 
         if isinstance(structure, MSONableAtoms):

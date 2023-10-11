@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from atomate2.aims.sets.base import AimsInputGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 __all__ = [
     "StaticSetGenerator",
@@ -26,9 +28,9 @@ class StaticSetGenerator(AimsInputGenerator):
     calc_type: str = "static"
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Get the parameter updates for the calculation
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Get the parameter updates for the calculation.
 
         Parameters
         ----------
@@ -69,9 +71,9 @@ class RelaxSetGenerator(AimsInputGenerator):
     method: str = "trm"
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
     ) -> dict:
-        """Get the parameter updates for the calculation
+        """Get the parameter updates for the calculation.
 
         Parameters
         ----------
@@ -95,7 +97,7 @@ class RelaxSetGenerator(AimsInputGenerator):
 
 @dataclass
 class SocketIOSetGenerator(AimsInputGenerator):
-    """Class to generate FHI-aims input sets for running with the socket
+    """Class to generate FHI-aims input sets for running with the socket.
 
     Parameters
     ----------
@@ -112,9 +114,9 @@ class SocketIOSetGenerator(AimsInputGenerator):
     port: int = 12345
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
     ) -> dict:
-        """Get the parameter updates for the calculation
+        """Get the parameter updates for the calculation.
 
         Parameters
         ----------
@@ -127,6 +129,4 @@ class SocketIOSetGenerator(AimsInputGenerator):
         -------
         The updated for the parameters for the output section of FHI-aims
         """
-        updates = {"use_pimd_wrapper": (self.host, self.port)}
-
-        return updates
+        return {"use_pimd_wrapper": (self.host, self.port)}

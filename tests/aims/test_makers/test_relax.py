@@ -1,12 +1,11 @@
 import os
-import pytest
 
+import pytest
 from jobflow import run_locally
 
 from atomate2.aims.jobs.core import RelaxMaker
 from atomate2.aims.schemas.task import AimsTaskDocument
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 
 cwd = os.getcwd()
 

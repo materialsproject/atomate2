@@ -26,9 +26,9 @@
   Maximal number of MD steps is        5
   Initializing MD run with Maxwell-Boltzmann momentum distribution at T =     300.000000 K
   Number of s.-c. iterations prior to a full restart of mixing :     2
- 
+
   Finished reading input file 'control.in'.
- 
+
 ------------------------------------------------------------
 
 
@@ -49,16 +49,16 @@
   |    2: Species H             0.95840000        0.00000000        0.00000000
   |    3: Species H            -0.24000000        0.92790000        0.00000000
 
- 
+
   Finished reading input file 'control.in'.
- 
+
 
 ------------------------------------------------------------
           Reading geometry description geometry.in.
 ------------------------------------------------------------
- 
+
   Consistency checks for stacksize environment parameter are next.
- 
+
   | Maximum stacksize for task 0: unlimited
   | Maximum stacksize for task 1: unlimited
   | Maximum stacksize for task 2: unlimited
@@ -67,9 +67,9 @@
   | Current stacksize for task 1: unlimited
   | Current stacksize for task 2: unlimited
   | Current stacksize for task 3: unlimited
- 
+
   Consistency checks for the contents of control.in are next.
- 
+
   MPI_IN_PLACE appears to work with this MPI implementation.
   | Keeping use_mpi_in_place .true. (see manual).
   Target number of points in a grid batch is not set. Defaulting to  100
@@ -136,14 +136,14 @@
   by explicit normalization and distribution of residual charges.
   Use the "compensate_multipole_errors" flag to change this behaviour.
   Set 'collect_eigenvectors' to be '.true.' for use_density_matrix .false.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
   | Total number of empty states used during s.c.f. cycle:        6
   If you use a very high smearing, use empty_states (per atom!) in control.in to increase this value.
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :       25
   | Maximum number of basis functions            :       24
   | Number of Kohn-Sham states (occupied + empty):       11
@@ -156,7 +156,7 @@
   Basis size parameters after reduction:
   | Total number of radial functions:       25
   | Total number of basis functions :       24
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |           8.719308MB.
   Testing on-site integration grid accuracy.

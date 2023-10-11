@@ -16,7 +16,7 @@
   |    6: Species Sn           10.12756329        1.03922555        2.65675696
   |    7: Species Sn            4.38578379        1.03922555        3.95291153
   |    8: Species Sn            7.09777521        3.11767666        0.45353413
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :       27
   | Maximum number of basis functions            :      308
   | Number of Kohn-Sham states (occupied + empty):      212

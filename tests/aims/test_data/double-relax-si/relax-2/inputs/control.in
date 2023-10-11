@@ -20,7 +20,7 @@ compute_analytical_stress          .true.
 #
 #  Suggested "tight" defaults for Si atom (to be pasted into control.in file)
 #
-#  Revised Jan 04, 2011, following tests (SiC) done by Lydia Nemec: 
+#  Revised Jan 04, 2011, following tests (SiC) done by Lydia Nemec:
 #     d and g functions of tier 2 now enabled by default.
 #
 ################################################################################
@@ -61,7 +61,7 @@ compute_analytical_stress          .true.
     ion_occ      3  p   1.
 ################################################################################
 #
-#  Suggested additional basis functions. For production calculations, 
+#  Suggested additional basis functions. For production calculations,
 #  uncomment them one after another (the most important basis functions are
 #  listed first).
 #

@@ -42,9 +42,9 @@
   | Reciprocal lattice vector 3:  1.082188  1.082188 -1.082188
   | Unit cell volume                               :   0.489295E+02  A^3
 
- 
+
   Finished reading input file 'control.in'.
- 
+
 
 ------------------------------------------------------------
           Reading geometry description geometry.in.
@@ -142,16 +142,16 @@
   Use the "compensate_multipole_errors" flag to change this behaviour.
   Set 'collect_eigenvectors' to be '.true.' for all serial calculations. This is mandatory.
   Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
 
   Range separation radius for Ewald summation (hartree_convergence_parameter):      4.18308528 bohr.
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
   | Total number of empty states used during s.c.f. cycle:        6
   If you use a very high smearing, use empty_states (per atom!) in control.in to increase this value.
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        9
   | Maximum number of basis functions            :       50
   | Number of Kohn-Sham states (occupied + empty):       20
@@ -170,11 +170,11 @@
   | Species Si :    hydro orbital   2 p accepted.
   | Species Si :    hydro orbital   3 d accepted.
   | Species Si :    hydro orbital   4 f accepted.
- 
+
   Basis size parameters after reduction:
   | Total number of radial functions:        9
   | Total number of basis functions :       50
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |           3.102808MB.
   Testing on-site integration grid accuracy.

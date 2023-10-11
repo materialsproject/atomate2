@@ -63,7 +63,7 @@
   Task        0 on host nomadbook-7 reporting.
 
   Performing system and environment tests:
-  *** Environment variable OMP_NUM_THREADS is set to 
+  *** Environment variable OMP_NUM_THREADS is set to
   2
   *** For performance reasons you might want to set it to 1
   | Checking for ScaLAPACK...
@@ -71,19 +71,19 @@
   | All pdtran() tests passed.
 
   Obtaining array dimensions for all initial allocations:
-  
+
   -----------------------------------------------------------------------
   Parsing control.in (first pass over file, find array dimensions only).
   The contents of control.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of control.in .
   -----------------------------------------------------------------------
-  
+
   #===============================================================================
   # Created using the Atomic Simulation Environment (ASE)
-  
+
   # Tue Jun 27 18:06:33 2023
-  
+
   #===============================================================================
   xc                                 pbe
   relativistic                       atomic_zora scalar
@@ -91,7 +91,7 @@
   relax_unit_cell                    full
   k_grid                             2 2 2
   #===============================================================================
-  
+
   ################################################################################
   #
   #  FHI-aims code project
@@ -179,35 +179,35 @@
   #     hydro 4 d 6.6
   #     hydro 5 g 16.4
   #     hydro 4 d 9
-  
+
   -----------------------------------------------------------------------
   Completed first pass over input file control.in .
   -----------------------------------------------------------------------
-  
-  
+
+
   -----------------------------------------------------------------------
   Parsing geometry.in (first pass over file, find array dimensions only).
   The contents of geometry.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of geometry.in .
   -----------------------------------------------------------------------
-  
+
   #===============================================================================
   # Created using the Atomic Simulation Environment (ASE)
-  
+
   # Tue Jun 27 18:06:33 2023
-  
+
   #=======================================================
   lattice_vector 0.0000000000000000 2.7549999999999999 2.7549999999999999
   lattice_vector 2.7549999999999999 0.0000000000000000 2.7549999999999999
   lattice_vector 2.7549999999999999 2.7549999999999999 0.0000000000000000
   atom_frac 0.0000000000000000 0.0000000000000000 -0.0000000000000000 Si
   atom_frac 0.2500000000000000 0.2500000000000000 0.2500000000000000 Si
-  
+
   -----------------------------------------------------------------------
   Completed first pass over input file geometry.in .
   -----------------------------------------------------------------------
-  
+
 
   Basic array size parameters:
   | Number of species                 :        1
@@ -232,7 +232,7 @@
   Geometry relaxation: Modified BFGS - TRM (trust radius method) for lattice optimization.
   Convergence accuracy for geometry relaxation: Maximum force <   0.100000E-02 eV/A.
   Found k-point grid:         2         2         2
- 
+
   Reading configuration options for species Si                  .
   | Found nuclear charge :  14.0000
   | Found atomic mass :    28.0855000000000      amu
@@ -262,9 +262,9 @@
   Species Si                  : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species Si                  : Default cutoff onset for free atom density etc. : 0.35000000E+01 AA.
   Species Si                  : Basic radial grid will be enhanced according to radial_multiplier =   1, to contain    42 grid points.
- 
+
   Finished reading input file 'control.in'.
- 
+
 ------------------------------------------------------------
 
 
@@ -311,21 +311,21 @@
        atom_frac         0.00000000        0.00000000        0.00000000  Si
        atom_frac         0.25000000        0.25000000        0.25000000  Si
 
- 
+
   Finished reading input file 'control.in'.
- 
+
 
 ------------------------------------------------------------
           Reading geometry description geometry.in.
 ------------------------------------------------------------
- 
+
   Consistency checks for stacksize environment parameter are next.
- 
+
   | Maximum stacksize for task 0: unlimited
   | Current stacksize for task 0: unlimited
- 
+
   Consistency checks for the contents of control.in are next.
- 
+
   MPI_IN_PLACE appears to work with this MPI implementation.
   | Keeping use_mpi_in_place .true. (see manual).
   Target number of points in a grid batch is not set. Defaulting to  100
@@ -430,16 +430,16 @@
   Use the "compensate_multipole_errors" flag to change this behaviour.
   Set 'collect_eigenvectors' to be '.true.' for all serial calculations. This is mandatory.
   Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
 
   Range separation radius for Ewald summation (hartree_convergence_parameter):      3.95124372 bohr.
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
   | Total number of empty states used during s.c.f. cycle:        6
   If you use a very high smearing, use empty_states (per atom!) in control.in to increase this value.
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        9
   | Maximum number of basis functions            :       50
   | Number of Kohn-Sham states (occupied + empty):       20
@@ -471,7 +471,7 @@
 
   Adding cutoff potential to free-atom effective potential.
   Creating fixed part of basis set: Ionic, confined, hydrogenic.
- 
+
   Si                   ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -487,15 +487,15 @@
     n    l      energy [Ha]    energy [eV]    outer radius [A]
     3    0        -1.073857       -29.2211       4.214062
 
- 
+
   Si                   hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     3    2         4.200000       -26.6624           1.139231           1.139231           4.534782
     2    1         1.400000        -6.4613           1.472672           1.472672           4.590560
     4    3         6.200000       -32.6778           1.368518           1.368518           4.534782
- 
+
   Creating atomic-like basis functions for current effective potential.
 
   Species Si                  :
@@ -518,11 +518,11 @@
   | Species Si :    hydro orbital   2 p accepted.
   | Species Si :    hydro orbital   3 d accepted.
   | Species Si :    hydro orbital   4 f accepted.
- 
+
   Basis size parameters after reduction:
   | Total number of radial functions:        9
   | Total number of basis functions :       50
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |           3.102808MB.
   Testing on-site integration grid accuracy.
@@ -2382,7 +2382,7 @@
   Evaluating new KS density using the density matrix
   Evaluating density matrix
   Time summed over all CPUs for getting density from density matrix: real work        0.880 s, elapsed        0.880 s
-  
+
   Evaluating density-matrix-based force terms: batch-based integration
   Evaluating density matrix
   Evaluating density matrix
@@ -2527,22 +2527,22 @@
   |    1         -0.486952935970507E-08         -0.319270797951684E-08         -0.276241042439398E-08
   |    2          0.486952935970508E-08          0.319270797951684E-08          0.276241042439398E-08
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.702535223 Ha          -1107.572336068 eV
   C Energy            :         -1.086870742 Ha            -29.575257650 eV
   XC Energy w/o HF    :        -41.789405964 Ha          -1137.147593718 eV
   Total XC Energy     :        -41.789405964 Ha          -1137.147593718 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.637384307 Ha          -1024.165335950 eV
   C Energy LDA        :         -2.146804754 Ha            -58.417529610 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
   Relaxation / MD: End force evaluation.       :  max(cpu_time)    wall_clock(cpu1)
@@ -3865,7 +3865,7 @@
   Evaluating new KS density using the density matrix
   Evaluating density matrix
   Time summed over all CPUs for getting density from density matrix: real work        0.843 s, elapsed        0.843 s
-  
+
   Evaluating density-matrix-based force terms: batch-based integration
   Evaluating density matrix
   Evaluating density matrix
@@ -4010,22 +4010,22 @@
   |    1          0.402258645112855E-07         -0.789345665168126E-08         -0.946066143948756E-08
   |    2         -0.402258645112855E-07          0.789345665168126E-08          0.946066143948756E-08
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.691832894 Ha          -1107.281110900 eV
   C Energy            :         -1.085450248 Ha            -29.536604044 eV
   XC Energy w/o HF    :        -41.777283142 Ha          -1136.817714944 eV
   Total XC Energy     :        -41.777283142 Ha          -1136.817714944 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.625522323 Ha          -1023.842554939 eV
   C Energy LDA        :         -2.145950281 Ha            -58.394278201 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
   Relaxation / MD: End force evaluation.       :  max(cpu_time)    wall_clock(cpu1)
@@ -5464,7 +5464,7 @@
   Evaluating new KS density using the density matrix
   Evaluating density matrix
   Time summed over all CPUs for getting density from density matrix: real work        0.807 s, elapsed        0.807 s
-  
+
   Evaluating density-matrix-based force terms: batch-based integration
   Evaluating density matrix
   Evaluating density matrix
@@ -5609,22 +5609,22 @@
   |    1         -0.222260903726852E-06          0.323486013650826E-07          0.398293064328442E-07
   |    2          0.222260903726852E-06         -0.323486013650826E-07         -0.398293064328442E-07
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.669204423 Ha          -1106.665358876 eV
   C Energy            :         -1.082435412 Ha            -29.454566200 eV
   XC Energy w/o HF    :        -41.751639836 Ha          -1136.119925076 eV
   Total XC Energy     :        -41.751639836 Ha          -1136.119925076 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.600440540 Ha          -1023.160044893 eV
   C Energy LDA        :         -2.144134624 Ha            -58.344871663 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
   Relaxation / MD: End force evaluation.       :  max(cpu_time)    wall_clock(cpu1)
@@ -6718,7 +6718,7 @@
   Evaluating new KS density using the density matrix
   Evaluating density matrix
   Time summed over all CPUs for getting density from density matrix: real work        0.797 s, elapsed        0.797 s
-  
+
   Evaluating density-matrix-based force terms: batch-based integration
   Evaluating density matrix
   Evaluating density matrix
@@ -6865,22 +6865,22 @@
   |    1          0.341280940656103E-06         -0.365477601296885E-07         -0.565529618943033E-07
   |    2         -0.341280940656103E-06          0.365477601296885E-07          0.565529618943033E-07
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.666493062 Ha          -1106.591578968 eV
   C Energy            :         -1.082073165 Ha            -29.444708963 eV
   XC Energy w/o HF    :        -41.748566227 Ha          -1136.036287931 eV
   Total XC Energy     :        -41.748566227 Ha          -1136.036287931 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.597435086 Ha          -1023.078262336 eV
   C Energy LDA        :         -2.143916094 Ha            -58.338925176 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
   Relaxation / MD: End force evaluation.       :  max(cpu_time)    wall_clock(cpu1)
@@ -7860,7 +7860,7 @@
   Evaluating new KS density using the density matrix
   Evaluating density matrix
   Time summed over all CPUs for getting density from density matrix: real work        0.800 s, elapsed        0.800 s
-  
+
   Evaluating density-matrix-based force terms: batch-based integration
   Evaluating density matrix
   Evaluating density matrix
@@ -8007,22 +8007,22 @@
   |    1         -0.577774893695394E-06          0.665273903016273E-07          0.110901338442392E-06
   |    2          0.577774893695393E-06         -0.665273903016273E-07         -0.110901338442392E-06
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.666268639 Ha          -1106.585472109 eV
   C Energy            :         -1.082043167 Ha            -29.443892673 eV
   XC Energy w/o HF    :        -41.748311806 Ha          -1136.029364783 eV
   Total XC Energy     :        -41.748311806 Ha          -1136.029364783 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.597186314 Ha          -1023.071492920 eV
   C Energy LDA        :         -2.143897994 Ha            -58.338432637 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
   Relaxation / MD: End force evaluation.       :  max(cpu_time)    wall_clock(cpu1)

@@ -1,4 +1,4 @@
-"""A definition of a MSON document representing an FHI-aims task"""
+"""A definition of a MSON document representing an FHI-aims task."""
 
 import json
 import logging
@@ -46,9 +46,6 @@ class AnalysisSummary(BaseModel):
         AnalysisSummary
             Summary object
         """
-
-        errors = []
-
         delta_vol = None
         percent_delta_vol = None
 
@@ -61,7 +58,7 @@ class AnalysisSummary(BaseModel):
             delta_volume=delta_vol,
             delta_volume_as_percent=percent_delta_vol,
             max_force=max_force,
-            errors=errors,
+            errors=[],
         )
 
 
@@ -155,9 +152,7 @@ class OutputSummary(BaseModel):
 
     @classmethod
     def from_aims_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
-        """
-        Create a summary of FHI-aims calculation outputs from an FHI-aims
-        calculation document.
+        """Create a summary from an aims CalculationDocument.
 
         Parameters
         ----------
@@ -169,7 +164,6 @@ class OutputSummary(BaseModel):
         OutputSummary
             The calculation output summary.
         """
-
         return cls(
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
@@ -205,16 +199,17 @@ class ConvergenceSummary(BaseModel):
     )
     asked_epsilon: float = Field(
         None,
-        description="The difference in the values for the convergence criteria that was asked for",
+        description="The difference in the values for the convergence criteria that was"
+        " asked for",
     )
     actual_epsilon: float = Field(
-        None, description="The actual difference in the convergence criteria values"
+        None,
+        description="The actual difference in the convergence criteria values",
     )
 
     @classmethod
     def from_aims_calc_doc(cls, calc_doc: Calculation) -> "ConvergenceSummary":
-        """
-        Create a summary of FHI-aims calculation outputs from an FHI-aims calculation document.
+        """Create a summary from an FHI-aims calculation document.
 
         Parameters
         ----------
@@ -226,7 +221,6 @@ class ConvergenceSummary(BaseModel):
         :ConvergenceSummary
             The summary for convergence runs.
         """
-
         from fhi_aims_workflows.jobs.base import CONVERGENCE_FILE_NAME
 
         job_dir = calc_doc.dir_name.split(":")[-1]
@@ -234,7 +228,8 @@ class ConvergenceSummary(BaseModel):
         convergence_file = Path(job_dir) / CONVERGENCE_FILE_NAME
         if not convergence_file.exists():
             raise ValueError(
-                f"Did not find the convergence json file {CONVERGENCE_FILE_NAME} in {calc_doc.dir_name}"
+                f"Did not find the convergence json file {CONVERGENCE_FILE_NAME}"
+                " in {calc_doc.dir_name}"
             )
 
         with open(convergence_file) as f:

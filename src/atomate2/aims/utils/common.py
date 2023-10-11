@@ -13,7 +13,7 @@ GEOMETRY_FILE_NAME: str = "geometry.in"
 
 @contextlib.contextmanager
 def cwd(path: str, mkdir: bool = False, rmdir: bool = False):
-    """Change cwd intermediately
+    """Change cwd intermediately.
 
     Example
     -------

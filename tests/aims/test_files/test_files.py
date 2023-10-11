@@ -1,7 +1,8 @@
 """Tests for file manipulation"""
 
-import pytest
 from pathlib import Path
+
+import pytest
 
 TEST_DIR = Path(__file__).parent
 

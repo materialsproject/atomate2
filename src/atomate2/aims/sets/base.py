@@ -6,20 +6,26 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Sequence, Tuple
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 from warnings import warn
 
 import numpy as np
 from ase.calculators.aims import AimsTemplate
-from ase.cell import Cell
 from monty.json import MontyDecoder, MontyEncoder
 from pymatgen.io.core import InputFile, InputGenerator, InputSet
 
 from atomate2.aims.io.parsers import AimsParseError, read_aims_output
-from atomate2.aims.utils.common import (CONTROL_FILE_NAME, GEOMETRY_FILE_NAME,
-                                        PARAMS_JSON_FILE_NAME, TMPDIR_NAME,
-                                        cwd)
+from atomate2.aims.utils.common import (
+    CONTROL_FILE_NAME,
+    GEOMETRY_FILE_NAME,
+    PARAMS_JSON_FILE_NAME,
+    TMPDIR_NAME,
+    cwd,
+)
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from ase.cell import Cell
 
 DEFAULT_AIMS_PROPERTIES = [
     "energy",
@@ -38,7 +44,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class AimsInputFile(InputFile):
-    """The input file for an FHI-aims calculation
+    """The input file for an FHI-aims calculation.
 
     Parameters
     ----------
@@ -49,7 +55,7 @@ class AimsInputFile(InputFile):
     _content_str: str = ""
 
     def get_string(self) -> str:
-        """The contents of the input file
+        """Get the contents of the input file.
 
         Returns
         -------
@@ -58,7 +64,7 @@ class AimsInputFile(InputFile):
         return self._content_str
 
     def get_str(self) -> str:
-        """The contents of the input file
+        """Get the contents of the input file.
 
         Returns
         -------
@@ -68,7 +74,7 @@ class AimsInputFile(InputFile):
 
     @classmethod
     def from_string(cls, contents: str):
-        """Create an input file from the contents string
+        """Create an input file from the contents string.
 
         Parameters
         ----------
@@ -79,7 +85,7 @@ class AimsInputFile(InputFile):
 
     @classmethod
     def from_str(cls, contents: str):
-        """Create an input file from the contents string
+        """Create an input file from the contents string.
 
         Parameters
         ----------
@@ -90,17 +96,15 @@ class AimsInputFile(InputFile):
 
 
 class AimsInputSet(InputSet):
-    """
-    A class to represent a set of Aims inputs.
-    """
+    """A class to represent a set of Aims inputs."""
 
     def __init__(
         self,
-        parameters: Dict[str, Any],
+        parameters: dict[str, Any],
         atoms: MSONableAtoms,
         properties: Sequence[str] = ("energy", "free_energy"),
     ):
-        """Constructor
+        """Construct the AimsInputSet.
 
         Parameters
         ----------
@@ -126,8 +130,8 @@ class AimsInputSet(InputSet):
             }
         )
 
-    def get_input_files(self) -> Tuple(str, str):
-        """Get the input file contents for the calculation
+    def get_input_files(self) -> tuple[str, str]:
+        """Get the input file contents for the calculation.
 
         Returns
         -------
@@ -157,8 +161,8 @@ class AimsInputSet(InputSet):
         """Get the AimsInput object."""
         return self[PARAMS_JSON_FILE_NAME]
 
-    def set_parameters(self, *args, **kwargs) -> Dict[str, Any]:
-        """Set the parameters object for the AimsTemplate
+    def set_parameters(self, *args, **kwargs) -> dict[str, Any]:
+        """Set the parameters object for the AimsTemplate.
 
         This sets the parameters object that is passed to an AimsTempalte and
         resets the control.in file
@@ -189,7 +193,7 @@ class AimsInputSet(InputSet):
 
     def remove_parameters(
         self, keys: Iterable[str] | str, strict: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Remove the aims parameters listed in keys.
 
         This removes the aims variables from the parameters object.
@@ -212,8 +216,10 @@ class AimsInputSet(InputSet):
         for key in keys:
             if strict and key not in self._parameters:
                 raise ValueError(f"The key ({key}) is not in self._parameters")
-            elif key not in self._parameters:
+
+            if key not in self._parameters:
                 continue
+
             del self._parameters[key]
 
         return self.set_parameters(**self._parameters)
@@ -244,14 +250,14 @@ class AimsInputGenerator(InputGenerator):
         The settings used to create the k-grid parameters for FHI-aims
     """
 
-    user_parameters: Dict[str, Any] = field(default_factory=dict)
-    user_kpoints_settings: Dict[str, Any] = field(default_factory=dict)
+    user_parameters: dict[str, Any] = field(default_factory=dict)
+    user_kpoints_settings: dict[str, Any] = field(default_factory=dict)
 
     def get_input_set(  # type: ignore
         self,
         atoms: MSONableAtoms = None,
         prev_dir: str | Path = None,
-        properties: List[str] | Tuple[str] = None,
+        properties: list[str] = None,
     ) -> AimsInputSet:
         """Generate an AimsInputSet object.
 
@@ -278,8 +284,8 @@ class AimsInputGenerator(InputGenerator):
 
     def _read_previous(
         self, prev_dir: str | Path = None
-    ) -> tuple[MSONableAtoms, Dict[str, Any], Dict[str, Iterable[float]]]:
-        """Read in previous results
+    ) -> tuple[MSONableAtoms, dict[str, Any], dict[str, list[float]]]:
+        """Read in previous results.
 
         Parameters
         ----------
@@ -294,12 +300,12 @@ class AimsInputGenerator(InputGenerator):
             # strip hostname from the directory (not good, works only with run_locally.
             # Should be checked with Fireworks, will not for sure work with
             # jobflow_remote)
-            prev_dir = prev_dir.split(":")[-1]
-            prev_parameters = json.load(
-                open(f"{prev_dir}/parameters.json", "rt"), cls=MontyDecoder
-            )
+            split_prev_dir = str(prev_dir).split(":")[-1]
+            with open(f"{split_prev_dir}/parameters.json") as param_file:
+                prev_parameters = json.load(param_file, cls=MontyDecoder)
+
             try:
-                prev_atoms = read_aims_output(f"{prev_dir}/aims.out")
+                prev_atoms = read_aims_output(f"{split_prev_dir}/aims.out")
                 prev_results = prev_atoms.calc.results
             except (IndexError, AimsParseError):
                 pass
@@ -308,11 +314,11 @@ class AimsInputGenerator(InputGenerator):
 
     def _get_properties(
         self,
-        properties: Iterable[str] = None,
-        parameters: Dict[str, Any] = None,
-        prev_results: Dict[str, Iterable[float]] = None,
-    ) -> Iterable[str]:
-        """Get the properties to calculate
+        properties: list[str] = None,
+        parameters: dict[str, Any] = None,
+        prev_results: dict[str, list[float]] = None,
+    ) -> list[str]:
+        """Get the properties to calculate.
 
         Parameters
         ----------
@@ -330,7 +336,7 @@ class AimsInputGenerator(InputGenerator):
         if properties is None:
             properties = ["energy", "free_energy"]
 
-        for key in prev_results.keys():
+        for key in prev_results:
             if key not in properties and key in DEFAULT_AIMS_PROPERTIES:
                 properties.append(key)
 
@@ -349,9 +355,9 @@ class AimsInputGenerator(InputGenerator):
         return properties
 
     def _get_input_parameters(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any] = None
-    ) -> Dict[str, Any]:
-        """Create the input parameters
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any] = None
+    ) -> dict[str, Any]:
+        """Create the input parameters.
 
         Parameters
         ----------
@@ -364,10 +370,9 @@ class AimsInputGenerator(InputGenerator):
         -------
         The input object
         """
-
         # Get the default configuration
         # FHI-aims recommends using their defaults so bare-bones default parameters
-        parameters = {
+        parameters: dict[str, Any] = {
             "xc": "pbe",
             "relativistic": "atomic_zora scalar",
         }
@@ -392,23 +397,24 @@ class AimsInputGenerator(InputGenerator):
         parameters = recursive_update(parameters, self.user_parameters)
         if ("k_grid" in parameters) and ("density" in kpt_settings):
             warn(
-                "WARNING: the k_grid is set in user_parameters and in the kpt_settings, using the one passed in user_parameters."
+                "WARNING: the k_grid is set in user_parameters and in the kpt_settings,"
+                " using the one passed in user_parameters.",
+                stacklevel=1,
             )
         elif np.any(atoms.pbc) and ("k_grid" not in parameters):
             density = kpt_settings.get("density", 5.0)
             even = kpt_settings.get("even", True)
             parameters["k_grid"] = self.d2k(atoms, density, even)
         elif not np.any(atoms.pbc) and "k_grid" in parameters:
-            warn("WARNING: removing unnecessary k_grid information")
+            warn("WARNING: removing unnecessary k_grid information", stacklevel=1)
             del parameters["k_grid"]
 
         return parameters
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """
-        Updates the parameters for a given calculation type
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Update the parameters for a given calculation type.
 
         Parameters
         ----------
@@ -426,7 +432,7 @@ class AimsInputGenerator(InputGenerator):
     def d2k(
         self,
         atoms: MSONableAtoms,
-        kptdensity: float | Iterable[float] = 5.0,
+        kptdensity: float | list[float] = 5.0,
         even: bool = True,
     ) -> Iterable[float]:
         """Convert k-point density to Monkhorst-Pack grid size.
@@ -470,10 +476,10 @@ class AimsInputGenerator(InputGenerator):
     @staticmethod
     def d2k_recipcell(
         recipcell: Cell,
-        pbc: List[bool],
-        kptdensity: float | Iterable[float] = 5.0,
+        pbc: list[bool],
+        kptdensity: float | Sequence[float] = 5.0,
         even: bool = True,
-    ) -> Iterable[float]:
+    ) -> Sequence[int]:
         """Convert k-point density to Monkhorst-Pack grid size.
 
         Parameters
@@ -493,7 +499,7 @@ class AimsInputGenerator(InputGenerator):
         """
         if not isinstance(kptdensity, Iterable):
             kptdensity = 3 * [float(kptdensity)]
-        kpts = []
+        kpts: list[int] = []
         for i in range(3):
             if pbc[i]:
                 k = (
@@ -511,7 +517,7 @@ class AimsInputGenerator(InputGenerator):
         return kpts
 
 
-def recursive_update(d: Dict, u: Dict) -> Dict:
+def recursive_update(d: dict, u: dict) -> dict:
     """
     Update a dictionary recursively and return it.
 

@@ -4,13 +4,15 @@ from __future__ import annotations
 import logging
 from glob import glob
 from pathlib import Path
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
 
-from atomate2.aims.sets.base import AimsInputGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+
+if TYPE_CHECKING:
+    from atomate2.aims.sets.base import AimsInputGenerator
+    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 logger = logging.getLogger(__name__)
 
@@ -56,9 +58,11 @@ def copy_aims_outputs(
     # copy files
     files = ["aims.out", "*.json"]
 
-    for pattern in set(additional_files):
-        for f in glob((Path(src_dir) / pattern).as_posix()):
-            files.append(Path(f).name)
+    files += [
+        f
+        for pattern in set(additional_files)
+        for f in glob((Path(src_dir) / pattern).as_posix())
+    ]
 
     all_files = [get_zfile(directory_listing, r, allow_missing=True) for r in files]
     all_files = [f for f in all_files if f]

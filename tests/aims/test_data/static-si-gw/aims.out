@@ -73,19 +73,19 @@
   Task        7 on host andrey-Latitude-5411 reporting.
 
   Obtaining array dimensions for all initial allocations:
-  
+
   -----------------------------------------------------------------------
   Parsing control.in (first pass over file, find array dimensions only).
   The contents of control.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of control.in .
   -----------------------------------------------------------------------
-  
+
   #===============================================================================
   # Created using the Atomic Simulation Environment (ASE)
-  
+
   # Thu Jun 29 17:30:40 2023
-  
+
   #===============================================================================
   xc                                 pbe
   relativistic                       atomic_zora scalar
@@ -103,7 +103,7 @@
   output                             band   0.62500  0.25000  0.62500   0.50000  0.00000  0.50000    4 U  X
   k_grid                             2 2 2
   #===============================================================================
-  
+
   ################################################################################
   #
   #  FHI-aims code project
@@ -191,35 +191,35 @@
   #     hydro 4 d 6.6
   #     hydro 5 g 16.4
   #     hydro 4 d 9
-  
+
   -----------------------------------------------------------------------
   Completed first pass over input file control.in .
   -----------------------------------------------------------------------
-  
-  
+
+
   -----------------------------------------------------------------------
   Parsing geometry.in (first pass over file, find array dimensions only).
   The contents of geometry.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of geometry.in .
   -----------------------------------------------------------------------
-  
+
   #===============================================================================
   # Created using the Atomic Simulation Environment (ASE)
-  
+
   # Thu Jun 29 17:30:40 2023
-  
+
   #=======================================================
   lattice_vector 0.0000000000000000 2.7149999999999999 2.7149999999999999
   lattice_vector 2.7149999999999999 0.0000000000000000 2.7149999999999999
   lattice_vector 2.7149999999999999 2.7149999999999999 0.0000000000000000
   atom_frac 0.0000000000000000 0.0000000000000000 -0.0000000000000000 Si
   atom_frac 0.2500000000000000 0.2500000000000000 0.2500000000000000 Si
-  
+
   -----------------------------------------------------------------------
   Completed first pass over input file geometry.in .
   -----------------------------------------------------------------------
-  
+
 
   Basic array size parameters:
   | Number of species                 :        1
@@ -273,26 +273,26 @@
   | begin  0.500000  0.500000  0.500000
   | end    0.625000  0.250000  0.625000
   | number of points:    7
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
 
   Plot band    7
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
   | begin  0.625000  0.250000  0.625000
   | end    0.500000  0.250000  0.750000
   | number of points:    4
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
 
   Plot band    8
@@ -308,25 +308,25 @@
   | number of points:    7
 
   Plot band   10
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
  BEGIN:            3           3           0           0
   | begin  0.625000  0.250000  0.625000
   | end    0.500000  0.000000  0.500000
   | number of points:    4
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
  BEGIN:            3           3           0           0
   Found k-point grid:         2         2         2
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
- 
+
   Reading configuration options for species Si                  .
   | Found nuclear charge :  14.0000
  BEGIN:            3           3           0           0
@@ -341,10 +341,10 @@
   | Found angular grid specification: user-specified.
   | Specified grid contains     5 separate shells.
   | Check grid settings after all constraints further below.
- READING VALENCE:            3           0   2.00000000000000     
+ READING VALENCE:            3           0   2.00000000000000
  VALENCE_N_MAX:            3           0           0           0
   | Found free-atom valence shell :  3 s   2.000
- READING VALENCE:            3           1   2.00000000000000     
+ READING VALENCE:            3           1   2.00000000000000
  VALENCE_N_MAX:            3           3           0           0
   | Found free-atom valence shell :  3 p   2.000
   | Found free-ion valence shell :  3 s   1.000
@@ -364,9 +364,9 @@
   Species Si                  : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species Si                  : Default cutoff onset for free atom density etc. : 0.35000000E+01 AA.
   Species Si                  : Basic radial grid will be enhanced according to radial_multiplier =   1, to contain    42 grid points.
- 
+
   Finished reading input file 'control.in'.
- 
+
 ------------------------------------------------------------
 
 
@@ -413,13 +413,13 @@
        atom_frac         0.00000000        0.00000000        0.00000000  Si
        atom_frac         0.25000000        0.25000000        0.25000000  Si
 
- 
-  Finished reading input file 'geometry.in'.
- 
 
- 
+  Finished reading input file 'geometry.in'.
+
+
+
   Consistency checks for stacksize environment parameter are next.
- 
+
   | Maximum stacksize for task 0: unlimited
   | Maximum stacksize for task 1: unlimited
   | Maximum stacksize for task 2: unlimited
@@ -436,9 +436,9 @@
   | Current stacksize for task 5: unlimited
   | Current stacksize for task 6: unlimited
   | Current stacksize for task 7: unlimited
- 
+
   Consistency checks for the contents of control.in are next.
- 
+
   MPI_IN_PLACE appears to work with this MPI implementation.
   | Keeping use_mpi_in_place .true. (see manual).
   Explicit treatment of the Coulomb operator is needed, but the RI method is not specified.
@@ -524,7 +524,7 @@
   Using density matrix based charge density update.
   Using packed matrix style: index .
  * WARNING: This is an experimental version of the periodic GW implemenation.
- * We are still actively working on it to improve the efficiency and reliability. 
+ * We are still actively working on it to improve the efficiency and reliability.
  * Do not rely on any results you obtained from periodic GW calculation.
   Defaulting to use full k-point grid (no symmetry reduction).
   Charge integration errors on the 3D integration grid will be compensated
@@ -539,9 +539,9 @@
   Set 'collect_eigenvectors' to be '.true.' for GW/RPA/MP2, SCREX/COHSEX cluster calculations
   Set 'collect_eigenvectors' to be '.true.' for qpe_calc (quasiparticle energy).
   Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
 
   Range separation radius for Ewald summation (hartree_convergence_parameter):      3.88818726 bohr.
   Number of empty states per atom not set in control.in .
@@ -549,7 +549,7 @@
   | (MP2,GW,RPA et al.), will use the full Hamiltonian size (see below)
   | as the max. possible number of states (occupied plus empty).
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        9
   | Maximum number of basis functions            :       50
   | Number of Kohn-Sham states (occupied + empty):       50
@@ -591,7 +591,7 @@
 
   Adding cutoff potential to free-atom effective potential.
   Creating fixed part of basis set: Ionic, confined, hydrogenic.
- 
+
   Si                   ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -607,15 +607,15 @@
     n    l      energy [Ha]    energy [eV]    outer radius [A]
     3    0        -1.073857       -29.2211       4.214062
 
- 
+
   Si                   hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     3    2         4.200000       -26.6624           1.139231           1.139231           4.534782
     2    1         1.400000        -6.4613           1.472672           1.472672           4.590560
     4    3         6.200000       -32.6778           1.368518           1.368518           4.534782
- 
+
   Creating atomic-like basis functions for current effective potential.
 
   Species Si                  :
@@ -638,11 +638,11 @@
   | Species Si :    hydro orbital   2 p accepted.
   | Species Si :    hydro orbital   3 d accepted.
   | Species Si :    hydro orbital   4 f accepted.
- 
+
   Basis size parameters after reduction:
   | Total number of radial functions:        9
   | Total number of basis functions :       50
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |           3.102808MB.
   Testing on-site integration grid accuracy.
@@ -2409,22 +2409,22 @@
   | Total energy corrected        :         -0.158000997409910E+05 eV  <-- do not rely on this value for anything but (periodic) metals
   | Electronic free energy        :         -0.158000997409910E+05 eV
 
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :          0.000000000 Ha              0.000000000 eV
   X Energy            :        -40.727898609 Ha          -1108.262508932 eV
   C Energy            :         -1.090203184 Ha            -29.665938014 eV
   XC Energy w/o HF    :        -41.818101793 Ha          -1137.928446945 eV
   Total XC Energy     :        -41.818101793 Ha          -1137.928446945 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :        -37.665480317 Ha          -1024.929867272 eV
   C Energy LDA        :         -2.148814526 Ha            -58.472218283 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
           Checking for symmetries
@@ -2460,10 +2460,10 @@
   Found symmetry 0.00 0.00-1.00  0.00-1.00 0.00 -1.00 0.00 0.00  around 1.28 1.28 1.28
   Found 30 symmetry operations for current configuration
   Irreducible k points #            8
- 
+
  --------------------------------------------
   Constructing auxiliary basis (full product) ...
- 
+
   Product basis:
   | charge radius: extent of product basis function
   | field radius: extent of its Coulomb potential
@@ -2516,10 +2516,10 @@
   | Shrink_full_auxil_basis : there are       44  radial auxiliary wave functions
                             accepted and      39 rejected.
   | Shrink_full_auxil_basis : there are totally                 428 partial auxiliary wave functions.
- 
+
   | Number of product basis functions per thread :    54
   | Minimal requirement for computer memory :           0.005 Gbs
- 
+
   Basis pair condensation :      1275  -->       1274
           Checking for symmetries
   Found symmetry 1.00 0.00 0.00  0.00 1.00 0.00  0.00 0.00 1.00  around 0.00 0.00 0.00
@@ -2730,18 +2730,18 @@
 
   Times            Block Sum    Expected
   | Times    0:        0.014       0.017
- 
+
   ------------------------------------------------------------------
- 
+
   Post-SCF correlation calculation starts ...
- 
+
  communicator split irkq, row, col:            8           1           1
  reso: n_basbas,n_basis,n_states         428          50          50
  reso: max_n_basis_sp,n_cells,n_full_freq          25         112          40
   | Storage requirements for basis-basbas products (processor-local):
   |   Species Si: n_prodsfn:   629; storage:       19.66 MiB.
 
- 
+
   Finished with initialization of triples (Coulomb norm) ...
   Preparing TB like auxiliary 2-center Coulomb matrix
   SBT integration errors (all should be 'small'):
@@ -2751,12 +2751,12 @@
   |            El't  L: logFT-al.   small-k   large-k   small-r   large-r
   | Need to store  2048 splines of   129 points taking       2104 KiB.
   | Spline reduction from  4096 to   129 points by (cutting and)     1 x coarsening gives error:  0.00E+00
- 
+
   Finished with initialization of Coulomb interaction matrix ...
- 
- 
+
+
   Finished with initialization of the periodic LVL triple coefficients ...
- 
+
   Atomic logSBT for LVL-triples                :  max(cpu_time)    wall_clock(cpu1)
   | Multiplication with kernel                  :        0.524 s           0.484 s
   | Main matrix multiplication                  :       41.445 s          40.393 s
@@ -2770,9 +2770,9 @@
   | LVL initialization                          :        0.025 s           0.025 s
   | Whole LVL-triples                           :        0.025 s           0.025 s
 
- 
+
   Finishing computation of the periodic LVL triple coefficients ...
- 
+
   Atomic logSBT for 2-center Coulomb matrix    :  max(cpu_time)    wall_clock(cpu1)
   | TB initialization                           :        0.098 s           0.098 s
   | TB usage                                    :        0.767 s           0.788 s
@@ -2873,14 +2873,14 @@
   Number of frequency points for self energy.....: 40
   Number of frequency points....................: 40
 
- 
+
  ---------------------------------------------------
  ---------------------------------
-  Start to calculate the periodic GW self energy  ... 
+  Start to calculate the periodic GW self energy  ...
  ojo gwblocks          24          24           1
- 
+
   Starting the main loop of GW computation
- 
+
   Overlap matrix is not singular
   | Lowest and highest eigenvalues :  0.6587E-03,  0.6782E+01
   Finished singularity check of overlap matrix
@@ -2895,10 +2895,10 @@
   Finished back-transformation of eigenvectors
   | Time :     0.000 s
   finished 100.0% of GW computation
- 
- CPOUT:    1598178.11257426     
+
+ CPOUT:    1598178.11257426
  GWOUT:   0.000000000000000E+000
- GWBOUT:    81.9919345330488     
+ GWBOUT:    81.9919345330488
   Atomic logSBT for 2-center Coulomb matrix    :  max(cpu_time)    wall_clock(cpu1)
   | TB initialization                           :        0.118 s           0.118 s
   | TB usage                                    :        0.000 s           0.000 s
@@ -2910,14 +2910,14 @@
   Writing the requested band structure output:
   -------------------------------------------------------------------
 
- 
+
   Analytical continuation of the self-energy starts...
 
   Treating all   12 k-points in band plot segment #   1:
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    80.9513369049658      (58.4376169648349,-3.561595476855725E-016)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -2933,7 +2933,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    83.7041977009874      (58.3077343594844,8.535325807135161E-017)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -2949,7 +2949,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    92.7956273183349      (55.3897854796596,0.643118712501765)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -2965,7 +2965,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    104.450215326923      (53.5637249822794,0.994813569493551)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -2981,7 +2981,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    80.9513369049658      (58.4376169648349,-3.561595476855725E-016)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -2997,7 +2997,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    115.297280413072      (56.6007537798006,-3.461439156078670E-016)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -3013,7 +3013,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    105.420154248424      (57.4269571121350,-1.08025925022435)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -3029,7 +3029,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    92.7956273183349      (55.3897854796596,0.643118712501765)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -3045,7 +3045,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    115.297280413072      (56.6007537798006,-3.461439156078670E-016)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 
@@ -3061,7 +3061,7 @@
 
   | Maximum value outside interaction range:  7.61E-15
  FMOUT:    105.420154248424      (57.4269571121350,-1.08025925022435)
- 
+
 ------------------------------------------------------------------------------
   Start to calculate the exact-exchange and DFT xc contribution for each single-particle level ...
 

@@ -20,7 +20,7 @@
   |    2: Species H             0.95840000        0.00000000        0.00000000
   |    3: Species H            -0.24000000        0.92790000        0.00000000
 
- 
+
   Finished reading input file 'control.in'.
 ------------------------------------------------------------
           Reading geometry description geometry.in.
@@ -89,14 +89,14 @@
   by explicit normalization and distribution of residual charges.
   Use the "compensate_multipole_errors" flag to change this behaviour.
   Set 'collect_eigenvectors' to be '.true.' for use_density_matrix .false.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
   | Total number of empty states used during s.c.f. cycle:        6
   If you use a very high smearing, use empty_states (per atom!) in control.in to increase this value.
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :        9
   | Maximum number of basis functions            :       24
   | Number of Kohn-Sham states (occupied + empty):       11
@@ -113,11 +113,11 @@
   | Species H :   atomic orbital   1 s accepted.
   | Species H :    hydro orbital   2 s accepted.
   | Species H :    hydro orbital   2 p accepted.
- 
+
   Basis size parameters after reduction:
   | Total number of radial functions:        9
   | Total number of basis functions :       24
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |           2.998708MB.
   Testing on-site integration grid accuracy.
@@ -144,9 +144,9 @@
 ************************************************************************
 
   @ DRIVER MODE: Connecting to host:port localhost       12345
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: POSDATA     
-  @ DRIVER MODE: Received positions 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: POSDATA
+  @ DRIVER MODE: Received positions
 
 ------------------------------------------------------------
           Begin self-consistency loop: Initialization.
@@ -353,15 +353,15 @@ Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |   
             atom         0.95840000        0.00000000        0.00000000  H
             atom        -0.24000000        0.92790000        0.00000000  H
  ------------------------------------------------------------------------
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: GETFORCE    
-  @ DRIVER MODE: Returning v,forces,stress 
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: INIT        
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: GETFORCE
+  @ DRIVER MODE: Returning v,forces,stress
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: INIT
   @ DRIVER MODE: Receiving replica           0
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: POSDATA     
-  @ DRIVER MODE: Received positions 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: POSDATA
+  @ DRIVER MODE: Received positions
 
 ------------------------------------------------------------
           Begin self-consistency loop: Re-initialization.
@@ -441,15 +441,15 @@ Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |   
             atom         0.96112981       -0.00029923        0.00096836  H
             atom        -0.24091781        0.93010946        0.00061317  H
  ------------------------------------------------------------------------
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: GETFORCE    
-  @ DRIVER MODE: Returning v,forces,stress 
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: INIT        
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: GETFORCE
+  @ DRIVER MODE: Returning v,forces,stress
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: INIT
   @ DRIVER MODE: Receiving replica           0
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: POSDATA     
-  @ DRIVER MODE: Received positions 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: POSDATA
+  @ DRIVER MODE: Received positions
 
 ------------------------------------------------------------
           Begin self-consistency loop: Re-initialization.
@@ -529,15 +529,15 @@ Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |   
             atom         0.96928604       -0.00194292        0.00060912  H
             atom        -0.24466825        0.93783534        0.00187299  H
  ------------------------------------------------------------------------
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: GETFORCE    
-  @ DRIVER MODE: Returning v,forces,stress 
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: INIT        
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: GETFORCE
+  @ DRIVER MODE: Returning v,forces,stress
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: INIT
   @ DRIVER MODE: Receiving replica           0
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: POSDATA     
-  @ DRIVER MODE: Received positions 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: POSDATA
+  @ DRIVER MODE: Received positions
 
 ------------------------------------------------------------
           Begin self-consistency loop: Re-initialization.
@@ -617,15 +617,15 @@ Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |   
             atom         0.97993442       -0.00415465        0.00105781  H
             atom        -0.24998067        0.94638047        0.00424181  H
  ------------------------------------------------------------------------
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: GETFORCE    
-  @ DRIVER MODE: Returning v,forces,stress 
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: INIT        
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: GETFORCE
+  @ DRIVER MODE: Returning v,forces,stress
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: INIT
   @ DRIVER MODE: Receiving replica           0
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: POSDATA     
-  @ DRIVER MODE: Received positions 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: POSDATA
+  @ DRIVER MODE: Received positions
 
 ------------------------------------------------------------
           Begin self-consistency loop: Re-initialization.
@@ -705,15 +705,15 @@ Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |   
             atom         0.98646958       -0.00700217        0.00087410  H
             atom        -0.25410520        0.95149554        0.00600999  H
  ------------------------------------------------------------------------
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: GETFORCE    
-  @ DRIVER MODE: Returning v,forces,stress 
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: INIT        
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: GETFORCE
+  @ DRIVER MODE: Returning v,forces,stress
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: INIT
   @ DRIVER MODE: Receiving replica           0
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: POSDATA     
-  @ DRIVER MODE: Received positions 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: POSDATA
+  @ DRIVER MODE: Received positions
 
 ------------------------------------------------------------
           Begin self-consistency loop: Re-initialization.
@@ -792,9 +792,9 @@ Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |   
             atom         0.98615072       -0.00962614       -0.00053732  H
             atom        -0.25646779        0.95117586        0.00820183  H
  ------------------------------------------------------------------------
-  @ DRIVER MODE: Message from server: STATUS      
-  @ DRIVER MODE: Message from server: GETFORCE    
-  @ DRIVER MODE: Returning v,forces,stress 
+  @ DRIVER MODE: Message from server: STATUS
+  @ DRIVER MODE: Message from server: GETFORCE
+  @ DRIVER MODE: Returning v,forces,stress
 
 -------------------------------------------------------------------------
 

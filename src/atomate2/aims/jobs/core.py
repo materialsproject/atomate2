@@ -1,25 +1,35 @@
+"""Define all Core FHI-aims jobs."""
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from jobflow import Response, job
 from monty.serialization import dumpfn
-from pymatgen.core import Structure
 
-from atomate2.aims.files import (cleanup_aims_outputs, copy_aims_outputs,
-                                 write_aims_input_set)
+from atomate2.aims.files import (
+    cleanup_aims_outputs,
+    copy_aims_outputs,
+    write_aims_input_set,
+)
 from atomate2.aims.io.parsers import read_aims_output
 from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDocument
-from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
-from atomate2.aims.sets.core import (RelaxSetGenerator, SocketIOSetGenerator,
-                                     StaticSetGenerator)
+from atomate2.aims.sets.core import (
+    RelaxSetGenerator,
+    SocketIOSetGenerator,
+    StaticSetGenerator,
+)
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+
+    from atomate2.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
 """Core job makers for FHI-aims workflows"""
@@ -27,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class StaticMaker(BaseAimsMaker):
-    """Maker to create FHI-aims SCF jobs
+    """Maker to create FHI-aims SCF jobs.
 
     Parameters
     ----------
@@ -78,7 +88,7 @@ class RelaxMaker(BaseAimsMaker):
 
 @dataclass
 class SocketIOStaticMaker(BaseAimsMaker):
-    """Maker for the SocketIO calculator in FHI-aims
+    """Maker for the SocketIO calculator in FHI-aims.
 
     Parameters
     ----------
@@ -87,7 +97,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
     name: str
         The job name
     host: str
-        The name of the host to maitain the socket server on
+        The name of the host to maintain the socket server on
     port: int
         The port number the socket server will listen on
     input_set_generator: SocketIOSetGenerator
@@ -108,9 +118,10 @@ class SocketIOStaticMaker(BaseAimsMaker):
         structure: Sequence[MSONableAtoms | Structure],
         prev_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run an FHI-aims calculation on multiple atoms object using the socket
-        communicator.
+        """Run multiple FHI-aims calculation with the socket.
+
+        Calculate the properties for multiple structures using the same parameters
+        using socket communication to speed up the calculations.
 
         Parameters
         ----------
@@ -185,7 +196,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
 
 @dataclass
 class BandStructureMaker(BaseAimsMaker):
-    """A job Maker for a band structure calculation
+    """A job Maker for a band structure calculation.
 
     Parameters
     ----------
@@ -206,7 +217,7 @@ class BandStructureMaker(BaseAimsMaker):
 
 @dataclass
 class GWMaker(BaseAimsMaker):
-    """A job Maker for a GW band structure calculation
+    """A job Maker for a GW band structure calculation.
 
     Parameters
     ----------

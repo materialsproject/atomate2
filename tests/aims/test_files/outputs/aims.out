@@ -73,14 +73,14 @@
   Task        7 on host andrey-Latitude-5411 reporting.
 
   Obtaining array dimensions for all initial allocations:
-  
+
   -----------------------------------------------------------------------
   Parsing control.in (first pass over file, find array dimensions only).
   The contents of control.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of control.in .
   -----------------------------------------------------------------------
-  
+
   #########################################################################################
   #
   #  Volker Blum, FHI 2010 : Input file for FHI-aims
@@ -103,7 +103,7 @@
       use_dipole_correction
   # to evaluate work function of both surface of slab
       evaluate_work_function
-  
+
     #
     #  SCF convergence settings
     #
@@ -132,20 +132,20 @@
       output band 0.0 0.5 0.0 0.3333 0.3333 0.0 21 M K
       output band 0.3333 0.3333 0.0 0.0 0.0 0.0 21 K G
       output band 0.0 0.0 0.0 -0.3333 -0.3333 0.0 21 G Kp
-  
-  
+
+
       output band_mulliken 0.0 0.0 0.0 0.0 0.5 0.0 21 G M
       output band_mulliken 0.0 0.5 0.0 0.3333 0.3333 0.0 21 M K
       output band_mulliken 0.3333 0.3333 0.0 0.0 0.0 0.0 21 K G
       output band_mulliken 0.0 0.0 0.0 -0.3333 -0.3333 0.0 21 G Kp
-  
+
   #  Output options:
   # k-path through which the band structure is calculated and plotted using the below setting
   #  output band kstart1 kstart1 kstart2 kstart3 kend1 kend2 kend3 n_points name_start name_end
       exx_band_structure_version 1
-  
-  
-  
+
+
+
     #
     #  RI_method LVL_fast
     #  For relaxation:
@@ -153,14 +153,14 @@
   #    relax_geometry bfgs 5.e-3
   #    relax_unit_cell full
   #    sc_accuracy_forces  5E-4
-  
+
   #
     #  Output options:
     #  pdos
       output dos -20 20 1000 0.01
   #    output species_proj_dos -20 20 1000 0.01
       output atom_proj_dos -20 20 1000 0.01
-  
+
   # linear response calculations
   # The momentum matrix elements in the energy window [ VBM-(omega_max + 10.0 eV),
   # CBM+(omega_max + 10.0 eV)] (in eV) relative to the internal zero will be summed
@@ -169,14 +169,14 @@
       compute_dielectric   10.0  1000
   #    output dielectric  lorentzian 0.05   x  x
       output dielectric  gaussian   0.05   x  x
-  
+
   #    output dielectric  lorentzian 0.05   y  y
       output dielectric  gaussian   0.05   y  y
-  
+
   #    output dielectric  lorentzian 0.05   z  z
       output dielectric  gaussian   0.05   z  z
-  
-  
+
+
       compute_absorption 0.1 -20 20 0.005 10.0 1000 x .true.
       compute_absorption 0.1 -20 20 0.005 10.0 1000 y .true.
       compute_absorption 0.1 -20 30 0.005 10.0 1000 z .true.
@@ -429,7 +429,7 @@
   #     hydro 4 d 10
   #     hydro 5 g 19.2
   #     hydro 4 s 12
-  
+
   ################################################################################
   #
   # For methods that use the localized form of the "resolution of identity" for
@@ -530,7 +530,7 @@
   #     hydro 3 p 5.2
   #     hydro 5 g 4.7
   #     hydro 6 s 7.6
-  
+
   ################################################################################
   #
   #  FHI-aims code project
@@ -612,20 +612,20 @@
   #     hydro 4 f 33.6
   #     hydro 5 d 6.8
   #     hydro 5 f 16
-  
-  
+
+
   -----------------------------------------------------------------------
   Completed first pass over input file control.in .
   -----------------------------------------------------------------------
-  
-  
+
+
   -----------------------------------------------------------------------
   Parsing geometry.in (first pass over file, find array dimensions only).
   The contents of geometry.in will be repeated verbatim below
   unless switched off by setting 'verbatim_writeout .false.' .
   in the first line of geometry.in .
   -----------------------------------------------------------------------
-  
+
   #
   # This is the geometry file that corresponds to the current relaxation step.
   # If you do not want this file to be written, set the "write_restart_geometry" flag to .false.
@@ -641,12 +641,12 @@
   atom       0.02081213      1.98757349      4.66407853 Te
   atom      -0.02140973      1.95099156      8.55192704 Se
   atom      -0.02178102      1.95181653     12.06464594 Te
-  
-  
+
+
   -----------------------------------------------------------------------
   Completed first pass over input file geometry.in .
   -----------------------------------------------------------------------
-  
+
 
   Basic array size parameters:
   | Number of species                 :        5
@@ -747,7 +747,7 @@ Evaluating the work function.
   Compute Absorption.
   Compute Absorption.
   Compute Absorption.
- 
+
   Reading configuration options for species Mo                  .
   | Found nuclear charge :  42.0000
   | Found atomic mass :    95.9400000000000      amu
@@ -780,7 +780,7 @@ Evaluating the work function.
   Species Mo                  : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species Mo                  : Default cutoff onset for free atom density etc. : 0.40000000E+01 AA.
   Species Mo                  : Basic radial grid will be enhanced according to radial_multiplier =   2, to contain   119 grid points.
- 
+
   Reading configuration options for species Se                  .
   | Found nuclear charge :  34.0000
   | Found atomic mass :    78.9600000000000      amu
@@ -812,7 +812,7 @@ Evaluating the work function.
   Species Se                  : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species Se                  : Default cutoff onset for free atom density etc. : 0.40000000E+01 AA.
   Species Se                  : Basic radial grid will be enhanced according to radial_multiplier =   2, to contain   111 grid points.
- 
+
   Reading configuration options for species S                   .
   | Found nuclear charge :  16.0000
   | Found atomic mass :    32.0650000000000      amu
@@ -844,7 +844,7 @@ Evaluating the work function.
   Species S                   : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species S                   : Default cutoff onset for free atom density etc. : 0.40000000E+01 AA.
   Species S                   : Basic radial grid will be enhanced according to radial_multiplier =   2, to contain    89 grid points.
- 
+
   Reading configuration options for species W                   .
   | Found nuclear charge :  74.0000
   | Found atomic mass :    183.840000000000      amu
@@ -879,7 +879,7 @@ Evaluating the work function.
   Species W                   : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species W                   : Default cutoff onset for free atom density etc. : 0.40000000E+01 AA.
   Species W                   : Basic radial grid will be enhanced according to radial_multiplier =   2, to contain   143 grid points.
- 
+
   Reading configuration options for species Te                  .
   | Found nuclear charge :  52.0000
   | Found atomic mass :    127.600000000000      amu
@@ -912,9 +912,9 @@ Evaluating the work function.
   Species Te                  : Using default innermost maximum threshold i_radial=  2 for radial functions.
   Species Te                  : Default cutoff onset for free atom density etc. : 0.40000000E+01 AA.
   Species Te                  : Basic radial grid will be enhanced according to radial_multiplier =   2, to contain   129 grid points.
- 
+
   Finished reading input file 'control.in'.
- 
+
 ------------------------------------------------------------
 
 
@@ -970,13 +970,13 @@ Evaluating the work function.
        atom_frac         0.32433958        0.66119075        0.27863140  Se
        atom_frac         0.32436064        0.66145985        0.39307973  Te
 
- 
-  Finished reading input file 'geometry.in'.
- 
 
- 
+  Finished reading input file 'geometry.in'.
+
+
+
   Consistency checks for stacksize environment parameter are next.
- 
+
   | Maximum stacksize for task 0: unlimited
   | Maximum stacksize for task 1: unlimited
   | Maximum stacksize for task 2: unlimited
@@ -993,9 +993,9 @@ Evaluating the work function.
   | Current stacksize for task 5: unlimited
   | Current stacksize for task 6: unlimited
   | Current stacksize for task 7: unlimited
- 
+
   Consistency checks for the contents of control.in are next.
- 
+
   HSE06 screening parameters: omega_HF  =      0.11000000 bohr^-1, and
                               omega_PBE =      0.11000000 bohr^-1.
   MPI_IN_PLACE appears to work with this MPI implementation.
@@ -1067,7 +1067,7 @@ Evaluating the work function.
   Coulomb operator: Defaulting to screening threshold for four-center integrals:   0.100000E-06
   Coulomb operator: Defaulting to screening threshold for Coulomb matrix:   0.100000E-09
   Fock matrix calculation: Setting the screening threshold for overlap matrix to coul_mat_threshold:   0.100000E-09
-  Coulomb operator: Defaulting to 'LVL_fast' resolution of identity - RI_type = LVL_fast 
+  Coulomb operator: Defaulting to 'LVL_fast' resolution of identity - RI_type = LVL_fast
   No other resolution of identity version is supported for periodic boundary conditions at present.
   Coulomb operator: Defaulting to logarithmic spherical Bessel transform integrals (use_logsbt .true.).
   HSE with LVL_fast: Also defaulting to logarithmic spherical Bessel transform integrals.
@@ -1085,7 +1085,7 @@ Evaluating the work function.
   Default number of logarithmic r- and k-grid for SBT is   4096
   * Use logSBT for radial HSE integration, too
  * NOTE: Band structure and exact exchange are requested at the same time,
- * and exx_band_structure_version is set to 1. 
+ * and exx_band_structure_version is set to 1.
  * exx_band_structure_version 1 is evaluated in a real-space formalism. It is fast
  * and the preferred version. HOWEVER, it does require a sufficiently
  * dense 'k_grid' to be used for the preceding s.c.f. cycle.
@@ -1093,25 +1093,25 @@ Evaluating the work function.
  * space approach will produce bands that are OBVIOUSLY incorrect.
  * You cannot miss this - they won't look 'slightly' correct. In
  * that case, please try to increase the 'k_grid' parameters used
- * for the s.c.f. cycle. In particular, please avoid k_grid dimensions 
+ * for the s.c.f. cycle. In particular, please avoid k_grid dimensions
  * of '1' (one) in any dimension. We apologize for this inconvenience.
- * On the bright side, if you use exx_band_structure_version 1 
+ * On the bright side, if you use exx_band_structure_version 1
  * correctly, it will give reliable results without much overhead.
- * 
+ *
  * If your band structure does not look reasonable, increase the s.c.f. k-point
  * grid density. Again, it is especially recommended that you avoid dimensions of 1 when
  * specifying k_grid and using this option, even for large unit cells where a
  * gamma-point-only k-grid would be sufficient to converge the accuracy of the
  * calculation.
- * 
+ *
  * Please test (e.g., by comparing results from different k_grid settings) when in any doubt.
   Using the following vdw_convergence_threshold for supercell sums
   over the Tkatchenko-Scheffler correction:  0.100000E-05 eV.
   Set 'collect_eigenvectors' to be '.true.' for all serial calculations. This is mandatory.
   Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
- 
+
   Consistency checks for the contents of geometry.in are next.
- 
+
 
   Range separation radius for Ewald summation (hartree_convergence_parameter):      5.00000000 bohr.
   Number of empty states per atom not set in control.in - providing a guess from actual geometry.
@@ -1122,7 +1122,7 @@ Evaluating the work function.
   | Number of empty states (old):  373.00000
   | Number of empty states (new):  383.00000
 
-  Structure-dependent array size parameters: 
+  Structure-dependent array size parameters:
   | Maximum number of distinct radial functions  :       73
   | Maximum number of basis functions            :      286
   | Number of Kohn-Sham states (occupied + empty):      336
@@ -1231,7 +1231,7 @@ Evaluating the work function.
 
   Adding cutoff potential to free-atom effective potential.
   Creating fixed part of basis set: Ionic, confined, hydrogenic.
- 
+
   Mo                   ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -1252,16 +1252,16 @@ Evaluating the work function.
     5    1        -0.465587       -12.6693       5.456393
     5    0        -0.650331       -17.6964       5.390095
 
- 
+
   Mo                   hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     4    3         8.400000       -60.0010           1.009788           1.009788           4.487018
     3    2         2.800000       -11.8048           1.687401           1.687401           5.456393
     5    4        12.000000       -78.3687           1.100005           1.100005           4.432498
- 
- 
+
+
   Se                   ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -1280,16 +1280,16 @@ Evaluating the work function.
     n    l      energy [Ha]    energy [eV]    outer radius [A]
     4    0        -1.414046       -38.4782       4.083166
 
- 
+
   Se                   hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     3    2         4.300000       -27.9518           1.103845           1.103845           5.278265
     2    1         1.600000        -8.6828           1.326010           1.326010           5.475439
     4    3         7.200000       -44.0822           1.173422           1.173422           4.965294
- 
- 
+
+
   S                    ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -1306,17 +1306,17 @@ Evaluating the work function.
     3    2        -0.495605       -13.4861       5.386362
     3    0        -1.470336       -40.0099       3.967934
 
- 
+
   S                    hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     2    1         1.800000       -11.0118           1.168531           1.168531           5.452614
     4    3         7.000000       -41.6672           1.212182           1.212182           5.066981
     4    2         6.200000       -32.6848           0.582121           1.814567           5.386362
     5    4        10.800000       -63.4785           1.227092           1.227092           4.766538
- 
- 
+
+
   W                    ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -1342,16 +1342,16 @@ Evaluating the work function.
     6    1        -0.508246       -13.8301       5.434360
     6    0        -0.752227       -20.4691       5.368330
 
- 
+
   W                    hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     4    3         7.800000       -51.7355           1.082252           1.082252           4.692859
     4    2         5.800000       -28.5979           0.616741           1.946131           5.434360
     5    4        12.400000       -83.6803           1.069102           1.069102           4.307971
- 
- 
+
+
   Te                   ion:
 
   List of free ionic orbitals and eigenvalues:
@@ -1373,16 +1373,16 @@ Evaluating the work function.
     n    l      energy [Ha]    energy [eV]    outer radius [A]
     5    0        -1.230774       -33.4911       4.407087
 
- 
+
   Te                   hydrogenic:
- 
-  List of hydrogenic basis orbitals: 
-    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]   
+
+  List of hydrogenic basis orbitals:
+    n    l      effective z      eigenvalue [eV]  inner max. [A]     outer max. [A]     outer radius [A]
     3    2         3.700000       -20.6934           1.282089           1.282089           5.425112
     4    3         6.000000       -30.6116           1.413813           1.413813           5.359194
     3    1         2.700000       -10.8497           0.586309           2.305482           5.491841
     5    4         9.000000       -44.0820           1.466627           1.466627           5.359194
- 
+
   Creating atomic-like basis functions for current effective potential.
 
   Species Mo                  :
@@ -1537,11 +1537,11 @@ Evaluating the work function.
   | Species Te :    hydro orbital   4 f accepted.
   | Species Te :    hydro orbital   5 g accepted.
   Reducing total number of  Kohn-Sham states to      286.
- 
+
   Basis size parameters after reduction:
   | Total number of radial functions:       73
   | Total number of basis functions :      286
- 
+
   Per-task memory consumption for arrays in subroutine allocate_ext:
   |          27.726404MB.
   Testing on-site integration grid accuracy.
@@ -1725,10 +1725,10 @@ Evaluating the work function.
   Integrating overlap matrix.
   Time summed over all CPUs for integration: real work       34.212 s, elapsed       38.875 s
   Calculating total energy contributions from superposition of free atom densities.
-  
+
   --------------------------------------------
   Constructing auxiliary basis (full product) ...
-  
+
   Product basis:
   | charge radius: extent of product basis function
   | field radius: extent of its Coulomb potential
@@ -2059,10 +2059,10 @@ Evaluating the work function.
                             accepted and     775 rejected.
   | Shrink_full_auxil_basis : there are totally              122540 partial auxiliary wave functions.
   prodbas_tasks_distribution_pbc not up to date - distributing tasks.
- 
+
   | Number of product basis functions per thread : 15318
   Parallel distribution of product basis not up to date - distributing tasks.
- 
+
   | Number of product basis functions per thread :   349
   | Minimal requirement for computer memory :           0.912 Gbs
   Minimal free memory per node on init_fm entry [GB]:     24.74
@@ -2333,7 +2333,7 @@ Evaluating the work function.
   |       41        42        43        44        45        46        47        48        49        50
   |       51        52        53        54        55        56        57        58        59        60
   |       61        62        63        64        65        66        67        68        69        70
-  |       71        72  
+  |       71        72
  Total ovlp3fn data transfer [GB]   5.36701221391559
   Full exact exchange energy:   25852.056449109368 eV.
   Detailed communication and barrier times:
@@ -2373,7 +2373,7 @@ Evaluating the work function.
 
   Times            Block Sum    Expected
   | Times    0:        4.547       5.922
- Time for Fock matrix mixing  0.666982541664765     
+ Time for Fock matrix mixing  0.666982541664765
 
   Updating Kohn-Sham eigenvalues and eigenvectors using ELSI and the (modified) LAPACK eigensolver.
   Singularity check in k-point 8, task 0 (analysis for other k-points/tasks may follow below):
@@ -2814,7 +2814,7 @@ Evaluating the work function.
   |       41        42        43        44        45        46        47        48        49        50
   |       51        52        53        54        55        56        57        58        59        60
   |       61        62        63        64        65        66        67        68        69        70
-  |       71        72  
+  |       71        72
  Total ovlp3fn data transfer [GB]   5.14889938756824
   Full exact exchange energy:   25852.056611034077 eV.
   Times            DM_x_o3fn   CM_prod_1   CM_prod_2   tmp2_prod        Sync   Imbalance       Other  Total calc
@@ -2837,7 +2837,7 @@ Evaluating the work function.
 
   Times            Block Sum    Expected
   | Times    0:        4.111       5.483
- Time for Fock matrix mixing  0.670616115200584     
+ Time for Fock matrix mixing  0.670616115200584
 
   Updating Kohn-Sham eigenvalues and eigenvectors using ELSI and the (modified) LAPACK eigensolver.
   Starting LAPACK eigensolver
@@ -3276,7 +3276,7 @@ Evaluating the work function.
   |       41        42        43        44        45        46        47        48        49        50
   |       51        52        53        54        55        56        57        58        59        60
   |       61        62        63        64        65        66        67        68        69        70
-  |       71        72  
+  |       71        72
  Total ovlp3fn data transfer [GB]   5.14889938756824
   Full exact exchange energy:   25852.056606406633 eV.
   Times            DM_x_o3fn   CM_prod_1   CM_prod_2   tmp2_prod        Sync   Imbalance       Other  Total calc
@@ -3299,7 +3299,7 @@ Evaluating the work function.
 
   Times            Block Sum    Expected
   | Times    0:        4.543       6.143
- Time for Fock matrix mixing  0.861784353296343     
+ Time for Fock matrix mixing  0.861784353296343
 
   Updating Kohn-Sham eigenvalues and eigenvectors using ELSI and the (modified) LAPACK eigensolver.
   Starting LAPACK eigensolver
@@ -3958,22 +3958,22 @@ Evaluating the work function.
   | Note that, for insulating systems, the printed 'chemical potential' value is not uniquely defined.
   | It can be anywhere in the energy gap, as long as it correctly separates occupied and unoccupied states.
   | In systems with a gap, the physically relevant chemical potential is the VBM or HOMO.
-  ------------------------------------ 
-  Start decomposition of the XC Energy 
-  ------------------------------------ 
-  X and C from original XC functional choice 
+  ------------------------------------
+  Start decomposition of the XC Energy
+  ------------------------------------
+  X and C from original XC functional choice
   Hartree-Fock Energy :       -237.511404523 Ha          -6463.014151602 eV
   X Energy            :       -966.117942690 Ha         -26289.406810876 eV
   C Energy            :        -15.727154125 Ha           -427.957637983 eV
   XC Energy w/o HF    :       -744.333692292 Ha         -20254.350297257 eV
   Total XC Energy     :       -981.845096814 Ha         -26717.364448858 eV
-  ------------------------------------ 
-  LDA X and C from self-consistent density 
+  ------------------------------------
+  LDA X and C from self-consistent density
   X Energy LDA        :       -922.172898532 Ha         -25093.601317430 eV
   C Energy LDA        :        -27.738329925 Ha           -754.798360983 eV
-  ------------------------------------ 
-  End decomposition of the XC Energy 
-  ------------------------------------ 
+  ------------------------------------
+  End decomposition of the XC Energy
+  ------------------------------------
 
 ------------------------------------------------------------
 
@@ -4768,7 +4768,7 @@ Evaluating the work function.
   |     6       52.048972       -0.048972        9.846689       21.773367       20.283131        0.123032        0.022753
   |
   | Total      288.000000        0.000000
- 
+
 
   Calculating atom-projected density of states ...
   | Chemical potential is  -5.470444 eV.
@@ -4804,7 +4804,7 @@ Evaluating the work function.
   |     6       52.037060       -0.037060        9.845985       21.771713       20.277902        0.119876        0.021585
   |
   | Total      288.000000       -0.000000
- 
+
 
   Calculating atom-projected density of states ...
   | Chemical potential is  -4.242070 eV.

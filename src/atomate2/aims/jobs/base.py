@@ -1,7 +1,4 @@
-"""
-A definition of base FHI-aims job Maker
-(closely resembling that of VASP and CP2K in atomate2)
-"""
+"""Defines the base FHI-aims Maker."""
 
 from __future__ import annotations
 
@@ -9,14 +6,17 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from jobflow import Flow, Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.core import Molecule, Structure
 
-from atomate2.aims.files import (cleanup_aims_outputs, copy_aims_outputs,
-                                 write_aims_input_set)
+from atomate2.aims.files import (
+    cleanup_aims_outputs,
+    copy_aims_outputs,
+    write_aims_input_set,
+)
 from atomate2.aims.run import run_aims, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDocument, ConvergenceSummary
 from atomate2.aims.sets.base import AimsInputGenerator
@@ -60,12 +60,12 @@ class BaseAimsMaker(Maker):
 
     name: str = "base"
     input_set_generator: AimsInputGenerator = field(default_factory=AimsInputGenerator)
-    write_input_set_kwargs: Dict[str, Any] = field(default_factory=dict)
-    copy_aims_kwargs: Dict[str, Any] = field(default_factory=dict)
-    run_aims_kwargs: Dict[str, Any] = field(default_factory=dict)
-    task_document_kwargs: Dict[str, Any] = field(default_factory=dict)
-    stop_children_kwargs: Dict[str, Any] = field(default_factory=dict)
-    write_additional_data: Dict[str, Any] = field(default_factory=dict)
+    write_input_set_kwargs: dict[str, Any] = field(default_factory=dict)
+    copy_aims_kwargs: dict[str, Any] = field(default_factory=dict)
+    run_aims_kwargs: dict[str, Any] = field(default_factory=dict)
+    task_document_kwargs: dict[str, Any] = field(default_factory=dict)
+    stop_children_kwargs: dict[str, Any] = field(default_factory=dict)
+    write_additional_data: dict[str, Any] = field(default_factory=dict)
     store_output_data: bool = True
 
     @job
@@ -85,7 +85,7 @@ class BaseAimsMaker(Maker):
             A previous FHI-aims calculation directory to copy output files from.
         """
         # the structure transformation part was deleted; can be reinserted when needed
-        if isinstance(structure, Structure) or isinstance(structure, Molecule):
+        if isinstance(structure, (Structure, Molecule)):
             atoms = MSONableAtoms.from_pymatgen(structure)
         else:
             atoms = structure.copy()
@@ -127,7 +127,9 @@ class BaseAimsMaker(Maker):
 
 @dataclass
 class ConvergenceMaker(Maker):
-    """A job that performs convergence run for a given number of steps. Stops either
+    """Defines a convergence workflow with a maximum number of steps.
+
+    A job that performs convergence run for a given number of steps. Stops either
     when all steps are done, or when the convergence criterion is reached, that is when
     the absolute difference between the subsequent values of the convergence field is
     less than a given epsilon.
@@ -158,10 +160,11 @@ class ConvergenceMaker(Maker):
     convergence_steps: list = field(default_factory=list)
 
     def __post_init__(self):
+        """Set the value of the last index."""
         self.last_idx = len(self.convergence_steps)
 
     def make(self, atoms):
-        """A top-level flow controlling convergence iteration
+        """Create a top-level flow controlling convergence iteration.
 
         Parameters
         ----------
@@ -177,9 +180,7 @@ class ConvergenceMaker(Maker):
         structure: MSONableAtoms | Structure | Molecule,
         prev_dir: str | Path = None,
     ) -> Response:
-        """
-        Runs several jobs with changing inputs consecutively to investigate
-        convergence in the results
+        """Run several jobs with changing inputs to test convergence.
 
         Parameters
         ----------
@@ -192,7 +193,7 @@ class ConvergenceMaker(Maker):
         -------
         The output response for the job
         """
-        if isinstance(structure, Structure) or isinstance(structure, Molecule):
+        if isinstance(structure, (Structure, Molecule)):
             atoms = MSONableAtoms.from_pymatgen(structure)
         else:
             atoms = structure.copy()
@@ -201,8 +202,8 @@ class ConvergenceMaker(Maker):
         idx = 0
         converged = False
         if prev_dir is not None:
-            prev_dir = prev_dir.split(":")[-1]
-            convergence_file = Path(prev_dir) / CONVERGENCE_FILE_NAME
+            split_prev_dir = str(prev_dir).split(":")[-1]
+            convergence_file = Path(split_prev_dir) / CONVERGENCE_FILE_NAME
             idx += 1
             if convergence_file.exists():
                 with open(convergence_file) as f:
@@ -239,16 +240,14 @@ class ConvergenceMaker(Maker):
                 [next_base_job, update_file_job, next_job], output=next_base_job.output
             )
             return Response(detour=replace_flow, output=replace_flow.output)
-        else:
-            task_doc = AimsTaskDocument.from_directory(prev_dir)
-            summary = ConvergenceSummary.from_aims_calc_doc(task_doc)
-            return summary
+        task_doc = AimsTaskDocument.from_directory(prev_dir)
+        return ConvergenceSummary.from_aims_calc_doc(task_doc)
 
     @job(name="Writing a convergence file")
     def update_convergence_file(
         self, prev_dir: str | Path, job_dir: str | Path, output
     ):
-        """Write a convergence file
+        """Write a convergence file.
 
         Parameters
         ----------
@@ -256,8 +255,8 @@ class ConvergenceMaker(Maker):
         """
         idx = 0
         if prev_dir is not None:
-            prev_dir = prev_dir.split(":")[-1]
-            convergence_file = Path(prev_dir) / CONVERGENCE_FILE_NAME
+            split_prev_dir = str(prev_dir).split(":")[-1]
+            convergence_file = Path(split_prev_dir) / CONVERGENCE_FILE_NAME
             if convergence_file.exists():
                 with open(convergence_file) as f:
                     convergence_data = json.load(f)
@@ -287,14 +286,14 @@ class ConvergenceMaker(Maker):
                 < self.epsilon
             )
 
-        job_dir = job_dir.split(":")[-1]
-        convergence_file = Path(job_dir) / CONVERGENCE_FILE_NAME
+        split_job_dir = str(job_dir).split(":")[-1]
+        convergence_file = Path(split_job_dir) / CONVERGENCE_FILE_NAME
         with open(convergence_file, "w") as f:
             json.dump(convergence_data, f)
 
     @job(name="Getting the results")
-    def get_results(self, prev_dir: Path | str) -> Dict[str, Any]:
-        """Get the results for a calculation from a given directory
+    def get_results(self, prev_dir: Path | str) -> dict[str, Any]:
+        """Get the results for a calculation from a given directory.
 
         Parameters
         ----------
