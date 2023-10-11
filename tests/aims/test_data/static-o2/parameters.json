@@ -1,0 +1,5 @@
+{
+  "xc": "pbe",
+  "relativistic": "atomic_zora scalar",
+  "species_dir": "/home/tpurcell/git/fhi-aims-workflows/tests/test_input_generators/species_dir"
+}

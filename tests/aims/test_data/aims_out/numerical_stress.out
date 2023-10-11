@@ -1,0 +1,109 @@
+  | Number of atoms                   :        8
+  | Number of spin channels           :        1
+  The structure contains        8 atoms,  and a total of        336.000 electrons.
+  Input geometry:
+  | Unit cell:
+  |       11.48355900        0.00000000        0.00000000
+  |        0.00000000        4.15690221        0.00000000
+  |        0.00000000        0.00000000        4.40644566
+  | Atomic structure:
+  |       Atom                x [A]            y [A]            z [A]
+  |    1: Species Se            9.84094794        3.11767666        0.11530178
+  |    2: Species Se            1.64261106        1.03922555        4.29114388
+  |    3: Species Se            7.38439056        1.03922555        2.31852460
+  |    4: Species Se            4.09916844        3.11767666        2.08792105
+  |    5: Species Sn            1.35599571        3.11767666        1.74968870
+  |    6: Species Sn           10.12756329        1.03922555        2.65675696
+  |    7: Species Sn            4.38578379        1.03922555        3.95291153
+  |    8: Species Sn            7.09777521        3.11767666        0.45353413
+  Structure-dependent array size parameters: 
+  | Maximum number of distinct radial functions  :       27
+  | Maximum number of basis functions            :      308
+  | Number of Kohn-Sham states (occupied + empty):      212
+          Begin self-consistency loop: Initialization.
+
+          Date     :  20230423, Time     :  191232.646
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191243.558
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191249.036
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191255.069
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191301.150
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191306.184
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191311.720
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191317.774
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191323.193
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191329.216
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191334.769
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191340.335
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191345.351
+------------------------------------------------------------
+Convergence:    q app. |  density  | eigen (eV) | Etot (eV) |             . |       CPU time |     Clock time
+
+  Calculation of numerical stress completed
+
+  +-------------------------------------------------------------------+
+  |                       Numerical stress tensor                     |
+  |                    Cartesian components [eV/A**3]                 |
+  +-------------------------------------------------------------------+
+  |                x                y                z                |
+  |                                                                   |
+  |  x         0.00244726      -0.00000007      -0.00000026           |
+  |  y        -0.00000007       0.00267442       0.00000005           |
+  |  z        -0.00000026       0.00000005       0.00258710           |
+  |                                                                   |
+  |  Pressure:      -0.00256959   [eV/A**3]                           |
+  |                                                                   |
+  +-------------------------------------------------------------------+
+
+  Calculation of original geometry
+------------------------------------------------------------
+
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20230423, Time     :  191351.379
+------------------------------------------------------------
+
+  Energy and forces in a compact form:
+  | Total energy uncorrected      :         -0.947172324448842E+06 eV
+  | Total energy corrected        :         -0.947172324448842E+06 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -0.947172324448842E+06 eV
+
+------------------------------------------------------------
+
+          Have a nice day.
+------------------------------------------------------------

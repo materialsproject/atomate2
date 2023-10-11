@@ -1,0 +1,38 @@
+  | Number of atoms                   :        2
+  | Number of spin channels           :        1
+
+  The structure contains        2 atoms,  and a total of         20.000 electrons.
+
+  Input geometry:
+  | Unit cell:
+  |        0.00000000        2.11309971        2.11309971
+  |        2.11309971        0.00000000        2.11309971
+  |        2.11309971        2.11309971        0.00000000
+  | Atomic structure:
+  |       Atom                x [A]            y [A]            z [A]
+  |    1: Species Mg            0.00000000        0.00000000        0.03000000
+  |    2: Species O             2.11309971        2.11309971        2.11309971
+  | Number of Kohn-Sham states (occupied + empty):       16
+------------------------------------------------------------
+          Begin self-consistency loop: Initialization.
+
+          Date     :  20220906, Time     :  153558.027
+------------------------------------------------------------
+Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |       CPU time |     Clock time
+  SCF    1 : -0.16E-13 |  0.26E+00 |  -0.11E+04 | -0.21E+04 |             . |        0.034 s |        0.033 s
+  SCF    2 : -0.45E-13 |  0.76E-02 |   0.16E-01 |  0.27E-03 |             . |        0.034 s |        0.034 s
+  SCF    3 : -0.29E-13 |  0.59E-02 |   0.81E-01 |  0.38E-03 |             . |        0.035 s |        0.035 s
+  SCF    4 : -0.12E-12 |  0.27E-03 |   0.37E-01 |  0.20E-05 |             . |        0.036 s |        0.036 s
+  SCF    5 : -0.24E-13 |  0.52E-04 |   0.17E-02 |  0.22E-07 |             . |        0.035 s |        0.035 s
+  SCF    6 : -0.11E-12 |  0.12E-04 |  -0.89E-03 | -0.29E-07 |             . |        0.037 s |        0.037 s
+  SCF    7 : -0.45E-13 |  0.13E-05 |   0.93E-04 | -0.32E-08 |             . |        0.037 s |        0.038 s
+  SCF    8 : -0.41E-13 |  0.90E-08 |   0.85E-06 |  0.17E-10 |             . |        0.034 s |        0.035 s
+  SCF    9 : -0.20E-13 |  0.39E-08 |  -0.34E-06 | -0.12E-10 |      0.72E+01 |        0.103 s |        0.103 s
+
+  | Total energy uncorrected      :         -0.750795452319975E+04 eV
+  | Total energy corrected        :         -0.750795452319975E+04 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -0.750795452319975E+04 eV
+  | Cartesian Polarization                  -51.045557E-03        -51.045557E-03        -51.458008E-03
+
+          Have a nice day.
+------------------------------------------------------------

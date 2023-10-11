@@ -1,0 +1,632 @@
+{
+  "@module": "atomate2_temp.aims.io.aims_output",
+  "@class": "AimsOutput",
+  "results": [
+    {
+      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@class": "MSONableAtoms",
+      "numbers": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "int64",
+        "data": [
+          14,
+          14
+        ]
+      },
+      "positions": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.3775,
+            1.3775,
+            1.3775
+          ]
+        ]
+      },
+      "cell": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            0.0,
+            2.755,
+            2.755
+          ],
+          [
+            2.755,
+            0.0,
+            2.755
+          ],
+          [
+            2.755,
+            2.755,
+            0.0
+          ]
+        ]
+      },
+      "pbc": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "bool",
+        "data": [
+          true,
+          true,
+          true
+        ]
+      },
+      "calculated_results": {
+        "energy": -15800.1843792097,
+        "free_energy": -15800.1843792097,
+        "forces": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            [
+              -4.86952935970507e-09,
+              -3.19270797951684e-09,
+              -2.76241042439398e-09
+            ],
+            [
+              4.86952935970508e-09,
+              3.19270797951684e-09,
+              2.76241042439398e-09
+            ]
+          ]
+        },
+        "stress": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            -0.03459259,
+            -0.03459263,
+            -0.03459263,
+            0.0,
+            0.0,
+            -0.0
+          ]
+        },
+        "fermi_energy": -4.8867571,
+        "homo": -5.3090984,
+        "lumo": -4.59331867,
+        "gap": 0.71577973,
+        "direct_gap": 2.43039973
+      },
+      "@version": null
+    },
+    {
+      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@class": "MSONableAtoms",
+      "numbers": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "int64",
+        "data": [
+          14,
+          14
+        ]
+      },
+      "positions": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            -0.0,
+            -0.0,
+            -0.0
+          ],
+          [
+            1.38620809,
+            1.38620809,
+            1.38620809
+          ]
+        ]
+      },
+      "cell": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            2e-08,
+            2.7724162,
+            2.7724162
+          ],
+          [
+            2.77241617,
+            -1e-08,
+            2.77241618
+          ],
+          [
+            2.77241617,
+            2.77241618,
+            -1e-08
+          ]
+        ]
+      },
+      "pbc": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "bool",
+        "data": [
+          true,
+          true,
+          true
+        ]
+      },
+      "calculated_results": {
+        "energy": -15800.206094291,
+        "free_energy": -15800.206094291,
+        "forces": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            [
+              4.02258645112855e-08,
+              -7.89345665168126e-09,
+              -9.46066143948756e-09
+            ],
+            [
+              -4.02258645112855e-08,
+              7.89345665168126e-09,
+              9.46066143948756e-09
+            ]
+          ]
+        },
+        "stress": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            -0.02338243,
+            -0.02338246,
+            -0.02338246,
+            0.0,
+            -0.0,
+            -0.0
+          ]
+        },
+        "fermi_energy": -4.92520044,
+        "homo": -5.28814064,
+        "lumo": -4.53504686,
+        "gap": 0.75309378,
+        "direct_gap": 2.42412061
+      },
+      "@version": null
+    },
+    {
+      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@class": "MSONableAtoms",
+      "numbers": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "int64",
+        "data": [
+          14,
+          14
+        ]
+      },
+      "positions": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            1e-08,
+            -0.0,
+            -0.0
+          ],
+          [
+            1.40510183,
+            1.40510185,
+            1.40510185
+          ]
+        ]
+      },
+      "cell": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            7e-08,
+            2.81020375,
+            2.81020375
+          ],
+          [
+            2.81020365,
+            -3e-08,
+            2.81020369
+          ],
+          [
+            2.81020365,
+            2.81020369,
+            -4e-08
+          ]
+        ]
+      },
+      "pbc": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "bool",
+        "data": [
+          true,
+          true,
+          true
+        ]
+      },
+      "calculated_results": {
+        "energy": -15800.2255887876,
+        "free_energy": -15800.2255887876,
+        "forces": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            [
+              -2.22260903726852e-07,
+              3.23486013650826e-08,
+              3.98293064328442e-08
+            ],
+            [
+              2.22260903726852e-07,
+              -3.23486013650826e-08,
+              -3.98293064328442e-08
+            ]
+          ]
+        },
+        "stress": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            -0.00247987,
+            -0.00247987,
+            -0.00247987,
+            0.0,
+            -0.0,
+            -0.0
+          ]
+        },
+        "fermi_energy": -5.00860218,
+        "homo": -5.24626422,
+        "lumo": -4.41783015,
+        "gap": 0.82843407,
+        "direct_gap": 2.27813973
+      },
+      "@version": null
+    },
+    {
+      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@class": "MSONableAtoms",
+      "numbers": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "int64",
+        "data": [
+          14,
+          14
+        ]
+      },
+      "positions": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            -1e-08,
+            0.0,
+            0.0
+          ],
+          [
+            1.40741244,
+            1.40741244,
+            1.40741244
+          ]
+        ]
+      },
+      "cell": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            7e-08,
+            2.81482492,
+            2.81482492
+          ],
+          [
+            2.81482482,
+            -4e-08,
+            2.81482486
+          ],
+          [
+            2.81482482,
+            2.81482486,
+            -4e-08
+          ]
+        ]
+      },
+      "pbc": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "bool",
+        "data": [
+          true,
+          true,
+          true
+        ]
+      },
+      "calculated_results": {
+        "energy": -15800.2255668194,
+        "free_energy": -15800.2255668194,
+        "forces": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            [
+              3.41280940656103e-07,
+              -3.65477601296885e-08,
+              -5.65529618943033e-08
+            ],
+            [
+              -3.41280940656103e-07,
+              3.65477601296885e-08,
+              5.65529618943033e-08
+            ]
+          ]
+        },
+        "stress": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            -0.00018941,
+            -0.00018941,
+            -0.00018941,
+            1e-08,
+            -0.0,
+            -0.0
+          ]
+        },
+        "fermi_energy": -5.0187557,
+        "homo": -5.24146614,
+        "lumo": -4.40429223,
+        "gap": 0.83717391,
+        "direct_gap": 2.22521105
+      },
+      "@version": null
+    },
+    {
+      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@class": "MSONableAtoms",
+      "numbers": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "int64",
+        "data": [
+          14,
+          14
+        ]
+      },
+      "positions": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            2e-08,
+            -0.0,
+            -0.0
+          ],
+          [
+            1.40760416,
+            1.40760419,
+            1.40760419
+          ]
+        ]
+      },
+      "cell": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            7e-08,
+            2.81520842,
+            2.81520842
+          ],
+          [
+            2.81520832,
+            -4e-08,
+            2.81520837
+          ],
+          [
+            2.81520832,
+            2.81520837,
+            -4e-08
+          ]
+        ]
+      },
+      "pbc": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "bool",
+        "data": [
+          true,
+          true,
+          true
+        ]
+      },
+      "calculated_results": {
+        "energy": -15800.2255427229,
+        "free_energy": -15800.2255427229,
+        "forces": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            [
+              -5.77774893695394e-07,
+              6.65273903016273e-08,
+              1.10901338442392e-07
+            ],
+            [
+              5.77774893695393e-07,
+              -6.65273903016273e-08,
+              -1.10901338442392e-07
+            ]
+          ]
+        },
+        "stress": {
+          "@module": "numpy",
+          "@class": "array",
+          "dtype": "float64",
+          "data": [
+            -1.19e-06,
+            -1.19e-06,
+            -1.19e-06,
+            -0.0,
+            -0.0,
+            0.0
+          ]
+        },
+        "fermi_energy": -5.01959746,
+        "homo": -5.24107103,
+        "lumo": -4.40317611,
+        "gap": 0.83789492,
+        "direct_gap": 2.2208318
+      },
+      "@version": null
+    }
+  ],
+  "metadata": {
+    "commit_hash": "232d594a3",
+    "aims_uuid": "7F959EC8-A7E1-43AC-A4DA-9302788CF7F6",
+    "version_number": "220309",
+    "fortran_compiler": "mpiifort (Intel) version 2021.6.0.20220226",
+    "c_compiler": "icc (Intel) version 2021.6.0.20220226",
+    "fortran_compiler_flags": "-O3 -ip -fp-model precise",
+    "c_compiler_flags": "-m64 -O3 -ip -fp-model precise -std=gnu99",
+    "build_type": [
+      "MPI",
+      "ScaLAPACK",
+      "LibXC",
+      "i-PI",
+      "RLSY"
+    ],
+    "linked_against": [
+      "/home/tpurcell/intel/oneapi/mkl/2022.1.0/lib/intel64/libmkl_scalapack_lp64.so",
+      "/home/tpurcell/intel/oneapi/mkl/2022.1.0/lib/intel64/libmkl_blacs_intelmpi_lp64.so",
+      "/home/tpurcell/intel/oneapi/mkl/2022.1.0/lib/intel64/libmkl_intel_lp64.so",
+      "/home/tpurcell/intel/oneapi/mkl/2022.1.0/lib/intel64/libmkl_sequential.so",
+      "/home/tpurcell/intel/oneapi/mkl/2022.1.0/lib/intel64/libmkl_core.so"
+    ]
+  },
+  "atoms_summary": {
+    "initial_atoms": {
+      "@module": "atomate2_temp.aims.utils.msonable_atoms",
+      "@class": "MSONableAtoms",
+      "numbers": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "int64",
+        "data": [
+          14,
+          14
+        ]
+      },
+      "positions": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.3775,
+            1.3775,
+            1.3775
+          ]
+        ]
+      },
+      "cell": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "float64",
+        "data": [
+          [
+            0.0,
+            2.755,
+            2.755
+          ],
+          [
+            2.755,
+            0.0,
+            2.755
+          ],
+          [
+            2.755,
+            2.755,
+            0.0
+          ]
+        ]
+      },
+      "pbc": {
+        "@module": "numpy",
+        "@class": "array",
+        "dtype": "bool",
+        "data": [
+          true,
+          true,
+          true
+        ]
+      },
+      "@version": null
+    },
+    "initial_cell": [
+      [
+        0.0,
+        2.755,
+        2.755
+      ],
+      [
+        2.755,
+        0.0,
+        2.755
+      ],
+      [
+        2.755,
+        2.755,
+        0.0
+      ]
+    ],
+    "constraints": [],
+    "is_relaxation": true,
+    "is_md": false,
+    "n_atoms": 2,
+    "n_bands": 20,
+    "n_electrons": 28,
+    "n_spins": 1,
+    "electronic_temperature": 0.1,
+    "n_k_points": 8,
+    "k_points": null,
+    "k_point_weights": null
+  }
+}

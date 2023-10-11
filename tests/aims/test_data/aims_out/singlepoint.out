@@ -1,0 +1,360 @@
+------------------------------------------------------------
+  | Number of atoms                   :        3
+  | Number of spin channels           :        1
+
+------------------------------------------------------------
+          Reading geometry description geometry.in.
+------------------------------------------------------------
+  | The smallest distance between any two atoms is         0.95840000 AA.
+  | The first atom of this pair is atom number                      1 .
+  | The second atom of this pair is atom number                     2 .
+  Input structure read successfully.
+  The structure contains        3 atoms,  and a total of         10.000 electrons.
+
+  Input geometry:
+  | No unit cell requested.
+  | Atomic structure:
+  |       Atom                x [A]            y [A]            z [A]
+  |    1: Species O             0.00000000        0.00000000        0.00000000
+  |    2: Species H             0.95840000        0.00000000        0.00000000
+  |    3: Species H            -0.24000000        0.92790000        0.00000000
+
+ 
+  Finished reading input file 'control.in'.
+ 
+
+------------------------------------------------------------
+          Reading geometry description geometry.in.
+------------------------------------------------------------
+
+  Consistency checks for stacksize environment parameter are next.
+
+  | Maximum stacksize for task 0: unlimited
+  | Current stacksize for task 0: unlimited
+ 
+  Consistency checks for the contents of control.in are next.
+ 
+  MPI_IN_PLACE appears to work with this MPI implementation.
+  | Keeping use_mpi_in_place .true. (see manual).
+  Target number of points in a grid batch is not set. Defaulting to  100
+  Method for grid partitioning is not set. Defaulting to parallel hash+maxmin partitioning.
+  Batch size limit is not set. Defaulting to    200
+  By default, will store active basis functions for each batch.
+  If in need of memory, prune_basis_once .false. can be used to disable this option.
+  communication_type for Hartree potential was not specified.
+  Defaulting to calc_hartree .
+  Defaulting to Pulay charge density mixer.
+  Pulay mixer: Number of relevant iterations not set.
+  Defaulting to    8 iterations.
+  Pulay mixer: Number of initial linear mixing iterations not set.
+  Defaulting to    0 iterations.
+  Work space size for distributed Hartree potential not set.
+  Defaulting to   0.200000E+03 MB.
+  Mixing parameter for charge density mixing has not been set.
+  Using default: charge_mix_param =     0.0500.
+  The mixing parameter will be adjusted in iteration number     2 of the first full s.c.f. cycle only.
+  Algorithm-dependent basis array size parameters:
+  | n_max_pulay                         :        8
+  Maximum number of self-consistency iterations not provided.
+  Presetting  1000 iterations.
+  Presetting a factor      1.000 between actual scf density residual
+  and density convergence criterion sc_accuracy_rho below which sc_init_iter
+  takes no effect.
+  Geometry relaxation not requested: no relaxation will be performed.
+  Forces evaluation will include force correction term due to incomplete self-consistency (default).
+  Force calculation: scf convergence accuracy of forces not set.
+  Defaulting to 'sc_accuracy_forces not_checked'.
+  Handling of forces: Unphysical translation and rotation will be removed from forces.
+  No accuracy limit for integral partition fn. given. Defaulting to  0.1000E-14.
+  No threshold value for u(r) in integrations given. Defaulting to  0.1000E-05.
+  No occupation type (smearing scheme) given. Defaulting to Gaussian broadening, width =  0.1000E-01 eV.
+  The width will be adjusted in iteration number     2 of the first full s.c.f. cycle only.
+  S.C.F. convergence parameters will be adjusted in iteration number     2 of the first full s.c.f. cycle only.
+  No accuracy for occupation numbers given. Defaulting to  0.1000E-12.
+  No threshold value for occupation numbers given. Defaulting to  0.0000E+00.
+  No accuracy for fermi level given. Defaulting to  0.1000E-19.
+  Maximum # of iterations to find E_F not set. Defaulting to  200.
+  Preferred method for the eigenvalue solver ('KS_method') not specified in 'control.in'.
+  Defaulting to serial version LAPACK (via ELSI).
+  Will not use alltoall communication since running on < 1024 CPUs.
+  Threshold for basis singularities not set.
+  Default threshold for basis singularities:  0.1000E-04
+  partition_type (choice of integration weights) for integrals was not specified.
+  | Using a version of the partition function of Stratmann and coworkers ('stratmann_sparse').
+  | At each grid point, the set of atoms used to build the partition table is smoothly restricted to
+  | only those atoms whose free-atom density would be non-zero at that grid point.
+  Partitioning for Hartree potential was not defined. Using partition_type for integrals.
+  | Adjusted default value of keyword multip_moments_threshold to:       0.10000000E-11
+  | This value may affect high angular momentum components of the Hartree potential in periodic systems.
+  Spin handling was not defined in control.in. Defaulting to unpolarized case.
+  No q(lm)/r^(l+1) cutoff set for long-range Hartree potential.
+  | Using default value of  0.100000E-09 .
+  | Verify using the multipole_threshold keyword.
+  Defaulting to new monopole extrapolation.
+  Density update method: automatic selection selected.
+  Charge integration errors on the 3D integration grid will be compensated
+  by explicit normalization and distribution of residual charges.
+  Use the "compensate_multipole_errors" flag to change this behaviour.
+  Set 'collect_eigenvectors' to be '.true.' for all serial calculations. This is mandatory.
+  Set 'collect_eigenvectors' to be '.true.' for use_density_matrix .false.
+  Set 'collect_eigenvectors' to be '.true.' for KS_method lapack_fast and serial.
+ 
+  Consistency checks for the contents of geometry.in are next.
+ 
+  Number of empty states per atom not set in control.in - providing a guess from actual geometry.
+  | Total number of empty states used during s.c.f. cycle:        6
+  If you use a very high smearing, use empty_states (per atom!) in control.in to increase this value.
+
+  Structure-dependent array size parameters: 
+  | Maximum number of distinct radial functions  :        4
+  | Maximum number of basis functions            :        7
+  | Number of Kohn-Sham states (occupied + empty):       11
+------------------------------------------------------------
+  Assembling full basis from fixed parts.
+  | Species H :   atomic orbital   1 s accepted.
+  | Species O :   atomic orbital   1 s accepted.
+  | Species O :   atomic orbital   2 s accepted.
+  | Species O :   atomic orbital   2 p accepted.
+  Reducing total number of  Kohn-Sham states to        7.
+
+  Basis size parameters after reduction:
+  | Total number of radial functions:        4
+  | Total number of basis functions :        7
+
+  Per-task memory consumption for arrays in subroutine allocate_ext:
+  |           1.332740MB.
+  Testing on-site integration grid accuracy.
+  |  Species  Function  <phi|h_atom|phi> (log., in eV)  <phi|h_atom|phi> (rad., in eV)
+           1        1                 -6.3246251765                 -6.3233331181
+           2        2               -511.1960429777               -511.1959399133
+           2        3                -23.7455964041                -23.7455972542
+           2        4                 -9.1890598667                 -9.1892026751
+
+  Preparing densities etc. for the partition functions (integrals / Hartree potential).
+
+  Preparations completed.
+  max(cpu_time)          :      0.064 s.
+  Wall clock time (cpu1) :      0.065 s.
+------------------------------------------------------------
+
+------------------------------------------------------------
+          Begin self-consistency loop: Initialization.
+
+          Date     :  20211129, Time     :  075849.067
+------------------------------------------------------------
+
+  Initializing index lists of integration centers etc. from given atomic structure:
+  | Number of centers in hartree potential         :         3
+  | Number of centers in hartree multipole         :         3
+  | Number of centers in electron density summation:         3
+  | Number of centers in basis integrals           :         3
+  | Number of centers in integrals                 :         3
+  | Number of centers in hamiltonian               :         3
+  Partitioning the integration grid into batches with parallel hashing+maxmin method.
+  | Number of batches:      241
+  | Maximal batch size:     116
+  | Minimal batch size:      55
+  | Average batch size:      66.075
+  | Standard deviation of batch sizes:      13.319
+
+  Integration load balanced across     1 MPI tasks.
+  Work distribution over tasks is as follows:
+  Task     0 has      15924 integration points.
+  Initializing partition tables, free-atom densities, potentials, etc. across the integration grid (initialize_grid_storage).
+  | initialize_grid_storage: Actual outermost partition radius vs. multipole_radius_free
+  | (-- VB: in principle, multipole_radius_free should be larger, hence this output)
+  | Species        1: Confinement radius =              4.999999999999999 AA, multipole_radius_free =              5.054417573612229 AA.
+  | Species        1: outer_partition_radius set to              5.054417573612229 AA .
+  | Species        2: Confinement radius =              4.999999999999999 AA, multipole_radius_free =              5.048384829883283 AA.
+  | Species        2: outer_partition_radius set to              5.048384829883283 AA .
+  | The sparse table of interatomic distances needs          0.09 kbyte instead of         0.07 kbyte of memory.
+  | Using the partition_type stratmann_smoother will reduce your memory usage.
+  | Net number of integration points:    15924
+  | of which are non-zero points    :    14477
+  Renormalizing the initial density to the exact electron count on the 3D integration grid.
+  | Initial density: Formal number of electrons (from input files) :      10.0000000000
+  | Integrated number of electrons on 3D grid     :       9.9999369396
+  | Charge integration error                      :      -0.0000630604
+  | Normalization factor for density and gradient :       1.0000063061
+  Renormalizing the free-atom superposition density to the exact electron count on the 3D integration grid.
+  | Formal number of electrons (from input files) :      10.0000000000
+  | Integrated number of electrons on 3D grid     :       9.9999369396
+  | Charge integration error                      :      -0.0000630604
+  | Normalization factor for density and gradient :       1.0000063061
+  Obtaining max. number of non-zero basis functions in each batch (get_n_compute_maxes).
+  | Maximal number of non-zero basis functions:        7 in task     0
+  Selecting the method for density update.
+  Loop over occupied states selected for charge density update.
+  Allocating        0.000 MB for KS_eigenvector
+  Integrating Hamiltonian matrix: batch-based integration.
+  Time summed over all CPUs for integration: real work        0.015 s, elapsed        0.015 s
+  Integrating overlap matrix.
+  Time summed over all CPUs for integration: real work        0.005 s, elapsed        0.005 s
+
+  Updating Kohn-Sham eigenvalues and eigenvectors using ELSI and the (modified) LAPACK eigensolver.
+
+  Obtaining occupation numbers and chemical potential using ELSI.
+  | Chemical potential (Fermi level):    -4.97602930 eV
+  Writing Kohn-Sham eigenvalues.
+
+  State    Occupation    Eigenvalue [Ha]    Eigenvalue [eV]
+      1       2.00000         -18.902625         -514.36658
+      2       2.00000          -1.081608          -29.43205
+      3       2.00000          -0.606768          -16.51099
+      4       2.00000          -0.506367          -13.77894
+      5       2.00000          -0.447360          -12.17328
+      6       0.00000           0.014377            0.39122
+      7       0.00000           0.114273            3.10954
+
+  Highest occupied state (VBM) at    -12.17327631 eV
+  | Occupation number:      2.00000000
+
+  Lowest unoccupied state (CBM) at     0.39121641 eV
+  | Occupation number:      0.00000000
+
+  Overall HOMO-LUMO gap:     12.56449272 eV.
+  Calculating total energy contributions from superposition of free atom densities.
+
+  Total energy components:
+  | Sum of eigenvalues            :         -43.08945336 Ha       -1172.52368334 eV
+  | XC energy correction          :          -8.51756845 Ha        -231.77483012 eV
+  | XC potential correction       :          11.21917906 Ha         305.28939513 eV
+  | Free-atom electrostatic energy:         -35.52816823 Ha        -966.77064642 eV
+  | Hartree energy correction     :           0.00000000 Ha           0.00000000 eV
+  | Entropy correction            :           0.00000000 Ha           0.00000000 eV
+  | ---------------------------
+  | Total energy                  :         -75.91601099 Ha       -2065.77976475 eV
+  | Total energy, T -> 0          :         -75.91601099 Ha       -2065.77976475 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -75.91601099 Ha       -2065.77976475 eV
+
+  Derived energy quantities:
+  | Kinetic energy                :          75.21650867 Ha        2046.74533810 eV
+  | Electrostatic energy          :        -142.61495121 Ha       -3880.75027274 eV
+  | Energy correction for multipole
+  | error in Hartree potential    :           0.00000000 Ha           0.00000000 eV
+  | Sum of eigenvalues per atom                           :        -390.84122778 eV
+  | Total energy (T->0) per atom                          :        -688.59325492 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy per atom                       :        -688.59325492 eV
+  Initialize hartree_potential_storage
+  Max. number of atoms included in rho_multipole:            3
+------------------------------------------------------------
+Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |       CPU time |     Clock time
+  SCF    1 : -0.33E-13 |  0.30E+00 |   0.49E+01 |  0.45E+00 |             . |        0.038 s |        0.038 s
+  SCF    2 : -0.78E-13 |  0.28E+00 |   0.43E+02 |  0.21E+01 |             . |        0.039 s |        0.040 s
+
+  Total energy components:
+  | Sum of eigenvalues            :         -41.33852675 Ha       -1124.87854596 eV
+  | XC energy correction          :          -8.70633803 Ha        -236.91151180 eV
+  | XC potential correction       :          11.46838875 Ha         312.07073576 eV
+  | Free-atom electrostatic energy:         -35.52816823 Ha        -966.77064642 eV
+  | Hartree energy correction     :          -1.71698207 Ha         -46.72145919 eV
+  | Entropy correction            :           0.00000000 Ha           0.00000000 eV
+  | ---------------------------
+  | Total energy                  :         -75.82162633 Ha       -2063.21142760 eV
+  | Total energy, T -> 0          :         -75.82162633 Ha       -2063.21142760 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -75.82162633 Ha       -2063.21142760 eV
+
+  Derived energy quantities:
+  | Kinetic energy                :          76.24040140 Ha        2074.60687688 eV
+  | Electrostatic energy          :        -143.35568970 Ha       -3900.90679269 eV
+  | Energy correction for multipole
+  | error in Hartree potential    :          -0.00119178 Ha          -0.03242990 eV
+  | Sum of eigenvalues per atom                           :        -374.95951532 eV
+  | Total energy (T->0) per atom                          :        -687.73714253 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy per atom                       :        -687.73714253 eV
+  Highest occupied state (VBM) at     -7.66833547 eV
+  | Occupation number:      2.00000000
+
+  Lowest unoccupied state (CBM) at     1.69091615 eV
+  | Occupation number:      0.00000000
+
+  Overall HOMO-LUMO gap:      9.35925162 eV.
+  | Chemical Potential                          :    -2.80805007 eV
+
+  Self-consistency cycle not yet converged - restarting mixer to attempt better convergence.
+
+  Removing unitary transformations (pure translations, rotations) from forces on atoms.
+  Atomic forces before filtering:
+  | Net force on center of mass :   0.000000E+00  0.000000E+00  0.000000E+00 eV/A
+  | Net torque on center of mass:   0.000000E+00  0.000000E+00  0.000000E+00 eV
+  Atomic forces after filtering:
+  | Net force on center of mass :   0.000000E+00  0.000000E+00  0.000000E+00 eV/A
+  | Net torque on center of mass:   0.000000E+00  0.000000E+00  0.000000E+00 eV
+
+  Energy and forces in a compact form:
+  | Total energy uncorrected      :         -0.206321142760261E+04 eV
+  | Total energy corrected        :         -0.206321142760261E+04 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -0.206321142760261E+04 eV
+  Total atomic forces (unitary forces cleaned) [eV/Ang]:
+  |    1          0.000000000000000E+00          0.000000000000000E+00          0.000000000000000E+00
+  |    2          0.000000000000000E+00          0.000000000000000E+00          0.000000000000000E+00
+  |    3          0.000000000000000E+00          0.000000000000000E+00          0.000000000000000E+00
+
+  No geometry change - only restart of scf mixer after initial iterations.
+
+------------------------------------------------------------
+          Begin self-consistency loop: Re-initialization.
+
+  Date     :  20211129, Time     :  075849.222
+------------------------------------------------------------
+Convergence:    q app. |  density  | eigen (eV) | Etot (eV) | forces (eV/A) |       CPU time |     Clock time
+  SCF    1 : -0.16E-13 |  0.26E+00 |  -0.11E+04 | -0.21E+04 |             . |        0.034 s |        0.033 s
+  SCF    2 : -0.45E-13 |  0.76E-02 |   0.16E-01 |  0.27E-03 |             . |        0.034 s |        0.034 s
+  SCF    3 : -0.29E-13 |  0.59E-02 |   0.81E-01 |  0.38E-03 |             . |        0.035 s |        0.035 s
+  SCF    4 : -0.12E-12 |  0.27E-03 |   0.37E-01 |  0.20E-05 |             . |        0.036 s |        0.036 s
+  SCF    5 : -0.24E-13 |  0.52E-04 |   0.17E-02 |  0.22E-07 |             . |        0.035 s |        0.035 s
+  SCF    6 : -0.11E-12 |  0.12E-04 |  -0.89E-03 | -0.29E-07 |             . |        0.037 s |        0.037 s
+  SCF    7 : -0.45E-13 |  0.13E-05 |   0.93E-04 | -0.32E-08 |             . |        0.037 s |        0.038 s
+  SCF    8 : -0.41E-13 |  0.90E-08 |   0.85E-06 |  0.17E-10 |             . |        0.034 s |        0.035 s
+  SCF    9 : -0.20E-13 |  0.39E-08 |  -0.34E-06 | -0.12E-10 |      0.72E+01 |        0.103 s |        0.103 s
+
+  Total energy components:
+  | Sum of eigenvalues            :         -41.28846430 Ha       -1123.51627744 eV
+  | XC energy correction          :          -8.71508157 Ha        -237.14943560 eV
+  | XC potential correction       :          11.47976697 Ha         312.38035309 eV
+  | Free-atom electrostatic energy:         -35.52816823 Ha        -966.77064642 eV
+  | Hartree energy correction     :          -1.76267108 Ha         -47.96472038 eV
+  | Entropy correction            :           0.00000000 Ha           0.00000000 eV
+  | ---------------------------
+  | Total energy                  :         -75.81461821 Ha       -2063.02072676 eV
+  | Total energy, T -> 0          :         -75.81461821 Ha       -2063.02072676 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -75.81461821 Ha       -2063.02072676 eV
+
+  Derived energy quantities:
+  | Kinetic energy                :          76.01251591 Ha        2068.40579724 eV
+  | Electrostatic energy          :        -143.11205255 Ha       -3894.27708840 eV
+  | Energy correction for multipole
+  | error in Hartree potential    :          -0.00196453 Ha          -0.05345756 eV
+  | Sum of eigenvalues per atom                           :        -374.50542581 eV
+  | Total energy (T->0) per atom                          :        -687.67357559 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy per atom                       :        -687.67357559 eV
+  Highest occupied state (VBM) at     -7.15022199 eV
+  | Occupation number:      2.00000000
+
+  Lowest unoccupied state (CBM) at     1.44619903 eV
+  | Occupation number:      0.00000000
+
+  Overall HOMO-LUMO gap:      8.59642103 eV.
+  | Chemical Potential                          :    -2.88054122 eV
+
+  Self-consistency cycle converged.
+
+  Removing unitary transformations (pure translations, rotations) from forces on atoms.
+  Atomic forces before filtering:
+  | Net force on center of mass :   0.853751E-02  0.190966E-01 -0.136769E-11 eV/A
+  | Net torque on center of mass:   0.425323E-12 -0.328228E-12 -0.191567E-02 eV
+  Atomic forces after filtering:
+  | Net force on center of mass :   0.000000E+00  0.000000E+00  0.405649E-27 eV/A
+  | Net torque on center of mass:   0.100374E-27  0.155553E-27  0.113290E-14 eV
+
+  Energy and forces in a compact form:
+  | Total energy uncorrected      :         -0.206302072675943E+04 eV
+  | Total energy corrected        :         -0.206302072675943E+04 eV  <-- do not rely on this value for anything but (periodic) metals
+  | Electronic free energy        :         -0.206302072675943E+04 eV
+  Total atomic forces (unitary forces cleaned) [eV/Ang]:
+  |    1         -0.478299830661005E+01         -0.616960341437854E+01          0.162259424656531E-27
+  |    2          0.692109878170016E+01         -0.419925410034428E+00          0.000000000000000E+00
+  |    3         -0.213810047509011E+01          0.658952882441297E+01          0.243389136984796E-27
+
+          Have a nice day.
+------------------------------------------------------------
