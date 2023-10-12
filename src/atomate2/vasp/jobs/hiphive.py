@@ -177,7 +177,8 @@ def run_static_calculations(
         )
         # for j in range(len(structures_ase)):
         #     structures_ase_all.append(structures_ase[j])
-        structures_ase_all = list(structures_ase)
+        # structures_ase_all = list(structures_ase)
+        structures_ase_all.append(structures_ase)
     # supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
     # structures_ase =
     # generate_mc_rattled_structures(supercell_ase, 3, 0.01, d_min=3.294)
