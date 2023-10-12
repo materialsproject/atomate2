@@ -199,7 +199,7 @@ class BasePhononMaker(Maker, ABC):
             )
 
         if isinstance(structure, MSONableAtoms):
-            structure = structure.pymatgen
+            structure = structure.structure
 
         if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
             raise ValueError(
@@ -251,7 +251,9 @@ class BasePhononMaker(Maker, ABC):
                 bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
             bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
             jobs.append(bulk)
-            structure = bulk.output.structure.pymatgen
+            structure = bulk.output.structure
+            if isinstance(structure, MSONableAtoms):
+                structure = structure.structure
             optimization_run_job_dir = bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
 
