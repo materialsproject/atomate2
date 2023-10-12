@@ -67,7 +67,7 @@ class VaspInputSet(InputSet):
         self.poscar = poscar
         self.potcar = potcar
         self.kpoints = kpoints
-        self.optional_files = {} if optional_files is None else optional_files
+        self.optional_files = optional_files or {}
 
     def write_input(
         self,
@@ -89,8 +89,8 @@ class VaspInputSet(InputSet):
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        if make_dir:
+            os.makedirs(directory, exist_ok=True)
 
         inputs = {
             "INCAR": self.incar,
@@ -618,8 +618,8 @@ class VaspInputGenerator(InputGenerator):
         ispin: int = None,
     ):
         """Get the INCAR."""
-        previous_incar = {} if previous_incar is None else previous_incar
-        incar_updates = {} if incar_updates is None else incar_updates
+        previous_incar = previous_incar or {}
+        incar_updates = incar_updates or {}
         incar_settings = dict(self.config_dict["INCAR"])
         config_magmoms = incar_settings.get("MAGMOM", {})
         auto_updates = {}
@@ -715,7 +715,7 @@ class VaspInputGenerator(InputGenerator):
         bandgap: float | None,
     ) -> Kpoints | None:
         """Get the kpoints file."""
-        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
+        kpoints_updates = kpoints_updates or {}
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:

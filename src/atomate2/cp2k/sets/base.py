@@ -77,7 +77,7 @@ class Cp2kInputSet(InputSet):
 
         """
         self.cp2k_input = cp2k_input
-        self.optional_files = {} if optional_files is None else optional_files
+        self.optional_files = optional_files or {}
 
     def write_input(
         self,
@@ -98,8 +98,8 @@ class Cp2kInputSet(InputSet):
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        if make_dir:
+            os.makedirs(directory, exist_ok=True)
 
         inputs = {
             "input": {"filename": "cp2k.inp", "object": self.cp2k_input},
@@ -270,9 +270,7 @@ class Cp2kInputGenerator(InputGenerator):
         raise NotImplementedError
 
     def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
+        self, structure: Structure, prev_input: Cp2kInput = None
     ) -> dict:
         """
         Get updates to the kpoints configuration for this calculation type.
@@ -329,8 +327,8 @@ class Cp2kInputGenerator(InputGenerator):
         input_updates: dict = None,
     ):
         """Get the input."""
-        previous_input = {} if previous_input is None else previous_input
-        input_updates = {} if input_updates is None else input_updates
+        previous_input = previous_input or {}
+        input_updates = input_updates or {}
         input_settings = dict(self.config_dict["cp2k_input"])
 
         # Generate base input but override with user input settings
@@ -349,9 +347,9 @@ class Cp2kInputGenerator(InputGenerator):
                 and input_settings[setting]
                 and callable(getattr(cp2k_input, setting))
             ):
-                subsettings = input_settings.get(setting)
+                sub_settings = input_settings.get(setting)
                 getattr(cp2k_input, setting)(
-                    **subsettings if isinstance(subsettings, dict) else {}
+                    **sub_settings if isinstance(sub_settings, dict) else {}
                 )
 
         cp2k_input.update(overrides)
@@ -399,7 +397,7 @@ class Cp2kInputGenerator(InputGenerator):
         kpoints_updates: dict[str, Any] | None,
     ) -> Kpoints | None:
         """Get the kpoints object."""
-        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
+        kpoints_updates = kpoints_updates or {}
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:
