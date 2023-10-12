@@ -8,10 +8,16 @@ cheaper than running both separately.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-from jobflow import Maker
+from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
 
 
 @dataclass
@@ -39,3 +45,23 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
         )
     )
+
+    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+        """
+        Create a flow with two chained statics.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        prev_vasp_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A flow containing two statics.
+        """
+        static1 = self.static1.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static2 = self.static2.make(structure, prev_vasp_dir=static1.output.dir_name)
+        return Flow([static1, static2], output=static2.output, name=self.name)
