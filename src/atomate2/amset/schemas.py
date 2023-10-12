@@ -165,7 +165,7 @@ class AmsetTaskDocument(StructureMetadata):
         from amset.io import load_mesh
         from amset.util import cast_dict_list
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
         settings = loadfn("settings.yaml")
