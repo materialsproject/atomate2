@@ -202,8 +202,8 @@ class ConvergenceMaker(Maker):
         idx = 0
         converged = False
         if prev_dir is not None:
-            split_prev_dir = str(prev_dir).split(":")[-1]
-            convergence_file = Path(split_prev_dir) / CONVERGENCE_FILE_NAME
+            prev_dir_no_host = str(prev_dir).split(":")[-1]
+            convergence_file = Path(prev_dir_no_host) / CONVERGENCE_FILE_NAME
             idx += 1
             if convergence_file.exists():
                 with open(convergence_file) as f:
@@ -211,10 +211,11 @@ class ConvergenceMaker(Maker):
                     idx = data["idx"] + 1
                     # check for convergence
                     converged = data["converged"]
-
+        else:
+            prev_dir_no_host = None
         if idx < self.last_idx and not converged:
             # finding next jobs
-            next_base_job = self.maker.make(atoms, prev_dir=prev_dir)
+            next_base_job = self.maker.make(atoms, prev_dir=prev_dir_no_host)
             next_base_job.update_maker_kwargs(
                 {
                     "_set": {
@@ -227,7 +228,7 @@ class ConvergenceMaker(Maker):
             next_base_job.append_name(append_str=f" {idx}")
 
             update_file_job = self.update_convergence_file(
-                prev_dir=prev_dir,
+                prev_dir=prev_dir_no_host,
                 job_dir=next_base_job.output.dir_name,
                 output=next_base_job.output,
             )
@@ -240,7 +241,7 @@ class ConvergenceMaker(Maker):
                 [next_base_job, update_file_job, next_job], output=next_base_job.output
             )
             return Response(detour=replace_flow, output=replace_flow.output)
-        task_doc = AimsTaskDocument.from_directory(prev_dir)
+        task_doc = AimsTaskDocument.from_directory(prev_dir_no_host)
         return ConvergenceSummary.from_aims_calc_doc(task_doc)
 
     @job(name="Writing a convergence file")
@@ -255,8 +256,8 @@ class ConvergenceMaker(Maker):
         """
         idx = 0
         if prev_dir is not None:
-            split_prev_dir = str(prev_dir).split(":")[-1]
-            convergence_file = Path(split_prev_dir) / CONVERGENCE_FILE_NAME
+            prev_dir_no_host = str(prev_dir).split(":")[-1]
+            convergence_file = Path(prev_dir_no_host) / CONVERGENCE_FILE_NAME
             if convergence_file.exists():
                 with open(convergence_file) as f:
                     convergence_data = json.load(f)

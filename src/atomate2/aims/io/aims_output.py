@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Sequence
 
+import numpy as np
 from monty.json import MontyDecoder, MSONable
 
 from atomate2.aims.io.parsers import read_aims_header_info, read_aims_output
@@ -168,7 +169,11 @@ class AimsOutput(MSONable):
     @property
     def forces(self) -> list[Vector3D]:
         """The forces for the final image of the calculation."""
-        return self.get_results_for_image(-1).calc.results.get("forces", None)
+        force_array = self.get_results_for_image(-1).calc.results.get("forces", None)
+        if isinstance(force_array, np.ndarray):
+            return force_array.tolist()
+
+        return force_array
 
     @property
     def stress(self) -> Matrix3D:
@@ -178,9 +183,19 @@ class AimsOutput(MSONable):
     @property
     def stresses(self) -> list[Matrix3D]:
         """The virial stresses for the final image of the calculation."""
-        return self.get_results_for_image(-1).calc.results.get("stresses", None)
+        stresses_array = self.get_results_for_image(-1).calc.results.get(
+            "stresses", None
+        )
+        if isinstance(stresses_array, np.ndarray):
+            return stresses_array.tolist()
+        return stresses_array
 
     @property
     def all_forces(self) -> list[list[Vector3D]]:
         """The forces for all images in the calculation."""
-        return [res.calc.results.get("forces", None) for res in self._results]
+        all_forces_array = [
+            res.calc.results.get("forces", None) for res in self._results
+        ]
+        return [
+            af.tolist() if isinstance(af, np.ndarray) else af for af in all_forces_array
+        ]

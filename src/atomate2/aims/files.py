@@ -56,15 +56,17 @@ def copy_aims_outputs(
         additional_files += ("hessian.aims", "geometry.in.next_step", "*.csc")
 
     # copy files
-    files = ["aims.out", "*.json"]
+    files: list[str | Path] = ["aims.out", "*.json"]
 
     files += [
-        f
+        Path(f).name
         for pattern in set(additional_files)
         for f in glob((Path(src_dir) / pattern).as_posix())
     ]
 
-    all_files = [get_zfile(directory_listing, r, allow_missing=True) for r in files]
+    all_files = [
+        get_zfile(directory_listing, str(r), allow_missing=True) for r in files
+    ]
     all_files = [f for f in all_files if f]
 
     copy_files(

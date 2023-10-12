@@ -237,7 +237,6 @@ class AimsOutHeaderChunk(AimsOutChunk):
         line_inds = self.search_for_all("Found relaxation constraint for atom")
         if len(line_inds) == 0:
             return []
-
         fix = []
         fix_cart = []
         for ll in line_inds:
@@ -255,14 +254,17 @@ class AimsOutHeaderChunk(AimsOutChunk):
                 elif coord == "z":
                     xyz[2] = 1
                 keep = True
+                n_mod = 0
                 for n, c in enumerate(fix_cart):
+                    print("n, c", n, c)
                     if ind == c.index:
                         keep = False
+                        n_mod = n
                         break
-                    if keep:
-                        fix_cart.append(FixCartesian(ind, xyz))
-                    else:
-                        fix_cart[n].mask[xyz.index(1)] = 0
+                if keep:
+                    fix_cart.append(FixCartesian(ind, xyz))
+                else:
+                    fix_cart[n_mod].mask[xyz.index(1)] = 0
         if len(fix) > 0:
             fix_cart.append(FixAtoms(indices=fix))
 

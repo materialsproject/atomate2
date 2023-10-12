@@ -221,7 +221,7 @@ class ConvergenceSummary(BaseModel):
         :ConvergenceSummary
             The summary for convergence runs.
         """
-        from fhi_aims_workflows.jobs.base import CONVERGENCE_FILE_NAME
+        from atomate2.aims.jobs.base import CONVERGENCE_FILE_NAME
 
         job_dir = calc_doc.dir_name.split(":")[-1]
 
@@ -334,7 +334,9 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        if additional_fields is None:
+            additional_fields = {}
+
         dir_name = Path(dir_name)
         task_files = _find_aims_files(dir_name, volumetric_files=volumetric_files)
 
@@ -427,7 +429,7 @@ def _find_aims_files(
     Only files in folders with names matching a task name (or alternatively files
     with the task name as an extension, e.g., aims.out) will be returned.
 
-    CP2K files in the current directory will be given the task name "standard".
+    FHI-aims files in the current directory will be given the task name "standard".
 
     Parameters
     ----------
@@ -469,6 +471,7 @@ def _find_aims_files(
 
         return aims_files
 
+    print("\n\n\n", list(path.glob("*")), "\n\n\n")
     for task_name in task_names:
         subfolder_match = list(path.glob(f"{task_name}/*"))
         suffix_match = list(path.glob(f"*.{task_name}*"))

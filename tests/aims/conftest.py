@@ -53,7 +53,10 @@ def ref_path():
 
 @pytest.fixture()
 def should_mock_aims(request):
-    return not request.config.getoption("--generate-test-data")
+    try:
+        return not request.config.getoption("--generate-test-data")
+    except ValueError:
+        return True
 
 
 @pytest.fixture()

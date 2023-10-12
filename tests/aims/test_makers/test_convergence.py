@@ -52,10 +52,6 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
 
-    # a very nasty hack!
-    # but otherwise I do not know how to get the uuid of the last job in a
-    # dynamic workflow
-
     job_uuid = flow.all_uuids[0]
     while responses[job_uuid][1].detour:
         job_uuid = responses[job_uuid][1].detour.all_uuids[-1]
