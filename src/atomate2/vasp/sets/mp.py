@@ -14,7 +14,11 @@ from typing import TYPE_CHECKING
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
-from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
+from atomate2.vasp.sets.core import (
+    EOSSetGenerator,
+    RelaxSetGenerator,
+    StaticSetGenerator,
+)
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -83,6 +87,16 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
             "LREAL": False,
             "ISMEAR": -5,
         }
+
+
+@dataclass
+class MPGGAEOSSetGenerator(EOSSetGenerator):
+    """Class to generate MP-compatible VASP GGA EOS input sets."""
+
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    auto_ismear: bool = False
+    auto_kspacing: bool = True
+    inherit_incar: bool = False
 
 
 @dataclass
