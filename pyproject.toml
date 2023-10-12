@@ -80,6 +80,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.8.0",
+    "ase@git+https://gitlab.com/ase/ase.git@793179f4#egg=ase",
 ]
 
 [project.scripts]
