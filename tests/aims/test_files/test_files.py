@@ -32,5 +32,4 @@ def test_copy_aims_outputs(tmp_dir):
     copy_aims_outputs(src_dir=path)
 
     for f in files + restart_files:
-        print(f)
         assert Path(f).exists()

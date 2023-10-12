@@ -252,7 +252,7 @@ class BasePhononMaker(Maker, ABC):
             bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
             jobs.append(bulk)
             structure = bulk.output.structure
-            if isinstance(structure, MSONableAtoms):
+            if self.code == "aims":
                 structure = structure.structure
             prev_dir = bulk.output.dir_name
             optimization_run_job_dir = bulk.output.dir_name

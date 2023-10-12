@@ -256,7 +256,6 @@ class AimsOutHeaderChunk(AimsOutChunk):
                 keep = True
                 n_mod = 0
                 for n, c in enumerate(fix_cart):
-                    print("n, c", n, c)
                     if ind == c.index:
                         keep = False
                         n_mod = n

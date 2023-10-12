@@ -177,8 +177,6 @@ def test_header_n_spins(header_chunk):
 
 
 def test_header_constraints(header_chunk):
-    print(header_chunk)
-    print(header_chunk.constraints)
     assert len(header_chunk.constraints) == 2
     assert header_chunk.constraints[0].index == 0
     assert header_chunk.constraints[1].index == 1
