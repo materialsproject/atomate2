@@ -14,8 +14,7 @@ from atomate2.common.flows.phonons import BasePhononMaker
 
 @dataclass
 class PhononMaker(BasePhononMaker):
-    """
-    Maker to calculate harmonic phonons with FHI-aims and Phonopy.
+    """Maker to calculate harmonic phonons with FHI-aims and Phonopy.
 
     Calculate the harmonic phonons of a material. Initially, a tight structural
     relaxation is performed to obtain a structure without forces on the atoms.

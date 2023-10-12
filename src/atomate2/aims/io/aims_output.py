@@ -29,7 +29,7 @@ class AimsOutput(MSONable):
 
         Parameters
         ----------
-        results: Sequence[MSONableAtoms]
+        results: Sequence[.MSONableAtoms]
             A list of all images in an output file
         metadata: Dict[str, Any]
             The metadata of the executable used to perform the calculation
@@ -182,7 +182,7 @@ class AimsOutput(MSONable):
 
     @property
     def stresses(self) -> list[Matrix3D]:
-        """The virial stresses for the final image of the calculation."""
+        """The atomic virial stresses for the final image of the calculation."""
         stresses_array = self.get_results_for_image(-1).calc.results.get(
             "stresses", None
         )

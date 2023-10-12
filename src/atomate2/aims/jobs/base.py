@@ -35,19 +35,19 @@ class BaseAimsMaker(Maker):
     ----------
     name : str
         The job name.
-    input_set_generator : AimsInputGenerator
+    input_set_generator : .AimsInputGenerator
         A generator used to make the input set.
-    write_input_set_kwargs : dict
+    write_input_set_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.write_aims_input_set`.
-    copy_aims_kwargs : dict
+    copy_aims_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.copy_aims_outputs`.
-    run_aims_kwargs : dict
+    run_aims_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.run_aims`.
-    task_document_kwargs : dict
+    task_document_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
-    stop_children_kwargs : dict
+    stop_children_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data : dict
+    write_additional_data : dict[str, Any]
         Additional data to write to the current directory. Given as a dict of
         {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
         the "." character which is typically used to denote file extensions. To avoid
@@ -79,7 +79,7 @@ class BaseAimsMaker(Maker):
 
         Parameters
         ----------
-        structure : MSONableAtoms or Structure or Molecule
+        structure : .MSONableAtoms or Structure or Molecule
             An ASE Atoms or pymatgen Structure object to create the calculation for.
         prev_dir : str or Path or None
             A previous FHI-aims calculation directory to copy output files from.
@@ -146,7 +146,7 @@ class ConvergenceMaker(Maker):
         A difference in criterion value for subsequent runs
     convergence_field: str
         An input parameter that changes to achieve convergence
-    convergence_steps: list | tuple
+    convergence_steps: list
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
         that the job is failed
@@ -168,7 +168,7 @@ class ConvergenceMaker(Maker):
 
         Parameters
         ----------
-            atoms : MSONableAtoms
+            atoms : .MSONableAtoms
                 a structure to run a job
         """
         convergence_job = self.convergence_iteration(atoms)
@@ -184,9 +184,9 @@ class ConvergenceMaker(Maker):
 
         Parameters
         ----------
-        atoms : MSONableAtoms or Structure or Molecule
+        atoms : .MSONableAtoms or Structure or Molecule
             The structure to run the job for
-        prev_dir: str | None
+        prev_dir: str or None
             An FHI-aims calculation directory in which previous run contents are stored
 
         Returns
@@ -252,7 +252,12 @@ class ConvergenceMaker(Maker):
 
         Parameters
         ----------
-        TO DO: fill out
+        prev_dir: str or Path
+            The previous calculation directory
+        job_dir: str or Path
+            The current calculation directory
+        output: .ConvergenceSummary
+            The current output of the convergence flow
         """
         idx = 0
         if prev_dir is not None:

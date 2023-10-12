@@ -39,7 +39,7 @@ def copy_aims_outputs(
         either "username@remote_host" or just "remote_host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    additional_aims_files : list of str
+    additional_aims_files : list[str]
         Additional files to copy
     restart_to_input : bool
         Move the aims restart files to by the aims input in the new directory
@@ -127,18 +127,17 @@ def cleanup_aims_outputs(
     file_patterns: Sequence[str] = (),
     file_client: FileClient | None = None,
 ):
-    """
-    Remove unnecessary files.
+    """Remove unnecessary files.
 
     Parameters
     ----------
-    directory:
+    directory: Path or str
         Directory containing files
-    host:
+    host: str or None
         File client host
-    file_patterns:
+    file_patterns: Sequence[str]
         Glob patterns to find files for deletion.
-    file_client:
+    file_client: FileClient
         A file client to use for performing file operations.
     """
     files_to_delete = []

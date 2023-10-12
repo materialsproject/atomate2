@@ -34,7 +34,7 @@ class StaticSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -77,7 +77,7 @@ class RelaxSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -120,7 +120,7 @@ class SocketIOSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters

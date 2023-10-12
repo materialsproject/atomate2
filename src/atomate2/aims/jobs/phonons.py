@@ -20,7 +20,7 @@ class PhononDisplacementMaker(BaseAimsMaker):
     ----------
     name: str
         The job name.
-    input_set_generator: AimsInputGenerator
+    input_set_generator: .AimsInputGenerator
         A generator used to make the input set.
     """
 
@@ -47,7 +47,7 @@ class PhononDisplacementMakerSocket(SocketIOStaticMaker):
     ----------
     name: str
         The job name.
-    input_set_generator: AimsInputGenerator
+    input_set_generator: .AimsInputGenerator
         A generator used to make the input set.
     """
 

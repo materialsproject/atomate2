@@ -13,15 +13,10 @@ from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from atomate2.aims.sets.core import StaticSetGenerator
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
-__all__ = [
-    "PeriodicGWConvergenceMaker",
-]
-
 
 @dataclass
 class PeriodicGWConvergenceMaker(BaseAimsMaker):
-    """
-    A maker to perform a GW workflow with automatic convergence in FHI-aims.
+    """A maker to perform a GW workflow with automatic convergence in FHI-aims.
 
     Parameters
     ----------
@@ -33,7 +28,7 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
         A difference in criterion value for subsequent runs
     convergence_field: str
         An input parameter that changes to achieve convergence
-    convergence_steps: list | tuple
+    convergence_steps: list
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
         that the job is failed
@@ -50,8 +45,7 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
         structure: Union[MSONableAtoms, Structure, Molecule],
         prev_dir: Union[str, Path, None] = None,
     ) -> Flow:
-        """
-        Create a flow from the DFT ground state and subsequent GW calculation.
+        """Create a flow from the DFT ground state and subsequent GW calculation.
 
         Parameters
         ----------
@@ -62,6 +56,7 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
         """
         parameters = self.input_set_generator.user_parameters
         parameters["elsi_restart"] = ["read_and_write", 1]
+
         # the first calculation
         if all(structure.pbc):
             input_set = BandStructureSetGenerator(user_parameters=deepcopy(parameters))
@@ -80,6 +75,7 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
         gw_maker = GWMaker(
             input_set_generator=gw_input_set, run_aims_kwargs=self.run_aims_kwargs
         )
+
         convergence = ConvergenceMaker(
             maker=gw_maker,
             epsilon=self.epsilon,
@@ -87,7 +83,9 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
             convergence_field=self.convergence_field,
             convergence_steps=self.convergence_steps,
         )
+
         gw = convergence.convergence_iteration(
             static.output.structure, prev_dir=static.output.dir_name
         )
+
         return Flow([static, gw], gw.output, name=self.name)

@@ -20,13 +20,6 @@ from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 STORE_VOLUMETRIC_DATA = ("total_density",)
 
 
-__all__ = [
-    "Status",
-    "AimsObject",
-    "Calculation",
-]
-
-
 class Status(ValueEnum):
     """FHI-aims calculation state."""
 
@@ -45,15 +38,25 @@ class AimsObject(ValueEnum):
 
 
 class CalculationInput(BaseModel):
-    """Summary of inputs for an FHI-aims calculation."""
+    """Summary of inputs for an FHI-aims calculation.
+
+    Parameters
+    ----------
+    structure: .MSONableAtoms
+        The input Atoms object
+    species_info: Dict
+        Description of parameters used for each atomic species
+    aims_input: Dict
+        The aims input parameters used for this task
+    """
 
     structure: MSONableAtoms = Field(None, description="The input Atoms object")
 
-    species_info: Dict = Field(
+    species_info: Dict[str, Any] = Field(
         None, description="Description of parameters used for each atomic species"
     )
 
-    aims_input: Dict = Field(
+    aims_input: Dict[str, Any] = Field(
         None, description="The aims input parameters used for this task"
     )
 
@@ -68,7 +71,37 @@ class CalculationInput(BaseModel):
 
 
 class CalculationOutput(BaseModel):
-    """Document defining FHI-aims calculation outputs."""
+    """Document defining FHI-aims calculation outputs.
+
+    Parameters
+    ----------
+    energy: float
+        The final total DFT energy for the calculation
+    energy_per_atom: float
+        The final DFT energy per atom for the calculation
+    structure: .MSONableAtoms
+        The final structure from the calculation
+    efermi: float
+        The Fermi level from the calculation in eV
+    forces: List[Vector3D]
+        Forces acting on each atom
+    all_forces: List[List[Vector3D]]
+        Forces acting on each atom for each structure in the output file
+    stress: Matrix3D
+        The stress on the cell
+    stresses: List[Matrix3D]
+        The atomic virial stresses
+    is_metal: bool
+        Whether the system is metallic
+    bandgap: float
+        The band gap from the calculation in eV
+    cbm: float
+        The conduction band minimum in eV (if system is not metallic
+    vbm: float
+        The valence band maximum in eV (if system is not metallic)
+    atomic_steps: List[.MSONableAtoms]
+        Structures for each ionic step"
+    """
 
     energy: float = Field(
         None, description="The final total DFT energy for the calculation"
@@ -89,7 +122,7 @@ class CalculationOutput(BaseModel):
         description="Forces acting on each atom for each structure in the output file",
     )
     stress: Matrix3D = Field(None, description="The stress on the cell")
-    stresses: List[Matrix3D] = Field(None, description="The stress on the cell")
+    stresses: List[Matrix3D] = Field(None, description="The atomic virial stresses")
 
     is_metal: bool = Field(None, description="Whether the system is metallic")
     bandgap: float = Field(None, description="The band gap from the calculation in eV")
@@ -115,14 +148,14 @@ class CalculationOutput(BaseModel):
 
         Parameters
         ----------
-        output
+        output: .AimsOutput
             An AimsOutput object.
-        store_trajectory
+        store_trajectory: bool
             A flag setting to store output trajectory
 
         Returns
         -------
-            The FHI-aims calculation output document.
+        The FHI-aims calculation output document.
         """
         structure = output.final_structure
 
@@ -166,7 +199,24 @@ class CalculationOutput(BaseModel):
 
 
 class Calculation(BaseModel):
-    """Full FHI-aims calculation inputs and outputs."""
+    """Full FHI-aims calculation inputs and outputs.
+
+    Parameters
+    ----------
+    dir_name: str
+        The directory for this FHI-aims calculation
+    aims_version: str
+        FHI-aims version used to perform the calculation
+    has_aims_completed: .Status
+        Whether FHI-aims completed the calculation successfully
+    output: .CalculationOutput
+        The FHI-aims calculation output
+    completed_at: str
+        Timestamp for when the calculation was completed
+    output_file_paths: Dict[str, str]
+        Paths (relative to dir_name) of the FHI-aims output files
+        associated with this calculation
+    """
 
     dir_name: str = Field(
         None, description="The directory for this FHI-aims calculation"
@@ -207,22 +257,22 @@ class Calculation(BaseModel):
 
         Parameters
         ----------
-        dir_name
+        dir_name: Path or str
             The directory containing the calculation outputs.
-        task_name
+        task_name: str
             The task name.
-        aims_output_file
+        aims_output_file: Path or str
             Path to the main output of aims job, relative to dir_name.
-        volumetric_files
+        volumetric_files: List[str]
             Path to volumetric (Cube) files, relative to dir_name.
-        parse_dos
+        parse_dos: str or bool
             Whether to parse the DOS. Can be:
 
             - "auto": Only parse DOS if there are no ionic steps.
             - True: Always parse DOS.
             - False: Never parse DOS.
 
-        parse_bandstructure
+        parse_bandstructure: str or bool
             How to parse the bandstructure. Can be:
 
             - "auto": Parse the bandstructure with projections for NSCF calculations
@@ -235,18 +285,18 @@ class Calculation(BaseModel):
               vbm, cbm, band_gap, is_metal and efermi rather than the full
               band structure object.
 
-        store_trajectory:
+        store_trajectory: bool
             Whether to store the ionic steps as a pmg trajectory object, which can be
             pushed, to a bson data store, instead of as a list od dicts. Useful for
             large trajectories.
-        store_scf:
+        store_scf: bool
             Whether to store the SCF convergence data.
-        store_volumetric_data
+        store_volumetric_data: Optional[Tuple[str]]
             Which volumetric files to store.
 
         Returns
         -------
-        Calculation
+        .Calculation
             An FHI-aims calculation document.
         """
         dir_name = Path(dir_name)
@@ -299,7 +349,7 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[AimsObject, str]
 
     Parameters
     ----------
-    volumetric_files
+    volumetric_files: List[str]
         A list of volumetric files associated with the calculation.
 
     Returns
@@ -325,11 +375,11 @@ def _get_volumetric_data(
 
     Parameters
     ----------
-    dir_name
+    dir_name: Path
         The directory containing the files.
-    output_file_paths
+    output_file_paths: Dict[.AimsObject, str]
         A dictionary mapping the data type to file path relative to dir_name.
-    store_volumetric_data
+    store_volumetric_data: Optional[Tuple[str]]
         The volumetric data files to load.
 
     Returns
@@ -356,16 +406,17 @@ def _get_volumetric_data(
 
 
 def _parse_dos(parse_dos: Union[str, bool], aims_output: AimsOutput) -> Optional[Dos]:
-    """
-    Parse DOS outputs from FHI-aims calculation.
+    """Parse DOS outputs from FHI-aims calculation.
 
     Parameters
     ----------
-    parse_dos: Whether to parse the DOS. Can be:
+    parse_dos: str or bool
+        Whether to parse the DOS. Can be:
         - "auto": Only parse DOS if there are no ionic steps.
         - True: Always parse DOS.
         - False: Never parse DOS.
-    aims_output: AimsOutput object for the calculation being parsed.
+    aims_output: AimsOutput
+        The output object for the calculation being parsed.
 
     Returns
     -------
@@ -388,8 +439,14 @@ def _parse_bandstructure(
 
     Parameters
     ----------
-         parse_bandstructure (bool): Whether to parse. Does not support the
-            auto/line distinction currently.
+    parse_bandstructure: str or bool
+        Whether to parse. Does not support the auto/line distinction currently.
+    aims_ouput: .AimsOutput
+        The output object to parse
+
+    Returns
+    -------
+    The bandstructure
     """
     if parse_bandstructure:
         return aims_output.band_structure
@@ -397,5 +454,15 @@ def _parse_bandstructure(
 
 
 def _parse_trajectory(aims_output: AimsOutput) -> Optional[Trajectory]:
-    """Grab a Trajectory object given an FHI-aims output object."""
+    """Grab a Trajectory object given an FHI-aims output object.
+
+    Parameters
+    ----------
+    aims_ouput: .AimsOutput
+        The output object to parse
+
+    Returns
+    -------
+    The trajectory for the calculation
+    """
     return aims_output.structures

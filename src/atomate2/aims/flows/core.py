@@ -12,10 +12,6 @@ from atomate2.aims.jobs.core import RelaxMaker
 from atomate2.aims.sets.core import RelaxSetGenerator
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
-__all__ = [
-    "DoubleRelaxMaker",
-]
-
 
 @dataclass
 class DoubleRelaxMaker(Maker):
@@ -28,9 +24,9 @@ class DoubleRelaxMaker(Maker):
     ----------
     name : str
         A name for the flow
-    relax_maker1: .RelaxMaker
+    relax_maker1: .BaseAimsMaker
         A maker that generates the first relaxation
-    relax_maker2: .RelaxMaker
+    relax_maker2: .BaseAimsMaker
         A maker that generates the second relaxation
     """
 
@@ -43,8 +39,7 @@ class DoubleRelaxMaker(Maker):
         structure: Union[MSONableAtoms, Structure, Molecule],
         prev_dir: Union[str, Path, None] = None,
     ) -> Flow:
-        """
-        Create a flow with two chained relaxations.
+        """Create a flow with two chained relaxations.
 
         Parameters
         ----------

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Sequence
 
 import numpy as np
 from ase import Atom
@@ -54,7 +54,7 @@ class AimsOutChunk:
 
         Parameters
         ----------
-        lines: list of str
+        lines: list[str]
             The set of lines from the output file the encompasses either
             a single structure within a trajectory or
             general information about the calculation (header)
@@ -66,7 +66,7 @@ class AimsOutChunk:
 
         Parameters
         ----------
-        keys: list of str
+        keys: list[str]
             The key strings to search for in self.lines
         line_start: int
             The lowest index to search for in self.lines
@@ -135,7 +135,7 @@ class AimsOutHeaderChunk(AimsOutChunk):
 
         Parameters
         ----------
-        lines: list of str
+        lines: list[str]
             The lines inside the aims.out header
         """
         super().__init__(lines)
@@ -481,9 +481,9 @@ class AimsOutCalcChunk(AimsOutChunk):
 
         Parameters
         ----------
-        lines: list of str
+        lines: list[str]
             The lines used for the structure
-        header: AimsOutHeaderChunk
+        header: .AimsOutHeaderChunk
             A summary of the relevant information from the aims.out header
         """
         super().__init__(lines)
@@ -1072,12 +1072,14 @@ def get_aims_out_chunks(fd, header_chunk):
         yield AimsOutCalcChunk(lines, header_chunk)
 
 
-def check_convergence(chunks, non_convergence_ok=False):
+def check_convergence(
+    chunks: list[AimsOutCalcChunk], non_convergence_ok: bool = False
+) -> bool:
     """Check if the aims output file is for a converged calculation.
 
     Parameters
     ----------
-    chunks: list of AimsOutChunks
+    chunks: list[.AimsOutCalcChunk]
         The list of chunks for the aims calculations
     non_convergence_ok: bool
         True if it is okay for the calculation to not be converged
@@ -1096,7 +1098,17 @@ def check_convergence(chunks, non_convergence_ok=False):
 def read_aims_header_info(
     fd: str | Path,
 ) -> tuple[dict[str, str], dict[str, Any]]:
-    """Read the FHI-aims header information."""
+    """Read the FHI-aims header information.
+
+    Parameters
+    ----------
+    fd: str or Path
+        The file to read
+
+    Returns
+    -------
+    The calculation metadata and the system summary
+    """
     header_chunk = get_header_chunk(fd)
 
     system_summary = header_chunk.header_summary
@@ -1105,10 +1117,27 @@ def read_aims_header_info(
 
 
 @reader
-def read_aims_output(fd, index=-1, non_convergence_ok=False):
+def read_aims_output(
+    fd: str | Path,
+    index: int | slice = -1,
+    non_convergence_ok: bool = False,
+) -> MSONableAtoms | Sequence[MSONableAtoms]:
     """Import FHI-aims output files with all data available.
 
     Includes all structures for relaxations and MD runs with FHI-aims
+
+    Parameters
+    ----------
+    fd: str or Path
+        The file to read
+    index: int or slice
+        The index of the images to read
+    non_convergence_ok: bool
+        True if the calculations do not have to be converged
+
+    Returns
+    -------
+    The selected atoms
     """
     header_chunk = get_header_chunk(fd)
     chunks = list(get_aims_out_chunks(fd, header_chunk))

@@ -22,7 +22,19 @@ logger = logging.getLogger(__name__)
 
 
 class AnalysisSummary(BaseModel):
-    """Calculation relaxation summary."""
+    """Calculation relaxation summary.
+
+    Parameters
+    ----------
+    delta_volume: float
+        Absolute change in volume
+    delta_volume_as_percent: float
+        Percentage change in volume
+    max_force: float
+        Maximum force on the atoms
+    errors: List[str]
+        Errors from the FHI-aims output
+    """
 
     delta_volume: float = Field(None, description="Absolute change in volume")
     delta_volume_as_percent: float = Field(
@@ -33,17 +45,16 @@ class AnalysisSummary(BaseModel):
 
     @classmethod
     def from_aims_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
-        """
-        Create analysis summary from FHI-aims calculation documents.
+        """Create analysis summary from FHI-aims calculation documents.
 
         Parameters
         ----------
-        calc_docs
+        calc_docs: List[.Calculation]
             FHI-aims calculation documents.
 
         Returns
         -------
-        AnalysisSummary
+        .AnalysisSummary
             Summary object
         """
         delta_vol = None
@@ -63,22 +74,46 @@ class AnalysisSummary(BaseModel):
 
 
 class Species(BaseModel):
-    """A representation of the most important information about each type of species."""
+    """A representation of the most important information about each type of species.
+
+    Parameters
+    ----------
+    element: str
+        Element assigned to this atom kind
+    species_defaults: str
+        Basis set for this atom kind
+    """
 
     element: str = Field(None, description="Element assigned to this atom kind")
     species_defaults: str = Field(None, description="Basis set for this atom kind")
 
 
 class SpeciesSummary(BaseModel):
-    """A summary of species defaults."""
+    """A summary of species defaults.
+
+    Parameters
+    ----------
+    species_defaults: Dict[str, .Species]
+        Dictionary mapping atomic kind labels to their info
+    """
 
     species_defaults: Dict[str, Species] = Field(
         None, description="Dictionary mapping atomic kind labels to their info"
     )
 
     @classmethod
-    def from_species_info(cls, species_info: dict):
-        """Initialize from the atomic_kind_info dictionary."""
+    def from_species_info(cls, species_info: Dict[str, Dict[str, Any]]):
+        """Initialize from the atomic_kind_info dictionary.
+
+        Parameters
+        ----------
+        species_info: Dict[str, Dict[str, Any]]
+            The information for the basis set for the calculation
+
+        Returns
+        -------
+        The SpeciesSummary
+        """
         d: Dict[str, Dict[str, Any]] = {"species_defaults": {}}
         for kind, info in species_info.items():
             d["species_defaults"][kind] = {
@@ -89,7 +124,17 @@ class SpeciesSummary(BaseModel):
 
 
 class InputSummary(BaseModel):
-    """Summary of inputs for an FHI-aims calculation."""
+    """Summary of inputs for an FHI-aims calculation.
+
+    Parameters
+    ----------
+    structure: .MSONableAtoms
+        The input structure object
+    species_info: .SpeciesSummary
+        Summary of the species defaults used for each atom kind
+    xc: str
+        Exchange-correlation functional used if not the default
+    """
 
     structure: MSONableAtoms = Field(None, description="The input structure object")
 
@@ -102,17 +147,16 @@ class InputSummary(BaseModel):
 
     @classmethod
     def from_aims_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
-        """
-        Create calculation input summary from a calculation document.
+        """Create calculation input summary from a calculation document.
 
         Parameters
         ----------
-        calc_doc
+        calc_doc: .Calculation
             An FHI-aims calculation document.
 
         Returns
         -------
-        InputSummary
+        .InputSummary
             A summary of the input structure and parameters.
         """
         summary = SpeciesSummary.from_species_info(calc_doc.input.species_info)
@@ -125,7 +169,31 @@ class InputSummary(BaseModel):
 
 
 class OutputSummary(BaseModel):
-    """Summary of the outputs for an FHI-aims calculation."""
+    """Summary of the outputs for an FHI-aims calculation.
+
+    Parameters
+    ----------
+    structure: .MSONableAtoms
+        The output structure object
+    trajectory: List[.MSONableAtoms]
+        The trajectory of output structures
+    energy: float
+        The final total DFT energy for the last calculation
+    energy_per_atom: float
+        The final DFT energy per atom for the last calculation
+    bandgap: float
+        The DFT bandgap for the last calculation
+    cbm: float
+        CBM for this calculation
+    vbm: float
+        VBM for this calculation
+    forces: List[Vector3D]
+        Forces on atoms from the last calculation
+    stress: Matrix3D
+        Stress on the unit cell from the last calculation
+    all_forces: List[List[Vector3D]]
+        Forces on atoms from all calculations.
+    """
 
     structure: MSONableAtoms = Field(None, description="The output structure object")
     trajectory: List[MSONableAtoms] = Field(
@@ -156,12 +224,12 @@ class OutputSummary(BaseModel):
 
         Parameters
         ----------
-        calc_doc
+        calc_doc: .Calculation
             An FHI-aims calculation document.
 
         Returns
         -------
-        OutputSummary
+        .OutputSummary
             The calculation output summary.
         """
         return cls(
@@ -179,7 +247,27 @@ class OutputSummary(BaseModel):
 
 
 class ConvergenceSummary(BaseModel):
-    """Summary of the outputs for an FHI-aims convergence calculation."""
+    """Summary of the outputs for an FHI-aims convergence calculation.
+
+    Parameters
+    ----------
+    structure: .MSONableAtoms
+        The output structure object
+    converged: bool
+        Is convergence achieved?
+    convergence_criterion_name: str
+        The output name of the convergence criterion
+    convergence_field_name: str
+        The name of the input setting to study convergence against
+    convergence_criterion_value: float
+        The output value of the convergence criterion
+    convergence_field_value: Any
+        The last value of the input setting to study convergence against
+    asked_epsilon: float
+        The difference in the values for the convergence criteria that was asked for
+    actual_epsilon: float
+        The actual difference in the convergence criteria values
+    """
 
     structure: MSONableAtoms = Field(None, description="The output structure object")
     converged: bool = Field(None, description="Is convergence achieved?")
@@ -213,12 +301,12 @@ class ConvergenceSummary(BaseModel):
 
         Parameters
         ----------
-        calc_doc
+        calc_doc: .Calculation
             An FHI-aims calculation document.
 
         Returns
         -------
-        :ConvergenceSummary
+        .ConvergenceSummary
             The summary for convergence runs.
         """
         from atomate2.aims.jobs.base import CONVERGENCE_FILE_NAME
@@ -251,7 +339,51 @@ class ConvergenceSummary(BaseModel):
 
 
 class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
-    """Definition of FHI-aims task document."""
+    """Definition of FHI-aims task document.
+
+    Parameters
+    ----------
+    dir_name: str
+        The directory for this FHI-aims task
+    last_updated: str
+        Timestamp for this task document was last updated
+    completed_at: str
+        Timestamp for when this task was completed
+    input: .InputSummary
+        The input to the first calculation
+    output: .OutputSummary
+        The output of the final calculation
+    structure: .MSONableAtoms
+        Final output structure from the task
+    state: .Status
+        State of this task
+    included_objects: List[.AimsObject]
+        List of FHI-aims objects included with this task document
+    aims_objects: Dict[.AimsObject, Any]
+        FHI-aims objects associated with this task
+    entry: ComputedEntry
+        The ComputedEntry from the task doc
+    analysis: .AnalysisSummary
+        Summary of structural relaxation and forces
+    task_label: str
+        A description of the task
+    tags: List[str]
+        Metadata tags for this task document
+    author: str
+        Author extracted from transformations
+    icsd_id: str
+        International crystal structure database id of the structure
+    calcs_reversed: List[.Calculation]
+        The inputs and outputs for all FHI-aims runs in this task.
+    transformations: Dict[str, Any]
+        Information on the structural transformations, parsed from a
+        transformations.json file
+    custodian: Any
+        Information on the custodian settings used to run this
+        calculation, parsed from a custodian.json file
+    additional_json: Dict[str, Any]
+        Additional json loaded from the calculation directory
+    """
 
     dir_name: str = Field(None, description="The directory for this FHI-aims task")
     last_updated: str = Field(
@@ -312,16 +444,15 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         additional_fields: Dict[str, Any] = None,
         **aims_calculation_kwargs,
     ) -> _T:
-        """
-        Create a task document from a directory containing FHi-aims files.
+        """Create a task document from a directory containing FHi-aims files.
 
         Parameters
         ----------
-        dir_name
+        dir_name: Path or str
             The path to the folder containing the calculation outputs.
-        volumetric_files
+        volumetric_files: Tuple[str, ...]
             A volumetric files to search for.
-        additional_fields
+        additional_fields: Dict[str, Any]
             Dictionary of additional fields to add to output document.
         **aims_calculation_kwargs
             Additional parsing options that will be passed to the
@@ -329,7 +460,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
 
         Returns
         -------
-        AimsTaskDoc
+        .AimsTaskDoc
             A task document for the calculation.
         """
         logger.info(f"Getting task doc in: {dir_name}")
@@ -387,14 +518,13 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
     def get_entry(
         calc_docs: List[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
-        """
-        Get a computed entry from a list of FHI-aims calculation documents.
+        """Get a computed entry from a list of FHI-aims calculation documents.
 
         Parameters
         ----------
-        calc_docs
+        calc_docs: List[.Calculation]
             A list of FHI-aims calculation documents.
-        job_id
+        job_id: Optional[str]
             The job identifier.
 
         Returns
@@ -423,8 +553,7 @@ def _find_aims_files(
     path: Union[str, Path],
     volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
 ) -> Dict[str, Any]:
-    """
-    Find FHI-aims files in a directory.
+    """Find FHI-aims files in a directory.
 
     Only files in folders with names matching a task name (or alternatively files
     with the task name as an extension, e.g., aims.out) will be returned.
@@ -433,9 +562,9 @@ def _find_aims_files(
 
     Parameters
     ----------
-    path
+    path: str or Path
         Path to a directory to search.
-    volumetric_files
+    volumetric_files: Tuple[str, ...]
         Volumetric files to search for.
 
     Returns
@@ -471,7 +600,6 @@ def _find_aims_files(
 
         return aims_files
 
-    print("\n\n\n", list(path.glob("*")), "\n\n\n")
     for task_name in task_names:
         subfolder_match = list(path.glob(f"{task_name}/*"))
         suffix_match = list(path.glob(f"*.{task_name}*"))
@@ -494,7 +622,18 @@ def _find_aims_files(
 
 
 def _get_max_force(calc_doc: Calculation) -> Optional[float]:
-    """Get max force acting on atoms from a calculation document."""
+    """Get max force acting on atoms from a calculation document.
+
+    Parameters
+    ----------
+    calc_doc: Calculation
+        The calucation doc to get the max force
+
+    Returns
+    -------
+    float
+        The maximum force
+    """
     forces = calc_doc.output.forces
     if forces is not None:
         forces = np.array(forces)
@@ -503,7 +642,20 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
 
 
 def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
-    """Get state from calculation documents and relaxation analysis."""
+    """Get state from calculation documents and relaxation analysis.
+
+    Parameters
+    ----------
+    calc_docs: List[.Calculations]
+        The calculation to get the state from
+    analysis: .AnalysisSummary
+        The summary of the analysis
+
+    Returns
+    -------
+    .Status
+        The status of the calculation
+    """
     all_calcs_completed = all(c.has_aims_completed == Status.SUCCESS for c in calc_docs)
     if len(analysis.errors) == 0 and all_calcs_completed:
         return Status.SUCCESS  # type: ignore

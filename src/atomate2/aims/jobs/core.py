@@ -32,7 +32,6 @@ if TYPE_CHECKING:
     from atomate2.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
-"""Core job makers for FHI-aims workflows"""
 
 
 @dataclass
@@ -45,7 +44,7 @@ class StaticMaker(BaseAimsMaker):
         The type key for the calculation
     name: str
         The job name
-    input_set_generator: AimsInputGenerator
+    input_set_generator: .AimsInputGenerator
         The InputGenerator for the calculation
     """
 
@@ -64,7 +63,7 @@ class RelaxMaker(BaseAimsMaker):
         The type key for the calculation
     name: str
         The job name
-    input_set_generator: AimsInputGenerator
+    input_set_generator: .AimsInputGenerator
         The InputGenerator for the calculation
     """
 
@@ -76,14 +75,16 @@ class RelaxMaker(BaseAimsMaker):
     def fixed_cell_relaxation(cls, *args, **kwargs):
         """Create a fixed cell relaxation maker."""
         return cls(
-            input_set_generator=RelaxSetGenerator(relax_cell=False, **kwargs),
+            input_set_generator=RelaxSetGenerator(*args, relax_cell=False, **kwargs),
             name=cls.name + " (fixed cell)",
         )
 
     @classmethod
     def full_relaxation(cls, *args, **kwargs):
         """Create a full relaxation maker."""
-        return cls(input_set_generator=RelaxSetGenerator(relax_cell=True, **kwargs))
+        return cls(
+            input_set_generator=RelaxSetGenerator(*args, relax_cell=True, **kwargs)
+        )
 
 
 @dataclass
@@ -100,7 +101,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
         The name of the host to maintain the socket server on
     port: int
         The port number the socket server will listen on
-    input_set_generator: SocketIOSetGenerator
+    input_set_generator: .AimsInputGenerator
         The InputGenerator for the calculation
     """
 
@@ -125,7 +126,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
 
         Parameters
         ----------
-        structure : Sequence[MSONableAtoms | Structure]
+        structure : Sequence[.MSONableAtoms | Structure]
             The list of atoms objects to run FHI-aims on
         prev_dir : str or Path or None
             A previous FHI-aims calculation directory to copy output files from.
@@ -204,7 +205,7 @@ class BandStructureMaker(BaseAimsMaker):
         The type key for the calculation
     name: str
         The job name
-    input_set_generator: BandStructureSetGenerator
+    input_set_generator: .BandStructureSetGenerator
         The InputGenerator for the calculation
     """
 
@@ -225,7 +226,7 @@ class GWMaker(BaseAimsMaker):
         The type key for the calculation
     name: str
         The job name
-    input_set_generator: GWSetGenerator
+    input_set_generator: .GWSetGenerator
         The InputGenerator for the calculation
     """
 

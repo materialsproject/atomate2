@@ -10,15 +10,15 @@ from ase.dft.kpoints import kpoint_convert, resolve_kpt_path_string
 # TODO add the same procedures but using pymatgen routines
 
 
-def prepare_band_input(cell: Cell, density=20):
+def prepare_band_input(cell: Cell, density: float = 20):
     """Prepare the band information needed for the FHI-aims control.in file.
 
     Parameters
     ----------
-    cell: object
-        ASE cell object
+    cell: Cell
+        The lattive parameters of the material
     density: float
-        Number of kpoints per Angstrom. Default: 20
+        Number of kpoints per Angstrom.
     """
     bp = cell.bandpath()
     r_kpts = resolve_kpt_path_string(bp.path, bp.special_points)

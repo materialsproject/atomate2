@@ -30,7 +30,7 @@ class BandStructureSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -67,7 +67,7 @@ class GWSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters

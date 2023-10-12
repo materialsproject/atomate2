@@ -57,7 +57,13 @@ class MSONableAtoms(Atoms, MSONable):
 
     @classmethod
     def from_pymatgen(cls, structure: Union[Structure, Molecule]):
-        """Create an Atoms object from a pymatgen object."""
+        """Create an Atoms object from a pymatgen object.
+
+        Parameters
+        ----------
+        structure: Structure of Molecule
+            The pymatgen structure or molecule to convert
+        """
         return ASE_ADAPTOR.get_atoms(structure)
 
     @property

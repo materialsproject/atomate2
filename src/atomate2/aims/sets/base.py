@@ -37,8 +37,6 @@ DEFAULT_AIMS_PROPERTIES = [
     "magmom",
 ]
 
-__all__ = ["AimsInputSet", "AimsInputGenerator"]
-
 logger = logging.getLogger(__name__)
 
 
@@ -110,7 +108,7 @@ class AimsInputSet(InputSet):
         ----------
         parameters: Dict[str, Any]
             The ASE parameters object for the calculation
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The atoms objects to create the inputs for
         properties: Sequence[str]
             The properties to calculate for the calculation
@@ -148,17 +146,17 @@ class AimsInputSet(InputSet):
 
     @property
     def control_in(self) -> str:
-        """Get the AimsInput object."""
+        """Get the control.in file contents."""
         return self[CONTROL_FILE_NAME]
 
     @property
     def geometry_in(self) -> str:
-        """Get the AimsInput object."""
+        """Get the geometry.in file contents."""
         return self[GEOMETRY_FILE_NAME]
 
     @property
     def parameters_json(self) -> str:
-        """Get the AimsInput object."""
+        """Get the JSON representation of the parameters dict."""
         return self[PARAMS_JSON_FILE_NAME]
 
     def set_parameters(self, *args, **kwargs) -> dict[str, Any]:
@@ -173,7 +171,7 @@ class AimsInputSet(InputSet):
 
         Returns
         -------
-        dict
+        dict[str, Any]
             dictionary with the variables that have been added.
         """
         self._parameters.clear()
@@ -200,10 +198,10 @@ class AimsInputSet(InputSet):
 
         Parameters
         ----------
-        keys
+        keys: Iterable[str] or str
             string or list of strings with the names of the aims parameters
             to be removed.
-        strict
+        strict: bool
             whether to raise a KeyError if one of the aims parameters to be
             removed is not present.
 
@@ -225,7 +223,13 @@ class AimsInputSet(InputSet):
         return self.set_parameters(**self._parameters)
 
     def set_atoms(self, atoms: MSONableAtoms):
-        """Set the atoms object for this input set."""
+        """Set the atoms object for this input set.
+
+        Parameters
+        ----------
+        atoms: .MSONableAtoms
+            The new atoms for the calculation
+        """
         self._atoms = MSONableAtoms(atoms)
 
         _, aims_geometry_in = self.get_input_files()
@@ -263,11 +267,11 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms : MSONableAtoms
+        atoms : .MSONableAtoms
             ASE Atoms object to generate the input set for.
         prev_dir: str or Path
             Path to the previous working directory
-        properties: list or tuple of str
+        properties: list[str]
             System properties that are being calculated
 
         Returns
@@ -322,11 +326,11 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        properties
+        properties: list[str]
             The currently requested properties
-        parameters
+        parameters: dict[str, Any]
             The parameters for this calculation
-        prev_results
+        prev_results: dict[str, list[float]]
             The previous calculation results
 
         Returns
@@ -361,9 +365,9 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             The atoms object for the structures
-        prev_parameters
+        prev_parameters: dict[str, Any]
             The previous calculation's calculation parameters
 
         Returns
@@ -418,7 +422,7 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms : MSONableAtoms
+        atoms : .MSONableAtoms
             ASE Atoms object.
         prev_parameters: Dict[str, Any]
             Previous calculation parameters.
@@ -441,7 +445,7 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             Contains unit cell and information about boundary conditions.
         kptdensity: float or list of floats
             Required k-point density.  Default value is 5.0 point per Ang^-1.
@@ -460,7 +464,7 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms: MSONableAtoms
+        atoms: .MSONableAtoms
             Atoms object of interest.
         k_grid: Iterable[int]
             k_grid that was used.
@@ -484,11 +488,11 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        recipcell: ASE Cell object
+        recipcell: Cell
             The reciprocal cell
-        pbc: list of Bools
+        pbc: list[bools]
             If element of pbc is True then system is periodic in that direction
-        kptdensity: float or list of floats
+        kptdensity: float or list[floats]
             Required k-point density.  Default value is 3.5 point per Ang^-1.
         even: bool
             Round up to even numbers.
@@ -523,10 +527,10 @@ def recursive_update(d: dict, u: dict) -> dict:
 
     Parameters
     ----------
-        d: Dict
-            Input dictionary to modify
-        u: Dict
-            Dictionary of updates to apply
+    d: Dict
+        Input dictionary to modify
+    u: Dict
+        Dictionary of updates to apply
 
     Returns
     -------

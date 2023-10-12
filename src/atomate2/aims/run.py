@@ -80,9 +80,9 @@ def run_aims_socket(atoms_to_calculate: list[MSONableAtoms], aims_cmd: str = Non
 
     Parameters
     ----------
-    atoms_to_calculate
+    atoms_to_calculate: list[.MSONableAtoms]
         The list of structures to run scf calculations on
-    aims_cmd:
+    aims_cmd: str
         The aims command to use
     """
     with open("parameters.json") as param_file:
