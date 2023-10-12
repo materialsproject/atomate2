@@ -37,6 +37,10 @@ class MatPesGGAStaticSetGenerator(StaticSetGenerator):
     config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
     auto_ismear: bool = False
     auto_kspacing: bool = True
+    user_incar_settings: dict = field(
+        # ensure _set_kspacing doesn't override input set ISMEAR
+        default_factory=lambda: {"ISMEAR": 0, "SIGMA": 0.05}
+    )
 
 
 @dataclass
@@ -46,6 +50,10 @@ class MatPesMetaGGAStaticSetGenerator(StaticSetGenerator):
     config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
     auto_ismear: bool = False
     auto_kspacing: bool = True
+    user_incar_settings: dict = field(
+        # ensure _set_kspacing doesn't override input set ISMEAR
+        default_factory=lambda: {"ISMEAR": 0, "SIGMA": 0.05}
+    )
 
     def get_incar_updates(
         self,
