@@ -22,7 +22,9 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     # generate flow
     flow = MatPesGGAPlusMetaGGAStaticMaker().make(si_struct)
 
+    assert flow.name == "MatPES GGA plus meta-GGA static"
     assert len(flow) == 2
+    assert [job.name for job in flow] == list(ref_paths)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -31,3 +33,4 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(output, TaskDoc)
     assert output.output.energy == pytest.approx(-17.53895666)
+    assert output.output.bandgap == pytest.approx(0.8087999)

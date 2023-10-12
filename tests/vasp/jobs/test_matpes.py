@@ -1,4 +1,6 @@
 import pytest
+from emmet.core.tasks import TaskDoc
+from jobflow import run_locally
 from pymatgen.core import Structure
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -28,6 +30,7 @@ expected_incar = {
     "NSW": 0,
     "PREC": "Accurate",
     "SIGMA": 0.05,
+    "LMAXMIX": 6,
     "LDAU": False,
     "LDAUJ": {
         "F": {"Co": 0, "Cr": 0, "Fe": 0, "Mn": 0, "Mo": 0, "Ni": 0, "V": 0, "W": 0},
@@ -78,18 +81,10 @@ def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
 
 
 def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
     # map from job name to directory containing reference input/output files
-    ref_paths = {
-        # TODO should be using GGA-specific reference files here but since they only
-        # differ in "GGA", "METAGGA", "ALGO" settings, we avoid a lot of mostly
-        # duplicate test files by not checking for these settings
-        "MatPES GGA static": "matpes_metagga_static",
-    }
+    ref_paths = {"MatPES GGA static": "matpes_pbe_r2scan_flow/pbe_static"}
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/matpes_metagga_static/inputs/POSCAR"
+        f"{vasp_test_dir}/matpes_pbe_r2scan_flow/pbe_static/inputs/POSCAR"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -106,19 +101,14 @@ def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # validate output
     output = responses[job.uuid][1].output
     assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-238.02634906)
+    assert output.output.energy == pytest.approx(-10.84940729)
 
 
 def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
     # map from job name to directory containing reference input/output files
-    ref_paths = {
-        "MatPES meta-GGA static": "matpes_metagga_static",
-    }
+    ref_paths = {"MatPES meta-GGA static": "matpes_pbe_r2scan_flow/r2scan_static"}
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/matpes_metagga_static/inputs/POSCAR"
+        f"{vasp_test_dir}/matpes_pbe_r2scan_flow/r2scan_static/inputs/POSCAR"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -129,7 +119,11 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MatPesMetaGGAStaticMaker().make(si_struct)
+    job = MatPesMetaGGAStaticMaker(
+        input_set_generator=MatPesMetaGGAStaticSetGenerator(
+            auto_kspacing=0.6172000000000004
+        )
+    ).make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -137,4 +131,4 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # validate output
     output = responses[job.uuid][1].output
     assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-238.02634906)
+    assert output.output.energy == pytest.approx(-17.53895667)
