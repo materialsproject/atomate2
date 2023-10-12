@@ -76,4 +76,4 @@ class MatPesMetaGGAStaticSetGenerator(StaticSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {"METAGGA": "R2SCAN", "ALGO": "ALL", "GGA": "--"}  # unset GGA
+        return {"METAGGA": "R2SCAN", "ALGO": "ALL", "GGA": None}  # unset GGA
