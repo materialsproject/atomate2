@@ -34,7 +34,6 @@ dependencies = [
     "numpy",
     "pydantic",
     "pymatgen>=2023.1.9",
-    "ase@git+https://gitlab.com/ase/ase.git@793179f4#egg=ase",
 ]
 
 [project.optional-dependencies]
@@ -59,6 +58,7 @@ docs = [
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.2"]
+aims = ["ase@git+https://gitlab.com/ase/ase.git@793179f4#egg=ase"]
 strict = [
     "PyYAML==6.0.1",
     "cclib==1.8",
