@@ -253,6 +253,7 @@ def run_phonon_displacements(
     supercell_matrix: Matrix3D,
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker,
     prev_dir: str | Path = None,
+    prev_dir_argname: str = None,
     socket: bool = False,
 ):
     """
@@ -273,6 +274,8 @@ def run_phonon_displacements(
         A maker to use to generate dispacement calculations
     prev_dir: str or Path
         The previous working directory
+    prev_dir_argname: str
+        argument name for the prev_dir variable
     socket: bool
         If True use the socket-io interface to increase performance
     """
@@ -283,12 +286,12 @@ def run_phonon_displacements(
         "uuids": [],
         "dirs": [],
     }
+    phonon_job_kwargs = {}
+    if prev_dir is not None and prev_dir_argname is not None:
+        phonon_job_kwargs[prev_dir_argname] = prev_dir
 
     if socket:
-        if prev_dir is not None:
-            phonon_job = phonon_maker.make(displacements, prev_dir=prev_dir)
-        else:
-            phonon_job = phonon_maker.make(displacements)
+        phonon_job = phonon_maker.make(displacements, **phonon_job_kwargs)
         info = {
             "original_structure": structure,
             "supercell_matrix": supercell_matrix,
@@ -304,10 +307,7 @@ def run_phonon_displacements(
         outputs["forces"] = phonon_job.output.output.all_forces
     else:
         for i, displacement in enumerate(displacements):
-            if prev_dir is not None:
-                phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
-            else:
-                phonon_job = phonon_maker.make(displacement)
+            phonon_job = phonon_maker.make(displacement, **phonon_job_kwargs)
             phonon_job.append_name(f" {i + 1}/{len(displacements)}")
 
             # we will add some meta data

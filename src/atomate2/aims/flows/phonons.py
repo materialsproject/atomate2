@@ -138,3 +138,15 @@ class PhononMaker(BasePhononMaker):
                 self.phonon_displacement_maker = PhononDisplacementMakerSocket()
             else:
                 self.phonon_displacement_maker = PhononDisplacementMaker()
+
+    @property
+    def prev_calc_dir_argname(self):
+        """Name of argument informing static maker of previous calculation directory.
+
+        As this differs between different DFT codes (e.g., VASP, CP2K), it
+        has been left as a property to be implemented by the inheriting class.
+
+        Note: this is only applicable if a relax_maker is specified; i.e., two
+        calculations are performed for each ordering (relax -> static)
+        """
+        return "prev_dir"

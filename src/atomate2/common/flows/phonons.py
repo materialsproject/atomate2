@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -34,7 +35,7 @@ SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
 
 
 @dataclass
-class BasePhononMaker(Maker):
+class BasePhononMaker(Maker, ABC):
     """
     Maker to calculate harmonic phonons with a DFT/force field code and Phonopy.
 
@@ -245,7 +246,10 @@ class BasePhononMaker(Maker):
 
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
-            bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
+            bulk_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
+            bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
             jobs.append(bulk)
             structure = bulk.output.structure.pymatgen
             optimization_run_job_dir = bulk.output.dir_name
@@ -270,8 +274,11 @@ class BasePhononMaker(Maker):
         if (self.static_energy_maker is not None) and (
             total_dft_energy_per_formula_unit is None
         ):
+            static_job_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                static_job_kwargs[self.prev_calc_dir_argname] = prev_dir
             static_job = self.static_energy_maker.make(
-                structure=structure, prev_dir=prev_dir
+                structure=structure, **static_job_kwargs
             )
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
@@ -306,6 +313,7 @@ class BasePhononMaker(Maker):
             supercell_matrix=supercell_matrix,
             phonon_maker=self.phonon_displacement_maker,
             socket=self.socket,
+            prev_dir_argname=self.prev_calc_dir_argname,
             prev_dir=prev_dir,
         )
         jobs.append(displacement_calcs)
@@ -314,7 +322,10 @@ class BasePhononMaker(Maker):
         born_run_job_dir = None
         born_run_uuid = None
         if self.born_maker is not None and (born is None or epsilon_static is None):
-            born_job = self.born_maker.make(structure, prev_dir=prev_dir)
+            born_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                born_kwargs[self.prev_calc_dir_argname] = prev_dir
+            born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
 
             # I am not happy how we currently access "born" charges
@@ -354,3 +365,15 @@ class BasePhononMaker(Maker):
 
         # create a flow including all jobs for a phonon computation
         return Flow(jobs, phonon_collect.output)
+
+    @property
+    @abstractmethod
+    def prev_calc_dir_argname(self):
+        """Name of argument informing static maker of previous calculation directory.
+
+        As this differs between different DFT codes (e.g., VASP, CP2K), it
+        has been left as a property to be implemented by the inheriting class.
+
+        Note: this is only applicable if a relax_maker is specified; i.e., two
+        calculations are performed for each ordering (relax -> static)
+        """
