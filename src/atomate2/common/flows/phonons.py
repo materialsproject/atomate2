@@ -166,7 +166,7 @@ class BasePhononMaker(Maker, ABC):
 
         Parameters
         ----------
-        structure : .Structure or MSONableAtoms
+        structure : Structure or MSONableAtoms
             A pymatgen structure or MSONableAtoms object. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
@@ -254,6 +254,7 @@ class BasePhononMaker(Maker, ABC):
             structure = bulk.output.structure
             if isinstance(structure, MSONableAtoms):
                 structure = structure.structure
+            prev_dir = bulk.output.dir_name
             optimization_run_job_dir = bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
 
