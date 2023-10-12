@@ -229,7 +229,7 @@ class CondensedBondingAnalysis(BaseModel):
                 path_to_charge=charge_path,
                 summed_spins=False,  # we will always use spin polarization here
                 cutoff_icohp=0.10,
-                whichbonds=which_bonds,
+                which_bonds=which_bonds,
             )
             cba_run_time = time.time() - start
             # initialize lobsterpy condensed bonding analysis
@@ -262,7 +262,7 @@ class CondensedBondingAnalysis(BaseModel):
                 cohp_plot_data=cba_cohp_plot_data,
                 cutoff_icohp=analyse.cutoff_icohp,
                 summed_spins=False,
-                which_bonds=analyse.whichbonds,
+                which_bonds=analyse.which_bonds,
                 final_dict_bonds=analyse.final_dict_bonds,
                 final_dict_ions=analyse.final_dict_ions,
                 run_time=cba_run_time,
@@ -683,7 +683,7 @@ def _identify_strongest_bonds(
                     are_cobis=are_cobis,
                     are_coops=are_coops,
                     strongest_bonds=bond_dict,
-                    which_bonds=analyse.whichbonds,
+                    which_bonds=analyse.which_bonds,
                 )
             )
         else:
