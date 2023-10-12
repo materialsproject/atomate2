@@ -122,7 +122,7 @@ class TaskDocument(MoleculeMetadata):
 
         logger.info(f"Getting task doc from {logfile}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
 
         # Let's parse the log file with cclib
         cclib_obj = ccread(logfile, logging.ERROR)
