@@ -163,7 +163,10 @@ class eos_maker(Maker):
         flow_output: dict[str, list] = {"relax": []}
         for iframe in range(self.number_of_frames + 1):
             flow_output["relax"].append(
-                [relax_jobs[iframe].output.volume, relax_jobs[iframe].output.energy]
+                [   
+                    relax_jobs[iframe].output.volume, 
+                    relax_jobs[iframe].output.calcs_reversed[0].output.energy,
+                ]
             )
 
         if self.static_maker:
@@ -172,7 +175,7 @@ class eos_maker(Maker):
                 flow_output["static"].append(
                     [
                         static_jobs[iframe].output.volume,
-                        static_jobs[iframe].output.energy,
+                        static_jobs[iframe].output.calcs_reversed[0].output.energy,
                     ]
                 )
 
