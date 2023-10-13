@@ -12,6 +12,7 @@ from ase.io import ParseError
 from ase.utils import lazymethod, lazyproperty, reader
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+from atomate2.aims.utils.units import ev_per_A3_to_kbar
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -568,7 +569,7 @@ class AimsOutCalcChunk(AimsOutChunk):
 
     @property
     def stresses(self):
-        """Parse the stresses from the aims.out file."""
+        """Parse the stresses from the aims.out file and convert to kbar."""
         line_start = self.reverse_search_for(
             ["Per atom stress (eV) used for heat flux calculation"]
         )
@@ -580,11 +581,11 @@ class AimsOutCalcChunk(AimsOutChunk):
             xx, yy, zz, xy, xz, yz = (float(d) for d in line.split()[2:8])
             stresses.append([xx, yy, zz, yz, xz, xy])
 
-        return np.array(stresses)
+        return np.array(stresses) * ev_per_A3_to_kbar
 
     @property
     def stress(self):
-        """Parse the stress from the aims.out file."""
+        """Parse the stress from the aims.out file and convert to kbar."""
         from ase.stress import full_3x3_to_voigt_6_stress
 
         line_start = self.reverse_search_for(
@@ -600,7 +601,7 @@ class AimsOutCalcChunk(AimsOutChunk):
             [float(inp) for inp in line.split()[2:5]]
             for line in self.lines[line_start + 5 : line_start + 8]
         ]
-        return full_3x3_to_voigt_6_stress(stress)
+        return full_3x3_to_voigt_6_stress(stress) * ev_per_A3_to_kbar
 
     @property
     def is_metallic(self):

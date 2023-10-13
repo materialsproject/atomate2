@@ -8,6 +8,8 @@ from atomate2.aims.io.parsers import (
     AimsOutCalcChunk,
     LINE_NOT_FOUND,
 )
+from atomate2.aims.utils.units import ev_per_A3_to_kbar
+
 from ase.stress import full_3x3_to_voigt_6_stress
 
 from numpy.linalg import norm
@@ -840,7 +842,7 @@ def test_calc_forces(calc_chunk):
 
 
 def test_calc_stresses(calc_chunk):
-    stresses = np.array(
+    stresses = ev_per_A3_to_kbar * np.array(
         [
             [-10.0, -20.0, -30.0, -60.0, -50.0, -40.0],
             [10.0, 20.0, 30.0, 60.0, 50.0, 40.0],
@@ -852,7 +854,7 @@ def test_calc_stresses(calc_chunk):
 
 
 def test_calc_stress(calc_chunk):
-    stress = full_3x3_to_voigt_6_stress(
+    stress = ev_per_A3_to_kbar * full_3x3_to_voigt_6_stress(
         np.array(
             [
                 [1.00000000, 2.00000000, 3.00000000],
@@ -867,7 +869,7 @@ def test_calc_stress(calc_chunk):
 
 
 def test_calc_num_stress(numerical_stress_chunk):
-    stress = full_3x3_to_voigt_6_stress(
+    stress = ev_per_A3_to_kbar * full_3x3_to_voigt_6_stress(
         np.array(
             [
                 [1.00000000, 2.00000000, 3.00000000],
