@@ -183,7 +183,7 @@ class eos_maker(Maker):
 
 
 @dataclass
-class mp_gga_eos_maker(Maker):
+class mp_gga_eos_maker(eos_maker):
     """
     Workflow to generate MP-compatible energy vs. volume data for EOS fitting.
 
