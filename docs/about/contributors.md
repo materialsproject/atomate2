@@ -97,7 +97,7 @@ University of California, Berkeley
 [0000-0002-4071-3000]: https://orcid.org/0000-0002-4071-3000
 
 **Thomas Purcell** [![gh]][tpurcell90] [![orc]][0000-0003-4564-7206] \
-Assistant Professor or Chemistry \
+Assistant Professor of Chemistry \
 University of Arizona
 
 [tpurcell90]: https://github.com/tpurcell90
