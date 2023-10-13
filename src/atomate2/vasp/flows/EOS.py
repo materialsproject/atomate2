@@ -14,9 +14,9 @@ from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.EOS import (
-    eos_deformation_maker,
+    deformation_maker,
     eos_relax_maker,
-    mp_gga_eos_deformation_maker,
+    mp_gga_deformation_maker,
     mp_gga_eos_relax_maker,
 )
 from atomate2.vasp.powerups import update_user_incar_settings
@@ -84,7 +84,7 @@ class eos_maker(Maker):
         Name of the flows produced by this maker.
     relax_maker : .BaseVaspMaker
         Maker to generate the relaxation, defaults to DoubleRelaxMaker
-    transmuter_maker : .BaseVaspMaker
+    deformation_maker : .BaseVaspMaker
         Maker to generate deformations + single-points, defaults to TransmuterMaker
     static_maker : .BaseVaspMaker
         Optional Maker to generate statics from transmutation.
@@ -97,7 +97,7 @@ class eos_maker(Maker):
 
     name: str = "EOS Maker"
     relax_maker: Maker | None = field(default_factory=eos_double_relax_maker)
-    transmuter_maker: Maker = field(default_factory=eos_deformation_maker)
+    deformation_maker: Maker = field(default_factory=deformation_maker)
     static_maker: Maker | None = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
@@ -134,19 +134,14 @@ class eos_maker(Maker):
         insert_equil_index = np.searchsorted(strain_l, 0, side="left")
         deformation_l = [(np.identity(3) * (1 + eps)).tolist() for eps in strain_l]
 
-        # Doubly ensure that relaxations are done at fixed volume --> ISIF = 2
-
         for ideformation, deformation in enumerate(deformation_l):
-            
-            deform_relax_maker = self.transmuter_maker(
-                transformations=("DeformStructureTransformation"),
-                transformation_params=({"deformation": deformation}),
-            )
+            # Doubly ensure that relaxations are done at fixed volume --> ISIF = 2
             deform_relax_maker = update_user_incar_settings(
-                flow=deform_relax_maker, incar_updates={"ISIF": 2}
+                flow=self.deformation_maker, incar_updates={"ISIF": 2}
             )
             deform_relax_job = deform_relax_maker.make(
                 structure=relax_flow.output.structure,
+                defomration_matrix=deformation,
                 prev_vasp_dir=relax_flow.output.dir_name,
             )
             deform_relax_job.name = f"EOS Deformation Relax {ideformation}"
@@ -199,7 +194,7 @@ class mp_gga_eos_maker(eos_maker):
         Name of the flows produced by this maker.
     relax_maker : .BaseVaspMaker
         Maker to generate the relaxation, defaults to DoubleRelaxMaker
-    transmuter_maker : .BaseVaspMaker
+    deformation_maker : .BaseVaspMaker
         Maker to generate deformations + single-points, defaults to TransmuterMaker
     static_maker : .BaseVaspMaker
         Optional Maker to generate statics from transmutation.
@@ -212,7 +207,7 @@ class mp_gga_eos_maker(eos_maker):
 
     name: str = "MP GGA EOS Maker"
     relax_maker: Maker | None = field(default_factory=mp_gga_eos_double_relax_maker)
-    transmuter_maker: Maker = field(default_factory=mp_gga_eos_deformation_maker)
+    deformation_maker: Maker = field(default_factory=mp_gga_deformation_maker)
     static_maker: Maker | None = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
