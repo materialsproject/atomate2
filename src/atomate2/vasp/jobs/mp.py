@@ -138,6 +138,7 @@ class MPPreRelaxMaker(BaseVaspMaker):
                 "GGA": "PS",
                 "LWAVE": True,
                 "LCHARG": True,
+                "METAGGA": None,
             },
         )
     )

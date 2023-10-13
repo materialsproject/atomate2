@@ -68,8 +68,8 @@ def run_lobster(
     custodian_kwargs : dict
          Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    lobster_job_kwargs = {} if lobster_job_kwargs is None else lobster_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    lobster_job_kwargs = lobster_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     lobster_cmd = expandvars(lobster_cmd)
     split_lobster_cmd = shlex.split(lobster_cmd)
