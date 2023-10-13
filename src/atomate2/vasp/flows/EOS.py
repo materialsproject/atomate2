@@ -141,7 +141,7 @@ class eos_maker(Maker):
             )
             deform_relax_job = deform_relax_maker.make(
                 structure=relax_flow.output.structure,
-                defomration_matrix=deformation,
+                deformation_matrix=deformation,
                 prev_vasp_dir=relax_flow.output.dir_name,
             )
             deform_relax_job.name = f"EOS Deformation Relax {ideformation}"
