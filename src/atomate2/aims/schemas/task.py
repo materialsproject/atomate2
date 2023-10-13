@@ -3,7 +3,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, List, Optional, Sequence, Type, TypeVar, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -440,7 +440,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
     def from_directory(
         cls: Type[_T],
         dir_name: Union[Path, str],
-        volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
+        volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
         additional_fields: Dict[str, Any] = None,
         **aims_calculation_kwargs,
     ) -> _T:
@@ -450,7 +450,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         ----------
         dir_name: Path or str
             The path to the folder containing the calculation outputs.
-        volumetric_files: Tuple[str, ...]
+        volumetric_files: Sequence[str]
             A volumetric files to search for.
         additional_fields: Dict[str, Any]
             Dictionary of additional fields to add to output document.
@@ -551,7 +551,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
 
 def _find_aims_files(
     path: Union[str, Path],
-    volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
+    volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
 ) -> Dict[str, Any]:
     """Find FHI-aims files in a directory.
 
@@ -564,7 +564,7 @@ def _find_aims_files(
     ----------
     path: str or Path
         Path to a directory to search.
-    volumetric_files: Tuple[str, ...]
+    volumetric_files: Sequence[str]
         Volumetric files to search for.
 
     Returns
@@ -626,7 +626,7 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
 
     Parameters
     ----------
-    calc_doc: Calculation
+    calc_doc: .Calculation
         The calucation doc to get the max force
 
     Returns

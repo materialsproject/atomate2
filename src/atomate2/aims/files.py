@@ -137,7 +137,7 @@ def cleanup_aims_outputs(
         File client host
     file_patterns: Sequence[str]
         Glob patterns to find files for deletion.
-    file_client: FileClient
+    file_client: .FileClient
         A file client to use for performing file operations.
     """
     files_to_delete = []

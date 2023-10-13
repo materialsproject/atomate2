@@ -16,7 +16,7 @@ def prepare_band_input(cell: Cell, density: float = 20):
     Parameters
     ----------
     cell: Cell
-        The lattive parameters of the material
+        The lattice parameters of the material
     density: float
         Number of kpoints per Angstrom.
     """

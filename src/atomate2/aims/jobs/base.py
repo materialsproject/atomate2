@@ -146,7 +146,7 @@ class ConvergenceMaker(Maker):
         A difference in criterion value for subsequent runs
     convergence_field: str
         An input parameter that changes to achieve convergence
-    convergence_steps: list
+    convergence_steps: Iterable
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
         that the job is failed

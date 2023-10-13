@@ -3,7 +3,7 @@
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 from ase.spectrum.band_structure import BandStructure
 from ase.stress import voigt_6_to_full_3x3_stress
@@ -250,7 +250,7 @@ class Calculation(BaseModel):
         parse_bandstructure: Union[str, bool] = False,
         store_trajectory: bool = False,
         store_scf: bool = False,
-        store_volumetric_data: Optional[Tuple[str]] = STORE_VOLUMETRIC_DATA,
+        store_volumetric_data: Union[Sequence[str], None] = STORE_VOLUMETRIC_DATA,
     ) -> Tuple["Calculation", Dict[AimsObject, Dict]]:
         """
         Create an FHI-aims calculation document from a directory and file paths.
@@ -291,7 +291,7 @@ class Calculation(BaseModel):
             large trajectories.
         store_scf: bool
             Whether to store the SCF convergence data.
-        store_volumetric_data: Optional[Tuple[str]]
+        store_volumetric_data: Sequence[str] or None
             Which volumetric files to store.
 
         Returns
@@ -368,7 +368,7 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[AimsObject, str]
 def _get_volumetric_data(
     dir_name: Path,
     output_file_paths: Dict[AimsObject, str],
-    store_volumetric_data: Optional[Tuple[str]],
+    store_volumetric_data: Union[Sequence[str], None],
 ) -> Dict[AimsObject, VolumetricData]:
     """
     Load volumetric data files from a directory.
@@ -379,7 +379,7 @@ def _get_volumetric_data(
         The directory containing the files.
     output_file_paths: Dict[.AimsObject, str]
         A dictionary mapping the data type to file path relative to dir_name.
-    store_volumetric_data: Optional[Tuple[str]]
+    store_volumetric_data: Sequence[str] or None
         The volumetric data files to load.
 
     Returns
@@ -415,7 +415,7 @@ def _parse_dos(parse_dos: Union[str, bool], aims_output: AimsOutput) -> Optional
         - "auto": Only parse DOS if there are no ionic steps.
         - True: Always parse DOS.
         - False: Never parse DOS.
-    aims_output: AimsOutput
+    aims_output: .AimsOutput
         The output object for the calculation being parsed.
 
     Returns

@@ -61,7 +61,7 @@ class MSONableAtoms(Atoms, MSONable):
 
         Parameters
         ----------
-        structure: Structure of Molecule
+        structure: Structure or Molecule
             The pymatgen structure or molecule to convert
         """
         return ASE_ADAPTOR.get_atoms(structure)
