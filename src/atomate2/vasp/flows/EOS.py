@@ -135,15 +135,17 @@ class eos_maker(Maker):
         deformation_l = [(np.identity(3) * (1 + eps)).tolist() for eps in strain_l]
 
         # Doubly ensure that relaxations are done at fixed volume --> ISIF = 2
-        deform_relax_maker = update_user_incar_settings(
-            flow=self.transmuter_maker, incar_updates={"ISIF": 2}
-        )
 
         for ideformation, deformation in enumerate(deformation_l):
-            deform_relax_job = deform_relax_maker(
+            
+            deform_relax_maker = self.transmuter_maker(
                 transformations=("DeformStructureTransformation"),
                 transformation_params=({"deformation": deformation}),
-            ).make(
+            )
+            deform_relax_maker = update_user_incar_settings(
+                flow=deform_relax_maker, incar_updates={"ISIF": 2}
+            )
+            deform_relax_job = deform_relax_maker.make(
                 structure=relax_flow.output.structure,
                 prev_vasp_dir=relax_flow.output.dir_name,
             )
