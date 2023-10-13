@@ -11,9 +11,10 @@ import ijson
 import numpy as np
 from emmet.core.structure import StructureMetadata
 from monty.dev import requires
+from monty.json import MontyDecoder, jsanitize
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
-from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
+from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import (
     Bandoverlaps,
@@ -534,26 +535,27 @@ class LobsterTaskDocument(StructureMetadata):
 
         Parameters
         ----------
-        dir_name : path or str
+        dir_name : path or str.
             The path to the folder containing the calculation outputs.
-        additional_fields : dict
+        additional_fields : dict.
             Dictionary of additional fields to add to output document.
-        store_lso_dos : bool
+        store_lso_dos : bool.
             Whether to store the LSO DOS.
-        save_cohp_plots : bool
+        save_cohp_plots : bool.
             Bool to indicate whether automatic cohp plots and jsons
             from lobsterpy will be generated.
-        plot_kwargs : dict
+        plot_kwargs : dict.
             kwargs to change plotting options in lobsterpy.
-        calc_quality_kwargs : dict
+        calc_quality_kwargs : dict.
             kwargs to change calc quality summary options in lobsterpy.
-        save_cba_jsons : bool
+        save_cba_jsons : bool.
             Bool to indicate whether condensed bonding analysis jsons
-            should be saved
-        add_coxxcar_to_task_document : bool
+            should be saved, consists of outputs from lobsterpy analysis,
+            calculation quality summary, lobster dos, charges and madelung energies
+        add_coxxcar_to_task_document : bool.
             Bool to indicate whether to add COHPCAR, COOPCAR, COBICAR data objects
             to the task document
-        save_computational_data_jsons : bool
+        save_computational_data_jsons : bool.
             Bool to indicate whether computational data jsons
             should be saved
 
@@ -765,9 +767,14 @@ class LobsterTaskDocument(StructureMetadata):
             cobi_data=cobi_obj,
         )
 
+        _replace_inf_values(doc.lobsterpy_data.limit_icohp)
+        _replace_inf_values(doc.lobsterpy_data_cation_anion.limit_icohp)
+
         if save_cba_jsons:
             cba_json_save_dir = dir_name / "cba.json.gz"
             with gzip.open(cba_json_save_dir, "wt", encoding="UTF-8") as f:
+                # Write the json in iterable format
+                # (Necessary to load large JSON files via ijson)
                 f.write("[")
                 if (
                     doc.lobsterpy_data_cation_anion is not None
@@ -775,93 +782,90 @@ class LobsterTaskDocument(StructureMetadata):
                     lobsterpy_analysis_type = (
                         doc.lobsterpy_data_cation_anion.which_bonds.replace("-", "_")
                     )
-                    cation_anion_bonds_dict = {
+                    data = {
                         f"{lobsterpy_analysis_type}_bonds": {
-                            "lobsterpy_data": doc.lobsterpy_data_cation_anion.dict(),
+                            "lobsterpy_data": doc.lobsterpy_data_cation_anion,
                             "lobsterpy_text": [
                                 "".join(doc.lobsterpy_text_cation_anion)
                             ],
-                            "sb_icobi": doc.strongest_bonds_icobi_cation_anion.dict(),
-                            "sb_icohp": doc.strongest_bonds_icohp_cation_anion.dict(),
-                            "sb_icoop": doc.strongest_bonds_icoop_cation_anion.dict(),
+                            "sb_icobi": doc.strongest_bonds_icobi_cation_anion,
+                            "sb_icohp": doc.strongest_bonds_icohp_cation_anion,
+                            "sb_icoop": doc.strongest_bonds_icoop_cation_anion,
                         }
                     }
-
-                    for item in cation_anion_bonds_dict[
-                        f"{lobsterpy_analysis_type}_bonds"
-                    ]["lobsterpy_data"]["cohp_plot_data"].items():
-                        plot_label, cohps = item
-                        # check if item has a `as_dict` method
-                        # (i.e. it is a pymatgen object)
-                        if hasattr(cohps, "as_dict"):
-                            cation_anion_bonds_dict[f"{lobsterpy_analysis_type}_bonds"][
-                                "lobsterpy_data"
-                            ]["cohp_plot_data"][plot_label] = cohps.as_dict()
-                    _replace_inf_values(cation_anion_bonds_dict)
-                    json.dump(cation_anion_bonds_dict, f)
-                    f.write(",")  # add comma separator between two dicts
                 else:
-                    lobsterpy_analysis_type = "cation_anion"
-                    cation_anion_bonds_dict = {f"{lobsterpy_analysis_type}_bonds": {}}
-                    json.dump(cation_anion_bonds_dict, f)
-                    f.write(",")  # add comma separator between two dicts
-
+                    data = {"cation_anion_bonds": {}}
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
+                f.write(",")
                 # add all-bonds data
                 lobsterpy_analysis_type = doc.lobsterpy_data.which_bonds
-                all_bonds_data = {
+                data = {
                     f"{lobsterpy_analysis_type}_bonds": {
-                        "lobsterpy_data": doc.lobsterpy_data.dict(),
+                        "lobsterpy_data": doc.lobsterpy_data,
                         "lobsterpy_text": ["".join(doc.lobsterpy_text)],
-                        "sb_icobi": doc.strongest_bonds_icobi.dict(),
-                        "sb_icohp": doc.strongest_bonds_icohp.dict(),
-                        "sb_icoop": doc.strongest_bonds_icoop.dict(),
+                        "sb_icobi": doc.strongest_bonds_icobi,
+                        "sb_icohp": doc.strongest_bonds_icohp,
+                        "sb_icoop": doc.strongest_bonds_icoop,
                     }
                 }
-
-                for item in all_bonds_data[f"{lobsterpy_analysis_type}_bonds"][
-                    "lobsterpy_data"
-                ]["cohp_plot_data"].items():
-                    plot_label, cohps = item
-                    # check if item has a `as_dict` method
-                    # (i.e. it is a pymatgen object)
-                    if hasattr(cohps, "as_dict"):
-                        all_bonds_data[f"{lobsterpy_analysis_type}_bonds"][
-                            "lobsterpy_data"
-                        ]["cohp_plot_data"][plot_label] = cohps.as_dict()
-                _replace_inf_values(all_bonds_data)
-                json.dump(all_bonds_data, f)
-                f.write(",")  # add comma separator between two dicts
-                json.dump(
-                    {"madelung_energies": doc.madelung_energies}, f
-                )  # add madelung energies
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
                 f.write(",")
-                json.dump({"charges": doc.charges}, f)  # add charges
+                data = {
+                    "madelung_energies": doc.madelung_energies
+                }  # add madelung energies
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
                 f.write(",")
-                json.dump(
-                    {"calc_quality_summary": doc.calc_quality_summary.dict()}, f
-                )  # add calc quality summary dict
+                data = {"charges": doc.charges}  # add charges
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
                 f.write(",")
-                json.dump(
-                    {"calc_quality_text": ["".join(doc.calc_quality_text)]}, f
-                )  # add calc quality text
+                data = {
+                    "calc_quality_summary": doc.calc_quality_summary
+                }  # add calc quality summary dict
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
                 f.write(",")
-                json.dump({"dos": doc.dos.as_dict()}, f)  # add dos of lobster
+                data = {
+                    "calc_quality_text": [
+                        "".join(doc.calc_quality_text)
+                    ]  # type: ignore
+                }  # add calc quality summary dict
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
                 f.write(",")
-                json.dump(
-                    {
-                        "lso_dos": doc.lso_dos.as_dict()
-                        if doc.lso_dos is not None
-                        else {}
-                    },
-                    f,
-                )  # add los dos of lobster if exist
+                data = {"dos": doc.dos}  # add NON LSO of lobster
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
                 f.write(",")
-                builder_meta = doc.builder_meta.dict()
-                builder_meta["build_date"] = str(doc.builder_meta.build_date.utcnow())
-                json.dump(
-                    {"builder_meta": builder_meta},
-                    f,
-                )  # add builder metadata
+                data = {"lso_dos": doc.lso_dos}  # add LSO DOS of lobster
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=True, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
+                f.write(",")
+                data = {"builder_meta": doc.builder_meta}  # add builder metadata
+                monty_encoded_json_doc = jsanitize(
+                    data, allow_bson=False, strict=True, enum_values=True
+                )
+                json.dump(monty_encoded_json_doc, f)
+                del data, monty_encoded_json_doc
                 f.write("]")
 
         if save_computational_data_jsons:
@@ -870,20 +874,14 @@ class LobsterTaskDocument(StructureMetadata):
                 "nsites",
                 "elements",
                 "nelements",
-                "composition",
-                "composition_reduced",
-                "formula_pretty",
                 "formula_anonymous",
                 "chemsys",
                 "volume",
                 "density",
                 "density_atomic",
                 "symmetry",
-                "dir_name",
-                "last_updated",
             ]
-            doc_here = doc.copy(deep=True, update=additional_fields)
-
+            # Always add cohp, cobi and coop data to the jsons if files exists
             if cohpcar_path.exists() and doc.cohp_data is None:
                 cohp_obj = CompleteCohp.from_file(
                     fmt="LOBSTER",
@@ -892,7 +890,7 @@ class LobsterTaskDocument(StructureMetadata):
                     are_coops=False,
                     are_cobis=False,
                 )
-                doc_here.__setattr__("cohp_data", cohp_obj)
+                doc.__setattr__("cohp_data", cohp_obj)
 
             if coopcar_path.exists() and doc.coop_data is None:
                 coop_obj = CompleteCohp.from_file(
@@ -902,7 +900,7 @@ class LobsterTaskDocument(StructureMetadata):
                     are_coops=True,
                     are_cobis=False,
                 )
-                doc_here.__setattr__("coop_data", coop_obj)
+                doc.__setattr__("coop_data", coop_obj)
 
             if cobicar_path.exists() and doc.cobi_data is None:
                 cobi_obj = CompleteCohp.from_file(
@@ -912,69 +910,36 @@ class LobsterTaskDocument(StructureMetadata):
                     are_coops=False,
                     are_cobis=True,
                 )
-                doc_here.__setattr__("cobi_data", cobi_obj)
+                doc.__setattr__("cobi_data", cobi_obj)
             with gzip.open(
                 computational_data_json_save_dir, "wt", encoding="UTF-8"
             ) as f:
+                # Write the json in iterable format
+                # (Necessary to load large JSON files via ijson)
                 f.write("[")
-                for attribute in doc_here.__fields__:
+                for attribute in doc.__fields__:
                     if attribute not in fields_to_exclude:
-                        if hasattr(doc_here.__getattribute__(attribute), "dict"):
-                            if "lobsterpy_data" in attribute:
-                                data = doc_here.__getattribute__(attribute).dict()
-                                for item in data["cohp_plot_data"].items():
-                                    key, value = item
-                                    if hasattr(
-                                        value, "as_dict"
-                                    ):  # check if item has a `as_dict` method
-                                        # (i.e. it is a pymatgen object)
-                                        data["cohp_plot_data"][key] = value.as_dict()
-                                data_new = {attribute: data}
-                                _replace_inf_values(data_new)
-                                json.dump(data_new, f)
-                                if (
-                                    attribute != list(doc_here.__fields__.keys())[-1]
-                                ):  # add comma separator between two dicts
-                                    f.write(",")
-                            else:
-                                if attribute == "builder_meta":
-                                    builder_meta = doc_here.__getattribute__(
-                                        attribute
-                                    ).dict()
-                                    builder_meta["build_date"] = str(
-                                        doc.builder_meta.build_date.utcnow()
-                                    )
-                                    data = {attribute: builder_meta}
-                                else:
-                                    data = {
-                                        attribute: doc_here.__getattribute__(
-                                            attribute
-                                        ).dict()
-                                    }
-                                json.dump(data, f)
-                                if (
-                                    attribute != list(doc_here.__fields__.keys())[-1]
-                                ):  # add comma separator between two dicts
-                                    f.write(",")
-                        elif hasattr(doc_here.__getattribute__(attribute), "as_dict"):
-                            data = {
-                                attribute: doc_here.__getattribute__(
-                                    attribute
-                                ).as_dict()
-                            }
-                            json.dump(data, f)
-                            if (
-                                attribute != list(doc_here.__fields__.keys())[-1]
-                            ):  # add comma separator between two dicts
-                                f.write(",")
-                        else:
-                            data = {attribute: doc_here.__getattribute__(attribute)}
-                            json.dump(data, f)
-                            if (
-                                attribute != list(doc_here.__fields__.keys())[-1]
-                            ):  # add comma separator between two dicts
-                                f.write(",")
+                        # Use monty encoder to automatically convert pymatgen
+                        # objects and other data json compatible dict format
+                        data = {
+                            attribute: jsanitize(
+                                doc.__getattribute__(attribute),
+                                allow_bson=False,
+                                strict=True,
+                                enum_values=True,
+                            )
+                        }
+                        json.dump(data, f)
+                        if attribute != list(doc.__fields__.keys())[-1]:
+                            f.write(",")  # add comma separator between two dicts
+                        del data
                 f.write("]")
+
+            # Again unset the cohp, cobi and coop data fields if not desired in the DB
+            if not add_coxxcar_to_task_document:
+                doc.__setattr__("cohp_data", None)
+                doc.__setattr__("coop_data", None)
+                doc.__setattr__("cobi_data", None)
 
         return doc.copy(update=additional_fields)
 
@@ -1078,19 +1043,19 @@ def _get_strong_bonds(
 
     Parameters
     ----------
-    bondlist : dict
+    bondlist : dict.
         dict including bonding information
-    are_cobis : bool
+    are_cobis : bool.
         True if these are cobis
-    are_coops : bool
+    are_coops : bool.
         True if these are coops
-    relevant_bonds : dict
+    relevant_bonds : dict.
         Dict include all bonds that are considered.
 
     Returns
     -------
     dict
-        Dictionary including strongest bonds.
+        Dictionary including the strongest bonds.
     """
     bonds = []
     icohp_all = []
@@ -1159,68 +1124,64 @@ def read_saved_json(
     """
     Read the data from  *.json.gz file corresponding to query.
 
+    Uses ijson to parse specific keys(memory efficient)
+
     Parameters
     ----------
-    filename: str
+    filename: str.
         name of the json file to read
-    pymatgen_objs: bool
+    pymatgen_objs: bool.
         if True will convert structure,coop, cobi, cohp and dos to pymatgen objects
-    query: str
-        field name to query from the json file.
+    query: str or None.
+        field name to query from the json file. If None, all data will be returned.
 
     Returns
     -------
     dict
         Returns a dictionary with lobster task json data corresponding to query.
     """
-    lobster_data = {}
     with gzip.open(filename, "rb") as f:
+        lobster_data = {}
         objects = ijson.items(f, "item", use_float=True)
         for obj in objects:
-            if query in obj:
+            if query is None:
                 for field, data in obj.items():
-                    if pymatgen_objs:
-                        if field == "structure":
-                            lobster_data[field] = Structure.from_dict(data)
-                        elif (
-                            field == "lobsterpy_data"
-                            or field == "lobsterpy_data_cation_anion"
-                        ):
-                            lobster_data[field] = data
-                            if lobster_data[field]:
-                                for plotlabel, cohp in lobster_data[field][
-                                    "cohp_plot_data"
-                                ].items():
-                                    lobster_data[field]["cohp_plot_data"][
-                                        plotlabel
-                                    ] = Cohp.from_dict(cohp)
-                        elif field == "all_bonds" or field == "cation_anion_bonds":
-                            lobster_data[field] = data
-                            if lobster_data[field]:
-                                for plotlabel, cohp in lobster_data[field][
-                                    "lobsterpy_data"
-                                ]["cohp_plot_data"].items():
-                                    lobster_data[field]["lobsterpy_data"][
-                                        "cohp_plot_data"
-                                    ][plotlabel] = Cohp.from_dict(cohp)
-                        elif (
-                            field == "cohp_data"
-                            or field == "cobi_data"
-                            or field == "coop_data"
-                        ):
-                            if data:
-                                lobster_data[field] = CompleteCohp.from_dict(data)
-                            else:
-                                lobster_data[field] = None
-                        elif field == "lso_dos" or field == "dos":
-                            if data:
-                                lobster_data[field] = LobsterCompleteDos.from_dict(data)
-                            else:
-                                lobster_data[field] = None
-                        else:
-                            lobster_data[field] = data
-                    else:
-                        lobster_data[field] = data
+                    lobster_data[field] = data
+            elif query in obj:
+                for field, data in obj.items():
+                    lobster_data[field] = data
                 break
+        if not lobster_data:
+            raise ValueError(
+                "Please recheck the query argument. "
+                f"No data associated to the requested 'query={query}' "
+                f"found in the JSON file"
+            )
+    if pymatgen_objs:
+        for query_key, value in lobster_data.items():
+            if isinstance(value, dict):
+                lobster_data[query_key] = MontyDecoder().process_decoded(value)
+                # Ensure nested pymatgen objects
+                # are converted (applicable for cba.json.gz)
+                if "lobsterpy_data" in value:
+                    for field in lobster_data[query_key]["lobsterpy_data"].__fields__:
+                        lobster_data[query_key]["lobsterpy_data"].__setattr__(
+                            field,
+                            MontyDecoder().process_decoded(
+                                lobster_data[query_key][
+                                    "lobsterpy_data"
+                                ].__getattribute__(field)
+                            ),
+                        )
+                # This ensures nested pymatgen objects are
+                # converted (applicable for computational_data.json.gz)
+                elif "lobsterpy_data" in query_key:
+                    for field in lobster_data[query_key].__fields__:
+                        lobster_data[query_key].__setattr__(
+                            field,
+                            MontyDecoder().process_decoded(
+                                lobster_data[query_key].__getattribute__(field)
+                            ),
+                        )
 
     return lobster_data

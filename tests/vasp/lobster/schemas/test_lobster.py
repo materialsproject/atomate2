@@ -185,6 +185,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
     from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
     from atomate2.lobster.schemas import (
+        CondensedBondingAnalysis,
         LobsterTaskDocument,
         read_saved_json,
     )
@@ -226,9 +227,12 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
         if (cba_key == "all_bonds" or cba_key == "cation_anion_bonds") and json_data[
             cba_key
         ]:
-            for cohp_data in json_data[cba_key]["lobsterpy_data"][
-                "cohp_plot_data"
-            ].values():
+            assert isinstance(
+                json_data[cba_key]["lobsterpy_data"], CondensedBondingAnalysis
+            )
+            for cohp_data in json_data[cba_key][
+                "lobsterpy_data"
+            ].cohp_plot_data.values():
                 assert isinstance(cohp_data, Cohp)
 
     # read cba saved jsons without converting it to non pymatgen objects (read as dict)
@@ -304,7 +308,8 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
             assert isinstance(json_data[taskdoc_key], LobsterCompleteDos)
 
         if "lobsterpy_data" in taskdoc_key and json_data[taskdoc_key]:
-            for cohp_data in json_data[taskdoc_key]["cohp_plot_data"].values():
+            assert isinstance(json_data[taskdoc_key], CondensedBondingAnalysis)
+            for cohp_data in json_data[taskdoc_key].cohp_plot_data.values():
                 assert isinstance(cohp_data, Cohp)
 
         if (
