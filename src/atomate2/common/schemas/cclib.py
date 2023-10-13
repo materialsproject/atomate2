@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")
 
 
-class TaskDocument(MoleculeMetadata):
+class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     """
     Definition of a cclib-generated task document.
 
