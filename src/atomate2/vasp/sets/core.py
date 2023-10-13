@@ -917,7 +917,7 @@ class MDSetGenerator(VaspInputGenerator):
 
 
 @dataclass
-class EOSSetGenerator(VaspInputGenerator):
+class eos_set_generator(VaspInputGenerator):
     """Class to generate VASP EOS deformation + relax input sets."""
 
     force_gamma: bool = True

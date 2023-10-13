@@ -15,9 +15,9 @@ from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
 from atomate2.vasp.sets.core import (
-    EOSSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
+    eos_set_generator,
 )
 
 if TYPE_CHECKING:
@@ -90,7 +90,7 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
 
 
 @dataclass
-class MPGGAEOSSetGenerator(EOSSetGenerator):
+class mp_gga_eos_set_generator(eos_set_generator):
     """Class to generate MP-compatible VASP GGA EOS input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)

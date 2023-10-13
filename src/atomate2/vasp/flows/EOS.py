@@ -13,19 +13,64 @@ import numpy as np
 from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import TransmuterMaker
+from atomate2.vasp.jobs.EOS import (
+    eos_deformation_maker,
+    eos_relax_maker,
+    mp_gga_eos_deformation_maker,
+    mp_gga_eos_relax_maker,
+)
 from atomate2.vasp.powerups import update_user_incar_settings
-from atomate2.vasp.sets.core import EOSSetGenerator
-from atomate2.vasp.sets.mp import MPGGAEOSSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
 
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 
 @dataclass
-class EOSMaker(Maker):
+class eos_double_relax_maker(DoubleRelaxMaker):
+    """
+    Workflow to generate initial double relaxation for EOS fitting.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker1 : .BaseVaspMaker
+        Maker to use to generate the first relaxation.
+    relax_maker2 : .BaseVaspMaker
+        Maker to use to generate the second relaxation.
+    """
+
+    name: str = "EOS double relax"
+    relax_maker1: BaseVaspMaker | None = field(default_factory=eos_relax_maker)
+    relax_maker2: BaseVaspMaker = field(default_factory=eos_relax_maker)
+
+
+@dataclass
+class mp_gga_eos_double_relax_maker(DoubleRelaxMaker):
+    """
+    Workflow to generate initial double relaxation for EOS fitting.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker1 : .BaseVaspMaker
+        Maker to use to generate the first relaxation.
+    relax_maker2 : .BaseVaspMaker
+        Maker to use to generate the second relaxation.
+    """
+
+    name: str = "MP GGA EOS double relax"
+    relax_maker1: BaseVaspMaker | None = field(default_factory=mp_gga_eos_relax_maker)
+    relax_maker2: BaseVaspMaker = field(default_factory=mp_gga_eos_relax_maker)
+
+
+@dataclass
+class eos_maker(Maker):
     """
     Workflow to generate energy vs. volume data for EOS fitting.
 
@@ -51,19 +96,8 @@ class EOSMaker(Maker):
     """
 
     name: str = "EOS Maker"
-    relax_maker: Maker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(
-            input_set_generator=EOSSetGenerator(
-                user_incar_settings={"ISIF": 3, "LWAVE": True}
-            )
-        )
-    )
-    transmuter_maker: Maker = field(
-        default_factory=lambda: TransmuterMaker(
-            input_set_generator=EOSSetGenerator(),
-            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
-        )
-    )
+    relax_maker: Maker | None = field(default_factory=eos_double_relax_maker)
+    transmuter_maker: Maker = field(default_factory=eos_deformation_maker)
     static_maker: Maker | None = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
@@ -149,7 +183,7 @@ class EOSMaker(Maker):
 
 
 @dataclass
-class MPGGAEOSMaker(Maker):
+class mp_gga_eos_maker(Maker):
     """
     Workflow to generate MP-compatible energy vs. volume data for EOS fitting.
 
@@ -174,20 +208,9 @@ class MPGGAEOSMaker(Maker):
         Number of strain calculations to do for EOS fit, default = 6
     """
 
-    name: str = "EOS Maker"
-    relax_maker: Maker | None = field(
-        default_factory=lambda: DoubleRelaxMaker(
-            input_set_generator=MPGGAEOSSetGenerator(
-                user_incar_settings={"ISIF": 3, "LWAVE": True}
-            )
-        )
-    )
-    transmuter_maker: Maker = field(
-        default_factory=lambda: TransmuterMaker(
-            input_set_generator=MPGGAEOSSetGenerator(),
-            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
-        )
-    )
+    name: str = "MP GGA EOS Maker"
+    relax_maker: Maker | None = field(default_factory=mp_gga_eos_double_relax_maker)
+    transmuter_maker: Maker = field(default_factory=mp_gga_eos_deformation_maker)
     static_maker: Maker | None = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
