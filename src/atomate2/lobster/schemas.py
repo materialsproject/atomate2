@@ -500,13 +500,13 @@ class LobsterTaskDocument(StructureMetadata):
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
     )
-    cohp_data: CompleteCohp = Field(
+    cohp_data: Optional[CompleteCohp] = Field(
         None, description="pymatgen CompleteCohp object with COHP data"
     )
-    coop_data: CompleteCohp = Field(
+    coop_data: Optional[CompleteCohp] = Field(
         None, description="pymatgen CompleteCohp object with COOP data"
     )
-    cobi_data: CompleteCohp = Field(
+    cobi_data: Optional[CompleteCohp] = Field(
         None, description="pymatgen CompleteCohp object with COBI data"
     )
 
