@@ -165,7 +165,7 @@ def test_lobster_task_document(lobster_test_dir):
         "total": 7.88,
     }
     gross_popp_here = doc2.gross_populations[10]["Mulliken GP"]
-    assert expected_gross_popp == gross_popp_here
+    assert expected_gross_pop == gross_popp_here
 
 
 def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
