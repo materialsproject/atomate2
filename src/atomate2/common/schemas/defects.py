@@ -150,13 +150,13 @@ class CCDDocument(BaseModel):
         "in charge state (q2).",
     )
 
-    static_uuids1: List[str] = Field(
+    static_uuids1: Optional[List[str]] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in "
         "charge state (q1).",
     )
 
-    static_uuids2: List[str] = Field(
+    static_uuids2: Optional[List[str]] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in "
         "charge state (q2).",

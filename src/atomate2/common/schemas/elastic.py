@@ -61,7 +61,7 @@ class DerivedProperties(BaseModel):
     snyder_total: float = Field(
         None, description="Synder's total sound velocity (SI units)."
     )
-    clark_thermalcond: float = Field(
+    clark_thermalcond: Optional[float] = Field(
         None, description="Clarke's thermal conductivity (SI units)."
     )
     cahill_thermalcond: float = Field(
@@ -111,7 +111,7 @@ class ElasticDocument(StructureMetadata):
     elastic_tensor: ElasticTensorDocument = Field(
         None, description="Fitted elastic tensor."
     )
-    eq_stress: Matrix3D = Field(
+    eq_stress: Optional[Matrix3D] = Field(
         None, description="The equilibrium stress of the structure."
     )
     derived_properties: DerivedProperties = Field(
