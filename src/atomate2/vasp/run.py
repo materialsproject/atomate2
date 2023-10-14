@@ -118,8 +118,8 @@ def run_vasp(
     custodian_kwargs : dict
         Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    vasp_job_kwargs = {} if vasp_job_kwargs is None else vasp_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    vasp_job_kwargs = vasp_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     vasp_cmd = expandvars(vasp_cmd)
     vasp_gamma_cmd = expandvars(vasp_gamma_cmd)
@@ -150,7 +150,7 @@ def run_vasp(
     if wall_time is not None:
         handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
-    c = Custodian(
+    custodian_manager = Custodian(
         handlers,
         jobs,
         validators=validators,
@@ -160,7 +160,7 @@ def run_vasp(
     )
 
     logger.info("Running VASP using custodian.")
-    c.run()
+    custodian_manager.run()
 
 
 def should_stop_children(

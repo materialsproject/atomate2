@@ -1,4 +1,4 @@
-def test_LobsterTaskDocument(lobster_test_dir):
+def test_lobster_task_document(lobster_test_dir):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
@@ -101,15 +101,15 @@ def test_LobsterTaskDocument(lobster_test_dir):
     assert np.isclose(doc.site_potentials["Ewald_splitting"], 3.14)
     assert len(doc.gross_populations) == 8
     assert doc.gross_populations[5]["element"] == "As"
-    expected_gross_popp = {
+    expected_gross_pop = {
         "4s": 1.38,
         "4p_y": 1.18,
         "4p_z": 1.18,
         "4p_x": 1.18,
         "total": 4.93,
     }
-    gross_popp_here = doc.gross_populations[5]["Loewdin GP"]
-    assert expected_gross_popp == gross_popp_here
+    gross_pop_here = doc.gross_populations[5]["Loewdin GP"]
+    assert expected_gross_pop == gross_pop_here
     assert np.allclose(
         doc.charges["Mulliken"],
         [0.13, 0.13, 0.13, 0.13, -0.13, -0.13, -0.13, -0.13],
@@ -136,14 +136,7 @@ def test_LobsterTaskDocument(lobster_test_dir):
     assert np.allclose(
         doc2.site_potentials["Loewdin"],
         [
-            -15.09,
-            -15.09,
-            -15.09,
-            -15.09,
-            -15.09,
-            -15.09,
-            -15.09,
-            -15.09,
+            *[-15.09] * 8,
             14.78,
             14.78,
             8.14,
@@ -164,7 +157,7 @@ def test_LobsterTaskDocument(lobster_test_dir):
     assert np.isclose(doc2.site_potentials["Ewald_splitting"], 3.14)
     assert len(doc2.gross_populations) == 22
     assert doc2.gross_populations[10]["element"] == "F"
-    expected_gross_popp = {
+    expected_gross_pop = {
         "2s": 1.98,
         "2p_y": 1.97,
         "2p_z": 1.97,

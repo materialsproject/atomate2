@@ -2,13 +2,13 @@
 
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
 from shutil import which
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from jobflow.utils import ValueEnum
-from pydantic import BaseModel, Field, validator
-from pydantic.datetime_parse import datetime
+from pydantic import BaseModel, Field, field_validator
 from pymatgen.command_line.bader_caller import BaderAnalysis
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
@@ -82,7 +82,7 @@ class CalculationInput(BaseModel):
         description="CP2K global parameters used in the last calc of this task.",
     )
 
-    @validator("atomic_kind_info")
+    @field_validator("atomic_kind_info", mode="before")
     def remove_unnecessary(cls, atomic_kind_info):
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
@@ -90,7 +90,7 @@ class CalculationInput(BaseModel):
                 del atomic_kind_info[k]["total_pseudopotential_energy"]
         return atomic_kind_info
 
-    @validator("dft")
+    @field_validator("dft", mode="before")
     def cleanup_dft(cls, dft):
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
@@ -148,19 +148,21 @@ class CalculationOutput(BaseModel):
     structure: Union[Structure, Molecule] = Field(
         None, description="The final structure/molecule from the calculation"
     )
-    efermi: float = Field(
+    efermi: Optional[float] = Field(
         None, description="The Fermi level from the calculation in eV"
     )
     is_metal: bool = Field(None, description="Whether the system is metallic")
-    bandgap: float = Field(None, description="The band gap from the calculation in eV")
+    bandgap: Optional[float] = Field(
+        None, description="The band gap from the calculation in eV"
+    )
     v_hartree: Union[Dict[int, List[float]], None] = Field(
         None, description="Plane averaged electrostatic potential"
     )
-    cbm: float = Field(
+    cbm: Optional[float] = Field(
         None,
         description="The conduction band minimum in eV (if system is not metallic)",
     )
-    vbm: float = Field(
+    vbm: Optional[float] = Field(
         None, description="The valence band maximum in eV (if system is not metallic)"
     )
     ionic_steps: List[Dict[str, Any]] = Field(
@@ -173,7 +175,7 @@ class CalculationOutput(BaseModel):
         None, description="Summary of runtime statistics for this calculation"
     )
 
-    scf: List = Field(None, description="SCF optimization steps")
+    scf: Optional[List] = Field(None, description="SCF optimization steps")
 
     @classmethod
     def from_cp2k_output(
@@ -269,7 +271,7 @@ class Calculation(BaseModel):
         description="Paths (relative to dir_name) of the CP2K output files "
         "associated with this calculation",
     )
-    bader: Dict = Field(None, description="Output from the bader software")
+    bader: Optional[Dict] = Field(None, description="Output from the bader software")
     run_type: RunType = Field(
         None, description="Calculation run type (e.g., HF, HSE06, PBE)"
     )
@@ -581,7 +583,7 @@ def _parse_trajectory(cp2k_output: Cp2kOutput) -> Optional[Trajectory]:
         if cp2k_output.filenames.get("ener")
         else None
     )
-    data = parse_energy_file(ener) if ener else None
+    data = parse_energy_file(ener) or None
     constant_lattice = all(
         s.lattice == cp2k_output.initial_structure.lattice
         for s in cp2k_output.structures

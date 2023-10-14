@@ -133,10 +133,8 @@ class AmsetTaskDocument(StructureMetadata):
     )
     soc: bool = Field(None, description="Whether spin-orbit coupling was included")
     structure: Structure = Field(None, description="The structure used in this task")
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
@@ -167,7 +165,7 @@ class AmsetTaskDocument(StructureMetadata):
         from amset.io import load_mesh
         from amset.util import cast_dict_list
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
         settings = loadfn("settings.yaml")

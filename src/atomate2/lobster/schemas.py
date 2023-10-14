@@ -107,14 +107,14 @@ class LobsterinModel(BaseModel):
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
 
-    gaussiansmearingwidth: float = Field(
+    gaussiansmearingwidth: Optional[float] = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    usedecimalplaces: int = Field(
+    usedecimalplaces: Optional[int] = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    cohpsteps: float = Field(
+    cohpsteps: Optional[float] = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
     basisset: str = Field(None, description="basis set of computation")
@@ -125,7 +125,7 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    lsodos: bool = Field(
+    lsodos: Optional[bool] = Field(
         None, description="Writes DOS output from the orthonormalized LCAO basis"
     )
     basisfunctions: list = Field(
@@ -215,7 +215,7 @@ class CondensedBondingAnalysis(BaseModel):
         which_bonds: str
             mode for condensed bonding analysis: "cation-anion" and "all".
         """
-        plot_kwargs = {} if plot_kwargs is None else plot_kwargs
+        plot_kwargs = plot_kwargs or {}
         dir_name = Path(dir_name)
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
         charge_path = dir_name / "CHARGE.lobster.gz"
@@ -476,7 +476,7 @@ class LobsterTaskDocument(StructureMetadata):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    lso_dos: LobsterCompleteDos = Field(
+    lso_dos: Optional[LobsterCompleteDos] = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
     madelung_energies: dict = Field(
@@ -495,7 +495,7 @@ class LobsterTaskDocument(StructureMetadata):
         " LOBSTER based on Mulliken and Loewdin charges with"
         "each site as a key and the gross population as a value.",
     )
-    band_overlaps: dict = Field(
+    band_overlaps: Optional[dict] = Field(
         None,
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
@@ -510,10 +510,8 @@ class LobsterTaskDocument(StructureMetadata):
         None, description="pymatgen CompleteCohp object with COBI data"
     )
 
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
@@ -564,7 +562,7 @@ class LobsterTaskDocument(StructureMetadata):
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
         # Read in lobsterout and lobsterin
