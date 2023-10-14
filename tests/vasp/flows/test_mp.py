@@ -62,12 +62,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        key: {"incar_settings": ["LWAVE", "LCHARG"]} for key in ref_paths
-    }
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     # generate flow
     flow = MPMetaGGADoubleRelaxStaticMaker(
@@ -102,10 +97,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {key: {"incar_settings": []} for key in ref_paths}
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     # generate flow
     flow = MPGGADoubleRelaxStaticMaker().make(si_struct)
@@ -133,10 +125,7 @@ def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {key: {"incar_settings": []} for key in ref_paths}
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     # generate flow
     flow = MPGGADoubleRelaxMaker().make(si_struct)

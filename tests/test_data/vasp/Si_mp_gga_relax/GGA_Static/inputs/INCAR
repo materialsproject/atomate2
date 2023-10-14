@@ -7,6 +7,7 @@ LASPH = True
 LORBIT = 11
 LREAL = False
 LWAVE = False
+LCHARG = True
 MAGMOM = 2*0.0
 NELM = 100
 NSW = 0
