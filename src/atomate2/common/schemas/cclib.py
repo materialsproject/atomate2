@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")
 
 
-class TaskDocument(MoleculeMetadata):
+class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     """
     Definition of a cclib-generated task document.
 
@@ -54,10 +54,8 @@ class TaskDocument(MoleculeMetadata):
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
@@ -247,7 +245,7 @@ class TaskDocument(MoleculeMetadata):
             metadata=metadata,
         )
         doc.molecule = final_molecule
-        return doc.copy(update=additional_fields)
+        return doc.model_copy(update=additional_fields)
 
 
 @requires(cclib, "cclib_calculate requires cclib to be installed.")
