@@ -132,14 +132,14 @@ class AimsOutput(MSONable):
         return self.get_results_for_image(-1).calc.results["fermi_energy"]
 
     @property
-    def homo(self) -> float:
+    def vbm(self) -> float:
         """The HOMO level for the final structure in the calculation."""
-        return self.get_results_for_image(-1).calc.results["homo"]
+        return self.get_results_for_image(-1).calc.results["vbm"]
 
     @property
-    def lumo(self) -> float:
+    def cbm(self) -> float:
         """The LUMO level for the final structure in the calculation."""
-        return self.get_results_for_image(-1).calc.results["lumo"]
+        return self.get_results_for_image(-1).calc.results["cbm"]
 
     @property
     def band_gap(self) -> float:

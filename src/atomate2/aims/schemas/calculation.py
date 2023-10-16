@@ -145,15 +145,13 @@ class CalculationOutput(BaseModel):
     bandgap: Optional[float] = Field(
         None, description="The band gap from the calculation in eV"
     )
-    cbm: Optional[float] = Field(
+    cbm: float = Field(
         None,
-        description="The conduction band minimum in eV (if system is not metallic)",
+        description="The conduction band minimum, or LUMO for molecules, in eV (if system is not metallic)",
     )
     vbm: Optional[float] = Field(
-        None, description="The valence band maximum in eV (if system is not metallic)"
+        None, description="The valence band maximum, or HOMO for molecules, in eV (if system is not metallic)"
     )
-    homo: float = Field(None, description="The HOMO of the structure")
-    lumo: float = Field(None, description="The LUMO of the structure")
     atomic_steps: List[MSONableAtoms] = Field(
         None, description="Structures for each ionic step"
     )
@@ -182,8 +180,8 @@ class CalculationOutput(BaseModel):
 
         electronic_output = {
             "efermi": output.fermi_energy,
-            "homo": output.homo,
-            "lumo": output.lumo,
+            "vbm": output.vbm,
+            "cbm": output.cbm,
             "bandgap": output.band_gap,
             "direct_bandgap": output.direct_band_gap,
         }

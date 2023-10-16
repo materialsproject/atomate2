@@ -679,16 +679,16 @@ class AimsOutCalcChunk(AimsOutChunk):
         line_start = self.reverse_search_for(["Smallest direct gap"])
         if line_start == LINE_NOT_FOUND:
             return {
-                "homo": homo,
-                "lumo": lumo,
+                "vbm": homo,
+                "cbm": lumo,
                 "gap": homo_lumo_gap,
                 "direct_gap": homo_lumo_gap,
             }
 
         direct_gap = float(self.lines[line_start].split(":")[1].split("eV")[0].strip())
         return {
-            "homo": homo,
-            "lumo": lumo,
+            "vbm": homo,
+            "cbm": lumo,
             "gap": homo_lumo_gap,
             "direct_gap": direct_gap,
         }
@@ -857,8 +857,8 @@ class AimsOutCalcChunk(AimsOutChunk):
             "hirshfeld_atomic_dipoles": self.hirshfeld_atomic_dipoles,
             "dielectric_tensor": self.dielectric_tensor,
             "polarization": self.polarization,
-            "homo": self.homo,
-            "lumo": self.lumo,
+            "vbm": self.vbm,
+            "cbm": self.cbm,
             "gap": self.gap,
             "direct_gap": self.direct_gap,
         }
@@ -985,14 +985,14 @@ class AimsOutCalcChunk(AimsOutChunk):
         return self._parse_eigenvalues()["occupancies"]
 
     @lazyproperty
-    def homo(self):
-        """Return the HOMO (CBM) of the calculation."""
-        return self._parse_homo_lumo()["homo"]
+    def vbm(self):
+        """Return the HOMO (VBM) of the calculation."""
+        return self._parse_homo_lumo()["vbm"]
 
     @lazyproperty
-    def lumo(self):
-        """Return the LUMO (VBM) of the calculation."""
-        return self._parse_homo_lumo()["lumo"]
+    def cbm(self):
+        """Return the LUMO (CBM) of the calculation."""
+        return self._parse_homo_lumo()["cbm"]
 
     @lazyproperty
     def gap(self):
