@@ -37,12 +37,14 @@ class AnalysisSummary(BaseModel):
         Errors from the FHI-aims output
     """
 
-    delta_volume: float = Field(None, description="Absolute change in volume")
-    delta_volume_as_percent: float = Field(
+    delta_volume: Optional[float] = Field(None, description="Absolute change in volume")
+    delta_volume_as_percent: Optional[float] = Field(
         None, description="Percentage change in volume"
     )
-    max_force: float = Field(None, description="Maximum force on the atoms")
-    errors: List[str] = Field(None, description="Errors from the FHI-aims output")
+    max_force: Optional[float] = Field(None, description="Maximum force on the atoms")
+    errors: Optional[List[str]] = Field(
+        None, description="Errors from the FHI-aims output"
+    )
 
     @classmethod
     def from_aims_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
@@ -216,16 +218,18 @@ class OutputSummary(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
-    bandgap: float = Field(None, description="The DFT bandgap for the last calculation")
-    cbm: float = Field(None, description="CBM for this calculation")
-    vbm: float = Field(None, description="VBM for this calculation")
-    forces: List[Vector3D] = Field(
+    bandgap: Optional[float] = Field(
+        None, description="The DFT bandgap for the last calculation"
+    )
+    cbm: Optional[float] = Field(None, description="CBM for this calculation")
+    vbm: Optional[float] = Field(None, description="VBM for this calculation")
+    forces: Optional[List[Vector3D]] = Field(
         None, description="Forces on atoms from the last calculation"
     )
-    stress: Matrix3D = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
-    all_forces: List[List[Vector3D]] = Field(
+    all_forces: Optional[List[List[Vector3D]]] = Field(
         None, description="Forces on atoms from all calculations."
     )
 
@@ -302,7 +306,7 @@ class ConvergenceSummary(BaseModel):
         None,
         description="The last value of the input setting to study convergence against",
     )
-    asked_epsilon: float = Field(
+    asked_epsilon: Optional[float] = Field(
         None,
         description="The difference in the values for the convergence criteria that was"
         " asked for",
@@ -413,7 +417,9 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
     completed_at: str = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: InputSummary = Field(None, description="The input to the first calculation")
+    input: Optional[InputSummary] = Field(
+        None, description="The input to the first calculation"
+    )
     output: OutputSummary = Field(
         None, description="The output of the final calculation"
     )
@@ -422,28 +428,32 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         None, description="The final pymatgen Structure or Molecule of the atoms"
     )
     state: Status = Field(None, description="State of this task")
-    included_objects: List[AimsObject] = Field(
+    included_objects: Optional[List[AimsObject]] = Field(
         None, description="List of FHI-aims objects included with this task document"
     )
-    aims_objects: Dict[AimsObject, Any] = Field(
+    aims_objects: Optional[Dict[AimsObject, Any]] = Field(
         None, description="FHI-aims objects associated with this task"
     )
-    entry: ComputedEntry = Field(
+    entry: Optional[ComputedEntry] = Field(
         None, description="The ComputedEntry from the task doc"
     )
     analysis: AnalysisSummary = Field(
         None, description="Summary of structural relaxation and forces"
     )
     task_label: str = Field(None, description="A description of the task")
-    tags: List[str] = Field(None, description="Metadata tags for this task document")
-    author: str = Field(None, description="Author extracted from transformations")
-    icsd_id: str = Field(
+    tags: Optional[List[str]] = Field(
+        None, description="Metadata tags for this task document"
+    )
+    author: Optional[str] = Field(
+        None, description="Author extracted from transformations"
+    )
+    icsd_id: Optional[str] = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: List[Calculation] = Field(
+    calcs_reversed: Optional[List[Calculation]] = Field(
         None, description="The inputs and outputs for all FHI-aims runs in this task."
     )
-    transformations: Dict[str, Any] = Field(
+    transformations: Optional[Dict[str, Any]] = Field(
         None,
         description="Information on the structural transformations, parsed from a "
         "transformations.json file",
@@ -453,7 +463,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         description="Information on the custodian settings used to run this "
         "calculation, parsed from a custodian.json file",
     )
-    additional_json: Dict[str, Any] = Field(
+    additional_json: Optional[Dict[str, Any]] = Field(
         None, description="Additional json loaded from the calculation directory"
     )
 

@@ -129,25 +129,31 @@ class CalculationOutput(BaseModel):
         None, description="The Fermi level from the calculation in eV"
     )
 
-    forces: List[Vector3D] = Field(None, description="Forces acting on each atom")
-    all_forces: List[List[Vector3D]] = Field(
+    forces: Optional[List[Vector3D]] = Field(
+        None, description="Forces acting on each atom"
+    )
+    all_forces: Optional[List[List[Vector3D]]] = Field(
         None,
         description="Forces acting on each atom for each structure in the output file",
     )
-    stress: Matrix3D = Field(None, description="The stress on the cell")
-    stresses: Union[List[Matrix3D], None] = Field(
+    stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
+    stresses: Optional[List[Matrix3D]] = Field(
         None, description="The atomic virial stresses"
     )
 
-    is_metal: bool = Field(None, description="Whether the system is metallic")
-    bandgap: float = Field(None, description="The band gap from the calculation in eV")
-    cbm: float = Field(
+    is_metal: Optional[bool] = Field(None, description="Whether the system is metallic")
+    bandgap: Optional[float] = Field(
+        None, description="The band gap from the calculation in eV"
+    )
+    cbm: Optional[float] = Field(
         None,
         description="The conduction band minimum in eV (if system is not metallic)",
     )
-    vbm: float = Field(
+    vbm: Optional[float] = Field(
         None, description="The valence band maximum in eV (if system is not metallic)"
     )
+    homo: float = Field(None, description="The HOMO of the structure")
+    lumo: float = Field(None, description="The LUMO of the structure")
     atomic_steps: List[MSONableAtoms] = Field(
         None, description="Structures for each ionic step"
     )
@@ -192,7 +198,6 @@ class CalculationOutput(BaseModel):
 
         stresses = None
         if output.stresses is not None:
-            print("\n\n", output.stresses, "\n\n")
             stresses = [
                 voigt_6_to_full_3x3_stress(st).tolist() for st in output.stresses
             ]
@@ -267,7 +272,7 @@ class Calculation(BaseModel):
         parse_bandstructure: Union[str, bool] = False,
         store_trajectory: bool = False,
         store_scf: bool = False,
-        store_volumetric_data: Union[Sequence[str], None] = STORE_VOLUMETRIC_DATA,
+        store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> Tuple["Calculation", Dict[AimsObject, Dict]]:
         """
         Create an FHI-aims calculation document from a directory and file paths.
@@ -385,7 +390,7 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[AimsObject, str]
 def _get_volumetric_data(
     dir_name: Path,
     output_file_paths: Dict[AimsObject, str],
-    store_volumetric_data: Union[Sequence[str], None],
+    store_volumetric_data: Optional[Sequence[str]],
 ) -> Dict[AimsObject, VolumetricData]:
     """
     Load volumetric data files from a directory.

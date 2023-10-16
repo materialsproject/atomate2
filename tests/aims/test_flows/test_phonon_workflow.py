@@ -63,28 +63,28 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
     output = responses[flow.job_uuids[-1]][1].output
 
     phonopy_settings_schema = {
-        "title": "PhononComputationalSettings",
-        "description": "Collection to store computational settings for the phonon "
-        "computation.",
-        "type": "object",
+        "description": "Collection to store computational settings for the "
+        "phonon computation.",
         "properties": {
             "npoints_band": {
-                "title": "Npoints Band",
                 "default": "number of points for band structure computation",
+                "title": "Npoints Band",
                 "type": "integer",
             },
             "kpath_scheme": {
-                "title": "Kpath Scheme",
                 "default": "indicates the kpath scheme",
+                "title": "Kpath Scheme",
                 "type": "string",
             },
             "kpoint_density_dos": {
+                "default": "number of points for computation of free energies and"
+                " densities of states",
                 "title": "Kpoint Density Dos",
-                "default": "number of points for computation of free energies and "
-                "densities of states",
                 "type": "integer",
             },
         },
+        "title": "PhononComputationalSettings",
+        "type": "object",
     }
     assert output.code == "aims"
     assert output.born is None
@@ -226,28 +226,28 @@ def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
     phonopy_settings_schema = {
-        "title": "PhononComputationalSettings",
-        "description": "Collection to store computational settings for the "
-        "phonon computation.",
-        "type": "object",
+        "description": "Collection to store computational settings for "
+        "the phonon computation.",
         "properties": {
             "npoints_band": {
-                "title": "Npoints Band",
                 "default": "number of points for band structure computation",
+                "title": "Npoints Band",
                 "type": "integer",
             },
             "kpath_scheme": {
-                "title": "Kpath Scheme",
                 "default": "indicates the kpath scheme",
+                "title": "Kpath Scheme",
                 "type": "string",
             },
             "kpoint_density_dos": {
-                "title": "Kpoint Density Dos",
                 "default": "number of points for computation of free energies "
                 "and densities of states",
+                "title": "Kpoint Density Dos",
                 "type": "integer",
             },
         },
+        "title": "PhononComputationalSettings",
+        "type": "object",
     }
     assert output.code == "aims"
     assert output.born is None
@@ -302,6 +302,7 @@ def test_phonon_default_socket_flow(Si, tmp_path, mock_aims, species_dir):
 
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
+
     phonopy_settings_schema = {
         "title": "PhononComputationalSettings",
         "description": "Collection to store computational settings for the "
