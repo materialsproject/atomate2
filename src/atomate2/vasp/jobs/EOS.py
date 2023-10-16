@@ -14,6 +14,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import numpy as np
+from jobflow import job
+from pymatgen.analysis.eos import EOS
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
@@ -28,6 +31,29 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
     from atomate2.vasp.sets.base import VaspInputGenerator
+
+
+@job
+def postprocess_EOS(data_dict: dict[str, list], EOS_models: list | None = None):
+    """Take dict of E(V) data and fit to each equation of state in EOS_models."""
+    if EOS_models is None:
+        EOS_models = [
+            "murnaghan",
+            "birch",
+            "birch_murnaghan",
+            "pourier_tarantola",
+            "vinet",
+        ]
+
+    output = {"EV": data_dict.copy(), "EOS": {}}
+    for key in data_dict:
+        output["EOS"][key] = {}  # type: ignore
+        data = np.asarray(data_dict[key])
+        for eos_name in EOS_models:
+            eos = EOS(eos_name=eos_name).fit(data[:, 0], data[:, 1])
+            eos_d = {**eos.results, "b0 GPa": float(eos.b0_GPa)}
+            output["EOS"][key][eos_name] = eos_d  # type: ignore
+    return output
 
 
 @dataclass

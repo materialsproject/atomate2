@@ -18,6 +18,7 @@ from atomate2.vasp.jobs.EOS import (
     eos_relax_maker,
     mp_gga_deformation_maker,
     mp_gga_eos_relax_maker,
+    postprocess_EOS,
 )
 from atomate2.vasp.powerups import update_user_incar_settings
 
@@ -163,8 +164,8 @@ class eos_maker(Maker):
         flow_output: dict[str, list] = {"relax": []}
         for iframe in range(self.number_of_frames + 1):
             flow_output["relax"].append(
-                [   
-                    relax_jobs[iframe].output.volume, 
+                [
+                    relax_jobs[iframe].output.volume,
                     relax_jobs[iframe].output.calcs_reversed[0].output.energy,
                 ]
             )
@@ -179,7 +180,13 @@ class eos_maker(Maker):
                     ]
                 )
 
-        return Flow(jobs=relax_jobs + static_jobs, output=flow_output, name=self.name)
+        postprocess = postprocess_EOS(flow_output)
+
+        return Flow(
+            jobs=relax_jobs + static_jobs + [postprocess],
+            output=postprocess.output,
+            name=self.name,
+        )
 
 
 @dataclass
