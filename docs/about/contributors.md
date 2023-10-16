@@ -102,3 +102,10 @@ University of Arizona
 
 [tpurcell90]: https://github.com/tpurcell90
 [0000-0003-4564-7206]: https://orcid.org/0000-0003-4564-7206
+
+**Alexander Bonkowski** [![gh]][ab5424] [![orc]][0000-0002-0525-4742] \
+PhD student in Chemistry \
+RWTH Aachen University
+
+[ab5424]: https://github.com/ab5424
+[0000-0002-0525-4742]: https://orcid.org/0000-0002-0525-4742
