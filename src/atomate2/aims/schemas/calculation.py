@@ -135,7 +135,9 @@ class CalculationOutput(BaseModel):
         description="Forces acting on each atom for each structure in the output file",
     )
     stress: Matrix3D = Field(None, description="The stress on the cell")
-    stresses: List[Matrix3D] = Field(None, description="The atomic virial stresses")
+    stresses: Union[List[Matrix3D], None] = Field(
+        None, description="The atomic virial stresses"
+    )
 
     is_metal: bool = Field(None, description="Whether the system is metallic")
     bandgap: float = Field(None, description="The band gap from the calculation in eV")
@@ -190,6 +192,7 @@ class CalculationOutput(BaseModel):
 
         stresses = None
         if output.stresses is not None:
+            print("\n\n", output.stresses, "\n\n")
             stresses = [
                 voigt_6_to_full_3x3_stress(st).tolist() for st in output.stresses
             ]
