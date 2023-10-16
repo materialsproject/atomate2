@@ -64,7 +64,7 @@ strict = [
     "cclib==1.8",
     "chgnet==0.2.2",
     "click==8.1.7",
-    "custodian==2023.7.22",
+    "custodian==2023.10.9",
     "dscribe==2.1.0",
     "emmet-core==0.70.4",
     "jobflow==0.1.14",
