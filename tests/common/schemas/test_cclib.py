@@ -96,7 +96,8 @@ def test_cclib_taskdoc(test_dir):
     task.dict()
 
     # test document can be jsanitized
-    d = jsanitize(doc, enum_values=True)
+    dct = jsanitize(doc, enum_values=True)
 
     # and decoded
-    MontyDecoder().process_decoded(d)
+    json_str = MontyDecoder().process_decoded(dct)
+    assert "builder_meta=EmmetMeta" in json_str

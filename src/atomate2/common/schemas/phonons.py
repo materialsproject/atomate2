@@ -66,12 +66,14 @@ class ThermalDisplacementData(BaseModel):
 class PhononUUIDs(BaseModel):
     """Collection to save all uuids connected to the phonon run."""
 
-    optimization_run_uuid: str = Field(None, description="optimization run uuid")
-    displacements_uuids: List[str] = Field(
+    optimization_run_uuid: Optional[str] = Field(
+        None, description="optimization run uuid"
+    )
+    displacements_uuids: Optional[List[str]] = Field(
         None, description="The uuids of the displacement jobs."
     )
-    static_run_uuid: str = Field(None, description="static run uuid")
-    born_run_uuid: str = Field(None, description="born run uuid")
+    static_run_uuid: Optional[str] = Field(None, description="static run uuid")
+    born_run_uuid: Optional[str] = Field(None, description="born run uuid")
 
 
 class ForceConstants(MSONable):
@@ -153,17 +155,17 @@ class PhononBSDOSDoc(StructureMetadata):
     )
 
     # needed, e.g. to compute Grueneisen parameter etc
-    force_constants: ForceConstants = Field(
+    force_constants: Optional[ForceConstants] = Field(
         None, description="Force constants between every pair of atoms in the structure"
     )
 
-    born: List[Matrix3D] = Field(
+    born: Optional[List[Matrix3D]] = Field(
         None,
         description="born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
     )
 
-    epsilon_static: Matrix3D = Field(
+    epsilon_static: Optional[Matrix3D] = Field(
         None, description="The high-frequency dielectric constant"
     )
 
@@ -186,7 +188,7 @@ class PhononBSDOSDoc(StructureMetadata):
         "Field including all relevant job directories"
     )
 
-    uuids: PhononUUIDs = Field("Field including all relevant uuids")
+    uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
 
     @classmethod
     def from_forces_born(
