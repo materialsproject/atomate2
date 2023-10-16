@@ -17,6 +17,8 @@ from atomate2.aims.utils.units import ev_per_A3_to_kbar
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from pymatgen.core import Molecule, Structure
+
 LINE_NOT_FOUND = object()
 
 
@@ -830,6 +832,11 @@ class AimsOutCalcChunk(AimsOutChunk):
         atoms.calc = SinglePointDFTCalculator(atoms)
         atoms.calc.results = self.results
         return atoms
+
+    @property
+    def structure(self) -> Structure | Molecule:
+        """The pytmagen structure of the atoms."""
+        return self.atoms.pymatgen
 
     @property
     def results(self):

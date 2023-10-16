@@ -10,6 +10,7 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from emmet.core.tasks import get_uri
 from pydantic import BaseModel, Field
+from pymatgen.core import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 
 from atomate2.aims.schemas.calculation import AimsObject, Calculation, Status
@@ -128,16 +129,20 @@ class InputSummary(BaseModel):
 
     Parameters
     ----------
-    structure: .MSONableAtoms
+    atoms: .MSONableAtoms
         The input structure object
+    structure: Structure or Molecule
+        The final pymatgen Structure or Molecule of the atoms
     species_info: .SpeciesSummary
         Summary of the species defaults used for each atom kind
     xc: str
         Exchange-correlation functional used if not the default
     """
 
-    structure: MSONableAtoms = Field(None, description="The input structure object")
-
+    atoms: MSONableAtoms = Field(None, description="The input structure object")
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The pymatgen structure of the input Atoms"
+    )
     species_info: SpeciesSummary = Field(
         None, description="Summary of the species defaults used for each atom kind"
     )
@@ -162,6 +167,7 @@ class InputSummary(BaseModel):
         summary = SpeciesSummary.from_species_info(calc_doc.input.species_info)
 
         return cls(
+            atoms=calc_doc.input.atoms,
             structure=calc_doc.input.structure,
             atomic_kind_info=summary,
             xc=str(calc_doc.run_type),
@@ -173,8 +179,10 @@ class OutputSummary(BaseModel):
 
     Parameters
     ----------
-    structure: .MSONableAtoms
-        The output structure object
+    atoms: .MSONableAtoms
+        The output atoms object
+    structure: Structure or Molecule
+        The final pymatgen Structure or Molecule of the atoms
     trajectory: List[.MSONableAtoms]
         The trajectory of output structures
     energy: float
@@ -195,7 +203,10 @@ class OutputSummary(BaseModel):
         Forces on atoms from all calculations.
     """
 
-    structure: MSONableAtoms = Field(None, description="The output structure object")
+    atoms: MSONableAtoms = Field(None, description="The output structure object")
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The pymatgen structure of the output Atoms"
+    )
     trajectory: List[MSONableAtoms] = Field(
         None, description="The trajectory of output structures"
     )
@@ -233,6 +244,7 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         return cls(
+            atoms=calc_doc.output.atoms,
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
@@ -251,8 +263,10 @@ class ConvergenceSummary(BaseModel):
 
     Parameters
     ----------
-    structure: .MSONableAtoms
+    atoms: .MSONableAtoms
         The output structure object
+    structure: Structure or Molecule
+        The output pymatgen Structure or Molecule of the atoms
     converged: bool
         Is convergence achieved?
     convergence_criterion_name: str
@@ -269,7 +283,10 @@ class ConvergenceSummary(BaseModel):
         The actual difference in the convergence criteria values
     """
 
-    structure: MSONableAtoms = Field(None, description="The output structure object")
+    atoms: MSONableAtoms = Field(None, description="The output atoms object")
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The pymatgen structure of the output Atoms"
+    )
     converged: bool = Field(None, description="Is convergence achieved?")
 
     convergence_criterion_name: str = Field(
@@ -324,6 +341,7 @@ class ConvergenceSummary(BaseModel):
             convergence_data = json.load(f)
 
         return cls(
+            atoms=calc_doc.output.atoms,
             structure=calc_doc.output.structure,
             converged=convergence_data["converged"],
             convergence_criterion_name=convergence_data["criterion_name"],
@@ -353,8 +371,10 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         The input to the first calculation
     output: .OutputSummary
         The output of the final calculation
-    structure: .MSONableAtoms
+    atoms: .MSONableAtoms
         Final output structure from the task
+    structure: Structure or Molecule
+        The final pymatgen Structure or Molecule of the atoms
     state: .Status
         State of this task
     included_objects: List[.AimsObject]
@@ -397,8 +417,9 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
     output: OutputSummary = Field(
         None, description="The output of the final calculation"
     )
-    structure: MSONableAtoms = Field(
-        None, description="Final output structure from the task"
+    atoms: MSONableAtoms = Field(None, description="Final output atoms from the task")
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The final pymatgen Structure or Molecule of the atoms"
     )
     state: Status = Field(None, description="State of this task")
     included_objects: List[AimsObject] = Field(
@@ -498,6 +519,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         # rewrite the original structure save!
 
         data = {
+            "atoms": calcs_reversed[-1].output.atoms,
             "structure": calcs_reversed[-1].output.structure,
             "meta_structure": calcs_reversed[-1].output.structure,
             "dir_name": dir_name,
@@ -535,7 +557,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         entry_dict = {
             "correction": 0.0,
             "entry_id": job_id,
-            "composition": calc_docs[-1].output.structure.get_chemical_formula(),
+            "composition": calc_docs[-1].output.atoms.get_chemical_formula(),
             "energy": calc_docs[-1].output.energy,
             "parameters": {
                 # Required to be compatible with MontyEncoder for the ComputedEntry

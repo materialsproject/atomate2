@@ -10,6 +10,7 @@ from ase.stress import voigt_6_to_full_3x3_stress
 from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
+from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.common import VolumetricData
@@ -42,15 +43,21 @@ class CalculationInput(BaseModel):
 
     Parameters
     ----------
-    structure: .MSONableAtoms
+    atoms: .MSONableAtoms
         The input Atoms object
+    structure: Structure or Molecule
+        The final pymatgen Structure or Molecule of the atoms
     species_info: Dict
         Description of parameters used for each atomic species
     aims_input: Dict
         The aims input parameters used for this task
     """
 
-    structure: MSONableAtoms = Field(None, description="The input Atoms object")
+    atoms: MSONableAtoms = Field(None, description="The input Atoms object")
+
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The pymatgen structure of the input Atoms"
+    )
 
     species_info: Dict[str, Any] = Field(
         None, description="Description of parameters used for each atomic species"
@@ -64,7 +71,8 @@ class CalculationInput(BaseModel):
     def from_aims_output(cls, output: AimsOutput):
         """Initialize from AimsOutput object."""
         return cls(
-            structure=output.initial_structure,
+            atoms=output.initial_structure,
+            structure=output.initial_structure.pymatgen,
             species_info=output.data.get("species_info", None),
             aims_input=output.input.as_dict(),
         )
@@ -79,8 +87,10 @@ class CalculationOutput(BaseModel):
         The final total DFT energy for the calculation
     energy_per_atom: float
         The final DFT energy per atom for the calculation
-    structure: .MSONableAtoms
+    atoms: .MSONableAtoms
         The final structure from the calculation
+    structure: Structure or Molecule
+        The final pymatgen Structure or Molecule of the atoms
     efermi: float
         The Fermi level from the calculation in eV
     forces: List[Vector3D]
@@ -109,8 +119,11 @@ class CalculationOutput(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the calculation"
     )
-    structure: MSONableAtoms = Field(
+    atoms: MSONableAtoms = Field(
         None, description="The final structure from the calculation"
+    )
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The pymatgen structure of the final Atoms"
     )
     efermi: float = Field(
         None, description="The Fermi level from the calculation in eV"
@@ -157,7 +170,7 @@ class CalculationOutput(BaseModel):
         -------
         The FHI-aims calculation output document.
         """
-        structure = output.final_structure
+        atoms = output.final_structure
 
         electronic_output = {
             "efermi": output.fermi_energy,
@@ -186,9 +199,10 @@ class CalculationOutput(BaseModel):
             all_forces = [f if (f is not None) else None for f in output.all_forces]
 
         return cls(
-            structure=structure,
+            atoms=atoms,
+            structure=atoms.pymatgen,
             energy=output.final_energy,
-            energy_per_atom=output.final_energy / len(structure),
+            energy_per_atom=output.final_energy / len(atoms),
             **electronic_output,
             atomic_steps=output.structures,
             forces=forces,

@@ -52,7 +52,7 @@ class DoubleRelaxMaker(Maker):
         relax1.name += " 1"
 
         relax2 = self.relax_maker2.make(
-            relax1.output.structure, prev_dir=relax1.output.dir_name
+            relax1.output.atoms, prev_dir=relax1.output.dir_name
         )
         relax2.name += " 2"
 
