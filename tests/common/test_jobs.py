@@ -30,7 +30,7 @@ def test_structure_to_conventional(si_structure):
 
 
 @mark.skipif(
-    not os.environ.get("MP_API_KEY"),
+    not os.getenv("MP_API_KEY"),
     reason="Materials Project API key not set in environment.",
 )
 def test_retrieve_structure_from_materials_project():

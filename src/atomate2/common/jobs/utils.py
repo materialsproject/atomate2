@@ -30,7 +30,6 @@ def structure_to_primitive(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
@@ -53,7 +52,6 @@ def structure_to_conventional(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_conventional_standard_structure()

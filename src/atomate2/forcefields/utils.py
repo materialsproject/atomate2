@@ -47,7 +47,6 @@ class TrajectoryObserver:
     """Trajectory observer.
 
     This is a hook in the relaxation process that saves the intermediate structures.
-
     """
 
     def __init__(self, atoms: Atoms):

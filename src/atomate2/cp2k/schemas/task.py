@@ -104,7 +104,7 @@ class AtomicKind(BaseModel):
     potential: str = Field(
         None, description="Name of pseudopotential for this atom kind"
     )
-    auxiliary_basis: str = Field(
+    auxiliary_basis: Optional[str] = Field(
         None, description="Auxiliary basis for this (if any) for this atom kind"
     )
     ghost: bool = Field(None, description="Whether this atom kind is a ghost")
@@ -186,13 +186,15 @@ class OutputSummary(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
-    bandgap: float = Field(None, description="The DFT bandgap for the last calculation")
-    cbm: float = Field(None, description="CBM for this calculation")
-    vbm: float = Field(None, description="VBM for this calculation")
+    bandgap: Optional[float] = Field(
+        None, description="The DFT bandgap for the last calculation"
+    )
+    cbm: Optional[float] = Field(None, description="CBM for this calculation")
+    vbm: Optional[float] = Field(None, description="VBM for this calculation")
     forces: List[Vector3D] = Field(
         None, description="Forces on atoms from the last calculation"
     )
-    stress: Matrix3D = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
 
@@ -232,51 +234,59 @@ class OutputSummary(BaseModel):
 class TaskDocument(StructureMetadata, MoleculeMetadata):
     """Definition of CP2K task document."""
 
-    dir_name: str = Field(None, description="The directory for this CP2K task")
+    dir_name: Optional[str] = Field(
+        None, description="The directory for this CP2K task"
+    )
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    completed_at: str = Field(
+    completed_at: Optional[str] = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: InputSummary = Field(None, description="The input to the first calculation")
-    output: OutputSummary = Field(
+    input: Optional[InputSummary] = Field(
+        None, description="The input to the first calculation"
+    )
+    output: Optional[OutputSummary] = Field(
         None, description="The output of the final calculation"
     )
     structure: Union[Structure, Molecule] = Field(
         None, description="Final output structure from the task"
     )
-    state: Status = Field(None, description="State of this task")
-    included_objects: List[Cp2kObject] = Field(
+    state: Optional[Status] = Field(None, description="State of this task")
+    included_objects: Optional[List[Cp2kObject]] = Field(
         None, description="List of CP2K objects included with this task document"
     )
-    cp2k_objects: Dict[Cp2kObject, Any] = Field(
+    cp2k_objects: Optional[Dict[Cp2kObject, Any]] = Field(
         None, description="CP2K objects associated with this task"
     )
-    entry: ComputedEntry = Field(
+    entry: Optional[ComputedEntry] = Field(
         None, description="The ComputedEntry from the task doc"
     )
-    analysis: AnalysisSummary = Field(
+    analysis: Optional[AnalysisSummary] = Field(
         None, description="Summary of structural relaxation and forces"
     )
-    run_stats: Dict[str, RunStatistics] = Field(
+    run_stats: Optional[Dict[str, RunStatistics]] = Field(
         None,
         description="Summary of runtime statistics for each calculation in this task",
     )
-    orig_inputs: Dict[str, Cp2kInput] = Field(
+    orig_inputs: Optional[Dict[str, Cp2kInput]] = Field(
         None, description="Summary of the original CP2K inputs written by custodian"
     )
-    task_label: str = Field(None, description="A description of the task")
-    tags: List[str] = Field(None, description="Metadata tags for this task document")
-    author: str = Field(None, description="Author extracted from transformations")
-    icsd_id: str = Field(
+    task_label: Optional[str] = Field(None, description="A description of the task")
+    tags: Optional[List[str]] = Field(
+        None, description="Metadata tags for this task document"
+    )
+    author: Optional[str] = Field(
+        None, description="Author extracted from transformations"
+    )
+    icsd_id: Optional[str] = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: List[Calculation] = Field(
+    calcs_reversed: Optional[List[Calculation]] = Field(
         None, description="The inputs and outputs for all CP2K runs in this task."
     )
-    transformations: Dict[str, Any] = Field(
+    transformations: Optional[Dict[str, Any]] = Field(
         None,
         description="Information on the structural transformations, parsed from a "
         "transformations.json file",
@@ -286,13 +296,11 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         description="Information on the custodian settings used to run this "
         "calculation, parsed from a custodian.json file",
     )
-    additional_json: Dict[str, Any] = Field(
+    additional_json: Optional[Dict[str, Any]] = Field(
         None, description="Additional json loaded from the calculation directory"
     )
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod

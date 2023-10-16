@@ -103,14 +103,14 @@ class LobsterinModel(BaseModel):
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
 
-    gaussiansmearingwidth: float = Field(
+    gaussiansmearingwidth: Optional[float] = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    usedecimalplaces: int = Field(
+    usedecimalplaces: Optional[int] = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    cohpsteps: float = Field(
+    cohpsteps: Optional[float] = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
     basisset: str = Field(None, description="basis set of computation")
@@ -121,7 +121,7 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    lsodos: bool = Field(
+    lsodos: Optional[bool] = Field(
         None, description="Writes DOS output from the orthonormalized LCAO basis"
     )
     basisfunctions: list = Field(
@@ -229,7 +229,7 @@ class CondensedBondingAnalysis(BaseModel):
                 path_to_charge=charge_path,
                 summed_spins=False,  # we will always use spin polarization here
                 cutoff_icohp=0.10,
-                whichbonds=which_bonds,
+                which_bonds=which_bonds,
             )
             cba_run_time = time.time() - start
             # initialize lobsterpy condensed bonding analysis
@@ -262,7 +262,7 @@ class CondensedBondingAnalysis(BaseModel):
                 cohp_plot_data=cba_cohp_plot_data,
                 cutoff_icohp=analyse.cutoff_icohp,
                 summed_spins=False,
-                which_bonds=analyse.whichbonds,
+                which_bonds=analyse.which_bonds,
                 final_dict_bonds=analyse.final_dict_bonds,
                 final_dict_ions=analyse.final_dict_ions,
                 run_time=cba_run_time,
@@ -388,7 +388,7 @@ class LobsterTaskDocument(StructureMetadata):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    lso_dos: LobsterCompleteDos = Field(
+    lso_dos: Optional[LobsterCompleteDos] = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
     madelung_energies: dict = Field(
@@ -409,16 +409,14 @@ class LobsterTaskDocument(StructureMetadata):
         "each site as a key and the gross population as a value.",
     )
 
-    band_overlaps: dict = Field(
+    band_overlaps: Optional[dict] = Field(
         None,
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
     )
 
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
@@ -685,7 +683,7 @@ def _identify_strongest_bonds(
                     are_cobis=are_cobis,
                     are_coops=are_coops,
                     strongest_bonds=bond_dict,
-                    which_bonds=analyse.whichbonds,
+                    which_bonds=analyse.which_bonds,
                 )
             )
         else:
