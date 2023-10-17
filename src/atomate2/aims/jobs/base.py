@@ -18,7 +18,7 @@ from atomate2.aims.files import (
     write_aims_input_set,
 )
 from atomate2.aims.run import run_aims, should_stop_children
-from atomate2.aims.schemas.task import AimsTaskDocument, ConvergenceSummary
+from atomate2.aims.schemas.task import AimsTaskDoc, ConvergenceSummary
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
@@ -44,7 +44,7 @@ class BaseAimsMaker(Maker):
     run_aims_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.run_aims`.
     task_document_kwargs : dict[str, Any]
-        Keyword arguments that will get passed to :obj:`.TaskDocument.from_directory`.
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     stop_children_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.should_stop_children`.
     write_additional_data : dict[str, Any]
@@ -54,7 +54,7 @@ class BaseAimsMaker(Maker):
         this, use the ":" character, which will automatically be converted to ".". E.g.
         ``{"my_file:txt": "contents of the file"}``.
     store_output_data: bool
-        Whether the job output (TaskDocument) should be stored in the JobStore through
+        Whether the job output (TaskDoc) should be stored in the JobStore through
         the response.
     """
 
@@ -108,9 +108,7 @@ class BaseAimsMaker(Maker):
         run_aims(**self.run_aims_kwargs)
 
         # parse FHI-aims outputs
-        task_doc = AimsTaskDocument.from_directory(
-            Path.cwd(), **self.task_document_kwargs
-        )
+        task_doc = AimsTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
         # decide whether child jobs should proceed
@@ -241,7 +239,7 @@ class ConvergenceMaker(Maker):
                 [next_base_job, update_file_job, next_job], output=next_base_job.output
             )
             return Response(detour=replace_flow, output=replace_flow.output)
-        task_doc = AimsTaskDocument.from_directory(prev_dir_no_host)
+        task_doc = AimsTaskDoc.from_directory(prev_dir_no_host)
         return ConvergenceSummary.from_aims_calc_doc(task_doc)
 
     @job(name="Writing a convergence file")

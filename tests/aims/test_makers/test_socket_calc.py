@@ -12,7 +12,7 @@ def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
     from jobflow import run_locally
 
     from atomate2.aims.jobs.core import SocketIOStaticMaker
-    from atomate2.aims.schemas.task import AimsTaskDocument
+    from atomate2.aims.schemas.task import AimsTaskDoc
     from atomate2.aims.sets.core import SocketIOSetGenerator
 
     atoms = MSONableAtoms(Si)
@@ -44,7 +44,7 @@ def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
 
     # validation the outputs of the job
     outputs = responses[job.uuid][1].output
-    assert isinstance(outputs, AimsTaskDocument)
+    assert isinstance(outputs, AimsTaskDoc)
     assert len(outputs.output.trajectory) == 3
     assert outputs.output.trajectory[0].get_potential_energy() == pytest.approx(
         -15800.0997410132

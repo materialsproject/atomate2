@@ -17,7 +17,7 @@ from atomate2.aims.files import (
 from atomate2.aims.io.parsers import read_aims_output
 from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
-from atomate2.aims.schemas.task import AimsTaskDocument
+from atomate2.aims.schemas.task import AimsTaskDoc
 from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from atomate2.aims.sets.core import (
     RelaxSetGenerator,
@@ -178,9 +178,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
         run_aims_socket(atoms, **self.run_aims_kwargs)
 
         # parse FHI-aims outputs
-        task_doc = AimsTaskDocument.from_directory(
-            Path.cwd(), **self.task_document_kwargs
-        )
+        task_doc = AimsTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
         # decide whether child jobs should proceed

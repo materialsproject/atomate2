@@ -12,7 +12,7 @@ def test_static_maker(Si, tmp_path, mock_aims, species_dir):
     from jobflow import run_locally
 
     from atomate2.aims.jobs.core import StaticMaker
-    from atomate2.aims.schemas.task import AimsTaskDocument
+    from atomate2.aims.schemas.task import AimsTaskDoc
     from atomate2.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
@@ -39,5 +39,5 @@ def test_static_maker(Si, tmp_path, mock_aims, species_dir):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, AimsTaskDocument)
+    assert isinstance(output1, AimsTaskDoc)
     assert output1.output.energy == pytest.approx(-15800.099740991)

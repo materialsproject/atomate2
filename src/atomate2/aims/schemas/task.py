@@ -13,16 +13,16 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 
-from atomate2.aims.schemas.calculation import AimsObject, Calculation, Status
+from atomate2.aims.schemas.calculation import AimsObject, Calculation, TaskState
 from atomate2.aims.utils import datetime_str
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
-_T = TypeVar("_T", bound="AimsTaskDocument")
+_T = TypeVar("_T", bound="AimsTaskDoc")
 _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
 logger = logging.getLogger(__name__)
 
 
-class AnalysisSummary(BaseModel):
+class AnalysisDoc(BaseModel):
     """Calculation relaxation summary.
 
     Parameters
@@ -47,7 +47,7 @@ class AnalysisSummary(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
+    def from_aims_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisDoc":
         """Create analysis summary from FHI-aims calculation documents.
 
         Parameters
@@ -57,7 +57,7 @@ class AnalysisSummary(BaseModel):
 
         Returns
         -------
-        .AnalysisSummary
+        .AnalysisDoc
             Summary object
         """
         delta_vol = None
@@ -65,7 +65,7 @@ class AnalysisSummary(BaseModel):
 
         final_calc = calc_docs[-1]
         max_force = None
-        if final_calc.has_aims_completed == Status.SUCCESS:
+        if final_calc.has_aims_completed == TaskState.SUCCESS:
             max_force = _get_max_force(final_calc)
 
         return cls(
@@ -126,7 +126,7 @@ class SpeciesSummary(BaseModel):
         return cls(**d)
 
 
-class InputSummary(BaseModel):
+class InputDoc(BaseModel):
     """Summary of inputs for an FHI-aims calculation.
 
     Parameters
@@ -153,7 +153,7 @@ class InputSummary(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "InputDoc":
         """Create calculation input summary from a calculation document.
 
         Parameters
@@ -163,7 +163,7 @@ class InputSummary(BaseModel):
 
         Returns
         -------
-        .InputSummary
+        .InputDoc
             A summary of the input structure and parameters.
         """
         summary = SpeciesSummary.from_species_info(calc_doc.input.species_info)
@@ -176,7 +176,7 @@ class InputSummary(BaseModel):
         )
 
 
-class OutputSummary(BaseModel):
+class OutputDoc(BaseModel):
     """Summary of the outputs for an FHI-aims calculation.
 
     Parameters
@@ -234,7 +234,7 @@ class OutputSummary(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "OutputDoc":
         """Create a summary from an aims CalculationDocument.
 
         Parameters
@@ -244,7 +244,7 @@ class OutputSummary(BaseModel):
 
         Returns
         -------
-        .OutputSummary
+        .OutputDoc
             The calculation output summary.
         """
         return cls(
@@ -360,7 +360,7 @@ class ConvergenceSummary(BaseModel):
         )
 
 
-class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
+class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
     """Definition of FHI-aims task document.
 
     Parameters
@@ -371,15 +371,15 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         Timestamp for this task document was last updated
     completed_at: str
         Timestamp for when this task was completed
-    input: .InputSummary
+    input: .InputDoc
         The input to the first calculation
-    output: .OutputSummary
+    output: .OutputDoc
         The output of the final calculation
     atoms: .MSONableAtoms
         Final output structure from the task
     structure: Structure or Molecule
         The final pymatgen Structure or Molecule of the atoms
-    state: .Status
+    state: .TaskState
         State of this task
     included_objects: List[.AimsObject]
         List of FHI-aims objects included with this task document
@@ -387,7 +387,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
         FHI-aims objects associated with this task
     entry: ComputedEntry
         The ComputedEntry from the task doc
-    analysis: .AnalysisSummary
+    analysis: .AnalysisDoc
         Summary of structural relaxation and forces
     task_label: str
         A description of the task
@@ -417,17 +417,15 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
     completed_at: str = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: Optional[InputSummary] = Field(
+    input: Optional[InputDoc] = Field(
         None, description="The input to the first calculation"
     )
-    output: OutputSummary = Field(
-        None, description="The output of the final calculation"
-    )
+    output: OutputDoc = Field(None, description="The output of the final calculation")
     atoms: MSONableAtoms = Field(None, description="Final output atoms from the task")
     structure: Union[Structure, Molecule] = Field(
         None, description="The final pymatgen Structure or Molecule of the atoms"
     )
-    state: Status = Field(None, description="State of this task")
+    state: TaskState = Field(None, description="State of this task")
     included_objects: Optional[List[AimsObject]] = Field(
         None, description="List of FHI-aims objects included with this task document"
     )
@@ -437,7 +435,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
     entry: Optional[ComputedEntry] = Field(
         None, description="The ComputedEntry from the task doc"
     )
-    analysis: AnalysisSummary = Field(
+    analysis: AnalysisDoc = Field(
         None, description="Summary of structural relaxation and forces"
     )
     task_label: str = Field(None, description="A description of the task")
@@ -514,7 +512,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
             calcs_reversed.append(calc_doc)
             all_aims_objects.append(aims_objects)
 
-        analysis = AnalysisSummary.from_aims_calc_docs(calcs_reversed)
+        analysis = AnalysisDoc.from_aims_calc_docs(calcs_reversed)
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
@@ -537,7 +535,7 @@ class AimsTaskDocument(StructureMetadata, MoleculeMetadata):
             "analysis": analysis,
             "tags": tags,
             "completed_at": calcs_reversed[-1].completed_at,
-            "output": OutputSummary.from_aims_calc_doc(calcs_reversed[-1]),
+            "output": OutputDoc.from_aims_calc_doc(calcs_reversed[-1]),
             "state": _get_state(calcs_reversed, analysis),
             "entry": cls.get_entry(calcs_reversed),
             "aims_objects": aims_objects,
@@ -673,22 +671,24 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     return None
 
 
-def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
+def _get_state(calc_docs: List[Calculation], analysis: AnalysisDoc) -> TaskState:
     """Get state from calculation documents and relaxation analysis.
 
     Parameters
     ----------
     calc_docs: List[.Calculations]
         The calculation to get the state from
-    analysis: .AnalysisSummary
+    analysis: .AnalysisDoc
         The summary of the analysis
 
     Returns
     -------
-    .Status
+    .TaskState
         The status of the calculation
     """
-    all_calcs_completed = all(c.has_aims_completed == Status.SUCCESS for c in calc_docs)
+    all_calcs_completed = all(
+        c.has_aims_completed == TaskState.SUCCESS for c in calc_docs
+    )
     if len(analysis.errors) == 0 and all_calcs_completed:
-        return Status.SUCCESS  # type: ignore
-    return Status.FAILED  # type: ignore
+        return TaskState.SUCCESS  # type: ignore
+    return TaskState.FAILED  # type: ignore

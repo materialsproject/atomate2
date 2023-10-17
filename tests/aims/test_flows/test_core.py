@@ -14,7 +14,7 @@ def test_double_relax(mock_aims, tmp_path, Si, species_dir):
     from jobflow import run_locally
 
     from atomate2.aims.flows.core import DoubleRelaxMaker
-    from atomate2.aims.schemas.task import AimsTaskDocument
+    from atomate2.aims.schemas.task import AimsTaskDoc
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -42,6 +42,6 @@ def test_double_relax(mock_aims, tmp_path, Si, species_dir):
     output1 = responses[flow.jobs[0].uuid][1].output
     output2 = responses[flow.jobs[1].uuid][1].output
 
-    assert isinstance(output1, AimsTaskDocument)
+    assert isinstance(output1, AimsTaskDoc)
     assert output1.output.energy == pytest.approx(-15800.22554)
     assert output2.output.energy == pytest.approx(-15800.25855)

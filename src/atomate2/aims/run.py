@@ -12,7 +12,7 @@ from ase.calculators.aims import Aims
 from monty.json import MontyDecoder
 
 if TYPE_CHECKING:
-    from atomate2.aims.schemas.task import AimsTaskDocument
+    from atomate2.aims.schemas.task import AimsTaskDoc
     from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ def run_aims(
 
 
 def should_stop_children(
-    task_document: AimsTaskDocument,
+    task_document: AimsTaskDoc,
     handle_unsuccessful: bool | str = True,
 ) -> bool:
     """
@@ -48,7 +48,7 @@ def should_stop_children(
 
     Parameters
     ----------
-    task_document : .TaskDocument
+    task_document : .TaskDoc
         An FHI-aims task document.
     handle_unsuccessful : bool or str
         This is a three-way toggle on what to do if your job looks OK, but is actually

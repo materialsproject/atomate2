@@ -4,7 +4,7 @@ import pytest
 from jobflow import run_locally
 
 from atomate2.aims.jobs.core import RelaxMaker
-from atomate2.aims.schemas.task import AimsTaskDocument
+from atomate2.aims.schemas.task import AimsTaskDoc
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 cwd = os.getcwd()
@@ -33,7 +33,7 @@ def test_base_maker(tmp_path, species_dir, mock_aims, Si):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, AimsTaskDocument)
+    assert isinstance(output1, AimsTaskDoc)
     assert output1.output.energy == pytest.approx(-15800.2255448846)
 
 
@@ -62,5 +62,5 @@ def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, Si):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, AimsTaskDocument)
+    assert isinstance(output1, AimsTaskDoc)
     assert output1.output.energy == pytest.approx(-15800.099741042)

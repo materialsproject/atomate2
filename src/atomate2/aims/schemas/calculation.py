@@ -21,7 +21,7 @@ from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 STORE_VOLUMETRIC_DATA = ("total_density",)
 
 
-class Status(ValueEnum):
+class TaskState(ValueEnum):
     """FHI-aims calculation state."""
 
     SUCCESS = "successful"
@@ -147,10 +147,13 @@ class CalculationOutput(BaseModel):
     )
     cbm: float = Field(
         None,
-        description="The conduction band minimum, or LUMO for molecules, in eV (if system is not metallic)",
+        description="The conduction band minimum, or LUMO for molecules, in eV "
+        "(if system is not metallic)",
     )
     vbm: Optional[float] = Field(
-        None, description="The valence band maximum, or HOMO for molecules, in eV (if system is not metallic)"
+        None,
+        description="The valence band maximum, or HOMO for molecules, in eV "
+        "(if system is not metallic)",
     )
     atomic_steps: List[MSONableAtoms] = Field(
         None, description="Structures for each ionic step"
@@ -227,7 +230,7 @@ class Calculation(BaseModel):
         The directory for this FHI-aims calculation
     aims_version: str
         FHI-aims version used to perform the calculation
-    has_aims_completed: .Status
+    has_aims_completed: .TaskState
         Whether FHI-aims completed the calculation successfully
     output: .CalculationOutput
         The FHI-aims calculation output
@@ -244,7 +247,7 @@ class Calculation(BaseModel):
     aims_version: str = Field(
         None, description="FHI-aims version used to perform the calculation"
     )
-    has_aims_completed: Status = Field(
+    has_aims_completed: TaskState = Field(
         None, description="Whether FHI-aims completed the calculation successfully"
     )
     output: CalculationOutput = Field(
@@ -342,7 +345,9 @@ class Calculation(BaseModel):
 
         output_doc = CalculationOutput.from_aims_output(aims_output)
 
-        has_aims_completed = Status.SUCCESS if aims_output.completed else Status.FAILED
+        has_aims_completed = (
+            TaskState.SUCCESS if aims_output.completed else TaskState.FAILED
+        )
 
         if store_trajectory:
             traj = _parse_trajectory(aims_output=aims_output)
