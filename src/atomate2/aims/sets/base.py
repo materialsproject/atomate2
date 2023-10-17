@@ -302,11 +302,11 @@ class AimsInputGenerator(InputGenerator):
         -------
         The input set for the calculation of atoms
         """
-        prev_atoms, prev_parameters, prev_results = self._read_previous(prev_dir)
+        prev_atoms, prev_parameters, _ = self._read_previous(prev_dir)
         atoms = atoms if atoms is not None else prev_atoms
 
         parameters = self._get_input_parameters(atoms, prev_parameters)
-        properties = self._get_properties(properties, parameters, prev_results)
+        properties = self._get_properties(properties, parameters)
 
         return AimsInputSet(parameters=parameters, atoms=atoms, properties=properties)
 
@@ -344,7 +344,6 @@ class AimsInputGenerator(InputGenerator):
         self,
         properties: list[str] = None,
         parameters: dict[str, Any] = None,
-        prev_results: dict[str, list[float]] = None,
     ) -> list[str]:
         """Get the properties to calculate.
 
@@ -363,10 +362,6 @@ class AimsInputGenerator(InputGenerator):
         """
         if properties is None:
             properties = ["energy", "free_energy"]
-
-        for key in prev_results:
-            if key not in properties and key in DEFAULT_AIMS_PROPERTIES:
-                properties.append(key)
 
         if "compute_forces" in parameters and "forces" not in properties:
             properties.append("forces")

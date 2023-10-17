@@ -11,7 +11,6 @@ from monty.serialization import dumpfn
 
 from atomate2.aims.files import (
     cleanup_aims_outputs,
-    copy_aims_outputs,
     write_aims_input_set,
 )
 from atomate2.aims.io.parsers import read_aims_output
@@ -147,7 +146,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
 
         from_prev = prev_dir is not None
         if from_prev:
-            copy_aims_outputs(prev_dir, **self.copy_aims_kwargs)
+            # copy_aims_outputs(prev_dir, **self.copy_aims_kwargs)
 
             dest_dir = self.copy_aims_kwargs.get("dest_dir", None)
             if dest_dir is None:

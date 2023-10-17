@@ -14,7 +14,6 @@ from pymatgen.core import Molecule, Structure
 
 from atomate2.aims.files import (
     cleanup_aims_outputs,
-    copy_aims_outputs,
     write_aims_input_set,
 )
 from atomate2.aims.run import run_aims, should_stop_children
@@ -91,8 +90,8 @@ class BaseAimsMaker(Maker):
             atoms = structure.copy()
 
         # copy previous inputs
-        if prev_dir is not None:
-            copy_aims_outputs(prev_dir, **self.copy_aims_kwargs)
+        # if prev_dir is not None:
+        #     copy_aims_outputs(prev_dir, **self.copy_aims_kwargs)
 
         # write aims input files
         self.write_input_set_kwargs["prev_dir"] = prev_dir
