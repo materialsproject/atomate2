@@ -18,3 +18,7 @@ if TYPE_CHECKING:
 
     from pymatgen.core.structure import Structure
     from atomate2.vasp.jobs.base import BaseVaspMaker
+
+@dataclass
+class AdsorptionMaker(Maker):
+    """Makes a flow for calculating adsorption energies."""
