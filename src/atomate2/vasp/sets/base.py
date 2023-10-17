@@ -1123,13 +1123,6 @@ def _set_kspacing(
         # This should default to ISMEAR=0 if band gap is not known (first computation)
         # if not from_prev:
         #     # be careful to not override user_incar_settings
-        if not from_prev:
-            if bandgap <= bandgap_tol:
-                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
-                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
-            else:
-                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
-                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
     elif incar_settings.get("KSPACING"):
         incar["KSPACING"] = incar_settings["KSPACING"]
 
