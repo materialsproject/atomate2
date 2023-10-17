@@ -686,13 +686,13 @@ class VaspInputGenerator(InputGenerator):
         if self.auto_lreal:
             auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
-        _set_kspacing(
-            incar,
-            incar_settings,
-            self.user_incar_settings,
-            self.auto_kspacing if isinstance(self.auto_kspacing, float) else bandgap,
-            kpoints,
-        )
+        if isinstance(self.auto_kspacing, bool):
+            bandgap = None  # don't auto-set KSPACING based on bandgap
+        elif isinstance(self.auto_kspacing, float):
+            # interpret auto_kspacing as bandgap and set KSPACING based on user input
+            bandgap = self.auto_kspacing
+        _set_kspacing(incar, incar_settings, self.user_incar_settings, bandgap, kpoints)
+
         # apply updates from auto options, careful not to override user_incar_settings
         _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
 
@@ -1111,7 +1111,7 @@ def _set_kspacing(
 
     elif "KSPACING" in user_incar_settings:
         incar["KSPACING"] = user_incar_settings["KSPACING"]
-    elif incar_settings.get("KSPACING") and bandgap:
+    elif incar_settings.get("KSPACING") and isinstance(bandgap, float):
         # will always default to 0.22 in first run as one
         # cannot be sure if one treats a metal or
         # semiconductor/insulator
