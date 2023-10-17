@@ -180,7 +180,7 @@ def test_header_n_spins(header_chunk):
 
 def test_header_constraints(header_chunk):
     assert len(header_chunk.constraints) == 2
-    assert header_chunk.constraints[0].index == 0
+    assert header_chunk.constraints[0].a == 0
     assert header_chunk.constraints[1].index == 1
     assert np.all(header_chunk.constraints[0].mask == [False, False, True])
 
@@ -300,7 +300,7 @@ def test_header_transfer_n_spins(empty_calc_chunk):
 
 def test_header_transfer_constraints(empty_calc_chunk):
     assert len(empty_calc_chunk.constraints) == 2
-    assert empty_calc_chunk.constraints[0].index == 0
+    assert empty_calc_chunk.constraints[0].a == 0
     assert empty_calc_chunk.constraints[1].index == 1
     assert np.all(empty_calc_chunk.constraints[0].mask == [False, False, True])
 

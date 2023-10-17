@@ -9,6 +9,7 @@ from os.path import expandvars
 from typing import TYPE_CHECKING
 
 from ase.calculators.aims import Aims
+from ase.calculators.socketio import SocketIOCalculator
 from monty.json import MontyDecoder
 
 if TYPE_CHECKING:
@@ -97,7 +98,7 @@ def run_aims_socket(atoms_to_calculate: list[MSONableAtoms], aims_cmd: str = Non
     port = parameters["use_pimd_wrapper"][1]
     atoms = atoms_to_calculate[0].copy()
 
-    with calculator.socketio(port=port) as calc:
+    with SocketIOCalculator(calc=calculator, port=port) as calc:
         for atoms_calc in atoms_to_calculate:
             # Delete prior calculation results
             calc.results.clear()

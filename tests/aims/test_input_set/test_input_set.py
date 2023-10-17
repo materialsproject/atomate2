@@ -235,10 +235,13 @@ atom_frac 0.2500000000000000 0.2500000000000000 0.2500000000000000 Si
 
 
 def check_file(ref: str, test: str) -> bool:
-    ref_lines = [line.split() for line in ref.split("\n")]
-    test_lines = [line.split() for line in test.split("\n")]
+    ref_lines = [line.strip() for line in ref.split("\n") if len(line.strip()) > 0]
+    test_lines = [line.strip() for line in test.split("\n") if len(line.strip()) > 0]
 
-    return ref_lines[7:] == test_lines[6:]
+    if ref_lines[3:] != test_lines[4:]:
+        print("\n".join(ref_lines), "\n here")
+        print("\n".join(test_lines))
+    return ref_lines[3:] == test_lines[4:]
 
 
 def test_input_set(Si, species_dir):

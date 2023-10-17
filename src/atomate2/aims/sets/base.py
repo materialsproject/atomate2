@@ -5,12 +5,12 @@ import copy
 import json
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterable, Sequence
 from warnings import warn
 
 import numpy as np
-from ase.calculators.aims import AimsTemplate
+from ase.calculators.aims import Aims
+from ase.constraints import FixScaledParametricRelations
 from monty.json import MontyDecoder, MontyEncoder
 from pymatgen.io.core import InputFile, InputGenerator, InputSet
 
@@ -25,6 +25,8 @@ from atomate2.aims.utils.common import (
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from ase.cell import Cell
 
 DEFAULT_AIMS_PROPERTIES = [
@@ -135,10 +137,32 @@ class AimsInputSet(InputSet):
         -------
         The contents of the control.in and geometry.in file
         """
+        property_flags = {
+            "forces": "compute_forces",
+            "stress": "compute_analytical_stress",
+            "stresses": "compute_heat_flux",
+        }
+        updated_params = dict(**self._parameters)
+        for prop in self._properties:
+            aims_name = property_flags.get(prop, None)
+            if aims_name is not None:
+                updated_params[aims_name] = True
+
         with cwd(TMPDIR_NAME, mkdir=True, rmdir=True):
-            aims_template = AimsTemplate()
-            aims_template.write_input(
-                Path("./"), self._atoms, self._parameters, self._properties
+            aims_calc = Aims(atoms=self._atoms, **updated_params)
+            scaled = np.any(self._atoms.pbc)
+            geo_constrain = any(
+                [False]
+                + [
+                    isinstance(const, FixScaledParametricRelations)
+                    for const in self._atoms.constraints
+                ]
+            )
+            aims_calc.write_input(
+                atoms=self._atoms,
+                properties=self._properties,
+                scaled=scaled,
+                geo_constrain=geo_constrain,
             )
             aims_control_in = AimsInputFile.from_file("control.in")
             aims_geometry_in = AimsInputFile.from_file("geometry.in")
