@@ -692,8 +692,6 @@ class VaspInputGenerator(InputGenerator):
             self.user_incar_settings,
             self.auto_kspacing if isinstance(self.auto_kspacing, float) else bandgap,
             kpoints,
-            previous_incar is None,
-            bandgap_tol=getattr(self, "bandgap_tol", SETTINGS.BANDGAP_TOL),
         )
         # apply updates from auto options, careful not to override user_incar_settings
         _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
@@ -1087,10 +1085,8 @@ def _set_kspacing(
     incar: Incar,
     incar_settings: dict,
     user_incar_settings: dict,
-    bandgap: float,
-    kpoints: Kpoints,
-    from_prev: bool,
-    bandgap_tol: float,
+    bandgap: float | None,
+    kpoints: Kpoints | None,
 ):
     """
     Set KSPACING in an INCAR.
