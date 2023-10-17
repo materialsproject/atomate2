@@ -12,7 +12,7 @@ from atomate2.openmm.schemas.state_reports import StateReports
 from atomate2.openmm.schemas.calculation_input import CalculationInput
 from atomate2.openmm.schemas.calculation_output import CalculationOutput
 from atomate2.openmm.constants import OpenMMConstants
-from atomate2.openmm.logger import logger
+# from atomate2.openmm.logger import logger
 from openmm import Platform, Context
 from typing import Union, Optional
 from openmm.app import DCDReporter, StateDataReporter, PDBReporter
@@ -145,7 +145,7 @@ class BaseOpenMMMaker(Maker):
                 file=dcd_file_name,
                 reportInterval=self.dcd_reporter_interval,
             )
-            logger.info(f"Created DCDReporter that will report to {dcd_file_name}")
+            # logger.info(f"Created DCDReporter that will report to {dcd_file_name}")
             sim.reporters.append(dcd_reporter)
         if self.state_reporter_interval > 0:
             state_file_name = os.path.join(output_dir, OpenMMConstants.STATE_REPORT_CSV_FILE_NAME.value)
@@ -160,7 +160,7 @@ class BaseOpenMMMaker(Maker):
                 volume=True,
                 density=True,
             )
-            logger.info(f"Created DCDReporter that will report to {state_file_name}")
+            # logger.info(f"Created DCDReporter that will report to {state_file_name}")
             sim.reporters.append(state_reporter)
 
         return sim
