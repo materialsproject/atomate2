@@ -24,7 +24,7 @@ def copy_aims_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
     additional_aims_files: list[str] | None = None,
-    restart_to_input: bool = True,
+    restart_to_input: bool = False,
     file_client: FileClient | None = None,
 ):
     """
@@ -52,15 +52,16 @@ def copy_aims_outputs(
     # additional files like bands, DOS, *.cube, whatever
     additional_files = additional_aims_files if additional_aims_files else []
 
-    if restart_to_input:
-        additional_files += ("hessian.aims", "geometry.in.next_step", "*.csc")
-
     # copy files
-    files: list[str | Path] = ["aims.out", "*.json"]
+    # (no need to copy aims.out by default; it can be added to additional_aims_files
+    # explicitly if needed)
+    files: list[str] = (
+        ["hessian.aims", "geometry.in.next_step", "*.csc"] if restart_to_input else []
+    )
 
     files += [
         Path(f).name
-        for pattern in set(additional_files)
+        for pattern in set(files + additional_files)
         for f in glob((Path(src_dir) / pattern).as_posix())
     ]
 
