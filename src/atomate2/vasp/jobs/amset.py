@@ -28,6 +28,8 @@ from atomate2.vasp.sets.core import (
 )
 
 if TYPE_CHECKING:
+    from typing import Any
+
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
 
@@ -200,7 +202,7 @@ def run_amset_deformations(
     symprec: float = SETTINGS.SYMPREC,
     prev_vasp_dir: str | Path | None = None,
     static_deformation_maker: BaseVaspMaker | None = None,
-):
+) -> Response:
     """
     Run amset deformations.
 
@@ -260,7 +262,7 @@ def calculate_deformation_potentials(
     deformation_dirs: list[str],
     symprec: float = SETTINGS.SYMPREC,
     ibands: tuple[list[int], list[int]] = None,
-):
+) -> dict[str, str]:
     """
     Generate the deformation.h5 (containing deformation potentials) using AMSET.
 
@@ -322,7 +324,7 @@ def calculate_polar_phonon_frequency(
     frequencies: list[float],
     eigenvectors: list[Vector3D],
     born_effective_charges: list[Vector3D],
-):
+) -> dict[str, list[float]]:
     """
     Calculate the polar phonon frequency using amset.
 
@@ -362,7 +364,7 @@ def calculate_polar_phonon_frequency(
 
 
 @job
-def generate_wavefunction_coefficients(dir_name: str):
+def generate_wavefunction_coefficients(dir_name: str) -> dict[str, Any]:
     """
     Generate wavefunction.h5 file using amset.
 

@@ -31,7 +31,7 @@ def calculate_finite_diff(
     distorted_calc_dirs: list[str],
     ref_calc_index: int,
     run_vasp_kwargs: dict | None = None,
-):
+) -> FiniteDifferenceDocument:
     """Run a post-processing VASP job for the finite difference overlap.
 
     Reads the WAVECAR file and computes the desired quantities. This can be used in

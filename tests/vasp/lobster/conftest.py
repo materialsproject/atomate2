@@ -1,6 +1,7 @@
 import logging
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import Literal, Union
 
 import pytest
 

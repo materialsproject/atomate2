@@ -59,7 +59,7 @@ class ConfigurationCoordinateMaker(Maker):
         structure: Structure,
         charge_state1: int,
         charge_state2: int,
-    ):
+    ) -> Flow:
         """
         Make a job for the calculation of the configuration coordinate diagram.
 
@@ -251,7 +251,7 @@ class FormationEnergyMaker(Maker, ABC):
     validate_charge: bool = True
     collect_defect_entry_data: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Apply post init updates."""
         self.validate_maker()
         if self.bulk_relax_maker is None:
@@ -263,7 +263,7 @@ class FormationEnergyMaker(Maker, ABC):
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: npt.NDArray | None = None,
         defect_index: int | str = "",
-    ):
+    ) -> Flow:
         """Make a flow to calculate the formation energy diagram.
 
         Start a series of charged supercell relaxations from a single defect
@@ -362,7 +362,7 @@ class FormationEnergyMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def validate_maker(self):
+    def validate_maker(self) -> None:
         """Check some key settings in the relax maker.
 
         Since this workflow is pretty complex but allows you to use any

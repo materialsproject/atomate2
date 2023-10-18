@@ -6,7 +6,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.lobster.handlers import EnoughBandsValidator, LobsterFilesValidator
@@ -16,6 +16,8 @@ from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from custodian.custodian import Validator
 
 
@@ -45,7 +47,7 @@ def run_lobster(
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     lobster_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run Lobster.
 

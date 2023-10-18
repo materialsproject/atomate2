@@ -156,6 +156,7 @@ select = [
     "ISC",  # flake8-implicit-str-concat
     "PD",   # pandas-vet
     "PERF", # perflint
+    "PGH",  # pygrep-hooks
     "PIE",  # flake8-pie
     "PL",   # pylint
     "PT",   # flake8-pytest-style
@@ -167,7 +168,6 @@ select = [
     "SIM",  # flake8-simplify
     "SLOT", # flake8-slots
     "TCH",  # flake8-type-checking
-    "TID",  # tidy imports
     "TID",  # flake8-tidy-imports
     "UP",   # pyupgrade
     "W",    # pycodestyle warning
