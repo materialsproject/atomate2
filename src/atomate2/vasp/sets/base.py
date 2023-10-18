@@ -312,6 +312,8 @@ class VaspInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
+    # copy _BASE_VASP_SET to ensure each class instance has its own copy
+    # otherwise in-place changes can affect other instances
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
     inherit_incar: bool = None
 

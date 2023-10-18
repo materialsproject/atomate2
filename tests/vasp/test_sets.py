@@ -2,6 +2,7 @@ import pytest
 from pymatgen.core import Lattice, Species, Structure
 
 from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 
 @pytest.fixture(scope="module")
@@ -172,10 +173,10 @@ def test_set_u_params(structure, request) -> None:
         (10, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
     ],
 )
-def test_set_kspacing_and_auto_ismear(struct_no_magmoms, bandgap, expected_params):
-    static_set = StaticSetGenerator(auto_ismear=True, auto_kspacing=True)
-    # need to indicate to atomate2 to use KSPACING instead of KPOINTS
-    static_set.config_dict["INCAR"]["KSPACING"] = 42  # dummy value
+def test_set_kspacing_and_auto_ismear(
+    struct_no_magmoms, bandgap, expected_params, monkeypatch
+):
+    static_set = MPMetaGGARelaxSetGenerator(auto_ismear=True, auto_kspacing=True)
 
     incar = static_set._get_incar(
         structure=struct_no_magmoms,
