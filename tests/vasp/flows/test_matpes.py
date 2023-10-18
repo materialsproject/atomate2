@@ -8,7 +8,7 @@ from pymatgen.core import Structure
 from atomate2.vasp.flows.matpes import MatPesGGAPlusMetaGGAStaticMaker
 
 
-def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
+def test_matpes_gga_plus_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # map from job name to directory containing reference output files
     pre_relax_dir = "matpes_pbe_r2scan_flow/pbe_static"
     ref_paths = {
