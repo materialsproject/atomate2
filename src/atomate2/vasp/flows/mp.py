@@ -1,5 +1,5 @@
 """
-Module defining flows for Materials Project workflows.
+Module defining Materials Project workflows.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
