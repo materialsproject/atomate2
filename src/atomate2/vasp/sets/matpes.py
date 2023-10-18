@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
 
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -31,29 +31,48 @@ _BASE_MATPES_PBE_STATIC_SET = {
 
 
 @dataclass
-class MatPesGGAStaticSetGenerator(StaticSetGenerator):
+class MatPesGGAStaticSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
     auto_ismear: bool = False
-    auto_kspacing: bool = True
-    user_incar_settings: dict = field(
-        # ensure _set_kspacing doesn't override input set ISMEAR
-        default_factory=lambda: {"ISMEAR": 0, "SIGMA": 0.05}
-    )
+    auto_kspacing: bool = False
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for this calculation type.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {}
 
 
 @dataclass
-class MatPesMetaGGAStaticSetGenerator(StaticSetGenerator):
+class MatPesMetaGGAStaticSetGenerator(MatPesGGAStaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
-
-    config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
-    auto_ismear: bool = False
-    auto_kspacing: bool = True
-    user_incar_settings: dict = field(
-        # ensure _set_kspacing doesn't override input set ISMEAR
-        default_factory=lambda: {"ISMEAR": 0, "SIGMA": 0.05}
-    )
 
     def get_incar_updates(
         self,

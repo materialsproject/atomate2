@@ -67,8 +67,8 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     # generate flow
     flow = MPMetaGGADoubleRelaxStaticMaker(
         relax_maker2=MPMetaGGARelaxMaker(
-            # TODO better test for bandgap_tol, isn't actually run by mock_vasp
-            # this just tests it can be passed without error
+            # TODO write better test for bandgap_tol since it isn't actually used by
+            # mock_vasp. this just tests it can be passed without error
             input_set_generator=MPMetaGGARelaxSetGenerator(bandgap_tol=0.1)
         )
     ).make(si_struct)

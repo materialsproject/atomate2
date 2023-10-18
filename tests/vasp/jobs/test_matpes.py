@@ -119,11 +119,7 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    job = MatPesMetaGGAStaticMaker(
-        input_set_generator=MatPesMetaGGAStaticSetGenerator(
-            auto_kspacing=0.6172000000000004
-        )
-    ).make(si_struct)
+    job = MatPesMetaGGAStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)

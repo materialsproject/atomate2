@@ -33,7 +33,6 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
     """Class to generate MP-compatible VASP GGA relaxation input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
-    auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool = False
 
@@ -90,7 +89,6 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
-    auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool = False
 
@@ -149,7 +147,6 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     bandgap_tol: float = 1e-4
-    auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool = False
 
