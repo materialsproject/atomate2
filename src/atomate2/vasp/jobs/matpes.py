@@ -54,6 +54,7 @@ class MatPesGGAStaticMaker(BaseVaspMaker):
     )
     inherit_incar: bool = False
 
+
 @dataclass
 class MatPesMetaGGAStaticMaker(BaseVaspMaker):
     """
