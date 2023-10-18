@@ -687,7 +687,7 @@ class VaspInputGenerator(InputGenerator):
         if self.auto_lreal:
             auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
-        if isinstance(self.auto_kspacing, bool):
+        if self.auto_kspacing is False:
             bandgap = None  # don't auto-set KSPACING based on bandgap
         elif isinstance(self.auto_kspacing, float):
             # interpret auto_kspacing as bandgap and set KSPACING based on user input
