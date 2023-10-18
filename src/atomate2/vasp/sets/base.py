@@ -674,11 +674,12 @@ class VaspInputGenerator(InputGenerator):
             auto_updates["ISPIN"] = ispin
 
         if self.auto_ismear:
+            bandgap_tol = getattr(self, "bandgap_tol", SETTINGS.BANDGAP_TOL)
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
                 auto_updates.update(ISMEAR=0, SIGMA=0.2)
-            elif bandgap == 0:
+            elif bandgap <= bandgap_tol:
                 auto_updates.update(ISMEAR=2, SIGMA=0.2)  # metal
             else:
                 auto_updates.update(ISMEAR=-5, SIGMA=0.05)  # insulator
