@@ -312,6 +312,8 @@ class VaspInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
+    # copy _BASE_VASP_SET to ensure each class instance has its own copy
+    # otherwise in-place changes can affect other instances
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
     inherit_incar: bool = None
 
@@ -692,6 +694,7 @@ class VaspInputGenerator(InputGenerator):
         elif isinstance(self.auto_kspacing, float):
             # interpret auto_kspacing as bandgap and set KSPACING based on user input
             bandgap = self.auto_kspacing
+
         _set_kspacing(incar, incar_settings, self.user_incar_settings, bandgap, kpoints)
 
         # apply updates from auto options, careful not to override user_incar_settings
@@ -1079,7 +1082,7 @@ def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
     kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
 
     # cap kspacing at a max of 0.44, per internal benchmarking
-    return kspacing if 0.22 < kspacing < 0.44 else 0.44
+    return min(kspacing, 0.44)
 
 
 def _set_kspacing(
@@ -1112,7 +1115,8 @@ def _set_kspacing(
 
     elif "KSPACING" in user_incar_settings:
         incar["KSPACING"] = user_incar_settings["KSPACING"]
-    elif incar_settings.get("KSPACING") and isinstance(bandgap, float):
+
+    elif incar_settings.get("KSPACING") and isinstance(bandgap, (int, float)):
         # will always default to 0.22 in first run as one
         # cannot be sure if one treats a metal or
         # semiconductor/insulator
@@ -1120,6 +1124,7 @@ def _set_kspacing(
         # This should default to ISMEAR=0 if band gap is not known (first computation)
         # if not from_prev:
         #     # be careful to not override user_incar_settings
+
     elif incar_settings.get("KSPACING"):
         incar["KSPACING"] = incar_settings["KSPACING"]
 
