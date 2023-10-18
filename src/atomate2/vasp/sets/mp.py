@@ -1,5 +1,5 @@
 """
-Module defining jobs for Materials Project r2SCAN workflows.
+Module defining Materials Project input set generators.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
@@ -37,7 +37,6 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
     """Class to generate MP-compatible VASP GGA relaxation input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
-    auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool = False
 
@@ -104,7 +103,6 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
-    auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool = False
 
@@ -159,14 +157,10 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
     bandgap_tol: float
         Tolerance for metallic bandgap. If bandgap < bandgap_tol, KSPACING will be 0.22,
         otherwise it will increase with bandgap up to a max of 0.44.
-    bandgap_override: float | None
-        Override the bandgap with a fixed value. Defaults to None.
     """
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     bandgap_tol: float = 1e-4
-    bandgap_override: float | None = None
-    auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool = False
 

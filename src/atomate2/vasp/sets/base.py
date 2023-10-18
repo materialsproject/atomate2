@@ -674,11 +674,12 @@ class VaspInputGenerator(InputGenerator):
             auto_updates["ISPIN"] = ispin
 
         if self.auto_ismear:
+            bandgap_tol = getattr(self, "bandgap_tol", SETTINGS.BANDGAP_TOL)
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
                 auto_updates.update(ISMEAR=0, SIGMA=0.2)
-            elif bandgap == 0:
+            elif bandgap <= bandgap_tol:
                 auto_updates.update(ISMEAR=2, SIGMA=0.2)  # metal
             else:
                 auto_updates.update(ISMEAR=-5, SIGMA=0.05)  # insulator
@@ -686,14 +687,13 @@ class VaspInputGenerator(InputGenerator):
         if self.auto_lreal:
             auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
-        _set_kspacing(
-            incar,
-            incar_settings,
-            self.user_incar_settings,
-            self.auto_kspacing if isinstance(self.auto_kspacing, float) else bandgap,
-            kpoints,
-            previous_incar is None,
-        )
+        if self.auto_kspacing is False:
+            bandgap = None  # don't auto-set KSPACING based on bandgap
+        elif isinstance(self.auto_kspacing, float):
+            # interpret auto_kspacing as bandgap and set KSPACING based on user input
+            bandgap = self.auto_kspacing
+        _set_kspacing(incar, incar_settings, self.user_incar_settings, bandgap, kpoints)
+
         # apply updates from auto options, careful not to override user_incar_settings
         _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
 
@@ -1083,12 +1083,11 @@ def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
 
 
 def _set_kspacing(
-    incar,
-    incar_settings,
-    user_incar_settings,
-    bandgap,
-    kpoints,
-    from_prev,
+    incar: Incar,
+    incar_settings: dict,
+    user_incar_settings: dict,
+    bandgap: float | None,
+    kpoints: Kpoints | None,
 ):
     """
     Set KSPACING in an INCAR.
@@ -1113,7 +1112,7 @@ def _set_kspacing(
 
     elif "KSPACING" in user_incar_settings:
         incar["KSPACING"] = user_incar_settings["KSPACING"]
-    elif incar_settings.get("KSPACING") and bandgap:
+    elif incar_settings.get("KSPACING") and isinstance(bandgap, float):
         # will always default to 0.22 in first run as one
         # cannot be sure if one treats a metal or
         # semiconductor/insulator
@@ -1121,13 +1120,6 @@ def _set_kspacing(
         # This should default to ISMEAR=0 if band gap is not known (first computation)
         # if not from_prev:
         #     # be careful to not override user_incar_settings
-        if not from_prev:
-            if bandgap == 0:
-                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.2)
-                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", 2)
-            else:
-                incar["SIGMA"] = user_incar_settings.get("SIGMA", 0.05)
-                incar["ISMEAR"] = user_incar_settings.get("ISMEAR", -5)
     elif incar_settings.get("KSPACING"):
         incar["KSPACING"] = incar_settings["KSPACING"]
 

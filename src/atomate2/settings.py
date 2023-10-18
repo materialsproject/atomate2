@@ -30,6 +30,11 @@ class Atomate2Settings(BaseSettings):
     SYMPREC: float = Field(
         0.1, description="Symmetry precision for spglib symmetry finding."
     )
+    BANDGAP_TOL: float = Field(
+        1e-4,
+        description="Tolerance for determining if a material is a semiconductor or "
+        "metal",
+    )
     CUSTODIAN_SCRATCH_DIR: Optional[str] = Field(
         None, description="Path to scratch directory used by custodian."
     )
