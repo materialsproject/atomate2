@@ -25,6 +25,9 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 if TYPE_CHECKING:
+    from os import PathLike
+    from typing import Any
+
     import numpy as np
     from ase import Atoms
     from ase.calculators.calculator import Calculator
@@ -49,7 +52,7 @@ class TrajectoryObserver:
     This is a hook in the relaxation process that saves the intermediate structures.
     """
 
-    def __init__(self, atoms: Atoms):
+    def __init__(self, atoms: Atoms) -> None:
         """
         Initialize the Observer.
 
@@ -68,7 +71,7 @@ class TrajectoryObserver:
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
-    def __call__(self):
+    def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
@@ -87,7 +90,7 @@ class TrajectoryObserver:
         """
         return self.atoms.get_potential_energy()
 
-    def save(self, filename: str):
+    def save(self, filename: str | PathLike) -> None:
         """
         Save the trajectory file.
 
@@ -121,7 +124,7 @@ class Relaxer:
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
-    ):
+    ) -> None:
         """
         Initialize the Relaxer.
 
@@ -150,10 +153,10 @@ class Relaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
-        interval=1,
-        verbose=False,
+        interval: int = 1,
+        verbose: bool = False,
         **kwargs,
-    ):
+    ) -> dict[str, Any]:
         """
         Relax the structure.
 

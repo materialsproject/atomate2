@@ -1,6 +1,7 @@
 import logging
+from collections.abc import Generator, Sequence
 from pathlib import Path
-from typing import Any, Callable, Dict, Final, Generator, Literal, Sequence, Union
+from typing import Any, Callable, Final, Literal, Union
 
 import pytest
 from pytest import MonkeyPatch
@@ -8,8 +9,8 @@ from pytest import MonkeyPatch
 logger = logging.getLogger("atomate2")
 
 _VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS: Dict[str, Union[str, Path]] = {}
-_FAKE_RUN_VASP_KWARGS: Dict[str, dict] = {}
+_REF_PATHS: dict[str, Union[str, Path]] = {}
+_FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 
 
 @pytest.fixture(scope="session")

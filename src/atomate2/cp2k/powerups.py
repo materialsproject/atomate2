@@ -47,7 +47,7 @@ def update_user_input_settings(
 
     # Convert nested dictionary updates for cp2k inpt settings
     # into dict_mod update format
-    def nested_to_dictmod(d, kk="input_set_generator->user_input_settings"):
+    def nested_to_dictmod(d, kk="input_set_generator->user_input_settings") -> dict:
         d2 = {}
         for k, v in d.items():
             k2 = kk + f"->{k}"

@@ -1,7 +1,8 @@
 import logging
+from collections.abc import Sequence
 from hashlib import md5
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import Literal, Union
 
 import pytest
 

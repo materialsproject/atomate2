@@ -87,7 +87,7 @@ class ElasticMaker(Maker):
         prev_vasp_dir: str | Path | None = None,
         equilibrium_stress: Matrix3D = None,
         conventional: bool = False,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the elastic constant.
 

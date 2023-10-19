@@ -2,7 +2,7 @@
 
 import warnings
 from pathlib import Path
-from typing import Literal, Optional, Tuple, Union
+from typing import Literal, Optional, Union
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -70,7 +70,7 @@ class Atomate2Settings(BaseSettings):
     VASP_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    VASP_STORE_VOLUMETRIC_DATA: Optional[Tuple[str]] = Field(
+    VASP_STORE_VOLUMETRIC_DATA: Optional[tuple[str]] = Field(
         None, description="Store data from these files in database if present"
     )
     VASP_STORE_ADDITIONAL_JSON: bool = Field(
@@ -145,7 +145,7 @@ class Atomate2Settings(BaseSettings):
     CP2K_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    CP2K_STORE_VOLUMETRIC_DATA: Optional[Tuple[str]] = Field(
+    CP2K_STORE_VOLUMETRIC_DATA: Optional[tuple[str]] = Field(
         None, description="Store data from these files in database if present"
     )
     CP2K_STORE_ADDITIONAL_JSON: bool = Field(
@@ -175,7 +175,7 @@ class Atomate2Settings(BaseSettings):
 
     @model_validator(mode="before")
     @classmethod
-    def load_default_settings(cls, values):
+    def load_default_settings(cls, values) -> dict:
         """
         Load settings from file or environment variables.
 
