@@ -1,15 +1,19 @@
+from __future__ import annotations
+
 import logging
-from collections.abc import Generator, Sequence
 from pathlib import Path
-from typing import Any, Callable, Final, Literal, Union
+from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
 import pytest
 from pytest import MonkeyPatch
 
+if TYPE_CHECKING:
+    from collections.abc import Generator, Sequence
+
 logger = logging.getLogger("atomate2")
 
 _VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS: dict[str, Union[str, Path]] = {}
+_REF_PATHS: dict[str, str | Path] = {}
 _FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 
 
