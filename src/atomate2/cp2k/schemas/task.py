@@ -2,7 +2,7 @@
 import logging
 from collections import OrderedDict
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import Any, Optional, TypeVar, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -27,9 +27,6 @@ from atomate2.cp2k.schemas.calculation import (
 )
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
-
-if TYPE_CHECKING:
-    from typing import Any, Optional, TypeVar, Union
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")
