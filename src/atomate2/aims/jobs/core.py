@@ -9,12 +9,13 @@ from typing import TYPE_CHECKING, Sequence
 from jobflow import Response, job
 from monty.serialization import dumpfn
 
+from atomate2 import SETTINGS
 from atomate2.aims.files import (
     cleanup_aims_outputs,
     write_aims_input_set,
 )
 from atomate2.aims.io.parsers import read_aims_output
-from atomate2.aims.jobs.base import BaseAimsMaker
+from atomate2.aims.jobs.base import _FILES_TO_ZIP, BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
 from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
@@ -24,6 +25,7 @@ from atomate2.aims.sets.core import (
     StaticSetGenerator,
 )
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+from atomate2.common.files import gzip_output_folder
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -180,6 +182,13 @@ class SocketIOStaticMaker(BaseAimsMaker):
 
         # cleanup files to save disk space
         cleanup_aims_outputs(directory=Path.cwd())
+
+        # gzip folder
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.VASP_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
 
         return Response(
             stop_children=stop_children,

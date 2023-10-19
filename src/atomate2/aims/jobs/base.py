@@ -12,6 +12,7 @@ from jobflow import Flow, Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.core import Molecule, Structure
 
+from atomate2 import SETTINGS
 from atomate2.aims.files import (
     cleanup_aims_outputs,
     copy_aims_outputs,
@@ -21,9 +22,23 @@ from atomate2.aims.run import run_aims, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc, ConvergenceSummary
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+from atomate2.common.files import gzip_output_folder
 
 logger = logging.getLogger(__name__)
 CONVERGENCE_FILE_NAME = "convergence.json"  # make it a constant?
+
+# Input files.
+# Exclude those that are also outputs
+_INPUT_FILES = [
+    "geometry.in",
+    "control.in",
+]
+
+# Output files.
+_OUTPUT_FILES = ["aims.out", "geometry.in.next_step", "hessian.aims", "*.cube", "*.csc"]
+
+# Files to zip: inputs, outputs and additionally generated files
+_FILES_TO_ZIP = _INPUT_FILES + _OUTPUT_FILES
 
 
 @dataclass
@@ -116,6 +131,13 @@ class BaseAimsMaker(Maker):
 
         # cleanup files to save disk space
         cleanup_aims_outputs(directory=Path.cwd())
+
+        # gzip folder
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.VASP_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
 
         return Response(
             stop_children=stop_children,
