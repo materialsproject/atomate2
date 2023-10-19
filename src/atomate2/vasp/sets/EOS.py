@@ -83,6 +83,7 @@ class EosSetGenerator(VaspInputGenerator):
             "LWAVE": True,
             "ISMEAR": 0,
             "SIGMA": 0.05,
+            "KSPACING": None,
         }
 
     def get_kpoints_updates(
@@ -234,6 +235,7 @@ class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
             "LREAL": False,
             "ISMEAR": -5,
             "IBRION": -1,
+            "KSPACING": None,
         }
 
 
@@ -286,7 +288,7 @@ class MPMetaGGAEosRelaxSetGenerator(EosSetGenerator):
             A dictionary of updates to apply.
         """
         # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
-        return {"LCHARG": True, "LWAVE": True, "GGA": None}
+        return {"LCHARG": True, "LWAVE": True, "GGA": None, "KSPACING": None}
 
 
 @dataclass
@@ -338,4 +340,10 @@ class MPMetaGGAEosPreRelaxSetGenerator(EosSetGenerator):
             A dictionary of updates to apply.
         """
         # unset METAGGA, shouldn't be set anyway but doesn't hurt to be sure
-        return {"LCHARG": True, "LWAVE": True, "GGA": "PS", "METAGGA": None}
+        return {
+            "LCHARG": True,
+            "LWAVE": True,
+            "GGA": "PS",
+            "METAGGA": None,
+            "KSPACING": None,
+        }
