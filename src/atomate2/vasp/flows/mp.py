@@ -1,5 +1,5 @@
 """
-Module defining flows for Materials Project workflows.
+Module defining Materials Project workflows.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
@@ -132,7 +132,7 @@ class MPGGADoubleRelaxStaticMaker(Maker):
             output = static_job.output
             jobs += [static_job]
 
-        return Flow(jobs, output, name=self.name)
+        return Flow(jobs=jobs, output=output, name=self.name)
 
 
 @dataclass
@@ -193,4 +193,4 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
             output = static_job.output
             jobs += [static_job]
 
-        return Flow(jobs, output=output, name=self.name)
+        return Flow(jobs=jobs, output=output, name=self.name)
