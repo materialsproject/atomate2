@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 
 def test_empty_and_invalid_config_file(clean_dir):
@@ -23,4 +24,25 @@ def test_empty_and_invalid_config_file(clean_dir):
         file.write("invalid yaml")
 
     with pytest.raises(SyntaxError, match="atomate2 config file at"):
+        Atomate2Settings()
+
+    # test error if the file exists and contains invalid settings
+    with open(config_file_path, "w") as file:
+        file.write("VASP_CMD: 42")
+
+    with pytest.raises(
+        ValidationError,
+        match="1 validation error for Atomate2Settings\nVASP_CMD\n  "
+        "Input should be a valid string ",
+    ):
+        Atomate2Settings()
+
+    with open(config_file_path, "w") as file:
+        file.write("BANDGAP_TOL: invalid")
+
+    with pytest.raises(
+        ValidationError,
+        match="1 validation error for Atomate2Settings\nBANDGAP_TOL\n  "
+        "Input should be a valid number",
+    ):
         Atomate2Settings()

@@ -217,7 +217,7 @@ def check_kpoints(ref_path: Path):
         user_ksp, ref_ksp = user_incar.get("KSPACING"), ref_incar.get("KSPACING")
         if user_ksp != ref_ksp:
             raise ValueError(
-                f"\n\nKSPACING is inconsistent: {user_ksp} != {ref_ksp} "
+                f"\n\nKSPACING is inconsistent: expected {ref_ksp}, got {user_ksp} "
                 f"\nin ref file {ref_incar_path}"
             )
 
