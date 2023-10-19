@@ -146,13 +146,8 @@ class SocketIOStaticMaker(BaseAimsMaker):
 
         from_prev = prev_dir is not None
         if from_prev:
-            # copy_aims_outputs(prev_dir, **self.copy_aims_kwargs)
-
-            dest_dir = self.copy_aims_kwargs.get("dest_dir", None)
-            if dest_dir is None:
-                dest_dir = Path.cwd()
-
-            images = read_aims_output(f"{dest_dir}/aims.out")
+            hostless_prev_dir = str(prev_dir).split(":")[1]
+            images = read_aims_output(f"{hostless_prev_dir}/aims.out")
             if not isinstance(images, Sequence):
                 images = [images]
 
