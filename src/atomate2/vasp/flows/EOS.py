@@ -14,13 +14,20 @@ from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.EOS import (
-    deformation_maker,
-    eos_relax_maker,
-    mp_gga_deformation_maker,
-    mp_gga_eos_relax_maker,
+    DeformationMaker,
+    EosRelaxMaker,
+    MPGGADeformationMaker,
+    MPGGAEosRelaxMaker,
+    MPGGAEosStaticMaker,
+    MPMetaGGADeformationMaker,
+    MPMetaGGAEosRelaxMaker,
+    MPMetaGGAEosStaticMaker,
     postprocess_EOS,
 )
 from atomate2.vasp.powerups import update_user_incar_settings
+from atomate2.vasp.sets.EOS import (
+    MPMetaGGAEosPreRelaxSetGenerator,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -31,7 +38,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class eos_double_relax_maker(DoubleRelaxMaker):
+class EosDoubleRelaxMaker(DoubleRelaxMaker):
     """
     Workflow to generate initial double relaxation for EOS fitting.
 
@@ -43,35 +50,21 @@ class eos_double_relax_maker(DoubleRelaxMaker):
         Maker to use to generate the first relaxation.
     relax_maker2 : .BaseVaspMaker
         Maker to use to generate the second relaxation.
+
+    NB: WAVECARs are copied over to speed up calculation
     """
 
     name: str = "EOS double relax"
-    relax_maker1: BaseVaspMaker | None = field(default_factory=eos_relax_maker)
-    relax_maker2: BaseVaspMaker = field(default_factory=eos_relax_maker)
+    relax_maker1: BaseVaspMaker | None = field(default_factory=EosRelaxMaker)
+    relax_maker2: BaseVaspMaker = field(
+        default_factory=lambda: EosRelaxMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
 
 
 @dataclass
-class mp_gga_eos_double_relax_maker(DoubleRelaxMaker):
-    """
-    Workflow to generate initial double relaxation for EOS fitting.
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    relax_maker1 : .BaseVaspMaker
-        Maker to use to generate the first relaxation.
-    relax_maker2 : .BaseVaspMaker
-        Maker to use to generate the second relaxation.
-    """
-
-    name: str = "MP GGA EOS double relax"
-    relax_maker1: BaseVaspMaker | None = field(default_factory=mp_gga_eos_relax_maker)
-    relax_maker2: BaseVaspMaker = field(default_factory=mp_gga_eos_relax_maker)
-
-
-@dataclass
-class eos_maker(Maker):
+class EosMaker(Maker):
     """
     Workflow to generate energy vs. volume data for EOS fitting.
 
@@ -97,8 +90,12 @@ class eos_maker(Maker):
     """
 
     name: str = "EOS Maker"
-    relax_maker: Maker | None = field(default_factory=eos_double_relax_maker)
-    deformation_maker: Maker = field(default_factory=deformation_maker)
+    relax_maker: Maker | None = field(default_factory=EosDoubleRelaxMaker)
+    deformation_maker: Maker = field(
+        default_factory=lambda: DeformationMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
     static_maker: Maker | None = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
@@ -181,6 +178,7 @@ class eos_maker(Maker):
                 )
 
         postprocess = postprocess_EOS(flow_output)
+        postprocess.name = self.name + "_" + postprocess.name
 
         return Flow(
             jobs=relax_jobs + static_jobs + [postprocess],
@@ -189,10 +187,41 @@ class eos_maker(Maker):
         )
 
 
+"""
+MPGGA = MP PBE-GGA compatible WFs
+"""
+
+
 @dataclass
-class mp_gga_eos_maker(eos_maker):
+class MPGGAEosDoubleRelaxMaker(DoubleRelaxMaker):
     """
-    Workflow to generate MP-compatible energy vs. volume data for EOS fitting.
+    Workflow to generate initial MP PBE-GGA double relaxation for EOS fitting.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker1 : .BaseVaspMaker
+        Maker to use to generate the first relaxation.
+    relax_maker2 : .BaseVaspMaker
+        Maker to use to generate the second relaxation.
+
+    NB: WAVECARs are copied over to speed up calculation
+    """
+
+    name: str = "MP GGA EOS double relax"
+    relax_maker1: BaseVaspMaker | None = field(default_factory=MPGGAEosRelaxMaker)
+    relax_maker2: BaseVaspMaker = field(
+        default_factory=lambda: MPGGAEosRelaxMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
+
+
+@dataclass
+class MPGGAEosMaker(EosMaker):
+    """
+    Workflow to generate atomate1, MP PBE-GGA compatible EOS flow.
 
     First relax a structure using relax_maker.
     Then perform a series of deformations to the relaxed structure, and
@@ -216,8 +245,91 @@ class mp_gga_eos_maker(eos_maker):
     """
 
     name: str = "MP GGA EOS Maker"
-    relax_maker: Maker | None = field(default_factory=mp_gga_eos_double_relax_maker)
-    deformation_maker: Maker = field(default_factory=mp_gga_deformation_maker)
-    static_maker: Maker | None = None
+    relax_maker: Maker | None = field(default_factory=MPGGAEosDoubleRelaxMaker)
+    deformation_maker: Maker = field(
+        default_factory=lambda: MPGGADeformationMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
+    static_maker: Maker | None = field(
+        default_factory=lambda: MPGGAEosStaticMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
+    linear_strain: tuple[float, float] = (-0.05, 0.05)
+    number_of_frames: int = 6
+
+
+"""
+MPMetaGGA prefix = MP r2SCAN Meta-GGA compatible
+"""
+
+
+@dataclass
+class MPMetaGGAEosDoubleRelaxMaker(DoubleRelaxMaker):
+    """
+    Workflow to generate initial MP r2SCAN Meta-GGA double relaxation for EOS fitting.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker1 : .BaseVaspMaker
+        Maker to use to generate the first relaxation.
+    relax_maker2 : .BaseVaspMaker
+        Maker to use to generate the second relaxation.
+
+    NB: WAVECARs are copied over to speed up calculation
+    """
+
+    name: str = "MP Meta-GGA EOS double relax"
+    relax_maker1: BaseVaspMaker | None = field(
+        default_factory=MPMetaGGAEosPreRelaxSetGenerator
+    )
+    relax_maker2: BaseVaspMaker = field(
+        default_factory=lambda: MPMetaGGAEosRelaxMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
+
+
+@dataclass
+class MPMetaGGAEosMaker(EosMaker):
+    """
+    Workflow to generate atomate1, MP r2SCAN Meta-GGA EOS flow.
+
+    First relax a structure using relax_maker.
+    Then perform a series of deformations to the relaxed structure, and
+    evaluate single-point energies with static_maker.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker : .BaseVaspMaker
+        Maker to generate the relaxation, defaults to DoubleRelaxMaker
+    deformation_maker : .BaseVaspMaker
+        Maker to generate deformations + single-points, defaults to TransmuterMaker
+    static_maker : .BaseVaspMaker
+        Optional Maker to generate statics from transmutation.
+        Original atomate workflow did not include statics, including it here
+    strain : tuple[float]
+        Percentage linear strain to apply as a deformation, default = -5% to 5%
+    number_of_frames : int
+        Number of strain calculations to do for EOS fit, default = 6
+    """
+
+    name: str = "MP Meta-GGA EOS Maker"
+    relax_maker: Maker | None = field(default_factory=MPMetaGGAEosDoubleRelaxMaker)
+    deformation_maker: Maker = field(
+        default_factory=lambda: MPMetaGGADeformationMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
+    static_maker: Maker | None = field(
+        default_factory=lambda: MPMetaGGAEosStaticMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
+        )
+    )
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6

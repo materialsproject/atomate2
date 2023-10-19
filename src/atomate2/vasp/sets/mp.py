@@ -17,7 +17,6 @@ from pkg_resources import resource_filename
 from atomate2.vasp.sets.core import (
     RelaxSetGenerator,
     StaticSetGenerator,
-    eos_set_generator,
 )
 
 if TYPE_CHECKING:
@@ -86,16 +85,6 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
             "LREAL": False,
             "ISMEAR": -5,
         }
-
-
-@dataclass
-class mp_gga_eos_set_generator(eos_set_generator):
-    """Class to generate MP-compatible VASP GGA EOS input sets."""
-
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
-    auto_ismear: bool = False
-    auto_kspacing: bool = True
-    inherit_incar: bool = False
 
 
 @dataclass
