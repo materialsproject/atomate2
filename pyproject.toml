@@ -193,5 +193,7 @@ isort.known-first-party = ["atomate2"]
 "**/tests/*" = ["D"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
-# flake8-future-annotations (FA): future annotations only work in pydantic models in python 3.10+
-"**/schemas/*" = ["FA", "TCH"]
+# flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
+"**/schemas/*" = ["FA", "TCH", "UP007"]
+"**/schemas.py" = ["FA", "TCH", "UP007"]
+"**/settings.py" = ["FA", "TCH", "UP007"]
