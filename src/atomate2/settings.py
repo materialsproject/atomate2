@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Literal, Optional, Union
 
 from pydantic import Field, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
 
