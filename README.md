@@ -120,9 +120,8 @@ Atomate2 is released under a modified BSD license; the full text can be found [h
 
 ## Acknowledgements
 
-Atomate2 was designed and developed by Alex Ganose.
-
-A full list of all contributors can be found [here][contributors].
+The development of atomate2 has benefited from many number of people across many research groups.
+A full list of contributors can be found [here][contributors].
 
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
