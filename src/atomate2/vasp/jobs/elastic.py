@@ -128,11 +128,7 @@ def generate_elastic_deformations(
         strain_magnitudes = np.linspace(-0.01, 0.01, 5 + (order - 2) * 2)
 
     if np.array(strain_magnitudes).ndim == 1:
-        strain_magnitudes = [  # type:ignore[assignment]
-            strain_magnitudes
-        ] * len(
-            strain_states
-        )
+        strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore[assignment]
 
     strains = []
     for state, magnitudes in zip(strain_states, strain_magnitudes):

@@ -383,7 +383,7 @@ class Calculation(BaseModel):
             if strip_bandstructure_projections:
                 bandstructure.projections = {}
             cp2k_objects[
-                Cp2kObject.BANDSTRUCTURE  # type:ignore[index]
+                Cp2kObject.BANDSTRUCTURE  # type: ignore[index]
             ] = bandstructure
 
         bader = None
@@ -404,10 +404,10 @@ class Calculation(BaseModel):
         v_hartree = None
         if average_v_hartree:
             if Cp2kObject.v_hartree in cp2k_objects:
-                v_hartree = cp2k_objects[Cp2kObject.v_hartree]  # type:ignore[index]
+                v_hartree = cp2k_objects[Cp2kObject.v_hartree]  # type: ignore[index]
             elif Cp2kObject.v_hartree in output_file_paths:
                 v_hartree_file = output_file_paths[
-                    Cp2kObject.v_hartree  # type:ignore[index]
+                    Cp2kObject.v_hartree  # type: ignore[index]
                 ]
                 v_hartree = VolumetricData.from_cube(dir_name / v_hartree_file)
                 v_hartree.scale(Ha_to_eV)
@@ -421,7 +421,7 @@ class Calculation(BaseModel):
 
         if store_trajectory:
             traj = _parse_trajectory(cp2k_output=cp2k_output)
-            cp2k_objects[Cp2kObject.TRAJECTORY] = traj  # type:ignore[index]
+            cp2k_objects[Cp2kObject.TRAJECTORY] = traj  # type: ignore[index]
 
         return (
             cls(
@@ -459,7 +459,7 @@ def _get_output_file_paths(volumetric_files: list[str]) -> dict[Cp2kObject, str]
         A mapping between the CP2K object type and the file path.
     """
     output_file_paths = {}
-    for cp2k_object in Cp2kObject:  # type:ignore[attr-defined]
+    for cp2k_object in Cp2kObject:  # type: ignore[attr-defined]
         for volumetric_file in volumetric_files:
             if cp2k_object.name in str(volumetric_file):
                 output_file_paths[cp2k_object] = str(volumetric_file)
@@ -477,11 +477,11 @@ def _get_basis_and_potential_files(dir_name: Path) -> dict[Cp2kObject, DataFile]
     """
     data: dict[Cp2kObject, DataFile] = {}
     if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type:ignore[index]
+        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type: ignore[index]
             str(dir_name / "BASIS")
         )
     if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type:ignore[index]
+        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore[index]
             str(dir_name / "POTENTIAL")
         )
     return data
