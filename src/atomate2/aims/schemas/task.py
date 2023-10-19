@@ -657,7 +657,7 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     Parameters
     ----------
     calc_doc: .Calculation
-        The calucation doc to get the max force
+        The calculation doc to get the max force
 
     Returns
     -------

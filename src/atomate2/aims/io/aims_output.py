@@ -21,7 +21,7 @@ class AimsOutput(MSONable):
 
     def __init__(
         self,
-        results: list[MSONableAtoms],
+        results: Sequence[MSONableAtoms],
         metadata: dict[str, Any],
         atoms_summary: dict[str, Any],
     ):

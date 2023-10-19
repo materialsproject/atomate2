@@ -320,7 +320,7 @@ class AimsInputGenerator(InputGenerator):
         prev_dir: str or Path
             The previous directory for the calculation
         """
-        prev_atoms = None
+        prev_atoms: MSONableAtoms = None
         prev_parameters = {}
         prev_results = {}
 
@@ -333,7 +333,10 @@ class AimsInputGenerator(InputGenerator):
                 prev_parameters = json.load(param_file, cls=MontyDecoder)
 
             try:
-                prev_atoms = read_aims_output(f"{split_prev_dir}/aims.out")
+                prev_atoms = read_aims_output(
+                    f"{split_prev_dir}/aims.out", index=slice(-1, None)
+                )[0]
+
                 prev_results = prev_atoms.calc.results
             except (IndexError, AimsParseError):
                 pass
