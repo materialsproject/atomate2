@@ -284,8 +284,8 @@ class MPMetaGGAEosDoubleRelaxMaker(DoubleRelaxMaker):
 
     name: str = "MP Meta-GGA EOS double relax"
     relax_maker1: BaseVaspMaker | None = field(
-        default_factory = lambda : MPMetaGGAEosRelaxMaker(
-            input_set_generator = MPMetaGGAEosPreRelaxSetGenerator()
+        default_factory=lambda: MPMetaGGAEosRelaxMaker(
+            input_set_generator=MPMetaGGAEosPreRelaxSetGenerator()
         )
     )
     relax_maker2: BaseVaspMaker = field(
@@ -322,9 +322,7 @@ class MPMetaGGAEosMaker(EosMaker):
     """
 
     name: str = "MP Meta-GGA EOS Maker"
-    relax_maker: Maker | None = field(
-        default_factory=MPMetaGGAEosDoubleRelaxMaker
-    )
+    relax_maker: Maker | None = field(default_factory=MPMetaGGAEosDoubleRelaxMaker)
     deformation_maker: Maker = field(
         default_factory=lambda: MPMetaGGADeformationMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}

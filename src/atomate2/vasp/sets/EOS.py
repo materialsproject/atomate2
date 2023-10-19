@@ -1,16 +1,17 @@
-""" 
-Module defining equation of state (EOS) parameter sets
+"""
+Module defining equation of state (EOS) parameter sets.
 
-Three familes of sets: default atomate2 params, 
+Three families of sets: default atomate2 params,
 MP GGA compatible, and MP meta-GGA compatible
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
+
 from monty.serialization import loadfn
 from pkg_resources import resource_filename
-from typing import TYPE_CHECKING
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -67,8 +68,8 @@ class EosSetGenerator(VaspInputGenerator):
         """
         """
         original atomate wf_bulk_modulus had 600 eV cutoff
-        Because default atomate2 set and MP's r2SCAN set use 680 eV cutoff,   
-        avoid needless duplication and use ENCUT = 680 eV here     
+        Because default atomate2 set and MP's r2SCAN set use 680 eV cutoff,
+        avoid needless duplication and use ENCUT = 680 eV here
         """
         return {
             "NSW": 99,
@@ -115,9 +116,11 @@ class EosSetGenerator(VaspInputGenerator):
         """
         return {"grid_density": 7000}
 
+
 """
 MPGGA prefix = MP PBE-GGA compatible
 """
+
 
 @dataclass
 class MPGGAEosRelaxSetGenerator(EosSetGenerator):
@@ -176,9 +179,11 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
             "ISMEAR": -5,
         }
 
+
 """
 MPGGA prefix = MP PBE-GGA compatible
 """
+
 
 @dataclass
 class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
@@ -226,7 +231,7 @@ class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
             "LWAVE": False,
             "LREAL": False,
             "ISMEAR": -5,
-            "IBRION": -1
+            "IBRION": -1,
         }
 
 
@@ -280,6 +285,7 @@ class MPMetaGGAEosRelaxSetGenerator(EosSetGenerator):
         """
         # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
         return {"LCHARG": True, "LWAVE": True, "GGA": None}
+
 
 @dataclass
 class MPMetaGGAEosPreRelaxSetGenerator(EosSetGenerator):

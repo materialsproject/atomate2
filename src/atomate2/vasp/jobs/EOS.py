@@ -54,12 +54,12 @@ def postprocess_EOS(data_dict: dict[str, list], EOS_models: list | None = None):
 
     output = {"EV": data_dict.copy(), "EOS": {}}
     for key in data_dict:
-        output["EOS"][key] = {}  # type: ignore
+        output["EOS"][key] = {}  # type: ignore[index]
         data = np.asarray(data_dict[key])
         for eos_name in EOS_models:
             eos = EOS(eos_name=eos_name).fit(data[:, 0], data[:, 1])
             eos_d = {**eos.results, "b0 GPa": float(eos.b0_GPa)}
-            output["EOS"][key][eos_name] = eos_d  # type: ignore
+            output["EOS"][key][eos_name] = eos_d  # type: ignore[index]
     return output
 
 
