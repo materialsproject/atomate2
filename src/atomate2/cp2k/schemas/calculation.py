@@ -83,6 +83,7 @@ class CalculationInput(BaseModel):
     )
 
     @field_validator("atomic_kind_info", mode="before")
+    @classmethod
     def remove_unnecessary(cls, atomic_kind_info) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
@@ -91,6 +92,7 @@ class CalculationInput(BaseModel):
         return atomic_kind_info
 
     @field_validator("dft", mode="before")
+    @classmethod
     def cleanup_dft(cls, dft) -> dict:
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
