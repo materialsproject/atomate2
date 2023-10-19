@@ -12,6 +12,8 @@ from ase.calculators.aims import Aims
 from ase.calculators.socketio import SocketIOCalculator
 from monty.json import MontyDecoder
 
+from atomate2 import SETTINGS
+
 if TYPE_CHECKING:
     from atomate2.aims.schemas.task import AimsTaskDoc
     from atomate2.aims.utils.msonable_atoms import MSONableAtoms
@@ -31,7 +33,7 @@ def run_aims(
         The command used to run FHI-aims (defaults to ASE_AIMS_COMMAND env variable).
     """
     if aims_cmd is None:
-        aims_cmd = os.getenv("ASE_AIMS_COMMAND", "aims.x")
+        aims_cmd = SETTINGS.AIMS_CMD
 
     aims_cmd = expandvars(aims_cmd)
 
@@ -88,11 +90,10 @@ def run_aims_socket(atoms_to_calculate: list[MSONableAtoms], aims_cmd: str = Non
     """
     with open("parameters.json") as param_file:
         parameters = json.load(param_file, cls=MontyDecoder)
-
     if aims_cmd:
         parameters["aims_command"] = aims_cmd
     elif "aims_command" not in parameters:
-        aims_cmd = os.getenv("ASE_AIMS_COMMAND", "aims.x")
+        parameters["aims_command"] = SETTINGS.AIMS_CMD
 
     calculator = Aims(**parameters)
     port = parameters["use_pimd_wrapper"][1]
