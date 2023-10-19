@@ -171,8 +171,8 @@ def check_input():
         from pymatgen.io.cp2k.inputs import Cp2kInput
 
         ref = Cp2kInput.from_file(ref_path / "inputs" / "cp2k.inp")
-        user_input.verbosity(False)
-        ref.verbosity(False)
+        user_input.verbosity(verbosity=False)
+        ref.verbosity(verbosity=False)
         user_string = " ".join(user_input.get_string().lower().split())
         user_hash = md5(user_string.encode("utf-8")).hexdigest()
 

@@ -77,9 +77,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
     )
-    assert np.allclose(
-        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
-    )
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.has_imaginary_modes)
     assert responses[job.jobs[-1].uuid][1].output.force_constants is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
@@ -245,9 +243,7 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
     )
-    assert np.allclose(
-        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
-    )
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.has_imaginary_modes)
     assert responses[job.jobs[-1].uuid][1].output.force_constants is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
@@ -379,9 +375,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
     )
-    assert np.allclose(
-        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
-    )
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.has_imaginary_modes)
     assert np.isclose(
         responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
             0
@@ -539,9 +533,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
     )
-    assert np.allclose(
-        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
-    )
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.has_imaginary_modes)
     assert np.isclose(
         responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
             0
@@ -672,9 +664,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
     )
-    assert np.allclose(
-        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
-    )
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.has_imaginary_modes)
     assert responses[job.jobs[-1].uuid][1].output.force_constants is None
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
@@ -772,9 +762,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     assert np.allclose(
         responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
     )
-    assert np.allclose(
-        responses[job.jobs[-1].uuid][1].output.has_imaginary_modes, False
-    )
+    assert np.allclose(responses[job.jobs[-1].uuid][1].output.has_imaginary_modes)
     assert np.isclose(
         responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
             0
