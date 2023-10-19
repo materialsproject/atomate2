@@ -1,6 +1,6 @@
 """Module to define various calculation types as Enums for CP2K."""
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Dict, Iterable
 
 from monty.serialization import loadfn
 from pymatgen.io.cp2k.inputs import Cp2kInput, Keyword, KeywordList
@@ -10,7 +10,7 @@ from atomate2.cp2k.schemas.calc_types import CalcType, RunType, TaskType
 _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").resolve()))
 
 
-def run_type(inputs: Dict) -> RunType:
+def run_type(inputs: dict) -> RunType:
     """
     Determine the run_type from the CP2K input dict.
 
@@ -61,7 +61,7 @@ def run_type(inputs: Dict) -> RunType:
     return RunType(f"LDA{is_hubbard}")
 
 
-def task_type(inputs: Dict) -> TaskType:
+def task_type(inputs: dict) -> TaskType:
     """
     Determine the task type.
 
@@ -143,7 +143,7 @@ def task_type(inputs: Dict) -> TaskType:
 
 
 def calc_type(
-    inputs: Dict,
+    inputs: dict,
 ) -> CalcType:
     """
     Determine the calc type.

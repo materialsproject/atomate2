@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 _CONVERGENCE_PROPERTIES = ("mobility.overall", "seebeck")
 
 
-def run_amset():
+def run_amset() -> None:
     """Run amset in the current directory."""
     # Run AMSET using the command line as calling from python can cause issues
     # with multiprocessing

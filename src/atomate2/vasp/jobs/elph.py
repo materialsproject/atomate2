@@ -90,7 +90,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Response:
         """
         Run a transmuter VASP job.
 
@@ -121,7 +121,7 @@ def run_elph_displacements(
     prev_vasp_dir: str | Path | None = None,
     original_structure: Structure = None,
     supercell_structure: Structure = None,
-):
+) -> Response:
     """
     Run electron phonon displaced structures.
 
@@ -200,7 +200,7 @@ def calculate_electron_phonon_renormalisation(
     elph_uuid: str,
     elph_dir: str,
     original_structure: Structure,
-):
+) -> ElectronPhononRenormalisationDoc:
     """
     Calculate the electron-phonon renormalisation of the band gap.
 
