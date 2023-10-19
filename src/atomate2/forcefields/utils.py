@@ -130,9 +130,9 @@ class Relaxer:
 
         Parameters
         ----------
-        calculator (ase Calculatur): an ase calculator
+        calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
-        relax_cell (bool): if True, cell parameters will be opitimized.
+        relax_cell (bool): if True, cell parameters will be optimized.
         """
         self.calculator = calculator
 

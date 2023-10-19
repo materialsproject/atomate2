@@ -109,3 +109,10 @@ RWTH Aachen University
 
 [ab5424]: https://github.com/ab5424
 [0000-0002-0525-4742]: https://orcid.org/0000-0002-0525-4742
+
+**Matthew Kuner** [![gh]][matthewkuner] [![orc]][0000-0002-8218-8558] \
+PhD student in Materials Science and Engineering \
+University of California, Berkeley
+
+[matthewkuner]: https://github.com/matthewkuner
+[0000-0002-8218-8558]: https://orcid.org/0000-0002-8218-8558
