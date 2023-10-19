@@ -120,7 +120,7 @@ Atomate2 is released under a modified BSD license; the full text can be found [h
 
 ## Acknowledgements
 
-The development of atomate2 has benefited from many number of people across many research groups.
+The development of atomate2 has benefited from many people across several research groups.
 A full list of contributors can be found [here][contributors].
 
 [pymatgen]: https://pymatgen.org
