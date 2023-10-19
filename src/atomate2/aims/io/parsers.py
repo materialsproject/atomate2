@@ -1,7 +1,9 @@
 """AIMS output parser, taken from ASE with modifications."""
 from __future__ import annotations
 
+import gzip
 import warnings
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Sequence
 
 import numpy as np
@@ -9,14 +11,12 @@ from ase import Atom
 from ase.calculators.singlepoint import SinglePointDFTCalculator
 from ase.constraints import FixAtoms, FixCartesian
 from ase.io import ParseError
-from ase.utils import lazymethod, lazyproperty, reader
+from ase.utils import lazymethod, lazyproperty
 
 from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.aims.utils.units import ev_per_A3_to_kbar
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from pymatgen.core import Molecule, Structure
 
 LINE_NOT_FOUND = object()
@@ -1101,31 +1101,41 @@ def check_convergence(
     return True
 
 
-@reader
 def read_aims_header_info(
-    fd: str | Path,
+    filename: str | Path,
 ) -> tuple[dict[str, str], dict[str, Any]]:
     """Read the FHI-aims header information.
 
     Parameters
     ----------
-    fd: str or Path
+    filename: str or Path
         The file to read
 
     Returns
     -------
     The calculation metadata and the system summary
     """
-    header_chunk = get_header_chunk(fd)
+    header_chunk = None
+    for path in [Path(filename), Path(f"{filename}.gz")]:
+        if not path.exists():
+            continue
+        if path.suffix == ".gz":
+            with gzip.open(filename, "rt") as fd:
+                header_chunk = get_header_chunk(fd)
+        else:
+            with open(filename) as fd:
+                header_chunk = get_header_chunk(fd)
+
+    if header_chunk is None:
+        raise FileNotFoundError(f"The requested output file {filename} does not exist.")
 
     system_summary = header_chunk.header_summary
     metadata = header_chunk.metadata_summary
     return metadata, system_summary
 
 
-@reader
 def read_aims_output(
-    fd: str | Path,
+    filename: str | Path,
     index: int | slice = -1,
     non_convergence_ok: bool = False,
 ) -> MSONableAtoms | Sequence[MSONableAtoms]:
@@ -1135,7 +1145,7 @@ def read_aims_output(
 
     Parameters
     ----------
-    fd: str or Path
+    filename: str or Path
         The file to read
     index: int or slice
         The index of the images to read
@@ -1146,8 +1156,22 @@ def read_aims_output(
     -------
     The selected atoms
     """
-    header_chunk = get_header_chunk(fd)
-    chunks = list(get_aims_out_chunks(fd, header_chunk))
+    chunks = None
+    for path in [Path(filename), Path(f"{filename}.gz")]:
+        if not path.exists():
+            continue
+        if path.suffix == ".gz":
+            with gzip.open(path, "rt") as fd:
+                header_chunk = get_header_chunk(fd)
+                chunks = list(get_aims_out_chunks(fd, header_chunk))
+        else:
+            with open(path) as fd:
+                header_chunk = get_header_chunk(fd)
+                chunks = list(get_aims_out_chunks(fd, header_chunk))
+
+    if chunks is None:
+        raise FileNotFoundError(f"The requested output file {filename} does not exist.")
+
     check_convergence(chunks, non_convergence_ok)
 
     # Relaxations have an additional footer chunk due to how it is split

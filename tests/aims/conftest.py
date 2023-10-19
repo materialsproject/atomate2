@@ -9,6 +9,7 @@ from ase.build import bulk, molecule
 import atomate2.aims.jobs.base
 import atomate2.aims.run
 from atomate2.aims.sets.base import AimsInputGenerator
+from atomate2.common.files import gunzip_files
 
 _REF_PATHS = {}
 _FAKE_RUN_AIMS_KWARGS = {}
@@ -181,6 +182,10 @@ def fake_run_aims(
         clear_aims_inputs()
 
     copy_aims_outputs(ref_path)
+    gunzip_files(
+        include_files=list(Path.cwd().glob("*")),
+        allow_missing=True,
+    )
 
     # pretend to run aims by copying pre-generated outputs from reference dir
     logger.info("Generated fake aims outputs")
