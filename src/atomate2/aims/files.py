@@ -89,7 +89,7 @@ def copy_aims_outputs(
 
 
 def write_aims_input_set(
-    atoms: MSONableAtoms,
+    structure: MSONableAtoms,
     input_set_generator: AimsInputGenerator,
     directory: str | Path = ".",
     prev_dir: str | Path | None = None,
@@ -100,8 +100,8 @@ def write_aims_input_set(
 
     Parameters
     ----------
-    atoms : .MSONableAtoms
-        An atoms object to write an input file for.
+    structure : .MSONableAtoms
+        A structure.
     input_set_generator : .AimsInputGenerator
         An GHI-aims input set generator.
     directory : str or Path
@@ -114,7 +114,7 @@ def write_aims_input_set(
     """
     properties = kwargs.get("properties", [])
     aims_is = input_set_generator.get_input_set(
-        atoms, prev_dir=prev_dir, properties=properties
+        structure, prev_dir=prev_dir, properties=properties
     )
 
     logger.info("Writing FHI-aims input set.")

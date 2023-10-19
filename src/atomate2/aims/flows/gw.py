@@ -4,10 +4,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
 
-from jobflow import Flow
+from jobflow import Flow, Maker
 from pymatgen.core import Molecule, Structure
 
-from atomate2.aims.jobs.base import BaseAimsMaker, ConvergenceMaker
+from atomate2.aims.jobs.base import ConvergenceMaker
 from atomate2.aims.jobs.core import BandStructureMaker, GWMaker, StaticMaker
 from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from atomate2.aims.sets.core import StaticSetGenerator
@@ -15,7 +15,7 @@ from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 @dataclass
-class PeriodicGWConvergenceMaker(BaseAimsMaker):
+class PeriodicGWConvergenceMaker(Maker):
     """A maker to perform a GW workflow with automatic convergence in FHI-aims.
 
     Parameters
@@ -31,7 +31,7 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
     convergence_steps: Iterable
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
-        that the job is failed
+        then the job is failed
     """
 
     name: str = "GW convergence"
@@ -84,8 +84,6 @@ class PeriodicGWConvergenceMaker(BaseAimsMaker):
             convergence_steps=self.convergence_steps,
         )
 
-        gw = convergence.convergence_iteration(
-            static.output.structure, prev_dir=static.output.dir_name
-        )
+        gw = convergence.make(static.output.structure)
 
         return Flow([static, gw], gw.output, name=self.name)

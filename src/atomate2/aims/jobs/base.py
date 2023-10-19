@@ -199,7 +199,7 @@ class ConvergenceMaker(Maker):
         self,
         structure: MSONableAtoms | Structure | Molecule,
         prev_dir: str | Path = None,
-    ) -> Response:
+    ) -> Response | ConvergenceSummary:
         """Run several jobs with changing inputs to test convergence.
 
         Parameters
@@ -316,20 +316,3 @@ class ConvergenceMaker(Maker):
         convergence_file = Path(split_job_dir) / CONVERGENCE_FILE_NAME
         with open(convergence_file, "w") as f:
             json.dump(convergence_data, f)
-
-    @job(name="Getting the results")
-    def get_results(self, prev_dir: Path | str) -> dict[str, Any]:
-        """Get the results for a calculation from a given directory.
-
-        Parameters
-        ----------
-        prev_dir: Path or str
-            The calculation directory to get the results for
-
-        Results
-        -------
-        The results dictionary loaded from the JSON file
-        """
-        convergence_file = Path(prev_dir) / CONVERGENCE_FILE_NAME
-        with open(convergence_file) as f:
-            return json.load(f)
