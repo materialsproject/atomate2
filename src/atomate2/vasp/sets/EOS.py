@@ -81,6 +81,8 @@ class EosSetGenerator(VaspInputGenerator):
             "ENAUG": 1360,
             "LREAL": False,
             "LWAVE": True,
+            "ISMEAR": 0,
+            "SIGMA": 0.05,
         }
 
     def get_kpoints_updates(
