@@ -32,7 +32,7 @@ class ConvergenceMaker(Maker):
     convergence_steps: Iterable
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
-        that the job is failed
+        than the job is failed
     name : str
         A name for the job
     maker: .BaseAimsMaker
