@@ -205,7 +205,7 @@ class AmsetTaskDocument(StructureMetadata):
             transport=transport,
             usage_stats=timing,
             kpoint_mesh=inter_mesh,
-            nkpoints=np.product(inter_mesh),
+            nkpoints=np.prod(inter_mesh),
             log=log,
             **mesh_kwargs,
         )

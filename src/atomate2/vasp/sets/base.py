@@ -1116,7 +1116,7 @@ def _set_kspacing(
         # known before calling VASP, but a warning is raised when the KSPACING value is
         # > 0.5 (2 reciprocal Angstrom). An error handler in Custodian is available to
         # correct overly large KSPACING values (small number of kpoints) if necessary.
-        if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
+        if np.prod(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
             incar["ISMEAR"] = 0
 
     elif "KSPACING" in user_incar_settings:
