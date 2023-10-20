@@ -47,8 +47,8 @@ class ConvergenceMaker(Maker):
 
     name: str = "convergence"
     maker: BaseAimsMaker = field(default_factory=BaseAimsMaker)
-    criterion_name: str = "energy_per_atom"
-    epsilon: float = 0.001
+    criterion_name: str = field(default_factory=str)
+    epsilon: float = field(default_factory=float)
     convergence_field: str = field(default_factory=str)
     convergence_steps: list = field(default_factory=list)
 
