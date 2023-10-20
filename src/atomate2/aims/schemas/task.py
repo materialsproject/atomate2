@@ -331,7 +331,7 @@ class ConvergenceSummary(BaseModel):
         .ConvergenceSummary
             The summary for convergence runs.
         """
-        from atomate2.aims.jobs.base import CONVERGENCE_FILE_NAME
+        from atomate2.aims.jobs.convergence import CONVERGENCE_FILE_NAME
 
         job_dir = calc_doc.dir_name.split(":")[-1]
 
