@@ -209,6 +209,7 @@ def fit_elastic_tensor(
         # stress could be none if the deformation calculation failed
         if data["stress"] is None:
             continue
+
         stresses.append(Stress(data["stress"]))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])

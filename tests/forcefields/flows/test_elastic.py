@@ -2,6 +2,7 @@ import numpy as np
 
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.forcefields.flows.elastic import ElasticMaker
+from atomate2.forcefields.jobs import M3GNetRelaxMaker
 
 
 def test_elastic_wf(clean_dir, si_structure):
@@ -12,66 +13,73 @@ def test_elastic_wf(clean_dir, si_structure):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     # !!! Generate job
-    job = ElasticMaker().make(si_prim)
+    job = ElasticMaker(
+        bulk_relax_maker=M3GNetRelaxMaker(
+            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+        ),
+        elastic_relax_maker=M3GNetRelaxMaker(
+            relax_cell=False, relax_kwargs={"fmax": 0.00001}
+        ),
+    ).make(si_prim)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
     elastic_output = responses[job.jobs[-1].uuid][1].output
     # !!! validation on the outputs
     assert isinstance(elastic_output, ElasticDocument)
-    print(elastic_output.derived_properties)
     assert np.allclose(
         elastic_output.elastic_tensor.ieee_format,
         [
             [
-                3977.9849215966215,
-                0.4229787220627818,
-                0.4229787364421082,
-                -3.2295162581729646e-08,
-                -7.425146345400383e-08,
-                -1.024151023658735e-07,
+                137.8521169761535,
+                108.47766069253291,
+                108.47765834315278,
+                8.381512878444252e-07,
+                1.7168846136878433e-06,
+                -7.857832305266632e-08,
             ],
             [
-                0.4229787220627818,
-                3977.9849689908447,
-                0.4229787389604583,
-                -7.217137169487033e-08,
-                -3.3226000335063545e-08,
-                -0.0004310059911418357,
+                108.47766069253291,
+                137.85210595521275,
+                108.47765400689046,
+                1.1331095025033052e-06,
+                1.2699645849546667e-06,
+                -7.38629015073859e-08,
             ],
             [
-                0.42297873644210815,
-                0.42297873896045834,
-                3977.9852398738194,
-                -0.0003037261372428852,
-                -0.00031248037772480935,
-                -4.580496493506366e-08,
+                108.47765834315277,
+                108.47765400689046,
+                137.85209998408476,
+                1.0651125485225092e-06,
+                1.6138557475735372e-06,
+                -5.812369670874092e-08,
             ],
             [
-                -3.229516258175224e-08,
-                -7.217137169490658e-08,
-                -0.0003037261372428852,
-                0.26113455179880346,
-                -2.8269500425138218e-08,
-                -2.0512746010223815e-08,
+                8.381512878652419e-07,
+                1.133109502524122e-06,
+                1.0651125484947536e-06,
+                19.08747291002524,
+                -1.0227298701797934e-08,
+                2.2345998151857803e-07,
             ],
             [
-                -7.425146345395245e-08,
-                -3.32260003350997e-08,
-                -0.0003124803777248094,
-                -2.8269500425137655e-08,
-                0.26113455024456755,
-                -1.9938074251124073e-08,
+                1.716884613678302e-06,
+                1.2699645849477278e-06,
+                1.6138557475642857e-06,
+                -1.0227298701797246e-08,
+                19.087473673023766,
+                1.4747912892211538e-07,
             ],
             [
-                -1.0241510236596086e-07,
-                -0.00043100599114183596,
-                -4.5804964935032035e-08,
-                -2.051274601022437e-08,
-                -1.9938074251124345e-08,
-                0.26113454137567343,
+                -7.857832305729226e-08,
+                -7.386290150738587e-08,
+                -5.812369671105389e-08,
+                2.2345998151857816e-07,
+                1.474791289221158e-07,
+                19.087474086415153,
             ],
         ],
         atol=1e-3,
     )
+
     assert elastic_output.chemsys == "Si"
