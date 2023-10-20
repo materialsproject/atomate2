@@ -17,6 +17,7 @@ from pymatgen.core import Lattice, Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 from atomate2.common.schemas.defects import CCDDocument
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -210,6 +211,7 @@ def get_supercell_from_prv_calc(
     Response:
         Output containing the supercell transformation and the dir_name
     """
+    prv_calc_dir = strip_hostname(prv_calc_dir)
     sc_entry, plnr_locpot = sc_entry_and_locpot_from_prv(prv_calc_dir)
     sc_structure = sc_entry.structure
     sc_mat_prv, _ = get_matched_structure_mapping(
