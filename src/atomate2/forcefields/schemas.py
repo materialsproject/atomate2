@@ -1,8 +1,9 @@
 """Job to prerelax a structure using an MD Potential."""
 
 from typing import Optional
-
+from ase.stress import voigt_6_to_full_3x3_stress
 from emmet.core.structure import StructureMetadata
+from emmet.core.math import Matrix3D,  Vector3D
 from pydantic import BaseModel, Extra, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -15,7 +16,7 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore[call-arg]
     forces: Optional[list[list[float]]] = Field(
         None, description="The forces on each atom."
     )
-    stress: Optional[list[float]] = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="The stress on the lattice."
     )
     structure: Structure = Field(None, description="The structure at this step.")
@@ -52,14 +53,14 @@ class OutputDoc(BaseModel):
         description="Energy per atom of the final structure in units of eV/atom.",
     )
 
-    forces: list[list[float]] = Field(
+    forces: Optional[list[Vector3D]] = Field(
         None,
         description="The force on each atom in units of eV/A for the final structure.",
     )
 
     # NOTE: units for stresses were converted to kbar (* -10 from standard output)
     #       to comply with MP convention
-    stress: list[float] = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
@@ -134,10 +135,10 @@ class ForceFieldTaskDocument(StructureMetadata):
         """
         trajectory = result["trajectory"].__dict__
 
-        # NOTE: units for stresses were converted to kbar (* -10 from standard output)
+        # NOTE: units for stresses were converted to kbar (* -10 from standard output) and to 3x3 matrix
         # to comply with MP convention
         for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = trajectory["stresses"][i] * -10
+            trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(trajectory["stresses"][i]) * -10
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
 

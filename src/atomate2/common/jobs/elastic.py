@@ -119,12 +119,12 @@ def run_elastic_deformations(
         A pymatgen structure.
     deformations : list of Deformation
         The deformations to apply.
-    prev_vasp_dir : str or Path or None
-        A previous VASP directory to use for copying VASP outputs.
+    prev_dir : str or Path or None
+        A previous directory to use for copying outputs.
     prev_dir_argname: str
         argument name for the prev_dir variable
     elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
-        A VaspMaker to use to generate the elastic relaxation jobs.
+        A VaspMaker or a ForceFieldMaker to use to generate the elastic relaxation jobs.
     """
     relaxations = []
     outputs = []
@@ -211,7 +211,6 @@ def fit_elastic_tensor(
         # stress could be none if the deformation calculation failed
         if data["stress"] is None:
             continue
-        print(data["stress"])
         stresses.append(Stress(data["stress"]))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])

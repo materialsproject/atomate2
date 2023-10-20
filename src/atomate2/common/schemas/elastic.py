@@ -90,7 +90,7 @@ class FittingData(BaseModel):
         None, description="The deformations corresponding to each strain state."
     )
     uuids: list[str] = Field(None, description="The uuids of the deformation jobs.")
-    job_dirs: list[str] = Field(
+    job_dirs: list[Optional[str]] = Field(
         None, description="The directories where the deformation jobs were run."
     )
 
