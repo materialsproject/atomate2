@@ -254,18 +254,21 @@ def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
         "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
     )
 
-    kwargs.setdefault("run_bader", SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS)
-    if SETTINGS.VASP_RUN_BADER and not _BADER_EXE_EXISTS:
-        warnings.warn(
-            f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
-            stacklevel=1,
-        )
-    kwargs.setdefault("run_ddec6", SETTINGS.VASP_RUN_DDEC6 and _CHARGEMOL_EXE_EXISTS)
-    if SETTINGS.VASP_RUN_DDEC6 and not _CHARGEMOL_EXE_EXISTS:
-        warnings.warn(
-            f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on path",
-            stacklevel=1,
-        )
+    if SETTINGS.VASP_RUN_BADER:
+        kwargs.setdefault("run_bader", _BADER_EXE_EXISTS)
+        if not _BADER_EXE_EXISTS:
+            warnings.warn(
+                f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
+                stacklevel=1,
+            )
+    if SETTINGS.VASP_RUN_DDEC6:
+        kwargs.setdefault("run_ddec6", _CHARGEMOL_EXE_EXISTS)
+        if not _CHARGEMOL_EXE_EXISTS:
+            warnings.warn(
+                f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
+                "path",
+                stacklevel=1,
+            )
 
     kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
