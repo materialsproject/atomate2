@@ -21,7 +21,6 @@ from atomate2.common.jobs.elastic import (
 if TYPE_CHECKING:
     from pathlib import Path
 
-
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
@@ -76,17 +75,19 @@ class BaseElasticMaker(Maker, ABC):
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = None
-    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = None  # constant volume optimization
+    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = (
+        None  # constant volume optimization
+    )
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
     def make(
-            self,
-            structure: Structure,
-            prev_dir: str | Path | None = None,
-            equilibrium_stress: Matrix3D = None,
-            conventional: bool = False,
+        self,
+        structure: Structure,
+        prev_dir: str | Path | None = None,
+        equilibrium_stress: Matrix3D = None,
+        conventional: bool = False,
     ):
         """
         Make flow to calculate the elastic constant.
@@ -134,7 +135,7 @@ class BaseElasticMaker(Maker, ABC):
             structure,
             deformations.output,
             elastic_relax_maker=self.elastic_relax_maker,
-            **vasp_deformation_kwargs
+            **vasp_deformation_kwargs,
         )
         fit_tensor = fit_elastic_tensor(
             structure,

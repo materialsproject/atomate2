@@ -14,6 +14,7 @@ from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
 
 from atomate2.common.flows.elastic import BaseElasticMaker
+
 if TYPE_CHECKING:
     from pathlib import Path
 

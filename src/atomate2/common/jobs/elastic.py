@@ -126,7 +126,7 @@ def run_elastic_deformations(
         A VaspMaker to use to generate the elastic relaxation jobs.
     """
     # should be set in every workflow
-    #if elastic_relax_maker is None:
+    # if elastic_relax_maker is None:
     #    elastic_relax_maker = ElasticRelaxMaker()
 
     relaxations = []
