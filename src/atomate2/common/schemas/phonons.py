@@ -11,6 +11,7 @@ from monty.json import MSONable
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
+from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
@@ -26,9 +27,35 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
-from atomate2.common.jobs.phonons import get_factor
+from atomate2.aims.utils.units import omega_to_THz
 
 logger = logging.getLogger(__name__)
+
+
+def get_factor(code: str):
+    """
+    Get the frequency conversion factor to THz for each code.
+
+    Parameters
+    ----------
+    code: str
+        The code to get the conversion factor for
+
+    Returns
+    -------
+    float
+        The correct conversion factor
+
+    Raises
+    ------
+    ValueError
+        If code is not defined
+    """
+    if code in ["forcefields", "vasp"]:
+        return VaspToTHz
+    if code == "aims":
+        return omega_to_THz  # Based on CODATA 2002
+    raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
 
 
 class PhononComputationalSettings(BaseModel):
