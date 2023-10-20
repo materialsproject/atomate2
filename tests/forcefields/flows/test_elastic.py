@@ -8,6 +8,7 @@ def test_elastic_wf(clean_dir, si_structure):
     from jobflow import run_locally
     from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
+    #TODO test with Alumnium
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     # !!! Generate job
@@ -18,6 +19,7 @@ def test_elastic_wf(clean_dir, si_structure):
     elastic_output = responses[job.jobs[-1].uuid][1].output
     # !!! validation on the outputs
     assert isinstance(elastic_output, ElasticDocument)
+    print(elastic_output.derived_properties)
     assert np.allclose(
         elastic_output.elastic_tensor.ieee_format,
         [
