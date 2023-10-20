@@ -21,7 +21,6 @@ def test_phonon_wf(clean_dir):
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
 
-    # !!! Generate job
     job = PhononMaker(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
@@ -33,7 +32,7 @@ def test_phonon_wf(clean_dir):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(

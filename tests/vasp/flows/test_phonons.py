@@ -39,7 +39,6 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = PhononMaker(
         min_length=3.0,
         bulk_relax_maker=None,
@@ -54,7 +53,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(
@@ -165,7 +164,6 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = PhononMaker(
         min_length=3.0,
         bulk_relax_maker=None,
@@ -180,7 +178,7 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(
@@ -305,9 +303,9 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
 
 # this will test all kpath schemes in combination with primitive cell
 @pytest.mark.parametrize(
-    "kpathscheme", ["seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro"]
+    "kpath_scheme", ["seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
+def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
     from jobflow import run_locally
 
     structure = Structure(
@@ -325,21 +323,20 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = PhononMaker(
         min_length=3.0,
         bulk_relax_maker=None,
         static_energy_maker=None,
         born_maker=None,
         use_symmetrized_structure="primitive",
-        kpath_scheme=kpathscheme,
+        kpath_scheme=kpath_scheme,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     # print(type(responses))
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
@@ -391,7 +388,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
     assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == kpathscheme
+        == kpath_scheme
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
@@ -493,7 +490,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     # print(type(responses))
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
@@ -577,7 +574,6 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = PhononMaker(
         min_length=3,
         bulk_relax_maker=None,
@@ -593,7 +589,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(
@@ -700,7 +696,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(
@@ -778,10 +774,10 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
 # combined with non-standard-primitive structures
 # this will test all kpath schemes in combination with primitive cell
 @pytest.mark.parametrize(
-    "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
+    "kpath_scheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
 def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
-    mock_vasp, clean_dir, kpathscheme
+    mock_vasp, clean_dir, kpath_scheme
 ):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -805,15 +801,15 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
             static_energy_maker=None,
             born_maker=None,
             use_symmetrized_structure=None,
-            kpath_scheme=kpathscheme,
+            kpath_scheme=kpath_scheme,
             generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         ).make(structure)
 
 
 @pytest.mark.parametrize(
-    "kpathscheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
+    "kpath_scheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpathscheme):
+def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpath_scheme):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -829,14 +825,13 @@ def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpathsc
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
     with pytest.raises(ValueError):
-        # !!! Generate job
         PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,
             static_energy_maker=None,
             born_maker=None,
             use_symmetrized_structure="conventional",
-            kpath_scheme=kpathscheme,
+            kpath_scheme=kpath_scheme,
             generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         ).make(structure)
 
@@ -889,7 +884,7 @@ def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
     # run the job
     responses = run_locally(phonon_flow, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     assert isinstance(responses[phonon_flow.jobs[-1].uuid][1].output, PhononBSDOSDoc)
     assert_allclose(
         responses[phonon_flow.jobs[-1].uuid][1].output.born,
@@ -965,7 +960,7 @@ def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
         # run the job
         responses = run_locally(phonon_flow, create_folders=True, ensure_success=True)
 
-        # !!! validation on the outputs
+        # validate the outputs
         assert isinstance(
             responses[phonon_flow.jobs[-1].uuid][1].output, PhononBSDOSDoc
         )

@@ -143,13 +143,12 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = MyMaker().make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
