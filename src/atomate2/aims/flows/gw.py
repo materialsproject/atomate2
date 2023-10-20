@@ -24,9 +24,13 @@ class GWConvergenceMaker(ConvergenceMaker):
         A name for the convergence criterion. Must be in the run results
     epsilon: float
         A difference in criterion value for subsequent runs
+    convergence_field: str
+        An input parameter that changes to achieve convergence
+    convergence_steps: Iterable
+        An iterable of the possible values for the convergence field.
+        If the iterable is depleted and the convergence is not reached,
+        that the job is failed
     """
 
     name: str = "GW convergence"
     maker: GWMaker = field(default_factory=GWMaker)
-    criterion_name: str = "bandgap"
-    epsilon: float = 0.001
