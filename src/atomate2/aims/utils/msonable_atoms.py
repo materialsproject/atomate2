@@ -1,13 +1,16 @@
 """A MSONable ASE Atoms Object."""
+from __future__ import annotations
 
-from typing import Any, Dict, Union
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from ase.atoms import Atoms
 from ase.calculators.singlepoint import SinglePointDFTCalculator
 from monty.json import MontyDecoder, MSONable
-from pymatgen.core import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
 
 ASE_ADAPTOR = AseAtomsAdaptor()
 
@@ -15,7 +18,7 @@ ASE_ADAPTOR = AseAtomsAdaptor()
 class MSONableAtoms(Atoms, MSONable):
     """A MSONable ASE atoms object."""
 
-    def as_dict(self) -> Dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         """Represent an ASE Atoms object as a dict.
 
         Returns
@@ -33,7 +36,7 @@ class MSONableAtoms(Atoms, MSONable):
         return d
 
     @classmethod
-    def from_dict(cls, d: Dict[str, Any]):
+    def from_dict(cls, d: dict[str, Any]):
         """Create the Atoms object from the dictionary.
 
         Parameters
@@ -56,7 +59,7 @@ class MSONableAtoms(Atoms, MSONable):
         return cls(atoms, calculator=calculator)
 
     @classmethod
-    def from_pymatgen(cls, structure: Union[Structure, Molecule]):
+    def from_pymatgen(cls, structure: Structure | Molecule):
         """Create an Atoms object from a pymatgen object.
 
         Parameters
@@ -72,7 +75,7 @@ class MSONableAtoms(Atoms, MSONable):
         return ASE_ADAPTOR.get_structure(self)
 
     @property
-    def pymatgen(self) -> Union[Structure, Molecule]:
+    def pymatgen(self) -> Structure | Molecule:
         """The pymatgen Structure or Molecule of the Atoms object."""
         if np.any(self.pbc):
             return ASE_ADAPTOR.get_structure(self)

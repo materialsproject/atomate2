@@ -4,13 +4,15 @@ from __future__ import annotations
 import logging
 from glob import glob
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from atomate2.aims.sets.base import AimsInputGenerator
     from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 

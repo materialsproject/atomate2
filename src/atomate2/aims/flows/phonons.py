@@ -1,15 +1,18 @@
 """Defines the phonon workflows for FHI-aims."""
+from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Union
+from typing import TYPE_CHECKING
 
-from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
 from atomate2.aims.jobs.phonons import (
     PhononDisplacementMaker,
     PhononDisplacementMakerSocket,
 )
 from atomate2.common.flows.phonons import BasePhononMaker
+
+if TYPE_CHECKING:
+    from atomate2.aims.jobs.base import BaseAimsMaker
 
 
 @dataclass
@@ -110,22 +113,22 @@ class PhononMaker(BasePhononMaker):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
-    min_length: Union[float, None] = 20.0
+    min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: Union[str, None] = None
+    use_symmetrized_structure: str | None = None
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
     socket: bool = False
     code: str = "aims"
-    bulk_relax_maker: Union[BaseAimsMaker, None] = field(
+    bulk_relax_maker: BaseAimsMaker | None = field(
         default_factory=lambda: RelaxMaker.full_relaxation()
     )
-    static_energy_maker: Union[BaseAimsMaker, None] = field(default_factory=StaticMaker)
-    born_maker: Union[BaseAimsMaker, None] = None
-    phonon_displacement_maker: Union[BaseAimsMaker, None] = None
+    static_energy_maker: BaseAimsMaker | None = field(default_factory=StaticMaker)
+    born_maker: BaseAimsMaker | None = None
+    phonon_displacement_maker: BaseAimsMaker | None = None
 
     def __post_init__(self):
         """Set the default phonon_displacement_maker.

@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import TYPE_CHECKING, Literal
 
 import pytest
 from ase.build import bulk, molecule
@@ -10,6 +12,10 @@ import atomate2.aims.jobs.base
 import atomate2.aims.run
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.common.files import gunzip_files
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 _REF_PATHS = {}
 _FAKE_RUN_AIMS_KWARGS = {}
@@ -152,7 +158,7 @@ def mock_aims(monkeypatch, ref_path, should_mock_aims):
 
 
 def fake_run_aims(
-    ref_path: Union[str, Path],
+    ref_path: str | Path,
     input_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["control.in"]] = _VFILES,
     clear_inputs: bool = False,
@@ -198,7 +204,7 @@ def clear_aims_inputs():
     logger.info("Cleared aims inputs")
 
 
-def copy_aims_outputs(ref_path: Union[str, Path]):
+def copy_aims_outputs(ref_path: str | Path):
     import shutil
 
     output_path = ref_path / "outputs"

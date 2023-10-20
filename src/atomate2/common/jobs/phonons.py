@@ -255,7 +255,6 @@ def run_phonon_displacements(
     prev_dir_argname: str = None,
     socket: bool = False,
 ) -> Flow:
-
     """
     Run phonon displacements.
 

@@ -4,8 +4,9 @@ from __future__ import annotations
 import copy
 import json
 import logging
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Iterable, Sequence
+from typing import TYPE_CHECKING, Any
 from warnings import warn
 
 import numpy as np

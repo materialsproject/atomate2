@@ -1,7 +1,8 @@
 """Input sets for band structure calculations."""
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, Dict, Sequence
+from typing import Any
 
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.utils.bands import prepare_band_input
@@ -24,8 +25,8 @@ class BandStructureSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
-    ) -> Dict[str, Sequence[str]]:
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+    ) -> dict[str, Sequence[str]]:
         """Get the parameter updates for the calculation.
 
         Parameters
@@ -61,8 +62,8 @@ class GWSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Get the parameter updates for the calculation.
 
         Parameters

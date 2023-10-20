@@ -1,17 +1,23 @@
 """GW workflows for FHI-aims with automatic convergence."""
+from __future__ import annotations
+
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Union
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core import Molecule, Structure
 
 from atomate2.aims.jobs.base import ConvergenceMaker
 from atomate2.aims.jobs.core import BandStructureMaker, GWMaker, StaticMaker
 from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from atomate2.aims.sets.core import StaticSetGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Molecule, Structure
+
+    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 @dataclass
@@ -42,8 +48,8 @@ class PeriodicGWConvergenceMaker(Maker):
 
     def make(
         self,
-        structure: Union[MSONableAtoms, Structure, Molecule],
-        prev_dir: Union[str, Path, None] = None,
+        structure: MSONableAtoms | Structure | Molecule,
+        prev_dir: str | Path | None = None,
     ) -> Flow:
         """Create a flow from the DFT ground state and subsequent GW calculation.
 

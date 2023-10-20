@@ -4,7 +4,7 @@ from __future__ import annotations
 import gzip
 import warnings
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from ase import Atom
@@ -17,6 +17,8 @@ from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.aims.utils.units import ev_per_A3_to_kbar
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core import Molecule, Structure
 
 LINE_NOT_FOUND = object()

@@ -2,8 +2,9 @@
 
 import json
 import logging
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Type, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -42,12 +43,12 @@ class AnalysisDoc(BaseModel):
         None, description="Percentage change in volume"
     )
     max_force: Optional[float] = Field(None, description="Maximum force on the atoms")
-    errors: Optional[List[str]] = Field(
+    errors: Optional[list[str]] = Field(
         None, description="Errors from the FHI-aims output"
     )
 
     @classmethod
-    def from_aims_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisDoc":
+    def from_aims_calc_docs(cls, calc_docs: list[Calculation]) -> "AnalysisDoc":
         """Create analysis summary from FHI-aims calculation documents.
 
         Parameters
@@ -100,12 +101,12 @@ class SpeciesSummary(BaseModel):
         Dictionary mapping atomic kind labels to their info
     """
 
-    species_defaults: Dict[str, Species] = Field(
+    species_defaults: dict[str, Species] = Field(
         None, description="Dictionary mapping atomic kind labels to their info"
     )
 
     @classmethod
-    def from_species_info(cls, species_info: Dict[str, Dict[str, Any]]):
+    def from_species_info(cls, species_info: dict[str, dict[str, Any]]):
         """Initialize from the atomic_kind_info dictionary.
 
         Parameters
@@ -117,7 +118,7 @@ class SpeciesSummary(BaseModel):
         -------
         The SpeciesSummary
         """
-        d: Dict[str, Dict[str, Any]] = {"species_defaults": {}}
+        d: dict[str, dict[str, Any]] = {"species_defaults": {}}
         for kind, info in species_info.items():
             d["species_defaults"][kind] = {
                 "element": info["element"],
@@ -209,7 +210,7 @@ class OutputDoc(BaseModel):
     structure: Union[Structure, Molecule] = Field(
         None, description="The pymatgen structure of the output Atoms"
     )
-    trajectory: List[MSONableAtoms] = Field(
+    trajectory: list[MSONableAtoms] = Field(
         None, description="The trajectory of output structures"
     )
     energy: float = Field(
@@ -223,13 +224,13 @@ class OutputDoc(BaseModel):
     )
     cbm: Optional[float] = Field(None, description="CBM for this calculation")
     vbm: Optional[float] = Field(None, description="VBM for this calculation")
-    forces: Optional[List[Vector3D]] = Field(
+    forces: Optional[list[Vector3D]] = Field(
         None, description="Forces on atoms from the last calculation"
     )
     stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
-    all_forces: Optional[List[List[Vector3D]]] = Field(
+    all_forces: Optional[list[list[Vector3D]]] = Field(
         None, description="Forces on atoms from all calculations."
     )
 
@@ -426,10 +427,10 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         None, description="The final pymatgen Structure or Molecule of the atoms"
     )
     state: TaskState = Field(None, description="State of this task")
-    included_objects: Optional[List[AimsObject]] = Field(
+    included_objects: Optional[list[AimsObject]] = Field(
         None, description="List of FHI-aims objects included with this task document"
     )
-    aims_objects: Optional[Dict[AimsObject, Any]] = Field(
+    aims_objects: Optional[dict[AimsObject, Any]] = Field(
         None, description="FHI-aims objects associated with this task"
     )
     entry: Optional[ComputedEntry] = Field(
@@ -439,7 +440,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         None, description="Summary of structural relaxation and forces"
     )
     task_label: str = Field(None, description="A description of the task")
-    tags: Optional[List[str]] = Field(
+    tags: Optional[list[str]] = Field(
         None, description="Metadata tags for this task document"
     )
     author: Optional[str] = Field(
@@ -448,10 +449,10 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
     icsd_id: Optional[str] = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: Optional[List[Calculation]] = Field(
+    calcs_reversed: Optional[list[Calculation]] = Field(
         None, description="The inputs and outputs for all FHI-aims runs in this task."
     )
-    transformations: Optional[Dict[str, Any]] = Field(
+    transformations: Optional[dict[str, Any]] = Field(
         None,
         description="Information on the structural transformations, parsed from a "
         "transformations.json file",
@@ -461,18 +462,18 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         description="Information on the custodian settings used to run this "
         "calculation, parsed from a custodian.json file",
     )
-    additional_json: Optional[Dict[str, Any]] = Field(
+    additional_json: Optional[dict[str, Any]] = Field(
         None, description="Additional json loaded from the calculation directory"
     )
 
     @classmethod
     def from_directory(
-        cls: Type[_T],
+        cls: type[_T],
         dir_name: Union[Path, str],
         volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
-        additional_fields: Dict[str, Any] = None,
+        additional_fields: dict[str, Any] = None,
         **aims_calculation_kwargs,
-    ) -> _T:
+    ):
         """Create a task document from a directory containing FHi-aims files.
 
         Parameters
@@ -546,7 +547,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
 
     @staticmethod
     def get_entry(
-        calc_docs: List[Calculation], job_id: Optional[str] = None
+        calc_docs: list[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
         """Get a computed entry from a list of FHI-aims calculation documents.
 
@@ -582,7 +583,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
 def _find_aims_files(
     path: Union[str, Path],
     volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Find FHI-aims files in a directory.
 
     Only files in folders with names matching a task name (or alternatively files
@@ -671,7 +672,7 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     return None
 
 
-def _get_state(calc_docs: List[Calculation], analysis: AnalysisDoc) -> TaskState:
+def _get_state(calc_docs: list[Calculation], analysis: AnalysisDoc) -> TaskState:
     """Get state from calculation documents and relaxation analysis.
 
     Parameters

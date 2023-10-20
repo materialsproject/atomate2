@@ -1,7 +1,7 @@
 """A representation of FHI-aims output (based on ASE output parser)."""
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from monty.json import MontyDecoder, MSONable
@@ -9,6 +9,7 @@ from monty.json import MontyDecoder, MSONable
 from atomate2.aims.io.parsers import read_aims_header_info, read_aims_output
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
     from emmet.core.math import Matrix3D, Vector3D
