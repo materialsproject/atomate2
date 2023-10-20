@@ -296,7 +296,7 @@ class FormationEnergyMaker(Maker, ABC):
                 uc_structure=defect.structure,
                 relax_maker=self.bulk_relax_maker,
                 sc_mat=supercell_matrix,
-                get_locpot=self.get_planar_locpot,
+                get_planar_locpot=self.get_planar_locpot,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["sc_struct"].lattice
