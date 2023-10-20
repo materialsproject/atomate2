@@ -83,11 +83,11 @@ class BaseElasticMaker(Maker, ABC):
     task_document_kwargs: dict = field(default_factory=dict)
 
     def make(
-            self,
-            structure: Structure,
-            prev_vasp_dir: str | Path | None = None,
-            equilibrium_stress: Matrix3D = None,
-            conventional: bool = False,
+        self,
+        structure: Structure,
+        prev_dir: str | Path | None = None,
+        equilibrium_stress: Matrix3D = None,
+        conventional: bool = False,
     ) -> Flow:
         """
         Make flow to calculate the elastic constant.
@@ -113,7 +113,7 @@ class BaseElasticMaker(Maker, ABC):
             bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
             jobs.append(bulk)
             structure = bulk.output.structure
-            prev_vasp_dir = bulk.output.dir_name
+            prev_dir = bulk.output.dir_name
             if equilibrium_stress is None:
                 equilibrium_stress = bulk.output.output.stress
 
