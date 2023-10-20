@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Job, Maker, OutputReference
@@ -21,6 +20,8 @@ from atomate2.common.jobs.defect import (
 )
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     import numpy.typing as npt
     from pymatgen.analysis.defects.core import Defect
     from pymatgen.core.structure import Structure
@@ -305,8 +306,8 @@ class FormationEnergyMaker(Maker, ABC):
             get_sc_job = get_supercell_from_prv_calc(
                 uc_structure=defect.structure,
                 prv_calc_dir=bulk_supercell_dir,
+                sc_entry_and_locpot_from_prv=self.sc_entry_and_locpot_from_prv,
                 sc_mat_ref=supercell_matrix,
-                structure_from_prv=self.structure_from_prv,
             )
             sc_mat = get_sc_job.output["sc_mat"]
             lattice = get_sc_job.output["lattice"]
@@ -329,12 +330,12 @@ class FormationEnergyMaker(Maker, ABC):
         jobs.extend([get_sc_job, spawn_output])
 
         if self.collect_defect_entry_data:
-            if isinstance(bulk_supercell_dir, (str, Path)):
-                raise NotImplementedError(
-                    "DefectEntery creation only works when you are explicitly "
-                    "calculating the bulk supercell. This is because the bulk "
-                    "SC energy parsing from previous calculations is not implemented."
-                )
+            # if isinstance(bulk_supercell_dir, (str, Path)):
+            # raise NotImplementedError(
+            #     "DefectEntery creation only works when you are explicitly "
+            #     "calculating the bulk supercell. This is because the bulk "
+            #     "SC energy parsing from previous calculations is not implemented."
+            # )
             collection_job = get_defect_entry(
                 charge_state_summary=spawn_output.output,
                 bulk_summary=get_sc_job.output,
@@ -348,8 +349,8 @@ class FormationEnergyMaker(Maker, ABC):
         )
 
     @abstractmethod
-    def structure_from_prv(self, previous_dir: str) -> Structure:
-        """Copy the output structure from previous directory.
+    def sc_entry_and_locpot_from_prv(self, previous_dir: str) -> Structure:
+        """Copy the output ComputedStructureEntry and Locpot from previous directory.
 
         Parameters
         ----------
@@ -358,7 +359,25 @@ class FormationEnergyMaker(Maker, ABC):
 
         Returns
         -------
-        structure: Structure
+        entry: ComputedStructureEntry
+        """
+
+    @abstractmethod
+    def get_planar_locpot(self, task_doc) -> dict:
+        """Get the Planar Locpot from the TaskDoc.
+
+        This is needed just in case the planar average locpot is stored in different
+        part of the TaskDoc for different codes.
+
+        Parameters
+        ----------
+        task_doc: TaskDoc
+            The task document.
+
+        Returns
+        -------
+        planar_locpot: dict
+            The planar average locpot.
         """
 
     @abstractmethod
