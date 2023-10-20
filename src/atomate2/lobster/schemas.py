@@ -3,7 +3,7 @@
 import logging
 import time
 from pathlib import Path
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -195,7 +195,7 @@ class CondensedBondingAnalysis(BaseModel):
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
         which_bonds: str = "all",
-    ):
+    ) -> tuple:
         """
         Create a task document from a directory containing LOBSTER files.
 
@@ -428,7 +428,7 @@ class LobsterTaskDocument(StructureMetadata):
         store_lso_dos: bool = False,
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
-    ):
+    ) -> "LobsterTaskDocument":
         """
         Create a task document from a directory containing LOBSTER files.
 
@@ -639,7 +639,7 @@ def _identify_strongest_bonds(
     icobilist_path: Path,
     icohplist_path: Path,
     icooplist_path: Path,
-):
+) -> list[StrongestBonds]:
     """
     Identify the strongest bonds and convert them into StrongestBonds objects.
 
@@ -656,8 +656,8 @@ def _identify_strongest_bonds(
 
     Returns
     -------
-    Tuple[StrongestBonds]
-        Tuple of StrongestBonds
+    list[StrongestBonds]
+        List of StrongestBonds
     """
     data = [
         (icohplist_path, False, False),
@@ -694,7 +694,7 @@ def _identify_strongest_bonds(
 # Don't we have this in pymatgen somewhere?
 def _get_strong_bonds(
     bondlist: dict, are_cobis: bool, are_coops: bool, relevant_bonds: dict
-):
+) -> dict:
     """
     Identify the strongest bonds from a list of bonds.
 
@@ -728,8 +728,8 @@ def _get_strong_bonds(
         lengths.append(length)
 
     bond_labels_unique = list(set(bonds))
-    sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
-    sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+    sep_icohp: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
+    sep_lengths: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
 
     for i, val in enumerate(bond_labels_unique):
         for j, val2 in enumerate(bonds):

@@ -40,7 +40,7 @@ def generate_elastic_deformations(
     strain_magnitudes: list[float] | list[list[float]] | None = None,
     symprec: float = SETTINGS.SYMPREC,
     sym_reduce: bool = True,
-):
+) -> list[Deformation]:
     """
     Generate elastic deformations.
 
@@ -75,13 +75,11 @@ def generate_elastic_deformations(
         strain_magnitudes = np.linspace(-0.01, 0.01, 5 + (order - 2) * 2)
 
     if np.array(strain_magnitudes).ndim == 1:
-        strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore
+        strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore[assignment]
 
     strains = []
     for state, magnitudes in zip(strain_states, strain_magnitudes):
-        strains.extend(
-            [Strain.from_voigt(m * np.array(state)) for m in magnitudes]  # type: ignore
-        )
+        strains.extend([Strain.from_voigt(m * np.array(state)) for m in magnitudes])
 
     # remove zero strains
     strains = [strain for strain in strains if (abs(strain) > 1e-10).any()]
@@ -107,7 +105,7 @@ def run_elastic_deformations(
     deformations: list[Deformation],
     prev_vasp_dir: str | Path | None = None,
     elastic_relax_maker: BaseVaspMaker = None,
-):
+) -> Response:
     """
     Run elastic deformations.
 
@@ -125,9 +123,8 @@ def run_elastic_deformations(
     elastic_relax_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
     """
-    # should be set in every workflow
-    # if elastic_relax_maker is None:
-    #    elastic_relax_maker = ElasticRelaxMaker()
+    if elastic_relax_maker is None:
+        elastic_relax_maker = ElasticRelaxMaker()
 
     relaxations = []
     outputs = []
@@ -173,7 +170,7 @@ def fit_elastic_tensor(
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
     allow_elastically_unstable_structs: bool = True,
-):
+) -> ElasticDocument:
     """
     Analyze stress/strain data to fit the elastic tensor and related properties.
 

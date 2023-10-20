@@ -1,8 +1,9 @@
 """Settings for atomate2."""
+from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import Literal, Optional, Tuple, Union
+from typing import Literal, Optional, Union
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -70,16 +71,16 @@ class Atomate2Settings(BaseSettings):
     VASP_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    VASP_STORE_VOLUMETRIC_DATA: Optional[Tuple[str]] = Field(
+    VASP_STORE_VOLUMETRIC_DATA: Optional[tuple[str]] = Field(
         None, description="Store data from these files in database if present"
     )
     VASP_STORE_ADDITIONAL_JSON: bool = Field(
-        True,
+        default=True,
         description="Ingest any additional JSON data present into database when "
         "parsing VASP directories useful for storing duplicate of FW.json",
     )
     VASP_RUN_BADER: bool = Field(
-        False,
+        default=False,
         description="Whether to run the Bader program when parsing VASP calculations."
         "Requires the bader executable to be on the path.",
     )
@@ -91,7 +92,7 @@ class Atomate2Settings(BaseSettings):
         "to the simulation will be compressed. If False no file is compressed.",
     )
     VASP_INHERIT_INCAR: bool = Field(
-        True,
+        default=True,
         description="Whether to inherit INCAR settings from previous calculation. "
         "This might be useful to port Custodian fixes to child jobs but can also be "
         "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs."
@@ -118,7 +119,7 @@ class Atomate2Settings(BaseSettings):
         "cp2k.psmp", description="Command to run the MPI version of cp2k"
     )
     CP2K_RUN_BADER: bool = Field(
-        False,
+        default=False,
         description="Whether to run the Bader program when parsing CP2K calculations."
         "Requires the bader executable to be on the path.",
     )
@@ -145,17 +146,17 @@ class Atomate2Settings(BaseSettings):
     CP2K_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    CP2K_STORE_VOLUMETRIC_DATA: Optional[Tuple[str]] = Field(
+    CP2K_STORE_VOLUMETRIC_DATA: Optional[tuple[str]] = Field(
         None, description="Store data from these files in database if present"
     )
     CP2K_STORE_ADDITIONAL_JSON: bool = Field(
-        True,
+        default=True,
         description="Ingest any additional JSON data present into database when "
         "parsing CP2K directories useful for storing duplicate of FW.json",
     )
 
     CP2K_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
-        True,
+        default=True,
         description="Determine if the files in folder are being compressed. If True "
         "all the files are compressed. If 'atomate' only a selection of files related "
         "to the simulation will be compressed. If False no file is compressed.",
@@ -175,7 +176,7 @@ class Atomate2Settings(BaseSettings):
 
     @model_validator(mode="before")
     @classmethod
-    def load_default_settings(cls, values):
+    def load_default_settings(cls, values) -> dict:
         """
         Load settings from file or environment variables.
 

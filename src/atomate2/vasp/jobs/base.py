@@ -107,7 +107,7 @@ _FILES_TO_ZIP = (
 )
 
 
-def vasp_job(method: Callable):
+def vasp_job(method: Callable) -> job:
     """
     Decorate the ``make`` method of VASP job makers.
 
@@ -242,7 +242,7 @@ class BaseVaspMaker(Maker):
 def get_vasp_task_document(
     path: Path | str,
     **kwargs,
-):
+) -> TaskDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 

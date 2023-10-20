@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 import logging
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import TYPE_CHECKING, Literal
 
 import pytest
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 logger = logging.getLogger("atomate2")
 
@@ -81,7 +86,7 @@ def mock_lobster(monkeypatch, lobster_test_dir):
 
 
 def fake_run_lobster(
-    ref_path: Union[str, Path],
+    ref_path: str | Path,
     check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
     check_dft_inputs: Sequence[Literal["WAVECAR", "POSCAR"]] = _DFT_FILES,
     lobsterin_settings: Sequence[str] = (),
@@ -117,7 +122,7 @@ def fake_run_lobster(
     logger.info("ran fake LOBSTER, generated outputs")
 
 
-def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str]):
+def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
     from pymatgen.io.lobster import Lobsterin
 
     user = Lobsterin.from_file("lobsterin")
@@ -130,7 +135,7 @@ def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str])
             raise ValueError(f"lobsterin value of {p} is inconsistent!")
 
 
-def copy_lobster_outputs(ref_path: Union[str, Path]):
+def copy_lobster_outputs(ref_path: str | Path):
     import shutil
 
     output_path = ref_path / "outputs"

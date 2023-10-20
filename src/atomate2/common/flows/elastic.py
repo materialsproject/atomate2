@@ -83,12 +83,12 @@ class BaseElasticMaker(Maker, ABC):
     task_document_kwargs: dict = field(default_factory=dict)
 
     def make(
-        self,
-        structure: Structure,
-        prev_dir: str | Path | None = None,
-        equilibrium_stress: Matrix3D = None,
-        conventional: bool = False,
-    ):
+            self,
+            structure: Structure,
+            prev_vasp_dir: str | Path | None = None,
+            equilibrium_stress: Matrix3D = None,
+            conventional: bool = False,
+    ) -> Flow:
         """
         Make flow to calculate the elastic constant.
 

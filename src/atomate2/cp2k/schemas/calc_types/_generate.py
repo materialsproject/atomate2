@@ -23,7 +23,7 @@ for functional_class in _RUN_TYPE_DATA:
                 _RUN_TYPES.append(f"{rt}{vdw}{u}")  # noqa: PERF401
 
 
-def get_enum_source(enum_name, doc, items):
+def get_enum_source(enum_name, doc, items) -> str:
     header = f"""
 class {enum_name}(ValueEnum):
     \"\"\" {doc} \"\"\"\n
@@ -52,7 +52,7 @@ task_type_enum = get_enum_source(
 )
 
 
-def get_calc_type_key(rt):
+def get_calc_type_key(rt) -> str:
     """Conveniece function for readability."""
     s = "_".join(rt.split())
     s = s.replace("+", "_").replace("-", "_").replace("(", "_").replace(")", "")

@@ -22,7 +22,7 @@ class VaspDrone(AbstractDrone):
         Additional keyword args passed to :obj:`.TaskDoc.from_directory`.
     """
 
-    def __init__(self, **task_document_kwargs):
+    def __init__(self, **task_document_kwargs) -> None:
         self.task_document_kwargs = task_document_kwargs
 
     def assimilate(self, path: str | Path | None = None) -> TaskDoc:

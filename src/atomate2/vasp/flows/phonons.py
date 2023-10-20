@@ -158,7 +158,7 @@ class PhononMaker(Maker):
         epsilon_static: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the phonon properties.
 

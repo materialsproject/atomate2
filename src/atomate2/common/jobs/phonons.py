@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 @job
 def get_total_energy_per_cell(
     total_dft_energy_per_formula_unit: float, structure: Structure
-):
+) -> float:
     """
     Job that computes total dft energy of the cell.
 
@@ -59,7 +59,7 @@ def get_total_energy_per_cell(
 @job
 def get_supercell_size(
     structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
-):
+) -> list[list[float]]:
     """
     Determine supercell size with given min_length.
 
@@ -127,7 +127,7 @@ def generate_phonon_displacements(
     use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
-):
+) -> list[Structure]:
     """
     Generate displaced structures with phonopy.
 
@@ -196,7 +196,7 @@ def generate_frequencies_eigenvectors(
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
     **kwargs,
-):
+) -> PhononBSDOSDoc:
     """
     Analyze the phonon runs and summarize the results.
 
@@ -253,7 +253,7 @@ def run_phonon_displacements(
     supercell_matrix,
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
     prev_vasp_dir: str | Path = None,
-):
+) -> Flow:
     """
     Run phonon displacements.
 

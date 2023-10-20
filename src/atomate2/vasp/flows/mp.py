@@ -100,7 +100,9 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Flow:
         """
         1, 2 or 3-step flow with optional pre-relax and final static jobs.
 
@@ -160,7 +162,9 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Flow:
         """
         Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
 
