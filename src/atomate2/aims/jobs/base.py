@@ -172,7 +172,7 @@ class ConvergenceMaker(Maker):
         that the job is failed
     """
 
-    name: str = "Convergence job"
+    name: str = "convergence"
     maker: BaseAimsMaker = field(default_factory=BaseAimsMaker)
     criterion_name: str = "energy_per_atom"
     epsilon: float = 0.001

@@ -11,7 +11,7 @@ cwd = os.getcwd()
 
 
 def test_convergence(mock_aims, tmp_path, Si, species_dir):
-    """A test for the convergence job"""
+    """A test for the convergence maker"""
 
     from jobflow import run_locally
 
