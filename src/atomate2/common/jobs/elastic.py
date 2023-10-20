@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from typing import TYPE_CHECKING
 
@@ -17,7 +18,6 @@ from pymatgen.transformations.standard_transformations import (
 from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
-from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -102,8 +103,9 @@ def generate_elastic_deformations(
 def run_elastic_deformations(
     structure: Structure,
     deformations: list[Deformation],
-    prev_vasp_dir: str | Path | None = None,
-    elastic_relax_maker: BaseVaspMaker = None,
+    prev_dir: str | Path | None = None,
+    prev_dir_argname: str = None,
+    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = None,
 ) -> Response:
     """
     Run elastic deformations.
@@ -119,12 +121,11 @@ def run_elastic_deformations(
         The deformations to apply.
     prev_vasp_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
-    elastic_relax_maker : .BaseVaspMaker
+    prev_dir_argname: str
+        argument name for the prev_dir variable
+    elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
     """
-    if elastic_relax_maker is None:
-        elastic_relax_maker = ElasticRelaxMaker()
-
     relaxations = []
     outputs = []
     for i, deformation in enumerate(deformations):
@@ -133,15 +134,19 @@ def run_elastic_deformations(
         ts = TransformedStructure(structure, transformations=[dst])
         deformed_structure = ts.final_structure
 
-        # write details of the transformation to the transformations.json file
-        # this file will automatically get added to the task document and allow
-        # the elastic builder to reconstruct the elastic document; note the ":" is
-        # automatically converted to a "." in the filename.
-        elastic_relax_maker.write_additional_data["transformations:json"] = ts
+        with contextlib.suppress(Exception):
+            # write details of the transformation to the transformations.json file
+            # this file will automatically get added to the task document and allow
+            # the elastic builder to reconstruct the elastic document; note the ":" is
+            # automatically converted to a "." in the filename.
+            elastic_relax_maker.write_additional_data["transformations:json"] = ts
 
+        elastic_job_kwargs = {}
+        if prev_dir is not None and prev_dir_argname is not None:
+            elastic_job_kwargs[prev_dir_argname] = prev_dir
         # create the job
         relax_job = elastic_relax_maker.make(
-            deformed_structure, prev_vasp_dir=prev_vasp_dir
+            deformed_structure, **elastic_job_kwargs
         )
         relax_job.append_name(f" {i + 1}/{len(deformations)}")
         relaxations.append(relax_job)
@@ -206,7 +211,7 @@ def fit_elastic_tensor(
         # stress could be none if the deformation calculation failed
         if data["stress"] is None:
             continue
-
+        print(data["stress"])
         stresses.append(Stress(data["stress"]))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])

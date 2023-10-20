@@ -126,14 +126,12 @@ class BaseElasticMaker(Maker, ABC):
             symprec=self.symprec,
             **self.generate_elastic_deformations_kwargs,
         )
-        vasp_deformation_kwargs = {}
-        if self.prev_calc_dir_argname is not None:
-            vasp_deformation_kwargs[self.prev_calc_dir_argname] = prev_dir
+
         vasp_deformation_calcs = run_elastic_deformations(
             structure,
             deformations.output,
             elastic_relax_maker=self.elastic_relax_maker,
-            **vasp_deformation_kwargs,
+            prev_dir=prev_dir,
         )
         fit_tensor = fit_elastic_tensor(
             structure,
