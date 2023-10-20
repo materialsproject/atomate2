@@ -135,7 +135,8 @@ class ForceFieldTaskDocument(StructureMetadata):
         """
         trajectory = result["trajectory"].__dict__
 
-        # NOTE: units for stresses were converted from ev/Angstrom³ to kbar (* -10 from standard output)
+        # NOTE: units for stresses were converted from ev/Angstrom³ to kbar
+        # (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
         for i in range(len(trajectory["stresses"])):
             trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(
