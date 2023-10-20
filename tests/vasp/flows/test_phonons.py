@@ -345,13 +345,8 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpathscheme):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [
-            5776.1499503440455,
-            5617.747377776762,
-            4725.502693639196,
-            3043.818276263367,
-            694.4907835517783,
-        ],
+        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
+        atol=1e-8,
     )
 
     assert isinstance(
@@ -504,13 +499,8 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [
-            5776.1499503440455,
-            5617.747377776762,
-            4725.502693639196,
-            3043.818276263367,
-            694.4907835517783,
-        ],
+        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
+        atol=1e-8,
     )
 
     assert isinstance(
@@ -608,44 +598,24 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [
-            5776.1499503440455,
-            5617.747377776762,
-            4725.502693639196,
-            3043.818276263367,
-            694.4907835517783,
-        ],
+        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
+        atol=1e-8,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [
-            0,
-            4.790668183967239,
-            13.034706214127153,
-            20.374002842560785,
-            26.414254898744545,
-        ],
+        [0, 4.79066818396, 13.0347062141, 20.3740028425, 26.4142548987],
+        atol=1e-8,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [
-            0.0,
-            8.053736263830405,
-            15.980056690395037,
-            19.980312349314378,
-            21.885134767453195,
-        ],
+        [0.0, 8.05373626383, 15.9800566903, 19.9803123493, 21.8851347674],
+        atol=1e-8,
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [
-            5776.1499503440455,
-            6096.814195199836,
-            7332.443935293648,
-            9156.019127569401,
-            11260.192741251365,
-        ],
+        [5776.14995034, 6096.81419519, 7332.44393529, 9156.01912756, 11260.1927412],
+        atol=1e-8,
     )
 
     assert isinstance(
