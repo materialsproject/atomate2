@@ -84,6 +84,11 @@ class Atomate2Settings(BaseSettings):
         description="Whether to run the Bader program when parsing VASP calculations."
         "Requires the bader executable to be on the path.",
     )
+    VASP_RUN_DDEC6: bool = Field(
+        default=False,
+        description="Whether to run the DDEC6 program when parsing VASP calculations."
+        "Requires the chargemol executable to be on the path.",
+    )
 
     VASP_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
         "atomate",
