@@ -30,7 +30,7 @@ def run_aims(
     Parameters
     ----------
     aims_cmd : str
-        The command used to run FHI-aims (defaults to ASE_AIMS_COMMAND env variable).
+        The command used to run FHI-aims (defaults to SETTINGS.AIMS_CMD).
     """
     if aims_cmd is None:
         aims_cmd = SETTINGS.AIMS_CMD
@@ -86,7 +86,7 @@ def run_aims_socket(atoms_to_calculate: list[MSONableAtoms], aims_cmd: str = Non
     atoms_to_calculate: list[.MSONableAtoms]
         The list of structures to run scf calculations on
     aims_cmd: str
-        The aims command to use
+        The aims command to use (defaults to SETTINGS.AIMS_CMD).
     """
     with open("parameters.json") as param_file:
         parameters = json.load(param_file, cls=MontyDecoder)
