@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
+from phonopy.units import VaspToTHz
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
@@ -16,7 +17,7 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.phonon_utils import get_factor
+from atomate2.aims.utils.units import omega_to_THz
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 
 if TYPE_CHECKING:
@@ -31,6 +32,32 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
+
+
+def get_factor(code: str):
+    """
+    Get the frequency conversion factor to THz for each code.
+
+    Parameters
+    ----------
+    code: str
+        The code to get the conversion factor for
+
+    Returns
+    -------
+    float
+        The correct conversion factor
+
+    Raises
+    ------
+    ValueError
+        If code is not defined
+    """
+    if code in ["forcefields", "vasp"]:
+        return VaspToTHz
+    if code == "aims":
+        return omega_to_THz  # Based on CODATA 2002
+    raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
 
 
 @job

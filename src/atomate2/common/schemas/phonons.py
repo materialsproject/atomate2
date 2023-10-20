@@ -26,7 +26,7 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
-from atomate2.common.phonon_utils import get_factor
+from atomate2.common.jobs.phonons import get_factor
 
 logger = logging.getLogger(__name__)
 
