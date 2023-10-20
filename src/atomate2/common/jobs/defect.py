@@ -185,9 +185,9 @@ def get_ccd_documents(
 @job
 def get_supercell_from_prv_calc(
     uc_structure: Structure,
-    prv_calc_dir: str | Path | None = None,
+    prv_calc_dir: str | Path,
+    sc_entry_and_locpot_from_prv: Callable,
     sc_mat_ref: NDArray | None = None,
-    structure_from_prv: Callable | None = None,
 ) -> dict:
     """Get the supercell from the previous calculation.
 
@@ -201,15 +201,17 @@ def get_supercell_from_prv_calc(
         The directory of the previous calculation.
     sc_mat : NDArray
         The supercell matrix. If not None, use this to validate the extracted supercell.
-    structure_from_prv : Callable
-        Function to get the supercell structure from the previous calculation.
+    sc_entry_and_locpot_from_prv : Callable
+        Function to get the supercell ComputedStructureEntry and Locpot from the
+        previous calculation.
 
     Returns
     -------
     Response:
         Output containing the supercell transformation and the dir_name
     """
-    sc_structure = structure_from_prv(prv_calc_dir)
+    sc_entry, plnr_locpot = sc_entry_and_locpot_from_prv(prv_calc_dir)
+    sc_structure = sc_entry.structure
     sc_mat_prv, _ = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
@@ -225,7 +227,15 @@ def get_supercell_from_prv_calc(
                 "The supercell matrix extracted from the previous calculation "
                 "does not match the the desired supercell shape."
             )
-    return {"sc_mat": sc_mat_prv, "lattice": Lattice(sc_structure.lattice.matrix)}
+    return {
+        "sc_entry": sc_entry,
+        "sc_struct": sc_structure,
+        "sc_mat": sc_mat_prv,
+        "dir_name": prv_calc_dir,
+        "lattice": Lattice(sc_structure.lattice.matrix),
+        "uuid": None,
+        "locpot_plnr": plnr_locpot,
+    }
 
 
 @job(name="bulk supercell")
@@ -233,6 +243,7 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
+    get_planar_locpot: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -246,12 +257,19 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
+    get_plnr_locpot : Callable | None
+        A function to get the Locpot from the output of the task document.
 
     Returns
     -------
     Response:
         Output a dictionary containing the bulk supercell calculation summary.
     """
+    if get_planar_locpot is None:
+
+        def get_planar_locpot(tdoc):
+            return tdoc.calcs_reversed[0].output.locpot
+
     logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
@@ -270,7 +288,7 @@ def bulk_supercell_calculation(
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
         "uuid": relax_job.uuid,
-        "locpot_plnr": relax_output.calcs_reversed[0].output.locpot,
+        "locpot_plnr": get_planar_locpot(relax_output),
     }
     flow = Flow([relax_job], output=summary_d)
     return Response(replace=flow)
@@ -409,11 +427,11 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
 @job
 def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dict]:
     """Get a defect entry from a defect calculation and a bulk calculation."""
-    bulk_sc_entry = bulk_summary["sc_entry"]
-    bulk_struct_entry = ComputedStructureEntry(
-        structure=bulk_summary["sc_struct"],
-        energy=bulk_sc_entry.energy,
-    )
+    bulk_struct_entry = bulk_summary["sc_entry"]
+    # bulk_struct_entry = ComputedStructureEntry(
+    #     structure=bulk_summary["sc_struct"],
+    #     energy=bulk_sc_entry.energy,
+    # )
     bulk_dir_name = bulk_summary["dir_name"]
     bulk_locpot = bulk_summary["locpot_plnr"]
     defect_ent_res = []
