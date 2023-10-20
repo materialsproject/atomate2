@@ -46,7 +46,7 @@ class AmsetMaker(Maker):
         wavefunction_dir: str | Path = None,
         deformation_dir: str | Path = None,
         bandstructure_dir: str | Path = None,
-    ):
+    ) -> Response:
         """
         Run an AMSET calculation.
 

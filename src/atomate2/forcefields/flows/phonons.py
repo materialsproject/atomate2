@@ -134,10 +134,11 @@ class PhononMaker(BasePhononMaker):
     )
     born_maker: ForceFieldStaticMaker | None = None
 
+
     @property
     def prev_calc_dir_argname(self):
         """Name of argument informing static maker of previous calculation directory.
-
+        
         As this differs between different DFT codes (e.g., VASP, CP2K), it
         has been left as a property to be implemented by the inheriting class.
 
@@ -145,3 +146,84 @@ class PhononMaker(BasePhononMaker):
         calculations are performed for each ordering (relax -> static)
         """
         return
+# TARP: Merge conflict resolution compare against the new common flow
+# =======
+#     def make(
+#         self,
+#         structure: Structure,
+#         born: list[Matrix3D] | None = None,
+#         epsilon_static: Matrix3D | None = None,
+#         total_dft_energy_per_formula_unit: float | None = None,
+#         supercell_matrix: Matrix3D | None = None,
+#     ) -> Flow:
+#         """
+#         Make flow to calculate the phonon properties.
+
+#         Parameters
+#         ----------
+#         structure : .Structure
+#             A pymatgen structure. Please start with a structure
+#             that is nearly fully optimized as the internal optimizers
+#             have very strict settings!
+#         born: Matrix3D
+#             The born charges and epsilon can be provided manually.
+#             It can be provided in the VASP convention with information for
+#             every atom in unit cell. Please be careful when converting
+#             structures within in this workflow as this could lead to errors
+#         epsilon_static: Matrix3D
+#             The high-frequency dielectric constant.
+#         total_dft_energy_per_formula_unit: float
+#             It has to be given per formula unit (as a result in corresponding Doc)
+#             Instead of recomputing the energy of the bulk structure every time,
+#             this value can also be provided in eV. If it is provided,
+#             the static run will be skipped. This energy is the typical
+#             output dft energy of the dft workflow. No conversion needed.
+#         supercell_matrix: list
+#             instead of min_length, also a supercell_matrix can
+#             be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
+#         """
+#         if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
+#             raise ValueError(
+#                 "use_symmetrized_structure can only be primitive, conventional, None"
+#             )
+
+#         if (
+#             not self.use_symmetrized_structure == "primitive"
+#             and self.kpath_scheme != "seekpath"
+#         ):
+#             raise ValueError(
+#                 "You can only use other kpath schemes with the primitive standard "
+#                 "structure"
+#             )
+
+#         if self.kpath_scheme not in [
+#             "seekpath",
+#             "hinuma",
+#             "setyawan_curtarolo",
+#             "latimer_munro",
+#         ]:
+#             raise ValueError("kpath scheme is not implemented")
+
+#         jobs = []
+
+#         # TODO: should this be after or before structural
+#         # optimization as the optimization could change
+#         # the symmetry
+#         # we could add a tutorial and point out that the structure
+#         # should be nearly optimized before the phonon workflow
+#         if self.use_symmetrized_structure == "primitive":
+#             # These structures are compatible with many
+#             # of the kpath algorithms that are used for Materials Project
+#             prim_job = structure_to_primitive(structure, self.symprec)
+#             jobs.append(prim_job)
+#             structure = prim_job.output
+#         elif self.use_symmetrized_structure == "conventional":
+#             # it could be beneficial to use conventional
+#             # standard structures to arrive faster at supercells with right
+#             # angles
+#             conv_job = structure_to_conventional(structure, self.symprec)
+#             jobs.append(conv_job)
+#             structure = conv_job.output
+# >>>>>>> main
+
+

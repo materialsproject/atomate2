@@ -14,6 +14,8 @@ from atomate2 import SETTINGS
 from atomate2.common.schemas.elastic import ElasticDocument
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
+
     from maggma.core import Store
 
 
@@ -58,7 +60,7 @@ class ElasticBuilder(Builder):
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
         structure_match_tol: float = 1e-5,
         **kwargs,
-    ):
+    ) -> None:
         self.tasks = tasks
         self.elasticity = elasticity
         self.query = query if query else {}
@@ -69,14 +71,14 @@ class ElasticBuilder(Builder):
 
         super().__init__(sources=[tasks], targets=[elasticity], **kwargs)
 
-    def ensure_indexes(self):
+    def ensure_indexes(self) -> None:
         """Ensure indices on the tasks and elasticity collections."""
         self.tasks.ensure_index("output.formula_pretty")
         self.tasks.ensure_index("last_updated")
         self.elasticity.ensure_index("fitting_data.uuids.0")
         self.elasticity.ensure_index("last_updated")
 
-    def get_items(self):
+    def get_items(self) -> Generator:
         """
         Get all items to process into elastic documents.
 
@@ -155,7 +157,7 @@ class ElasticBuilder(Builder):
 
         return elastic_docs
 
-    def update_targets(self, items: list[ElasticDocument]):
+    def update_targets(self, items: list[ElasticDocument]) -> None:
         """
         Insert new elastic documents into the elasticity store.
 
@@ -164,11 +166,11 @@ class ElasticBuilder(Builder):
         items : list of .ElasticDocument
             A list of elasticity documents.
         """
-        items = chain.from_iterable(filter(bool, items))  # type: ignore
+        _items = chain.from_iterable(filter(bool, items))
 
-        if len(items) > 0:
-            self.logger.info(f"Updating {len(items)} elastic documents")
-            self.elasticity.update(items, key="fitting_data.uuids.0")
+        if len(list(_items)) > 0:
+            self.logger.info(f"Updating {len(list(_items))} elastic documents")
+            self.elasticity.update(_items, key="fitting_data.uuids.0")
         else:
             self.logger.info("No items to update")
 

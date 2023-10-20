@@ -19,7 +19,7 @@ def copy_files(
     prefix: str = "",
     allow_missing: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     r"""
     Copy files between source and destination folders.
 
@@ -77,7 +77,7 @@ def delete_files(
     exclude_files: list[str | Path] | None = None,
     allow_missing: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     r"""
     Delete files in a directory.
 
@@ -124,7 +124,7 @@ def rename_files(
     host: str | None = None,
     allow_missing: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Delete files in a directory.
 
@@ -168,7 +168,7 @@ def gzip_files(
     allow_missing: bool = False,
     force: bool = False,
     file_client: FileClient = None,
-):
+) -> None:
     r"""
     Gzip files in a directory.
 
@@ -221,7 +221,7 @@ def gunzip_files(
     allow_missing: bool = False,
     force: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     r"""
     Gunzip files in a directory.
 
@@ -360,7 +360,7 @@ def get_zfile(
 
 def gzip_output_folder(
     directory: str | Path, setting: bool | str, files_list: list[str]
-):
+) -> None:
     """
     Zip the content of the output folder based on the specific code setting.
 

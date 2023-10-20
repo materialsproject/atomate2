@@ -3,12 +3,12 @@
 [gh]: https://cdnjs.cloudflare.com/ajax/libs/octicons/8.5.0/svg/mark-github.svg
 [orc]: ../_static/orcid.svg
 
-atomate2 was designed and developed by **Alex Ganose** [![gh]][utf] [![orc]][0000-0002-4486-3321].
+The first version of atomate2 was designed and developed by **Alex Ganose** [![gh]][utf] [![orc]][0000-0002-4486-3321].
 
 [utf]: https://github.com/utf
 [0000-0002-4486-3321]: https://orcid.org/0000-0002-4486-3321
 
-Additional contributions have been provided by:
+Further substantial contributions have been provided by:
 
 **Andrew Rosen** [![gh]][Andrew-S-Rosen] [![orc]][0000-0002-0141-7006] \
 Assistant Professor of Chemical & Biological Engineering \

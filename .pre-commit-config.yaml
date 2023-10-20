@@ -1,9 +1,8 @@
 default_language_version:
   python: python3
-exclude: '^.github/'
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.1.0
+  rev: v0.1.1
   hooks:
   - id: ruff
     args: [--fix]

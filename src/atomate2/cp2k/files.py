@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 
@@ -15,6 +15,8 @@ from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core import Structure
 
     from atomate2.cp2k.sets.base import Cp2kInputGenerator
@@ -30,7 +32,7 @@ def copy_cp2k_outputs(
     additional_cp2k_files: list[str] | None = None,
     restart_to_input: bool = True,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy CP2K output files to the current directory.
 
@@ -159,7 +161,7 @@ def write_cp2k_input_set(
     apply_input_updates: bool = True,
     optional_files: dict | None = None,
     **kwargs,
-):
+) -> None:
     """
     Write CP2K input set.
 
@@ -199,7 +201,7 @@ def cleanup_cp2k_outputs(
     host: str | None = None,
     file_patterns: Sequence[str] = ("*bak*",),
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Remove unnecessary files.
 
