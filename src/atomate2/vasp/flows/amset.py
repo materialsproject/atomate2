@@ -418,7 +418,7 @@ class HSEVaspAmsetMaker(Maker):
         # elastic constant
         elastic = self.elastic_maker.make(
             static.output.structure,
-            prev_vasp_dir=static.output.dir_name,
+            prev_dir=static.output.dir_name,
             equilibrium_stress=static.output.output.stress,
         )
 
