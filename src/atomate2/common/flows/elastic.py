@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from abc import ABC, abstractmethod
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
@@ -21,7 +22,6 @@ from atomate2.vasp.jobs.elastic import (
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from abc import ABC, abstractmethod
 
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure

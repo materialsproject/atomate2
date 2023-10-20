@@ -17,13 +17,13 @@ from atomate2.vasp.jobs.elastic import (
     generate_elastic_deformations,
     run_elastic_deformations,
 )
-
+from atomate2.common.flows.elastic import BaseElasticMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
-    from atomate2.common.flows.elastic import BaseElasticMaker
+
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
