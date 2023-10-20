@@ -243,6 +243,7 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
+    get_plnr_locpot: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -256,12 +257,19 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
+    get_plnr_locpot : Callable | None
+        A function to get the Locpot from the output of the task document.
 
     Returns
     -------
     Response:
         Output a dictionary containing the bulk supercell calculation summary.
     """
+    if get_plnr_locpot is None:
+
+        def get_plnr_locpot(tdoc):
+            return tdoc.calcs_reversed[0].output.locpot
+
     logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
@@ -280,7 +288,7 @@ def bulk_supercell_calculation(
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
         "uuid": relax_job.uuid,
-        "locpot_plnr": relax_output.calcs_reversed[0].output.locpot,
+        "locpot_plnr": get_plnr_locpot(relax_output),
     }
     flow = Flow([relax_job], output=summary_d)
     return Response(replace=flow)
