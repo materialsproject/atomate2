@@ -12,6 +12,13 @@ def test_empty_and_invalid_config_file(clean_dir):
     config_file_path = Path.cwd() / "test-atomate2-config.yaml"
     os.environ["ATOMATE2_CONFIG_FILE"] = str(config_file_path)
 
+    settings = Atomate2Settings()
+    assert str(config_file_path) == settings.CONFIG_FILE
+    assert settings.SYMPREC == 0.1
+    assert settings.BANDGAP_TOL == 1e-4
+    assert settings.VASP_RUN_BADER is False
+    assert settings.VASP_RUN_DDEC6 is False
+
     # test warning if config file is empty
     config_file_path.touch()
     with pytest.warns(
