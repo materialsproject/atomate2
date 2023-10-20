@@ -145,9 +145,7 @@ def run_elastic_deformations(
         if prev_dir is not None and prev_dir_argname is not None:
             elastic_job_kwargs[prev_dir_argname] = prev_dir
         # create the job
-        relax_job = elastic_relax_maker.make(
-            deformed_structure, **elastic_job_kwargs
-        )
+        relax_job = elastic_relax_maker.make(deformed_structure, **elastic_job_kwargs)
         relax_job.append_name(f" {i + 1}/{len(deformations)}")
         relaxations.append(relax_job)
 

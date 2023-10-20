@@ -61,11 +61,15 @@ class ElasticMaker(BaseElasticMaker):
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_cell=True, relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: CHGNetRelaxMaker(
+            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+        )
     )
     elastic_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_cell=False, relax_kwargs={"fmax": 0.00001})
-    ) # constant volume relaxation
+        default_factory=lambda: CHGNetRelaxMaker(
+            relax_cell=False, relax_kwargs={"fmax": 0.00001}
+        )
+    )  # constant volume relaxation
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)

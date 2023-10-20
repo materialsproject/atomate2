@@ -3,7 +3,7 @@
 from typing import Optional
 from ase.stress import voigt_6_to_full_3x3_stress
 from emmet.core.structure import StructureMetadata
-from emmet.core.math import Matrix3D,  Vector3D
+from emmet.core.math import Matrix3D, Vector3D
 from pydantic import BaseModel, Extra, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -16,9 +16,7 @@ class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore[call-arg]
     forces: Optional[list[list[float]]] = Field(
         None, description="The forces on each atom."
     )
-    stress: Optional[Matrix3D] = Field(
-        None, description="The stress on the lattice."
-    )
+    stress: Optional[Matrix3D] = Field(None, description="The stress on the lattice.")
     structure: Structure = Field(None, description="The structure at this step.")
 
 
@@ -138,7 +136,9 @@ class ForceFieldTaskDocument(StructureMetadata):
         # NOTE: units for stresses were converted to kbar (* -10 from standard output) and to 3x3 matrix
         # to comply with MP convention
         for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(trajectory["stresses"][i]) * -10
+            trajectory["stresses"][i] = (
+                voigt_6_to_full_3x3_stress(trajectory["stresses"][i]) * -10
+            )
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
 
