@@ -1,13 +1,17 @@
 """Define the VASP PhononMaker."""
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Union
+from typing import TYPE_CHECKING
 
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
+
+if TYPE_CHECKING:
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
@@ -111,25 +115,25 @@ class PhononMaker(BasePhononMaker):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
-    min_length: Union[float, None] = 20.0
+    min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: Union[str, None] = None
+    use_symmetrized_structure: str | None = None
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
     socket: bool = False
     code: str = "vasp"
-    bulk_relax_maker: Union[BaseVaspMaker, None] = field(
+    bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    static_energy_maker: Union[BaseVaspMaker, None] = field(
+    static_energy_maker: BaseVaspMaker | None = field(
         default_factory=lambda: StaticMaker(
             input_set_generator=StaticSetGenerator(auto_ispin=True)
         )
     )
-    born_maker: Union[BaseVaspMaker, None] = field(default_factory=DielectricMaker)
+    born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
     )

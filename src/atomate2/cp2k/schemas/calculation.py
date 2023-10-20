@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 from shutil import which
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, field_validator
@@ -66,24 +66,25 @@ class CalculationInput(BaseModel):
         None, description="The input structure/molecule object"
     )
 
-    atomic_kind_info: Dict = Field(
+    atomic_kind_info: dict = Field(
         None, description="Description of parameters used for each atomic kind"
     )
 
-    cp2k_input: Dict = Field(None, description="The cp2k input used for this task")
+    cp2k_input: dict = Field(None, description="The cp2k input used for this task")
 
-    dft: Dict = Field(
+    dft: dict = Field(
         None,
         description="DFT parameters used in the last calc of this task.",
     )
 
-    cp2k_global: Dict = Field(
+    cp2k_global: dict = Field(
         None,
         description="CP2K global parameters used in the last calc of this task.",
     )
 
     @field_validator("atomic_kind_info", mode="before")
-    def remove_unnecessary(cls, atomic_kind_info):
+    @classmethod
+    def remove_unnecessary(cls, atomic_kind_info) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
             if "total_pseudopotential_energy" in atomic_kind_info[k]:
@@ -91,14 +92,15 @@ class CalculationInput(BaseModel):
         return atomic_kind_info
 
     @field_validator("dft", mode="before")
-    def cleanup_dft(cls, dft):
+    @classmethod
+    def cleanup_dft(cls, dft) -> dict:
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
             dft["UKS"] = True
         return dft
 
     @classmethod
-    def from_cp2k_output(cls, output: Cp2kOutput):
+    def from_cp2k_output(cls, output: Cp2kOutput) -> "CalculationInput":
         """Initialize from Cp2kOutput object."""
         return cls(
             structure=output.initial_structure,
@@ -155,7 +157,7 @@ class CalculationOutput(BaseModel):
     bandgap: Optional[float] = Field(
         None, description="The band gap from the calculation in eV"
     )
-    v_hartree: Union[Dict[int, List[float]], None] = Field(
+    v_hartree: Union[dict[int, list[float]], None] = Field(
         None, description="Plane averaged electrostatic potential"
     )
     cbm: Optional[float] = Field(
@@ -165,17 +167,17 @@ class CalculationOutput(BaseModel):
     vbm: Optional[float] = Field(
         None, description="The valence band maximum in eV (if system is not metallic)"
     )
-    ionic_steps: List[Dict[str, Any]] = Field(
+    ionic_steps: list[dict[str, Any]] = Field(
         None, description="Energy, forces, and structure for each ionic step"
     )
-    locpot: Dict[int, List[float]] = Field(
+    locpot: dict[int, list[float]] = Field(
         None, description="Average of the local potential along the crystal axes"
     )
     run_stats: RunStatistics = Field(
         None, description="Summary of runtime statistics for this calculation"
     )
 
-    scf: Optional[List] = Field(None, description="SCF optimization steps")
+    scf: Optional[list] = Field(None, description="SCF optimization steps")
 
     @classmethod
     def from_cp2k_output(
@@ -266,12 +268,12 @@ class Calculation(BaseModel):
     task_name: str = Field(
         None, description="Name of task given by custodian (e.g., relax1, relax2)"
     )
-    output_file_paths: Dict[str, str] = Field(
+    output_file_paths: dict[str, str] = Field(
         None,
         description="Paths (relative to dir_name) of the CP2K output files "
         "associated with this calculation",
     )
-    bader: Optional[Dict] = Field(None, description="Output from the bader software")
+    bader: Optional[dict] = Field(None, description="Output from the bader software")
     run_type: RunType = Field(
         None, description="Calculation run type (e.g., HF, HSE06, PBE)"
     )
@@ -288,7 +290,7 @@ class Calculation(BaseModel):
         dir_name: Union[Path, str],
         task_name: str,
         cp2k_output_file: Union[Path, str] = "cp2k.out",
-        volumetric_files: List[str] = None,
+        volumetric_files: list[str] = None,
         parse_dos: Union[str, bool] = False,
         parse_bandstructure: Union[str, bool] = False,
         average_v_hartree: bool = True,
@@ -298,9 +300,9 @@ class Calculation(BaseModel):
         store_trajectory: bool = False,
         store_scf: bool = False,
         store_volumetric_data: Optional[
-            Tuple[str]
+            tuple[str]
         ] = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA,
-    ) -> Tuple["Calculation", Dict[Cp2kObject, Dict]]:
+    ) -> tuple["Calculation", dict[Cp2kObject, dict]]:
         """
         Create a CP2K calculation document from a directory and file paths.
 
@@ -367,7 +369,7 @@ class Calculation(BaseModel):
         completed_at = str(datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime))
 
         output_file_paths = _get_output_file_paths(volumetric_files)
-        cp2k_objects: Dict[Cp2kObject, Any] = _get_volumetric_data(
+        cp2k_objects: dict[Cp2kObject, Any] = _get_volumetric_data(
             dir_name, output_file_paths, store_volumetric_data
         )
         cp2k_objects.update(_get_basis_and_potential_files(dir_name))
@@ -376,13 +378,15 @@ class Calculation(BaseModel):
         if dos is not None:
             if strip_dos_projections:
                 dos = Dos(dos.efermi, dos.energies, dos.densities)
-            cp2k_objects[Cp2kObject.DOS] = dos  # type: ignore
+            cp2k_objects[Cp2kObject.DOS] = dos  # type: ignore[index]
 
         bandstructure = _parse_bandstructure(parse_bandstructure, cp2k_output)
         if bandstructure is not None:
             if strip_bandstructure_projections:
                 bandstructure.projections = {}
-            cp2k_objects[Cp2kObject.BANDSTRUCTURE] = bandstructure  # type: ignore
+            cp2k_objects[
+                Cp2kObject.BANDSTRUCTURE  # type: ignore[index]
+            ] = bandstructure
 
         bader = None
         if run_bader and Cp2kObject.ELECTRON_DENSITY in output_file_paths:
@@ -402,9 +406,11 @@ class Calculation(BaseModel):
         v_hartree = None
         if average_v_hartree:
             if Cp2kObject.v_hartree in cp2k_objects:
-                v_hartree = cp2k_objects[Cp2kObject.v_hartree]  # type: ignore
+                v_hartree = cp2k_objects[Cp2kObject.v_hartree]  # type: ignore[index]
             elif Cp2kObject.v_hartree in output_file_paths:
-                v_hartree_file = output_file_paths[Cp2kObject.v_hartree]  # type: ignore
+                v_hartree_file = output_file_paths[
+                    Cp2kObject.v_hartree  # type: ignore[index]
+                ]
                 v_hartree = VolumetricData.from_cube(dir_name / v_hartree_file)
                 v_hartree.scale(Ha_to_eV)
 
@@ -417,7 +423,7 @@ class Calculation(BaseModel):
 
         if store_trajectory:
             traj = _parse_trajectory(cp2k_output=cp2k_output)
-            cp2k_objects[Cp2kObject.TRAJECTORY] = traj  # type: ignore
+            cp2k_objects[Cp2kObject.TRAJECTORY] = traj  # type: ignore[index]
 
         return (
             cls(
@@ -440,7 +446,7 @@ class Calculation(BaseModel):
         )
 
 
-def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]:
+def _get_output_file_paths(volumetric_files: list[str]) -> dict[Cp2kObject, str]:
     """
     Get the output file paths for CP2K output files from the list of volumetric files.
 
@@ -451,18 +457,18 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[Cp2kObject, str]
 
     Returns
     -------
-    Dict[Cp2kObject, str]
+    dict[Cp2kObject, str]
         A mapping between the CP2K object type and the file path.
     """
     output_file_paths = {}
-    for cp2k_object in Cp2kObject:  # type: ignore
+    for cp2k_object in Cp2kObject:  # type: ignore[attr-defined]
         for volumetric_file in volumetric_files:
             if cp2k_object.name in str(volumetric_file):
                 output_file_paths[cp2k_object] = str(volumetric_file)
     return output_file_paths
 
 
-def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]:
+def _get_basis_and_potential_files(dir_name: Path) -> dict[Cp2kObject, DataFile]:
     """
     Get the path of the basis and potential files.
 
@@ -471,13 +477,13 @@ def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]
     Calculation summaries will only have metadata (i.e. the name) that matches to
     the basis/potential contained in these files.
     """
-    data: Dict[Cp2kObject, DataFile] = {}
+    data: dict[Cp2kObject, DataFile] = {}
     if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type: ignore
+        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type: ignore[index]
             str(dir_name / "BASIS")
         )
     if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore
+        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore[index]
             str(dir_name / "POTENTIAL")
         )
     return data
@@ -485,9 +491,9 @@ def _get_basis_and_potential_files(dir_name: Path) -> Dict[Cp2kObject, DataFile]
 
 def _get_volumetric_data(
     dir_name: Path,
-    output_file_paths: Dict[Cp2kObject, str],
-    store_volumetric_data: Optional[Tuple[str]],
-) -> Dict[Cp2kObject, VolumetricData]:
+    output_file_paths: dict[Cp2kObject, str],
+    store_volumetric_data: Optional[tuple[str]],
+) -> dict[Cp2kObject, VolumetricData]:
     """
     Load volumetric data files from a directory.
 
@@ -502,7 +508,7 @@ def _get_volumetric_data(
 
     Returns
     -------
-    Dict[Cp2kObject, VolumetricData]
+    dict[Cp2kObject, VolumetricData]
         A dictionary mapping the CP2K object data type (`Cp2kObject.v_hartree`,
         `Cp2kObject.electron_density`, etc) to the volumetric data object.
     """

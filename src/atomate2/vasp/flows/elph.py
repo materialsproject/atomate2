@@ -123,7 +123,9 @@ class ElectronPhononMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Flow:
         """
         Create a electron-phonon coupling workflow.
 

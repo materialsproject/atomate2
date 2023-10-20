@@ -4,13 +4,15 @@ from __future__ import annotations
 import logging
 from glob import glob
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from atomate2.aims.sets.base import AimsInputGenerator
     from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
@@ -89,7 +91,7 @@ def copy_aims_outputs(
 
 
 def write_aims_input_set(
-    structure: MSONableAtoms,
+    atoms: MSONableAtoms,
     input_set_generator: AimsInputGenerator,
     directory: str | Path = ".",
     prev_dir: str | Path | None = None,
@@ -100,8 +102,8 @@ def write_aims_input_set(
 
     Parameters
     ----------
-    structure : .MSONableAtoms
-        A structure.
+    atoms : .MSONableAtoms
+        A to write the input set for.
     input_set_generator : .AimsInputGenerator
         An GHI-aims input set generator.
     directory : str or Path
@@ -114,7 +116,7 @@ def write_aims_input_set(
     """
     properties = kwargs.get("properties", [])
     aims_is = input_set_generator.get_input_set(
-        structure, prev_dir=prev_dir, properties=properties
+        atoms, prev_dir=prev_dir, properties=properties
     )
 
     logger.info("Writing FHI-aims input set.")

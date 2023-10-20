@@ -2,7 +2,7 @@
 
 import copy
 import logging
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
@@ -49,15 +49,15 @@ class ThermalDisplacementData(BaseModel):
         "cutoff frequency in THz to avoid numerical issues in the "
         "computation of the thermal displacement parameters"
     )
-    thermal_displacement_matrix_cif: List[List[Matrix3D]] = Field(
+    thermal_displacement_matrix_cif: list[list[Matrix3D]] = Field(
         None, description="field including thermal displacement matrices in CIF format"
     )
-    thermal_displacement_matrix: List[List[Matrix3D]] = Field(
+    thermal_displacement_matrix: list[list[Matrix3D]] = Field(
         None,
         description="field including thermal displacement matrices in Cartesian "
         "coordinate system",
     )
-    temperatures_thermal_displacements: List[int] = Field(
+    temperatures_thermal_displacements: list[int] = Field(
         None,
         description="temperatures at which the thermal displacement matrices"
         "have been computed",
@@ -70,7 +70,7 @@ class PhononUUIDs(BaseModel):
     optimization_run_uuid: Optional[str] = Field(
         None, description="optimization run uuid"
     )
-    displacements_uuids: Optional[List[str]] = Field(
+    displacements_uuids: Optional[list[str]] = Field(
         None, description="The uuids of the displacement jobs."
     )
     static_run_uuid: Optional[str] = Field(None, description="static run uuid")
@@ -80,14 +80,14 @@ class PhononUUIDs(BaseModel):
 class ForceConstants(MSONable):
     """A force constants class."""
 
-    def __init__(self, force_constants: List[List[Matrix3D]]):
+    def __init__(self, force_constants: list[list[Matrix3D]]) -> None:
         self.force_constants = force_constants
 
 
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: List[Optional[str]] = Field(
+    displacements_job_dirs: list[Optional[str]] = Field(
         None, description="The directories where the displacement jobs were run."
     )
     static_run_job_dir: Optional[str] = Field(
@@ -119,30 +119,30 @@ class PhononBSDOSDoc(StructureMetadata):
         description="Phonon density of states object.",
     )
 
-    free_energies: List[float] = Field(
+    free_energies: list[float] = Field(
         None,
         description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    heat_capacities: List[float] = Field(
+    heat_capacities: list[float] = Field(
         None,
         description="heat capacities in J/K/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    internal_energies: List[float] = Field(
+    internal_energies: list[float] = Field(
         None,
         description="internal energies in  J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    entropies: List[float] = Field(
+    entropies: list[float] = Field(
         None,
         description="entropies in J/(K*mol) per formula unit"
         "for temperatures in temperature_list ",
     )
 
-    temperatures: List[int] = Field(
+    temperatures: list[int] = Field(
         None,
         description="temperatures at which the vibrational"
         " part of the free energies"
@@ -160,7 +160,7 @@ class PhononBSDOSDoc(StructureMetadata):
         None, description="Force constants between every pair of atoms in the structure"
     )
 
-    born: Optional[List[Matrix3D]] = Field(
+    born: Optional[list[Matrix3D]] = Field(
         None,
         description="born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
@@ -202,12 +202,12 @@ class PhononBSDOSDoc(StructureMetadata):
         use_symmetrized_structure: Union[str, None],
         kpath_scheme: str,
         code: str,
-        displacement_data: Dict[str, list],
+        displacement_data: dict[str, list],
         total_dft_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
-    ):
+    ) -> "PhononBSDOSDoc":
         """
         Generate collection of phonon data.
 
@@ -246,7 +246,7 @@ class PhononBSDOSDoc(StructureMetadata):
         cell = get_phonopy_structure(structure)
 
         if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-            primitive_matrix: Union[List[List[float]], str] = [
+            primitive_matrix: Union[list[list[float]], str] = [
                 [1.0, 0.0, 0.0],
                 [0.0, 1.0, 0.0],
                 [0.0, 0.0, 1.0],
@@ -488,7 +488,7 @@ class PhononBSDOSDoc(StructureMetadata):
     @staticmethod
     def get_kpath(
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
-    ):
+    ) -> tuple:
         """
         Get high-symmetry points in k-space in phonopy format.
 

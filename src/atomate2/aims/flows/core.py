@@ -1,16 +1,21 @@
 """(Work)flows for FHI-aims."""
+from __future__ import annotations
+
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Maker
-from pymatgen.core import Molecule, Structure
 
-from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.jobs.core import RelaxMaker
 from atomate2.aims.sets.core import RelaxSetGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
+
+    from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 @dataclass
@@ -36,8 +41,8 @@ class DoubleRelaxMaker(Maker):
 
     def make(
         self,
-        structure: Union[MSONableAtoms, Structure, Molecule],
-        prev_dir: Union[str, Path, None] = None,
+        structure: MSONableAtoms | Structure | Molecule,
+        prev_dir: str | Path | None = None,
     ) -> Flow:
         """Create a flow with two chained relaxations.
 
@@ -61,8 +66,8 @@ class DoubleRelaxMaker(Maker):
     @classmethod
     def from_parameters(
         cls,
-        parameters: Dict[str, Any],
-        species_defaults: Union[list[str], tuple[str, str]] = ("light", "tight"),
+        parameters: dict[str, Any],
+        species_defaults: list[str] | tuple[str, str] = ("light", "tight"),
     ):
         """Create the maker from an ASE parameter set.
 

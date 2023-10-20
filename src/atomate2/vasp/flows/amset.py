@@ -88,7 +88,7 @@ class DeformationPotentialMaker(Maker):
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
         ibands: tuple[list[int], list[int]] = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate acoustic deformation potentials.
 
@@ -206,7 +206,7 @@ class VaspAmsetMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
 
@@ -388,7 +388,7 @@ class HSEVaspAmsetMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
 

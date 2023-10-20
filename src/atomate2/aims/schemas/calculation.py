@@ -1,9 +1,10 @@
 """Schemas for FHI-aims calculation objects."""
 
 import os
+from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Optional, Union
 
 from ase.spectrum.band_structure import BandStructure
 from ase.stress import voigt_6_to_full_3x3_stress
@@ -59,11 +60,11 @@ class CalculationInput(BaseModel):
         None, description="The pymatgen structure of the input Atoms"
     )
 
-    species_info: Dict[str, Any] = Field(
+    species_info: dict[str, Any] = Field(
         None, description="Description of parameters used for each atomic species"
     )
 
-    aims_input: Dict[str, Any] = Field(
+    aims_input: dict[str, Any] = Field(
         None, description="The aims input parameters used for this task"
     )
 
@@ -129,15 +130,15 @@ class CalculationOutput(BaseModel):
         None, description="The Fermi level from the calculation in eV"
     )
 
-    forces: Optional[List[Vector3D]] = Field(
+    forces: Optional[list[Vector3D]] = Field(
         None, description="Forces acting on each atom"
     )
-    all_forces: Optional[List[List[Vector3D]]] = Field(
+    all_forces: Optional[list[list[Vector3D]]] = Field(
         None,
         description="Forces acting on each atom for each structure in the output file",
     )
     stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
-    stresses: Optional[List[Matrix3D]] = Field(
+    stresses: Optional[list[Matrix3D]] = Field(
         None, description="The atomic virial stresses"
     )
 
@@ -155,7 +156,7 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    atomic_steps: List[MSONableAtoms] = Field(
+    atomic_steps: list[MSONableAtoms] = Field(
         None, description="Structures for each ionic step"
     )
 
@@ -256,7 +257,7 @@ class Calculation(BaseModel):
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
-    output_file_paths: Dict[str, str] = Field(
+    output_file_paths: dict[str, str] = Field(
         None,
         description="Paths (relative to dir_name) of the FHI-aims output files "
         "associated with this calculation",
@@ -268,13 +269,13 @@ class Calculation(BaseModel):
         dir_name: Union[Path, str],
         task_name: str,
         aims_output_file: Union[Path, str] = "aims.out",
-        volumetric_files: List[str] = None,
+        volumetric_files: list[str] = None,
         parse_dos: Union[str, bool] = False,
         parse_bandstructure: Union[str, bool] = False,
         store_trajectory: bool = False,
         store_scf: bool = False,
         store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
-    ) -> Tuple["Calculation", Dict[AimsObject, Dict]]:
+    ) -> tuple["Calculation", dict[AimsObject, dict]]:
         """
         Create an FHI-aims calculation document from a directory and file paths.
 
@@ -331,7 +332,7 @@ class Calculation(BaseModel):
         completed_at = str(datetime.fromtimestamp(os.stat(aims_output_file).st_mtime))
 
         output_file_paths = _get_output_file_paths(volumetric_files)
-        aims_objects: Dict[AimsObject, Any] = _get_volumetric_data(
+        aims_objects: dict[AimsObject, Any] = _get_volumetric_data(
             dir_name, output_file_paths, store_volumetric_data
         )
 
@@ -369,7 +370,7 @@ class Calculation(BaseModel):
         )
 
 
-def _get_output_file_paths(volumetric_files: List[str]) -> Dict[AimsObject, str]:
+def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]:
     """Get the output file paths for FHI-aims output files.
 
     Parameters
@@ -392,9 +393,9 @@ def _get_output_file_paths(volumetric_files: List[str]) -> Dict[AimsObject, str]
 
 def _get_volumetric_data(
     dir_name: Path,
-    output_file_paths: Dict[AimsObject, str],
+    output_file_paths: dict[AimsObject, str],
     store_volumetric_data: Optional[Sequence[str]],
-) -> Dict[AimsObject, VolumetricData]:
+) -> dict[AimsObject, VolumetricData]:
     """
     Load volumetric data files from a directory.
 

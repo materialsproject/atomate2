@@ -200,7 +200,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
     nbands_factor: float = 1.2
     auto_ispin: bool = True
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
         super().__post_init__()
         self.mode = self.mode.lower()
@@ -550,7 +550,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
     added_kpoints: list[Vector3D] = field(default_factory=list)
     auto_ispin: bool = True
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
         super().__post_init__()
 
@@ -902,13 +902,13 @@ class MDSetGenerator(VaspInputGenerator):
         }
 
         try:
-            return defaults[ensemble.lower()]  # type: ignore
+            return defaults[ensemble.lower()]  # type: ignore[return-value]
         except KeyError as err:
             supported = tuple(defaults)
             raise ValueError(f"Expect {ensemble=} to be one of {supported}") from err
 
 
-def _get_nedos(vasprun: Vasprun | None, dedos: float):
+def _get_nedos(vasprun: Vasprun | None, dedos: float) -> int:
     """Automatic setting of nedos using the energy range and the energy step."""
     if vasprun is None:
         return 2000
