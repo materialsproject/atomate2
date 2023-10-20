@@ -11,7 +11,6 @@ from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
 
-
 if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
