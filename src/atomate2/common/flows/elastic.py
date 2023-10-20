@@ -2,16 +2,14 @@
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from abc import ABC, abstractmethod
 from jobflow import Flow, Maker, OnMissing
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.common.jobs.elastic import (
     fit_elastic_tensor,
     generate_elastic_deformations,
@@ -24,8 +22,8 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
