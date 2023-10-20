@@ -21,14 +21,17 @@ from atomate2.vasp.jobs.elastic import (
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from abc import ABC, abstractmethod
+
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
-    from atomate2.common.flows.elastic import BaseElasticMaker
+
     from atomate2.vasp.jobs.base import BaseVaspMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 @dataclass
-class ElasticMaker(BaseElasticMaker):
+class BaseElasticMaker(Maker, ABC):
     """
     Maker to calculate elastic constants.
 
@@ -56,10 +59,10 @@ class ElasticMaker(BaseElasticMaker):
         Whether to reduce the number of deformations using symmetry.
     symprec : float
         Symmetry precision to use in the reduction of symmetry.
-    bulk_relax_maker : .BaseVaspMaker or None
+    bulk_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
-    elastic_relax_maker : .BaseVaspMaker
+    elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
     generate_elastic_deformations_kwargs : dict
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
@@ -73,22 +76,94 @@ class ElasticMaker(BaseElasticMaker):
     order: int = 2
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
-    bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
-    )
-    elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
+    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = None
+    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = None  # constant volume optimization
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
+    def make(
+            self,
+            structure: Structure,
+            prev_dir: str | Path | None = None,
+            equilibrium_stress: Matrix3D = None,
+            conventional: bool = False,
+    ):
+        """
+        Make flow to calculate the elastic constant.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure.
+        prev_vasp_dir : str or Path or None
+            A previous vasp calculation directory to use for copying outputs.
+        equilibrium_stress : tuple of tuple of float
+            The equilibrium stress of the (relaxed) structure, if known.
+        conventional : bool
+            Whether to transform the structure into the conventional cell.
+        """
+        jobs = []
+
+        if self.bulk_relax_maker is not None:
+            # optionally relax the structure
+            bulk_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
+            bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
+            jobs.append(bulk)
+            structure = bulk.output.structure
+            prev_vasp_dir = bulk.output.dir_name
+            if equilibrium_stress is None:
+                equilibrium_stress = bulk.output.output.stress
+
+        if conventional:
+            sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
+            structure = sga.get_conventional_standard_structure()
+
+        deformations = generate_elastic_deformations(
+            structure,
+            order=self.order,
+            sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
+            **self.generate_elastic_deformations_kwargs,
+        )
+        vasp_deformation_kwargs = {}
+        if self.prev_calc_dir_argname is not None:
+            vasp_deformation_kwargs[self.prev_calc_dir_argname] = prev_dir
+        vasp_deformation_calcs = run_elastic_deformations(
+            structure,
+            deformations.output,
+            elastic_relax_maker=self.elastic_relax_maker,
+            **vasp_deformation_kwargs
+        )
+        fit_tensor = fit_elastic_tensor(
+            structure,
+            vasp_deformation_calcs.output,
+            equilibrium_stress=equilibrium_stress,
+            order=self.order,
+            symprec=self.symprec if self.sym_reduce else None,
+            **self.fit_elastic_tensor_kwargs,
+            **self.task_document_kwargs,
+        )
+
+        # allow some of the deformations to fail
+        fit_tensor.config.on_missing_references = OnMissing.NONE
+
+        jobs += [deformations, vasp_deformation_calcs, fit_tensor]
+
+        return Flow(
+            jobs=jobs,
+            output=fit_tensor.output,
+            name=self.name,
+        )
+
     @property
+    @abstractmethod
     def prev_calc_dir_argname(self):
         """Name of argument informing static maker of previous calculation directory.
-
         As this differs between different DFT codes (e.g., VASP, CP2K), it
         has been left as a property to be implemented by the inheriting class.
-
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_vasp_dir"
