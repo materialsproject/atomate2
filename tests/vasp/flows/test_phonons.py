@@ -416,13 +416,13 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     born = [
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.1]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0.1]],
     ]
     epsilon_static = [
         [5.25, 0, 0],
-        [0, 5.25, -0],
+        [0, 5.25, 0],
         [0, 0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
@@ -469,7 +469,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     ]
     epsilon_static = [
         [5.25, 0, 0],
-        [0, 5.25, -0],
+        [0, 5.25, 0],
         [0, 0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5

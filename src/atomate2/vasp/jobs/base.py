@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import which
@@ -29,6 +30,12 @@ if TYPE_CHECKING:
 
 
 _BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
+_CHARGEMOL_EXE_EXISTS = bool(
+    which("Chargemol_09_26_2017_linux_parallel")
+    or which("Chargemol_09_26_2017_linux_serial")
+    or which("chargemol")
+)
+
 _DATA_OBJECTS = [
     BandStructure,
     BandStructureSymmLine,
@@ -239,10 +246,7 @@ class BaseVaspMaker(Maker):
         )
 
 
-def get_vasp_task_document(
-    path: Path | str,
-    **kwargs,
-) -> TaskDoc:
+def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 
@@ -251,6 +255,17 @@ def get_vasp_task_document(
     )
 
     kwargs.setdefault("run_bader", SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS)
+    if SETTINGS.VASP_RUN_BADER and not _BADER_EXE_EXISTS:
+        warnings.warn(
+            f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
+            stacklevel=1,
+        )
+    kwargs.setdefault("run_ddec6", SETTINGS.VASP_RUN_DDEC6 and _CHARGEMOL_EXE_EXISTS)
+    if SETTINGS.VASP_RUN_DDEC6 and not _CHARGEMOL_EXE_EXISTS:
+        warnings.warn(
+            f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on path",
+            stacklevel=1,
+        )
 
     kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
