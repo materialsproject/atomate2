@@ -1,9 +1,10 @@
 """Job to prerelax a structure using an MD Potential."""
 
 from typing import Optional
+
 from ase.stress import voigt_6_to_full_3x3_stress
-from emmet.core.structure import StructureMetadata
 from emmet.core.math import Matrix3D, Vector3D
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Extra, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
