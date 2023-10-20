@@ -50,8 +50,8 @@ def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     job_uuid = job.uuid
-    while responses[job_uuid][1].detour:
-        job_uuid = responses[job_uuid][1].detour.all_uuids[-1]
+    while responses[job_uuid][1].replace:
+        job_uuid = responses[job_uuid][1].replace.all_uuids[2]
 
     output = responses[job_uuid][1].output
 

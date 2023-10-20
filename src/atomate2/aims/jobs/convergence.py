@@ -51,11 +51,6 @@ class ConvergenceMaker(Maker):
     epsilon: float = 0.001
     convergence_field: str = field(default_factory=str)
     convergence_steps: list = field(default_factory=list)
-    last_idx: int = None
-
-    def __post_init__(self):
-        """Set the value of the last index."""
-        self.last_idx = len(self.convergence_steps)
 
     @job
     def make(
@@ -93,7 +88,7 @@ class ConvergenceMaker(Maker):
         else:
             prev_dir_no_host = None
 
-        if idx < self.last_idx and not converged:
+        if idx < len(self.convergence_steps) and not converged:
             # finding next jobs
             next_base_job = self.maker.make(atoms, prev_dir=prev_dir_no_host)
             next_base_job.update_maker_kwargs(
@@ -125,7 +120,7 @@ class ConvergenceMaker(Maker):
             replace_flow = Flow(
                 [next_base_job, update_file_job, next_job], output=next_base_job.output
             )
-            return Response(detour=replace_flow, output=replace_flow.output)
+            return Response(replace=replace_flow, output=replace_flow.output)
 
         task_doc = AimsTaskDoc.from_directory(prev_dir_no_host)
         return ConvergenceSummary.from_aims_calc_doc(task_doc)

@@ -53,8 +53,8 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
     os.chdir(cwd)
 
     job_uuid = job.uuid
-    while responses[job_uuid][1].detour:
-        job_uuid = responses[job_uuid][1].detour.all_uuids[-1]
+    while responses[job_uuid][1].replace:
+        job_uuid = responses[job_uuid][1].replace.all_uuids[2]
 
     output = responses[job_uuid][1].output
 
