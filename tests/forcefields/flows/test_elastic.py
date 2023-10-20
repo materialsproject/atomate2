@@ -8,7 +8,7 @@ def test_elastic_wf(clean_dir, si_structure):
     from jobflow import run_locally
     from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-    #TODO test with Alumnium
+    # TODO test with Alumnium
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     # !!! Generate job
