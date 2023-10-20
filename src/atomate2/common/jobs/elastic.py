@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -19,7 +18,6 @@ from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path

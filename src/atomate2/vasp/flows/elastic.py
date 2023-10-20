@@ -6,11 +6,11 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
+from atomate2.common.flows.elastic import BaseElasticMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
 
-from atomate2.common.flows.elastic import BaseElasticMaker
 
 if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
