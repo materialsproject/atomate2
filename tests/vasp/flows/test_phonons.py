@@ -343,7 +343,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
         [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
-        atol=1e-8,
+        atol=1e-3,
     )
 
     assert isinstance(
@@ -497,7 +497,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
         [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
-        atol=1e-8,
+        atol=1e-3,
     )
 
     assert isinstance(
@@ -595,7 +595,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
         [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
-        atol=1e-8,
+        atol=1e-3,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,

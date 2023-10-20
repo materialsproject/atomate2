@@ -207,7 +207,7 @@ class ElasticDocument(StructureMetadata):
                 strains, pk_stresses, eq_stress=eq_stress
             )
         else:
-            raise ValueError(f"Unsupported elastic fitting method {fitting_method}")
+            raise ValueError(f"Unsupported elastic {fitting_method=}")
 
         ieee = result.convert_to_ieee(structure)
         property_tensor = ieee if order == 2 else ElasticTensor(ieee[0])
