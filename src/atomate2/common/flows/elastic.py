@@ -12,8 +12,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
-from atomate2.vasp.jobs.elastic import (
-    ElasticRelaxMaker,
+from atomate2.common.jobs.elastic import (
     fit_elastic_tensor,
     generate_elastic_deformations,
     run_elastic_deformations,
