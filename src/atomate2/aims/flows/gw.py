@@ -34,3 +34,5 @@ class GWConvergenceMaker(ConvergenceMaker):
 
     name: str = "GW convergence"
     maker: GWMaker = field(default_factory=GWMaker)
+    criterion_name: str = "bandgap"
+    epsilon: float = 0.1

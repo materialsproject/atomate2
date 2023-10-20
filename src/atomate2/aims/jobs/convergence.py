@@ -27,6 +27,12 @@ class ConvergenceMaker(Maker):
 
     Parameters
     ----------
+    convergence_field: str
+        An input parameter that changes to achieve convergence
+    convergence_steps: Iterable
+        An iterable of the possible values for the convergence field.
+        If the iterable is depleted and the convergence is not reached,
+        that the job is failed
     name : str
         A name for the job
     maker: .BaseAimsMaker
@@ -35,22 +41,14 @@ class ConvergenceMaker(Maker):
         A name for the convergence criterion. Must be in the run results
     epsilon: float
         A difference in criterion value for subsequent runs
-    convergence_field: str
-        An input parameter that changes to achieve convergence
-    convergence_steps: Iterable
-        An iterable of the possible values for the convergence field.
-        If the iterable is depleted and the convergence is not reached,
-        that the job is failed
-    last_idx: int
-        The index of the last allowed convergence step (max number of steps)
     """
 
+    convergence_field: str
+    convergence_steps: list | tuple
     name: str = "convergence"
     maker: BaseAimsMaker = field(default_factory=BaseAimsMaker)
-    criterion_name: str = field(default_factory=str)
-    epsilon: float = field(default_factory=float)
-    convergence_field: str = field(default_factory=str)
-    convergence_steps: list = field(default_factory=list)
+    criterion_name: str = "energy_per_atom"
+    epsilon: float = 0.001
 
     @job
     def make(
