@@ -17,7 +17,7 @@ from pymatgen.transformations.standard_transformations import (
 from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
-from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -25,7 +25,8 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
-    from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 
 logger = logging.getLogger(__name__)
 
