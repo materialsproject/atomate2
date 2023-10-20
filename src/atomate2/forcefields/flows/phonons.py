@@ -124,7 +124,9 @@ class PhononMaker(BasePhononMaker):
 
     code: str = "forcefields"
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_cell=True, relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: CHGNetRelaxMaker(
+            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+        )
     )
     static_energy_maker: ForceFieldRelaxMaker | None = field(
         default_factory=CHGNetStaticMaker
