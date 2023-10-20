@@ -12,7 +12,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.vasp.handlers import (
@@ -35,6 +35,8 @@ from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from custodian.custodian import ErrorHandler, Validator
     from emmet.core.tasks import TaskDoc
 
@@ -88,7 +90,7 @@ def run_vasp(
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run VASP.
 

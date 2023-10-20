@@ -1,6 +1,6 @@
 """Job to prerelax a structure using an MD Potential."""
 
-from typing import List, Optional
+from typing import Optional
 
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Extra, Field
@@ -8,14 +8,14 @@ from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 
-class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
+class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore[call-arg]
     """Document defining the information at each ionic step."""
 
     energy: float = Field(None, description="The free energy.")
-    forces: Optional[List[List[float]]] = Field(
+    forces: Optional[list[list[float]]] = Field(
         None, description="The forces on each atom."
     )
-    stress: Optional[List[float]] = Field(
+    stress: Optional[list[float]] = Field(
         None, description="The stress on the lattice."
     )
     structure: Structure = Field(None, description="The structure at this step.")
@@ -52,18 +52,18 @@ class OutputDoc(BaseModel):
         description="Energy per atom of the final structure in units of eV/atom.",
     )
 
-    forces: List[List[float]] = Field(
+    forces: list[list[float]] = Field(
         None,
         description="The force on each atom in units of eV/A for the final structure.",
     )
 
     # NOTE: units for stresses were converted to kbar (* -10 from standard output)
     #       to comply with MP convention
-    stress: List[float] = Field(
+    stress: list[float] = Field(
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
-    ionic_steps: List[IonicStep] = Field(
+    ionic_steps: list[IonicStep] = Field(
         None, description="Step-by-step trajectory of the structural relaxation."
     )
 
@@ -111,7 +111,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
-    ):
+    ) -> "ForceFieldTaskDocument":
         """
         Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
 

@@ -3,7 +3,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
 
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
@@ -40,16 +40,16 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     logfile: str = Field(
         None, description="Path to the log file used in the post-processing analysis"
     )
-    attributes: Dict = Field(
+    attributes: dict = Field(
         None, description="Computed properties and calculation outputs"
     )
-    metadata: Dict = Field(
+    metadata: dict = Field(
         None,
         description="Calculation metadata, including input parameters and runtime "
         "statistics",
     )
     task_label: str = Field(None, description="A description of the task")
-    tags: List[str] = Field(None, description="Optional tags for this task document")
+    tags: list[str] = Field(None, description="Optional tags for this task document")
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
@@ -61,14 +61,14 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     @classmethod
     @requires(cclib, "The cclib TaskDocument requires cclib to be installed.")
     def from_logfile(
-        cls: Type[_T],
+        cls: type[_T],
         dir_name: Union[str, Path],
-        logfile_extensions: Union[str, List[str]],
+        logfile_extensions: Union[str, list[str]],
         store_trajectory: bool = False,
-        additional_fields: Optional[Dict[str, Any]] = None,
-        analysis: Optional[Union[str, List[str]]] = None,
+        additional_fields: Optional[dict[str, Any]] = None,
+        analysis: Optional[Union[str, list[str]]] = None,
         proatom_dir: Optional[Union[Path, str]] = None,
-    ) -> _T:
+    ) -> "TaskDocument":
         """
         Create a TaskDocument from a log file.
 
@@ -254,7 +254,7 @@ def cclib_calculate(
     method: str,
     cube_file: Union[Path, str],
     proatom_dir: Union[Path, str],
-) -> Optional[Dict[str, Any]]:
+) -> Optional[dict[str, Any]]:
     """
     Run a cclib population analysis.
 
@@ -351,8 +351,8 @@ def cclib_calculate(
 
 
 def _get_homos_lumos(
-    moenergies: List[List[float]], homo_indices: List[int]
-) -> Tuple[List[float], Optional[List[float]], Optional[List[float]]]:
+    moenergies: list[list[float]], homo_indices: list[int]
+) -> tuple[list[float], Optional[list[float]], Optional[list[float]]]:
     """
     Calculate the HOMO, LUMO, and HOMO-LUMO gap energies in eV.
 
