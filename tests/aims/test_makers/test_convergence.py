@@ -15,7 +15,7 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
 
     from jobflow import run_locally
 
-    from atomate2.aims.flows.convergence import ConvergenceMaker
+    from atomate2.aims.jobs.convergence import ConvergenceMaker
     from atomate2.aims.jobs.core import StaticMaker, StaticSetGenerator
     from atomate2.aims.schemas.task import ConvergenceSummary
 
