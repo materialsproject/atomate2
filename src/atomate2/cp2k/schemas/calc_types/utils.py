@@ -103,7 +103,7 @@ def task_type(inputs: dict) -> TaskType:
     elif cp2k_run_type.upper() in ["GEO_OPT", "GEOMETRY_OPTIMIZATION", "CELL_OPT"]:
         calc_type.append("Structure Optimization")
 
-    elif cp2k_run_type.upper() in ["BAND"]:
+    elif cp2k_run_type.upper() == "BAND":
         calc_type.append("Band")
 
     elif cp2k_run_type.upper() in ["MOLECULAR_DYNAMICS", "MD"]:
@@ -121,7 +121,7 @@ def task_type(inputs: dict) -> TaskType:
     elif cp2k_run_type.upper() in ["ELECTRONIC_SPECTRA", "SPECTRA"]:
         calc_type.append("Electronic Spectra")
 
-    elif cp2k_run_type.upper() in ["NEGF"]:
+    elif cp2k_run_type.upper() == "NEGF":
         calc_type.append("Non-equilibrium Green's Function")
 
     elif cp2k_run_type.upper() in ["PINT", "DRIVER"]:
@@ -130,13 +130,13 @@ def task_type(inputs: dict) -> TaskType:
     elif cp2k_run_type.upper() in ["RT_PROPAGATION", "EHRENFEST_DYN"]:
         calc_type.append("Real-time propagation")
 
-    elif cp2k_run_type.upper() in ["BSSE"]:
+    elif cp2k_run_type.upper() == "BSSE":
         calc_type.append("Base set superposition error")
 
-    elif cp2k_run_type.upper() in ["DEBUG"]:
+    elif cp2k_run_type.upper() == "DEBUG":
         calc_type.append("Debug analysis")
 
-    elif cp2k_run_type.upper() in ["NONE"]:
+    elif cp2k_run_type.upper() == "NONE":
         calc_type.append("None")
 
     return TaskType(" ".join(calc_type))

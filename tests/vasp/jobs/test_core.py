@@ -1,3 +1,4 @@
+from numpy.testing import assert_allclose
 from pytest import approx
 
 
@@ -70,7 +71,6 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
 
 
 def test_dielectric(mock_vasp, clean_dir, si_structure):
-    import numpy as np
     from jobflow import run_locally
 
     from atomate2.vasp.jobs.core import DielectricMaker
@@ -93,12 +93,12 @@ def test_dielectric(mock_vasp, clean_dir, si_structure):
 
     # Additional validation on the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert np.allclose(
+    assert_allclose(
         output1.calcs_reversed[0].output.epsilon_static,
         [[11.41539467, 0, 0], [0, 11.41539963, 0], [0, 0, 11.41539866]],
         atol=0.01,
     )
-    assert np.allclose(
+    assert_allclose(
         output1.calcs_reversed[0].output.epsilon_ionic,
         [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
         atol=0.01,
