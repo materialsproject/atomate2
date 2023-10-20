@@ -68,5 +68,5 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
     # validation on the outputs
     renorm_output = responses[flow.output.uuid][1].output
     assert isinstance(renorm_output, ElectronPhononRenormalisationDoc)
-    assert set(renorm_output.delta_band_gaps) == pytest.approx({-0.4889, -0.4885}, 1e-4)
+    assert renorm_output.delta_band_gaps == pytest.approx([-0.4889, -0.4885], 1e-4)
     assert renorm_output.chemsys == "Si"
