@@ -31,7 +31,7 @@ class InputDoc(BaseModel):
     )
     steps: int = Field(
         None, description="Maximum number of steps allowed during relaxation."
-    )gitgit add
+    )
     relax_kwargs: Optional[dict] = Field(
         None, description="Keyword arguments that passed to the relaxer function."
     )
