@@ -16,7 +16,7 @@ def comp_system(atoms, prev_dir, test_name, work_path, ref_path, species_dir):
     shutil.copy(params_file, Path(prev_dir) / "~parameters.json")
     with open(params_file) as f:
         params = json.load(f)
-    params["species_dir"] = species_dir.as_posix()
+    params["species_dir"] = (species_dir / "light").as_posix()
     with open(params_file, "w") as f:
         json.dump(params, f)
 
@@ -52,7 +52,7 @@ def test_static_from_relax_si_no_kgrid(Si, species_dir, tmp_path, ref_path):
 
 def test_static_from_relax_default_species_dir(Si, species_dir, tmp_path, ref_path):
     sd_def = os.getenv("AIMS_SPECIES_DIR", None)
-    os.environ["AIMS_SPECIES_DIR"] = str(species_dir)
+    os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     comp_system(
         Si,
@@ -82,7 +82,7 @@ def test_static_from_relax_o2(O2, species_dir, tmp_path, ref_path):
 
 def test_static_from_relax_default_species_dir_o2(O2, species_dir, tmp_path, ref_path):
     sd_def = os.getenv("AIMS_SPECIES_DIR", None)
-    os.environ["AIMS_SPECIES_DIR"] = str(species_dir)
+    os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     comp_system(
         O2,

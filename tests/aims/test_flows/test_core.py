@@ -22,7 +22,10 @@ def test_double_relax(mock_aims, tmp_path, Si, species_dir):
         "Relaxation calculation 2": "double-relax-si/relax-2",
     }
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir).as_posix(),
+    }
 
     # settings passed to fake_run_aims
     fake_run_kwargs = {}

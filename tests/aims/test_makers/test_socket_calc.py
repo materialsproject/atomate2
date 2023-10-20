@@ -29,7 +29,10 @@ def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
     # generate job
     maker = SocketIOStaticMaker(
         input_set_generator=SocketIOSetGenerator(user_parameters=parameters)

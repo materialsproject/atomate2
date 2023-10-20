@@ -20,7 +20,10 @@ def test_base_maker(tmp_path, species_dir, mock_aims, Si):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
     # generate job
     maker = RelaxMaker.full_relaxation(user_parameters=parameters)
     maker.name = "relax_si"
@@ -47,7 +50,10 @@ def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, Si):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
     # generate job
     maker = RelaxMaker.fixed_cell_relaxation(user_parameters=parameters)
     maker.name = "relax_fixed_cell_si"

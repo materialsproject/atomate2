@@ -26,7 +26,7 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
         "SCF Calculation 2": "k-grid-convergence-si/static-3",
     }
 
-    input_set_parameters = {"species_dir": species_dir.as_posix()}
+    input_set_parameters = {"species_dir": (species_dir / "light").as_posix()}
 
     parameters = {
         "maker": StaticMaker(

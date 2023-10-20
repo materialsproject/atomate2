@@ -24,7 +24,10 @@ def test_static_maker(Si, tmp_path, mock_aims, species_dir):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
     # generate job
     maker = StaticMaker(
         input_set_generator=StaticSetGenerator(user_parameters=parameters)

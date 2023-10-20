@@ -19,7 +19,10 @@ def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, O2):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
     # generate job
     maker = GWMaker(input_set_generator=GWSetGenerator(user_parameters=parameters))
     maker.name = "gw_o2"

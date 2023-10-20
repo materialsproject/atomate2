@@ -244,18 +244,22 @@ def check_file(ref: str, test: str) -> bool:
 def test_input_set(Si, species_dir):
     parameters_json_str = (
         "{"
-        f'\n  "xc": "pbe",\n  "species_dir": "{species_dir}",\n  '
+        f'\n  "xc": "pbe",\n  "species_dir": "{species_dir / "light"}",\n  '
         '"k_grid": [\n    2,\n    2,\n    2\n  ]\n'
         "}"
     )
     parameters_json_str_rel = (
         "{"
-        f'\n  "xc": "pbe",\n  "species_dir": "{species_dir}",\n  '
+        f'\n  "xc": "pbe",\n  "species_dir": "{species_dir / "light"}",\n  '
         '"k_grid": [\n    2,\n    2,\n    2\n  ],\n  "relax_geometry": "trm 1e-3"\n'
         "}"
     )
 
-    parameters = {"xc": "pbe", "species_dir": str(species_dir), "k_grid": [2, 2, 2]}
+    parameters = {
+        "xc": "pbe",
+        "species_dir": str(species_dir / "light"),
+        "k_grid": [2, 2, 2],
+    }
     properties = ("energy", "free_energy", "forces")
 
     in_set = AimsInputSet(parameters, Si, properties)

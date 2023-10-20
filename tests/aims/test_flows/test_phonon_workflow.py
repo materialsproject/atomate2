@@ -31,7 +31,10 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
     # generate job
 
     parameters_phonon_disp = dict(compute_forces=True, **parameters)
@@ -209,7 +212,7 @@ def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
     aims_sd = os.environ.get("AIMS_SPECIES_DIR", None)
-    os.environ["AIMS_SPECIES_DIR"] = str(species_dir)
+    os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     maker = PhononMaker()
     maker.name = "phonons"
@@ -271,7 +274,7 @@ def test_phonon_default_socket_flow(Si, tmp_path, mock_aims, species_dir):
     from atomate2.aims.flows.phonons import PhononMaker
 
     aims_sd = os.environ.get("AIMS_SPECIES_DIR", None)
-    os.environ["AIMS_SPECIES_DIR"] = str(species_dir)
+    os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     # mapping from job name to directory containing test files
     ref_paths = {
