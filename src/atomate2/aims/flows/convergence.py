@@ -4,18 +4,20 @@ Checks to see if the calculations are converged with respect to a particular par
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from pathlib import Path
 
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, Response, job
+from pymatgen.core import Molecule, Structure
 
 from atomate2.aims.jobs.base import BaseAimsMaker
-from atomate2.aims.jobs.convergence import convergence_iteration
-
-if TYPE_CHECKING:
-    from pymatgen.core import Molecule, Structure
-
-    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+from atomate2.aims.jobs.convergence import (
+    CONVERGENCE_FILE_NAME,
+    update_convergence_file,
+)
+from atomate2.aims.schemas.task import AimsTaskDoc, ConvergenceSummary
+from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 @dataclass
@@ -59,21 +61,75 @@ class ConvergenceMaker(Maker):
         """Set the value of the last index."""
         self.last_idx = len(self.convergence_steps)
 
-    def make(self, structure: MSONableAtoms | Structure | Molecule) -> Flow:
+    @job
+    def make(
+        self,
+        structure: MSONableAtoms | Structure | Molecule,
+        prev_dir: str | Path | None = None,
+    ):
         """Create a top-level flow controlling convergence iteration.
 
         Parameters
         ----------
         structure : .MSONableAtoms or Structure or Molecule
             a structure to run a job
+        prev_dir: str or Path or None
+            An FHI-aims calculation directory in which previous run contents are stored
         """
-        convergence_job = convergence_iteration(
-            structure,
-            self.last_idx,
-            self.maker,
-            self.criterion_name,
-            self.epsilon,
-            self.convergence_field,
-            self.convergence_steps,
-        )
-        return Flow([convergence_job], output=convergence_job.output)
+        if isinstance(structure, (Structure, Molecule)):
+            atoms = MSONableAtoms.from_pymatgen(structure)
+        else:
+            atoms = structure.copy()
+
+        # getting the calculation index
+        idx = 0
+        converged = False
+        if prev_dir is not None:
+            prev_dir_no_host = str(prev_dir).split(":")[-1]
+            convergence_file = Path(prev_dir_no_host) / CONVERGENCE_FILE_NAME
+            idx += 1
+            if convergence_file.exists():
+                with open(convergence_file) as f:
+                    data = json.load(f)
+                    idx = data["idx"] + 1
+                    # check for convergence
+                    converged = data["converged"]
+        else:
+            prev_dir_no_host = None
+
+        if idx < self.last_idx and not converged:
+            # finding next jobs
+            next_base_job = self.maker.make(atoms, prev_dir=prev_dir_no_host)
+            next_base_job.update_maker_kwargs(
+                {
+                    "_set": {
+                        f"input_set_generator->user_parameters->"
+                        f"{self.convergence_field}": self.convergence_steps[idx]
+                    }
+                },
+                dict_mod=True,
+            )
+            next_base_job.append_name(append_str=f" {idx}")
+
+            update_file_job = update_convergence_file(
+                prev_dir=prev_dir_no_host,
+                job_dir=next_base_job.output.dir_name,
+                criterion_name=self.criterion_name,
+                epsilon=self.epsilon,
+                convergence_field=self.convergence_field,
+                convergence_steps=self.convergence_steps,
+                output=next_base_job.output,
+            )
+
+            next_job = self.make(
+                structure,
+                prev_dir=next_base_job.output.dir_name,
+            )
+
+            replace_flow = Flow(
+                [next_base_job, update_file_job, next_job], output=next_base_job.output
+            )
+            return Response(detour=replace_flow, output=replace_flow.output)
+
+        task_doc = AimsTaskDoc.from_directory(prev_dir_no_host)
+        return ConvergenceSummary.from_aims_calc_doc(task_doc)

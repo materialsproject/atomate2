@@ -45,14 +45,14 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate job
-    flow = ConvergenceMaker(**parameters).make(MSONableAtoms(Si))
+    job = ConvergenceMaker(**parameters).make(MSONableAtoms(Si))
 
     # Run the job and ensure that it finished running successfully
     os.chdir(tmp_path)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
     os.chdir(cwd)
 
-    job_uuid = flow.all_uuids[0]
+    job_uuid = job.uuid
     while responses[job_uuid][1].detour:
         job_uuid = responses[job_uuid][1].detour.all_uuids[-1]
 

@@ -44,12 +44,12 @@ def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate job
-    flow = GWConvergenceMaker(**parameters).make(MSONableAtoms(O2))
+    job = GWConvergenceMaker(**parameters).make(MSONableAtoms(O2))
 
     # Run the job and ensure that it finished running successfully
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    job_uuid = flow.all_uuids[0]
+    job_uuid = job.uuid
     while responses[job_uuid][1].detour:
         job_uuid = responses[job_uuid][1].detour.all_uuids[-1]
 
