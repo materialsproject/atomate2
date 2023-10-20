@@ -85,7 +85,7 @@ def run_lobster(
     if job_type == JobType.NORMAL:
         jobs = [LobsterJob(split_lobster_cmd, **lobster_job_kwargs)]
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     handlers: list = []
 
