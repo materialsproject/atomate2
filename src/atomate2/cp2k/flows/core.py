@@ -136,7 +136,8 @@ class BandStructureMaker(Maker):
         jobs = [static_job]
 
         outputs = {}
-        if self.bandstructure_type in ("both", "uniform"):
+        bandstructure_type = self.bandstructure_type
+        if bandstructure_type in ("both", "uniform"):
             uniform_job = self.bs_maker.make(
                 static_job.output.structure,
                 prev_cp2k_dir=static_job.output.dir_name,
@@ -150,7 +151,7 @@ class BandStructureMaker(Maker):
             }
             outputs.update(output)
 
-        if self.bandstructure_type in ("both", "line"):
+        if bandstructure_type in ("both", "line"):
             line_job = self.bs_maker.make(
                 static_job.output.structure,
                 prev_cp2k_dir=static_job.output.dir_name,
@@ -164,10 +165,8 @@ class BandStructureMaker(Maker):
             }
             outputs.update(output)
 
-        if self.bandstructure_type not in ("both", "line", "uniform"):
-            raise ValueError(
-                f"Unrecognised bandstructure type {self.bandstructure_type}"
-            )
+        if bandstructure_type not in ("both", "line", "uniform"):
+            raise ValueError(f"Unrecognised {bandstructure_type=}")
 
         return Flow(jobs, outputs, name=self.name)
 

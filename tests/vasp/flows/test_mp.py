@@ -77,9 +77,9 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[-1].uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-46.8613738)
+    task_doc = responses[flow.jobs[-1].uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-46.8613738)
 
 
 def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
@@ -106,9 +106,9 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[-1].uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.84060922)
+    task_doc = responses[flow.jobs[-1].uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.84060922)
 
 
 def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
@@ -134,6 +134,6 @@ def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[-1].uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.84145656)
+    task_doc = responses[flow.jobs[-1].uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.84145656)

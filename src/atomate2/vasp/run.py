@@ -147,7 +147,7 @@ def run_vasp(
     elif job_type == JobType.FULL_OPT:
         jobs = VaspJob.full_opt_run(split_vasp_cmd, **vasp_job_kwargs)
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     if wall_time is not None:
         handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
@@ -201,4 +201,4 @@ def should_stop_children(
             "limit of electronic/ionic iterations)!"
         )
 
-    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")
+    raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")
