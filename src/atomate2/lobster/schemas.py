@@ -28,7 +28,8 @@ from pymatgen.io.lobster import (
     SitePotential,
 )
 
-from atomate2 import __version__
+from atomate2 import SETTINGS, __version__
+from atomate2.lobster.files import FileNames
 from atomate2.utils.datetime import datetime_str
 
 try:
@@ -207,22 +208,25 @@ class CondensedBondingAnalysis(BaseModel):
         ----------
         dir_name : path or str
             The path to the folder containing the calculation outputs.
-        save_cohp_plots : bool
+        save_cohp_plots : bool.
             Bool to indicate whether automatic cohp plots and jsons
             from lobsterpy will be generated.
-        plot_kwargs : dict
+        plot_kwargs : dict.
             kwargs to change plotting options in lobsterpy.
-        which_bonds: str
+        which_bonds: str.
             mode for condensed bonding analysis: "cation-anion" and "all".
         """
         plot_kwargs = plot_kwargs or {}
         dir_name = Path(dir_name)
-        cohpcar_path = dir_name / "COHPCAR.lobster.gz"
-        charge_path = dir_name / "CHARGE.lobster.gz"
-        structure_path = dir_name / "POSCAR.gz"
-        icohplist_path = dir_name / "ICOHPLIST.lobster.gz"
-        icobilist_path = dir_name / "ICOBILIST.lobster.gz"
-        icooplist_path = dir_name / "ICOOPLIST.lobster.gz"
+        file_names = FileNames(
+            lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES  # type:ignore
+        )
+        cohpcar_path = dir_name / file_names.cohpcar_lobster  # type:ignore
+        charge_path = dir_name / file_names.charge_lobster  # type:ignore
+        structure_path = dir_name / file_names.poscar  # type:ignore
+        icohplist_path = dir_name / file_names.icohplist_lobster  # type:ignore
+        icobilist_path = dir_name / file_names.icobilist_lobster  # type:ignore
+        icooplist_path = dir_name / file_names.icooplist_lobster  # type:ignore
 
         try:
             start = time.time()
@@ -362,20 +366,25 @@ class CalcQualitySummary(BaseModel):
             A task document summarizing quality of the lobster calculation.
         """
         dir_name = Path(dir_name)
-        band_overlaps_path = dir_name / "bandOverlaps.lobster.gz"
-        charge_path = dir_name / "CHARGE.lobster.gz"
+        file_names = FileNames(
+            lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES  # type:ignore
+        )
+        band_overlaps_path = dir_name / file_names.bandoverlaps_lobster  # type:ignore
+        charge_path = dir_name / file_names.charge_lobster  # type:ignore
         doscar_path = (
-            dir_name / "DOSCAR.LSO.lobster.gz"
-            if (dir_name / "DOSCAR.LSO.lobster.gz").exists()
-            else dir_name / "DOSCAR.lobster.gz"
+            dir_name / file_names.doscar_lso_lobster  # type:ignore
+            if (dir_name / file_names.doscar_lso_lobster).exists()  # type:ignore
+            else dir_name / file_names.doscar_lobster  # type:ignore
         )
-        lobsterin_path = dir_name / "lobsterin.gz"
-        lobsterout_path = dir_name / "lobsterout.gz"
+        lobsterin_path = dir_name / file_names.lobsterin  # type:ignore
+        lobsterout_path = dir_name / file_names.lobsterout  # type:ignore
         potcar_path = (
-            dir_name / "POTCAR.gz" if (dir_name / "POTCAR.gz").exists() else None
+            dir_name / file_names.potcar  # type:ignore
+            if (dir_name / file_names.potcar).exists()  # type:ignore
+            else None
         )
-        structure_path = dir_name / "POSCAR.gz"
-        vasprun_path = dir_name / "vasprun.xml.gz"
+        structure_path = dir_name / file_names.poscar  # type:ignore
+        vasprun_path = dir_name / file_names.vasprun_xml  # type:ignore
 
         calc_quality_kwargs = {} if calc_quality_kwargs is None else calc_quality_kwargs
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
@@ -565,22 +574,34 @@ class LobsterTaskDocument(StructureMetadata):
         additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
-        # Read in lobsterout and lobsterin
-        lobsterout_doc = Lobsterout(dir_name / "lobsterout.gz").get_doc()
-        lobster_out = LobsteroutModel(**lobsterout_doc)
-        lobster_in = LobsterinModel(**Lobsterin.from_file(dir_name / "lobsterin.gz"))
+        file_names = FileNames(
+            lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES  # type:ignore
+        )
 
-        icohplist_path = dir_name / "ICOHPLIST.lobster.gz"
-        cohpcar_path = dir_name / "COHPCAR.lobster.gz"
-        charge_path = dir_name / "CHARGE.lobster.gz"
-        cobicar_path = dir_name / "COBICAR.lobster.gz"
-        coopcar_path = dir_name / "COOPCAR.lobster.gz"
-        doscar_path = dir_name / "DOSCAR.lobster.gz"
-        structure_path = dir_name / "POSCAR.gz"
-        madelung_energies_path = dir_name / "MadelungEnergies.lobster.gz"
-        site_potentials_path = dir_name / "SitePotentials.lobster.gz"
-        gross_populations_path = dir_name / "GROSSPOP.lobster.gz"
-        band_overlaps_path = dir_name / "bandOverlaps.lobster.gz"
+        # Read in lobsterout and lobsterin
+        lobsterout_doc = Lobsterout(
+            dir_name / file_names.lobsterout  # type:ignore
+        ).get_doc()
+        lobster_out = LobsteroutModel(**lobsterout_doc)
+        lobster_in = LobsterinModel(
+            **Lobsterin.from_file(dir_name / file_names.lobsterin)  # type:ignore
+        )
+
+        icohplist_path = dir_name / file_names.icohplist_lobster  # type:ignore
+        cohpcar_path = dir_name / file_names.cohpcar_lobster  # type:ignore
+        charge_path = dir_name / file_names.charge_lobster  # type:ignore
+        cobicar_path = dir_name / file_names.cobicar_lobster  # type:ignore
+        coopcar_path = dir_name / file_names.coopcar_lobster  # type:ignore
+        doscar_path = dir_name / file_names.doscar_lobster  # type:ignore
+        structure_path = dir_name / file_names.poscar  # type:ignore
+        madelung_energies_path = (
+            dir_name / file_names.madelungenergies_lobster  # type:ignore
+        )
+        site_potentials_path = (
+            dir_name / file_names.sitepotentials_lobster  # type:ignore
+        )
+        gross_populations_path = dir_name / file_names.grosspop_lobster  # type:ignore
+        band_overlaps_path = dir_name / file_names.bandoverlaps_lobster  # type:ignore
 
         # Do automatic bonding analysis with LobsterPy
         condensed_bonding_analysis = None

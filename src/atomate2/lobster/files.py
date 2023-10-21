@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
@@ -110,9 +109,17 @@ class FileNames:
 
     Updates default file names based on SETTINGS.LOBSTER_ZIP_FILES
     Makes schema code cleaner
+
+    Parameters
+    ----------
+    lobster_zip_files: bool.
+        boolean indicating whether files are gzipped at end of lobster run.
     """
 
-    def __init__(self, lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES):
+    def __init__(
+        self,
+        lobster_zip_files: bool,
+    ):
         self._lobster_zip_files = lobster_zip_files
         self._set_attributes()
 
