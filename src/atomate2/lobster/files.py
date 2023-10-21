@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
@@ -18,6 +19,7 @@ LOBSTEROUTPUT_FILES = [
     "COHPCAR.lobster",
     "COOPCAR.lobster",
     "DOSCAR.lobster",
+    "DOSCAR.LSO.lobster",
     "GROSSPOP.lobster",
     "ICOHPLIST.lobster",
     "ICOOPLIST.lobster",
@@ -100,3 +102,26 @@ def copy_lobster_files(
     )
 
     logger.info("Finished copying inputs")
+
+
+class FileNames:
+    """
+     Utility class to have list of file names as attributes.
+
+    Updates default file names based on SETTINGS.LOBSTER_ZIP_FILES
+    Makes schema code cleaner
+    """
+
+    def __init__(self, lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES):
+        self._lobster_zip_files = lobster_zip_files
+        self._set_attributes()
+
+    def _set_attributes(self):
+        """Will set file names as attributes to the class."""
+        default_file_names = ["lobsterin", *LOBSTEROUTPUT_FILES, *VASP_OUTPUT_FILES]
+        for file_name in default_file_names:
+            if self._lobster_zip_files:
+                # replace '.' with '_' in attribute names
+                setattr(self, file_name.replace(".", "_").lower(), f"{file_name}.gz")
+            else:
+                setattr(self, file_name.replace(".", "_").lower(), file_name)
