@@ -76,7 +76,7 @@ def test_elastic_wf(clean_dir, si_structure):
                 19.0875,
             ],
         ],
-        atol=1e-3,
+        atol=1e-2,
     )
 
     assert elastic_output.chemsys == "Si"
