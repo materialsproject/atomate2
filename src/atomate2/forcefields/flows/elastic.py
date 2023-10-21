@@ -7,12 +7,10 @@ from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import TightRelaxMaker
-from atomate2.vasp.jobs.elastic import ElasticRelaxMaker
+from atomate2.forcefields.jobs import CHGNetRelaxMaker
 
 if TYPE_CHECKING:
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 @dataclass
@@ -44,10 +42,10 @@ class ElasticMaker(BaseElasticMaker):
         Whether to reduce the number of deformations using symmetry.
     symprec : float
         Symmetry precision to use in the reduction of symmetry.
-    bulk_relax_maker : .BaseVaspMaker or None
+    bulk_relax_maker : .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
-    elastic_relax_maker : .BaseVaspMaker
+    elastic_relax_maker : .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
     generate_elastic_deformations_kwargs : dict
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
@@ -61,10 +59,16 @@ class ElasticMaker(BaseElasticMaker):
     order: int = 2
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
-    bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+    bulk_relax_maker: ForceFieldRelaxMaker | None = field(
+        default_factory=lambda: CHGNetRelaxMaker(
+            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+        )
     )
-    elastic_relax_maker: BaseVaspMaker = field(default_factory=ElasticRelaxMaker)
+    elastic_relax_maker: ForceFieldRelaxMaker | None = field(
+        default_factory=lambda: CHGNetRelaxMaker(
+            relax_cell=False, relax_kwargs={"fmax": 0.00001}
+        )
+    )  # constant volume relaxation
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
@@ -79,4 +83,4 @@ class ElasticMaker(BaseElasticMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_vasp_dir"
+        return
