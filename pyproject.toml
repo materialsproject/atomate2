@@ -117,6 +117,7 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
+addopts = "-p no:warnings --import-mode=importlib"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",

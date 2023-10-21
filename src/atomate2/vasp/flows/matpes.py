@@ -64,4 +64,5 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
         """
         static1 = self.static1.make(structure, prev_vasp_dir=prev_vasp_dir)
         static2 = self.static2.make(structure, prev_vasp_dir=static1.output.dir_name)
-        return Flow([static1, static2], output=static2.output, name=self.name)
+        output = {"static1": static1.output, "static2": static2.output}
+        return Flow([static1, static2], output=output, name=self.name)
