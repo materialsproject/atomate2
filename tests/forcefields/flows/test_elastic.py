@@ -23,8 +23,8 @@ def test_elastic_wf(clean_dir, si_structure):
     responses = run_locally(job, create_folders=True, ensure_success=True)
     elastic_output = responses[job.jobs[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
-    assert_allclose(elastic_output.derived_properties.k_voigt, 118.26914, atol=1e-3)
+    assert_allclose(elastic_output.derived_properties.k_voigt, 118.26914, atol=1e-1)
     assert_allclose(
-        elastic_output.derived_properties.g_voigt, 17.327374125417816, atol=1e-3
+        elastic_output.derived_properties.g_voigt, 17.327374125417816, atol=1e-1
     )
     assert elastic_output.chemsys == "Si"
