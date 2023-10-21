@@ -22,61 +22,7 @@ def test_elastic_wf(clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
     elastic_output = responses[job.jobs[-1].uuid][1].output
-    # !!! validation on the outputs
     assert isinstance(elastic_output, ElasticDocument)
-    assert assert_allclose(
-        elastic_output.elastic_tensor.ieee_format,
-        [
-            [
-                137.8521,
-                108.4777,
-                108.4777,
-                0.00,
-                0.00,
-                0.00,
-            ],
-            [
-                108.4777,
-                137.8521,
-                108.4777,
-                0.00,
-                0.00,
-                0.00,
-            ],
-            [
-                108.4777,
-                108.4777,
-                137.8521,
-                0.00,
-                0.00,
-                0.00,
-            ],
-            [
-                0.00,
-                0.00,
-                0.00,
-                19.0875,
-                0.00,
-                0.00,
-            ],
-            [
-                0.00,
-                0.00,
-                0.00,
-                0.00,
-                19.0875,
-                0.00,
-            ],
-            [
-                0.00,
-                0.00,
-                0.00,
-                0.00,
-                0.00,
-                19.0875,
-            ],
-        ],
-        atol=1e-2,
-    )
-
+    assert_allclose(elastic_output.derived_properties.k_voigt, 118.26914, atol=1e-3)
+    assert_allclose(elastic_output.derived_properties.g_voigt, 17.327374125417816, atol=1e-3)
     assert elastic_output.chemsys == "Si"
