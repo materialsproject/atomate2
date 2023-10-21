@@ -151,7 +151,7 @@ def test_lobster_task_document(lobster_test_dir):
     assert expected_gross_pop == gross_popp_here
 
 
-def test_lobster_task_document_non_gzip(lobster_test_dir):
+def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
@@ -162,7 +162,7 @@ def test_lobster_task_document_non_gzip(lobster_test_dir):
     from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
     from atomate2 import SETTINGS
-    from atomate2.common.files import gunzip_files, gzip_files
+    from atomate2.common.files import copy_files, gunzip_files
     from atomate2.lobster.schemas import (
         LobsterinModel,
         LobsteroutModel,
@@ -173,11 +173,13 @@ def test_lobster_task_document_non_gzip(lobster_test_dir):
     # Simulate settings when gzip is turned off in atomate2 settings
     SETTINGS.LOBSTER_ZIP_FILES = False
 
+    # copy test files to temp path
+    copy_files(src_dir=lobster_test_dir / "lobsteroutputs/mp-2534", dest_dir=tmp_path)
     # Unzip test files to check if schema still works
-    gunzip_files(lobster_test_dir / "lobsteroutputs/mp-2534")
+    gunzip_files(tmp_path)
 
     doc = LobsterTaskDocument.from_directory(
-        dir_name=lobster_test_dir / "lobsteroutputs/mp-2534",
+        dir_name=tmp_path,  # lobster_test_dir / "lobsteroutputs/mp-2534",
         save_cohp_plots=False,
         calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=False,
@@ -279,8 +281,8 @@ def test_lobster_task_document_non_gzip(lobster_test_dir):
 
     assert doc.chemsys == "As-Ga"
 
-    # gzip test files again as before after testing
-    gzip_files(lobster_test_dir / "lobsteroutputs/mp-2534")
+    # Reset to default atomate2 settings
+    SETTINGS.LOBSTER_ZIP_FILES = True
 
 
 def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
