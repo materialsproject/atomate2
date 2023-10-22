@@ -309,7 +309,106 @@ class CondensedBondingAnalysis(BaseModel):
                 sb_icoop,
             )
         except ValueError:
-            return (None, None, None, None, None)
+            return None, None, None, None, None
+
+
+class DosComparisons(BaseModel):
+    """Model describing the DOS comparisons field in the CalcQualitySummary model."""
+
+    tanimoto_orb_s: Optional[float] = Field(
+        None,
+        description="Tanimoto similarity index between s orbital of "
+        "VASP and LOBSTER DOS",
+    )
+    tanimoto_orb_p: Optional[float] = Field(
+        None,
+        description="Tanimoto similarity index between p orbital of "
+        "VASP and LOBSTER DOS",
+    )
+    tanimoto_orb_d: Optional[float] = Field(
+        None,
+        description="Tanimoto similarity index between d orbital of "
+        "VASP and LOBSTER DOS",
+    )
+    tanimoto_orb_f: Optional[float] = Field(
+        None,
+        description="Tanimoto similarity index between f orbital of "
+        "VASP and LOBSTER DOS",
+    )
+    tanimoto_summed: float = Field(
+        None,
+        description="Tanimoto similarity index for summed PDOS between "
+        "VASP and LOBSTER",
+    )
+    e_range: list[float] = Field(
+        None,
+        description="Energy range used for evaluating the Tanimoto similarity index",
+    )
+    n_bins: int = Field(
+        None,
+        description="Number of bins used for discretizing the VASP and LOBSTER PDOS"
+        "(Affects the Tanimoto similarity index)",
+    )
+
+
+class ChargeComparisons(BaseModel):
+    """Model describing the charges field in the CalcQualitySummary model."""
+
+    BVA_Mulliken_agree: Optional[bool] = Field(
+        None,
+        description="Bool indicating whether atoms classification as cation "
+        "or anion based on Mulliken charge signs of LOBSTER "
+        "agree with BVA analysis",
+    )
+    BVA_Loewdin_agree: Optional[bool] = Field(
+        None,
+        description="Bool indicating whether atoms classification as cations "
+        "or anions based on Loewdin charge signs of LOBSTER "
+        "agree with BVA analysis",
+    )
+
+
+class BandOverlapsComparisons(BaseModel):
+    """Model describing the Band overlaps field in the CalcQualitySummary model."""
+
+    file_exists: bool = Field(
+        None,
+        description="Boolean indicating whether the bandOverlaps.lobster "
+        "file is generated during the LOBSTER run",
+    )
+    limit_maxDeviation: Optional[float] = Field(
+        None,
+        description="Limit set for maximal deviation in pymatgen parser",
+    )
+    has_good_quality_maxDeviation: bool = Field(
+        None,
+        description="Boolean indicating whether the deviation at each k-point "
+        "is within the threshold set using limit_maxDeviation "
+        "for analyzing the bandOverlaps.lobster file data",
+    )
+    max_deviation: Optional[float] = Field(
+        None,
+        description="Maximum deviation from ideal identity matrix from the observed in "
+        "the bandOverlaps.lobster file",
+    )
+    percent_kpoints_abv_limit: Optional[float] = Field(
+        None,
+        description="Percent of k-points that show deviations above "
+        "the limit_maxDeviation threshold set in pymatgen parser.",
+    )
+
+
+class ChargeSpilling(BaseModel):
+    """Model describing the Charge spilling field in the CalcQualitySummary model."""
+
+    abs_charge_spilling: float = Field(
+        None,
+        description="Absolute charge spilling value from the LOBSTER calculation.",
+    )
+    abs_total_spilling: float = Field(
+        None,
+        description="Total charge spilling percent from the LOBSTER calculation.",
+    )
 
 
 class CalcQualitySummary(BaseModel):
@@ -320,27 +419,21 @@ class CalcQualitySummary(BaseModel):
         description="Denotes whether the calculation used the minimal basis for the "
         "LOBSTER computation",
     )
-    charge_spilling: dict = Field(
+    charge_spilling: ChargeSpilling = Field(
         None,
-        description="Dict contains the absolute charge spilling value",
+        description="Model describing the charge spilling from the LOBSTER runs",
     )
-    charges: dict = Field(
+    charges: ChargeComparisons = Field(
         None,
-        description="Dict contains the LOBSTER and BVA charge sign comparison results",
+        description="Model describing the charge sign comparison results",
     )
-    band_overlaps: dict = Field(
+    band_overlaps: BandOverlapsComparisons = Field(
         None,
-        description="Dict summarizing important information from the "
-        "bandOverlaps.lobster file to evaluate the quality of the projection, "
-        "namely whether the file is generated during projection (i.e., larger "
-        "deviations exist), the maximum deviation observed, percent of k-points "
-        "above the threshold set in the pymatgen parser (during data generation the "
-        "value was set to 0.1)",
+        description="Model describing the band overlap file analysis results",
     )
-    dos_comparisons: dict = Field(
+    dos_comparisons: DosComparisons = Field(
         None,
-        description="Dict with Tanimoto index values obtained from comparing "
-        "VASP and LOBSTER projected DOS fingerprints",
+        description="Model describing the VASP and LOBSTER PDOS comparisons results",
     )
 
     @classmethod
@@ -466,20 +559,20 @@ class LobsterTaskDocument(StructureMetadata):
     strongest_bonds_icobi: StrongestBonds = Field(
         None, description="Describes the strongest cation-anion ICOBI bonds"
     )
-    lobsterpy_data_cation_anion: CondensedBondingAnalysis = Field(
+    lobsterpy_data_cation_anion: Optional[CondensedBondingAnalysis] = Field(
         None, description="Model describing the LobsterPy data"
     )
-    lobsterpy_text_cation_anion: str = Field(
+    lobsterpy_text_cation_anion: Optional[str] = Field(
         None,
         description="Stores LobsterPy automatic analysis summary text",
     )
-    strongest_bonds_icohp_cation_anion: StrongestBonds = Field(
+    strongest_bonds_icohp_cation_anion: Optional[StrongestBonds] = Field(
         None, description="Describes the strongest cation-anion ICOHP bonds"
     )
-    strongest_bonds_icoop_cation_anion: StrongestBonds = Field(
+    strongest_bonds_icoop_cation_anion: Optional[StrongestBonds] = Field(
         None, description="Describes the strongest cation-anion ICOOP bonds"
     )
-    strongest_bonds_icobi_cation_anion: StrongestBonds = Field(
+    strongest_bonds_icobi_cation_anion: Optional[StrongestBonds] = Field(
         None, description="Describes the strongest cation-anion ICOBI bonds"
     )
     dos: LobsterCompleteDos = Field(
@@ -653,7 +746,7 @@ class LobsterTaskDocument(StructureMetadata):
         )
 
         calc_quality_text = Description.get_calc_quality_description(
-            calc_quality_summary.dict()
+            calc_quality_summary.model_dump()
         )
 
         # Read in charges
@@ -787,7 +880,8 @@ class LobsterTaskDocument(StructureMetadata):
         )
 
         _replace_inf_values(doc.lobsterpy_data.limit_icohp)
-        _replace_inf_values(doc.lobsterpy_data_cation_anion.limit_icohp)
+        if doc.lobsterpy_data_cation_anion is not None:
+            _replace_inf_values(doc.lobsterpy_data_cation_anion.limit_icohp)
 
         if save_cba_jsons:
             cba_json_save_dir = dir_name / "cba.json.gz"
@@ -936,7 +1030,7 @@ class LobsterTaskDocument(StructureMetadata):
                 # Write the json in iterable format
                 # (Necessary to load large JSON files via ijson)
                 f.write("[")
-                for attribute in doc.__fields__:
+                for attribute in doc.model_fields:
                     if attribute not in fields_to_exclude:
                         # Use monty encoder to automatically convert pymatgen
                         # objects and other data json compatible dict format
@@ -949,7 +1043,7 @@ class LobsterTaskDocument(StructureMetadata):
                             )
                         }
                         json.dump(data, f)
-                        if attribute != list(doc.__fields__.keys())[-1]:
+                        if attribute != list(doc.model_fields.keys())[-1]:
                             f.write(",")  # add comma separator between two dicts
                         del data
                 f.write("]")
@@ -960,7 +1054,7 @@ class LobsterTaskDocument(StructureMetadata):
                 doc.__setattr__("coop_data", None)
                 doc.__setattr__("cobi_data", None)
 
-        return doc.copy(update=additional_fields)
+        return doc.model_copy(update=additional_fields)
 
 
 def _replace_inf_values(data: Union[dict[Any, Any], list[Any]]):
