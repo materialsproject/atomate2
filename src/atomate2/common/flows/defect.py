@@ -59,7 +59,7 @@ class ConfigurationCoordinateMaker(Maker):
         structure: Structure,
         charge_state1: int,
         charge_state2: int,
-    ):
+    ) -> Flow:
         """
         Make a job for the calculation of the configuration coordinate diagram.
 
@@ -199,6 +199,13 @@ class FormationEnergyMaker(Maker, ABC):
         sites with selective dynamics set to True. So this setting only works
         with `relax_radius`.
 
+    validate_charge: bool
+        Whether to validate the charge of the defect. If True (default), the charge
+        of the output structure will have to match the charge of the input defect.
+        This helps catch situations where the charge of the output defect is either
+        improperly set or improperly parsed before the data is stored in the
+        database.
+
     collect_defect_entry_data: bool
         Whether to collect the defect entry data at the end of the flow.
         If True, the output of all the charge states for each symmetry distinct
@@ -234,7 +241,6 @@ class FormationEnergyMaker(Maker, ABC):
                 'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
             }
         ]
-
     """
 
     defect_relax_maker: Maker
@@ -242,9 +248,10 @@ class FormationEnergyMaker(Maker, ABC):
     name: str = "formation energy"
     relax_radius: float | str | None = None
     perturb: float | None = None
+    validate_charge: bool = True
     collect_defect_entry_data: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Apply post init updates."""
         self.validate_maker()
         if self.bulk_relax_maker is None:
@@ -256,7 +263,7 @@ class FormationEnergyMaker(Maker, ABC):
         bulk_supercell_dir: str | Path | None = None,
         supercell_matrix: npt.NDArray | None = None,
         defect_index: int | str = "",
-    ):
+    ) -> Flow:
         """Make a flow to calculate the formation energy diagram.
 
         Start a series of charged supercell relaxations from a single defect
@@ -317,6 +324,7 @@ class FormationEnergyMaker(Maker, ABC):
             },
             relax_radius=self.relax_radius,
             perturb=self.perturb,
+            validate_charge=self.validate_charge,
         )
         jobs.extend([get_sc_job, spawn_output])
 
@@ -354,7 +362,7 @@ class FormationEnergyMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def validate_maker(self):
+    def validate_maker(self) -> None:
         """Check some key settings in the relax maker.
 
         Since this workflow is pretty complex but allows you to use any

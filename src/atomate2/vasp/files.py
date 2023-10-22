@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
@@ -13,6 +13,8 @@ from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core import Structure
 
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -31,7 +33,7 @@ def copy_vasp_outputs(
     contcar_to_poscar: bool = True,
     force_overwrite: bool | str = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy VASP output files to the current directory.
 
@@ -161,7 +163,7 @@ def write_vasp_input_set(
     potcar_spec: bool = False,
     clean_prev: bool = True,
     **kwargs,
-):
+) -> None:
     """
     Write VASP input set.
 

@@ -152,13 +152,7 @@ class StaticSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        updates = {
-            "NSW": 0,
-            "ISMEAR": -5,
-            "LCHARG": True,
-            "LORBIT": 11,
-            "LREAL": False,
-        }
+        updates = {"NSW": 0, "ISMEAR": -5, "LCHARG": True, "LORBIT": 11, "LREAL": False}
         if self.lepsilon:
             # LPEAD=T: numerical evaluation of overlap integral prevents LRF_COMMUTATOR
             # errors and can lead to better expt. agreement but produces slightly
@@ -206,7 +200,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
     nbands_factor: float = 1.2
     auto_ispin: bool = True
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
         super().__post_init__()
         self.mode = self.mode.lower()
@@ -297,16 +291,16 @@ class NonSCFSetGenerator(VaspInputGenerator):
         }
 
         if vasprun is not None:
-            # set nbands
-            nbands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
-            updates["NBANDS"] = nbands
+            # set NBANDS
+            n_bands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
+            updates["NBANDS"] = n_bands
 
         if self.mode == "uniform":
-            # automatic setting of nedos using the energy range and the energy step
-            nedos = _get_nedos(vasprun, self.dedos)
+            # automatic setting of NEDOS using the energy range and the energy step
+            n_edos = _get_nedos(vasprun, self.dedos)
 
             # use tetrahedron method for DOS and optics calculations
-            updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": nedos})
+            updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": n_edos})
 
         elif self.mode in ("line", "boltztrap"):
             # if line mode or explicit k-points (boltztrap) can't use ISMEAR=-5
@@ -335,7 +329,6 @@ class HSERelaxSetGenerator(VaspInputGenerator):
         By default the hybrid input sets use ALGO = Normal which is only efficient for
         VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
         details.
-
     """
 
     def get_incar_updates(
@@ -448,7 +441,6 @@ class HSEStaticSetGenerator(VaspInputGenerator):
         By default the hybrid input sets use ALGO = Normal which is only efficient for
         VASP 6.0 and higher. See https://www.vasp.at/wiki/index.php/LFOCKACE for more
         details.
-
     """
 
     def get_incar_updates(
@@ -558,7 +550,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
     added_kpoints: list[Vector3D] = field(default_factory=list)
     auto_ispin: bool = True
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
         super().__post_init__()
 
@@ -910,13 +902,13 @@ class MDSetGenerator(VaspInputGenerator):
         }
 
         try:
-            return defaults[ensemble.lower()]  # type: ignore
+            return defaults[ensemble.lower()]  # type: ignore[return-value]
         except KeyError as err:
             supported = tuple(defaults)
             raise ValueError(f"Expect {ensemble=} to be one of {supported}") from err
 
 
-def _get_nedos(vasprun: Vasprun | None, dedos: float):
+def _get_nedos(vasprun: Vasprun | None, dedos: float) -> int:
     """Automatic setting of nedos using the energy range and the energy step."""
     if vasprun is None:
         return 2000

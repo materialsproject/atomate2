@@ -1,15 +1,20 @@
+from __future__ import annotations
+
 import logging
 from pathlib import Path
-from typing import Any, Callable, Dict, Final, Generator, Literal, Sequence, Union
+from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
 import pytest
 from pytest import MonkeyPatch
 
+if TYPE_CHECKING:
+    from collections.abc import Generator, Sequence
+
 logger = logging.getLogger("atomate2")
 
 _VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS: Dict[str, Union[str, Path]] = {}
-_FAKE_RUN_VASP_KWARGS: Dict[str, dict] = {}
+_REF_PATHS: dict[str, str | Path] = {}
+_FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 
 
 @pytest.fixture(scope="session")
@@ -217,7 +222,7 @@ def check_kpoints(ref_path: Path):
         user_ksp, ref_ksp = user_incar.get("KSPACING"), ref_incar.get("KSPACING")
         if user_ksp != ref_ksp:
             raise ValueError(
-                f"\n\nKSPACING is inconsistent: {user_ksp} != {ref_ksp} "
+                f"\n\nKSPACING is inconsistent: expected {ref_ksp}, got {user_ksp} "
                 f"\nin ref file {ref_incar_path}"
             )
 

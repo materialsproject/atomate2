@@ -32,7 +32,7 @@ def test_mp_pre_relax_maker_default_values():
         assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
 
-def test_mp_relax_maker_default_values():
+def test_mp_meta_gga_relax_maker_default_values():
     maker = MPMetaGGARelaxMaker()
     assert maker.name == "MP meta-GGA relax"
     assert {*maker.input_set_generator.config_dict} >= {"INCAR", "POTCAR"}
@@ -67,9 +67,9 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[job.uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-46.8613738)
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-46.8613738)
 
 
 def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -100,9 +100,9 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[job.uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-46.86703814)
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-46.86703814)
 
 
 def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -131,6 +131,6 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[job.uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.84140641)
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.84140641)

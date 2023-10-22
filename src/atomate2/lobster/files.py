@@ -56,7 +56,7 @@ def copy_lobster_files(
     src_dir: Path | str,
     src_host: str | None = None,
     file_client: FileClient = None,
-):
+) -> None:
     """
     Copy Lobster files to current directory.
 

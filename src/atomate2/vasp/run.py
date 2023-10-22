@@ -12,7 +12,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.vasp.handlers import (
@@ -35,6 +35,8 @@ from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from custodian.custodian import ErrorHandler, Validator
     from emmet.core.tasks import TaskDoc
 
@@ -88,7 +90,7 @@ def run_vasp(
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run VASP.
 
@@ -145,12 +147,12 @@ def run_vasp(
     elif job_type == JobType.FULL_OPT:
         jobs = VaspJob.full_opt_run(split_vasp_cmd, **vasp_job_kwargs)
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     if wall_time is not None:
         handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
-    c = Custodian(
+    custodian_manager = Custodian(
         handlers,
         jobs,
         validators=validators,
@@ -160,7 +162,7 @@ def run_vasp(
     )
 
     logger.info("Running VASP using custodian.")
-    c.run()
+    custodian_manager.run()
 
 
 def should_stop_children(
@@ -199,4 +201,4 @@ def should_stop_children(
             "limit of electronic/ionic iterations)!"
         )
 
-    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")
+    raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")

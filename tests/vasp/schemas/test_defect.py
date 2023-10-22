@@ -1,4 +1,4 @@
-def test_CCDDocument(vasp_test_dir):
+def test_ccd_document(vasp_test_dir):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
@@ -34,25 +34,25 @@ def test_CCDDocument(vasp_test_dir):
         for task, sdir in zip(static_tasks2, static_dirs2)
     ]
 
-    inputdict = defaultdict(list)
+    input_dict = defaultdict(list)
 
     for s, e, sdir in inputs1:
-        inputdict["structures1"].append(s)
-        inputdict["energies1"].append(e)
-        inputdict["static_dirs1"].append(sdir)
-        inputdict["static_uuids1"].append(sdir)
+        input_dict["structures1"].append(s)
+        input_dict["energies1"].append(e)
+        input_dict["static_dirs1"].append(sdir)
+        input_dict["static_uuids1"].append(sdir)
 
     for s, e, sdir in inputs2:
-        inputdict["structures2"].append(s)
-        inputdict["energies2"].append(e)
-        inputdict["static_dirs2"].append(sdir)
-        inputdict["static_uuids2"].append(sdir)
+        input_dict["structures2"].append(s)
+        input_dict["energies2"].append(e)
+        input_dict["static_dirs2"].append(sdir)
+        input_dict["static_uuids2"].append(sdir)
 
-    inputdict["relaxed_uuid1"] = static_dirs1[2]
-    inputdict["relaxed_uuid2"] = static_dirs2[2]
+    input_dict["relaxed_uuid1"] = static_dirs1[2]
+    input_dict["relaxed_uuid2"] = static_dirs2[2]
 
     ccd_doc = CCDDocument.from_task_outputs(
-        **inputdict,
+        **input_dict,
     )
 
     # create the CCD document

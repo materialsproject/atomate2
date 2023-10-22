@@ -13,14 +13,18 @@ from pymatgen.io.lobster import Lobsterin
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
-from atomate2.lobster.files import LOBSTEROUTPUT_FILES, copy_lobster_files
+from atomate2.lobster.files import (
+    LOBSTEROUTPUT_FILES,
+    VASP_OUTPUT_FILES,
+    copy_lobster_files,
+)
 from atomate2.lobster.run import run_lobster
 from atomate2.lobster.schemas import LobsterTaskDocument
 
 logger = logging.getLogger(__name__)
 
 
-_FILES_TO_ZIP = [*LOBSTEROUTPUT_FILES, "lobsterin"]
+_FILES_TO_ZIP = [*LOBSTEROUTPUT_FILES, "lobsterin", *VASP_OUTPUT_FILES]
 
 
 @dataclass
@@ -57,7 +61,7 @@ class LobsterMaker(Maker):
         self,
         wavefunction_dir: str | Path = None,
         basis_dict: dict | None = None,
-    ):
+    ) -> LobsterTaskDocument:
         """
         Run a LOBSTER calculation.
 

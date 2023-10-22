@@ -1,5 +1,5 @@
 """
-Module defining flows for Materials Project workflows.
+Module defining Materials Project workflows.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
@@ -100,7 +100,9 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Flow:
         """
         1, 2 or 3-step flow with optional pre-relax and final static jobs.
 
@@ -132,7 +134,7 @@ class MPGGADoubleRelaxStaticMaker(Maker):
             output = static_job.output
             jobs += [static_job]
 
-        return Flow(jobs, output, name=self.name)
+        return Flow(jobs=jobs, output=output, name=self.name)
 
 
 @dataclass
@@ -160,7 +162,9 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Flow:
         """
         Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
 
@@ -193,4 +197,4 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
             output = static_job.output
             jobs += [static_job]
 
-        return Flow(jobs, output=output, name=self.name)
+        return Flow(jobs=jobs, output=output, name=self.name)
