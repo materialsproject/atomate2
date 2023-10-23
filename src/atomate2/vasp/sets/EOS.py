@@ -174,9 +174,13 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
             A dictionary of updates to apply.
         """
         return {
+            "LCHARG": False,
+            "EDIFF": 1.0e-6,
+            "ENCUT": 680,
+            "ENAUG": 1360,
+            "KSPACING": None,
             "NSW": 0,
             "IBRION": -1,
-            "LCHARG": True,
             "LWAVE": False,
             "LREAL": False,
             "ISMEAR": -5,
@@ -190,7 +194,7 @@ MPGGA prefix = MP PBE-GGA compatible
 
 @dataclass
 class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
-    """Class to generate MP-compatible VASP GGA static input sets."""
+    """Class to generate MP-compatible VASP Meta-GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     auto_ismear: bool = False
@@ -227,6 +231,9 @@ class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
             A dictionary of updates to apply.
         """
         return {
+            "EDIFF": 1.0e-6,
+            "ENCUT": 680,
+            "ENAUG": 1360,
             "ALGO": "FAST",
             "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
             "NSW": 0,
@@ -288,7 +295,21 @@ class MPMetaGGAEosRelaxSetGenerator(EosSetGenerator):
             A dictionary of updates to apply.
         """
         # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
-        return {"LCHARG": True, "LWAVE": True, "GGA": None, "KSPACING": None}
+        return {
+            "LCHARG": True,
+            "LWAVE": True,
+            "GGA": None,
+            "KSPACING": None,
+            "NSW": 99,
+            "ISIF": 2,
+            "IBRION": 2,
+            "EDIFF": 1.0e-6,
+            "ENCUT": 680,
+            "ENAUG": 1360,
+            "LREAL": False,
+            "ISMEAR": 0,
+            "SIGMA": 0.05,
+        }
 
 
 @dataclass
@@ -345,5 +366,14 @@ class MPMetaGGAEosPreRelaxSetGenerator(EosSetGenerator):
             "LWAVE": True,
             "GGA": "PS",
             "METAGGA": None,
+            "NSW": 99,
+            "ISIF": 2,
+            "IBRION": 2,
+            "EDIFF": 1.0e-6,
+            "ENCUT": 680,
+            "ENAUG": 1360,
+            "LREAL": False,
+            "ISMEAR": 0,
+            "SIGMA": 0.05,
             "KSPACING": None,
         }
