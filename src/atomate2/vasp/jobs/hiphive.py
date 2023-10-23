@@ -120,6 +120,8 @@ def generate_hiphive_displacements(
     rattle_std: List[float],
     loop: int,
 ):
+    print(f"supercell_matrix = {supercell_matrix}")
+    print(f"manual_supercell_matrix = [[5, 0, 0], [0, 5, 0], [0, 0, 5]]")
     supercell_structure = SupercellTransformation(
             scaling_matrix=supercell_matrix
             ).apply_transformation(structure)
