@@ -22,7 +22,16 @@ from atomate2.vasp.jobs.core import (
     # MPStaticMaker,
     TightRelaxMaker,
 )
+from atomate2.common.jobs.phonons import (
+    PhononDisplacementMaker,
+    generate_frequencies_eigenvectors,
+    generate_phonon_displacements,
+    get_supercell_size,
+    get_total_energy_per_cell,
+    run_phonon_displacements,
+)
 from atomate2.vasp.jobs.hiphive import (
+    generate_hiphive_displacements,
     collect_perturbed_structures,
     quality_control,
     run_fc_to_pdos,
@@ -31,10 +40,13 @@ from atomate2.vasp.jobs.hiphive import (
     run_lattice_thermal_conductivity,
     run_static_calculations,
 )
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -120,10 +132,20 @@ class HiphiveMaker(Maker):
     task_document_kwargs: dict = field(
         default_factory=lambda: {"task_label": "dummy_label"}
     )
-    MPstatic_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+    static_energy_maker: BaseVaspMaker | None = field(
+        default_factory=lambda: StaticMaker(
+            input_set_generator=StaticSetGenerator(auto_ispin=True)
+        )
+    )
+    phonon_displacement_maker: BaseVaspMaker = field(
+        default_factory=PhononDisplacementMaker
+    )
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
+    min_length: float | None = 20.0
+    prefer_90_degrees: bool = True
+    get_supercell_size_kwargs: dict = field(default_factory=dict)
     IMAGINARY_TOL = 0.025  # in THz
     MESH_DENSITY = 100.0  # should always be a float
     T_QHA: ClassVar[list[int]] = [
@@ -156,6 +178,8 @@ class HiphiveMaker(Maker):
         mpid: str,
         structure: Structure,
         bulk_modulus: float,
+        supercell_matrix: Matrix3D | None = None,
+        total_dft_energy_per_formula_unit: float | None = None,
         fit_method: str | None = None,
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
@@ -252,7 +276,10 @@ class HiphiveMaker(Maker):
         loops = 1
 
         # 1. Relax the structure
-        bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        if isinstance(self.bulk_relax_maker, ForceFieldRelaxMaker):
+            bulk = self.bulk_relax_maker.make(structure)
+        else:
+            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
         jobs.append(bulk)
         outputs.append(bulk.output)
         print(bulk.output.structure)
@@ -272,256 +299,312 @@ class HiphiveMaker(Maker):
             }
         )
 
-        # 2. Generates supercell, performs fixed displ rattling and
-        # runs static calculations
-        vasp_static_calcs = run_static_calculations(
+        # if supercell_matrix is None, supercell size will be determined after relax
+        # maker to ensure that cell lengths are really larger than threshold
+        if supercell_matrix is None:
+            supercell_job = get_supercell_size(
+                structure,
+                self.min_length,
+                self.prefer_90_degrees,
+                **self.get_supercell_size_kwargs,
+            )
+            jobs.append(supercell_job)
+            supercell_matrix = supercell_job.output
+        
+        # Computation of static energy
+        total_dft_energy = None
+        static_run_job_dir = None
+        static_run_uuid = None
+        if (self.static_energy_maker is not None) and (
+            total_dft_energy_per_formula_unit is None
+        ):
+            if isinstance(self.static_energy_maker, ForceFieldRelaxMaker):
+                static_job = self.static_energy_maker.make(structure)
+            else:
+                static_job = self.static_energy_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            jobs.append(static_job)
+            total_dft_energy = static_job.output.output.energy
+            static_run_job_dir = static_job.output.dir_name
+            static_run_uuid = static_job.output.uuid
+            prev_vasp_dir = static_job.output.dir_name
+        elif total_dft_energy_per_formula_unit is not None:
+            # to make sure that one can reuse results from Doc
+            compute_total_energy_job = get_total_energy_per_cell(
+                total_dft_energy_per_formula_unit, structure
+            )
+            jobs.append(compute_total_energy_job)
+            total_dft_energy = compute_total_energy_job.output
+        
+        # get a phonon object from phonopy
+        displacements = generate_hiphive_displacements(
             structure=structure,
-            supercell_matrix_kwargs=supercell_matrix_kwargs,
+            supercell_matrix=supercell_matrix,
             n_structures=n_structures,
             rattle_std=rattle_std,
             loop=loops,
-            prev_vasp_dir=prev_vasp_dir,
-            MPstatic_maker=self.MPstatic_maker,
         )
-        jobs.append(vasp_static_calcs)
-        outputs.append(vasp_static_calcs.output)
-        vasp_static_calcs.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"vasp_static_calcs_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"rattleStds={rattle_std}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        jobs.append(displacements)
 
-        # 3.  Save "structure_data_{loop}.json", "relaxed_structures.json",
-        # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
-        # files locally
-        json_saver = collect_perturbed_structures(
+        # perform the phonon displacement calculations
+        vasp_displacement_calcs = run_phonon_displacements(
+            displacements=displacements.output,
             structure=structure,
-            supercell_matrix_kwargs=supercell_matrix_kwargs,
-            rattled_structures=vasp_static_calcs.output,
-            forces=vasp_static_calcs.output,
-            loop=loops,
-        )
-        json_saver.name += f" {loops}"
-        jobs.append(json_saver)
-        outputs.append(json_saver.output)
-        json_saver.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"json_saver_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"rattleStds={rattle_std}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
-
-        # 4. Hiphive Fitting of FCPs upto 4th order
-        fit_force_constant = run_hiphive(
-            fit_method=fit_method,
-            disp_cut=disp_cut,
-            bulk_modulus=bulk_modulus,
-            temperature_qha=temperature_qha,
-            mesh_density=mesh_density,
-            imaginary_tol=imaginary_tol,
-            prev_dir_json_saver=json_saver.output[3],
-            loop=loops,
-        )
-        fit_force_constant.name += f" {loops}"
-        jobs.append(fit_force_constant)
-        outputs.append(fit_force_constant.output)
-        fit_force_constant.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"fit_force_constant_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"rattleStds={rattle_std}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
-
-        # 5. Extract Phonon Band structure & DOS from FC
-        fc_pdos_pb_to_db = run_fc_to_pdos(
-            renormalized=renormalize,
-            renorm_temperature=renormalize_temperature,
-            mesh_density=mesh_density,
-            prev_dir_json_saver=fit_force_constant.output[4],
-            loop=loops,
-        )
-        fc_pdos_pb_to_db.name += f" {loops}"
-        jobs.append(fc_pdos_pb_to_db)
-        outputs.append(fc_pdos_pb_to_db.output)
-        fc_pdos_pb_to_db.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"fc_pdos_pb_to_db_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"rattleStds={rattle_std}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
-
-        # 6. Quality Control Job to check if the desired Test RMSE is achieved,
-        # if not, then increase the number of structures --
-        # Using "addintion" feature of jobflow
-        loops += 1
-        n_structures += 1
-        logger.info(f"Number of structures increased to {n_structures}")
-        logger.info(f"loop = {loops}")
-        error_check_job = quality_control(
-            rmse_test=fit_force_constant.output[5],
-            n_structures=n_structures,
-            rattle_std=rattle_std,
-            loop=loops,
-            fit_method=fit_method,
-            disp_cut=disp_cut,
-            bulk_modulus=bulk_modulus,
-            temperature_qha=temperature_qha,
-            mesh_density=mesh_density,
-            imaginary_tol=imaginary_tol,
-            prev_dir_json_saver=json_saver.output[3],
+            supercell_matrix=supercell_matrix,
+            phonon_maker=self.phonon_displacement_maker,
             prev_vasp_dir=prev_vasp_dir,
-            supercell_matrix_kwargs=supercell_matrix_kwargs,
         )
-        error_check_job.name += f" {loops}"
-        jobs.append(error_check_job)
-        outputs.append(error_check_job.output)
-        error_check_job.metadata.update(
-            {
-                "tag": [
-                    f"error_check_job_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"rattleStds={rattle_std}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        jobs.append(vasp_displacement_calcs)
 
-        # 7. Perform phonon renormalization to obtain temperature-dependent
-        # force constants using hiPhive
-        if renormalize:
-            for temperature in renormalize_temperature:
-                nconfig = renormalize_nconfig * (1 + temperature // 100)
-                renormalization = run_hiphive_renormalization(
-                    temperature=temperature,
-                    renorm_method=renormalize_method,
-                    nconfig=nconfig,
-                    conv_thresh=renormalize_conv_thresh,
-                    max_iter=renormalize_max_iter,
-                    renorm_TE_iter=renormalize_thermal_expansion_iter,
-                    bulk_modulus=bulk_modulus,
-                    mesh_density=mesh_density,
-                    prev_dir_hiphive=fit_force_constant.output[4],
-                    loop=loops,
-                )
-                renormalization.name += f" {temperature} {loops}"
-                jobs.append(renormalization)
-                outputs.append(renormalization.output)
-                renormalization.metadata.update(
-                    {
-                        "tag": [
-                            f"run_renormalization_{loops}",
-                            f"nConfigsPerStd={n_structures}",
-                            f"rattleStds={rattle_std}",
-                            f"dispCut={disp_cut}",
-                            f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                            f"loop={loops}",
-                        ]
-                    }
-                )
+        # # 2. Generates supercell, performs fixed displ rattling and
+        # # runs static calculations
+        # vasp_static_calcs = run_static_calculations(
+        #     structure=structure,
+        #     supercell_matrix_kwargs=supercell_matrix_kwargs,
+        #     n_structures=n_structures,
+        #     rattle_std=rattle_std,
+        #     loop=loops,
+        #     prev_vasp_dir=prev_vasp_dir,
+        #     MPstatic_maker=self.phonon_displacement_maker,
+        # )
+        # jobs.append(vasp_static_calcs)
+        # outputs.append(vasp_static_calcs.output)
+        # vasp_static_calcs.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"vasp_static_calcs_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"rattleStds={rattle_std}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
-        # ##### 8. Lattice thermal conductivity calculation using phono3py
-        # if calculate_lattice_thermal_conductivity:
-        #     fw_lattice_conductivity = RunPhono3py(
-        #         # phono3py_cmd=phono3py_cmd,
-        #         renormalized=renormalize,
-        #         loop=loops,
-        #         # prev_dir_hiphive=prev_dir_hiphive,
-        #         prev_dir_hiphive=fw_fit_force_constant.output[4],
+        # # 3.  Save "structure_data_{loop}.json", "relaxed_structures.json",
+        # # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
+        # # files locally
+        # json_saver = collect_perturbed_structures(
+        #     structure=structure,
+        #     supercell_matrix_kwargs=supercell_matrix_kwargs,
+        #     rattled_structures=vasp_static_calcs.output,
+        #     forces=vasp_static_calcs.output,
+        #     loop=loops,
+        # )
+        # json_saver.name += f" {loops}"
+        # jobs.append(json_saver)
+        # outputs.append(json_saver.output)
+        # json_saver.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"json_saver_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"rattleStds={rattle_std}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
+
+        # # 4. Hiphive Fitting of FCPs upto 4th order
+        # fit_force_constant = run_hiphive(
+        #     fit_method=fit_method,
+        #     disp_cut=disp_cut,
+        #     bulk_modulus=bulk_modulus,
+        #     temperature_qha=temperature_qha,
+        #     mesh_density=mesh_density,
+        #     imaginary_tol=imaginary_tol,
+        #     prev_dir_json_saver=json_saver.output[3],
+        #     loop=loops,
+        # )
+        # fit_force_constant.name += f" {loops}"
+        # jobs.append(fit_force_constant)
+        # outputs.append(fit_force_constant.output)
+        # fit_force_constant.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"fit_force_constant_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"rattleStds={rattle_std}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
+
+        # # 5. Extract Phonon Band structure & DOS from FC
+        # fc_pdos_pb_to_db = run_fc_to_pdos(
+        #     renormalized=renormalize,
+        #     renorm_temperature=renormalize_temperature,
+        #     mesh_density=mesh_density,
+        #     prev_dir_json_saver=fit_force_constant.output[4],
+        #     loop=loops,
+        # )
+        # fc_pdos_pb_to_db.name += f" {loops}"
+        # jobs.append(fc_pdos_pb_to_db)
+        # outputs.append(fc_pdos_pb_to_db.output)
+        # fc_pdos_pb_to_db.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"fc_pdos_pb_to_db_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"rattleStds={rattle_std}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
+
+        # # 6. Quality Control Job to check if the desired Test RMSE is achieved,
+        # # if not, then increase the number of structures --
+        # # Using "addintion" feature of jobflow
+        # loops += 1
+        # n_structures += 1
+        # logger.info(f"Number of structures increased to {n_structures}")
+        # logger.info(f"loop = {loops}")
+        # error_check_job = quality_control(
+        #     rmse_test=fit_force_constant.output[5],
+        #     n_structures=n_structures,
+        #     rattle_std=rattle_std,
+        #     loop=loops,
+        #     fit_method=fit_method,
+        #     disp_cut=disp_cut,
+        #     bulk_modulus=bulk_modulus,
+        #     temperature_qha=temperature_qha,
+        #     mesh_density=mesh_density,
+        #     imaginary_tol=imaginary_tol,
+        #     prev_dir_json_saver=json_saver.output[3],
+        #     prev_vasp_dir=prev_vasp_dir,
+        #     supercell_matrix_kwargs=supercell_matrix_kwargs,
+        # )
+        # error_check_job.name += f" {loops}"
+        # jobs.append(error_check_job)
+        # outputs.append(error_check_job.output)
+        # error_check_job.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"error_check_job_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"rattleStds={rattle_std}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
+
+        # # 7. Perform phonon renormalization to obtain temperature-dependent
+        # # force constants using hiPhive
+        # if renormalize:
+        #     for temperature in renormalize_temperature:
+        #         nconfig = renormalize_nconfig * (1 + temperature // 100)
+        #         renormalization = run_hiphive_renormalization(
+        #             temperature=temperature,
+        #             renorm_method=renormalize_method,
+        #             nconfig=nconfig,
+        #             conv_thresh=renormalize_conv_thresh,
+        #             max_iter=renormalize_max_iter,
+        #             renorm_TE_iter=renormalize_thermal_expansion_iter,
+        #             bulk_modulus=bulk_modulus,
+        #             mesh_density=mesh_density,
+        #             prev_dir_hiphive=fit_force_constant.output[4],
+        #             loop=loops,
         #         )
-        # else:
-        #     pass
+        #         renormalization.name += f" {temperature} {loops}"
+        #         jobs.append(renormalization)
+        #         outputs.append(renormalization.output)
+        #         renormalization.metadata.update(
+        #             {
+        #                 "tag": [
+        #                     f"run_renormalization_{loops}",
+        #                     f"nConfigsPerStd={n_structures}",
+        #                     f"rattleStds={rattle_std}",
+        #                     f"dispCut={disp_cut}",
+        #                     f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #                     f"loop={loops}",
+        #                 ]
+        #             }
+        #         )
 
-        # fw_lattice_conductivity.name += f" {loops}"
-        # jobs.append(fw_lattice_conductivity)
-        # outputs.append(fw_lattice_conductivity.output)
-        # fw_lattice_conductivity.metadata.update({"tag": [f"mp_id={mpid}",
-        # f"fw_lattice_conductivity_{loops}", f"nConfigsPerStd={n_structures}",
-        # f"rattleStds={rattle_std}", f"dispCut={disp_cut}",
-        # f"supercell_matrix_kwargs={supercell_matrix_kwargs}", f"loop={loops}"]})
+        # # ##### 8. Lattice thermal conductivity calculation using phono3py
+        # # if calculate_lattice_thermal_conductivity:
+        # #     fw_lattice_conductivity = RunPhono3py(
+        # #         # phono3py_cmd=phono3py_cmd,
+        # #         renormalized=renormalize,
+        # #         loop=loops,
+        # #         # prev_dir_hiphive=prev_dir_hiphive,
+        # #         prev_dir_hiphive=fw_fit_force_constant.output[4],
+        # #         )
+        # # else:
+        # #     pass
 
-        # 8. Lattice thermal conductivity calculation using Sheng BTE
-        if calculate_lattice_thermal_conductivity:
-            if renormalize:
-                temperatures = renormalize_temperature
-            else:
-                temperatures = thermal_conductivity_temperature
-            # Because of the way ShengBTE works, a temperature array that is not
-            # evenly spaced out (T_step) requires submission for each temperature
-            if not renormalize:
-                if isinstance(temperatures, dict):
-                    pass
-                elif type(temperatures) in [list, np.ndarray]:
-                    assert all(np.diff(temperatures) == np.diff(temperatures)[0])
-                    # if len(temperatures) == 0:
-                    #     # Handle the case when temperatures is empty
-                    #     pass
-                    # elif type(temperatures) in [list, np.ndarray]:
-                    #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+        # # fw_lattice_conductivity.name += f" {loops}"
+        # # jobs.append(fw_lattice_conductivity)
+        # # outputs.append(fw_lattice_conductivity.output)
+        # # fw_lattice_conductivity.metadata.update({"tag": [f"mp_id={mpid}",
+        # # f"fw_lattice_conductivity_{loops}", f"nConfigsPerStd={n_structures}",
+        # # f"rattleStds={rattle_std}", f"dispCut={disp_cut}",
+        # # f"supercell_matrix_kwargs={supercell_matrix_kwargs}", f"loop={loops}"]})
 
-                lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-                    shengbte_cmd=shengbte_cmd,
-                    renormalized=renormalize,
-                    temperature=temperatures,
-                    loop=loops,
-                    prev_dir_hiphive=fit_force_constant.output[4],
-                )
-            else:
-                for _t, T in enumerate(temperatures):
-                    if T == 0:
-                        continue
-                    lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-                        shengbte_cmd=shengbte_cmd,
-                        renormalized=renormalize,
-                        temperature=T,
-                        loop=loops,
-                        prev_dir_hiphive=fit_force_constant.output[4],
-                    )
+        # # 8. Lattice thermal conductivity calculation using Sheng BTE
+        # if calculate_lattice_thermal_conductivity:
+        #     if renormalize:
+        #         temperatures = renormalize_temperature
+        #     else:
+        #         temperatures = thermal_conductivity_temperature
+        #     # Because of the way ShengBTE works, a temperature array that is not
+        #     # evenly spaced out (T_step) requires submission for each temperature
+        #     if not renormalize:
+        #         if isinstance(temperatures, dict):
+        #             pass
+        #         elif type(temperatures) in [list, np.ndarray]:
+        #             assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+        #             # if len(temperatures) == 0:
+        #             #     # Handle the case when temperatures is empty
+        #             #     pass
+        #             # elif type(temperatures) in [list, np.ndarray]:
+        #             #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
 
-        lattice_thermal_conductivity.name += f" {loops}"
-        jobs.append(lattice_thermal_conductivity)
-        outputs.append(lattice_thermal_conductivity.output)
-        lattice_thermal_conductivity.metadata.update(
-            {
-                "tag": [
-                    f"run_lattice_thermal_conductivity_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"rattleStds={rattle_std}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        #         lattice_thermal_conductivity = run_lattice_thermal_conductivity(
+        #             shengbte_cmd=shengbte_cmd,
+        #             renormalized=renormalize,
+        #             temperature=temperatures,
+        #             loop=loops,
+        #             prev_dir_hiphive=fit_force_constant.output[4],
+        #         )
+        #     else:
+        #         for _t, T in enumerate(temperatures):
+        #             if T == 0:
+        #                 continue
+        #             lattice_thermal_conductivity = run_lattice_thermal_conductivity(
+        #                 shengbte_cmd=shengbte_cmd,
+        #                 renormalized=renormalize,
+        #                 temperature=T,
+        #                 loop=loops,
+        #                 prev_dir_hiphive=fit_force_constant.output[4],
+        #             )
+
+        # lattice_thermal_conductivity.name += f" {loops}"
+        # jobs.append(lattice_thermal_conductivity)
+        # outputs.append(lattice_thermal_conductivity.output)
+        # lattice_thermal_conductivity.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"run_lattice_thermal_conductivity_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"rattleStds={rattle_std}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
         return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE")

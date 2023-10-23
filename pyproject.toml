@@ -92,6 +92,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.9.0",
+    "phono3py==2.5.1"
 ]
 
 [project.scripts]

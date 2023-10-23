@@ -96,6 +96,7 @@ hbar = sp.constants.hbar  # J-s
 kB = sp.constants.Boltzmann  # J/K
 
 __all__ = [
+    "generate_hiphive_displacements"
     "run_static_calculations",
     "quality_control",
     "run_hiphive",
@@ -107,6 +108,53 @@ __all__ = [
 
 __author__ = "Alex Ganose, Junsoo Park, Zhuoying Zhu, Hrushikesh Sahasrabuddhe"
 __email__ = "aganose@lbl.gov, jsyony37@lbl.gov, zyzhu@lbl.gov, hpsahasrabuddhe@lbl.gov"
+
+
+
+
+@job
+def generate_hiphive_displacements(
+    structure: Structure,
+    supercell_matrix: np.array,
+    n_structures: int,
+    rattle_std: List[float],
+    loop: int,
+):
+    supercell_structure = SupercellTransformation(
+            scaling_matrix=supercell_matrix
+            ).apply_transformation(structure)
+    print(f"supercell_structure: {supercell_structure}")
+
+    # Generate the rattled structures ####
+    structures_ase_all = []
+    # Convert to ASE atoms
+    for i in range(len(rattle_std)):
+        supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
+        structures_ase = generate_displaced_structures(
+            supercell_ase, n_structures, rattle_std[i], loop
+        )
+        # for j in range(len(structures_ase)):
+        #     structures_ase_all.append(structures_ase[j])
+        # structures_ase_all = list(structures_ase)
+        structures_ase_all.append(structures_ase)
+    # supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
+    # structures_ase =
+    # generate_mc_rattled_structures(supercell_ase, 3, 0.01, d_min=3.294)
+    # structures_ase_all.append(structures_ase)
+
+    print(f"structures_ase_all: {structures_ase_all}")
+    # Convert back to pymatgen structure
+    structures_pymatgen = []
+    for atoms_ase in range(len(structures_ase_all)):
+        print(f"atoms: {atoms_ase}")
+        print(f"structures_ase_all[atoms]: {structures_ase_all[atoms_ase][0]}")
+        structure_i = AseAtomsAdaptor.get_structure(structures_ase_all[atoms_ase])
+        structures_pymatgen.append(structure_i)
+
+    for i in range(len(structures_pymatgen)):
+        structures_pymatgen[i].to(f"POSCAR_{i}", "poscar")
+
+    return structures_pymatgen
 
 
 @job
