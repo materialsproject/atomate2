@@ -161,7 +161,6 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
     from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
-    from atomate2 import SETTINGS
     from atomate2.common.files import copy_files, gunzip_files
     from atomate2.lobster.schemas import (
         LobsterinModel,
@@ -169,9 +168,6 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
         LobsterTaskDocument,
         StrongestBonds,
     )
-
-    # Simulate settings when gzip is turned off in atomate2 settings
-    SETTINGS.LOBSTER_ZIP_FILES = False
 
     # copy test files to temp path
     copy_files(src_dir=lobster_test_dir / "lobsteroutputs/mp-2534", dest_dir=tmp_path)
@@ -184,6 +180,7 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
         calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
+        lobster_zip_files=False,
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
@@ -280,9 +277,6 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     assert len(doc.band_overlaps["1"]) + len(doc.band_overlaps["-1"]) == 12
 
     assert doc.chemsys == "As-Ga"
-
-    # Reset to default atomate2 settings
-    SETTINGS.LOBSTER_ZIP_FILES = True
 
 
 def test_lobstertaskdocument_saved_jsons(lobster_test_dir):

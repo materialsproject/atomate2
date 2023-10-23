@@ -200,6 +200,7 @@ class CondensedBondingAnalysis(BaseModel):
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
         which_bonds: str = "all",
+        lobster_zip_files: bool = SETTINGS.LOBSTER_ZIP_FILES,  # type:ignore[assignment]
     ) -> tuple:
         """
         Create a task document from a directory containing LOBSTER files.
@@ -215,18 +216,26 @@ class CondensedBondingAnalysis(BaseModel):
             kwargs to change plotting options in lobsterpy.
         which_bonds: str.
             mode for condensed bonding analysis: "cation-anion" and "all".
+        lobster_zip_files: bool.
+            boolean indicating if the files in the directory are gzipped
         """
         plot_kwargs = plot_kwargs or {}
         dir_name = Path(dir_name)
-        file_names = FileNames(
-            lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES  # type:ignore
+        file_names = FileNames(lobster_zip_files=lobster_zip_files)
+        cohpcar_path = (
+            dir_name / file_names.cohpcar_lobster  # type:ignore[attr-defined]
         )
-        cohpcar_path = dir_name / file_names.cohpcar_lobster  # type:ignore
-        charge_path = dir_name / file_names.charge_lobster  # type:ignore
-        structure_path = dir_name / file_names.poscar  # type:ignore
-        icohplist_path = dir_name / file_names.icohplist_lobster  # type:ignore
-        icobilist_path = dir_name / file_names.icobilist_lobster  # type:ignore
-        icooplist_path = dir_name / file_names.icooplist_lobster  # type:ignore
+        charge_path = dir_name / file_names.charge_lobster  # type:ignore[attr-defined]
+        structure_path = dir_name / file_names.poscar  # type:ignore[attr-defined]
+        icohplist_path = (
+            dir_name / file_names.icohplist_lobster  # type:ignore[attr-defined]
+        )
+        icobilist_path = (
+            dir_name / file_names.icobilist_lobster  # type:ignore[attr-defined]
+        )
+        icooplist_path = (
+            dir_name / file_names.icooplist_lobster  # type:ignore[attr-defined]
+        )
 
         try:
             start = time.time()
@@ -442,6 +451,7 @@ class CalcQualitySummary(BaseModel):
         cls,
         dir_name: Union[Path, str],
         calc_quality_kwargs: dict = None,
+        lobster_zip_files: bool = SETTINGS.LOBSTER_ZIP_FILES,  # type:ignore[assignment]
     ):
         """
         Create a LOBSTER calculation quality summary from directory with LOBSTER files.
@@ -451,7 +461,9 @@ class CalcQualitySummary(BaseModel):
         dir_name : path or str
             The path to the folder containing the calculation outputs.
         calc_quality_kwargs : dict
-            kwargs to change calc quality analysis options in lobsterpy..
+            kwargs to change calc quality analysis options in lobsterpy.
+        lobster_zip_files: bool.
+            boolean indicating if the files in the directory are gzipped
 
         Returns
         -------
@@ -460,24 +472,28 @@ class CalcQualitySummary(BaseModel):
         """
         dir_name = Path(dir_name)
         file_names = FileNames(
-            lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES  # type:ignore
+            lobster_zip_files=lobster_zip_files  # type:ignore
         )
-        band_overlaps_path = dir_name / file_names.bandoverlaps_lobster  # type:ignore
-        charge_path = dir_name / file_names.charge_lobster  # type:ignore
+        band_overlaps_path = (
+            dir_name / file_names.bandoverlaps_lobster  # type:ignore[attr-defined]
+        )
+        charge_path = dir_name / file_names.charge_lobster  # type:ignore[attr-defined]
         doscar_path = (
-            dir_name / file_names.doscar_lso_lobster  # type:ignore
-            if (dir_name / file_names.doscar_lso_lobster).exists()  # type:ignore
-            else dir_name / file_names.doscar_lobster  # type:ignore
+            dir_name / file_names.doscar_lso_lobster  # type:ignore[attr-defined]
+            if (
+                dir_name / file_names.doscar_lso_lobster  # type:ignore[attr-defined]
+            ).exists()
+            else dir_name / file_names.doscar_lobster  # type:ignore[attr-defined]
         )
-        lobsterin_path = dir_name / file_names.lobsterin  # type:ignore
-        lobsterout_path = dir_name / file_names.lobsterout  # type:ignore
+        lobsterin_path = dir_name / file_names.lobsterin  # type:ignore[attr-defined]
+        lobsterout_path = dir_name / file_names.lobsterout  # type:ignore[attr-defined]
         potcar_path = (
-            dir_name / file_names.potcar  # type:ignore
-            if (dir_name / file_names.potcar).exists()  # type:ignore
+            dir_name / file_names.potcar  # type:ignore[attr-defined]
+            if (dir_name / file_names.potcar).exists()  # type:ignore[attr-defined]
             else None
         )
-        structure_path = dir_name / file_names.poscar  # type:ignore
-        vasprun_path = dir_name / file_names.vasprun_xml  # type:ignore
+        structure_path = dir_name / file_names.poscar  # type:ignore[attr-defined]
+        vasprun_path = dir_name / file_names.vasprun_xml  # type:ignore[attr-defined]
 
         calc_quality_kwargs = {} if calc_quality_kwargs is None else calc_quality_kwargs
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
@@ -629,6 +645,7 @@ class LobsterTaskDocument(StructureMetadata):
         save_cba_jsons: bool = True,
         add_coxxcar_to_task_document: bool = True,
         save_computational_data_jsons: bool = True,
+        lobster_zip_files: bool = SETTINGS.LOBSTER_ZIP_FILES,  # type:ignore[assignment]
     ) -> "LobsterTaskDocument":
         """
         Create a task document from a directory containing LOBSTER files.
@@ -658,6 +675,8 @@ class LobsterTaskDocument(StructureMetadata):
         save_computational_data_jsons : bool.
             Bool to indicate whether computational data jsons
             should be saved
+        lobster_zip_files: bool.
+            boolean indicating if the files in the directory are gzipped
 
         Returns
         -------
@@ -668,33 +687,47 @@ class LobsterTaskDocument(StructureMetadata):
         dir_name = Path(dir_name)
 
         file_names = FileNames(
-            lobster_zip_files=SETTINGS.LOBSTER_ZIP_FILES  # type:ignore
+            lobster_zip_files=lobster_zip_files  # type: ignore[assignment]
         )
 
         # Read in lobsterout and lobsterin
         lobsterout_doc = Lobsterout(
-            dir_name / file_names.lobsterout  # type:ignore
+            dir_name / file_names.lobsterout  # type:ignore[attr-defined]
         ).get_doc()
         lobster_out = LobsteroutModel(**lobsterout_doc)
         lobster_in = LobsterinModel(
-            **Lobsterin.from_file(dir_name / file_names.lobsterin)  # type:ignore
+            **Lobsterin.from_file(
+                dir_name / file_names.lobsterin  # type:ignore[attr-defined]
+            )
         )
 
-        icohplist_path = dir_name / file_names.icohplist_lobster  # type:ignore
-        cohpcar_path = dir_name / file_names.cohpcar_lobster  # type:ignore
-        charge_path = dir_name / file_names.charge_lobster  # type:ignore
-        cobicar_path = dir_name / file_names.cobicar_lobster  # type:ignore
-        coopcar_path = dir_name / file_names.coopcar_lobster  # type:ignore
-        doscar_path = dir_name / file_names.doscar_lobster  # type:ignore
-        structure_path = dir_name / file_names.poscar  # type:ignore
+        icohplist_path = (
+            dir_name / file_names.icohplist_lobster  # type:ignore[attr-defined]
+        )
+        cohpcar_path = (
+            dir_name / file_names.cohpcar_lobster  # type:ignore[attr-defined]
+        )
+        charge_path = dir_name / file_names.charge_lobster  # type:ignore[attr-defined]
+        cobicar_path = (
+            dir_name / file_names.cobicar_lobster  # type:ignore[attr-defined]
+        )
+        coopcar_path = (
+            dir_name / file_names.coopcar_lobster  # type:ignore[attr-defined]
+        )
+        doscar_path = dir_name / file_names.doscar_lobster  # type:ignore[attr-defined]
+        structure_path = dir_name / file_names.poscar  # type:ignore[attr-defined]
         madelung_energies_path = (
-            dir_name / file_names.madelungenergies_lobster  # type:ignore
+            dir_name / file_names.madelungenergies_lobster  # type:ignore[attr-defined]
         )
         site_potentials_path = (
-            dir_name / file_names.sitepotentials_lobster  # type:ignore
+            dir_name / file_names.sitepotentials_lobster  # type:ignore[attr-defined]
         )
-        gross_populations_path = dir_name / file_names.grosspop_lobster  # type:ignore
-        band_overlaps_path = dir_name / file_names.bandoverlaps_lobster  # type:ignore
+        gross_populations_path = (
+            dir_name / file_names.grosspop_lobster  # type:ignore[attr-defined]
+        )
+        band_overlaps_path = (
+            dir_name / file_names.bandoverlaps_lobster  # type:ignore[attr-defined]
+        )
 
         # Do automatic bonding analysis with LobsterPy
         condensed_bonding_analysis = None
@@ -717,6 +750,7 @@ class LobsterTaskDocument(StructureMetadata):
                 save_cohp_plots=save_cohp_plots,
                 plot_kwargs=plot_kwargs,
                 which_bonds="all",
+                lobster_zip_files=lobster_zip_files,
             )
             (
                 condensed_bonding_analysis_ionic,
@@ -729,6 +763,7 @@ class LobsterTaskDocument(StructureMetadata):
                 save_cohp_plots=save_cohp_plots,
                 plot_kwargs=plot_kwargs,
                 which_bonds="cation-anion",
+                lobster_zip_files=lobster_zip_files,
             )
         # Get lobster calculation quality summary data
         calc_quality_kwargs_default = {
@@ -742,7 +777,9 @@ class LobsterTaskDocument(StructureMetadata):
                 calc_quality_kwargs_default[args] = values
 
         calc_quality_summary = CalcQualitySummary.from_directory(
-            dir_name, calc_quality_kwargs=calc_quality_kwargs_default
+            dir_name,
+            calc_quality_kwargs=calc_quality_kwargs_default,
+            lobster_zip_files=lobster_zip_files,
         )
 
         calc_quality_text = Description.get_calc_quality_description(
@@ -763,7 +800,9 @@ class LobsterTaskDocument(StructureMetadata):
 
         # Read in LSO DOS
         lso_dos = None
-        doscar_lso_path = dir_name / "DOSCAR.LSO.lobster.gz"
+        doscar_lso_path = (
+            dir_name / file_names.doscar_lso_lobster  # type:ignore[attr-defined]
+        )
         if store_lso_dos and doscar_lso_path.exists():
             doscar_lso_lobster = Doscar(
                 doscar=doscar_lso_path, structure_file=structure_path
