@@ -145,7 +145,7 @@ class HiphiveMaker(Maker):
     )
     min_length: float | None = 13.0
     prefer_90_degrees: bool = True
-    get_supercell_size_kwargs: dict = field(default_factory=dict)
+    supercell_matrix_kwargs: dict = field(default_factory=dict)
     IMAGINARY_TOL = 0.025  # in THz
     MESH_DENSITY = 100.0  # should always be a float
     T_QHA: ClassVar[list[int]] = [
@@ -184,7 +184,6 @@ class HiphiveMaker(Maker):
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
         prev_vasp_dir: str | Path | None = None,
-        supercell_matrix_kwargs: dict | None = None,
         num_supercell_kwargs: dict | None = None,
         perturbed_structure_kwargs: dict | None = None,
         calculate_lattice_thermal_conductivity: bool = True,
@@ -293,7 +292,7 @@ class HiphiveMaker(Maker):
                     f"nConfigsPerStd={n_structures}",
                     f"rattleStds={rattle_std}",
                     f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+                    f"supercell_matrix_kwargs={self.supercell_matrix_kwargs}",
                     f"loop={loops}",
                 ]
             }
@@ -306,7 +305,7 @@ class HiphiveMaker(Maker):
                 structure,
                 self.min_length,
                 self.prefer_90_degrees,
-                **self.get_supercell_size_kwargs,
+                **self.supercell_matrix_kwargs,
             )
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output

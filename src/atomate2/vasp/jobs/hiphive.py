@@ -150,7 +150,7 @@ def generate_hiphive_displacements(
     for atoms_ase in range(len(structures_ase_all)):
         print(f"atoms: {atoms_ase}")
         print(f"structures_ase_all[atoms]: {structures_ase_all[atoms_ase][0]}")
-        structure_i = AseAtomsAdaptor.get_structure(structures_ase_all[atoms_ase])
+        structure_i = AseAtomsAdaptor.get_structure(structures_ase_all[atoms_ase][0])
         structures_pymatgen.append(structure_i)
 
     for i in range(len(structures_pymatgen)):
