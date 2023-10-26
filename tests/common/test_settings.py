@@ -18,6 +18,7 @@ def test_empty_and_invalid_config_file(clean_dir):
     assert settings.BANDGAP_TOL == 1e-4
     assert settings.VASP_RUN_BADER is False
     assert settings.VASP_RUN_DDEC6 is False
+    assert settings.DDEC6_ATOMIC_DENSITIES_DIR is None
 
     # test warning if config file is empty
     config_file_path.touch()
