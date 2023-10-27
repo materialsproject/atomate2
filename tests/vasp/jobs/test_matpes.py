@@ -99,9 +99,9 @@ def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[job.uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.84940729)
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.84940729)
 
 
 def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -125,6 +125,6 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[job.uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-17.53895667)
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-17.53895667)
