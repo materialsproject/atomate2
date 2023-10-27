@@ -17,6 +17,7 @@ from atomate2.vasp.jobs.ferroelectric import (
     interpolate_structures,
     add_interpolation_flow,
     polarization_analysis,
+    get_polarization_output,
 )
 
 __all__ = ["FerroelectricMaker"]
@@ -117,9 +118,9 @@ class FerroelectricMaker(Maker):
                                                  self.lcalcpol_maker)
 
         pol_analysis = polarization_analysis(
-            nonpolar_lcalcpol.output,
-            polar_lcalcpol.output,
-            add_interp_flow.output
+            get_polarization_output(nonpolar_lcalcpol),
+            get_polarization_output(polar_lcalcpol),
+            add_interp_flow.output,
         )
         
         jobs.append(add_interp_flow)
