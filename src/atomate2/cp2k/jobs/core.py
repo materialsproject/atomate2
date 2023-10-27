@@ -310,7 +310,7 @@ class NonSCFMaker(BaseCp2kMaker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         mode : str
             Type of band structure calculation. Options are:
@@ -385,7 +385,7 @@ class TransmuterMaker(BaseCp2kMaker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous Cp2k calculation directory to copy output files from.
         """
         transformations = get_transformations(

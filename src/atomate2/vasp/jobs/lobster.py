@@ -135,7 +135,7 @@ def update_user_incar_settings_maker(
     vasp_maker: BaseVaspMaker,
     nbands: int,
     structure: Structure,
-    prev_vasp_dir: Path | str,
+    prev_dir: Path | str,
 ) -> Response:
     """
     Update the INCAR settings of a maker.
@@ -149,7 +149,7 @@ def update_user_incar_settings_maker(
         integer indicating the correct number of bands
     structure : .Structure
         Structure object.
-    prev_vasp_dir : Path or str
+    prev_dir : Path or str
         Path or string to vasp files.
 
     Returns
@@ -158,7 +158,7 @@ def update_user_incar_settings_maker(
         LobsterStaticMaker with correct number of bands.
     """
     vasp_maker = update_user_incar_settings(vasp_maker, {"NBANDS": nbands})
-    vasp_job = vasp_maker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
+    vasp_job = vasp_maker.make(structure=structure, prev_dir=prev_dir)
     return Response(replace=vasp_job)
 
 

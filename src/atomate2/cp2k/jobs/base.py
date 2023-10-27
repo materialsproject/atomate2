@@ -138,7 +138,7 @@ class BaseCp2kMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         """
         # Apply transformations if they are present
