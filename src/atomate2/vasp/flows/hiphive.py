@@ -303,7 +303,7 @@ class HiphiveMaker(Maker):
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
                 structure,
-                self.supercell_matrix_kwargs["min_length"],
+                self.min_length,
                 self.prefer_90_degrees,
                 **self.supercell_matrix_kwargs,
             )
