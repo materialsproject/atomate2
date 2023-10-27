@@ -175,7 +175,7 @@ class MagneticOrderingOutput(BaseModel):
     relax_output: Optional[MagneticOrderingRelaxation] = Field(
         None, description="Relaxation output, if relaxation performed."
     )
-    energy_diff_relax_static: Optional[str | float] = Field(
+    energy_diff_relax_static: str | float | None = Field(
         None,
         description=(
             "Difference in energy between relaxation and final static calculation, if"
