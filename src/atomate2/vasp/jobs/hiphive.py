@@ -400,8 +400,8 @@ def collect_perturbed_structures(
             "supercell_matrix": supercell_matrix,
         }
 
-    dumpfn(rattled_structures, f"perturbed_structures_{loop}.json")
-    dumpfn(forces, f"perturbed_forces_{loop}.json")
+    dumpfn(rattled_structures["structure"], f"perturbed_structures_{loop}.json")
+    dumpfn(forces["forces"], f"perturbed_forces_{loop}.json")
     dumpfn(structure_data, f"structure_data_{loop}.json")
     dumpfn(structure, "relaxed_structure.json")
 
