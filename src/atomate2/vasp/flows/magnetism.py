@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Literal, Sequence
+from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.flows.magnetism import (
     MagneticOrderingsMaker as MagneticOrderingsMakerBase,
 )
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.schemas.magnetism import MagneticOrderingsDocument
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core.periodic_table import Element
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -48,12 +51,13 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
     ----------
     name : str
         Name of the flows produced by this Maker.
-    static_maker : StaticMaker
-        Maker used to perform static calculations for total energy.
-    relax_maker : RelaxMaker | None
-        Maker used to perform relaxations of the enumerated structures. If None,
-        relaxations will be skipped (i.e., only static calculations). By default, the
-        RelaxMaker is provided.
+    static_maker : BaseVaspMaker
+        Maker used to perform static calculations for total energy. Defaults to a
+        StaticMaker with stricter settings (EDIFF=1e-7).
+    relax_maker : BaseVaspMaker | None
+        Maker used to perform relaxations of the enumerated structures. By default, the
+        RelaxMaker is provided (preferred). If None, relaxations will be skipped and
+        only static calculations will be performed.
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
         in µB. Generally these are chosen to be high-spin, since they can relax to a
@@ -70,11 +74,16 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
         If True, will remove very unsymmetrical orderings that are likely physically
         implausible. Defaults to True.
     transformation_kwargs : dict | None
-        Keyword arguments provided to MagOrderingTransformation in pymatgen.
+        Keyword arguments provided to MagOrderingTransformation in pymatgen. Defaults to
+        None.
     """
 
     name: str = "magnetic_orderings"
-    static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+    static_maker: BaseVaspMaker = field(
+        default_factory=lambda: StaticMaker(
+            input_set_generator=StaticSetGenerator(user_incar_settings={"EDIFF": 1e-7})
+        )
+    )
     relax_maker: BaseVaspMaker | None = field(default_factory=RelaxMaker)
     default_magmoms: dict[Element, float] | None = None
     strategies: Sequence[
@@ -99,7 +108,7 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
         are performed for each ordering (i.e., relax -> static).
 
         This is necessary because different DFT codes have different previous directory
-        argnames.
+        argnames. TODO: remove this patch fix when prev_dir is implemented.
         """
         return "prev_vasp_dir"
 

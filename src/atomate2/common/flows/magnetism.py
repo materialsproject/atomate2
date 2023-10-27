@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, Sequence
+from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
@@ -15,6 +16,8 @@ from atomate2.common.jobs.magnetism import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core import Element
     from pymatgen.core.structure import Structure
 
@@ -77,7 +80,7 @@ class MagneticOrderingsMaker(Maker, ABC):
     """
 
     static_maker: Maker
-    relax_maker: Maker | None = None
+    relax_maker: Maker | None
     default_magmoms: dict[Element, float] | None = None
     strategies: Sequence[
         Literal[
@@ -99,7 +102,15 @@ class MagneticOrderingsMaker(Maker, ABC):
 
         This ensures that the same DFT code is used for both calculations.
         """
-        if self.relax_maker is not None:
+        if self.relax_maker is None:
+            warnings.warn(
+                (
+                    "No relax_maker provided, relaxations will be skipped. Please be"
+                    " sure that this is intended!"
+                ),
+                stacklevel=2,
+            )
+        else:
             static_base_maker_name = self.static_maker.__class__.__mro__[1].__name__
             relax_base_maker_name = self.relax_maker.__class__.__mro__[1].__name__
             assert relax_base_maker_name == static_base_maker_name, (
