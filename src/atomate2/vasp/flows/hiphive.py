@@ -390,10 +390,10 @@ class HiphiveMaker(Maker):
             supercell_matrix=supercell_matrix,
             # rattled_structures=vasp_static_calcs.output,
             # rattled_structures=vasp_displacement_calcs.output.structure,
-            rattled_structures=vasp_displacement_calcs.output,
+            rattled_structures=vasp_displacement_calcs.output["structure"],
             # forces=vasp_static_calcs.output,
             # forces=vasp_displacement_calcs.output.forces,
-            forces=vasp_displacement_calcs.output,
+            forces=vasp_displacement_calcs.output["forces"],
             loop=loops,
         )
         json_saver.name += f" {loops}"
