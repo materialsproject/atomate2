@@ -262,7 +262,23 @@ def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
                 stacklevel=1,
             )
     if SETTINGS.VASP_RUN_DDEC6:
-        kwargs.setdefault("run_ddec6", _CHARGEMOL_EXE_EXISTS)
+        # if VASP_RUN_DDEC6 is True but _CHARGEMOL_EXE_EXISTS is False, just silently
+        # skip running DDEC6
+        run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
+        if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
+            # if DDEC6_ATOMIC_DENSITIES_DIR is a string, use that as the path to the
+            # atomic densities.
+            if not Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
+                # warn the user if the directory doesn't exist and skip running DDEC6
+                warnings.warn(
+                    f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
+                    "DDEC6",
+                    stacklevel=1,
+                )
+            else:
+                run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
+        kwargs.setdefault("run_ddec6", run_ddec6)
+
         if not _CHARGEMOL_EXE_EXISTS:
             warnings.warn(
                 f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
