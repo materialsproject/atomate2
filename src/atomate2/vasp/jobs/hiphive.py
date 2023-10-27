@@ -295,6 +295,8 @@ def collect_perturbed_structures(
     if prev_dir_json_saver is not None:
         # copy_hiphive_outputs(prev_dir_json_saver)
         # structure = loadfn("relaxed_structure.json")
+        print(f'scaling_matrix = {supercell_matrix}')
+        print(f'structure = {structure}')
         supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
 
         # min_atoms = supercell_matrix_kwargs["min_atoms"]
@@ -344,6 +346,8 @@ def collect_perturbed_structures(
             "supercell_matrix": supercell_matrix,
         }
     else:
+        print(f'scaling_matrix = {supercell_matrix}')
+        print(f'structure = {structure}')
         supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
 
         # min_atoms = supercell_matrix_kwargs["min_atoms"]
