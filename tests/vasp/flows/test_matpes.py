@@ -31,14 +31,14 @@ def test_matpes_gga_plus_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_d
 
     # validate output
     pbe_doc = responses[flow.jobs[0].uuid][1].output
+    assert isinstance(pbe_doc, TaskDoc)
+    assert pbe_doc.output.energy == pytest.approx(-10.84940729)
+    assert pbe_doc.output.bandgap == pytest.approx(0.6172, abs=1e-3)
+
     r2scan_doc = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(r2scan_doc, TaskDoc)
     assert r2scan_doc.output.energy == pytest.approx(-17.53895666)
     assert r2scan_doc.output.bandgap == pytest.approx(0.8087999)
-
-    assert isinstance(pbe_doc, TaskDoc)
-    assert pbe_doc.output.energy == pytest.approx(-10.84940729)
-    assert pbe_doc.output.bandgap == pytest.approx(0.6172, abs=1e-3)
 
     assert isinstance(flow.output, dict)
     assert {*flow.output} == {"static1", "static2"}
