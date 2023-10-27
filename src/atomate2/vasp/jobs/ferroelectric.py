@@ -37,13 +37,12 @@ def polarization_analysis(np_lcalcpol_output,
     ordered_keys = [
         f"interpolation_{i}" for i in reversed(range(len(interp_lcalcpol_outputs)))
     ]
-    #logger.info(np_lcalcpol_output.uuid)
-    polarization_tasks = [np_lcalcpol_output.dict()]
-    polarization_tasks += [interp_lcalcpol_outputs[k].dict() for k in ordered_keys]
-    polarization_tasks += [p_lcalcpol_output.dict()]
 
-    tasks = []
-    outcars = []
+    polarization_tasks = [np_lcalcpol_output]
+    polarization_tasks += [interp_lcalcpol_outputs[k] for k in ordered_keys]
+    polarization_tasks += [p_lcalcpol_output]
+
+    task_lbls = []
     structures = []
     energies_per_atom = []
     energies = []
@@ -51,27 +50,26 @@ def polarization_analysis(np_lcalcpol_output,
     uuids = []
     
     for i, p in enumerate(polarization_tasks):
-        energies_per_atom.append(p["calcs_reversed"][0]["output"]["energy_per_atom"])
-        energies.append(p["calcs_reversed"][0]["output"]["energy"])
-        tasks.append(p["task_label"] or str(i))
-        outcars.append(p["calcs_reversed"][0]["output"]["outcar"])
-        structures.append(p["calcs_reversed"][0]["input"]["structure"])
-        job_dirs.append(p["dir_name"])
-        #uuids.append(p["uuid"])
+        energies_per_atom.append(p["energy_per_atom"])
+        energies.append(p["energy"])
+        task_lbls.append(p["task_label"] or str(i))
+        structures.append(p["structure"])
+        job_dirs.append(p["job_dir"])
+        uuids.append(p["uuid"])
 
     # If LCALCPOL = True then Outcar will parse and store the pseudopotential zvals.
-    zval_dict = p["calcs_reversed"][0]["output"]["outcar"]["zval_dict"]
+    zval_dict = p["zval_dict"]
 
     # Assumes that we want to calculate the ionic contribution to the dipole moment.
     # VASP's ionic contribution is sometimes strange.
     # See pymatgen.analysis.ferroelectricity.polarization.Polarization for details.
-    p_elecs = [outcar["p_elec"] for outcar in outcars]
-    p_ions = [get_total_ionic_dipole(structure, zval_dict) for structure in structures]
+    p_elecs = [p["p_elecs"] for p in polarization_tasks]
+    p_ions = [ get_total_ionic_dipole(st, zval_dict) for st in structures]
 
     polarization_doc = PolarizationDocument.from_pol_output(
         p_elecs, p_ions, structures, energies,
         energies_per_atom, zval_dict,
-        tasks, job_dirs, uuids)
+        task_lbls, job_dirs, uuids)
 
     return polarization_doc
 
@@ -117,8 +115,37 @@ def add_interpolation_flow(prev_dir,lcalcpol_maker):
         interpolation = lcalcpol_maker.make(interp_structure)
         interpolation.append_name(f" interpolation_{i}")
         jobs.append(interpolation)
-
-        outputs.update({f"interpolation_{i}": interpolation.output})
+        output = get_polarization_output(interpolation)
+        outputs.update({f"interpolation_{i}": output})
 
     interp_flow = Flow(jobs, outputs)
     return Response(replace=interp_flow)
+
+
+def get_polarization_output(job):
+    """
+    Extract from lcalcpol job all the relevant output to compute the polarization.
+    
+    Parameters
+    ----------
+    job_output:
+        Job where to extract relevant quantities
+    """
+
+    p = job.output
+    outcar = p["calcs_reversed"][0]["output"]["outcar"]
+    outcar = p.calcs_reversed[0].output.outcar
+    
+    output = {
+        "energy_per_atom" : p.calcs_reversed[0].output.energy_per_atom,
+        "energy" : p.calcs_reversed[0].output.energy,
+        "task_label" : p.task_label,
+        "structure" : p.structure,
+        "zval_dict" : outcar["zval_dict"],
+        "p_elecs" : outcar["p_elec"],
+        "job_dir" : p.dir_name,
+        "uuid" : p.uuid,
+    }
+
+    return output
+    
