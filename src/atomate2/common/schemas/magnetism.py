@@ -1,6 +1,8 @@
 """Schemas for magnetic ordering calculations."""
 from __future__ import annotations
 
+from typing import Optional
+
 import numpy as np
 from pydantic import BaseModel, Field
 from pymatgen.analysis.magnetism.analyzer import (
@@ -17,16 +19,18 @@ class MagneticOrderingInput(BaseModel):
     documents.
     """
 
-    structure: Structure = Field(None, description="Input structure")
-    ordering: Ordering = Field(
+    structure: Optional[Structure] = Field(None, description="Input structure")
+    ordering: Optional[Ordering] = Field(
         None,
         description=(
             "The magnetic ordering of the input structure, "
             "as defined in pymatgen.analysis.magnetism.analyzer."
         ),
     )
-    magmoms: list[float] = Field(None, description="Magnetic moments of the structure.")
-    symmetry: str = Field(None, description="Detected space group symbol.")
+    magmoms: Optional[list[float]] = Field(
+        None, description="Magnetic moments of the structure."
+    )
+    symmetry: Optional[str] = Field(None, description="Detected space group symbol.")
 
 
 class MagneticOrderingRelaxation(BaseModel):
@@ -35,47 +39,55 @@ class MagneticOrderingRelaxation(BaseModel):
     This is embedded within the MagneticOrderingOutput.
     """
 
-    uuid: str = Field(None, description="Unique ID of the calculation.")
-    dir_name: str = Field(None, description="Directory of the calculation.")
-    input: MagneticOrderingInput = Field(
+    uuid: Optional[str] = Field(None, description="Unique ID of the calculation.")
+    dir_name: Optional[str] = Field(None, description="Directory of the calculation.")
+    input: Optional[MagneticOrderingInput] = Field(
         None, description="Input ordering information."
     )
-    structure: Structure = Field(
+    structure: Optional[Structure] = Field(
         None, description="Final structure from the calculation."
     )
-    symmetry_changed: bool = Field(None, description="Whether or not symmetry changed.")
-    ordering_changed: bool = Field(
+    symmetry_changed: Optional[bool] = Field(
+        None, description="Whether or not symmetry changed."
+    )
+    ordering_changed: Optional[bool] = Field(
         None,
         description=(
             "Specifies whether or not the magnetic ordering changed during the"
             " calculation."
         ),
     )
-    ordering: Ordering = Field(None, description="Final ordering from the calculation.")
-    magmoms: list[float] = Field(None, description="Magnetic moments of the structure.")
-    symmetry: str = Field(None, description="Detected space group symbol.")
-    energy: float = Field(None, description="Final energy result from the calculation.")
-    energy_per_atom: float = Field(None, description="Final energy per atom.")
-    total_magnetization: float = Field(
+    ordering: Optional[Ordering] = Field(
+        None, description="Final ordering from the calculation."
+    )
+    magmoms: Optional[list[float]] = Field(
+        None, description="Magnetic moments of the structure."
+    )
+    symmetry: Optional[str] = Field(None, description="Detected space group symbol.")
+    energy: Optional[float] = Field(
+        None, description="Final energy result from the calculation."
+    )
+    energy_per_atom: Optional[float] = Field(None, description="Final energy per atom.")
+    total_magnetization: Optional[float] = Field(
         None,
         description=(
             "Total magnetization as a sum of individual atomic moments in "
             "the calculated unit cell."
         ),
     )
-    total_magnetization_per_formula_unit: float = Field(
+    total_magnetization_per_formula_unit: Optional[float] = Field(
         None, description="Total magnetization normalized to per formula unit."
     )
-    total_magnetization_per_unit_volume: float = Field(
-        None, description="Total magnetiation noramlized to per unit volume."
+    total_magnetization_per_unit_volume: Optional[float] = Field(
+        None, description="Total magnetiation normalized to per unit volume."
     )
 
     @classmethod
     def from_structures_and_energies(
         cls,
-        input_structure,
-        output_structure,
-        output_energy,
+        input_structure: Structure,
+        output_structure: Structure,
+        output_energy: float,
         uuid: str | None = None,
         dir_name: str | None = None,
     ) -> MagneticOrderingRelaxation:
@@ -108,58 +120,62 @@ class MagneticOrderingOutput(BaseModel):
     relax_output field.
     """
 
-    uuid: str = Field(None, description="Unique ID of the calculation.")
-    dir_name: str = Field(None, description="Directory of the calculation.")
-    input: MagneticOrderingInput = Field(
+    uuid: Optional[str] = Field(None, description="Unique ID of the calculation.")
+    dir_name: Optional[str] = Field(None, description="Directory of the calculation.")
+    input: Optional[MagneticOrderingInput] = Field(
         None, description="Input ordering information."
     )
-    structure: Structure = Field(
+    structure: Optional[Structure] = Field(
         None, description="Final structure from the calculation."
     )
-    ordering: Ordering = Field(
+    ordering: Optional[Ordering] = Field(
         None,
         description=(
             "The magnetic ordering of the output structure, "
             "as defined in pymatgen.analysis.magnetism.analyzer."
         ),
     )
-    magmoms: list[float] = Field(None, description="Magnetic moments of the structure.")
-    symmetry: str = Field(None, description="Detected space group symbol.")
-    energy: float = Field(None, description="Final energy result from the calculation.")
-    energy_per_atom: float = Field(None, description="Final energy per atom.")
-    total_magnetization: float = Field(
+    magmoms: Optional[list[float]] = Field(
+        None, description="Magnetic moments of the structure."
+    )
+    symmetry: Optional[str] = Field(None, description="Detected space group symbol.")
+    energy: Optional[float] = Field(
+        None, description="Final energy result from the calculation."
+    )
+    energy_per_atom: Optional[float] = Field(None, description="Final energy per atom.")
+    total_magnetization: Optional[float] = Field(
         None,
         description=(
             "Total magnetization as a sum of individual atomic moments in "
             "the calculated unit cell."
         ),
     )
-    total_magnetization_per_formula_unit: float = Field(
+    total_magnetization_per_formula_unit: Optional[float] = Field(
         None, description="Total magnetization normalized to per formula unit."
     )
-    total_magnetization_per_unit_volume: float = Field(
-        None, description="Total magnetiation noramlized to per unit volume."
+    total_magnetization_per_unit_volume: Optional[float] = Field(
+        None, description="Total magnetiation normalized to per unit volume."
     )
-    ordering_changed: bool = Field(
+    ordering_changed: Optional[bool] = Field(
         None,
         description=(
             "Specifies whether or not the magnetic ordering changed during the"
             " calculation."
         ),
     )
-    symmetry_changed: bool = Field(
+    symmetry_changed: Optional[bool] = Field(
         None,
         description=(
             "Specifies whether or not the symmetry changed during the calculation."
         ),
     )
-    energy_above_ground_state_per_atom: float = Field(
+    energy_above_ground_state_per_atom: Optional[float] = Field(
         None, description="Energy per atom above the calculated ground state ordering."
     )
-    relax_output: MagneticOrderingRelaxation | None = Field(
+    relax_output: Optional[MagneticOrderingRelaxation] = Field(
         None, description="Relaxation output, if relaxation performed."
     )
-    energy_diff_relax_static: str | float | None = Field(
+    energy_diff_relax_static: Optional[str | float] = Field(
         None,
         description=(
             "Difference in energy between relaxation and final static calculation, if"
@@ -219,34 +235,38 @@ class MagneticOrderingsDocument(BaseModel):
     MagneticOrderingsBuilder corresponding to your DFT code.
     """
 
-    formula: str = Field(
+    formula: Optional[str] = Field(
         None,
         description="Formula taken from pymatgen.core.structure.Structure.formula.",
     )
-    formula_pretty: str = Field(
+    formula_pretty: Optional[str] = Field(
         None,
         description="Cleaned representation of the formula",
     )
-    parent_structure: Structure = Field(
+    parent_structure: Optional[Structure] = Field(
         None,
         description=(
             "The parent structure from which individual magnetic "
             "orderings are generated."
         ),
     )
-    outputs: list[MagneticOrderingOutput] = Field(
+    outputs: Optional[list[MagneticOrderingOutput]] = Field(
         None,
         description="All magnetic ordering calculation results for this structure.",
     )
-    ground_state_uuid: str = Field(
+    ground_state_uuid: Optional[str] = Field(
         None, description="UUID of the ground state ordering."
     )
-    ground_state_structure: Structure = Field(
+    ground_state_structure: Optional[Structure] = Field(
         None, description="Ground state structure."
     )
-    ground_state_ordering: Ordering = Field(None, description="Ground state ordering.")
-    ground_state_energy: float = Field(None, description="Ground state energy.")
-    ground_state_energy_per_atom: float = Field(
+    ground_state_ordering: Optional[Ordering] = Field(
+        None, description="Ground state ordering."
+    )
+    ground_state_energy: Optional[float] = Field(
+        None, description="Ground state energy."
+    )
+    ground_state_energy_per_atom: Optional[float] = Field(
         None, description="Ground state energy."
     )
 
