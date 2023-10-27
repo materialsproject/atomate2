@@ -271,12 +271,13 @@ def run_static_calculations(
 
 @job
 def collect_perturbed_structures(
+    structure: Structure,
     # supercell_matrix_kwargs: Dict[str, Any],
     supercell_matrix: np.array,
     rattled_structures: list[Structure],
     forces: list[list[float]],
     loop: int = None,
-    structure: Optional[Structure] = None,
+    # structure: Optional[Structure] = None,
     prev_dir_json_saver: Optional[str] = None,
 ):
     """
