@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable, Literal, Sequence
+from typing import TYPE_CHECKING, Callable, Literal
 
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from emmet.core.tasks import TaskDoc
     from pymatgen.core.structure import Structure
 
@@ -61,7 +63,7 @@ def enumerate_magnetic_orderings(
         antiferromagnetic, antiferromagnetic_by_motif, ferrimagnetic_by_motif and
         ferrimagnetic_by_species (here, "motif", means to use a different ordering
         parameter for symmetry inequivalent sites). Defaults to
-        ("ferromagnetic", "antiferromagnetic).
+        ("ferromagnetic", "antiferromagnetic").
     automatic : bool
         If True, will automatically choose sensible strategies
     truncate_by_symmetry: : bool
@@ -91,7 +93,7 @@ def enumerate_magnetic_orderings(
 def run_ordering_calculations(
     orderings: tuple[Sequence[Structure], Sequence[str]],
     static_maker: Maker,
-    relax_maker: Maker | None = None,
+    relax_maker: Maker | None,
     prev_calc_dir_argname: str | None = None,
 ) -> Response:
     """Run calculations for a list of enumerated orderings.
@@ -112,7 +114,7 @@ def run_ordering_calculations(
     prev_calc_dir_argname : str | None
         The name of the argument to pass to the static_maker to indicate the previous
         calculation directory if relax_maker is not None (e.g., for VASP:
-        "prev_vasp_dir").
+        "prev_vasp_dir"). TODO: remove this patch fix when prev_dir is implemented.
 
     Returns
     -------
