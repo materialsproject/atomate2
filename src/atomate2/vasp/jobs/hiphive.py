@@ -407,27 +407,16 @@ def collect_perturbed_structures(
 
     with open(f"perturbed_structures_{loop}.json") as file:
         all_structures_loop = json.load(file)
-        all_structures_loop = all_structures_loop["structures"]
+        # all_structures_loop = all_structures_loop["structures"]
         dumpfn(all_structures_loop, f"perturbed_structures_{loop}.json")
 
     with open(f"perturbed_forces_{loop}.json") as file:
         all_forces_loop = json.load(file)
 
-    structure_data = loadfn(f"structure_data_{loop}.json")
+    # structure_data = loadfn(f"structure_data_{loop}.json")
 
     # Convert list of lists to numpy arrayx
     all_forces_loop = np.array(all_forces_loop["forces"])
-
-    # output = []
-    # for sublist in all_forces_loop:
-    #     output.append(
-    #         {
-    #             "@module": "numpy",
-    #             "@class": "array",
-    #             "dtype": str(all_forces_loop.dtype),
-    #             "data": sublist.tolist(),
-    #         }
-    #     )
 
     output = [
         {
