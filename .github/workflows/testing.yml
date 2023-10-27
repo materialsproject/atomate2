@@ -42,6 +42,19 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
+      - name: Install enumlib
+        run: |
+          git clone --recursive https://github.com/msg-byu/enumlib.git
+          cd enumlib/symlib/src
+          export F90=gfortran
+          make
+          cd ../../src
+          make enum.x
+          sudo mv enum.x /usr/local/bin/
+          cd ..
+          sudo cp aux_src/makeStr.py /usr/local/bin/
+        continue-on-error: true # This is not critical to succeed.
+
       - name: Install dependencies
         # ERROR: Cannot install atomate2 and atomate2[strict,tests]==0.0.1 because these package versions have conflicting dependencies.
         # The conflict is caused by:
