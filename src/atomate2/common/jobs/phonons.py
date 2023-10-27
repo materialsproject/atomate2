@@ -246,8 +246,7 @@ def generate_frequencies_eigenvectors(
     )
 
 
-# @job(data=["forces", "displaced_structures"])
-@job
+@job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
     displacements,
     structure: Structure,
