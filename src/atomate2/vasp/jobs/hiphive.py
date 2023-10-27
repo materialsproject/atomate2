@@ -996,27 +996,27 @@ def fit_force_constants(
     logger.info("We are starting Joblib_s parallellized jobs")
 
     # With Joblib's parallellization
-    cutoff_results = Parallel(n_jobs=-1, backend="multiprocessing")
-    (delayed(_run_cutoffs)(i, cutoffs, n_cutoffs, parent_structure, structures,
-    supercell_matrix, fit_method,disp_cut, imaginary_tol, fit_kwargs) for
-    i, cutoffs in enumerate(all_cutoffs))
-    # cutoff_results = Parallel(
-    #     n_jobs=min(os.cpu_count(), len(all_cutoffs)), backend="multiprocessing"
-    # )(
-    #     delayed(_run_cutoffs)(
-    #         i,
-    #         cutoffs,
-    #         n_cutoffs,
-    #         parent_structure,
-    #         structures,
-    #         supercell_matrix,
-    #         fit_method,
-    #         disp_cut,
-    #         imaginary_tol,
-    #         fit_kwargs,
-    #     )
-    #     for i, cutoffs in enumerate(all_cutoffs)
-    # )
+    # cutoff_results = Parallel(n_jobs=-1, backend="multiprocessing")
+    # (delayed(_run_cutoffs)(i, cutoffs, n_cutoffs, parent_structure, structures,
+    # supercell_matrix, fit_method,disp_cut, imaginary_tol, fit_kwargs) for
+    # i, cutoffs in enumerate(all_cutoffs))
+    cutoff_results = Parallel(
+        n_jobs=min(os.cpu_count(), len(all_cutoffs)), backend="multiprocessing"
+    )(
+        delayed(_run_cutoffs)(
+            i,
+            cutoffs,
+            n_cutoffs,
+            parent_structure,
+            structures,
+            supercell_matrix,
+            fit_method,
+            disp_cut,
+            imaginary_tol,
+            fit_kwargs,
+        )
+        for i, cutoffs in enumerate(all_cutoffs)
+    )
 
     logger.info(f"CUTOFF RESULTS \n {cutoff_results}")
 
