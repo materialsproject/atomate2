@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
+from pymatgen.core import Element
 
 from atomate2.common.jobs.magnetism import (
     enumerate_magnetic_orderings,
@@ -18,7 +19,6 @@ from atomate2.common.jobs.magnetism import (
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from pymatgen.core import Element
     from pymatgen.core.structure import Structure
 
 __all__ = ["MagneticOrderingsMaker"]
@@ -136,6 +136,18 @@ class MagneticOrderingsMaker(Maker, ABC):
             The magnetic ordering workflow.
         """
         jobs = []
+
+        if Element("Co") in structure.elements:
+            warnings.warn(
+                (
+                    "Co detected in structure! Please consider testing both low-spin"
+                    " and high-spin configurations. The current default for Co (without"
+                    " oxidation state) is high-spin. Refer to the defaults in"
+                    " pymatgen/analysis/magnetism/default_magmoms.yaml for more"
+                    " information. "
+                ),
+                stacklevel=2,
+            )
 
         orderings = enumerate_magnetic_orderings(
             structure,
