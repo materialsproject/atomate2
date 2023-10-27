@@ -143,7 +143,7 @@ class HiphiveMaker(Maker):
     bulk_relax_maker: BaseVaspMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    # min_length: float | None = 13.0
+    min_length: float | None = 13.0
     prefer_90_degrees: bool = True
     supercell_matrix_kwargs: dict = field(default_factory=dict)
     IMAGINARY_TOL = 0.025  # in THz
@@ -303,7 +303,7 @@ class HiphiveMaker(Maker):
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
                 structure,
-                self.supercell_matrix_kwargs["min_length"],
+                self.min_length,
                 self.prefer_90_degrees,
                 **self.supercell_matrix_kwargs,
             )
