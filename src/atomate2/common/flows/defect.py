@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     import numpy.typing as npt
     from pymatgen.analysis.defects.core import Defect
     from pymatgen.core.structure import Structure
+    from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 logger = logging.getLogger(__name__)
 
@@ -350,7 +351,9 @@ class FormationEnergyMaker(Maker, ABC):
         )
 
     @abstractmethod
-    def sc_entry_and_locpot_from_prv(self, previous_dir: str) -> Structure:
+    def sc_entry_and_locpot_from_prv(
+        self, previous_dir: str
+    ) -> tuple[ComputedStructureEntry, dict]:
         """Copy the output ComputedStructureEntry and Locpot from previous directory.
 
         Parameters

@@ -167,7 +167,9 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     bulk_relax_maker: BaseVaspMaker | None = None
     name: str = "formation energy"
 
-    def sc_entry_and_locpot_from_prv(self, previous_dir: str) -> ComputedStructureEntry:
+    def sc_entry_and_locpot_from_prv(
+        self, previous_dir: str
+    ) -> tuple[ComputedStructureEntry, dict]:
         """Copy the output structure from previous directory.
 
         Read the vasprun.xml file from the previous directory
