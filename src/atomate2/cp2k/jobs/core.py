@@ -300,7 +300,7 @@ class NonSCFMaker(BaseCp2kMaker):
     def make(
         self,
         structure: Structure,
-        prev_cp2k_dir: str | Path | None,
+        prev_dir: str | Path | None,
         mode: str = "uniform",
     ) -> None:
         """
@@ -325,7 +325,7 @@ class NonSCFMaker(BaseCp2kMaker):
         # copy previous inputs
         self.copy_cp2k_kwargs.setdefault("additional_cp2k_files", ("wfn",))
 
-        return super().make.original(self, structure, prev_cp2k_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @dataclass
@@ -376,7 +376,7 @@ class TransmuterMaker(BaseCp2kMaker):
     def make(
         self,
         structure: Structure,
-        prev_cp2k_dir: str | Path | None = None,
+        prev_dir: str | Path | None = None,
     ) -> None:
         """
         Run a transmuter Cp2k job.
@@ -399,7 +399,7 @@ class TransmuterMaker(BaseCp2kMaker):
         tjson = transmuter.transformed_structures[-1]
         self.write_additional_data.setdefault("transformations:json", tjson)
 
-        return super().make.original(self, structure, prev_cp2k_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @dataclass
