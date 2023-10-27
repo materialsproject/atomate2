@@ -76,7 +76,8 @@ class MagneticOrderingsMaker(Maker, ABC):
         If True, will remove very unsymmetrical orderings that are likely physically
         implausible. Defaults to True.
     transformation_kwargs : dict | None
-        Keyword arguments provided to MagOrderingTransformation in pymatgen.
+        Keyword arguments provided to MagOrderingTransformation in pymatgen. Defaults to
+        None.
     """
 
     static_maker: Maker

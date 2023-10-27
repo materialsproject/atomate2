@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from typing import TYPE_CHECKING, Callable, Literal
 
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
+from pymatgen.core.periodic_table import Element
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -77,6 +79,18 @@ def enumerate_magnetic_orderings(
     -------
     Ordered structures, origins (e.g., "fm", "afm")
     """
+    if Element("Co") in structure.elements:
+        warnings.warn(
+            (
+                "Co detected in structure! Please consider testing both low-spin and"
+                " high-spin configurations. The current default for Co (no oxidation"
+                " state) is high-spin. Refer to the defaults in"
+                " pymatgen/analysis/magnetism/default_magmoms.yaml for more"
+                " information. "
+            ),
+            stacklevel=2,
+        )
+
     enumerator = MagneticStructureEnumerator(
         structure,
         default_magmoms=default_magmoms,
