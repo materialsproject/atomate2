@@ -16,6 +16,7 @@ from dataclasses import field
 from itertools import product
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
+from joblib import Parallel, delayed
 
 import numpy as np
 import phonopy as phpy
@@ -995,10 +996,10 @@ def fit_force_constants(
     logger.info("We are starting Joblib_s parallellized jobs")
 
     # With Joblib's parallellization
-    # cutoff_results = Parallel(n_jobs=-1, backend="multiprocessing")
-    # (delayed(_run_cutoffs)(i, cutoffs, n_cutoffs, parent_structure, structures,
-    # supercell_matrix, fit_method,disp_cut, imaginary_tol, fit_kwargs) for
-    # i, cutoffs in enumerate(all_cutoffs))
+    cutoff_results = Parallel(n_jobs=-1, backend="multiprocessing")
+    (delayed(_run_cutoffs)(i, cutoffs, n_cutoffs, parent_structure, structures,
+    supercell_matrix, fit_method,disp_cut, imaginary_tol, fit_kwargs) for
+    i, cutoffs in enumerate(all_cutoffs))
     # cutoff_results = Parallel(
     #     n_jobs=min(os.cpu_count(), len(all_cutoffs)), backend="multiprocessing"
     # )(
@@ -1017,90 +1018,90 @@ def fit_force_constants(
     #     for i, cutoffs in enumerate(all_cutoffs)
     # )
 
-    # logger.info(f"CUTOFF RESULTS \n {cutoff_results}")
-
-    # for result in cutoff_results:
-    #     if result is None:
-    #         continue
-
-    #     fitting_data["cutoffs"].append(result["cutoffs"])
-    #     fitting_data["rmse_test"].append(result["rmse_test"])
-    #     #        fitting_data["n_imaginary"].append(result["n_imaginary"])
-    #     #        fitting_data["min_frequency"].append(result["min_frequency"])
-
-    #     if (
-    #         result["rmse_test"]
-    #         < best_fit["rmse_test"]
-    #         #            and result["min_frequency"] > -np.abs(max_imaginary_freq)
-    #         #            and result["n_imaginary"] <= max_n_imaginary
-    #         #            and result["n_imaginary"] < best_fit["n_imaginary"]
-    #     ):
-    #         best_fit.update(result)
-    #         fitting_data["best"] = result["cutoffs"]
-
-    # logger.info("Finished fitting force constants.")
-
-    # print(f'all_cutoffs={all_cutoffs}')
-
-    # Without Joblib's parallellization
-    for i, cutoffs in enumerate(all_cutoffs):
-        print(f"disp_cut={disp_cut}")
-        print(f"fit_method={fit_method}")
-        print(f"cuttoffs={cutoffs}")
-        print(f"imaginary_tol={imaginary_tol}")
-        print(f"n_cutoffs={n_cutoffs}")
-        print(f"parent_structure={parent_structure}")
-        print(f"structures={structures}")
-        print(f"supercell_matrix={supercell_matrix}")
-
-        start_time = time.time()
-        cutoff_results = _run_cutoffs(
-            i,
-            cutoffs,
-            n_cutoffs,
-            parent_structure,
-            structures,
-            supercell_matrix,
-            fit_method,
-            disp_cut,
-            imaginary_tol,
-            fit_kwargs,
-        )
-        time_taken = time.time() - start_time
-        logger.info(f"Time taken for cutoffs {cutoffs} is {time_taken} seconds")
-
-        print(f"cutoff_results={cutoff_results}")
-        print(f"time taken={time_taken}")
-        print(f'cutoffs={cutoff_results["cutoffs"]}')
-        print(f'rmse_test={cutoff_results["rmse_test"]}')
-        print(f'parameters={cutoff_results["parameters"]}')
-
-        with open(f"timings_{cutoffs}_{fit_method}.csv", mode="a", newline="") as file:
-            writer = csv.writer(file)
-            writer.writerow([cutoffs, time_taken, cutoff_results["rmse_test"]])
-
-        cutoff_results["force_constants_potential"].write(
-            f"force_constants_potential_{cutoffs}_{fit_method}.fcp"
-        )
-        cutoff_results["force_constants"].write(
-            f"force_constants_potential_{cutoffs}_{fit_method}.fcs"
-        )
-
-        if cutoff_results["rmse_test"] < best_fit["rmse_test"]:
-            best_fit["rmse_test"] = cutoff_results["rmse_test"]
-            best_fit["cluster_space"] = cutoff_results["cluster_space"]
-            best_fit["force_constants"] = cutoff_results["force_constants"]
-            best_fit["parameters"] = cutoff_results["parameters"]
-            best_fit["cutoffs"] = cutoff_results["cutoffs"]
-            best_fit["force_constants_potential"] = cutoff_results[
-                "force_constants_potential"
-            ]
-            fitting_data["best"] = cutoff_results["cutoffs"]
-
-        fitting_data["cutoffs"].append(cutoff_results["cutoffs"])
-        fitting_data["rmse_test"].append(cutoff_results["rmse_test"])
-
     logger.info(f"CUTOFF RESULTS \n {cutoff_results}")
+
+    for result in cutoff_results:
+        if result is None:
+            continue
+
+        fitting_data["cutoffs"].append(result["cutoffs"])
+        fitting_data["rmse_test"].append(result["rmse_test"])
+        #        fitting_data["n_imaginary"].append(result["n_imaginary"])
+        #        fitting_data["min_frequency"].append(result["min_frequency"])
+
+        if (
+            result["rmse_test"]
+            < best_fit["rmse_test"]
+            #            and result["min_frequency"] > -np.abs(max_imaginary_freq)
+            #            and result["n_imaginary"] <= max_n_imaginary
+            #            and result["n_imaginary"] < best_fit["n_imaginary"]
+        ):
+            best_fit.update(result)
+            fitting_data["best"] = result["cutoffs"]
+
+    logger.info("Finished fitting force constants.")
+
+    print(f'all_cutoffs={all_cutoffs}')
+
+    # # Without Joblib's parallellization
+    # for i, cutoffs in enumerate(all_cutoffs):
+    #     print(f"disp_cut={disp_cut}")
+    #     print(f"fit_method={fit_method}")
+    #     print(f"cuttoffs={cutoffs}")
+    #     print(f"imaginary_tol={imaginary_tol}")
+    #     print(f"n_cutoffs={n_cutoffs}")
+    #     print(f"parent_structure={parent_structure}")
+    #     print(f"structures={structures}")
+    #     print(f"supercell_matrix={supercell_matrix}")
+
+    #     start_time = time.time()
+    #     cutoff_results = _run_cutoffs(
+    #         i,
+    #         cutoffs,
+    #         n_cutoffs,
+    #         parent_structure,
+    #         structures,
+    #         supercell_matrix,
+    #         fit_method,
+    #         disp_cut,
+    #         imaginary_tol,
+    #         fit_kwargs,
+    #     )
+    #     time_taken = time.time() - start_time
+    #     logger.info(f"Time taken for cutoffs {cutoffs} is {time_taken} seconds")
+
+    #     print(f"cutoff_results={cutoff_results}")
+    #     print(f"time taken={time_taken}")
+    #     print(f'cutoffs={cutoff_results["cutoffs"]}')
+    #     print(f'rmse_test={cutoff_results["rmse_test"]}')
+    #     print(f'parameters={cutoff_results["parameters"]}')
+
+    #     with open(f"timings_{cutoffs}_{fit_method}.csv", mode="a", newline="") as file:
+    #         writer = csv.writer(file)
+    #         writer.writerow([cutoffs, time_taken, cutoff_results["rmse_test"]])
+
+    #     cutoff_results["force_constants_potential"].write(
+    #         f"force_constants_potential_{cutoffs}_{fit_method}.fcp"
+    #     )
+    #     cutoff_results["force_constants"].write(
+    #         f"force_constants_potential_{cutoffs}_{fit_method}.fcs"
+    #     )
+
+    #     if cutoff_results["rmse_test"] < best_fit["rmse_test"]:
+    #         best_fit["rmse_test"] = cutoff_results["rmse_test"]
+    #         best_fit["cluster_space"] = cutoff_results["cluster_space"]
+    #         best_fit["force_constants"] = cutoff_results["force_constants"]
+    #         best_fit["parameters"] = cutoff_results["parameters"]
+    #         best_fit["cutoffs"] = cutoff_results["cutoffs"]
+    #         best_fit["force_constants_potential"] = cutoff_results[
+    #             "force_constants_potential"
+    #         ]
+    #         fitting_data["best"] = cutoff_results["cutoffs"]
+
+    #     fitting_data["cutoffs"].append(cutoff_results["cutoffs"])
+    #     fitting_data["rmse_test"].append(cutoff_results["rmse_test"])
+
+    # logger.info(f"CUTOFF RESULTS \n {cutoff_results}")
 
     return (
         best_fit["force_constants"],
