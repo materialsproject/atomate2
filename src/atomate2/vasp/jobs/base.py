@@ -266,17 +266,17 @@ def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
         # skip running DDEC6
         run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
         if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
-            # if DDEC6_ATOMIC_DENSITIES_DIR is a string, use that as the path to the
-            # atomic densities.
-            if not Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
-                # warn the user if the directory doesn't exist and skip running DDEC6
+            # if DDEC6_ATOMIC_DENSITIES_DIR is a string and directory at that path
+            # exists, use as path to the atomic densities
+            if Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
+                run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
+            else:
+                # if the directory doesn't exist, warn the user and skip running DDEC6
                 warnings.warn(
                     f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
                     "DDEC6",
                     stacklevel=1,
                 )
-            else:
-                run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
         kwargs.setdefault("run_ddec6", run_ddec6)
 
         if not _CHARGEMOL_EXE_EXISTS:
