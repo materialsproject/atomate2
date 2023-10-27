@@ -416,7 +416,8 @@ def collect_perturbed_structures(
     # structure_data = loadfn(f"structure_data_{loop}.json")
 
     # Convert list of lists to numpy arrayx
-    all_forces_loop = np.array(all_forces_loop["forces"])
+    # all_forces_loop = np.array(all_forces_loop["forces"])
+    all_forces_loop = np.array(all_forces_loop)
 
     output = [
         {
