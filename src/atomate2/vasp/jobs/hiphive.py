@@ -271,7 +271,8 @@ def run_static_calculations(
 
 @job
 def collect_perturbed_structures(
-    supercell_matrix_kwargs: Dict[str, Any],
+    # supercell_matrix_kwargs: Dict[str, Any],
+    supercell_matrix: np.array,
     rattled_structures: list[Structure],
     forces: list[list[float]],
     loop: int = None,
@@ -291,51 +292,50 @@ def collect_perturbed_structures(
         None.
     """
     if prev_dir_json_saver is not None:
-        copy_hiphive_outputs(prev_dir_json_saver)
-        structure = loadfn("relaxed_structure.json")
-        # supercell = SupercellTransformation(scaling_matrix=supercell_matrix).
-        # apply_transformation(structure)
+        # copy_hiphive_outputs(prev_dir_json_saver)
+        # structure = loadfn("relaxed_structure.json")
+        supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
 
-        min_atoms = supercell_matrix_kwargs["min_atoms"]
-        max_atoms = supercell_matrix_kwargs["max_atoms"]
-        min_length = supercell_matrix_kwargs["min_length"]
-        force_diagonal = supercell_matrix_kwargs["force_diagonal"]
-        supercell = CubicSupercellTransformation(
-            min_atoms=min_atoms,
-            max_atoms=max_atoms,
-            min_length=min_length,
-            force_diagonal=force_diagonal,
-        ).apply_transformation(structure)
-        # supercell_matrix = [[5, 0, 0],[0, 5, 0],[0, 0, 5]]
-        # supercell_matrix = [[6, 0, 0],[0, 6, 0],[0, 0, 6]]
-        supercell_matrix = []
-        for i in range(3):
-            lattice_vector_supercell = supercell.lattice.abc[i]
-            lattice_vector_prim_cell = structure.lattice.abc[i]
-            if i == 0:
-                supercell_matrix.append(
-                    [
-                        np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-                        0,
-                        0,
-                    ]
-                )
-            if i == 1:
-                supercell_matrix.append(
-                    [
-                        0,
-                        np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-                        0,
-                    ]
-                )
-            if i == 2:
-                supercell_matrix.append(
-                    [
-                        0,
-                        0,
-                        np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-                    ]
-                )
+        # min_atoms = supercell_matrix_kwargs["min_atoms"]
+        # max_atoms = supercell_matrix_kwargs["max_atoms"]
+        # min_length = supercell_matrix_kwargs["min_length"]
+        # force_diagonal = supercell_matrix_kwargs["force_diagonal"]
+        # supercell = CubicSupercellTransformation(
+        #     min_atoms=min_atoms,
+        #     max_atoms=max_atoms,
+        #     min_length=min_length,
+        #     force_diagonal=force_diagonal,
+        # ).apply_transformation(structure)
+        # # supercell_matrix = [[5, 0, 0],[0, 5, 0],[0, 0, 5]]
+        # # supercell_matrix = [[6, 0, 0],[0, 6, 0],[0, 0, 6]]
+        # supercell_matrix = []
+        # for i in range(3):
+        #     lattice_vector_supercell = supercell.lattice.abc[i]
+        #     lattice_vector_prim_cell = structure.lattice.abc[i]
+        #     if i == 0:
+        #         supercell_matrix.append(
+        #             [
+        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
+        #                 0,
+        #                 0,
+        #             ]
+        #         )
+        #     if i == 1:
+        #         supercell_matrix.append(
+        #             [
+        #                 0,
+        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
+        #                 0,
+        #             ]
+        #         )
+        #     if i == 2:
+        #         supercell_matrix.append(
+        #             [
+        #                 0,
+        #                 0,
+        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
+        #             ]
+        #         )
 
         structure_data = {
             "structure": structure,
@@ -343,49 +343,48 @@ def collect_perturbed_structures(
             "supercell_matrix": supercell_matrix,
         }
     else:
-        # supercell = SupercellTransformation(scaling_matrix=supercell_matrix).
-        # apply_transformation(structure)
+        supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
 
-        min_atoms = supercell_matrix_kwargs["min_atoms"]
-        max_atoms = supercell_matrix_kwargs["max_atoms"]
-        min_length = supercell_matrix_kwargs["min_length"]
-        force_diagonal = supercell_matrix_kwargs["force_diagonal"]
-        supercell = CubicSupercellTransformation(
-            min_atoms=min_atoms,
-            max_atoms=max_atoms,
-            min_length=min_length,
-            force_diagonal=force_diagonal,
-        ).apply_transformation(structure)
-        # supercell_matrix = [[5, 0, 0],[0, 5, 0],[0, 0, 5]]
-        # supercell_matrix = [[6, 0, 0],[0, 6, 0],[0, 0, 6]]
-        supercell_matrix = []
-        for i in range(3):
-            lattice_vector_supercell = supercell.lattice.abc[i]
-            lattice_vector_prim_cell = structure.lattice.abc[i]
-            if i == 0:
-                supercell_matrix.append(
-                    [
-                        np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-                        0,
-                        0,
-                    ]
-                )
-            if i == 1:
-                supercell_matrix.append(
-                    [
-                        0,
-                        np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-                        0,
-                    ]
-                )
-            if i == 2:
-                supercell_matrix.append(
-                    [
-                        0,
-                        0,
-                        np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-                    ]
-                )
+        # min_atoms = supercell_matrix_kwargs["min_atoms"]
+        # max_atoms = supercell_matrix_kwargs["max_atoms"]
+        # min_length = supercell_matrix_kwargs["min_length"]
+        # force_diagonal = supercell_matrix_kwargs["force_diagonal"]
+        # supercell = CubicSupercellTransformation(
+        #     min_atoms=min_atoms,
+        #     max_atoms=max_atoms,
+        #     min_length=min_length,
+        #     force_diagonal=force_diagonal,
+        # ).apply_transformation(structure)
+        # # supercell_matrix = [[5, 0, 0],[0, 5, 0],[0, 0, 5]]
+        # # supercell_matrix = [[6, 0, 0],[0, 6, 0],[0, 0, 6]]
+        # supercell_matrix = []
+        # for i in range(3):
+        #     lattice_vector_supercell = supercell.lattice.abc[i]
+        #     lattice_vector_prim_cell = structure.lattice.abc[i]
+        #     if i == 0:
+        #         supercell_matrix.append(
+        #             [
+        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
+        #                 0,
+        #                 0,
+        #             ]
+        #         )
+        #     if i == 1:
+        #         supercell_matrix.append(
+        #             [
+        #                 0,
+        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
+        #                 0,
+        #             ]
+        #         )
+        #     if i == 2:
+        #         supercell_matrix.append(
+        #             [
+        #                 0,
+        #                 0,
+        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
+        #             ]
+        #         )
 
         structure_data = {
             "structure": structure,
