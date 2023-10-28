@@ -55,7 +55,7 @@ def test_phonon_wf(clean_dir):
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.372457981109619, 4
+        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.37245798, 4
     )
     assert responses[job.jobs[-1].uuid][1].output.born is None
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
@@ -84,12 +84,12 @@ def test_phonon_wf(clean_dir):
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 4.7839398173, 13.993186953, 21.886413347, 28.191106671],
+        [0.0, 4.78393981, 13.99318695, 21.88641334, 28.19110667],
         atol=2,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 8.8606058656, 17.557589434, 21.089039169, 22.625872713],
+        [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
         atol=2,
     )
     assert_allclose(

@@ -20,7 +20,7 @@ def test_lobster_task_document(lobster_test_dir):
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
-    assert_allclose(doc.lobsterout.charge_spilling[0], 0.009899999999999999)
+    assert_allclose(doc.lobsterout.charge_spilling[0], 0.00989999)
 
     assert isinstance(doc.lobsterin, LobsterinModel)
     assert_allclose(doc.lobsterin.cohpstartenergy, -5)
