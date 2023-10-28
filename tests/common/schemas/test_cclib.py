@@ -36,15 +36,15 @@ def test_cclib_taskdoc(test_dir):
     assert doc["molecule"][0].coords == pytest.approx([0.397382, 0.0, 0.0])
     assert doc["last_updated"] is not None
     assert doc["attributes"]["homo_energies"] == pytest.approx(
-        [-7.054007346511501, -11.618445074798501]
+        [-7.05400734, -11.61844507]
     )
     assert doc["attributes"]["lumo_energies"] == pytest.approx(
-        [4.2384453353880005, -3.9423854660440005]
+        [4.23844533, -3.94238546]
     )
     assert doc["attributes"]["homo_lumo_gaps"] == pytest.approx(
-        [11.292452681899501, 7.6760596087545006]
+        [11.29245268, 7.67605960]
     )
-    assert doc["attributes"]["min_homo_lumo_gap"] == pytest.approx(7.6760596087545006)
+    assert doc["attributes"]["min_homo_lumo_gap"] == pytest.approx(7.67605960)
 
     # Now we will try two possible extensions, but we will make sure that
     # it fails because the newest log file (.txt) is not valid

@@ -92,7 +92,6 @@ def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MatPesGGAStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
@@ -118,7 +117,6 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MatPesMetaGGAStaticMaker().make(si_struct)
 
     # ensure flow runs successfully
