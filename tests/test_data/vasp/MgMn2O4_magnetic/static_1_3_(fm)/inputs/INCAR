@@ -1,5 +1,5 @@
 ALGO = Fast
-EDIFF = 1e-05
+EDIFF = 1e-07
 ENAUG = 1360.0
 ENCUT = 680.0
 GGA = Ps
