@@ -1,12 +1,13 @@
+from jobflow import run_locally
+from numpy.testing import assert_allclose
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
+from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.forcefields.flows.elastic import ElasticMaker
+from atomate2.forcefields.jobs import M3GNetRelaxMaker
+
+
 def test_elastic_wf(clean_dir, si_structure):
-    from jobflow import run_locally
-    from numpy.testing import assert_allclose
-    from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-    from atomate2.common.schemas.elastic import ElasticDocument
-    from atomate2.forcefields.flows.elastic import ElasticMaker
-    from atomate2.forcefields.jobs import M3GNetRelaxMaker
-
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     # !!! Generate job

@@ -1,3 +1,8 @@
+import logging
+import os
+import shutil
+import sys
+import tempfile
 from pathlib import Path
 from unittest import mock
 
@@ -21,9 +26,6 @@ def test_dir():
 
 @pytest.fixture(scope="session")
 def log_to_stdout():
-    import logging
-    import sys
-
     # Set Logging
     root = logging.getLogger()
     root.setLevel(logging.DEBUG)
@@ -37,10 +39,6 @@ def log_to_stdout():
 
 @pytest.fixture(scope="session")
 def clean_dir(debug_mode):
-    import os
-    import shutil
-    import tempfile
-
     old_cwd = os.getcwd()
     new_path = tempfile.mkdtemp()
     os.chdir(new_path)
@@ -55,9 +53,6 @@ def clean_dir(debug_mode):
 @pytest.fixture()
 def tmp_dir():
     """Same as clean_dir but is fresh for every test"""
-    import os
-    import shutil
-    import tempfile
 
     old_cwd = os.getcwd()
     new_path = tempfile.mkdtemp()

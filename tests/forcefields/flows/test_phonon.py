@@ -1,3 +1,4 @@
+from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
@@ -13,8 +14,6 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 def test_phonon_wf(clean_dir):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],

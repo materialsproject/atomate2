@@ -1,12 +1,11 @@
 import pytest
+from jobflow import run_locally
+
+from atomate2.vasp.flows.elph import ElectronPhononMaker
+from atomate2.vasp.schemas.elph import ElectronPhononRenormalisationDoc
 
 
 def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.elph import ElectronPhononMaker
-    from atomate2.vasp.schemas.elph import ElectronPhononRenormalisationDoc
-
     # map job name to directory containing test files
     ref_paths = {
         "non-scf uniform T=0.0": "Si_elph_renorm/non-scf_uniform_T=0.0",
@@ -43,24 +42,11 @@ def test_elph_renormalisation(mock_vasp, clean_dir, si_structure):
     flow = ElectronPhononMaker(
         min_supercell_length=3, temperatures=(0, 100), relax_maker=None
     ).make(si_structure)
-    flow.update_maker_kwargs(
-        {
-            "_set": {
-                "input_set_generator->user_kpoints_settings->reciprocal_density": 50
-            }
-        },
-        name_filter="static",
-        dict_mod=True,
-    )
-    flow.update_maker_kwargs(
-        {
-            "_set": {
-                "input_set_generator->user_kpoints_settings->reciprocal_density": 50
-            }
-        },
-        name_filter="non-scf",
-        dict_mod=True,
-    )
+    set_op = {
+        "_set": {"input_set_generator->user_kpoints_settings->reciprocal_density": 50}
+    }
+    flow.update_maker_kwargs(set_op, name_filter="static", dict_mod=True)
+    flow.update_maker_kwargs(set_op, name_filter="non-scf", dict_mod=True)
 
     # run the flow and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

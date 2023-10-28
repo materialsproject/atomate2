@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import shutil
 from hashlib import md5
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
@@ -200,8 +201,6 @@ def clear_cp2k_inputs():
 
 
 def copy_cp2k_outputs(ref_path: str | Path):
-    import shutil
-
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
