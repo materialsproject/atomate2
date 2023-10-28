@@ -58,7 +58,6 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MPMetaGGAStaticMaker(
         input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.8249)
     ).make(si_struct)
@@ -91,7 +90,6 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MPMetaGGARelaxMaker(
         input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.4786)
     ).make(si_struct)
@@ -124,7 +122,6 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MPGGARelaxMaker().make(si_struct)
 
     # ensure flow runs successfully

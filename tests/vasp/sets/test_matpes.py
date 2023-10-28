@@ -1,3 +1,5 @@
+"""Confirm with @janosh before changing any of the expected values below."""
+
 import pytest
 
 from atomate2.vasp.sets.base import VaspInputGenerator
