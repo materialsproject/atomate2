@@ -88,6 +88,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     auto_kspacing: bool = True
+    bandgap_tol: float = 1e-4
 
     def get_incar_updates(
         self,
