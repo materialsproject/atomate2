@@ -1,11 +1,19 @@
+from pathlib import Path
+from unittest import mock
+
 import pytest
+from fireworks import LaunchPad
+from jobflow import JobStore
+from jobflow.settings import JobflowSettings
+from maggma.stores import MemoryStore
 from monty.serialization import loadfn
+from pymatgen.core import Structure
+
+from atomate2.utils.log import initialize_logger
 
 
 @pytest.fixture(scope="session")
 def test_dir():
-    from pathlib import Path
-
     module_dir = Path(__file__).resolve().parent
     test_dir = module_dir / "test_data"
     return test_dir.resolve()
@@ -66,8 +74,6 @@ def debug_mode():
 
 @pytest.fixture(scope="session")
 def lpad(database, debug_mode):
-    from fireworks import LaunchPad
-
     lpad = LaunchPad(name=database)
     lpad.reset("", require_password=False)
     yield lpad
@@ -80,9 +86,6 @@ def lpad(database, debug_mode):
 
 @pytest.fixture()
 def memory_jobstore():
-    from jobflow import JobStore
-    from maggma.stores import MemoryStore
-
     store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
     store.connect()
 
@@ -91,24 +94,17 @@ def memory_jobstore():
 
 @pytest.fixture(scope="session", autouse=True)
 def log_to_stdout_auto_use():
-    from atomate2.utils.log import initialize_logger
-
     initialize_logger()
 
 
 @pytest.fixture()
 def si_structure(test_dir):
-    from pymatgen.core import Structure
-
     return Structure.from_file(test_dir / "structures" / "Si.cif")
 
 
 @pytest.fixture(autouse=True)
 def mock_jobflow_settings(memory_jobstore):
     """Mock the jobflow settings to use our specific jobstore (with data store)."""
-    from unittest import mock
-
-    from jobflow.settings import JobflowSettings
 
     settings = JobflowSettings(JOB_STORE=memory_jobstore)
 
