@@ -13,41 +13,41 @@ def test_input_generators(si_structure, basis_and_potential):
         StaticSetGenerator,
     )
 
-    for set_gen in [
+    for gen in [
         StaticSetGenerator(user_input_settings=basis_and_potential),
         HybridStaticSetGenerator(user_input_settings=basis_and_potential),
     ]:
-        input_set = set_gen.get_input_set(si_structure)
+        input_set = gen.get_input_set(si_structure)
         assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "ENERGY_FORCE"
         assert input_set.cp2k_input.check("FORCE_EVAL/DFT/KPOINTS")
 
-    for set_gen in [
+    for gen in [
         RelaxSetGenerator(user_input_settings=basis_and_potential),
         HybridRelaxSetGenerator(user_input_settings=basis_and_potential),
     ]:
-        input_set = set_gen.get_input_set(si_structure)
+        input_set = gen.get_input_set(si_structure)
         assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "GEO_OPT"
         assert input_set.cp2k_input.get("MOTION")
         assert input_set.cp2k_input["MOTION"]["GEO_OPT"]["BFGS"]["TRUST_RADIUS"].values[
             0
         ] == pytest.approx(0.1)
 
-    for set_gen in [
+    for gen in [
         CellOptSetGenerator(user_input_settings=basis_and_potential),
         HybridCellOptSetGenerator(user_input_settings=basis_and_potential),
     ]:
-        input_set = set_gen.get_input_set(si_structure)
+        input_set = gen.get_input_set(si_structure)
         assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "CELL_OPT"
 
-    set_gen = HybridStaticSetGenerator(user_input_settings=basis_and_potential)
-    set_gen.user_input_settings = {
+    gen = HybridStaticSetGenerator(user_input_settings=basis_and_potential)
+    gen.user_input_settings = {
         "activate_hybrid": {
             "hybrid_functional": "HSE06",
             "eps_schwarz": 5e-3,
             "eps_schwarz_forces": 1e-2,
         }
     }
-    input_set = set_gen.get_input_set(si_structure)
+    input_set = gen.get_input_set(si_structure)
     assert input_set.cp2k_input.check("FORCE_EVAL/DFT/XC/HF")
     assert (
         input_set.cp2k_input["FORCE_EVAL"]["DFT"]["XC"]["HF"]["INTERACTION_POTENTIAL"][
@@ -63,8 +63,8 @@ def test_input_generators(si_structure, basis_and_potential):
     ].values[0] == pytest.approx(1e-2)
     assert input_set.cp2k_input.check("FORCE_EVAL/DFT/AUXILIARY_DENSITY_MATRIX_METHOD")
 
-    set_gen = NonSCFSetGenerator(user_input_settings=basis_and_potential)
-    input_set = set_gen.get_input_set(si_structure)
+    gen = NonSCFSetGenerator(user_input_settings=basis_and_potential)
+    input_set = gen.get_input_set(si_structure)
     assert input_set.cp2k_input.check("FORCE_EVAL/DFT/PRINT/BAND_STRUCTURE")
     assert (
         "KPOINT_SET"
@@ -76,10 +76,10 @@ def test_input_generators(si_structure, basis_and_potential):
         input_set.cp2k_input["FORCE_EVAL"]["DFT"]["PRINT"]["BAND_STRUCTURE"][
             "KPOINT_SET"
         ][0]["NPOINTS"].values[0]
-        == set_gen.line_density
+        == gen.line_density
     )
 
-    set_gen = MDSetGenerator(user_input_settings=basis_and_potential)
-    input_set = set_gen.get_input_set(si_structure)
+    gen = MDSetGenerator(user_input_settings=basis_and_potential)
+    input_set = gen.get_input_set(si_structure)
     assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "MD"
     assert input_set.cp2k_input.check("MOTION/MD")

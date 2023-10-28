@@ -1,10 +1,9 @@
-import os
-
-import numpy as np
 from pytest import approx
 
 
 def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
+    import os
+
     from jobflow import run_locally
 
     from atomate2.cp2k.jobs.core import StaticMaker
@@ -37,6 +36,8 @@ def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
 
 
 def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
+    import os
+
     from jobflow import run_locally
 
     from atomate2.cp2k.jobs.core import RelaxMaker
@@ -73,6 +74,9 @@ def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
 
 
 def test_transmuter(tmp_path, mock_cp2k, basis_and_potential, si_structure):
+    import os
+
+    import numpy as np
     from jobflow import run_locally
 
     from atomate2.cp2k.jobs.core import TransmuterMaker

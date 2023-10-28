@@ -1,8 +1,4 @@
-from pathlib import Path
-
 import pytest
-
-from atomate2.cp2k.files import copy_cp2k_outputs, get_largest_relax_extension
 
 
 @pytest.mark.parametrize(
@@ -15,6 +11,10 @@ from atomate2.cp2k.files import copy_cp2k_outputs, get_largest_relax_extension
     ],
 )
 def test_copy_cp2k_outputs_static(cp2k_test_dir, tmp_dir, copy_kwargs, files):
+    from pathlib import Path
+
+    from atomate2.cp2k.files import copy_cp2k_outputs
+
     path = cp2k_test_dir / "Si_band_structure" / "static" / "outputs"
     copy_cp2k_outputs(src_dir=path, **copy_kwargs)
 
@@ -23,6 +23,8 @@ def test_copy_cp2k_outputs_static(cp2k_test_dir, tmp_dir, copy_kwargs, files):
 
 
 def test_get_largest_relax_extension(cp2k_test_dir):
+    from atomate2.cp2k.files import get_largest_relax_extension
+
     path = cp2k_test_dir / "Si_band_structure" / "static" / "outputs"
     extension = get_largest_relax_extension(directory=path)
     assert extension == ""
