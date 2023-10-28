@@ -92,7 +92,7 @@ class Atomate2Settings(BaseSettings):
         "to the simulation will be compressed. If False no file is compressed.",
     )
     VASP_INHERIT_INCAR: bool = Field(
-        default=True,
+        default=False,
         description="Whether to inherit INCAR settings from previous calculation. "
         "This might be useful to port Custodian fixes to child jobs but can also be "
         "dangerous e.g. when switching from GGA to meta-GGA or relax to static jobs."
