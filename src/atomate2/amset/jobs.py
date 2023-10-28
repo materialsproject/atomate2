@@ -14,8 +14,6 @@ from atomate2.amset.files import copy_amset_files, write_amset_settings
 from atomate2.amset.run import check_converged, run_amset
 from atomate2.amset.schemas import AmsetTaskDocument
 
-__all__ = ["AmsetMaker"]
-
 logger = logging.getLogger(__name__)
 
 
@@ -48,7 +46,7 @@ class AmsetMaker(Maker):
         wavefunction_dir: str | Path = None,
         deformation_dir: str | Path = None,
         bandstructure_dir: str | Path = None,
-    ):
+    ) -> Response:
         """
         Run an AMSET calculation.
 

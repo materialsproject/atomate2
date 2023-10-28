@@ -25,25 +25,13 @@ from atomate2.vasp.sets.core import (
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Response
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 
 logger = logging.getLogger(__name__)
-
-__all__ = [
-    "StaticMaker",
-    "RelaxMaker",
-    "NonSCFMaker",
-    "DielectricMaker",
-    "HSEBSMaker",
-    "HSERelaxMaker",
-    "HSEStaticMaker",
-    "TightRelaxMaker",
-    "HSETightRelaxMaker",
-    "TransmuterMaker",
-]
 
 
 @dataclass
@@ -185,7 +173,7 @@ class NonSCFMaker(BaseVaspMaker):
         structure: Structure,
         prev_vasp_dir: str | Path | None,
         mode: str = "uniform",
-    ):
+    ) -> Response:
         """
         Run a non-scf VASP job.
 
@@ -359,7 +347,7 @@ class HSEBSMaker(BaseVaspMaker):
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
         mode="uniform",
-    ):
+    ) -> Response:
         """
         Run a HSE06 band structure VASP job.
 
@@ -490,7 +478,7 @@ class TransmuterMaker(BaseVaspMaker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Response:
         """
         Run a transmuter VASP job.
 

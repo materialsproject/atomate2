@@ -1,7 +1,7 @@
 """General schemas for defect workflow outputs."""
 
 import logging
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Union
 
 import numpy as np
 from emmet.core.tasks import TaskDoc
@@ -26,11 +26,11 @@ class FormationEnergyDiagramDocument(BaseModel):
         None, description="The ComputedEntry representing the bulk structure."
     )
 
-    defect_entries: List[DefectEntry] = Field(
+    defect_entries: list[DefectEntry] = Field(
         None, description="The defect entries for the formation energy diagram."
     )
 
-    pd_entries: List[ComputedEntry] = Field(
+    pd_entries: list[ComputedEntry] = Field(
         None, description="The entries used to construct the phase diagram."
     )
 
@@ -54,11 +54,11 @@ class FormationEnergyDiagramDocument(BaseModel):
         None, description="The directory name of the pristine supercell calculation."
     )
 
-    defect_sc_dirs: Dict[int, str] = Field(
+    defect_sc_dirs: dict[int, str] = Field(
         None, description="The directory names of the charged defect calculations."
     )
 
-    dielectric: Union[float, List[List[float]]] = Field(
+    dielectric: Union[float, list[list[float]]] = Field(
         None,
         description="The dielectric constant or tensor, can be used to compute "
         "finite-size corrections.",
@@ -87,7 +87,7 @@ class FormationEnergyDiagramDocument(BaseModel):
         )
 
     def as_formation_energy_diagram(
-        self, pd_entries: Optional[List[ComputedEntry]] = None
+        self, pd_entries: Optional[list[ComputedEntry]] = None
     ) -> FormationEnergyDiagram:
         """Create a `FormationEnergyDiagram` object from the document.
 
@@ -122,41 +122,41 @@ class CCDDocument(BaseModel):
         None, description="The structure of defect (supercell) in charge state (q2)."
     )
 
-    distortions1: List[float] = Field(
+    distortions1: list[float] = Field(
         None,
         description="The distortions of the defect (supercell) in charge state (q1).",
     )
-    distortions2: List[float] = Field(
+    distortions2: list[float] = Field(
         None,
         description="The distortions of the defect (supercell) in charge state (q2).",
     )
 
-    energies1: List[float] = Field(
+    energies1: list[float] = Field(
         None, description="The energies of the defect (supercell) in charge state (q1)."
     )
-    energies2: List[float] = Field(
+    energies2: list[float] = Field(
         None, description="The energies of the defect (supercell) in charge state (q2)."
     )
 
-    static_dirs1: List[str] = Field(
+    static_dirs1: list[str] = Field(
         None,
         description="Directories of distorted calculations for the defect (supercell) "
         "in charge state (q1).",
     )
 
-    static_dirs2: List[str] = Field(
+    static_dirs2: list[str] = Field(
         None,
         description="Directories of distorted calculations for the defect (supercell) "
         "in charge state (q2).",
     )
 
-    static_uuids1: List[str] = Field(
+    static_uuids1: Optional[list[str]] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in "
         "charge state (q1).",
     )
 
-    static_uuids2: List[str] = Field(
+    static_uuids2: Optional[list[str]] = Field(
         None,
         description="UUIDs of distorted calculations for the defect (supercell) in "
         "charge state (q2).",
@@ -177,17 +177,17 @@ class CCDDocument(BaseModel):
     @classmethod
     def from_task_outputs(
         cls,
-        structures1: List[Structure],
-        structures2: List[Structure],
-        energies1: List[float],
-        energies2: List[float],
-        static_dirs1: List[str],
-        static_dirs2: List[str],
-        static_uuids1: List[str],
-        static_uuids2: List[str],
+        structures1: list[Structure],
+        structures2: list[Structure],
+        energies1: list[float],
+        energies2: list[float],
+        static_dirs1: list[str],
+        static_dirs2: list[str],
+        static_uuids1: list[str],
+        static_uuids2: list[str],
         relaxed_uuid1: str,
         relaxed_uuid2: str,
-    ):
+    ) -> "CCDDocument":
         """Create a CCDDocument from a lists of structures and energies.
 
         The directories and the UUIDs of the static calculations are also provided as
@@ -221,7 +221,9 @@ class CCDDocument(BaseModel):
             UUID of relaxed calculation in charge state (q2).
         """
 
-        def get_ent(struct, energy, dir_name, uuid):
+        def get_ent(
+            struct: Structure, energy: float, dir_name, uuid
+        ) -> ComputedStructureEntry:
             return ComputedStructureEntry(
                 structure=struct,
                 energy=energy,
@@ -242,8 +244,8 @@ class CCDDocument(BaseModel):
     @classmethod
     def from_entries(
         cls,
-        entries1: List[ComputedStructureEntry],
-        entries2: List[ComputedStructureEntry],
+        entries1: list[ComputedStructureEntry],
+        entries2: list[ComputedStructureEntry],
         relaxed_uuid1: Optional[str] = None,
         relaxed_uuid2: Optional[str] = None,
     ) -> "CCDDocument":
@@ -263,14 +265,14 @@ class CCDDocument(BaseModel):
 
         """
 
-        def find_entry(entries, uuid) -> Tuple[int, ComputedStructureEntry]:
+        def find_entry(entries, uuid) -> tuple[int, ComputedStructureEntry]:
             """Find the entry with the given UUID."""
             for itr, entry in enumerate(entries):
                 if entry.data["uuid"] == uuid:
                     return itr, entry
             raise ValueError(f"Could not find entry with UUID: {uuid}")
 
-        def dQ_entries(e1, e2):
+        def dQ_entries(e1, e2) -> float:
             """Get the displacement between two entries."""
             return get_dQ(e1.structure, e2.structure)
 
@@ -312,10 +314,10 @@ class CCDDocument(BaseModel):
             relaxed_index2=idx2,
         )
 
-    def get_taskdocs(self):
+    def get_taskdocs(self) -> list[list[TaskDoc]]:
         """Get the distorted task documents."""
 
-        def remove_host_name(dir_name):
+        def remove_host_name(dir_name) -> str:
             return dir_name.split(":")[-1]
 
         return [
@@ -331,8 +333,8 @@ class CCDDocument(BaseModel):
 
 
 def sort_pos_dist(
-    list_in: List[Any], s1: Any, s2: Any, dist: Callable
-) -> Tuple[List[Any], List[float]]:
+    list_in: list[Any], s1: Any, s2: Any, dist: Callable
+) -> tuple[list[Any], list[float]]:
     """
     Sort a list defined when we can only compute a positive-definite distance.
 

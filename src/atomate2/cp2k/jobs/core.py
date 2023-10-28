@@ -39,18 +39,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "StaticMaker",
-    "RelaxMaker",
-    "CellOptMaker",
-    "HybridStaticMaker",
-    "HybridRelaxMaker",
-    "HybridCellOptMaker",
-    "NonSCFMaker",
-    "TransmuterMaker",
-    "MDMaker",
-]
-
 
 @dataclass
 class StaticMaker(BaseCp2kMaker):
@@ -314,7 +302,7 @@ class NonSCFMaker(BaseCp2kMaker):
         structure: Structure,
         prev_cp2k_dir: str | Path | None,
         mode: str = "uniform",
-    ):
+    ) -> None:
         """
         Run a non-scf CP2K job.
 
@@ -389,7 +377,7 @@ class TransmuterMaker(BaseCp2kMaker):
         self,
         structure: Structure,
         prev_cp2k_dir: str | Path | None = None,
-    ):
+    ) -> None:
         """
         Run a transmuter Cp2k job.
 

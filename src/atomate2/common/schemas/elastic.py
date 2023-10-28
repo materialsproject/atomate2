@@ -1,6 +1,6 @@
 """Schemas for elastic tensor fitting and related properties."""
 from copy import deepcopy
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -18,13 +18,6 @@ from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
-
-__all__ = [
-    "DerivedProperties",
-    "FittingData",
-    "ElasticTensorDocument",
-    "ElasticDocument",
-]
 
 
 class DerivedProperties(BaseModel):
@@ -68,7 +61,7 @@ class DerivedProperties(BaseModel):
     snyder_total: float = Field(
         None, description="Synder's total sound velocity (SI units)."
     )
-    clark_thermalcond: float = Field(
+    clark_thermalcond: Optional[float] = Field(
         None, description="Clarke's thermal conductivity (SI units)."
     )
     cahill_thermalcond: float = Field(
@@ -84,20 +77,20 @@ class DerivedProperties(BaseModel):
 class FittingData(BaseModel):
     """Data used to fit elastic tensors."""
 
-    cauchy_stresses: List[Matrix3D] = Field(
+    cauchy_stresses: list[Matrix3D] = Field(
         None, description="The Cauchy stresses used to fit the elastic tensor."
     )
-    strains: List[Matrix3D] = Field(
+    strains: list[Matrix3D] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: List[Matrix3D] = Field(
+    pk_stresses: list[Matrix3D] = Field(
         None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations: List[Matrix3D] = Field(
+    deformations: list[Matrix3D] = Field(
         None, description="The deformations corresponding to each strain state."
     )
-    uuids: List[str] = Field(None, description="The uuids of the deformation jobs.")
-    job_dirs: List[str] = Field(
+    uuids: list[str] = Field(None, description="The uuids of the deformation jobs.")
+    job_dirs: list[Optional[str]] = Field(
         None, description="The directories where the deformation jobs were run."
     )
 
@@ -118,7 +111,7 @@ class ElasticDocument(StructureMetadata):
     elastic_tensor: ElasticTensorDocument = Field(
         None, description="Fitted elastic tensor."
     )
-    eq_stress: Matrix3D = Field(
+    eq_stress: Optional[Matrix3D] = Field(
         None, description="The equilibrium stress of the structure."
     )
     derived_properties: DerivedProperties = Field(
@@ -138,16 +131,16 @@ class ElasticDocument(StructureMetadata):
     def from_stresses(
         cls,
         structure: Structure,
-        stresses: List[Stress],
-        deformations: List[Deformation],
-        uuids: List[str],
-        job_dirs: List[str],
+        stresses: list[Stress],
+        deformations: list[Deformation],
+        uuids: list[str],
+        job_dirs: list[str],
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
         order: Optional[int] = None,
         equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
-    ):
+    ) -> "ElasticDocument":
         """
         Create an elastic document from strains and stresses.
 
@@ -214,7 +207,7 @@ class ElasticDocument(StructureMetadata):
                 strains, pk_stresses, eq_stress=eq_stress
             )
         else:
-            raise ValueError(f"Unsupported elastic fitting method {fitting_method}")
+            raise ValueError(f"Unsupported elastic {fitting_method=}")
 
         ieee = result.convert_to_ieee(structure)
         property_tensor = ieee if order == 2 else ElasticTensor(ieee[0])
@@ -251,13 +244,13 @@ class ElasticDocument(StructureMetadata):
 
 def _expand_strains(
     structure: Structure,
-    strains: List[Strain],
-    stresses: List[Stress],
-    uuids: List[str],
-    job_dirs: List[str],
+    strains: list[Strain],
+    stresses: list[Stress],
+    uuids: list[str],
+    job_dirs: list[str],
     symprec: float,
     tol: float = 1e-3,
-):
+) -> tuple[list, list, list[str], list[str]]:
     """
     Use symmetry to expand strains.
 

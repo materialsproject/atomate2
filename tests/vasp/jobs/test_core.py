@@ -1,3 +1,4 @@
+from numpy.testing import assert_allclose
 from pytest import approx
 
 
@@ -29,7 +30,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-10.85037078)
@@ -61,7 +62,7 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-10.85043620)
@@ -70,7 +71,6 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
 
 
 def test_dielectric(mock_vasp, clean_dir, si_structure):
-    import numpy as np
     from jobflow import run_locally
 
     from atomate2.vasp.jobs.core import DielectricMaker
@@ -93,12 +93,12 @@ def test_dielectric(mock_vasp, clean_dir, si_structure):
 
     # Additional validation on the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert np.allclose(
+    assert_allclose(
         output1.calcs_reversed[0].output.epsilon_static,
         [[11.41539467, 0, 0], [0, 11.41539963, 0], [0, 0, 11.41539866]],
         atol=0.01,
     )
-    assert np.allclose(
+    assert_allclose(
         output1.calcs_reversed[0].output.epsilon_ionic,
         [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
         atol=0.01,
@@ -159,7 +159,7 @@ def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-12.52887403)
@@ -236,8 +236,8 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
 
     # generate job
     job = MDMaker().make(si_structure)
-    NSW = 3
-    job.maker.input_set_generator.user_incar_settings["NSW"] = NSW
+    nsw = 3
+    job.maker.input_set_generator.user_incar_settings["NSW"] = nsw
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -251,7 +251,7 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     # check ionic steps stored as pymatgen Trajectory
     assert output1.calcs_reversed[0].output.ionic_steps is None
     traj = output1.vasp_objects[VaspObject.TRAJECTORY]
-    assert len(traj.frame_properties) == NSW
+    assert len(traj.frame_properties) == nsw
     # simply check a frame property can be converted to an IonicStep
     for frame in traj.frame_properties:
         IonicStep(**frame)

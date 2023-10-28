@@ -62,9 +62,7 @@ HSE_DOUBLE_RELAX = DoubleRelaxMaker(
             user_kpoints_settings=SPECIAL_KPOINT
         ),
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
-        copy_vasp_kwargs={
-            "additional_vasp_files": ("WAVECAR",),
-        },
+        copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
     ),
 )
 GRID_KEYS = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
@@ -171,7 +169,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     bulk_relax_maker: BaseVaspMaker | None = None
     name: str = "formation energy"
 
-    def structure_from_prv(self, previous_dir: str):
+    def structure_from_prv(self, previous_dir: str) -> Structure:
         """Copy the output structure from previous directory.
 
         Read the vasprun.xml file from the previous directory
@@ -194,7 +192,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         vasprun = Vasprun(vasprun_file)
         return vasprun.final_structure
 
-    def validate_maker(self):
+    def validate_maker(self) -> None:
         """Check some key settings in the relax maker.
 
         Since this workflow is pretty complex but allows you to use any
@@ -206,7 +204,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             `ISIF = 2` and `use_structure_charge = True`
         """
 
-        def check_defect_relax_maker(relax_maker: RelaxMaker):
+        def check_defect_relax_maker(relax_maker: RelaxMaker) -> RelaxMaker:
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
@@ -251,7 +249,7 @@ class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
     )
-    name: str = "config. coordinate"
+    name: str = "config coordinate"
 
 
 @dataclass
@@ -274,7 +272,7 @@ class NonRadiativeMaker(Maker):
         structure: Structure,
         charge_state1: int,
         charge_state2: int,
-    ):
+    ) -> Flow:
         """Create the job for Non-Radiative defect capture.
 
         Make a job for the calculation of the configuration coordinate diagram.

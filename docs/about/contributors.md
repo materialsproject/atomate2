@@ -3,12 +3,12 @@
 [gh]: https://cdnjs.cloudflare.com/ajax/libs/octicons/8.5.0/svg/mark-github.svg
 [orc]: ../_static/orcid.svg
 
-atomate2 was designed and developed by **Alex Ganose** [![gh]][utf] [![orc]][0000-0002-4486-3321].
+The first version of atomate2 was designed and developed by **Alex Ganose** [![gh]][utf] [![orc]][0000-0002-4486-3321].
 
 [utf]: https://github.com/utf
 [0000-0002-4486-3321]: https://orcid.org/0000-0002-4486-3321
 
-Additional contributions have been provided by:
+Further substantial contributions have been provided by:
 
 **Andrew Rosen** [![gh]][Andrew-S-Rosen] [![orc]][0000-0002-0141-7006] \
 Assistant Professor of Chemical & Biological Engineering \
@@ -24,7 +24,7 @@ Lawrence Livermore National Laboratory
 [jmmshn]: https://github.com/jmmshn
 [0000-0002-2743-7531]: https://orcid.org/0000-0002-2743-7531
 
-**Janosh Riebesell** [![gh]][janosh] [![orc]][0000-0001-5233-3462]\
+**Janosh Riebesell** [![gh]][janosh] [![orc]][0000-0001-5233-3462] \
 PhD Student \
 Cambridge University
 
@@ -68,16 +68,51 @@ Microsoft Research
 [0000-0001-7777-8871]: https://orcid.org/0000-0001-7777-8871
 
 **Zhuoying Zhu** [![gh]][zhuoying] [![orc]][0000-0003-1775-7651] \
-Postdoctoral researcher\
+Postdoctoral Researcher \
 Lawrence Berkeley National Laboratory
 
 [zhuoying]: https://github.com/zhuoying
 [0000-0003-1775-7651]: https://orcid.org/0000-0003-1775-7651
 
 **Aakash Ashok Naik** [![gh]][naik-aakash] [![orc]][0000-0002-6071-6786] \
-PhD student\
+PhD student \
 Federal Institute for Materials Research and Testing (Berlin) \
 Friedrich Schiller University Jena
 
 [naik-aakash]: https://github.com/naik-aakash
 [0000-0002-6071-6786]: https://orcid.org/0000-0002-6071-6786
+
+**Aaron Kaplan** [![gh]][esoteric-ephemera] [![orc]][0000-0003-3439-4856] \
+Postdoctoral Researcher \
+Lawrence Berkeley National Laboratory
+
+[esoteric-ephemera]: https://github.com/esoteric-ephemera
+[0000-0003-3439-4856]: https://orcid.org/0000-0003-3439-4856
+
+**Matthew McDermott** [![gh]][mattmcdermott] [![orc]][0000-0002-4071-3000] \
+PhD student \
+University of California, Berkeley
+
+[mattmcdermott]: https://github.com/mattmcdermott
+[0000-0002-4071-3000]: https://orcid.org/0000-0002-4071-3000
+
+**Thomas Purcell** [![gh]][tpurcell90] [![orc]][0000-0003-4564-7206] \
+Assistant Professor of Chemistry \
+University of Arizona
+
+[tpurcell90]: https://github.com/tpurcell90
+[0000-0003-4564-7206]: https://orcid.org/0000-0003-4564-7206
+
+**Alexander Bonkowski** [![gh]][ab5424] [![orc]][0000-0002-0525-4742] \
+PhD student in Chemistry \
+RWTH Aachen University
+
+[ab5424]: https://github.com/ab5424
+[0000-0002-0525-4742]: https://orcid.org/0000-0002-0525-4742
+
+**Matthew Kuner** [![gh]][matthewkuner] [![orc]][0000-0002-8218-8558] \
+PhD student in Materials Science and Engineering \
+University of California, Berkeley
+
+[matthewkuner]: https://github.com/matthewkuner
+[0000-0002-8218-8558]: https://orcid.org/0000-0002-8218-8558

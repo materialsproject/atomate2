@@ -33,8 +33,6 @@ from atomate2.cp2k.sets.base import Cp2kInputGenerator
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = ["BaseCp2kMaker", "cp2k_job"]
-
 
 _DATA_OBJECTS = [
     BandStructure,
@@ -50,7 +48,7 @@ _DATA_OBJECTS = [
 _FILES_TO_ZIP = ["cp2k.inp", "cp2k.out"]
 
 
-def cp2k_job(method: Callable):
+def cp2k_job(method: Callable) -> job:
     """
     Decorate the ``make`` method of CP2K job makers.
 
@@ -130,7 +128,9 @@ class BaseCp2kMaker(Maker):
     store_output_data: bool = True
 
     @cp2k_job
-    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_cp2k_dir: str | Path | None = None
+    ) -> Response:
         """
         Run a CP2K calculation.
 

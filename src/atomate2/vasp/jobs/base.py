@@ -27,8 +27,6 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = ["BaseVaspMaker", "vasp_job"]
-
 
 _BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 _DATA_OBJECTS = [
@@ -109,7 +107,7 @@ _FILES_TO_ZIP = (
 )
 
 
-def vasp_job(method: Callable):
+def vasp_job(method: Callable) -> job:
     """
     Decorate the ``make`` method of VASP job makers.
 
@@ -183,7 +181,9 @@ class BaseVaspMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
 
     @vasp_job
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+    ) -> Response:
         """
         Run a VASP calculation.
 
@@ -193,6 +193,11 @@ class BaseVaspMaker(Maker):
             A pymatgen structure object.
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+            Response: A response object containing the output, detours and stop
+                commands of the VASP run.
         """
         # copy previous inputs
         from_prev = prev_vasp_dir is not None
@@ -237,7 +242,7 @@ class BaseVaspMaker(Maker):
 def get_vasp_task_document(
     path: Path | str,
     **kwargs,
-):
+) -> TaskDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 

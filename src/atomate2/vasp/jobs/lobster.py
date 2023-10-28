@@ -24,13 +24,6 @@ if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 
-__all__ = [
-    "LobsterStaticMaker",
-    "get_basis_infos",
-    "get_lobster_jobs",
-    "delete_lobster_wavecar",
-]
-
 logger = logging.getLogger(__name__)
 
 
@@ -88,7 +81,7 @@ def get_basis_infos(
     vasp_maker: BaseVaspMaker,
     address_max_basis: str = None,
     address_min_basis: str = None,
-):
+) -> dict:
     """
     Compute all relevant basis sets and maximum number of bands.
 
@@ -143,7 +136,7 @@ def update_user_incar_settings_maker(
     nbands: int,
     structure: Structure,
     prev_vasp_dir: Path | str,
-):
+) -> Response:
     """
     Update the INCAR settings of a maker.
 
@@ -177,7 +170,7 @@ def get_lobster_jobs(
     optimization_uuid: str,
     static_dir: Path | str,
     static_uuid: str,
-):
+) -> Response:
     """
     Create a list of Lobster jobs with different basis sets.
 
@@ -231,7 +224,7 @@ def get_lobster_jobs(
 def delete_lobster_wavecar(
     dirs: list[Path | str],
     lobster_static_dir: Path | str = None,
-):
+) -> None:
     """
     Delete all WAVECARs.
 

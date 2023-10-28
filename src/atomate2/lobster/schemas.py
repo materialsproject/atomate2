@@ -3,7 +3,7 @@
 import logging
 import time
 from pathlib import Path
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -33,14 +33,6 @@ try:
 except ImportError:
     Analysis = None
     Description = None
-
-__all__ = [
-    "LobsterTaskDocument",
-    "LobsteroutModel",
-    "LobsterinModel",
-    "CondensedBondingAnalysis",
-    "StrongestBonds",
-]
 
 logger = logging.getLogger(__name__)
 
@@ -111,14 +103,14 @@ class LobsterinModel(BaseModel):
     )
     cohpendenergy: float = Field(None, description="End energy for COHP computation")
 
-    gaussiansmearingwidth: float = Field(
+    gaussiansmearingwidth: Optional[float] = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    usedecimalplaces: int = Field(
+    usedecimalplaces: Optional[int] = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    cohpsteps: float = Field(
+    cohpsteps: Optional[float] = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
     basisset: str = Field(None, description="basis set of computation")
@@ -129,7 +121,7 @@ class LobsterinModel(BaseModel):
     saveprojectiontofile: bool = Field(
         None, description="Save the results of projections"
     )
-    lsodos: bool = Field(
+    lsodos: Optional[bool] = Field(
         None, description="Writes DOS output from the orthonormalized LCAO basis"
     )
     basisfunctions: list = Field(
@@ -203,7 +195,7 @@ class CondensedBondingAnalysis(BaseModel):
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
         which_bonds: str = "all",
-    ):
+    ) -> tuple:
         """
         Create a task document from a directory containing LOBSTER files.
 
@@ -219,7 +211,7 @@ class CondensedBondingAnalysis(BaseModel):
         which_bonds: str
             mode for condensed bonding analysis: "cation-anion" and "all".
         """
-        plot_kwargs = {} if plot_kwargs is None else plot_kwargs
+        plot_kwargs = plot_kwargs or {}
         dir_name = Path(dir_name)
         cohpcar_path = dir_name / "COHPCAR.lobster.gz"
         charge_path = dir_name / "CHARGE.lobster.gz"
@@ -237,7 +229,7 @@ class CondensedBondingAnalysis(BaseModel):
                 path_to_charge=charge_path,
                 summed_spins=False,  # we will always use spin polarization here
                 cutoff_icohp=0.10,
-                whichbonds=which_bonds,
+                which_bonds=which_bonds,
             )
             cba_run_time = time.time() - start
             # initialize lobsterpy condensed bonding analysis
@@ -270,7 +262,7 @@ class CondensedBondingAnalysis(BaseModel):
                 cohp_plot_data=cba_cohp_plot_data,
                 cutoff_icohp=analyse.cutoff_icohp,
                 summed_spins=False,
-                which_bonds=analyse.whichbonds,
+                which_bonds=analyse.which_bonds,
                 final_dict_bonds=analyse.final_dict_bonds,
                 final_dict_ions=analyse.final_dict_ions,
                 run_time=cba_run_time,
@@ -396,7 +388,7 @@ class LobsterTaskDocument(StructureMetadata):
     dos: LobsterCompleteDos = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    lso_dos: LobsterCompleteDos = Field(
+    lso_dos: Optional[LobsterCompleteDos] = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
     madelung_energies: dict = Field(
@@ -417,16 +409,14 @@ class LobsterTaskDocument(StructureMetadata):
         "each site as a key and the gross population as a value.",
     )
 
-    band_overlaps: dict = Field(
+    band_overlaps: Optional[dict] = Field(
         None,
         description="Band overlaps data for each k-point from"
         " bandOverlaps.lobster file if it exists",
     )
 
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
@@ -438,7 +428,7 @@ class LobsterTaskDocument(StructureMetadata):
         store_lso_dos: bool = False,
         save_cohp_plots: bool = True,
         plot_kwargs: dict = None,
-    ):
+    ) -> "LobsterTaskDocument":
         """
         Create a task document from a directory containing LOBSTER files.
 
@@ -461,7 +451,7 @@ class LobsterTaskDocument(StructureMetadata):
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
         # Read in lobsterout and lobsterin
@@ -649,7 +639,7 @@ def _identify_strongest_bonds(
     icobilist_path: Path,
     icohplist_path: Path,
     icooplist_path: Path,
-):
+) -> list[StrongestBonds]:
     """
     Identify the strongest bonds and convert them into StrongestBonds objects.
 
@@ -666,8 +656,8 @@ def _identify_strongest_bonds(
 
     Returns
     -------
-    Tuple[StrongestBonds]
-        Tuple of StrongestBonds
+    list[StrongestBonds]
+        List of StrongestBonds
     """
     data = [
         (icohplist_path, False, False),
@@ -693,7 +683,7 @@ def _identify_strongest_bonds(
                     are_cobis=are_cobis,
                     are_coops=are_coops,
                     strongest_bonds=bond_dict,
-                    which_bonds=analyse.whichbonds,
+                    which_bonds=analyse.which_bonds,
                 )
             )
         else:
@@ -704,7 +694,7 @@ def _identify_strongest_bonds(
 # Don't we have this in pymatgen somewhere?
 def _get_strong_bonds(
     bondlist: dict, are_cobis: bool, are_coops: bool, relevant_bonds: dict
-):
+) -> dict:
     """
     Identify the strongest bonds from a list of bonds.
 
@@ -738,8 +728,8 @@ def _get_strong_bonds(
         lengths.append(length)
 
     bond_labels_unique = list(set(bonds))
-    sep_icohp: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
-    sep_lengths: List[List[float]] = [[] for _ in range(len(bond_labels_unique))]
+    sep_icohp: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
+    sep_lengths: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
 
     for i, val in enumerate(bond_labels_unique):
         for j, val2 in enumerate(bonds):

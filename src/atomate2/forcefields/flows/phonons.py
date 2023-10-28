@@ -28,8 +28,6 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-__all__ = ["PhononMaker"]
-
 
 @dataclass
 class PhononMaker(Maker):
@@ -155,7 +153,7 @@ class PhononMaker(Maker):
         epsilon_static: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the phonon properties.
 

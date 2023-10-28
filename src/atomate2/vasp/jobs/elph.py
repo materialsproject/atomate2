@@ -20,14 +20,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.electronic_structure.bandstructure import BandStructure
 
-__all__ = [
-    "DEFAULT_ELPH_TEMPERATURES",
-    "DEFAULT_MIN_SUPERCELL_LENGTH",
-    "SupercellElectronPhononDisplacedStructureMaker",
-    "run_elph_displacements",
-    "calculate_electron_phonon_renormalisation",
-]
-
 
 DEFAULT_ELPH_TEMPERATURES = (0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
 DEFAULT_MIN_SUPERCELL_LENGTH = 15
@@ -98,7 +90,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Response:
         """
         Run a transmuter VASP job.
 
@@ -129,7 +121,7 @@ def run_elph_displacements(
     prev_vasp_dir: str | Path | None = None,
     original_structure: Structure = None,
     supercell_structure: Structure = None,
-):
+) -> Response:
     """
     Run electron phonon displaced structures.
 
@@ -208,7 +200,7 @@ def calculate_electron_phonon_renormalisation(
     elph_uuid: str,
     elph_dir: str,
     original_structure: Structure,
-):
+) -> ElectronPhononRenormalisationDoc:
     """
     Calculate the electron-phonon renormalisation of the band gap.
 

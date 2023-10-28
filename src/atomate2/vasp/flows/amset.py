@@ -40,7 +40,6 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-__all__ = ["VaspAmsetMaker", "DeformationPotentialMaker", "HSEVaspAmsetMaker"]
 
 _DEFAULT_DOPING = (
     1e16,
@@ -89,7 +88,7 @@ class DeformationPotentialMaker(Maker):
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
         ibands: tuple[list[int], list[int]] = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate acoustic deformation potentials.
 
@@ -207,7 +206,7 @@ class VaspAmsetMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
 
@@ -237,7 +236,7 @@ class VaspAmsetMaker(Maker):
         # elastic constant
         elastic = self.elastic_maker.make(
             static.output.structure,
-            prev_vasp_dir=static.output.dir_name,
+            prev_dir=static.output.dir_name,
             equilibrium_stress=static.output.output.stress,
         )
 
@@ -389,7 +388,7 @@ class HSEVaspAmsetMaker(Maker):
         self,
         structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
 
@@ -419,7 +418,7 @@ class HSEVaspAmsetMaker(Maker):
         # elastic constant
         elastic = self.elastic_maker.make(
             static.output.structure,
-            prev_vasp_dir=static.output.dir_name,
+            prev_dir=static.output.dir_name,
             equilibrium_stress=static.output.output.stress,
         )
 

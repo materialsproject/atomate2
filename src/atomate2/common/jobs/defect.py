@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable, Iterable
+from typing import TYPE_CHECKING, Callable
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -19,6 +19,7 @@ from pymatgen.entries.computed_entries import ComputedStructureEntry
 from atomate2.common.schemas.defects import CCDDocument
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     from pathlib import Path
 
     from emmet.core.tasks import TaskDoc
@@ -28,15 +29,6 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 logger = logging.getLogger(__name__)
-
-__all__ = [
-    "get_charged_structures",
-    "spawn_energy_curve_calcs",
-    "get_ccd_documents",
-    "get_supercell_from_prv_calc",
-    "bulk_supercell_calculation",
-    "spawn_defect_q_jobs",
-]
 
 
 class CCDInput(BaseModel):
@@ -49,7 +41,7 @@ class CCDInput(BaseModel):
 
 
 @job
-def get_charged_structures(structure: Structure, charges: Iterable):
+def get_charged_structures(structure: Structure, charges: Iterable) -> list[Structure]:
     """Add charges to a structure.
 
     This needs to be a job so the results of other jobs can be passed in.
@@ -81,7 +73,7 @@ def spawn_energy_curve_calcs(
     prev_vasp_dir: str | Path | None = None,
     add_name: str = "",
     add_info: dict | None = None,
-):
+) -> Response:
     """Compute the total energy curve from a reference to distorted structure.
 
     Parameters
@@ -153,7 +145,7 @@ def get_ccd_documents(
     inputs1: Iterable[CCDInput],
     inputs2: Iterable[CCDInput],
     undistorted_index: int,
-):
+) -> Response:
     """
     Get the configuration coordinate diagram from the task documents.
 
@@ -218,7 +210,7 @@ def get_supercell_from_prv_calc(
         Output containing the supercell transformation and the dir_name
     """
     sc_structure = structure_from_prv(prv_calc_dir)
-    (sc_mat_prv, _) = get_matched_structure_mapping(
+    sc_mat_prv, _ = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
 
@@ -409,18 +401,18 @@ def check_charge_state(charge_state: int, task_structure: Structure) -> Response
     if int(charge_state) != int(task_structure.charge):
         raise ValueError(
             f"The charge of the output structure is {task_structure.charge}, "
-            f"but expect charge state from the Defect object is {charge_state}."
+            f"but expected charge state from the Defect object is {charge_state}."
         )
     return True
 
 
 @job
-def get_defect_entry(charge_state_summary: dict, bulk_summary: dict):
+def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dict]:
     """Get a defect entry from a defect calculation and a bulk calculation."""
-    bulk_c_entry = bulk_summary["sc_entry"]
+    bulk_sc_entry = bulk_summary["sc_entry"]
     bulk_struct_entry = ComputedStructureEntry(
         structure=bulk_summary["sc_struct"],
-        energy=bulk_c_entry.energy,
+        energy=bulk_sc_entry.energy,
     )
     bulk_dir_name = bulk_summary["dir_name"]
     bulk_locpot = bulk_summary["locpot_plnr"]

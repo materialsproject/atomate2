@@ -18,42 +18,43 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.9",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
     "custodian>=2023.3.10",
-    "emmet-core>=0.65.0",
+    "emmet-core>=0.70.5",
     "jobflow>=0.1.11",
-    "monty",
+    "monty>=2023.9.25",
     "numpy",
-    "pydantic",
-    "pymatgen>=2023.1.9",
+    "pydantic-settings>=2.0.3",
+    "pydantic>=2.0.1",
+    "pymatgen>=2023.10.11",
 ]
 
 [project.optional-dependencies]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
-mp = ["mp-api>=0.27.5"]
+mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["lobsterpy>=0.3.0"]
+lobster = ["lobsterpy>=0.3.2"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
-forcefields = ["chgnet==0.2.0", "matgl==0.8.3", "quippy-ase==0.9.14"]
+forcefields = ["chgnet>=0.2.2", "matgl>=0.8.3", "quippy-ase>=0.9.14"]
 docs = [
     "FireWorks==2.0.3",
-    "autodoc_pydantic==1.9.0",
+    "autodoc_pydantic==2.0.1",
     "furo==2023.9.10",
-    "ipython==8.15.0",
+    "ipython==8.16.1",
     "jsonschema[format]",
     "myst_parser==2.0.0",
-    "numpydoc==1.5.0",
-    "sphinx==7.2.5",
+    "numpydoc==1.6.0",
     "sphinx-copybutton==0.5.2",
+    "sphinx==7.2.6",
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
@@ -61,24 +62,25 @@ tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.2"]
 strict = [
     "PyYAML==6.0.1",
     "cclib==1.8",
-    "chgnet==0.2.0",
+    "chgnet==0.3.1",
     "click==8.1.7",
-    "custodian==2023.7.22",
+    "custodian==2023.10.9",
     "dscribe==2.1.0",
-    "emmet-core==0.67.5",
-    "jobflow==0.1.13",
-    "lobsterpy==0.3.0",
+    "emmet-core==0.71.2",
+    "jobflow==0.1.14",
+    "lobsterpy==0.3.2",
     "matgl==0.8.3",
-    "monty==2023.9.5",
-    "mp-api==0.35.1",
+    "monty==2023.9.25",
+    "mp-api==0.37.5",
     "numpy",
     "phonopy==2.20.0",
-    "pydantic==1.10.9",
-    "pymatgen-analysis-defects==2023.8.22",
-    "pymatgen==2023.8.10",
+    "pydantic-settings==2.0.3",
+    "pydantic==2.4.2",
+    "pymatgen-analysis-defects==2023.10.19",
+    "pymatgen==2023.10.11",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "typing-extensions==4.7.1",
+    "typing-extensions==4.8.0",
 ]
 
 [project.scripts]
@@ -114,6 +116,7 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
+addopts = "-p no:warnings --import-mode=importlib"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
@@ -140,36 +143,37 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py39"
 select = [
-    "B",    # flake8-bugbear
-    "C4",   # flake8-comprehensions
-    "D",    # pydocstyle
-    "E",    # pycodestyle error
-    "EXE",  # flake8-executable
-    "F",    # pyflakes
-    "FLY",  # flynt
-    "I",    # isort
-    "ICN",  # flake8-import-conventions
-    "ISC",  # flake8-implicit-str-concat
-    "PD",   # pandas-vet
-    "PERF", # perflint
-    "PIE",  # flake8-pie
-    "PL",   # pylint
-    "PT",   # flake8-pytest-style
-    "PYI",  # flakes8-pyi
-    "Q",    # flake8-quotes
-    "RET",  # flake8-return
-    "RSE",  # flake8-raise
-    "RUF",  # Ruff-specific rules
-    "SIM",  # flake8-simplify
-    "SLOT", # flake8-slots
-    "TCH",  # flake8-type-checking
-    "TID",  # tidy imports
-    "TID",  # flake8-tidy-imports
-    "UP",   # pyupgrade
-    "W",    # pycodestyle warning
-    "YTT",  # flake8-2020
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "D",      # pydocstyle
+    "E",      # pycodestyle error
+    "EXE",    # flake8-executable
+    "F",      # pyflakes
+    "FA",     # flake8-future-annotations
+    "FBT003", # boolean-positional-value-in-call
+    "FLY",    # flynt
+    "I",      # isort
+    "ICN",    # flake8-import-conventions
+    "ISC",    # flake8-implicit-str-concat
+    "PD",     # pandas-vet
+    "PERF",   # perflint
+    "PIE",    # flake8-pie
+    "PL",     # pylint
+    "PT",     # flake8-pytest-style
+    "PYI",    # flakes8-pyi
+    "Q",      # flake8-quotes
+    "RET",    # flake8-return
+    "RSE",    # flake8-raise
+    "RUF",    # Ruff-specific rules
+    "SIM",    # flake8-simplify
+    "SLOT",   # flake8-slots
+    "TCH",    # flake8-type-checking
+    "TID",    # flake8-tidy-imports
+    "UP",     # pyupgrade
+    "W",      # pycodestyle warning
+    "YTT",    # flake8-2020
 ]
 ignore = [
     "PD011",   # pandas-use-of-dot-values
@@ -190,5 +194,7 @@ isort.known-first-party = ["atomate2"]
 "**/tests/*" = ["D"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
-# flake8-future-annotations (FA): future annotations only work in pydantic models in python 3.10+
-"**/schemas/*" = ["FA", "TCH"]
+# flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
+"**/schemas/*" = ["FA", "TCH", "UP007"]
+"**/schemas.py" = ["FA", "TCH", "UP007"]
+"**/settings.py" = ["FA", "TCH", "UP007"]

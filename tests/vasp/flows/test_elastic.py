@@ -1,6 +1,6 @@
 def test_elastic(mock_vasp, clean_dir, si_structure):
-    import numpy as np
     from jobflow import run_locally
+    from numpy.testing import assert_allclose
     from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
     from atomate2.common.schemas.elastic import ElasticDocument
@@ -51,7 +51,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
     # validation on the outputs
     elastic_output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
-    assert np.allclose(
+    assert_allclose(
         elastic_output.elastic_tensor.ieee_format,
         [
             [155.7923, 54.8871, 54.8871, 0.0, 0.0, 0.0],
