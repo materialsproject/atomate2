@@ -1,13 +1,13 @@
+import os
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
+from atomate2.settings import Atomate2Settings
+
 
 def test_empty_and_invalid_config_file(clean_dir):
-    import os
-    from pathlib import Path
-
-    from atomate2.settings import Atomate2Settings
-
     # set path to load settings from though ATOMATE2_CONFIG_FILE env variable
     config_file_path = Path.cwd() / "test-atomate2-config.yaml"
     os.environ["ATOMATE2_CONFIG_FILE"] = str(config_file_path)

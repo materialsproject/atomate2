@@ -3,6 +3,9 @@ import os
 import shutil
 
 import pytest
+from monty.json import MontyDecoder, jsanitize
+
+from atomate2.common.schemas.cclib import TaskDocument
 
 try:
     import cclib
@@ -12,10 +15,6 @@ except ImportError:
 
 @pytest.mark.skipif(cclib is None, reason="requires cclib to be installed")
 def test_cclib_taskdoc(test_dir):
-    from monty.json import MontyDecoder, jsanitize
-
-    from atomate2.common.schemas.cclib import TaskDocument
-
     p = test_dir / "schemas"
 
     # Plain parsing of task doc. We do not check all cclib entries
