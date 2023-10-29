@@ -1,4 +1,6 @@
 import pytest
+from emmet.core.tasks import TaskDoc
+from jobflow import run_locally
 from pymatgen.core import Structure
 
 from atomate2.vasp.jobs.mp import (
@@ -42,9 +44,6 @@ def test_mp_meta_gga_relax_maker_default_values():
 
 
 def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
     # map from job name to directory containing reference output files
     ref_paths = {
         "MP meta-GGA static": "Si_mp_meta_gga_relax/r2scan_final_static",
@@ -58,7 +57,6 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MPMetaGGAStaticMaker(
         input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.8249)
     ).make(si_struct)
@@ -73,9 +71,6 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
     # map from job name to directory containing reference output files
     ref_paths = {
         "MP meta-GGA relax": "Si_mp_meta_gga_relax/r2scan_relax",
@@ -91,7 +86,6 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MPMetaGGARelaxMaker(
         input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.4786)
     ).make(si_struct)
@@ -106,9 +100,6 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
     # map from job name to directory containing reference output files
     ref_paths = {
         "MP GGA relax": "Si_mp_gga_relax/GGA_Relax_1",
@@ -124,7 +115,6 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # generate flow
     job = MPGGARelaxMaker().make(si_struct)
 
     # ensure flow runs successfully

@@ -1,12 +1,13 @@
+from jobflow import run_locally
+from numpy.testing import assert_allclose
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
+from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.forcefields.flows.elastic import ElasticMaker
+from atomate2.forcefields.jobs import M3GNetRelaxMaker
+
+
 def test_elastic_wf(clean_dir, si_structure):
-    from jobflow import run_locally
-    from numpy.testing import assert_allclose
-    from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-    from atomate2.common.schemas.elastic import ElasticDocument
-    from atomate2.forcefields.flows.elastic import ElasticMaker
-    from atomate2.forcefields.jobs import M3GNetRelaxMaker
-
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     # !!! Generate job
@@ -24,7 +25,5 @@ def test_elastic_wf(clean_dir, si_structure):
     elastic_output = responses[job.jobs[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
     assert_allclose(elastic_output.derived_properties.k_voigt, 118.26914, atol=1e-1)
-    assert_allclose(
-        elastic_output.derived_properties.g_voigt, 17.327374125417816, atol=1e-1
-    )
+    assert_allclose(elastic_output.derived_properties.g_voigt, 17.32737412, atol=1e-1)
     assert elastic_output.chemsys == "Si"

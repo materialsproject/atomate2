@@ -1,14 +1,25 @@
 from __future__ import annotations
 
 import logging
+import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
+import numpy as np
 import pytest
+from jobflow import CURRENT_JOB
+from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
+from pymatgen.util.coord import pbc_diff
 from pytest import MonkeyPatch
+
+import atomate2.vasp.jobs.base
+import atomate2.vasp.jobs.defect
+import atomate2.vasp.run
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence
+
 
 logger = logging.getLogger("atomate2")
 
@@ -73,14 +84,8 @@ def mock_vasp(
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    import atomate2.vasp.jobs.base
-    import atomate2.vasp.jobs.defect
-    import atomate2.vasp.run
-    from atomate2.vasp.sets.base import VaspInputGenerator
 
     def mock_run_vasp(*args, **kwargs):
-        from jobflow import CURRENT_JOB
-
         name = CURRENT_JOB.job.name
         try:
             ref_path = vasp_test_dir / _REF_PATHS[name]
@@ -171,8 +176,6 @@ def fake_run_vasp(
 
 
 def check_incar(ref_path: Path, incar_settings: Sequence[str]):
-    from pymatgen.io.vasp import Incar
-
     user_incar = Incar.from_file("INCAR")
     ref_incar_path = ref_path / "inputs" / "INCAR"
     ref_incar = Incar.from_file(ref_incar_path)
@@ -188,8 +191,6 @@ def check_incar(ref_path: Path, incar_settings: Sequence[str]):
 
 
 def check_kpoints(ref_path: Path):
-    from pymatgen.io.vasp import Incar, Kpoints
-
     user_kpoints_exists = Path("KPOINTS").exists()
     ref_kpoints_exists = Path(ref_path / "inputs" / "KPOINTS").exists()
 
@@ -228,10 +229,6 @@ def check_kpoints(ref_path: Path):
 
 
 def check_poscar(ref_path: Path):
-    import numpy as np
-    from pymatgen.io.vasp import Poscar
-    from pymatgen.util.coord import pbc_diff
-
     user_poscar = Poscar.from_file("POSCAR")
     ref_poscar = Poscar.from_file(ref_path / "inputs" / "POSCAR")
 
@@ -251,8 +248,6 @@ def check_poscar(ref_path: Path):
 
 
 def check_potcar(ref_path: Path):
-    from pymatgen.io.vasp import Potcar
-
     if Path(ref_path / "inputs" / "POTCAR").exists():
         ref_potcar = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
     elif Path(ref_path / "inputs" / "POTCAR.spec").exists():
@@ -292,8 +287,6 @@ def clear_vasp_inputs():
 
 
 def copy_vasp_outputs(ref_path: Path):
-    import shutil
-
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
