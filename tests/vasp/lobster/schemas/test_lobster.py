@@ -1,13 +1,18 @@
+import os
+
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
+from atomate2.common.files import copy_files, gunzip_files
 from atomate2.lobster.schemas import (
+    CondensedBondingAnalysis,
     LobsterinModel,
     LobsteroutModel,
     LobsterTaskDocument,
     StrongestBonds,
+    read_saved_json,
 )
 
 
@@ -157,18 +162,6 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
     """
-    from numpy.testing import assert_allclose
-    from pymatgen.core.structure import Structure
-    from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
-    from pymatgen.electronic_structure.dos import LobsterCompleteDos
-
-    from atomate2.common.files import copy_files, gunzip_files
-    from atomate2.lobster.schemas import (
-        LobsterinModel,
-        LobsteroutModel,
-        LobsterTaskDocument,
-        StrongestBonds,
-    )
 
     # copy test files to temp path
     copy_files(src_dir=lobster_test_dir / "lobsteroutputs/mp-2534", dest_dir=tmp_path)
@@ -181,7 +174,6 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
         calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
-        lobster_zip_files=False,
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
@@ -282,18 +274,8 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
 
 def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
     """
-    Test if jsons are saved are valid
+    Test if jsons saved are valid
     """
-    import os
-
-    from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
-    from pymatgen.electronic_structure.dos import LobsterCompleteDos
-
-    from atomate2.lobster.schemas import (
-        CondensedBondingAnalysis,
-        LobsterTaskDocument,
-        read_saved_json,
-    )
 
     # Generate condensed bonding analysis (cba) json using lobstertaskdoc
 
