@@ -162,7 +162,6 @@ class MagneticOrderingsMaker(Maker, ABC):
             orderings.output,
             static_maker=self.static_maker,
             relax_maker=self.relax_maker,
-            prev_calc_dir_argname=self.prev_calc_dir_argname,
         )
 
         postprocessing = postprocess_orderings(calculations.output, self._build_doc_fn)
@@ -180,16 +179,4 @@ class MagneticOrderingsMaker(Maker, ABC):
 
         The specific MagneticOrderingsDocument class used will depend on the DFT code,
         so this has been left to be implemented by the inheriting class.
-        """
-
-    @property
-    @abstractmethod
-    def prev_calc_dir_argname(self):
-        """Name of argument informing static maker of previous calculation directory.
-
-        As this differs between different DFT codes (e.g., VASP, CP2K), it
-        has been left as a property to be implemented by the inheriting class.
-
-        Note: this is only applicable if a relax_maker is specified; i.e., two
-        calculations are performed for each ordering (relax -> static)
         """

@@ -100,18 +100,6 @@ class MagneticOrderingsMaker(MagneticOrderingsMakerBase):
     truncate_by_symmetry: bool = True
     transformation_kwargs: dict | None = None
 
-    @property
-    def prev_calc_dir_argname(self) -> str:
-        """Argument name informing static maker of previous calculation directory.
-
-        This only applies if a relax_maker is specified and two calculations
-        are performed for each ordering (i.e., relax -> static).
-
-        This is necessary because different DFT codes have different previous directory
-        argnames. TODO: remove this patch fix when prev_dir is implemented.
-        """
-        return "prev_vasp_dir"
-
     @staticmethod
     def _build_doc_fn(tasks):
         """Wrap the function MagneticOrderingsDocument.from_tasks."""

@@ -94,7 +94,6 @@ def run_ordering_calculations(
     orderings: tuple[Sequence[Structure], Sequence[str]],
     static_maker: Maker,
     relax_maker: Maker | None,
-    prev_calc_dir_argname: str | None = None,
 ) -> Response:
     """Run calculations for a list of enumerated orderings.
 
@@ -111,10 +110,6 @@ def run_ordering_calculations(
     relax_maker : .Maker | None
         An optional Maker to use to generate jobs for relaxing the structures (before
         static calculations).
-    prev_calc_dir_argname : str | None
-        The name of the argument to pass to the static_maker to indicate the previous
-        calculation directory if relax_maker is not None (e.g., for VASP:
-        "prev_vasp_dir"). TODO: remove this patch fix when prev_dir is implemented.
 
     Returns
     -------
@@ -139,7 +134,7 @@ def run_ordering_calculations(
 
             structure = relax_job.output.structure
             parent_uuid = relax_job.output.uuid
-            static_job_kwargs[prev_calc_dir_argname] = relax_job.output.dir_name
+            static_job_kwargs["prev_dir"] = relax_job.output.dir_name
 
         static_job = static_maker.make(structure, **static_job_kwargs)
         static_job.append_name(" " + name)
