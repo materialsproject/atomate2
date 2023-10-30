@@ -82,15 +82,16 @@ def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
 
 def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # map from job name to directory containing reference input/output files
-    ref_paths = {"MatPES GGA static": "matpes_pbe_r2scan_flow/pbe_static"}
+    gga_job_name = "MatPES GGA static"
+    ref_paths = {gga_job_name: "matpes_pbe_r2scan_flow/pbe_static"}
     si_struct = Structure.from_file(
         f"{vasp_test_dir}/matpes_pbe_r2scan_flow/pbe_static/inputs/POSCAR"
     )
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {key: {"incar_settings": []} for key in ref_paths}
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    # exclude LWAVE from INCAR checking since it defaults to False in MatPesGGAStatic
+    # but is overridden to True in the MatPES static flow to speed up SCF convergence
+    # of 2nd static, but we use the same reference input files in both tests
+    mock_vasp(ref_paths, {gga_job_name: {"incar_exclude": ["LWAVE"]}})
 
     job = MatPesGGAStaticMaker().make(si_struct)
 
@@ -110,12 +111,7 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
         f"{vasp_test_dir}/matpes_pbe_r2scan_flow/r2scan_static/inputs/POSCAR"
     )
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        key: {"incar_settings": ["GGA", "METAGGA", "ALGO"]} for key in ref_paths
-    }
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     job = MatPesMetaGGAStaticMaker().make(si_struct)
 
