@@ -261,13 +261,13 @@ class MagneticOrderingsDocument(BaseModel):
         None, description="Ground state structure."
     )
     ground_state_ordering: Optional[Ordering] = Field(
-        None, description="Ground state ordering."
+        None, description="Ground state magnetic ordering."
     )
     ground_state_energy: Optional[float] = Field(
         None, description="Ground state energy."
     )
     ground_state_energy_per_atom: Optional[float] = Field(
-        None, description="Ground state energy."
+        None, description="Ground state energy, normalized per atom."
     )
 
     @classmethod
@@ -314,7 +314,6 @@ class MagneticOrderingsDocument(BaseModel):
         These keys are automatically constructed when jobflow stores its outputs;
         however, you may need to put the data in this format if using this manually (as
         in a postprocessing job).
-
         """
         parent_structure = tasks[0]["metadata"]["parent_structure"]
 
