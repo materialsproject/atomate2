@@ -129,7 +129,7 @@ class BaseCp2kMaker(Maker):
 
     @cp2k_job
     def make(
-        self, structure: Structure, prev_cp2k_dir: str | Path | None = None
+        self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
         """
         Run a CP2K calculation.
@@ -138,7 +138,7 @@ class BaseCp2kMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         """
         # Apply transformations if they are present
@@ -155,9 +155,9 @@ class BaseCp2kMaker(Maker):
             self.write_additional_data.setdefault("transformations:json", t_json)
 
         # copy previous inputs
-        from_prev = prev_cp2k_dir is not None
-        if prev_cp2k_dir is not None:
-            copy_cp2k_outputs(prev_cp2k_dir, **self.copy_cp2k_kwargs)
+        from_prev = prev_dir is not None
+        if prev_dir is not None:
+            copy_cp2k_outputs(prev_dir, **self.copy_cp2k_kwargs)
 
         # write cp2k input files
         self.write_input_set_kwargs["from_prev"] = from_prev

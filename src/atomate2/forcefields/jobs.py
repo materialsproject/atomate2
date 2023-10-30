@@ -51,14 +51,19 @@ class ForceFieldRelaxMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure) -> ForceFieldTaskDocument:
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
         """
         Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
         structure: .Structure
-             pymatgen structure.
+            pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
         """
         if self.steps < 0:
             logger.warning(
@@ -102,7 +107,9 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure) -> ForceFieldTaskDocument:
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
         """
         Perform a static evaluation using a force field.
 
@@ -110,6 +117,9 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         ----------
         structure: .Structure
             pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
         """
         if self.steps < 0:
             logger.warning(
@@ -240,11 +250,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
             **self.optimizer_kwargs,
         )
 
-        return relaxer.relax(
-            structure,
-            steps=self.steps,
-            **self.relax_kwargs,
-        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -279,10 +285,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
             relax_cell=False,
         )
 
-        return relaxer.relax(
-            structure,
-            steps=1,
-        )
+        return relaxer.relax(structure, steps=1)
 
 
 @dataclass
