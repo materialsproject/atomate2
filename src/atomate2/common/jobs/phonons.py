@@ -252,7 +252,7 @@ def run_phonon_displacements(
     structure: Structure,
     supercell_matrix,
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
-    prev_vasp_dir: str | Path = None,
+    prev_dir: str | Path = None,
 ) -> Flow:
     """
     Run phonon displacements.
@@ -268,7 +268,7 @@ def run_phonon_displacements(
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
-    prev_vasp_dir : str or Path or None
+    prev_dir : str or Path or None
         A previous vasp calculation directory to use for copying outputs.
     """
     if phonon_maker is None:
@@ -282,8 +282,8 @@ def run_phonon_displacements(
     }
 
     for i, displacement in enumerate(displacements):
-        if prev_vasp_dir is not None:
-            phonon_job = phonon_maker.make(displacement, prev_vasp_dir=prev_vasp_dir)
+        if prev_dir is not None:
+            phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
         else:
             phonon_job = phonon_maker.make(displacement)
         phonon_job.append_name(f" {i + 1}/{len(displacements)}")
