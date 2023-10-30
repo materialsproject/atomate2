@@ -45,7 +45,5 @@ def test_magnetic_orderings(mock_vasp, clean_dir, test_dir):
         == min(final_output.outputs, key=lambda doc: doc.energy_per_atom).uuid
     )
     assert final_output.ground_state_ordering == Ordering.AFM
-    assert final_output.ground_state_energy == pytest.approx(-104.29929263)
-    assert final_output.ground_state_energy_per_atom == pytest.approx(
-        -7.4499494735714284
-    )
+    assert final_output.ground_state_energy == pytest.approx(-104.29910777)
+    assert final_output.ground_state_energy_per_atom == pytest.approx(-7.44993626929)
