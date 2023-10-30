@@ -1,14 +1,25 @@
 from __future__ import annotations
 
 import logging
+import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
+import numpy as np
 import pytest
+from jobflow import CURRENT_JOB
+from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
+from pymatgen.util.coord import pbc_diff
 from pytest import MonkeyPatch
+
+import atomate2.vasp.jobs.base
+import atomate2.vasp.jobs.defect
+import atomate2.vasp.run
+from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence
+
 
 logger = logging.getLogger("atomate2")
 
@@ -73,14 +84,8 @@ def mock_vasp(
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    import atomate2.vasp.jobs.base
-    import atomate2.vasp.jobs.defect
-    import atomate2.vasp.run
-    from atomate2.vasp.sets.base import VaspInputGenerator
 
     def mock_run_vasp(*args, **kwargs):
-        from jobflow import CURRENT_JOB
-
         name = CURRENT_JOB.job.name
         try:
             ref_path = vasp_test_dir / _REF_PATHS[name]
@@ -121,6 +126,7 @@ def mock_vasp(
 def fake_run_vasp(
     ref_path: Path,
     incar_settings: Sequence[str] = None,
+    incar_exclude: Sequence[str] = None,
     check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
 ):
@@ -135,6 +141,9 @@ def fake_run_vasp(
     incar_settings
         A list of INCAR settings to check. Defaults to None which checks all settings.
         Empty list or tuple means no settings will be checked.
+    incar_exclude
+        A list of INCAR settings to exclude from checking. Defaults to None, meaning
+        no settings will be excluded.
     check_inputs
         A list of vasp input files to check. Supported options are "incar", "kpoints",
         "poscar", "potcar", "wavecar".
@@ -144,7 +153,7 @@ def fake_run_vasp(
     logger.info("Running fake VASP.")
 
     if "incar" in check_inputs:
-        check_incar(ref_path, incar_settings)
+        check_incar(ref_path, incar_settings, incar_exclude)
 
     if "kpoints" in check_inputs:
         check_kpoints(ref_path)
@@ -170,14 +179,18 @@ def fake_run_vasp(
     logger.info("Generated fake vasp outputs")
 
 
-def check_incar(ref_path: Path, incar_settings: Sequence[str]):
-    from pymatgen.io.vasp import Incar
-
+def check_incar(
+    ref_path: Path, incar_settings: Sequence[str], incar_exclude: Sequence[str]
+) -> None:
     user_incar = Incar.from_file("INCAR")
     ref_incar_path = ref_path / "inputs" / "INCAR"
     ref_incar = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
-    for key in list(user_incar) if incar_settings is None else incar_settings:
+
+    keys_to_check = (
+        set(user_incar) if incar_settings is None else set(incar_settings)
+    ) - set(incar_exclude or [])
+    for key in keys_to_check:
         user_val = user_incar.get(key, defaults.get(key))
         ref_val = ref_incar.get(key, defaults.get(key))
         if user_val != ref_val:
@@ -188,8 +201,6 @@ def check_incar(ref_path: Path, incar_settings: Sequence[str]):
 
 
 def check_kpoints(ref_path: Path):
-    from pymatgen.io.vasp import Incar, Kpoints
-
     user_kpoints_exists = Path("KPOINTS").exists()
     ref_kpoints_exists = Path(ref_path / "inputs" / "KPOINTS").exists()
 
@@ -228,10 +239,6 @@ def check_kpoints(ref_path: Path):
 
 
 def check_poscar(ref_path: Path):
-    import numpy as np
-    from pymatgen.io.vasp import Poscar
-    from pymatgen.util.coord import pbc_diff
-
     user_poscar = Poscar.from_file("POSCAR")
     ref_poscar = Poscar.from_file(ref_path / "inputs" / "POSCAR")
 
@@ -251,8 +258,6 @@ def check_poscar(ref_path: Path):
 
 
 def check_potcar(ref_path: Path):
-    from pymatgen.io.vasp import Potcar
-
     if Path(ref_path / "inputs" / "POTCAR").exists():
         ref_potcar = Potcar.from_file(ref_path / "inputs" / "POTCAR").symbols
     elif Path(ref_path / "inputs" / "POTCAR.spec").exists():
@@ -292,8 +297,6 @@ def clear_vasp_inputs():
 
 
 def copy_vasp_outputs(ref_path: Path):
-    import shutil
-
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():

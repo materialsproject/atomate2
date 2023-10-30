@@ -52,7 +52,6 @@ class MatPesGGAStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MatPesGGAStaticSetGenerator
     )
-    inherit_incar: bool = False
 
 
 @dataclass
@@ -88,4 +87,3 @@ class MatPesMetaGGAStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MatPesMetaGGAStaticSetGenerator
     )
-    inherit_incar: bool = False

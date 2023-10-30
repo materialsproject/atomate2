@@ -1,13 +1,24 @@
+import jobflow
+import numpy as np
+import pytest
+from emmet.core.tasks import TaskDoc
+from emmet.core.vasp.calculation import IonicStep, VaspObject
+from jobflow import run_locally
+from numpy.testing import assert_allclose
 from pytest import approx
+
+from atomate2.vasp.jobs.core import (
+    DielectricMaker,
+    HSERelaxMaker,
+    HSEStaticMaker,
+    MDMaker,
+    RelaxMaker,
+    StaticMaker,
+    TransmuterMaker,
+)
 
 
 def test_static_maker(mock_vasp, clean_dir, si_structure):
-    import jobflow
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import StaticMaker
-
     jstore = jobflow.SETTINGS.JOB_STORE
 
     # mapping from job name to directory containing test files
@@ -41,11 +52,6 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
 
 
 def test_relax_maker(mock_vasp, clean_dir, si_structure):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import RelaxMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"relax": "Si_double_relax/relax_1"}
 
@@ -70,11 +76,6 @@ def test_relax_maker(mock_vasp, clean_dir, si_structure):
 
 
 def test_dielectric(mock_vasp, clean_dir, si_structure):
-    import numpy as np
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import DielectricMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"dielectric": "Si_dielectric"}
 
@@ -93,12 +94,12 @@ def test_dielectric(mock_vasp, clean_dir, si_structure):
 
     # Additional validation on the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert np.allclose(
+    assert_allclose(
         output1.calcs_reversed[0].output.epsilon_static,
         [[11.41539467, 0, 0], [0, 11.41539963, 0], [0, 0, 11.41539866]],
         atol=0.01,
     )
-    assert np.allclose(
+    assert_allclose(
         output1.calcs_reversed[0].output.epsilon_ionic,
         [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
         atol=0.01,
@@ -106,11 +107,6 @@ def test_dielectric(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_relax(mock_vasp, clean_dir, si_structure):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import HSERelaxMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"hse relax": "Si_hse_relax"}
 
@@ -136,11 +132,6 @@ def test_hse_relax(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import HSEStaticMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"hse static": "Si_hse_band_structure/hse_static"}
 
@@ -166,12 +157,6 @@ def test_hse_static_maker(mock_vasp, clean_dir, si_structure):
 
 
 def test_transmuter(mock_vasp, clean_dir, si_structure):
-    import numpy as np
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import TransmuterMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"transmuter": "Si_transmuter"}
 
@@ -206,13 +191,6 @@ def test_transmuter(mock_vasp, clean_dir, si_structure):
 
 
 def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
-    import pytest
-    from emmet.core.tasks import TaskDoc
-    from emmet.core.vasp.calculation import IonicStep, VaspObject
-    from jobflow import run_locally
-
-    from atomate2.vasp.jobs.core import MDMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"molecular dynamics": "Si_molecular_dynamics/molecular_dynamics"}
 

@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 import logging
+import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 import pytest
+from pymatgen.io.lobster import Lobsterin
+
+import atomate2.lobster.jobs
+import atomate2.lobster.run
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -62,8 +67,6 @@ def mock_lobster(monkeypatch, lobster_test_dir):
        dictionary created in step 4.
     6. Run your lobster job after calling `mock_lobster`.
     """
-    import atomate2.lobster.jobs
-    import atomate2.lobster.run
 
     def mock_run_lobster(*args, **kwargs):
         from jobflow import CURRENT_JOB
@@ -123,8 +126,6 @@ def fake_run_lobster(
 
 
 def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
-    from pymatgen.io.lobster import Lobsterin
-
     user = Lobsterin.from_file("lobsterin")
 
     # Check lobsterin
@@ -136,8 +137,6 @@ def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
 
 
 def copy_lobster_outputs(ref_path: str | Path):
-    import shutil
-
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():

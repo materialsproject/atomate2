@@ -100,9 +100,7 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         )
     )
 
-    def make(
-        self, structure: Structure, prev_vasp_dir: str | Path | None = None
-    ) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         1, 2 or 3-step flow with optional pre-relax and final static jobs.
 
@@ -110,7 +108,7 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -120,16 +118,14 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         """
         jobs: list[Job] = []
 
-        relax_flow = self.relax_maker.make(
-            structure=structure, prev_vasp_dir=prev_vasp_dir
-        )
+        relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         output = relax_flow.output
         jobs += [relax_flow]
 
         if self.static_maker:
             # Run a static calculation
             static_job = self.static_maker.make(
-                structure=output.structure, prev_vasp_dir=output.dir_name
+                structure=output.structure, prev_dir=output.dir_name
             )
             output = static_job.output
             jobs += [static_job]
@@ -162,9 +158,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         )
     )
 
-    def make(
-        self, structure: Structure, prev_vasp_dir: str | Path | None = None
-    ) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
 
@@ -174,7 +168,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -184,15 +178,13 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         """
         jobs: list[Job] = []
 
-        relax_flow = self.relax_maker.make(
-            structure=structure, prev_vasp_dir=prev_vasp_dir
-        )
+        relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         output = relax_flow.output
         jobs += [relax_flow]
         if self.static_maker:
             # Run a static calculation (typically r2SCAN)
             static_job = self.static_maker.make(
-                structure=output.structure, prev_vasp_dir=output.dir_name
+                structure=output.structure, prev_dir=output.dir_name
             )
             output = static_job.output
             jobs += [static_job]

@@ -1,6 +1,9 @@
-def test_gunzip_force_overwrites(tmp_path):
-    from atomate2.common.files import gunzip_files, gzip_files
+from pathlib import Path
 
+from atomate2.common.files import gunzip_files, gzip_files, gzip_output_folder
+
+
+def test_gunzip_force_overwrites(tmp_path):
     files = ["file1", "file2", "file3"]
     for fname in files:
         f = tmp_path / fname
@@ -31,10 +34,6 @@ def test_gunzip_force_overwrites(tmp_path):
 
 
 def test_zip_outputs(tmp_dir):
-    from pathlib import Path
-
-    from atomate2.common.files import gzip_output_folder
-
     for file_name in ["a", "b"]:
         (Path.cwd() / file_name).touch()
 
