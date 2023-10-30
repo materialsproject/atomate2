@@ -58,7 +58,7 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.2"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.3"]
 strict = [
     "PyYAML==6.0.1",
     "cclib==1.8",
