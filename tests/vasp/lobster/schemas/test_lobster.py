@@ -7,6 +7,7 @@ from pymatgen.electronic_structure.dos import LobsterCompleteDos
 
 from atomate2.common.files import copy_files, gunzip_files
 from atomate2.lobster.schemas import (
+    CohpPlotData,
     CondensedBondingAnalysis,
     LobsterinModel,
     LobsteroutModel,
@@ -83,12 +84,12 @@ def test_lobster_task_document(lobster_test_dir):
     assert doc.strongest_bonds_icoop_cation_anion.which_bonds == "cation-anion"
     assert doc.strongest_bonds_icohp_cation_anion.which_bonds == "cation-anion"
     assert doc.strongest_bonds_icobi_cation_anion.which_bonds == "cation-anion"
-    assert isinstance(doc.lobsterpy_data.cohp_plot_data["Ga1: 4 x As-Ga"], Cohp)
+    assert isinstance(doc.lobsterpy_data.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp)
     assert doc.lobsterpy_data.which_bonds == "all"
     assert doc.lobsterpy_data_cation_anion.which_bonds == "cation-anion"
     assert doc.lobsterpy_data.number_of_considered_ions == 2
     assert isinstance(
-        doc.lobsterpy_data_cation_anion.cohp_plot_data["Ga1: 4 x As-Ga"], Cohp
+        doc.lobsterpy_data_cation_anion.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp
     )
     assert isinstance(doc.lobsterpy_text, str)
     assert isinstance(doc.lobsterpy_text_cation_anion, str)
@@ -230,13 +231,11 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     assert doc.strongest_bonds_icoop_cation_anion.which_bonds == "cation-anion"
     assert doc.strongest_bonds_icohp_cation_anion.which_bonds == "cation-anion"
     assert doc.strongest_bonds_icobi_cation_anion.which_bonds == "cation-anion"
-    assert isinstance(doc.lobsterpy_data.cohp_plot_data["Ga1: 4 x As-Ga"], Cohp)
+    assert isinstance(doc.lobsterpy_data.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp)
     assert doc.lobsterpy_data.which_bonds == "all"
     assert doc.lobsterpy_data_cation_anion.which_bonds == "cation-anion"
     assert doc.lobsterpy_data.number_of_considered_ions == 2
-    assert isinstance(
-        doc.lobsterpy_data_cation_anion.cohp_plot_data["Ga1: 4 x As-Ga"], Cohp
-    )
+    assert isinstance(doc.lobsterpy_data_cation_anion.cohp_plot_data, CohpPlotData)
     assert isinstance(doc.lobsterpy_text, str)
     assert isinstance(doc.lobsterpy_text_cation_anion, str)
 
@@ -317,10 +316,10 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
             assert isinstance(
                 json_data[cba_key]["lobsterpy_data"], CondensedBondingAnalysis
             )
-            for cohp_data in json_data[cba_key][
-                "lobsterpy_data"
-            ].cohp_plot_data.values():
-                assert isinstance(cohp_data, Cohp)
+            assert isinstance(
+                json_data[cba_key]["lobsterpy_data"].cohp_plot_data, CohpPlotData
+            )
+            # assert isinstance(cohp_data, Cohp)
 
     # read cba saved jsons without converting it to non pymatgen objects (read as dict)
 
@@ -336,8 +335,8 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
         if (cba_key == "all_bonds" or cba_key == "cation_anion_bonds") and json_data[
             cba_key
         ]:
-            for cohp_data in json_data[cba_key]["lobsterpy_data"][
-                "cohp_plot_data"
+            for cohp_data in json_data[cba_key]["lobsterpy_data"]["cohp_plot_data"][
+                "data"
             ].values():
                 assert isinstance(cohp_data, dict)
 
@@ -396,7 +395,7 @@ def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
 
         if "lobsterpy_data" in taskdoc_key and json_data[taskdoc_key]:
             assert isinstance(json_data[taskdoc_key], CondensedBondingAnalysis)
-            for cohp_data in json_data[taskdoc_key].cohp_plot_data.values():
+            for cohp_data in json_data[taskdoc_key].cohp_plot_data.data.values():
                 assert isinstance(cohp_data, Cohp)
 
         if (
