@@ -126,6 +126,7 @@ def mock_vasp(
 def fake_run_vasp(
     ref_path: Path,
     incar_settings: Sequence[str] = None,
+    incar_exclude: Sequence[str] = None,
     check_inputs: Sequence[Literal["incar", "kpoints", "poscar", "potcar"]] = _VFILES,
     clear_inputs: bool = True,
 ):
@@ -140,6 +141,9 @@ def fake_run_vasp(
     incar_settings
         A list of INCAR settings to check. Defaults to None which checks all settings.
         Empty list or tuple means no settings will be checked.
+    incar_exclude
+        A list of INCAR settings to exclude from checking. Defaults to None, meaning
+        no settings will be excluded.
     check_inputs
         A list of vasp input files to check. Supported options are "incar", "kpoints",
         "poscar", "potcar", "wavecar".
@@ -149,7 +153,7 @@ def fake_run_vasp(
     logger.info("Running fake VASP.")
 
     if "incar" in check_inputs:
-        check_incar(ref_path, incar_settings)
+        check_incar(ref_path, incar_settings, incar_exclude)
 
     if "kpoints" in check_inputs:
         check_kpoints(ref_path)
@@ -175,12 +179,18 @@ def fake_run_vasp(
     logger.info("Generated fake vasp outputs")
 
 
-def check_incar(ref_path: Path, incar_settings: Sequence[str]):
+def check_incar(
+    ref_path: Path, incar_settings: Sequence[str], incar_exclude: Sequence[str]
+) -> None:
     user_incar = Incar.from_file("INCAR")
     ref_incar_path = ref_path / "inputs" / "INCAR"
     ref_incar = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}
-    for key in list(user_incar) if incar_settings is None else incar_settings:
+
+    keys_to_check = (
+        set(user_incar) if incar_settings is None else set(incar_settings)
+    ) - set(incar_exclude or [])
+    for key in keys_to_check:
         user_val = user_incar.get(key, defaults.get(key))
         ref_val = ref_incar.get(key, defaults.get(key))
         if user_val != ref_val:
