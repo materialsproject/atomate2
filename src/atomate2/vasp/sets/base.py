@@ -444,6 +444,7 @@ class VaspInputGenerator(InputGenerator):
             predictor_corrector_preamble=structure.properties.get(
                 "predictor_corrector_preamble"
             ),
+            lattice_velocities=structure.properties.get("lattice_velocities"),
         )
         return VaspInputSet(
             incar=incar,
