@@ -977,6 +977,7 @@ def fit_force_constants(
         "cutoffs": None,
         "force_constants_potential": None,
     }
+    # all_cutoffs = all_cutoffs[0] #later change it back to all_cutoffs
     n_cutoffs = len(all_cutoffs)
     print(f"len_cutoffs={n_cutoffs}")
 
@@ -1046,6 +1047,7 @@ def fit_force_constants(
 
     # Without Joblib's parallellization
     for i, cutoffs in enumerate(all_cutoffs):
+        print(f"i={i}")
         print(f"disp_cut={disp_cut}")
         print(f"fit_method={fit_method}")
         print(f"cuttoffs={cutoffs}")
@@ -1101,6 +1103,9 @@ def fit_force_constants(
 
         fitting_data["cutoffs"].append(cutoff_results["cutoffs"])
         fitting_data["rmse_test"].append(cutoff_results["rmse_test"])
+
+        if i == 0:
+            break
 
     # logger.info(f"CUTOFF RESULTS \n {cutoff_results}")
 
