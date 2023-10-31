@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 import pytest
+from jobflow import run_locally
+from pymatgen.analysis.magnetism.analyzer import Ordering
+from pymatgen.core import Structure
+
+from atomate2.vasp.flows.magnetism import MagneticOrderingsMaker
+from atomate2.vasp.schemas.magnetism import MagneticOrderingsDocument
 
 
 def test_magnetic_orderings(mock_vasp, clean_dir, test_dir):
-    from jobflow import run_locally
-    from pymatgen.analysis.magnetism.analyzer import Ordering
-    from pymatgen.core import Structure
-
-    from atomate2.vasp.flows.magnetism import MagneticOrderingsMaker
-    from atomate2.vasp.schemas.magnetism import MagneticOrderingsDocument
-
     structure = Structure.from_file(
         test_dir / "vasp" / "MgMn2O4_magnetic" / "relax_1_3_(fm)" / "inputs" / "POSCAR"
     )
