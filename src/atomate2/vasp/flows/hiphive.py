@@ -14,6 +14,7 @@ from jobflow import Flow, Maker
 
 # Pymatgen packages
 from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.forcefields.flows.phonons import PhononMaker
 
 # Atomate2 packages
 # from atomate2.vasp.sets.core import MPStaticSetGenerator
