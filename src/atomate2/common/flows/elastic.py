@@ -94,7 +94,7 @@ class BaseElasticMaker(Maker, ABC):
         ----------
         structure : .Structure
             A pymatgen structure.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         equilibrium_stress : tuple of tuple of float
             The equilibrium stress of the (relaxed) structure, if known.

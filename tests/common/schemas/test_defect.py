@@ -1,12 +1,14 @@
+import numpy as np
+
+from atomate2.common.schemas.defects import sort_pos_dist
+
+
 def test_sort_pos_dist():
     """
     Test the sorting algorithm with a list of 2D positions.
     The algorithm should sort the list into a straight line depending on
     the direction of s1 and s2
     """
-    import numpy as np
-
-    from atomate2.common.schemas.defects import sort_pos_dist
 
     def abs_d(s1, s2):
         return np.linalg.norm(np.array(s1) - np.array(s2))

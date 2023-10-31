@@ -79,4 +79,4 @@ class ElasticMaker(BaseElasticMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_vasp_dir"
+        return "prev_dir"

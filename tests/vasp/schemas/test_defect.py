@@ -1,13 +1,15 @@
+from collections import defaultdict
+
+from emmet.core.tasks import TaskDoc
+
+from atomate2.common.schemas.defects import CCDDocument
+
+
 def test_ccd_document(vasp_test_dir):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
     """
-    from collections import defaultdict
-
-    from emmet.core.tasks import TaskDoc
-
-    from atomate2.common.schemas.defects import CCDDocument
 
     def is_strict_minimum(min_index, arr):
         min_val = arr[min_index]

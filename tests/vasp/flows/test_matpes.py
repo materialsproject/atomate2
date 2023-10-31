@@ -26,6 +26,10 @@ def test_matpes_gga_plus_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_d
     assert len(flow) == 2
     assert [job.name for job in flow] == list(ref_paths)
 
+    # make sure first static has LWAVE=True so we can pass its WAVECAR to second static
+    # as pre-conditioned starting point
+    assert flow[0].maker.input_set_generator.user_incar_settings["LWAVE"] is True
+
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 

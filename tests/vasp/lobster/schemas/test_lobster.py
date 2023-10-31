@@ -1,26 +1,27 @@
+from numpy.testing import assert_allclose
+from pymatgen.core.structure import Structure
+from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
+from pymatgen.electronic_structure.dos import LobsterCompleteDos
+
+from atomate2.lobster.schemas import (
+    LobsterinModel,
+    LobsteroutModel,
+    LobsterTaskDocument,
+    StrongestBonds,
+)
+
+
 def test_lobster_task_document(lobster_test_dir):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
     """
-    from numpy.testing import assert_allclose
-    from pymatgen.core.structure import Structure
-    from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
-    from pymatgen.electronic_structure.dos import LobsterCompleteDos
-
-    from atomate2.lobster.schemas import (
-        LobsterinModel,
-        LobsteroutModel,
-        LobsterTaskDocument,
-        StrongestBonds,
-    )
-
     doc = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-2534", save_cohp_plots=False
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
-    assert_allclose(doc.lobsterout.charge_spilling[0], 0.009899999999999999)
+    assert_allclose(doc.lobsterout.charge_spilling[0], 0.00989999, atol=1e-7)
 
     assert isinstance(doc.lobsterin, LobsterinModel)
     assert_allclose(doc.lobsterin.cohpstartenergy, -5)

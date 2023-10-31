@@ -200,7 +200,7 @@ class HSEDenseUniformMaker(HSEBSMaker):
 def run_amset_deformations(
     structure: Structure,
     symprec: float = SETTINGS.SYMPREC,
-    prev_vasp_dir: str | Path | None = None,
+    prev_dir: str | Path | None = None,
     static_deformation_maker: BaseVaspMaker | None = None,
 ) -> Response:
     """
@@ -216,7 +216,7 @@ def run_amset_deformations(
     symprec : float
         Symmetry precision used to reduce the number of deformations. Set to None for
         no symmetry reduction.
-    prev_vasp_dir : str or Path or None
+    prev_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
     static_deformation_maker : .BaseVaspMaker or None
         A VaspMaker to use to generate the static deformation jobs.
@@ -244,7 +244,7 @@ def run_amset_deformations(
 
         # create the job
         static_job = static_deformation_maker.make(
-            deformed_structure, prev_vasp_dir=prev_vasp_dir
+            deformed_structure, prev_dir=prev_dir
         )
         static_job.append_name(f" {i + 1}/{len(deformations)}")
         statics.append(static_job)
