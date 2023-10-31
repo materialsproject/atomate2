@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING
 
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import (
+    DielectricMaker,
+    StaticMaker,
+    TightRelaxMaker,
+)
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
@@ -148,4 +152,4 @@ class PhononMaker(BasePhononMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_vasp_dir"
+        return "prev_dir"
