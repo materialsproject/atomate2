@@ -688,6 +688,13 @@ def run_hiphive(
             be any of the values allowed by the hiphive ``Optimizer`` class.
     """
     copy_hiphive_outputs(prev_dir_json_saver)
+    
+    # all_structures = loadfn(f"/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/ZnSe_VASP/perturbed_structures_{loop}.json")
+    # all_forces = loadfn(f"/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/ZnSe_VASP/perturbed_forces_{loop}_new.json")
+    # structure_data = loadfn(f"/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/ZnSe_VASP/structure_data_{loop}.json")
+    # dumpfn(all_structures, f"perturbed_structures_{loop}.json")
+    # dumpfn(all_forces, f"perturbed_forces_{loop}.json")
+    # dumpfn(structure_data, f"structure_data_{loop}.json")
 
     all_structures = loadfn(f"perturbed_structures_{loop}.json")
     all_forces = loadfn(f"perturbed_forces_{loop}_new.json")
@@ -1345,11 +1352,11 @@ def harmonic_properties(
     else:  # do not calculate these if imaginary modes exist
         logger.warning("Imaginary modes found!")
 
-    if len(temperature) == 1:
-        temperature = temperature[0]
-        free_energy = free_energy[0]
-        entropy = entropy[0]
-        heat_capacity = heat_capacity[0]
+    # if len(temperature) == 1:
+    #     temperature = temperature[0]
+    #     free_energy = free_energy[0]
+    #     entropy = entropy[0]
+    #     heat_capacity = heat_capacity[0]
 
     return {
         "temperature": temperature,
@@ -1492,13 +1499,21 @@ def gruneisen(
         )  # eV/K/atom to J/K
         vol = phonopy.primitive.get_volume()
         # cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
-        cte = (
-            grun_tot
-            * heat_capacity.repeat(3).reshape(len(heat_capacity), 3)
-            / (vol / 10**30)
-            / (bulk_modulus * 10**9)
-            / 3
-        )
+        # Check the shapes of the arrays
+        print("grun_tot", grun_tot)
+        print("heat_capacity shape:", heat_capacity.shape)
+        print("heat_capacity", heat_capacity)
+        print("vol", vol)
+        print("bulk_modulus", bulk_modulus)
+        # cte = np.array(grun_tot)*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
+        cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
+        # cte = (
+        #     grun_tot
+        #     * heat_capacity.repeat(3).reshape(len(heat_capacity), 3)
+        #     / (vol / 10**30)
+        #     / (bulk_modulus * 10**9)
+        #     / 3
+        # )
         cte = np.nan_to_num(cte)
         dLfrac = thermal_expansion(temperature, cte)
         if len(temperature) == 1:
@@ -1519,9 +1534,15 @@ def thermal_expansion(
         temperature = [0, *temperature]
         cte = np.array([np.array([0, 0, 0]), *list(cte)])
     temperature_np = np.array(temperature)
-    ind = np.argsort(temperature_np)
-    temperature_np = temperature[ind]
-    cte = np.array(cte)[ind]
+    # ind = np.argsort(temperature_np)
+    ind = np.array(np.argsort(temperature_np))
+    print(f"ind = {ind}")
+    print(f"temperature_np = {temperature_np}")
+    print(f"cte = {cte}")
+    # temperature_np = temperature[ind]
+    temperature_np = temperature
+    # cte = np.array(cte)[ind]
+    cte = np.array(cte)
     # linear expansion fraction
     dLfrac = copy(cte)
     for t in range(len(temperature_np)):
