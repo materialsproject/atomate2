@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker
+from atomate2.vasp.sets.matpes import MatPesGGAStaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -37,7 +38,14 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
     """
 
     name: str = "MatPES GGA plus meta-GGA static"
-    static1: Maker | None = field(default_factory=MatPesGGAStaticMaker)
+    static1: Maker | None = field(
+        default_factory=lambda: MatPesGGAStaticMaker(
+            # write WAVECAR so we can pass as pre-conditioned starting point to static2
+            input_set_generator=MatPesGGAStaticSetGenerator(
+                user_incar_settings={"LWAVE": True}
+            ),
+        )
+    )
     static2: Maker = field(
         default_factory=lambda: MatPesMetaGGAStaticMaker(
             # could copy CHGCAR from GGA to meta-GGA directory too but is redundant
