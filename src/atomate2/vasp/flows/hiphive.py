@@ -153,7 +153,7 @@ class HiphiveMaker(Maker):
         i * 100 for i in range(21)
     ]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
     T_RENORM: ClassVar[list[int]] = [
-        1500
+        300
     ]  # [i*100 for i in range(0,16)] # Temp. at which renorm. is to be performed
     # Temperature at which lattice thermal conductivity is calculated
     # If renormalization is performed,
@@ -171,7 +171,8 @@ class HiphiveMaker(Maker):
     RENORM_NCONFIG = 5  # Changed from 50
     RENORM_CONV_THRESH = 0.1  # meV/atom
     RENORM_MAX_ITER = 30  # Changed from 20
-    SHENGBTE_CMD = "srun -n 32 ./ShengBTE 2>BTE.err >BTE.out"
+    # SHENGBTE_CMD = "srun -n 32 ./ShengBTE 2>BTE.err >BTE.out"
+    SHENGBTE_CMD = "srun -n 16 -c 32 --cpu_bind=cores -G 16 --gpu-bind=none /global/homes/h/hrushi99/code/FourPhonon/ShengBTE"
     PHONO3PY_CMD = "phono3py --mesh 19 19 19 --fc3 --fc2 --br --dim 5 5 5"
 
     def make(
@@ -189,7 +190,7 @@ class HiphiveMaker(Maker):
         perturbed_structure_kwargs: dict | None = None,
         calculate_lattice_thermal_conductivity: bool = True,
         # thermal_conductivity_temperature: Union[float, Dict] = T_KLAT,
-        renormalize: bool = False,
+        renormalize: bool = True,
         renormalize_temperature: list = T_RENORM,
         renormalize_method: str = RENORM_METHOD,
         renormalize_nconfig: int = RENORM_NCONFIG,
@@ -507,38 +508,39 @@ class HiphiveMaker(Maker):
         #     }
         # )
 
-        # # 7. Perform phonon renormalization to obtain temperature-dependent
-        # # force constants using hiPhive
-        # if renormalize:
-        #     for temperature in renormalize_temperature:
-        #         nconfig = renormalize_nconfig * (1 + temperature // 100)
-        #         renormalization = run_hiphive_renormalization(
-        #             temperature=temperature,
-        #             renorm_method=renormalize_method,
-        #             nconfig=nconfig,
-        #             conv_thresh=renormalize_conv_thresh,
-        #             max_iter=renormalize_max_iter,
-        #             renorm_TE_iter=renormalize_thermal_expansion_iter,
-        #             bulk_modulus=bulk_modulus,
-        #             mesh_density=mesh_density,
-        #             prev_dir_hiphive=fit_force_constant.output[4],
-        #             loop=loops,
-        #         )
-        #         renormalization.name += f" {temperature} {loops}"
-        #         jobs.append(renormalization)
-        #         outputs.append(renormalization.output)
-        #         renormalization.metadata.update(
-        #             {
-        #                 "tag": [
-        #                     f"run_renormalization_{loops}",
-        #                     f"nConfigsPerStd={n_structures}",
-        #                     f"rattleStds={rattle_std}",
-        #                     f"dispCut={disp_cut}",
-        #                     f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-        #                     f"loop={loops}",
-        #                 ]
-        #             }
-        #         )
+        # 7. Perform phonon renormalization to obtain temperature-dependent
+        # force constants using hiPhive
+        if renormalize:
+            for temperature in renormalize_temperature:
+                nconfig = renormalize_nconfig * (1 + temperature // 100)
+                renormalization = run_hiphive_renormalization(
+                    temperature=temperature,
+                    renorm_method=renormalize_method,
+                    nconfig=nconfig,
+                    conv_thresh=renormalize_conv_thresh,
+                    max_iter=renormalize_max_iter,
+                    renorm_TE_iter=renormalize_thermal_expansion_iter,
+                    bulk_modulus=bulk_modulus,
+                    mesh_density=mesh_density,
+                    prev_dir_hiphive=fit_force_constant.output[4],
+                    loop=loops,
+                )
+                renormalization.name += f" {temperature} {loops}"
+                jobs.append(renormalization)
+                outputs.append(renormalization.output)
+                renormalization.metadata.update(
+                    {
+                        "tag": [
+                            f"run_renormalization_{loops}",
+                            f"nConfigsPerStd={n_structures}",
+                            f"rattleStds={rattle_std}",
+                            f"dispCut={disp_cut}",
+                            # f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+                            f"supercell_matrix={supercell_matrix}",
+                            f"loop={loops}",
+                        ]
+                    }
+                )
 
         # # ##### 8. Lattice thermal conductivity calculation using phono3py
         # # if calculate_lattice_thermal_conductivity:
@@ -560,58 +562,61 @@ class HiphiveMaker(Maker):
         # # f"rattleStds={rattle_std}", f"dispCut={disp_cut}",
         # # f"supercell_matrix_kwargs={supercell_matrix_kwargs}", f"loop={loops}"]})
 
-        # # 8. Lattice thermal conductivity calculation using Sheng BTE
-        # if calculate_lattice_thermal_conductivity:
-        #     if renormalize:
-        #         temperatures = renormalize_temperature
-        #     else:
-        #         temperatures = thermal_conductivity_temperature
-        #     # Because of the way ShengBTE works, a temperature array that is not
-        #     # evenly spaced out (T_step) requires submission for each temperature
-        #     if not renormalize:
-        #         if isinstance(temperatures, dict):
-        #             pass
-        #         elif type(temperatures) in [list, np.ndarray]:
-        #             assert all(np.diff(temperatures) == np.diff(temperatures)[0])
-        #             # if len(temperatures) == 0:
-        #             #     # Handle the case when temperatures is empty
-        #             #     pass
-        #             # elif type(temperatures) in [list, np.ndarray]:
-        #             #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+        # 8. Lattice thermal conductivity calculation using Sheng BTE
+        if calculate_lattice_thermal_conductivity:
+            if renormalize:
+                temperatures = renormalize_temperature
+            else:
+                temperatures = thermal_conductivity_temperature
+            # Because of the way ShengBTE works, a temperature array that is not
+            # evenly spaced out (T_step) requires submission for each temperature
+            if not renormalize:
+                if isinstance(temperatures, dict):
+                    pass
+                elif type(temperatures) in [list, np.ndarray]:
+                    assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+                    # if len(temperatures) == 0:
+                    #     # Handle the case when temperatures is empty
+                    #     pass
+                    # elif type(temperatures) in [list, np.ndarray]:
+                    #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
 
-        #         lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-        #             shengbte_cmd=shengbte_cmd,
-        #             renormalized=renormalize,
-        #             temperature=temperatures,
-        #             loop=loops,
-        #             prev_dir_hiphive=fit_force_constant.output[4],
-        #         )
-        #     else:
-        #         for _t, T in enumerate(temperatures):
-        #             if T == 0:
-        #                 continue
-        #             lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-        #                 shengbte_cmd=shengbte_cmd,
-        #                 renormalized=renormalize,
-        #                 temperature=T,
-        #                 loop=loops,
-        #                 prev_dir_hiphive=fit_force_constant.output[4],
-        #             )
+                lattice_thermal_conductivity = run_lattice_thermal_conductivity(
+                    shengbte_cmd=shengbte_cmd,
+                    renormalized=renormalize,
+                    temperature=temperatures,
+                    loop=loops,
+                    prev_dir_hiphive=fit_force_constant.output[4],
+                    # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2023-11-01-04-50-29-927903-42200",
+                )
+            else:
+                for _t, T in enumerate(temperatures):
+                    if T == 0:
+                        continue
+                    lattice_thermal_conductivity = run_lattice_thermal_conductivity(
+                        shengbte_cmd=shengbte_cmd,
+                        renormalized=renormalize,
+                        temperature=T,
+                        loop=loops,
+                        prev_dir_hiphive=fit_force_constant.output[4],
+                        # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2023-11-01-04-50-29-927903-42200",
+                    )
 
-        # lattice_thermal_conductivity.name += f" {loops}"
-        # jobs.append(lattice_thermal_conductivity)
-        # outputs.append(lattice_thermal_conductivity.output)
-        # lattice_thermal_conductivity.metadata.update(
-        #     {
-        #         "tag": [
-        #             f"run_lattice_thermal_conductivity_{loops}",
-        #             f"nConfigsPerStd={n_structures}",
-        #             f"rattleStds={rattle_std}",
-        #             f"dispCut={disp_cut}",
-        #             f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-        #             f"loop={loops}",
-        #         ]
-        #     }
-        # )
+        lattice_thermal_conductivity.name += f" {loops}"
+        jobs.append(lattice_thermal_conductivity)
+        outputs.append(lattice_thermal_conductivity.output)
+        lattice_thermal_conductivity.metadata.update(
+            {
+                "tag": [
+                    f"run_lattice_thermal_conductivity_{loops}",
+                    f"nConfigsPerStd={n_structures}",
+                    f"rattleStds={rattle_std}",
+                    f"dispCut={disp_cut}",
+                    # f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+                    f"supercell_matrix={supercell_matrix}",
+                    f"loop={loops}",
+                ]
+            }
+        )
 
         return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE")
