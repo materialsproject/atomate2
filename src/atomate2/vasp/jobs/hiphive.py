@@ -1586,12 +1586,12 @@ def run_shengbte(
 
     # Create a symlink to ShengBTE
 
-    ShengBTE = "ShengBTE"
-    src = "/global/homes/h/hrushi99/code/shengbte_new3/shengbte/ShengBTE"
-    dst = os.path.join(os.getcwd(), ShengBTE)
+    # ShengBTE = "ShengBTE"
+    # src = "/global/homes/h/hrushi99/code/shengbte_new3/shengbte/ShengBTE"
+    # dst = os.path.join(os.getcwd(), ShengBTE)
 
-    with contextlib.suppress(FileExistsError):
-        os.symlink(src, dst)
+    # with contextlib.suppress(FileExistsError):
+    #     os.symlink(src, dst)
 
     print("We are in ShengBTE FW 3")
 
