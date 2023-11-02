@@ -283,10 +283,14 @@ def run_phonon_displacements(
     }
 
     for i, displacement in enumerate(displacements):
-        if prev_vasp_dir is not None:
+        if isinstance(phonon_maker, PhononDisplacementMaker):
             phonon_job = phonon_maker.make(displacement, prev_vasp_dir=prev_vasp_dir)
         else:
             phonon_job = phonon_maker.make(displacement)
+        # if prev_vasp_dir is not None:
+        #     phonon_job = phonon_maker.make(displacement, prev_vasp_dir=prev_vasp_dir)
+        # else:
+        #     phonon_job = phonon_maker.make(displacement)
         phonon_job.append_name(f" {i + 1}/{len(displacements)}")
 
         # we will add some meta data
