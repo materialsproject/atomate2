@@ -1506,7 +1506,8 @@ def gruneisen(
         print("vol", vol)
         print("bulk_modulus", bulk_modulus)
         # cte = np.array(grun_tot)*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
-        cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
+        # cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
+        cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus*10**9)/3
         # cte = (
         #     grun_tot
         #     * heat_capacity.repeat(3).reshape(len(heat_capacity), 3)
