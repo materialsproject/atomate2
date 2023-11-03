@@ -182,7 +182,7 @@ class EosMaker(Maker):
                 flow_output[jobtype]["energies"].append(
                     jobs[jobtype][iframe].output.calcs_reversed[0].output.energy
                 )
-                flow_output[jobtype]["volume"].append(
+                flow_output[jobtype]["volumes"].append(
                     jobs[jobtype][iframe]
                     .output.calcs_reversed[0]
                     .output.structure.volume
