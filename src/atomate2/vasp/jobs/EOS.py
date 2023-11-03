@@ -16,7 +16,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-import numpy as np
 from jobflow import job
 from pymatgen.analysis.eos import EOS
 from pymatgen.transformations.standard_transformations import (
@@ -44,7 +43,7 @@ if TYPE_CHECKING:
 
 
 @job
-def postprocess_EOS(data_dict: dict[str, list], EOS_models: list | None = None):
+def postprocess_EOS(data_dict: dict, EOS_models: list | None = None):
     """Take dict of E(V) data and fit to each equation of state in EOS_models."""
     if EOS_models is None:
         EOS_models = [
@@ -55,14 +54,19 @@ def postprocess_EOS(data_dict: dict[str, list], EOS_models: list | None = None):
             "vinet",
         ]
 
-    output = {"EV": data_dict.copy(), "EOS": {}}
-    for key in data_dict:
-        output["EOS"][key] = {}  # type: ignore[index]
-        data = np.asarray(data_dict[key])
+    output = data_dict.copy()
+    for jobtype in ["relax", "static"]:
+        if len(list(data_dict[jobtype])) == 0:
+            continue
+        output[jobtype]["EOS"] = {}
         for eos_name in EOS_models:
-            eos = EOS(eos_name=eos_name).fit(data[:, 0], data[:, 1])
-            eos_d = {**eos.results, "b0 GPa": float(eos.b0_GPa)}
-            output["EOS"][key][eos_name] = eos_d  # type: ignore[index]
+            eos = EOS(eos_name=eos_name).fit(
+                data_dict[jobtype]["volumes"], data_dict[jobtype]["energies"]
+            )
+            output[jobtype]["EOS"][eos_name] = {
+                **eos.results,
+                "b0 GPa": float(eos.b0_GPa),
+            }
     return output
 
 

@@ -112,13 +112,18 @@ class EosMaker(Maker):
         prev_vasp_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
         """
-        relax_jobs: list[Job] = []
-        static_jobs: list[Job] = []
+        jobs: dict[str, list[Job]] = {"relax": [], "static": []}
 
         relax_flow = self.relax_maker.make(
             structure=structure, prev_vasp_dir=prev_vasp_dir
         )
         relax_flow.name = "EOS equilibrium relaxation"
+        equil_props = {
+            "relax": {
+                "E0": relax_flow.output.calcs_reversed[0].output.energy,
+                "V0": relax_flow.output.calcs_reversed[0].output.structure.volume,
+            }
+        }
 
         if self.static_maker:
             equil_static = self.static_maker.make(
@@ -126,6 +131,10 @@ class EosMaker(Maker):
                 prev_vasp_dir=relax_flow.output.dir_name,
             )
             equil_static.name = "EOS equilibrium static"
+            equil_props["static"] = {
+                "E0": equil_static.output.calcs_reversed[0].output.energy,
+                "V0": equil_static.output.calcs_reversed[0].output.structure.volume,
+            }
 
         strain_l = np.linspace(
             self.linear_strain[0], self.linear_strain[1], self.number_of_frames
@@ -146,43 +155,44 @@ class EosMaker(Maker):
             deform_relax_job.name = f"EOS Deformation Relax {ideformation}"
 
             if ideformation == insert_equil_index:
-                relax_jobs += [relax_flow]
+                jobs["relax"] += [relax_flow]
                 if self.static_maker:
-                    static_jobs += [equil_static]
+                    jobs["static"] += [equil_static]
 
-            relax_jobs += [deform_relax_job]
+            jobs["relax"] += [deform_relax_job]
             if self.static_maker:
                 deform_static_job = self.static_maker.make(
                     structure=deform_relax_job.output.structure,
                     prev_vasp_dir=deform_relax_job.output.dir_name,
                 )
                 deform_static_job.name = f"EOS Static {ideformation}"
-                static_jobs += [deform_static_job]
+                jobs["static"] += [deform_static_job]
 
-        flow_output: dict[str, list] = {"relax": []}
-        for iframe in range(self.number_of_frames + 1):
-            flow_output["relax"].append(
-                [
-                    relax_jobs[iframe].output.volume,
-                    relax_jobs[iframe].output.calcs_reversed[0].output.energy,
-                ]
-            )
+        flow_output: dict = {}
+        for jobtype in jobs:
+            if len(jobs[jobtype]) == 0:
+                continue
 
-        if self.static_maker:
-            flow_output["static"] = []
+            flow_output[jobtype] = {
+                "energies": [],
+                "volumes": [],
+                **equil_props[jobtype],
+            }
             for iframe in range(self.number_of_frames + 1):
-                flow_output["static"].append(
-                    [
-                        static_jobs[iframe].output.volume,
-                        static_jobs[iframe].output.calcs_reversed[0].output.energy,
-                    ]
+                flow_output[jobtype]["energies"].append(
+                    jobs[jobtype][iframe].output.calcs_reversed[0].output.energy
+                )
+                flow_output[jobtype]["volume"].append(
+                    jobs[jobtype][iframe]
+                    .output.calcs_reversed[0]
+                    .output.structure.volume
                 )
 
         postprocess = postprocess_EOS(flow_output)
         postprocess.name = self.name + "_" + postprocess.name
 
         return Flow(
-            jobs=relax_jobs + static_jobs + [postprocess],
+            jobs=jobs["relax"] + jobs["static"] + [postprocess],
             output=postprocess.output,
             name=self.name,
         )
