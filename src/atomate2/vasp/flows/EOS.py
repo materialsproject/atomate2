@@ -29,6 +29,7 @@ from atomate2.vasp.jobs.EOS import (
     postprocess_EOS,
 )
 from atomate2.vasp.powerups import update_user_incar_settings
+from atomate2.vasp.sets.EOS import MPGGAEosRelaxSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -294,7 +295,13 @@ class MPGGAEosDoubleRelaxMaker(DoubleRelaxMaker):
     """
 
     name: str = "MP GGA EOS double relax"
-    relax_maker1: BaseVaspMaker | None = field(default_factory=MPGGAEosRelaxMaker)
+    relax_maker1: BaseVaspMaker | None = field(
+        default_factory=lambda: MPGGAEosRelaxMaker(
+            input_set_generator=MPGGAEosRelaxSetGenerator(
+                user_incar_settings={"ISIF": 3, "EDIFFG": -0.05}
+            )
+        )
+    )
     relax_maker2: BaseVaspMaker = field(
         default_factory=lambda: MPGGAEosRelaxMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
