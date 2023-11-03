@@ -28,6 +28,9 @@ from atomate2.vasp.sets.EOS import (
     EosSetGenerator,
     MPGGAEosRelaxSetGenerator,
     MPGGAEosStaticSetGenerator,
+    MPLegacyEosRelaxSetGenerator,
+    MPLegacyEosStaticSetGenerator,
+    MPMetaGGAEosPreRelaxSetGenerator,
     MPMetaGGAEosRelaxSetGenerator,
     MPMetaGGAEosStaticSetGenerator,
 )
@@ -171,6 +174,118 @@ class EosRelaxMaker(BaseVaspMaker):
 
 
 """
+MPLegacy prefix: same jobs but using atomate1-compatible PBE-GGA params
+"""
+
+
+@dataclass
+class MPLegacyEosRelaxMaker(BaseVaspMaker):
+    """
+    Maker to create MP atomate1-compatible GGA relax job in VASP.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "EOS MP legacy GGA relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: MPLegacyEosRelaxSetGenerator(
+            user_incar_settings={"ISIF": 3}
+        )
+    )
+
+
+@dataclass
+class MPLegacyEosStaticMaker(BaseVaspMaker):
+    """
+    Maker to create MP atomate1-compatible GGA static job in VASP.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "EOS MP legacy GGA static"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=MPLegacyEosStaticSetGenerator
+    )
+
+
+@dataclass
+class MPLegacyDeformationMaker(DeformationMaker):
+    """
+    Maker to deform input structure and relax using MP-atomate1-PBE-GGA params.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "EOS MP legacy GGA deform and relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=MPLegacyEosRelaxSetGenerator
+    )
+
+
+"""
 MPGGA prefix: Same jobs but using MP's default PBE-GGA parameters
 """
 
@@ -285,6 +400,43 @@ class MPGGADeformationMaker(DeformationMaker):
 """
 MPMetaGGA prefix: jobs using MP's default r2SCAN Meta-GGA parameters
 """
+
+
+@dataclass
+class MPMetaGGAEosPreRelaxMaker(BaseVaspMaker):
+    """
+    Maker to create MP-compatible r2SCAN relax job in VASP using EOS parameters.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "EOS MP meta-GGA pre-relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: MPMetaGGAEosPreRelaxSetGenerator(
+            user_incar_settings={"ISIF": 3}
+        )
+    )
 
 
 @dataclass

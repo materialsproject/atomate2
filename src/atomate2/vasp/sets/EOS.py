@@ -83,7 +83,67 @@ class EosSetGenerator(VaspInputGenerator):
             "LWAVE": True,
             "ISMEAR": 0,
             "SIGMA": 0.05,
-            "KSPACING": None,
+            "KSPACING": 0.22,
+        }
+
+
+"""
+MPLegacy prefix = MP PBE-GGA compatible with atomate implementation
+"""
+
+
+@dataclass
+class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
+    """Class to generate atomate1-MP-compatible VASP GGA EOS relax input sets."""
+
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    auto_ismear: bool = False
+    auto_kspacing: bool = False
+    inherit_incar: bool = False
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a relaxation job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        """
+        original atomate wf_bulk_modulus had 600 eV cutoff
+        Because default atomate2 set and MP's r2SCAN set use 680 eV cutoff,
+        avoid needless duplication and use ENCUT = 680 eV here
+        """
+        return {
+            "NSW": 99,
+            "LCHARG": False,
+            "ISIF": 2,
+            "IBRION": 2,
+            "EDIFF": 1.0e-6,
+            "ENCUT": 600,
+            "LREAL": False,
+            "LWAVE": True,
         }
 
     def get_kpoints_updates(
@@ -120,24 +180,9 @@ class EosSetGenerator(VaspInputGenerator):
         return {"grid_density": 7000}
 
 
-"""
-MPGGA prefix = MP PBE-GGA compatible
-"""
-
-
 @dataclass
-class MPGGAEosRelaxSetGenerator(EosSetGenerator):
-    """Class to generate MP-compatible VASP GGA EOS relax input sets."""
-
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
-    auto_ismear: bool = False
-    auto_kspacing: bool = False
-    inherit_incar: bool = False
-
-
-@dataclass
-class MPGGAEosStaticSetGenerator(EosSetGenerator):
-    """Class to generate MP-compatible VASP GGA EOS relax input sets."""
+class MPLegacyEosStaticSetGenerator(EosSetGenerator):
+    """Class to generate atomate1-MP-compatible VASP GGA EOS relax input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
     auto_ismear: bool = False
@@ -153,7 +198,68 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
         outcar: Outcar = None,
     ) -> dict:
         """
-        Get updates to the INCAR for this calculation type.
+        Get updates to the INCAR for a relaxation job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        """
+        original atomate wf_bulk_modulus had 600 eV cutoff
+        and k-point grid density of *7,000*
+        """
+        return {
+            "NSW": 0,
+            "LCHARG": False,
+            "EDIFF": 1.0e-6,
+            "ENCUT": 600,
+            "LREAL": False,
+            "LWAVE": False,
+            "IBRION": -1,
+            "ISMEAR": -5,
+            "LORBIT": 11,
+            "ALGO": "Normal",
+        }
+
+
+"""
+MPGGA prefix = MP GGA compatible
+"""
+
+
+@dataclass
+class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
+    """Class to generate MP-compatible VASP GGA EOS relax input sets."""
+
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    auto_ismear: bool = False
+    auto_kspacing: bool = False
+    inherit_incar: bool = False
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -174,26 +280,86 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
             A dictionary of updates to apply.
         """
         return {
+            "NSW": 99,
             "LCHARG": False,
+            "ISIF": 2,
+            "IBRION": 2,
             "EDIFF": 1.0e-6,
-            "ENCUT": 680,
-            "ENAUG": 1360,
-            "KSPACING": None,
-            "NSW": 0,
-            "IBRION": -1,
-            "LWAVE": False,
+            "ALGO": "FAST",
             "LREAL": False,
+            "LWAVE": True,
+            "ISMEAR": 0,
+            "SIGMA": 0.05,
+            "LMAXMIX": 6,
+            "KSPACING": 0.22,
+            "METAGGA": None,
+        }
+
+
+@dataclass
+class MPGGAEosStaticSetGenerator(EosSetGenerator):
+    """Class to generate MP-compatible VASP GGA EOS relax input sets."""
+
+    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    auto_ismear: bool = False
+    auto_kspacing: bool = False
+    inherit_incar: bool = False
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a relaxation job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        """
+        original atomate wf_bulk_modulus had 600 eV cutoff
+        and k-point grid density of *7,000*
+        """
+        return {
+            "NSW": 0,
+            "LCHARG": False,
+            "IBRION": -1,
+            "EDIFF": 1.0e-6,
+            "ALGO": "NORMAL",
+            "LREAL": False,
+            "LWAVE": False,
             "ISMEAR": -5,
+            "LMAXMIX": 6,
+            "KSPACING": 0.22,
+            "METAGGA": None,
         }
 
 
 """
-MPGGA prefix = MP PBE-GGA compatible
+MPMetaGGA prefix = MP r2SCAN meta-GGA compatible
 """
 
 
 @dataclass
-class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
+class MPMetaGGAEosStaticSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP Meta-GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
@@ -232,9 +398,7 @@ class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
         """
         return {
             "EDIFF": 1.0e-6,
-            "ENCUT": 680,
-            "ENAUG": 1360,
-            "ALGO": "FAST",
+            "ALGO": "NORMAL",
             "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
             "NSW": 0,
             "LCHARG": True,
@@ -242,12 +406,13 @@ class MPMetaGGAEosStaticSetGenerator(EosSetGenerator):
             "LREAL": False,
             "ISMEAR": -5,
             "IBRION": -1,
-            "KSPACING": None,
+            "LMAXMIX": 6,
+            "KSPACING": 0.22,
         }
 
 
 @dataclass
-class MPMetaGGAEosRelaxSetGenerator(EosSetGenerator):
+class MPMetaGGAEosRelaxSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP meta-GGA relaxation input sets.
 
     Parameters
@@ -299,13 +464,12 @@ class MPMetaGGAEosRelaxSetGenerator(EosSetGenerator):
             "LCHARG": True,
             "LWAVE": True,
             "GGA": None,
-            "KSPACING": None,
+            "LMAXMIX": 6,
+            "KSPACING": 0.22,
             "NSW": 99,
             "ISIF": 2,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
-            "ENCUT": 680,
-            "ENAUG": 1360,
             "LREAL": False,
             "ISMEAR": 0,
             "SIGMA": 0.05,
@@ -313,7 +477,7 @@ class MPMetaGGAEosRelaxSetGenerator(EosSetGenerator):
 
 
 @dataclass
-class MPMetaGGAEosPreRelaxSetGenerator(EosSetGenerator):
+class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP meta-GGA pre-relaxation input sets.
 
     Parameters
@@ -370,10 +534,9 @@ class MPMetaGGAEosPreRelaxSetGenerator(EosSetGenerator):
             "ISIF": 2,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
-            "ENCUT": 680,
-            "ENAUG": 1360,
+            "EDIFFG": -0.05,
             "LREAL": False,
             "ISMEAR": 0,
             "SIGMA": 0.05,
-            "KSPACING": None,
+            "KSPACING": 0.22,
         }
