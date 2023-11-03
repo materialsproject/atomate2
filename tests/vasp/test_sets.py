@@ -19,11 +19,11 @@ def struct_no_magmoms() -> Structure:
 def struct_with_spin() -> Structure:
     """Dummy FeO structure with spins defined."""
     fe = Species("Fe2+", spin=4)
-    o = Species("O2-", spin=0.63)
+    oxy = Species("O2-", spin=0.63)
 
     return Structure(
         lattice=Lattice.cubic(3),
-        species=[fe, o],
+        species=[fe, oxy],
         coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
     )
 
