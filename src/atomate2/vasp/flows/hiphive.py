@@ -147,8 +147,8 @@ class HiphiveMaker(Maker):
         )
     )
     phonon_displacement_maker: BaseVaspMaker = field(
-        default_factory=PhononDisplacementMaker(
-            input_set_generator=lambda: StaticSetGenerator(auto_lreal=True)
+        default_factory=lambda:PhononDisplacementMaker(
+            input_set_generator=StaticSetGenerator(auto_lreal=True)
         )
     )
     bulk_relax_maker: BaseVaspMaker | None = field(
