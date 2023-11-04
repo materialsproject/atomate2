@@ -118,7 +118,7 @@ def generate_hiphive_displacements(
     structure: Structure,
     supercell_matrix: np.array,
     n_structures: int,
-    rattle_std: List[float],
+    fixed_displs: List[float],
     loop: int,
 ):
     print(f"supercell_matrix = {supercell_matrix}")
@@ -131,10 +131,10 @@ def generate_hiphive_displacements(
     # Generate the rattled structures ####
     structures_ase_all = []
     # Convert to ASE atoms
-    for i in range(len(rattle_std)):
+    for i in range(len(fixed_displs)):
         supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
         structures_ase = generate_displaced_structures(
-            supercell_ase, n_structures, rattle_std[i], loop
+            supercell_ase, n_structures, fixed_displs[i], loop
         )
         # for j in range(len(structures_ase)):
         #     structures_ase_all.append(structures_ase[j])
@@ -164,7 +164,7 @@ def generate_hiphive_displacements(
 def run_static_calculations(
     supercell_matrix_kwargs: Dict[str, Any],
     n_structures: int,
-    rattle_std: List[float],
+    fixed_displs: List[float],
     loop: int,
     prev_vasp_dir: Union[str, Path, None],
     # MPstatic_maker: BaseVaspMaker = field(default_factory=MPStaticMaker),
@@ -221,10 +221,10 @@ def run_static_calculations(
     # Generate the rattled structures ####
     structures_ase_all = []
     # Convert to ASE atoms
-    for i in range(len(rattle_std)):
+    for i in range(len(fixed_displs)):
         supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
         structures_ase = generate_displaced_structures(
-            supercell_ase, n_structures, rattle_std[i], loop
+            supercell_ase, n_structures, fixed_displs[i], loop
         )
         # for j in range(len(structures_ase)):
         #     structures_ase_all.append(structures_ase[j])
@@ -273,15 +273,10 @@ def run_static_calculations(
 @job
 def collect_perturbed_structures(
     structure: Structure,
-    # supercell_matrix_kwargs: Dict[str, Any],
-    # supercell_matrix: np.array,
     supercell_matrix,
-    # rattled_structures: list[Structure],
     rattled_structures,
-    # forces: list[list[float]],
     forces,
     loop: int = None,
-    # structure: Optional[Structure] = None,
     prev_dir_json_saver: Optional[str] = None,
 ):
     """
@@ -466,7 +461,7 @@ def collect_perturbed_structures(
 def quality_control(
     rmse_test: float,
     n_structures: int,
-    rattle_std: List[float],
+    fixed_displs: List[float],
     loop: int,
     fit_method: str,
     disp_cut: float,
@@ -488,7 +483,7 @@ def quality_control(
             addition=quality_control_job(
                 rmse_test,
                 n_structures,
-                rattle_std,
+                fixed_displs,
                 loop,
                 fit_method,
                 disp_cut,
@@ -508,7 +503,7 @@ def quality_control(
 def quality_control_job(
     rmse_test,
     n_structures: int,
-    rattle_std: List[float],
+    fixed_displs: List[float],
     loop: int,
     fit_method: str,
     disp_cut: float,
@@ -534,7 +529,7 @@ def quality_control_job(
         prev_dir_json_saver=prev_dir_json_saver,
         supercell_matrix_kwargs=supercell_matrix_kwargs,
         n_structures=n_structures,
-        rattle_std=rattle_std,
+        fixed_displs=fixed_displs,
         loop=loop,
         prev_vasp_dir=prev_vasp_dir,
         MPstatic_maker=MPstatic_maker,
@@ -546,7 +541,7 @@ def quality_control_job(
             "tag": [
                 f"vasp_static_calcs_{loop}",
                 f"nConfigsPerStd={n_structures}",
-                f"rattleStds={rattle_std}",
+                f"fixedDispls={fixed_displs}",
                 f"dispCut={disp_cut}",
                 f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
                 f"loop={loop}",
@@ -572,7 +567,7 @@ def quality_control_job(
             "tag": [
                 f"json_saver_{loop}",
                 f"nConfigsPerStd={n_structures}",
-                f"rattleStds={rattle_std}",
+                f"fixedDispls={fixed_displs}",
                 f"dispCut={disp_cut}",
                 f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
                 f"loop={loop}",
@@ -599,7 +594,7 @@ def quality_control_job(
             "tag": [
                 f"fw_fit_force_constant_{loop}",
                 f"nConfigsPerStd={n_structures}",
-                f"rattleStds={rattle_std}",
+                f"fixedDispls={fixed_displs}",
                 f"dispCut={disp_cut}",
                 f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
                 f"loop={loop}",
@@ -618,7 +613,7 @@ def quality_control_job(
     error_check_job = quality_control(
         rmse_test=fw_fit_force_constant.output[5],
         n_structures=n_structures,
-        rattle_std=rattle_std,
+        fixedDispls=fixed_displs,
         loop=loop,
         fit_method=fit_method,
         disp_cut=disp_cut,
@@ -639,7 +634,7 @@ def quality_control_job(
             "tag": [
                 f"error_check_job_{loop}",
                 f"nConfigsPerStd={n_structures}",
-                f"rattleStds={rattle_std}",
+                f"fixedDispls={fixed_displs}",
                 f"dispCut={disp_cut}",
                 f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
                 f"loop={loop}",
@@ -1949,6 +1944,10 @@ def run_hiphive_renormalization(
 
     dumpfn(structure_data, "structure_data.json".format())
     dumpfn(renorm_thermal_data, "renorm_thermal_data.json".format())
+
+    current_dir = os.getcwd()
+
+    return [current_dir]
 
 
 def run_renormalization(

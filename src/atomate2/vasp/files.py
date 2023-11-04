@@ -249,6 +249,7 @@ def copy_hiphive_outputs(
         "fitting_data.json",
         "phonopy_params.yaml",
         "thermal_data.json",
+        "renorm_thermal_data.json",
         "structure.json",
         "relaxed_structure.json",
         "structure_data.json",
