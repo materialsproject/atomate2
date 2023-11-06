@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
+from typing import List
 
 from emmet.core.qc_tasks import TaskDoc
 from pymatgen.apps.borg.hive import AbstractDrone
@@ -74,7 +75,7 @@ class QChemDrone(AbstractDrone):
             return [parent]
         if (
             not any(parent.endswith(os.sep + r) for r in task_names)
-            and len(list(Path(parent.glob("mol.qout*")))) > 0
+            and len(List(Path(parent).glob("mol.qout*"))) > 0
         ):
             return [parent]
         return []

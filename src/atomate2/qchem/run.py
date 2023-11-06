@@ -95,7 +95,7 @@ def run_qchem(
         logger.info(f"{qchem_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [QCJob(split_qchem_cmd, **qchem_job_kwargs)]
     else:
         raise ValueError(f"Unsupported job type: {job_type}")

@@ -12,33 +12,17 @@ from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.io.qchem.inputs import QCInput
 
-from atomate2.qchem.files import copy_qchem_outputs, write_qchem_input_set
+from atomate2.qchem.files import copy_qchem_outputs
 from atomate2.qchem.run import run_qchem, should_stop_children
-from atomate2.qchem.sets.base import QChemInputGenerator
+from atomate2.qchem.sets.base import QCInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Molecule
 
-__all__ = ["BaseQChemMaker", "qchem_job"]
-
-# _DATA_OBJECTS = [
-#     BandStructure,
-#     BandStructureSymmLine,
-#     DOS,
-#     Dos,
-#     CompleteDos,
-#     Locpot,
-#     Chgcar,
-#     Wavecar,
-#     Trajectory,
-#     "force_constants",
-#     "normalmode_eigenvecs",
-# ]
-
-# _DATA_OBJECTS = [QCInput]
+__all__ = ["BaseQCMaker", "qchem_job"]
 
 
-def qchem_job(method: Callable):
+def qchem_job(method: Callable) -> job:
     """
     Decorate the ``make`` method of QChem job makers.
 
@@ -72,7 +56,7 @@ def qchem_job(method: Callable):
 
 
 @dataclass
-class BaseQChemMaker(Maker):
+class BaseQCMaker(Maker):
     """
     Base QChem job maker.
 
@@ -101,9 +85,7 @@ class BaseQChemMaker(Maker):
     """
 
     name: str = "base qchem job"
-    input_set_generator: Callable[[], QChemInputGenerator] = field(
-        default_factory=QChemInputGenerator
-    )
+    input_set_generator: QCInputGenerator = field(default_factory=QCInputGenerator)
     write_input_set_kwargs: dict = field(default_factory=dict)
     copy_qchem_kwargs: dict = field(default_factory=dict)
     run_qchem_kwargs: dict = field(default_factory=dict)
@@ -112,7 +94,9 @@ class BaseQChemMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
 
     @qchem_job
-    def make(self, molecule: Molecule, prev_qchem_dir: str | Path | None = None):
+    def make(
+        self, molecule: Molecule, prev_qchem_dir: str | Path | None = None
+    ) -> Response:
         """
         Run a QChem calculation.
 
@@ -132,9 +116,7 @@ class BaseQChemMaker(Maker):
             self.write_input_set_kwargs["from_prev"] = from_prev
 
         # write qchem input files
-        write_qchem_input_set(
-            molecule, self.input_set_generator, **self.write_input_set_kwargs
-        )
+        self.input_set_generator.get_input_set(molecule).write_inputs()
 
         # write any additional data
         for filename, data in self.write_additional_data.items():

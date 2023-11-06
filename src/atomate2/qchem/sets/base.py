@@ -21,23 +21,24 @@ __author__ = "Alex Ganose, Ryan Kingsbury, Rishabh D Guha"
 __copyright__ = "Copyright 2018-2022, The Materials Project"
 __version__ = "0.1"
 
-# _BASE_QCHEM_SET = loadfn(resource_filename("atomate2.qchem.sets", "BaseQchemSet.yaml"))
+# _BASE_QCHEM_SET =
+# loadfn(resource_filename("atomate2.qchem.sets", "BaseQchemSet.yaml"))
 
-__all__ = ["QChemInputSet", "QChemInputGenerator"]
+__all__ = ["QCInputSet", "QCInputGenerator"]
 
 
-class QChemInputSet(InputSet):
+class QCInputSet(InputSet):
     """
-    A class to represent a QChem input file as a set.
+    A class to represent a QChem input file as a QChem InputSet.
 
     Parameters
     ----------
     qcinput
         A QCInput object
     optional_files
-        Any other optional input files supplied as a dict of ``{filename: object}``. The objects
-        should follow standard pymatgen conventions in implementing an ``as_dict()``
-        and ``from_dict()`` method.
+        Any other optional input files supplied as a dict of ``{filename: object}``.
+        The objects should follow standard pymatgen conventions in
+        implementing an ``as_dict()`` and ``from_dict()`` method.
     """
 
     def __init__(
@@ -77,7 +78,9 @@ class QChemInputSet(InputSet):
                 raise FileExistsError(f"{directory / k} already exists.")
 
     @staticmethod
-    def from_directory(directory: str | Path, optional_files: dict = None):
+    def from_directory(
+        directory: str | Path, optional_files: dict = None
+    ) -> QCInputSet:
         """
         Load a set of QChem inputs from a directory.
 
@@ -102,14 +105,14 @@ class QChemInputSet(InputSet):
             for name, obj in optional_files.items():
                 optional_inputs[name] = obj.from_file(directory / name)
 
-        return QChemInputSet(**inputs, optional_files=optional_inputs)
+        return QCInputSet(**inputs, optional_files=optional_inputs)
 
         # Todo
         # Implement is_valid property
 
 
 @dataclass
-class QChemInputGenerator(InputGenerator):
+class QCInputGenerator(InputGenerator):
     """
     A class to generate QChem input set.
 
@@ -125,8 +128,9 @@ class QChemInputGenerator(InputGenerator):
 
     scf_algorithm : str
         Algorithm to use for converging the SCF. Recommended choices are
-        "DIIS", "GDM", and "DIIS_GDM". Other algorithms supported by Qchem's GEN_SCFMAN
-        module will also likely perform well. Refer to the QChem manual for further details.
+        "DIIS", "GDM", and "DIIS_GDM". Other algorithms supported by Qchem's
+        GEN_SCFMAN module will also likely perform well.
+        Refer to the QChem manual for further details.
 
     dft_rung : int
         Select the DFT functional among 5 recommended levels of theory,
@@ -142,32 +146,38 @@ class QChemInputGenerator(InputGenerator):
 
     smd_solvent : str
         Solvent to use for SMD implicit solvation model. (Default: None)
-        Examples include "water", "ethanol", "methanol", and "acetonitrile". Refer to the QChem
-        manual for a complete list of solvents available. To define a custom solvent, set this
-        argument to "custom" and populate custom_smd with the necessary parameters.
+        Examples include "water", "ethanol", "methanol", and "acetonitrile".
+        Refer to the QChem manual for a complete list of solvents available.
+        To define a custom solvent, set this argument to "custom" and
+        populate custom_smd with the necessary parameters.
 
         **Note that only one of smd_solvent and pcm_dielectric may be set.**
 
     custom_smd : str
         List of parameters to define a custom solvent in SMD. (Default: None)
-        Must be given as a string of seven comma separated values in the following order:
-        "dielectric, refractive index, acidity, basicity, surface tension, aromaticity,
-        electronegative halogenicity"
+        Must be given as a string of seven comma separated values
+        in the following order:
+        "dielectric, refractive index, acidity, basicity,
+        surface tension, aromaticity, electronegative halogenicity"
         Refer to the QChem manual for further details.
 
     opt_variables : dict
         A dictionary of opt sections, where each opt section is a key
         and the corresponding values are a list of strings. Strings must be formatted
-        as instructed by the QChem manual. The different opt sections are: CONSTRAINT, FIXED,
-        DUMMY, and CONNECT.
-        Ex. opt = {"CONSTRAINT": ["tors 2 3 4 5 25.0", "tors 2 5 7 9 80.0"], "FIXED": ["2 XY"]}
+        as instructed by the QChem manual.
+        The different opt sections are: CONSTRAINT, FIXED, DUMMY, and CONNECT.
+        Ex.
+        opt =
+        {"CONSTRAINT": ["tors 2 3 4 5 25.0", "tors 2 5 7 9 80.0"], "FIXED": ["2 XY"]}
 
     scan_variables : dict
         A dictionary of scan variables. Because two constraints of the
-        same type are allowed (for instance, two torsions or two bond stretches), each TYPE of
-        variable (stre, bend, tors) should be its own key in the dict, rather than each variable.
-        Note that the total number of variable (sum of lengths of all lists) CANNOT be more than two.
-        Ex. scan_variables = {"stre": ["3 6 1.5 1.9 0.1"], "tors": ["1 2 3 4 -180 180 15"]}
+        same type are allowed (for instance, two torsions or two bond stretches),
+        each TYPE of variable (stre, bend, tors) should be its own key in the dict,
+        rather than each variable. Note that the total number of variable
+        (sum of lengths of all lists) CANNOT be more than two.
+        Ex. scan_variables =
+        {"stre": ["3 6 1.5 1.9 0.1"], "tors": ["1 2 3 4 -180 180 15"]}
 
     max_scf_cycles : int
         Maximum number of SCF iterations. (Default: 100)
@@ -175,28 +185,32 @@ class QChemInputGenerator(InputGenerator):
     geom_opt_max_cycles : int
         Maximum number of geometry optimization iterations. (Default: 200)
 
-    plot_cubes : bool)
+    plot_cubes : bool
         Whether to write CUBE files of the electron density. (Default: False)
 
     nbo_params : dict
         A dict containing the desired NBO params. Note that a key:value pair of
-        "version":7 will trigger NBO7 analysis. Otherwise, NBO5 analysis will be performed,
-        including if an empty dict is passed. Besides a key of "version", all other key:value
-        pairs will be written into the $nbo section of the QChem input file. (Default: False)
+        "version":7 will trigger NBO7 analysis.
+        Otherwise, NBO5 analysis will be performed,
+        including if an empty dict is passed.
+        Besides a key of "version", all other key:value pairs
+        will be written into the $nbo section of the QChem input file. (Default: False)
 
     new_geom_opt : dict
         A dict containing parameters for the $geom_opt section of the QChem
-        input file, which control the new geometry optimizer available starting in version 5.4.2.
-        Note that the new optimizer remains under development and not officially released.
-        Further note that even passing an empty dictionary will trigger the new optimizer.
+        input file, which control the new geometry optimizer
+        available starting in version 5.4.2.
+        Further note that even passing an empty dictionary
+        will trigger the new optimizer.
         (Default: False)
 
     overwrite_inputs : dict
         Dictionary of QChem input sections to add or overwrite variables.
         The currently available sections (keys) are rem, pcm, solvent, smx, opt,
-        scan, van_der_waals, and plots. The value of each key is a dictionary of key value pairs
-        relevant to that section. For example, to add a new variable to the rem section
-        that sets symmetry to false, use
+        scan, van_der_waals, and plots. The value of each key is a dictionary
+        of key value pairs relevant to that section.
+        For example, to add a new variable to the rem section that sets
+        symmetry to false, use
         overwrite_inputs = {"rem": {"symmetry": "false"}}
         **Note that if something like basis is added to the rem dict it will overwrite
         the default basis.**
@@ -210,7 +224,6 @@ class QChemInputGenerator(InputGenerator):
 
     def __init__(
         self,
-        molecule: Molecule,
         job_type: str,
         basis_set: str,
         scf_algorithm: str,
@@ -238,7 +251,6 @@ class QChemInputGenerator(InputGenerator):
         nbo_dict: dict | None = None,
         geom_opt_dict: dict | None = None,
     ):
-        self.molecule = molecule
         self.job_type = job_type
         self.basis_set = basis_set
         self.scf_algorithm = scf_algorithm
@@ -320,10 +332,10 @@ class QChemInputGenerator(InputGenerator):
             rem_dict["ideriv"] = "1"
             if self.smd_solvent in ("custom", "other") and self.custom_smd is None:
                 raise ValueError(
-                    "A user-defined SMD requires passing custom_smd, a string"
-                    + " of seven comma separated values in the following order:"
-                    + " dielectric, refractive index, acidity, basicity, surface"
-                    + " tension, aromaticity, electronegative halogenicity"
+                    "A user-defined SMD requires passing custom_smd,"
+                    "a string of seven comma separated values in the following order: "
+                    "dielectric, refractive index, acidity, basicity, surface tension,"
+                    "aromaticity, electronegative halogenicity"
                 )
 
         if self.plot_cubes:
@@ -395,7 +407,8 @@ class QChemInputGenerator(InputGenerator):
                 if sub == "nbo":
                     if nbo_dict is None:
                         raise RuntimeError(
-                            "Can't overwrite nbo params when NBO is not being run! Exiting..."
+                            "Can't overwrite nbo params when NBO"
+                            "is not being run! Exiting..."
                         )
                     temp_nbo = lower_and_check_unique(sub_dict)
                     for k, v in temp_nbo.items():
@@ -403,7 +416,8 @@ class QChemInputGenerator(InputGenerator):
                 if sub == "geom_opt":
                     if geom_opt_dict is None:
                         raise RuntimeError(
-                            "Can't overwrite geom_opt params when not using the new optimizer! Exiting..."
+                            "Can't overwrite geom_opt params when"
+                            "not using the new optimizer! Exiting..."
                         )
                     temp_geomopt = lower_and_check_unique(sub_dict)
                     for k, v in temp_geomopt.items():
@@ -424,19 +438,23 @@ class QChemInputGenerator(InputGenerator):
             self.nbo_dict = nbo_dict
             self.geom_opt_dict = geom_opt_dict
 
-    def get_input_set(self) -> QChemInputSet:
+    def get_input_set(self, molecule: Molecule = None) -> QCInputSet:
         """
-        Get a QChem Input Set as a dictionary for a molecule.
+        Return a QChem InputSet for a molecule.
 
         Parameters
         ----------
+        molecule: Molecule
+            Pymatgen representation of a molecule for which the QCInputSet
+            will be generated
 
         Returns
         -------
         QchemInputSet
             A QChem input set
         """
-        # molecule, prev_basis, prev_scf, new_geom_opt, overwrite_inputs, nbo_params = self._get_previous(
+        # molecule, prev_basis, prev_scf, new_geom_opt,
+        # overwrite_inputs, nbo_params = self._get_previous(
         #     molecule, prev_dir
         # )
 
@@ -461,9 +479,9 @@ class QChemInputGenerator(InputGenerator):
         # basis_set = self._basis_set(basis_set_updates)
         # scf_algorithm = self._get_scf_algorithm(scf_algorithm_updates)
 
-        return QChemInputSet(
+        return QCInputSet(
             qcinput=QCInput(
-                self.molecule,
+                molecule,
                 self.rem_dict,
                 self.opt_dict,
                 self.pcm_dict,
@@ -478,18 +496,19 @@ class QChemInputGenerator(InputGenerator):
             )
         )
 
-    def get_input_set_updates(self) -> dict:
-        """
-        Get updates to the input set for this calculation type.
+    # def get_input_set_updates(self) -> dict:
+    #     """
+    #     Get updates to the input set for this calculation type.
 
-        Parameters
-        ----------
+    #     Parameters
+    #     ----------
 
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
+    #     Returns
+    #     -------
+    #     dict
+    #         A dictionary of updates to apply.
 
-        Is this something which is even necessary in context of QChem? Will have to discuss
-        """
-        raise NotImplementedError
+    #     Is this something which is even necessary
+    #     in context of QChem? Will have to discuss
+    #     """
+    #     raise NotImplementedError

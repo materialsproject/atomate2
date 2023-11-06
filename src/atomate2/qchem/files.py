@@ -5,16 +5,11 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence
+from typing import Sequence
 
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-
-if TYPE_CHECKING:
-    from pymatgen.core.structure import Molecule
-
-    from atomate2.qchem.sets.base import QChemInputGenerator
 
 __all__ = ["copy_qchem_outputs", "get_largest_opt_extension"]
 
@@ -34,8 +29,9 @@ def copy_qchem_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with opt1, opt2,
     etc), this function will only copy the files with the highest numbered suffix
-    and the suffix will be removed. Additional qchem files will be also be  copied with the
-    same suffix applied. Lastly, this function will gunzip any gzipped files.
+    and the suffix will be removed. Additional qchem files will be also be copied
+    with the same suffix applied.
+    Lastly, this function will gunzip any gzipped files.
 
     Parameters
     ----------
@@ -123,31 +119,31 @@ def get_largest_opt_extension(
     return f".opt{max_relax}"
 
 
-def write_qchem_input_set(
-    molecule: Molecule,
-    input_set_generator: QChemInputGenerator,
-    directory: str | Path = ".",
-    # from_prev: bool = False,
-    **kwargs,
-):
-    """
-    Write QChem input set.
+# def write_qchem_input_set(
+#     molecule: Molecule,
+#     input_set_generator: QChemInputGenerator,
+#     directory: str | Path = ".",
+#     # from_prev: bool = False,
+#     **kwargs,
+# ):
+#     """
+#     Write QChem input set.
 
-    Parameters
-    ----------
-    molecule : .Molecule
-        A molecule.
-    input_set_generator : .QChemInputGenerator
-        A QChem input set generator.
-    directory : str or Path
-        The directory to write the input files to.
-    # from_prev : bool
-    #     Whether to initialize the input set from a previous calculation.
-    **kwargs
-        Keyword arguments that will be passed to :obj:`.QChemInputSet.write_input`.
-    """
-    # prev_dir = "." if from_prev else None
-    qis = input_set_generator.get_input_set(molecule)
+#     Parameters
+#     ----------
+#     molecule : .Molecule
+#         A molecule.
+#     input_set_generator : .QChemInputGenerator
+#         A QChem input set generator.
+#     directory : str or Path
+#         The directory to write the input files to.
+#     # from_prev : bool
+#     #     Whether to initialize the input set from a previous calculation.
+#     **kwargs
+#         Keyword arguments that will be passed to :obj:`.QChemInputSet.write_input`.
+#     """
+#     # prev_dir = "." if from_prev else None
+#     qis = input_set_generator.get_input_set(molecule)
 
-    logger.info("Writing QChem input set.")
-    qis.write_input(directory, **kwargs)
+#     logger.info("Writing QChem input set.")
+#     qis.write_input(directory, **kwargs)

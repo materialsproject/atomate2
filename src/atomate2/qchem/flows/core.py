@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.qchem.jobs.base import BaseQChemMaker
+from atomate2.qchem.jobs.base import BaseQCMaker
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, TransitionStateMaker
 
 if TYPE_CHECKING:
@@ -27,10 +28,12 @@ __all__ = [
 
 @dataclass
 class FrequencyFlatteningOptimizeMaker(Maker):
-    # need to incorporate iterations and perturb geometry
     """
-    Maker to iteratively optimize given structure and flatten imaginary frequencies to ensure that
-    the resulting structure is a true minima and not a saddle point.
+    Iterative Maker for FrequencyFlattening.
+
+    Maker to iteratively optimize given structure and flatten
+    imaginary frequencies to ensure that the resulting structure
+    is a true minima and not a saddle point.
 
     Parameters
     ----------
@@ -40,6 +43,7 @@ class FrequencyFlatteningOptimizeMaker(Maker):
         Maker to generate the frequency calculation.
     opt_maker : .BaseQChemMaker
         Maker to generate the optimization calculation.
+
     """
 
     name: str = "frequency flattening structure optimization"
@@ -52,8 +56,14 @@ class FrequencyFlatteningOptimizeMaker(Maker):
     scale: float = 1.0
     max_errors: int = 20
 
-    opt_maker: BaseQChemMaker = field(default_factory=OptMaker)
-    freq_maker: BaseQChemMaker = field(default_factory=FreqMaker)
+    opt_maker: BaseQCMaker = field(default_factory=OptMaker)
+    freq_maker: BaseQCMaker = field(default_factory=FreqMaker)
+
+    warnings.warn(
+        "This is a Test implementation. Use previous implementations for now",
+        Warning,
+        stacklevel=2,
+    )
 
     def make(self, molecule: Molecule, prev_qchem_dir: str | Path | None = None):
         """
@@ -82,9 +92,7 @@ class FrequencyFlatteningOptimizeMaker(Maker):
         return Flow([freq1, opt2], opt2.output, name=self.name)
 
     @classmethod
-    def from_freq_and_opt_maker(
-        cls, freq_maker: BaseQChemMaker, opt_maker=BaseQChemMaker
-    ):
+    def from_freq_and_opt_maker(cls, freq_maker: BaseQCMaker, opt_maker=BaseQCMaker):
         """
         Instantiate the FrequencyFlatteningOptimizeMaker with a Freq and an Opt maker.
 
@@ -92,7 +100,8 @@ class FrequencyFlatteningOptimizeMaker(Maker):
         ----------
         freq_maker : .BaseQChemMaker
         opt_maker : .BaseQChemMaker
-            Maker to use to generate the frequency flattening and subsequent optimization.
+            Maker to use to generate the frequency flattening
+            and subsequent optimization.
         """
         return cls(freq_maker_1=deepcopy(freq_maker), opt_maker_2=deepcopy(opt_maker))
 
@@ -101,7 +110,10 @@ class FrequencyFlatteningOptimizeMaker(Maker):
 class FrequencyFlatteningTransitionStateMaker(Maker):
     # need to incorporate iterations and perturb geometry
     """
-    Maker to iteratively optimize transition state structure and flatten imaginary frequencies to ensure that
+    Iterative Maker for Transition State Freq Flattening.
+
+    Maker to iteratively optimize transition state structure
+    and flatten imaginary frequencies to ensure that
     the resulting structure is a transition state.
 
     Parameters
@@ -124,8 +136,14 @@ class FrequencyFlatteningTransitionStateMaker(Maker):
     scale: float = 1.0
     max_errors: int = 20
 
-    ts_maker: BaseQChemMaker = field(default_factory=TransitionStateMaker)
-    freq_maker: BaseQChemMaker = field(default_factory=FreqMaker)
+    ts_maker: BaseQCMaker = field(default_factory=TransitionStateMaker)
+    freq_maker: BaseQCMaker = field(default_factory=FreqMaker)
+
+    warnings.warn(
+        "This is a Test implementation. Use previous implementations for now",
+        Warning,
+        stacklevel=2,
+    )
 
     def make(self, molecule: Molecule, prev_qchem_dir: str | Path | None = None):
         """
@@ -154,9 +172,7 @@ class FrequencyFlatteningTransitionStateMaker(Maker):
         return Flow([freq1, ts2], ts2.output, name=self.name)
 
     @classmethod
-    def from_freq_and_ts_maker(
-        cls, freq_maker: BaseQChemMaker, ts_maker=BaseQChemMaker
-    ):
+    def from_freq_and_ts_maker(cls, freq_maker: BaseQCMaker, ts_maker=BaseQCMaker):
         """
         Instantiate the FrequencyFlatteningOptimizeMaker with a Freq and a TS maker.
 
@@ -164,6 +180,7 @@ class FrequencyFlatteningTransitionStateMaker(Maker):
         ----------
         freq_maker : .BaseQChemMaker
         ts_maker : .BaseQChemMaker
-            Maker to use to generate the frequency flattening and subsequent optimization.
+            Maker to use to generate the frequency flattening
+            and subsequent optimization.
         """
         return cls(freq_maker_1=deepcopy(freq_maker), ts_maker_2=deepcopy(ts_maker))

@@ -6,7 +6,10 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from atomate2.qchem.jobs.base import BaseQChemMaker
+if TYPE_CHECKING:
+    from atomate2.qchem.sets.base import QCInputGenerator
+
+from atomate2.qchem.jobs.base import BaseQCMaker
 from atomate2.qchem.sets.core import (
     ForceSetGenerator,
     FreqSetGenerator,
@@ -15,9 +18,6 @@ from atomate2.qchem.sets.core import (
     SinglePointSetGenerator,
     TransitionStateSetGenerator,
 )
-
-if TYPE_CHECKING:
-    from atomate2.qchem.sets.base import QChemInputGenerator
 
 # from custodian.qchem.handlers import (
 #     QChemErrorHandler,
@@ -37,7 +37,7 @@ __all__ = [
 
 
 @dataclass
-class SinglePointMaker(BaseQChemMaker):
+class SinglePointMaker(BaseQCMaker):
     """
     Maker to create QChem single point calculation jobs.
 
@@ -66,13 +66,13 @@ class SinglePointMaker(BaseQChemMaker):
     """
 
     name: str = "single_point"
-    input_set_generator: QChemInputGenerator = field(
+    input_set_generator: QCInputGenerator = field(
         default_factory=SinglePointSetGenerator
     )
 
 
 @dataclass
-class OptMaker(BaseQChemMaker):
+class OptMaker(BaseQCMaker):
     """
     Maker to create QChem optimization jobs.
 
@@ -101,13 +101,16 @@ class OptMaker(BaseQChemMaker):
     """
 
     name: str = "optimization"
-    input_set_generator: QChemInputGenerator = field(default_factory=OptSetGenerator)
+    input_set_generator: QCInputGenerator = field(default_factory=OptSetGenerator)
 
 
 @dataclass
-class ForceMaker(BaseQChemMaker):
+class ForceMaker(BaseQCMaker):
     """
-    Maker to create QChem job to converge electron density and calculate the gradient and atomic forces.
+    QChem Maker for a Force Job.
+
+    Maker to create QChem job to converge electron density
+    and calculate the gradient and atomic forces.
 
     Parameters
     ----------
@@ -134,11 +137,11 @@ class ForceMaker(BaseQChemMaker):
     """
 
     name: str = "force"
-    input_set_generator: QChemInputGenerator = field(default_factory=ForceSetGenerator)
+    input_set_generator: QCInputGenerator = field(default_factory=ForceSetGenerator)
 
 
 @dataclass
-class TransitionStateMaker(BaseQChemMaker):
+class TransitionStateMaker(BaseQCMaker):
     """
      Maker to create QChem transition state structure optimization jobs.
 
@@ -167,13 +170,13 @@ class TransitionStateMaker(BaseQChemMaker):
     """
 
     name: str = "transition_state"
-    input_set_generator: QChemInputGenerator = field(
+    input_set_generator: QCInputGenerator = field(
         default_factory=TransitionStateSetGenerator
     )
 
 
 @dataclass
-class FreqMaker(BaseQChemMaker):
+class FreqMaker(BaseQCMaker):
     """
      Maker to create QChem job for frequency calculations.
 
@@ -202,13 +205,16 @@ class FreqMaker(BaseQChemMaker):
     """
 
     name: str = "frequency"
-    input_set_generator: QChemInputGenerator = field(default_factory=FreqSetGenerator)
+    input_set_generator: QCInputGenerator = field(default_factory=FreqSetGenerator)
 
 
 @dataclass
-class PESScanMaker(BaseQChemMaker):
+class PESScanMaker(BaseQCMaker):
     """
-     Maker to create a QChem job which performa a potential energy surface scan by varying bond lengths, angles,
+    Maker for a PES Scan job.
+
+    Maker to create a QChem job which perform a potential energy surface
+    scan by varying bond lengths, angles,
     and/or dihedral angles in a molecule.
 
     Parameters
@@ -236,6 +242,4 @@ class PESScanMaker(BaseQChemMaker):
     """
 
     name: str = "pes_scan"
-    input_set_generator: QChemInputGenerator = field(
-        default_factory=PESScanSetGenerator
-    )
+    input_set_generator: QCInputGenerator = field(default_factory=PESScanSetGenerator)
