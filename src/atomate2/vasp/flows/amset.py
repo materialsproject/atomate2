@@ -86,7 +86,7 @@ class DeformationPotentialMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
+        prev_dir: str | Path | None = None,
         ibands: tuple[list[int], list[int]] = None,
     ) -> Flow:
         """
@@ -96,16 +96,14 @@ class DeformationPotentialMaker(Maker):
         ----------
         structure : .Structure
             A pymatgen structure.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         ibands : tuple of list of int
             Which bands to include in the deformation.h5 file. Given as a tuple of one
             or two lists (one for each spin channel). The bands indices are zero
             indexed.
         """
-        bulk = self.static_deformation_maker.make(
-            structure, prev_vasp_dir=prev_vasp_dir
-        )
+        bulk = self.static_deformation_maker.make(structure, prev_dir=prev_dir)
         bulk.append_name("bulk ", prepend=True)
 
         # all deformation calculations need to be on the same k-point mesh, to achieve
@@ -118,7 +116,7 @@ class DeformationPotentialMaker(Maker):
         vasp_deformation_calcs = run_amset_deformations(
             bulk.output.structure,
             symprec=self.symprec,
-            prev_vasp_dir=bulk.output.dir_name,
+            prev_dir=bulk.output.dir_name,
             static_deformation_maker=self.static_deformation_maker,
         )
 
@@ -205,7 +203,7 @@ class VaspAmsetMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
+        prev_dir: str | Path | None = None,
     ) -> Flow:
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
@@ -214,23 +212,23 @@ class VaspAmsetMaker(Maker):
         ----------
         structure : .Structure
             A pymatgen structure.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
         jobs = []
 
         if self.relax_maker is not None:
             # optionally relax the structure
-            bulk = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            bulk = self.relax_maker.make(structure, prev_dir=prev_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
-            prev_vasp_dir = bulk.output.dir_name
+            prev_dir = bulk.output.dir_name
 
-        static = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static = self.static_maker.make(structure, prev_dir=prev_dir)
 
         # dense band structure for eigenvalues and wave functions
         dense_bs = self.dense_uniform_maker.make(
-            static.output.structure, prev_vasp_dir=static.output.dir_name
+            static.output.structure, prev_dir=static.output.dir_name
         )
 
         # elastic constant
@@ -242,7 +240,7 @@ class VaspAmsetMaker(Maker):
 
         # dielectric constant
         dielectric = self.dielectric_maker.make(
-            static.output.structure, prev_vasp_dir=static.output.dir_name
+            static.output.structure, prev_dir=static.output.dir_name
         )
 
         # polar phonon frequency
@@ -259,7 +257,7 @@ class VaspAmsetMaker(Maker):
         # deformation potentials
         deformation = self.deformation_potential_maker.make(
             static.output.structure,
-            prev_vasp_dir=static.output.dir_name,
+            prev_dir=static.output.dir_name,
             ibands=wavefunction.output["ibands"],
         )
 
@@ -303,7 +301,7 @@ class VaspAmsetMaker(Maker):
         if self.use_hse_gap and "bandgap" not in self.amset_settings:
             gap = self.hse_gap_maker.make(
                 dense_bs.output.structure,
-                prev_vasp_dir=dense_bs.output.dir_name,
+                prev_dir=dense_bs.output.dir_name,
                 mode="gap",
             )
             settings["bandgap"] = gap.output.output.bandgap
@@ -387,7 +385,7 @@ class HSEVaspAmsetMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
+        prev_dir: str | Path | None = None,
     ) -> Flow:
         """
         Make flow to calculate electronic transport properties using AMSET and VASP.
@@ -396,23 +394,23 @@ class HSEVaspAmsetMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
         jobs = []
 
         if self.relax_maker is not None:
             # optionally relax the structure
-            bulk = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            bulk = self.relax_maker.make(structure, prev_dir=prev_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
-            prev_vasp_dir = bulk.output.dir_name
+            prev_dir = bulk.output.dir_name
 
-        static = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static = self.static_maker.make(structure, prev_dir=prev_dir)
 
         # dense band structure for eigenvalues and wave functions
         dense_bs = self.dense_uniform_maker.make(
-            static.output.structure, prev_vasp_dir=static.output.dir_name
+            static.output.structure, prev_dir=static.output.dir_name
         )
 
         # elastic constant
@@ -424,7 +422,7 @@ class HSEVaspAmsetMaker(Maker):
 
         # dielectric constant
         dielectric = self.dielectric_maker.make(
-            static.output.structure, prev_vasp_dir=static.output.dir_name
+            static.output.structure, prev_dir=static.output.dir_name
         )
 
         # polar phonon frequency
@@ -441,7 +439,7 @@ class HSEVaspAmsetMaker(Maker):
         # deformation potentials
         deformation = self.deformation_potential_maker.make(
             static.output.structure,
-            prev_vasp_dir=static.output.dir_name,
+            prev_dir=static.output.dir_name,
             ibands=wavefunction.output["ibands"],
         )
 

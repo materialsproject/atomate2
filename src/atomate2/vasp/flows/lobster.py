@@ -104,7 +104,7 @@ class VaspLobsterMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
+        prev_dir: str | Path | None = None,
     ) -> Flow:
         """
         Make flow to calculate bonding properties.
@@ -115,7 +115,7 @@ class VaspLobsterMaker(Maker):
             A pymatgen structure. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         """
         jobs = []
@@ -124,12 +124,12 @@ class VaspLobsterMaker(Maker):
         optimization_dir = None
         optimization_uuid = None
         if self.relax_maker is not None:
-            optimization = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            optimization = self.relax_maker.make(structure, prev_dir=prev_dir)
             jobs.append(optimization)
             structure = optimization.output.structure
             optimization_dir = optimization.output.dir_name
             optimization_uuid = optimization.output.uuid
-            prev_vasp_dir = optimization_dir
+            prev_dir = optimization_dir
 
         # Information about the basis is collected
         basis_infos = get_basis_infos(
@@ -146,7 +146,7 @@ class VaspLobsterMaker(Maker):
             self.lobster_static_maker,
             basis_infos.output["nbands"],
             structure,
-            prev_vasp_dir,
+            prev_dir,
         )
         jobs.append(lobster_static)
         lobster_static_dir = lobster_static.output.dir_name

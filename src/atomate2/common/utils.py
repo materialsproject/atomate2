@@ -116,7 +116,7 @@ def parse_additional_json(dir_name: Path) -> dict[str, Any]:
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
         key = filename.name.split(".")[0]
-        # ignore FW.json(.gz) so jobflow doesn't try to parse prev_vasp_dir
+        # ignore FW.json(.gz) so jobflow doesn't try to parse prev_dir
         # OutputReferences was causing atomate2 MP workflows to fail with ValueError:
         # Could not resolve reference 7f5a7f14-464c-4a5b-85f9-8d11b595be3b not in store
         # or cache contact @janosh in case of questions

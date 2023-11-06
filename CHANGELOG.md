@@ -1,5 +1,55 @@
 # Change log
 
+## v0.0.12
+
+* Breaking: default `Atomate2Settings.VASP_INHERIT_INCAR` to `False` by @janosh in https://github.com/materialsproject/atomate2/pull/594
+
+### Bug Fixes 🐛
+* Enforce magmom precedence in INCAR creation by @mattmcdermott in https://github.com/materialsproject/atomate2/pull/506
+* Warn on empty config by @janosh in https://github.com/materialsproject/atomate2/pull/522
+* CP2K use `calcs_reversed[0]` instead of `calcs_reversed[-1]` to not reverse again by @janosh in https://github.com/materialsproject/atomate2/pull/534
+* Fix wrong INCAR values in MP workflows by @janosh in https://github.com/materialsproject/atomate2/pull/550
+* Fix failing tests from Pydantic v2 migration by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/558
+* fixing pydantic v2 test errors by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/565
+* `parse_additional_json()` ignore `FW.json.gz` in output directories by @janosh in https://github.com/materialsproject/atomate2/pull/574
+* Fix `bandgap_tol` and delete `bandgap_override` on `MPMetaGGARelaxSetGenerator` by @janosh in https://github.com/materialsproject/atomate2/pull/553
+* Fix `VaspInputGenerator`'s `_set_kspacing` not respecting `auto_ismear = False` nor `auto_kspacing = False` by @janosh in https://github.com/materialsproject/atomate2/pull/576
+* Clean up VASP powerups, correct params in MP flows, test for `_set_u_params`, test for `_set_kspacing`, fix `_get_incar` method of `VaspInputSet` by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/561
+* Fix Lobster workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/583
+* Change `MatPesGGAPlusMetaGGAStaticMaker.output` to dict containing both statics by @janosh in https://github.com/materialsproject/atomate2/pull/586
+* Test MP + MatPES set generators by @janosh in https://github.com/materialsproject/atomate2/pull/596
+### Enhancements 🛠
+* Add StructureMetadata as baseclass for output documents by @gpetretto in https://github.com/materialsproject/atomate2/pull/514
+* Materials Project GGA and meta-GGA workflows by @janosh in https://github.com/materialsproject/atomate2/pull/504
+* [WIP] MP-compatible r2SCAN workflow (and a few general INCAR improvements) by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/362
+* Update to Pydantic v2 by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/567
+* Add MatPES GGA and r2SCAN static makers by @janosh in https://github.com/materialsproject/atomate2/pull/532
+* Move elastic workflow to common and build force-field elastic workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/581
+### Documentation 📖
+* Update @arosen93 to @Andrew-S-Rosen by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/516
+* Add Aaron Kaplan and Matthew McDermott to `contributors.md` by @janosh in https://github.com/materialsproject/atomate2/pull/560
+* Document architectural difference between atomate 1 and 2 by @janosh in https://github.com/materialsproject/atomate2/pull/381
+* Add Thomas Purcell to `contributors.md` by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/568
+* Add Alex Bonkowski to contributors list by @JaGeo in https://github.com/materialsproject/atomate2/pull/573
+* Add @matthewkuner to contributors by @matthewkuner in https://github.com/materialsproject/atomate2/pull/575
+* Update contributors.md by @utf in https://github.com/materialsproject/atomate2/pull/579
+### House-Keeping 🧹
+* Remove `__all__` from all modules by @janosh in https://github.com/materialsproject/atomate2/pull/540
+* removed py38 support, and add py 3.11 support by @naik-aakash in https://github.com/materialsproject/atomate2/pull/537
+* Check full INCAR by default in `mock_vasp` fixture by @janosh in https://github.com/materialsproject/atomate2/pull/551
+* skip validate charge test by @jmmshn in https://github.com/materialsproject/atomate2/pull/563
+* Add some type annotations by @ab5424 in https://github.com/materialsproject/atomate2/pull/578
+* Future type annotations by @janosh in https://github.com/materialsproject/atomate2/pull/580
+* Use `numpy.testing.assert_allclose` over assert `np.(all|is)close` by @janosh in https://github.com/materialsproject/atomate2/pull/582
+
+## New Contributors
+* @mattmcdermott made their first contribution in https://github.com/materialsproject/atomate2/pull/506
+* @tpurcell90 made their first contribution in https://github.com/materialsproject/atomate2/pull/568
+* @esoteric-ephemera made their first contribution in https://github.com/materialsproject/atomate2/pull/561
+* @ab5424 made their first contribution in https://github.com/materialsproject/atomate2/pull/578
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.11...v0.0.12
+
 ## v0.0.11
 
 ### Task Document Changes

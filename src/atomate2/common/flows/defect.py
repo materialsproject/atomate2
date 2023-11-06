@@ -112,7 +112,7 @@ class ConfigurationCoordinateMaker(Maker):
             struct2,
             distortions=self.distortions,
             static_maker=self.static_maker,
-            prev_vasp_dir=dir1,
+            prev_dir=dir1,
             add_name="q1",
             add_info={"relaxed_uuid": relax1.uuid, "distorted_uuid": relax2.uuid},
         )
@@ -122,7 +122,7 @@ class ConfigurationCoordinateMaker(Maker):
             struct1,
             distortions=self.distortions,
             static_maker=self.static_maker,
-            prev_vasp_dir=dir2,
+            prev_dir=dir2,
             add_name="q2",
             add_info={"relaxed_uuid": relax2.uuid, "distorted_uuid": relax1.uuid},
         )

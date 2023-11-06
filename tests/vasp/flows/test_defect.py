@@ -1,16 +1,24 @@
 from typing import TYPE_CHECKING
 
+import numpy as np
+from jobflow import JobStore, run_locally
+from maggma.stores.mongolike import MemoryStore
+from pymatgen.analysis.defects.generators import SubstitutionGenerator
+from pymatgen.core import Structure
+from pymatgen.io.vasp.outputs import WSWQ
+
+from atomate2.vasp.flows.defect import (
+    ConfigurationCoordinateMaker,
+    FormationEnergyMaker,
+    NonRadiativeMaker,
+)
+
 if TYPE_CHECKING:
     from atomate2.common.schemas.defects import CCDDocument
     from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
 
 def test_ccd_maker(mock_vasp, clean_dir, test_dir):
-    from jobflow import run_locally
-    from pymatgen.core import Structure
-
-    from atomate2.vasp.flows.defect import ConfigurationCoordinateMaker
-
     # mapping from job name to directory containing test files
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -57,17 +65,6 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
 
 
 def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
-    import numpy as np
-    from jobflow import JobStore, run_locally
-    from maggma.stores.mongolike import MemoryStore
-    from pymatgen.core import Structure
-    from pymatgen.io.vasp.outputs import WSWQ
-
-    from atomate2.vasp.flows.defect import (
-        ConfigurationCoordinateMaker,
-        NonRadiativeMaker,
-    )
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "relax q1": "Si_config_coord/relax_q1",
@@ -132,10 +129,6 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
 def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     from jobflow import SETTINGS, run_locally
-    from pymatgen.analysis.defects.generators import SubstitutionGenerator
-    from pymatgen.core import Structure
-
-    from atomate2.vasp.flows.defect import FormationEnergyMaker
 
     # mapping from job name to directory containing test files
     ref_paths = {

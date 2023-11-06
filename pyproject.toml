@@ -49,7 +49,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
     "furo==2023.9.10",
-    "ipython==8.16.1",
+    "ipython==8.17.2",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.6.0",
@@ -58,15 +58,15 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.2"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.3"]
 strict = [
     "PyYAML==6.0.1",
     "cclib==1.8",
-    "chgnet==0.2.2",
+    "chgnet==0.3.1",
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",
-    "emmet-core==0.71.2",
+    "emmet-core==0.72.8",
     "jobflow==0.1.14",
     "lobsterpy==0.3.2",
     "matgl==0.8.3",
