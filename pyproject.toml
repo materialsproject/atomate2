@@ -70,7 +70,7 @@ strict = [
     "jobflow==0.1.14",
     "lobsterpy==0.3.2",
     "matgl==0.8.3",
-    "monty==2023.9.25",
+    "monty==2023.11.3",
     "mp-api==0.37.5",
     "numpy",
     "phonopy==2.20.0",
