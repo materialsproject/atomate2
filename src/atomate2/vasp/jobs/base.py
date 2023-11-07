@@ -30,6 +30,8 @@ if TYPE_CHECKING:
 
 _BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
 _DATA_OBJECTS = [
+    BandStructure,
+    BandStructureSymmLine,
     DOS,
     Dos,
     CompleteDos,
@@ -39,7 +41,7 @@ _DATA_OBJECTS = [
     Trajectory,
     "force_constants",
     "normalmode_eigenvecs",
-    "bandstructure"
+    "bandstructure",
 ]
 
 # Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
