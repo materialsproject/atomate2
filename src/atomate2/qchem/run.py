@@ -5,8 +5,9 @@ from __future__ import annotations
 import logging
 import shlex
 import subprocess
+from collections.abc import Sequence
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.qchem.handlers import QChemErrorHandler

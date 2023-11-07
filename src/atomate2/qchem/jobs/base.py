@@ -85,7 +85,9 @@ class BaseQCMaker(Maker):
     """
 
     name: str = "base qchem job"
-    input_set_generator: QCInputGenerator = field(default_factory=QCInputGenerator)
+    input_set_generator: QCInputGenerator = field(
+        default_factory=lambda: QCInputGenerator()
+    )
     write_input_set_kwargs: dict = field(default_factory=dict)
     copy_qchem_kwargs: dict = field(default_factory=dict)
     run_qchem_kwargs: dict = field(default_factory=dict)
