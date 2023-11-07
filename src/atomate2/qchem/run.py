@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import shlex
 import subprocess
-from collections.abc import Sequence
 from os.path import expandvars
 from typing import TYPE_CHECKING, Any
 
@@ -13,13 +12,13 @@ from custodian import Custodian
 from custodian.qchem.handlers import QChemErrorHandler
 from custodian.qchem.jobs import QCJob
 from jobflow.utils import ValueEnum
+from emmet.core.qc_tasks import TaskDoc
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
     from custodian.custodian import ErrorHandler
-
-    from atomate2.qchem.schemas.task import TaskDocument
+    from collections.abc import Sequence
 
 __all__ = [
     "JobType",

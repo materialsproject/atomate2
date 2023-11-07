@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import logging
 import re
-from collections.abc import Sequence
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __all__ = ["copy_qchem_outputs", "get_largest_opt_extension"]
 
