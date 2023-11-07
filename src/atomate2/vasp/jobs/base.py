@@ -182,7 +182,7 @@ class BaseVaspMaker(Maker):
 
     @vasp_job
     def make(
-        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+        self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
         """
         Run a VASP calculation.
@@ -191,7 +191,7 @@ class BaseVaspMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -200,9 +200,9 @@ class BaseVaspMaker(Maker):
                 commands of the VASP run.
         """
         # copy previous inputs
-        from_prev = prev_vasp_dir is not None
-        if prev_vasp_dir is not None:
-            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
+        from_prev = prev_dir is not None
+        if prev_dir is not None:
+            copy_vasp_outputs(prev_dir, **self.copy_vasp_kwargs)
 
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 

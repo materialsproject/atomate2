@@ -1,9 +1,18 @@
+from __future__ import annotations
+
 import logging
-from collections.abc import Sequence
+import shutil
 from pathlib import Path
-from typing import Literal, Union
+from typing import TYPE_CHECKING, Literal
 
 import pytest
+from pymatgen.io.lobster import Lobsterin
+
+import atomate2.lobster.jobs
+import atomate2.lobster.run
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 logger = logging.getLogger("atomate2")
 
@@ -58,8 +67,6 @@ def mock_lobster(monkeypatch, lobster_test_dir):
        dictionary created in step 4.
     6. Run your lobster job after calling `mock_lobster`.
     """
-    import atomate2.lobster.jobs
-    import atomate2.lobster.run
 
     def mock_run_lobster(*args, **kwargs):
         from jobflow import CURRENT_JOB
@@ -82,7 +89,7 @@ def mock_lobster(monkeypatch, lobster_test_dir):
 
 
 def fake_run_lobster(
-    ref_path: Union[str, Path],
+    ref_path: str | Path,
     check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
     check_dft_inputs: Sequence[Literal["WAVECAR", "POSCAR"]] = _DFT_FILES,
     lobsterin_settings: Sequence[str] = (),
@@ -118,9 +125,7 @@ def fake_run_lobster(
     logger.info("ran fake LOBSTER, generated outputs")
 
 
-def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str]):
-    from pymatgen.io.lobster import Lobsterin
-
+def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
     user = Lobsterin.from_file("lobsterin")
 
     # Check lobsterin
@@ -131,9 +136,7 @@ def verify_inputs(ref_path: Union[str, Path], lobsterin_settings: Sequence[str])
             raise ValueError(f"lobsterin value of {p} is inconsistent!")
 
 
-def copy_lobster_outputs(ref_path: Union[str, Path]):
-    import shutil
-
+def copy_lobster_outputs(ref_path: str | Path):
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():

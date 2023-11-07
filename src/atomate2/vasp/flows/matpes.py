@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker
+from atomate2.vasp.sets.matpes import MatPesGGAStaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -37,7 +38,14 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
     """
 
     name: str = "MatPES GGA plus meta-GGA static"
-    static1: Maker | None = field(default_factory=MatPesGGAStaticMaker)
+    static1: Maker | None = field(
+        default_factory=lambda: MatPesGGAStaticMaker(
+            # write WAVECAR so we can pass as pre-conditioned starting point to static2
+            input_set_generator=MatPesGGAStaticSetGenerator(
+                user_incar_settings={"LWAVE": True}
+            ),
+        )
+    )
     static2: Maker = field(
         default_factory=lambda: MatPesMetaGGAStaticMaker(
             # could copy CHGCAR from GGA to meta-GGA directory too but is redundant
@@ -46,7 +54,7 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
+    def make(self, structure: Structure, prev_dir: str | Path | None = None):
         """
         Create a flow with two chained statics.
 
@@ -54,7 +62,7 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -62,6 +70,7 @@ class MatPesGGAPlusMetaGGAStaticMaker(Maker):
         Flow
             A flow containing two statics.
         """
-        static1 = self.static1.make(structure, prev_vasp_dir=prev_vasp_dir)
-        static2 = self.static2.make(structure, prev_vasp_dir=static1.output.dir_name)
-        return Flow([static1, static2], output=static2.output, name=self.name)
+        static1 = self.static1.make(structure, prev_dir=prev_dir)
+        static2 = self.static2.make(structure, prev_dir=static1.output.dir_name)
+        output = {"static1": static1.output, "static2": static2.output}
+        return Flow([static1, static2], output=output, name=self.name)
