@@ -12,13 +12,14 @@ from custodian import Custodian
 from custodian.qchem.handlers import QChemErrorHandler
 from custodian.qchem.jobs import QCJob
 from jobflow.utils import ValueEnum
-from emmet.core.qc_tasks import TaskDoc
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
-    from custodian.custodian import ErrorHandler
     from collections.abc import Sequence
+
+    from custodian.custodian import ErrorHandler
+    from emmet.core.qc_tasks import TaskDoc
 
 __all__ = [
     "JobType",
@@ -116,7 +117,7 @@ def run_qchem(
 
 
 def should_stop_children(
-    task_document: TaskDocument,
+    task_document: TaskDoc,
     handle_unsuccessful: bool | str = SETTINGS.QCHEM_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """

@@ -191,7 +191,7 @@ class Atomate2Settings(BaseSettings):
     )
 
     QCHEM_STORE_ADDITIONAL_JSON: bool = Field(
-        True,
+        default=True,
         description="Ingest any additional JSON data present into database when "
         "parsing QChem directories useful for storing duplicate of FW.json",
     )
