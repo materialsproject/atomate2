@@ -3,7 +3,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -22,7 +22,6 @@ try:
 except ImportError:
     amset = None
 
-__all__ = ["TransportData", "MeshData", "UsageStats", "AmsetTaskDocument"]
 
 logger = logging.getLogger(__name__)
 
@@ -30,23 +29,23 @@ logger = logging.getLogger(__name__)
 class TransportData(BaseModel):
     """Definition of AMSET transport data model."""
 
-    doping: List[float] = Field(None, description="Carrier concentrations in cm^-3")
-    temperatures: List[float] = Field(None, description="Temperatures in K")
-    fermi_levels: List[List[float]] = Field(
+    doping: list[float] = Field(None, description="Carrier concentrations in cm^-3")
+    temperatures: list[float] = Field(None, description="Temperatures in K")
+    fermi_levels: list[list[float]] = Field(
         None, description="Fermi level positions in eV, given as (ndoping, ntemps)"
     )
-    conductivity: List[List[Matrix3D]] = Field(
+    conductivity: list[list[Matrix3D]] = Field(
         None, description="Conductivity tensor in S/m, given as (ndoping, ntemps, 3, 3)"
     )
-    seebeck: List[List[Matrix3D]] = Field(
+    seebeck: list[list[Matrix3D]] = Field(
         None, description="Seebeck tensor in µV/K, given as (ndoping, ntemps, 3, 3)"
     )
-    electronic_thermal_conductivity: List[List[Matrix3D]] = Field(
+    electronic_thermal_conductivity: list[list[Matrix3D]] = Field(
         None,
         description="Electronic thermal conductivity tensor in W/mK, given as "
         "(ndoping, ntemps, 3, 3)",
     )
-    mobility: Dict[str, List[List[Matrix3D]]] = Field(
+    mobility: dict[str, list[list[Matrix3D]]] = Field(
         None,
         description="Carrier mobility tensor in cm^2/Vs, given as "
         "{scattering_type: (ndoping, ntemps, 3, 3)}",
@@ -74,32 +73,32 @@ class UsageStats(BaseModel):
 class MeshData(BaseModel):
     """Definition of full AMSET mesh data."""
 
-    energies: Dict[str, List[List[float]]] = Field(
+    energies: dict[str, list[list[float]]] = Field(
         None, description="Band structure energies in eV on the irreducible mesh."
     )
-    kpoints: List[Vector3D] = Field(
+    kpoints: list[Vector3D] = Field(
         None, description="K-points in fractional coordinates"
     )
-    ir_kpoints: List[Vector3D] = Field(
+    ir_kpoints: list[Vector3D] = Field(
         None, description="Irreducible k-points in fractional coordinates"
     )
-    ir_to_full_kpoint_mapping: List[int] = Field(
+    ir_to_full_kpoint_mapping: list[int] = Field(
         None, description="Mapping from irreducible to full k-points"
     )
     efermi: float = Field(None, description="Intrinsic Fermi level from band structure")
-    vb_idx: Dict[str, int] = Field(
+    vb_idx: dict[str, int] = Field(
         None, description="Index of highest valence band for each spin"
     )
     num_electrons: float = Field(None, description="Number of electrons in the system")
-    velocities: Dict[str, List[List[Vector3D]]] = Field(
+    velocities: dict[str, list[list[Vector3D]]] = Field(
         None, description="Band velocities for each irreducible k-point."
     )
-    scattering_rates: Dict[str, List[List[List[List[List[float]]]]]] = Field(
+    scattering_rates: dict[str, list[list[list[list[list[float]]]]]] = Field(
         None,
         description="Scattering rates in s^-1, given as "
         "{spin: (nscattering_types, ndoping, ntemps, nbands, nkpoints)}",
     )
-    fd_cutoffs: Tuple[List[List[float]], List[List[float]]] = Field(
+    fd_cutoffs: tuple[list[list[float]], list[list[float]]] = Field(
         None,
         description="Energy cutoffs within which the scattering rates are calculated"
         "given as (min_cutoff, max_cutoff) where each cutoff is given"
@@ -129,15 +128,13 @@ class AmsetTaskDocument(StructureMetadata):
     nkpoints: int = Field(None, description="Total number of interpolated k-points")
     log: str = Field(None, description="Full AMSET running log")
     is_metal: bool = Field(None, description="Whether the system is a metal")
-    scattering_labels: List[str] = Field(
+    scattering_labels: list[str] = Field(
         None, description="The scattering types used in the calculation"
     )
     soc: bool = Field(None, description="Whether spin-orbit coupling was included")
     structure: Structure = Field(None, description="The structure used in this task")
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
@@ -145,9 +142,9 @@ class AmsetTaskDocument(StructureMetadata):
     def from_directory(
         cls,
         dir_name: Union[Path, str],
-        additional_fields: Dict[str, Any] = None,
+        additional_fields: dict[str, Any] = None,
         include_mesh: bool = False,
-    ):
+    ) -> "AmsetTaskDocument":
         """
         Create a task document from a directory containing VASP files.
 
@@ -156,7 +153,7 @@ class AmsetTaskDocument(StructureMetadata):
         dir_name : path or str
             The path to the folder containing the calculation outputs.
         additional_fields : dict
-            Dictionary of additional fields to add to output document.
+            dictionary of additional fields to add to output document.
         include_mesh : bool
             Whether to include the full AMSET mesh in the document.
 
@@ -168,7 +165,7 @@ class AmsetTaskDocument(StructureMetadata):
         from amset.io import load_mesh
         from amset.util import cast_dict_list
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
 
         settings = loadfn("settings.yaml")
@@ -208,7 +205,7 @@ class AmsetTaskDocument(StructureMetadata):
             transport=transport,
             usage_stats=timing,
             kpoint_mesh=inter_mesh,
-            nkpoints=np.product(inter_mesh),
+            nkpoints=np.prod(inter_mesh),
             log=log,
             **mesh_kwargs,
         )

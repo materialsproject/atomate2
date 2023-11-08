@@ -33,20 +33,11 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "get_total_energy_per_cell",
-    "get_supercell_size",
-    "generate_phonon_displacements",
-    "run_phonon_displacements",
-    "generate_frequencies_eigenvectors",
-    "PhononDisplacementMaker",
-]
-
 
 @job
 def get_total_energy_per_cell(
     total_dft_energy_per_formula_unit: float, structure: Structure
-):
+) -> float:
     """
     Job that computes total dft energy of the cell.
 
@@ -68,7 +59,7 @@ def get_total_energy_per_cell(
 @job
 def get_supercell_size(
     structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
-):
+) -> list[list[float]]:
     """
     Determine supercell size with given min_length.
 
@@ -136,7 +127,7 @@ def generate_phonon_displacements(
     use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
-):
+) -> list[Structure]:
     """
     Generate displaced structures with phonopy.
 
@@ -205,7 +196,7 @@ def generate_frequencies_eigenvectors(
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
     **kwargs,
-):
+) -> PhononBSDOSDoc:
     """
     Analyze the phonon runs and summarize the results.
 
@@ -237,7 +228,6 @@ def generate_frequencies_eigenvectors(
         Born charges
     kwargs: dict
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
-
     """
     return PhononBSDOSDoc.from_forces_born(
         structure=structure,
@@ -262,8 +252,8 @@ def run_phonon_displacements(
     structure: Structure,
     supercell_matrix,
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
-    prev_vasp_dir: str | Path = None,
-):
+    prev_dir: str | Path = None,
+) -> Flow:
     """
     Run phonon displacements.
 
@@ -278,7 +268,7 @@ def run_phonon_displacements(
         supercell matrix for meta data
     phonon_maker : .BaseVaspMaker
         A VaspMaker to use to generate the elastic relaxation jobs.
-    prev_vasp_dir : str or Path or None
+    prev_dir : str or Path or None
         A previous vasp calculation directory to use for copying outputs.
     """
     if phonon_maker is None:
@@ -292,8 +282,8 @@ def run_phonon_displacements(
     }
 
     for i, displacement in enumerate(displacements):
-        if prev_vasp_dir is not None:
-            phonon_job = phonon_maker.make(displacement, prev_vasp_dir=prev_vasp_dir)
+        if prev_dir is not None:
+            phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
         else:
             phonon_job = phonon_maker.make(displacement)
         phonon_job.append_name(f" {i + 1}/{len(displacements)}")

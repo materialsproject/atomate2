@@ -116,6 +116,10 @@ def parse_additional_json(dir_name: Path) -> dict[str, Any]:
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
         key = filename.name.split(".")[0]
-        if key not in ("custodian", "transformations"):
+        # ignore FW.json(.gz) so jobflow doesn't try to parse prev_dir
+        # OutputReferences was causing atomate2 MP workflows to fail with ValueError:
+        # Could not resolve reference 7f5a7f14-464c-4a5b-85f9-8d11b595be3b not in store
+        # or cache contact @janosh in case of questions
+        if key not in ("custodian", "transformations", "FW"):
             additional_json[key] = loadfn(filename, cls=None)
     return additional_json

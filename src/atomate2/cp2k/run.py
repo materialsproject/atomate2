@@ -6,7 +6,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.cp2k.handlers import (
@@ -26,15 +26,12 @@ from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from custodian.custodian import ErrorHandler, Validator
 
     from atomate2.cp2k.schemas.task import TaskDocument
 
-__all__ = [
-    "JobType",
-    "run_cp2k",
-    "should_stop_children",
-]
 
 _DEFAULT_HANDLERS = (
     StdErrHandler(),
@@ -71,7 +68,7 @@ def run_cp2k(
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     cp2k_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run CP2K.
 
@@ -99,8 +96,8 @@ def run_cp2k(
     custodian_kwargs : dict
         Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    cp2k_job_kwargs = {} if cp2k_job_kwargs is None else cp2k_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    cp2k_job_kwargs = cp2k_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     cp2k_cmd = expandvars(cp2k_cmd)
     split_cp2k_cmd = shlex.split(cp2k_cmd)
@@ -113,7 +110,7 @@ def run_cp2k(
     if job_type == JobType.NORMAL:
         jobs = [Cp2kJob(split_cp2k_cmd, **cp2k_job_kwargs)]
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     c = Custodian(
         handlers,
@@ -164,4 +161,4 @@ def should_stop_children(
             "limit of electronic/ionic iterations)!"
         )
 
-    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")
+    raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")
