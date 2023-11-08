@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import job
-from pymatgen.analysis.eos import EOS
+from pymatgen.analysis.eos import EOS, EOSError
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
@@ -60,13 +60,17 @@ def postprocess_EOS(data_dict: dict, EOS_models: list | None = None):
             continue
         output[jobtype]["EOS"] = {}
         for eos_name in EOS_models:
-            eos = EOS(eos_name=eos_name).fit(
-                data_dict[jobtype]["volumes"], data_dict[jobtype]["energies"]
-            )
-            output[jobtype]["EOS"][eos_name] = {
-                **eos.results,
-                "b0 GPa": float(eos.b0_GPa),
-            }
+            try:
+                eos = EOS(eos_name=eos_name).fit(
+                    data_dict[jobtype]["volumes"], data_dict[jobtype]["energies"]
+                )
+                output[jobtype]["EOS"][eos_name] = {
+                    **eos.results,
+                    "b0 GPa": float(eos.b0_GPa),
+                }
+            except EOSError:
+                output[jobtype]["EOS"][eos_name] = {}
+
     return output
 
 
