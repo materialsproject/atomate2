@@ -41,7 +41,7 @@ _DATA_OBJECTS = [
     Trajectory,
     "force_constants",
     "normalmode_eigenvecs",
-    "bandstructure",
+    "bandstructure",  # FIX: BandStructure is not currently MSONable
 ]
 
 # Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
