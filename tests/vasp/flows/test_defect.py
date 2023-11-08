@@ -153,7 +153,6 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         )
     )
 
-    # rmaker = RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator())
     maker = FormationEnergyMaker(
         relax_radius="auto",
         perturb=0.1,
@@ -180,3 +179,16 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
     for k in ref_paths:
         _check_plnr_locpot(k)
+
+    # make sure the the you can restart the calculation from prv
+    prv_dir = test_dir / "vasp/GaN_Mg_defect/bulk_relax/outputs"
+    flow2 = maker.make(
+        defects[0],
+        bulk_supercell_dir=prv_dir,
+        defect_index=0,
+    )
+    _ = run_locally(
+        flow2,
+        create_folders=True,
+        ensure_success=True,
+    )
