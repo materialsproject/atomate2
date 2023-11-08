@@ -1025,9 +1025,7 @@ class LobsterTaskDocument(StructureMetadata):
                 json.dump(monty_encoded_json_doc, f)
                 f.write(",")
                 data = {
-                    "calc_quality_text": [
-                        "".join(doc.calc_quality_text)
-                    ]  # type: ignore
+                    "calc_quality_text": ["".join(doc.calc_quality_text)]  # type: ignore
                 }  # add calc quality summary dict
                 monty_encoded_json_doc = jsanitize(
                     data, allow_bson=True, strict=True, enum_values=True
