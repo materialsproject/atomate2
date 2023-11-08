@@ -438,19 +438,16 @@ class PhononBSDOSDoc(StructureMetadata):
                 kwargs.get("tmax_thermal_displacements", 500),
                 kwargs.get("tstep_thermal_displacements", 100),
             )
-            for i, temp in enumerate(temperature_range_thermal_displacements):
+            for idx, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
                     phonon.primitive,
-                    i,
-                    filename="tdispmat_" + str(temp) + "K.cif",
+                    idx,
+                    filename=f"tdispmat_{temp}K.cif",
                 )
-            tdisp_mat = (
-                phonon._thermal_displacement_matrices.thermal_displacement_matrices.tolist()
-            )
+            _disp_mat = phonon._thermal_displacement_matrices
+            tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
 
-            tdisp_mat_cif = (
-                phonon._thermal_displacement_matrices.thermal_displacement_matrices_cif.tolist()
-            )
+            tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
 
         else:
             tdisp_mat = None
