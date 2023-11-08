@@ -336,9 +336,9 @@ class Calculation(BaseModel):
               vbm, cbm, band_gap, is_metal and efermi rather than the full
               band structure object.
 
-        average_v_hartree
+        average_v_hartree : bool = True
             Whether to store the average of the V_HARTREE along the crystal axes.
-        run_bader
+        run_bader : bool = False
             Whether to run bader on the charge density.
         strip_dos_projections : bool
             Whether to strip the element and site projections from the density of
@@ -347,13 +347,13 @@ class Calculation(BaseModel):
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
-        store_trajectory:
+        store_trajectory : bool = False
             Whether to store the ionic steps as a pmg trajectory object, which can be
             pushed, to a bson data store, instead of as a list od dicts. Useful for
             large trajectories.
-        store_scf:
+        store_scf : bool = False
             Whether to store the SCF convergence data.
-        store_volumetric_data
+        store_volumetric_data : tuple[str] | None = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA
             Which volumetric files to store.
 
         Returns
