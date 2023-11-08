@@ -91,9 +91,10 @@ class Atomate2Settings(BaseSettings):
     )
     DDEC6_ATOMIC_DENSITIES_DIR: Optional[str] = Field(
         default=None,
-        description="Directory where the atomic densities are stored. If not set, "
-        "pymatgen tries to auto-download the densities and extract them into "
-        "~/.cache/pymatgen/ddec",
+        description="Directory where the atomic densities are stored.",
+        # TODO uncomment below once that functionality is actually implemented
+        # If not set, pymatgen tries to auto-download the densities and extract them
+        # into ~/.cache/pymatgen/ddec
     )
 
     VASP_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
