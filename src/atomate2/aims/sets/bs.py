@@ -4,9 +4,10 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
+from pymatgen.core.structure import Structure
+
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.utils.bands import prepare_band_input
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 @dataclass
@@ -25,13 +26,13 @@ class BandStructureSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, atoms: Structure, prev_parameters: dict[str, Any]
     ) -> dict[str, Sequence[str]]:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        atoms: Structure
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -62,13 +63,13 @@ class GWSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, atoms: Structure, prev_parameters: dict[str, Any]
     ) -> dict[str, Any]:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        atoms: Structure
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
