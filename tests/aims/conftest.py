@@ -5,8 +5,10 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
+import numpy as np
 import pytest
-from ase.build import bulk, molecule
+from ase.build import molecule
+from pymatgen.core.structure import Structure
 
 import atomate2.aims.jobs.base
 import atomate2.aims.run
@@ -36,7 +38,18 @@ def pytest_addoption(parser):
 
 @pytest.fixture()
 def Si():
-    return bulk("Si")
+    return Structure(
+        lattice=np.array(
+            [[0.0, 2.715, 2.715], [2.715, 0.0, 2.715], [2.715, 2.715, 0.0]]
+        ),
+        species=["Si", "Si"],
+        coords=np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [0.25, 0.25, 0.25],
+            ]
+        ),
+    )
 
 
 @pytest.fixture()
