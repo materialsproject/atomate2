@@ -1,4 +1,5 @@
 {
   "xc": "pbe",
-  "relativistic": "atomic_zora scalar"
+  "relativistic": "atomic_zora scalar",
+  "output": []
 }
