@@ -44,7 +44,6 @@ def comp_system(atoms, user_params, test_name, work_path, ref_path):
     )
     input_set = generator.get_input_set(atoms)
     input_set.write_input(work_path / test_name)
-    # input_set.write_input(ref_path / test_name)
     compare_files(test_name, work_path, ref_path)
 
 

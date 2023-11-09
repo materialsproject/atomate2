@@ -47,7 +47,7 @@ class BandStructureSetGenerator(AimsInputGenerator):
         The updated for the parameters for the output section of FHI-aims
         """
         updated_outputs = prev_parameters.get("output", [])
-        updated_outputs += prepare_band_input(structure.lattice, self.k_point_density)
+        updated_outputs += prepare_band_input(structure, self.k_point_density)
         return {"output": updated_outputs}
 
 
@@ -90,7 +90,7 @@ class GWSetGenerator(AimsInputGenerator):
                 {
                     "qpe_calc": "gw_expt",
                     "output": current_output
-                    + prepare_band_input(structure.lattice, self.k_point_density),
+                    + prepare_band_input(structure, self.k_point_density),
                 }
             )
         else:
