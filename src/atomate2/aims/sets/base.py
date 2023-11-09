@@ -149,7 +149,7 @@ class AimsInputSet(InputSet):
                 updated_params[aims_name] = True
 
         aims_geometry_in = AimsGeometryIn.from_structure(self._structure)
-        aims_control_in = AimsControlIn(self._parameters)
+        aims_control_in = AimsControlIn(updated_params)
 
         with cwd(TMPDIR_NAME, mkdir=True, rmdir=True):
             aims_control_in.write_file(self._structure)

@@ -1,14 +1,14 @@
-import numpy as np
 import pytest
+from pymatgen.core import Lattice, Structure
 
 from atomate2.aims.sets.base import AimsInputSet
 
 control_in_str = """
 #===============================================================================
 # Created using the Atomic Simulation Environment (ASE)
-
+#
 # Thu Oct  5 12:27:49 2023
-
+#
 #===============================================================================
 xc                                 pbe
 k_grid                             2 2 2
@@ -107,9 +107,9 @@ compute_forces                     .true.
 control_in_str_rel = """
 #===============================================================================
 # Created using the Atomic Simulation Environment (ASE)
-
+#
 # Thu Oct  5 12:33:50 2023
-
+#
 #===============================================================================
 xc                                 pbe
 k_grid                             2 2 2
@@ -209,28 +209,26 @@ compute_forces                     .true.
 geometry_in_str = """
 #===============================================================================
 # Created using the Atomic Simulation Environment (ASE)
-
+#
 # Thu Oct  5 12:27:49 2023
-
 #=======================================================
-lattice_vector 0.0000000000000000 2.7149999999999999 2.7149999999999999
-lattice_vector 2.7149999999999999 0.0000000000000000 2.7149999999999999
-lattice_vector 2.7149999999999999 2.7149999999999999 0.0000000000000000
-atom_frac 0.0000000000000000 0.0000000000000000 -0.0000000000000000 Si
-atom_frac 0.2500000000000000 0.2500000000000000 0.2500000000000000 Si
+lattice_vector  0.000000000000e+00  2.715000000000e+00  2.715000000000e+00
+lattice_vector  2.715000000000e+00  0.000000000000e+00  2.715000000000e+00
+lattice_vector  2.715000000000e+00  2.715000000000e+00  0.000000000000e+00
+atom  0.000000000000e+00  0.000000000000e+00  0.000000000000e+00 Si
+atom  1.357500000000e+00  1.357500000000e+00  1.357500000000e+00 Si
 """
 geometry_in_str_new = """
 #===============================================================================
 # Created using the Atomic Simulation Environment (ASE)
-
+#
 # Thu Oct  5 12:27:49 2023
-
 #=======================================================
-lattice_vector 0.0000000000000000 2.7149999999999999 2.7149999999999999
-lattice_vector 2.7149999999999999 0.0000000000000000 2.7149999999999999
-lattice_vector 2.7149999999999999 2.7149999999999999 0.0000000000000000
-atom_frac -0.0100000000000000 0.0000000000000000 -0.0000000000000000 Si
-atom_frac 0.2500000000000000 0.2500000000000000 0.2500000000000000 Si
+lattice_vector  0.000000000000e+00  2.715000000000e+00  2.715000000000e+00
+lattice_vector  2.715000000000e+00  0.000000000000e+00  2.715000000000e+00
+lattice_vector  2.715000000000e+00  2.715000000000e+00  0.000000000000e+00
+atom  0.000000000000e+00 -2.715000000000e-02 -2.715000000000e-02 Si
+atom  1.357500000000e+00  1.357500000000e+00  1.357500000000e+00 Si
 """
 
 
@@ -238,7 +236,7 @@ def check_file(ref: str, test: str) -> bool:
     ref_lines = [line.strip() for line in ref.split("\n") if len(line.strip()) > 0]
     test_lines = [line.strip() for line in test.split("\n") if len(line.strip()) > 0]
 
-    return ref_lines[3:] == test_lines[4:]
+    return ref_lines[5:] == test_lines[5:]
 
 
 def test_input_set(Si, species_dir):
@@ -290,8 +288,13 @@ def test_input_set(Si, species_dir):
     with pytest.raises(ValueError):
         in_set.remove_parameters(keys=["relax_geometry"], strict=True)
 
-    new_atoms = Si.copy()
-    new_atoms.set_scaled_positions(np.array([[-0.01, 0, 0], [0.25, 0.25, 0.25]]))
-    in_set.set_atoms(new_atoms)
+    new_structure = Structure(
+        lattice=Lattice(
+            [[0.0, 2.715, 2.715], [2.715, 0.0, 2.715], [2.715, 2.715, 0.0]]
+        ),
+        species=["Si", "Si"],
+        coords=[[-0.01, 0, 0], [0.25, 0.25, 0.25]],
+    )
+    in_set.set_structure(new_structure)
     assert check_file(geometry_in_str_new, in_set.geometry_in.get_str())
     assert check_file(geometry_in_str, in_set_copy.geometry_in.get_str())
