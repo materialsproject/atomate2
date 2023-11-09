@@ -93,7 +93,7 @@ def run_aims_socket(
     """
     ase_adaptor = AseAtomsAdaptor()
     atoms_to_calculate = [
-        ase_adaptor.to_atoms(structure) for structure in structures_to_calculate
+        ase_adaptor.get_atoms(structure) for structure in structures_to_calculate
     ]
 
     with open("parameters.json") as param_file:

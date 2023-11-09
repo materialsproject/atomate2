@@ -121,7 +121,10 @@ def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {"k_grid": [2, 2, 2], "species_dir": species_dir.as_posix()}
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light/").as_posix(),
+    }
     parameters_phonon_disp = dict(
         compute_forces=True, use_pimd_wrapper=("localhost", 12345), **parameters
     )
@@ -149,9 +152,9 @@ def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     )
 
     # run the flow or job and ensure that it finished running successfully
-    os.chdir(tmp_path)
+    # os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    os.chdir(cwd)
+    # os.chdir(cwd)
 
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
