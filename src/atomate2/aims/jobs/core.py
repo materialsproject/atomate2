@@ -9,13 +9,13 @@ from typing import TYPE_CHECKING
 
 from jobflow import Response, job
 from monty.serialization import dumpfn
+from pymatgen.io.aims.parsers import read_aims_output
 
 from atomate2 import SETTINGS
 from atomate2.aims.files import (
     cleanup_aims_outputs,
     write_aims_input_set,
 )
-from atomate2.aims.io.parsers import read_aims_output
 from atomate2.aims.jobs.base import _FILES_TO_ZIP, BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
@@ -25,11 +25,10 @@ from atomate2.aims.sets.core import (
     SocketIOSetGenerator,
     StaticSetGenerator,
 )
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.common.files import gzip_output_folder
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
+    from pymatgen.core import Molecule, Structure
 
     from atomate2.aims.sets.base import AimsInputGenerator
 
@@ -118,7 +117,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
     @job
     def make(
         self,
-        structure: Sequence[MSONableAtoms | Structure],
+        structure: list[Structure | Molecule],
         prev_dir: str | Path | None = None,
     ) -> Response:
         """Run multiple FHI-aims calculation with the socket.
@@ -128,8 +127,8 @@ class SocketIOStaticMaker(BaseAimsMaker):
 
         Parameters
         ----------
-        structure : Sequence[.MSONableAtoms | Structure]
-            The list of atoms objects to run FHI-aims on
+        structure : list[Molecule | Structure]
+            The list of structure objects to run FHI-aims on
         prev_dir : str or Path or None
             A previous FHI-aims calculation directory to copy output files from.
 
@@ -138,14 +137,8 @@ class SocketIOStaticMaker(BaseAimsMaker):
         The output response for the calculations
         """
         # copy previous inputs
-        if not isinstance(structure, Sequence):
-            structure = [MSONableAtoms(structure)]
-        atoms = [
-            st.copy()
-            if isinstance(st, MSONableAtoms)
-            else MSONableAtoms.from_pymatgen(st)
-            for st in structure
-        ]
+        if not isinstance(structure, list):
+            structure = [structure]
 
         from_prev = prev_dir is not None
         if from_prev:
@@ -157,14 +150,14 @@ class SocketIOStaticMaker(BaseAimsMaker):
             for img in images:
                 img.calc = None
 
-            for ii in range(-1 * len(atoms), 0, -1):
-                if atoms[ii] in images:
-                    del atoms[ii]
+            for ii in range(-1 * len(structure), 0, -1):
+                if structure[ii] in images:
+                    del structure[ii]
 
         # write aims input files
         self.write_input_set_kwargs["prev_dir"] = prev_dir
         write_aims_input_set(
-            atoms[0], self.input_set_generator, **self.write_input_set_kwargs
+            structure[0], self.input_set_generator, **self.write_input_set_kwargs
         )
 
         # write any additional data
@@ -172,7 +165,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
             dumpfn(data, filename.replace(":", "."))
 
         # run FHI-aims
-        run_aims_socket(atoms, **self.run_aims_kwargs)
+        run_aims_socket(structure, **self.run_aims_kwargs)
 
         # parse FHI-aims outputs
         task_doc = AimsTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)

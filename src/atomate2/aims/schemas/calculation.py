@@ -1,25 +1,32 @@
 """Schemas for FHI-aims calculation objects."""
+from __future__ import annotations
 
 import os
 from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
+import numpy as np
 from ase.spectrum.band_structure import BandStructure
-from ase.stress import voigt_6_to_full_3x3_stress
-from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos
+from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.common import VolumetricData
 
-from atomate2.aims.io.aims_output import AimsOutput
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+if TYPE_CHECKING:
+    from emmet.core.math import Matrix3D, Vector3D
 
 STORE_VOLUMETRIC_DATA = ("total_density",)
+
+
+def voigt_to_full_stress_conv(voigt_stress: Sequence[float]) -> Matrix3D:
+    """Transform voigt vector to a full 3x3 matrix."""
+    xx, yy, zz, yz, xz, xy = np.array(voigt_stress).flatten()
+    return np.array([[xx, xy, xz], [xy, yy, yz], [xz, yz, zz]])
 
 
 class TaskState(ValueEnum):
@@ -44,21 +51,15 @@ class CalculationInput(BaseModel):
 
     Parameters
     ----------
-    atoms: .MSONableAtoms
-        The input Atoms object
     structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the atoms
+        The final pymatgen Structure or Molecule of the system
     species_info: Dict
         Description of parameters used for each atomic species
     aims_input: Dict
         The aims input parameters used for this task
     """
 
-    atoms: MSONableAtoms = Field(None, description="The input Atoms object")
-
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The pymatgen structure of the input Atoms"
-    )
+    structure: Structure | Molecule = Field(None, description="The input structure")
 
     species_info: dict[str, Any] = Field(
         None, description="Description of parameters used for each atomic species"
@@ -72,8 +73,7 @@ class CalculationInput(BaseModel):
     def from_aims_output(cls, output: AimsOutput):
         """Initialize from AimsOutput object."""
         return cls(
-            atoms=output.initial_structure,
-            structure=output.initial_structure.pymatgen,
+            structure=output.initial_structure,
             species_info=output.data.get("species_info", None),
             aims_input=output.input.as_dict(),
         )
@@ -88,10 +88,8 @@ class CalculationOutput(BaseModel):
         The final total DFT energy for the calculation
     energy_per_atom: float
         The final DFT energy per atom for the calculation
-    atoms: .MSONableAtoms
-        The final structure from the calculation
     structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the atoms
+        The final pymatgen Structure or Molecule of the system
     efermi: float
         The Fermi level from the calculation in eV
     forces: List[Vector3D]
@@ -110,7 +108,7 @@ class CalculationOutput(BaseModel):
         The conduction band minimum in eV (if system is not metallic
     vbm: float
         The valence band maximum in eV (if system is not metallic)
-    atomic_steps: List[.MSONableAtoms]
+    atomic_steps: list[Structure or Molecule]
         Structures for each ionic step"
     """
 
@@ -120,12 +118,11 @@ class CalculationOutput(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the calculation"
     )
-    atoms: MSONableAtoms = Field(
+
+    structure: Structure | Molecule = Field(
         None, description="The final structure from the calculation"
     )
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The pymatgen structure of the final Atoms"
-    )
+
     efermi: float = Field(
         None, description="The Fermi level from the calculation in eV"
     )
@@ -156,7 +153,7 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    atomic_steps: list[MSONableAtoms] = Field(
+    atomic_steps: list[Structure | Molecule] = Field(
         None, description="Structures for each ionic step"
     )
 
@@ -165,7 +162,7 @@ class CalculationOutput(BaseModel):
         cls,
         output: AimsOutput,  # Must use auto_load kwarg when passed
         store_trajectory: bool = False,
-    ) -> "CalculationOutput":
+    ) -> CalculationOutput:
         """
         Create an FHI-aims output document from FHI-aims outputs.
 
@@ -180,7 +177,7 @@ class CalculationOutput(BaseModel):
         -------
         The FHI-aims calculation output document.
         """
-        atoms = output.final_structure
+        structure = output.final_structure
 
         electronic_output = {
             "efermi": output.fermi_energy,
@@ -196,12 +193,12 @@ class CalculationOutput(BaseModel):
 
         stress = None
         if output.stress is not None:
-            stress = voigt_6_to_full_3x3_stress(output.stress).tolist()
+            stress = voigt_to_full_stress_conv(output.stress).tolist()
 
         stresses = None
         if output.stresses is not None:
             stresses = [
-                voigt_6_to_full_3x3_stress(st).tolist() for st in output.stresses
+                voigt_to_full_stress_conv(st).tolist() for st in output.stresses
             ]
 
         all_forces = None
@@ -209,10 +206,9 @@ class CalculationOutput(BaseModel):
             all_forces = [f if (f is not None) else None for f in output.all_forces]
 
         return cls(
-            atoms=atoms,
-            structure=atoms.pymatgen,
+            structure=structure,
             energy=output.final_energy,
-            energy_per_atom=output.final_energy / len(atoms),
+            energy_per_atom=output.final_energy / len(structure.species),
             **electronic_output,
             atomic_steps=output.structures,
             forces=forces,
@@ -266,16 +262,16 @@ class Calculation(BaseModel):
     @classmethod
     def from_aims_files(
         cls,
-        dir_name: Union[Path, str],
+        dir_name: Path | str,
         task_name: str,
-        aims_output_file: Union[Path, str] = "aims.out",
+        aims_output_file: Path | str = "aims.out",
         volumetric_files: list[str] = None,
-        parse_dos: Union[str, bool] = False,
-        parse_bandstructure: Union[str, bool] = False,
+        parse_dos: str | bool = False,
+        parse_bandstructure: str | bool = False,
         store_trajectory: bool = False,
         store_scf: bool = False,
         store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
-    ) -> tuple["Calculation", dict[AimsObject, dict]]:
+    ) -> tuple[Calculation, dict[AimsObject, dict]]:
         """
         Create an FHI-aims calculation document from a directory and file paths.
 
@@ -431,7 +427,7 @@ def _get_volumetric_data(
     return volumetric_data
 
 
-def _parse_dos(parse_dos: Union[str, bool], aims_output: AimsOutput) -> Optional[Dos]:
+def _parse_dos(parse_dos: str | bool, aims_output: AimsOutput) -> Optional[Dos]:
     """Parse DOS outputs from FHI-aims calculation.
 
     Parameters
@@ -458,7 +454,7 @@ def _parse_dos(parse_dos: Union[str, bool], aims_output: AimsOutput) -> Optional
 
 
 def _parse_bandstructure(
-    parse_bandstructure: Union[str, bool], aims_output: AimsOutput
+    parse_bandstructure: str | bool, aims_output: AimsOutput
 ) -> Optional[BandStructure]:
     """
     Get the band structure.

@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.common.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -154,7 +153,7 @@ class BasePhononMaker(Maker, ABC):
 
     def make(
         self,
-        structure: Structure | MSONableAtoms,
+        structure: Structure,
         prev_dir: str | Path | None = None,
         born: list[Matrix3D] | None = None,
         epsilon_static: Matrix3D | None = None,
@@ -166,8 +165,8 @@ class BasePhononMaker(Maker, ABC):
 
         Parameters
         ----------
-        structure : Structure or MSONableAtoms
-            A pymatgen structure or MSONableAtoms object. Please start with a structure
+        structure : Structure
+            A pymatgen structure object. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
         prev_dir : str or Path or None
@@ -197,9 +196,6 @@ class BasePhononMaker(Maker, ABC):
                 "The code variable must be passed and it must be a supported code."
                 f" Supported codes are: {SUPPORTED_CODES}"
             )
-
-        if isinstance(structure, MSONableAtoms):
-            structure = structure.structure
 
         if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
             raise ValueError(

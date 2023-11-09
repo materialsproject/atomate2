@@ -4,10 +4,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
+from pymatgen.core import Structure
+
 from atomate2.aims.sets.base import AimsInputGenerator
 
 if TYPE_CHECKING:
-    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+    from pymatgen.core import Molecule
 
 __all__ = [
     "StaticSetGenerator",
@@ -28,13 +30,13 @@ class StaticSetGenerator(AimsInputGenerator):
     calc_type: str = "static"
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict[str, Any]:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        structure: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -71,13 +73,13 @@ class RelaxSetGenerator(AimsInputGenerator):
     method: str = "trm"
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        structure: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -87,9 +89,9 @@ class RelaxSetGenerator(AimsInputGenerator):
         The updated for the parameters for the output section of FHI-aims
         """
         updates = {"relax_geometry": f"{self.method} {self.max_force:e}"}
-        if any(atoms.pbc) and self.relax_cell:
+        if isinstance(structure, Structure) and self.relax_cell:
             updates["relax_unit_cell"] = "full"
-        elif any(atoms.pbc):
+        elif isinstance(structure, Structure):
             updates["relax_unit_cell"] = "none"
 
         return updates
@@ -114,13 +116,13 @@ class SocketIOSetGenerator(AimsInputGenerator):
     port: int = 12345
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        structure: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters

@@ -10,12 +10,12 @@ from typing import TYPE_CHECKING, Any
 from warnings import warn
 
 import numpy as np
-from ase.calculators.aims import Aims
-from ase.constraints import FixScaledParametricRelations
 from monty.json import MontyDecoder, MontyEncoder
+from pymatgen.core import Molecule, Structure
+from pymatgen.io.aims.inputs import AimsControlIn, AimsGeometryIn
+from pymatgen.io.aims.parsers import AimsParseError, read_aims_output
 from pymatgen.io.core import InputFile, InputGenerator, InputSet
 
-from atomate2.aims.io.parsers import AimsParseError, read_aims_output
 from atomate2.aims.utils.common import (
     CONTROL_FILE_NAME,
     GEOMETRY_FILE_NAME,
@@ -23,12 +23,11 @@ from atomate2.aims.utils.common import (
     TMPDIR_NAME,
     cwd,
 )
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from ase.cell import Cell
+    from emmet.core.math import Matrix3D
 
 DEFAULT_AIMS_PROPERTIES = [
     "energy",
@@ -102,7 +101,7 @@ class AimsInputSet(InputSet):
     def __init__(
         self,
         parameters: dict[str, Any],
-        atoms: MSONableAtoms,
+        structure: Structure | Molecule,
         properties: Sequence[str] = ("energy", "free_energy"),
     ):
         """Construct the AimsInputSet.
@@ -111,13 +110,13 @@ class AimsInputSet(InputSet):
         ----------
         parameters: Dict[str, Any]
             The ASE parameters object for the calculation
-        atoms: .MSONableAtoms
-            The atoms objects to create the inputs for
+        structure: Structure or Molecule
+            The Structure/Molecule objects to create the inputs for
         properties: Sequence[str]
             The properties to calculate for the calculation
         """
         self._parameters = parameters
-        self._atoms = MSONableAtoms(atoms)
+        self._structure = structure
         self._properties = properties
 
         aims_control_in, aims_geometry_in = self.get_input_files()
@@ -149,25 +148,14 @@ class AimsInputSet(InputSet):
             if aims_name is not None:
                 updated_params[aims_name] = True
 
+        aims_geometry_in = AimsGeometryIn.from_structure(self._structure)
+        aims_control_in = AimsControlIn(self._parameters)
+
         with cwd(TMPDIR_NAME, mkdir=True, rmdir=True):
-            aims_calc = Aims(atoms=self._atoms, **updated_params)
-            scaled = np.any(self._atoms.pbc)
-            geo_constrain = any(
-                [False]
-                + [
-                    isinstance(const, FixScaledParametricRelations)
-                    for const in self._atoms.constraints
-                ]
-            )
-            aims_calc.write_input(
-                atoms=self._atoms,
-                properties=self._properties,
-                scaled=scaled,
-                geo_constrain=geo_constrain,
-            )
-            aims_control_in = AimsInputFile.from_file("control.in")
-            aims_geometry_in = AimsInputFile.from_file("geometry.in")
-        return aims_control_in, aims_geometry_in
+            aims_control_in.write_file(self._structure)
+            aims_control_in_content = AimsInputFile.from_file("control.in")
+
+        return aims_control_in_content, AimsInputFile.from_str(aims_geometry_in.content)
 
     @property
     def control_in(self) -> str:
@@ -247,18 +235,19 @@ class AimsInputSet(InputSet):
 
         return self.set_parameters(**self._parameters)
 
-    def set_atoms(self, atoms: MSONableAtoms):
-        """Set the atoms object for this input set.
+    def set_structure(self, structure: Structure | Molecule):
+        """Set the structure object for this input set.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
-            The new atoms for the calculation
+        structure: Structure or Molecule
+            The new Structure or Molecule for the calculation
         """
-        self._atoms = MSONableAtoms(atoms)
+        self._structure = structure
 
-        _, aims_geometry_in = self.get_input_files()
+        aims_control_in, aims_geometry_in = self.get_input_files()
         self.inputs[GEOMETRY_FILE_NAME] = aims_geometry_in
+        self.inputs[CONTROL_FILE_NAME] = aims_control_in
         self.__dict__.update(self.inputs)
 
     def deepcopy(self):
@@ -284,7 +273,7 @@ class AimsInputGenerator(InputGenerator):
 
     def get_input_set(  # type: ignore
         self,
-        atoms: MSONableAtoms = None,
+        structure: Structure | Molecule = None,
         prev_dir: str | Path = None,
         properties: list[str] = None,
     ) -> AimsInputSet:
@@ -292,8 +281,8 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms : .MSONableAtoms
-            ASE Atoms object to generate the input set for.
+        structure : Structure or Molecule
+            Structure or Molecule to generate the input set for.
         prev_dir: str or Path
             Path to the previous working directory
         properties: list[str]
@@ -301,19 +290,21 @@ class AimsInputGenerator(InputGenerator):
 
         Returns
         -------
-        The input set for the calculation of atoms
+        The input set for the calculation of structure
         """
-        prev_atoms, prev_parameters, _ = self._read_previous(prev_dir)
-        atoms = atoms if atoms is not None else prev_atoms
+        prev_structure, prev_parameters, _ = self._read_previous(prev_dir)
+        structure = structure or prev_structure
 
-        parameters = self._get_input_parameters(atoms, prev_parameters)
+        parameters = self._get_input_parameters(structure, prev_parameters)
         properties = self._get_properties(properties, parameters)
 
-        return AimsInputSet(parameters=parameters, atoms=atoms, properties=properties)
+        return AimsInputSet(
+            parameters=parameters, structure=structure, properties=properties
+        )
 
     def _read_previous(
         self, prev_dir: str | Path = None
-    ) -> tuple[MSONableAtoms, dict[str, Any], dict[str, list[float]]]:
+    ) -> tuple[Structure | Molecule, dict[str, Any], dict[str, list[float]]]:
         """Read in previous results.
 
         Parameters
@@ -321,7 +312,7 @@ class AimsInputGenerator(InputGenerator):
         prev_dir: str or Path
             The previous directory for the calculation
         """
-        prev_atoms: MSONableAtoms = None
+        prev_structure: Structure | Molecule = None
         prev_parameters = {}
         prev_results = {}
 
@@ -334,15 +325,16 @@ class AimsInputGenerator(InputGenerator):
                 prev_parameters = json.load(param_file, cls=MontyDecoder)
 
             try:
-                prev_atoms = read_aims_output(
+                prev_structure = read_aims_output(
                     f"{split_prev_dir}/aims.out", index=slice(-1, None)
                 )[0]
 
-                prev_results = prev_atoms.calc.results
+                prev_results = prev_structure.properties
+                prev_results.update(prev_structure.site_properties)
             except (IndexError, AimsParseError):
                 pass
 
-        return prev_atoms, prev_parameters, prev_results
+        return prev_structure, prev_parameters, prev_results
 
     def _get_properties(
         self,
@@ -382,14 +374,14 @@ class AimsInputGenerator(InputGenerator):
         return properties
 
     def _get_input_parameters(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any] = None
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any] = None
     ) -> dict[str, Any]:
         """Create the input parameters.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
-            The atoms object for the structures
+        structure: Structure | Molecule
+            The structure or molecule for the system
         prev_parameters: dict[str, Any]
             The previous calculation's calculation parameters
 
@@ -412,12 +404,12 @@ class AimsInputGenerator(InputGenerator):
         prev_parameters.pop("relax_unit_cell", None)
 
         kpt_settings = copy.deepcopy(self.user_kpoints_settings)
-        if "k_grid" in prev_parameters:
-            density = self.k2d(atoms, prev_parameters.pop("k_grid"))
+        if isinstance(structure, Structure) and "k_grid" in prev_parameters:
+            density = self.k2d(structure, prev_parameters.pop("k_grid"))
             if "density" not in kpt_settings:
                 kpt_settings["density"] = density
 
-        parameter_updates = self.get_parameter_updates(atoms, prev_parameters)
+        parameter_updates = self.get_parameter_updates(structure, prev_parameters)
         parameters = recursive_update(parameters, parameter_updates)
 
         # Override default parameters with user_parameters
@@ -428,25 +420,25 @@ class AimsInputGenerator(InputGenerator):
                 " using the one passed in user_parameters.",
                 stacklevel=1,
             )
-        elif np.any(atoms.pbc) and ("k_grid" not in parameters):
+        elif isinstance(structure, Structure) and ("k_grid" not in parameters):
             density = kpt_settings.get("density", 5.0)
             even = kpt_settings.get("even", True)
-            parameters["k_grid"] = self.d2k(atoms, density, even)
-        elif not np.any(atoms.pbc) and "k_grid" in parameters:
+            parameters["k_grid"] = self.d2k(structure, density, even)
+        elif isinstance(structure, Molecule) and "k_grid" in parameters:
             warn("WARNING: removing unnecessary k_grid information", stacklevel=1)
             del parameters["k_grid"]
 
         return parameters
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict[str, Any]:
         """Update the parameters for a given calculation type.
 
         Parameters
         ----------
-        atoms : .MSONableAtoms
-            ASE Atoms object.
+        structure : Structure or Molecule
+            The system to run
         prev_parameters: Dict[str, Any]
             Previous calculation parameters.
 
@@ -458,7 +450,7 @@ class AimsInputGenerator(InputGenerator):
 
     def d2k(
         self,
-        atoms: MSONableAtoms,
+        structure: Structure,
         kptdensity: float | list[float] = 5.0,
         even: bool = True,
     ) -> Iterable[float]:
@@ -468,7 +460,7 @@ class AimsInputGenerator(InputGenerator):
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        structure: Structure
             Contains unit cell and information about boundary conditions.
         kptdensity: float or list of floats
             Required k-point density.  Default value is 5.0 point per Ang^-1.
@@ -479,16 +471,16 @@ class AimsInputGenerator(InputGenerator):
         -------
         Monkhorst-Pack grid size in all directions
         """
-        recipcell = atoms.cell.reciprocal()
-        return self.d2k_recipcell(recipcell, atoms.pbc, kptdensity, even)
+        recipcell = structure.lattice.inv_matrix
+        return self.d2k_recipcell(recipcell, structure.lattice.pbc, kptdensity, even)
 
-    def k2d(self, atoms: MSONableAtoms, k_grid: Iterable[int]):
+    def k2d(self, structure: Structure, k_grid: Iterable[int]):
         """Generate the kpoint density in each direction from given k_grid.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
-            Atoms object of interest.
+        structure: Structure
+            Contains unit cell and information about boundary conditions.
         k_grid: Iterable[int]
             k_grid that was used.
 
@@ -496,13 +488,13 @@ class AimsInputGenerator(InputGenerator):
         -------
         Density of kpoints in each direction. result.mean() computes average density
         """
-        recipcell = atoms.cell.reciprocal()
+        recipcell = structure.lattice.inv_matrix
         densities = k_grid / (2 * np.pi * np.sqrt((recipcell**2).sum(axis=1)))
         return np.array(densities)
 
     @staticmethod
     def d2k_recipcell(
-        recipcell: Cell,
+        recipcell: Matrix3D,
         pbc: list[bool],
         kptdensity: float | Sequence[float] = 5.0,
         even: bool = True,
@@ -544,7 +536,7 @@ class AimsInputGenerator(InputGenerator):
         return kpts
 
 
-def recursive_update(d: dict, u: dict) -> dict:
+def recursive_update(dct: dict, up: dict) -> dict:
     """
     Update a dictionary recursively and return it.
 
@@ -566,14 +558,14 @@ def recursive_update(d: dict, u: dict) -> dict:
 
         yields {'activate_hybrid': {"hybrid_functional": "HSE06", "cutoff_radius": 8}}}
     """
-    for k, v in u.items():
-        if isinstance(v, dict):
-            d[k] = recursive_update(d.get(k, {}), v)
-        elif k == "output" and isinstance(
-            v, list
+    for key, val in up.items():
+        if isinstance(val, dict):
+            dct[key] = recursive_update(dct.get(key, {}), val)
+        elif key == "output" and isinstance(
+            val, list
         ):  # for all other keys the list addition is not needed (I guess)
-            old_v = d.get(k, [])
-            d[k] = old_v + v
+            old_v = dct.get(key, [])
+            dct[key] = old_v + val
         else:
-            d[k] = v
-    return d
+            dct[key] = val
+    return dct

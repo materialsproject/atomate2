@@ -1,12 +1,16 @@
 """Input sets for band structure calculations."""
+from __future__ import annotations
 
-from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+from pymatgen.core import Molecule, Structure
 
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.utils.bands import prepare_band_input
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 @dataclass
@@ -25,13 +29,13 @@ class BandStructureSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict[str, Sequence[str]]:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        structure: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -41,7 +45,7 @@ class BandStructureSetGenerator(AimsInputGenerator):
         The updated for the parameters for the output section of FHI-aims
         """
         updated_outputs = prev_parameters.get("output", [])
-        updated_outputs += prepare_band_input(atoms.cell, self.k_point_density)
+        updated_outputs += prepare_band_input(structure.lattice, self.k_point_density)
         return {"output": updated_outputs}
 
 
@@ -62,13 +66,13 @@ class GWSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, atoms: MSONableAtoms, prev_parameters: dict[str, Any]
+        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict[str, Any]:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        atoms: .MSONableAtoms
+        structure: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -79,12 +83,12 @@ class GWSetGenerator(AimsInputGenerator):
         """
         updates = {"anacon_type": "two-pole"}
         current_output = prev_parameters.get("output", [])
-        if all(atoms.pbc):
+        if isinstance(structure, Structure) and all(structure.lattice.pbc):
             updates.update(
                 {
                     "qpe_calc": "gw_expt",
                     "output": current_output
-                    + prepare_band_input(atoms.cell, self.k_point_density),
+                    + prepare_band_input(structure.lattice, self.k_point_density),
                 }
             )
         else:

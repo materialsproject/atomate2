@@ -5,11 +5,10 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from pymatgen.core import Molecule, Structure
 
 from atomate2 import SETTINGS
 from atomate2.aims.files import (
@@ -20,8 +19,10 @@ from atomate2.aims.files import (
 from atomate2.aims.run import run_aims, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
 from atomate2.aims.sets.base import AimsInputGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 from atomate2.common.files import gzip_output_folder
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class BaseAimsMaker(Maker):
     @job
     def make(
         self,
-        structure: MSONableAtoms | Structure | Molecule,
+        structure: Structure | Molecule,
         prev_dir: str | Path | None = None,
     ):
         """
@@ -92,17 +93,11 @@ class BaseAimsMaker(Maker):
 
         Parameters
         ----------
-        structure : .MSONableAtoms or Structure or Molecule
-            An ASE Atoms or pymatgen Structure object to create the calculation for.
+        structure : Structure or Molecule
+            A pymatgen Structure object to create the calculation for.
         prev_dir : str or Path or None
             A previous FHI-aims calculation directory to copy output files from.
         """
-        # the structure transformation part was deleted; can be reinserted when needed
-        if isinstance(structure, (Structure, Molecule)):
-            atoms = MSONableAtoms.from_pymatgen(structure)
-        else:
-            atoms = structure.copy()
-
         # copy previous inputs if needed (governed by self.copy_aims_kwargs)
         if prev_dir is not None:
             copy_aims_outputs(prev_dir, **self.copy_aims_kwargs)
@@ -110,7 +105,7 @@ class BaseAimsMaker(Maker):
         # write aims input files
         self.write_input_set_kwargs["prev_dir"] = prev_dir
         write_aims_input_set(
-            atoms, self.input_set_generator, **self.write_input_set_kwargs
+            structure, self.input_set_generator, **self.write_input_set_kwargs
         )
 
         # write any additional data

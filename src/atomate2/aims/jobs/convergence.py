@@ -5,13 +5,15 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, Response, job
-from pymatgen.core import Molecule, Structure
 
 from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.schemas.task import AimsTaskDoc, ConvergenceSummary
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
 
 CONVERGENCE_FILE_NAME = "convergence.json"  # make it a constant?
 
@@ -53,23 +55,18 @@ class ConvergenceMaker(Maker):
     @job
     def make(
         self,
-        structure: MSONableAtoms | Structure | Molecule,
+        structure: Structure | Molecule,
         prev_dir: str | Path | None = None,
     ):
         """Create a top-level flow controlling convergence iteration.
 
         Parameters
         ----------
-        structure : .MSONableAtoms or Structure or Molecule
+        structure : Structure or Molecule
             a structure to run a job
         prev_dir: str or Path or None
             An FHI-aims calculation directory in which previous run contents are stored
         """
-        if isinstance(structure, (Structure, Molecule)):
-            atoms = MSONableAtoms.from_pymatgen(structure)
-        else:
-            atoms = structure.copy()
-
         # getting the calculation index
         idx = 0
         converged = False
@@ -88,7 +85,7 @@ class ConvergenceMaker(Maker):
 
         if idx < len(self.convergence_steps) and not converged:
             # finding next jobs
-            next_base_job = self.maker.make(atoms, prev_dir=prev_dir_no_host)
+            next_base_job = self.maker.make(structure, prev_dir=prev_dir_no_host)
             next_base_job.update_maker_kwargs(
                 {
                     "_set": {

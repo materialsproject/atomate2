@@ -1,10 +1,11 @@
 """A definition of a MSON document representing an FHI-aims task."""
+from __future__ import annotations
 
 import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, TypeVar
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -16,7 +17,6 @@ from pymatgen.entries.computed_entries import ComputedEntry
 
 from atomate2.aims.schemas.calculation import AimsObject, Calculation, TaskState
 from atomate2.aims.utils import datetime_str
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 _T = TypeVar("_T", bound="AimsTaskDoc")
 _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
@@ -48,7 +48,7 @@ class AnalysisDoc(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_docs(cls, calc_docs: list[Calculation]) -> "AnalysisDoc":
+    def from_aims_calc_docs(cls, calc_docs: list[Calculation]) -> AnalysisDoc:
         """Create analysis summary from FHI-aims calculation documents.
 
         Parameters
@@ -118,13 +118,13 @@ class SpeciesSummary(BaseModel):
         -------
         The SpeciesSummary
         """
-        d: dict[str, dict[str, Any]] = {"species_defaults": {}}
+        dct: dict[str, dict[str, Any]] = {"species_defaults": {}}
         for kind, info in species_info.items():
-            d["species_defaults"][kind] = {
+            dct["species_defaults"][kind] = {
                 "element": info["element"],
                 "species_defaults": info["species_defaults"],
             }
-        return cls(**d)
+        return cls(**dct)
 
 
 class InputDoc(BaseModel):
@@ -132,19 +132,16 @@ class InputDoc(BaseModel):
 
     Parameters
     ----------
-    atoms: .MSONableAtoms
-        The input structure object
     structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the atoms
+        The input pymatgen Structure or Molecule of the system
     species_info: .SpeciesSummary
         Summary of the species defaults used for each atom kind
     xc: str
         Exchange-correlation functional used if not the default
     """
 
-    atoms: MSONableAtoms = Field(None, description="The input structure object")
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The pymatgen structure of the input Atoms"
+    structure: Structure | Molecule = Field(
+        None, description="The input structure object"
     )
     species_info: SpeciesSummary = Field(
         None, description="Summary of the species defaults used for each atom kind"
@@ -154,7 +151,7 @@ class InputDoc(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "InputDoc":
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> InputDoc:
         """Create calculation input summary from a calculation document.
 
         Parameters
@@ -170,7 +167,6 @@ class InputDoc(BaseModel):
         summary = SpeciesSummary.from_species_info(calc_doc.input.species_info)
 
         return cls(
-            atoms=calc_doc.input.atoms,
             structure=calc_doc.input.structure,
             atomic_kind_info=summary,
             xc=str(calc_doc.run_type),
@@ -182,11 +178,9 @@ class OutputDoc(BaseModel):
 
     Parameters
     ----------
-    atoms: .MSONableAtoms
-        The output atoms object
     structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the atoms
-    trajectory: List[.MSONableAtoms]
+        The final pymatgen Structure or Molecule of the final system
+    trajectory: List[Structure or Molecule]
         The trajectory of output structures
     energy: float
         The final total DFT energy for the last calculation
@@ -206,11 +200,10 @@ class OutputDoc(BaseModel):
         Forces on atoms from all calculations.
     """
 
-    atoms: MSONableAtoms = Field(None, description="The output structure object")
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The pymatgen structure of the output Atoms"
+    structure: Structure | Molecule = Field(
+        None, description="The output structure object"
     )
-    trajectory: list[MSONableAtoms] = Field(
+    trajectory: Sequence[Structure | Molecule] = Field(
         None, description="The trajectory of output structures"
     )
     energy: float = Field(
@@ -235,7 +228,7 @@ class OutputDoc(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "OutputDoc":
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
         """Create a summary from an aims CalculationDocument.
 
         Parameters
@@ -249,7 +242,6 @@ class OutputDoc(BaseModel):
             The calculation output summary.
         """
         return cls(
-            atoms=calc_doc.output.atoms,
             structure=calc_doc.output.structure,
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
@@ -268,10 +260,8 @@ class ConvergenceSummary(BaseModel):
 
     Parameters
     ----------
-    atoms: .MSONableAtoms
-        The output structure object
     structure: Structure or Molecule
-        The output pymatgen Structure or Molecule of the atoms
+        The output structure object
     converged: bool
         Is convergence achieved?
     convergence_criterion_name: str
@@ -288,9 +278,8 @@ class ConvergenceSummary(BaseModel):
         The actual difference in the convergence criteria values
     """
 
-    atoms: MSONableAtoms = Field(None, description="The output atoms object")
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The pymatgen structure of the output Atoms"
+    structure: Structure | Molecule = Field(
+        None, description="The pymatgen object of the output structure"
     )
     converged: bool = Field(None, description="Is convergence achieved?")
 
@@ -318,7 +307,7 @@ class ConvergenceSummary(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> "ConvergenceSummary":
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> ConvergenceSummary:
         """Create a summary from an FHI-aims calculation document.
 
         Parameters
@@ -346,7 +335,6 @@ class ConvergenceSummary(BaseModel):
             convergence_data = json.load(f)
 
         return cls(
-            atoms=calc_doc.output.atoms,
             structure=calc_doc.output.structure,
             converged=convergence_data["converged"],
             convergence_criterion_name=convergence_data["criterion_name"],
@@ -376,10 +364,8 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         The input to the first calculation
     output: .OutputDoc
         The output of the final calculation
-    atoms: .MSONableAtoms
-        Final output structure from the task
     structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the atoms
+        Final output structure from the task
     state: .TaskState
         State of this task
     included_objects: List[.AimsObject]
@@ -422,9 +408,8 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         None, description="The input to the first calculation"
     )
     output: OutputDoc = Field(None, description="The output of the final calculation")
-    atoms: MSONableAtoms = Field(None, description="Final output atoms from the task")
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The final pymatgen Structure or Molecule of the atoms"
+    structure: Structure | Molecule = Field(
+        None, description="Final output atoms from the task"
     )
     state: TaskState = Field(None, description="State of this task")
     included_objects: Optional[list[AimsObject]] = Field(
@@ -469,7 +454,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
     @classmethod
     def from_directory(
         cls: type[_T],
-        dir_name: Union[Path, str],
+        dir_name: Path | str,
         volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
         additional_fields: dict[str, Any] = None,
         **aims_calculation_kwargs,
@@ -528,7 +513,6 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         # rewrite the original structure save!
 
         data = {
-            "atoms": calcs_reversed[-1].output.atoms,
             "structure": calcs_reversed[-1].output.structure,
             "meta_structure": calcs_reversed[-1].output.structure,
             "dir_name": dir_name,
@@ -543,7 +527,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
             "included_objects": included_objects,
         }
         doc = cls(**data)
-        return doc.copy(update=additional_fields)
+        return doc.model_copy(update=additional_fields, deep=True)
 
     @staticmethod
     def get_entry(
@@ -581,7 +565,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
 
 
 def _find_aims_files(
-    path: Union[str, Path],
+    path: Path | str,
     volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
 ) -> dict[str, Any]:
     """Find FHI-aims files in a directory.

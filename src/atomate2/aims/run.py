@@ -11,13 +11,14 @@ from typing import TYPE_CHECKING
 from ase.calculators.aims import Aims
 from ase.calculators.socketio import SocketIOCalculator
 from monty.json import MontyDecoder
+from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
-    from atomate2.aims.schemas.task import AimsTaskDoc
-    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+    from pymatgen.core import Molecule, Structure
 
+    from atomate2.aims.schemas.task import AimsTaskDoc
 logger = logging.getLogger(__name__)
 
 
@@ -78,16 +79,23 @@ def should_stop_children(
     raise RuntimeError(f"Unknown option for handle_unsuccessful: {handle_unsuccessful}")
 
 
-def run_aims_socket(atoms_to_calculate: list[MSONableAtoms], aims_cmd: str = None):
+def run_aims_socket(
+    structures_to_calculate: list[Structure | Molecule], aims_cmd: str = None
+):
     """Use the ASE interface to run FHI-aims from the socket.
 
     Parameters
     ----------
-    atoms_to_calculate: list[.MSONableAtoms]
+    structures_to_calculate: list[Structure or Molecule]
         The list of structures to run scf calculations on
     aims_cmd: str
         The aims command to use (defaults to SETTINGS.AIMS_CMD).
     """
+    ase_adaptor = AseAtomsAdaptor()
+    atoms_to_calculate = [
+        ase_adaptor.to_atoms(structure) for structure in structures_to_calculate
+    ]
+
     with open("parameters.json") as param_file:
         parameters = json.load(param_file, cls=MontyDecoder)
     if aims_cmd:

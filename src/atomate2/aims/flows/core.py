@@ -15,7 +15,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 @dataclass
@@ -41,14 +40,14 @@ class DoubleRelaxMaker(Maker):
 
     def make(
         self,
-        structure: MSONableAtoms | Structure | Molecule,
+        structure: Structure | Molecule,
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """Create a flow with two chained relaxations.
 
         Parameters
         ----------
-        structure : .MSONableAtoms, Structure, Molecule
+        structure : Structure or Molecule
             The structure to relax.
         prev_dir : str or Path or None
             A previous FHI-aims calculation directory to copy output files from.
@@ -57,7 +56,7 @@ class DoubleRelaxMaker(Maker):
         relax1.name += " 1"
 
         relax2 = self.relax_maker2.make(
-            relax1.output.atoms, prev_dir=relax1.output.dir_name
+            relax1.output.structure, prev_dir=relax1.output.dir_name
         )
         relax2.name += " 2"
 

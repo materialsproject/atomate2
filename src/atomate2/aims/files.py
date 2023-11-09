@@ -13,8 +13,9 @@ from atomate2.utils.path import strip_hostname
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from pymatgen.core import Molecule, Structure
+
     from atomate2.aims.sets.base import AimsInputGenerator
-    from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ def copy_aims_outputs(
 
 
 def write_aims_input_set(
-    atoms: MSONableAtoms,
+    structure: Structure | Molecule,
     input_set_generator: AimsInputGenerator,
     directory: str | Path = ".",
     prev_dir: str | Path | None = None,
@@ -102,7 +103,7 @@ def write_aims_input_set(
 
     Parameters
     ----------
-    atoms : .MSONableAtoms
+    structure : Structure or Molecule
         A to write the input set for.
     input_set_generator : .AimsInputGenerator
         An GHI-aims input set generator.
@@ -116,7 +117,7 @@ def write_aims_input_set(
     """
     properties = kwargs.get("properties", [])
     aims_is = input_set_generator.get_input_set(
-        atoms, prev_dir=prev_dir, properties=properties
+        structure, prev_dir=prev_dir, properties=properties
     )
 
     logger.info("Writing FHI-aims input set.")
