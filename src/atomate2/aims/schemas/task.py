@@ -5,7 +5,7 @@ import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, TypeVar
+from typing import Any, Optional, TypeVar, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -140,7 +140,7 @@ class InputDoc(BaseModel):
         Exchange-correlation functional used if not the default
     """
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The input structure object"
     )
     species_info: SpeciesSummary = Field(
@@ -200,10 +200,10 @@ class OutputDoc(BaseModel):
         Forces on atoms from all calculations.
     """
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The output structure object"
     )
-    trajectory: Sequence[Structure | Molecule] = Field(
+    trajectory: Sequence[Union[Structure, Molecule]] = Field(
         None, description="The trajectory of output structures"
     )
     energy: float = Field(
@@ -278,7 +278,7 @@ class ConvergenceSummary(BaseModel):
         The actual difference in the convergence criteria values
     """
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The pymatgen object of the output structure"
     )
     converged: bool = Field(None, description="Is convergence achieved?")
@@ -408,7 +408,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         None, description="The input to the first calculation"
     )
     output: OutputDoc = Field(None, description="The output of the final calculation")
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="Final output atoms from the task"
     )
     state: TaskState = Field(None, description="State of this task")
@@ -550,7 +550,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         entry_dict = {
             "correction": 0.0,
             "entry_id": job_id,
-            "composition": calc_docs[-1].output.atoms.get_chemical_formula(),
+            "composition": calc_docs[-1].output.structure.formula,
             "energy": calc_docs[-1].output.energy,
             "parameters": {
                 # Required to be compatible with MontyEncoder for the ComputedEntry

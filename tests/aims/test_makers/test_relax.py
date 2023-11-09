@@ -57,7 +57,7 @@ def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, Si):
     maker = RelaxMaker.fixed_cell_relaxation(user_parameters=parameters)
     maker.name = "relax_fixed_cell_si"
     structure = Si.copy()
-    structure.positions[0, 0] += 0.25
+    structure.frac_coords[0, 0] += 0.25
     job = maker.make(structure)
 
     # run the flow or job and ensure that it finished running successfully

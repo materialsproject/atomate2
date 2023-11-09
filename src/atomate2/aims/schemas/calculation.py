@@ -5,7 +5,7 @@ import os
 from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import numpy as np
 from ase.spectrum.band_structure import BandStructure
@@ -59,7 +59,9 @@ class CalculationInput(BaseModel):
         The aims input parameters used for this task
     """
 
-    structure: Structure | Molecule = Field(None, description="The input structure")
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The input structure"
+    )
 
     species_info: dict[str, Any] = Field(
         None, description="Description of parameters used for each atomic species"
@@ -119,7 +121,7 @@ class CalculationOutput(BaseModel):
         None, description="The final DFT energy per atom for the calculation"
     )
 
-    structure: Structure | Molecule = Field(
+    structure: Union[Structure, Molecule] = Field(
         None, description="The final structure from the calculation"
     )
 
@@ -153,7 +155,7 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    atomic_steps: list[Structure | Molecule] = Field(
+    atomic_steps: list[Union[Structure, Molecule]] = Field(
         None, description="Structures for each ionic step"
     )
 
