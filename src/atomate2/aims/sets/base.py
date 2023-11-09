@@ -155,7 +155,10 @@ class AimsInputSet(InputSet):
             aims_control_in.write_file(self._structure)
             aims_control_in_content = AimsInputFile.from_file("control.in")
 
-        return aims_control_in_content, AimsInputFile.from_str(aims_geometry_in.content)
+            aims_geometry_in.write_file()
+            aims_geometry_in_content = AimsInputFile.from_file("geometry.in")
+
+        return aims_control_in_content, aims_geometry_in_content
 
     @property
     def control_in(self) -> str:
