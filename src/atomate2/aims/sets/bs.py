@@ -4,13 +4,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from pymatgen.core import Molecule, Structure
+from pymatgen.core import Structure
 
 from atomate2.aims.sets.base import AimsInputGenerator
 from atomate2.aims.utils.bands import prepare_band_input
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+    from pymatgen.core import Molecule
 
 
 @dataclass
@@ -29,13 +31,13 @@ class BandStructureSetGenerator(AimsInputGenerator):
     k_point_density: float = 20
 
     def get_parameter_updates(
-        self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
+        self, structure: Structure, prev_parameters: dict[str, Any]
     ) -> dict[str, Sequence[str]]:
         """Get the parameter updates for the calculation.
 
         Parameters
         ----------
-        structure: Structure or Molecule
+        structure: Structure
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
@@ -72,7 +74,7 @@ class GWSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        structure: Structure or Molecule
+        atoms: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters
