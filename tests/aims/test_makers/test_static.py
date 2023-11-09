@@ -3,8 +3,6 @@ import os
 
 import pytest
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 cwd = os.getcwd()
 
 
@@ -33,7 +31,7 @@ def test_static_maker(Si, tmp_path, mock_aims, species_dir):
         input_set_generator=StaticSetGenerator(user_parameters=parameters)
     )
     maker.name = "base"
-    job = maker.make(MSONableAtoms(Si))
+    job = maker.make(Si)
 
     # run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)

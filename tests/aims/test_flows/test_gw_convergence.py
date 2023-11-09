@@ -1,7 +1,7 @@
 """A test for GW workflows for FHI-aims."""
 import pytest
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
+# from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
@@ -44,7 +44,7 @@ def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate job
-    job = GWConvergenceMaker(**parameters).make(MSONableAtoms(O2))
+    job = GWConvergenceMaker(**parameters).make(O2)
 
     # Run the job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)

@@ -2,8 +2,6 @@ import os
 
 import pytest
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 cwd = os.getcwd()
 
 
@@ -15,7 +13,7 @@ def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
     from atomate2.aims.schemas.task import AimsTaskDoc
     from atomate2.aims.sets.core import SocketIOSetGenerator
 
-    atoms = MSONableAtoms(Si)
+    atoms = Si
     atoms_list = [atoms, atoms.copy(), atoms.copy()]
     atoms_list[1].positions[0, 0] += 0.02
     atoms_list[2].cell[:, :] *= 1.02

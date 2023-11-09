@@ -6,7 +6,6 @@ from jobflow import run_locally
 from atomate2.aims.jobs.core import GWMaker
 from atomate2.aims.schemas.task import AimsTaskDoc
 from atomate2.aims.sets.bs import GWSetGenerator
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
 def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, O2):
@@ -26,7 +25,7 @@ def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, O2):
     # generate job
     maker = GWMaker(input_set_generator=GWSetGenerator(user_parameters=parameters))
     maker.name = "gw_o2"
-    job = maker.make(MSONableAtoms(O2))
+    job = maker.make(O2)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)

@@ -5,8 +5,6 @@ import os
 
 import pytest
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 cwd = os.getcwd()
 
 
@@ -45,7 +43,7 @@ def test_convergence(mock_aims, tmp_path, Si, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate job
-    job = ConvergenceMaker(**parameters).make(MSONableAtoms(Si))
+    job = ConvergenceMaker(**parameters).make(Si)
 
     # Run the job and ensure that it finished running successfully
     os.chdir(tmp_path)

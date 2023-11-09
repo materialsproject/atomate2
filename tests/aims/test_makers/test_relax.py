@@ -5,7 +5,6 @@ from jobflow import run_locally
 
 from atomate2.aims.jobs.core import RelaxMaker
 from atomate2.aims.schemas.task import AimsTaskDoc
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 cwd = os.getcwd()
 
@@ -27,7 +26,7 @@ def test_base_maker(tmp_path, species_dir, mock_aims, Si):
     # generate job
     maker = RelaxMaker.full_relaxation(user_parameters=parameters)
     maker.name = "relax_si"
-    job = maker.make(MSONableAtoms(Si))
+    job = maker.make(Si)
 
     # run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)
@@ -57,9 +56,9 @@ def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, Si):
     # generate job
     maker = RelaxMaker.fixed_cell_relaxation(user_parameters=parameters)
     maker.name = "relax_fixed_cell_si"
-    atoms = Si.copy()
-    atoms.positions[0, 0] += 0.25
-    job = maker.make(MSONableAtoms(atoms))
+    structure = Si.copy()
+    structure.positions[0, 0] += 0.25
+    job = maker.make(structure)
 
     # run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)

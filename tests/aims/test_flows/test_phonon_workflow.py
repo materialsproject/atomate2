@@ -4,8 +4,6 @@ import os
 
 import pytest
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 cwd = os.getcwd()
 
 
@@ -53,7 +51,7 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
     )
     maker.name = "phonons"
     flow = maker.make(
-        MSONableAtoms(Si),
+        Si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 
@@ -146,7 +144,7 @@ def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     )
     maker.name = "phonons"
     flow = maker.make(
-        MSONableAtoms(Si),
+        Si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 
@@ -217,7 +215,7 @@ def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
     maker = PhononMaker()
     maker.name = "phonons"
     flow = maker.make(
-        MSONableAtoms(Si),
+        Si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 
@@ -294,7 +292,7 @@ def test_phonon_default_socket_flow(Si, tmp_path, mock_aims, species_dir):
     maker = PhononMaker(socket=True)
     maker.name = "phonons"
     flow = maker.make(
-        MSONableAtoms(Si),
+        Si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 

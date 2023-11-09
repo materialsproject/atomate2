@@ -3,8 +3,6 @@ import os
 
 import pytest
 
-from atomate2.aims.utils.msonable_atoms import MSONableAtoms
-
 cwd = os.getcwd()
 
 
@@ -34,7 +32,7 @@ def test_double_relax(mock_aims, tmp_path, Si, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate flow
-    flow = DoubleRelaxMaker.from_parameters(parameters).make(MSONableAtoms(Si))
+    flow = DoubleRelaxMaker.from_parameters(parameters).make(Si)
 
     # Run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)

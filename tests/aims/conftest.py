@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 import pytest
-from ase.build import bulk, molecule
+from pymatgen.core import Lattice, Molecule, Structure
 
 import atomate2.aims.jobs.base
 import atomate2.aims.run
@@ -36,12 +36,18 @@ def pytest_addoption(parser):
 
 @pytest.fixture()
 def Si():
-    return bulk("Si")
+    return Structure(
+        lattice=Lattice(
+            [[0.0, 2.715, 2.715], [2.715, 0.0, 2.715], [2.715, 2.715, 0.0]]
+        ),
+        species=["Si", "Si"],
+        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+    )
 
 
 @pytest.fixture()
 def O2():
-    return molecule("O2")
+    return Molecule(species=["O", "O"], coords=[[0, 0, 0.622978], [0, 0, -0.622978]])
 
 
 @pytest.fixture(scope="session")
