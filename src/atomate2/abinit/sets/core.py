@@ -36,9 +36,7 @@ class StaticSetGenerator(AbinitInputGenerator):
 
     calc_type: str = "static"
     factory: Callable = scf_input
-    restart_from_deps: tuple = field(
-        default_factory=lambda: tuple(GS_RESTART_FROM_DEPS)
-    )
+    restart_from_deps: tuple = (GS_RESTART_FROM_DEPS, )
 
     def get_abinit_input(
         self,
@@ -198,9 +196,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
 
     calc_type: str = "relaxation"
     factory: Callable = ion_ioncell_relax_input
-    restart_from_deps: tuple = field(
-        default_factory=lambda: tuple(GS_RESTART_FROM_DEPS)
-    )
+    restart_from_deps: tuple = (GS_RESTART_FROM_DEPS, )
     relax_cell: bool = True
     tolmxf: float = 5.0e-5
 

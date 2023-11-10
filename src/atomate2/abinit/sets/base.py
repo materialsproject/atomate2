@@ -273,7 +273,7 @@ class AbinitInputGenerator(InputGenerator):
     restart_from_deps:
         Defines the files that needs to be linked from previous calculations in
         case of restart. The format is a tuple where each element is a list of
-        "|" separated runelevels (as defined in the AbinitInput object) followed
+        "|" separated run levels (as defined in the AbinitInput object) followed
         by a colon and a list of "|" list of extensions of files that needs to
         be linked. The runlevel defines the type of calculations from which the
         file can be linked. An example is (f"{NSCF}:WFK",).
@@ -281,7 +281,7 @@ class AbinitInputGenerator(InputGenerator):
         Defines the files that needs to be linked from previous calculations and
         are required for the execution of the current calculation.
         The format is a tuple where each element is a list of  "|" separated
-        runelevels (as defined in the AbinitInput object) followed by a colon and
+        run levels (as defined in the AbinitInput object) followed by a colon and
         a list of "|" list of extensions of files that needs to be linked.
         The runlevel defines the type of calculations from which the file can
         be linked. An example is (f"{NSCF}:WFK",).
@@ -566,7 +566,6 @@ class AbinitInputGenerator(InputGenerator):
         input_index
             The index to be used to select the AbinitInput in case a factory
             returns a MultiDataset.
-
 
         Returns
         -------

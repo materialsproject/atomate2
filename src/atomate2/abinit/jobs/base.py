@@ -135,7 +135,7 @@ class BaseAbinitMaker(Maker):
         prev_outputs: str | Path | list[str] | None = None,
         restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
-    ) -> jobflow.Flow | jobflow.Job:
+    ) -> jobflow.Job:
         """
         Return an ABINIT jobflow.Job.
 
