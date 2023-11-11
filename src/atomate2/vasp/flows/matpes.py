@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class MatPesGGAPlusMetaGGAStaticMaker(Maker):
+class MatPesStaticFlowMaker(Maker):
     """MatPES flow doing a GGA static followed by meta-GGA static.
 
     Uses the GGA WAVECAR to speed up electronic convergence on the meta-GGA static.
