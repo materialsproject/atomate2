@@ -40,25 +40,28 @@ class MatPesStaticFlowMaker(Maker):
         +U corrections if structure contains elements with +U corrections, else to None.
     """
 
-    name: str = "MatPES GGA plus meta-GGA static"
+    name: str = "MatPES static flow"
     static1: Maker | None = field(
         default_factory=lambda: MatPesGGAStaticMaker(
-            # write WAVECAR so we can pass as pre-conditioned starting point to static2
             input_set_generator=MatPesGGAStaticSetGenerator(
+                # write WAVECAR so we can use as pre-conditioned starting point for
+                # static2/3
                 user_incar_settings={"LWAVE": True}
             ),
         )
     )
     static2: Maker = field(
         default_factory=lambda: MatPesMetaGGAStaticMaker(
-            # could copy CHGCAR from GGA to meta-GGA directory too but is redundant
-            # since VASP can reconstruct it from WAVECAR
+            # start from pre-conditioned WAVECAR from static1 to speed up convergence
+            # could copy CHGCAR too but is redundant since VASP can reconstruct it from
+            # WAVECAR
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
         )
     )
     # optional 3rd PBE+U static in case structure contains elements with +U corrections
     static3: Maker | None = field(
         default_factory=lambda: MatPesGGAStaticMaker(
+            name="MatPES GGA+U static",
             input_set_generator=MatPesGGAStaticSetGenerator(
                 user_incar_settings={"LDAU:": True},  # enable +U corrections
             ),
@@ -92,14 +95,14 @@ class MatPesStaticFlowMaker(Maker):
         output = {"static1": static1.output, "static2": static2.output}
         jobs = [static1, static2]
 
-        # only run 3rd static if structure contains at least one element with +U
+        # only run 3rd static if structure contains at least one element with Hubbard +U
         # corrections
         static3_config = self.static3.input_set_generator.config_dict
-        plus_u_dict = static3_config.get("INCAR", {}).get("LDAUU", {})
-        elems = set(structure.elements)
+        u_corrections = static3_config.get("INCAR", {}).get("LDAUU", {})
+        elems = set(map(str, structure.elements))
         if self.static3 and any(
             anion in elems and elems & {*cations}
-            for anion, cations in plus_u_dict.items()
+            for anion, cations in u_corrections.items()
         ):
             static3 = self.static3.make(structure, prev_dir=static1.output.dir_name)
             output["static3"] = static3.output
