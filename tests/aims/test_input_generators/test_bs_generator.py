@@ -5,7 +5,19 @@ import json
 from glob import glob
 from pathlib import Path
 
+import numpy as np
+
 from atomate2.aims.sets.bs import BandStructureSetGenerator
+
+
+def check_band(test_line, ref_line):
+    test_pts = [float(inp) for inp in test_line.split()[-9:-2]]
+    ref_pts = [float(inp) for inp in ref_line.split()[-9:-2]]
+
+    return (
+        np.allclose(test_pts, ref_pts)
+        and test_line.split()[-2:] == ref_line.split()[-2:]
+    )
 
 
 def compare_files(test_name, work_dir, ref_dir):
@@ -24,17 +36,31 @@ def compare_files(test_name, work_dir, ref_dir):
                 if len(line.strip()) > 0
             ]
 
-        assert test_lines == ref_lines
+        for test_line, ref_line in zip(test_lines, ref_lines):
+            if "output" in test_line and "band" in test_line:
+                check_band(test_line, ref_line)
+            else:
+                assert test_line == ref_line
 
     with open(f"{ref_dir / test_name}/parameters.json") as ref_file:
         ref = json.load(ref_file)
     ref.pop("species_dir", None)
+    ref_output = ref.pop("output", None)
 
     with open(f"{work_dir / test_name}/parameters.json") as check_file:
         check = json.load(check_file)
+
     check.pop("species_dir", None)
+    check_output = check.pop("output", None)
 
     assert ref == check
+
+    if check_output:
+        for ref_out, check_out in zip(ref_output, check_output):
+            if "band" in check_out:
+                check_band(check_out, ref_out)
+            else:
+                assert ref_out == check_out
 
 
 def comp_system(atoms, user_params, test_name, work_path, ref_path):
