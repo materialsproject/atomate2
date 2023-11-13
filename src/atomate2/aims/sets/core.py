@@ -11,10 +11,7 @@ from atomate2.aims.sets.base import AimsInputGenerator
 if TYPE_CHECKING:
     from pymatgen.core import Molecule
 
-__all__ = [
-    "StaticSetGenerator",
-    "RelaxSetGenerator",
-]
+__all__ = ["StaticSetGenerator", "RelaxSetGenerator", "SocketIOSetGenerator"]
 
 
 @dataclass

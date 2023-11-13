@@ -148,7 +148,7 @@ def update_convergence_file(
     convergence_steps: Iterable
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
-        that the job is failed
+        then the job is failed
     output: .ConvergenceSummary
         The current output of the convergence flow
     """
