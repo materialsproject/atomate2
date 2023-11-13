@@ -81,7 +81,7 @@ def get_basis_infos(
     vasp_maker: BaseVaspMaker,
     address_max_basis: str = None,
     address_min_basis: str = None,
-):
+) -> dict:
     """
     Compute all relevant basis sets and maximum number of bands.
 
@@ -135,8 +135,8 @@ def update_user_incar_settings_maker(
     vasp_maker: BaseVaspMaker,
     nbands: int,
     structure: Structure,
-    prev_vasp_dir: Path | str,
-):
+    prev_dir: Path | str,
+) -> Response:
     """
     Update the INCAR settings of a maker.
 
@@ -149,7 +149,7 @@ def update_user_incar_settings_maker(
         integer indicating the correct number of bands
     structure : .Structure
         Structure object.
-    prev_vasp_dir : Path or str
+    prev_dir : Path or str
         Path or string to vasp files.
 
     Returns
@@ -158,7 +158,7 @@ def update_user_incar_settings_maker(
         LobsterStaticMaker with correct number of bands.
     """
     vasp_maker = update_user_incar_settings(vasp_maker, {"NBANDS": nbands})
-    vasp_job = vasp_maker.make(structure=structure, prev_vasp_dir=prev_vasp_dir)
+    vasp_job = vasp_maker.make(structure=structure, prev_dir=prev_dir)
     return Response(replace=vasp_job)
 
 
@@ -170,7 +170,7 @@ def get_lobster_jobs(
     optimization_uuid: str,
     static_dir: Path | str,
     static_uuid: str,
-):
+) -> Response:
     """
     Create a list of Lobster jobs with different basis sets.
 
@@ -224,7 +224,7 @@ def get_lobster_jobs(
 def delete_lobster_wavecar(
     dirs: list[Path | str],
     lobster_static_dir: Path | str = None,
-):
+) -> None:
     """
     Delete all WAVECARs.
 

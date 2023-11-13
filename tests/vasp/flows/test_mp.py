@@ -1,17 +1,20 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import pytest
+from emmet.core.tasks import TaskDoc
+from jobflow import Maker, run_locally
 from pymatgen.core import Structure
 
+from atomate2.vasp.flows.mp import (
+    MPGGADoubleRelaxMaker,
+    MPGGADoubleRelaxStaticMaker,
+    MPMetaGGADoubleRelaxStaticMaker,
+)
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPPreRelaxMaker,
 )
-
-if TYPE_CHECKING:
-    from jobflow import Maker
+from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 
 @pytest.mark.parametrize("name", ["test", None])
@@ -27,8 +30,6 @@ if TYPE_CHECKING:
 def test_mp_meta_gga_relax_custom_values(
     name: str, relax_maker: Maker | None, static_maker: Maker | None
 ):
-    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStaticMaker
-
     kwargs = {}
     if name:
         kwargs["name"] = name
@@ -47,11 +48,6 @@ def test_mp_meta_gga_relax_custom_values(
 
 
 def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStaticMaker
-
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_meta_gga_relax/pbesol_pre_relax"
     ref_paths = {
@@ -61,31 +57,27 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        key: {"incar_settings": ["LWAVE", "LCHARG"]} for key in ref_paths
-    }
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     # generate flow
-    flow = MPMetaGGADoubleRelaxStaticMaker().make(si_struct)
+    flow = MPMetaGGADoubleRelaxStaticMaker(
+        relax_maker2=MPMetaGGARelaxMaker(
+            # TODO write better test for bandgap_tol since it isn't actually used by
+            # mock_vasp. this just tests it can be passed without error
+            input_set_generator=MPMetaGGARelaxSetGenerator(bandgap_tol=0.1)
+        )
+    ).make(si_struct)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[-1].uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-46.8613738)
+    task_doc = responses[flow.jobs[-1].uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-46.8613738)
 
 
 def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.mp import MPGGADoubleRelaxStaticMaker
-
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
     ref_paths = {
@@ -95,10 +87,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {key: {"incar_settings": []} for key in ref_paths}
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     # generate flow
     flow = MPGGADoubleRelaxStaticMaker().make(si_struct)
@@ -107,17 +96,12 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[-1].uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.84060922)
+    task_doc = responses[flow.jobs[-1].uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.84060922)
 
 
 def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker
-
     # map from job name to directory containing reference output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
     ref_paths = {
@@ -126,10 +110,7 @@ def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
     }
     si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {key: {"incar_settings": []} for key in ref_paths}
-
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     # generate flow
     flow = MPGGADoubleRelaxMaker().make(si_struct)
@@ -138,6 +119,6 @@ def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     # validate output
-    output = responses[flow.jobs[-1].uuid][1].output
-    assert isinstance(output, TaskDoc)
-    assert output.output.energy == pytest.approx(-10.84145656)
+    task_doc = responses[flow.jobs[-1].uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.84145656)

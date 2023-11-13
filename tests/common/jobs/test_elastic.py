@@ -5,8 +5,8 @@ from pymatgen.analysis.elasticity import Stress
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+from atomate2.common.jobs.elastic import generate_elastic_deformations
 from atomate2.common.schemas.elastic import _expand_strains
-from atomate2.vasp.jobs.elastic import generate_elastic_deformations
 
 
 @pytest.mark.parametrize("conventional", [False, True])

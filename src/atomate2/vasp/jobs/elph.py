@@ -89,8 +89,8 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
-    ):
+        prev_dir: str | Path | None = None,
+    ) -> Response:
         """
         Run a transmuter VASP job.
 
@@ -98,7 +98,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
         """
         dim = self.min_supercell_length / np.array(structure.lattice.abc)
@@ -110,7 +110,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         # update temperatures
         self.input_set_generator.temperatures = self.temperatures
 
-        return super().make.original(self, structure, prev_vasp_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @job
@@ -118,10 +118,10 @@ def run_elph_displacements(
     temperatures: list[float],
     structures: list[Structure],
     vasp_maker: BaseVaspMaker,
-    prev_vasp_dir: str | Path | None = None,
+    prev_dir: str | Path | None = None,
     original_structure: Structure = None,
     supercell_structure: Structure = None,
-):
+) -> Response:
     """
     Run electron phonon displaced structures.
 
@@ -135,7 +135,7 @@ def run_elph_displacements(
         Electron phonon displaced structures for each temperature.
     vasp_maker : BaseVaspMaker
         A maker to generate VASP calculations on the displaced structures.
-    prev_vasp_dir : str or Path or None
+    prev_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
     original_structure : Structure
         The original structure before supercell is made and before electron phonon
@@ -157,7 +157,7 @@ def run_elph_displacements(
     }
     for temp, structure in zip(temperatures, structures):
         # create the job
-        elph_job = vasp_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        elph_job = vasp_maker.make(structure, prev_dir=prev_dir)
         elph_job.append_name(f" T={temp}")
 
         # write details of the electron phonon temperature and structure elph_info.json
@@ -200,7 +200,7 @@ def calculate_electron_phonon_renormalisation(
     elph_uuid: str,
     elph_dir: str,
     original_structure: Structure,
-):
+) -> ElectronPhononRenormalisationDoc:
     """
     Calculate the electron-phonon renormalisation of the band gap.
 

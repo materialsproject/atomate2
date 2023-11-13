@@ -153,12 +153,12 @@ class PhononMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_vasp_dir: str | Path | None = None,
+        prev_dir: str | Path | None = None,
         born: list[Matrix3D] | None = None,
         epsilon_static: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the phonon properties.
 
@@ -167,7 +167,7 @@ class PhononMaker(Maker):
         structure : .Structure
             A pymatgen structure. Please start with a structure that is nearly fully
             optimized as the internal optimizers have very strict settings!
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous vasp calculation directory to use for copying outputs.
         born: Matrix3D
             Instead of recomputing born charges and epsilon, these values can also be
@@ -233,10 +233,10 @@ class PhononMaker(Maker):
         optimization_run_uuid = None
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
-            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
             jobs.append(bulk)
             structure = bulk.output.structure
-            prev_vasp_dir = bulk.output.dir_name
+            prev_dir = bulk.output.dir_name
             optimization_run_job_dir = bulk.output.dir_name
             optimization_run_uuid = bulk.output.uuid
 
@@ -260,13 +260,13 @@ class PhononMaker(Maker):
             total_dft_energy_per_formula_unit is None
         ):
             static_job = self.static_energy_maker.make(
-                structure=structure, prev_vasp_dir=prev_vasp_dir
+                structure=structure, prev_dir=prev_dir
             )
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
             static_run_job_dir = static_job.output.dir_name
             static_run_uuid = static_job.output.uuid
-            prev_vasp_dir = static_job.output.dir_name
+            prev_dir = static_job.output.dir_name
         elif total_dft_energy_per_formula_unit is not None:
             # to make sure that one can reuse results from Doc
             compute_total_energy_job = get_total_energy_per_cell(
@@ -294,7 +294,7 @@ class PhononMaker(Maker):
             structure=structure,
             supercell_matrix=supercell_matrix,
             phonon_maker=self.phonon_displacement_maker,
-            prev_vasp_dir=prev_vasp_dir,
+            prev_dir=prev_dir,
         )
         jobs.append(vasp_displacement_calcs)
 
@@ -302,7 +302,7 @@ class PhononMaker(Maker):
         born_run_job_dir = None
         born_run_uuid = None
         if self.born_maker is not None and (born is None or epsilon_static is None):
-            born_job = self.born_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            born_job = self.born_maker.make(structure, prev_dir=prev_dir)
             jobs.append(born_job)
 
             # I am not happy how we currently access "born" charges

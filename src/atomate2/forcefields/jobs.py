@@ -51,14 +51,19 @@ class ForceFieldRelaxMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure):
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
         """
         Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
         structure: .Structure
-             pymatgen structure.
+            pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
         """
         if self.steps < 0:
             logger.warning(
@@ -78,7 +83,7 @@ class ForceFieldRelaxMaker(Maker):
             **self.task_document_kwargs,
         )
 
-    def _relax(self, structure):
+    def _relax(self, structure: Structure) -> dict:
         raise NotImplementedError
 
 
@@ -102,7 +107,9 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure):
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
         """
         Perform a static evaluation using a force field.
 
@@ -110,6 +117,9 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         ----------
         structure: .Structure
             pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
         """
         if self.steps < 0:
             logger.warning(
@@ -122,14 +132,14 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
             result,
-            False,
-            1,
-            None,
-            None,
+            relax_cell=False,
+            steps=1,
+            relax_kwargs=None,
+            optimizer_kwargs=None,
             **self.task_document_kwargs,
         )
 
-    def _evaluate_static(self, structure):
+    def _evaluate_static(self, structure: Structure) -> dict:
         raise NotImplementedError
 
 
@@ -162,7 +172,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def _relax(self, structure):
+    def _relax(self, structure: Structure) -> dict:
         from chgnet.model import StructOptimizer
 
         relaxer = StructOptimizer(**self.optimizer_kwargs)
@@ -188,7 +198,7 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     force_field_name = "CHGNet"
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def _evaluate_static(self, structure):
+    def _evaluate_static(self, structure: Structure) -> dict:
         from chgnet.model import StructOptimizer
 
         relaxer = StructOptimizer()
@@ -226,7 +236,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def _relax(self, structure):
+    def _relax(self, structure: Structure) -> dict:
         import matgl
         from matgl.ext.ase import Relaxer
 
@@ -240,11 +250,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
             **self.optimizer_kwargs,
         )
 
-        return relaxer.relax(
-            structure,
-            steps=self.steps,
-            **self.relax_kwargs,
-        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -266,7 +272,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
     force_field_name: str = "M3GNet"
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def _evaluate_static(self, structure):
+    def _evaluate_static(self, structure: Structure) -> dict:
         import matgl
         from matgl.ext.ase import Relaxer
 
@@ -279,10 +285,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
             relax_cell=False,
         )
 
-        return relaxer.relax(
-            structure,
-            steps=1,
-        )
+        return relaxer.relax(structure, steps=1)
 
 
 @dataclass
@@ -325,7 +328,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     potential_param_file_name: str = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
 
-    def _relax(self, structure):
+    def _relax(self, structure: Structure) -> dict:
         from quippy.potential import Potential
 
         calculator = Potential(
@@ -364,7 +367,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     potential_param_file_name: str | Path = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
 
-    def _evaluate_static(self, structure):
+    def _evaluate_static(self, structure: Structure) -> dict:
         from quippy.potential import Potential
 
         calculator = Potential(

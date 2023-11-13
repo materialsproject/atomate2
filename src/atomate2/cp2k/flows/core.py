@@ -46,7 +46,7 @@ class DoubleRelaxMaker(Maker):
     relax_maker1: Maker = field(default_factory=RelaxMaker)
     relax_maker2: Maker = field(default_factory=RelaxMaker)
 
-    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Create a flow with two chained relaxations.
 
@@ -54,7 +54,7 @@ class DoubleRelaxMaker(Maker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_cp2k_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous Cp2k calculation directory to copy output files from.
 
         Returns
@@ -62,18 +62,18 @@ class DoubleRelaxMaker(Maker):
         Flow
             A flow containing two relaxations.
         """
-        relax1 = self.relax_maker1.make(structure, prev_cp2k_dir=prev_cp2k_dir)
+        relax1 = self.relax_maker1.make(structure, prev_dir=prev_dir)
         relax1.name += " 1"
 
         relax2 = self.relax_maker2.make(
-            relax1.output.structure, prev_cp2k_dir=relax1.output.dir_name
+            relax1.output.structure, prev_dir=relax1.output.dir_name
         )
         relax2.name += " 2"
 
         return Flow([relax1, relax2], relax2.output, name=self.name)
 
     @classmethod
-    def from_relax_maker(cls, relax_maker: BaseCp2kMaker):
+    def from_relax_maker(cls, relax_maker: BaseCp2kMaker) -> DoubleRelaxMaker:
         """
         Instantiate the DoubleRelaxMaker with two relax makers of the same type.
 
@@ -112,7 +112,7 @@ class BandStructureMaker(Maker):
     static_maker: Maker = field(default_factory=StaticMaker)
     bs_maker: Maker = field(default_factory=NonSCFMaker)
 
-    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Create a band structure flow.
 
@@ -120,7 +120,7 @@ class BandStructureMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_cp2k_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -128,14 +128,15 @@ class BandStructureMaker(Maker):
         Flow
             A band structure flow.
         """
-        static_job = self.static_maker.make(structure, prev_cp2k_dir=prev_cp2k_dir)
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
         jobs = [static_job]
 
         outputs = {}
-        if self.bandstructure_type in ("both", "uniform"):
+        bandstructure_type = self.bandstructure_type
+        if bandstructure_type in ("both", "uniform"):
             uniform_job = self.bs_maker.make(
                 static_job.output.structure,
-                prev_cp2k_dir=static_job.output.dir_name,
+                prev_dir=static_job.output.dir_name,
                 mode="uniform",
             )
             uniform_job.name += " uniform"
@@ -146,10 +147,10 @@ class BandStructureMaker(Maker):
             }
             outputs.update(output)
 
-        if self.bandstructure_type in ("both", "line"):
+        if bandstructure_type in ("both", "line"):
             line_job = self.bs_maker.make(
                 static_job.output.structure,
-                prev_cp2k_dir=static_job.output.dir_name,
+                prev_dir=static_job.output.dir_name,
                 mode="line",
             )
             line_job.name += " line"
@@ -160,10 +161,8 @@ class BandStructureMaker(Maker):
             }
             outputs.update(output)
 
-        if self.bandstructure_type not in ("both", "line", "uniform"):
-            raise ValueError(
-                f"Unrecognised bandstructure type {self.bandstructure_type}"
-            )
+        if bandstructure_type not in ("both", "line", "uniform"):
+            raise ValueError(f"Unrecognised {bandstructure_type=}")
 
         return Flow(jobs, outputs, name=self.name)
 
@@ -189,7 +188,7 @@ class RelaxBandStructureMaker(Maker):
     relax_maker: Maker = field(default_factory=DoubleRelaxMaker)
     band_structure_maker: Maker = field(default_factory=BandStructureMaker)
 
-    def make(self, structure: Structure, prev_cp2k_dir: str | Path | None = None):
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Run a relaxation and then calculate the uniform and line mode band structures.
 
@@ -197,7 +196,7 @@ class RelaxBandStructureMaker(Maker):
         ----------
         structure: .Structure
             A pymatgen structure object.
-        prev_cp2k_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
 
         Returns
@@ -205,9 +204,9 @@ class RelaxBandStructureMaker(Maker):
         Flow
             A relax and band structure flow.
         """
-        relax_job = self.relax_maker.make(structure, prev_cp2k_dir=prev_cp2k_dir)
+        relax_job = self.relax_maker.make(structure, prev_dir=prev_dir)
         bs_flow = self.band_structure_maker.make(
-            relax_job.output.structure, prev_cp2k_dir=relax_job.output.dir_name
+            relax_job.output.structure, prev_dir=relax_job.output.dir_name
         )
 
         return Flow([relax_job, bs_flow], bs_flow.output, name=self.name)
@@ -238,7 +237,7 @@ class HybridFlowMaker(Maker):
     pbe_maker: Maker = field(default=lambda: StaticMaker(store_output_data=False))
     hybrid_maker: Maker = field(default_factory=HybridStaticMaker)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """
         Post init updates.
 
@@ -249,7 +248,9 @@ class HybridFlowMaker(Maker):
         the PBE density matrix, which creates huge speed-ups. Rarely causes
         problems so it is done as a default here.
         """
-        updates = {"activate_hybrid": {"hybrid_functional": self.hybrid_functional}}
+        updates: dict[str, dict[str, str | bool]] = {
+            "activate_hybrid": {"hybrid_functional": self.hybrid_functional}
+        }
         if self.initialize_with_pbe:
             updates["activate_hybrid"].update(
                 {"screen_on_initial_p": True, "screen_p_forces": True}
@@ -258,9 +259,7 @@ class HybridFlowMaker(Maker):
             updates, self.hybrid_maker.input_set_generator.user_input_settings
         )
 
-    def make(
-        self, structure: Structure, prev_cp2k_dir: str | Path | None = None
-    ) -> Job:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Job:
         """
         Make a hybrid flow.
 
@@ -268,7 +267,7 @@ class HybridFlowMaker(Maker):
         ----------
         structure: .Structure
             A pymatgen structure object.
-        prev_cp2k_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
 
         Returns
@@ -278,13 +277,13 @@ class HybridFlowMaker(Maker):
         """
         jobs = []
         if self.initialize_with_pbe:
-            initialization = self.pbe_maker.make(structure, prev_cp2k_dir)
+            initialization = self.pbe_maker.make(structure, prev_dir)
             jobs.append(initialization)
         hyb = self.hybrid_maker.make(
             initialization.output.structure if self.initialize_with_pbe else structure,
-            prev_cp2k_dir=initialization.output.dir_name
+            prev_dir=initialization.output.dir_name
             if self.initialize_with_pbe
-            else prev_cp2k_dir,
+            else prev_dir,
         )
         jobs.append(hyb)
         return Flow(jobs, output=hyb.output, name=self.name)

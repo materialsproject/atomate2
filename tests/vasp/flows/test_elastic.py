@@ -1,15 +1,16 @@
+from jobflow import run_locally
+from numpy.testing import assert_allclose
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
+from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.vasp.flows.elastic import ElasticMaker
+from atomate2.vasp.powerups import (
+    update_user_incar_settings,
+    update_user_kpoints_settings,
+)
+
+
 def test_elastic(mock_vasp, clean_dir, si_structure):
-    import numpy as np
-    from jobflow import run_locally
-    from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-    from atomate2.common.schemas.elastic import ElasticDocument
-    from atomate2.vasp.flows.elastic import ElasticMaker
-    from atomate2.vasp.powerups import (
-        update_user_incar_settings,
-        update_user_kpoints_settings,
-    )
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "elastic relax 1/6": "Si_elastic/elastic_relax_1_6",
@@ -51,7 +52,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
     # validation on the outputs
     elastic_output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
-    assert np.allclose(
+    assert_allclose(
         elastic_output.elastic_tensor.ieee_format,
         [
             [155.7923, 54.8871, 54.8871, 0.0, 0.0, 0.0],

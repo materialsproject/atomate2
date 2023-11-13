@@ -1,5 +1,5 @@
 """
-Module defining jobs for Materials Project r2SCAN workflows.
+Module defining Materials Project job makers.
 
 Reference: https://doi.org/10.1103/PhysRevMaterials.6.013801
 
@@ -21,14 +21,6 @@ from atomate2.vasp.sets.mp import (
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
-
-__all__ = [
-    "MPGGARelaxMaker",
-    "MPGGAStaticMaker",
-    "MPPreRelaxMaker",
-    "MPMetaGGARelaxMaker",
-    "MPMetaGGAStaticMaker",
-]
 
 
 @dataclass
