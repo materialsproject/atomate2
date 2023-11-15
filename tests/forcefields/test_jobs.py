@@ -1,4 +1,3 @@
-import torch
 from jobflow import run_locally
 from pytest import approx, importorskip
 
@@ -14,13 +13,8 @@ from atomate2.forcefields.jobs import (
 )
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
-importorskip("quippy")
-
 
 def test_chgnet_static_maker(si_structure):
-    # FIXME - brittle due to inability to adjust dtypes in CHGNetStaticMaker
-    torch.set_default_dtype(torch.float32)
-
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -38,9 +32,6 @@ def test_chgnet_static_maker(si_structure):
 
 
 def test_chgnet_relax_maker(si_structure):
-    # FIXME - brittle due to inability to adjust dtypes in CHGNetRelaxMaker
-    torch.set_default_dtype(torch.float32)
-
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -59,9 +50,6 @@ def test_chgnet_relax_maker(si_structure):
 
 
 def test_m3gnet_static_maker(si_structure):
-    # FIXME - brittle due to inability to adjust dtypes in M3GNetStaticMaker
-    torch.set_default_dtype(torch.float32)
-
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -78,9 +66,6 @@ def test_m3gnet_static_maker(si_structure):
 
 
 def test_m3gnet_relax_maker(si_structure):
-    # FIXME - brittle due to inability to adjust dtypes in M3GNetRelaxMaker
-    torch.set_default_dtype(torch.float32)
-
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -143,6 +128,8 @@ def test_mace_relax_maker(si_structure, test_dir):
 
 
 def test_gap_static_maker(si_structure, test_dir):
+    importorskip("quippy")
+
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -164,6 +151,8 @@ def test_gap_static_maker(si_structure, test_dir):
 
 
 def test_gap_relax_maker(si_structure, test_dir):
+    importorskip("quippy")
+
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
