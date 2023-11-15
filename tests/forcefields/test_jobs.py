@@ -1,3 +1,4 @@
+import torch
 from jobflow import run_locally
 from pytest import approx, importorskip
 
@@ -17,6 +18,9 @@ importorskip("quippy")
 
 
 def test_chgnet_static_maker(si_structure):
+    # FIXME - brittle due to inability to adjust dtypes in CHGNetStaticMaker
+    torch.set_default_dtype(torch.float32)
+
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -34,6 +38,9 @@ def test_chgnet_static_maker(si_structure):
 
 
 def test_chgnet_relax_maker(si_structure):
+    # FIXME - brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+    torch.set_default_dtype(torch.float32)
+
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -52,6 +59,9 @@ def test_chgnet_relax_maker(si_structure):
 
 
 def test_m3gnet_static_maker(si_structure):
+    # FIXME - brittle due to inability to adjust dtypes in M3GNetStaticMaker
+    torch.set_default_dtype(torch.float32)
+
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -68,6 +78,9 @@ def test_m3gnet_static_maker(si_structure):
 
 
 def test_m3gnet_relax_maker(si_structure):
+    # FIXME - brittle due to inability to adjust dtypes in M3GNetRelaxMaker
+    torch.set_default_dtype(torch.float32)
+
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -88,6 +101,7 @@ def test_mace_static_maker(si_structure, test_dir):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
+    # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACEStaticMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
         potential_device="cpu",
@@ -110,6 +124,7 @@ def test_mace_relax_maker(si_structure, test_dir):
     si_structure.translate_sites(0, [0, 0, 0.1])
 
     # generate job
+    # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACERelaxMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
         potential_device="cpu",

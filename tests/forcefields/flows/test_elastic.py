@@ -1,3 +1,4 @@
+import torch
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -9,6 +10,9 @@ from atomate2.forcefields.jobs import M3GNetRelaxMaker
 
 def test_elastic_wf(clean_dir, si_structure):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
+
+    # FIXME - brittle due to inability to adjust dtypes in M3GNetRelaxMaker
+    torch.set_default_dtype(torch.float32)
 
     # !!! Generate job
     job = ElasticMaker(
