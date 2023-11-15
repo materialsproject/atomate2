@@ -27,8 +27,6 @@ from atomate2.aims.utils.common import (
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from emmet.core.math import Matrix3D
-
 DEFAULT_AIMS_PROPERTIES = [
     "energy",
     "free_energy",
@@ -305,8 +303,9 @@ class AimsInputGenerator(InputGenerator):
             parameters=parameters, structure=structure, properties=properties
         )
 
+    @staticmethod
     def _read_previous(
-        self, prev_dir: str | Path = None
+        prev_dir: str | Path = None
     ) -> tuple[Structure | Molecule, dict[str, Any], dict[str, list[float]]]:
         """Read in previous results.
 
@@ -315,7 +314,7 @@ class AimsInputGenerator(InputGenerator):
         prev_dir: str or Path
             The previous directory for the calculation
         """
-        prev_structure: Structure | Molecule = None
+        prev_structure: Structure | Molecule | None = None
         prev_parameters = {}
         prev_results = {}
 
@@ -339,8 +338,8 @@ class AimsInputGenerator(InputGenerator):
 
         return prev_structure, prev_parameters, prev_results
 
+    @staticmethod
     def _get_properties(
-        self,
         properties: list[str] = None,
         parameters: dict[str, Any] = None,
     ) -> list[str]:
@@ -352,8 +351,6 @@ class AimsInputGenerator(InputGenerator):
             The currently requested properties
         parameters: dict[str, Any]
             The parameters for this calculation
-        prev_results: dict[str, list[float]]
-            The previous calculation results
 
         Returns
         -------
@@ -477,14 +474,14 @@ class AimsInputGenerator(InputGenerator):
         recipcell = structure.lattice.inv_matrix
         return self.d2k_recipcell(recipcell, structure.lattice.pbc, kptdensity, even)
 
-    def k2d(self, structure: Structure, k_grid: Iterable[int]):
+    def k2d(self, structure: Structure, k_grid: np.ndarray[int]):
         """Generate the kpoint density in each direction from given k_grid.
 
         Parameters
         ----------
         structure: Structure
             Contains unit cell and information about boundary conditions.
-        k_grid: Iterable[int]
+        k_grid: np.ndarray[int]
             k_grid that was used.
 
         Returns
@@ -497,8 +494,8 @@ class AimsInputGenerator(InputGenerator):
 
     @staticmethod
     def d2k_recipcell(
-        recipcell: Matrix3D,
-        pbc: list[bool],
+        recipcell: np.ndarray,
+        pbc: Sequence[bool],
         kptdensity: float | Sequence[float] = 5.0,
         even: bool = True,
     ) -> Sequence[int]:
@@ -508,7 +505,7 @@ class AimsInputGenerator(InputGenerator):
         ----------
         recipcell: Cell
             The reciprocal cell
-        pbc: list[bools]
+        pbc: Sequence[bool]
             If element of pbc is True then system is periodic in that direction
         kptdensity: float or list[floats]
             Required k-point density.  Default value is 3.5 point per Ang^-1.
@@ -545,9 +542,9 @@ def recursive_update(dct: dict, up: dict) -> dict:
 
     Parameters
     ----------
-    d: Dict
+    dct: Dict
         Input dictionary to modify
-    u: Dict
+    up: Dict
         Dictionary of updates to apply
 
     Returns

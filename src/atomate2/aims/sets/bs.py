@@ -74,7 +74,7 @@ class GWSetGenerator(AimsInputGenerator):
 
         Parameters
         ----------
-        atoms: Structure or Molecule
+        structure: Structure or Molecule
             The structure to calculate the bands for
         prev_parameters: Dict[str, Any]
             The previous parameters

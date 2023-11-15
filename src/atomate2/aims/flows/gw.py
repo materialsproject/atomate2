@@ -29,7 +29,7 @@ class GWConvergenceMaker(ConvergenceMaker):
     convergence_steps: Iterable
         An iterable of the possible values for the convergence field.
         If the iterable is depleted and the convergence is not reached,
-        that the job is failed
+        then the job is failed
     """
 
     name: str = "GW convergence"
