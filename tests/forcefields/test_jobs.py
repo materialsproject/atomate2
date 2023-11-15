@@ -89,8 +89,7 @@ def test_mace_static_maker(si_structure, test_dir):
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACEStaticMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
-        potential_device="cpu",
-        potential_kwargs={"default_dtype": "float64"},
+        potential_kwargs={"default_dtype": "float64", "device": "cpu"},
         task_document_kwargs=task_doc_kwargs,
     ).make(si_structure)
 
@@ -112,8 +111,7 @@ def test_mace_relax_maker(si_structure, test_dir):
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACERelaxMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
-        potential_device="cpu",
-        potential_kwargs={"default_dtype": "float64"},
+        potential_kwargs={"default_dtype": "float64", "device": "cpu"},
         steps=25,
     ).make(si_structure)
 

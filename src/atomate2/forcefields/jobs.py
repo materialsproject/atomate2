@@ -310,11 +310,10 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_param_filename: str | Path
-        param_file_name for :obj: mace.calculators.MACECalculator()'.
-    potential_device: str
-        device for :obj: mace.calculators.MACECalculator()'.
-    potential_kwargs: dict
-        Further kwargs for :obj: mace.calculators.MACECalculator()'.
+        param_file_name for :obj:`mace.calculators.MACECalculator()'`.
+    potential_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model_paths) for
+            :obj:`mace.calculators.MACECalculator()'`.
     """
 
     name: str = "MACE relax"
@@ -325,16 +324,15 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     potential_param_file_name: str = "MACE.model"
-    potential_device: str = "cpu"
     potential_kwargs: dict = field(default_factory=dict)
 
     def _relax(self, structure: Structure) -> dict:
         from mace.calculators import MACECalculator
 
+        self.potential_kwargs.setdefault("device", "auto")
+
         calculator = MACECalculator(
-            model_paths=self.potential_param_file_name,
-            device=self.potential_device,
-            **self.potential_kwargs,
+            model_paths=self.potential_param_file_name, **self.potential_kwargs
         )
         relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
@@ -354,27 +352,25 @@ class MACEStaticMaker(ForceFieldStaticMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_param_filename: str | Path
-        param_file_name for :obj: mace.calculators.MACECalculator()'.
-    potential_device: str
-        device for :obj: mace.calculators.MACECalculator()'.
-    potential_kwargs: dict
-        Further kwargs for :obj: mace.calculators.MACECalculator()'.
+        param_file_name for :obj:`mace.calculators.MACECalculator()'`.
+    potential_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model_paths) for
+            :obj:`mace.calculators.MACECalculator()'`.
     """
 
     name: str = "MACE static"
     force_field_name: str = "MACE"
     task_document_kwargs: dict = field(default_factory=dict)
     potential_param_file_name: str = "MACE.model"
-    potential_device: str = "auto"
     potential_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
         from mace.calculators import MACECalculator
 
+        self.potential_kwargs.setdefault("device", "auto")
+
         calculator = MACECalculator(
-            model_paths=self.potential_param_file_name,
-            device=self.potential_device,
-            **self.potential_kwargs,
+            model_paths=self.potential_param_file_name, **self.potential_kwargs
         )
         relaxer = Relaxer(calculator, relax_cell=False)
         return relaxer.relax(structure, steps=1)
@@ -402,11 +398,11 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
-        args_str for :obj: quippy.potential.Potential()'.
+        args_str for :obj:`quippy.potential.Potential()'`.
     potential_param_filename: str|Path
-        param_file_name for :obj: quippy.potential.Potential()'.
+        param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
-        Further kwargs for :obj: quippy.potential.Potential()'.
+        Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
     name: str = "GAP relax"
@@ -446,11 +442,11 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
-        args_str for :obj: quippy.potential.Potential()'.
+        args_str for :obj:`quippy.potential.Potential()'`.
     potential_param_filename: str | Path
-        param_file_name for :obj: quippy.potential.Potential()'.
+        param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
-        Further kwargs for :obj: quippy.potential.Potential()'.
+        Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
     name: str = "GAP static"
