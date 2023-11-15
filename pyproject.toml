@@ -44,7 +44,7 @@ mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["lobsterpy>=0.3.2"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
-forcefields = ["chgnet>=0.2.2", "matgl>=0.8.3", "quippy-ase>=0.9.14"]
+forcefields = ["chgnet>=0.2.2", "matgl>=0.8.3", "quippy-ase>=0.9.14", "mace@git+https://github.com/ACEsuit/mace.git"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
@@ -69,6 +69,7 @@ strict = [
     "emmet-core==0.72.8",
     "jobflow==0.1.14",
     "lobsterpy==0.3.2",
+    "mace@git+https://github.com/ACEsuit/mace.git@v0.3.0",
     "matgl==0.8.3",
     "monty==2023.9.25",
     "mp-api==0.37.5",
