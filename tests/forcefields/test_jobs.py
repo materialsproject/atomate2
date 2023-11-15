@@ -91,6 +91,7 @@ def test_mace_static_maker(si_structure, test_dir):
     job = MACEStaticMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
         potential_device="cpu",
+        potential_kwargs={"default_dtype": "float64"},
         task_document_kwargs=task_doc_kwargs,
     ).make(si_structure)
 
@@ -112,6 +113,7 @@ def test_mace_relax_maker(si_structure, test_dir):
     job = MACERelaxMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
         potential_device="cpu",
+        potential_kwargs={"default_dtype": "float64"},
         steps=25,
     ).make(si_structure)
 
