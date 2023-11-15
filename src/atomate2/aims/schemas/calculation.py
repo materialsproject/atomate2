@@ -23,9 +23,12 @@ if TYPE_CHECKING:
 STORE_VOLUMETRIC_DATA = ("total_density",)
 
 
-def voigt_to_full_stress_conv(voigt_stress: Sequence[float]) -> Matrix3D:
-    """Transform voigt vector to a full 3x3 matrix."""
-    xx, yy, zz, yz, xz, xy = np.array(voigt_stress).flatten()
+def ensure_stress_full(input_stress: Sequence[float] | Matrix3D) -> Matrix3D:
+    """Test if the stress if a voigt vector and if so convert it to a 3x3 matrix."""
+    if np.array(input_stress).shape == (3, 3):
+        return np.array(input_stress)
+
+    xx, yy, zz, yz, xz, xy = np.array(input_stress).flatten()
     return np.array([[xx, xy, xz], [xy, yy, yz], [xz, yz, zz]])
 
 
@@ -44,41 +47,6 @@ class AimsObject(ValueEnum):
     ELECTRON_DENSITY = "electron_density"  # e_density
     WFN = "wfn"  # Wavefunction file
     TRAJECTORY = "trajectory"
-
-
-class CalculationInput(BaseModel):
-    """Summary of inputs for an FHI-aims calculation.
-
-    Parameters
-    ----------
-    structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the system
-    species_info: Dict
-        Description of parameters used for each atomic species
-    aims_input: Dict
-        The aims input parameters used for this task
-    """
-
-    structure: Union[Structure, Molecule] = Field(
-        None, description="The input structure"
-    )
-
-    species_info: dict[str, Any] = Field(
-        None, description="Description of parameters used for each atomic species"
-    )
-
-    aims_input: dict[str, Any] = Field(
-        None, description="The aims input parameters used for this task"
-    )
-
-    @classmethod
-    def from_aims_output(cls, output: AimsOutput):
-        """Initialize from AimsOutput object."""
-        return cls(
-            structure=output.initial_structure,
-            species_info=output.data.get("species_info", None),
-            aims_input=output.input.as_dict(),
-        )
 
 
 class CalculationOutput(BaseModel):
@@ -195,13 +163,11 @@ class CalculationOutput(BaseModel):
 
         stress = None
         if output.stress is not None:
-            stress = voigt_to_full_stress_conv(output.stress).tolist()
+            stress = ensure_stress_full(output.stress).tolist()
 
         stresses = None
         if output.stresses is not None:
-            stresses = [
-                voigt_to_full_stress_conv(st).tolist() for st in output.stresses
-            ]
+            stresses = [ensure_stress_full(st).tolist() for st in output.stresses]
 
         all_forces = None
         if not any(ff is None for ff in output.all_forces):
