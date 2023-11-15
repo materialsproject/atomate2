@@ -322,6 +322,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     relax_cell: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     potential_param_file_name: str = "MACE.model"
     potential_device: str = "cpu"
@@ -362,6 +363,7 @@ class MACEStaticMaker(ForceFieldStaticMaker):
 
     name: str = "MACE static"
     force_field_name: str = "MACE"
+    task_document_kwargs: dict = field(default_factory=dict)
     potential_param_file_name: str = "MACE.model"
     potential_device: str = "auto"
     potential_kwargs: dict = field(default_factory=dict)
@@ -395,6 +397,8 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
@@ -410,6 +414,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     relax_cell: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     potential_args_str: str | Path = "IP GAP"
     potential_param_file_name: str = "gap.xml"
@@ -450,6 +455,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
 
     name: str = "GAP static"
     force_field_name: str = "GAP"
+    task_document_kwargs: dict = field(default_factory=dict)
     potential_args_str: str = "IP GAP"
     potential_param_file_name: str | Path = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
