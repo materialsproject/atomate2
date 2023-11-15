@@ -1,3 +1,4 @@
+import pytest
 from jobflow import run_locally
 from pytest import approx, importorskip
 
@@ -12,6 +13,15 @@ from atomate2.forcefields.jobs import (
     MACEStaticMaker,
 )
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+
+
+@pytest.fixture()
+def revert_torch_default_dtype():
+    import torch
+
+    default_dtype = torch.get_default_dtype()
+    yield
+    torch.set_default_dtype(default_dtype)
 
 
 def test_chgnet_static_maker(si_structure):
@@ -82,7 +92,7 @@ def test_m3gnet_relax_maker(si_structure):
     assert output1.output.n_steps == 14
 
 
-def test_mace_static_maker(si_structure, test_dir):
+def test_mace_static_maker(si_structure, test_dir, revert_torch_default_dtype):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -103,7 +113,7 @@ def test_mace_static_maker(si_structure, test_dir):
     assert output1.output.n_steps == 1
 
 
-def test_mace_relax_maker(si_structure, test_dir):
+def test_mace_relax_maker(si_structure, test_dir, revert_torch_default_dtype):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
