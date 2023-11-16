@@ -309,7 +309,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    potential_param_filename: str | Path
+    potential_param_file_name: str | Path
         param_file_name for :obj:`mace.calculators.MACECalculator()'`.
     potential_kwargs: dict[str, Any]
         Further keywords (e.g. device, default_dtype, model_paths) for
@@ -351,7 +351,7 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    potential_param_filename: str | Path
+    potential_param_file_name: str | Path
         param_file_name for :obj:`mace.calculators.MACECalculator()'`.
     potential_kwargs: dict[str, Any]
         Further keywords (e.g. device, default_dtype, model_paths) for
@@ -399,7 +399,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
         args_str for :obj:`quippy.potential.Potential()'`.
-    potential_param_filename: str|Path
+    potential_param_file_name: str|Path
         param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
         Further keywords for :obj:`quippy.potential.Potential()'`.
@@ -443,7 +443,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
         args_str for :obj:`quippy.potential.Potential()'`.
-    potential_param_filename: str | Path
+    potential_param_file_name: str | Path
         param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
         Further keywords for :obj:`quippy.potential.Potential()'`.
