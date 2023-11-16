@@ -44,6 +44,7 @@ jobs:
 
       - name: Install enumlib
         run: |
+          cd ..
           git clone --recursive https://github.com/msg-byu/enumlib.git
           cd enumlib/symlib/src
           export F90=gfortran
