@@ -123,7 +123,7 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
-addopts = "-p no:warnings --import-mode=importlib"
+addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
