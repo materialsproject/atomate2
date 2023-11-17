@@ -334,7 +334,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         calculator = MACECalculator(
             model_paths=self.potential_param_file_name, **self.potential_kwargs
         )
-        relaxer = Relaxer(calculator, **optimizer_kwargs, relax_cell=self.relax_cell)
+        relaxer = Relaxer(calculator, **self.optimizer_kwargs, relax_cell=self.relax_cell)
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
@@ -424,7 +424,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
             param_filename=str(self.potential_param_file_name),
             **self.potential_kwargs,
         )
-        relaxer = Relaxer(calculator, **optimizer_kwargs, relax_cell=self.relax_cell)
+        relaxer = Relaxer(calculator, **self.optimizer_kwargs, relax_cell=self.relax_cell)
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
