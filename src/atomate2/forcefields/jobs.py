@@ -51,14 +51,19 @@ class ForceFieldRelaxMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure) -> ForceFieldTaskDocument:
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
         """
         Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
         structure: .Structure
-             pymatgen structure.
+            pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
         """
         if self.steps < 0:
             logger.warning(
@@ -102,7 +107,9 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
-    def make(self, structure: Structure) -> ForceFieldTaskDocument:
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
         """
         Perform a static evaluation using a force field.
 
@@ -110,6 +117,9 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         ----------
         structure: .Structure
             pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
         """
         if self.steps < 0:
             logger.warning(
@@ -240,11 +250,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
             **self.optimizer_kwargs,
         )
 
-        return relaxer.relax(
-            structure,
-            steps=self.steps,
-            **self.relax_kwargs,
-        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -279,10 +285,97 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
             relax_cell=False,
         )
 
-        return relaxer.relax(
-            structure,
-            steps=1,
+        return relaxer.relax(structure, steps=1)
+
+
+@dataclass
+class MACERelaxMaker(ForceFieldRelaxMaker):
+    """
+    Base Maker to calculate forces and stresses using a MACE potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    relax_cell : bool
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    potential_param_file_name: str | Path
+        param_file_name for :obj:`mace.calculators.MACECalculator()'`.
+    potential_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model_paths) for
+            :obj:`mace.calculators.MACECalculator()'`.
+    """
+
+    name: str = "MACE relax"
+    force_field_name: str = "MACE"
+    relax_cell: bool = False
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+    potential_param_file_name: str = "MACE.model"
+    potential_kwargs: dict = field(default_factory=dict)
+
+    def _relax(self, structure: Structure) -> dict:
+        from mace.calculators import MACECalculator
+
+        self.potential_kwargs.setdefault("device", "auto")
+
+        calculator = MACECalculator(
+            model_paths=self.potential_param_file_name, **self.potential_kwargs
         )
+        relaxer = Relaxer(
+            calculator, **self.optimizer_kwargs, relax_cell=self.relax_cell
+        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+
+
+@dataclass
+class MACEStaticMaker(ForceFieldStaticMaker):
+    """
+    Base Maker to calculate forces and stresses using a MACE potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    potential_param_file_name: str | Path
+        param_file_name for :obj:`mace.calculators.MACECalculator()'`.
+    potential_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model_paths) for
+            :obj:`mace.calculators.MACECalculator()'`.
+    """
+
+    name: str = "MACE static"
+    force_field_name: str = "MACE"
+    task_document_kwargs: dict = field(default_factory=dict)
+    potential_param_file_name: str = "MACE.model"
+    potential_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure: Structure) -> dict:
+        from mace.calculators import MACECalculator
+
+        self.potential_kwargs.setdefault("device", "auto")
+
+        calculator = MACECalculator(
+            model_paths=self.potential_param_file_name, **self.potential_kwargs
+        )
+        relaxer = Relaxer(calculator, relax_cell=False)
+        return relaxer.relax(structure, steps=1)
 
 
 @dataclass
@@ -307,11 +400,11 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
-        args_str for :obj: quippy.potential.Potential()'.
-    potential_param_filename: str|Path
-        param_file_name for :obj: quippy.potential.Potential()'.
+        args_str for :obj:`quippy.potential.Potential()'`.
+    potential_param_file_name: str|Path
+        param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
-        Further kwargs for :obj: quippy.potential.Potential()'.
+        Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
     name: str = "GAP relax"
@@ -333,7 +426,9 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
             param_filename=str(self.potential_param_file_name),
             **self.potential_kwargs,
         )
-        relaxer = Relaxer(calculator, relax_cell=self.relax_cell)
+        relaxer = Relaxer(
+            calculator, **self.optimizer_kwargs, relax_cell=self.relax_cell
+        )
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
@@ -351,15 +446,16 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
-        args_str for :obj: quippy.potential.Potential()'.
-    potential_param_filename: str | Path
-        param_file_name for :obj: quippy.potential.Potential()'.
+        args_str for :obj:`quippy.potential.Potential()'`.
+    potential_param_file_name: str | Path
+        param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
-        Further kwargs for :obj: quippy.potential.Potential()'.
+        Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
     name: str = "GAP static"
     force_field_name: str = "GAP"
+    task_document_kwargs: dict = field(default_factory=dict)
     potential_args_str: str = "IP GAP"
     potential_param_file_name: str | Path = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)

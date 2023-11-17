@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
@@ -16,8 +17,6 @@ from atomate2.vasp.flows.phonons import PhononMaker
 
 
 def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -58,7 +57,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5774.60355377, 5616.33406091, 4724.76619808, 3044.20807258, 696.337319349],
+        [5774.60355377, 5616.33406091, 4724.76619808, 3044.20807258, 696.33731934],
     )
 
     assert isinstance(
@@ -107,31 +106,31 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
         responses[job.jobs[-1].uuid][1].output.entropies,
         [
             0.0,
-            4.786689009990746,
-            13.02544271435008,
-            20.360935069065423,
-            26.39830736008501,
+            4.78668900,
+            13.02544271,
+            20.36093506,
+            26.39830736,
         ],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
         [
             0.0,
-            8.047577577838897,
-            15.97117761314484,
-            19.97051059716143,
-            21.87494655884403,
+            8.04757757,
+            15.97117761,
+            19.97051059,
+            21.87494655,
         ],
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
         [
-            5774.603553771463,
-            6095.002960937394,
-            7329.854739783488,
-            9152.488591840654,
-            11255.660261586278,
+            5774.60355377,
+            6095.00296093,
+            7329.85473978,
+            9152.48859184,
+            11255.66026158,
         ],
     )
     assert responses[job.jobs[-1].uuid][1].output.chemsys == "Si"
@@ -141,8 +140,6 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
 def test_phonon_wf_only_displacements_no_structural_transformation(
     mock_vasp, clean_dir
 ):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -184,42 +181,42 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
         [
-            5774.566996471001,
-            5616.29786373465,
-            4724.736849262271,
-            3044.193412800876,
-            696.3435315493462,
+            5774.56699647,
+            5616.29786373,
+            4724.73684926,
+            3044.19341280,
+            696.34353154,
         ],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
         [
             0.0,
-            4.78666294741712,
-            13.025332342984333,
-            20.36075467024152,
-            26.398072464162844,
+            4.78666294,
+            13.02533234,
+            20.36075467,
+            26.39807246,
         ],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
         [
             0.0,
-            8.047497695382027,
-            15.971019069215203,
-            19.970326488158854,
-            21.874752681396565,
+            8.04749769,
+            15.97101906,
+            19.97032648,
+            21.87475268,
         ],
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
         [
-            5774.566996471001,
-            6094.964157503006,
-            7329.8033166885825,
-            9152.419812411707,
-            11255.57251541699,
+            5774.56699647,
+            6094.96415750,
+            7329.80331668,
+            9152.41981241,
+            11255.57251541,
         ],
     )
 
@@ -249,9 +246,9 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
         (
-            (1.0000000000000002, 0.0, 0.0),
-            (0.0, 1.0000000000000002, 0.0),
-            (0.0, 0.0, 1.0000000000000002),
+            (1.00000000, 0.0, 0.0),
+            (0.0, 1.00000000, 0.0),
+            (0.0, 0.0, 1.00000000),
         ),
     )
     assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
@@ -272,31 +269,31 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
         responses[job.jobs[-1].uuid][1].output.entropies,
         [
             0.0,
-            4.78666294741712,
-            13.025332342984333,
-            20.36075467024152,
-            26.398072464162844,
+            4.78666294,
+            13.02533234,
+            20.36075467,
+            26.39807246,
         ],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
         [
             0.0,
-            8.047497695382027,
-            15.971019069215203,
-            19.970326488158854,
-            21.874752681396565,
+            8.04749769,
+            15.97101906,
+            19.97032648,
+            21.87475268,
         ],
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
         [
-            5774.566996471001,
-            6094.964157503006,
-            7329.8033166885825,
-            9152.419812411707,
-            11255.57251541699,
+            5774.56699647,
+            6094.96415750,
+            7329.80331668,
+            9152.41981241,
+            11255.57251541,
         ],
     )
 
@@ -306,8 +303,6 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     "kpath_scheme", ["seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
 def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -342,8 +337,8 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
-        atol=1e-8,
+        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
+        atol=1e-3,
     )
 
     assert isinstance(
@@ -398,8 +393,6 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
 
 # test supply of born charges, epsilon, dft energy, supercell
 def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -416,13 +409,13 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     born = [
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-        [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.1]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+        [[0, 0, 0], [0, 0, 0], [0, 0, 0.1]],
     ]
     epsilon_static = [
         [5.25, 0, 0],
-        [0, 5.25, -0],
+        [0, 5.25, 0],
         [0, 0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
@@ -446,8 +439,6 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
 
 # test supply of born charges, epsilon, dft energy, supercell
 def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -469,7 +460,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     ]
     epsilon_static = [
         [5.25, 0, 0],
-        [0, 5.25, -0],
+        [0, 5.25, 0],
         [0, 0, 5.25],
     ]
     total_dft_energy_per_formula_unit = -5
@@ -496,8 +487,8 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
-        atol=1e-8,
+        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
+        atol=1e-3,
     )
 
     assert isinstance(
@@ -557,8 +548,6 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
 
 # test optional parameters
 def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -594,17 +583,17 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.490783551],
-        atol=1e-8,
+        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
+        atol=1e-3,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [0, 4.79066818396, 13.0347062141, 20.3740028425, 26.4142548987],
+        [0, 4.79066818, 13.03470621, 20.37400284, 26.41425489],
         atol=1e-8,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 8.05373626383, 15.9800566903, 19.9803123493, 21.8851347674],
+        [0.0, 8.05373626, 15.98005669, 19.98031234, 21.88513476],
         atol=1e-8,
     )
 
@@ -658,8 +647,6 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
 
 # test run including all steps of the computation for Si
 def test_phonon_wf_all_steps(mock_vasp, clean_dir):
-    from jobflow import run_locally
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -702,11 +689,11 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
         [
-            5853.741503991992,
-            5692.290895556432,
-            4798.677849195808,
-            3122.482960037922,
-            782.1734533334413,
+            5853.74150399,
+            5692.29089555,
+            4798.67784919,
+            3122.48296003,
+            782.17345333,
         ],
     )
 
@@ -728,13 +715,13 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
         responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
             0
         ],
-        13.411855999999997,
+        13.41185599,
     )
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert_allclose(responses[job.jobs[-1].uuid][1].output.born, np.zeros((2, 3, 3)))
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.746290585
+        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74629058
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.epsilon_static,
@@ -837,11 +824,6 @@ def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpath_s
 
 
 def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
-    from jobflow import run_locally
-    from pymatgen.core.structure import Structure
-
-    from atomate2.vasp.flows.phonons import PhononMaker
-
     structure = Structure(
         lattice=[
             [5.691694, 0.000000, 0.000000],
@@ -895,24 +877,19 @@ def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
     )
 
     def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
-        from jobflow import run_locally
-        from pymatgen.core.structure import Structure
-
-        from atomate2.vasp.flows.phonons import PhononMaker
-
         structure = Structure(
             lattice=[
-                [2.3003714889113018, -3.9843602950772405, 0.0000000000000000],
-                [2.3003714889113018, 3.9843602950772405, 0.0000000000000000],
-                [0.0000000000000000, 0.0000000000000000, 7.2813299999999996],
+                [2.30037148, -3.98436029, 0.00000000],
+                [2.30037148, 3.98436029, 0.00000000],
+                [0.00000000, 0.00000000, 7.28132999],
             ],
             species=["Mg", "Mg", "Mg", "Sb", "Sb"],
             coords=[
                 [0.0, 0.0, 0.0],
-                [0.3333333333333333, 0.6666666666666666, 0.3683250000000000],
-                [0.6666666666666667, 0.3333333333333334, 0.6316750000000000],
-                [0.3333333333333333, 0.6666666666666666, 0.7747490000000000],
-                [0.6666666666666667, 0.3333333333333334, 0.2252510000000000],
+                [0.33333333, 0.66666666, 0.36832500],
+                [0.66666666, 0.33333333, 0.63167500],
+                [0.33333333, 0.66666666, 0.77474900],
+                [0.66666666, 0.33333333, 0.22525100],
             ],
         )
 

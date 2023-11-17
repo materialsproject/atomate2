@@ -166,9 +166,9 @@ def test_set_u_params(structure, request) -> None:
     "bandgap, expected_params",
     [
         (0, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
-        (0.1, {"KSPACING": 0.269695615, "ISMEAR": -5, "SIGMA": 0.05}),
-        (1, {"KSPACING": 0.302352354, "ISMEAR": -5, "SIGMA": 0.05}),
-        (2, {"KSPACING": 0.349355136, "ISMEAR": -5, "SIGMA": 0.05}),
+        (0.1, {"KSPACING": 0.26969561, "ISMEAR": -5, "SIGMA": 0.05}),
+        (1, {"KSPACING": 0.30235235, "ISMEAR": -5, "SIGMA": 0.05}),
+        (2, {"KSPACING": 0.34935513, "ISMEAR": -5, "SIGMA": 0.05}),
         (5, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
         (10, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
     ],

@@ -1,4 +1,5 @@
 """Schemas for elastic tensor fitting and related properties."""
+
 from copy import deepcopy
 from typing import Optional
 
@@ -90,7 +91,7 @@ class FittingData(BaseModel):
         None, description="The deformations corresponding to each strain state."
     )
     uuids: list[str] = Field(None, description="The uuids of the deformation jobs.")
-    job_dirs: list[str] = Field(
+    job_dirs: list[Optional[str]] = Field(
         None, description="The directories where the deformation jobs were run."
     )
 
@@ -207,7 +208,7 @@ class ElasticDocument(StructureMetadata):
                 strains, pk_stresses, eq_stress=eq_stress
             )
         else:
-            raise ValueError(f"Unsupported elastic fitting method {fitting_method}")
+            raise ValueError(f"Unsupported elastic {fitting_method=}")
 
         ieee = result.convert_to_ieee(structure)
         property_tensor = ieee if order == 2 else ElasticTensor(ieee[0])

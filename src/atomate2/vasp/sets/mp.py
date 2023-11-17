@@ -37,7 +37,6 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
     auto_kspacing: bool = True
-    inherit_incar: bool = False
 
 
 @dataclass
@@ -46,7 +45,6 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
     auto_kspacing: bool = True
-    inherit_incar: bool = False
 
     def get_incar_updates(
         self,
@@ -93,7 +91,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     auto_kspacing: bool = True
-    inherit_incar: bool = False
+    bandgap_tol: float = 1e-4
 
     def get_incar_updates(
         self,
@@ -151,7 +149,6 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     bandgap_tol: float = 1e-4
     auto_kspacing: bool = True
-    inherit_incar: bool = False
 
     def get_incar_updates(
         self,

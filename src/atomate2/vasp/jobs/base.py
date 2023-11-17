@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import which
@@ -29,6 +30,12 @@ if TYPE_CHECKING:
 
 
 _BADER_EXE_EXISTS = bool(which("bader") or which("bader.exe"))
+_CHARGEMOL_EXE_EXISTS = bool(
+    which("Chargemol_09_26_2017_linux_parallel")
+    or which("Chargemol_09_26_2017_linux_serial")
+    or which("chargemol")
+)
+
 _DATA_OBJECTS = [
     BandStructure,
     BandStructureSymmLine,
@@ -41,6 +48,7 @@ _DATA_OBJECTS = [
     Trajectory,
     "force_constants",
     "normalmode_eigenvecs",
+    "bandstructure",  # FIX: BandStructure is not currently MSONable
 ]
 
 # Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
@@ -182,7 +190,7 @@ class BaseVaspMaker(Maker):
 
     @vasp_job
     def make(
-        self, structure: Structure, prev_vasp_dir: str | Path | None = None
+        self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
         """
         Run a VASP calculation.
@@ -191,7 +199,7 @@ class BaseVaspMaker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -200,9 +208,9 @@ class BaseVaspMaker(Maker):
                 commands of the VASP run.
         """
         # copy previous inputs
-        from_prev = prev_vasp_dir is not None
-        if prev_vasp_dir is not None:
-            copy_vasp_outputs(prev_vasp_dir, **self.copy_vasp_kwargs)
+        from_prev = prev_dir is not None
+        if prev_dir is not None:
+            copy_vasp_outputs(prev_dir, **self.copy_vasp_kwargs)
 
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
@@ -239,10 +247,7 @@ class BaseVaspMaker(Maker):
         )
 
 
-def get_vasp_task_document(
-    path: Path | str,
-    **kwargs,
-) -> TaskDoc:
+def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 
@@ -250,7 +255,37 @@ def get_vasp_task_document(
         "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
     )
 
-    kwargs.setdefault("run_bader", SETTINGS.VASP_RUN_BADER and _BADER_EXE_EXISTS)
+    if SETTINGS.VASP_RUN_BADER:
+        kwargs.setdefault("run_bader", _BADER_EXE_EXISTS)
+        if not _BADER_EXE_EXISTS:
+            warnings.warn(
+                f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
+                stacklevel=1,
+            )
+    if SETTINGS.VASP_RUN_DDEC6:
+        # if VASP_RUN_DDEC6 is True but _CHARGEMOL_EXE_EXISTS is False, just silently
+        # skip running DDEC6
+        run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
+        if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
+            # if DDEC6_ATOMIC_DENSITIES_DIR is a string and directory at that path
+            # exists, use as path to the atomic densities
+            if Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
+                run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
+            else:
+                # if the directory doesn't exist, warn the user and skip running DDEC6
+                warnings.warn(
+                    f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
+                    "DDEC6",
+                    stacklevel=1,
+                )
+        kwargs.setdefault("run_ddec6", run_ddec6)
+
+        if not _CHARGEMOL_EXE_EXISTS:
+            warnings.warn(
+                f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
+                "path",
+                stacklevel=1,
+            )
 
     kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 

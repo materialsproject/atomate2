@@ -110,7 +110,7 @@ def run_cp2k(
     if job_type == JobType.NORMAL:
         jobs = [Cp2kJob(split_cp2k_cmd, **cp2k_job_kwargs)]
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     c = Custodian(
         handlers,
@@ -161,4 +161,4 @@ def should_stop_children(
             "limit of electronic/ionic iterations)!"
         )
 
-    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")
+    raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")

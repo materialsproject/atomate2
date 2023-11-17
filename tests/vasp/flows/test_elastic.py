@@ -1,15 +1,16 @@
+from jobflow import run_locally
+from numpy.testing import assert_allclose
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
+from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.vasp.flows.elastic import ElasticMaker
+from atomate2.vasp.powerups import (
+    update_user_incar_settings,
+    update_user_kpoints_settings,
+)
+
+
 def test_elastic(mock_vasp, clean_dir, si_structure):
-    from jobflow import run_locally
-    from numpy.testing import assert_allclose
-    from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-    from atomate2.common.schemas.elastic import ElasticDocument
-    from atomate2.vasp.flows.elastic import ElasticMaker
-    from atomate2.vasp.powerups import (
-        update_user_incar_settings,
-        update_user_kpoints_settings,
-    )
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "elastic relax 1/6": "Si_elastic/elastic_relax_1_6",
