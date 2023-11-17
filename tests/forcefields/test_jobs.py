@@ -121,6 +121,7 @@ def test_mace_relax_maker(si_structure, test_dir, revert_torch_default_dtype):
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACERelaxMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
+        optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         potential_kwargs={"default_dtype": "float64", "device": "cpu"},
         steps=25,
     ).make(si_structure)
@@ -131,8 +132,8 @@ def test_mace_relax_maker(si_structure, test_dir, revert_torch_default_dtype):
     # validating the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-0.051099, rel=1e-4)
-    assert output1.output.n_steps == 10
+    assert output1.output.energy == approx(-0.051912, rel=1e-4)
+    assert output1.output.n_steps == 4
 
 
 def test_gap_static_maker(si_structure, test_dir):
