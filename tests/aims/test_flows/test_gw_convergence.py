@@ -51,7 +51,7 @@ def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
 
     job_uuid = job.uuid
     while responses[job_uuid][1].replace:
-        job_uuid = responses[job_uuid][1].replace.all_uuids[2]
+        job_uuid = responses[job_uuid][1].replace.all_uuids[1]
 
     output = responses[job_uuid][1].output
 

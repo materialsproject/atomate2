@@ -348,6 +348,39 @@ class ConvergenceSummary(BaseModel):
             ),
         )
 
+    @classmethod
+    def from_data(
+        cls, structure: Structure | Molecule, convergence_data: dict[str, Any]
+    ):
+        """Create a summary from the convergence data dictionary.
+
+        Parameters
+        ----------
+        structure : Structure | Molecule
+            a Pymatgen structure object
+
+        convergence_data: dict[str, Any]
+            A dictionary containing convergence data for the run.
+
+        Returns
+        -------
+        .ConvergenceSummary
+            The summary for convergence runs.
+        """
+        return cls(
+            structure=structure,
+            converged=convergence_data["converged"],
+            convergence_criterion_name=convergence_data["criterion_name"],
+            convergence_field_name=convergence_data["convergence_field_name"],
+            convergence_criterion_value=convergence_data["criterion_values"][-1],
+            convergence_field_value=convergence_data["convergence_field_values"][-1],
+            asked_epsilon=convergence_data["epsilon"],
+            actual_epsilon=abs(
+                convergence_data["criterion_values"][-2]
+                - convergence_data["criterion_values"][-1]
+            ),
+        )
+
 
 class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
     """Definition of FHI-aims task document.
