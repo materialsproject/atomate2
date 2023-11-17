@@ -399,7 +399,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
         args_str for :obj:`quippy.potential.Potential()'`.
-    potential_param_file_name: str|Path
+    potential_param_file_name: str | Path
         param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
         Further keywords for :obj:`quippy.potential.Potential()'`.
