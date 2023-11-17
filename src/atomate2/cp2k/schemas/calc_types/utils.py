@@ -1,4 +1,5 @@
 """Module to define various calculation types as Enums for CP2K."""
+
 from collections.abc import Iterable
 from pathlib import Path
 

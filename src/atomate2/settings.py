@@ -1,4 +1,5 @@
 """Settings for atomate2."""
+
 from __future__ import annotations
 
 import warnings
@@ -83,6 +84,18 @@ class Atomate2Settings(BaseSettings):
         default=False,
         description="Whether to run the Bader program when parsing VASP calculations."
         "Requires the bader executable to be on the path.",
+    )
+    VASP_RUN_DDEC6: bool = Field(
+        default=False,
+        description="Whether to run the DDEC6 program when parsing VASP calculations."
+        "Requires the chargemol executable to be on the path.",
+    )
+    DDEC6_ATOMIC_DENSITIES_DIR: Optional[str] = Field(
+        default=None,
+        description="Directory where the atomic densities are stored.",
+        # TODO uncomment below once that functionality is actually implemented
+        # If not set, pymatgen tries to auto-download the densities and extract them
+        # into ~/.cache/pymatgen/ddec
     )
 
     VASP_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
