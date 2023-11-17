@@ -99,6 +99,7 @@ def test_mace_static_maker(si_structure, test_dir, revert_torch_default_dtype):
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACEStaticMaker(
         potential_param_file_name=test_dir / "forcefields" / "mace" / "MACE.model",
+        optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         potential_kwargs={"default_dtype": "float64", "device": "cpu"},
         task_document_kwargs=task_doc_kwargs,
     ).make(si_structure)
