@@ -17,15 +17,6 @@ from atomate2.forcefields.jobs import (
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 
-@pytest.fixture()
-def revert_torch_default_dtype():
-    import torch
-
-    default_dtype = torch.get_default_dtype()
-    yield
-    torch.set_default_dtype(default_dtype)
-
-
 def test_chgnet_static_maker(si_structure):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
@@ -105,9 +96,7 @@ mace_paths = pytest.mark.parametrize(
 
 
 @mace_paths
-def test_mace_static_maker(
-    si_structure, test_dir, revert_torch_default_dtype, model_path
-):
+def test_mace_static_maker(si_structure, test_dir, model_path):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -127,9 +116,7 @@ def test_mace_static_maker(
 
 
 @mace_paths
-def test_mace_relax_maker(
-    si_structure, test_dir, revert_torch_default_dtype, model_path
-):
+def test_mace_relax_maker(si_structure, test_dir, model_path):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
