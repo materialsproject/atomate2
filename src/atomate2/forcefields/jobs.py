@@ -12,6 +12,7 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
@@ -242,12 +243,10 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
         # Note: the below code was taken from the matgl repo examples.
         # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
-        pot = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+        potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
 
         relaxer = Relaxer(
-            potential=pot,
-            relax_cell=self.relax_cell,
-            **self.optimizer_kwargs,
+            potential=potential, relax_cell=self.relax_cell, **self.optimizer_kwargs
         )
 
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
@@ -278,12 +277,9 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
 
         # Note: the below code was taken from the matgl repo examples.
         # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
-        pot = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+        potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
 
-        relaxer = Relaxer(
-            potential=pot,
-            relax_cell=False,
-        )
+        relaxer = Relaxer(potential=potential, relax_cell=False)
 
         return relaxer.relax(structure, steps=1)
 
@@ -309,10 +305,13 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    potential_param_file_name: str | Path
-        param_file_name for :obj:`mace.calculators.MACECalculator()'`.
-    potential_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model_paths) for
+    model: str | Path | None
+        Checkpoint to load with :obj:`mace.calculators.MACECalculator()'`. Can be a URL
+        starting with https://. If None, loads the universal MACE trained for Matbench
+        Discovery on the MPtrj dataset available at
+        https://figshare.com/articles/dataset/22715158.
+    model_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model) for
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
@@ -323,19 +322,15 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-    potential_param_file_name: str = "MACE.model"
-    potential_kwargs: dict = field(default_factory=dict)
+    model: str | Path | Sequence[str | Path] | None = None
+    model_kwargs: dict = field(default_factory=dict)
 
     def _relax(self, structure: Structure) -> dict:
-        from mace.calculators import MACECalculator
+        from mace.calculators import mace_mp
 
-        self.potential_kwargs.setdefault("device", "auto")
-
-        calculator = MACECalculator(
-            model_paths=self.potential_param_file_name, **self.potential_kwargs
-        )
+        calculator = mace_mp(model=self.model, **self.model_kwargs)
         relaxer = Relaxer(
-            calculator, **self.optimizer_kwargs, relax_cell=self.relax_cell
+            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
         )
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
@@ -353,27 +348,26 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    potential_param_file_name: str | Path
-        param_file_name for :obj:`mace.calculators.MACECalculator()'`.
-    potential_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model_paths) for
+    model: str | Path | None
+        Checkpoint to load with :obj:`mace.calculators.MACECalculator()'`. Can be a URL
+        starting with https://. If None, loads the universal MACE trained for Matbench
+        Discovery on the MPtrj dataset available at
+        https://figshare.com/articles/dataset/22715158.
+    model_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model) for
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
     name: str = "MACE static"
     force_field_name: str = "MACE"
     task_document_kwargs: dict = field(default_factory=dict)
-    potential_param_file_name: str = "MACE.model"
-    potential_kwargs: dict = field(default_factory=dict)
+    model: str | Path | Sequence[str | Path] | None = None
+    model_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
-        from mace.calculators import MACECalculator
+        from mace.calculators import mace_mp
 
-        self.potential_kwargs.setdefault("device", "auto")
-
-        calculator = MACECalculator(
-            model_paths=self.potential_param_file_name, **self.potential_kwargs
-        )
+        calculator = mace_mp(model=self.model, **self.model_kwargs)
         relaxer = Relaxer(calculator, relax_cell=False)
         return relaxer.relax(structure, steps=1)
 
@@ -401,7 +395,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     potential_args_str: str
         args_str for :obj:`quippy.potential.Potential()'`.
-    potential_param_file_name: str|Path
+    potential_param_file_name: str | Path
         param_file_name for :obj:`quippy.potential.Potential()'`.
     potential_kwargs: dict
         Further keywords for :obj:`quippy.potential.Potential()'`.
