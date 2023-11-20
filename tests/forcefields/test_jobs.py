@@ -86,7 +86,7 @@ def test_m3gnet_relax_maker(si_structure):
 
 
 mace_paths = pytest.mark.parametrize(
-    "model_path",
+    "model",
     [
         # None, # TODO uncomment once https://github.com/ACEsuit/mace/pull/230 is merged
         # to test loading MACE checkpoint on the fly from figshare
@@ -96,14 +96,14 @@ mace_paths = pytest.mark.parametrize(
 
 
 @mace_paths
-def test_mace_static_maker(si_structure, test_dir, model_path):
+def test_mace_static_maker(si_structure, test_dir, model):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
-    job = MACEStaticMaker(
-        model_path=model_path, task_document_kwargs=task_doc_kwargs
-    ).make(si_structure)
+    job = MACEStaticMaker(model=model, task_document_kwargs=task_doc_kwargs).make(
+        si_structure
+    )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -116,14 +116,14 @@ def test_mace_static_maker(si_structure, test_dir, model_path):
 
 
 @mace_paths
-def test_mace_relax_maker(si_structure, test_dir, model_path):
+def test_mace_relax_maker(si_structure, test_dir, model):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACERelaxMaker(
-        model_path=model_path,
+        model=model,
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
     ).make(si_structure)
