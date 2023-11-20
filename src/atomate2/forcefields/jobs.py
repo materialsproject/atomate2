@@ -243,12 +243,10 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
         # Note: the below code was taken from the matgl repo examples.
         # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
-        pot = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+        potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
 
         relaxer = Relaxer(
-            potential=pot,
-            relax_cell=self.relax_cell,
-            **self.optimizer_kwargs,
+            potential=potential, relax_cell=self.relax_cell, **self.optimizer_kwargs
         )
 
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
@@ -279,12 +277,9 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
 
         # Note: the below code was taken from the matgl repo examples.
         # Load pre-trained M3GNet model (currently uses the MP-2021.2.8 database)
-        pot = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+        potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
 
-        relaxer = Relaxer(
-            potential=pot,
-            relax_cell=False,
-        )
+        relaxer = Relaxer(potential=potential, relax_cell=False)
 
         return relaxer.relax(structure, steps=1)
 
