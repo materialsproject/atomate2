@@ -72,7 +72,7 @@ strict = [
     "custodian==2023.10.9",
     "dscribe==2.1.0",
     "emmet-core==0.72.21",
-    "ijson==3.2.2",
+    "ijson==3.2.3",
     "jobflow==0.1.14",
     "lobsterpy==0.3.2",
     "mace@git+https://github.com/ACEsuit/mace@develop",
