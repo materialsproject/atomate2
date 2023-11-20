@@ -46,7 +46,7 @@ lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.2"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = [
     "chgnet>=0.2.2",
-    "mace@git+https://github.com/ACEsuit/mace",
+    "mace@git+https://github.com/ACEsuit/mace@develop",
     "matgl>=0.9.0",
     "quippy-ase>=0.9.14",
 ]
