@@ -76,7 +76,7 @@ strict = [
     "jobflow==0.1.14",
     "lobsterpy==0.3.2",
     "mace@git+https://github.com/ACEsuit/mace@develop",
-    "matgl==0.9.0",
+    "matgl==0.9.1",
     "monty==2023.9.25",
     "mp-api==0.37.5",
     "numpy",
