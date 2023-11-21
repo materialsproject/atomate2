@@ -178,11 +178,11 @@ class Atomate2Settings(BaseSettings):
     ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
     ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")
     ABINIT_COPY_DEPS: bool = Field(
-        False,
+        default=False,
         description="Copy (True) or link file dependencies between jobs.",
     )
     ABINIT_AUTOPARAL: bool = Field(
-        False,
+        default=False,
         description="Use autoparal to determine optimal parallel configuration.",
     )
     ABINIT_ABIPY_MANAGER_FILE: str = Field(

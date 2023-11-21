@@ -5,17 +5,15 @@ import copy
 import json
 import logging
 import os
-from collections import namedtuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
 from abipy.abio.inputs import AbinitInput, MultiDataset
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
 from monty.json import MontyEncoder, jsanitize
-from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.abiobjects import KSampling, KSamplingModes
 from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
@@ -38,6 +36,11 @@ from atomate2.abinit.utils.common import (
     InitializationError,
     get_final_structure,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from pymatgen.core.structure import Structure
 
 __all__ = ["AbinitInputSet", "AbinitInputGenerator"]
 
@@ -222,21 +225,21 @@ def as_pseudo_table(pseudos):
         # in case a single path to a pseudopotential file has been passed
         if os.path.isfile(pseudos):
             return PseudoTable(pseudos)
-        else:
-            pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
-            repo = get_repo_from_name(pseudo_repo_name)
-            if not repo.is_installed():
-                msg = (
-                    f"Pseudo repository {pseudo_repo_name} is not installed "
-                    f"in {repo.dirpath}. "
-                    f"Use abips.py to install it."
-                )
-                raise RuntimeError(msg)
-            return repo.get_pseudos(table_name)
+        pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
+        repo = get_repo_from_name(pseudo_repo_name)
+        if not repo.is_installed():
+            msg = (
+                f"Pseudo repository {pseudo_repo_name} is not installed "
+                f"in {repo.dirpath}. "
+                f"Use abips.py to install it."
+            )
+            raise RuntimeError(msg)
+        return repo.get_pseudos(table_name)
     return PseudoTable(pseudos)
 
 
-PrevOutput = namedtuple("PrevOutput", "dirname exts")
+class PrevOutput:
+    dirname_exts: str
 
 
 @dataclass
@@ -466,8 +469,8 @@ class AbinitInputGenerator(InputGenerator):
     def _get_in_file_name(out_filepath: str) -> str:
         in_file = os.path.basename(out_filepath)
         in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
-        in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
-        return in_file
+
+        return os.path.basename(in_file).replace("WFQ", "WFK", 1)
 
     @staticmethod
     def resolve_dep_exts(prev_dir: str, exts: list[str]) -> tuple:
@@ -778,7 +781,7 @@ class AbinitInputGenerator(InputGenerator):
 
         if base_kpoints and not added_kpoints:
             return base_kpoints
-        elif added_kpoints and not base_kpoints:
+        if added_kpoints and not base_kpoints:
             return added_kpoints
 
         # do some sanity checking

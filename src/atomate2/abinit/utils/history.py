@@ -27,12 +27,12 @@ class JobHistory(collections.deque, MSONable):
     def as_dict(self):
         """Create dictionary representation of the history."""
         items = [i.as_dict() if hasattr(i, "as_dict") else i for i in self]
-        d = {
+
+        return {
             "items": items,
             "@module": type(self).__module__,
             "@class": type(self).__name__,
         }
-        return d
 
     @classmethod
     def from_dict(cls, d):
@@ -173,9 +173,7 @@ class JobHistory(collections.deque, MSONable):
         """
         types = types if isinstance(types, (list, tuple)) else [types]
 
-        events = [e for e in self if e.event_type in types]
-
-        return events
+        return [e for e in self if e.event_type in types]
 
     def get_total_run_time(self):
         """Get the total run time based summing the abinit stop event run times."""

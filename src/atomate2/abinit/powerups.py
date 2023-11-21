@@ -90,10 +90,8 @@ def update_user_abinit_settings(
         f"input_set_generator->user_abinit_settings->{k}": v
         for k, v in abinit_updates.items()
     }
-    updated_flow = update_maker_kwargs(
-        class_filter, dict_mod_updates, flow, name_filter
-    )
-    return updated_flow
+
+    return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
 def update_factory_kwargs(
@@ -133,10 +131,8 @@ def update_factory_kwargs(
         f"input_set_generator->factory_kwargs->{k}": v
         for k, v in factory_updates.items()
     }
-    updated_flow = update_maker_kwargs(
-        class_filter, dict_mod_updates, flow, name_filter
-    )
-    return updated_flow
+
+    return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
 def update_user_kpoints_settings(
@@ -183,10 +179,7 @@ def update_user_kpoints_settings(
             for k, v in kpoints_updates.items()
         }
 
-    updated_flow = update_maker_kwargs(
-        class_filter, dict_mod_updates, flow, name_filter
-    )
-    return updated_flow
+    return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
 def update_generator_attributes(
@@ -224,7 +217,5 @@ def update_generator_attributes(
     dict_mod_updates = {
         f"input_set_generator->{k}": v for k, v in generator_updates.items()
     }
-    updated_flow = update_maker_kwargs(
-        class_filter, dict_mod_updates, flow, name_filter
-    )
-    return updated_flow
+
+    return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)

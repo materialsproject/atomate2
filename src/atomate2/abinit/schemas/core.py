@@ -3,7 +3,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Type, TypeVar, Union
+from typing import Union
 
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
@@ -12,6 +12,7 @@ from emmet.core.structure import StructureMetadata
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
+from typing_extensions import Self
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.utils.common import (
@@ -21,8 +22,6 @@ from atomate2.abinit.utils.common import (
     get_event_report,
     get_final_structure,
 )
-
-_T = TypeVar("_T", bound="AbinitTaskDocument")
 
 logger = logging.getLogger(__name__)
 
@@ -61,13 +60,13 @@ class AbinitTaskDocument(StructureMetadata):
 
     @classmethod
     def from_directory(
-        cls: Type[_T],
+        cls: type[Self],
         dir_name: Union[Path, str],
         source: str = "log",
         critical_events=None,
         run_number=1,
         run_status=None,
-    ) -> _T:
+    ) -> Self:
         """Build AbinitTaskDocument from directory."""
         # Files required for the job analysis.
         # TODO: See if we can put the AbinitInputFile object here from
@@ -99,7 +98,7 @@ class AbinitTaskDocument(StructureMetadata):
         abinit_input = load_abinit_input(dir_name)
         structure = get_final_structure(dir_name=dir_name)
 
-        doc = cls.from_structure(
+        return cls.from_structure(
             meta_structure=structure,
             include_structure=True,
             dir_name=dir_name,
@@ -109,4 +108,3 @@ class AbinitTaskDocument(StructureMetadata):
             abinit_input=abinit_input,
             structure=structure,
         )
-        return doc

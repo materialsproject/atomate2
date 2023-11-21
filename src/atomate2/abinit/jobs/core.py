@@ -4,13 +4,11 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import ClassVar, Sequence
+from typing import TYPE_CHECKING, ClassVar
 
 from jobflow import job
-from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.sets.base import AbinitInputGenerator
 from atomate2.abinit.sets.core import (
     LineNonSCFSetGenerator,
     NonSCFSetGenerator,
@@ -19,7 +17,14 @@ from atomate2.abinit.sets.core import (
     StaticSetGenerator,
     UniformNonSCFSetGenerator,
 )
-from atomate2.abinit.utils.history import JobHistory
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.sets.base import AbinitInputGenerator
+    from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
 

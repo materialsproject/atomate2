@@ -4,15 +4,19 @@ from __future__ import annotations
 
 import logging
 import os
-from pathlib import Path
-from typing import Iterable
+from typing import TYPE_CHECKING
 
 from abipy.flowtk.utils import abi_extensions
 from monty.serialization import loadfn
-from pymatgen.core.structure import Structure
 
 from atomate2.abinit.utils.common import INDIR_NAME
 from atomate2.utils.file_client import FileClient, auto_fileclient
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
 
 __all__ = [
     "out_to_in",
@@ -101,8 +105,8 @@ def load_abinit_input(dirpath, fname="abinit_input.json"):
         raise NotImplementedError(
             f"Cannot load AbinitInput from directory without {fname} file."
         )
-    abinit_input = loadfn(abinit_input_file)
-    return abinit_input
+
+    return loadfn(abinit_input_file)
 
 
 def write_abinit_input_set(

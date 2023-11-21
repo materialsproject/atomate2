@@ -2,18 +2,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import (
     LineNonSCFMaker,
     RelaxMaker,
     StaticMaker,
     UniformNonSCFMaker,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.jobs.base import BaseAbinitMaker
 
 
 @dataclass

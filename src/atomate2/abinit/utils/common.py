@@ -129,14 +129,10 @@ class AbinitRuntimeError(AbiAtomateError):
         """Create dictionary representation of the error."""
         d = {"num_errors": self.num_errors, "num_warnings": self.num_warnings}
         if self.errors:
-            errors = []
-            for error in self.errors:
-                errors.append(error.as_dict())
+            errors = [error.as_dict() for error in self.errors]
             d["errors"] = errors
         if self.warnings:
-            warnings = []
-            for warning in self.warnings:
-                warnings.append(warning.as_dict())
+            warnings = [warning.as_dict() for warning in self.warnings]
             d["warnings"] = warnings
         if self.msg:
             d["error_message"] = self.msg
@@ -299,14 +295,13 @@ class RestartInfo(MSONable):
 
     def as_dict(self):
         """Create dictionary representation of the error."""
-        d = {
+        return {
             "previous_dir": self.previous_dir,
             # "reset": self.reset,
             "num_restarts": self.num_restarts,
             "@module": type(self).__module__,
             "@class": type(self).__name__,
         }
-        return d
 
     @classmethod
     def from_dict(cls, d):
@@ -387,10 +382,9 @@ def get_event_report(ofile, mpiabort_file):
     if not ofile.exists:
         if not mpiabort_file.exists:
             return None
-        else:
-            # ABINIT abort file without log!
-            abort_report = parser.parse(mpiabort_file.path)
-            return abort_report
+        # ABINIT abort file without log!
+
+        return parser.parse(mpiabort_file.path)
 
     try:
         report = parser.parse(ofile.path)
@@ -418,5 +412,5 @@ def get_event_report(ofile, mpiabort_file):
     # except parser.Error as exc:
     except Exception as exc:
         # Return a report with an error entry with info on the exception.
-        logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {str(exc)}")
+        logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {exc!s}")
         return parser.report_exception(ofile.path, exc)

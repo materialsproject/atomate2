@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import logging
 from pathlib import Path
-from typing import Literal, Sequence, Union
+from typing import TYPE_CHECKING, Literal
 
 import pytest
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 logger = logging.getLogger("atomate2")
 
@@ -24,7 +30,7 @@ def abinit_integration_tests(pytestconfig):
     return pytestconfig.getoption("abinit_integration")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running ABINIT.
@@ -83,7 +89,7 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
 
 
 def fake_run_abinit(
-    ref_path: Union[str, Path],
+    ref_path: str | Path,
 ):
     """
     Emulate running ABINIT.
@@ -105,7 +111,7 @@ def fake_run_abinit(
 
 
 def check_abinit_inputs(
-    ref_path: Union[str, Path],
+    ref_path: str | Path,
     check_inputs: Sequence[Literal["run.abi"]] = _ABINIT_FILES,
 ):
     ref_path = Path(ref_path)
@@ -119,7 +125,7 @@ def check_abinit_inputs(
     logger.info("Verified inputs successfully")
 
 
-def check_run_abi(ref_path: Union[str, Path]):
+def check_run_abi(ref_path: str | Path):
     from abipy.abio.abivars import AbinitInputFile
     from monty.io import zopen
 
@@ -134,7 +140,7 @@ def check_run_abi(ref_path: Union[str, Path]):
     assert diffs == [], "'run.abi' is different from reference."
 
 
-def check_abinit_input_json(ref_path: Union[str, Path]):
+def check_abinit_input_json(ref_path: str | Path):
     from abipy.abio.inputs import AbinitInput
     from monty.serialization import loadfn
 
@@ -152,7 +158,7 @@ def clear_abinit_files():
     logger.info("Cleared abinit files.")
 
 
-def copy_abinit_outputs(ref_path: Union[str, Path]):
+def copy_abinit_outputs(ref_path: str | Path):
     import shutil
 
     from monty.shutil import decompress_file

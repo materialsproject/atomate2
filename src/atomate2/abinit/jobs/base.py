@@ -5,33 +5,39 @@ from __future__ import annotations
 import logging
 import os
 import time
-from collections import namedtuple
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import ClassVar, Sequence
+from typing import TYPE_CHECKING, ClassVar, NamedTuple
 
 import jobflow
 from abipy.flowtk.events import as_event_class
 from jobflow import Maker, Response, job
-from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
-from atomate2.abinit.sets.base import AbinitInputGenerator
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.sets.base import AbinitInputGenerator
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["BaseAbinitMaker"]
 
 
-JobSetupVars = namedtuple(
-    "JobSetupVars",
-    ["start_time", "history", "workdir", "abipy_manager", "wall_time"],
-)
+class JobSetupVars(NamedTuple):
+    start_time: float
+    history: JobHistory
+    workdir: str
+    abipy_manager: None  # To change in the future
+    wall_time: int | None
 
 
 def setup_job(
@@ -82,7 +88,7 @@ def setup_job(
 
     # set walltime, if possible
     # TODO: see in set_walltime, where to put this walltime_command
-    wall_time = wall_time
+    # wall_time = wall_time
     return JobSetupVars(
         start_time=start_time,
         history=history,

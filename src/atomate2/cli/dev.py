@@ -358,8 +358,7 @@ def abinit_test_data(test_name, test_data_dir, force):
                 if not src_fpath.exists():
                     if allow_missing:
                         continue
-                    else:
-                        raise RuntimeError(f"File {src_fpath} does not exist")
+                    raise RuntimeError(f"File {src_fpath} does not exist")
                 if src_fpath.is_symlink():
                     dest_fpath.write_text(f"SYMBOLIC_LINK TO {src_fpath.resolve()}")
                 elif src_fpath.is_file():
@@ -574,10 +573,16 @@ def save_abinit_maker(maker):
     author_mail = None
     if git:
         name = subprocess.run(
-            "git config user.name".split(), capture_output=True, encoding="utf-8"
+            "git config user.name".split(),
+            capture_output=True,
+            encoding="utf-8",
+            check=True,
         )
         mail = subprocess.run(
-            "git config user.email".split(), capture_output=True, encoding="utf-8"
+            "git config user.email".split(),
+            capture_output=True,
+            encoding="utf-8",
+            check=True,
         )
         if name.returncode == 0:
             author = name.stdout.strip()
@@ -609,10 +614,7 @@ def save_abinit_maker(maker):
 
 
 def _find_sub_list(sublist, mainlist):
-    results = []
     sll = len(sublist)
-    for ind in (i for i, e in enumerate(mainlist) if e == sublist[0]):
-        if mainlist[ind : ind + sll] == sublist:
-            results.append((ind, ind + sll))
+    inds = [i for i, e in enumerate(mainlist) if e == sublist[0]]
 
-    return results
+    return [(ind, ind + sll) for ind in inds if mainlist[ind : ind + sll] == sublist]
