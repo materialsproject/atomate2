@@ -1,9 +1,32 @@
 import numpy as np
+import pytest
+from emmet.core.tasks import TaskDoc
 from jobflow import run_locally
+from pymatgen.core import Structure
 
-from atomate2.vasp.jobs.EOS import (
-    postprocess_EOS,
+from atomate2.vasp.jobs.EOS.base import postprocess_EOS
+from atomate2.vasp.jobs.EOS.mp import (
+    MPGGADeformationMaker,
+    MPGGAEosStaticMaker,
 )
+
+expected_incar_relax = {
+    "ISIF": 3,
+    "IBRION": 2,
+    "EDIFF": 1.0e-6,
+    "ISMEAR": 0,
+    "SIGMA": 0.05,
+    "LMAXMIX": 6,
+    "KSPACING": 0.22,
+}
+
+expected_incar_deform = {
+    **expected_incar_relax,
+    "ISIF": 2,
+}
+
+expected_incar_static = {**expected_incar_relax, "NSW": 0, "IBRION": -1, "ISMEAR": -5}
+expected_incar_static.pop("ISIF")
 
 
 def taylor(v, E0, B0, B1, V0):
@@ -23,16 +46,105 @@ def test_postprocess_EOS(clean_dir):
     EOS_pars = {"e0": -1.25e2, "b0": 85.0, "b1": 4.46, "v0": 11.15}
 
     volumes = EOS_pars["v0"] * np.linspace(0.95, 1.05, 11)
-    E = taylor(volumes, EOS_pars["e0"], EOS_pars["b0"], EOS_pars["b1"], EOS_pars["v0"])
-    EV_dict = {"relax": np.transpose((volumes, E))}
+    energies = taylor(
+        volumes, EOS_pars["e0"], EOS_pars["b0"], EOS_pars["b1"], EOS_pars["v0"]
+    )
+    EV_dict = {
+        "relax": {
+            "E0": EOS_pars["e0"],
+            "V0": EOS_pars["v0"],
+            "energies": energies,
+            "volumes": volumes,
+        }
+    }
 
     analysis_job = postprocess_EOS(EV_dict)
     response = run_locally(analysis_job, create_folders=False, ensure_success=True)
     job_output = response[analysis_job.uuid][1].output
-    assert set(job_output) == {"EV", "EOS"}
-    assert set(job_output["EOS"]) == {"relax"}
-    for EOS in job_output["EOS"]["relax"]:
+    assert set(job_output["relax"]) == {"E0", "V0", "energies", "volumes", "EOS"}
+    assert set(job_output["relax"]["EOS"]) == {
+        "murnaghan",
+        "birch",
+        "birch_murnaghan",
+        "pourier_tarantola",
+        "vinet",
+    }
+
+    # Testing that percent errors are less than 5%
+    # Makes sense for testing EOS close to minimum, where Taylor series applies
+    for EOS in job_output["relax"]["EOS"]:
         assert all(
-            100.0 * (job_output["EOS"]["relax"][EOS][par] / EOS_pars[par] - 1.0) < 5.0
+            100.0 * (job_output["relax"]["EOS"][EOS][par] / EOS_pars[par] - 1.0) < 5.0
             for par in EOS_pars
         )
+
+
+def test_mp_gga_eos_deformation_maker(mock_vasp, clean_dir, vasp_test_dir):
+    # map from job name to directory containing reference output files
+    ref_paths = {
+        "EOS MP GGA deform and relax": "Si_EOS_MP_GGA/"
+        "mp-149-PBE-EOS_Deformation_Relax_0",
+    }
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        key: {"incar_settings": list(expected_incar_deform)} for key in ref_paths
+    }
+
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    structure = Structure.from_file(
+        f"{vasp_test_dir}/Si_EOS_MP_GGA/"
+        "mp-149-PBE-EOS_Deformation_Relax_0/inputs/POSCAR"
+    )
+    eps = -0.05
+    deformation_matrix = (np.identity(3) * (1 + eps)).tolist()
+    maker = MPGGADeformationMaker()
+    job = maker.make(structure, deformation_matrix)
+
+    # ensure flow runs successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # validate output
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.547764)
+    for key, expected in expected_incar_deform.items():
+        actual = task_doc.input.parameters.get(key, None)
+        assert actual == expected, f"{key=}, {actual=}, {expected=}"
+
+
+def test_mp_gga_eos_static_maker(mock_vasp, clean_dir, vasp_test_dir):
+    # map from job name to directory containing reference output files
+    ref_paths = {
+        "EOS MP GGA static": "Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0",
+    }
+
+    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
+    fake_run_vasp_kwargs = {
+        key: {"incar_settings": list(expected_incar_static)} for key in ref_paths
+    }
+
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    input_structure = Structure.from_file(
+        f"{vasp_test_dir}/Si_EOS_MP_GGA/"
+        f"mp-149-PBE-EOS_Deformation_Relax_0/outputs/POSCAR.gz"
+    )
+    structure = Structure.from_file(
+        f"{vasp_test_dir}/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/POSCAR"
+    )
+    assert input_structure == structure
+
+    job = MPGGAEosStaticMaker().make(structure)
+
+    # ensure flow runs successfully
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    # validate output
+    task_doc = responses[job.uuid][1].output
+    assert isinstance(task_doc, TaskDoc)
+    assert task_doc.output.energy == pytest.approx(-10.547764)
+    for key, expected in expected_incar_static.items():
+        actual = task_doc.input.parameters.get(key, None)
+        assert actual == expected, f"{key=}, {actual=}, {expected=}"
