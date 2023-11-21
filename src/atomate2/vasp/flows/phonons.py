@@ -40,7 +40,7 @@ class PhononMaker(Maker):
     forces are computed for these structures. With the help of phonopy, these
     forces are then converted into a dynamical matrix. To correct for polarization
     effects, a correction of the dynamical matrix based on BORN charges can
-    be performed.     Finally, phonon densities of states, phonon band structures
+    be performed. Finally, phonon densities of states, phonon band structures
     and thermodynamic properties are computed.
 
     .. Note::
