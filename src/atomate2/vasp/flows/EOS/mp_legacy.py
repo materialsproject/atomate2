@@ -10,8 +10,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.flows.EOS.base import EosMaker
-from atomate2.vasp.jobs.EOS.mp_legacy import (
+from atomate2.vasp.flows.eos.base import EosMaker
+from atomate2.vasp.jobs.eos.mp_legacy import (
     MPLegacyDeformationMaker,
     MPLegacyEosRelaxMaker,
     MPLegacyEosStaticMaker,

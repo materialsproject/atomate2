@@ -23,7 +23,7 @@ from pymatgen.transformations.standard_transformations import (
 )
 
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
-from atomate2.vasp.sets.EOS import EosSetGenerator
+from atomate2.vasp.sets.eos import EosSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path

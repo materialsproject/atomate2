@@ -12,8 +12,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.flows.EOS.base import EosMaker
-from atomate2.vasp.jobs.EOS.mp import (
+from atomate2.vasp.flows.eos.base import EosMaker
+from atomate2.vasp.jobs.eos.mp import (
     MPGGADeformationMaker,
     MPGGAEosRelaxMaker,
     MPGGAEosStaticMaker,
@@ -22,7 +22,7 @@ from atomate2.vasp.jobs.EOS.mp import (
     MPMetaGGAEosRelaxMaker,
     MPMetaGGAEosStaticMaker,
 )
-from atomate2.vasp.sets.EOS import MPGGAEosRelaxSetGenerator
+from atomate2.vasp.sets.eos import MPGGAEosRelaxSetGenerator
 
 if TYPE_CHECKING:
     from jobflow import Maker

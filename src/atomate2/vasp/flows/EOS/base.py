@@ -13,7 +13,7 @@ import numpy as np
 from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.EOS.base import (
+from atomate2.vasp.jobs.eos.base import (
     DeformationMaker,
     EosRelaxMaker,
     postprocess_EOS,
@@ -105,7 +105,7 @@ class EosMaker(Maker):
         prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
         """
-        jobs: dict[str, list[Job]] = {"relax": [], "static": []}
+        jobs: dict[str, list[Job]] = {"relax": [], "static": [], "postprocess": []}
 
         relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         relax_flow.name = "EOS equilibrium relaxation"
@@ -127,9 +127,20 @@ class EosMaker(Maker):
                 "V0": equil_static.output.calcs_reversed[0].output.structure.volume,
             }
 
-        strain_l = np.linspace(
-            self.linear_strain[0], self.linear_strain[1], self.number_of_frames
+        strain_l, strain_delta = np.linspace(
+            self.linear_strain[0],
+            self.linear_strain[1],
+            self.number_of_frames,
+            retstep=True,
         )
+        # Cell without applied strain already included from relax/equilibrium
+        # steps. Perturb this point (or these points) if included
+        zero_strain_mask = np.abs(strain_l) < 1.0e-15
+        if np.any(zero_strain_mask):
+            nzs = len(strain_l[zero_strain_mask])
+            shift = strain_delta / (nzs + 1.0) * np.linspace(-1.0, 1.0, nzs)
+            strain_l[np.abs(strain_l) < 1.0e-15] += shift
+
         insert_equil_index = np.searchsorted(strain_l, 0, side="left")
         deformation_l = [(np.identity(3) * (1 + eps)).tolist() for eps in strain_l]
 
@@ -161,6 +172,10 @@ class EosMaker(Maker):
 
         flow_output: dict = {}
         if self.postprocessor:
+            assert self.number_of_frames >= 3, (
+                "To perform least squares EOS fit with four parameters, "
+                "you must specify self.number_of_frames >= 3."
+            )
             for jobtype in jobs:
                 if len(jobs[jobtype]) == 0:
                     continue
@@ -183,9 +198,10 @@ class EosMaker(Maker):
             postprocess = self.postprocessor(flow_output)
             postprocess.name = self.name + "_" + postprocess.name
             flow_output = postprocess.output
+            jobs["postprocess"] += [postprocess]
 
         return Flow(
-            jobs=jobs["relax"] + jobs["static"] + [postprocess],
+            jobs=jobs["relax"] + jobs["static"] + jobs["postprocess"],
             output=flow_output,
             name=self.name,
         )

@@ -4,8 +4,8 @@ from emmet.core.tasks import TaskDoc
 from jobflow import run_locally
 from pymatgen.core import Structure
 
-from atomate2.vasp.jobs.EOS.base import postprocess_EOS
-from atomate2.vasp.jobs.EOS.mp import (
+from atomate2.vasp.jobs.eos.base import postprocess_EOS
+from atomate2.vasp.jobs.eos.mp import (
     MPGGADeformationMaker,
     MPGGAEosStaticMaker,
 )

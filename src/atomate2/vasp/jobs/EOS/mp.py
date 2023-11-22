@@ -26,8 +26,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.EOS.base import DeformationMaker
-from atomate2.vasp.sets.EOS import (
+from atomate2.vasp.jobs.eos.base import DeformationMaker
+from atomate2.vasp.sets.eos import (
     MPGGAEosRelaxSetGenerator,
     MPGGAEosStaticSetGenerator,
     MPMetaGGAEosPreRelaxSetGenerator,

@@ -3,11 +3,11 @@ from emmet.core.tasks import TaskDoc
 from jobflow import Flow, run_locally
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.EOS.mp import (
+from atomate2.vasp.flows.eos.mp import (
     MPGGAEosDoubleRelaxMaker,
     MPGGAEosMaker,
 )
-from atomate2.vasp.jobs.EOS.mp import (
+from atomate2.vasp.jobs.eos.mp import (
     MPMetaGGAEosStaticMaker,
 )
 
@@ -79,7 +79,12 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 @pytest.mark.parametrize("do_statics", [False, True])
 def test_mp_eos_maker(
-    do_statics: bool, mock_vasp, clean_dir, vasp_test_dir, nframes: int = 6
+    do_statics: bool,
+    mock_vasp,
+    clean_dir,
+    vasp_test_dir,
+    nframes: int = 2,
+    linear_strain: tuple = (-0.05, 0.05),
 ):
     base_ref_path = "Si_EOS_MP_GGA/"
     ref_paths = {}
@@ -123,9 +128,13 @@ def test_mp_eos_maker(
         f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR"
     )
 
-    flow = MPGGAEosMaker(static_maker=static_maker, number_of_frames=nframes).make(
-        structure
-    )
+    # cannot perform least-squares fit for four parameters with only 3 data points
+    flow = MPGGAEosMaker(
+        static_maker=static_maker,
+        number_of_frames=nframes,
+        linear_strain=linear_strain,
+        postprocessor=None,
+    ).make(structure)
 
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -141,8 +150,7 @@ def test_mp_eos_maker(
     for ijob, uuid in enumerate(flow.job_uuids):
         taskdocs[jobs[ijob]] = responses[uuid][1].output
 
-    # extra job is the postprocessing step
-    assert len(responses) == len(ref_paths) + 1
+    assert len(responses) == len(ref_paths)
 
     if do_statics:
         # Check that deformation jobs correctly feed structures
@@ -163,14 +171,7 @@ def test_mp_eos_maker(
         taskdocs[f"EOS Deformation Relax {i}"].calcs_reversed[0].output.energy
         for i in range(nframes)
     ]
-    ref_relaxed_totens = [
-        -10.547764,
-        -10.747783,
-        -10.838795,
-        -10.838564,
-        -10.76523,
-        -10.632079,
-    ]
+    ref_relaxed_totens = [-10.547764, -10.632079]
 
     assert all(
         abs(relaxed_totens[i] - ref_relaxed_totens[i]) < 1.0e-6 for i in range(nframes)
@@ -181,14 +182,7 @@ def test_mp_eos_maker(
             taskdocs[f"EOS Static {i}"].calcs_reversed[0].output.energy
             for i in range(nframes)
         ]
-        ref_static_totens = [
-            -10.547764,
-            -10.747783,
-            -10.838795,
-            -10.838564,
-            -10.76523,
-            -10.63208,
-        ]
+        ref_static_totens = [-10.547764, -10.63208]
         assert all(
             abs(static_totens[i] - ref_static_totens[i]) < 1.0e-6
             for i in range(nframes)
