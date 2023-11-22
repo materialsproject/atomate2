@@ -17,7 +17,11 @@ from atomate2.vasp.jobs.core import (
     StaticMaker,
 )
 from atomate2.vasp.jobs.md import MDMaker, md_output
-from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
+from atomate2.vasp.sets.core import (
+    HSEBSSetGenerator,
+    MDSetGenerator,
+    NonSCFSetGenerator,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -509,13 +513,12 @@ class MultiMDMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    md_maker : .BaseVaspMaker
+    md_makers : .BaseVaspMaker
         Maker to use to generate the first relaxation.
     """
 
     name: str = "multi md"
-    md_maker: BaseVaspMaker = field(default_factory=MDMaker)
-    n_runs: int = 5
+    md_makers: list[BaseVaspMaker] = field(default_factory=lambda: list(MDMaker()))
 
     def make(
         self,
@@ -542,14 +545,14 @@ class MultiMDMaker(Maker):
         """
         md_job = None
         md_jobs = []
-        for i in range(1, self.n_runs + 1):
+        for i, maker in enumerate(self.md_makers, 1):
             if md_job is None:
                 md_structure = structure
                 md_prev_dir = prev_dir
             else:
                 md_structure = md_job.output.structure
                 md_prev_dir = md_job.output.dir_name
-            md_job = self.md_maker.make(md_structure, prev_dir=md_prev_dir)
+            md_job = maker.make(md_structure, prev_dir=md_prev_dir)
             md_job.name += f" {i}"
             md_jobs.append(md_job)
 
@@ -589,3 +592,61 @@ class MultiMDMaker(Maker):
             prev_dir=md_ref.vasp_dir,
             prev_traj_ids=md_ref.full_traj_ids,
         )
+
+    @classmethod
+    def from_parameters(
+        cls,
+        nsteps: int,
+        time_step: float,
+        n_runs: int,
+        ensemble: str,
+        start_temp: float,
+        end_temp: float | None = None,
+        **kwargs,
+    ) -> MultiMDMaker:
+        """
+        Create an instance of the Maker based on the standard parameters.
+
+        Set values in the Flow maker, the Job Maker and the VaspInputGenerator,
+        using them to create the final instance of the Maker.
+
+        Parameters
+        ----------
+        nsteps: int
+            Number of time steps for simulations. The VASP `NSW` parameter.
+        time_step: float
+            The time step (in femtosecond) for the simulation. The VASP
+            `POTIM` parameter.
+        n_runs : int
+            Number of MD runs in the flow.
+        ensemble: str
+            Molecular dynamics ensemble to run. Options include `nvt`, `nve`, and `npt`.
+        start_temp: float
+            Starting temperature. The VASP `TEBEG` parameter.
+        end_temp: float or None
+            Final temperature. The VASP `TEEND` parameter. If None the same
+            as start_temp.
+        kwargs:
+            Other parameters passed
+
+        Returns
+        -------
+            A MultiMDMaker
+        """
+        if end_temp is None:
+            end_temp = start_temp
+        md_makers = []
+        start_temp_i = start_temp
+        increment = (end_temp - start_temp) / n_runs
+        for _ in range(n_runs):
+            end_temp_i = start_temp_i + increment
+            generator = MDSetGenerator(
+                nsteps=nsteps,
+                time_step=time_step,
+                ensemble=ensemble,
+                start_temp=start_temp_i,
+                end_temp=end_temp_i,
+            )
+            md_makers.append(MDMaker(input_set_generator=generator))
+            start_temp_i = end_temp_i
+        return cls(md_makers=md_makers, **kwargs)

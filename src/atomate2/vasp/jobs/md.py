@@ -15,6 +15,7 @@ from custodian.vasp.handlers import (
     StdErrHandler,
     VaspErrorHandler,
 )
+from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Response, job
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -87,7 +88,7 @@ class MDMaker(BaseVaspMaker):
     # Store ionic steps info in a pymatgen Trajectory object instead of in the output
     # document.
     task_document_kwargs: dict = field(
-        default_factory=lambda: {"store_trajectory": True}
+        default_factory=lambda: {"store_trajectory": StoreTrajectoryOption.PARTIAL}
     )
 
 
