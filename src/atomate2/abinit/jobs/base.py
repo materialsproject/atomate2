@@ -6,6 +6,7 @@ import logging
 import os
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar, NamedTuple
 
 import jobflow
@@ -19,8 +20,6 @@ from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
 from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
-
-from pathlib import Path
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -186,10 +185,7 @@ class BaseAbinitMaker(Maker):
 
         # parse Abinit outputs
         run_number = config.history.run_number
-        task_doc = AbinitTaskDoc.from_directory(
-            Path.cwd(),
-            **self.task_document_kwargs
-        )
+        task_doc = AbinitTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
         return self.get_response(

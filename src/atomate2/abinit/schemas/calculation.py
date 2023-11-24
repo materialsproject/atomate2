@@ -2,26 +2,23 @@
 from __future__ import annotations
 
 import os
-from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
-import numpy as np
-from ase.spectrum.band_structure import BandStructure
+# from pymatgen.io.abinit.outputs import AbinitOutput
+from abipy.electrons.gsr import GsrFile
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
-from pymatgen.core.trajectory import Trajectory
-from pymatgen.electronic_structure.dos import Dos
-# from pymatgen.io.abinit.outputs import AbinitOutput
-from abipy.electrons.gsr import GsrFile
-#from pymatgen.io.common import VolumetricData
+
+# from pymatgen.io.common import VolumetricData
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D, Vector3D
 
-#STORE_VOLUMETRIC_DATA = ("total_density",)
+# STORE_VOLUMETRIC_DATA = ("total_density",)
+
 
 class TaskState(ValueEnum):
     """Abinit calculation state."""
@@ -138,13 +135,15 @@ class CalculationOutput(BaseModel):
         -------
         The Abinit calculation output document.
         """
-        structure = output.structure # final structure by default for GSR
+        structure = output.structure  # final structure by default for GSR
 
         electronic_output = {
             "efermi": float(output.ebands.fermie),
             "vbm": output.ebands.get_edge_state("vbm").eig,
             "cbm": output.ebands.get_edge_state("cbm").eig,
-            "bandgap": output.ebands.fundamental_gaps[0].energy,  # [0] for one spin channel only
+            "bandgap": output.ebands.fundamental_gaps[
+                0
+            ].energy,  # [0] for one spin channel only
             "direct_bandgap": output.ebands.direct_gaps[0].energy,
         }
 
@@ -197,18 +196,14 @@ class Calculation(BaseModel):
         associated with this calculation
     """
 
-    dir_name: str = Field(
-        None, description="The directory for this Abinit calculation"
-    )
+    dir_name: str = Field(None, description="The directory for this Abinit calculation")
     abinit_version: str = Field(
         None, description="Abinit version used to perform the calculation"
     )
     has_abinit_completed: TaskState = Field(
         None, description="Whether Abinit completed the calculation successfully"
     )
-    output: CalculationOutput = Field(
-        None, description="The Abinit calculation output"
-    )
+    output: CalculationOutput = Field(None, description="The Abinit calculation output")
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
@@ -224,12 +219,12 @@ class Calculation(BaseModel):
         dir_name: Path | str,
         task_name: str,
         abinit_output_file: Path | str = "out_GSR.nc",
-        #volumetric_files: list[str] = None,
+        # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
         store_trajectory: bool = False,
         store_scf: bool = False,
-        #store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
+        # store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Calculation, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
@@ -281,23 +276,23 @@ class Calculation(BaseModel):
         dir_name = Path(dir_name)
         abinit_output_file = dir_name / abinit_output_file
 
-        #volumetric_files = [] if volumetric_files is None else volumetric_files
+        # volumetric_files = [] if volumetric_files is None else volumetric_files
         # abinit_output = AbinitOutput.from_outfile(abinit_output_file)
         abinit_output = GsrFile.from_file(abinit_output_file)
 
         completed_at = str(datetime.fromtimestamp(os.stat(abinit_output_file).st_mtime))
 
-        #output_file_paths = _get_output_file_paths(volumetric_files)
-        #abinit_objects: dict[AbinitObject, Any] = _get_volumetric_data(
+        # output_file_paths = _get_output_file_paths(volumetric_files)
+        # abinit_objects: dict[AbinitObject, Any] = _get_volumetric_data(
         #    dir_name, output_file_paths, store_volumetric_data
-        #)
+        # )
 
-        #dos = _parse_dos(parse_dos, abinit_output)
-        #if dos is not None:
+        # dos = _parse_dos(parse_dos, abinit_output)
+        # if dos is not None:
         #    abinit_objects[AbinitObject.DOS] = dos  # type: ignore
 
-        #bandstructure = _parse_bandstructure(parse_bandstructure, abinit_output)
-        #if bandstructure is not None:
+        # bandstructure = _parse_bandstructure(parse_bandstructure, abinit_output)
+        # if bandstructure is not None:
         #    abinit_objects[AbinitObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         output_doc = CalculationOutput.from_abinit_output(abinit_output)
@@ -306,7 +301,7 @@ class Calculation(BaseModel):
         #     TaskState.SUCCESS if abinit_output.completed else TaskState.FAILED
         # )
 
-        #if store_trajectory:
+        # if store_trajectory:
         #    traj = _parse_trajectory(abinit_output=abinit_output)
         #    abinit_objects[AbinitObject.TRAJECTORY] = traj  # type: ignore
 
@@ -319,7 +314,7 @@ class Calculation(BaseModel):
                 completed_at=completed_at,
                 output=output_doc,
                 # output_file_paths={
-                    # k.name.lower(): v for k, v in output_file_paths.items()
+                # k.name.lower(): v for k, v in output_file_paths.items()
                 # },
             ),
             # abinit_objects,
