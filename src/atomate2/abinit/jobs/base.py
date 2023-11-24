@@ -16,12 +16,14 @@ from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
+from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
+from pathlib import Path
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from pathlib import Path
 
     from pymatgen.core.structure import Structure
 
@@ -113,12 +115,15 @@ class BaseAbinitMaker(Maker):
         The wall time for the job.
     run_abinit_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_abinit`.
+    task_document_kwargs : dict[str, Any]
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     """
 
     input_set_generator: AbinitInputGenerator
     name: str = "base abinit job"
     wall_time: int | None = None
-    run_abinit_kwargs: dict = field(default_factory=dict)
+    run_abinit_kwargs: dict[str, Any] = field(default_factory=dict)
+    task_document_kwargs: dict[str, Any] = field(default_factory=dict)
 
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[str]] = ()
@@ -181,11 +186,9 @@ class BaseAbinitMaker(Maker):
 
         # parse Abinit outputs
         run_number = config.history.run_number
-        task_doc = AbinitTaskDocument.from_directory(
-            config.workdir,
-            critical_events=self.critical_events,
-            run_number=run_number,
-            run_status=run_status,
+        task_doc = AbinitTaskDoc.from_directory(
+            Path.cwd(),
+            **self.task_document_kwargs
         )
         task_doc.task_label = self.name
 

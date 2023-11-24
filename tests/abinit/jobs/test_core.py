@@ -3,7 +3,8 @@ def test_static_run_silicon_standard(mock_abinit, abinit_test_dir, clean_dir):
     from monty.serialization import loadfn
     from pymatgen.core.structure import Structure
 
-    from atomate2.abinit.schemas.core import AbinitTaskDocument
+    #from atomate2.abinit.schemas.core import AbinitTaskDocument
+    from atomate2.abinit.schemas.task import AbinitTaskDoc as AbinitTaskDocument
 
     # load the initial structure, the maker and the ref_paths from the test_dir
     test_dir = abinit_test_dir / "jobs" / "core" / "StaticMaker" / "silicon_standard"
