@@ -307,7 +307,7 @@ class PhononBSDOSDoc(StructureMetadata):
             kpath_concrete, npoints=kwargs.get("npoints_band", 101)
         )
 
-        # phonon band structures will always be cmouted
+        # phonon band structures will always be computed
         filename_band_yaml = "phonon_band_structure.yaml"
 
         # TODO: potentially add kwargs to avoid computation of eigenvectors
