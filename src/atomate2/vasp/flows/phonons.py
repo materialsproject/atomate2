@@ -117,7 +117,7 @@ class PhononMaker(Maker):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft code. currently only vasp is implemented.
+        determines the DFT code. currently only vasp is implemented.
         This keyword might enable the implementation of other codes
         in the future
     store_force_constants: bool
@@ -183,7 +183,7 @@ class PhononMaker(Maker):
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output dft energy of the dft workflow.
+            skipped. This energy is the typical output DFT energy of the DFT workflow.
             No conversion needed.
         supercell_matrix: list
             Instead of min_length, also a supercell_matrix can be given, e.g.
