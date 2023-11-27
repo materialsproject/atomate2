@@ -186,7 +186,7 @@ class PhononMaker(Maker):
             )
 
         if (
-            not self.use_symmetrized_structure == "primitive"
+            self.use_symmetrized_structure != "primitive"
             and self.kpath_scheme != "seekpath"
         ):
             raise ValueError(
