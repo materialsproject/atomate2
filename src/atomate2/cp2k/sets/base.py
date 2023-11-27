@@ -415,7 +415,7 @@ class Cp2kInputGenerator(InputGenerator):
             return kconfig
 
         explicit = (
-            kconfig.get("explicit", False)
+            kconfig.get("explicit")
             or len(kconfig.get("added_kpoints", [])) > 0
             or "zero_weighted_reciprocal_density" in kconfig
             or "zero_weighted_line_density" in kconfig
