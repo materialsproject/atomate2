@@ -136,7 +136,7 @@ dos = CompleteDos.from_dict(result["output"]["vasp_objects"]["dos"])
 # plot the DOS
 dos_plotter = DosPlotter()
 dos_plotter.add_dos_dict(dos.get_element_dos())
-dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10), img_format="pdf")
+dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10))
 
 # get the line mode bandstructure from the database
 result = store.query_one(
@@ -150,7 +150,7 @@ bandstructure = BandStructureSymmLine.from_dict(
 
 # plot the line mode band structure
 bs_plotter = BSPlotter(bandstructure)
-bs_plotter.save_plot("MgO-bandstructure.pdf", img_format="pdf")
+bs_plotter.save_plot("MgO-bandstructure.pdf")
 ```
 
 If you open the saved figures, you should see a plot of your DOS and bandstructure!

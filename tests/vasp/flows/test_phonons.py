@@ -391,7 +391,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
     )
 
 
-# test supply of born charges, epsilon, dft energy, supercell
+# test supply of born charges, epsilon, DFT energy, supercell
 def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -437,7 +437,7 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
         run_locally(job, create_folders=True, ensure_success=True)
 
 
-# test supply of born charges, epsilon, dft energy, supercell
+# test supply of born charges, epsilon, DFT energy, supercell
 def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],

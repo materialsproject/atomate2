@@ -183,20 +183,22 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC", False) is True and self.incar.get(
-            "ALGO", "Normal"
-        ) not in ["Normal", "All", "Damped"]:
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+            "Normal",
+            "All",
+            "Damped",
+        ]:
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
                 stacklevel=1,
             )
 
-        if not self.incar.get("LASPH", False) and (
+        if not self.incar.get("LASPH") and (
             self.incar.get("METAGGA")
-            or self.incar.get("LHFCALC", False)
-            or self.incar.get("LDAU", False)
-            or self.incar.get("LUSE_VDW", False)
+            or self.incar.get("LHFCALC")
+            or self.incar.get("LDAU")
+            or self.incar.get("LUSE_VDW")
         ):
             warnings.warn(
                 "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT",
@@ -1035,7 +1037,7 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
 
     # Turn off +U flags if +U is not even used
     ldau_flags = ["LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE"]
-    if incar.get("LDAU", False) is False:
+    if not incar.get("LDAU"):
         for ldau_flag in ldau_flags:
             if ldau_flag not in skip:
                 incar.pop(ldau_flag, None)
