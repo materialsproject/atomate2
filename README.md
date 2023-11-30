@@ -1,11 +1,11 @@
 # atomate2
 
-[![tests](https://img.shields.io/github/workflow/status/materialsproject/atomate2/testing?label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
+[![tests](https://img.shields.io/github/actions/workflow/status/materialsproject/atomate2/testing.yml?branch=main&label=tests)](https://github.com/materialsproject/atomate2/actions?query=workflow%3Atesting)
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
 
-**👉 [Full Documentation][docs] 👈**
+[Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
 Atomate2 is a free, open-source software for performing complex materials science
 workflows using simple Python functions. Features of atomate2 include
@@ -32,6 +32,9 @@ Some of the workflows available in atomate2 are:
 - elastic, dielectric, and piezoelectric tensors
 - one-shot electron-phonon interactions
 - electronic transport using [AMSET]
+- phonons using [phonopy]
+- defect formation energy diagrams
+- [Lobster] bonding analysis with [lobsterpy]
 
 It is easy to customise and compose any of the above workflows.
 
@@ -117,9 +120,8 @@ Atomate2 is released under a modified BSD license; the full text can be found [h
 
 ## Acknowledgements
 
-Atomate2 was designed and developed by Alex Ganose.
-
-A full list of all contributors can be found [here][contributors].
+The development of atomate2 has benefited from many people across several research groups.
+A full list of contributors can be found [here][contributors].
 
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
@@ -138,4 +140,9 @@ A full list of all contributors can be found [here][contributors].
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
+[Lobster]: http://www.cohp.de
+[lobsterpy]: https://github.com/JaGeo/LobsterPy
+[phonopy]: https://github.com/phonopy/phonopy
 [docs]: https://materialsproject.github.io/atomate2/
+[github]: https://github.com/materialsproject/atomate2
+[pypi]: https://pypi.org/project/atomate2

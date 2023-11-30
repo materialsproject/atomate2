@@ -12,10 +12,9 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
-from custodian.custodian import ErrorHandler, Validator
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -34,13 +33,13 @@ from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS
-from atomate2.vasp.schemas.task import TaskDocument
 
-__all__ = [
-    "JobType",
-    "run_vasp",
-    "should_stop_children",
-]
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from custodian.custodian import ErrorHandler, Validator
+    from emmet.core.tasks import TaskDoc
+
 
 _DEFAULT_HANDLERS = (
     VaspErrorHandler(),
@@ -67,7 +66,7 @@ class JobType(ValueEnum):
     - ``NORMAL``: Normal custodian :obj:`.VaspJob`.
     - ``DOUBLE_RELAXATION``: Custodian double relaxation run from
       :obj:`.VaspJob.double_relaxation_run`.
-    - ``METAGGA_OPT``: Custodian metagga optimization run from
+    - ``METAGGA_OPT``: Custodian meta-GGA optimization run from
       :obj:`.VaspJob.metagga_opt_run`.
     - ``FULL_OPT``: Custodian full optimization run from
       :obj:`.VaspJob.full_opt_run`.
@@ -91,7 +90,7 @@ def run_vasp(
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run VASP.
 
@@ -121,18 +120,17 @@ def run_vasp(
     custodian_kwargs : dict
         Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    vasp_job_kwargs = {} if vasp_job_kwargs is None else vasp_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    vasp_job_kwargs = vasp_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     vasp_cmd = expandvars(vasp_cmd)
     vasp_gamma_cmd = expandvars(vasp_gamma_cmd)
     split_vasp_cmd = shlex.split(vasp_cmd)
     split_vasp_gamma_cmd = shlex.split(vasp_gamma_cmd)
 
-    if "auto_npar" not in vasp_job_kwargs:
-        vasp_job_kwargs["auto_npar"] = False
+    vasp_job_kwargs.setdefault("auto_npar", False)
 
-    vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
+    vasp_job_kwargs.update(gamma_vasp_cmd=split_vasp_gamma_cmd)
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {vasp_cmd}")
@@ -140,7 +138,7 @@ def run_vasp(
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
         return
 
-    elif job_type == JobType.NORMAL:
+    if job_type == JobType.NORMAL:
         jobs = [VaspJob(split_vasp_cmd, **vasp_job_kwargs)]
     elif job_type == JobType.DOUBLE_RELAXATION:
         jobs = VaspJob.double_relaxation_run(split_vasp_cmd, **vasp_job_kwargs)
@@ -149,12 +147,12 @@ def run_vasp(
     elif job_type == JobType.FULL_OPT:
         jobs = VaspJob.full_opt_run(split_vasp_cmd, **vasp_job_kwargs)
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     if wall_time is not None:
-        handlers = list(handlers) + [WalltimeHandler(wall_time=wall_time)]
+        handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
-    c = Custodian(
+    custodian_manager = Custodian(
         handlers,
         jobs,
         validators=validators,
@@ -164,11 +162,11 @@ def run_vasp(
     )
 
     logger.info("Running VASP using custodian.")
-    c.run()
+    custodian_manager.run()
 
 
 def should_stop_children(
-    task_document: TaskDocument,
+    task_document: TaskDoc,
     handle_unsuccessful: bool | str = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """
@@ -176,7 +174,7 @@ def should_stop_children(
 
     Parameters
     ----------
-    task_document : .TaskDocument
+    task_document : .TaskDoc
         A VASP task document.
     handle_unsuccessful : bool or str
         This is a three-way toggle on what to do if your job looks OK, but is actually
@@ -203,4 +201,4 @@ def should_stop_children(
             "limit of electronic/ionic iterations)!"
         )
 
-    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")
+    raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")

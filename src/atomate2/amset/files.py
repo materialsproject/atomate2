@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from monty.serialization import loadfn
 
@@ -12,7 +12,8 @@ from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_fi
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
-__all__ = ["copy_amset_files"]
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,7 @@ def copy_amset_files(
     src_dir: Path | str,
     src_host: str | None = None,
     file_client: FileClient = None,
-):
+) -> None:
     """
     Copy AMSET files to current directory.
 
@@ -77,7 +78,7 @@ def copy_amset_files(
     logger.info("Finished copying inputs")
 
 
-def write_amset_settings(settings_updates: dict, from_prev: bool = False):
+def write_amset_settings(settings_updates: dict, from_prev: bool = False) -> None:
     """
     Write AMSET settings to file.
 

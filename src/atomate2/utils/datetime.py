@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from datetime import datetime
 
-__all__ = ["datetime_str"]
-
 
 def datetime_str() -> str:
     """

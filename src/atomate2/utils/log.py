@@ -5,8 +5,6 @@ from __future__ import annotations
 import logging
 import sys
 
-__all__ = ["initialize_logger"]
-
 
 def initialize_logger(level: int = logging.INFO) -> logging.Logger:
     """Initialize the default logger.

@@ -3,14 +3,14 @@
 import click
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
-def dev():
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+def dev() -> None:
     """Tools for atomate2 developers."""
 
 
-@dev.command(context_settings=dict(help_option_names=["-h", "--help"]))
+@dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
-def vasp_test_data(test_dir):
+def vasp_test_data(test_dir) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
@@ -22,11 +22,11 @@ def vasp_test_data(test_dir):
     from pathlib import Path
     from pprint import pformat
 
+    from emmet.core.tasks import TaskDoc
     from monty.serialization import loadfn
 
     from atomate2.common.files import copy_files, delete_files, gunzip_files
     from atomate2.utils.path import strip_hostname
-    from atomate2.vasp.schemas.task import TaskDocument
 
     warnings.filterwarnings("ignore", module="pymatgen")
 
@@ -40,9 +40,7 @@ def vasp_test_data(test_dir):
 
     outputs = loadfn("outputs.json")
 
-    task_labels = [
-        o["output"].task_label for o in outputs if isinstance(o, TaskDocument)
-    ]
+    task_labels = [o["output"].task_label for o in outputs if isinstance(o, TaskDoc)]
 
     if len(task_labels) != len(set(task_labels)):
         raise ValueError("Not all jobs have unique names")
@@ -50,7 +48,7 @@ def vasp_test_data(test_dir):
     original_mapping = {}
     mapping = {}
     for output in outputs:
-        if not isinstance(output["output"], TaskDocument):
+        if not isinstance(output["output"], TaskDoc):
             # this is not a VASP job
             continue
 
@@ -115,7 +113,7 @@ def vasp_test_data(test_dir):
         [f"  {v}  ->  {k}" for k, v in original_mapping.items()]
     )
 
-    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping.keys()}
+    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping}
     run_vasp_kwargs_str = pformat(run_vasp_kwargs).replace("\n", "\n    ")
 
     test_function_str = f"""Test files generated in test_data.
@@ -134,6 +132,7 @@ tests in atomate2/tests/vasp/jobs.
 
 def test_my_flow(mock_vasp, clean_dir, si_structure):
     from jobflow import run_locally
+    from emmet.core.tasks import TaskDoc
 
     # mapping from job name to directory containing test files
     ref_paths = {mapping_str}
@@ -144,22 +143,21 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = MyMaker().make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, TaskDocument)
+    assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
     print(test_function_str)
 
 
-def _potcar_to_potcar_spec(potcar_filename, output_filename):
+def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
     """Convert a POTCAR file to a POTCAR.spec file."""
     from pymatgen.io.vasp import Potcar
 

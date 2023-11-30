@@ -5,17 +5,19 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence
-
-from pymatgen.core import Structure
+from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from atomate2.vasp.sets.base import VaspInputGenerator
 
-__all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 
 logger = logging.getLogger(__name__)
@@ -25,10 +27,11 @@ logger = logging.getLogger(__name__)
 def copy_vasp_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
-    additional_vasp_files: Sequence[str] = tuple(),
+    additional_vasp_files: Sequence[str] = (),
     contcar_to_poscar: bool = True,
+    force_overwrite: bool | str = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy VASP output files to the current directory.
 
@@ -50,6 +53,13 @@ def copy_vasp_outputs(
         Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
+    force_overwrite : bool or str
+        How to handle overwriting existing files during the copy step. Accepts
+        either a string or bool:
+
+            - `"force"` or `True`: Overwrite existing files if they already exist.
+            - `"raise"` or `False`: Raise an error if files already exist.
+            - `"skip"` Skip files they already exist.
     file_client : .FileClient
         A file client to use for performing file operations.
     """
@@ -61,7 +71,7 @@ def copy_vasp_outputs(
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
     # find required files
-    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml") + tuple(additional_vasp_files)
+    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml", *additional_vasp_files)
     required_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
 
     # find optional files; do not fail if KPOINTS is missing, this might be KSPACING
@@ -74,7 +84,7 @@ def copy_vasp_outputs(
 
     # check at least one type of POTCAR file is included
     if len([f for f in optional_files if "POTCAR" in f.name]) == 0:
-        raise FileNotFoundError("Could not find POTCAR file to copy.")
+        raise FileNotFoundError(f"Could not find a POTCAR file in {src_dir!r} to copy")
 
     copy_files(
         src_dir,
@@ -87,6 +97,7 @@ def copy_vasp_outputs(
         include_files=required_files + optional_files,
         allow_missing=True,
         file_client=file_client,
+        force=force_overwrite,
     )
 
     # rename files to remove relax extension
@@ -150,7 +161,7 @@ def write_vasp_input_set(
     potcar_spec: bool = False,
     clean_prev: bool = True,
     **kwargs,
-):
+) -> None:
     """
     Write VASP input set.
 

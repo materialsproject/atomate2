@@ -8,13 +8,11 @@ import subprocess
 import numpy as np
 from pydash import get
 
-__all__ = ["run_amset", "check_converged"]
-
 logger = logging.getLogger(__name__)
 _CONVERGENCE_PROPERTIES = ("mobility.overall", "seebeck")
 
 
-def run_amset():
+def run_amset() -> None:
     """Run amset in the current directory."""
     # Run AMSET using the command line as calling from python can cause issues
     # with multiprocessing

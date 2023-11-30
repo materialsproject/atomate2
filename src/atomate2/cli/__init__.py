@@ -5,8 +5,8 @@ import click
 from atomate2.cli.dev import dev
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
-def cli():
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+def cli() -> None:
     """Command-line interface for atomate2."""
 
 
