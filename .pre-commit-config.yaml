@@ -2,7 +2,7 @@ default_language_version:
   python: python3
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.1.5
+  rev: v0.1.6
   hooks:
   - id: ruff
     args: [--fix]
@@ -42,7 +42,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.6.1
+  rev: v1.7.1
   hooks:
   - id: mypy
     files: ^src/
