@@ -1027,7 +1027,7 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
 
     # Turn off +U flags if +U is not even used
     ldau_flags = ("LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE")
-    if incar.get("LDAU"):
+    if not incar.get("LDAU"):
         for ldau_flag in ldau_flags:
             if ldau_flag not in skip:
                 incar.pop(ldau_flag, None)

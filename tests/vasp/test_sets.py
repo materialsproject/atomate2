@@ -7,24 +7,25 @@ from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 @pytest.fixture(scope="module")
 def struct_no_magmoms() -> Structure:
-    """Dummy FeO structure with no magnetic moments defined."""
+    """Dummy FeO structure with expected +U corrections but no magnetic moments
+    defined."""
     return Structure(
         lattice=Lattice.cubic(3),
-        species=["Fe", "O"],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=("Fe", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
 @pytest.fixture(scope="module")
 def struct_with_spin() -> Structure:
     """Dummy FeO structure with spins defined."""
-    fe = Species("Fe2+", spin=4)
-    o = Species("O2-", spin=0.63)
+    iron = Species("Fe2+", spin=4)
+    oxi = Species("O2-", spin=0.63)
 
     return Structure(
         lattice=Lattice.cubic(3),
-        species=[fe, o],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=(iron, oxi),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
@@ -41,8 +42,8 @@ def struct_no_u_params() -> Structure:
     """Dummy SiO structure with no anticipated +U corrections"""
     return Structure(
         lattice=Lattice.cubic(3),
-        species=["Si", "O"],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=("Si", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
@@ -152,10 +153,10 @@ def test_set_u_params(structure, request) -> None:
         # in config_dict
         assert len([key for key in incar if key.startswith("LDAU")]) > 0
         for LDAU_key in ["LDAUU", "LDAUJ", "LDAUL"]:
-            for isite, site in enumerate(structure):
-                assert incar[LDAU_key][isite] == input_gen.config_dict["INCAR"][
-                    LDAU_key
-                ]["O"].get(str(site.specie), 0)
+            for idx, site in enumerate(structure):
+                assert incar[LDAU_key][idx] == input_gen.config_dict["INCAR"][LDAU_key][
+                    "O"
+                ].get(str(site.specie), 0)
     else:
         # if no sites have a nonzero U value in the config_dict,
         # ensure that no keys starting with LDAU are in the INCAR
