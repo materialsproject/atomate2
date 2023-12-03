@@ -22,7 +22,7 @@ def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
     # generate flow
     flow = MatPesStaticFlowMaker().make(si_struct)
 
-    assert flow.name == "MatPES GGA plus meta-GGA static"
+    assert flow.name == "MatPES static flow"
     assert len(flow) == 2
     assert [job.name for job in flow] == list(ref_paths)
 

@@ -114,18 +114,17 @@ atm dev vasp-test-data WF_NAME
 ```
 
 You should change WF_NAME to be a name for the workflow. Note, WF_NAME should not
-contain spaces or punctuation. For example, the elastic constant workflow test data was
-genenerated using `atm dev vasp-test-data Si_elastic`.
+contain spaces or punctuation. For example, the elastic constant workflow test data was generated using `atm` dev vasp-test-data Si_elastic`.
 
 This will generate a folder in the current directory called "WF_NAME" that contains
 the folders in the correct format.
 
 ````{note}
 By default, the script will only copy POTCAR, POSCAR, CONTCAR, KPOINTS, INCAR,
-vasprun.xml, OUTCAR and json files to the WF_NAME folder. If additional files are
+vasprun.xml, OUTCAR and JSON files to the WF_NAME folder. If additional files are
 needed for specific steps of the workflow you need to copy them in manually. A
 mapping from jobflow calculation folder to job folder in WF_NAME is given at the
-to of the `atm dev vasp-test-data` script output. E.g., it will look something
+top of the `atm dev vasp-test-data` script output. E.g., it will look something
 like
 
 ```
