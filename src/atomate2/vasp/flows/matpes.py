@@ -95,17 +95,18 @@ class MatPesStaticFlowMaker(Maker):
         output = {"static1": static1.output, "static2": static2.output}
         jobs = [static1, static2]
 
-        # only run 3rd static if structure contains at least one element with Hubbard +U
-        # corrections
-        static3_config = self.static3.input_set_generator.config_dict
-        u_corrections = static3_config.get("INCAR", {}).get("LDAUU", {})
-        elems = set(map(str, structure.elements))
-        if self.static3 and any(
-            anion in elems and elems & {*cations}
-            for anion, cations in u_corrections.items()
-        ):
-            static3 = self.static3.make(structure, prev_dir=static1.output.dir_name)
-            output["static3"] = static3.output
-            jobs += [static3]
+        # only run 3rd static if set generator not None and structure contains at least
+        # one element with Hubbard +U corrections
+        if self.static3 is not None:
+            static3_config = self.static3.input_set_generator.config_dict
+            u_corrections = static3_config.get("INCAR", {}).get("LDAUU", {})
+            elems = set(map(str, structure.elements))
+            if self.static3 and any(
+                anion in elems and elems & {*cations}
+                for anion, cations in u_corrections.items()
+            ):
+                static3 = self.static3.make(structure, prev_dir=static1.output.dir_name)
+                output["static3"] = static3.output
+                jobs += [static3]
 
         return Flow(jobs=jobs, output=output, name=self.name)
