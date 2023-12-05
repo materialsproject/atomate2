@@ -246,7 +246,7 @@ class MPVaspLobsterMaker(VaspLobsterMaker):
                 "IBRION": -1,
                 "ISMEAR": -5,
                 "LORBIT": 11,
-                "ICHARG": 0,
+                #"ICHARG": 0, # is this okay?
                 "ALGO": "Normal",
             }, )))
     lobster_maker: LobsterMaker | None = field(default_factory=lambda: LobsterMaker())
