@@ -25,8 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    #"pymatgen>=2023.1.9",
-    "pymatgen>=2022.11.7",
+    "pymatgen>=2023.1.9",
     "custodian>=2023.3.10",
     "pydantic",
     "monty",
