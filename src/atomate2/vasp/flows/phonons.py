@@ -40,7 +40,7 @@ class PhononMaker(Maker):
     forces are computed for these structures. With the help of phonopy, these
     forces are then converted into a dynamical matrix. To correct for polarization
     effects, a correction of the dynamical matrix based on BORN charges can
-    be performed.     Finally, phonon densities of states, phonon band structures
+    be performed. Finally, phonon densities of states, phonon band structures
     and thermodynamic properties are computed.
 
     .. Note::
@@ -53,25 +53,25 @@ class PhononMaker(Maker):
 
     Parameters
     ----------
-    name : str
+    name : str = "phonon"
         Name of the flows produced by this maker.
-    sym_reduce : bool
+    sym_reduce : bool = True
         Whether to reduce the number of deformations using symmetry.
-    symprec : float
+    symprec : float = 1e-4
         Symmetry precision to use in the
         reduction of symmetry to find the primitive/conventional cell
         (use_primitive_standard_structure, use_conventional_standard_structure)
         and to handle all symmetry-related tasks in phonopy
-    displacement: float
+    displacement: float = 0.01
         displacement distance for phonons
-    min_length: float
+    min_length: float = 20.0
         min length of the supercell that will be built
-    prefer_90_degrees: bool
+    prefer_90_degrees: bool = True
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
-    get_supercell_size_kwargs: dict
+    get_supercell_size_kwargs: dict = {}
         kwargs that will be passed to get_supercell_size to determine supercell size
-    use_symmetrized_structure: str
+    use_symmetrized_structure: str or None = None
         allowed strings: "primitive", "conventional", None
 
         - "primitive" will enforce to start the phonon computation
@@ -106,7 +106,7 @@ class PhononMaker(Maker):
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
-    kpath_scheme: str
+    kpath_scheme: str = "seekpath"
         scheme to generate kpoints. Please be aware that
         you can only use seekpath with any kind of cell
         Otherwise, please use the standard primitive structure
@@ -116,8 +116,8 @@ class PhononMaker(Maker):
         seekpath can be used with any kind of unit cell as
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
-    code: str
-        determines the dft code. currently only vasp is implemented.
+    code: str = "vasp"
+        determines the DFT code. currently only vasp is implemented.
         This keyword might enable the implementation of other codes
         in the future
     store_force_constants: bool
@@ -183,7 +183,7 @@ class PhononMaker(Maker):
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output dft energy of the dft workflow.
+            skipped. This energy is the typical output DFT energy of the DFT workflow.
             No conversion needed.
         supercell_matrix: list
             Instead of min_length, also a supercell_matrix can be given, e.g.
@@ -195,7 +195,7 @@ class PhononMaker(Maker):
             )
 
         if (
-            not self.use_symmetrized_structure == "primitive"
+            self.use_symmetrized_structure != "primitive"
             and self.kpath_scheme != "seekpath"
         ):
             raise ValueError(
@@ -203,12 +203,10 @@ class PhononMaker(Maker):
                 "structure"
             )
 
-        if self.kpath_scheme not in [
-            "seekpath",
-            "hinuma",
-            "setyawan_curtarolo",
-            "latimer_munro",
-        ]:
+        if (
+            self.kpath_scheme
+            not in "seekpath hinuma setyawan_curtarolo latimer_munro".split()
+        ):
             raise ValueError("kpath scheme is not implemented")
 
         jobs = []

@@ -18,6 +18,7 @@ LOBSTEROUTPUT_FILES = [
     "COHPCAR.lobster",
     "COOPCAR.lobster",
     "DOSCAR.lobster",
+    "DOSCAR.LSO.lobster",
     "GROSSPOP.lobster",
     "ICOHPLIST.lobster",
     "ICOOPLIST.lobster",

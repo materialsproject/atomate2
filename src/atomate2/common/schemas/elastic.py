@@ -1,4 +1,5 @@
 """Schemas for elastic tensor fitting and related properties."""
+
 from copy import deepcopy
 from typing import Optional
 

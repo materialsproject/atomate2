@@ -1,4 +1,5 @@
 """Settings for atomate2."""
+
 from __future__ import annotations
 
 import warnings
