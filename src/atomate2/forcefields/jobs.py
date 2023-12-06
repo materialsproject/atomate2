@@ -31,7 +31,7 @@ class ForceFieldRelaxMaker(Maker):
         The job name.
     force_field_name : str
         The name of the force field.
-    relax_cell : bool
+    relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -45,7 +45,7 @@ class ForceFieldRelaxMaker(Maker):
 
     name: str = "Forcefield relax"
     force_field_name: str = "Forcefield"
-    relax_cell: bool = False
+    relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -153,7 +153,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     ----------
     force_field_name : str
         The name of the force field.
-    relax_cell : bool
+    relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -167,7 +167,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
 
     name: str = "CHGNet relax"
     force_field_name = "CHGNet"
-    relax_cell: bool = False
+    relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -217,7 +217,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         The job name.
     force_field_name : str
         The name of the force field.
-    relax_cell : bool
+    relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -231,7 +231,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
     name: str = "M3GNet relax"
     force_field_name: str = "M3GNet"
-    relax_cell: bool = False
+    relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -295,7 +295,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         The job name.
     force_field_name : str
         The name of the force field.
-    relax_cell : bool
+    relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -317,7 +317,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
 
     name: str = "MACE relax"
     force_field_name: str = "MACE"
-    relax_cell: bool = False
+    relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -383,7 +383,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         The job name.
     force_field_name : str
         The name of the force field.
-    relax_cell : bool
+    relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -403,7 +403,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
 
     name: str = "GAP relax"
     force_field_name: str = "GAP"
-    relax_cell: bool = False
+    relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)

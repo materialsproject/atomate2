@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
@@ -130,7 +130,7 @@ class PhononMaker(Maker):
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
