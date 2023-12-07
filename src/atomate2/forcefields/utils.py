@@ -15,7 +15,7 @@ import pickle
 import sys
 from typing import TYPE_CHECKING
 
-from ase.constraints import ExpCellFilter
+from ase.filters import FrechetCellFilter
 from ase.optimize.bfgs import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.optimize.fire import FIRE
@@ -182,14 +182,14 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = ExpCellFilter(atoms)
+                atoms = FrechetCellFilter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, ExpCellFilter):
+        if isinstance(atoms, FrechetCellFilter):
             atoms = atoms.atoms
 
         return {
