@@ -163,13 +163,20 @@ class Relaxer:
 
         Parameters
         ----------
-        atoms (Atoms): the atoms for relaxation
-        fmax (float): total force tolerance for relaxation convergence.
-        steps (int): max number of steps for relaxation
-        traj_file (str): the trajectory file for saving
-        interval (int): the step interval for saving the trajectories
-        verbose (bool): if True, screenoutput will be shown.
-        kwargs: further kwargs.
+        atoms : Atoms
+            The atoms for relaxation.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str
+            The trajectory file for saving.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        **kwargs
+            Further kwargs.
 
         Returns
         -------
@@ -192,7 +199,5 @@ class Relaxer:
         if isinstance(atoms, FrechetCellFilter):
             atoms = atoms.atoms
 
-        return {
-            "final_structure": self.ase_adaptor.get_structure(atoms),
-            "trajectory": obs,
-        }
+        struct = self.ase_adaptor.get_structure(atoms)
+        return {"final_structure": struct, "trajectory": obs}
