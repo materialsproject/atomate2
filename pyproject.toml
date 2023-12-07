@@ -69,7 +69,7 @@ strict = [
     "PyYAML==6.0.1",
     "ase@git+https://gitlab.com/ase/ase@2bab58f4e",
     "cclib==1.8",
-    "chgnet==0.3.2",
+    "chgnet==0.3.3",
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",
