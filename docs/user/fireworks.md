@@ -29,6 +29,14 @@ mgo_structure = Structure(
 # make a band structure flow to optimise the structure and obtain the band structure
 bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 
+# (Optional) add metadata to the flow task document.
+# Could be useful to filter specific results from the database.
+# For e.g., adding material project ID for the compound, use following lines
+bandstructure_flow.update_maker_kwargs(
+    {"_set": {"task_document_kwargs->additional_fields": {"mp_id": "mp-xxx"}}},
+    dict_mod=True,
+)
+
 # convert the flow to a fireworks WorkFlow object
 wf = flow_to_workflow(bandstructure_flow)
 
