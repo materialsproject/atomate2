@@ -138,7 +138,7 @@ class Relaxer:
         self.calculator = calculator
 
         if isinstance(optimizer, str):
-            optimizer_obj = OPTIMIZERS.get(optimizer, None)
+            optimizer_obj = OPTIMIZERS.get(optimizer)
         elif optimizer is None:
             raise ValueError("Optimizer cannot be None")
         else:

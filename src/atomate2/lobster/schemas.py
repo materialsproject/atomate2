@@ -382,13 +382,10 @@ class CondensedBondingAnalysis(BaseModel):
                 )
                 import json
 
-                with open(
-                    dir_name / f"condensed_bonding_analysis_{which_bonds}.json", "w"
-                ) as fp:
+                filename = dir_name / f"condensed_bonding_analysis_{which_bonds}"
+                with open(f"{filename}.json", "w") as fp:
                     json.dump(analyse.condensed_bonding_analysis, fp)
-                with open(
-                    dir_name / f"condensed_bonding_analysis_{which_bonds}.txt", "w"
-                ) as fp:
+                with open(f"{filename}.txt", "w") as fp:
                     for line in describe.text:
                         fp.write(f"{line}\n")
 
