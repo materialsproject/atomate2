@@ -45,6 +45,7 @@ phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.2"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = [
+    "ase@git+https://gitlab.com/ase/ase",
     "chgnet>=0.2.2",
     "mace@git+https://github.com/ACEsuit/mace@develop",
     "matgl>=0.9.0",
@@ -66,8 +67,9 @@ dev = ["pre-commit>=2.12.1"]
 tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.3"]
 strict = [
     "PyYAML==6.0.1",
+    "ase@git+https://gitlab.com/ase/ase@2bab58f4e",
     "cclib==1.8",
-    "chgnet==0.3.2",
+    "chgnet==0.3.3",
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",

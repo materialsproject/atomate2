@@ -15,7 +15,7 @@ import pickle
 import sys
 from typing import TYPE_CHECKING
 
-from ase.constraints import ExpCellFilter
+from ase.filters import FrechetCellFilter
 from ase.optimize.bfgs import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.optimize.fire import FIRE
@@ -163,13 +163,20 @@ class Relaxer:
 
         Parameters
         ----------
-        atoms (Atoms): the atoms for relaxation
-        fmax (float): total force tolerance for relaxation convergence.
-        steps (int): max number of steps for relaxation
-        traj_file (str): the trajectory file for saving
-        interval (int): the step interval for saving the trajectories
-        verbose (bool): if True, screenoutput will be shown.
-        kwargs: further kwargs.
+        atoms : Atoms
+            The atoms for relaxation.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str
+            The trajectory file for saving.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        **kwargs
+            Further kwargs.
 
         Returns
         -------
@@ -182,17 +189,15 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = ExpCellFilter(atoms)
+                atoms = FrechetCellFilter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, ExpCellFilter):
+        if isinstance(atoms, FrechetCellFilter):
             atoms = atoms.atoms
 
-        return {
-            "final_structure": self.ase_adaptor.get_structure(atoms),
-            "trajectory": obs,
-        }
+        struct = self.ase_adaptor.get_structure(atoms)
+        return {"final_structure": struct, "trajectory": obs}
