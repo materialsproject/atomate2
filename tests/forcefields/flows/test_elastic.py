@@ -3,17 +3,17 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.forcefields.flows.elastic import ElasticMaker
-from atomate2.forcefields.jobs import M3GNetRelaxMaker
+from atomate2.forcefields.jobs import MACERelaxMaker
 
 
-def test_elastic_wf_with_m3gnet(clean_dir, si_structure):
+def test_elastic_wf_with_mace(clean_dir, si_structure):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     job = ElasticMaker(
-        bulk_relax_maker=M3GNetRelaxMaker(
+        bulk_relax_maker=MACERelaxMaker(
             relax_cell=True, relax_kwargs={"fmax": 0.00001}
         ),
-        elastic_relax_maker=M3GNetRelaxMaker(
+        elastic_relax_maker=MACERelaxMaker(
             relax_cell=False, relax_kwargs={"fmax": 0.00001}
         ),
     ).make(si_prim)
