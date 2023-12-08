@@ -448,13 +448,13 @@ class DosComparisons(BaseModel):
 class ChargeComparisons(BaseModel):
     """Model describing the charges field in the CalcQualitySummary model."""
 
-    BVA_Mulliken_agree: Optional[bool] = Field(
+    bva_mulliken_agree: Optional[bool] = Field(
         None,
         description="Bool indicating whether atoms classification as cation "
         "or anion based on Mulliken charge signs of LOBSTER "
         "agree with BVA analysis",
     )
-    BVA_Loewdin_agree: Optional[bool] = Field(
+    bva_loewdin_agree: Optional[bool] = Field(
         None,
         description="Bool indicating whether atoms classification as cations "
         "or anions based on Loewdin charge signs of LOBSTER "
@@ -512,11 +512,11 @@ class CalcQualitySummary(BaseModel):
     charge_spilling: ChargeSpilling = Field(
         description="Model describing the charge spilling from the LOBSTER runs",
     )
-    charges: Optional[ChargeComparisons] = Field(
+    charge_comparisons: Optional[ChargeComparisons] = Field(
         None,
         description="Model describing the charge sign comparison results",
     )
-    band_overlaps: Optional[BandOverlapsComparisons] = Field(
+    band_overlaps_analysis: Optional[BandOverlapsComparisons] = Field(
         None,
         description="Model describing the band overlap file analysis results",
     )
