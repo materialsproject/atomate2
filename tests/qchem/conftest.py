@@ -5,16 +5,15 @@ import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
-import numpy as np
 import pytest
 from jobflow import CURRENT_JOB
+from pymatgen.io.qchem.inputs import QCInput
 from pytest import MonkeyPatch
 
 import atomate2.qchem.jobs.base
 import atomate2.qchem.jobs.core
 import atomate2.qchem.run
 from atomate2.qchem.sets.base import QCInputGenerator
-from pymatgen.io.qchem.inputs import QCInput
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence
@@ -22,7 +21,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger("atomate2")
 
-_QFILES: Final = ("mol.qin.gz")
+_QFILES: Final = "mol.qin.gz"
 _REF_PATHS: dict[str, str | Path] = {}
 _FAKE_RUN_QCHEM_KWARGS: dict[str, dict] = {}
 
@@ -98,7 +97,7 @@ def mock_qchem(
     monkeypatch.setattr(atomate2.qchem.run, "run_qchem", mock_run_qchem)
     monkeypatch.setattr(atomate2.qchem.jobs.base, "run_qchem", mock_run_qchem)
     monkeypatch.setattr(QCInputGenerator, "get_input_set", mock_get_input_set)
-    #monkeypatch.setattr(QCInputGenerator, "get_nelect", mock_get_nelect)
+    # monkeypatch.setattr(QCInputGenerator, "get_nelect", mock_get_nelect)
 
     def _run(ref_paths, fake_run_qchem_kwargs=None):
         _REF_PATHS.update(ref_paths)
@@ -176,11 +175,9 @@ def check_qin(
                 f"got {user_val} \nin ref file {ref_qin_path}"
             )
 
+
 def clear_qchem_inputs():
-    for qchem_file in (
-        "mol.qin.gz",
-        "mol.qin.orig.gz"
-    ):
+    for qchem_file in ("mol.qin.gz", "mol.qin.orig.gz"):
         if Path(qchem_file).exists():
             Path(qchem_file).unlink()
     logger.info("Cleared qchem inputs")
@@ -191,5 +188,6 @@ def copy_qchem_outputs(ref_path: Path):
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
+
 
 # path = /Users/rmohanakrishnan/Documents/Research/dev/atomate2/tests/test_data/qchem/H2O/single_point/inputs

@@ -5,11 +5,6 @@ import pytest
 from atomate2.qchem.sets.base import QCInputGenerator
 from atomate2.qchem.sets.core import (
     SinglePointSetGenerator,
-    #OptSetGenerator,
-    #TransitionStateSetGenerator,
-    #ForceSetGenerator,
-    #FreqSetGenerator,
-    #PESScanSetGenerator,
 )
 
 
@@ -17,11 +12,11 @@ from atomate2.qchem.sets.core import (
     "set_generator",
     [
         SinglePointSetGenerator,
-        #OptSetGenerator,
-        #TransitionStateSetGenerator,
-        #ForceSetGenerator,
-        #FreqSetGenerator,
-        #PESScanSetGenerator,
+        # OptSetGenerator,
+        # TransitionStateSetGenerator,
+        # ForceSetGenerator,
+        # FreqSetGenerator,
+        # PESScanSetGenerator,
     ],
 )
 def test_qc_sets(set_generator: QCInputGenerator) -> None:
@@ -53,7 +48,6 @@ def test_qc_sets(set_generator: QCInputGenerator) -> None:
         "plots_dict",
         "nbo_dict",
         "geom_opt_dict",
-
     }
     assert qc_set.scf_algorithm == "diis"
-    assert qc_set.job_type == 'sp'
+    assert qc_set.job_type == "sp"
