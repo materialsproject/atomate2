@@ -140,7 +140,7 @@ class PhononMaker(Maker):
     phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker = field(
         default_factory=CHGNetStaticMaker
     )
-    create_thermal_displacements: bool = True
+    create_thermal_displacements: bool = False
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = "vasp"
