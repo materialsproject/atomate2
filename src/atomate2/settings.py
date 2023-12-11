@@ -186,7 +186,7 @@ class Atomate2Settings(BaseSettings):
     )
 
     # ABINIT settings
-    ABINIT_MPIRUN_CMD: str | None = Field(None, description="Mpirun command.")
+    ABINIT_MPIRUN_CMD: Optional[str] = Field(None, description="Mpirun command.")
     ABINIT_CMD: str = Field("abinit", description="Abinit command.")
     ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
     ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")
@@ -198,7 +198,7 @@ class Atomate2Settings(BaseSettings):
         default=False,
         description="Use autoparal to determine optimal parallel configuration.",
     )
-    ABINIT_ABIPY_MANAGER_FILE: str | None = Field(
+    ABINIT_ABIPY_MANAGER_FILE: Optional[str] = Field(
         None,
         description="Config file for task manager of abipy.",
     )
