@@ -274,51 +274,14 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
             "meta_structure": calcs_reversed[-1].output.structure,
             "dir_name": dir_name,
             "calcs_reversed": calcs_reversed,
-            # "analysis": analysis,
             "tags": tags,
             "completed_at": calcs_reversed[-1].completed_at,
             "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
-            # "state": _get_state(calcs_reversed),#, analysis),
-            # "entry": cls.get_entry(calcs_reversed),
             "abinit_objects": abinit_objects,
             "included_objects": included_objects,
         }
         doc = cls(**data)
         return doc.model_copy(update=additional_fields, deep=True)
-
-    # @staticmethod
-    # def get_entry(
-    #    calc_docs: list[Calculation], job_id: Optional[str] = None
-    # ) -> ComputedEntry:
-    #    """Get a computed entry from a list of Abinit calculation documents.
-
-    #    Parameters
-    #    ----------
-    #    calc_docs: List[.Calculation]
-    #        A list of Abinit calculation documents.
-    #    job_id: Optional[str]
-    #        The job identifier.
-
-    #    Returns
-    #    -------
-    #    ComputedEntry
-    #        A computed entry.
-    #    """
-    #    entry_dict = {
-    #        "correction": 0.0,
-    #        "entry_id": job_id,
-    #        "composition": calc_docs[-1].output.structure.formula,
-    #        "energy": calc_docs[-1].output.energy,
-    #        "parameters": {
-    #            # Required to be compatible with MontyEncoder for the ComputedEntry
-    #            # "run_type": str(calc_docs[-1].run_type),
-    #            "run_type": "abinit run"
-    #        },
-    #        "data": {
-    #            "last_updated": datetime_str(),
-    #        },
-    #    }
-    #    return ComputedEntry.from_dict(entry_dict)
 
 
 def _find_abinit_files(
@@ -360,6 +323,9 @@ def _find_abinit_files(
         for file in files:
             # Here we make assumptions about the output file naming
             if file.match(f"*outdata/out_GSR{suffix}*"):
+                # abinit_files["abinit_output_file"] = Path(file).name
+                abinit_files["abinit_gsr_file"] = Path(file).relative_to(path)
+            elif file.match(f"*run.abo{suffix}*"):
                 # abinit_files["abinit_output_file"] = Path(file).name
                 abinit_files["abinit_output_file"] = Path(file).relative_to(path)
         # for vol in volumetric_files:

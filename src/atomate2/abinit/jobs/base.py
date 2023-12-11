@@ -184,7 +184,6 @@ class BaseAbinitMaker(Maker):
         )
 
         # parse Abinit outputs
-        run_number = config.history.run_number
         task_doc = AbinitTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
@@ -220,7 +219,7 @@ class BaseAbinitMaker(Maker):
             return Response(
                 output=task_document,
                 stop_children=True,
-                stop_jobflow=True,
+                stop_jobflow=False,
                 stored_data={"error": unconverged_error},
             )
 

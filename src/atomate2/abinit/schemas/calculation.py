@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Optional, Union
 
 # from pymatgen.io.abinit.outputs import AbinitOutput
 from abipy.electrons.gsr import GsrFile
+from abipy.abio.outputs import AbinitOutputFile
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
@@ -116,7 +117,7 @@ class CalculationOutput(BaseModel):
     )
 
     @classmethod
-    def from_abinit_output(
+    def from_abinit_gsr(
         cls,
         output: GsrFile,  # Must use auto_load kwarg when passed ; VT ???
         # store_trajectory: bool = False,
@@ -218,7 +219,8 @@ class Calculation(BaseModel):
         cls,
         dir_name: Path | str,
         task_name: str,
-        abinit_output_file: Path | str = "out_GSR.nc",
+        abinit_gsr_file: Path | str = "out_GSR.nc",
+        abinit_output_file: Path | str = "run.abo",
         # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
@@ -274,11 +276,13 @@ class Calculation(BaseModel):
             An Abinit calculation document.
         """
         dir_name = Path(dir_name)
+        abinit_gsr_file = dir_name / abinit_gsr_file
         abinit_output_file = dir_name / abinit_output_file
 
         # volumetric_files = [] if volumetric_files is None else volumetric_files
         # abinit_output = AbinitOutput.from_outfile(abinit_output_file)
-        abinit_output = GsrFile.from_file(abinit_output_file)
+        abinit_gsr = GsrFile.from_file(abinit_gsr_file)
+        abinit_output = AbinitOutputFile.from_file(abinit_output_file)
 
         completed_at = str(datetime.fromtimestamp(os.stat(abinit_output_file).st_mtime))
 
@@ -295,11 +299,11 @@ class Calculation(BaseModel):
         # if bandstructure is not None:
         #    abinit_objects[AbinitObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
-        output_doc = CalculationOutput.from_abinit_output(abinit_output)
+        output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
 
-        # has_abinit_completed = (
-        #     TaskState.SUCCESS if abinit_output.completed else TaskState.FAILED
-        # )
+        has_abinit_completed = (
+            TaskState.SUCCESS if abinit_output.run_completed else TaskState.FAILED
+        )
 
         # if store_trajectory:
         #    traj = _parse_trajectory(abinit_output=abinit_output)
@@ -309,8 +313,8 @@ class Calculation(BaseModel):
             cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
-                # abinit_version=abinit_output.abinit_version,
-                # has_abinit_completed=has_abinit_completed,
+                abinit_version=abinit_output.abinit_version,
+                has_abinit_completed=has_abinit_completed,
                 completed_at=completed_at,
                 output=output_doc,
                 # output_file_paths={

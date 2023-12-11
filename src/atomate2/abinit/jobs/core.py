@@ -167,8 +167,7 @@ class RelaxMaker(BaseAbinitMaker):
         # TODO: add the possibility to tune the RelaxInputGenerator options
         #  in this class method.
         return cls(
-            # input_set_generator=RelaxSetGenerator(relax_cell=False, *args, **kwargs),
-            input_set_generator=RelaxSetGenerator(relax_cell=False, **kwargs),
+            input_set_generator=RelaxSetGenerator(relax_cell=False, *args, **kwargs),
             name=cls.name + " (ions only)",
         )
 
@@ -178,6 +177,5 @@ class RelaxMaker(BaseAbinitMaker):
         # TODO: add the possibility to tune the RelaxInputGenerator options
         #  in this class method.
         return cls(
-            # input_set_generator=RelaxSetGenerator(relax_cell=True, *args, **kwargs)
-            input_set_generator=RelaxSetGenerator(relax_cell=True, **kwargs)
+            input_set_generator=RelaxSetGenerator(relax_cell=True, *args, **kwargs)
         )
