@@ -100,7 +100,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
@@ -263,7 +263,7 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
@@ -387,7 +387,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 
@@ -542,7 +542,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 
@@ -641,7 +641,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 
@@ -748,7 +748,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 

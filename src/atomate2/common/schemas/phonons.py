@@ -339,7 +339,7 @@ class PhononBSDOSDoc(StructureMetadata):
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
 
-        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7000)
+        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
         kpoint = Kpoints.automatic_density(
             structure=get_pmg_structure(phonon.primitive),
             kppa=kpoint_density_dos,
