@@ -249,6 +249,7 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
         calcs_reversed = []
         all_abinit_objects = []
         for task_name, files in task_files.items():
+            print(files)
             calc_doc, abinit_objects = Calculation.from_abinit_files(
                 dir_name, task_name, **files, **abinit_calculation_kwargs
             )
