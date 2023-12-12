@@ -16,8 +16,8 @@ from jobflow import Maker, Response, job
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
-from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
 from atomate2.abinit.schemas.task import AbinitTaskDoc
+from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
@@ -202,7 +202,7 @@ class BaseAbinitMaker(Maker):
         prev_outputs: str | tuple | list | Path | None = None,
     ):
         """Get new job to restart abinit calculation."""
-        if task_document.state == Status.SUCCESS:
+        if task_document.state == TaskState.SUCCESS:
             return Response(
                 output=task_document,
             )
