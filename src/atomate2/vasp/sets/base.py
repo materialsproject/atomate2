@@ -716,7 +716,9 @@ class VaspInputGenerator(InputGenerator):
 
         # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
         # overwritten settings are changed back to the intended values.
-        _apply_incar_updates(incar, self.user_incar_settings)
+        # skip dictionary parameters to avoid dictionaries appearing in the INCAR
+        skip = ["LDAUU", "LDAUJ", "LDAUL", "MAGMOM"]
+        _apply_incar_updates(incar, self.user_incar_settings, skip=skip)
 
         return incar
 
