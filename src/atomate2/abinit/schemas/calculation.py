@@ -15,8 +15,7 @@ from pymatgen.core import Molecule, Structure
 
 # from pymatgen.io.common import VolumetricData
 
-if TYPE_CHECKING:
-    from emmet.core.math import Matrix3D, Vector3D
+from emmet.core.math import Matrix3D, Vector3D
 
 # STORE_VOLUMETRIC_DATA = ("total_density",)
 
