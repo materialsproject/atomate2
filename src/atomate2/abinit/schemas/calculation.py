@@ -312,7 +312,7 @@ class Calculation(BaseModel):
             cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
-                abinit_version=abinit_output.abinit_version,
+                abinit_version=abinit_gsr.abinit_version,
                 has_abinit_completed=has_abinit_completed,
                 completed_at=completed_at,
                 output=output_doc,
