@@ -645,7 +645,7 @@ class VaspInputGenerator(InputGenerator):
             if k == "MAGMOM":
                 incar[k] = _get_magmoms(
                     structure,
-                    magmoms=self.user_incar_settings.get("MAGMOMS", {}),
+                    magmoms=self.user_incar_settings.get("MAGMOM", {}),
                     config_magmoms=config_magmoms,
                 )
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
