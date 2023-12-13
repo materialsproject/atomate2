@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
-# from pymatgen.io.abinit.outputs import AbinitOutput
 from abipy.electrons.gsr import GsrFile
 from abipy.abio.outputs import AbinitOutputFile
 from jobflow.utils import ValueEnum
@@ -279,7 +278,6 @@ class Calculation(BaseModel):
         abinit_output_file = dir_name / abinit_output_file
 
         # volumetric_files = [] if volumetric_files is None else volumetric_files
-        # abinit_output = AbinitOutput.from_outfile(abinit_output_file)
         abinit_gsr = GsrFile.from_file(abinit_gsr_file)
         abinit_output = AbinitOutputFile.from_file(abinit_output_file)
 
@@ -320,5 +318,5 @@ class Calculation(BaseModel):
                 # k.name.lower(): v for k, v in output_file_paths.items()
                 # },
             ),
-            # abinit_objects,
+            None# abinit_objects,
         )

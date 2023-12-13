@@ -354,6 +354,7 @@ def _find_abinit_files(
 
     if len(task_files) == 0:
         # get any matching file from the root folder
+        print("MEH")
         standard_files = _get_task_files(list(path.glob("*"))+list(path.glob("outdata/*")))
         if len(standard_files) > 0:
             task_files["standard"] = standard_files
