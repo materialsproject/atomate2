@@ -39,7 +39,8 @@ def mock_qchem(
     This fixture allows one to mock (fake) running qchem.
 
     It works by monkeypatching (replacing) calls to run_qchem and
-    QCInputSet.write_inputs with versions that will work when the Qchem executables are not present.
+    QCInputSet.write_inputs with versions that will work when the
+    Qchem executables are not present.
 
     The primary idea is that instead of running QChem to generate the output files,
     reference files will be copied into the directory instead. As we do not want to
@@ -57,13 +58,15 @@ def mock_qchem(
        subdirectory of "tests/test_data/qchem".
     3. Create a dictionary mapping each job name to its reference directory. Note that
        you should supply the reference directory relative to the "tests/test_data/qchem"
-       folder. For example, if your calculation has one job named "single_point" and the
-       reference files are present in "tests/test_data/qchem/H2O_single_point", the dictionary
-       would look like: ``{"single_point": "H2O_single_point"}``.
-    4. Optional: create a dictionary mapping each job name to custom keyword arguments
-       that will be supplied to fake_run_qchem. This way you can configure which rem
-       settings are expected for each job. For example, if your calculation has one job
-       named "single_point" and you wish to validate that "BASIS" is set correctly in the qin,
+       folder. For example, if your calculation has one job named "single_point"
+       and the reference files are present in
+       "tests/test_data/qchem/single_point", the dictionary
+       would look like: ``{"single_point": "single_point"}``.
+    4. Optional: create a dictionary mapping each job name to
+       custom keyword arguments that will be supplied to fake_run_qchem.
+       This way you can configure which rem settings are expected for each job.
+       For example, if your calculation has one job named "single_point" and
+       you wish to validate that "BASIS" is set correctly in the qin,
        your dictionary would look like ``{"single_point": {"rem": {"BASIS": "6-31G"}}``.
     5. Inside the test function, call `mock_qchem(ref_paths, fake_qchem_kwargs)`, where
        ref_paths is the dictionary created in step 3 and fake_qchem_kwargs is the
@@ -72,6 +75,7 @@ def mock_qchem(
 
     For examples, see the tests in tests/qchem/makers/core.py.
     """
+    print(f"qchem_test directory is {qchem_test_dir}")
 
     def mock_run_qchem(*args, **kwargs):
         name = CURRENT_JOB.job.name
@@ -88,11 +92,7 @@ def mock_qchem(
     get_input_set_orig = QCInputGenerator.get_input_set
 
     def mock_get_input_set(self, *args, **kwargs):
-        kwargs["rem_spec"] = True
         return get_input_set_orig(self, *args, **kwargs)
-
-    # def mock_get_nelect(*_, **__):
-    #     return 12
 
     monkeypatch.setattr(atomate2.qchem.run, "run_qchem", mock_run_qchem)
     monkeypatch.setattr(atomate2.qchem.jobs.base, "run_qchem", mock_run_qchem)
@@ -156,13 +156,16 @@ def fake_run_qchem(
 def check_qin(
     ref_path: Path, qin_settings: Sequence[str], qin_exclude: Sequence[str]
 ) -> None:
-    user_qin = QCInput.from_file("mol.qin.gz")
+    # user_qin = QCInput.from_file("mol.qin.gz")
     ref_qin_path = ref_path / "inputs" / "mol.qin.gz"
     ref_qin = QCInput.from_file(ref_qin_path)
-    defaults = {"sym_ignore": True, "symmetry": False, "xc_grid": 3}
+    script_directory = Path(__file__).resolve().parent
+    user_qin_path = script_directory / "mol.qin.gz"
+    user_qin = QCInput.from_file(user_qin_path)
+    # defaults = {"sym_ignore": True, "symmetry": False, "xc_grid": 3}
 
     keys_to_check = (
-        set(user_qin) if qin_settings is None else set(qin_settings)
+        set(user_qin.as_dict()) if qin_settings is None else set(qin_settings)
     ) - set(qin_exclude or [])
     user_dict = user_qin.as_dict()
     ref_dict = ref_qin.as_dict()
@@ -188,6 +191,3 @@ def copy_qchem_outputs(ref_path: Path):
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
-
-
-# path = /Users/rmohanakrishnan/Documents/Research/dev/atomate2/tests/test_data/qchem/H2O/single_point/inputs

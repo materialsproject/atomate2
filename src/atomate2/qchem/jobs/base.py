@@ -120,7 +120,8 @@ class BaseQCMaker(Maker):
             self.write_input_set_kwargs["from_prev"] = from_prev
 
         # write qchem input files
-        self.input_set_generator.get_input_set(molecule).write_inputs()
+        # self.input_set_generator.get_input_set(molecule).write_inputs()
+        self.input_set_generator.get_input_set(molecule)
 
         # write any additional data
         for filename, data in self.write_additional_data.items():
@@ -131,7 +132,8 @@ class BaseQCMaker(Maker):
 
         # parse qchem outputs
         task_doc = TaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
-        task_doc.task_label = self.name
+        # task_doc.task_label = self.name
+        task_doc.task_type = self.name
 
         # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)

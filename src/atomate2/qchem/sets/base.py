@@ -427,16 +427,16 @@ class QCInputGenerator(InputGenerator):
                     for k, v in temp_opts.items():
                         opt_dict[k] = v
 
-            self.rem_dict = rem_dict
-            self.opt_dict = opt_dict
-            self.pcm_dict = pcm_dict
-            self.solv_dict = solv_dict
-            self.smx_dict = smx_dict
-            self.scan_dict = scan_dict
-            self.vdw_dict = vdw_dict
-            self.plots_dict = plots_dict
-            self.nbo_dict = nbo_dict
-            self.geom_opt_dict = geom_opt_dict
+        self.rem_dict = rem_dict
+        self.opt_dict = opt_dict
+        self.pcm_dict = pcm_dict
+        self.solv_dict = solv_dict
+        self.smx_dict = smx_dict
+        self.scan_dict = scan_dict
+        self.vdw_dict = vdw_dict
+        self.plots_dict = plots_dict
+        self.nbo_dict = nbo_dict
+        self.geom_opt_dict = geom_opt_dict
 
     def get_input_set(self, molecule: Molecule = None) -> QCInputSet:
         """

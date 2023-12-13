@@ -16,6 +16,8 @@ from pymatgen.core import Structure
 
 from atomate2.utils.log import initialize_logger
 
+print(sys.executable)
+
 
 @pytest.fixture(scope="session")
 def test_dir():

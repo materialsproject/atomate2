@@ -195,6 +195,8 @@ class Atomate2Settings(BaseSettings):
         5, description="Maximum number of errors to correct before custodian gives up"
     )
 
+    QCHEM_MAX_CORES: int = Field(4, description="Maximum number of cores for QCJob")
+
     QCHEM_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
         "fizzle",
         description="Three-way toggle on what to do if the job looks OK but is actually"

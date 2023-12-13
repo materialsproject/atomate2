@@ -1,27 +1,35 @@
 """Confirm with @janosh before changing any of the expected values below."""
 
+
 import pytest
 
 from atomate2.qchem.sets.base import QCInputGenerator
 from atomate2.qchem.sets.core import (
+    ForceSetGenerator,
+    FreqSetGenerator,
+    OptSetGenerator,
+    PESScanSetGenerator,
     SinglePointSetGenerator,
+    TransitionStateSetGenerator,
 )
+
+job_types = ["sp", "opt", "ts", "force", "freq", "pesscan"]
 
 
 @pytest.mark.parametrize(
-    "set_generator",
+    "set_generator, expected_job_type",
     [
-        SinglePointSetGenerator,
-        # OptSetGenerator,
-        # TransitionStateSetGenerator,
-        # ForceSetGenerator,
-        # FreqSetGenerator,
-        # PESScanSetGenerator,
+        (SinglePointSetGenerator, "sp"),
+        (OptSetGenerator, "opt"),
+        (TransitionStateSetGenerator, "ts"),
+        (ForceSetGenerator, "force"),
+        (FreqSetGenerator, "freq"),
+        (PESScanSetGenerator, "pes_scan"),
     ],
 )
-def test_qc_sets(set_generator: QCInputGenerator) -> None:
+def test_qc_sets(set_generator: QCInputGenerator, expected_job_type: str) -> None:
     qc_set: QCInputGenerator = set_generator()
-    assert {*qc_set.as_dict()} >= {
+    assert {*qc_set.__dict__} >= {
         "job_type",
         "basis_set",
         "scf_algorithm",
@@ -50,4 +58,6 @@ def test_qc_sets(set_generator: QCInputGenerator) -> None:
         "geom_opt_dict",
     }
     assert qc_set.scf_algorithm == "diis"
-    assert qc_set.job_type == "sp"
+    assert qc_set.job_type == expected_job_type
+    assert qc_set.basis_set == "def2-tzvppd"
+    assert isinstance(qc_set.rem_dict, dict)

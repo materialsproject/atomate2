@@ -97,7 +97,11 @@ def run_qchem(
         return
 
     if job_type == JobType.NORMAL:
-        jobs = [QCJob(split_qchem_cmd, **qchem_job_kwargs)]
+        jobs = [
+            QCJob(
+                split_qchem_cmd, max_cores=SETTINGS.QCHEM_MAX_CORES, **qchem_job_kwargs
+            )
+        ]
     else:
         raise ValueError(f"Unsupported job type: {job_type}")
 
