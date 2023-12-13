@@ -110,7 +110,7 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    atomic_steps: list[Union[Structure, Molecule]] = Field(
+    atomic_steps: Optional[list[Union[Structure, Molecule]]] = Field(
         None, description="Structures for each ionic step"
     )
 
@@ -167,7 +167,7 @@ class CalculationOutput(BaseModel):
             energy=output.energy,
             energy_per_atom=output.energy_per_atom,
             **electronic_output,
-            # atomic_steps=output.structures,
+            #atomic_steps=None,
             forces=forces,
             stress=stress,
             stresses=stresses,
@@ -222,7 +222,7 @@ class Calculation(BaseModel):
         # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
-        store_trajectory: bool = False,
+        #store_trajectory: bool = False,
         store_scf: bool = False,
         # store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Calculation, dict[AbinitObject, dict]]:

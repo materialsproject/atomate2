@@ -52,7 +52,7 @@ class OutputDoc(BaseModel):
     structure: Union[Structure, Molecule] = Field(
         None, description="The output structure object"
     )
-    trajectory: Sequence[Union[Structure, Molecule]] = Field(
+    trajectory: Optional[Sequence[Union[Structure, Molecule]]] = Field(
         None, description="The trajectory of output structures"
     )
     energy: float = Field(
