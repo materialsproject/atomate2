@@ -320,7 +320,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         dir_name
             The path to the folder containing the calculation outputs.
         store_additional_json
-            Whether to store additional json files found in the calculation directory.
+            Whether to store additional JSON files found in the calculation directory.
         volumetric_files
             Volumetric files to search for.
         additional_fields

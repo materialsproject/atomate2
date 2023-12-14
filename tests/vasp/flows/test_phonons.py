@@ -100,7 +100,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
@@ -263,7 +263,7 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
@@ -326,6 +326,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
         use_symmetrized_structure="primitive",
         kpath_scheme=kpath_scheme,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -387,11 +388,11 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 
-# test supply of born charges, epsilon, dft energy, supercell
+# test supply of born charges, epsilon, DFT energy, supercell
 def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -427,6 +428,7 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
         born_maker=None,
         use_symmetrized_structure="primitive",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
     ).make(
         structure=structure,
         total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
@@ -437,7 +439,7 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
         run_locally(job, create_folders=True, ensure_success=True)
 
 
-# test supply of born charges, epsilon, dft energy, supercell
+# test supply of born charges, epsilon, DFT energy, supercell
 def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
@@ -471,6 +473,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
         born_maker=None,
         use_symmetrized_structure="primitive",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
     ).make(
         structure=structure,
         total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
@@ -542,7 +545,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 
@@ -641,7 +644,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 
@@ -678,6 +681,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
         min_length=3.0,
         use_symmetrized_structure=None,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -688,13 +692,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [
-            5853.74150399,
-            5692.29089555,
-            4798.67784919,
-            3122.48296003,
-            782.17345333,
-        ],
+        [5853.74150399, 5692.29089555, 4798.67784919, 3122.48296003, 782.17345333],
     )
 
     assert isinstance(
@@ -748,7 +746,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
 
 

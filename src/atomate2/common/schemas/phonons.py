@@ -307,7 +307,7 @@ class PhononBSDOSDoc(StructureMetadata):
             kpath_concrete, npoints=kwargs.get("npoints_band", 101)
         )
 
-        # phonon band structures will always be cmouted
+        # phonon band structures will always be computed
         filename_band_yaml = "phonon_band_structure.yaml"
 
         # TODO: potentially add kwargs to avoid computation of eigenvectors
@@ -324,9 +324,7 @@ class PhononBSDOSDoc(StructureMetadata):
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
 
         new_plotter.save_plot(
-            "phonon_band_structure.eps",
-            img_format=kwargs.get("img_format", "eps"),
-            units=kwargs.get("units", "THz"),
+            "phonon_band_structure.eps", units=kwargs.get("units", "THz")
         )
 
         # will determine if imaginary modes are present in the structure
@@ -335,13 +333,13 @@ class PhononBSDOSDoc(StructureMetadata):
         )
 
         # gets data for visualization on website - yaml is also enough
-        if kwargs.get("band_structure_eigenvectors", False):
+        if kwargs.get("band_structure_eigenvectors"):
             bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
 
-        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7000)
+        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
         kpoint = Kpoints.automatic_density(
             structure=get_pmg_structure(phonon.primitive),
             kppa=kpoint_density_dos,
@@ -354,9 +352,7 @@ class PhononBSDOSDoc(StructureMetadata):
         new_plotter_dos = PhononDosPlotter()
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
-            filename="phonon_dos.eps",
-            img_format=kwargs.get("img_format", "eps"),
-            units=kwargs.get("units", "THz"),
+            filename="phonon_dos.eps", units=kwargs.get("units", "THz")
         )
 
         # compute vibrational part of free energies per formula unit
@@ -391,7 +387,7 @@ class PhononBSDOSDoc(StructureMetadata):
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
-        if kwargs.get("create_thermal_displacements", False):
+        if kwargs.get("create_thermal_displacements"):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -460,7 +456,7 @@ class PhononBSDOSDoc(StructureMetadata):
                 "thermal_displacement_matrix": tdisp_mat,
                 "freq_min_thermal_displacements": freq_min_thermal_displacements,
             }
-            if kwargs.get("create_thermal_displacements", False)
+            if kwargs.get("create_thermal_displacements")
             else None,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],

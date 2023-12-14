@@ -23,11 +23,9 @@ if TYPE_CHECKING:
 _BASE_MATPES_PBE_STATIC_SET_NO_POTCAR = loadfn(
     resource_filename("pymatgen.io.vasp", "MatPESStaticSet.yaml")
 )
-_BASE_PBE54_SET = loadfn(resource_filename("pymatgen.io.vasp", "PBE54Base.yaml"))
-_BASE_MATPES_PBE_STATIC_SET = {
-    **_BASE_PBE54_SET,
-    **_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR,
-}
+_POTCAR_BASE_FILE = f"{_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR['PARENT']}.yaml"
+_POTCAR_SET = loadfn(resource_filename("pymatgen.io.vasp", _POTCAR_BASE_FILE))
+_BASE_MATPES_PBE_STATIC_SET = {**_POTCAR_SET, **_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR}
 
 
 @dataclass

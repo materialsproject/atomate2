@@ -17,7 +17,6 @@ def vasp_test_data(test_dir) -> None:
     directory. Please refer to the atomate2 documentation on writing unit tests for more
     information.
     """
-    import sys
     import warnings
     from pathlib import Path
     from pprint import pformat
@@ -34,7 +33,7 @@ def vasp_test_data(test_dir) -> None:
 
     if test_dir.exists():
         click.echo("test_data folder already exists, refusing to overwrite it")
-        sys.exit()
+        raise SystemExit(1)
 
     test_dir.mkdir()
 

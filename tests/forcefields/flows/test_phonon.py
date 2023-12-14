@@ -83,7 +83,7 @@ def test_phonon_wf(clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
