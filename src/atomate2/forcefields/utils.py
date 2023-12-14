@@ -28,16 +28,12 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 try:
-    from ase.filters import FrechetCellFilter
-
-    _ase_cell_filter = FrechetCellFilter
+    from ase.filters import FrechetCellFilter as _ase_cell_filter
 
 except ImportError:
     import logging
 
-    from ase.constraints import ExpCellFilter
-
-    _ase_cell_filter = ExpCellFilter
+    from ase.constraints import ExpCellFilter as _ase_cell_filter
 
     logger = logging.getLogger(__name__)
     logger.warning(
