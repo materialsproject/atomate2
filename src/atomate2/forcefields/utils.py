@@ -15,7 +15,6 @@ import pickle
 import sys
 from typing import TYPE_CHECKING
 
-from ase.filters import FrechetCellFilter
 from ase.optimize.bfgs import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.optimize.fire import FIRE
@@ -24,6 +23,29 @@ from ase.optimize.mdmin import MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+
+try:
+    from ase.filters import FrechetCellFilter
+
+    _ase_cell_filter = FrechetCellFilter
+
+except ImportError:
+    import logging
+
+    from ase.constraints import ExpCellFilter
+
+    _ase_cell_filter = ExpCellFilter
+
+    logger = logging.getLogger(__name__)
+    logger.warning(
+        "Due to errors in the implementation of gradients in the ASE"
+        " ExpCellFilter, we recommend installing ASE directly"
+        " from \n"
+        "    https://gitlab.com/ase/ase\n"
+        "rather than PyPi to access FrechetCellFilter. See\n"
+        "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
+        "for more details."
+    )
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -189,14 +211,14 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = FrechetCellFilter(atoms)
+                atoms = _ase_cell_filter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, FrechetCellFilter):
+        if isinstance(atoms, _ase_cell_filter):
             atoms = atoms.atoms
 
         struct = self.ase_adaptor.get_structure(atoms)
