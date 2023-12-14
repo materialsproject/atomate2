@@ -28,22 +28,21 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 try:
-    from ase.filters import FrechetCellFilter as _ase_cell_filter
+    from ase.filters import FrechetCellFilter
 
 except ImportError:
     import logging
 
-    from ase.constraints import ExpCellFilter as _ase_cell_filter
+    FrechetCellFilter = None
 
     logger = logging.getLogger(__name__)
     logger.warning(
         "Due to errors in the implementation of gradients in the ASE"
-        " ExpCellFilter, we recommend installing ASE directly"
-        " from \n"
-        "    https://gitlab.com/ase/ase\n"
+        " ExpCellFilter, we recommend installing ASE from gitlab\n"
+        "    pip install git+https://gitlab.com/ase/ase\n"
         "rather than PyPi to access FrechetCellFilter. See\n"
         "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
-        "for more details."
+        "for more details. Otherwise, you must specify an alternate ASE Filter."
     )
 
 if TYPE_CHECKING:
@@ -54,6 +53,11 @@ if TYPE_CHECKING:
     from ase import Atoms
     from ase.calculators.calculator import Calculator
     from ase.optimize.optimize import Optimizer
+
+    if FrechetCellFilter is not None:
+        from ase.filters import Filter
+    else:
+        from ase.constraints import Filter
 
 
 OPTIMIZERS = {
@@ -177,6 +181,7 @@ class Relaxer:
         traj_file: str = None,
         interval: int = 1,
         verbose: bool = False,
+        cell_filter: Filter = FrechetCellFilter,
         **kwargs,
     ) -> dict[str, Any]:
         """
@@ -210,14 +215,14 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = _ase_cell_filter(atoms)
+                atoms = cell_filter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, _ase_cell_filter):
+        if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
         struct = self.ase_adaptor.get_structure(atoms)
