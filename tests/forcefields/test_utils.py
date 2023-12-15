@@ -24,6 +24,9 @@ def approx(val):
 
 def test_safe_import():
     assert FrechetCellFilter is None or FrechetCellFilter.__module__ == "ase.filters"
+    if FrechetCellFilter is None:
+        with pytest.raises(ImportError):
+            pass
 
 
 def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
@@ -52,17 +55,26 @@ def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
     assert path.isfile(save_file_name)
 
 
-@pytest.mark.parametrize("optimizer", ["BFGS", None, BFGS])
-def test_Relaxer(si_structure, test_dir, optimizer):
+@pytest.mark.parametrize(
+    ("optimizer", "traj_file"),
+    [("BFGS", None), (None, None), (BFGS, "log_file.json.gz")],
+)
+def test_Relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
     data_key = "pypi" if FrechetCellFilter is None else "git"
     test_data = loadfn(f"{test_dir}/forcefields/utils_test_data.json")["Relaxer"][
         data_key
     ]
 
-    relaxer = Relaxer(calculator=LennardJones(), optimizer="BFGS")
+    if optimizer is None:
+        # None is invalid, should raise ValueError
+        with pytest.raises(ValueError):
+            Relaxer(calculator=LennardJones(), optimizer=optimizer)
+        return
+
+    relaxer = Relaxer(calculator=LennardJones(), optimizer=optimizer)
 
     try:
-        relax_output = relaxer.relax(atoms=si_structure)
+        relax_output = relaxer.relax(atoms=si_structure, traj_file=traj_file)
     except TypeError:
         # if using PyPI ASE, FrechetCellFilter is not callable, set to None
         assert FrechetCellFilter is None
@@ -92,3 +104,7 @@ def test_Relaxer(si_structure, test_dir, optimizer):
         == approx(test_data["relaxer_final_traj"]["stresses"][i])
         for i in range(6)
     )
+
+    if traj_file:
+        print(traj_file)
+        assert path.isfile(traj_file)
