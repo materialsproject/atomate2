@@ -1,5 +1,9 @@
+import logging
+from os import path
+
 import pytest
 from ase.calculators.lj import LennardJones
+from ase.optimize import BFGS
 from monty.serialization import loadfn
 from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -9,6 +13,8 @@ from atomate2.forcefields.utils import (
     TrajectoryObserver,
 )
 
+logger = logging.getLogger(__name__)
+
 _rel_tol = 1.0e-6
 
 
@@ -17,11 +23,10 @@ def approx(val):
 
 
 def test_safe_import():
-    if FrechetCellFilter is not None:
-        assert FrechetCellFilter.__module__ == "ase.filters"
+    assert FrechetCellFilter is None or FrechetCellFilter.__module__ == "ase.filters"
 
 
-def test_TrajectoryObserver(si_structure, test_dir):
+def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
     output = loadfn(f"{test_dir}/forcefields/utils_test_data.json")[
         "TrajectoryObserver"
     ]
@@ -42,11 +47,14 @@ def test_TrajectoryObserver(si_structure, test_dir):
     )
     assert all(traj.stresses[0][i] == approx(output["stresses"][i]) for i in range(6))
 
+    save_file_name = "log_file.json.gz"
+    traj.save(save_file_name)
+    assert path.isfile(save_file_name)
 
-def test_Relaxer(si_structure, test_dir):
-    data_key = "pypi"
-    if FrechetCellFilter is not None:
-        data_key = "git"
+
+@pytest.mark.parametrize("optimizer", ["BFGS", None, BFGS])
+def test_Relaxer(si_structure, test_dir, optimizer):
+    data_key = "pypi" if FrechetCellFilter is None else "git"
     test_data = loadfn(f"{test_dir}/forcefields/utils_test_data.json")["Relaxer"][
         data_key
     ]

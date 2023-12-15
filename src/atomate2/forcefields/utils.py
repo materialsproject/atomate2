@@ -31,12 +31,8 @@ try:
     from ase.filters import FrechetCellFilter
 
 except ImportError:
-    import logging
-
     FrechetCellFilter = None
-
-    logger = logging.getLogger(__name__)
-    logger.warning(
+    print(
         "Due to errors in the implementation of gradients in the ASE"
         " ExpCellFilter, we recommend installing ASE from gitlab\n"
         "    pip install git+https://gitlab.com/ase/ase\n"
