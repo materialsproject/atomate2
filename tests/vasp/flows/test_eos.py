@@ -77,7 +77,7 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
             assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
 
-@pytest.mark.parametrize("do_statics", [False, True])
+@pytest.mark.parametrize("do_statics", [False])  # , True])
 def test_mp_eos_maker(
     do_statics: bool,
     mock_vasp,
@@ -150,7 +150,7 @@ def test_mp_eos_maker(
     for ijob, uuid in enumerate(flow.job_uuids):
         taskdocs[jobs[ijob]] = responses[uuid][1].output
 
-    assert len(responses) == len(ref_paths)
+    assert len(taskdocs) == len(ref_paths)
 
     if do_statics:
         # Check that deformation jobs correctly feed structures

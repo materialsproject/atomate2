@@ -16,8 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import job
-from pymatgen.analysis.eos import EOS, EOSError
+from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
@@ -33,36 +32,39 @@ if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 
-@job
-def postprocess_EOS(data_dict: dict, EOS_models: list | None = None):
-    """Take dict of E(V) data and fit to each equation of state in EOS_models."""
-    if EOS_models is None:
-        EOS_models = [
-            "murnaghan",
-            "birch",
-            "birch_murnaghan",
-            "pourier_tarantola",
-            "vinet",
-        ]
+@dataclass
+class EosRelaxMaker(BaseVaspMaker):
+    """
+    Maker to create VASP relaxation job using EOS parameters.
 
-    output = data_dict.copy()
-    for jobtype in ["relax", "static"]:
-        if len(list(data_dict.get(jobtype, []))) == 0:
-            continue
-        output[jobtype]["EOS"] = {}
-        for eos_name in EOS_models:
-            try:
-                eos = EOS(eos_name=eos_name).fit(
-                    data_dict[jobtype]["volumes"], data_dict[jobtype]["energies"]
-                )
-                output[jobtype]["EOS"][eos_name] = {
-                    **eos.results,
-                    "b0 GPa": float(eos.b0_GPa),
-                }
-            except EOSError:
-                output[jobtype]["EOS"][eos_name] = {}
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
 
-    return output
+    name: str = "EOS GGA relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: EosSetGenerator(user_incar_settings={"ISIF": 3})
+    )
 
 
 @dataclass
@@ -125,43 +127,15 @@ class DeformationMaker(BaseVaspMaker):
         transformation_params : tuple of dict or None
             The parameters used to instantiate each transformation class.
             Given as a list of dicts.
-
         """
-        deformation = DeformStructureTransformation(deformation=deformation_matrix)
-        structure = deformation.apply_transformation(structure)
-        return super().make.original(self, structure, prev_dir)
+        # Ensure that relaxations are done at fixed volume --> ISIF = 2
+        self.input_set_generator.user_incar_settings["ISIF"] = 2
 
+        # deform the structure
+        DST = DeformStructureTransformation(deformation=deformation_matrix)
+        TS = TransformedStructure(structure, transformations=[DST])
+        deformed_structure = TS.final_structure
 
-@dataclass
-class EosRelaxMaker(BaseVaspMaker):
-    """
-    Maker to create VASP relaxation job using EOS parameters.
+        self.write_additional_data["transformations:json"] = TS
 
-    Parameters
-    ----------
-    name : str
-        The job name.
-    input_set_generator : .VaspInputGenerator
-        A generator used to make the input set.
-    write_input_set_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
-    stop_children_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data : dict
-        Additional data to write to the current directory. Given as a dict of
-        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
-        the "." character which is typically used to denote file extensions. To avoid
-        this, use the ":" character, which will automatically be converted to ".". E.g.
-        ``{"my_file:txt": "contents of the file"}``.
-    """
-
-    name: str = "EOS GGA relax"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: EosSetGenerator(user_incar_settings={"ISIF": 3})
-    )
+        return super().make.original(self, deformed_structure, prev_dir=prev_dir)

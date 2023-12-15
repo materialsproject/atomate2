@@ -11,8 +11,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.flows.eos.base import EosMaker
 from atomate2.vasp.jobs.eos.mp import (
     MPGGADeformationMaker,
     MPGGAEosRelaxMaker,
@@ -63,7 +63,7 @@ class MPGGAEosDoubleRelaxMaker(DoubleRelaxMaker):
 
 
 @dataclass
-class MPGGAEosMaker(EosMaker):
+class MPGGAEosMaker(CommonEosMaker):
     """
     Workflow to generate MP PBE-GGA compatible EOS flow.
 
@@ -133,7 +133,7 @@ class MPMetaGGAEosDoubleRelaxMaker(DoubleRelaxMaker):
 
 
 @dataclass
-class MPMetaGGAEosMaker(EosMaker):
+class MPMetaGGAEosMaker(CommonEosMaker):
     """
     Workflow to generate atomate1, MP r2SCAN Meta-GGA EOS flow.
 
