@@ -1,5 +1,4 @@
 """Schemas for elastic tensor fitting and related properties."""
-
 from copy import deepcopy
 from typing import Optional
 
@@ -24,51 +23,51 @@ from atomate2 import SETTINGS
 class DerivedProperties(BaseModel):
     """Properties derived from an elastic tensor."""
 
-    k_voigt: float = Field(None, description="Voigt average of the bulk modulus.")
-    k_reuss: float = Field(None, description="Reuss average of the bulk modulus.")
-    k_vrh: float = Field(
+    k_voigt: Optional[float] = Field(None, description="Voigt average of the bulk modulus.")
+    k_reuss: Optional[float] = Field(None, description="Reuss average of the bulk modulus.")
+    k_vrh: Optional[float] = Field(
         None, description="Voigt-Reuss-Hill average of the bulk modulus."
     )
-    g_voigt: float = Field(None, description="Voigt average of the shear modulus.")
-    g_reuss: float = Field(None, description="Reuss average of the shear modulus.")
-    g_vrh: float = Field(
+    g_voigt: Optional[float] = Field(None, description="Voigt average of the shear modulus.")
+    g_reuss: Optional[float] = Field(None, description="Reuss average of the shear modulus.")
+    g_vrh: Optional[float] = Field(
         None, description="Voigt-Reuss-Hill average of the shear modulus."
     )
-    universal_anisotropy: float = Field(
+    universal_anisotropy: Optional[float] = Field(
         None, description="Universal elastic anisotropy."
     )
-    homogeneous_poisson: float = Field(None, description="Homogeneous poisson ratio.")
-    y_mod: float = Field(
+    homogeneous_poisson: Optional[float] = Field(None, description="Homogeneous poisson ratio.")
+    y_mod: Optional[float] = Field(
         None,
         description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of "
         "the bulk and shear moduli.",
     )
-    trans_v: float = Field(
+    trans_v: Optional[float] = Field(
         None,
         description="Transverse sound velocity (SI units) obtained from the "
         "Voigt-Reuss-Hill average bulk modulus.",
     )
-    long_v: float = Field(
+    long_v: Optional[float] = Field(
         None,
         description="Longitudinal sound velocity (SI units) obtained from the "
         "Voigt-Reuss-Hill average bulk modulus.",
     )
-    snyder_ac: float = Field(
+    snyder_ac: Optional[float] = Field(
         None, description="Synder's acoustic sound velocity (SI units)."
     )
-    snyder_opt: float = Field(
+    snyder_opt: Optional[float] = Field(
         None, description="Synder's optical sound velocity (SI units)."
     )
-    snyder_total: float = Field(
+    snyder_total: Optional[float] = Field(
         None, description="Synder's total sound velocity (SI units)."
     )
     clark_thermalcond: Optional[float] = Field(
         None, description="Clarke's thermal conductivity (SI units)."
     )
-    cahill_thermalcond: float = Field(
+    cahill_thermalcond: Optional[float] = Field(
         None, description="Cahill's thermal conductivity (SI units)."
     )
-    debye_temperature: float = Field(
+    debye_temperature: Optional[float] = Field(
         None,
         description="Debye temperature from longitudinal and transverse sound "
         "velocities (SI units).",
@@ -78,20 +77,20 @@ class DerivedProperties(BaseModel):
 class FittingData(BaseModel):
     """Data used to fit elastic tensors."""
 
-    cauchy_stresses: list[Matrix3D] = Field(
+    cauchy_stresses: Optional[list[Matrix3D]] = Field(
         None, description="The Cauchy stresses used to fit the elastic tensor."
     )
-    strains: list[Matrix3D] = Field(
+    strains: Optional[list[Matrix3D]] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: list[Matrix3D] = Field(
+    pk_stresses: Optional[list[Matrix3D]] = Field(
         None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations: list[Matrix3D] = Field(
+    deformations:Optional[list[Matrix3D]] = Field(
         None, description="The deformations corresponding to each strain state."
     )
-    uuids: list[str] = Field(None, description="The uuids of the deformation jobs.")
-    job_dirs: list[Optional[str]] = Field(
+    uuids: Optional[list[str]] = Field(None, description="The uuids of the deformation jobs.")
+    job_dirs: Optional[list[Optional[str]]] = Field(
         None, description="The directories where the deformation jobs were run."
     )
 
@@ -99,32 +98,32 @@ class FittingData(BaseModel):
 class ElasticTensorDocument(BaseModel):
     """Raw and standardized elastic tensors."""
 
-    raw: MatrixVoigt = Field(None, description="Raw elastic tensor.")
-    ieee_format: MatrixVoigt = Field(None, description="Elastic tensor in IEEE format.")
+    raw: Optional[MatrixVoigt] = Field(None, description="Raw elastic tensor.")
+    ieee_format: Optional[MatrixVoigt] = Field(None, description="Elastic tensor in IEEE format.")
 
 
 class ElasticDocument(StructureMetadata):
     """Document containing elastic tensor information and related properties."""
 
-    structure: Structure = Field(
+    structure: Optional[Structure] = Field(
         None, description="The structure for which the elastic data is calculated."
     )
-    elastic_tensor: ElasticTensorDocument = Field(
+    elastic_tensor: Optional[ElasticTensorDocument] = Field(
         None, description="Fitted elastic tensor."
     )
     eq_stress: Optional[Matrix3D] = Field(
         None, description="The equilibrium stress of the structure."
     )
-    derived_properties: DerivedProperties = Field(
+    derived_properties: Optional[DerivedProperties] = Field(
         None, description="Properties derived from the elastic tensor."
     )
-    fitting_data: FittingData = Field(
+    fitting_data: Optional[FittingData] = Field(
         None, description="Data used to fit the elastic tensor."
     )
-    fitting_method: str = Field(
+    fitting_method: Optional[str] = Field(
         None, description="Method used to fit the elastic tensor."
     )
-    order: int = Field(
+    order: Optional[int] = Field(
         None, description="Order of the expansion of the elastic tensor."
     )
 
