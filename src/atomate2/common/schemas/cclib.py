@@ -34,22 +34,22 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     For the list of supported packages, see https://cclib.github.io
     """
 
-    molecule: Molecule = Field(None, description="Final output molecule from the task")
-    energy: float = Field(None, description="Final total energy")
-    dir_name: str = Field(None, description="Directory where the output is parsed")
-    logfile: str = Field(
+    molecule: Optional[Molecule] = Field(None, description="Final output molecule from the task")
+    energy: Optional[float] = Field(None, description="Final total energy")
+    dir_name: Optional[str] = Field(None, description="Directory where the output is parsed")
+    logfile: Optional[str] = Field(
         None, description="Path to the log file used in the post-processing analysis"
     )
-    attributes: dict = Field(
+    attributes: Optional[dict] = Field(
         None, description="Computed properties and calculation outputs"
     )
-    metadata: dict = Field(
+    metadata: Optional[dict] = Field(
         None,
         description="Calculation metadata, including input parameters and runtime "
         "statistics",
     )
-    task_label: str = Field(None, description="A description of the task")
-    tags: list[str] = Field(None, description="Optional tags for this task document")
+    task_label: Optional[str] = Field(None, description="A description of the task")
+    tags: Optional[list[str]] = Field(None, description="Optional tags for this task document")
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
