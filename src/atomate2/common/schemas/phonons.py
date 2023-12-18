@@ -417,12 +417,14 @@ class PhononBSDOSDoc(StructureMetadata):
                     filename="tdispmat_" + str(temp) + "K.cif",
                 )
             tdisp_mat = (
-                phonon._thermal_displacement_matrices.thermal_displacement_matrices.tolist()
+                phonon._thermal_displacement_matrices.thermal_displacement_matrices
             )
+            tdisp_mat = tdisp_mat.tolist()
 
             tdisp_mat_cif = (
-                phonon._thermal_displacement_matrices.thermal_displacement_matrices_cif.tolist()
+                phonon._thermal_displacement_matrices.thermal_displacement_matrices_cif
             )
+            tdisp_mat_cif = tdisp_mat_cif.tolist()
 
         else:
             tdisp_mat = None

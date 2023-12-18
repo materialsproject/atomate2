@@ -23,20 +23,30 @@ from atomate2 import SETTINGS
 class DerivedProperties(BaseModel):
     """Properties derived from an elastic tensor."""
 
-    k_voigt: Optional[float] = Field(None, description="Voigt average of the bulk modulus.")
-    k_reuss: Optional[float] = Field(None, description="Reuss average of the bulk modulus.")
+    k_voigt: Optional[float] = Field(
+        None, description="Voigt average of the bulk modulus."
+    )
+    k_reuss: Optional[float] = Field(
+        None, description="Reuss average of the bulk modulus."
+    )
     k_vrh: Optional[float] = Field(
         None, description="Voigt-Reuss-Hill average of the bulk modulus."
     )
-    g_voigt: Optional[float] = Field(None, description="Voigt average of the shear modulus.")
-    g_reuss: Optional[float] = Field(None, description="Reuss average of the shear modulus.")
+    g_voigt: Optional[float] = Field(
+        None, description="Voigt average of the shear modulus."
+    )
+    g_reuss: Optional[float] = Field(
+        None, description="Reuss average of the shear modulus."
+    )
     g_vrh: Optional[float] = Field(
         None, description="Voigt-Reuss-Hill average of the shear modulus."
     )
     universal_anisotropy: Optional[float] = Field(
         None, description="Universal elastic anisotropy."
     )
-    homogeneous_poisson: Optional[float] = Field(None, description="Homogeneous poisson ratio.")
+    homogeneous_poisson: Optional[float] = Field(
+        None, description="Homogeneous poisson ratio."
+    )
     y_mod: Optional[float] = Field(
         None,
         description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of "
@@ -86,10 +96,12 @@ class FittingData(BaseModel):
     pk_stresses: Optional[list[Matrix3D]] = Field(
         None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations:Optional[list[Matrix3D]] = Field(
+    deformations: Optional[list[Matrix3D]] = Field(
         None, description="The deformations corresponding to each strain state."
     )
-    uuids: Optional[list[str]] = Field(None, description="The uuids of the deformation jobs.")
+    uuids: Optional[list[str]] = Field(
+        None, description="The uuids of the deformation jobs."
+    )
     job_dirs: Optional[list[Optional[str]]] = Field(
         None, description="The directories where the deformation jobs were run."
     )
@@ -99,7 +111,9 @@ class ElasticTensorDocument(BaseModel):
     """Raw and standardized elastic tensors."""
 
     raw: Optional[MatrixVoigt] = Field(None, description="Raw elastic tensor.")
-    ieee_format: Optional[MatrixVoigt] = Field(None, description="Elastic tensor in IEEE format.")
+    ieee_format: Optional[MatrixVoigt] = Field(
+        None, description="Elastic tensor in IEEE format."
+    )
 
 
 class ElasticDocument(StructureMetadata):
