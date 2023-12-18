@@ -196,7 +196,7 @@ class BaseAbinitMaker(Maker):
 
     def get_response(
         self,
-        task_document: AbinitTaskDocument,
+        task_document: AbinitTaskDoc,
         history: JobHistory,
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
@@ -213,7 +213,7 @@ class BaseAbinitMaker(Maker):
             unconverged_error = UnconvergedError(
                 self,
                 msg=f"Unconverged after {history.run_number} runs.",
-                abinit_input=task_document.abinit_input,
+                abinit_input=task_document.input,
                 history=history,
             )
             return Response(

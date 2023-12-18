@@ -26,14 +26,14 @@ class TaskState(ValueEnum):
     FAILED = "failed"
 
 
-# class AbinitObject(ValueEnum):
-#     """Types of Abinit data objects."""
+class AbinitObject(ValueEnum):
+    """Types of Abinit data objects."""
 
-#     DOS = "dos"
-#     BAND_STRUCTURE = "band_structure"
-#     ELECTRON_DENSITY = "electron_density"  # e_density
-#     WFN = "wfn"  # Wavefunction file
-#     TRAJECTORY = "trajectory"
+    DOS = "dos"
+    BAND_STRUCTURE = "band_structure"
+    ELECTRON_DENSITY = "electron_density"  # e_density
+    WFN = "wfn"  # Wavefunction file
+    TRAJECTORY = "trajectory"
 
 
 class CalculationOutput(BaseModel):
@@ -206,7 +206,7 @@ class Calculation(BaseModel):
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
-    output_file_paths: dict[str, str] = Field(
+    output_file_paths: Optional[dict[str, str]] = Field(
         None,
         description="Paths (relative to dir_name) of the Abinit output files "
         "associated with this calculation",

@@ -6,21 +6,67 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Optional, TypeVar, Union
 
+from abipy.abio.inputs import AbinitInput
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
-from emmet.core.tasks import get_uri
+#from emmet.core.tasks import get_uri
+from atomate2.utils.path import get_uri
+from atomate2.utils.path import strip_hostname
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 
 # from pymatgen.entries.computed_entries import ComputedEntry
-# from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
-from atomate2.abinit.schemas.calculation import Calculation
+from atomate2.abinit.schemas.calculation import (
+    Calculation,
+    TaskState,
+    AbinitObject,
+    )
 from atomate2.abinit.utils import datetime_str
+from atomate2.abinit.files import load_abinit_input
 
 _T = TypeVar("_T", bound="AbinitTaskDoc")
 # _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
 logger = logging.getLogger(__name__)
 
+class InputDoc(BaseModel):
+    """Summary of the inputs for an Abinit calculation.
+
+    Parameters
+    ----------
+    structure: Structure or Molecule
+        The final pymatgen Structure or Molecule of the final system
+    """
+
+    structure: Union[Structure, Molecule] = Field(
+        None, description="The input structure object"
+    )
+    abinit_input: AbinitInput = Field(
+        None, description="AbinitInput used to perform calculation."
+    )
+    xc: str = Field(
+        None, description="Exchange-correlation functional used if not the default"
+    )
+
+    @classmethod
+    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> InputDoc:
+        """Create a summary from an abinit CalculationDocument.
+
+        Parameters
+        ----------
+        calc_doc: .Calculation
+            An Abinit calculation document.
+
+        Returns
+        -------
+        .InputDoc
+            The calculation input summary.
+        """
+        abinit_input=load_abinit_input(calc_doc.dir_name)
+        return cls(
+            structure=abinit_input.structure,
+            abinit_input=abinit_input,
+            xc=str(abinit_input.pseudos[0].xc.name),
+        )
 
 class OutputDoc(BaseModel):
     """Summary of the outputs for an Abinit calculation.
@@ -104,7 +150,7 @@ class OutputDoc(BaseModel):
         )
 
 
-class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
+class AbinitTaskDoc(StructureMetadata):
     """Definition of Abinit task document.
 
     Parameters
@@ -151,22 +197,22 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
         Additional json loaded from the calculation directory
     """
 
-    dir_name: str = Field(None, description="The directory for this Abinit task")
-    last_updated: str = Field(
+    dir_name: Optional[str] = Field(None, description="The directory for this Abinit task")
+    last_updated: Optional[str] = Field(
         default_factory=datetime_str,
         description="Timestamp for when this task document was last updated",
     )
-    completed_at: str = Field(
+    completed_at: Optional[str] = Field(
         None, description="Timestamp for when this task was completed"
     )
     input: Optional[InputDoc] = Field(
         None, description="The input to the first calculation"
     )
-    output: OutputDoc = Field(None, description="The output of the final calculation")
+    output: Optional[OutputDoc] = Field(None, description="The output of the final calculation")
     structure: Union[Structure, Molecule] = Field(
         None, description="Final output atoms from the task"
     )
-    state: TaskState = Field(None, description="State of this task")
+    state: Optional[TaskState] = Field(None, description="State of this task")
     included_objects: Optional[list[AbinitObject]] = Field(
         None, description="List of Abinit objects included with this task document"
     )
@@ -179,7 +225,7 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
     # analysis: AnalysisDoc = Field(
     #    None, description="Summary of structural relaxation and forces"
     # )
-    task_label: str = Field(None, description="A description of the task")
+    task_label: Optional[str] = Field(None, description="A description of the task")
     tags: Optional[list[str]] = Field(
         None, description="Metadata tags for this task document"
     )
@@ -249,7 +295,6 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
         calcs_reversed = []
         all_abinit_objects = []
         for task_name, files in task_files.items():
-            print(files)
             calc_doc, abinit_objects = Calculation.from_abinit_files(
                 dir_name, task_name, **files, **abinit_calculation_kwargs
             )
@@ -260,6 +305,7 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
+        dir_name = strip_hostname(dir_name) # VT: TODO to put here?necessary with laptop at least...
 
         # only store objects from last calculation
         # TODO: make this an option
@@ -270,18 +316,32 @@ class AbinitTaskDoc(StructureMetadata, MoleculeMetadata):
 
         # rewrite the original structure save!
 
+        if isinstance(calcs_reversed[-1].output.structure, Structure):
+            attr = "from_structure"
+            dat = {
+                "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
+                "include_structure": True,
+            }
+        doc = getattr(cls, attr)(**dat)
+        ddict = doc.dict()
+
         data = {
-            "structure": calcs_reversed[-1].output.structure,
-            "meta_structure": calcs_reversed[-1].output.structure,
-            "dir_name": dir_name,
-            "calcs_reversed": calcs_reversed,
-            "tags": tags,
-            "completed_at": calcs_reversed[-1].completed_at,
-            "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
             "abinit_objects": abinit_objects,
+            "calcs_reversed": calcs_reversed,
+            "completed_at": calcs_reversed[-1].completed_at,
+            "dir_name": dir_name,
             "included_objects": included_objects,
+            "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
+            "meta_structure": calcs_reversed[-1].output.structure,
+            "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
+            "state": calcs_reversed[-1].has_abinit_completed,
+            "structure": calcs_reversed[-1].output.structure,
+            "tags": tags,
         }
-        doc = cls(**data)
+        #doc = cls(**data)
+        doc = cls(**ddict)
+        doc = doc.copy(update=data)
         return doc.model_copy(update=additional_fields, deep=True)
 
 
@@ -354,7 +414,6 @@ def _find_abinit_files(
 
     if len(task_files) == 0:
         # get any matching file from the root folder
-        print("MEH")
         standard_files = _get_task_files(list(path.glob("*"))+list(path.glob("outdata/*")))
         if len(standard_files) > 0:
             task_files["standard"] = standard_files
