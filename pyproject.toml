@@ -85,7 +85,7 @@ strict = [
     "phonopy==2.21.0",
     "pydantic-settings==2.1.0",
     "pydantic==2.4.2",
-    "pymatgen-analysis-defects==2023.10.19",
+    "pymatgen-analysis-defects==2023.12.14",
     "pymatgen==2023.11.12",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
