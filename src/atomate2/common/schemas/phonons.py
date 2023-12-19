@@ -353,7 +353,7 @@ class PhononBSDOSDoc(StructureMetadata):
 
         new_plotter.save_plot(
             "phonon_band_structure.eps",
-            img_format=kwargs.get("img_format", "eps"),
+            # img_format=kwargs.get("img_format", "eps"),
             units=kwargs.get("units", "THz"),
         )
 
