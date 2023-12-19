@@ -60,3 +60,11 @@ def test_multi_md_flow(mock_vasp, clean_dir, si_structure):
     assert len(output_recap_2.traj_ids) == 1
     assert len(output_recap_2.full_traj_ids) == 3
     assert isinstance(output_recap_1, MultiMDOutput)
+
+
+def test_multi_md_flow_restart_from_uuid():
+    # check that the correct reference is used if a string is passed
+    ref_id = "475bf8ab-06ec-4222-8bad-6f9f3979f2ea"
+    flow = MultiMDMaker().restart_from_uuid(ref_id)
+
+    assert flow.jobs[0].function_kwargs["prev_dir"].uuid == ref_id

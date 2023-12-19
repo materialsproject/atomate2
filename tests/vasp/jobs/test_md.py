@@ -46,6 +46,8 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     assert output1.calcs_reversed[0].output.ionic_steps is None
     traj = output1.vasp_objects[VaspObject.TRAJECTORY]
     assert len(traj.frame_properties) == nsw
-    # simply check a frame property can be converted to an IonicStep
-    for frame in traj.frame_properties:
-        IonicStep(**frame)
+    # check that a frame property can be converted to an IonicStep
+    energies = [-11.47041923, -11.46905352, -11.46520398]
+    for i, frame in enumerate(traj.frame_properties):
+        ionic_step = IonicStep(**frame)
+        assert ionic_step.e_wo_entrp == pytest.approx(energies[i])

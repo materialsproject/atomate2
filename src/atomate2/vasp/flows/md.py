@@ -32,14 +32,14 @@ class MultiMDMaker(Maker):
     """
 
     name: str = "multi md"
-    md_makers: list[BaseVaspMaker] = field(default_factory=lambda: list(MDMaker()))
+    md_makers: list[BaseVaspMaker] = field(default_factory=lambda: [MDMaker()])
 
     def make(
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
         prev_traj_ids: list[str] | None = None,
-    ):
+    ) -> Flow:
         """
         Create a flow with several chained MD runs.
 
@@ -82,7 +82,7 @@ class MultiMDMaker(Maker):
 
         return Flow(md_jobs, output_job.output, name=self.name)
 
-    def restart_from_uuid(self, md_ref: str | OutputReference):
+    def restart_from_uuid(self, md_ref: str | OutputReference) -> Flow:
         """
         Create a flow from the output reference of another MultiMDMaker.
 
