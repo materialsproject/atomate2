@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 
 from atomate2.aims.jobs.base import BaseAimsMaker
 from atomate2.aims.jobs.core import SocketIOStaticMaker
-from atomate2.aims.sets.base import AimsInputGenerator
-from atomate2.aims.sets.core import SocketIOSetGenerator, StaticSetGenerator
+from pymatgen.io.aims.sets.base import AimsInputGenerator
+from pymatgen.io.aims.sets.core import SocketIOSetGenerator, StaticSetGenerator
 
 
 @dataclass

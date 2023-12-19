@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
-from atomate2.aims.sets.bs import GWSetGenerator
+from pymatgen.io.aims.sets.bs import GWSetGenerator
 
 
 def check_band(test_line, ref_line):

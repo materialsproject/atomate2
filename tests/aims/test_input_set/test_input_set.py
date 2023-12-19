@@ -1,7 +1,7 @@
 import pytest
 from pymatgen.core import Lattice, Structure
 
-from atomate2.aims.sets.base import AimsInputSet
+from pymatgen.io.aims.sets.base import AimsInputSet
 
 control_in_str = """
 #===============================================================================

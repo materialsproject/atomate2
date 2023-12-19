@@ -5,7 +5,7 @@ from jobflow import run_locally
 
 from atomate2.aims.jobs.core import GWMaker
 from atomate2.aims.schemas.task import AimsTaskDoc
-from atomate2.aims.sets.bs import GWSetGenerator
+from pymatgen.io.aims.sets.bs import GWSetGenerator
 
 
 def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, O2):

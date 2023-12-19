@@ -4,7 +4,7 @@ import os
 from glob import glob
 from pathlib import Path
 
-from atomate2.aims.sets.core import RelaxSetGenerator
+from pymatgen.io.aims.sets.core import RelaxSetGenerator
 
 
 def compare_files(test_name, work_dir, ref_dir):

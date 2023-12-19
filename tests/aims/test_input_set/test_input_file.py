@@ -1,4 +1,4 @@
-from atomate2.aims.sets.base import AimsInputFile
+from pymatgen.io.aims.sets import AimsInputFile
 
 
 def test_input_file():

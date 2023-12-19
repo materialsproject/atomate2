@@ -18,7 +18,7 @@ from atomate2.aims.files import (
 )
 from atomate2.aims.run import run_aims, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
-from atomate2.aims.sets.base import AimsInputGenerator
+from pymatgen.io.aims.sets.base import AimsInputGenerator
 from atomate2.common.files import gzip_output_folder
 
 if TYPE_CHECKING:

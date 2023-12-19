@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from jobflow import Flow, Maker
 
 from atomate2.aims.jobs.core import RelaxMaker
-from atomate2.aims.sets.core import RelaxSetGenerator
+from pymatgen.io.aims.sets.core import RelaxSetGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure

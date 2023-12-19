@@ -7,7 +7,7 @@ import shutil
 from glob import glob
 from pathlib import Path
 
-from atomate2.aims.sets.core import StaticSetGenerator
+from pymatgen.io.aims.sets.core import StaticSetGenerator
 
 
 def compare_files(test_name, work_dir, ref_dir):

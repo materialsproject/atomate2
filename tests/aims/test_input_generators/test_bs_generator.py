@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from atomate2.aims.sets.bs import BandStructureSetGenerator
+from pymatgen.io.aims.sets.bs import BandStructureSetGenerator
 
 
 def check_band(test_line, ref_line):

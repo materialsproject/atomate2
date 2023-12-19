@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Molecule, Structure
 
-    from atomate2.aims.sets.base import AimsInputGenerator
+    from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
 

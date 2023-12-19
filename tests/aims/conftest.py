@@ -10,7 +10,7 @@ from pymatgen.core import Lattice, Molecule, Structure
 
 import atomate2.aims.jobs.base
 import atomate2.aims.run
-from atomate2.aims.sets.base import AimsInputGenerator
+from pymatgen.io.aims.sets.base import AimsInputGenerator
 from atomate2.common.files import gunzip_files
 
 if TYPE_CHECKING:

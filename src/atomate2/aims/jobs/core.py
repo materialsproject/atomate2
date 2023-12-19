@@ -19,8 +19,8 @@ from atomate2.aims.files import (
 from atomate2.aims.jobs.base import _FILES_TO_ZIP, BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
-from atomate2.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
-from atomate2.aims.sets.core import (
+from pymatgen.io.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
+from pymatgen.io.aims.sets.core import (
     RelaxSetGenerator,
     SocketIOSetGenerator,
     StaticSetGenerator,
@@ -30,7 +30,7 @@ from atomate2.common.files import gzip_output_folder
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
 
-    from atomate2.aims.sets.base import AimsInputGenerator
+    from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
 

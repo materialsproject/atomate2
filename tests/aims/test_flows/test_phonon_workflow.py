@@ -14,7 +14,7 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
     from atomate2.aims.flows.phonons import PhononMaker
     from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
     from atomate2.aims.jobs.phonons import PhononDisplacementMaker
-    from atomate2.aims.sets.core import StaticSetGenerator
+    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -106,7 +106,7 @@ def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     from atomate2.aims.flows.phonons import PhononMaker
     from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
     from atomate2.aims.jobs.phonons import PhononDisplacementMakerSocket
-    from atomate2.aims.sets.core import StaticSetGenerator
+    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {

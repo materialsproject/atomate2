@@ -14,7 +14,7 @@ def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
     from atomate2.aims.flows.gw import GWConvergenceMaker
     from atomate2.aims.jobs.core import GWMaker
     from atomate2.aims.schemas.task import ConvergenceSummary
-    from atomate2.aims.sets.bs import GWSetGenerator
+    from pymatgen.io.aims.sets.bs import GWSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {

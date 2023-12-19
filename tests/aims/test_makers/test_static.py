@@ -11,7 +11,7 @@ def test_static_maker(Si, tmp_path, mock_aims, species_dir):
 
     from atomate2.aims.jobs.core import StaticMaker
     from atomate2.aims.schemas.task import AimsTaskDoc
-    from atomate2.aims.sets.core import StaticSetGenerator
+    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {"base": "static-si"}

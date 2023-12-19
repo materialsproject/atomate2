@@ -11,7 +11,7 @@ def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
 
     from atomate2.aims.jobs.core import SocketIOStaticMaker
     from atomate2.aims.schemas.task import AimsTaskDoc
-    from atomate2.aims.sets.core import SocketIOSetGenerator
+    from pymatgen.io.aims.sets.core import SocketIOSetGenerator
 
     atoms = Si
     atoms_list = [atoms, atoms.copy(), atoms.copy()]
