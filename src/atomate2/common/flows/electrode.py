@@ -19,6 +19,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+__author__ = "Jimmy Shen"
+__email__ = "jmmshn@gmail.com"
+
 
 @dataclass
 class ElectrodeInsertionMaker(Maker, ABC):

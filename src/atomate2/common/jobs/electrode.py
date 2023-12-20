@@ -18,6 +18,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+__author__ = "Jimmy Shen"
+__email__ = "jmmshn@gmail.com"
+
 
 class RelaxJobSummary(NamedTuple):
     """A summary of a relaxation job."""
