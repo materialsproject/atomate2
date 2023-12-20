@@ -45,18 +45,26 @@ def get_stable_inserted_structure(
         [get_stable_inserted_structure]:
             (static) -> N x (chgcar analysis -> relax) -> (return best structure)
 
-    Args:
-        structure: The structure to insert into.
-        inserted_species: The species to insert.
-        structure_matcher: The structure matcher to use to determine if additional
-            insertion is needed.
-        static_maker: A maker to perform static calculations.
-        relax_maker: A maker to perform relaxation calculations.
-        insertions_per_step: The maximum number of ion insertion sites to attempt.
-        use_aeccar: Whether to use the AECCAR0 and AECCAR2 files for the charge density.
-            This is often necessary since the CHGCAR file has spurious effects near the
-            core which often breaks the min-filter algorithms used to identify the local
-            minima.
+    Parameters
+    ----------
+    structure:
+        The structure to insert into.
+    inserted_species:
+        The species to insert.
+    structure_matcher:
+        The structure matcher to use to determine if additional
+        insertion is needed.
+    static_maker:
+        A maker to perform static calculations.
+    relax_maker:
+        A maker to perform relaxation calculations.
+    insertions_per_step:
+        The maximum number of ion insertion sites to attempt.
+    use_aeccar:
+        Whether to use the AECCAR0 and AECCAR2 files for the charge density.
+        This is often necessary since the CHGCAR file has spurious effects near the
+        core which often breaks the min-filter algorithms used to identify the local
+        minima.
     """
     if structure is None:
         return None
@@ -111,12 +119,14 @@ def get_inserted_structures(
 ) -> list[Structure]:
     """Get the inserted structures.
 
-    Args:
-        chgcar: The charge density.
-        inserted_species: The species to insert.
-        insertions_per_step: The maximum number of ion insertion sites to attempt.
-        charge_insertion_generator: The charge insertion generator to use.
-            Tolerances should be set here.
+    Parameters
+    ----------
+    chg: The charge density.
+    inserted_species: The species to insert.
+    insertions_per_step: The maximum number of ion insertion sites to attempt.
+    charge_insertion_generator: The charge insertion generator to use,
+        tolerances should be set here.
+
 
     Returns
     -------
@@ -136,9 +146,10 @@ def get_relaxed_job_summaries(
 ) -> Response:
     """Spawn relaxation jobs.
 
-    Args:
-        structures: The structures to relax.
-        relax_maker: The maker to use to spawn relaxation jobs.
+    Parameters
+    ----------
+    structures: The structures to relax.
+    relax_maker: The maker to use to spawn relaxation jobs.
 
     Returns
     -------
@@ -169,10 +180,11 @@ def get_min_energy_structure(
 ) -> Structure:
     """Get the structure with the lowest energy.
 
-    Args:
-        structures: The structures to compare.
-        ref_structure: The reference structure to compare to.
-        structure_matcher: The structure matcher to use to compare structures.
+    Parameters
+    ----------
+    structures: The structures to compare.
+    ref_structure: The reference structure to compare to.
+    structure_matcher: The structure matcher to use to compare structures.
 
     Returns
     -------
