@@ -71,7 +71,7 @@ def spawn_energy_curve_calcs(
     distorted_structure: Structure,
     distortions: Iterable[float],
     static_maker: StaticMaker,
-    prev_dir: str | Path | None = None,
+    prev_vasp_dir: str | Path | None = None,
     add_name: str = "",
     add_info: dict | None = None,
 ) -> Response:
@@ -109,7 +109,7 @@ def spawn_energy_curve_calcs(
     )
     # add all the distorted structures
     for i, d_struct in enumerate(distorted_structures):
-        static_job = static_maker.make(d_struct, prev_dir=prev_dir)
+        static_job = static_maker.make(d_struct, prev_vasp_dir=prev_vasp_dir)
         suffix = f" {i}" if add_name == "" else f" {add_name} {i}"
 
         # write some provenances data in info.json file
@@ -458,7 +458,7 @@ def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dic
                 "defect_locpot": defect_locpot,
                 "bulk_dir_name": bulk_dir_name,
                 "bulk_locpot": bulk_locpot,
-                "bulk_uuid": bulk_summary.get("uuid"),
+                "bulk_uuid": bulk_summary.get("uuid", None),
                 "defect_uuid": qq_summary.get("uuid", None),
             }
         )

@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
 
+from atomate2.common.jobs.electrode import get_stable_inserted_structure
+
 if TYPE_CHECKING:
     from pymatgen.alchemy import ElementLike
     from pymatgen.core.structure import Structure
@@ -65,3 +67,12 @@ class ElectrodeInsertionMaker(Maker):
         -------
             Flow for ion insertion.
         """
+        # First relax the structure
+        relax = self.relax_maker.make(structure)
+        structure = relax.output.structure
+
+        # Get the inserted structure
+        inserted_structure = get_stable_inserted_structure(
+            structure=structure,
+        )
+        return Flow.from_job(inserted_structure)
