@@ -29,7 +29,8 @@ class ElectrodeInsertionMaker(Maker, ABC):
 
     The basic unit for cation insertion is:
         [get_stable_inserted_structure]:
-            (static) -> N x (chgcar analysis -> relax) -> (return best structure)
+            (static) -> (chgcar analysis) ->
+            N x (relax) -> (return best structure)
 
     The workflow is:
         [relax structure]
@@ -89,9 +90,9 @@ class ElectrodeInsertionMaker(Maker, ABC):
         -------
             Flow for ion insertion.
         """
+        self.update_static_maker()
         # First relax the structure
         relax = self.relax_maker.make(structure)
-        self.update_static_maker()
         # Get the inserted structure
         inserted_structure = get_stable_inserted_structure(
             structure=relax.output.structure,
