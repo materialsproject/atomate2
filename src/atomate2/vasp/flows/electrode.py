@@ -57,4 +57,4 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
 
     def update_static_maker(self):
         """Ensure that the static maker will store the desired data."""
-        self.static_maker.task_document_kwargs = {"store_volumetric_data": ["aeccar"]}
+        self.static_maker.task_document_kwargs = {"store_volumetric_data": ("aeccar")}
