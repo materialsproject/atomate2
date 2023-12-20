@@ -27,8 +27,9 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
     The workflow is:
         [relax structure]
         [get_stable_inserted_structure]
-        [relax structure]
         [get_stable_inserted_structure]
+        ... until the insertion is no longer topotactic.
+
 
     Parameters
     ----------

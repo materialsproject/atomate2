@@ -31,8 +31,15 @@ class ElectrodeInsertionMaker(Maker, ABC):
     The workflow is:
         [relax structure]
         [get_stable_inserted_structure]
-        [relax structure]
         [get_stable_inserted_structure]
+        [get_stable_inserted_structure]
+        ... until the insertion is no longer topotactic.
+
+    This workflow requires the users to provide the following functions:
+        self.get_charge_density(task_doc: TaskDoc):
+            Get the charge density of a TaskDoc output from a calculation.
+        self.update_static_maker():
+            Ensure that the static maker will store the desired data.
 
     Parameters
     ----------
