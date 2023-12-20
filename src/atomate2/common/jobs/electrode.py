@@ -40,6 +40,7 @@ def get_stable_inserted_structure(
     relax_maker: Maker,
     get_charge_density: Callable,
     insertions_per_step: int = 4,
+    n_steps: int | None = None,
 ):
     """Attempt ion insertion.
 
@@ -72,6 +73,8 @@ def get_stable_inserted_structure(
     """
     if structure is None:
         return None
+    if n_steps is not None and n_steps <= 0:
+        return None
     static_job = static_maker.make(structure=structure)
     chg_job = get_charge_density(static_job.output)
     insertion_job = get_inserted_structures(
@@ -97,6 +100,7 @@ def get_stable_inserted_structure(
         static_maker=static_maker,
         relax_maker=relax_maker,
         get_charge_density=get_charge_density,
+        n_steps=n_steps - 1,
         insertions_per_step=insertions_per_step,
     )
 

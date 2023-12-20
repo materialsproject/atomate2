@@ -52,8 +52,6 @@ class ElectrodeInsertionMaker(Maker, ABC):
         A maker to perform relaxation calculations.
     static_maker: Maker
         A maker to perform static calculations.
-    insertions_per_step: int
-        The maximum number of ion insertion sites to attempt.
     stucture_matcher: StructureMatcher
         The structure matcher to use to determine if additional insertion is needed.
     """
@@ -61,20 +59,31 @@ class ElectrodeInsertionMaker(Maker, ABC):
     name: str
     relax_maker: Maker
     static_maker: Maker
-    insertions_per_step: int = 4
     structure_matcher: StructureMatcher = field(
         default_factory=lambda: StructureMatcher(
             comparator=ElementComparator(),
         )
     )
 
-    def make(self, structure: Structure, inserted_element: ElementLike) -> Flow:
+    def make(
+        self,
+        structure: Structure,
+        inserted_element: ElementLike,
+        n_steps: int | None,
+        insertions_per_step: int = 4,
+    ) -> Flow:
         """Make the flow.
 
         Parameters
         ----------
-        structure: Structure to insert ion into.
-        inserted_species: Species to insert.
+        structure:
+            Structure to insert ion into.
+        inserted_species:
+            Species to insert.
+        n_steps: int
+            The maximum number of sequential insertion steps to attempt.
+        insertions_per_step: int
+            The maximum number of ion insertion sites to attempt.
 
         Returns
         -------
@@ -91,7 +100,8 @@ class ElectrodeInsertionMaker(Maker, ABC):
             static_maker=self.static_maker,
             relax_maker=self.relax_maker,
             get_charge_density=self.get_charge_density,
-            insertions_per_step=self.insertions_per_step,
+            n_steps=n_steps,
+            insertions_per_step=insertions_per_step,
         )
         return Flow([relax, inserted_structure])
 
