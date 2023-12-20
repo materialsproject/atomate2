@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import logging
-from abc import abstractmethod
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from atomate2.common.flows import electrode as electrode_flows
@@ -16,13 +14,13 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-@dataclass
 class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
     """Attempt ion insertion into a structure.
 
     The basic unit for cation insertion is:
         [get_stable_inserted_structure]:
-            (static) -> N x (chgcar analysis -> relax) -> (return best structure)
+            (static) -> (chgcar analysis) ->
+            N x (relax) -> (return best structure)
 
     The workflow is:
         [relax structure]
@@ -43,7 +41,6 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         The structure matcher to use to determine if additional insertion is needed.
     """
 
-    @abstractmethod
     def get_charge_density(self, task_doc: TaskDoc) -> VolumetricData:
         """Get the charge density of a structure.
 
@@ -58,9 +55,6 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         aeccar2 = task_doc.calcs_reversed[0].output.aeccar2
         return aeccar0 + aeccar2
 
-    @abstractmethod
     def update_static_maker(self):
         """Ensure that the static maker will store the desired data."""
-        self.static_maker.task_document_kwargs = (
-            {"store_volumetric_data": ["aeccar"]},
-        )
+        self.static_maker.task_document_kwargs = {"store_volumetric_data": ["aeccar"]}

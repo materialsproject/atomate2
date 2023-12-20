@@ -57,14 +57,18 @@ class ElectrodeInsertionMaker(Maker, ABC):
         The structure matcher to use to determine if additional insertion is needed.
     """
 
-    name: str
     relax_maker: Maker
     static_maker: Maker
+    name: str = "ion insertion"
     structure_matcher: StructureMatcher = field(
         default_factory=lambda: StructureMatcher(
             comparator=ElementComparator(),
         )
     )
+
+    def __post_init__(self):
+        """Ensure that the static maker will store the desired data."""
+        self.update_static_maker()
 
     def make(
         self,
@@ -90,7 +94,6 @@ class ElectrodeInsertionMaker(Maker, ABC):
         -------
             Flow for ion insertion.
         """
-        self.update_static_maker()
         # First relax the structure
         relax = self.relax_maker.make(structure)
         # Get the inserted structure
