@@ -90,9 +90,16 @@ def get_stable_inserted_structure(
         insertions_per_step=insertions_per_step,
     )
 
-    return Flow(
-        jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
+    replace_flow = Flow(
+        jobs=[
+            static_job,
+            chg_job,
+            insertion_job,
+            relax_jobs,
+            min_en_job,
+        ]
     )
+    return Response(replace=replace_flow, addition=next_step)
 
 
 @job
