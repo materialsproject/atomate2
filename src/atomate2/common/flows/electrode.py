@@ -44,7 +44,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         self.update_static_maker():
             Ensure that the static maker will store the desired data.
 
-    Parameters
+    Attributes
     ----------
     name: str
         The name of the flow created by this maker.
@@ -109,8 +109,9 @@ class ElectrodeInsertionMaker(Maker, ABC):
     def get_charge_density(self, task_doc) -> VolumetricData:
         """Get the charge density of a structure.
 
-        Args:
-            structure: The structure to get the charge density of.
+        Parameters
+        ----------
+        structure: The structure to get the charge density of.
 
         Returns
         -------

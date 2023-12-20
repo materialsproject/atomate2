@@ -39,8 +39,6 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         A maker to perform relaxation calculations.
     static_maker: Maker
         A maker to perform static calculations.
-    insertions_per_step: int
-        The maximum number of ion insertion sites to attempt.
     stucture_matcher: StructureMatcher
         The structure matcher to use to determine if additional insertion is needed.
     """
