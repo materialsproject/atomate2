@@ -98,5 +98,5 @@ class ElectrodeInsertionMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def update_static_maker(self) -> bool:
+    def update_static_maker(self):
         """Ensure that the static maker will store the desired data."""
