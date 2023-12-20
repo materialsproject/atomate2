@@ -74,5 +74,6 @@ class ElectrodeInsertionMaker(Maker):
         # Get the inserted structure
         inserted_structure = get_stable_inserted_structure(
             structure=structure,
+            inserted_species=inserted_species,
         )
         return Flow.from_job(inserted_structure)

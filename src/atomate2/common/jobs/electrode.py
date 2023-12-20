@@ -31,7 +31,7 @@ class RelaxJobSummary(NamedTuple):
 @job
 def get_stable_inserted_structure(
     structure: Structure,
-    inserted_species: ElementLike,
+    inserted_element: ElementLike,
     structure_matcher: StructureMatcher,
     static_maker: Maker,
     relax_maker: Maker,
@@ -65,7 +65,7 @@ def get_stable_inserted_structure(
     chg_job = get_charge_density(static_job.output)
     insertion_job = get_inserted_structures(
         chg_job.output,
-        inserted_species=inserted_species,
+        inserted_species=inserted_element,
         insertions_per_step=insertions_per_step,
     )
     relax_jobs = get_relaxed_job_summaries(
@@ -81,7 +81,7 @@ def get_stable_inserted_structure(
 
     next_step = get_stable_inserted_structure(
         structure=min_en_job.output,
-        inserted_species=inserted_species,
+        inserted_species=inserted_element,
         structure_matcher=structure_matcher,
         static_maker=static_maker,
         relax_maker=relax_maker,
