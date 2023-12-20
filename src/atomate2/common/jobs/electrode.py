@@ -36,7 +36,6 @@ def get_stable_inserted_structure(
     static_maker: Maker,
     relax_maker: Maker,
     get_charge_density: Callable,
-    check_static_maker: Callable = lambda: True,
     insertions_per_step: int = 4,
 ):
     """Attempt ion insertion.
@@ -58,6 +57,8 @@ def get_stable_inserted_structure(
         A maker to perform static calculations.
     relax_maker:
         A maker to perform relaxation calculations.
+    get_charge_density:
+        A function to get the charge density from a TaskDocument.
     insertions_per_step:
         The maximum number of ion insertion sites to attempt.
     use_aeccar:
@@ -68,7 +69,6 @@ def get_stable_inserted_structure(
     """
     if structure is None:
         return None
-
     static_job = static_maker.make(structure=structure)
     chg_job = get_charge_density(static_job.output)
     insertion_job = get_inserted_structures(
@@ -94,7 +94,6 @@ def get_stable_inserted_structure(
         static_maker=static_maker,
         relax_maker=relax_maker,
         get_charge_density=get_charge_density,
-        check_static_maker=check_static_maker,
         insertions_per_step=insertions_per_step,
     )
 

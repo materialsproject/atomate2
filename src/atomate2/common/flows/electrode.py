@@ -72,7 +72,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         """
         # First relax the structure
         relax = self.relax_maker.make(structure)
-
+        self.update_static_maker()
         # Get the inserted structure
         inserted_structure = get_stable_inserted_structure(
             structure=relax.output.structure,
@@ -81,7 +81,6 @@ class ElectrodeInsertionMaker(Maker, ABC):
             static_maker=self.static_maker,
             relax_maker=self.relax_maker,
             get_charge_density=self.get_charge_density,
-            check_static_maker=self.check_static_maker,
             insertions_per_step=self.insertions_per_step,
         )
         return Flow([relax, inserted_structure])
@@ -99,5 +98,5 @@ class ElectrodeInsertionMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def check_static_maker(self, static_maker) -> bool:
+    def update_static_maker(self) -> bool:
         """Ensure that the static maker will store the desired data."""
