@@ -52,7 +52,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         A maker to perform relaxation calculations.
     static_maker: Maker
         A maker to perform static calculations.
-    stucture_matcher: StructureMatcher
+    structure_matcher: StructureMatcher
         The structure matcher to use to determine if additional insertion is needed.
     """
 
