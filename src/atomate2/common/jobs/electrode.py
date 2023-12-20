@@ -76,7 +76,7 @@ def get_stable_inserted_structure(
     if n_steps is not None and n_steps <= 0:
         return None
     static_job = static_maker.make(structure=structure)
-    chg_job = get_charge_density(static_job.output)
+    chg_job = get_charge_density_job(static_job.output, get_charge_density)
     insertion_job = get_inserted_structures(
         chg_job.output,
         inserted_species=inserted_element,
@@ -207,3 +207,22 @@ def get_min_energy_structure(
 
     min_summary = min(topotactic_summaries, key=lambda x: x.entry.energy_per_atom)
     return min_summary.structure
+
+
+@job
+def get_charge_density_job(
+    task_doc,
+    get_charge_density: Callable,
+) -> VolumetricData:
+    """Get the charge density from a task document.
+
+    Parameters
+    ----------
+    task_doc: The task document to get the charge density from.
+    get_charge_density: A function to get the charge density from a task document.
+
+    Returns
+    -------
+        The charge density.
+    """
+    return get_charge_density(task_doc)
