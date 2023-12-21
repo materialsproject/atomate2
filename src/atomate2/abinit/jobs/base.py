@@ -7,7 +7,7 @@ import os
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar, NamedTuple
+from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple
 
 import jobflow
 from abipy.flowtk.events import as_event_class
@@ -16,8 +16,8 @@ from jobflow import Maker, Response, job
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
-from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.schemas.calculation import TaskState
+from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
@@ -177,7 +177,7 @@ class BaseAbinitMaker(Maker):
         )
 
         # Run abinit
-        run_status = run_abinit(
+        run_abinit(
             wall_time=config.wall_time,
             start_time=config.start_time,
             **self.run_abinit_kwargs,

@@ -4,17 +4,16 @@ from __future__ import annotations
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Optional, Union
 
-from abipy.electrons.gsr import GsrFile
 from abipy.abio.outputs import AbinitOutputFile
+from abipy.electrons.gsr import GsrFile
+
+# from pymatgen.io.common import VolumetricData
+from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
-
-# from pymatgen.io.common import VolumetricData
-
-from emmet.core.math import Matrix3D, Vector3D
 
 # STORE_VOLUMETRIC_DATA = ("total_density",)
 
@@ -100,7 +99,10 @@ class CalculationOutput(BaseModel):
     bandgap: Optional[float] = Field(
         None, description="The band gap from the calculation in eV"
     )
-    cbm: float = Field(
+    direct_bandgap: Optional[float] = Field(
+        None, description="The direct band gap from the calculation in eV"
+    )
+    cbm: Optional[float] = Field(
         None,
         description="The conduction band minimum, or LUMO for molecules, in eV "
         "(if system is not metallic)",
@@ -136,14 +138,24 @@ class CalculationOutput(BaseModel):
         """
         structure = output.structure  # final structure by default for GSR
 
+        # In case no conduction bands were included
+        try:
+            cbm = output.ebands.get_edge_state("cbm").eig
+            bandgap = output.ebands.fundamental_gaps[
+                0
+            ].energy  # [0] for one spin channel only
+            direct_bandgap = output.ebands.direct_gaps[0].energy
+        except ValueError:
+            cbm = None
+            bandgap = None
+            direct_bandgap = None
+
         electronic_output = {
             "efermi": float(output.ebands.fermie),
             "vbm": output.ebands.get_edge_state("vbm").eig,
-            "cbm": output.ebands.get_edge_state("cbm").eig,
-            "bandgap": output.ebands.fundamental_gaps[
-                0
-            ].energy,  # [0] for one spin channel only
-            "direct_bandgap": output.ebands.direct_gaps[0].energy,
+            "cbm": cbm,
+            "bandgap": bandgap,
+            "direct_bandgap": direct_bandgap,
         }
 
         forces = None
@@ -167,7 +179,7 @@ class CalculationOutput(BaseModel):
             energy=output.energy,
             energy_per_atom=output.energy_per_atom,
             **electronic_output,
-            #atomic_steps=None,
+            # atomic_steps=None,
             forces=forces,
             stress=stress,
             stresses=stresses,
@@ -222,7 +234,7 @@ class Calculation(BaseModel):
         # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
-        #store_trajectory: bool = False,
+        # store_trajectory: bool = False,
         store_scf: bool = False,
         # store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Calculation, dict[AbinitObject, dict]]:
@@ -318,5 +330,5 @@ class Calculation(BaseModel):
                 # k.name.lower(): v for k, v in output_file_paths.items()
                 # },
             ),
-            None# abinit_objects,
+            None,  # abinit_objects,
         )

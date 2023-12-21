@@ -8,25 +8,27 @@ from typing import Any, Optional, TypeVar, Union
 
 from abipy.abio.inputs import AbinitInput
 from emmet.core.math import Matrix3D, Vector3D
-from emmet.core.structure import MoleculeMetadata, StructureMetadata
-#from emmet.core.tasks import get_uri
-from atomate2.utils.path import get_uri
-from atomate2.utils.path import strip_hostname
+from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 
+from atomate2.abinit.files import load_abinit_input
+
 # from pymatgen.entries.computed_entries import ComputedEntry
 from atomate2.abinit.schemas.calculation import (
+    AbinitObject,
     Calculation,
     TaskState,
-    AbinitObject,
-    )
+)
 from atomate2.abinit.utils import datetime_str
-from atomate2.abinit.files import load_abinit_input
+
+# from emmet.core.tasks import get_uri
+from atomate2.utils.path import get_uri, strip_hostname
 
 _T = TypeVar("_T", bound="AbinitTaskDoc")
 # _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
 logger = logging.getLogger(__name__)
+
 
 class InputDoc(BaseModel):
     """Summary of the inputs for an Abinit calculation.
@@ -61,12 +63,13 @@ class InputDoc(BaseModel):
         .InputDoc
             The calculation input summary.
         """
-        abinit_input=load_abinit_input(calc_doc.dir_name)
+        abinit_input = load_abinit_input(calc_doc.dir_name)
         return cls(
             structure=abinit_input.structure,
             abinit_input=abinit_input,
             xc=str(abinit_input.pseudos[0].xc.name),
         )
+
 
 class OutputDoc(BaseModel):
     """Summary of the outputs for an Abinit calculation.
@@ -197,7 +200,9 @@ class AbinitTaskDoc(StructureMetadata):
         Additional json loaded from the calculation directory
     """
 
-    dir_name: Optional[str] = Field(None, description="The directory for this Abinit task")
+    dir_name: Optional[str] = Field(
+        None, description="The directory for this Abinit task"
+    )
     last_updated: Optional[str] = Field(
         default_factory=datetime_str,
         description="Timestamp for when this task document was last updated",
@@ -208,7 +213,9 @@ class AbinitTaskDoc(StructureMetadata):
     input: Optional[InputDoc] = Field(
         None, description="The input to the first calculation"
     )
-    output: Optional[OutputDoc] = Field(None, description="The output of the final calculation")
+    output: Optional[OutputDoc] = Field(
+        None, description="The output of the final calculation"
+    )
     structure: Union[Structure, Molecule] = Field(
         None, description="Final output atoms from the task"
     )
@@ -305,7 +312,9 @@ class AbinitTaskDoc(StructureMetadata):
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
-        dir_name = strip_hostname(dir_name) # VT: TODO to put here?necessary with laptop at least...
+        dir_name = strip_hostname(
+            dir_name
+        )  # VT: TODO to put here?necessary with laptop at least...
 
         # only store objects from last calculation
         # TODO: make this an option
@@ -339,7 +348,7 @@ class AbinitTaskDoc(StructureMetadata):
             "structure": calcs_reversed[-1].output.structure,
             "tags": tags,
         }
-        #doc = cls(**data)
+        # doc = cls(**data)
         doc = cls(**ddict)
         doc = doc.copy(update=data)
         return doc.model_copy(update=additional_fields, deep=True)
@@ -414,7 +423,9 @@ def _find_abinit_files(
 
     if len(task_files) == 0:
         # get any matching file from the root folder
-        standard_files = _get_task_files(list(path.glob("*"))+list(path.glob("outdata/*")))
+        standard_files = _get_task_files(
+            list(path.glob("*")) + list(path.glob("outdata/*"))
+        )
         if len(standard_files) > 0:
             task_files["standard"] = standard_files
 

@@ -5,7 +5,6 @@ import copy
 import json
 import logging
 import os
-import abipy.abio.factories as abifact
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
@@ -618,9 +617,18 @@ class AbinitInputGenerator(InputGenerator):
         if factory_kwargs:
             total_factory_kwargs.update(factory_kwargs)
 
-        if isinstance(self.factory, str):   #needed bc the factory is stored as a
-                                            #str in the MongoDB
-            generated_input = eval('abifact.'+self.factory.split()[1]+'(**total_factory_kwargs)')
+        if isinstance(self.factory, str):  # needed bc the factory is stored as a
+            # str in the MongoDB
+            import abipy.abio.factories as abifact
+
+            if self.factory.split()[1] in dir(abifact):
+                generated_input = eval(
+                    "abifact." + self.factory.split()[1] + "(**total_factory_kwargs)"
+                )
+            else:
+                raise Exception(
+                    f"{self.factory.split()[1]} is not a valid abipy factory."
+                )
         else:
             generated_input = self.factory(**total_factory_kwargs)
 

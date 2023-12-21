@@ -3,9 +3,6 @@
 """A collection of helper utils found in atomate2 package."""
 
 
-from datetime import datetime
-
-
 def datetime_str() -> str:
     """
     Get a string representation of the current time.
@@ -15,4 +12,6 @@ def datetime_str() -> str:
     str
         The current time.
     """
+    from datetime import datetime
+
     return str(datetime.utcnow())
