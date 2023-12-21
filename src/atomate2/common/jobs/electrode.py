@@ -175,7 +175,7 @@ def get_relaxed_job_summaries(
         outputs.append(RelaxJobSummary(**d_))
 
     replace_flow = Flow(relax_jobs, output=outputs)
-    return Response(replace=replace_flow)
+    return Response(replace=replace_flow, output=outputs)
 
 
 @job

@@ -96,11 +96,13 @@ class ElectrodeInsertionMaker(Maker, ABC):
         """
         # First relax the structure
         relax = self.relax_maker.make(structure)
+        # add ignored_species to the structure matcher
+        sm = _add_ignored_species(self.structure_matcher, inserted_element)
         # Get the inserted structure
         inserted_structure = get_stable_inserted_structure(
             structure=relax.output.structure,
             inserted_element=inserted_element,
-            structure_matcher=self.structure_matcher,
+            structure_matcher=sm,
             static_maker=self.static_maker,
             relax_maker=self.relax_maker,
             get_charge_density=self.get_charge_density,
@@ -125,3 +127,12 @@ class ElectrodeInsertionMaker(Maker, ABC):
     @abstractmethod
     def update_static_maker(self):
         """Ensure that the static maker will store the desired data."""
+
+
+def _add_ignored_species(structure_matcher: StructureMatcher, species: ElementLike):
+    """Add an ignored species to a structure matcher."""
+    sm_dict = structure_matcher.as_dict()
+    ignored_species = set(sm_dict.get("ignored_species", set()))
+    ignored_species.add(str(species))
+    sm_dict["ignored_species"] = list(ignored_species)
+    return StructureMatcher.from_dict(sm_dict)
