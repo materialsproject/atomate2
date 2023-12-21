@@ -25,7 +25,6 @@ from atomate2.vasp.jobs.mp import (
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from jobflow import Job
     from pymatgen.core.structure import Structure
 
 
@@ -116,11 +115,9 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        jobs: list[Job] = []
-
         relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         output = relax_flow.output
-        jobs += [relax_flow]
+        jobs = [relax_flow]
 
         if self.static_maker:
             # Run a static calculation
@@ -176,11 +173,9 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        jobs: list[Job] = []
-
         relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         output = relax_flow.output
-        jobs += [relax_flow]
+        jobs = [relax_flow]
         if self.static_maker:
             # Run a static calculation (typically r2SCAN)
             static_job = self.static_maker.make(

@@ -39,7 +39,7 @@ def get_total_energy_per_cell(
     total_dft_energy_per_formula_unit: float, structure: Structure
 ) -> float:
     """
-    Job that computes total dft energy of the cell.
+    Job that computes total DFT energy of the cell.
 
     Parameters
     ----------
@@ -221,7 +221,7 @@ def generate_frequencies_eigenvectors(
     displacement_data: dict
         outputs from displacements
     total_dft_energy: float
-        total dft energy in eV per cell
+        total DFT energy in eV per cell
     epsilon_static: Matrix3D
         The high-frequency dielectric constant
     born: Matrix3D

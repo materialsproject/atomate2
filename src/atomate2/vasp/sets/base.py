@@ -183,20 +183,22 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC", False) is True and self.incar.get(
-            "ALGO", "Normal"
-        ) not in ["Normal", "All", "Damped"]:
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+            "Normal",
+            "All",
+            "Damped",
+        ]:
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
                 stacklevel=1,
             )
 
-        if not self.incar.get("LASPH", False) and (
+        if not self.incar.get("LASPH") and (
             self.incar.get("METAGGA")
-            or self.incar.get("LHFCALC", False)
-            or self.incar.get("LDAU", False)
-            or self.incar.get("LUSE_VDW", False)
+            or self.incar.get("LHFCALC")
+            or self.incar.get("LDAU")
+            or self.incar.get("LUSE_VDW")
         ):
             warnings.warn(
                 "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT",
@@ -245,8 +247,8 @@ class VaspInputGenerator(InputGenerator):
         Allow user to override POTCARs. E.g., {"Gd": "Gd_3"}.
     user_potcar_functional
         Functional to use. Default is to use the functional in the config dictionary.
-        Valid values: "PBE", "PBE_52", "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91",
-        "LDA_US", "PW91_US".
+        Valid values: "PBE", "PBE_52", "PBE_54", "PBE_64", "LDA", "LDA_52", "LDA_54",
+        "LDA_64", "PW91", "LDA_US", "PW91_US".
     auto_ismear
         If true, the values for ISMEAR and SIGMA will be set automatically depending
         on the bandgap of the system. If the bandgap is not known (e.g., there is no
@@ -991,14 +993,14 @@ def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
     skip
         Keys to skip.
     """
-    for k, v in updates.items():
-        if k in skip:
+    for key, val in updates.items():
+        if key in skip:
             continue
 
-        if v is None:
-            incar.pop(k, None)
+        if val is None:
+            incar.pop(key, None)
         else:
-            incar[k] = v
+            incar[key] = val
 
 
 def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
@@ -1024,8 +1026,8 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
         incar.pop("MAGMOM", None)
 
     # Turn off +U flags if +U is not even used
-    ldau_flags = ["LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE"]
-    if incar.get("LDAU", False) is False:
+    ldau_flags = ("LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE")
+    if not incar.get("LDAU"):
         for ldau_flag in ldau_flags:
             if ldau_flag not in skip:
                 incar.pop(ldau_flag, None)
@@ -1033,19 +1035,16 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
 
 def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     """Combine k-points files together."""
-    labels = []
-    kpoints = []
-    weights = []
+    labels, kpoints, weights = [], [], []
 
+    recip_mode = Kpoints.supported_modes.Reciprocal
     for kpoints_object in filter(None, kpoints_objects):
-        if kpoints_object.style != Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != recip_mode:
             raise ValueError(
-                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
+                f"Can only combine kpoints with style {recip_mode}, "
+                f"got {kpoints_object.style}"
             )
-        if kpoints_object.labels is None:
-            labels.append([""] * len(kpoints_object.kpts))
-        else:
-            labels.append(kpoints_object.labels)
+        labels.append(kpoints_object.labels or [""] * len(kpoints_object.kpts))
 
         weights.append(kpoints_object.kpts_weights)
         kpoints.append(kpoints_object.kpts)
@@ -1055,7 +1054,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     kpoints = np.concatenate(kpoints)
     return Kpoints(
         comment="Combined k-points",
-        style=Kpoints.supported_modes.Reciprocal,
+        style=recip_mode,
         num_kpts=len(kpoints),
         kpts=kpoints,
         labels=labels,
