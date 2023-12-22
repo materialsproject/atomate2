@@ -95,13 +95,13 @@ def get_stable_inserted_structure(
 
     next_step = get_stable_inserted_structure(
         structure=min_en_job.output,
-        inserted_species=inserted_element,
+        inserted_element=inserted_element,
         structure_matcher=structure_matcher,
         static_maker=static_maker,
         relax_maker=relax_maker,
         get_charge_density=get_charge_density,
-        n_steps=n_steps - 1,
         insertions_per_step=insertions_per_step,
+        n_steps=n_steps - 1,
     )
 
     replace_flow = Flow(
