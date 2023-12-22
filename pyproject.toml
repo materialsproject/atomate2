@@ -111,15 +111,6 @@ atomate2 = ["py.typed"]
 method = "git"
 default-tag = "0.0.1"
 
-[tool.flake8]
-max-line-length = 88
-max-doc-length = 88
-select = "C, E, F, W, B"
-extend-ignore = "E203, W503, E501, F401, RST21"
-min-python-version = "3.8.0"
-docstring-convention = "numpy"
-rst-roles = "class, func, ref, obj"
-
 [tool.mypy]
 ignore_missing_imports = true
 no_strict_optional = true
