@@ -167,10 +167,10 @@ def get_relaxed_job_summaries(
         job_ = relax_maker.make(structure=structure)
         relax_jobs.append(job_)
         d_ = {
-            "structure": job_.structure,
-            "entry": job_.entry,
-            "dir_name": job_.dir_name,
-            "uuid": job_.uuid,
+            "structure": job_.output.structure,
+            "entry": job_.output.entry,
+            "dir_name": job_.output.dir_name,
+            "uuid": job_.output.uuid,
         }
         outputs.append(RelaxJobSummary(**d_))
 
