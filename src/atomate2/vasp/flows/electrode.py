@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING
 
+from pymatgen.io.vasp.outputs import Chgcar
+
 from atomate2.common.flows import electrode as electrode_flows
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
-    from emmet.core.tasks import TaskDoc
     from pymatgen.io.vasp.outputs import VolumetricData
 
 logger = logging.getLogger(__name__)
@@ -41,20 +44,29 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         The structure matcher to use to determine if additional insertion is needed.
     """
 
-    def get_charge_density(self, task_doc: TaskDoc) -> VolumetricData:
+    def get_charge_density(self, prev_dir) -> VolumetricData:
         """Get the charge density of a structure.
 
-        Args:
-            structure: The structure to get the charge density of.
+        Parameters
+        ----------
+        prev_dir:
+            The previous directory where the static calculation was performed.
 
         Returns
         -------
             The charge density.
         """
-        aeccar0 = task_doc.calcs_reversed[0].output.aeccar0
-        aeccar2 = task_doc.calcs_reversed[0].output.aeccar2
+        prev_dir = Path(strip_hostname(prev_dir))
+        aeccar0 = Chgcar.from_file(prev_dir / "AECCAR0.gz")
+        aeccar2 = Chgcar.from_file(prev_dir / "AECCAR2.gz")
         return aeccar0 + aeccar2
 
     def update_static_maker(self):
         """Ensure that the static maker will store the desired data."""
-        self.static_maker.task_document_kwargs = {"store_volumetric_data": ("aeccar")}
+        store_volumetric_data = list(
+            self.static_maker.task_document_kwargs.get("store_volumetric_data", [])
+        )
+        store_volumetric_data.extend(["aeccar0", "aeccar2"])
+        self.static_maker.task_document_kwargs[
+            "store_volumetric_data"
+        ] = store_volumetric_data

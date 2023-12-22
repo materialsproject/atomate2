@@ -9,6 +9,7 @@ from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.alchemy import ElementLike
     from pymatgen.analysis.structure_matcher import StructureMatcher
     from pymatgen.core import Structure
@@ -62,7 +63,7 @@ def get_stable_inserted_structure(
     relax_maker:
         A maker to perform relaxation calculations.
     get_charge_density:
-        A function to get the charge density from a TaskDocument.
+        A function to get the charge density from a previous calculation.
     insertions_per_step:
         The maximum number of ion insertion sites to attempt.
     use_aeccar:
@@ -76,7 +77,7 @@ def get_stable_inserted_structure(
     if n_steps is not None and n_steps <= 0:
         return None
     static_job = static_maker.make(structure=structure)
-    chg_job = get_charge_density_job(static_job.output, get_charge_density)
+    chg_job = get_charge_density_job(static_job.output.dir_name, get_charge_density)
     insertion_job = get_inserted_structures(
         chg_job.output,
         inserted_species=inserted_element,
@@ -105,15 +106,14 @@ def get_stable_inserted_structure(
     )
 
     replace_flow = Flow(
-        jobs=[
-            static_job,
-            chg_job,
-            insertion_job,
-            relax_jobs,
-            min_en_job,
-        ]
+        jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
     )
-    return Response(replace=replace_flow, addition=next_step)
+    # print the names of all the jobs:
+    for job_ in ["static_job", "chg_job", "insertion_job", "relax_jobs", "min_en_job"]:
+        job_obj: Job = eval(job_)
+        print(job_, job_obj.uuid)
+
+    return Response(replace=replace_flow)
 
 
 @job
@@ -183,7 +183,7 @@ def get_min_energy_structure(
     relaxed_summaries: list[RelaxJobSummary],
     ref_structure: Structure,
     structure_matcher: StructureMatcher,
-) -> Structure:
+) -> Response:
     """Get the structure with the lowest energy.
 
     Parameters
@@ -206,23 +206,23 @@ def get_min_energy_structure(
         return None
 
     min_summary = min(topotactic_summaries, key=lambda x: x.entry.energy_per_atom)
-    return min_summary.structure
+    return Response(output=min_summary.structure)
 
 
 @job
 def get_charge_density_job(
-    task_doc,
+    prev_dir,
     get_charge_density: Callable,
 ) -> VolumetricData:
     """Get the charge density from a task document.
 
     Parameters
     ----------
-    task_doc: The task document to get the charge density from.
+    prev_dir: The previous directory where the static calculation was performed.
     get_charge_density: A function to get the charge density from a task document.
 
     Returns
     -------
         The charge density.
     """
-    return get_charge_density(task_doc)
+    return get_charge_density(prev_dir)

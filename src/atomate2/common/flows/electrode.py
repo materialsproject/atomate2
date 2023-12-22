@@ -112,12 +112,13 @@ class ElectrodeInsertionMaker(Maker, ABC):
         return Flow([relax, inserted_structure])
 
     @abstractmethod
-    def get_charge_density(self, task_doc) -> VolumetricData:
+    def get_charge_density(self, prev_dir) -> VolumetricData:
         """Get the charge density of a structure.
 
         Parameters
         ----------
-        structure: The structure to get the charge density of.
+        prev_dir:
+            The previous directory where the static calculation was performed.
 
         Returns
         -------
