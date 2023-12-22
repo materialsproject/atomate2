@@ -9,7 +9,6 @@ from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 
 if TYPE_CHECKING:
-    from jobflow import Job
     from pymatgen.alchemy import ElementLike
     from pymatgen.analysis.structure_matcher import StructureMatcher
     from pymatgen.core import Structure
@@ -108,11 +107,6 @@ def get_stable_inserted_structure(
     replace_flow = Flow(
         jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
     )
-    # print the names of all the jobs:
-    for job_ in ["static_job", "chg_job", "insertion_job", "relax_jobs", "min_en_job"]:
-        job_obj: Job = eval(job_)
-        print(job_, job_obj.uuid)
-
     return Response(replace=replace_flow)
 
 
@@ -196,6 +190,7 @@ def get_min_energy_structure(
     -------
         The structure with the lowest energy.
     """
+    relaxed_summaries = list(map(RelaxJobSummary._make, relaxed_summaries))
     topotactic_summaries = [
         summary
         for summary in relaxed_summaries
