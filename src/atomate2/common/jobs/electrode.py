@@ -190,6 +190,7 @@ def get_min_energy_structure(
     -------
         The structure with the lowest energy.
     """
+    # Convert the list of lists to a list of named tuples
     relaxed_summaries = list(map(RelaxJobSummary._make, relaxed_summaries))
     topotactic_summaries = [
         summary
