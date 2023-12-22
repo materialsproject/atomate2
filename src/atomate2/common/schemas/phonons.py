@@ -362,26 +362,26 @@ class PhononBSDOSDoc(StructureMetadata):
 
         free_energies = [
             dos.helmholtz_free_energy(
-                structure=get_pmg_structure(phonon.primitive), t=temperature
+                temp=temp, structure=get_pmg_structure(phonon.primitive)
             )
-            for temperature in temperature_range
+            for temp in temperature_range
         ]
 
         entropies = [
-            dos.entropy(structure=get_pmg_structure(phonon.primitive), t=temperature)
-            for temperature in temperature_range
+            dos.entropy(temp=temp, structure=get_pmg_structure(phonon.primitive))
+            for temp in temperature_range
         ]
 
         internal_energies = [
             dos.internal_energy(
-                structure=get_pmg_structure(phonon.primitive), t=temperature
+                temp=temp, structure=get_pmg_structure(phonon.primitive)
             )
-            for temperature in temperature_range
+            for temp in temperature_range
         ]
 
         heat_capacities = [
-            dos.cv(structure=get_pmg_structure(phonon.primitive), t=temperature)
-            for temperature in temperature_range
+            dos.cv(temp=temp, structure=get_pmg_structure(phonon.primitive))
+            for temp in temperature_range
         ]
 
         # will compute thermal displacement matrices

@@ -10,10 +10,7 @@ from atomate2.vasp.flows.mp import (
     MPGGADoubleRelaxStaticMaker,
     MPMetaGGADoubleRelaxStaticMaker,
 )
-from atomate2.vasp.jobs.mp import (
-    MPMetaGGARelaxMaker,
-    MPPreRelaxMaker,
-)
+from atomate2.vasp.jobs.mp import MPMetaGGARelaxMaker, MPPreRelaxMaker
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 
