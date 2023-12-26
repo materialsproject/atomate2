@@ -1,6 +1,7 @@
 """Module to define various calculation types as Enums for CP2K."""
+
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Dict, Iterable
 
 from monty.serialization import loadfn
 from pymatgen.io.cp2k.inputs import Cp2kInput, Keyword, KeywordList
@@ -10,14 +11,14 @@ from atomate2.cp2k.schemas.calc_types import CalcType, RunType, TaskType
 _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").resolve()))
 
 
-def run_type(inputs: Dict) -> RunType:
+def run_type(inputs: dict) -> RunType:
     """
     Determine the run_type from the CP2K input dict.
 
     This is adapted from pymatgen to be far less unstable.
 
     Args:
-        dft: dictionary of dft parameters (standard from task doc)
+        dft: dictionary of DFT parameters (standard from task doc)
     """
     dft = inputs.get("dft")
 
@@ -61,7 +62,7 @@ def run_type(inputs: Dict) -> RunType:
     return RunType(f"LDA{is_hubbard}")
 
 
-def task_type(inputs: Dict) -> TaskType:
+def task_type(inputs: dict) -> TaskType:
     """
     Determine the task type.
 
@@ -103,7 +104,7 @@ def task_type(inputs: Dict) -> TaskType:
     elif cp2k_run_type.upper() in ["GEO_OPT", "GEOMETRY_OPTIMIZATION", "CELL_OPT"]:
         calc_type.append("Structure Optimization")
 
-    elif cp2k_run_type.upper() in ["BAND"]:
+    elif cp2k_run_type.upper() == "BAND":
         calc_type.append("Band")
 
     elif cp2k_run_type.upper() in ["MOLECULAR_DYNAMICS", "MD"]:
@@ -121,7 +122,7 @@ def task_type(inputs: Dict) -> TaskType:
     elif cp2k_run_type.upper() in ["ELECTRONIC_SPECTRA", "SPECTRA"]:
         calc_type.append("Electronic Spectra")
 
-    elif cp2k_run_type.upper() in ["NEGF"]:
+    elif cp2k_run_type.upper() == "NEGF":
         calc_type.append("Non-equilibrium Green's Function")
 
     elif cp2k_run_type.upper() in ["PINT", "DRIVER"]:
@@ -130,20 +131,20 @@ def task_type(inputs: Dict) -> TaskType:
     elif cp2k_run_type.upper() in ["RT_PROPAGATION", "EHRENFEST_DYN"]:
         calc_type.append("Real-time propagation")
 
-    elif cp2k_run_type.upper() in ["BSSE"]:
+    elif cp2k_run_type.upper() == "BSSE":
         calc_type.append("Base set superposition error")
 
-    elif cp2k_run_type.upper() in ["DEBUG"]:
+    elif cp2k_run_type.upper() == "DEBUG":
         calc_type.append("Debug analysis")
 
-    elif cp2k_run_type.upper() in ["NONE"]:
+    elif cp2k_run_type.upper() == "NONE":
         calc_type.append("None")
 
     return TaskType(" ".join(calc_type))
 
 
 def calc_type(
-    inputs: Dict,
+    inputs: dict,
 ) -> CalcType:
     """
     Determine the calc type.

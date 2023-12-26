@@ -32,8 +32,6 @@ from atomate2 import SETTINGS
 _BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
 _BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
 
-__all__ = ["Cp2kInputSet", "Cp2kInputGenerator", "Cp2kAllElectronInputGenerator"]
-
 
 class Cp2kInputSet(InputSet):
     """A class to represent a set of CP2K inputs."""
@@ -42,7 +40,7 @@ class Cp2kInputSet(InputSet):
         self,
         cp2k_input: Cp2kInput,
         optional_files: dict | None = None,
-    ):
+    ) -> None:
         """
         Initialize the set.
 
@@ -79,14 +77,14 @@ class Cp2kInputSet(InputSet):
 
         """
         self.cp2k_input = cp2k_input
-        self.optional_files = {} if optional_files is None else optional_files
+        self.optional_files = optional_files or {}
 
     def write_input(
         self,
         directory: str | Path,
         make_dir: bool = True,
         overwrite: bool = True,
-    ):
+    ) -> None:
         """
         Write Cp2k input file to a directory.
 
@@ -100,8 +98,8 @@ class Cp2kInputSet(InputSet):
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        if make_dir:
+            os.makedirs(directory, exist_ok=True)
 
         inputs = {
             "input": {"filename": "cp2k.inp", "object": self.cp2k_input},
@@ -118,7 +116,9 @@ class Cp2kInputSet(InputSet):
                 raise FileExistsError(f"{directory / fn} already exists.")
 
     @staticmethod
-    def from_directory(directory: str | Path, optional_files: dict = None):
+    def from_directory(
+        directory: str | Path, optional_files: dict = None
+    ) -> Cp2kInputSet:
         """
         Load a set of CP2K inputs from a directory.
 
@@ -190,7 +190,7 @@ class Cp2kInputGenerator(InputGenerator):
     force_gamma: bool = False
     config_dict: dict = field(default_factory=lambda: _BASE_CP2K_SET)
 
-    def get_input_set(  # type: ignore
+    def get_input_set(
         self,
         structure: Structure | Molecule = None,
         prev_dir: str | Path = None,
@@ -249,7 +249,7 @@ class Cp2kInputGenerator(InputGenerator):
 
         return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional_files)
 
-    def get_input_updates(self, structure, prev_input) -> dict:
+    def get_input_updates(self, structure: Structure, prev_input: Cp2kInput) -> dict:
         """
         Get updates to the cp2k input for this calculation type.
 
@@ -272,9 +272,7 @@ class Cp2kInputGenerator(InputGenerator):
         raise NotImplementedError
 
     def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_input: Cp2kInput = None,
+        self, structure: Structure, prev_input: Cp2kInput = None
     ) -> dict:
         """
         Get updates to the kpoints configuration for this calculation type.
@@ -299,7 +297,9 @@ class Cp2kInputGenerator(InputGenerator):
         """
         return {}
 
-    def _get_previous(self, structure: Structure = None, prev_dir: str | Path = None):
+    def _get_previous(
+        self, structure: Structure = None, prev_dir: str | Path = None
+    ) -> tuple[Structure, Cp2kInput, Cp2kOutput]:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
             raise ValueError("Either structure or prev_dir must be set.")
@@ -317,7 +317,7 @@ class Cp2kInputGenerator(InputGenerator):
 
         return structure, prev_input, cp2k_output
 
-    def _get_structure(self, structure):
+    def _get_structure(self, structure) -> Structure:
         """Get the standardized structure."""
         if self.sort_structure and hasattr(structure, "get_sorted_structure"):
             structure = structure.get_sorted_structure()
@@ -329,10 +329,10 @@ class Cp2kInputGenerator(InputGenerator):
         kpoints: Kpoints | None = None,
         previous_input: Cp2kInput = None,
         input_updates: dict = None,
-    ):
+    ) -> Cp2kInput:
         """Get the input."""
-        previous_input = {} if previous_input is None else previous_input
-        input_updates = {} if input_updates is None else input_updates
+        previous_input = previous_input or {}
+        input_updates = input_updates or {}
         input_settings = dict(self.config_dict["cp2k_input"])
 
         # Generate base input but override with user input settings
@@ -351,15 +351,15 @@ class Cp2kInputGenerator(InputGenerator):
                 and input_settings[setting]
                 and callable(getattr(cp2k_input, setting))
             ):
-                subsettings = input_settings.get(setting)
+                sub_settings = input_settings.get(setting)
                 getattr(cp2k_input, setting)(
-                    **subsettings if isinstance(subsettings, dict) else {}
+                    **sub_settings if isinstance(sub_settings, dict) else {}
                 )
 
         cp2k_input.update(overrides)
         return cp2k_input
 
-    def _get_basis_file(self, cp2k_input: Cp2kInput):
+    def _get_basis_file(self, cp2k_input: Cp2kInput) -> BasisFile:
         """
         Get the basis sets for the input object and convert them to a basis file object.
 
@@ -376,7 +376,7 @@ class Cp2kInputGenerator(InputGenerator):
         cp2k_input.safeset({"force_eval": {"dft": {"BASIS_SET_FILE_NAME": "BASIS"}}})
         return BasisFile(objects=basis_sets)
 
-    def _get_potential_file(self, cp2k_input: Cp2kInput):
+    def _get_potential_file(self, cp2k_input: Cp2kInput) -> PotentialFile:
         """
         Get the potentials and convert them to a potential file object.
 
@@ -401,7 +401,7 @@ class Cp2kInputGenerator(InputGenerator):
         kpoints_updates: dict[str, Any] | None,
     ) -> Kpoints | None:
         """Get the kpoints object."""
-        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
+        kpoints_updates = kpoints_updates or {}
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:
@@ -415,7 +415,7 @@ class Cp2kInputGenerator(InputGenerator):
             return kconfig
 
         explicit = (
-            kconfig.get("explicit", False)
+            kconfig.get("explicit")
             or len(kconfig.get("added_kpoints", [])) > 0
             or "zero_weighted_reciprocal_density" in kconfig
             or "zero_weighted_line_density" in kconfig
@@ -535,14 +535,14 @@ class Cp2kInputGenerator(InputGenerator):
 # TODO From `atomate2.vasp.sets.base`. Should possibly go in common.
 # only reservation is if, eventually, CP2K gets it own kpoint object version
 # instead of using the vasp kpoint objects.
-def _combine_kpoints(*kpoints_objects: Kpoints):
+def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     """Combine k-points files together."""
     labels = []
     kpoints = []
     weights = []
 
     for kpoints_object in filter(None, kpoints_objects):
-        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != Kpoints.supported_modes.Reciprocal:
             raise ValueError(
                 "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
             )
@@ -599,7 +599,7 @@ class Cp2kAllElectronInputGenerator(Cp2kInputGenerator):
         return None
 
 
-def recursive_update(d: dict, u: dict):
+def recursive_update(d: dict, u: dict) -> dict:
     """
     Update a dictionary recursively and return it.
 

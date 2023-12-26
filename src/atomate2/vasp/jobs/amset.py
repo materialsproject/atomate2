@@ -28,21 +28,12 @@ from atomate2.vasp.sets.core import (
 )
 
 if TYPE_CHECKING:
+    from typing import Any
+
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
 
     from atomate2.vasp.sets.base import VaspInputGenerator
-
-__all__ = [
-    "DenseUniformMaker",
-    "StaticDeformationMaker",
-    "HSEDenseUniformMaker",
-    "HSEStaticDeformationMaker",
-    "run_amset_deformations",
-    "calculate_deformation_potentials",
-    "calculate_polar_phonon_frequency",
-    "generate_wavefunction_coefficients",
-]
 
 
 @dataclass
@@ -209,9 +200,9 @@ class HSEDenseUniformMaker(HSEBSMaker):
 def run_amset_deformations(
     structure: Structure,
     symprec: float = SETTINGS.SYMPREC,
-    prev_vasp_dir: str | Path | None = None,
+    prev_dir: str | Path | None = None,
     static_deformation_maker: BaseVaspMaker | None = None,
-):
+) -> Response:
     """
     Run amset deformations.
 
@@ -225,7 +216,7 @@ def run_amset_deformations(
     symprec : float
         Symmetry precision used to reduce the number of deformations. Set to None for
         no symmetry reduction.
-    prev_vasp_dir : str or Path or None
+    prev_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
     static_deformation_maker : .BaseVaspMaker or None
         A VaspMaker to use to generate the static deformation jobs.
@@ -253,7 +244,7 @@ def run_amset_deformations(
 
         # create the job
         static_job = static_deformation_maker.make(
-            deformed_structure, prev_vasp_dir=prev_vasp_dir
+            deformed_structure, prev_dir=prev_dir
         )
         static_job.append_name(f" {i + 1}/{len(deformations)}")
         statics.append(static_job)
@@ -271,7 +262,7 @@ def calculate_deformation_potentials(
     deformation_dirs: list[str],
     symprec: float = SETTINGS.SYMPREC,
     ibands: tuple[list[int], list[int]] = None,
-):
+) -> dict[str, str]:
     """
     Generate the deformation.h5 (containing deformation potentials) using AMSET.
 
@@ -333,7 +324,7 @@ def calculate_polar_phonon_frequency(
     frequencies: list[float],
     eigenvectors: list[Vector3D],
     born_effective_charges: list[Vector3D],
-):
+) -> dict[str, list[float]]:
     """
     Calculate the polar phonon frequency using amset.
 
@@ -373,7 +364,7 @@ def calculate_polar_phonon_frequency(
 
 
 @job
-def generate_wavefunction_coefficients(dir_name: str):
+def generate_wavefunction_coefficients(dir_name: str) -> dict[str, Any]:
     """
     Generate wavefunction.h5 file using amset.
 
