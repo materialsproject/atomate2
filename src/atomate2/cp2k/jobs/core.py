@@ -39,18 +39,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "StaticMaker",
-    "RelaxMaker",
-    "CellOptMaker",
-    "HybridStaticMaker",
-    "HybridRelaxMaker",
-    "HybridCellOptMaker",
-    "NonSCFMaker",
-    "TransmuterMaker",
-    "MDMaker",
-]
-
 
 @dataclass
 class StaticMaker(BaseCp2kMaker):
@@ -312,9 +300,9 @@ class NonSCFMaker(BaseCp2kMaker):
     def make(
         self,
         structure: Structure,
-        prev_cp2k_dir: str | Path | None,
+        prev_dir: str | Path | None,
         mode: str = "uniform",
-    ):
+    ) -> None:
         """
         Run a non-scf CP2K job.
 
@@ -322,7 +310,7 @@ class NonSCFMaker(BaseCp2kMaker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         mode : str
             Type of band structure calculation. Options are:
@@ -337,7 +325,7 @@ class NonSCFMaker(BaseCp2kMaker):
         # copy previous inputs
         self.copy_cp2k_kwargs.setdefault("additional_cp2k_files", ("wfn",))
 
-        return super().make.original(self, structure, prev_cp2k_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @dataclass
@@ -388,8 +376,8 @@ class TransmuterMaker(BaseCp2kMaker):
     def make(
         self,
         structure: Structure,
-        prev_cp2k_dir: str | Path | None = None,
-    ):
+        prev_dir: str | Path | None = None,
+    ) -> None:
         """
         Run a transmuter Cp2k job.
 
@@ -397,7 +385,7 @@ class TransmuterMaker(BaseCp2kMaker):
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous Cp2k calculation directory to copy output files from.
         """
         transformations = get_transformations(
@@ -411,7 +399,7 @@ class TransmuterMaker(BaseCp2kMaker):
         tjson = transmuter.transformed_structures[-1]
         self.write_additional_data.setdefault("transformations:json", tjson)
 
-        return super().make.original(self, structure, prev_cp2k_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @dataclass

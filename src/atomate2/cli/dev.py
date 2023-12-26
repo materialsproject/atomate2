@@ -4,20 +4,19 @@ import click
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
-def dev():
+def dev() -> None:
     """Tools for atomate2 developers."""
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
-def vasp_test_data(test_dir):
+def vasp_test_data(test_dir) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
     directory. Please refer to the atomate2 documentation on writing unit tests for more
     information.
     """
-    import sys
     import warnings
     from pathlib import Path
     from pprint import pformat
@@ -34,7 +33,7 @@ def vasp_test_data(test_dir):
 
     if test_dir.exists():
         click.echo("test_data folder already exists, refusing to overwrite it")
-        sys.exit()
+        raise SystemExit(1)
 
     test_dir.mkdir()
 
@@ -143,13 +142,12 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = MyMaker().make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
@@ -158,7 +156,7 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     print(test_function_str)
 
 
-def _potcar_to_potcar_spec(potcar_filename, output_filename):
+def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
     """Convert a POTCAR file to a POTCAR.spec file."""
     from pymatgen.io.vasp import Potcar
 

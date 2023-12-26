@@ -2,28 +2,30 @@ import pytest
 from pymatgen.core import Lattice, Species, Structure
 
 from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 
 @pytest.fixture(scope="module")
 def struct_no_magmoms() -> Structure:
-    """Dummy FeO structure with no magnetic moments defined."""
+    """Dummy FeO structure with expected +U corrections but no magnetic moments
+    defined."""
     return Structure(
         lattice=Lattice.cubic(3),
-        species=["Fe", "O"],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=("Fe", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
 @pytest.fixture(scope="module")
 def struct_with_spin() -> Structure:
     """Dummy FeO structure with spins defined."""
-    fe = Species("Fe2+", spin=4)
-    o = Species("O2-", spin=0.63)
+    iron = Species("Fe2+", spin=4)
+    oxi = Species("O2-", spin=0.63)
 
     return Structure(
         lattice=Lattice.cubic(3),
-        species=[fe, o],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=(iron, oxi),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
@@ -35,6 +37,16 @@ def struct_with_magmoms(struct_no_magmoms) -> Structure:
     return struct
 
 
+@pytest.fixture(scope="module")
+def struct_no_u_params() -> Structure:
+    """Dummy SiO structure with no anticipated +U corrections"""
+    return Structure(
+        lattice=Lattice.cubic(3),
+        species=("Si", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
+    )
+
+
 def test_user_incar_settings():
     structure = Structure([[1, 0, 0], [0, 1, 0], [0, 0, 1]], ["H"], [[0, 0, 0]])
 
@@ -44,8 +56,8 @@ def test_user_incar_settings():
         "ALGO": "VeryFast",
         "EDIFF": 1e-30,
         "EDIFFG": -1e-10,
-        "ENAUG": 20000,
-        "ENCUT": 15000,
+        "ENAUG": 20_000,
+        "ENCUT": 15_000,
         "GGA": "PE",
         "IBRION": 1,
         "ISIF": 1,
@@ -59,7 +71,7 @@ def test_user_incar_settings():
         "MAGMOM": {"H": 100},
         "NELM": 5,
         "NELMIN": 10,  # should not be greater than NELM
-        "NSW": 5000,
+        "NSW": 5_000,
         "PREC": 10,  # wrong type, should be string.
         "SIGMA": 20,
     }
@@ -119,3 +131,61 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
             input_gen.config_dict["INCAR"]["MAGMOM"].get(str(s), 0.6)
             for s in structure.species
         ]
+
+
+@pytest.mark.parametrize("structure", ["struct_no_magmoms", "struct_no_u_params"])
+def test_set_u_params(structure, request) -> None:
+    structure = request.getfixturevalue(structure)
+    input_gen = StaticSetGenerator()
+    incar = input_gen.get_input_set(structure, potcar_spec=True).incar
+
+    has_nonzero_u = (
+        any(
+            input_gen.config_dict["INCAR"]["LDAUU"]["O"].get(str(site.specie), 0) > 0
+            for site in structure
+        )
+        and input_gen.config_dict["INCAR"]["LDAU"]
+    )
+
+    if has_nonzero_u:
+        # if at least one site has a nonzero U value in the config_dict,
+        # ensure that there are LDAU* keys, and that they match expected values
+        # in config_dict
+        assert len([key for key in incar if key.startswith("LDAU")]) > 0
+        for LDAU_key in ["LDAUU", "LDAUJ", "LDAUL"]:
+            for idx, site in enumerate(structure):
+                assert incar[LDAU_key][idx] == input_gen.config_dict["INCAR"][LDAU_key][
+                    "O"
+                ].get(str(site.specie), 0)
+    else:
+        # if no sites have a nonzero U value in the config_dict,
+        # ensure that no keys starting with LDAU are in the INCAR
+        assert len([key for key in incar if key.startswith("LDAU")]) == 0
+
+
+@pytest.mark.parametrize(
+    "bandgap, expected_params",
+    [
+        (0, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
+        (0.1, {"KSPACING": 0.26969561, "ISMEAR": -5, "SIGMA": 0.05}),
+        (1, {"KSPACING": 0.30235235, "ISMEAR": -5, "SIGMA": 0.05}),
+        (2, {"KSPACING": 0.34935513, "ISMEAR": -5, "SIGMA": 0.05}),
+        (5, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
+        (10, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
+    ],
+)
+def test_set_kspacing_and_auto_ismear(
+    struct_no_magmoms, bandgap, expected_params, monkeypatch
+):
+    static_set = MPMetaGGARelaxSetGenerator(auto_ismear=True, auto_kspacing=True)
+
+    incar = static_set._get_incar(
+        structure=struct_no_magmoms,
+        kpoints=None,
+        previous_incar=None,
+        incar_updates={},
+        bandgap=bandgap,
+    )
+
+    actual = {key: incar[key] for key in expected_params}
+    assert actual == pytest.approx(expected_params)

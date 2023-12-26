@@ -16,8 +16,6 @@ import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
 
-__all__ = ["FileClient", "auto_fileclient"]
-
 
 class FileClient:
     """
@@ -43,13 +41,13 @@ class FileClient:
         self,
         key_filename: str | Path = "~/.ssh/id_rsa",
         config_filename: str | Path = "~/.ssh/config",
-    ):
+    ) -> None:
         self.key_filename = key_filename
         self.config_filename = config_filename
 
         self.connections: dict[str, dict[str, Any]] = {}
 
-    def connect(self, host: str):
+    def connect(self, host: str) -> None:
         """
         Connect to a remote host.
 
@@ -219,7 +217,7 @@ class FileClient:
         dest_filename: str | Path,
         src_host: str | None = None,
         dest_host: str | None = None,
-    ):
+    ) -> None:
         """
         Copy a file from source to destination.
 
@@ -259,7 +257,7 @@ class FileClient:
                 "Copying between two different remote hosts is not supported."
             )
 
-    def remove(self, path: str | Path, host: str | None = None):
+    def remove(self, path: str | Path, host: str | None = None) -> None:
         """
         Remove a file (does not work on directories).
 
@@ -281,7 +279,7 @@ class FileClient:
         old_path: str | Path,
         new_path: str | Path,
         host: str | None = None,
-    ):
+    ) -> None:
         """
         Rename (move) a file.
 
@@ -354,7 +352,7 @@ class FileClient:
         host: str | None = None,
         compresslevel: int = 6,
         force: bool | str = False,
-    ):
+    ) -> None:
         """
         Gzip a file.
 
@@ -417,7 +415,7 @@ class FileClient:
         path: str | Path,
         host: str | None = None,
         force: bool | str = False,
-    ):
+    ) -> None:
         """
         Ungzip a file.
 
@@ -466,7 +464,7 @@ class FileClient:
             ssh = self.get_ssh(host)
             _, stdout, _ = ssh.exec_command(f"gunzip -f {path!s}")
 
-    def close(self):
+    def close(self) -> None:
         """Close all connections."""
         for connection in self.connections.values():
             connection["ssh"].close()
@@ -477,7 +475,7 @@ class FileClient:
         """Support for "with" context."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         """Support for "with" context."""
         self.close()
 

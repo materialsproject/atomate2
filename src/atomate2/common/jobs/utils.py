@@ -12,12 +12,6 @@ from atomate2 import SETTINGS
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = [
-    "structure_to_primitive",
-    "structure_to_conventional",
-    "retrieve_structure_from_materials_project",
-]
-
 
 @job
 def structure_to_primitive(
@@ -36,7 +30,6 @@ def structure_to_primitive(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
@@ -59,7 +52,6 @@ def structure_to_conventional(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_conventional_standard_structure()
