@@ -41,6 +41,7 @@ def get_stable_inserted_structure(
     get_charge_density: Callable,
     insertions_per_step: int = 4,
     n_steps: int | None = None,
+    n_inserted: int = 0,
 ):
     """Attempt ion insertion.
 
@@ -63,13 +64,17 @@ def get_stable_inserted_structure(
         A maker to perform relaxation calculations.
     get_charge_density:
         A function to get the charge density from a previous calculation.
-    insertions_per_step:
-        The maximum number of ion insertion sites to attempt.
-    use_aeccar:
         Whether to use the AECCAR0 and AECCAR2 files for the charge density.
         This is often necessary since the CHGCAR file has spurious effects near the
         core which often breaks the min-filter algorithms used to identify the local
         minima.
+    insertions_per_step:
+        The maximum number of ion insertion sites to attempt.
+    n_steps:
+        The maximum number of steps to perform.
+    n_inserted:
+        The number of ions inserted so far, used to help assign a unique name to the
+        different jobs.
     """
     if structure is None:
         return None
@@ -92,7 +97,7 @@ def get_stable_inserted_structure(
         ref_structure=structure,
         structure_matcher=structure_matcher,
     )
-
+    nn_step = n_steps - 1 if n_steps is not None else None
     next_step = get_stable_inserted_structure(
         structure=min_en_job.output,
         inserted_element=inserted_element,
@@ -101,8 +106,15 @@ def get_stable_inserted_structure(
         relax_maker=relax_maker,
         get_charge_density=get_charge_density,
         insertions_per_step=insertions_per_step,
-        n_steps=n_steps - 1,
+        n_steps=nn_step,
+        n_inserted=n_inserted + 1,
     )
+
+    # append job name
+    denominator = n_steps if n_steps is not None else "∞"
+    append_name = f"{n_inserted}/{denominator}"
+    for job_ in [static_job, chg_job, insertion_job, min_en_job]:
+        job_.append_name(f"{job_.name} {append_name}")
 
     replace_flow = Flow(
         jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
