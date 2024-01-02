@@ -81,8 +81,7 @@ def get_stable_inserted_structure(
     if n_steps is not None and n_steps <= 0:
         return None
     # append job name
-    denominator = n_steps if n_steps is not None else "∞"
-    add_name = f"{n_inserted + 1}/{denominator}"
+    add_name = f"{n_inserted}"
 
     static_job = static_maker.make(structure=structure)
     chg_job = get_charge_density_job(static_job.output.dir_name, get_charge_density)
@@ -173,7 +172,7 @@ def get_relaxed_job_summaries(
     for ii, structure in enumerate(structures):
         job_ = relax_maker.make(structure=structure)
         relax_jobs.append(job_)
-        job_.append_name(f"{append_name} ({ii})")
+        job_.append_name(f" {append_name} ({ii})")
         d_ = {
             "structure": job_.output.structure,
             "entry": job_.output.entry,
