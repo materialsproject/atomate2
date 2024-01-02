@@ -82,7 +82,7 @@ def get_stable_inserted_structure(
         return None
     # append job name
     denominator = n_steps if n_steps is not None else "∞"
-    add_name = f"{n_inserted}/{denominator}"
+    add_name = f"{n_inserted + 1}/{denominator}"
 
     static_job = static_maker.make(structure=structure)
     chg_job = get_charge_density_job(static_job.output.dir_name, get_charge_density)
@@ -113,8 +113,8 @@ def get_stable_inserted_structure(
         n_inserted=n_inserted + 1,
     )
 
-    for job_ in [static_job, chg_job, insertion_job, min_en_job]:
-        job_.append_name(f"{add_name}")
+    for job_ in [static_job, chg_job, insertion_job, min_en_job, relax_jobs, next_step]:
+        job_.append_name(f" {add_name}")
 
     replace_flow = Flow(
         jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
