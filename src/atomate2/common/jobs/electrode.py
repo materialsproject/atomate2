@@ -112,9 +112,9 @@ def get_stable_inserted_structure(
 
     # append job name
     denominator = n_steps if n_steps is not None else "∞"
-    append_name = f"{n_inserted}/{denominator}"
+    add_name = f"{n_inserted}/{denominator}"
     for job_ in [static_job, chg_job, insertion_job, min_en_job]:
-        job_.append_name(f"{job_.name} {append_name}")
+        job_.append_name(f"{add_name}")
 
     replace_flow = Flow(
         jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
@@ -155,6 +155,7 @@ def get_inserted_structures(
 def get_relaxed_job_summaries(
     structures: list[Structure],
     relax_maker: Maker,
+    append_name: str = "",
 ) -> Response:
     """Spawn relaxation jobs.
 
@@ -169,9 +170,10 @@ def get_relaxed_job_summaries(
     """
     relax_jobs = []
     outputs = []
-    for structure in structures:
+    for ii, structure in enumerate(structures):
         job_ = relax_maker.make(structure=structure)
         relax_jobs.append(job_)
+        job_.append_name(f"{append_name} ({ii})")
         d_ = {
             "structure": job_.output.structure,
             "entry": job_.output.entry,
