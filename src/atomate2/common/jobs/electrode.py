@@ -80,6 +80,10 @@ def get_stable_inserted_structure(
         return None
     if n_steps is not None and n_steps <= 0:
         return None
+    # append job name
+    denominator = n_steps if n_steps is not None else "∞"
+    add_name = f"{n_inserted}/{denominator}"
+
     static_job = static_maker.make(structure=structure)
     chg_job = get_charge_density_job(static_job.output.dir_name, get_charge_density)
     insertion_job = get_inserted_structures(
@@ -88,8 +92,7 @@ def get_stable_inserted_structure(
         insertions_per_step=insertions_per_step,
     )
     relax_jobs = get_relaxed_job_summaries(
-        structures=insertion_job.output,
-        relax_maker=relax_maker,
+        structures=insertion_job.output, relax_maker=relax_maker, append_name=add_name
     )
 
     min_en_job = get_min_energy_structure(
@@ -110,9 +113,6 @@ def get_stable_inserted_structure(
         n_inserted=n_inserted + 1,
     )
 
-    # append job name
-    denominator = n_steps if n_steps is not None else "∞"
-    add_name = f"{n_inserted}/{denominator}"
     for job_ in [static_job, chg_job, insertion_job, min_en_job]:
         job_.append_name(f"{add_name}")
 
