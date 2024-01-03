@@ -15,15 +15,23 @@ import pickle
 import sys
 from typing import TYPE_CHECKING
 
-from ase.filters import FrechetCellFilter
-from ase.optimize.bfgs import BFGS
-from ase.optimize.bfgslinesearch import BFGSLineSearch
-from ase.optimize.fire import FIRE
-from ase.optimize.lbfgs import LBFGS, LBFGSLineSearch
-from ase.optimize.mdmin import MDMin
+from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+
+try:
+    from ase.filters import FrechetCellFilter
+except ImportError:
+    FrechetCellFilter = None
+    print(
+        "Due to errors in the implementation of gradients in the ASE"
+        " ExpCellFilter, we recommend installing ASE from gitlab\n"
+        "    pip install git+https://gitlab.com/ase/ase\n"
+        "rather than PyPi to access FrechetCellFilter. See\n"
+        "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
+        "for more details. Otherwise, you must specify an alternate ASE Filter."
+    )
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -32,6 +40,7 @@ if TYPE_CHECKING:
     import numpy as np
     from ase import Atoms
     from ase.calculators.calculator import Calculator
+    from ase.filters import Filter
     from ase.optimize.optimize import Optimizer
 
 
@@ -156,6 +165,7 @@ class Relaxer:
         traj_file: str = None,
         interval: int = 1,
         verbose: bool = False,
+        cell_filter: Filter = FrechetCellFilter,
         **kwargs,
     ) -> dict[str, Any]:
         """
@@ -189,14 +199,14 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = FrechetCellFilter(atoms)
+                atoms = cell_filter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, FrechetCellFilter):
+        if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
         struct = self.ase_adaptor.get_structure(atoms)
