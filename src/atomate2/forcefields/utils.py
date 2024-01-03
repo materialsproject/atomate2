@@ -15,21 +15,13 @@ import pickle
 import sys
 from typing import TYPE_CHECKING
 
-from ase.optimize import (
-    BFGS,
-    FIRE,
-    LBFGS,
-    BFGSLineSearch,
-    LBFGSLineSearch,
-    MDMin,
-)
+from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 try:
     from ase.filters import FrechetCellFilter
-
 except ImportError:
     FrechetCellFilter = None
     print(
@@ -48,12 +40,8 @@ if TYPE_CHECKING:
     import numpy as np
     from ase import Atoms
     from ase.calculators.calculator import Calculator
+    from ase.filters import Filter
     from ase.optimize.optimize import Optimizer
-
-    if FrechetCellFilter is not None:
-        from ase.filters import Filter
-    else:
-        from ase.constraints import Filter
 
 
 OPTIMIZERS = {
