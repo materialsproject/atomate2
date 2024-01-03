@@ -25,11 +25,11 @@ def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
     # NB: always 3 Cartesian components to each interatomic force,
     # and only 6 unique elements of the flattened stress tensor
     assert traj.energies[0] == pytest.approx(expected_energy)
+
     expected_forces = [
         [8.32667268e-17, 4.16333634e-17, 7.31069641e-17],
         [-8.32667268e-17, -4.16333634e-17, -7.31069641e-17],
     ]
-
     assert_allclose(traj.forces[0], expected_forces, atol=1e-8)
     expected_stresses = [
         4.38808e-03,
@@ -51,35 +51,19 @@ def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
     [("BFGS", None), (None, None), (BFGS, "log_file.json.gz")],
 )
 def test_Relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
-    final_lattice = (
-        {
-            "a": 3.86697465,
-            "b": 3.86697465,
-            "c": 3.86697465,
-            "volume": 40.88829274510334,
+    if FrechetCellFilter:
+        expected_lattice = {
+            "a": 3.866974,
+            "b": 3.866974,
+            "c": 3.866974,
+            "volume": 40.888292,
         }
-        if FrechetCellFilter
-        else {
-            "a": 1.7710250785292723,
-            "b": 1.7710250785292574,
-            "c": 1.771025078529287,
-            "volume": 3.927888357259462,
-        }
-    )
-    expected_forces = (
-        [
+        expected_forces = [
             [8.32667268e-17, 4.16333634e-17, 7.31069641e-17],
             [-8.32667268e-17, -4.16333634e-17, -7.31069641e-17],
         ]
-        if FrechetCellFilter
-        else [
-            [-5.95083358e-12, -1.65202964e-12, 2.84683735e-13],
-            [5.92662724e-12, 1.65667133e-12, -2.77979812e-13],
-        ]
-    )
-    expected_energy = -0.0683075110 if FrechetCellFilter else -5.846762493
-    expected_stresses = (
-        [
+        expected_energy = -0.0683075110
+        expected_stresses = [
             4.38808588e-03,
             4.38808588e-03,
             4.38808588e-03,
@@ -87,8 +71,19 @@ def test_Relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
             -1.31340626e-18,
             -1.60482883e-18,
         ]
-        if FrechetCellFilter
-        else [
+    else:
+        expected_lattice = {
+            "a": 1.77102507,
+            "b": 1.77102507,
+            "c": 1.77102507,
+            "volume": 3.927888,
+        }
+        expected_forces = [
+            [-5.95083358e-12, -1.65202964e-12, 2.84683735e-13],
+            [5.92662724e-12, 1.65667133e-12, -2.77979812e-13],
+        ]
+        expected_energy = -5.846762493
+        expected_stresses = [
             -1.27190530e-03,
             -1.27190530e-03,
             -1.27190530e-03,
@@ -96,7 +91,6 @@ def test_Relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
             -3.26060788e-14,
             5.09222979e-13,
         ]
-    )
 
     if optimizer is None:
         # None is invalid, should raise ValueError
@@ -113,8 +107,8 @@ def test_Relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
 
     assert {
         key: getattr(relax_output["final_structure"].lattice, key)
-        for key in final_lattice
-    } == pytest.approx(final_lattice)
+        for key in expected_lattice
+    } == pytest.approx(expected_lattice)
 
     assert relax_output["trajectory"].energies[-1] == pytest.approx(expected_energy)
 
