@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
@@ -356,7 +356,7 @@ class HSEBSMaker(BaseVaspMaker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        mode="uniform",
+        mode: Literal["line", "uniform", "gap"] = "uniform",
     ) -> Response:
         """
         Run a HSE06 band structure VASP job.
@@ -367,7 +367,7 @@ class HSEBSMaker(BaseVaspMaker):
             A pymatgen structure object.
         prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
-        mode : str
+        mode : str = "uniform"
             Type of band structure calculation. Options are:
             - "line": Full band structure along symmetry lines.
             - "uniform": Uniform mesh band structure.

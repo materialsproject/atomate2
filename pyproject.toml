@@ -144,38 +144,10 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-select = [
-    "B",      # flake8-bugbear
-    "C4",     # flake8-comprehensions
-    "D",      # pydocstyle
-    "E",      # pycodestyle error
-    "EXE",    # flake8-executable
-    "F",      # pyflakes
-    "FA",     # flake8-future-annotations
-    "FBT003", # boolean-positional-value-in-call
-    "FLY",    # flynt
-    "I",      # isort
-    "ICN",    # flake8-import-conventions
-    "ISC",    # flake8-implicit-str-concat
-    "PD",     # pandas-vet
-    "PERF",   # perflint
-    "PIE",    # flake8-pie
-    "PL",     # pylint
-    "PT",     # flake8-pytest-style
-    "PYI",    # flakes8-pyi
-    "Q",      # flake8-quotes
-    "RET",    # flake8-return
-    "RSE",    # flake8-raise
-    "RUF",    # Ruff-specific rules
-    "SIM",    # flake8-simplify
-    "SLOT",   # flake8-slots
-    "TCH",    # flake8-type-checking
-    "TID",    # flake8-tidy-imports
-    "UP",     # pyupgrade
-    "W",      # pycodestyle warning
-    "YTT",    # flake8-2020
-]
+select = ["ALL"]
 ignore = [
+    "ARG002",  # unused method argument
+    "COM812",  # trailing comma missing
     "PD011",   # pandas-use-of-dot-values
     "PERF203", # try-except-in-loop
     "PLR",     # pylint-refactor
@@ -183,8 +155,28 @@ ignore = [
     "PT006",   # pytest-parametrize-names-wrong-type
     "RUF013",  # implicit-optional
     # TODO remove PT011, pytest.raises() should always check err msg
-    "PT011", # pytest-raises-too-broad
-    "PT013", # pytest-incorrect-pytest-import
+    "ANN001", # TODO remove this ignore
+    "ANN002",
+    "ANN003",
+    "ANN101", # missing self type annotation
+    "ANN102",
+    "ANN401",
+    "BLE001",
+    "C901",   # function too complex
+    "DTZ",    # datetime-tz-now
+    "EM",     # exception message must not use f-string literal
+    "ERA001", # found commented out code
+    "FBT001",
+    "FBT002",
+    "FIX002",
+    "G004",   # logging uses fstring
+    "PT011",  # pytest-raises-too-broad
+    "PT013",  # pytest-incorrect-pytest-import
+    "PTH",    # prefer Pathlib to os.path
+    "S324",   # use of insecure hash function
+    "SLF",    # private member accessed outside class
+    "TD",     # TODOs
+    "TRY003", # long message outside exception class
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]
@@ -192,10 +184,11 @@ isort.split-on-trailing-comma = false
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = ["D"]
+"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
 # flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
 "**/schemas/*" = ["FA", "TCH", "UP007"]
 "**/schemas.py" = ["FA", "TCH", "UP007"]
 "**/settings.py" = ["FA", "TCH", "UP007"]
+"docs/*" = ["INP001"]
