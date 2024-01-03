@@ -1,5 +1,9 @@
 import pytest
 
+from atomate2.vasp import powerups
+from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.jobs.core import RelaxMaker
+
 
 @pytest.mark.parametrize(
     "powerup,attribute,settings",
@@ -16,10 +20,6 @@ import pytest
     ],
 )
 def test_update_user_settings(powerup, attribute, settings):
-    from atomate2.vasp import powerups
-    from atomate2.vasp.flows.core import DoubleRelaxMaker
-    from atomate2.vasp.jobs.core import RelaxMaker
-
     powerup_func = getattr(powerups, powerup)
 
     # test job maker

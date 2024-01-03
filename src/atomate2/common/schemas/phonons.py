@@ -2,7 +2,7 @@
 
 import copy
 import logging
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
@@ -29,14 +29,6 @@ from pymatgen.symmetry.kpath import KPathSeek
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "PhononBSDOSDoc",
-    "PhononComputationalSettings",
-    "PhononUUIDs",
-    "PhononJobDirs",
-    "ThermalDisplacementData",
-]
-
 
 class PhononComputationalSettings(BaseModel):
     """Collection to store computational settings for the phonon computation."""
@@ -56,15 +48,15 @@ class ThermalDisplacementData(BaseModel):
         "cutoff frequency in THz to avoid numerical issues in the "
         "computation of the thermal displacement parameters"
     )
-    thermal_displacement_matrix_cif: List[List[Matrix3D]] = Field(
+    thermal_displacement_matrix_cif: list[list[Matrix3D]] = Field(
         None, description="field including thermal displacement matrices in CIF format"
     )
-    thermal_displacement_matrix: List[List[Matrix3D]] = Field(
+    thermal_displacement_matrix: list[list[Matrix3D]] = Field(
         None,
         description="field including thermal displacement matrices in Cartesian "
         "coordinate system",
     )
-    temperatures_thermal_displacements: List[int] = Field(
+    temperatures_thermal_displacements: list[int] = Field(
         None,
         description="temperatures at which the thermal displacement matrices"
         "have been computed",
@@ -74,25 +66,27 @@ class ThermalDisplacementData(BaseModel):
 class PhononUUIDs(BaseModel):
     """Collection to save all uuids connected to the phonon run."""
 
-    optimization_run_uuid: str = Field(None, description="optimization run uuid")
-    displacements_uuids: List[str] = Field(
+    optimization_run_uuid: Optional[str] = Field(
+        None, description="optimization run uuid"
+    )
+    displacements_uuids: Optional[list[str]] = Field(
         None, description="The uuids of the displacement jobs."
     )
-    static_run_uuid: str = Field(None, description="static run uuid")
-    born_run_uuid: str = Field(None, description="born run uuid")
+    static_run_uuid: Optional[str] = Field(None, description="static run uuid")
+    born_run_uuid: Optional[str] = Field(None, description="born run uuid")
 
 
 class ForceConstants(MSONable):
     """A force constants class."""
 
-    def __init__(self, force_constants: List[List[Matrix3D]]):
+    def __init__(self, force_constants: list[list[Matrix3D]]) -> None:
         self.force_constants = force_constants
 
 
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: List[Optional[str]] = Field(
+    displacements_job_dirs: list[Optional[str]] = Field(
         None, description="The directories where the displacement jobs were run."
     )
     static_run_job_dir: Optional[str] = Field(
@@ -124,30 +118,30 @@ class PhononBSDOSDoc(StructureMetadata):
         description="Phonon density of states object.",
     )
 
-    free_energies: List[float] = Field(
+    free_energies: list[float] = Field(
         None,
         description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    heat_capacities: List[float] = Field(
+    heat_capacities: list[float] = Field(
         None,
         description="heat capacities in J/K/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    internal_energies: List[float] = Field(
+    internal_energies: list[float] = Field(
         None,
         description="internal energies in  J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    entropies: List[float] = Field(
+    entropies: list[float] = Field(
         None,
         description="entropies in J/(K*mol) per formula unit"
         "for temperatures in temperature_list ",
     )
 
-    temperatures: List[int] = Field(
+    temperatures: list[int] = Field(
         None,
         description="temperatures at which the vibrational"
         " part of the free energies"
@@ -161,17 +155,17 @@ class PhononBSDOSDoc(StructureMetadata):
     )
 
     # needed, e.g. to compute Grueneisen parameter etc
-    force_constants: ForceConstants = Field(
+    force_constants: Optional[ForceConstants] = Field(
         None, description="Force constants between every pair of atoms in the structure"
     )
 
-    born: List[Matrix3D] = Field(
+    born: Optional[list[Matrix3D]] = Field(
         None,
         description="born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
     )
 
-    epsilon_static: Matrix3D = Field(
+    epsilon_static: Optional[Matrix3D] = Field(
         None, description="The high-frequency dielectric constant"
     )
 
@@ -194,7 +188,7 @@ class PhononBSDOSDoc(StructureMetadata):
         "Field including all relevant job directories"
     )
 
-    uuids: PhononUUIDs = Field("Field including all relevant uuids")
+    uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
 
     @classmethod
     def from_forces_born(
@@ -207,12 +201,12 @@ class PhononBSDOSDoc(StructureMetadata):
         use_symmetrized_structure: Union[str, None],
         kpath_scheme: str,
         code: str,
-        displacement_data: Dict[str, list],
+        displacement_data: dict[str, list],
         total_dft_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
-    ):
+    ) -> "PhononBSDOSDoc":
         """
         Generate collection of phonon data.
 
@@ -252,7 +246,7 @@ class PhononBSDOSDoc(StructureMetadata):
         cell = get_phonopy_structure(structure)
 
         if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-            primitive_matrix: Union[List[List[float]], str] = [
+            primitive_matrix: Union[list[list[float]], str] = [
                 [1.0, 0.0, 0.0],
                 [0.0, 1.0, 0.0],
                 [0.0, 0.0, 1.0],
@@ -313,7 +307,7 @@ class PhononBSDOSDoc(StructureMetadata):
             kpath_concrete, npoints=kwargs.get("npoints_band", 101)
         )
 
-        # phonon band structures will always be cmouted
+        # phonon band structures will always be computed
         filename_band_yaml = "phonon_band_structure.yaml"
 
         # TODO: potentially add kwargs to avoid computation of eigenvectors
@@ -330,9 +324,7 @@ class PhononBSDOSDoc(StructureMetadata):
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
 
         new_plotter.save_plot(
-            "phonon_band_structure.eps",
-            img_format=kwargs.get("img_format", "eps"),
-            units=kwargs.get("units", "THz"),
+            "phonon_band_structure.eps", units=kwargs.get("units", "THz")
         )
 
         # will determine if imaginary modes are present in the structure
@@ -341,13 +333,13 @@ class PhononBSDOSDoc(StructureMetadata):
         )
 
         # gets data for visualization on website - yaml is also enough
-        if kwargs.get("band_structure_eigenvectors", False):
+        if kwargs.get("band_structure_eigenvectors"):
             bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"
 
-        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7000)
+        kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
         kpoint = Kpoints.automatic_density(
             structure=get_pmg_structure(phonon.primitive),
             kppa=kpoint_density_dos,
@@ -360,9 +352,7 @@ class PhononBSDOSDoc(StructureMetadata):
         new_plotter_dos = PhononDosPlotter()
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
-            filename="phonon_dos.eps",
-            img_format=kwargs.get("img_format", "eps"),
-            units=kwargs.get("units", "THz"),
+            filename="phonon_dos.eps", units=kwargs.get("units", "THz")
         )
 
         # compute vibrational part of free energies per formula unit
@@ -372,32 +362,32 @@ class PhononBSDOSDoc(StructureMetadata):
 
         free_energies = [
             dos.helmholtz_free_energy(
-                structure=get_pmg_structure(phonon.primitive), t=temperature
+                temp=temp, structure=get_pmg_structure(phonon.primitive)
             )
-            for temperature in temperature_range
+            for temp in temperature_range
         ]
 
         entropies = [
-            dos.entropy(structure=get_pmg_structure(phonon.primitive), t=temperature)
-            for temperature in temperature_range
+            dos.entropy(temp=temp, structure=get_pmg_structure(phonon.primitive))
+            for temp in temperature_range
         ]
 
         internal_energies = [
             dos.internal_energy(
-                structure=get_pmg_structure(phonon.primitive), t=temperature
+                temp=temp, structure=get_pmg_structure(phonon.primitive)
             )
-            for temperature in temperature_range
+            for temp in temperature_range
         ]
 
         heat_capacities = [
-            dos.cv(structure=get_pmg_structure(phonon.primitive), t=temperature)
-            for temperature in temperature_range
+            dos.cv(temp=temp, structure=get_pmg_structure(phonon.primitive))
+            for temp in temperature_range
         ]
 
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
         # only this is available in phonopy
-        if kwargs.get("create_thermal_displacements", False):
+        if kwargs.get("create_thermal_displacements"):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
             )
@@ -416,19 +406,16 @@ class PhononBSDOSDoc(StructureMetadata):
                 kwargs.get("tmax_thermal_displacements", 500),
                 kwargs.get("tstep_thermal_displacements", 100),
             )
-            for i, temp in enumerate(temperature_range_thermal_displacements):
+            for idx, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
                     phonon.primitive,
-                    i,
-                    filename="tdispmat_" + str(temp) + "K.cif",
+                    idx,
+                    filename=f"tdispmat_{temp}K.cif",
                 )
-            tdisp_mat = (
-                phonon._thermal_displacement_matrices.thermal_displacement_matrices.tolist()
-            )
+            _disp_mat = phonon._thermal_displacement_matrices
+            tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
 
-            tdisp_mat_cif = (
-                phonon._thermal_displacement_matrices.thermal_displacement_matrices_cif.tolist()
-            )
+            tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
 
         else:
             tdisp_mat = None
@@ -469,7 +456,7 @@ class PhononBSDOSDoc(StructureMetadata):
                 "thermal_displacement_matrix": tdisp_mat,
                 "freq_min_thermal_displacements": freq_min_thermal_displacements,
             }
-            if kwargs.get("create_thermal_displacements", False)
+            if kwargs.get("create_thermal_displacements")
             else None,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],
@@ -493,7 +480,7 @@ class PhononBSDOSDoc(StructureMetadata):
     @staticmethod
     def get_kpath(
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
-    ):
+    ) -> tuple:
         """
         Get high-symmetry points in k-space in phonopy format.
 

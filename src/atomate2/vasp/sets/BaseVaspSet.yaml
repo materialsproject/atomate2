@@ -12,7 +12,7 @@ INCAR:
   ISMEAR: 0
   LORBIT: 11
   LASPH: True
-  LDAU: true
+  LDAU: True
   LDAUJ:
     F:
       Co: 0

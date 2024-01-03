@@ -6,6 +6,7 @@ The code has been released under BSD 3-Clause License
 and the following copyright applies:
 Copyright (c) 2022, Materials Virtual Lab.
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -14,7 +15,7 @@ import pickle
 import sys
 from typing import TYPE_CHECKING
 
-from ase.constraints import ExpCellFilter
+from ase.filters import FrechetCellFilter
 from ase.optimize.bfgs import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.optimize.fire import FIRE
@@ -25,6 +26,9 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 if TYPE_CHECKING:
+    from os import PathLike
+    from typing import Any
+
     import numpy as np
     from ase import Atoms
     from ase.calculators.calculator import Calculator
@@ -47,10 +51,9 @@ class TrajectoryObserver:
     """Trajectory observer.
 
     This is a hook in the relaxation process that saves the intermediate structures.
-
     """
 
-    def __init__(self, atoms: Atoms):
+    def __init__(self, atoms: Atoms) -> None:
         """
         Initialize the Observer.
 
@@ -69,7 +72,7 @@ class TrajectoryObserver:
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
-    def __call__(self):
+    def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
@@ -88,7 +91,7 @@ class TrajectoryObserver:
         """
         return self.atoms.get_potential_energy()
 
-    def save(self, filename: str):
+    def save(self, filename: str | PathLike) -> None:
         """
         Save the trajectory file.
 
@@ -122,20 +125,20 @@ class Relaxer:
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
-    ):
+    ) -> None:
         """
         Initialize the Relaxer.
 
         Parameters
         ----------
-        calculator (ase Calculatur): an ase calculator
+        calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
-        relax_cell (bool): if True, cell parameters will be opitimized.
+        relax_cell (bool): if True, cell parameters will be optimized.
         """
         self.calculator = calculator
 
         if isinstance(optimizer, str):
-            optimizer_obj = OPTIMIZERS.get(optimizer, None)
+            optimizer_obj = OPTIMIZERS.get(optimizer)
         elif optimizer is None:
             raise ValueError("Optimizer cannot be None")
         else:
@@ -151,22 +154,29 @@ class Relaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
-        interval=1,
-        verbose=False,
+        interval: int = 1,
+        verbose: bool = False,
         **kwargs,
-    ):
+    ) -> dict[str, Any]:
         """
         Relax the structure.
 
         Parameters
         ----------
-        atoms (Atoms): the atoms for relaxation
-        fmax (float): total force tolerance for relaxation convergence.
-        steps (int): max number of steps for relaxation
-        traj_file (str): the trajectory file for saving
-        interval (int): the step interval for saving the trajectories
-        verbose (bool): if True, screenoutput will be shown.
-        kwargs: further kwargs.
+        atoms : Atoms
+            The atoms for relaxation.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str
+            The trajectory file for saving.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        **kwargs
+            Further kwargs.
 
         Returns
         -------
@@ -179,17 +189,15 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = ExpCellFilter(atoms)
+                atoms = FrechetCellFilter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, ExpCellFilter):
+        if isinstance(atoms, FrechetCellFilter):
             atoms = atoms.atoms
 
-        return {
-            "final_structure": self.ase_adaptor.get_structure(atoms),
-            "trajectory": obs,
-        }
+        struct = self.ase_adaptor.get_structure(atoms)
+        return {"final_structure": struct, "trajectory": obs}

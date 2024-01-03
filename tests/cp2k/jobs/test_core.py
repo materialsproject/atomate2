@@ -29,10 +29,10 @@ def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
-    assert output1.output.energy == approx(-214.23651374775685)
+    assert output1.output.energy == approx(-214.23651374)
 
 
 def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
@@ -63,11 +63,14 @@ def test_relax_maker(tmp_path, mock_cp2k, basis_and_potential, si_structure):
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
-    assert output1.output.energy == approx(-193.39161102270234)
+    assert output1.output.energy == approx(-193.39161102)
     assert len(output1.calcs_reversed[0].output.ionic_steps) == 1
+    assert output1.calcs_reversed[0].output.structure.lattice.abc == approx(
+        si_structure.lattice.abc
+    )
 
 
 def test_transmuter(tmp_path, mock_cp2k, basis_and_potential, si_structure):
@@ -103,7 +106,7 @@ def test_transmuter(tmp_path, mock_cp2k, basis_and_potential, si_structure):
     # validate outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
-    assert output1.output.energy == approx(-404.0823179177859)
+    assert output1.output.energy == approx(-404.08231791)
     assert output1.transformations["history"][0]["scaling_matrix"] == [
         [1, 0, 0],
         [0, 1, 0],

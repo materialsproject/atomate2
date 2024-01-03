@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
@@ -27,8 +27,6 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
-
-__all__ = ["PhononMaker"]
 
 
 @dataclass
@@ -118,7 +116,7 @@ class PhononMaker(Maker):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft code. currently only vasp is implemented.
+        determines the DFT code. currently only vasp is implemented.
         This keyword might enable the implementation of other codes
         in the future
     store_force_constants: bool
@@ -132,7 +130,7 @@ class PhononMaker(Maker):
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
@@ -142,7 +140,7 @@ class PhononMaker(Maker):
     phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker = field(
         default_factory=CHGNetStaticMaker
     )
-    create_thermal_displacements: bool = True
+    create_thermal_displacements: bool = False
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = "vasp"
@@ -155,7 +153,7 @@ class PhononMaker(Maker):
         epsilon_static: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the phonon properties.
 
@@ -177,7 +175,7 @@ class PhononMaker(Maker):
             Instead of recomputing the energy of the bulk structure every time,
             this value can also be provided in eV. If it is provided,
             the static run will be skipped. This energy is the typical
-            output dft energy of the dft workflow. No conversion needed.
+            output DFT energy of the DFT workflow. No conversion needed.
         supercell_matrix: list
             instead of min_length, also a supercell_matrix can
             be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
@@ -188,7 +186,7 @@ class PhononMaker(Maker):
             )
 
         if (
-            not self.use_symmetrized_structure == "primitive"
+            self.use_symmetrized_structure != "primitive"
             and self.kpath_scheme != "seekpath"
         ):
             raise ValueError(

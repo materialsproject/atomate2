@@ -6,7 +6,7 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.lobster.handlers import EnoughBandsValidator, LobsterFilesValidator
@@ -16,9 +16,10 @@ from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from custodian.custodian import Validator
 
-__all__ = ["JobType", "run_lobster"]
 
 _DEFAULT_VALIDATORS = (LobsterFilesValidator(), EnoughBandsValidator())
 _DEFAULT_HANDLERS = ()
@@ -46,7 +47,7 @@ def run_lobster(
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     lobster_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run Lobster.
 
@@ -69,8 +70,8 @@ def run_lobster(
     custodian_kwargs : dict
          Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    lobster_job_kwargs = {} if lobster_job_kwargs is None else lobster_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    lobster_job_kwargs = lobster_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     lobster_cmd = expandvars(lobster_cmd)
     split_lobster_cmd = shlex.split(lobster_cmd)
@@ -84,7 +85,7 @@ def run_lobster(
     if job_type == JobType.NORMAL:
         jobs = [LobsterJob(split_lobster_cmd, **lobster_job_kwargs)]
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     handlers: list = []
 

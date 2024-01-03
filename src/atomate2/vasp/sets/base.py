@@ -9,7 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from monty.io import zopen
@@ -29,12 +29,12 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core import Structure
 
 
 _BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
-
-__all__ = ["VaspInputSet", "VaspInputGenerator"]
 
 
 class VaspInputSet(InputSet):
@@ -64,12 +64,12 @@ class VaspInputSet(InputSet):
         potcar: Potcar | list[str],
         kpoints: Kpoints | None = None,
         optional_files: dict | None = None,
-    ):
+    ) -> None:
         self.incar = incar
         self.poscar = poscar
         self.potcar = potcar
         self.kpoints = kpoints
-        self.optional_files = {} if optional_files is None else optional_files
+        self.optional_files = optional_files or {}
 
     def write_input(
         self,
@@ -77,7 +77,7 @@ class VaspInputSet(InputSet):
         make_dir: bool = True,
         overwrite: bool = True,
         potcar_spec: bool = False,
-    ):
+    ) -> None:
         """
         Write VASP input files to a directory.
 
@@ -91,8 +91,8 @@ class VaspInputSet(InputSet):
             Whether to overwrite an input file if it already exists.
         """
         directory = Path(directory)
-        if make_dir and not directory.exists():
-            os.makedirs(directory)
+        if make_dir:
+            os.makedirs(directory, exist_ok=True)
 
         inputs = {
             "INCAR": self.incar,
@@ -118,7 +118,9 @@ class VaspInputSet(InputSet):
                 raise FileExistsError(f"{directory / k} already exists.")
 
     @staticmethod
-    def from_directory(directory: str | Path, optional_files: dict = None):
+    def from_directory(
+        directory: str | Path, optional_files: dict = None
+    ) -> VaspInputSet:
         """
         Load a set of VASP inputs from a directory.
 
@@ -181,20 +183,22 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC", False) is True and self.incar.get(
-            "ALGO", "Normal"
-        ) not in ["Normal", "All", "Damped"]:
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+            "Normal",
+            "All",
+            "Damped",
+        ]:
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
                 stacklevel=1,
             )
 
-        if not self.incar.get("LASPH", False) and (
+        if not self.incar.get("LASPH") and (
             self.incar.get("METAGGA")
-            or self.incar.get("LHFCALC", False)
-            or self.incar.get("LDAU", False)
-            or self.incar.get("LUSE_VDW", False)
+            or self.incar.get("LHFCALC")
+            or self.incar.get("LDAU")
+            or self.incar.get("LUSE_VDW")
         ):
             warnings.warn(
                 "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT",
@@ -243,8 +247,8 @@ class VaspInputGenerator(InputGenerator):
         Allow user to override POTCARs. E.g., {"Gd": "Gd_3"}.
     user_potcar_functional
         Functional to use. Default is to use the functional in the config dictionary.
-        Valid values: "PBE", "PBE_52", "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91",
-        "LDA_US", "PW91_US".
+        Valid values: "PBE", "PBE_52", "PBE_54", "PBE_64", "LDA", "LDA_52", "LDA_54",
+        "LDA_64", "PW91", "LDA_US", "PW91_US".
     auto_ismear
         If true, the values for ISMEAR and SIGMA will be set automatically depending
         on the bandgap of the system. If the bandgap is not known (e.g., there is no
@@ -262,6 +266,11 @@ class VaspInputGenerator(InputGenerator):
         If true and the system is metallic, try and use ``reciprocal_density_metal``
         instead of ``reciprocal_density`` for metallic systems. Note, this only works
         when generating the input set from a previous VASP directory.
+    auto_kspacing
+        If true, automatically use the VASP recommended KSPACING based on bandgap,
+        i.e. higher kpoint spacing for insulators than metals. Can be boolean or float.
+        If float, then the value will interpreted as the bandgap in eV to use for the
+        KSPACING calculation.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
         initial MAGMOM guess for all species.
@@ -287,6 +296,10 @@ class VaspInputGenerator(InputGenerator):
         Tolerance for symmetry finding, used for line mode band structure k-points.
     config_dict
         The config dictionary to use containing the base input set settings.
+    inherit_incar
+        Whether to inherit INCAR settings from previous calculation. This might be
+        useful to port Custodian fixes to child jobs but can also be dangerous e.g.
+        when switching from GGA to meta-GGA or relax to static jobs. Defaults to True.
     """
 
     user_incar_settings: dict = field(default_factory=dict)
@@ -296,6 +309,7 @@ class VaspInputGenerator(InputGenerator):
     auto_ismear: bool = True
     auto_ispin: bool = False
     auto_lreal: bool = False
+    auto_kspacing: bool | float = False
     auto_metal_kpoints: bool = True
     constrain_total_magmom: bool = False
     validate_magmom: bool = True
@@ -304,9 +318,12 @@ class VaspInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
+    # copy _BASE_VASP_SET to ensure each class instance has its own copy
+    # otherwise in-place changes can affect other instances
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
+    inherit_incar: bool = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Post init formatting of arguments."""
         self.vdw = None if self.vdw is None else self.vdw.lower()
 
@@ -365,7 +382,10 @@ class VaspInputGenerator(InputGenerator):
             for k, v in self.user_potcar_settings.items():
                 self.config_dict["POTCAR"][k] = v
 
-    def get_input_set(  # type: ignore
+        if self.inherit_incar is None:
+            self.inherit_incar = SETTINGS.VASP_INHERIT_INCAR
+
+    def get_input_set(
         self,
         structure: Structure = None,
         prev_dir: str | Path = None,
@@ -398,20 +418,16 @@ class VaspInputGenerator(InputGenerator):
         structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
             structure, prev_dir
         )
-        incar_updates = self.get_incar_updates(
-            structure,
-            prev_incar=prev_incar,
-            bandgap=bandgap,
-            vasprun=vasprun,
-            outcar=outcar,
-        )
-        kpoints_updates = self.get_kpoints_updates(
-            structure,
-            prev_incar=prev_incar,
-            bandgap=bandgap,
-            vasprun=vasprun,
-            outcar=outcar,
-        )
+        prev_incar = prev_incar if self.inherit_incar else {}
+        kwds = {
+            "structure": structure,
+            "prev_incar": prev_incar,
+            "bandgap": bandgap,
+            "vasprun": vasprun,
+            "outcar": outcar,
+        }
+        incar_updates = self.get_incar_updates(**kwds)
+        kpoints_updates = self.get_kpoints_updates(**kwds)
         kspacing = self._kspacing(incar_updates)
         kpoints = self._get_kpoints(structure, kpoints_updates, kspacing, bandgap)
         incar = self._get_incar(
@@ -508,16 +524,17 @@ class VaspInputGenerator(InputGenerator):
             Number of electrons for the structure.
         """
         potcar = self._get_potcar(structure, potcar_spec=False)
-        nelec = {p.element: p.nelectrons for p in potcar}
+        map_elem_electrons = {p.element: p.nelectrons for p in potcar}
         comp = structure.composition.element_composition
-        nelect = sum(num_atoms * nelec[str(el)] for el, num_atoms in comp.items())
+        n_electrons = sum(
+            num_atoms * map_elem_electrons[str(el)] for el, num_atoms in comp.items()
+        )
 
-        if self.use_structure_charge:
-            return nelect - structure.charge
+        return n_electrons - (structure.charge if self.use_structure_charge else 0)
 
-        return nelect
-
-    def _get_previous(self, structure: Structure = None, prev_dir: str | Path = None):
+    def _get_previous(
+        self, structure: Structure = None, prev_dir: str | Path = None
+    ) -> tuple:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
             raise ValueError("Either structure or prev_dir must be set.")
@@ -563,7 +580,7 @@ class VaspInputGenerator(InputGenerator):
 
         return structure, prev_incar, bandgap, ispin, vasprun, outcar
 
-    def _get_structure(self, structure):
+    def _get_structure(self, structure: Structure) -> Structure:
         """Get the standardized structure."""
         for site in structure:
             if "magmom" in site.properties and isinstance(
@@ -579,7 +596,7 @@ class VaspInputGenerator(InputGenerator):
             get_valid_magmom_struct(structure, spin_mode="auto", inplace=True)
         return structure
 
-    def _get_potcar(self, structure, potcar_spec: bool = False):
+    def _get_potcar(self, structure: Structure, potcar_spec: bool = False) -> Potcar:
         """Get the POTCAR."""
         elements = [a[0] for a in groupby([s.specie.symbol for s in structure])]
         potcar_symbols = [self.config_dict["POTCAR"].get(el, el) for el in elements]
@@ -605,16 +622,16 @@ class VaspInputGenerator(InputGenerator):
 
     def _get_incar(
         self,
-        structure,
+        structure: Structure,
         kpoints: Kpoints,
         previous_incar: dict = None,
         incar_updates: dict = None,
         bandgap: float = None,
         ispin: int = None,
-    ):
+    ) -> Incar:
         """Get the INCAR."""
-        previous_incar = {} if previous_incar is None else previous_incar
-        incar_updates = {} if incar_updates is None else incar_updates
+        previous_incar = previous_incar or {}
+        incar_updates = incar_updates or {}
         incar_settings = dict(self.config_dict["INCAR"])
         config_magmoms = incar_settings.get("MAGMOM", {})
         auto_updates = {}
@@ -667,24 +684,26 @@ class VaspInputGenerator(InputGenerator):
             auto_updates["ISPIN"] = ispin
 
         if self.auto_ismear:
+            bandgap_tol = getattr(self, "bandgap_tol", SETTINGS.BANDGAP_TOL)
             if bandgap is None:
                 # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
                 # be safe with the most general settings
-                auto_updates.update({"ISMEAR": 0, "SIGMA": 0.2})
-            elif bandgap == 0:
-                auto_updates.update({"ISMEAR": 2, "SIGMA": 0.2})  # metal
+                auto_updates.update(ISMEAR=0, SIGMA=0.2)
+            elif bandgap <= bandgap_tol:
+                auto_updates.update(ISMEAR=2, SIGMA=0.2)  # metal
             else:
-                auto_updates.update({"ISMEAR": -5, "SIGMA": 0.05})  # insulator
+                auto_updates.update(ISMEAR=-5, SIGMA=0.05)  # insulator
 
         if self.auto_lreal:
             auto_updates["LREAL"] = _get_recommended_lreal(structure)
 
-        if kpoints is not None:
-            # unset KSPACING as we are using a KPOINTS file and ensure adequate number
-            # of KPOINTS are present for the tetrahedron method (ISMEAR=-5).
-            incar.pop("KSPACING", None)
-            if np.product(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
-                auto_updates["ISMEAR"] = 0
+        if self.auto_kspacing is False:
+            bandgap = None  # don't auto-set KSPACING based on bandgap
+        elif isinstance(self.auto_kspacing, float):
+            # interpret auto_kspacing as bandgap and set KSPACING based on user input
+            bandgap = self.auto_kspacing
+
+        _set_kspacing(incar, incar_settings, self.user_incar_settings, bandgap, kpoints)
 
         # apply updates from auto options, careful not to override user_incar_settings
         _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
@@ -709,7 +728,7 @@ class VaspInputGenerator(InputGenerator):
         bandgap: float | None,
     ) -> Kpoints | None:
         """Get the kpoints file."""
-        kpoints_updates = {} if kpoints_updates is None else kpoints_updates
+        kpoints_updates = kpoints_updates or {}
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:
@@ -860,7 +879,7 @@ class VaspInputGenerator(InputGenerator):
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
-    def _kspacing(self, incar_updates):
+    def _kspacing(self, incar_updates) -> float | None:
         """Get KSPACING value based on the config dict, updates and user settings."""
         if "KSPACING" in self.user_incar_settings:
             return self.user_incar_settings["KSPACING"]
@@ -911,7 +930,7 @@ def _get_magmoms(
     return mag
 
 
-def _get_u_param(lda_param, lda_config, structure):
+def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
     """Get U parameters."""
     comp = structure.composition
     elements = sorted((el for el in comp.elements if comp[el] > 0), key=lambda e: e.X)
@@ -932,38 +951,36 @@ def _get_u_param(lda_param, lda_config, structure):
     ]
 
 
-def _get_ediff(param, value, structure, incar_settings):
+def _get_ediff(param, value, structure: Structure, incar_settings) -> float:
     """Get EDIFF."""
     if incar_settings.get("EDIFF") is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
     return float(incar_settings["EDIFF"])
 
 
-def _set_u_params(incar, incar_settings, structure):
+def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
     """Modify INCAR for use with U parameters."""
-    has_u = incar_settings.get("LDAU", False) and sum(incar["LDAUU"]) > 0
+    has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
     if not has_u:
-        for key in list(incar):
-            if key.startswith("LDAU"):
-                del incar[key]
+        ldau_keys = [key for key in incar if key.startswith("LDAU")]
+        for key in ldau_keys:
+            incar.pop(key, None)
 
     # Modify LMAXMIX if you have d or f electrons present. Note that if the user
-    # explicitly sets LMAXMIX in settings it will override this logic. Previously, this
-    # was only set if Hubbard U was enabled as per the VASP manual but following an
-    # investigation it was determined that this would lead to a significant difference
-    # between SCF -> NonSCF even without Hubbard U enabled. Thanks to Andrew Rosen for
-    # investigating and reporting.
-    if "LMAXMIX" not in incar_settings:
-        # contains f-electrons
-        if any(el.Z > 56 for el in structure.composition):
-            incar["LMAXMIX"] = 6
-        # contains d-electrons
-        elif any(el.Z > 20 for el in structure.composition):
-            incar["LMAXMIX"] = 4
+    # explicitly sets LMAXMIX in settings it will override this logic (setdefault keeps
+    # current value). Previously, this was only set if Hubbard U was enabled as per the
+    # VASP manual but following an investigation it was determined that this would lead
+    # to a significant difference between SCF -> NonSCF even without Hubbard U enabled.
+    # Thanks to Andrew Rosen for investigating and reporting.
+    blocks = [site.specie.block for site in structure]
+    if "f" in blocks:  # contains f-electrons
+        incar.setdefault("LMAXMIX", 6)
+    elif "d" in blocks:  # contains d-electrons
+        incar.setdefault("LMAXMIX", 4)
 
 
-def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
+def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
     """
     Apply updates to an INCAR file.
 
@@ -976,17 +993,17 @@ def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()):
     skip
         Keys to skip.
     """
-    for k, v in updates.items():
-        if k in skip:
+    for key, val in updates.items():
+        if key in skip:
             continue
 
-        if v is None:
-            incar.pop(k, None)
+        if val is None:
+            incar.pop(key, None)
         else:
-            incar[k] = v
+            incar[key] = val
 
 
-def _remove_unused_incar_params(incar, skip: Sequence[str] = ()):
+def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
     """
     Remove INCAR parameters that are not actively used by VASP.
 
@@ -1009,28 +1026,25 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()):
         incar.pop("MAGMOM", None)
 
     # Turn off +U flags if +U is not even used
-    ldau_flags = ["LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE"]
-    if incar.get("LDAU", False) is False:
+    ldau_flags = ("LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE")
+    if not incar.get("LDAU"):
         for ldau_flag in ldau_flags:
             if ldau_flag not in skip:
                 incar.pop(ldau_flag, None)
 
 
-def _combine_kpoints(*kpoints_objects: Kpoints):
+def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     """Combine k-points files together."""
-    labels = []
-    kpoints = []
-    weights = []
+    labels, kpoints, weights = [], [], []
 
+    recip_mode = Kpoints.supported_modes.Reciprocal
     for kpoints_object in filter(None, kpoints_objects):
-        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != recip_mode:
             raise ValueError(
-                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
+                f"Can only combine kpoints with style {recip_mode}, "
+                f"got {kpoints_object.style}"
             )
-        if kpoints_object.labels is None:
-            labels.append([""] * len(kpoints_object.kpts))
-        else:
-            labels.append(kpoints_object.labels)
+        labels.append(kpoints_object.labels or [""] * len(kpoints_object.kpts))
 
         weights.append(kpoints_object.kpts_weights)
         kpoints.append(kpoints_object.kpts)
@@ -1040,7 +1054,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
     kpoints = np.concatenate(kpoints)
     return Kpoints(
         comment="Combined k-points",
-        style=Kpoints.supported_modes.Reciprocal,
+        style=recip_mode,
         num_kpts=len(kpoints),
         kpts=kpoints,
         labels=labels,
@@ -1048,7 +1062,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints):
     )
 
 
-def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
+def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None) -> int:
     """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
     if outcar is not None and outcar.magnetization is not None:
         # Turn off spin when magmom for every site is smaller than 0.02.
@@ -1059,8 +1073,64 @@ def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None):
     return 2
 
 
-def _get_recommended_lreal(structure: Structure):
+def _get_recommended_lreal(structure: Structure) -> str | bool:
     """Get recommended LREAL flag based on the structure."""
-    if structure.num_sites > 16:
-        return "Auto"
-    return False
+    return "Auto" if structure.num_sites > 16 else False
+
+
+def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
+    """Get KSPACING based on a band gap."""
+    if bandgap <= tol:  # metallic
+        return 0.22
+
+    rmin = max(1.5, 25.22 - 2.87 * bandgap)  # Eq. 25
+    kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
+
+    # cap kspacing at a max of 0.44, per internal benchmarking
+    return min(kspacing, 0.44)
+
+
+def _set_kspacing(
+    incar: Incar,
+    incar_settings: dict,
+    user_incar_settings: dict,
+    bandgap: float | None,
+    kpoints: Kpoints | None,
+) -> Incar:
+    """
+    Set KSPACING in an INCAR.
+
+    if kpoints is not None then unset any KSPACING
+    if kspacing set in user_incar_settings then use that
+    if auto_kspacing then do that
+    if kspacing is set in config use that.
+    if from_prev is True, ISMEAR will be set according to the band gap.
+    """
+    if kpoints is not None:
+        # unset KSPACING as we are using a KPOINTS file
+        incar.pop("KSPACING", None)
+
+        # Ensure adequate number of KPOINTS are present for the tetrahedron method
+        # (ISMEAR=-5). If KSPACING is in the INCAR file the number of kpoints is not
+        # known before calling VASP, but a warning is raised when the KSPACING value is
+        # > 0.5 (2 reciprocal Angstrom). An error handler in Custodian is available to
+        # correct overly large KSPACING values (small number of kpoints) if necessary.
+        if np.prod(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
+            incar["ISMEAR"] = 0
+
+    elif "KSPACING" in user_incar_settings:
+        incar["KSPACING"] = user_incar_settings["KSPACING"]
+
+    elif incar_settings.get("KSPACING") and isinstance(bandgap, (int, float)):
+        # will always default to 0.22 in first run as one
+        # cannot be sure if one treats a metal or
+        # semiconductor/insulator
+        incar["KSPACING"] = _get_kspacing(bandgap)
+        # This should default to ISMEAR=0 if band gap is not known (first computation)
+        # if not from_prev:
+        #     # be careful to not override user_incar_settings
+
+    elif incar_settings.get("KSPACING"):
+        incar["KSPACING"] = incar_settings["KSPACING"]
+
+    return incar

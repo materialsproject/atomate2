@@ -18,18 +18,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-__all__ = [
-    "StaticSetGenerator",
-    "RelaxSetGenerator",
-    "CellOptSetGenerator",
-    "HybridStaticSetGenerator",
-    "HybridRelaxSetGenerator",
-    "HybridCellOptSetGenerator",
-    "NonSCFSetGenerator",
-    "MDSetGenerator",
-]
-
-
 @dataclass
 class StaticSetGenerator(Cp2kInputGenerator):
     """Class to generate CP2K static input sets."""
@@ -76,7 +64,7 @@ class CellOptSetGenerator(Cp2kInputGenerator):
 class HybridStaticSetGenerator(Cp2kInputGenerator):
     """Class for generating static hybrid input sets."""
 
-    def get_input_updates(self, structure, *args, **kwargs) -> dict:
+    def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
         updates: dict = {
             "run_type": "ENERGY_FORCE",
@@ -100,7 +88,7 @@ class HybridStaticSetGenerator(Cp2kInputGenerator):
 class HybridRelaxSetGenerator(Cp2kInputGenerator):
     """Class for generating hybrid relaxation input sets."""
 
-    def get_input_updates(self, structure, *args, **kwargs) -> dict:
+    def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
         updates: dict = {
             "run_type": "GEO_OPT",
@@ -125,7 +113,7 @@ class HybridRelaxSetGenerator(Cp2kInputGenerator):
 class HybridCellOptSetGenerator(Cp2kInputGenerator):
     """Class for generating hybrid cell optimization input sets."""
 
-    def get_input_updates(self, structure, *args, **kwargs) -> dict:
+    def get_input_updates(self, structure: Structure, *args, **kwargs) -> dict:
         """Get input updates for a hybrid calculation."""
         updates: dict = {
             "run_type": "CELL_OPT",
@@ -171,7 +159,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
     reciprocal_density: float = 100
     line_density: float = 20
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
         self.mode = self.mode.lower()
 

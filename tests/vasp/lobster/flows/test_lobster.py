@@ -8,7 +8,7 @@ from atomate2.vasp.jobs.lobster import LobsterStaticMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 
-def test_lobsteruniformmaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
+def test_lobster_uniform_maker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     # mapping from job name to directory containing test files
     ref_paths = {
         "relax 1": "Si_lobster_uniform/relax_1",
@@ -67,11 +67,14 @@ def test_lobsteruniformmaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore
     )
     job = VaspLobsterMaker(
         lobster_maker=LobsterMaker(
+            task_document_kwargs={
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10}
+            },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,
                 "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
-            }
+            },
         ),
         delete_wavecars=False,
     ).make(si_structure)
@@ -141,11 +144,14 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
     job = VaspLobsterMaker(
         lobster_static_maker=LobsterStaticMaker(),
         lobster_maker=LobsterMaker(
+            task_document_kwargs={
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10}
+            },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,
                 "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
-            }
+            },
         ),
         delete_wavecars=False,
     ).make(si_structure)
@@ -216,11 +222,14 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
     job = VaspLobsterMaker(
         lobster_static_maker=LobsterStaticMaker(),
         lobster_maker=LobsterMaker(
+            task_document_kwargs={
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10}
+            },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
                 "COHPEndEnergy": 5.0,
                 "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
-            }
+            },
         ),
         delete_wavecars=True,
     ).make(si_structure)

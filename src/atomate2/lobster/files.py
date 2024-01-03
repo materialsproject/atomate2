@@ -18,6 +18,7 @@ LOBSTEROUTPUT_FILES = [
     "COHPCAR.lobster",
     "COOPCAR.lobster",
     "DOSCAR.lobster",
+    "DOSCAR.LSO.lobster",
     "GROSSPOP.lobster",
     "ICOHPLIST.lobster",
     "ICOOPLIST.lobster",
@@ -47,7 +48,6 @@ VASP_OUTPUT_FILES = [
     "WAVECAR",
     "XDATCAR",
 ]
-__all__ = ["copy_lobster_files"]
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ def copy_lobster_files(
     src_dir: Path | str,
     src_host: str | None = None,
     file_client: FileClient = None,
-):
+) -> None:
     """
     Copy Lobster files to current directory.
 
