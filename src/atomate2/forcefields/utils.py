@@ -13,6 +13,7 @@ import contextlib
 import io
 import pickle
 import sys
+import warnings
 from typing import TYPE_CHECKING
 
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
@@ -24,13 +25,14 @@ try:
     from ase.filters import FrechetCellFilter
 except ImportError:
     FrechetCellFilter = None
-    print(
+    warnings.warn(
         "Due to errors in the implementation of gradients in the ASE"
         " ExpCellFilter, we recommend installing ASE from gitlab\n"
         "    pip install git+https://gitlab.com/ase/ase\n"
         "rather than PyPi to access FrechetCellFilter. See\n"
         "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
-        "for more details. Otherwise, you must specify an alternate ASE Filter."
+        "for more details. Otherwise, you must specify an alternate ASE Filter.",
+        stacklevel=2,
     )
 
 if TYPE_CHECKING:

@@ -879,15 +879,12 @@ class VaspInputGenerator(InputGenerator):
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
-    def _kspacing(self, incar_updates) -> float | None:
+    def _kspacing(self, incar_updates: dict[str, Any]) -> float | None:
         """Get KSPACING value based on the config dict, updates and user settings."""
-        if "KSPACING" in self.user_incar_settings:
-            return self.user_incar_settings["KSPACING"]
-        if "KSPACING" in incar_updates:
-            return incar_updates["KSPACING"]
-        if "KSPACING" in self.config_dict["INCAR"]:
-            return self.config_dict["INCAR"]["KSPACING"]
-        return None
+        key = "KSPACING"
+        return self.user_incar_settings.get(
+            key, incar_updates.get(key, self.config_dict["INCAR"].get(key))
+        )
 
 
 def _get_magmoms(
@@ -930,7 +927,9 @@ def _get_magmoms(
     return mag
 
 
-def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
+def _get_u_param(
+    lda_param: str, lda_config: dict[str, Any], structure: Structure
+) -> list[float]:
     """Get U parameters."""
     comp = structure.composition
     elements = sorted((el for el in comp.elements if comp[el] > 0), key=lambda e: e.X)
@@ -951,14 +950,18 @@ def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
     ]
 
 
-def _get_ediff(param, value, structure: Structure, incar_settings) -> float:
+def _get_ediff(
+    param: str, value: str | float, structure: Structure, incar_settings: dict[str, Any]
+) -> float:
     """Get EDIFF."""
     if incar_settings.get("EDIFF") is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
     return float(incar_settings["EDIFF"])
 
 
-def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
+def _set_u_params(
+    incar: Incar, incar_settings: dict[str, Any], structure: Structure
+) -> None:
     """Modify INCAR for use with U parameters."""
     has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
@@ -980,7 +983,9 @@ def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
         incar.setdefault("LMAXMIX", 4)
 
 
-def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
+def _apply_incar_updates(
+    incar: dict[str, Any], updates: dict[str, Any], skip: Sequence[str] = ()
+) -> None:
     """
     Apply updates to an INCAR file.
 
@@ -1003,7 +1008,9 @@ def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
             incar[key] = val
 
 
-def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
+def _remove_unused_incar_params(
+    incar: dict[str, Any], skip: Sequence[str] = ()
+) -> None:
     """
     Remove INCAR parameters that are not actively used by VASP.
 

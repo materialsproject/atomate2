@@ -13,7 +13,7 @@ def test_safe_import():
     assert FrechetCellFilter is None or FrechetCellFilter.__module__ == "ase.filters"
 
 
-def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
+def test_trajectory_observer(si_structure, test_dir, tmp_dir):
     atoms = AseAtomsAdaptor.get_atoms(structure=si_structure, calculator=LennardJones())
 
     traj = TrajectoryObserver(atoms)
@@ -50,7 +50,7 @@ def test_TrajectoryObserver(si_structure, test_dir, tmp_dir):
     ("optimizer", "traj_file"),
     [("BFGS", None), (None, None), (BFGS, "log_file.json.gz")],
 )
-def test_Relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
+def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
     if FrechetCellFilter:
         expected_lattice = {
             "a": 3.866974,
