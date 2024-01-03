@@ -15,7 +15,7 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 def test_phonon_wf(clean_dir):
-    # FIXME - brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
     torch.set_default_dtype(torch.float32)
 
     structure = Structure(

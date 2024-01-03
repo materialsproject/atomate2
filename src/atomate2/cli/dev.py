@@ -153,7 +153,7 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
 def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
