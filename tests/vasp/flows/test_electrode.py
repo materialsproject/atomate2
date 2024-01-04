@@ -62,4 +62,25 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    print(responses)
+
+    inserted_formulas = []
+    for res in responses.values():
+        for r in res.values():
+            if hasattr(r.output, "formula_pretty"):
+                inserted_formulas.append(  # noqa: PERF401
+                    f"{r.output.formula_pretty}-{r.output.task_label.split()[0]}"
+                )
+    inserted_formulas.sort()
+    # C-relax, C-static
+    # HC4-relax (single insertion)
+    # HC4-static
+    # HC2-relax, (triple insertion)
+    assert inserted_formulas == [
+        "C-relax",
+        "C-static",
+        "HC2-relax",
+        "HC2-relax",
+        "HC2-relax",
+        "HC4-relax",
+        "HC4-static",
+    ]
