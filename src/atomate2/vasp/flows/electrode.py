@@ -61,7 +61,7 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         aeccar2 = Chgcar.from_file(prev_dir / "AECCAR2.gz")
         return aeccar0 + aeccar2
 
-    def update_static_maker(self):
+    def update_static_maker(self) -> None:
         """Ensure that the static maker will store the desired data."""
         store_volumetric_data = list(
             self.static_maker.task_document_kwargs.get("store_volumetric_data", [])
