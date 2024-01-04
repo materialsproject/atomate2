@@ -66,7 +66,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         )
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure that the static maker will store the desired data."""
         self.update_static_maker()
 
@@ -126,11 +126,13 @@ class ElectrodeInsertionMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def update_static_maker(self):
+    def update_static_maker(self) -> None:
         """Ensure that the static maker will store the desired data."""
 
 
-def _add_ignored_species(structure_matcher: StructureMatcher, species: ElementLike):
+def _add_ignored_species(
+    structure_matcher: StructureMatcher, species: ElementLike
+) -> StructureMatcher:
     """Add an ignored species to a structure matcher."""
     sm_dict = structure_matcher.as_dict()
     ignored_species = set(sm_dict.get("ignored_species", set()))
