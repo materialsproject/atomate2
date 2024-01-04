@@ -244,7 +244,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
     completed_at: Optional[str] = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: Optional[InputSummary] = Field(
+    input: Optional[InputSummary] = Field(  # noqa: A003
         None, description="The input to the first calculation"
     )
     output: Optional[OutputSummary] = Field(
@@ -486,7 +486,7 @@ def _find_cp2k_files(
     path = Path(path)
     task_files = OrderedDict()
 
-    def _get_task_files(files, suffix="") -> dict[str, Any]:
+    def _get_task_files(files: list[Path], suffix: str = "") -> dict[str, Any]:
         cp2k_files: dict[str, Any] = {}
         vol_files = []
         for file in files:

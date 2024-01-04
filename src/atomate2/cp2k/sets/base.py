@@ -317,7 +317,7 @@ class Cp2kInputGenerator(InputGenerator):
 
         return structure, prev_input, cp2k_output
 
-    def _get_structure(self, structure) -> Structure:
+    def _get_structure(self, structure: Structure) -> Structure:
         """Get the standardized structure."""
         if self.sort_structure and hasattr(structure, "get_sorted_structure"):
             structure = structure.get_sorted_structure()
