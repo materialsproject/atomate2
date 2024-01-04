@@ -42,7 +42,7 @@ def get_stable_inserted_structure(
     insertions_per_step: int = 4,
     n_steps: int | None = None,
     n_inserted: int = 0,
-):
+) -> Response:
     """Attempt ion insertion.
 
     The basic unit for cation insertion is:
