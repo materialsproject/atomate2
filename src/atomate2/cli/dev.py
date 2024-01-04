@@ -17,7 +17,7 @@ def dev() -> None:
     "-a",
     multiple=True,
     help="list of additional files to copy from each completed VASP directory. "
-    "Example: `--additional-file CHGCAR --additional-file LOCPOT`",
+    "Example: `--additional_file CHGCAR --additional_file LOCPOT`",
 )
 def vasp_test_data(test_dir, additional_file) -> None:
     """Generate test data for VASP unit tests.
@@ -33,7 +33,7 @@ def vasp_test_data(test_dir, additional_file) -> None:
         Should not contain spaces or punctuation.
     additional_files
         list of additional files to copy from each completed VASP directory.
-        Example: `--additional-files CHGCAR --additional-files LOCPOT`
+        Example: `--additional_file CHGCAR --additional_file LOCPOT`,
     """
     import warnings
     from pathlib import Path
