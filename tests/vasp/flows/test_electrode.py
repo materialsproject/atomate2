@@ -72,9 +72,9 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
                 )
     inserted_formulas.sort()
     # C-relax, C-static
-    # HC4-relax (single insertion)
+    # HC4-relax (1x first insertion)
     # HC4-static
-    # HC2-relax, (triple insertion)
+    # HC2-relax, (3x second insertion)
     assert inserted_formulas == [
         "C-relax",
         "C-static",
