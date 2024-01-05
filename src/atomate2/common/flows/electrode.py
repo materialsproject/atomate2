@@ -51,6 +51,9 @@ class ElectrodeInsertionMaker(Maker, ABC):
         The name of the flow created by this maker.
     relax_maker: RelaxMaker
         A maker to perform relaxation calculations.
+    bulk_relax_maker: Maker
+        A separate maker to perform the first bulk relaxation calculation.
+        If None, the relax_maker will be used.
     static_maker: Maker
         A maker to perform static calculations.
     structure_matcher: StructureMatcher
@@ -59,6 +62,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
 
     relax_maker: Maker
     static_maker: Maker
+    bulk_relax_maker: Maker | None = None
     name: str = "ion insertion"
     structure_matcher: StructureMatcher = field(
         default_factory=lambda: StructureMatcher(
@@ -95,7 +99,10 @@ class ElectrodeInsertionMaker(Maker, ABC):
             Flow for ion insertion.
         """
         # First relax the structure
-        relax = self.relax_maker.make(structure)
+        if self.bulk_relax_maker:
+            relax = self.bulk_relax_maker.make(structure)
+        else:
+            relax = self.relax_maker.make(structure)
         # add ignored_species to the structure matcher
         sm = _add_ignored_species(self.structure_matcher, inserted_element)
         # Get the inserted structure
