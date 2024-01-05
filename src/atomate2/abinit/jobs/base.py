@@ -184,7 +184,12 @@ class BaseAbinitMaker(Maker):
         )
 
         # parse Abinit outputs
-        task_doc = AbinitTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
+
+        self.task_document_kwargs.update({"critical_events": self.critical_events})
+        task_doc = AbinitTaskDoc.from_directory(
+            Path.cwd(),
+            **self.task_document_kwargs,
+        )
         task_doc.task_label = self.name
 
         return self.get_response(
@@ -213,7 +218,7 @@ class BaseAbinitMaker(Maker):
             unconverged_error = UnconvergedError(
                 self,
                 msg=f"Unconverged after {history.run_number} runs.",
-                abinit_input=task_document.input,
+                abinit_input=task_document.input.abinit_input,
                 history=history,
             )
             return Response(

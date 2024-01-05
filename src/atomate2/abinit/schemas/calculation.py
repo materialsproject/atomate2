@@ -1,13 +1,18 @@
 """Schemas for Abinit calculation objects."""
 from __future__ import annotations
 
+import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
-from abipy.abio.outputs import AbinitOutputFile
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 from abipy.electrons.gsr import GsrFile
+from abipy.flowtk import events
+from abipy.flowtk.utils import File
 
 # from pymatgen.io.common import VolumetricData
 from emmet.core.math import Matrix3D, Vector3D
@@ -15,7 +20,16 @@ from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 
+from atomate2.abinit.utils.common import (
+    LOG_FILE_NAME,
+    MPIABORTFILE,
+    AbiConvergenceWarning,
+    get_event_report,
+)
+
 # STORE_VOLUMETRIC_DATA = ("total_density",)
+
+logger = logging.getLogger(__name__)
 
 
 class TaskState(ValueEnum):
@@ -23,6 +37,7 @@ class TaskState(ValueEnum):
 
     SUCCESS = "successful"
     FAILED = "failed"
+    UNCONVERGED = "unconverged"
 
 
 class AbinitObject(ValueEnum):
@@ -218,6 +233,9 @@ class Calculation(BaseModel):
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
+    event_report: events.EventReport = Field(
+        None, description="Event report of this abinit job."
+    )
     output_file_paths: Optional[dict[str, str]] = Field(
         None,
         description="Paths (relative to dir_name) of the Abinit output files "
@@ -230,7 +248,9 @@ class Calculation(BaseModel):
         dir_name: Path | str,
         task_name: str,
         abinit_gsr_file: Path | str = "out_GSR.nc",
-        abinit_output_file: Path | str = "run.abo",
+        abinit_log_file: Path | str = LOG_FILE_NAME,
+        abinit_abort_file: Path | str = MPIABORTFILE,
+        critical_events: Sequence[str] = (),
         # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
@@ -247,8 +267,8 @@ class Calculation(BaseModel):
             The directory containing the calculation outputs.
         task_name: str
             The task name.
-        abinit_output_file: Path or str
-            Path to the main output of abinit job, relative to dir_name.
+        abinit_log_file: Path or str
+            Path to the main log of abinit job, relative to dir_name.
         #volumetric_files: List[str]
             #Path to volumetric (Cube) files, relative to dir_name.
         parse_dos: str or bool
@@ -287,13 +307,13 @@ class Calculation(BaseModel):
         """
         dir_name = Path(dir_name)
         abinit_gsr_file = dir_name / abinit_gsr_file
-        abinit_output_file = dir_name / abinit_output_file
+        abinit_log_file = dir_name / abinit_log_file
+        abinit_abort_file = dir_name / abinit_abort_file
 
         # volumetric_files = [] if volumetric_files is None else volumetric_files
         abinit_gsr = GsrFile.from_file(abinit_gsr_file)
-        abinit_output = AbinitOutputFile.from_file(abinit_output_file)
 
-        completed_at = str(datetime.fromtimestamp(os.stat(abinit_output_file).st_mtime))
+        completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
 
         # output_file_paths = _get_output_file_paths(volumetric_files)
         # abinit_objects: dict[AbinitObject, Any] = _get_volumetric_data(
@@ -310,9 +330,30 @@ class Calculation(BaseModel):
 
         output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
 
-        has_abinit_completed = (
-            TaskState.SUCCESS if abinit_output.run_completed else TaskState.FAILED
-        )
+        report = None
+        has_abinit_completed = TaskState.FAILED
+        # TODO: How to detect which status it has here ?
+        #  UNCONVERGED would be for scf/nscf/relax when it's not yet converged
+        #  FAILED should be for a job that failed for other reasons.
+        #  What about a job that has been killed by the run_abinit (i.e. before
+        #  Slurm or PBS kills it) ?
+
+        try:
+            report = get_event_report(
+                ofile=File(abinit_log_file), mpiabort_file=File(abinit_abort_file)
+            )
+            if report.run_completed:
+                has_abinit_completed = TaskState.SUCCESS
+            critical_events_report = report.filter_types(critical_events)
+            if critical_events_report:
+                for warning in critical_events_report.warnings:
+                    if type(warning) in AbiConvergenceWarning.all:
+                        has_abinit_completed = TaskState.UNCONVERGED
+                        break
+
+        except Exception as exc:
+            msg = f"{cls} exception while parsing event_report:\n{exc}"
+            logger.critical(msg)
 
         # if store_trajectory:
         #    traj = _parse_trajectory(abinit_output=abinit_output)
@@ -326,6 +367,7 @@ class Calculation(BaseModel):
                 has_abinit_completed=has_abinit_completed,
                 completed_at=completed_at,
                 output=output_doc,
+                event_report=report,
                 # output_file_paths={
                 # k.name.lower(): v for k, v in output_file_paths.items()
                 # },

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Optional, TypeVar, Union
 
 from abipy.abio.inputs import AbinitInput
+from abipy.flowtk import events
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
@@ -21,6 +22,10 @@ from atomate2.abinit.schemas.calculation import (
     TaskState,
 )
 from atomate2.abinit.utils import datetime_str
+from atomate2.abinit.utils.common import (
+    LOG_FILE_NAME,
+    MPIABORTFILE,
+)
 
 # from emmet.core.tasks import get_uri
 from atomate2.utils.path import get_uri, strip_hostname
@@ -220,6 +225,9 @@ class AbinitTaskDoc(StructureMetadata):
         None, description="Final output atoms from the task"
     )
     state: Optional[TaskState] = Field(None, description="State of this task")
+    event_report: Optional[events.EventReport] = Field(
+        None, description="Event report of this abinit job."
+    )
     included_objects: Optional[list[AbinitObject]] = Field(
         None, description="List of Abinit objects included with this task document"
     )
@@ -340,6 +348,7 @@ class AbinitTaskDoc(StructureMetadata):
             "calcs_reversed": calcs_reversed,
             "completed_at": calcs_reversed[-1].completed_at,
             "dir_name": dir_name,
+            "event_report": calcs_reversed[-1].event_report,
             "included_objects": included_objects,
             "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
             "meta_structure": calcs_reversed[-1].output.structure,
@@ -350,7 +359,7 @@ class AbinitTaskDoc(StructureMetadata):
         }
         # doc = cls(**data)
         doc = cls(**ddict)
-        doc = doc.copy(update=data)
+        doc = doc.model_copy(update=data)
         return doc.model_copy(update=additional_fields, deep=True)
 
 
@@ -393,11 +402,11 @@ def _find_abinit_files(
         for file in files:
             # Here we make assumptions about the output file naming
             if file.match(f"*outdata/out_GSR{suffix}*"):
-                # abinit_files["abinit_output_file"] = Path(file).name
                 abinit_files["abinit_gsr_file"] = Path(file).relative_to(path)
-            elif file.match(f"*run.abo{suffix}*"):
-                # abinit_files["abinit_output_file"] = Path(file).name
-                abinit_files["abinit_output_file"] = Path(file).relative_to(path)
+            elif file.match(f"*{LOG_FILE_NAME}{suffix}*"):
+                abinit_files["abinit_log_file"] = Path(file).relative_to(path)
+            elif file.match(f"*{MPIABORTFILE}{suffix}*"):
+                abinit_files["abinit_abort_file"] = Path(file).relative_to(path)
         # for vol in volumetric_files:
         #    _files = [f.name for f in files if f.match(f"*{vol}*cube{suffix}*")]
         #    if _files:
