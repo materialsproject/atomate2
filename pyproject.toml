@@ -162,6 +162,7 @@ ignore = [
     "ANN102",
     "ANN401",
     "BLE001",
+    "C408",   # Unnecessary (dict/list/tuple) call - remove call
     "C901",   # function too complex
     "DTZ",    # datetime-tz-now
     "EM",     # exception message must not use f-string literal

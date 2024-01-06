@@ -48,15 +48,15 @@ class ThermalDisplacementData(BaseModel):
         "cutoff frequency in THz to avoid numerical issues in the "
         "computation of the thermal displacement parameters"
     )
-    thermal_displacement_matrix_cif: list[list[Matrix3D]] = Field(
+    thermal_displacement_matrix_cif: Optional[list[list[Matrix3D]]] = Field(
         None, description="field including thermal displacement matrices in CIF format"
     )
-    thermal_displacement_matrix: list[list[Matrix3D]] = Field(
+    thermal_displacement_matrix: Optional[list[list[Matrix3D]]] = Field(
         None,
         description="field including thermal displacement matrices in Cartesian "
         "coordinate system",
     )
-    temperatures_thermal_displacements: list[int] = Field(
+    temperatures_thermal_displacements: Optional[list[int]] = Field(
         None,
         description="temperatures at which the thermal displacement matrices"
         "have been computed",
@@ -86,10 +86,10 @@ class ForceConstants(MSONable):
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: list[Optional[str]] = Field(
+    displacements_job_dirs: Optional[list[Optional[str]]] = Field(
         None, description="The directories where the displacement jobs were run."
     )
-    static_run_job_dir: Optional[str] = Field(
+    static_run_job_dir: Optional[Optional[str]] = Field(
         None, description="Directory where static run was performed."
     )
     born_run_job_dir: Optional[str] = Field(
@@ -103,45 +103,45 @@ class PhononJobDirs(BaseModel):
 class PhononBSDOSDoc(StructureMetadata):
     """Collection of all data produced by the phonon workflow."""
 
-    structure: Structure = Field(
+    structure: Optional[Structure] = Field(
         None,
         description="Structure of Materials Project.",
     )
 
-    phonon_bandstructure: PhononBandStructureSymmLine = Field(
+    phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(
         None,
         description="Phonon band structure object.",
     )
 
-    phonon_dos: PhononDos = Field(
+    phonon_dos: Optional[PhononDos] = Field(
         None,
         description="Phonon density of states object.",
     )
 
-    free_energies: list[float] = Field(
+    free_energies: Optional[list[float]] = Field(
         None,
         description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    heat_capacities: list[float] = Field(
+    heat_capacities: Optional[list[float]] = Field(
         None,
         description="heat capacities in J/K/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    internal_energies: list[float] = Field(
+    internal_energies: Optional[list[float]] = Field(
         None,
         description="internal energies in  J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    entropies: list[float] = Field(
+    entropies: Optional[list[float]] = Field(
         None,
         description="entropies in J/(K*mol) per formula unit"
         "for temperatures in temperature_list ",
     )
 
-    temperatures: list[int] = Field(
+    temperatures: Optional[list[int]] = Field(
         None,
         description="temperatures at which the vibrational"
         " part of the free energies"
@@ -150,7 +150,7 @@ class PhononBSDOSDoc(StructureMetadata):
 
     total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
 
-    has_imaginary_modes: bool = Field(
+    has_imaginary_modes: Optional[bool] = Field(
         None, description="if true, structure has imaginary modes"
     )
 
@@ -296,7 +296,7 @@ class PhononBSDOSDoc(StructureMetadata):
         phonon.save("phonopy.yaml")
 
         # get phonon band structure
-        kpath_dict, kpath_concrete = cls.get_kpath(
+        kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
             structure=get_pmg_structure(phonon.primitive),
             kpath_scheme=kpath_scheme,
             symprec=symprec,
@@ -408,9 +408,7 @@ class PhononBSDOSDoc(StructureMetadata):
             )
             for idx, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
-                    phonon.primitive,
-                    idx,
-                    filename=f"tdispmat_{temp}K.cif",
+                    phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
                 )
             _disp_mat = phonon._thermal_displacement_matrices
             tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
@@ -494,22 +492,18 @@ class PhononBSDOSDoc(StructureMetadata):
         **kpath_kwargs:
             additional parameters that can be passed to this method as a dict
         """
-        if kpath_scheme in [
-            "setyawan_curtarolo",
-            "latimer_munro",
-            "hinuma",
-        ]:
-            highsymmkpath = HighSymmKpath(
+        if kpath_scheme in ("setyawan_curtarolo", "latimer_munro", "hinuma"):
+            high_symm_kpath = HighSymmKpath(
                 structure, path_type=kpath_scheme, symprec=symprec, **kpath_kwargs
             )
-            kpath = highsymmkpath.kpath
+            kpath = high_symm_kpath.kpath
         elif kpath_scheme == "seekpath":
-            highsymmkpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
-            kpath = highsymmkpath._kpath
+            high_symm_kpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
+            kpath = high_symm_kpath._kpath
 
         path = copy.deepcopy(kpath["path"])
 
-        for ilabelset, labelset in enumerate(kpath["path"]):
-            for ilabel, label in enumerate(labelset):
-                path[ilabelset][ilabel] = kpath["kpoints"][label]
+        for set_idx, label_set in enumerate(kpath["path"]):
+            for lbl_idx, label in enumerate(label_set):
+                path[set_idx][lbl_idx] = kpath["kpoints"][label]
         return kpath["kpoints"], path
