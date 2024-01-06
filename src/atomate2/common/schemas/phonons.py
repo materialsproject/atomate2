@@ -191,7 +191,6 @@ class PhononBSDOSDoc(StructureMetadata):
     uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
 
     @classmethod
-    @classmethod
     def from_forces_born(
         cls,
         structure: Structure,
@@ -297,7 +296,7 @@ class PhononBSDOSDoc(StructureMetadata):
         phonon.save("phonopy.yaml")
 
         # get phonon band structure
-        kpath_dict, kpath_concrete = cls.get_kpath(
+        kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
             structure=get_pmg_structure(phonon.primitive),
             kpath_scheme=kpath_scheme,
             symprec=symprec,
@@ -409,9 +408,7 @@ class PhononBSDOSDoc(StructureMetadata):
             )
             for idx, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
-                    phonon.primitive,
-                    idx,
-                    filename=f"tdispmat_{temp}K.cif",
+                    phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
                 )
             _disp_mat = phonon._thermal_displacement_matrices
             tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
@@ -495,22 +492,18 @@ class PhononBSDOSDoc(StructureMetadata):
         **kpath_kwargs:
             additional parameters that can be passed to this method as a dict
         """
-        if kpath_scheme in [
-            "setyawan_curtarolo",
-            "latimer_munro",
-            "hinuma",
-        ]:
-            highsymmkpath = HighSymmKpath(
+        if kpath_scheme in ("setyawan_curtarolo", "latimer_munro", "hinuma"):
+            high_symm_kpath = HighSymmKpath(
                 structure, path_type=kpath_scheme, symprec=symprec, **kpath_kwargs
             )
-            kpath = highsymmkpath.kpath
+            kpath = high_symm_kpath.kpath
         elif kpath_scheme == "seekpath":
-            highsymmkpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
-            kpath = highsymmkpath._kpath
+            high_symm_kpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
+            kpath = high_symm_kpath._kpath
 
         path = copy.deepcopy(kpath["path"])
 
-        for ilabelset, labelset in enumerate(kpath["path"]):
-            for ilabel, label in enumerate(labelset):
-                path[ilabelset][ilabel] = kpath["kpoints"][label]
+        for set_idx, label_set in enumerate(kpath["path"]):
+            for lbl_idx, label in enumerate(label_set):
+                path[set_idx][lbl_idx] = kpath["kpoints"][label]
         return kpath["kpoints"], path
