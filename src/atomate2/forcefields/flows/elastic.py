@@ -74,7 +74,7 @@ class ElasticMaker(BaseElasticMaker):
     task_document_kwargs: dict = field(default_factory=dict)
 
     @property
-    def prev_calc_dir_argname(self):
+    def prev_calc_dir_argname(self) -> str | None:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
@@ -83,4 +83,3 @@ class ElasticMaker(BaseElasticMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return
