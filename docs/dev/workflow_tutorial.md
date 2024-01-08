@@ -1,4 +1,4 @@
-# How to Develop a new workflow for `atomate2`
+# How to develop a new `atomate2` workflow
 
 ## Anatomy of an `atomate2` computational workflow (i.e., what do I need to write?)
 
