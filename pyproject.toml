@@ -33,7 +33,7 @@ dependencies = [
     "monty>=2023.9.25",
     "numpy",
     "pydantic-settings>=2.0.3",
-    "pydantic>=2.0.1",
+    "pydantic>=2.0.1,<2.5.2",
     "pymatgen>=2023.12.18",
 ]
 
