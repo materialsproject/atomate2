@@ -90,12 +90,12 @@ def run_qchem(
 
     # vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
 
-    if job_type == JobType.DIRECT:
-        logger.info(f"Running command: {qchem_cmd}")
-        # return_code = subprocess.call(qchem_cmd, shell=True)
-        return_code = subprocess.call(qchem_cmd)
-        logger.info(f"{qchem_cmd} finished running with returncode: {return_code}")
-        return
+    # if job_type == JobType.DIRECT:
+    #     logger.info(f"Running command: {qchem_cmd}")
+    #     # return_code = subprocess.call(qchem_cmd, shell=True)
+    #     return_code = subprocess.call(qchem_cmd)
+    #     logger.info(f"{qchem_cmd} finished running with returncode: {return_code}")
+    #     return
 
     if job_type == JobType.NORMAL:
         jobs = [
