@@ -1,5 +1,46 @@
 # Change log
 
+## v0.0.13
+
+### BREAKING CHANGE
+
+The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been modified. Previously, this function had custom arguments for previous calculation directories (e.g., `prev_vasp_dir`, `prev_cp2k_dir`). These arguments have been standardised to `prev_dir`. Accordingly, the approach used to chain workflows has now changed.
+
+### New Features 🎉
+* Add setting `VASP_RUN_DDEC6: bool = False` by @janosh in https://github.com/materialsproject/atomate2/pull/587
+### Bug Fixes 🐛
+* Resolve bandstructure datastore bug by @JaGeo in https://github.com/materialsproject/atomate2/pull/605
+* Fix `TypeError`: `PhononBSPlotter.save_plot()` got an unexpected keyword argument `img_format` by @janosh in https://github.com/materialsproject/atomate2/pull/625
+* `ForceFieldRelaxMaker` default `relax_cell` to `True` by @janosh in https://github.com/materialsproject/atomate2/pull/635
+* Replace ase `ExpCellFilter` with `FrechetCellFilter` in `Relaxer` by @janosh in https://github.com/materialsproject/atomate2/pull/636
+* update lobsterpy version and schemas to match new version changes by @naik-aakash in https://github.com/materialsproject/atomate2/pull/637
+* Default `create_thermal_displacements` to `False` in VASP and forcefield `PhononMaker` by @janosh in https://github.com/materialsproject/atomate2/pull/647
+* Fix import of ASE filters when user has installed from PyPI and not gitlab by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/650
+* Mark schema fields with `None` default as `Optional` to pass pydantic v2 validation by @danielzuegner in https://github.com/materialsproject/atomate2/pull/651
+### Enhancements 🛠
+* Breaking: Unify previous directory `Maker` API by @janosh in https://github.com/materialsproject/atomate2/pull/593
+* Add keyword `incar_exclude: Sequence[str] = None` to `fake_run_vasp()` by @janosh in https://github.com/materialsproject/atomate2/pull/599
+* Allow `prv_dir` to be used more in defect wf by @jmmshn in https://github.com/materialsproject/atomate2/pull/585
+* Add MACE RelaxMaker and StaticMaker by @CompRhys in https://github.com/materialsproject/atomate2/pull/611
+* Update lobster task schema by @naik-aakash in https://github.com/materialsproject/atomate2/pull/529
+* Allow optimizer to be configured for MACE/GAP by @CompRhys in https://github.com/materialsproject/atomate2/pull/615
+* MACE Static/RelaxMakers default to loading `mace_mp` instead of test model by @janosh in https://github.com/materialsproject/atomate2/pull/614
+* Add optional 3rd static for PBE+U to `MatPesStaticFlowMaker` by @janosh in https://github.com/materialsproject/atomate2/pull/606
+* Use PyPI version of MACE by @utf in https://github.com/materialsproject/atomate2/pull/668
+* Multi step MD flow by @gpetretto in https://github.com/materialsproject/atomate2/pull/489
+### Documentation 📖
+* Add @CompRhys to `contributors.md` by @CompRhys in https://github.com/materialsproject/atomate2/pull/612
+### House-Keeping 🧹
+* Update GitHub Action versions by @janosh in https://github.com/materialsproject/atomate2/pull/640
+* Drop `flake8` by @janosh in https://github.com/materialsproject/atomate2/pull/658
+* Enable all `ruff` rules by default by @janosh in https://github.com/materialsproject/atomate2/pull/663
+
+### New Contributors
+* @CompRhys made their first contribution in https://github.com/materialsproject/atomate2/pull/612
+* @danielzuegner made their first contribution in https://github.com/materialsproject/atomate2/pull/651
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.12...v0.0.13
+
 ## v0.0.12
 
 * Breaking: default `Atomate2Settings.VASP_INHERIT_INCAR` to `False` by @janosh in https://github.com/materialsproject/atomate2/pull/594
