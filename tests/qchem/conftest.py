@@ -160,9 +160,16 @@ def check_qin(
     ref_qin_path = ref_path / "inputs" / "mol.qin.gz"
     ref_qin = QCInput.from_file(ref_qin_path)
     script_directory = Path(__file__).resolve().parent
-    user_qin_path = script_directory / "mol.qin.gz"
-    user_qin = QCInput.from_file(user_qin_path)
     # defaults = {"sym_ignore": True, "symmetry": False, "xc_grid": 3}
+    job_name = ref_path.stem
+    print(f"The job name is {job_name}")
+    if job_name == "water_single_point":
+        user_qin_path = script_directory / "sp.qin.gz"
+    elif job_name == "water_optimization":
+        user_qin_path = script_directory / "opt.qin.gz"
+    elif job_name == "water_frequency":
+        user_qin_path = script_directory / "freq.qin.gz"
+    user_qin = QCInput.from_file(user_qin_path)
 
     keys_to_check = (
         set(user_qin.as_dict()) if qin_settings is None else set(qin_settings)
