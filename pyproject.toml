@@ -80,7 +80,7 @@ strict = [
     "mace@git+https://github.com/ACEsuit/mace@develop",
     "matgl==0.9.1",
     "monty==2023.9.25",
-    "mp-api==0.39.4",
+    "mp-api==0.39.5",
     "numpy",
     "phonopy==2.21.0",
     "pydantic-settings==2.1.0",
