@@ -45,7 +45,7 @@ class QCInputSet(InputSet):
         self,
         qcinput: QCInput,
         optional_files: dict | None = None,
-    ):
+    ) -> None:
         self.qcinput = qcinput
         self.optional_files = {} if optional_files is None else optional_files
 
@@ -53,7 +53,7 @@ class QCInputSet(InputSet):
         self,
         directory: str | Path,
         overwrite: bool = True,
-    ):
+    ) -> None:
         """
         Write QChem input file to directory.
 
@@ -250,7 +250,7 @@ class QCInputGenerator(InputGenerator):
         plots_dict: dict | None = None,
         nbo_dict: dict | None = None,
         geom_opt_dict: dict | None = None,
-    ):
+    ) -> None:
         self.job_type = job_type
         self.basis_set = basis_set
         self.scf_algorithm = scf_algorithm

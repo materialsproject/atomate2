@@ -75,8 +75,8 @@ def mock_qchem(
 
     For examples, see the tests in tests/qchem/makers/core.py.
     """
-    print(f"qchem_test directory is {qchem_test_dir}")
 
+    # print(f"qchem_test directory is {qchem_test_dir}")
     def mock_run_qchem(*args, **kwargs):
         name = CURRENT_JOB.job.name
         try:
@@ -160,9 +160,9 @@ def check_qin(
     ref_qin_path = ref_path / "inputs" / "mol.qin.gz"
     ref_qin = QCInput.from_file(ref_qin_path)
     script_directory = Path(__file__).resolve().parent
+    # print(f"The job name is {job_name}")
     # defaults = {"sym_ignore": True, "symmetry": False, "xc_grid": 3}
     job_name = ref_path.stem
-    print(f"The job name is {job_name}")
     if job_name == "water_single_point":
         user_qin_path = script_directory / "sp.qin.gz"
     elif job_name == "water_optimization":

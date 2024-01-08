@@ -65,7 +65,9 @@ class FrequencyFlatteningOptimizeMaker(Maker):
         stacklevel=2,
     )
 
-    def make(self, molecule: Molecule, prev_qchem_dir: str | Path | None = None):
+    def make(
+        self, molecule: Molecule, prev_qchem_dir: str | Path | None = None
+    ) -> Flow:
         """
         Create a flow with iterative frequency and optimization calculations.
 
@@ -92,7 +94,9 @@ class FrequencyFlatteningOptimizeMaker(Maker):
         return Flow([freq1, opt2], opt2.output, name=self.name)
 
     @classmethod
-    def from_freq_and_opt_maker(cls, freq_maker: BaseQCMaker, opt_maker=BaseQCMaker):
+    def from_freq_and_opt_maker(
+        cls, freq_maker: BaseQCMaker, opt_maker=BaseQCMaker
+    ) -> Maker:
         """
         Instantiate the FrequencyFlatteningOptimizeMaker with a Freq and an Opt maker.
 
@@ -145,7 +149,9 @@ class FrequencyFlatteningTransitionStateMaker(Maker):
         stacklevel=2,
     )
 
-    def make(self, molecule: Molecule, prev_qchem_dir: str | Path | None = None):
+    def make(
+        self, molecule: Molecule, prev_qchem_dir: str | Path | None = None
+    ) -> Flow:
         """
         Create a flow with iterative frequency and ts optimization calculations.
 
@@ -172,7 +178,9 @@ class FrequencyFlatteningTransitionStateMaker(Maker):
         return Flow([freq1, ts2], ts2.output, name=self.name)
 
     @classmethod
-    def from_freq_and_ts_maker(cls, freq_maker: BaseQCMaker, ts_maker=BaseQCMaker):
+    def from_freq_and_ts_maker(
+        cls, freq_maker: BaseQCMaker, ts_maker=BaseQCMaker
+    ) -> Maker:
         """
         Instantiate the FrequencyFlatteningOptimizeMaker with a Freq and a TS maker.
 

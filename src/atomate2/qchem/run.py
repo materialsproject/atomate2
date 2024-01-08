@@ -50,10 +50,10 @@ def run_qchem(
     max_errors: int = SETTINGS.QCHEM_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
     handlers: Sequence[ErrorHandler] = _DEFAULT_HANDLERS,
-    wall_time: int | None = None,
+    # wall_time: int | None = None,
     qchem_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run QChem.
 
@@ -92,7 +92,8 @@ def run_qchem(
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {qchem_cmd}")
-        return_code = subprocess.call(qchem_cmd, shell=True)
+        # return_code = subprocess.call(qchem_cmd, shell=True)
+        return_code = subprocess.call(qchem_cmd)
         logger.info(f"{qchem_cmd} finished running with returncode: {return_code}")
         return
 

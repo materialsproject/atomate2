@@ -25,7 +25,7 @@ class SinglePointSetGenerator(QCInputGenerator):
 
     # def get_input_set_updates(self) -> dict:
     #     """Get updates to the input dict for a single point calculation."""
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(job_type="sp", scf_algorithm="diis", basis_set="def2-tzvppd")
 
 
@@ -35,7 +35,7 @@ class OptSetGenerator(QCInputGenerator):
 
     # def get_input_set_updates(self) -> dict:
     #     """Get updates to the input dict for a geometry optimization calculation."""
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(job_type="opt", scf_algorithm="diis", basis_set="def2-tzvppd")
 
 
@@ -45,7 +45,7 @@ class TransitionStateSetGenerator(QCInputGenerator):
 
     # def get_basis_set_updates(self) -> dict:
     #     """Get updates to the input dict for a transition state calculation."""
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(job_type="ts", scf_algorithm="diis", basis_set="def2-tzvppd")
 
 
@@ -55,7 +55,7 @@ class ForceSetGenerator(QCInputGenerator):
 
     # def get_basis_set_updates(self) -> dict:
     #     """Get updates to the input dict for a force(gradient) calculation."""
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             job_type="force", scf_algorithm="diis", basis_set="def2-tzvppd"
         )
@@ -67,7 +67,7 @@ class FreqSetGenerator(QCInputGenerator):
 
     # def get_basis_set_updates(self) -> dict:
     #     """Get updates to the input dict for a frequency calculation."""
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(job_type="freq", scf_algorithm="diis", basis_set="def2-tzvppd")
 
 
@@ -77,7 +77,7 @@ class PESScanSetGenerator(QCInputGenerator):
 
     # def get_basis_set_updates(self) -> dict:
     #     """Get updates to the input dict for a pes scan calculation."""
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             job_type="pes_scan", scf_algorithm="diis", basis_set="def2-tzvppd"
         )

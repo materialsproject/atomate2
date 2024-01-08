@@ -26,7 +26,7 @@ def copy_qchem_outputs(
     src_host: str | None = None,
     additional_qchem_files: Sequence[str] = (),
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy QChem output files to the current directory.
 
