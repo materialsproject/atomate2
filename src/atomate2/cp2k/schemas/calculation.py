@@ -84,7 +84,7 @@ class CalculationInput(BaseModel):
 
     @field_validator("atomic_kind_info", mode="before")
     @classmethod
-    def remove_unnecessary(cls, atomic_kind_info) -> dict:
+    def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
             if "total_pseudopotential_energy" in atomic_kind_info[k]:
@@ -93,7 +93,7 @@ class CalculationInput(BaseModel):
 
     @field_validator("dft", mode="before")
     @classmethod
-    def cleanup_dft(cls, dft) -> dict:
+    def cleanup_dft(cls, dft: dict) -> dict:
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
             dft["UKS"] = True
@@ -258,7 +258,7 @@ class Calculation(BaseModel):
     has_cp2k_completed: Status = Field(
         None, description="Whether CP2K completed the calculation successfully"
     )
-    input: CalculationInput = Field(
+    input: CalculationInput = Field(  # noqa: A003
         None, description="CP2K input settings for the calculation"
     )
     output: CalculationOutput = Field(None, description="The CP2K calculation output")

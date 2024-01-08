@@ -469,7 +469,7 @@ All VASP workflows are constructed using the `Maker.make()` function. The argume
 for this function always include:
 
 - `structure`: A pymatgen structure.
-- `prev_vasp_dir`: A previous VASP directory to copy output files from.
+- `prev_dir`: A previous VASP directory to copy output files from.
 
 There are two options when chaining workflows:
 
@@ -480,7 +480,7 @@ There are two options when chaining workflows:
    set KSPACING), and the magnetic moments. Some workflows will also use other outputs.
    For example, the Band Structure workflow will copy the CHGCAR file (charge
    density) from the previous calculation. This can be achieved by setting both the
-   `structure` and `prev_vasp_dir` arguments.
+   `structure` and `prev_dir` arguments.
 
 These two examples are illustrated in the code below, where we chain a relaxation
 calculation and a static calculation.
@@ -500,7 +500,7 @@ static_job = StaticMaker().make(structure=relax_job.output.structure)
 
 # create a static job that will use additional outputs from the relaxation
 static_job = StaticMaker().make(
-    structure=relax_job.output.structure, prev_vasp_dir=relax_job.output.dir_name
+    structure=relax_job.output.structure, prev_dir=relax_job.output.dir_name
 )
 
 # create a flow including the two jobs and set the output to be that of the static
