@@ -1,0 +1,8 @@
+MPMetaGGAStaticSetGenerator
+===========================
+
+.. currentmodule:: atomate2.vasp.sets.mp
+
+.. autoclass:: MPMetaGGAStaticSetGenerator
+   :show-inheritance:
+   :members:

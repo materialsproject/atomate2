@@ -1,0 +1,6 @@
+md\_output
+==========
+
+.. currentmodule:: atomate2.vasp.jobs.md
+
+.. autofunction:: md_output

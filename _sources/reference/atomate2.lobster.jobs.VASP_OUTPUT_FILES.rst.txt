@@ -1,0 +1,6 @@
+VASP\_OUTPUT\_FILES
+===================
+
+.. currentmodule:: atomate2.lobster.jobs
+
+.. autodata:: VASP_OUTPUT_FILES

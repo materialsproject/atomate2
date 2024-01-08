@@ -1,0 +1,6 @@
+MultiMDOutput
+=============
+
+.. currentmodule:: atomate2.vasp.schemas.md
+
+.. autopydantic_model:: MultiMDOutput

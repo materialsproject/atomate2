@@ -1,0 +1,6 @@
+check\_charge\_state
+====================
+
+.. currentmodule:: atomate2.common.jobs.defect
+
+.. autofunction:: check_charge_state

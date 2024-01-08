@@ -1,0 +1,6 @@
+LOBSTEROUTPUT\_FILES
+====================
+
+.. currentmodule:: atomate2.lobster.jobs
+
+.. autodata:: LOBSTEROUTPUT_FILES

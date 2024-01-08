@@ -1,0 +1,61 @@
+atomate2.vasp.flows.elph
+========================
+
+.. automodule:: atomate2.vasp.flows.elph
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      DEFAULT_ELPH_TEMPERATURES
+      DEFAULT_MIN_SUPERCELL_LENGTH
+      ElectronPhononMaker
+      HSEElectronPhononMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

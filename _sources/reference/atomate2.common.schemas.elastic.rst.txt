@@ -1,0 +1,58 @@
+atomate2.common.schemas.elastic
+===============================
+
+.. automodule:: atomate2.common.schemas.elastic
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      DerivedProperties
+      ElasticDocument
+      ElasticTensorDocument
+      FittingData
+
+
+
+
+   
+   
+   
+
+
+

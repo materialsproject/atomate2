@@ -1,0 +1,61 @@
+atomate2.vasp.flows.mp
+======================
+
+.. automodule:: atomate2.vasp.flows.mp
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MPGGADoubleRelaxMaker
+      MPGGADoubleRelaxStaticMaker
+      MPMetaGGADoubleRelaxMaker
+      MPMetaGGADoubleRelaxStaticMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

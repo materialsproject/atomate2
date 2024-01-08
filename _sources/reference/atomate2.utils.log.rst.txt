@@ -1,0 +1,42 @@
+atomate2.utils.log
+==================
+
+.. automodule:: atomate2.utils.log
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      initialize_logger
+
+
+
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+parse\_additional\_json
+=======================
+
+.. currentmodule:: atomate2.common.utils
+
+.. autofunction:: parse_additional_json

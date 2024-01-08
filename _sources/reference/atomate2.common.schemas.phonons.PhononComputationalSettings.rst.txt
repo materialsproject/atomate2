@@ -1,0 +1,6 @@
+PhononComputationalSettings
+===========================
+
+.. currentmodule:: atomate2.common.schemas.phonons
+
+.. autopydantic_model:: PhononComputationalSettings

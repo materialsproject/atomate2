@@ -1,0 +1,77 @@
+atomate2.vasp.jobs.amset
+========================
+
+.. automodule:: atomate2.vasp.jobs.amset
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      calculate_deformation_potentials
+      calculate_polar_phonon_frequency
+      generate_wavefunction_coefficients
+      run_amset_deformations
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      DenseUniformMaker
+      HSEDenseUniformMaker
+      HSEStaticDeformationMaker
+      StaticDeformationMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

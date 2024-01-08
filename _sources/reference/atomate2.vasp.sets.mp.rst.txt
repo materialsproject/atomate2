@@ -1,0 +1,61 @@
+atomate2.vasp.sets.mp
+=====================
+
+.. automodule:: atomate2.vasp.sets.mp
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MPGGARelaxSetGenerator
+      MPGGAStaticSetGenerator
+      MPMetaGGARelaxSetGenerator
+      MPMetaGGAStaticSetGenerator
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

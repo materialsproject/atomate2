@@ -1,0 +1,8 @@
+MPGGADoubleRelaxStaticMaker
+===========================
+
+.. currentmodule:: atomate2.vasp.flows.mp
+
+.. autoclass:: MPGGADoubleRelaxStaticMaker
+   :show-inheritance:
+   :members:

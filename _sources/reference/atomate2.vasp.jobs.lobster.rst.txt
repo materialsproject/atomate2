@@ -1,0 +1,64 @@
+atomate2.vasp.jobs.lobster
+==========================
+
+.. automodule:: atomate2.vasp.jobs.lobster
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      delete_lobster_wavecar
+      get_basis_infos
+      get_lobster_jobs
+      update_user_incar_settings_maker
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      LobsterStaticMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

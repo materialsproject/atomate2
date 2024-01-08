@@ -1,0 +1,6 @@
+parse\_custodian
+================
+
+.. currentmodule:: atomate2.common.utils
+
+.. autofunction:: parse_custodian

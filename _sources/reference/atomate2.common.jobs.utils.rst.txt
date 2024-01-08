@@ -1,0 +1,58 @@
+atomate2.common.jobs.utils
+==========================
+
+.. automodule:: atomate2.common.jobs.utils
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      retrieve_structure_from_materials_project
+      structure_to_conventional
+      structure_to_primitive
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

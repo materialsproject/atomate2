@@ -1,0 +1,53 @@
+atomate2.vasp.jobs.matpes
+=========================
+
+.. automodule:: atomate2.vasp.jobs.matpes
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MatPesGGAStaticMaker
+      MatPesMetaGGAStaticMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

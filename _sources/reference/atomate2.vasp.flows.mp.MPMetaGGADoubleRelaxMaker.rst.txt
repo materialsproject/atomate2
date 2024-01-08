@@ -1,0 +1,8 @@
+MPMetaGGADoubleRelaxMaker
+=========================
+
+.. currentmodule:: atomate2.vasp.flows.mp
+
+.. autoclass:: MPMetaGGADoubleRelaxMaker
+   :show-inheritance:
+   :members:

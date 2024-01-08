@@ -1,0 +1,6 @@
+generate\_frequencies\_eigenvectors
+===================================
+
+.. currentmodule:: atomate2.common.jobs.phonons
+
+.. autofunction:: generate_frequencies_eigenvectors

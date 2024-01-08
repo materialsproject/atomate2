@@ -1,0 +1,49 @@
+atomate2.vasp.jobs.elastic
+==========================
+
+.. automodule:: atomate2.vasp.jobs.elastic
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ElasticRelaxMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

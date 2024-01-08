@@ -1,0 +1,6 @@
+run\_elastic\_deformations
+==========================
+
+.. currentmodule:: atomate2.common.jobs.elastic
+
+.. autofunction:: run_elastic_deformations

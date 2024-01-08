@@ -1,0 +1,49 @@
+atomate2.vasp.flows.matpes
+==========================
+
+.. automodule:: atomate2.vasp.flows.matpes
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MatPesStaticFlowMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

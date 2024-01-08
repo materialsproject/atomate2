@@ -1,0 +1,6 @@
+PhononJobDirs
+=============
+
+.. currentmodule:: atomate2.common.schemas.phonons
+
+.. autopydantic_model:: PhononJobDirs

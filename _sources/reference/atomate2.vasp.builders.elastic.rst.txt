@@ -1,0 +1,51 @@
+atomate2.vasp.builders.elastic
+==============================
+
+.. automodule:: atomate2.vasp.builders.elastic
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ElasticBuilder
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

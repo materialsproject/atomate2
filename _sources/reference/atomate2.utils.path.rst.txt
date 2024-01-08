@@ -1,0 +1,46 @@
+atomate2.utils.path
+===================
+
+.. automodule:: atomate2.utils.path
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      find_recent_logfile
+      get_uri
+      strip_hostname
+
+
+
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+   
+   
+
+
+

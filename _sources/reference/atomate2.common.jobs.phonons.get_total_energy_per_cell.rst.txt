@@ -1,0 +1,6 @@
+get\_total\_energy\_per\_cell
+=============================
+
+.. currentmodule:: atomate2.common.jobs.phonons
+
+.. autofunction:: get_total_energy_per_cell

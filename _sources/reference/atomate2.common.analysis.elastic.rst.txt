@@ -1,0 +1,42 @@
+atomate2.common.analysis.elastic
+================================
+
+.. automodule:: atomate2.common.analysis.elastic
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_default_strain_states
+
+
+
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+   
+   
+
+
+

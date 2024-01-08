@@ -1,0 +1,60 @@
+atomate2.common.utils
+=====================
+
+.. automodule:: atomate2.common.utils
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_transformations
+      parse_additional_json
+      parse_custodian
+      parse_transformations
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

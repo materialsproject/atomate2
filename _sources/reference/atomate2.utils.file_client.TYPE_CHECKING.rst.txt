@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.utils.file_client
+
+.. autodata:: TYPE_CHECKING

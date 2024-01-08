@@ -1,0 +1,8 @@
+MDMaker
+=======
+
+.. currentmodule:: atomate2.vasp.jobs.md
+
+.. autoclass:: MDMaker
+   :show-inheritance:
+   :members:

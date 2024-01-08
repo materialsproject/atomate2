@@ -1,0 +1,65 @@
+atomate2.vasp.jobs.mp
+=====================
+
+.. automodule:: atomate2.vasp.jobs.mp
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MPGGARelaxMaker
+      MPGGAStaticMaker
+      MPMetaGGARelaxMaker
+      MPMetaGGAStaticMaker
+      MPPreRelaxMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

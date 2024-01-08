@@ -1,0 +1,42 @@
+atomate2.vasp.jobs.defect
+=========================
+
+.. automodule:: atomate2.vasp.jobs.defect
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      calculate_finite_diff
+
+
+
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+   
+   
+
+
+

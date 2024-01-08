@@ -1,0 +1,6 @@
+get\_vasp\_task\_document
+=========================
+
+.. currentmodule:: atomate2.vasp.jobs.base
+
+.. autofunction:: get_vasp_task_document

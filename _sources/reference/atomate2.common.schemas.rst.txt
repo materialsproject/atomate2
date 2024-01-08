@@ -1,0 +1,45 @@
+atomate2.common.schemas
+=======================
+
+.. automodule:: atomate2.common.schemas
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   atomate2.common.schemas.cclib
+   atomate2.common.schemas.defects
+   atomate2.common.schemas.elastic
+   atomate2.common.schemas.phonons
+

@@ -1,0 +1,58 @@
+atomate2.vasp.files
+===================
+
+.. automodule:: atomate2.vasp.files
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      copy_vasp_outputs
+      get_largest_relax_extension
+      write_vasp_input_set
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

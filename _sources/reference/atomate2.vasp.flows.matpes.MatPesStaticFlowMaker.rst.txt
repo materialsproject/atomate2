@@ -1,0 +1,8 @@
+MatPesStaticFlowMaker
+=====================
+
+.. currentmodule:: atomate2.vasp.flows.matpes
+
+.. autoclass:: MatPesStaticFlowMaker
+   :show-inheritance:
+   :members:

@@ -1,0 +1,47 @@
+atomate2.amset.run
+==================
+
+.. automodule:: atomate2.amset.run
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      check_converged
+      run_amset
+      tensor_average
+
+
+
+   
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+   
+   
+
+
+

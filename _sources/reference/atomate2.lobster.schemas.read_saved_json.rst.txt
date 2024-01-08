@@ -1,0 +1,6 @@
+read\_saved\_json
+=================
+
+.. currentmodule:: atomate2.lobster.schemas
+
+.. autofunction:: read_saved_json

@@ -1,0 +1,8 @@
+MatPesGGAStaticMaker
+====================
+
+.. currentmodule:: atomate2.vasp.jobs.matpes
+
+.. autoclass:: MatPesGGAStaticMaker
+   :show-inheritance:
+   :members:

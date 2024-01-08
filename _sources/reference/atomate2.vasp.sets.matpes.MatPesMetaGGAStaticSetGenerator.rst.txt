@@ -1,0 +1,8 @@
+MatPesMetaGGAStaticSetGenerator
+===============================
+
+.. currentmodule:: atomate2.vasp.sets.matpes
+
+.. autoclass:: MatPesMetaGGAStaticSetGenerator
+   :show-inheritance:
+   :members:

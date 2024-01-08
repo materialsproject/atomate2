@@ -1,0 +1,8 @@
+MultiMDMaker
+============
+
+.. currentmodule:: atomate2.vasp.flows.md
+
+.. autoclass:: MultiMDMaker
+   :show-inheritance:
+   :members:

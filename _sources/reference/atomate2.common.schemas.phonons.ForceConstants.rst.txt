@@ -1,0 +1,8 @@
+ForceConstants
+==============
+
+.. currentmodule:: atomate2.common.schemas.phonons
+
+.. autoclass:: ForceConstants
+   :show-inheritance:
+   :members:

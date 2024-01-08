@@ -1,0 +1,8 @@
+MPGGAStaticMaker
+================
+
+.. currentmodule:: atomate2.vasp.jobs.mp
+
+.. autoclass:: MPGGAStaticMaker
+   :show-inheritance:
+   :members:

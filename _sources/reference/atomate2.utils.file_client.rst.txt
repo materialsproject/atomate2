@@ -1,0 +1,60 @@
+atomate2.utils.file\_client
+===========================
+
+.. automodule:: atomate2.utils.file_client
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      auto_fileclient
+      get_ssh_connection
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      FileClient
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

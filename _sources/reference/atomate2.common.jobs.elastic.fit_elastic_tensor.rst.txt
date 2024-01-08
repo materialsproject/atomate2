@@ -1,0 +1,6 @@
+fit\_elastic\_tensor
+====================
+
+.. currentmodule:: atomate2.common.jobs.elastic
+
+.. autofunction:: fit_elastic_tensor

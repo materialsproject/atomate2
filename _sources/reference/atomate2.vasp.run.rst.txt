@@ -1,0 +1,62 @@
+atomate2.vasp.run
+=================
+
+.. automodule:: atomate2.vasp.run
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      run_vasp
+      should_stop_children
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      JobType
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

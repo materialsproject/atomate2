@@ -1,0 +1,60 @@
+atomate2.common.schemas.defects
+===============================
+
+.. automodule:: atomate2.common.schemas.defects
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_dQ
+      sort_pos_dist
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CCDDocument
+      FormationEnergyDiagramDocument
+
+
+
+
+   
+   
+   
+
+
+

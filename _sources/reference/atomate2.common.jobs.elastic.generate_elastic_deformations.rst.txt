@@ -1,0 +1,6 @@
+generate\_elastic\_deformations
+===============================
+
+.. currentmodule:: atomate2.common.jobs.elastic
+
+.. autofunction:: generate_elastic_deformations

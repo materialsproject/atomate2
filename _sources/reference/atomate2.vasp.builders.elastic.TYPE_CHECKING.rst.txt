@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.vasp.builders.elastic
+
+.. autodata:: TYPE_CHECKING

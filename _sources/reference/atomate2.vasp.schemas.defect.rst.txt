@@ -1,0 +1,45 @@
+atomate2.vasp.schemas.defect
+============================
+
+.. automodule:: atomate2.vasp.schemas.defect
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      FiniteDifferenceDocument
+
+
+
+
+   
+   
+   
+
+
+

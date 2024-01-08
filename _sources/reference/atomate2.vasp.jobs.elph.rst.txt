@@ -1,0 +1,68 @@
+atomate2.vasp.jobs.elph
+=======================
+
+.. automodule:: atomate2.vasp.jobs.elph
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      calculate_electron_phonon_renormalisation
+      run_elph_displacements
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      DEFAULT_ELPH_TEMPERATURES
+      DEFAULT_MIN_SUPERCELL_LENGTH
+      SupercellElectronPhononDisplacedStructureMaker
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

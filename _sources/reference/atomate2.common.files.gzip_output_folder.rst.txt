@@ -1,0 +1,6 @@
+gzip\_output\_folder
+====================
+
+.. currentmodule:: atomate2.common.files
+
+.. autofunction:: gzip_output_folder

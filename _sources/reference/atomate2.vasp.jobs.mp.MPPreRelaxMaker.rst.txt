@@ -1,0 +1,8 @@
+MPPreRelaxMaker
+===============
+
+.. currentmodule:: atomate2.vasp.jobs.mp
+
+.. autoclass:: MPPreRelaxMaker
+   :show-inheritance:
+   :members:

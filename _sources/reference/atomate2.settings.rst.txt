@@ -1,0 +1,46 @@
+﻿atomate2.settings
+=================
+
+.. automodule:: atomate2.settings
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      Atomate2Settings
+
+
+
+
+   
+   
+   
+
+
+

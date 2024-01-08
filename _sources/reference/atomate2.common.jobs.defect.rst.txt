@@ -1,0 +1,72 @@
+atomate2.common.jobs.defect
+===========================
+
+.. automodule:: atomate2.common.jobs.defect
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      bulk_supercell_calculation
+      check_charge_state
+      get_ccd_documents
+      get_charged_structures
+      get_defect_entry
+      get_supercell_from_prv_calc
+      spawn_defect_q_jobs
+      spawn_energy_curve_calcs
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CCDInput
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

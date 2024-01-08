@@ -1,0 +1,6 @@
+update\_vasp\_input\_generators
+===============================
+
+.. currentmodule:: atomate2.vasp.powerups
+
+.. autofunction:: update_vasp_input_generators

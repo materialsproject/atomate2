@@ -1,0 +1,6 @@
+get\_defect\_entry
+==================
+
+.. currentmodule:: atomate2.common.jobs.defect
+
+.. autofunction:: get_defect_entry

@@ -1,0 +1,6 @@
+run\_phonon\_displacements
+==========================
+
+.. currentmodule:: atomate2.common.jobs.phonons
+
+.. autofunction:: run_phonon_displacements

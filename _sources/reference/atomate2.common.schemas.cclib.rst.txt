@@ -1,0 +1,57 @@
+atomate2.common.schemas.cclib
+=============================
+
+.. automodule:: atomate2.common.schemas.cclib
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      cclib_calculate
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TaskDocument
+
+
+
+
+   
+   
+   
+
+
+

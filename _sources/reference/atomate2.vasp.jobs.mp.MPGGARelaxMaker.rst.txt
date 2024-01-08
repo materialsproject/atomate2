@@ -1,0 +1,8 @@
+MPGGARelaxMaker
+===============
+
+.. currentmodule:: atomate2.vasp.jobs.mp
+
+.. autoclass:: MPGGARelaxMaker
+   :show-inheritance:
+   :members:
