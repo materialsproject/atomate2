@@ -15,7 +15,9 @@ submit an MgO band structure workflow using FireWorks:
 
 ```python
 from fireworks import LaunchPad
+from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
+from atomate2.utils.powerups import add_metadata_to_flow
 from jobflow.managers.fireworks import flow_to_workflow
 from pymatgen.core import Structure
 
@@ -32,9 +34,10 @@ bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
 # (Optional) add metadata to the flow task document.
 # Could be useful to filter specific results from the database.
 # For e.g., adding material project ID for the compound, use following lines
-bandstructure_flow.update_maker_kwargs(
-    {"_set": {"task_document_kwargs->additional_fields": {"mp_id": "mp-xxx"}}},
-    dict_mod=True,
+bandstructure_flow = add_metadata_to_flow(
+    flow=bandstructure_flow,
+    class_filter=BaseVaspMaker,
+    additional_fields={"mp_id": "mp-190"},
 )
 
 # convert the flow to a fireworks WorkFlow object
