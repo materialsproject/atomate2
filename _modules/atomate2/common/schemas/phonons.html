@@ -814,12 +814,11 @@
 
 <div class="viewcode-block" id="PhononBSDOSDoc">
 <a class="viewcode-back" href="../../../../reference/atomate2.common.schemas.phonons.PhononBSDOSDoc.html#atomate2.common.schemas.phonons.PhononBSDOSDoc">[docs]</a>
-<span class="k">class</span> <span class="nc">PhononBSDOSDoc</span><span class="p">(</span><span class="n">StructureMetadata</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">PhononBSDOSDoc</span><span class="p">(</span><span class="n">StructureMetadata</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>  <span class="c1"># type: ignore[call-arg]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Collection of all data produced by the phonon workflow.&quot;&quot;&quot;</span>
 
     <span class="n">structure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Structure</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Structure of Materials Project.&quot;</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Structure of Materials Project.&quot;</span>
     <span class="p">)</span>
 
     <span class="n">phonon_bandstructure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PhononBandStructureSymmLine</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
