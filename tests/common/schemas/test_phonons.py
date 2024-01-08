@@ -40,8 +40,13 @@ def test_phonon_bs_dos_doc():
     validated = PhononBSDOSDoc.model_validate_json(json.dumps(doc, cls=MontyEncoder))
     assert isinstance(validated, PhononBSDOSDoc)
 
+    # test invalid supercell_matrix type fails
     with pytest.raises(ValidationError):
         doc = PhononBSDOSDoc(**kwargs | {"supercell_matrix": (1, 1, 1)})
+
+    # test optional material_id
+    doc = PhononBSDOSDoc(**kwargs | {"material_id": 1234})
+    assert doc.material_id == 1234
 
 
 # schemas where all fields have default values

@@ -108,6 +108,8 @@ class PhononBSDOSDoc(StructureMetadata):
         description="Structure of Materials Project.",
     )
 
+    material_id: Optional[Union[str, int]] = Field(None, description="Material ID.")
+
     phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(
         None,
         description="Phonon band structure object.",
