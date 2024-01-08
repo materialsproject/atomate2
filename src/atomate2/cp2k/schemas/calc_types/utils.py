@@ -1,4 +1,5 @@
 """Module to define various calculation types as Enums for CP2K."""
+
 from collections.abc import Iterable
 from pathlib import Path
 
@@ -17,7 +18,7 @@ def run_type(inputs: dict) -> RunType:
     This is adapted from pymatgen to be far less unstable.
 
     Args:
-        dft: dictionary of dft parameters (standard from task doc)
+        dft: dictionary of DFT parameters (standard from task doc)
     """
     dft = inputs.get("dft")
 

@@ -117,7 +117,7 @@ class AmsetTaskDocument(StructureMetadata):
     completed_at: str = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: dict = Field(None, description="The input settings")
+    input: dict = Field(None, description="The input settings")  # noqa: A003
     transport: TransportData = Field(None, description="The transport results")
     usage_stats: UsageStats = Field(None, description="Timing and memory usage")
     mesh: MeshData = Field(None, description="Full AMSET mesh data")

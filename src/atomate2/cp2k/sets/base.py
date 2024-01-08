@@ -317,7 +317,7 @@ class Cp2kInputGenerator(InputGenerator):
 
         return structure, prev_input, cp2k_output
 
-    def _get_structure(self, structure) -> Structure:
+    def _get_structure(self, structure: Structure) -> Structure:
         """Get the standardized structure."""
         if self.sort_structure and hasattr(structure, "get_sorted_structure"):
             structure = structure.get_sorted_structure()
@@ -415,7 +415,7 @@ class Cp2kInputGenerator(InputGenerator):
             return kconfig
 
         explicit = (
-            kconfig.get("explicit", False)
+            kconfig.get("explicit")
             or len(kconfig.get("added_kpoints", [])) > 0
             or "zero_weighted_reciprocal_density" in kconfig
             or "zero_weighted_line_density" in kconfig
@@ -542,7 +542,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     weights = []
 
     for kpoints_object in filter(None, kpoints_objects):
-        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != Kpoints.supported_modes.Reciprocal:
             raise ValueError(
                 "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
             )

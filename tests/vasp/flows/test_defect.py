@@ -146,14 +146,13 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    struct_GaN = Structure.from_file(test_dir / "structures" / "GaN.cif")
+    struct = Structure.from_file(test_dir / "structures" / "GaN.cif")
     defects = list(
         SubstitutionGenerator().get_defects(
-            structure=struct_GaN, substitution={"Ga": ["Mg"]}
+            structure=struct, substitution={"Ga": ["Mg"]}
         )
     )
 
-    # rmaker = RelaxMaker(input_set_generator=ChargeStateRelaxSetGenerator())
     maker = FormationEnergyMaker(
         relax_radius="auto",
         perturb=0.1,
@@ -180,3 +179,16 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
 
     for k in ref_paths:
         _check_plnr_locpot(k)
+
+    # make sure the the you can restart the calculation from prv
+    prv_dir = test_dir / "vasp/GaN_Mg_defect/bulk_relax/outputs"
+    flow2 = maker.make(
+        defects[0],
+        bulk_supercell_dir=prv_dir,
+        defect_index=0,
+    )
+    _ = run_locally(
+        flow2,
+        create_folders=True,
+        ensure_success=True,
+    )

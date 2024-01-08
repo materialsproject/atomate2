@@ -136,7 +136,7 @@ def run_vasp(
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {vasp_cmd}")
-        return_code = subprocess.call(vasp_cmd, shell=True)
+        return_code = subprocess.call(vasp_cmd, shell=True)  # noqa: S602
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
         return
 

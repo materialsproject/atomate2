@@ -156,7 +156,7 @@ class BaseElasticMaker(Maker, ABC):
 
     @property
     @abstractmethod
-    def prev_calc_dir_argname(self):
+    def prev_calc_dir_argname(self) -> str:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
