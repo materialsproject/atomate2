@@ -438,10 +438,20 @@ class VaspInputGenerator(InputGenerator):
             bandgap=bandgap,
             ispin=ispin,
         )
+        site_properties = structure.site_properties
+        poscar = Poscar(
+            structure,
+            velocities=site_properties.get("velocities"),
+            predictor_corrector=site_properties.get("predictor_corrector"),
+            predictor_corrector_preamble=structure.properties.get(
+                "predictor_corrector_preamble"
+            ),
+            lattice_velocities=structure.properties.get("lattice_velocities"),
+        )
         return VaspInputSet(
             incar=incar,
             kpoints=kpoints,
-            poscar=Poscar(structure),
+            poscar=poscar,
             potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
         )
 
