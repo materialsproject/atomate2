@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 import shlex
-import subprocess
 from os.path import expandvars
 from typing import TYPE_CHECKING, Any
 

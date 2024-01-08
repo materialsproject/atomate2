@@ -25,7 +25,7 @@ file_name = "H2O.xyz"
 
 # Construct the full path
 mol_path = curr_dir / file_name
-H2O_structure = Molecule.from_file(file_name)
+H2O_structure = Molecule.from_file(mol_path)
 
 
 def test_single_point_maker(mock_qchem, clean_dir, structure=H2O_structure):
