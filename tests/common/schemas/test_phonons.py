@@ -48,6 +48,10 @@ def test_phonon_bs_dos_doc():
     doc = PhononBSDOSDoc(**kwargs | {"material_id": 1234})
     assert doc.material_id == 1234
 
+    # test extra="allow" option
+    doc = PhononBSDOSDoc(**kwargs | {"extra_field": "test"})
+    assert doc.extra_field == "test"
+
 
 # schemas where all fields have default values
 @pytest.mark.parametrize("model_cls", [PhononJobDirs, PhononUUIDs])
