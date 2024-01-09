@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -18,13 +17,14 @@ from pytest import approx
 
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
 
-curr_dir = Path(os.path.dirname(sys.argv[0]))
+# curr_dir = Path(os.path.dirname(sys.argv[0]))
 
 # Specify the file name
 file_name = "H2O.xyz"
 
 # Construct the full path
-mol_path = curr_dir / file_name
+# mol_path = curr_dir / file_name
+mol_path = Path(os.path.abspath(file_name))
 H2O_structure = Molecule.from_file(mol_path)
 
 
