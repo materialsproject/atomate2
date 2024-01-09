@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import numpy as np
@@ -24,7 +23,8 @@ file_name = "H2O.xyz"
 
 # Construct the full path
 # mol_path = curr_dir / file_name
-mol_path = Path(os.path.abspath(file_name))
+# mol_path = Path(os.path.abspath(file_name))
+mol_path = Path("tests/qchem/jobs/H2O.xyz")
 H2O_structure = Molecule.from_file(mol_path)
 
 
