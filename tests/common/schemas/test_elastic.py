@@ -16,18 +16,14 @@ def test_elastic_document(test_dir):
     schema_ref = json.loads(schema_path.read_text())
 
     doc = ElasticDocument(**schema_ref)
-    ElasticDocument.model_validate_json(json.dumps(doc, cls=MontyEncoder))
+    validated = ElasticDocument.model_validate_json(json.dumps(doc, cls=MontyEncoder))
+    assert isinstance(validated, ElasticDocument)
 
 
 # schemas where all fields have default values
 @pytest.mark.parametrize(
     "model_cls",
-    [
-        ElasticDocument,
-        ElasticTensorDocument,
-        DerivedProperties,
-        FittingData,
-    ],
+    [ElasticDocument, ElasticTensorDocument, DerivedProperties, FittingData],
 )
 def test_model_validate(model_cls):
     model_cls.model_validate_json(json.dumps(model_cls(), cls=MontyEncoder))

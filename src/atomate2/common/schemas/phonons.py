@@ -100,12 +100,11 @@ class PhononJobDirs(BaseModel):
     )
 
 
-class PhononBSDOSDoc(StructureMetadata):
+class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the phonon workflow."""
 
     structure: Optional[Structure] = Field(
-        None,
-        description="Structure of Materials Project.",
+        None, description="Structure of Materials Project."
     )
 
     phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(

@@ -8,6 +8,7 @@ The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been 
 
 ### New Features 🎉
 * Add setting `VASP_RUN_DDEC6: bool = False` by @janosh in https://github.com/materialsproject/atomate2/pull/587
+
 ### Bug Fixes 🐛
 * Resolve bandstructure datastore bug by @JaGeo in https://github.com/materialsproject/atomate2/pull/605
 * Fix `TypeError`: `PhononBSPlotter.save_plot()` got an unexpected keyword argument `img_format` by @janosh in https://github.com/materialsproject/atomate2/pull/625
