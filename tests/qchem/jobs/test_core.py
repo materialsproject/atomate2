@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import numpy as np
 from emmet.core.qc_tasks import TaskDoc
 
 # from emmet.core.vasp.calculation import IonicStep, VaspObject
@@ -22,10 +21,9 @@ from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
 file_name = "H2O.xyz"
 
 # Construct the full path
-# mol_path = curr_dir / file_name
-# mol_path = Path(os.path.abspath(file_name))
 mol_path = Path("tests/qchem/jobs/H2O.xyz")
 H2O_structure = Molecule.from_file(mol_path)
+# H2O_structure = Molecule.from_file(file_name)
 
 
 def test_single_point_maker(mock_qchem, clean_dir, structure=H2O_structure):
@@ -108,9 +106,7 @@ def test_freq(mock_qchem, clean_dir, structure=H2O_structure):
     job = FreqMaker().make(structure)
 
     responses = run_locally(job, create_folders=True, ensure_success=True)
-    ref_freqs = np.array([1643.03, 3446.82, 3524.32])
+    ref_freqs = [1643.03, 3446.82, 3524.32]
     output1 = responses[job.uuid][1].output
-    assert np.array_equal(
-        np.array(output1.calcs_reversed[0].output.frequencies), ref_freqs
-    )
+    assert output1.calcs_reversed[0].output.frequencies == ref_freqs
     assert output1.output.final_energy == approx(-76.449405011)
