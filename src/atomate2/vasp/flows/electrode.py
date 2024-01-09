@@ -29,18 +29,29 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         [relax structure]
         [get_stable_inserted_structure]
         [get_stable_inserted_structure]
+        [get_stable_inserted_structure]
         ... until the insertion is no longer topotactic.
 
+    If you use this workflow please cite the following paper:
+        Shen, J.-X., Horton, M., & Persson, K. A. (2020).
+        A charge-density-based general cation insertion algorithm for
+        generating new Li-ion cathode materials.
+        npj Computational Materials, 6(161), 1--7.
+        doi: 10.1038/s41524-020-00422-3
 
-    Parameters
+
+    Attributes
     ----------
     name: str
         The name of the flow created by this maker.
     relax_maker: RelaxMaker
         A maker to perform relaxation calculations.
+    bulk_relax_maker: Maker
+        A separate maker to perform the first bulk relaxation calculation.
+        If None, the relax_maker will be used.
     static_maker: Maker
         A maker to perform static calculations.
-    stucture_matcher: StructureMatcher
+    structure_matcher: StructureMatcher
         The structure matcher to use to determine if additional insertion is needed.
     """
 

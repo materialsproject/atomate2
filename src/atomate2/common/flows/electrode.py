@@ -45,6 +45,13 @@ class ElectrodeInsertionMaker(Maker, ABC):
         self.update_static_maker():
             Ensure that the static maker will store the desired data.
 
+    If you use this workflow please cite the following paper:
+        Shen, J.-X., Horton, M., & Persson, K. A. (2020).
+        A charge-density-based general cation insertion algorithm for
+        generating new Li-ion cathode materials.
+        npj Computational Materials, 6(161), 1—7.
+        doi: 10.1038/s41524-020-00422-3
+
     Attributes
     ----------
     name: str
