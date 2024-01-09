@@ -36,7 +36,7 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         Shen, J.-X., Horton, M., & Persson, K. A. (2020).
         A charge-density-based general cation insertion algorithm for
         generating new Li-ion cathode materials.
-        npj Computational Materials, 6(161), 1--7.
+        npj Computational Materials, 6(161), 1—7.
         doi: 10.1038/s41524-020-00422-3
 
 
