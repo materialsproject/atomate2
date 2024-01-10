@@ -10,11 +10,18 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 from pymatgen.analysis.structure_matcher import ElementComparator, StructureMatcher
 
-from atomate2.common.jobs.electrode import get_stable_inserted_structure
+from atomate2.common.jobs.electrode import (
+    RelaxJobSummary,
+    get_computed_entries,
+    get_insertion_electrode_doc,
+    get_stable_inserted_results,
+    get_structure_group_doc,
+)
 
 if TYPE_CHECKING:
     from pymatgen.alchemy import ElementLike
     from pymatgen.core.structure import Structure
+    from pymatgen.entries.computed_entries import ComputedEntry
     from pymatgen.io.vasp.outputs import VolumetricData
 
 logger = logging.getLogger(__name__)
@@ -87,6 +94,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         inserted_element: ElementLike,
         n_steps: int | None,
         insertions_per_step: int = 4,
+        working_ion_entry: ComputedEntry | None = None,
     ) -> Flow:
         """Make the flow.
 
@@ -113,7 +121,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         # add ignored_species to the structure matcher
         sm = _add_ignored_species(self.structure_matcher, inserted_element)
         # Get the inserted structure
-        inserted_structure = get_stable_inserted_structure(
+        new_entries_job = get_stable_inserted_results(
             structure=relax.output.structure,
             inserted_element=inserted_element,
             structure_matcher=sm,
@@ -123,7 +131,23 @@ class ElectrodeInsertionMaker(Maker, ABC):
             n_steps=n_steps,
             insertions_per_step=insertions_per_step,
         )
-        return Flow([relax, inserted_structure])
+        relaxed_summary = RelaxJobSummary(
+            structure=relax.output.structure,
+            entry=relax.output.entry,
+            dir_name=relax.output.dir_name,
+            uuid=relax.output.uuid,
+        )
+        get_entries_job = get_computed_entries(new_entries_job.output, relaxed_summary)
+        structure_group_job = get_structure_group_doc(get_entries_job.output)
+        jobs = [relax, new_entries_job, get_entries_job, structure_group_job]
+        output = structure_group_job.output
+        if working_ion_entry:
+            insertion_electrode_job = get_insertion_electrode_doc(
+                get_entries_job.output, working_ion_entry
+            )
+            jobs.append(insertion_electrode_job)
+            output = insertion_electrode_job.output
+        return Flow(jobs=jobs, output=output)
 
     @abstractmethod
     def get_charge_density(self, prev_dir) -> VolumetricData:

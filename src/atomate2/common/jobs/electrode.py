@@ -5,6 +5,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Callable, NamedTuple
 
+from emmet.core.electrode import InsertionElectrodeDoc
+from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 
@@ -32,7 +34,7 @@ class RelaxJobSummary(NamedTuple):
 
 
 @job
-def get_stable_inserted_structure(
+def get_stable_inserted_results(
     structure: Structure,
     inserted_element: ElementLike,
     structure_matcher: StructureMatcher,
@@ -77,9 +79,9 @@ def get_stable_inserted_structure(
         different jobs.
     """
     if structure is None:
-        return None
+        return []
     if n_steps is not None and n_steps <= 0:
-        return None
+        return []
     # append job name
     add_name = f"{n_inserted}"
 
@@ -94,14 +96,14 @@ def get_stable_inserted_structure(
         structures=insertion_job.output, relax_maker=relax_maker, append_name=add_name
     )
 
-    min_en_job = get_min_energy_structure(
+    min_en_job = get_min_energy_summary(
         relaxed_summaries=relax_jobs.output,
         ref_structure=structure,
         structure_matcher=structure_matcher,
     )
     nn_step = n_steps - 1 if n_steps is not None else None
-    next_step = get_stable_inserted_structure(
-        structure=min_en_job.output,
+    next_step = get_stable_inserted_results(
+        structure=min_en_job.output[0],
         inserted_element=inserted_element,
         structure_matcher=structure_matcher,
         static_maker=static_maker,
@@ -114,11 +116,57 @@ def get_stable_inserted_structure(
 
     for job_ in [static_job, chg_job, insertion_job, min_en_job, relax_jobs, next_step]:
         job_.append_name(f" {add_name}")
-
+    combine_job = get_computed_entries(next_step.output, min_en_job.output)
     replace_flow = Flow(
-        jobs=[static_job, chg_job, insertion_job, relax_jobs, min_en_job, next_step]
+        jobs=[
+            static_job,
+            chg_job,
+            insertion_job,
+            relax_jobs,
+            min_en_job,
+            next_step,
+            combine_job,
+        ],
+        output=combine_job.output,
     )
     return Response(replace=replace_flow)
+
+
+@job
+def get_computed_entries(
+    multi: list[ComputedEntry], single: RelaxJobSummary | None
+) -> list[ComputedEntry]:
+    """Add a single new entry to a list of entries.
+
+    Parameters
+    ----------
+    multi: The list of entries.
+    single: Possible tuple containing the new entry
+
+    Returns
+    -------
+        The list of entries with the new entry added.
+    """
+    if single is None:
+        return multi
+    # keep the [1] for now, if jobflow supports NamedTuple, we can do this much cleaner
+    return [*multi, single[1]]
+
+
+@job(output_schema=StructureGroupDoc)
+def get_structure_group_doc(
+    computed_entries: list[ComputedEntry], ignored_species: str
+) -> Response:
+    """Take in `ComputedEntry` and return a `StructureGroupDoc`."""
+    return StructureGroupDoc.from_grouped_entries(
+        computed_entries, ignored_species=ignored_species
+    )
+
+
+@job(output_schema=InsertionElectrodeDoc)
+def get_insertion_electrode_doc(computed_entries, working_ion_entry) -> Response:
+    """Return a `InsertionElectrodeDoc`."""
+    return InsertionElectrodeDoc.from_entries(computed_entries, working_ion_entry)
 
 
 @job
@@ -186,7 +234,7 @@ def get_relaxed_job_summaries(
 
 
 @job
-def get_min_energy_structure(
+def get_min_energy_summary(
     relaxed_summaries: list[RelaxJobSummary],
     ref_structure: Structure,
     structure_matcher: StructureMatcher,
@@ -203,7 +251,8 @@ def get_min_energy_structure(
     -------
         The structure with the lowest energy.
     """
-    # Convert the list of lists to a list of named tuples
+    # Since the outputs parser will see a NamedTuple and immediately convert it to
+    # a list We have to convert the list of lists to a list of NamedTuples
     relaxed_summaries = list(map(RelaxJobSummary._make, relaxed_summaries))
     topotactic_summaries = [
         summary
@@ -214,8 +263,7 @@ def get_min_energy_structure(
     if len(topotactic_summaries) == 0:
         return None
 
-    min_summary = min(topotactic_summaries, key=lambda x: x.entry.energy_per_atom)
-    return Response(output=min_summary.structure)
+    return min(topotactic_summaries, key=lambda x: x.entry.energy_per_atom)
 
 
 @job

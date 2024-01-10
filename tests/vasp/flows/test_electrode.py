@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 def test_electrode_makers(mock_vasp, clean_dir, test_dir):
-    from jobflow import run_locally
+    from jobflow import OutputReference, run_locally
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.core import RelaxMaker, StaticMaker
@@ -66,7 +66,9 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
     inserted_formulas = []
     for res in responses.values():
         for r in res.values():
-            if hasattr(r.output, "formula_pretty"):
+            if not isinstance(r.output, OutputReference) and hasattr(
+                r.output, "formula_pretty"
+            ):
                 inserted_formulas.append(  # noqa: PERF401
                     f"{r.output.formula_pretty}-{r.output.task_label.split()[0]}"
                 )
