@@ -5,14 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from jobflow import Flow
-
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+    from jobflow import Flow, Maker
 
 
-def add_metadata_to_flow(
-    flow, additional_fields: dict, class_filter: BaseVaspMaker
-) -> Flow:
+def add_metadata_to_flow(flow, additional_fields: dict, class_filter: Maker) -> Flow:
     """
     Return the flow with additional field(metadata) to the task doc.
 
@@ -24,7 +20,7 @@ def add_metadata_to_flow(
     flow:
     additional_fields : dict
         A dict with metadata.
-    class_filter: .BaseVaspMaker
+    class_filter: .Maker
         The Maker to which additional metadata needs to be added
 
     Returns
@@ -47,7 +43,7 @@ def add_metadata_to_flow(
 
 
 def update_custodian_handlers(
-    flow: Flow, custom_handlers: tuple, class_filter: BaseVaspMaker
+    flow: Flow, custom_handlers: tuple, class_filter: Maker
 ) -> Flow:
     """
     Return the flow with custom custodian handlers for VASP jobs.
@@ -60,7 +56,7 @@ def update_custodian_handlers(
     flow:
     custom_handlers : tuple
         A tuple with custodian handlers.
-    class_filter: .BaseVaspMaker
+    class_filter: .Maker
         The Maker to which custom custodian handler needs to be added
 
     Returns

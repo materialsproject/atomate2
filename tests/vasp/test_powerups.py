@@ -63,3 +63,37 @@ def test_update_user_settings(powerup, attribute, settings):
         getattr(flow.jobs[1].function.__self__.input_set_generator, attribute)
         != settings
     )
+
+
+@pytest.mark.parametrize(
+    "powerup,settings",
+    [
+        ("add_metadata_to_flow", {"mp-id": "mp-xxx"}),
+        ("add_metadata_to_flow", {"mp-id": "mp-161", "composition": "NaCl"}),
+    ],
+)
+def test_add_metadata_to_flow(powerup, settings):
+    powerup_func = getattr(powerups, powerup)
+
+    # test flow
+    drm = DoubleRelaxMaker()
+    flow = drm.make(1)
+    flow = powerup_func(flow, settings)
+    assert (
+        flow.jobs[0].function.__self__.task_document_kwargs["additional_fields"]
+        == settings
+    )
+
+
+@pytest.mark.parametrize(
+    "powerup, settings",
+    [("update_vasp_custodian_handlers", ())],
+)
+def test_update_cp2k_custodian_handlers(powerup, settings):
+    powerup_func = getattr(powerups, powerup)
+
+    # test flow
+    drm = DoubleRelaxMaker()
+    flow = drm.make(1)
+    flow = powerup_func(flow, settings)
+    assert flow.jobs[0].function.__self__.run_vasp_kwargs["handlers"] == settings
