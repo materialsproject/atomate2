@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Optional, Union
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from abipy.flowtk.events import AbinitCriticalWarning
+
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
@@ -250,7 +252,7 @@ class Calculation(BaseModel):
         abinit_gsr_file: Path | str = "out_GSR.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
-        critical_events: Sequence[str] = (),
+        critical_events: Sequence[AbinitCriticalWarning] = (),
         # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,

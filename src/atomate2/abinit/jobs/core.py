@@ -6,6 +6,12 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
+from abipy.flowtk.events import (
+    AbinitCriticalWarning,
+    NscfConvergenceWarning,
+    RelaxConvergenceWarning,
+    ScfConvergenceWarning,
+)
 from jobflow import job
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
@@ -47,7 +53,9 @@ class StaticMaker(BaseAbinitMaker):
         default_factory=StaticSetGenerator
     )
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        ScfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -66,7 +74,9 @@ class LineNonSCFMaker(BaseAbinitMaker):
         default_factory=LineNonSCFSetGenerator
     )
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -85,7 +95,9 @@ class UniformNonSCFMaker(BaseAbinitMaker):
         default_factory=UniformNonSCFSetGenerator
     )
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -100,7 +112,9 @@ class NonSCFMaker(BaseAbinitMaker):
     )
 
     # Non dataclass variables:
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
     @job
     def make(
@@ -146,7 +160,9 @@ class NonSCFWfqMaker(NonSCFMaker):
     )
 
     # Non dataclass variables:
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -158,7 +174,9 @@ class RelaxMaker(BaseAbinitMaker):
     name: str = "Relaxation calculation"
 
     # non-dataclass variables
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("RelaxConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        RelaxConvergenceWarning,
+    )
     # structure_fixed: ClassVar[bool] = False
 
     @classmethod

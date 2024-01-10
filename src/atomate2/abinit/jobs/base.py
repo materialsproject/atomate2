@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple
 
 import jobflow
-from abipy.flowtk.events import as_event_class
 from jobflow import Maker, Response, job
 
 from atomate2 import SETTINGS
@@ -24,6 +23,7 @@ from atomate2.abinit.utils.history import JobHistory
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from abipy.flowtk.events import AbinitCriticalWarning
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.base import AbinitInputGenerator
@@ -125,13 +125,11 @@ class BaseAbinitMaker(Maker):
     task_document_kwargs: dict[str, Any] = field(default_factory=dict)
 
     # class variables
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ()
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
 
     def __post_init__(self):
         """Process post-init configuration."""
-        self.critical_events = [
-            as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
-        ]
+        self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
     def calc_type(self):
