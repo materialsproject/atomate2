@@ -89,7 +89,7 @@ def test_add_metadata_to_flow(powerup, settings):
     "powerup, settings",
     [("update_vasp_custodian_handlers", ())],
 )
-def test_update_cp2k_custodian_handlers(powerup, settings):
+def test_update_vasp_custodian_handlers(powerup, settings):
     powerup_func = getattr(powerups, powerup)
 
     # test flow
