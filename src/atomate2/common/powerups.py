@@ -5,10 +5,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from jobflow import Flow, Maker
+    from jobflow import Flow
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-def add_metadata_to_flow(flow, additional_fields: dict, class_filter: Maker) -> Flow:
+def add_metadata_to_flow(
+    flow, additional_fields: dict, class_filter: BaseVaspMaker
+) -> Flow:
     """
     Return the flow with additional field(metadata) to the task doc.
 
@@ -20,7 +24,7 @@ def add_metadata_to_flow(flow, additional_fields: dict, class_filter: Maker) -> 
     flow:
     additional_fields : dict
         A dict with metadata.
-    class_filter: .Maker
+    class_filter: .BaseVaspMaker
         The Maker to which additional metadata needs to be added
 
     Returns
@@ -29,7 +33,12 @@ def add_metadata_to_flow(flow, additional_fields: dict, class_filter: Maker) -> 
         Flow with added metadata to the task-doc.
     """
     flow.update_maker_kwargs(
-        {"_set": {"task_document_kwargs->additional_fields": additional_fields}},
+        {
+            "_set": {
+                f"task_document_kwargs->additional_fields->{field}": value
+                for field, value in additional_fields.items()
+            }
+        },
         dict_mod=True,
         class_filter=class_filter,
     )
@@ -37,8 +46,8 @@ def add_metadata_to_flow(flow, additional_fields: dict, class_filter: Maker) -> 
     return flow
 
 
-def update_vasp_custodian_handlers(
-    flow: Flow, custom_handlers: tuple, class_filter: Maker
+def update_custodian_handlers(
+    flow: Flow, custom_handlers: tuple, class_filter: BaseVaspMaker
 ) -> Flow:
     """
     Return the flow with custom custodian handlers for VASP jobs.
@@ -51,7 +60,7 @@ def update_vasp_custodian_handlers(
     flow:
     custom_handlers : tuple
         A tuple with custodian handlers.
-    class_filter: .Maker
+    class_filter: .BaseVaspMaker
         The Maker to which custom custodian handler needs to be added
 
     Returns
@@ -59,8 +68,9 @@ def update_vasp_custodian_handlers(
     Flow
         Flow with modified custodian handlers.
     """
+    code = class_filter.name.split(" ")[1]
     flow.update_maker_kwargs(
-        {"_set": {"run_vasp_kwargs->handlers": custom_handlers}},
+        {"_set": {f"run_{code}_kwargs->handlers": custom_handlers}},
         dict_mod=True,
         class_filter=class_filter,
     )

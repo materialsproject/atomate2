@@ -17,7 +17,7 @@ submit an MgO band structure workflow using FireWorks:
 from fireworks import LaunchPad
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
-from atomate2.utils.powerups import add_metadata_to_flow
+from atomate2.common.powerups import add_metadata_to_flow
 from jobflow.managers.fireworks import flow_to_workflow
 from pymatgen.core import Structure
 
