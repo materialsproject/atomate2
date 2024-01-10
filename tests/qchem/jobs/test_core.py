@@ -13,7 +13,7 @@ from jobflow import run_locally
 from pymatgen.core.structure import Molecule
 from pytest import approx
 
-from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
+from atomate2.qchem.jobs.core import OptMaker, SinglePointMaker
 
 # curr_dir = Path(os.path.dirname(sys.argv[0]))
 
