@@ -138,7 +138,9 @@ class ElectrodeInsertionMaker(Maker, ABC):
             uuid=relax.output.uuid,
         )
         get_entries_job = get_computed_entries(new_entries_job.output, relaxed_summary)
-        structure_group_job = get_structure_group_doc(get_entries_job.output)
+        structure_group_job = get_structure_group_doc(
+            get_entries_job.output, ignored_species=str(inserted_element)
+        )
         jobs = [relax, new_entries_job, get_entries_job, structure_group_job]
         output = structure_group_job.output
         if working_ion_entry:

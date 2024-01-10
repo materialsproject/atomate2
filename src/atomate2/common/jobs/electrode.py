@@ -9,6 +9,7 @@ from emmet.core.electrode import InsertionElectrodeDoc
 from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 if TYPE_CHECKING:
     from pymatgen.alchemy import ElementLike
@@ -150,7 +151,14 @@ def get_computed_entries(
     if single is None:
         return multi
     # keep the [1] for now, if jobflow supports NamedTuple, we can do this much cleaner
-    return [*multi, single[1]]
+    s_ = RelaxJobSummary._make(single)
+    ent = ComputedStructureEntry(
+        structure=s_.structure,
+        energy=s_.entry.energy,
+        parameters=s_.entry.parameters,
+        data=s_.entry.data,
+    )
+    return [*multi, ent]
 
 
 @job(output_schema=StructureGroupDoc)
@@ -158,15 +166,21 @@ def get_structure_group_doc(
     computed_entries: list[ComputedEntry], ignored_species: str
 ) -> Response:
     """Take in `ComputedEntry` and return a `StructureGroupDoc`."""
+    for ii, ient in enumerate(computed_entries):
+        ient.data["material_id"] = ii
     return StructureGroupDoc.from_grouped_entries(
-        computed_entries, ignored_species=ignored_species
+        computed_entries, ignored_specie=ignored_species
     )
 
 
 @job(output_schema=InsertionElectrodeDoc)
 def get_insertion_electrode_doc(computed_entries, working_ion_entry) -> Response:
     """Return a `InsertionElectrodeDoc`."""
-    return InsertionElectrodeDoc.from_entries(computed_entries, working_ion_entry)
+    for ii, ient in enumerate(computed_entries):
+        ient.data["material_id"] = ii
+    return InsertionElectrodeDoc.from_entries(
+        computed_entries, working_ion_entry, battery_id=None
+    )
 
 
 @job

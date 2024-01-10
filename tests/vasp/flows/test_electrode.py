@@ -2,7 +2,9 @@ from __future__ import annotations
 
 
 def test_electrode_makers(mock_vasp, clean_dir, test_dir):
+    from emmet.core.electrode import InsertionElectrodeDoc
     from jobflow import OutputReference, run_locally
+    from monty.serialization import loadfn
     from pymatgen.core import Structure
 
     from atomate2.vasp.flows.core import RelaxMaker, StaticMaker
@@ -45,6 +47,7 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
 
     # create the workflow
     struct = Structure.from_file(test_dir / "vasp/H_Graphite/C4.vasp")
+    h_entry = loadfn(test_dir / "vasp/H_Graphite/H_entry.json")
     single_relax_maker = RelaxMaker(input_set_generator=MPMetaGGARelaxSetGenerator())
     static_maker = StaticMaker(
         input_set_generator=MPMetaGGAStaticSetGenerator(), task_document_kwargs={}
@@ -53,7 +56,9 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
     maker = ElectrodeInsertionMaker(
         relax_maker=single_relax_maker, static_maker=static_maker
     )
-    flow = maker.make(struct, inserted_element="H", n_steps=2)
+    flow = maker.make(
+        struct, inserted_element="H", n_steps=2, working_ion_entry=h_entry
+    )
 
     flow = update_user_kpoints_settings(flow, {"grid_density": 88})
     flow = update_user_incar_settings(
@@ -64,15 +69,20 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     inserted_formulas = []
+    ie_doc = None
     for res in responses.values():
         for r in res.values():
             if not isinstance(r.output, OutputReference) and hasattr(
                 r.output, "formula_pretty"
             ):
-                inserted_formulas.append(  # noqa: PERF401
+                inserted_formulas.append(
                     f"{r.output.formula_pretty}-{r.output.task_label.split()[0]}"
                 )
+            if isinstance(r.output, InsertionElectrodeDoc):
+                ie_doc = r.output
+
     inserted_formulas.sort()
+
     # C-relax, C-static
     # HC4-relax (1x first insertion)
     # HC4-static
@@ -86,3 +96,6 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
         "HC4-relax",
         "HC4-static",
     ]
+
+    # None of the secondary insertions were topotactic
+    assert len(ie_doc.adj_pairs) == 1
