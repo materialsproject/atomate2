@@ -26,6 +26,7 @@ from atomate2.vasp.sets.core import (
     HSEStaticSetGenerator,
     HSETightRelaxSetGenerator,
     MDSetGenerator,
+    MLMDSetGenerator,
     NonSCFSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
@@ -567,3 +568,52 @@ class MDMaker(BaseVaspMaker):
     task_document_kwargs: dict = field(
         default_factory=lambda: {"store_trajectory": True}
     )
+
+
+@dataclass
+class MLMDMaker(MDMaker):
+    """Maker to create VASP molecular dynamics jobs using MLFF feature."""
+
+    name: str = "MLFF molecular dynamics"
+
+    input_set_generator: VaspInputGenerator = field(default_factory=MLMDSetGenerator)
+
+    @classmethod
+    def train(cls, generator_kwargs=None, **kwargs):
+        """Train."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF MD train",
+            input_set_generator=MLMDSetGenerator(ml_mode="train", **generator_kwargs),
+            **kwargs,
+        )
+
+    @classmethod
+    def select(cls, generator_kwargs=None, **kwargs):
+        """Select."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF select",
+            input_set_generator=MLMDSetGenerator(ml_mode="select", **generator_kwargs),
+            **kwargs,
+        )
+
+    @classmethod
+    def refit(cls, generator_kwargs=None, **kwargs):
+        """Refit."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF refit",
+            input_set_generator=MLMDSetGenerator(ml_mode="refit", **generator_kwargs),
+            **kwargs,
+        )
+
+    @classmethod
+    def run(cls, generator_kwargs=None, **kwargs):
+        """Run."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF MD run",
+            input_set_generator=MLMDSetGenerator(ml_mode="run", **generator_kwargs),
+            **kwargs,
+        )
