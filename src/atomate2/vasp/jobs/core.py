@@ -4,17 +4,8 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
-from custodian.vasp.handlers import (
-    FrozenJobErrorHandler,
-    IncorrectSmearingHandler,
-    LargeSigmaHandler,
-    MeshSymmetryErrorHandler,
-    PositiveEnergyErrorHandler,
-    StdErrHandler,
-    VaspErrorHandler,
-)
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 
@@ -25,8 +16,6 @@ from atomate2.vasp.sets.core import (
     HSERelaxSetGenerator,
     HSEStaticSetGenerator,
     HSETightRelaxSetGenerator,
-    MDSetGenerator,
-    MLMDSetGenerator,
     NonSCFSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
@@ -357,7 +346,7 @@ class HSEBSMaker(BaseVaspMaker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        mode="uniform",
+        mode: Literal["line", "uniform", "gap"] = "uniform",
     ) -> Response:
         """
         Run a HSE06 band structure VASP job.
@@ -368,7 +357,7 @@ class HSEBSMaker(BaseVaspMaker):
             A pymatgen structure object.
         prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
-        mode : str
+        mode : str = "uniform"
             Type of band structure calculation. Options are:
             - "line": Full band structure along symmetry lines.
             - "uniform": Uniform mesh band structure.
@@ -512,108 +501,3 @@ class TransmuterMaker(BaseVaspMaker):
         self.write_additional_data.setdefault("transformations:json", tjson)
 
         return super().make.original(self, structure, prev_dir)
-
-
-@dataclass
-class MDMaker(BaseVaspMaker):
-    """
-    Maker to create VASP molecular dynamics jobs.
-
-    Parameters
-    ----------
-    name : str
-        The job name.
-    input_set_generator : .VaspInputSetGenerator
-        A generator used to make the input set.
-    write_input_set_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
-    copy_vasp_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
-    run_vasp_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.run_vasp`.
-    task_document_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
-    stop_children_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.should_stop_children`.
-    write_additional_data : dict
-        Additional data to write to the current directory. Given as a dict of
-        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
-        the "." character which is typically used to denote file extensions. To avoid
-        this, use the ":" character, which will automatically be converted to ".". E.g.
-        ``{"my_file:txt": "contents of the file"}``.
-    """
-
-    name: str = "molecular dynamics"
-
-    input_set_generator: VaspInputGenerator = field(default_factory=MDSetGenerator)
-
-    # Explicitly pass the handlers to not use the default ones. Some default handlers
-    # such as PotimErrorHandler do not apply to MD runs.
-    run_vasp_kwargs: dict = field(
-        default_factory=lambda: {
-            "handlers": (
-                VaspErrorHandler(),
-                MeshSymmetryErrorHandler(),
-                PositiveEnergyErrorHandler(),
-                FrozenJobErrorHandler(),
-                StdErrHandler(),
-                LargeSigmaHandler(),
-                IncorrectSmearingHandler(),
-            )
-        }
-    )
-
-    # Store ionic steps info in a pymatgen Trajectory object instead of in the output
-    # document.
-    task_document_kwargs: dict = field(
-        default_factory=lambda: {"store_trajectory": True}
-    )
-
-
-@dataclass
-class MLMDMaker(MDMaker):
-    """Maker to create VASP molecular dynamics jobs using MLFF feature."""
-
-    name: str = "MLFF molecular dynamics"
-
-    input_set_generator: VaspInputGenerator = field(default_factory=MLMDSetGenerator)
-
-    @classmethod
-    def train(cls, generator_kwargs=None, **kwargs):
-        """Train."""
-        generator_kwargs = generator_kwargs or {}
-        return cls(
-            name="MLFF MD train",
-            input_set_generator=MLMDSetGenerator(ml_mode="train", **generator_kwargs),
-            **kwargs,
-        )
-
-    @classmethod
-    def select(cls, generator_kwargs=None, **kwargs):
-        """Select."""
-        generator_kwargs = generator_kwargs or {}
-        return cls(
-            name="MLFF select",
-            input_set_generator=MLMDSetGenerator(ml_mode="select", **generator_kwargs),
-            **kwargs,
-        )
-
-    @classmethod
-    def refit(cls, generator_kwargs=None, **kwargs):
-        """Refit."""
-        generator_kwargs = generator_kwargs or {}
-        return cls(
-            name="MLFF refit",
-            input_set_generator=MLMDSetGenerator(ml_mode="refit", **generator_kwargs),
-            **kwargs,
-        )
-
-    @classmethod
-    def run(cls, generator_kwargs=None, **kwargs):
-        """Run."""
-        generator_kwargs = generator_kwargs or {}
-        return cls(
-            name="MLFF MD run",
-            input_set_generator=MLMDSetGenerator(ml_mode="run", **generator_kwargs),
-            **kwargs,
-        )

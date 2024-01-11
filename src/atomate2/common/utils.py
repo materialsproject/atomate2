@@ -112,7 +112,7 @@ def parse_transformations(
 
 
 def parse_additional_json(dir_name: Path) -> dict[str, Any]:
-    """Parse additional json files in the directory."""
+    """Parse additional JSON files in the directory."""
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
         key = filename.name.split(".")[0]

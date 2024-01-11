@@ -823,7 +823,7 @@ class MDSetGenerator(VaspInputGenerator):
     start_temp: float = 300
     end_temp: float = 300
     nsteps: int = 1000
-    time_step: int = 2
+    time_step: float = 2
     auto_ispin: bool = True
 
     def get_incar_updates(

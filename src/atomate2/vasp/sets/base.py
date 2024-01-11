@@ -247,8 +247,8 @@ class VaspInputGenerator(InputGenerator):
         Allow user to override POTCARs. E.g., {"Gd": "Gd_3"}.
     user_potcar_functional
         Functional to use. Default is to use the functional in the config dictionary.
-        Valid values: "PBE", "PBE_52", "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91",
-        "LDA_US", "PW91_US".
+        Valid values: "PBE", "PBE_52", "PBE_54", "PBE_64", "LDA", "LDA_52", "LDA_54",
+        "LDA_64", "PW91", "LDA_US", "PW91_US".
     auto_ismear
         If true, the values for ISMEAR and SIGMA will be set automatically depending
         on the bandgap of the system. If the bandgap is not known (e.g., there is no
@@ -438,10 +438,20 @@ class VaspInputGenerator(InputGenerator):
             bandgap=bandgap,
             ispin=ispin,
         )
+        site_properties = structure.site_properties
+        poscar = Poscar(
+            structure,
+            velocities=site_properties.get("velocities"),
+            predictor_corrector=site_properties.get("predictor_corrector"),
+            predictor_corrector_preamble=structure.properties.get(
+                "predictor_corrector_preamble"
+            ),
+            lattice_velocities=structure.properties.get("lattice_velocities"),
+        )
         return VaspInputSet(
             incar=incar,
             kpoints=kpoints,
-            poscar=Poscar(structure),
+            poscar=poscar,
             potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
         )
 
@@ -879,15 +889,12 @@ class VaspInputGenerator(InputGenerator):
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
-    def _kspacing(self, incar_updates) -> float | None:
+    def _kspacing(self, incar_updates: dict[str, Any]) -> float | None:
         """Get KSPACING value based on the config dict, updates and user settings."""
-        if "KSPACING" in self.user_incar_settings:
-            return self.user_incar_settings["KSPACING"]
-        if "KSPACING" in incar_updates:
-            return incar_updates["KSPACING"]
-        if "KSPACING" in self.config_dict["INCAR"]:
-            return self.config_dict["INCAR"]["KSPACING"]
-        return None
+        key = "KSPACING"
+        return self.user_incar_settings.get(
+            key, incar_updates.get(key, self.config_dict["INCAR"].get(key))
+        )
 
 
 def _get_magmoms(
@@ -930,7 +937,9 @@ def _get_magmoms(
     return mag
 
 
-def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
+def _get_u_param(
+    lda_param: str, lda_config: dict[str, Any], structure: Structure
+) -> list[float]:
     """Get U parameters."""
     comp = structure.composition
     elements = sorted((el for el in comp.elements if comp[el] > 0), key=lambda e: e.X)
@@ -951,14 +960,18 @@ def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
     ]
 
 
-def _get_ediff(param, value, structure: Structure, incar_settings) -> float:
+def _get_ediff(
+    param: str, value: str | float, structure: Structure, incar_settings: dict[str, Any]
+) -> float:
     """Get EDIFF."""
     if incar_settings.get("EDIFF") is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
     return float(incar_settings["EDIFF"])
 
 
-def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
+def _set_u_params(
+    incar: Incar, incar_settings: dict[str, Any], structure: Structure
+) -> None:
     """Modify INCAR for use with U parameters."""
     has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
@@ -980,7 +993,9 @@ def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
         incar.setdefault("LMAXMIX", 4)
 
 
-def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
+def _apply_incar_updates(
+    incar: dict[str, Any], updates: dict[str, Any], skip: Sequence[str] = ()
+) -> None:
     """
     Apply updates to an INCAR file.
 
@@ -993,17 +1008,19 @@ def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
     skip
         Keys to skip.
     """
-    for k, v in updates.items():
-        if k in skip:
+    for key, val in updates.items():
+        if key in skip:
             continue
 
-        if v is None:
-            incar.pop(k, None)
+        if val is None:
+            incar.pop(key, None)
         else:
-            incar[k] = v
+            incar[key] = val
 
 
-def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
+def _remove_unused_incar_params(
+    incar: dict[str, Any], skip: Sequence[str] = ()
+) -> None:
     """
     Remove INCAR parameters that are not actively used by VASP.
 
@@ -1026,7 +1043,7 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
         incar.pop("MAGMOM", None)
 
     # Turn off +U flags if +U is not even used
-    ldau_flags = ["LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE"]
+    ldau_flags = ("LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE")
     if not incar.get("LDAU"):
         for ldau_flag in ldau_flags:
             if ldau_flag not in skip:
@@ -1035,19 +1052,16 @@ def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
 
 def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     """Combine k-points files together."""
-    labels = []
-    kpoints = []
-    weights = []
+    labels, kpoints, weights = [], [], []
 
+    recip_mode = Kpoints.supported_modes.Reciprocal
     for kpoints_object in filter(None, kpoints_objects):
-        if kpoints_object.style != Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != recip_mode:
             raise ValueError(
-                "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
+                f"Can only combine kpoints with style {recip_mode}, "
+                f"got {kpoints_object.style}"
             )
-        if kpoints_object.labels is None:
-            labels.append([""] * len(kpoints_object.kpts))
-        else:
-            labels.append(kpoints_object.labels)
+        labels.append(kpoints_object.labels or [""] * len(kpoints_object.kpts))
 
         weights.append(kpoints_object.kpts_weights)
         kpoints.append(kpoints_object.kpts)
@@ -1057,7 +1071,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     kpoints = np.concatenate(kpoints)
     return Kpoints(
         comment="Combined k-points",
-        style=Kpoints.supported_modes.Reciprocal,
+        style=recip_mode,
         num_kpts=len(kpoints),
         kpts=kpoints,
         labels=labels,

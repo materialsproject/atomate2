@@ -8,6 +8,8 @@ from typing import Any
 from jobflow import Flow, Job, Maker
 from pymatgen.io.vasp import Kpoints
 
+from atomate2.common.powerups import add_metadata_to_flow as base_add_metadata_to_flow
+from atomate2.common.powerups import update_custodian_handlers as base_custodian_handler
 from atomate2.cp2k.jobs.base import BaseCp2kMaker
 
 
@@ -138,3 +140,57 @@ def update_user_kpoints_settings(
             dict_mod=True,
         )
     return updated_flow
+
+
+def add_metadata_to_flow(
+    flow, additional_fields: dict, class_filter: Maker = BaseCp2kMaker
+) -> Flow:
+    """
+    Return the Cp2k flow with additional field(metadata) to the task doc.
+
+    This allows adding metadata to the task-docs, could be useful
+    to query results from DB.
+
+    Parameters
+    ----------
+    flow:
+    additional_fields : dict
+        A dict with metadata.
+    class_filter: .BaseCp2kMaker
+        The Maker to which additional metadata needs to be added
+
+    Returns
+    -------
+    Flow
+        Flow with added metadata to the task-doc.
+    """
+    return base_add_metadata_to_flow(
+        flow=flow, class_filter=class_filter, additional_fields=additional_fields
+    )
+
+
+def update_cp2k_custodian_handlers(
+    flow: Flow, custom_handlers: tuple, class_filter: Maker = BaseCp2kMaker
+) -> Flow:
+    """
+    Return the flow with custom custodian handlers for Cp2k jobs.
+
+    This allows user to selectively set error correcting handlers for Cp2k jobs
+    or completely unset error handlers.
+
+    Parameters
+    ----------
+    flow:
+    custom_handlers : tuple
+        A tuple with custodian handlers.
+    class_filter: .BaseCp2kMaker
+        The Maker to which custom custodian handler needs to be added
+
+    Returns
+    -------
+    Flow
+        Flow with modified custodian handlers.
+    """
+    return base_custodian_handler(
+        flow=flow, custom_handlers=custom_handlers, class_filter=class_filter
+    )
