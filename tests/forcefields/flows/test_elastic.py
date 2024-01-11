@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from jobflow import run_locally
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
@@ -5,16 +7,26 @@ from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.forcefields.flows.elastic import ElasticMaker
 from atomate2.forcefields.jobs import MACERelaxMaker
 
+_mace_model_path = (
+    f"{Path(__file__).parent.parent.parent}/test_data/forcefields/mace/MACE.model"
+)
+
 
 def test_elastic_wf_with_mace(clean_dir, si_structure):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
 
     job = ElasticMaker(
         bulk_relax_maker=MACERelaxMaker(
-            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+            relax_cell=True,
+            relax_kwargs={"fmax": 0.00001},
+            model=_mace_model_path,
+            model_kwargs={"default_dtype": "float64"},
         ),
         elastic_relax_maker=MACERelaxMaker(
-            relax_cell=False, relax_kwargs={"fmax": 0.00001}
+            relax_cell=False,
+            relax_kwargs={"fmax": 0.00001},
+            model=_mace_model_path,
+            model_kwargs={"default_dtype": "float64"},
         ),
     ).make(si_prim)
 
