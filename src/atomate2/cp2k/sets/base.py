@@ -5,13 +5,13 @@ from __future__ import annotations
 import os
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.cp2k.inputs import (
@@ -29,8 +29,8 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
 
-_BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
-_BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
+_BASE_CP2K_SET = loadfn(get_mod_path("atomate2.cp2k.sets") / "BaseCp2kSet.yaml")
+_BASE_GAPW_SET = loadfn(get_mod_path("atomate2.cp2k.sets") / "BaseAllSet.yaml")
 
 
 class Cp2kInputSet(InputSet):

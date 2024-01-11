@@ -7,6 +7,7 @@ import os
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -14,7 +15,6 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-_BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
+_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
 
 class VaspInputSet(InputSet):
