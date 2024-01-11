@@ -52,6 +52,8 @@ jobs:
         #   emmet-core 0.70.0 depends on pymatgen>=2023.10.11
         run: |
           python -m pip install --upgrade pip
+          # ase needed to get FrechetCellFilter used by ML force fields
+          pip install git+https://gitlab.com/ase/ase
           pip install .[strict,tests]
 
       - name: Test
@@ -80,6 +82,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # ase needed to get FrechetCellFilter used by ML force fields
+          pip install git+https://gitlab.com/ase/ase
           pip install .[strict,docs]
 
       - name: Build

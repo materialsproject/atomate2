@@ -180,44 +180,20 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [
-            5774.56699647,
-            5616.29786373,
-            4724.73684926,
-            3044.19341280,
-            696.34353154,
-        ],
+        [5774.56699647, 5616.29786373, 4724.73684926, 3044.19341280, 696.34353154],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [
-            0.0,
-            4.78666294,
-            13.02533234,
-            20.36075467,
-            26.39807246,
-        ],
+        [0.0, 4.78666294, 13.02533234, 20.36075467, 26.39807246],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [
-            0.0,
-            8.04749769,
-            15.97101906,
-            19.97032648,
-            21.87475268,
-        ],
+        [0.0, 8.04749769, 15.97101906, 19.97032648, 21.87475268],
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [
-            5774.56699647,
-            6094.96415750,
-            7329.80331668,
-            9152.41981241,
-            11255.57251541,
-        ],
+        [5774.56699647, 6094.96415750, 7329.80331668, 9152.41981241, 11255.57251541],
     )
 
     assert isinstance(
