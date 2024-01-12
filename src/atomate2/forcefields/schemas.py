@@ -80,7 +80,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Final output structure from the task"
     )
 
-    input: InputDoc = Field(
+    input: InputDoc = Field(  # noqa: A003
         None, description="The inputted information used to run this job."
     )
 
@@ -135,7 +135,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         """
         trajectory = result["trajectory"].__dict__
 
-        # NOTE: units for stresses were converted from eV/Angstrom³ to kbar
+        # NOTE: units for stresses were converted from eV/Angstrom³ to kBar
         # (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
         for i in range(len(trajectory["stresses"])):

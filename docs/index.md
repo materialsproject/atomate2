@@ -18,6 +18,7 @@ reference/index
 :caption: Developer Guide
 :hidden:
 dev/dev_install
+dev/workflow_tutorial
 dev/vasp_tests
 ```
 

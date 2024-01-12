@@ -78,7 +78,7 @@ def run_lobster(
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {lobster_cmd}")
-        return_code = subprocess.call(lobster_cmd, shell=True)
+        return_code = subprocess.call(lobster_cmd, shell=True)  # noqa: S602
         logger.info(f"{lobster_cmd} finished running with returncode: {return_code}")
         return
 

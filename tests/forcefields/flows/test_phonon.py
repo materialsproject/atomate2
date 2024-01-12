@@ -15,7 +15,7 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 def test_phonon_wf(clean_dir):
-    # FIXME - brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
     torch.set_default_dtype(torch.float32)
 
     structure = Structure(
@@ -83,7 +83,7 @@ def test_phonon_wf(clean_dir):
     )
     assert (
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7000
+        == 7_000
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
