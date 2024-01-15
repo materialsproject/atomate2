@@ -258,6 +258,13 @@ VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: <<LOBSTER_CMD>>
 ```
 
+```{note}
+Materials project compatible settings LOBSTER workflow is also available now,
+which could be used by simply importing from atomate2.vasp.flows.mp > MPVaspLobsterMaker
+instead of VaspLobsterMaker. Rest of the things to execute the workflow stays same as
+shown below.
+```
+
 The corresponding flow could, for example, be started with the following code:
 
 ```Python
