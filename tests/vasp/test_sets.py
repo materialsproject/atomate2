@@ -75,8 +75,8 @@ def test_user_incar_settings():
         "PREC": 10,  # wrong type, should be string.
         "SIGMA": 20,
         "LDAUU": {"H": 5.},
-        "LDAUJ": {"H" 6.},
-        "LDAUL": {"H", 3.},
+        "LDAUJ": {"H": 6.},
+        "LDAUL": {"H": 3.},
         "LDAUTYPE": 2,
     }
 
@@ -86,6 +86,10 @@ def test_user_incar_settings():
     for key in uis:
         if isinstance(incar[key], str):
             assert incar[key].lower() == uis[key].lower()
+        elif isinstance(uis[key], dict):
+            assert incar[key] == [
+                uis[key][el.species.elements[0].symbol] for el in structure
+            ]
         else:
             assert incar[key] == uis[key]
 
@@ -125,7 +129,10 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
     has_struct_spin = getattr(structure.species[0], "spin", None) is not None
 
     if user_incar_settings:  # case 1
-        assert incar_magmom == [user_incar_settings["MAGMOM"][el.species.elements[0].symbol] for el in structure]
+        assert incar_magmom == [
+            user_incar_settings["MAGMOM"][el.species.elements[0].symbol]
+            for el in structure
+        ]
     elif has_struct_magmom:  # case 2
         assert incar_magmom == structure.site_properties["magmom"]
     elif has_struct_spin:  # case 3
