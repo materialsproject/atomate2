@@ -1,6 +1,14 @@
 """Module containing command line scripts for developers."""
 
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import click
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -10,7 +18,7 @@ def dev() -> None:
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
-def vasp_test_data(test_dir) -> None:
+def vasp_test_data(test_dir: Path) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
@@ -153,10 +161,10 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
-def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
+def _potcar_to_potcar_spec(potcar_filename: str | Path, output_filename: Path) -> None:
     """Convert a POTCAR file to a POTCAR.spec file."""
     from pymatgen.io.vasp import Potcar
 

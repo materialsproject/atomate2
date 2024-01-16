@@ -69,7 +69,7 @@ class MatPesStaticFlowMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_dir: str | Path | None = None):
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Create a flow with MatPES statics.
 

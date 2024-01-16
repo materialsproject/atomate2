@@ -33,8 +33,8 @@ dependencies = [
     "monty>=2023.9.25",
     "numpy",
     "pydantic-settings>=2.0.3",
-    "pydantic>=2.0.1",
-    "pymatgen>=2023.10.11",
+    "pydantic>=2.0.1,<2.5.2",
+    "pymatgen>=2023.12.18",
 ]
 
 [project.optional-dependencies]
@@ -45,9 +45,9 @@ phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.4"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = [
-    "ase@git+https://gitlab.com/ase/ase",
+    "ase>=3.22.1",
     "chgnet>=0.2.2",
-    "mace@git+https://github.com/ACEsuit/mace@develop",
+    "mace-torch>=0.3.3",
     "matgl>=0.9.0",
     "quippy-ase>=0.9.14",
 ]
@@ -55,7 +55,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
     "furo==2023.9.10",
-    "ipython==8.18.1",
+    "ipython==8.20.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.6.0",
@@ -64,29 +64,31 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.3"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.4"]
 strict = [
     "PyYAML==6.0.1",
-    "ase@git+https://gitlab.com/ase/ase@2bab58f4e",
+    # must use >= for ase to not uninstall main branch install in CI
+    # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
+    "ase>=3.22.1",
     "cclib==1.8",
     "chgnet==0.3.3",
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",
-    "emmet-core==0.74.8",
+    "emmet-core==0.76.1",
     "ijson==3.2.3",
-    "jobflow==0.1.15",
+    "jobflow==0.1.16",
     "lobsterpy==0.3.4",
-    "mace@git+https://github.com/ACEsuit/mace@develop",
+    "mace-torch>=0.3.3",
     "matgl==0.9.1",
     "monty==2023.9.25",
-    "mp-api==0.39.4",
+    "mp-api==0.39.5",
     "numpy",
     "phonopy==2.21.0",
     "pydantic-settings==2.1.0",
     "pydantic==2.4.2",
-    "pymatgen-analysis-defects==2023.10.19",
-    "pymatgen==2023.11.12",
+    "pymatgen-analysis-defects==2024.1.12",
+    "pymatgen==2023.12.18",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.9.0",
@@ -110,15 +112,6 @@ atomate2 = ["py.typed"]
 [tool.versioningit.vcs]
 method = "git"
 default-tag = "0.0.1"
-
-[tool.flake8]
-max-line-length = 88
-max-doc-length = 88
-select = "C, E, F, W, B"
-extend-ignore = "E203, W503, E501, F401, RST21"
-min-python-version = "3.8.0"
-docstring-convention = "numpy"
-rst-roles = "class, func, ref, obj"
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -153,38 +146,10 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-select = [
-    "B",      # flake8-bugbear
-    "C4",     # flake8-comprehensions
-    "D",      # pydocstyle
-    "E",      # pycodestyle error
-    "EXE",    # flake8-executable
-    "F",      # pyflakes
-    "FA",     # flake8-future-annotations
-    "FBT003", # boolean-positional-value-in-call
-    "FLY",    # flynt
-    "I",      # isort
-    "ICN",    # flake8-import-conventions
-    "ISC",    # flake8-implicit-str-concat
-    "PD",     # pandas-vet
-    "PERF",   # perflint
-    "PIE",    # flake8-pie
-    "PL",     # pylint
-    "PT",     # flake8-pytest-style
-    "PYI",    # flakes8-pyi
-    "Q",      # flake8-quotes
-    "RET",    # flake8-return
-    "RSE",    # flake8-raise
-    "RUF",    # Ruff-specific rules
-    "SIM",    # flake8-simplify
-    "SLOT",   # flake8-slots
-    "TCH",    # flake8-type-checking
-    "TID",    # flake8-tidy-imports
-    "UP",     # pyupgrade
-    "W",      # pycodestyle warning
-    "YTT",    # flake8-2020
-]
+select = ["ALL"]
 ignore = [
+    "ARG002",  # unused method argument
+    "COM812",  # trailing comma missing
     "PD011",   # pandas-use-of-dot-values
     "PERF203", # try-except-in-loop
     "PLR",     # pylint-refactor
@@ -192,18 +157,40 @@ ignore = [
     "PT006",   # pytest-parametrize-names-wrong-type
     "RUF013",  # implicit-optional
     # TODO remove PT011, pytest.raises() should always check err msg
-    "PT011", # pytest-raises-too-broad
-    "PT013", # pytest-incorrect-pytest-import
+    "ANN002",
+    "ANN003",
+    "ANN101", # missing self type annotation
+    "ANN102",
+    "ANN401",
+    "BLE001",
+    "C408",   # Unnecessary (dict/list/tuple) call - remove call
+    "C901",   # function too complex
+    "DTZ",    # datetime-tz-now
+    "EM",     # exception message must not use f-string literal
+    "ERA001", # found commented out code
+    "FBT001",
+    "FBT002",
+    "FIX002",
+    "G004",   # logging uses fstring
+    "PT011",  # pytest-raises-too-broad
+    "PT013",  # pytest-incorrect-pytest-import
+    "PTH",    # prefer Pathlib to os.path
+    "S324",   # use of insecure hash function
+    "SLF",    # private member accessed outside class
+    "TD",     # TODOs
+    "TRY003", # long message outside exception class
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]
+isort.split-on-trailing-comma = false
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = ["D"]
+"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
 # flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
 "**/schemas/*" = ["FA", "TCH", "UP007"]
 "**/schemas.py" = ["FA", "TCH", "UP007"]
 "**/settings.py" = ["FA", "TCH", "UP007"]
+"docs/*" = ["INP001"]

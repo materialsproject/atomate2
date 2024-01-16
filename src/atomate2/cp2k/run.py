@@ -104,7 +104,7 @@ def run_cp2k(
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {cp2k_cmd}")
-        return_code = subprocess.call(cp2k_cmd, shell=True)
+        return_code = subprocess.call(cp2k_cmd, shell=True)  # noqa: S602
         logger.info(f"{cp2k_cmd} finished running with returncode: {return_code}")
         return
     if job_type == JobType.NORMAL:
