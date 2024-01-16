@@ -2,6 +2,7 @@
 
 from itertools import product
 from pathlib import Path
+from typing import Any
 
 from monty.serialization import loadfn
 
@@ -24,14 +25,13 @@ for functional_class in _RUN_TYPE_DATA:
                 _RUN_TYPES.append(f"{rt}{vdw}{u}")  # noqa: PERF401
 
 
-def get_enum_source(enum_name, doc, items) -> str:
+def get_enum_source(enum_name: str, doc: str, items: dict[str, Any]) -> str:
     header = f"""
 class {enum_name}(ValueEnum):
     \"\"\" {doc} \"\"\"\n
 """
-    items = [f'    {const} = "{val}"' for const, val in items.items()]
 
-    return header + "\n".join(items)
+    return header + "\n".join(f'    {key} = "{val}"' for key, val in items.items())
 
 
 run_type_enum = get_enum_source(

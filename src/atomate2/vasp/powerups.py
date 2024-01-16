@@ -282,7 +282,7 @@ def use_auto_ispin(
 
 
 def add_metadata_to_flow(
-    flow, additional_fields: dict, class_filter: Maker = BaseVaspMaker
+    flow: Flow, additional_fields: dict, class_filter: Maker = BaseVaspMaker
 ) -> Flow:
     """
     Return the VASP flow with additional field(metadata) to the task doc.
@@ -292,7 +292,8 @@ def add_metadata_to_flow(
 
     Parameters
     ----------
-    flow:
+    flow : Flow
+        The flow to which to add metadata.
     additional_fields : dict
         A dict with metadata.
     class_filter: .BaseVaspMaker
