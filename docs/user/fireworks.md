@@ -13,9 +13,10 @@ FireWorks workflow using the {obj}`~jobflow.managers.fireworks.flow_to_workflow`
 The workflow can then be submitted to the launchpad in the usual way. For example, to
 submit an MgO band structure workflow using FireWorks:
 
-```python
+```py
 from fireworks import LaunchPad
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
+from atomate2.vasp.powerups import add_metadata_to_flow
 from jobflow.managers.fireworks import flow_to_workflow
 from pymatgen.core import Structure
 
@@ -28,6 +29,14 @@ mgo_structure = Structure(
 
 # make a band structure flow to optimise the structure and obtain the band structure
 bandstructure_flow = RelaxBandStructureMaker().make(mgo_structure)
+
+# (Optional) add metadata to the flow task document.
+# Could be useful to filter specific results from the database.
+# For e.g., adding material project ID for the compound, use following lines
+bandstructure_flow = add_metadata_to_flow(
+    flow=bandstructure_flow,
+    additional_fields={"mp_id": "mp-190"},
+)
 
 # convert the flow to a fireworks WorkFlow object
 wf = flow_to_workflow(bandstructure_flow)

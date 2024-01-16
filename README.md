@@ -53,7 +53,7 @@ calculations will be performed:
 4. A non-self-consistent calculation on a high symmetry k-point path (for the line mode
    band structure).
 
-```python
+```py
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure

@@ -37,7 +37,7 @@ def get_total_energy_per_cell(
     total_dft_energy_per_formula_unit: float, structure: Structure
 ) -> float:
     """
-    Job that computes total dft energy of the cell.
+    Job that computes total DFT energy of the cell.
 
     Parameters
     ----------
@@ -219,7 +219,7 @@ def generate_frequencies_eigenvectors(
     displacement_data: dict
         outputs from displacements
     total_dft_energy: float
-        total dft energy in eV per cell
+        total DFT energy in eV per cell
     epsilon_static: Matrix3D
         The high-frequency dielectric constant
     born: Matrix3D
@@ -246,10 +246,10 @@ def generate_frequencies_eigenvectors(
 
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
-    displacements,
+    displacements: list[Structure],
     structure: Structure,
     supercell_matrix: Matrix3D,
-    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
     prev_dir: str | Path = None,
     prev_dir_argname: str = None,
     socket: bool = False,
@@ -304,13 +304,16 @@ def run_phonon_displacements(
         outputs["dirs"] = [phonon_job.output.dir_name] * len(displacements)
         outputs["forces"] = phonon_job.output.output.all_forces
     else:
-        for i, displacement in enumerate(displacements):
-            phonon_job = phonon_maker.make(displacement, **phonon_job_kwargs)
-            phonon_job.append_name(f" {i + 1}/{len(displacements)}")
+        for idx, displacement in enumerate(displacements):
+            if prev_dir is not None:
+                phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
+            else:
+                phonon_job = phonon_maker.make(displacement)
+            phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data
             info = {
-                "displacement_number": i,
+                "displacement_number": idx,
                 "original_structure": structure,
                 "supercell_matrix": supercell_matrix,
                 "displaced_structure": displacement,
@@ -321,7 +324,7 @@ def run_phonon_displacements(
                     dict_mod=True,
                 )
             phonon_jobs.append(phonon_job)
-            outputs["displacement_number"].append(i)
+            outputs["displacement_number"].append(idx)
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)

@@ -123,3 +123,9 @@ University of California, Berkeley
 
 [matthewkuner]: https://github.com/matthewkuner
 [0000-0002-8218-8558]: https://orcid.org/0000-0002-8218-8558
+
+**Rhys Goodall** [![gh]][comprhys] [![orc]][0000-0002-6589-1700] \
+Hobbyist Contributor
+
+[comprhys]: https://github.com/comprhys
+[0000-0002-6589-1700]: https://orcid.org/0000-0002-6589-1700

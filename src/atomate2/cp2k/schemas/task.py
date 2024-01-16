@@ -320,7 +320,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         dir_name
             The path to the folder containing the calculation outputs.
         store_additional_json
-            Whether to store additional json files found in the calculation directory.
+            Whether to store additional JSON files found in the calculation directory.
         volumetric_files
             Volumetric files to search for.
         additional_fields
@@ -486,7 +486,7 @@ def _find_cp2k_files(
     path = Path(path)
     task_files = OrderedDict()
 
-    def _get_task_files(files, suffix="") -> dict[str, Any]:
+    def _get_task_files(files: list[Path], suffix: str = "") -> dict[str, Any]:
         cp2k_files: dict[str, Any] = {}
         vol_files = []
         for file in files:

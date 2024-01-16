@@ -1,6 +1,14 @@
-import numpy as np
+import json
 
-from atomate2.common.schemas.defects import sort_pos_dist
+import numpy as np
+import pytest
+from monty.json import MontyEncoder
+
+from atomate2.common.schemas.defects import (
+    CCDDocument,
+    FormationEnergyDiagramDocument,
+    sort_pos_dist,
+)
 
 
 def test_sort_pos_dist():
@@ -19,3 +27,15 @@ def test_sort_pos_dist():
 
     r, d = sort_pos_dist(points_on_line_2d, s1=(0, 0), s2=(-2.5, -2.5), dist=abs_d)
     assert r == [(2, 2), (1, 1), (0, 0), (-1, -1), (-2, -2)]
+
+
+# schemas where all fields have default values
+@pytest.mark.parametrize(
+    "model_cls",
+    [
+        FormationEnergyDiagramDocument,
+        CCDDocument,
+    ],
+)
+def test_model_validate(model_cls):
+    model_cls.model_validate_json(json.dumps(model_cls(), cls=MontyEncoder))

@@ -5,13 +5,13 @@ from __future__ import annotations
 import os
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.cp2k.inputs import (
@@ -29,8 +29,8 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
 
-_BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
-_BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
+_BASE_CP2K_SET = loadfn(get_mod_path("atomate2.cp2k.sets") / "BaseCp2kSet.yaml")
+_BASE_GAPW_SET = loadfn(get_mod_path("atomate2.cp2k.sets") / "BaseAllSet.yaml")
 
 
 class Cp2kInputSet(InputSet):
@@ -317,7 +317,7 @@ class Cp2kInputGenerator(InputGenerator):
 
         return structure, prev_input, cp2k_output
 
-    def _get_structure(self, structure) -> Structure:
+    def _get_structure(self, structure: Structure) -> Structure:
         """Get the standardized structure."""
         if self.sort_structure and hasattr(structure, "get_sorted_structure"):
             structure = structure.get_sorted_structure()
@@ -415,7 +415,7 @@ class Cp2kInputGenerator(InputGenerator):
             return kconfig
 
         explicit = (
-            kconfig.get("explicit", False)
+            kconfig.get("explicit")
             or len(kconfig.get("added_kpoints", [])) > 0
             or "zero_weighted_reciprocal_density" in kconfig
             or "zero_weighted_line_density" in kconfig
@@ -542,7 +542,7 @@ def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
     weights = []
 
     for kpoints_object in filter(None, kpoints_objects):
-        if not kpoints_object.style == Kpoints.supported_modes.Reciprocal:
+        if kpoints_object.style != Kpoints.supported_modes.Reciprocal:
             raise ValueError(
                 "Can only combine kpoints with style=Kpoints.supported_modes.Reciprocal"
             )

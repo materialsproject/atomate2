@@ -38,7 +38,7 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
         "validate_magmom",
         "vdw",
     }
-    assert matpes_set.potcar_functional == "PBE_54"
+    assert matpes_set.potcar_functional == "PBE_64"
     assert matpes_set.inherit_incar is False
     assert matpes_set.auto_ismear is False
     assert matpes_set.auto_kspacing is False
