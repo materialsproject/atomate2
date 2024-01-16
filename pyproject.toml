@@ -157,7 +157,6 @@ ignore = [
     "PT006",   # pytest-parametrize-names-wrong-type
     "RUF013",  # implicit-optional
     # TODO remove PT011, pytest.raises() should always check err msg
-    "ANN001", # TODO remove this ignore
     "ANN002",
     "ANN003",
     "ANN101", # missing self type annotation
