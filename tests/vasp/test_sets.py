@@ -96,9 +96,9 @@ def test_user_incar_settings():
         ("struct_no_magmoms", {}),
         ("struct_with_magmoms", {}),
         ("struct_with_spin", {}),
-        ("struct_no_magmoms", {"MAGMOM": [3.7, 0.8]}),
-        ("struct_with_magmoms", {"MAGMOM": [3.7, 0.8]}),
-        ("struct_with_spin", {"MAGMOM": [3.7, 0.8]}),
+        ("struct_no_magmoms", {"MAGMOM": {"Fe": 3.7,"O": 0.8}}),
+        ("struct_with_magmoms", {"MAGMOM": {"Fe": 3.7,"O": 0.8}}),
+        ("struct_with_spin", {"MAGMOM": {"Fe": 3.7,"O": 0.8}}),
     ],
 )
 def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> None:
@@ -125,7 +125,7 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
     has_struct_spin = getattr(structure.species[0], "spin", None) is not None
 
     if user_incar_settings:  # case 1
-        assert incar_magmom == user_incar_settings["MAGMOM"]
+        assert incar_magmom == [user_incar_settings["MAGMOM"][el.species.elements[0].symbol] for el in structure]
     elif has_struct_magmom:  # case 2
         assert incar_magmom == structure.site_properties["magmom"]
     elif has_struct_spin:  # case 3
