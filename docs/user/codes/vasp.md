@@ -267,7 +267,7 @@ shown below.
 
 The corresponding flow could, for example, be started with the following code:
 
-```Python
+```py
 from jobflow import SETTINGS
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
@@ -294,7 +294,7 @@ It is, however,  computationally very beneficial to define two different types o
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
-```python
+```py
 from fireworks import LaunchPad
 from jobflow.managers.fireworks import flow_to_workflow
 from pymatgen.core.structure import Structure
@@ -328,7 +328,7 @@ lpad.add_wf(wf)
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 
-```python
+```py
 from jobflow import SETTINGS
 from pymatgen.electronic_structure.cohp import Cohp
 from pymatgen.electronic_structure.plotter import CohpPlotter
@@ -370,7 +370,7 @@ The inputs for a calculation can be modified in several ways. Every VASP job
 takes a {obj}`.VaspInputGenerator` as an argument (`input_set_generator`). One
 option is to specify an alternative input set generator:
 
-```python
+```py
 from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.jobs.core import StaticMaker
 
@@ -389,7 +389,7 @@ The second approach is to edit the job after it has been made. All VASP jobs hav
 the `input_set_generator` attribute maker will update the input set that gets
 written:
 
-```python
+```py
 static_job.maker.input_set_generator.user_incar_settings["LOPTICS"] = True
 ```
 
@@ -399,7 +399,7 @@ functions called "powerups" that can apply settings updates to all VASP jobs in 
 These powerups also contain filters for the name of the job and the maker used to
 generate them.
 
-```python
+```py
 from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -492,7 +492,7 @@ There are two options when chaining workflows:
 These two examples are illustrated in the code below, where we chain a relaxation
 calculation and a static calculation.
 
-```python
+```py
 from jobflow import Flow
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from pymatgen.core.structure import Structure
