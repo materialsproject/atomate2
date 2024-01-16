@@ -88,7 +88,7 @@ def test_user_incar_settings():
             assert incar[key].lower() == uis[key].lower()
         elif isinstance(uis[key], dict):
             assert incar[key] == [
-                uis[key][el.species.elements[0].symbol] for el in structure
+                uis[key][str(site.specie)] for site in structure
             ]
         else:
             assert incar[key] == uis[key]
@@ -102,7 +102,7 @@ def test_user_incar_settings():
         ("struct_with_spin", {}),
         ("struct_no_magmoms", {"MAGMOM": {"Fe": 3.7,"O": 0.8}}),
         ("struct_with_magmoms", {"MAGMOM": {"Fe": 3.7,"O": 0.8}}),
-        ("struct_with_spin", {"MAGMOM": {"Fe": 3.7,"O": 0.8}}),
+        ("struct_with_spin", {"MAGMOM": {"Fe2+,spin=4": 3.7,"O2-,spin=0.63": 0.8}}),
     ],
 )
 def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> None:
@@ -130,8 +130,8 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
 
     if user_incar_settings:  # case 1
         assert incar_magmom == [
-            user_incar_settings["MAGMOM"][el.species.elements[0].symbol]
-            for el in structure
+            user_incar_settings["MAGMOM"][str(site.specie)]
+            for site in structure
         ]
     elif has_struct_magmom:  # case 2
         assert incar_magmom == structure.site_properties["magmom"]
