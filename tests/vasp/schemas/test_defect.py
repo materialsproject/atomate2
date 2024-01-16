@@ -19,9 +19,9 @@ def test_ccd_document(vasp_test_dir):
     static_tasks2: list[TaskDoc] = []
     static_dirs1: list[str] = []
     static_dirs2: list[str] = []
-    for i in range(5):
-        sdir1 = vasp_test_dir / "Si_config_coord" / f"static_q1_{i}" / "outputs"
-        sdir2 = vasp_test_dir / "Si_config_coord" / f"static_q2_{i}" / "outputs"
+    for idx in range(5):
+        sdir1 = vasp_test_dir / "Si_config_coord" / f"static_q1_{idx}" / "outputs"
+        sdir2 = vasp_test_dir / "Si_config_coord" / f"static_q2_{idx}" / "outputs"
         static_tasks1.append(TaskDoc.from_directory(sdir1))
         static_tasks2.append(TaskDoc.from_directory(sdir2))
         static_dirs1.append(str(sdir1))
@@ -53,9 +53,7 @@ def test_ccd_document(vasp_test_dir):
     input_dict["relaxed_uuid1"] = static_dirs1[2]
     input_dict["relaxed_uuid2"] = static_dirs2[2]
 
-    ccd_doc = CCDDocument.from_task_outputs(
-        **input_dict,
-    )
+    ccd_doc = CCDDocument.from_task_outputs(**input_dict)
 
     # create the CCD document
     # ccd_doc = CCDDocument.from_struct_en(static_tasks1, static_tasks2, s0, s1)

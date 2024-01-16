@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     import numpy.typing as npt
+    from emmet.core.tasks import TaskDoc
     from pymatgen.analysis.defects.core import Defect
     from pymatgen.core.structure import Structure
     from pymatgen.entries.computed_entries import ComputedStructureEntry
@@ -361,7 +362,7 @@ class FormationEnergyMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def get_planar_locpot(self, task_doc) -> dict:
+    def get_planar_locpot(self, task_doc: TaskDoc) -> dict:
         """Get the Planar Locpot from the TaskDoc.
 
         This is needed just in case the planar average locpot is stored in different

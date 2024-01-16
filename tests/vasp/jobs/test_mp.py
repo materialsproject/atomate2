@@ -44,7 +44,7 @@ def test_mp_meta_gga_relax_maker_default_values():
 
 
 def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     ref_paths = {
         "MP meta-GGA static": "Si_mp_meta_gga_relax/r2scan_final_static",
     }
@@ -71,7 +71,7 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     ref_paths = {
         "MP meta-GGA relax": "Si_mp_meta_gga_relax/r2scan_relax",
     }
@@ -100,7 +100,7 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     ref_paths = {
         "MP GGA relax": "Si_mp_gga_relax/GGA_Relax_1",
     }

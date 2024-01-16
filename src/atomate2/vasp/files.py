@@ -148,7 +148,7 @@ def get_largest_relax_extension(
         return ""
 
     numbers = [re.search(r".relax(\d+)", file.name).group(1) for file in relax_files]
-    max_relax = max(numbers, key=lambda x: int(x))
+    max_relax = max(numbers, key=int)
     return f".relax{max_relax}"
 
 

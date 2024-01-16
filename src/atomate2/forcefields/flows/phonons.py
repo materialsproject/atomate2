@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.forcefields.jobs import (
@@ -116,24 +117,22 @@ class PhononMaker(BasePhononMaker):
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
-    create_thermal_displacements: bool = True
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
+    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
+        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
+    )
+    static_energy_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
+        default_factory=CHGNetStaticMaker
+    )
+    phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker = field(
+        default_factory=CHGNetStaticMaker
+    )
+    create_thermal_displacements: bool = False
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
 
     code: str = "forcefields"
-    bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(
-            relax_cell=True, relax_kwargs={"fmax": 0.00001}
-        )
-    )
-    static_energy_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=CHGNetStaticMaker
-    )
-    phonon_displacement_maker: ForceFieldStaticMaker = field(
-        default_factory=CHGNetStaticMaker
-    )
     born_maker: ForceFieldStaticMaker | None = None
 
     @property
