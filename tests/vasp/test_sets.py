@@ -74,6 +74,10 @@ def test_user_incar_settings():
         "NSW": 5_000,
         "PREC": 10,  # wrong type, should be string.
         "SIGMA": 20,
+        "LDAUU": {"H": 5.},
+        "LDAUJ": {"H" 6.},
+        "LDAUL": {"H", 3.},
+        "LDAUTYPE": 2,
     }
 
     static_set_generator = StaticSetGenerator(user_incar_settings=uis)
