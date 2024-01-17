@@ -1,10 +1,11 @@
 """Define the PhononDisplacementMakers for FHI-aims."""
 from dataclasses import dataclass, field
 
-from atomate2.aims.jobs.base import BaseAimsMaker
-from atomate2.aims.jobs.core import SocketIOStaticMaker
 from pymatgen.io.aims.sets.base import AimsInputGenerator
 from pymatgen.io.aims.sets.core import SocketIOSetGenerator, StaticSetGenerator
+
+from atomate2.aims.jobs.base import BaseAimsMaker
+from atomate2.aims.jobs.core import SocketIOStaticMaker
 
 
 @dataclass

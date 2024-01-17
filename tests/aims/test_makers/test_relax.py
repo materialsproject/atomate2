@@ -9,7 +9,7 @@ from atomate2.aims.schemas.task import AimsTaskDoc
 cwd = os.getcwd()
 
 
-def test_base_maker(tmp_path, species_dir, mock_aims, Si):
+def test_base_maker(tmp_path, species_dir, mock_aims, si):
     # mapping from job name to directory containing test files
     ref_paths = {"relax_si": "relax-si"}
 
@@ -26,7 +26,7 @@ def test_base_maker(tmp_path, species_dir, mock_aims, Si):
     # generate job
     maker = RelaxMaker.full_relaxation(user_parameters=parameters)
     maker.name = "relax_si"
-    job = maker.make(Si)
+    job = maker.make(si)
 
     # run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)
@@ -39,7 +39,7 @@ def test_base_maker(tmp_path, species_dir, mock_aims, Si):
     assert output1.output.energy == pytest.approx(-15800.2255448846)
 
 
-def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, Si):
+def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, si):
     # mapping from job name to directory containing test files
     ref_paths = {"relax_fixed_cell_si": "relax-fixed-cell-si"}
 
@@ -56,7 +56,7 @@ def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, Si):
     # generate job
     maker = RelaxMaker.fixed_cell_relaxation(user_parameters=parameters)
     maker.name = "relax_fixed_cell_si"
-    structure = Si.copy()
+    structure = si.copy()
     structure.frac_coords[0, 0] += 0.25
     job = maker.make(structure)
 

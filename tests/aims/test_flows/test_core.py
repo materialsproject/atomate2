@@ -6,7 +6,7 @@ import pytest
 cwd = os.getcwd()
 
 
-def test_double_relax(mock_aims, tmp_path, Si, species_dir):
+def test_double_relax(mock_aims, tmp_path, si, species_dir):
     """A test for the double relaxation flow"""
 
     from jobflow import run_locally
@@ -32,7 +32,7 @@ def test_double_relax(mock_aims, tmp_path, Si, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate flow
-    flow = DoubleRelaxMaker.from_parameters(parameters).make(Si)
+    flow = DoubleRelaxMaker.from_parameters(parameters).make(si)
 
     # Run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)

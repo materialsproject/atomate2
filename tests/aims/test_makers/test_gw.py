@@ -2,13 +2,13 @@
 
 import pytest
 from jobflow import run_locally
+from pymatgen.io.aims.sets.bs import GWSetGenerator
 
 from atomate2.aims.jobs.core import GWMaker
 from atomate2.aims.schemas.task import AimsTaskDoc
-from pymatgen.io.aims.sets.bs import GWSetGenerator
 
 
-def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, O2):
+def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, o2):
     # mapping from job name to directory containing test files
     ref_paths = {"gw_o2": "gw-o2"}
 
@@ -25,7 +25,7 @@ def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, O2):
     # generate job
     maker = GWMaker(input_set_generator=GWSetGenerator(user_parameters=parameters))
     maker.name = "gw_o2"
-    job = maker.make(O2)
+    job = maker.make(o2)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
+from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 from atomate2 import SETTINGS
 from atomate2.aims.files import (
@@ -18,7 +19,6 @@ from atomate2.aims.files import (
 )
 from atomate2.aims.run import run_aims, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
-from pymatgen.io.aims.sets.base import AimsInputGenerator
 from atomate2.common.files import gzip_output_folder
 
 if TYPE_CHECKING:
@@ -87,7 +87,7 @@ class BaseAimsMaker(Maker):
         self,
         structure: Structure | Molecule,
         prev_dir: str | Path | None = None,
-    ):
+    ) -> Response:
         """
         Run an FHI-aims calculation.
 

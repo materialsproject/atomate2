@@ -131,7 +131,7 @@ class CalculationOutput(BaseModel):
     def from_aims_output(
         cls,
         output: AimsOutput,  # Must use auto_load kwarg when passed
-        store_trajectory: bool = False,
+        # store_trajectory: bool = False,
     ) -> CalculationOutput:
         """
         Create an FHI-aims output document from FHI-aims outputs.
@@ -237,7 +237,7 @@ class Calculation(BaseModel):
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
         store_trajectory: bool = False,
-        store_scf: bool = False,
+        # store_scf: bool = False,
         store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Calculation, dict[AimsObject, dict]]:
         """
@@ -302,11 +302,11 @@ class Calculation(BaseModel):
 
         dos = _parse_dos(parse_dos, aims_output)
         if dos is not None:
-            aims_objects[AimsObject.DOS] = dos  # type: ignore
+            aims_objects[AimsObject.DOS] = dos  # type: ignore  # noqa: PGH003
 
         bandstructure = _parse_bandstructure(parse_bandstructure, aims_output)
         if bandstructure is not None:
-            aims_objects[AimsObject.BANDSTRUCTURE] = bandstructure  # type: ignore
+            aims_objects[AimsObject.BANDSTRUCTURE] = bandstructure  # type: ignore  # noqa: PGH003
 
         output_doc = CalculationOutput.from_aims_output(aims_output)
 
@@ -316,7 +316,7 @@ class Calculation(BaseModel):
 
         if store_trajectory:
             traj = _parse_trajectory(aims_output=aims_output)
-            aims_objects[AimsObject.TRAJECTORY] = traj  # type: ignore
+            aims_objects[AimsObject.TRAJECTORY] = traj  # type: ignore  # noqa: PGH003
 
         return (
             cls(
@@ -348,7 +348,7 @@ def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]
         A mapping between the Aims object type and the file path.
     """
     output_file_paths = {}
-    for aims_object in AimsObject:  # type: ignore
+    for aims_object in AimsObject:  # type: ignore  # noqa: PGH003
         for volumetric_file in volumetric_files:
             if aims_object.name in str(volumetric_file):
                 output_file_paths[aims_object] = str(volumetric_file)

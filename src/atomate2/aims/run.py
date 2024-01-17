@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 def run_aims(
     aims_cmd: str = None,
-):
+) -> None:
     """
     Run FHI-aims.
 
@@ -39,7 +39,7 @@ def run_aims(
     aims_cmd = expandvars(aims_cmd)
 
     logger.info(f"Running command: {aims_cmd}")
-    return_code = subprocess.call(["/bin/bash", "-c", aims_cmd], env=os.environ)
+    return_code = subprocess.call(["/bin/bash", "-c", aims_cmd], env=os.environ)  # noqa: S603
     logger.info(f"{aims_cmd} finished running with return code: {return_code}")
 
 
@@ -81,7 +81,7 @@ def should_stop_children(
 
 def run_aims_socket(
     structures_to_calculate: list[Structure | Molecule], aims_cmd: str = None
-):
+) -> None:
     """Use the ASE interface to run FHI-aims from the socket.
 
     Parameters

@@ -4,17 +4,17 @@ import pytest
 # from atomate2.aims.utils.msonable_atoms import MSONableAtoms
 
 
-def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
+def test_gw_convergence(mock_aims, tmp_dir, o2, species_dir):
     """A test for the GW convergence maker for molecule with respect to the basis set
     size
     """
 
     from jobflow import run_locally
+    from pymatgen.io.aims.sets.bs import GWSetGenerator
 
     from atomate2.aims.flows.gw import GWConvergenceMaker
     from atomate2.aims.jobs.core import GWMaker
     from atomate2.aims.schemas.task import ConvergenceSummary
-    from pymatgen.io.aims.sets.bs import GWSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -44,7 +44,7 @@ def test_gw_convergence(mock_aims, tmp_dir, O2, species_dir):
     mock_aims(ref_paths, fake_run_kwargs)
 
     # generate job
-    job = GWConvergenceMaker(**parameters).make(O2)
+    job = GWConvergenceMaker(**parameters).make(o2)
 
     # Run the job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)

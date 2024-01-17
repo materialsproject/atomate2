@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Maker
+from pymatgen.io.aims.sets.core import RelaxSetGenerator
 
 from atomate2.aims.jobs.core import RelaxMaker
-from pymatgen.io.aims.sets.core import RelaxSetGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
@@ -67,7 +67,7 @@ class DoubleRelaxMaker(Maker):
         cls,
         parameters: dict[str, Any],
         species_defaults: list[str] | tuple[str, str] = ("light", "tight"),
-    ):
+    ) -> DoubleRelaxMaker:
         """Create the maker from an ASE parameter set.
 
         Creates a DoubleRelaxFlow for the same parameters with two different

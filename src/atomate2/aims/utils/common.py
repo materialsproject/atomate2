@@ -3,6 +3,7 @@
 import contextlib
 import os
 import shutil
+from collections.abc import Generator
 
 TMPDIR_NAME = "tmpdir"
 OUTPUT_FILE_NAME: str = "aims.out"
@@ -12,7 +13,7 @@ GEOMETRY_FILE_NAME: str = "geometry.in"
 
 
 @contextlib.contextmanager
-def cwd(path: str, mkdir: bool = False, rmdir: bool = False):
+def cwd(path: str, mkdir: bool = False, rmdir: bool = False) -> Generator:
     """Change cwd intermediately.
 
     Example
@@ -30,7 +31,7 @@ def cwd(path: str, mkdir: bool = False, rmdir: bool = False):
     rmdir: bool
         If True remove the working directory upon exiting
     """
-    CWD = os.getcwd()
+    cwd = os.getcwd()
 
     if os.path.exists(path) is False and mkdir:
         os.makedirs(path)
@@ -38,6 +39,6 @@ def cwd(path: str, mkdir: bool = False, rmdir: bool = False):
     os.chdir(path)
     yield
 
-    os.chdir(CWD)
+    os.chdir(cwd)
     if rmdir:
         shutil.rmtree(path)

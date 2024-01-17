@@ -1,6 +1,5 @@
 import pytest
 from pymatgen.core import Lattice, Structure
-
 from pymatgen.io.aims.sets.base import AimsInputSet
 
 control_in_str = """
@@ -239,7 +238,7 @@ def check_file(ref: str, test: str) -> bool:
     return ref_lines[5:] == test_lines[5:]
 
 
-def test_input_set(Si, species_dir):
+def test_input_set(si, species_dir):
     parameters_json_str = (
         "{"
         f'\n  "xc": "pbe",\n  "species_dir": "{species_dir / "light"}",\n  '
@@ -260,7 +259,7 @@ def test_input_set(Si, species_dir):
     }
     properties = ("energy", "free_energy", "forces")
 
-    in_set = AimsInputSet(parameters, Si, properties)
+    in_set = AimsInputSet(parameters, si, properties)
     assert check_file(geometry_in_str, in_set.geometry_in.get_str())
     assert check_file(control_in_str, in_set.control_in.get_str())
     assert parameters_json_str == in_set.parameters_json

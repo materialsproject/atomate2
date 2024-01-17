@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING, Literal
 
 import pytest
 from pymatgen.core import Lattice, Molecule, Structure
+from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 import atomate2.aims.jobs.base
 import atomate2.aims.run
-from pymatgen.io.aims.sets.base import AimsInputGenerator
 from atomate2.common.files import gunzip_files
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture()
-def Si():
+def si():
     return Structure(
         lattice=Lattice(
             [[0.0, 2.715, 2.715], [2.715, 0.0, 2.715], [2.715, 2.715, 0.0]]
@@ -46,7 +46,7 @@ def Si():
 
 
 @pytest.fixture()
-def O2():
+def o2():
     return Molecule(species=["O", "O"], coords=[[0, 0, 0.622978], [0, 0, -0.622978]])
 
 

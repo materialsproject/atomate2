@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from pymatgen.core import Molecule, Structure
-
     from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -29,7 +28,7 @@ def copy_aims_outputs(
     additional_aims_files: list[str] | None = None,
     restart_to_input: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy FHI-aims output files to the current directory (inspired by CP2K plugin).
 
@@ -97,7 +96,7 @@ def write_aims_input_set(
     directory: str | Path = ".",
     prev_dir: str | Path | None = None,
     **kwargs,
-):
+) -> None:
     """
     Write FHI-aims input set.
 
@@ -130,7 +129,7 @@ def cleanup_aims_outputs(
     host: str | None = None,
     file_patterns: Sequence[str] = (),
     file_client: FileClient | None = None,
-):
+) -> None:
     """Remove unnecessary files.
 
     Parameters

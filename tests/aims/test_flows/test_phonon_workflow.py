@@ -7,14 +7,14 @@ import pytest
 cwd = os.getcwd()
 
 
-def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
+def test_phonon_flow(si, tmp_path, mock_aims, species_dir):
     import numpy as np
     from jobflow import run_locally
+    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     from atomate2.aims.flows.phonons import PhononMaker
     from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
     from atomate2.aims.jobs.phonons import PhononDisplacementMaker
-    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -51,7 +51,7 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
     )
     maker.name = "phonons"
     flow = maker.make(
-        Si,
+        si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 
@@ -99,14 +99,14 @@ def test_phonon_flow(Si, tmp_path, mock_aims, species_dir):
 
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
-def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
+def test_phonon_socket_flow(si, tmp_path, mock_aims, species_dir):
     import numpy as np
     from jobflow import run_locally
+    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     from atomate2.aims.flows.phonons import PhononMaker
     from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
     from atomate2.aims.jobs.phonons import PhononDisplacementMakerSocket
-    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -147,7 +147,7 @@ def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     )
     maker.name = "phonons"
     flow = maker.make(
-        Si,
+        si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 
@@ -193,7 +193,7 @@ def test_phonon_socket_flow(Si, tmp_path, mock_aims, species_dir):
     assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 14.41
 
 
-def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
+def test_phonon_default_flow(si, tmp_path, mock_aims, species_dir):
     import numpy as np
     from jobflow import run_locally
 
@@ -218,7 +218,7 @@ def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
     maker = PhononMaker()
     maker.name = "phonons"
     flow = maker.make(
-        Si,
+        si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 
@@ -268,7 +268,7 @@ def test_phonon_default_flow(Si, tmp_path, mock_aims, species_dir):
 
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
-def test_phonon_default_socket_flow(Si, tmp_path, mock_aims, species_dir):
+def test_phonon_default_socket_flow(si, tmp_path, mock_aims, species_dir):
     import numpy as np
     from jobflow import run_locally
 
@@ -295,7 +295,7 @@ def test_phonon_default_socket_flow(Si, tmp_path, mock_aims, species_dir):
     maker = PhononMaker(socket=True)
     maker.name = "phonons"
     flow = maker.make(
-        Si,
+        si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
     )
 

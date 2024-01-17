@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.forcefields.jobs import (
@@ -118,13 +118,13 @@ class PhononMaker(BasePhononMaker):
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
-    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
+    bulk_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
-    static_energy_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
+    static_energy_maker: ForceFieldStaticMaker | None = field(
         default_factory=CHGNetStaticMaker
     )
-    phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker = field(
+    phonon_displacement_maker: ForceFieldStaticMaker = field(
         default_factory=CHGNetStaticMaker
     )
     create_thermal_displacements: bool = False
@@ -136,7 +136,7 @@ class PhononMaker(BasePhononMaker):
     born_maker: ForceFieldStaticMaker | None = None
 
     @property
-    def prev_calc_dir_argname(self):
+    def prev_calc_dir_argname(self) -> None:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it

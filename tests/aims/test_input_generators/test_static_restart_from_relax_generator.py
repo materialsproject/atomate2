@@ -58,9 +58,9 @@ def comp_system(atoms, prev_dir, test_name, work_path, ref_path, species_dir):
     shutil.move(Path(prev_dir) / "~parameters.json", params_file)
 
 
-def test_static_from_relax_si(Si, species_dir, tmp_path, ref_path):
+def test_static_from_relax_si(si, species_dir, tmp_path, ref_path):
     comp_system(
-        Si,
+        si,
         f"{ref_path}/relax-si/outputs",
         "static-from-prev-si",
         tmp_path,
@@ -69,9 +69,9 @@ def test_static_from_relax_si(Si, species_dir, tmp_path, ref_path):
     )
 
 
-def test_static_from_relax_si_no_kgrid(Si, species_dir, tmp_path, ref_path):
+def test_static_from_relax_si_no_kgrid(si, species_dir, tmp_path, ref_path):
     comp_system(
-        Si,
+        si,
         f"{ref_path}/relax-no-kgrid-si/",
         "static-from-prev-no-kgrid-si",
         tmp_path,
@@ -80,12 +80,12 @@ def test_static_from_relax_si_no_kgrid(Si, species_dir, tmp_path, ref_path):
     )
 
 
-def test_static_from_relax_default_species_dir(Si, species_dir, tmp_path, ref_path):
+def test_static_from_relax_default_species_dir(si, species_dir, tmp_path, ref_path):
     sd_def = os.getenv("AIMS_SPECIES_DIR", None)
     os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     comp_system(
-        Si,
+        si,
         f"{ref_path}/relax-default-sd-si/",
         "static-from-prev-default-sd-si",
         tmp_path,
@@ -99,9 +99,9 @@ def test_static_from_relax_default_species_dir(Si, species_dir, tmp_path, ref_pa
         os.unsetenv("AIMS_SPECIES_DIR")
 
 
-def test_static_from_relax_o2(O2, species_dir, tmp_path, ref_path):
+def test_static_from_relax_o2(o2, species_dir, tmp_path, ref_path):
     comp_system(
-        O2,
+        o2,
         f"{ref_path}/relax-o2/",
         "static-from-prev-o2",
         tmp_path,
@@ -110,12 +110,12 @@ def test_static_from_relax_o2(O2, species_dir, tmp_path, ref_path):
     )
 
 
-def test_static_from_relax_default_species_dir_o2(O2, species_dir, tmp_path, ref_path):
+def test_static_from_relax_default_species_dir_o2(o2, species_dir, tmp_path, ref_path):
     sd_def = os.getenv("AIMS_SPECIES_DIR", None)
     os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     comp_system(
-        O2,
+        o2,
         f"{ref_path}/relax-default-sd-o2/",
         "static-from-prev-default-sd-o2",
         tmp_path,

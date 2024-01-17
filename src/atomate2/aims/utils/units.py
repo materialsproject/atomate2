@@ -7,6 +7,5 @@ THZ = 1e12
 AMU = 1.66053906660e-27  # [kg] CODATA 2002
 AA = 1e-10
 
-omega_to_THz = (EV / AA**2 / AMU) ** 0.5 / THZ / 2 / PI
-
-ev_per_A3_to_kbar = EV / AA**3 / 1e8
+omegaToTHz = (EV / AA**2 / AMU) ** 0.5 / THZ / 2 / PI  # noqa: N816
+ev_per_A3_to_kbar = EV / AA**3 / 1e8  # noqa: N816

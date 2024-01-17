@@ -130,7 +130,7 @@ class PhononMaker(BasePhononMaker):
     born_maker: BaseAimsMaker | None = None
     phonon_displacement_maker: BaseAimsMaker | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Set the default phonon_displacement_maker.
 
         Set the displacement maker based on whether the socket communicator is used
@@ -142,7 +142,7 @@ class PhononMaker(BasePhononMaker):
                 self.phonon_displacement_maker = PhononDisplacementMaker()
 
     @property
-    def prev_calc_dir_argname(self):
+    def prev_calc_dir_argname(self) -> str:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it

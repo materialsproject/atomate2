@@ -24,10 +24,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import (
-        ForceFieldRelaxMaker,
-        ForceFieldStaticMaker,
-    )
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
@@ -365,7 +362,7 @@ class BasePhononMaker(Maker, ABC):
 
     @property
     @abstractmethod
-    def prev_calc_dir_argname(self):
+    def prev_calc_dir_argname(self) -> str | None:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it

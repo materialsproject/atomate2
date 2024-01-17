@@ -6,14 +6,14 @@ cwd = os.getcwd()
 
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
-def test_static_socket_maker(Si, species_dir, mock_aims, tmp_path):
+def test_static_socket_maker(si, species_dir, mock_aims, tmp_path):
     from jobflow import run_locally
+    from pymatgen.io.aims.sets.core import SocketIOSetGenerator
 
     from atomate2.aims.jobs.core import SocketIOStaticMaker
     from atomate2.aims.schemas.task import AimsTaskDoc
-    from pymatgen.io.aims.sets.core import SocketIOSetGenerator
 
-    atoms = Si
+    atoms = si
     atoms_list = [atoms, atoms.copy(), atoms.copy()]
     atoms_list[1].positions[0, 0] += 0.02
     atoms_list[2].cell[:, :] *= 1.02

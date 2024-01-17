@@ -10,26 +10,22 @@ from typing import TYPE_CHECKING
 from jobflow import Response, job
 from monty.serialization import dumpfn
 from pymatgen.io.aims.parsers import read_aims_output
-
-from atomate2 import SETTINGS
-from atomate2.aims.files import (
-    cleanup_aims_outputs,
-    write_aims_input_set,
-)
-from atomate2.aims.jobs.base import _FILES_TO_ZIP, BaseAimsMaker
-from atomate2.aims.run import run_aims_socket, should_stop_children
-from atomate2.aims.schemas.task import AimsTaskDoc
 from pymatgen.io.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from pymatgen.io.aims.sets.core import (
     RelaxSetGenerator,
     SocketIOSetGenerator,
     StaticSetGenerator,
 )
+
+from atomate2 import SETTINGS
+from atomate2.aims.files import cleanup_aims_outputs, write_aims_input_set
+from atomate2.aims.jobs.base import _FILES_TO_ZIP, BaseAimsMaker
+from atomate2.aims.run import run_aims_socket, should_stop_children
+from atomate2.aims.schemas.task import AimsTaskDoc
 from atomate2.common.files import gzip_output_folder
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
-
     from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -73,7 +69,7 @@ class RelaxMaker(BaseAimsMaker):
     input_set_generator: AimsInputGenerator = field(default_factory=RelaxSetGenerator)
 
     @classmethod
-    def fixed_cell_relaxation(cls, *args, **kwargs):
+    def fixed_cell_relaxation(cls, *args, **kwargs) -> RelaxMaker:
         """Create a fixed cell relaxation maker."""
         return cls(
             input_set_generator=RelaxSetGenerator(*args, relax_cell=False, **kwargs),
@@ -81,7 +77,7 @@ class RelaxMaker(BaseAimsMaker):
         )
 
     @classmethod
-    def full_relaxation(cls, *args, **kwargs):
+    def full_relaxation(cls, *args, **kwargs) -> RelaxMaker:
         """Create a full relaxation maker."""
         return cls(
             input_set_generator=RelaxSetGenerator(*args, relax_cell=True, **kwargs)

@@ -6,12 +6,12 @@ import pytest
 cwd = os.getcwd()
 
 
-def test_static_maker(Si, tmp_path, mock_aims, species_dir):
+def test_static_maker(si, tmp_path, mock_aims, species_dir):
     from jobflow import run_locally
+    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     from atomate2.aims.jobs.core import StaticMaker
     from atomate2.aims.schemas.task import AimsTaskDoc
-    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     # mapping from job name to directory containing test files
     ref_paths = {"base": "static-si"}
@@ -31,7 +31,7 @@ def test_static_maker(Si, tmp_path, mock_aims, species_dir):
         input_set_generator=StaticSetGenerator(user_parameters=parameters)
     )
     maker.name = "base"
-    job = maker.make(Si)
+    job = maker.make(si)
 
     # run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)

@@ -18,7 +18,7 @@ class _SegmentDict(TypedDict):
     length: int
 
 
-def prepare_band_input(structure: Structure, density: float = 20):
+def prepare_band_input(structure: Structure, density: float = 20) -> list:
     """Prepare the band information needed for the FHI-aims control.in file.
 
     Parameters

@@ -106,7 +106,9 @@ class SpeciesSummary(BaseModel):
     )
 
     @classmethod
-    def from_species_info(cls, species_info: dict[str, dict[str, Any]]):
+    def from_species_info(
+        cls, species_info: dict[str, dict[str, Any]]
+    ) -> SpeciesSummary:
         """Initialize from the atomic_kind_info dictionary.
 
         Parameters
@@ -351,7 +353,7 @@ class ConvergenceSummary(BaseModel):
     @classmethod
     def from_data(
         cls, structure: Structure | Molecule, convergence_data: dict[str, Any]
-    ):
+    ) -> ConvergenceSummary:
         """Create a summary from the convergence data dictionary.
 
         Parameters
@@ -491,7 +493,7 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
         volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
         additional_fields: dict[str, Any] = None,
         **aims_calculation_kwargs,
-    ):
+    ) -> AimsTaskDoc:
         """Create a task document from a directory containing FHi-aims files.
 
         Parameters
@@ -630,9 +632,11 @@ def _find_aims_files(
     path = Path(path)
     task_files = {}
 
-    def _get_task_files(files, suffix=""):
-        aims_files = {}
-        vol_files = []
+    def _get_task_files(
+        files: list[Path], suffix: str = ""
+    ) -> dict[str, list[str | Path] | Path | str]:
+        aims_files: dict[str, list[str | Path] | Path | str] = {}
+        vol_files: list[str | Path] = []
         for file in files:
             # Here we make assumptions about the output file naming
             if file.match(f"*aims.out{suffix}*"):
@@ -708,5 +712,5 @@ def _get_state(calc_docs: list[Calculation], analysis: AnalysisDoc) -> TaskState
         c.has_aims_completed == TaskState.SUCCESS for c in calc_docs
     )
     if len(analysis.errors) == 0 and all_calcs_completed:
-        return TaskState.SUCCESS  # type: ignore
-    return TaskState.FAILED  # type: ignore
+        return TaskState.SUCCESS  # type: ignore  # noqa: PGH003
+    return TaskState.FAILED  # type: ignore  # noqa: PGH003

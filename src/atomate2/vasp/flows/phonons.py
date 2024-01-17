@@ -6,11 +6,7 @@ from typing import TYPE_CHECKING
 
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.core import (
-    DielectricMaker,
-    StaticMaker,
-    TightRelaxMaker,
-)
+from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
@@ -141,15 +137,9 @@ class PhononMaker(BasePhononMaker):
     phonon_displacement_maker: BaseVaspMaker = field(
         default_factory=PhononDisplacementMaker
     )
-    create_thermal_displacements: bool = False
-    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
-    kpath_scheme: str = "seekpath"
-    code: str = "vasp"
-    store_force_constants: bool = True
-
 
     @property
-    def prev_calc_dir_argname(self):
+    def prev_calc_dir_argname(self) -> str:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it

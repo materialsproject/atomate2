@@ -59,7 +59,7 @@ class ConvergenceMaker(Maker):
         prev_dir: str | Path | None = None,
         convergence_data: dict | None = None,
         prev_output_value: float | None = None,
-    ):
+    ) -> ConvergenceSummary:
         """Create a top-level flow controlling convergence iteration.
 
         Parameters

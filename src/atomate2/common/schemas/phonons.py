@@ -28,12 +28,12 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
-from atomate2.aims.utils.units import omega_to_THz
+from atomate2.aims.utils.units import omegaToTHz
 
 logger = logging.getLogger(__name__)
 
 
-def get_factor(code: str):
+def get_factor(code: str) -> float:
     """
     Get the frequency conversion factor to THz for each code.
 
@@ -55,7 +55,7 @@ def get_factor(code: str):
     if code in ["forcefields", "vasp"]:
         return VaspToTHz
     if code == "aims":
-        return omega_to_THz  # Based on CODATA 2002
+        return omegaToTHz  # Based on CODATA 2002
     raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
 
 
