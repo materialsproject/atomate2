@@ -339,7 +339,7 @@ result = store.query_one(
 )
 
 for number, (key, cohp) in enumerate(
-    result["output"]["lobsterpy_data"]["cohp_plot_data"].items()
+    result["output"]["lobsterpy_data"]["cohp_plot_data"]["data"].items()
 ):
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
@@ -347,7 +347,7 @@ for number, (key, cohp) in enumerate(
     plotter.save_plot(f"plots_all_bonds{number}.pdf")
 
 for number, (key, cohp) in enumerate(
-    result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()
+    result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"]["data"].items()
 ):
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
