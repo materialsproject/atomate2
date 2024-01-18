@@ -1,7 +1,0 @@
-COHPstartEnergy -5.0
-COHPendEnergy 5.0
-basisSet pbeVaspFit2015
-cohpGenerator from 0.1 to 3.0 orbitalwise
-saveProjectionToFile
-basisfunctions Ga 3d 4p 4s
-basisfunctions As 4p 4s
