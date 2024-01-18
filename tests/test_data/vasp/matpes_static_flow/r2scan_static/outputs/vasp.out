@@ -1,0 +1,111 @@
+ running    1 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on    1 cores,    1 groups
+ distr:  one band on    1 cores,    1 groups
+ vasp.6.4.1 05Apr23 (build May 18 2023 13:19:41) complex
+ POSCAR found type information on POSCAR Si
+ POSCAR found :  1 types and       2 ions
+ Reading from existing POTCAR
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     You use a magnetic or noncollinear calculation, but did not specify     |
+|     the initial magnetic moment with the MAGMOM tag. Note that a            |
+|     default of 1 will be used for all atoms. This ferromagnetic setup       |
+|     may break the symmetry of the crystal, in particular it may rule        |
+|     out finding an antiferromagnetic solution. Thence, we recommend         |
+|     setting the initial magnetic moment manually or verifying carefully     |
+|     that this magnetic setup is desired.                                    |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for Pade appr. of Perdew
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     The requested file  could not be found or opened for reading            |
+|     k-point information. Automatic k-point generation is used as a          |
+|     fallback, which may lead to unwanted results.                           |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ INCAR ok, starting setup
+ POSCAR ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ augmentation electrons    8.008962626160372
+ soft         electrons    0.000000000000000
+ total        electrons    8.008962626160372
+ augmentation electrons   2.2406565400931010E-003
+ soft         electrons    0.000000000000000
+ total        electrons   2.2406565400931010E-003
+ augmentation electrons    21.67319323768297
+ soft         electrons    0.000000000000000
+ total        electrons    21.67319323768297
+ augmentation electrons    18.93680343768297
+ soft         electrons    0.000000000000000
+ total        electrons    18.93680343768297
+ WARNING: random wavefunctions but no delay for mixing, default for NELMDL
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          ort
+DAV:   1     0.295458134336E+01    0.29546E+01   -0.43010E+03   180   0.980E+02
+DAV:   2    -0.174521216640E+02   -0.20407E+02   -0.19632E+02   180   0.965E+01
+DAV:   3    -0.179215017575E+02   -0.46938E+00   -0.46846E+00   180   0.147E+01
+DAV:   4    -0.179247549235E+02   -0.32532E-02   -0.32528E-02   180   0.142E+00
+DAV:   5    -0.179247614105E+02   -0.64870E-05   -0.64867E-05   180   0.516E-02
+ gam= 0.000 g(H,U,f)=  0.966E-01 0.113E-01 0.584E-01 ort(H,U,f) = 0.000E+00 0.000E+00 0.000E+00
+SDA:   6    -0.174725442636E+02    0.45222E+00   -0.64867E-05   180   0.166E+00 0.000E+00
+ gam= 0.000 trial= 0.400  step= 0.420 mean= 0.400
+ gam= 0.000 g(H,U,f)=  0.172E-01 0.648E-02 0.356E-01 ort(H,U,f) = 0.378E-01 0.848E-02 0.414E-01
+CGA:   7    -0.175090556753E+02   -0.36511E-01   -0.34916E-01   180   0.593E-01 0.877E-01
+ gam= 0.000 trial= 0.401  step= 0.560 mean= 0.401
+ gam= 0.111 g(H,U,f)=  0.274E-02 0.357E-02 0.284E-03 ort(H,U,f) = 0.607E-02 0.477E-02 0.355E-03
+CGA:   8    -0.175263360887E+02   -0.17280E-01   -0.16612E-01   180   0.659E-02 0.112E-01
+ gam= 0.111 trial= 0.409  step=-0.155 mean= 0.409
+ BOPT < 0, no correction made
+ gam= 0.000 g(H,U,f)=  0.866E-03 0.234E-02 0.104E-01 ort(H,U,f) = 0.174E-02 0.331E-02 0.144E-01
+CGA:   9    -0.175337664459E+02   -0.74304E-02    0.60776E-03   180   0.136E-01 0.194E-01
+ gam= 0.000 trial= 0.409  step= 0.422 mean= 0.409
+ gam= 0.175 g(H,U,f)=  0.384E-03 0.162E-02 0.392E-03 ort(H,U,f) = 0.557E-03 0.194E-02 0.467E-03
+CGA:  10    -0.175366787143E+02   -0.29123E-02   -0.28767E-02   180   0.239E-02 0.296E-02
+ gam= 0.175 trial= 0.410  step= 0.835 mean= 0.410
+ gam= 0.000 g(H,U,f)=  0.366E-04 0.566E-03 0.306E-10 ort(H,U,f) = 0.512E-04 0.115E-02 0.612E-10
+CGA:  11    -0.175382123256E+02   -0.15336E-02   -0.12168E-02   180   0.602E-03 0.120E-02
+ gam= 0.000 trial= 0.431  step= 2.218 mean= 0.431
+ gam= 0.000 trial= 2.801  step= 2.801 mean= 0.680
+ gam= 0.163 g(H,U,f)=  0.875E-04 0.106E-04 0.113E-14 ort(H,U,f) =-0.421E-04-0.526E-04-0.909E-14
+CGA:  12    -0.175389063922E+02   -0.69407E-03   -0.73758E-05   180   0.980E-04-0.947E-04
+ gam= 0.163 trial= 0.786  step= 0.762 mean= 0.786
+ gam= 0.200 g(H,U,f)=  0.815E-05 0.114E-04 0.343E-14 ort(H,U,f) = 0.280E-05 0.253E-06-0.954E-15
+CGA:  13    -0.175389378334E+02   -0.31441E-04   -0.31478E-04   180   0.196E-04 0.305E-05
+ gam= 0.200 trial= 0.785  step= 1.509 mean= 0.785
+ gam= 0.695 g(H,U,f)=  0.119E-04 0.168E-05 0.301E-15 ort(H,U,f) =-0.870E-05 0.423E-05 0.691E-15
+CGA:  14    -0.175389514394E+02   -0.13606E-04   -0.15223E-04   180   0.136E-04-0.447E-05
+ gam= 0.695 trial= 0.821  step= 1.132 mean= 0.821
+ gam= 0.369 g(H,U,f)=  0.464E-05 0.374E-06 0.260E-16 ort(H,U,f) =-0.268E-05-0.187E-05-0.203E-15
+CGA:  15    -0.175389566683E+02   -0.52290E-05   -0.59361E-05   180   0.502E-05-0.455E-05
+ gam= 0.369 trial= 0.836  step= 0.733 mean= 0.836
+ final diagonalization
+   1 F= -.17538957E+02 E0= -.17538957E+02  d E =-.455536E-13  mag=     0.0000
+ augmentation electrons  -0.4276120905307024
+ soft         electrons    8.434013363934984
+ total        electrons    8.006401273404281
+ augmentation electrons  -4.3429534654735243E-006
+ soft         electrons    8.434013363934984
+ total        electrons   1.0752152572868918E-007
+ PROFILE, used timers:     280

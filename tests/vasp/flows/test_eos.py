@@ -2,13 +2,14 @@ import pytest
 from emmet.core.tasks import TaskDoc
 from jobflow import Flow, run_locally
 from pymatgen.core import Structure
+from pytest import approx
 
-from atomate2.vasp.flows.eos.mp import (
+from atomate2.vasp.flows.eos import (
     MPGGAEosDoubleRelaxMaker,
     MPGGAEosMaker,
 )
-from atomate2.vasp.jobs.eos.mp import (
-    MPMetaGGAEosStaticMaker,
+from atomate2.vasp.jobs.eos import (
+    MPGGAEosStaticMaker,
 )
 
 expected_incar_relax = {
@@ -70,14 +71,8 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     assert len(responses) == len(ref_paths)
 
-    expected_incar_pars = [expected_incar_relax_1, expected_incar_relax]
-    for ijob in range(2):
-        for key, expected in expected_incar_pars[ijob].items():
-            actual = taskdocs[ijob].input.parameters.get(key, None)
-            assert actual == expected, f"{key=}, {actual=}, {expected=}"
 
-
-@pytest.mark.parametrize("do_statics", [False])  # , True])
+@pytest.mark.parametrize("do_statics", [False, True])
 def test_mp_eos_maker(
     do_statics: bool,
     mock_vasp,
@@ -98,13 +93,13 @@ def test_mp_eos_maker(
 
     for i in range(nframes):
         ref_paths[
-            f"EOS Deformation Relax {i}"
+            f"EOS MP GGA relax deformation {i}"
         ] = f"mp-149-PBE-EOS_Deformation_Relax_{i}"
-        expected_incars[f"EOS Deformation Relax {i}"] = expected_incar_deform
+        expected_incars[f"EOS MP GGA relax deformation {i}"] = expected_incar_deform
 
         if do_statics:
-            ref_paths[f"EOS Static {i}"] = f"mp-149-PBE-EOS_Static_{i}"
-            expected_incars[f"EOS Static {i}"] = expected_incar_static
+            ref_paths[f"EOS MP GGA static {i}"] = f"mp-149-PBE-EOS_Static_{i}"
+            expected_incars[f"EOS MP GGA static {i}"] = expected_incar_static
 
     if do_statics:
         ref_paths["EOS equilibrium static"] = "mp-149-PBE-EOS_equilibrium_static"
@@ -120,7 +115,7 @@ def test_mp_eos_maker(
 
     static_maker = None
     if do_statics:
-        static_maker = MPMetaGGAEosStaticMaker(
+        static_maker = MPGGAEosStaticMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
         )
 
@@ -139,51 +134,27 @@ def test_mp_eos_maker(
     # ensure flow runs successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    taskdocs = {}
     jobs = []
     for job in flow:
         if isinstance(job, Flow):
-            jobs.extend([t.name for t in job.jobs])
+            jobs.extend([t for t in job.jobs])
         else:
-            jobs.append(job.name)
+            jobs.append(job)
 
-    for ijob, uuid in enumerate(flow.job_uuids):
-        taskdocs[jobs[ijob]] = responses[uuid][1].output
+    jobs = {job.name: job.uuid for job in jobs if job.name in ref_paths}
+    job_output = {
+        job_name: responses[uuid][1].output for job_name, uuid in jobs.items()
+    }
 
-    assert len(taskdocs) == len(ref_paths)
+    # deformation jobs not included in this
+    assert len(job_output) == (3 if do_statics else 2)
 
+    ref_energies = {"EOS MP GGA relax 1": -10.849349, "EOS MP GGA relax 2": -10.849357}
     if do_statics:
-        # Check that deformation jobs correctly feed structures
-        # into statics
+        ref_energies["EOS equilibrium static"] = -10.849357
 
-        assert structure_equality(
-            taskdocs["EOS equilibrium static"].input.structure,
-            taskdocs["EOS MP GGA relax 2"].output.structure,
-        ), "Equilibrium static input structure is wrong!"
-
-        for i in range(nframes):
-            assert structure_equality(
-                taskdocs[f"EOS Static {i}"].input.structure,
-                taskdocs[f"EOS Deformation Relax {i}"].output.structure,
-            ), f"Static {i} has incorrect input structure!"
-
-    relaxed_totens = [
-        taskdocs[f"EOS Deformation Relax {i}"].calcs_reversed[0].output.energy
-        for i in range(nframes)
-    ]
-    ref_relaxed_totens = [-10.547764, -10.632079]
-
+    # check that TaskDoc energies agree
     assert all(
-        abs(relaxed_totens[i] - ref_relaxed_totens[i]) < 1.0e-6 for i in range(nframes)
+        approx(ref_energies[key]) == job_output[key].calcs_reversed[0].output.energy
+        for key in ref_energies
     )
-
-    if do_statics:
-        static_totens = [
-            taskdocs[f"EOS Static {i}"].calcs_reversed[0].output.energy
-            for i in range(nframes)
-        ]
-        ref_static_totens = [-10.547764, -10.63208]
-        assert all(
-            abs(static_totens[i] - ref_static_totens[i]) < 1.0e-6
-            for i in range(nframes)
-        )

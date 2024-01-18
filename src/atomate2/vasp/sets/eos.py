@@ -8,10 +8,10 @@ MP GGA compatible, and MP meta-GGA compatible
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from importlib.resources import files as import_files
 from typing import TYPE_CHECKING
 
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -21,10 +21,10 @@ if TYPE_CHECKING:
 
 
 _BASE_MP_GGA_RELAX_SET = loadfn(
-    resource_filename("atomate2.vasp.sets", "BaseMPGGASet.yaml")
+    import_files("atomate2.vasp.sets") / "BaseMPGGASet.yaml"
 )
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
-    resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
+    import_files("atomate2.vasp.sets") / "BaseMPR2SCANRelaxSet.yaml"
 )
 
 
@@ -66,15 +66,10 @@ class EosSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        """
-        original atomate wf_bulk_modulus had 600 eV cutoff
-        Because default atomate2 set and MP's r2SCAN set use 680 eV cutoff,
-        avoid needless duplication and use ENCUT = 680 eV here
-        """
         return {
             "NSW": 99,
             "LCHARG": False,
-            "ISIF": 2,
+            "ISIF": 3,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
             "ENCUT": 680,
@@ -87,9 +82,7 @@ class EosSetGenerator(VaspInputGenerator):
         }
 
 
-"""
-MPLegacy prefix = MP PBE-GGA compatible with atomate implementation
-"""
+# MPLegacy prefix = MP PBE-GGA compatible with atomate implementation
 
 
 @dataclass
@@ -130,15 +123,10 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
         dict
             A dictionary of updates to apply.
         """
-        """
-        original atomate wf_bulk_modulus had 600 eV cutoff
-        Because default atomate2 set and MP's r2SCAN set use 680 eV cutoff,
-        avoid needless duplication and use ENCUT = 680 eV here
-        """
         return {
             "NSW": 99,
             "LCHARG": False,
-            "ISIF": 2,
+            "ISIF": 3,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
             "ENCUT": 600,
@@ -218,10 +206,8 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        """
-        original atomate wf_bulk_modulus had 600 eV cutoff
-        and k-point grid density of *7,000*
-        """
+        # Original atomate wf_bulk_modulus had 600 eV cutoff
+        # and k-point grid_density = 7,000
         return {
             "NSW": 0,
             "LCHARG": False,
@@ -236,9 +222,7 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
         }
 
 
-"""
-MPGGA prefix = MP GGA compatible
-"""
+# MPGGA prefix = MP GGA compatible
 
 
 @dataclass
@@ -282,7 +266,7 @@ class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
         return {
             "NSW": 99,
             "LCHARG": False,
-            "ISIF": 2,
+            "ISIF": 3,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
             "ALGO": "FAST",
@@ -334,10 +318,6 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        """
-        original atomate wf_bulk_modulus had 600 eV cutoff
-        and k-point grid density of *7,000*
-        """
         return {
             "NSW": 0,
             "LCHARG": False,
@@ -353,9 +333,7 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
         }
 
 
-"""
-MPMetaGGA prefix = MP r2SCAN meta-GGA compatible
-"""
+# MPMetaGGA prefix = MP r2SCAN meta-GGA compatible
 
 
 @dataclass
@@ -467,7 +445,7 @@ class MPMetaGGAEosRelaxSetGenerator(VaspInputGenerator):
             "LMAXMIX": 6,
             "KSPACING": 0.22,
             "NSW": 99,
-            "ISIF": 2,
+            "ISIF": 3,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
             "LREAL": False,
@@ -531,7 +509,7 @@ class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
             "GGA": "PS",
             "METAGGA": None,
             "NSW": 99,
-            "ISIF": 2,
+            "ISIF": 3,
             "IBRION": 2,
             "EDIFF": 1.0e-6,
             "EDIFFG": -0.05,

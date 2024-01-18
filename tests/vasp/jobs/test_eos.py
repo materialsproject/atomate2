@@ -5,8 +5,8 @@ from jobflow import run_locally
 from pymatgen.core import Structure
 
 from atomate2.common.jobs.eos import postprocess_EOS
-from atomate2.vasp.jobs.eos.mp import (
-    MPGGADeformationMaker,
+from atomate2.vasp.jobs.eos import (
+    MPGGAEosRelaxMaker,
     MPGGAEosStaticMaker,
 )
 
@@ -18,11 +18,6 @@ expected_incar_relax = {
     "SIGMA": 0.05,
     "LMAXMIX": 6,
     "KSPACING": 0.22,
-}
-
-expected_incar_deform = {
-    **expected_incar_relax,
-    "ISIF": 2,
 }
 
 expected_incar_static = {**expected_incar_relax, "NSW": 0, "IBRION": -1, "ISMEAR": -5}
@@ -53,12 +48,12 @@ def test_postprocess_EOS(clean_dir):
         "relax": {
             "E0": EOS_pars["e0"],
             "V0": EOS_pars["v0"],
-            "energies": energies,
-            "volumes": volumes,
+            "energies": list(energies),
+            "volumes": list(volumes),
         }
     }
 
-    analysis_job = postprocess_EOS(EV_dict)
+    analysis_job = postprocess_EOS(EV_dict, {})
     response = run_locally(analysis_job, create_folders=False, ensure_success=True)
     job_output = response[analysis_job.uuid][1].output
     assert set(job_output["relax"]) == {"E0", "V0", "energies", "volumes", "EOS"}
@@ -79,28 +74,24 @@ def test_postprocess_EOS(clean_dir):
         )
 
 
-def test_mp_gga_eos_deformation_maker(mock_vasp, clean_dir, vasp_test_dir):
+def test_mp_gga_eos_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     # map from job name to directory containing reference output files
     ref_paths = {
-        "EOS MP GGA deform and relax": "Si_EOS_MP_GGA/"
-        "mp-149-PBE-EOS_Deformation_Relax_0",
+        "EOS MP GGA relax": "Si_EOS_MP_GGA/mp-149-PBE-EOS_MP_GGA_relax_1",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        key: {"incar_settings": list(expected_incar_deform)} for key in ref_paths
+        key: {"incar_settings": list(expected_incar_relax)} for key in ref_paths
     }
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/Si_EOS_MP_GGA/"
-        "mp-149-PBE-EOS_Deformation_Relax_0/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax']}" "/inputs/POSCAR"
     )
-    eps = -0.05
-    deformation_matrix = (np.identity(3) * (1 + eps)).tolist()
-    maker = MPGGADeformationMaker()
-    job = maker.make(structure, deformation_matrix)
+    maker = MPGGAEosRelaxMaker()
+    job = maker.make(structure)
 
     # ensure flow runs successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -108,10 +99,7 @@ def test_mp_gga_eos_deformation_maker(mock_vasp, clean_dir, vasp_test_dir):
     # validate output
     task_doc = responses[job.uuid][1].output
     assert isinstance(task_doc, TaskDoc)
-    assert task_doc.output.energy == pytest.approx(-10.547764)
-    for key, expected in expected_incar_deform.items():
-        actual = task_doc.input.parameters.get(key, None)
-        assert actual == expected, f"{key=}, {actual=}, {expected=}"
+    assert task_doc.output.energy == pytest.approx(-10.849349)
 
 
 def test_mp_gga_eos_static_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -145,6 +133,3 @@ def test_mp_gga_eos_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     task_doc = responses[job.uuid][1].output
     assert isinstance(task_doc, TaskDoc)
     assert task_doc.output.energy == pytest.approx(-10.547764)
-    for key, expected in expected_incar_static.items():
-        actual = task_doc.input.parameters.get(key, None)
-        assert actual == expected, f"{key=}, {actual=}, {expected=}"
