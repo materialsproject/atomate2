@@ -183,7 +183,7 @@ class CommonEosMaker(Maker):
                     "you must specify self.number_of_frames >= 3."
                 )
 
-            postprocess = self.postprocessor(equil_props, jobs["deformation"][0].output)
+            postprocess = self.postprocessor(flow_output["equilibrium"], flow_output["deformation"])
             postprocess.name = self.name + "_" + postprocess.name
             flow_output = postprocess.output
             jobs["utility"] += [postprocess]
