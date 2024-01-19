@@ -40,7 +40,7 @@ from atomate2.vasp.jobs.hiphive import (
     run_lattice_thermal_conductivity,
     run_static_calculations,
 )
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -290,7 +290,8 @@ class HiphiveMaker(Maker):
         if isinstance(self.bulk_relax_maker, ForceFieldRelaxMaker):
             bulk = self.bulk_relax_maker.make(structure)
         else:
-            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_vasp_dir)
+        # bulk = self.bulk_relax_maker.make(structure)
         jobs.append(bulk)
         outputs.append(bulk.output)
         print(bulk.output.structure)
@@ -329,7 +330,7 @@ class HiphiveMaker(Maker):
         if (self.static_energy_maker is not None) and (
             total_dft_energy_per_formula_unit is None
         ):
-            if isinstance(self.static_energy_maker, ForceFieldRelaxMaker):
+            if isinstance(self.static_energy_maker, ForceFieldStaticMaker):
                 static_job = self.static_energy_maker.make(structure)
             else:
                 static_job = self.static_energy_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
@@ -362,7 +363,7 @@ class HiphiveMaker(Maker):
             structure=structure,
             supercell_matrix=supercell_matrix,
             phonon_maker=self.phonon_displacement_maker,
-            prev_vasp_dir=prev_vasp_dir,
+            prev_dir=prev_vasp_dir,
         )
         jobs.append(vasp_displacement_calcs)
 
