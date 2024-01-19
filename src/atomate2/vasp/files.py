@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 
 __all__ = ["copy_vasp_outputs", "get_largest_relax_extension", "copy_hiphive_outputs"]
 
+
 logger = logging.getLogger(__name__)
 
 
