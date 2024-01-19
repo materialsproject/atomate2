@@ -1,9 +1,10 @@
 import gzip
+import json
 import os
 import shutil
 
 import pytest
-from monty.json import MontyDecoder, jsanitize
+from monty.json import MontyDecoder, MontyEncoder, jsanitize
 
 from atomate2.common.schemas.cclib import TaskDocument
 
@@ -100,3 +101,7 @@ def test_cclib_taskdoc(test_dir):
     # and decoded
     json_str = MontyDecoder().process_decoded(dct)
     assert "builder_meta=EmmetMeta" in json_str
+
+
+def test_model_validate():
+    TaskDocument.model_validate_json(json.dumps(TaskDocument(), cls=MontyEncoder))

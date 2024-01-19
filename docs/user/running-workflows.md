@@ -7,7 +7,7 @@
 Once you have a working installation of atomate2, you'll want to jump in and start
 running workflows. Atomate2 includes many workflows with reasonable settings that can
 get you started. This tutorial will quickly guide you through customizing and running a
-workflow to calculate the bandstructure of MgO.
+workflow to calculate the band structure of MgO.
 
 ### Objectives
 
@@ -16,7 +16,7 @@ workflow to calculate the bandstructure of MgO.
 
 ### Prerequisites
 
-In order for you to complete this tutorial you need
+For you to complete this tutorial you need
 
 * A working installation of atomate2.
 
@@ -60,7 +60,7 @@ workflow.
 
 Create a Python script named `mgo_bandstructure.py` with the following contents:
 
-```python
+```py
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -116,7 +116,7 @@ results will be in your database.
 Finally, we'll plot the results that we calculated. Simply run the following Python
 code, either as a script or on the Python prompt.
 
-```python
+```py
 from jobflow import SETTINGS
 from pymatgen.electronic_structure.plotter import DosPlotter, BSPlotter
 from pymatgen.electronic_structure.dos import CompleteDos

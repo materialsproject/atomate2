@@ -10,10 +10,7 @@ from atomate2.vasp.flows.mp import (
     MPGGADoubleRelaxStaticMaker,
     MPMetaGGADoubleRelaxStaticMaker,
 )
-from atomate2.vasp.jobs.mp import (
-    MPMetaGGARelaxMaker,
-    MPPreRelaxMaker,
-)
+from atomate2.vasp.jobs.mp import MPMetaGGARelaxMaker, MPPreRelaxMaker
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 
@@ -48,7 +45,7 @@ def test_mp_meta_gga_relax_custom_values(
 
 
 def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "Si_mp_meta_gga_relax/pbesol_pre_relax"
     ref_paths = {
         "MP pre-relax 1": pre_relax_dir,
@@ -78,7 +75,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
     ref_paths = {
         "MP GGA relax 1": pre_relax_dir,
@@ -102,7 +99,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
     ref_paths = {
         "MP GGA relax 1": pre_relax_dir,

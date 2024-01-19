@@ -260,7 +260,7 @@ LOBSTER_CMD: <<LOBSTER_CMD>>
 
 The corresponding flow could, for example, be started with the following code:
 
-```Python
+```py
 from jobflow import SETTINGS
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
@@ -287,7 +287,7 @@ It is, however,  computationally very beneficial to define two different types o
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
-```python
+```py
 from fireworks import LaunchPad
 from jobflow.managers.fireworks import flow_to_workflow
 from pymatgen.core.structure import Structure
@@ -321,7 +321,7 @@ lpad.add_wf(wf)
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 
-```python
+```py
 from jobflow import SETTINGS
 from pymatgen.electronic_structure.cohp import Cohp
 from pymatgen.electronic_structure.plotter import CohpPlotter
@@ -339,7 +339,7 @@ result = store.query_one(
 )
 
 for number, (key, cohp) in enumerate(
-    result["output"]["lobsterpy_data"]["cohp_plot_data"].items()
+    result["output"]["lobsterpy_data"]["cohp_plot_data"]["data"].items()
 ):
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
@@ -347,7 +347,7 @@ for number, (key, cohp) in enumerate(
     plotter.save_plot(f"plots_all_bonds{number}.pdf")
 
 for number, (key, cohp) in enumerate(
-    result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"].items()
+    result["output"]["lobsterpy_data_cation_anion"]["cohp_plot_data"]["data"].items()
 ):
     plotter = CohpPlotter()
     cohp = Cohp.from_dict(cohp)
@@ -363,7 +363,7 @@ The inputs for a calculation can be modified in several ways. Every VASP job
 takes a {obj}`.VaspInputGenerator` as an argument (`input_set_generator`). One
 option is to specify an alternative input set generator:
 
-```python
+```py
 from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.jobs.core import StaticMaker
 
@@ -382,7 +382,7 @@ The second approach is to edit the job after it has been made. All VASP jobs hav
 the `input_set_generator` attribute maker will update the input set that gets
 written:
 
-```python
+```py
 static_job.maker.input_set_generator.user_incar_settings["LOPTICS"] = True
 ```
 
@@ -392,7 +392,7 @@ functions called "powerups" that can apply settings updates to all VASP jobs in 
 These powerups also contain filters for the name of the job and the maker used to
 generate them.
 
-```python
+```py
 from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -469,7 +469,7 @@ All VASP workflows are constructed using the `Maker.make()` function. The argume
 for this function always include:
 
 - `structure`: A pymatgen structure.
-- `prev_vasp_dir`: A previous VASP directory to copy output files from.
+- `prev_dir`: A previous VASP directory to copy output files from.
 
 There are two options when chaining workflows:
 
@@ -480,12 +480,12 @@ There are two options when chaining workflows:
    set KSPACING), and the magnetic moments. Some workflows will also use other outputs.
    For example, the Band Structure workflow will copy the CHGCAR file (charge
    density) from the previous calculation. This can be achieved by setting both the
-   `structure` and `prev_vasp_dir` arguments.
+   `structure` and `prev_dir` arguments.
 
 These two examples are illustrated in the code below, where we chain a relaxation
 calculation and a static calculation.
 
-```python
+```py
 from jobflow import Flow
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from pymatgen.core.structure import Structure
@@ -500,7 +500,7 @@ static_job = StaticMaker().make(structure=relax_job.output.structure)
 
 # create a static job that will use additional outputs from the relaxation
 static_job = StaticMaker().make(
-    structure=relax_job.output.structure, prev_vasp_dir=relax_job.output.dir_name
+    structure=relax_job.output.structure, prev_dir=relax_job.output.dir_name
 )
 
 # create a flow including the two jobs and set the output to be that of the static
