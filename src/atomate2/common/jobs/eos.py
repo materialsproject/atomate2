@@ -5,6 +5,14 @@ from __future__ import annotations
 import numpy as np
 from jobflow import job
 from pymatgen.analysis.eos import EOS, EOSError
+from pymatgen.alchemy.materials import TransformedStructure
+from pymatgen.transformations.standard_transformations import (
+    DeformStructureTransformation,
+)
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 
 @job
@@ -75,3 +83,20 @@ def postprocess_EOS(
                 output[jobtype]["EOS"][eos_name] = {}
 
     return output
+
+@job
+def apply_strain_to_structure(
+    structure : Structure,
+    deformations : list
+) -> list:
+    """ Applies strain to structures, returns """
+    transformations = []
+    for deformation in deformations:
+        # deform the structure
+        ts = TransformedStructure(
+            structure, transformations=[
+                DeformStructureTransformation(deformation=deformation)
+            ]
+        )
+        transformations += [ts]
+    return transformations

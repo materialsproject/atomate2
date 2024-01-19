@@ -147,7 +147,7 @@ def test_mp_eos_maker(
     }
 
     # deformation jobs not included in this
-    assert len(job_output) == (3 if do_statics else 2)
+    assert len(job_output) == len(ref_paths)
 
     ref_energies = {"EOS MP GGA relax 1": -10.849349, "EOS MP GGA relax 2": -10.849357}
     if do_statics:
