@@ -8,7 +8,7 @@ from atomate2.qchem.files import copy_qchem_outputs, get_largest_opt_extension
 @pytest.mark.parametrize(
     "files",
     [
-        ("custodian.json.gz","FW.json.gz"),
+        ("custodian.json.gz", "FW.json.gz"),
     ],
 )
 def test_copy_qchem_outputs_sp(qchem_test_dir, tmp_dir, files):
@@ -22,7 +22,7 @@ def test_copy_qchem_outputs_sp(qchem_test_dir, tmp_dir, files):
 @pytest.mark.parametrize(
     "files",
     [
-       ("custodian.json.gz","FW.json.gz"),
+        ("custodian.json.gz", "FW.json.gz"),
     ],
 )
 def test_copy_qchem_outputs_freq(qchem_test_dir, tmp_dir, files):
