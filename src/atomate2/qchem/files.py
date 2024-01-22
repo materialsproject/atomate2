@@ -30,7 +30,7 @@ def copy_qchem_outputs(
     """
     Copy QChem output files to the current directory.
 
-    For folders containing multiple calculations (e.g., suffixed with opt1, opt2,
+    For folders containing multiple calculations (e.g., suffixed with opt_1, opt_2,
     etc), this function will only copy the files with the highest numbered suffix
     and the suffix will be removed. Additional qchem files will be also be copied
     with the same suffix applied.
@@ -116,37 +116,13 @@ def get_largest_opt_extension(
     opt_files = file_client.glob(Path(directory) / "*.opt*", host=host)
     if len(opt_files) == 0:
         return ""
+    numbers = []
+    for file in opt_files:
+        match = re.search(r"\.opt_(\d+)", file.name)
+        if match:
+            numbers.append(match.group(1))
 
-    numbers = [re.search(r".opt(\d+)", file.name).group(1) for file in opt_files]
+    if not numbers:
+        return ""  # No matches found
     max_relax = max(numbers, key=lambda x: int(x))
-    return f".opt{max_relax}"
-
-
-# def write_qchem_input_set(
-#     molecule: Molecule,
-#     input_set_generator: QChemInputGenerator,
-#     directory: str | Path = ".",
-#     # from_prev: bool = False,
-#     **kwargs,
-# ):
-#     """
-#     Write QChem input set.
-
-#     Parameters
-#     ----------
-#     molecule : .Molecule
-#         A molecule.
-#     input_set_generator : .QChemInputGenerator
-#         A QChem input set generator.
-#     directory : str or Path
-#         The directory to write the input files to.
-#     # from_prev : bool
-#     #     Whether to initialize the input set from a previous calculation.
-#     **kwargs
-#         Keyword arguments that will be passed to :obj:`.QChemInputSet.write_input`.
-#     """
-#     # prev_dir = "." if from_prev else None
-#     qis = input_set_generator.get_input_set(molecule)
-
-#     logger.info("Writing QChem input set.")
-#     qis.write_input(directory, **kwargs)
+    return f".opt_{max_relax}"
