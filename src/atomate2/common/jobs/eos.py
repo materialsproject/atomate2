@@ -53,7 +53,10 @@ def postprocess_EOS(
             "vinet",
         ]
 
-    output = {**equilibrium, **deformation}
+    output = {
+        key: {**equilibrium[key], **deformation[key]}
+        for key in equilibrium
+    }
     jobtypes = list(output)
 
     for jobtype in jobtypes:
