@@ -13,7 +13,7 @@ from jobflow import run_locally
 from pymatgen.core.structure import Molecule
 from pytest import approx
 
-from atomate2.qchem.jobs.core import OptMaker, SinglePointMaker
+from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
 
 # curr_dir = Path(os.path.dirname(sys.argv[0]))
 
@@ -22,8 +22,8 @@ file_name = "H2O.xyz"
 
 # Construct the full path
 mol_path = Path("tests/qchem/jobs/H2O.xyz")
-H2O_structure = Molecule.from_file(mol_path)
-# H2O_structure = Molecule.from_file(file_name)
+# H2O_structure = Molecule.from_file(mol_path)
+H2O_structure = Molecule.from_file(file_name)
 
 
 def test_single_point_maker(mock_qchem, clean_dir, structure=H2O_structure):
@@ -98,15 +98,15 @@ def test_opt_maker(mock_qchem, clean_dir, structure=H2O_structure):
     assert output1.output.final_energy == approx(-76.450849061819)
 
 
-# def test_freq(mock_qchem, clean_dir, structure=H2O_structure):
-#     ref_paths = {"frequency": "water_frequency"}
-#     fake_run_qchem_kwargs = {}
-#     mock_qchem(ref_paths, fake_run_qchem_kwargs)
+def test_freq(mock_qchem, clean_dir, structure=H2O_structure):
+    ref_paths = {"frequency": "water_frequency"}
+    fake_run_qchem_kwargs = {}
+    mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
-#     job = FreqMaker().make(structure)
+    job = FreqMaker().make(structure)
 
-#     responses = run_locally(job, create_folders=True, ensure_success=True)
-#     ref_freqs = [1643.03, 3446.82, 3524.32]
-#     output1 = responses[job.uuid][1].output
-#     assert output1.calcs_reversed[0].output.frequencies == ref_freqs
-#     assert output1.output.final_energy == approx(-76.449405011)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+    ref_freqs = [1643.03, 3446.82, 3524.32]
+    output1 = responses[job.uuid][1].output
+    assert output1.calcs_reversed[0].output.frequencies == ref_freqs
+    assert output1.output.final_energy == approx(-76.449405011)

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Literal, Optional, Union
 
 from pydantic import Field, model_validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
 
@@ -185,6 +185,8 @@ class Atomate2Settings(BaseSettings):
         None, description="Additional settings applied to AMSET settings file."
     )
 
+    model_config = SettingsConfigDict(env_prefix="atomate2_")
+
     # QChem specific settings
 
     QCHEM_CMD: str = Field(
@@ -210,9 +212,6 @@ class Atomate2Settings(BaseSettings):
         description="Ingest any additional JSON data present into database when "
         "parsing QChem directories useful for storing duplicate of FW.json",
     )
-
-    class Config:
-        """Pydantic config settings."""
 
     @model_validator(mode="before")
     @classmethod
