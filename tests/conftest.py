@@ -16,8 +16,6 @@ from pymatgen.core import Structure
 
 from atomate2.utils.log import initialize_logger
 
-# print(sys.executable)
-
 
 @pytest.fixture(scope="session")
 def test_dir():
@@ -46,7 +44,7 @@ def clean_dir(debug_mode):
     os.chdir(new_path)
     yield
     if debug_mode:
-        print(f"Tests ran in {new_path}")
+        print(f"Tests ran in {new_path}")  # noqa: T201
     else:
         os.chdir(old_cwd)
         shutil.rmtree(new_path)

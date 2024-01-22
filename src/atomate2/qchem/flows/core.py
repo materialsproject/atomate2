@@ -9,13 +9,14 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.qchem.jobs.base import BaseQCMaker
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, TransitionStateMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core.structure import Molecule
+
+    from atomate2.qchem.jobs.base import BaseQCMaker
 
 # from atomate2.qchem.schemas.calculation import VaspObject
 # from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
@@ -95,7 +96,7 @@ class FrequencyFlatteningOptimizeMaker(Maker):
 
     @classmethod
     def from_freq_and_opt_maker(
-        cls, freq_maker: BaseQCMaker, opt_maker=BaseQCMaker
+        cls, freq_maker: BaseQCMaker, opt_maker: BaseQCMaker
     ) -> Maker:
         """
         Instantiate the FrequencyFlatteningOptimizeMaker with a Freq and an Opt maker.
@@ -179,7 +180,7 @@ class FrequencyFlatteningTransitionStateMaker(Maker):
 
     @classmethod
     def from_freq_and_ts_maker(
-        cls, freq_maker: BaseQCMaker, ts_maker=BaseQCMaker
+        cls, freq_maker: BaseQCMaker, ts_maker: BaseQCMaker
     ) -> Maker:
         """
         Instantiate the FrequencyFlatteningOptimizeMaker with a Freq and a TS maker.

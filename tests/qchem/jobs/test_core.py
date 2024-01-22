@@ -15,14 +15,11 @@ from pytest import approx
 
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
 
-# curr_dir = Path(os.path.dirname(sys.argv[0]))
-
-# Specify the file name
-file_name = "H2O.xyz"
+# Find parent directory
+current_directory = Path(__file__).resolve().parent
+file_name = current_directory / "H2O.xyz"
 
 # Construct the full path
-mol_path = Path("tests/qchem/jobs/H2O.xyz")
-# H2O_structure = Molecule.from_file(mol_path)
 H2O_structure = Molecule.from_file(file_name)
 
 
