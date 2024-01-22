@@ -7,6 +7,7 @@ import os
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -14,7 +15,6 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-_BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
+_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
 
 class VaspInputSet(InputSet):
@@ -236,8 +236,9 @@ class VaspInputGenerator(InputGenerator):
         so these keys can be defined in one of two ways, e.g. either
         {"LDAUU":{"O":{"Fe":5}}} to set LDAUU for Fe to 5 in an oxide, or
         {"LDAUU":{"Fe":5}} to set LDAUU to 5 regardless of the input structure.
-        To set magmoms, pass a dict mapping element symbols to magnetic moments, e.g.
-        {"MAGMOM": {"Co": 1}}.
+        To set magmoms, pass a dict mapping the strings of species to magnetic
+        moments, e.g. {"MAGMOM": {"Co": 1}} or {"MAGMOM": {"Fe2+,spin=4": 3.7}} in the
+        case of a site with Species("Fe2+", spin=4).
         If None is given, that key is unset. For example, {"ENCUT": None} will remove
         ENCUT from the incar settings.
     user_kpoints_settings
@@ -655,7 +656,7 @@ class VaspInputGenerator(InputGenerator):
             if k == "MAGMOM":
                 incar[k] = _get_magmoms(
                     structure,
-                    magmoms=self.user_incar_settings.get("MAGMOMS", {}),
+                    magmoms=self.user_incar_settings.get("MAGMOM", {}),
                     config_magmoms=config_magmoms,
                 )
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
@@ -726,7 +727,9 @@ class VaspInputGenerator(InputGenerator):
 
         # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
         # overwritten settings are changed back to the intended values.
-        _apply_incar_updates(incar, self.user_incar_settings)
+        # skip dictionary parameters to avoid dictionaries appearing in the INCAR
+        skip = ["LDAUU", "LDAUJ", "LDAUL", "MAGMOM"]
+        _apply_incar_updates(incar, self.user_incar_settings, skip=skip)
 
         return incar
 

@@ -42,7 +42,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.4"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.6"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = [
     "ase>=3.22.1",
@@ -55,7 +55,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
     "furo==2023.9.10",
-    "ipython==8.19.0",
+    "ipython==8.20.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.6.0",
@@ -75,10 +75,10 @@ strict = [
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",
-    "emmet-core==0.75.2",
+    "emmet-core==0.76.2",
     "ijson==3.2.3",
     "jobflow==0.1.16",
-    "lobsterpy==0.3.4",
+    "lobsterpy==0.3.6",
     "mace-torch>=0.3.3",
     "matgl==0.9.1",
     "monty==2023.9.25",
@@ -87,7 +87,7 @@ strict = [
     "phonopy==2.21.0",
     "pydantic-settings==2.1.0",
     "pydantic==2.4.2",
-    "pymatgen-analysis-defects==2023.12.14",
+    "pymatgen-analysis-defects==2024.1.12",
     "pymatgen==2023.12.18",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
@@ -157,7 +157,6 @@ ignore = [
     "PT006",   # pytest-parametrize-names-wrong-type
     "RUF013",  # implicit-optional
     # TODO remove PT011, pytest.raises() should always check err msg
-    "ANN001", # TODO remove this ignore
     "ANN002",
     "ANN003",
     "ANN101", # missing self type annotation

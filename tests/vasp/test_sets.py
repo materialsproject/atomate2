@@ -74,6 +74,10 @@ def test_user_incar_settings():
         "NSW": 5_000,
         "PREC": 10,  # wrong type, should be string.
         "SIGMA": 20,
+        "LDAUU": {"H": 5.0},
+        "LDAUJ": {"H": 6.0},
+        "LDAUL": {"H": 3.0},
+        "LDAUTYPE": 2,
     }
 
     static_set_generator = StaticSetGenerator(user_incar_settings=uis)
@@ -82,6 +86,8 @@ def test_user_incar_settings():
     for key in uis:
         if isinstance(incar[key], str):
             assert incar[key].lower() == uis[key].lower()
+        elif isinstance(uis[key], dict):
+            assert incar[key] == [uis[key][str(site.specie)] for site in structure]
         else:
             assert incar[key] == uis[key]
 
@@ -92,9 +98,9 @@ def test_user_incar_settings():
         ("struct_no_magmoms", {}),
         ("struct_with_magmoms", {}),
         ("struct_with_spin", {}),
-        ("struct_no_magmoms", {"MAGMOM": [3.7, 0.8]}),
-        ("struct_with_magmoms", {"MAGMOM": [3.7, 0.8]}),
-        ("struct_with_spin", {"MAGMOM": [3.7, 0.8]}),
+        ("struct_no_magmoms", {"MAGMOM": {"Fe": 3.7, "O": 0.8}}),
+        ("struct_with_magmoms", {"MAGMOM": {"Fe": 3.7, "O": 0.8}}),
+        ("struct_with_spin", {"MAGMOM": {"Fe2+,spin=4": 3.7, "O2-,spin=0.63": 0.8}}),
     ],
 )
 def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> None:
@@ -121,7 +127,9 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
     has_struct_spin = getattr(structure.species[0], "spin", None) is not None
 
     if user_incar_settings:  # case 1
-        assert incar_magmom == user_incar_settings["MAGMOM"]
+        assert incar_magmom == [
+            user_incar_settings["MAGMOM"][str(site.specie)] for site in structure
+        ]
     elif has_struct_magmom:  # case 2
         assert incar_magmom == structure.site_properties["magmom"]
     elif has_struct_spin:  # case 3

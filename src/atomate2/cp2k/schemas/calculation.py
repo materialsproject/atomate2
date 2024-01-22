@@ -258,7 +258,7 @@ class Calculation(BaseModel):
     has_cp2k_completed: Status = Field(
         None, description="Whether CP2K completed the calculation successfully"
     )
-    input: CalculationInput = Field(  # noqa: A003
+    input: CalculationInput = Field(
         None, description="CP2K input settings for the calculation"
     )
     output: CalculationOutput = Field(None, description="The CP2K calculation output")

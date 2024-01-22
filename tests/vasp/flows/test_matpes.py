@@ -9,7 +9,7 @@ from atomate2.vasp.flows.matpes import MatPesStaticFlowMaker
 
 
 def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "matpes_static_flow/pbe_static"
     ref_paths = {
         "MatPES GGA static": pre_relax_dir,
