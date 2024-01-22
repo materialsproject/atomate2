@@ -23,7 +23,7 @@ class CommonEosMaker(Maker):
     Generate equation of state data.
 
     First relax a structure using relax_maker.
-    Then perform a series of deformations to the relaxed structure, and
+    Then perform a series of deformations on the relaxed structure, and
     evaluate single-point energies with static_maker.
 
     Parameters

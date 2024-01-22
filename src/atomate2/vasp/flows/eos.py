@@ -70,7 +70,7 @@ class EosMaker(CommonEosMaker):
     Generate equation of state data with default atomate2 parameters.
 
     First relax a structure using relax_maker.
-    Then perform a series of deformations to the relaxed structure, and
+    Then perform a series of deformations on the relaxed structure, and
     evaluate single-point energies with static_maker.
 
     Parameters
@@ -134,7 +134,7 @@ class MPLegacyEosMaker(CommonEosMaker):
     Generate equation of state data with MP legacy PBE-GGA parameters.
 
     First relax a structure using relax_maker.
-    Then perform a series of deformations to the relaxed structure, and
+    Then perform a series of deformations on the relaxed structure, and
     evaluate single-point energies with static_maker.
 
     Parameters
@@ -207,7 +207,7 @@ class MPGGAEosMaker(CommonEosMaker):
     Generate equation of state data with MP PBE-GGA parameters.
 
     First relax a structure using relax_maker.
-    Then perform a series of deformations to the relaxed structure, and
+    Then perform a series of deformations on the relaxed structure, and
     evaluate single-point energies with static_maker.
 
     Parameters
@@ -271,7 +271,7 @@ class MPMetaGGAEosMaker(CommonEosMaker):
     Generate equation of state data with MP r2SCAN-meta-GGA parameters.
 
     First relax a structure using relax_maker.
-    Then perform a series of deformations to the relaxed structure, and
+    Then perform a series of deformations on the relaxed structure, and
     evaluate single-point energies with static_maker.
 
     Parameters
