@@ -16,7 +16,7 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
     job = _mlff_to_maker[mlff]().make(si_structure)
     job_to_uuid = {job.name: job.uuid for job in job.jobs}
     postprocess_uuid = job_to_uuid[f"{mlff} EOS Maker_postprocess_eos"]
-    response = run_locally(job)
+    response = run_locally(job, ensure_success=True)
     output = response[postprocess_uuid][1].output
 
     ref_data = loadfn(f"{test_dir}/forcefields/eos/{mlff}_Si_eos.json.gz")
