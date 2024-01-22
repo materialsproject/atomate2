@@ -122,7 +122,11 @@ class CommonEosMaker(Maker):
         transformations = apply_strain_to_structure(structure, deformation_l)
         jobs["utility"] += [transformations]
 
-        job_types = ("relax", "static") if self.static_maker else ("relax")
+        job_types = ("relax", "static") if self.static_maker else ("relax",)
+        for key in job_types:
+            flow_output[key]["energies"] = []
+            flow_output[key]["volumes"] = []
+
         for idef in range(self.number_of_frames):
             if self._store_transformation_information:
                 with contextlib.suppress(Exception):
