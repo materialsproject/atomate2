@@ -2,61 +2,54 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 from jobflow import job
-from pymatgen.analysis.eos import EOS, EOSError
 from pymatgen.alchemy.materials import TransformedStructure
+from pymatgen.analysis.eos import EOS, EOSError
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
 
-from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
 @job
-def postprocess_EOS(
-    equilibrium: dict, deformation: dict, EOS_models: list[str] | None = None
-):
+def postprocess_eos(output: dict, eos_models: list[str] = None) -> dict:
     """
-    General-purpose postprocessing step that fits to the EOS models in pymatgen.
+    General-purpose postprocessing step to fit to EOS models in pymatgen.
 
     Parameters
     ----------
-    equilibrium : dict
+    output : dict
         dict of energy and volume data for equilibrium calculations,
         structured as
         {
             "relax" or "static" : {
-                key : float for key in ("E0", "V0")
-            }
-        }
-    deformation : dict
-        dict of energy and volume data for deformation calculations,
-        structured as
-        {
-            "relax" or "static": {
+                key : float for key in ("E0", "V0"),
                 "energies": [list of energies],
                 "volumes": [list of volumes]
             }
         }
-    EOS_models : list[str] or None (default)
-        Custom user-defined list of EOS names as strings to fit to
-    """
-    if EOS_models is None:
-        EOS_models = [
-            "murnaghan",
-            "birch",
-            "birch_murnaghan",
-            "pourier_tarantola",
-            "vinet",
-        ]
+    eos_models : list[str] or None (default)
+        Custom user-defined list of EOS names (string) to fit to
 
-    output = {
-        key: {**equilibrium[key], **deformation[key]}
-        for key in equilibrium
-    }
+    Returns
+    -------
+    dict
+        A dict containing a copy of the input dict, and fitted EOS
+        parameters for each of the models in `eos_models`
+    """
+    eos_models = eos_models or [
+        "murnaghan",
+        "birch",
+        "birch_murnaghan",
+        "pourier_tarantola",
+        "vinet",
+    ]
+
     jobtypes = list(output)
 
     for jobtype in jobtypes:
@@ -73,7 +66,7 @@ def postprocess_EOS(
             output[jobtype][key] = list(output[jobtype][key][sort_vol_indx])
 
         output[jobtype]["EOS"] = {}
-        for eos_name in EOS_models:
+        for eos_name in eos_models:
             try:
                 eos = EOS(eos_name=eos_name).fit(
                     output[jobtype]["volumes"], output[jobtype]["energies"]
@@ -87,19 +80,36 @@ def postprocess_EOS(
 
     return output
 
+
 @job
-def apply_strain_to_structure(
-    structure : Structure,
-    deformations : list
-) -> list:
-    """ Applies strain to structures, returns """
+def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
+    """
+    Apply strain(s) to input structure and return transformation(s) as list.
+
+    Parameters
+    ----------
+    structure: .Structure
+        Input structure to apply strain to
+    deformations: list[.Deformation]
+        A list of deformations to apply **independently** to the input
+        structure, in anticipation of performing an EOS fit.
+        Deformations should be of the form of a 3x3 matrix, e.g.,
+        [[1.2, 0., 0.], [0., 1.2, 0.], [0., 0., 1.2]]
+        or
+        ((1.2, 0., 0.), (0., 1.2, 0.), (0., 0., 1.2))
+
+    Returns
+    -------
+    list
+        A list of .TransformedStructure objects corresponding to the
+        list of input deformations.
+    """
     transformations = []
     for deformation in deformations:
         # deform the structure
         ts = TransformedStructure(
-            structure, transformations=[
-                DeformStructureTransformation(deformation=deformation)
-            ]
+            structure,
+            transformations=[DeformStructureTransformation(deformation=deformation)],
         )
         transformations += [ts]
     return transformations

@@ -6,16 +6,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import numpy as np
-from jobflow import Flow, Maker, Response, job
-from pymatgen.alchemy.materials import TransformedStructure
-from pymatgen.transformations.standard_transformations import (
-    DeformStructureTransformation,
-)
+from jobflow import Flow, Maker
 
-from atomate2.common.jobs.eos import (
-    postprocess_EOS, 
-    apply_strain_to_structure
-)
+from atomate2.common.jobs.eos import apply_strain_to_structure, postprocess_eos
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -48,7 +41,8 @@ class CommonEosMaker(Maker):
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
-        Optional postprocessing step, defaults to `atomate2.common.jobs.postprocess_EOS`.
+        Optional postprocessing step, defaults to
+        `atomate2.common.jobs.postprocess_eos`.
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation
@@ -61,10 +55,10 @@ class CommonEosMaker(Maker):
     static_maker: Maker = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
-    postprocessor: Job = postprocess_EOS
-    _store_transformation_information : bool = False
+    postprocessor: Job = postprocess_eos
+    _store_transformation_information: bool = False
 
-    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """
         Run an EOS flow.
 
@@ -74,19 +68,21 @@ class CommonEosMaker(Maker):
             A pymatgen structure object.
         prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
-        """
-        jobs: dict[str, list[Job]] = {
-            key: [] for key in ("relax", "static", "utility")
-        }
 
-        equil_props = {}
+        Returns
+        -------
+        .Flow, and EOS flow
+        """
+        jobs: dict[str, list[Job]] = {key: [] for key in ("relax", "static", "utility")}
+
+        flow_output = {}
         # First step: optional relaxation of structure
         if self.initial_relax_maker:
             relax_flow = self.initial_relax_maker.make(
                 structure=structure, prev_dir=prev_dir
             )
             relax_flow.name = "EOS equilibrium relaxation"
-            equil_props["relax"] = {
+            flow_output["relax"] = {
                 "E0": relax_flow.output.output.energy,
                 "V0": relax_flow.output.structure.volume,
             }
@@ -99,7 +95,7 @@ class CommonEosMaker(Maker):
                     structure=structure, prev_dir=prev_dir
                 )
                 equil_static.name = "EOS equilibrium static"
-                equil_props["static"] = {
+                flow_output["static"] = {
                     "E0": equil_static.output.output.energy,
                     "V0": equil_static.output.structure.volume,
                 }
@@ -123,39 +119,25 @@ class CommonEosMaker(Maker):
         deformation_l = [(np.identity(3) * (1.0 + eps)).tolist() for eps in strain_l]
 
         # apply strain to structures, return list of transformations
-        transformations = apply_strain_to_structure(structure,deformation_l)
+        transformations = apply_strain_to_structure(structure, deformation_l)
         jobs["utility"] += [transformations]
 
-        """
-        jobs["deformation"] += [
-            EosDeformationMaker(
-                eos_relax_maker=self.eos_relax_maker, static_maker=self.static_maker
-            ).make(
-                structure=structure,
-                deformations=deformation_l,
-                prev_dir=prev_dir,
-            )
-        ]
-        """
         job_types = ("relax", "static") if self.static_maker else ("relax")
-        deformation_output = {
-            key: {"energies": [], "volumes": []} for key in job_types
-        }
         for idef in range(self.number_of_frames):
-
             if self._store_transformation_information:
                 with contextlib.suppress(Exception):
-                    # write details of the transformation to the transformations.json file
-                    # this file will automatically get added to the task document and allow
-                    # the elastic builder to reconstruct the elastic document; note the ":" is
-                    # automatically converted to a "." in the filename.
+                    # write details of the transformation to the
+                    # transformations.json file. This file will automatically get
+                    # added to the task document and allow the elastic builder
+                    # to reconstruct the elastic document. Note the ":"
+                    # is automatically converted to a "." in the filename.
                     self.eos_relax_maker.write_additional_data[
                         "transformations:json"
                     ] = transformations.output[idef]
 
             relax_job = self.eos_relax_maker.make(
-                structure = transformations.output[idef].final_structure, 
-                prev_dir=prev_dir
+                structure=transformations.output[idef].final_structure,
+                prev_dir=prev_dir,
             )
             relax_job.name += f" deformation {idef}"
             jobs["relax"].append(relax_job)
@@ -169,13 +151,11 @@ class CommonEosMaker(Maker):
                 jobs["static"].append(static_job)
 
             for key in job_types:
-                deformation_output[key]["energies"].append(jobs[key][-1].output.output.energy)
-                deformation_output[key]["volumes"].append(jobs[key][-1].output.structure.volume)
+                flow_output[key]["energies"].append(jobs[key][-1].output.output.energy)
+                flow_output[key]["volumes"].append(
+                    jobs[key][-1].output.structure.volume
+                )
 
-        flow_output = {
-            "equilibrium": equil_props,
-            "deformation": deformation_output,
-        }
         if self.postprocessor:
             if self.number_of_frames < 3:
                 raise ValueError(
@@ -183,7 +163,7 @@ class CommonEosMaker(Maker):
                     "you must specify self.number_of_frames >= 3."
                 )
 
-            postprocess = self.postprocessor(flow_output["equilibrium"], flow_output["deformation"])
+            postprocess = self.postprocessor(flow_output)
             postprocess.name = self.name + "_" + postprocess.name
             flow_output = postprocess.output
             jobs["utility"] += [postprocess]
@@ -193,83 +173,3 @@ class CommonEosMaker(Maker):
             joblist += jobs[key]
 
         return Flow(jobs=joblist, output=flow_output, name=self.name)
-
-
-@dataclass
-class EosDeformationMaker(Maker):
-    """
-    Flow that computes deformations on input structure.
-
-    Based on atomate2.common.jobs.elastic.run_elastic_deformations,
-    mostly different structure of I/O
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    eos_relax_maker : .Maker | None
-        Maker to relax the deformed structure.
-    static_maker : .Maker | None
-        Maker to perform an optional static on the relaxed structure,
-        defaults to None (no statics).
-    """
-
-    name: str = "EOS Deformation Relax"
-    eos_relax_maker: Maker = None
-    static_maker: Maker = None
-
-    @job
-    def make(
-        self,
-        structure: Structure,
-        deformations: list,
-        prev_dir: str | Path = None,
-    ) -> Response:
-        """
-        Relax an input structure after applying a deformation.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure.
-        deformations : list of .Deformation objects or 3x3 matrices
-            The deformations to apply.
-        prev_dir : str or Path or None
-            A previous directory to use for copying outputs.
-        """
-        job_types = ["relax"] + (["static"] if self.static_maker else [])
-        jobs = {key: [] for key in job_types}
-        output = {key: {"energies": [], "volumes": []} for key in job_types}
-
-        for idef, deformation in enumerate(deformations):
-            # deform the structure
-            dst = DeformStructureTransformation(deformation=deformation)
-            ts = TransformedStructure(structure, transformations=[dst])
-            deformed_structure = ts.final_structure
-
-            with contextlib.suppress(Exception):
-                # write details of the transformation to the transformations.json file
-                # this file will automatically get added to the task document and allow
-                # the elastic builder to reconstruct the elastic document; note the ":" is
-                # automatically converted to a "." in the filename.
-                self.eos_relax_maker.write_additional_data["transformations:json"] = ts
-
-            relax_job = self.eos_relax_maker.make(deformed_structure, prev_dir=prev_dir)
-            relax_job.name += f" deformation {idef}"
-            jobs["relax"].append(relax_job)
-
-            if self.static_maker:
-                static_job = self.static_maker.make(
-                    structure=relax_job.output.structure,
-                    prev_dir=relax_job.output.dir_name,
-                )
-                static_job.name += f" {idef}"
-                jobs["static"].append(static_job)
-
-            for key in job_types:
-                output[key]["energies"].append(jobs[key][idef].output.output.energy)
-                output[key]["volumes"].append(jobs[key][idef].output.structure.volume)
-
-        return Response(
-            replace=Flow(jobs["relax"] + jobs.get("static", []), output=output)
-        )

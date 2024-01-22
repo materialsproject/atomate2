@@ -14,10 +14,7 @@ from typing import TYPE_CHECKING
 
 from monty.serialization import loadfn
 
-from atomate2.vasp.sets.core import (
-    RelaxSetGenerator,
-    StaticSetGenerator,
-)
+from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure

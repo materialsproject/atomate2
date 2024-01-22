@@ -85,7 +85,9 @@ class EosRelaxMaker(BaseVaspMaker):
 
     name: str = "EOS GGA relax"
     input_set_generator: VaspInputGenerator = field(default_factory=EosSetGenerator)
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )
 
 
 # MPLegacy prefix, legacy MP PBE-GGA
@@ -124,7 +126,9 @@ class MPLegacyEosRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPLegacyEosRelaxSetGenerator
     )
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )
 
 
 @dataclass
@@ -160,7 +164,9 @@ class MPLegacyEosStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPLegacyEosStaticSetGenerator
     )
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )
 
 
 # MPGGA prefix, MP PBE-GGA compatible parameters
@@ -199,7 +205,9 @@ class MPGGAEosRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPGGAEosRelaxSetGenerator
     )
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )
 
 
 @dataclass
@@ -235,7 +243,9 @@ class MPGGAEosStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPGGAEosStaticSetGenerator
     )
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )
 
 
 # MPMetaGGA prefix, MP r2SCAN-meta-GGA compatible
@@ -309,7 +319,9 @@ class MPMetaGGAEosRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPMetaGGAEosRelaxSetGenerator
     )
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )
 
 
 @dataclass
@@ -345,4 +357,6 @@ class MPMetaGGAEosStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(
         default_factory=MPMetaGGAEosStaticSetGenerator
     )
-    copy_vasp_kwargs = {"additional_vasp_files": ("WAVECAR",)}
+    copy_vasp_kwargs: dict = field(
+        default_factory=lambda: {"additional_vasp_files": ("WAVECAR",)}
+    )

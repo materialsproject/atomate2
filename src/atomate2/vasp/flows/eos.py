@@ -88,7 +88,8 @@ class EosMaker(CommonEosMaker):
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
-        Optional postprocessing step, defaults to `atomate2.common.jobs.postprocess_EOS`.
+        Optional postprocessing step, defaults to
+        `atomate2.common.jobs.postprocess_EOS`.
     """
 
     name: str = "EOS Maker"
@@ -151,7 +152,8 @@ class MPLegacyEosMaker(CommonEosMaker):
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
-        Optional postprocessing step, defaults to `atomate2.common.jobs.postprocess_EOS`.
+        Optional postprocessing step, defaults to
+        `atomate2.common.jobs.postprocess_EOS`.
     """
 
     name: str = "MP Legacy GGA EOS Maker"
@@ -223,7 +225,8 @@ class MPGGAEosMaker(CommonEosMaker):
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
-        Optional postprocessing step, defaults to `atomate2.common.jobs.postprocess_EOS`.
+        Optional postprocessing step, defaults to
+        `atomate2.common.jobs.postprocess_EOS`.
     """
 
     name: str = "MP GGA EOS Maker"
@@ -286,7 +289,8 @@ class MPMetaGGAEosMaker(CommonEosMaker):
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
-        Optional postprocessing step, defaults to `atomate2.common.jobs.postprocess_EOS`.
+        Optional postprocessing step, defaults to
+        `atomate2.common.jobs.postprocess_EOS`.
     """
 
     name: str = "MP Meta-GGA EOS Maker"

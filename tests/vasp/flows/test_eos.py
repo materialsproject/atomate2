@@ -4,13 +4,8 @@ from jobflow import Flow, run_locally
 from pymatgen.core import Structure
 from pytest import approx
 
-from atomate2.vasp.flows.eos import (
-    MPGGAEosDoubleRelaxMaker,
-    MPGGAEosMaker,
-)
-from atomate2.vasp.jobs.eos import (
-    MPGGAEosStaticMaker,
-)
+from atomate2.vasp.flows.eos import MPGGAEosDoubleRelaxMaker, MPGGAEosMaker
+from atomate2.vasp.jobs.eos import MPGGAEosStaticMaker
 
 expected_incar_relax = {
     "ISIF": 3,
@@ -137,7 +132,7 @@ def test_mp_eos_maker(
     jobs = []
     for job in flow:
         if isinstance(job, Flow):
-            jobs.extend([t for t in job.jobs])
+            jobs.extend(list(job.jobs))
         else:
             jobs.append(job)
 
