@@ -244,7 +244,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
     completed_at: Optional[str] = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: Optional[InputSummary] = Field(  # noqa: A003
+    input: Optional[InputSummary] = Field(
         None, description="The input to the first calculation"
     )
     output: Optional[OutputSummary] = Field(

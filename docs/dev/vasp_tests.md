@@ -59,7 +59,7 @@ The script should also contain some additional code that will allow
 `atm dev vasp-test-data` to process the reference data. Below we give an example
 used to generate the elastic constant workflow test data.
 
-```python
+```py
 from atomate2.vasp.flows.elastic import ElasticMaker
 from atomate2.vasp.powerups import update_user_kpoints_settings
 from pymatgen.core import Structure
@@ -161,7 +161,7 @@ The most important part is the section that mocks VASP and configures which chec
 to perform on the input files. For the elastic constant workflow, it looks something like
 this:
 
-```python
+```py
 # mapping from job name to directory containing test files
 ref_paths = {
     "elastic relax 1/6": "Si_elastic/elastic_relax_1_6",
@@ -214,7 +214,7 @@ the k-point density during the test.
 Finally, you should add `assert` statements to validate the workflow outputs. As an
 example, the full elastic workflow test is reproduced below.
 
-```python
+```py
 def test_elastic(mock_vasp, clean_dir):
     import numpy as np
     from jobflow import run_locally

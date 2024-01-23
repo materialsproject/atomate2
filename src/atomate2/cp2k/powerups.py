@@ -47,12 +47,14 @@ def update_user_input_settings(
         A copy of the input flow/job/maker modified to use the updated input settings.
     """
 
-    # Convert nested dictionary updates for cp2k inpt settings
+    # Convert nested dictionary updates for cp2k input settings
     # into dict_mod update format
-    def nested_to_dictmod(d, kk="input_set_generator->user_input_settings") -> dict:
+    def nested_to_dictmod(
+        dct: dict, kk: str = "input_set_generator->user_input_settings"
+    ) -> dict:
         d2 = {}
-        for k, v in d.items():
-            k2 = kk + f"->{k}"
+        for k, v in dct.items():
+            k2 = f"{kk}->{k}"
             if isinstance(v, dict):
                 d2.update(nested_to_dictmod(v, kk=k2))
             else:
@@ -143,7 +145,7 @@ def update_user_kpoints_settings(
 
 
 def add_metadata_to_flow(
-    flow, additional_fields: dict, class_filter: Maker = BaseCp2kMaker
+    flow: Flow, additional_fields: dict, class_filter: Maker = BaseCp2kMaker
 ) -> Flow:
     """
     Return the Cp2k flow with additional field(metadata) to the task doc.

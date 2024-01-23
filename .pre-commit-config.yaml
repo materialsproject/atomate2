@@ -2,7 +2,7 @@ default_language_version:
   python: python3
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.1.11
+  rev: v0.1.13
   hooks:
   - id: ruff
     args: [--fix]
@@ -35,7 +35,6 @@ repos:
     files: ^src/
     additional_dependencies:
     - tokenize-rt==4.1.0
-    - types-pkg_resources==0.1.2
     - types-paramiko
 - repo: https://github.com/codespell-project/codespell
   rev: v2.2.6
