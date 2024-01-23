@@ -1,7 +1,25 @@
 from __future__ import annotations
 
+from unittest import mock
 
-def test_electrode_makers(mock_vasp, clean_dir, test_dir):
+import pytest
+from jobflow.settings import JobflowSettings
+
+
+@pytest.fixture()
+def mock_jobflow_settings(memory_jobstore):
+    """Set the UID_TYPE to "ulid" to make sure the documents can be sorted.
+
+    See: https://github.com/materialsproject/jobflow/issues/519#issuecomment-1906850096
+    """
+
+    settings = JobflowSettings(JOB_STORE=memory_jobstore, UID_TYPE="ulid")
+
+    with mock.patch("jobflow.SETTINGS", settings):
+        yield
+
+
+def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings):
     from emmet.core.electrode import InsertionElectrodeDoc
     from jobflow import OutputReference, run_locally
     from monty.serialization import loadfn
@@ -17,6 +35,7 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
         MPMetaGGARelaxSetGenerator,
         MPMetaGGAStaticSetGenerator,
     )
+    # mock the default setting
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -66,7 +85,9 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
     )
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    responses = run_locally(
+        flow, create_folders=True, ensure_success=True, raise_immediately=True
+    )
 
     inserted_formulas = []
     ie_doc = None
