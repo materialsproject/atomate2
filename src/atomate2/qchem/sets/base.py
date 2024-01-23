@@ -295,7 +295,7 @@ class QCInputGenerator(InputGenerator):
             "xc_grid": "3",
             "thresh": "14",
             "s2thresh": "16",
-            "scf_slogorithm": self.scf_algorithm,
+            "scf_algorithm": self.scf_algorithm,
             "resp_charges": "true",
             "symmetry": "false",
             "sym_ignore": "true",
@@ -372,61 +372,6 @@ class QCInputGenerator(InputGenerator):
             for key in self.new_geom_opt:
                 geom_opt_dict[key] = self.new_geom_opt[key]
 
-        if self.overwrite_inputs:
-            for sub, sub_dict in self.overwrite_inputs.items():
-                if sub == "rem":
-                    temp_rem = lower_and_check_unique(sub_dict)
-                    for k, v in temp_rem.items():
-                        rem_dict[k] = v
-                if sub == "pcm":
-                    temp_pcm = lower_and_check_unique(sub_dict)
-                    for k, v in temp_pcm.items():
-                        pcm_dict[k] = v
-                if sub == "solvent":
-                    temp_solvent = lower_and_check_unique(sub_dict)
-                    for k, v in temp_solvent.items():
-                        solv_dict[k] = v
-                if sub == "smx":
-                    temp_smx = lower_and_check_unique(sub_dict)
-                    for k, v in temp_smx.items():
-                        smx_dict[k] = v
-                if sub == "scan":
-                    temp_scan = lower_and_check_unique(sub_dict)
-                    for k, v in temp_scan.items():
-                        scan_dict[k] = v
-                if sub == "van_der_waals":
-                    temp_vdw = lower_and_check_unique(sub_dict)
-                    for k, v in temp_vdw.items():
-                        vdw_dict[k] = v
-                    # set the PCM section to read custom radii
-                    pcm_dict["radii"] = "read"
-                if sub == "plots":
-                    temp_plots = lower_and_check_unique(sub_dict)
-                    for k, v in temp_plots.items():
-                        plots_dict[k] = v
-                if sub == "nbo":
-                    if nbo_dict is None:
-                        raise RuntimeError(
-                            "Can't overwrite nbo params when NBO"
-                            "is not being run! Exiting..."
-                        )
-                    temp_nbo = lower_and_check_unique(sub_dict)
-                    for k, v in temp_nbo.items():
-                        nbo_dict[k] = v
-                if sub == "geom_opt":
-                    if geom_opt_dict is None:
-                        raise RuntimeError(
-                            "Can't overwrite geom_opt params when"
-                            "not using the new optimizer! Exiting..."
-                        )
-                    temp_geomopt = lower_and_check_unique(sub_dict)
-                    for k, v in temp_geomopt.items():
-                        geom_opt_dict[k] = v
-                if sub == "opt":
-                    temp_opts = lower_and_check_unique(sub_dict)
-                    for k, v in temp_opts.items():
-                        opt_dict[k] = v
-
         self.rem_dict = rem_dict
         self.opt_dict = opt_dict
         self.pcm_dict = pcm_dict
@@ -453,46 +398,75 @@ class QCInputGenerator(InputGenerator):
         QchemInputSet
             A QChem input set
         """
-        # molecule, prev_basis, prev_scf, new_geom_opt,
-        # overwrite_inputs, nbo_params = self._get_previous(
-        #     molecule, prev_dir
-        # )
-
-        # basis_set_updates = self.get_basis_set_updates(
-        #     molecule,
-        #     prev_basis=prev_basis,
-        #     prev_scf=prev_scf,
-        #     new_geom_opt=new_geom_opt,
-        #     overwrite_inputs=overwrite_inputs,
-        #     nbo_params=nbo_params,
-        # )
-
-        # scf_algorithm_updates = self.get_scf_algorithm_updates(
-        #     molecule,
-        #     prev_basis=prev_basis,
-        #     prev_scf=prev_scf,
-        #     new_geom_opt=new_geom_opt,
-        #     overwrite_inputs=overwrite_inputs,
-        #     nbo_params=nbo_params,
-        # )
-
-        # basis_set = self._basis_set(basis_set_updates)
-        # scf_algorithm = self._get_scf_algorithm(scf_algorithm_updates)
+        if self.overwrite_inputs:
+            for sub, sub_dict in self.overwrite_inputs.items():
+                if sub == "rem":
+                    temp_rem = lower_and_check_unique(sub_dict)
+                    for k, v in temp_rem.items():
+                        self.rem_dict[k] = v
+                if sub == "pcm":
+                    temp_pcm = lower_and_check_unique(sub_dict)
+                    for k, v in temp_pcm.items():
+                        self.pcm_dict[k] = v
+                if sub == "solvent":
+                    temp_solvent = lower_and_check_unique(sub_dict)
+                    for k, v in temp_solvent.items():
+                        self.solv_dict[k] = v
+                if sub == "smx":
+                    temp_smx = lower_and_check_unique(sub_dict)
+                    for k, v in temp_smx.items():
+                        self.smx_dict[k] = v
+                if sub == "scan":
+                    temp_scan = lower_and_check_unique(sub_dict)
+                    for k, v in temp_scan.items():
+                        self.scan_dict[k] = v
+                if sub == "van_der_waals":
+                    temp_vdw = lower_and_check_unique(sub_dict)
+                    for k, v in temp_vdw.items():
+                        self.vdw_dict[k] = v
+                    # set the PCM section to read custom radii
+                    self.pcm_dict["radii"] = "read"
+                if sub == "plots":
+                    temp_plots = lower_and_check_unique(sub_dict)
+                    for k, v in temp_plots.items():
+                        self.plots_dict[k] = v
+                if sub == "nbo":
+                    if self.nbo_dict is None:
+                        raise RuntimeError(
+                            "Can't overwrite nbo params when NBO"
+                            "is not being run! Exiting..."
+                        )
+                    temp_nbo = lower_and_check_unique(sub_dict)
+                    for k, v in temp_nbo.items():
+                        self.nbo_dict[k] = v
+                if sub == "geom_opt":
+                    if self.geom_opt_dict is None:
+                        raise RuntimeError(
+                            "Can't overwrite geom_opt params when"
+                            "not using the new optimizer! Exiting..."
+                        )
+                    temp_geomopt = lower_and_check_unique(sub_dict)
+                    for k, v in temp_geomopt.items():
+                        self.geom_opt_dict[k] = v
+                if sub == "opt":
+                    temp_opts = lower_and_check_unique(sub_dict)
+                    for k, v in temp_opts.items():
+                        self.opt_dict[k] = v
 
         return QCInputSet(
             qcinput=QCInput(
                 molecule,
-                self.rem_dict,
-                self.opt_dict,
-                self.pcm_dict,
-                self.solv_dict,
-                self.smx_dict,
-                self.scan_dict,
-                self.vdw_dict,
-                self.vdw_mode,
-                self.plots_dict,
-                self.nbo_dict,
-                self.geom_opt_dict,
+                rem=self.rem_dict,
+                opt=self.opt_dict,
+                pcm=self.pcm_dict,
+                solvent=self.solv_dict,
+                smx=self.smx_dict,
+                scan=self.scan_dict,
+                van_der_waals=self.vdw_dict,
+                vdw_mode=self.vdw_mode,
+                plots=self.plots_dict,
+                nbo=self.nbo_dict,
+                geom_opt=self.geom_opt_dict,
             )
         )
 
