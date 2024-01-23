@@ -269,8 +269,8 @@ def bulk_supercell_calculation(
     """
     if get_planar_locpot is None:
 
-        def get_planar_locpot(tdoc) -> NDArray:
-            return tdoc.calcs_reversed[0].output.locpot
+        def get_planar_locpot(task_doc: TaskDoc) -> NDArray:
+            return task_doc.calcs_reversed[0].output.locpot
 
     logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat

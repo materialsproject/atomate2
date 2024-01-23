@@ -8,7 +8,9 @@ if TYPE_CHECKING:
     from jobflow import Flow, Maker
 
 
-def add_metadata_to_flow(flow, additional_fields: dict, class_filter: Maker) -> Flow:
+def add_metadata_to_flow(
+    flow: Flow, additional_fields: dict, class_filter: Maker
+) -> Flow:
     """
     Return the flow with additional field(metadata) to the task doc.
 
