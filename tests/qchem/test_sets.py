@@ -22,10 +22,12 @@ def water_mol() -> Molecule:
 )
 def test_overwrite(molecule, overwrite_inputs, request) -> None:
     """
-    Test for ensuring whether overwrite_inputs correctly changes the default input_set parameters.
+    Test for ensuring whether overwrite_inputs correctly
+    changes the default input_set parameters.
 
-    Here, we use the StaticSetGenerator as an example, but any input generator that has
-    a passed overwrite_inputs dict as an input argument could be used.
+    Here, we use the StaticSetGenerator as an example,
+    but any input generator that has a passed overwrite_inputs
+    dict as an input argument could be used.
     """
     molecule = request.getfixturevalue(molecule)
 
