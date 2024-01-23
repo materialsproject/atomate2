@@ -196,6 +196,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
 # use staticmaker for compatibility
 
 
+@dataclass
 class MPVaspLobsterMaker(VaspLobsterMaker):
     """
     Maker to perform a Lobster computation.
