@@ -46,7 +46,7 @@ lpad = LaunchPad.auto_load()
 lpad.add_wf(wf)
 ```
 
-Additional details about interfacing Jobflow-based packages with FireWorks can be found in the [Running Jobflow with FireWorks](fw_guide) guide.
+Additional details about interfacing Jobflow-based packages with FireWorks can be found in the [Running Jobflow with FireWorks][fw_guide] guide.
 
 [fireworks]: https://materialsproject.github.io/fireworks/
 [fireworks_instructions]: https://materialsproject.github.io/jobflow/install_fireworks.html
