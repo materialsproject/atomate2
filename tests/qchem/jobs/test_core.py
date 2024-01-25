@@ -1,31 +1,19 @@
 from pathlib import Path
 
 from emmet.core.qc_tasks import TaskDoc
-
-# from emmet.core.vasp.calculation import IonicStep, VaspObject
 from jobflow import run_locally
-
-# OptMaker,
-# ForceMaker,
-# TransitionStateMaker,
-# FreqMaker,
-# PESScanMaker,
 from pymatgen.core.structure import Molecule
 from pytest import approx
 
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
 
-# Find parent directory
 current_directory = Path(__file__).resolve().parent
 file_name = current_directory / "H2O.xyz"
 
-# Construct the full path
-H2O_structure = Molecule.from_file(file_name)
+H2O = Molecule.from_file(file_name)
 
 
-def test_single_point_maker(mock_qchem, clean_dir, structure=H2O_structure):
-    # jstore = jobflow.SETTINGS.JOB_STORE
-
+def test_single_point_maker(mock_qchem, clean_dir):
     # mapping from job name to directory containing test files
     ref_paths = {"single_point": "water_single_point"}
 
@@ -37,7 +25,7 @@ def test_single_point_maker(mock_qchem, clean_dir, structure=H2O_structure):
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
     # generate job
-    job = SinglePointMaker().make(structure)
+    job = SinglePointMaker().make(H2O)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -48,12 +36,12 @@ def test_single_point_maker(mock_qchem, clean_dir, structure=H2O_structure):
     assert output1.output.final_energy == approx(-76.4451488262)
 
 
-def test_opt_maker(mock_qchem, clean_dir, structure=H2O_structure):
+def test_opt_maker(mock_qchem, clean_dir):
     ref_paths = {"optimization": "water_optimization"}
     fake_run_qchem_kwargs = {}
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
-    job = OptMaker().make(structure)
+    job = OptMaker().make(H2O)
 
     responses = run_locally(job, create_folders=True, ensure_success=True)
     opt_geometry = {
@@ -95,12 +83,12 @@ def test_opt_maker(mock_qchem, clean_dir, structure=H2O_structure):
     assert output1.output.final_energy == approx(-76.450849061819)
 
 
-def test_freq(mock_qchem, clean_dir, structure=H2O_structure):
+def test_freq(mock_qchem, clean_dir):
     ref_paths = {"frequency": "water_frequency"}
     fake_run_qchem_kwargs = {}
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
-    job = FreqMaker().make(structure)
+    job = FreqMaker().make(H2O)
 
     responses = run_locally(job, create_folders=True, ensure_success=True)
     ref_freqs = [1643.03, 3446.82, 3524.32]
