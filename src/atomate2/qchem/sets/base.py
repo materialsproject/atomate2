@@ -24,8 +24,6 @@ __version__ = "0.1"
 # _BASE_QCHEM_SET =
 # loadfn(resource_filename("atomate2.qchem.sets", "BaseQchemSet.yaml"))
 
-__all__ = ["QCInputSet", "QCInputGenerator"]
-
 
 class QCInputSet(InputSet):
     """
