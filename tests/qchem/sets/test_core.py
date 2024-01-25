@@ -1,6 +1,3 @@
-"""Confirm with @janosh before changing any of the expected values below."""
-
-
 import pytest
 
 from atomate2.qchem.sets.base import QCInputGenerator
@@ -12,8 +9,6 @@ from atomate2.qchem.sets.core import (
     SinglePointSetGenerator,
     TransitionStateSetGenerator,
 )
-
-job_types = ["sp", "opt", "ts", "force", "freq", "pesscan"]
 
 
 @pytest.mark.parametrize(
