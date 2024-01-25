@@ -114,8 +114,7 @@ class BaseQCMaker(Maker):
         if prev_qchem_dir is not None:
             copy_qchem_outputs(prev_qchem_dir, **self.copy_qchem_kwargs)
 
-        if "from_prev" not in self.write_input_set_kwargs:
-            self.write_input_set_kwargs["from_prev"] = from_prev
+        self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
         # write qchem input files
         # self.input_set_generator.get_input_set(molecule).write_inputs()
