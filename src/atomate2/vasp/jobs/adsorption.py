@@ -53,27 +53,60 @@ def removeAdsorbate(slab):
 
     return slab
 
-@job
-def run_adslab_jobs(
-    bulk_structure,
-    molecule_structure,
-    min_slab_size,
+@job(data=[Structure])
+def generate_slab(
+    bulk_structure: Structure,
+    min_slab_size: int,
     surface_idx,
-    min_vacuum_size,
-    min_lw,
-    include_slab=True,
+    min_vacuum_size: int,
+    min_lw: float,
+
+) -> Structure:
+    """Generate the adsorption slabs."""
+
+    H = Molecule([Element("H")], [[0, 0, 0]])
+    slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False,
+                                   center_slab=True)
+    temp_slab = slab_generator.get_slab()
+    ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(H, translate=True, min_lw=min_lw)
+    pureSlab = removeAdsorbate(ads_slabs[0])
+
+    return pureSlab
+
+@job(data=[Structure])
+def generate_adslabs(
+    bulk_structure: Structure,
+    molecule_structure: Structure,
+    min_slab_size: int,
+    surface_idx,
+    min_vacuum_size: int,
+    min_lw: float,
+
+) -> list[Structure]:
+    """Generate the adsorption slabs."""
+
+    slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False,
+                                   center_slab=True)
+    slab = slab_generator.get_slab()
+    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(molecule_structure, translate=True,
+                                                                         min_lw=min_lw)
+    return ads_slabs
+
+
+
+@job
+def run_slab_job(
+
     ) -> Flow:
 
-    slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False, center_slab=True)
-    slab = slab_generator.get_slab()
-    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(molecule_structure, translate=True, min_lw=min_lw)
+    pass
 
-    if include_slab:
-        H = Molecule([Element("H")], [[0, 0, 0]])
-        temp_slab = slab_generator.get_slab()
-        ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(H, translate=True, min_lw=min_lw)
-        pureSlab = removeAdsorbate(ads_slabs[0])
+@job
+def run_adslabs_job(
 
+    ) -> Flow:
+
+    pass
 
 @job
 def run_adsorption_calculations():

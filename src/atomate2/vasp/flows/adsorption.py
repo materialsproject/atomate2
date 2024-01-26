@@ -13,6 +13,7 @@ from atomate2.vasp.jobs.adsorption import (
     run_adslab_jobs,
     run_adsorption_calculations
 )
+
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 
@@ -62,11 +63,16 @@ class AdsorptionMaker(Maker):
 
             mol_static_job = StaticMaker.make(molecule_structure)
             jobs.append(mol_static_job)
-            self.molecule_dft_energy = mol_static_job.output.energy
+            self.molecule_dft_energy = mol_static_job.output.output.energy
 
         bulkOptimize = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
         jobs.append(bulkOptimize)
         optimized_bulk = bulkOptimize.output.structure
+
+        generate_slab = generate_slab()
+
+        generate_adslabs = generate_adslabs()
+
 
         adslab_jobs = run_adslab_jobs(
             optimized_bulk,
@@ -81,4 +87,7 @@ class AdsorptionMaker(Maker):
         jobs.append(adslab_jobs)
 
         adsorption_calc = run_adsorption_calculations()
+        jobs.append(adsorption_calc)
+
+        return Flow(jobs, adsorption_calc.output)
 
