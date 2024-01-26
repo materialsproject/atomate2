@@ -12,7 +12,6 @@ from pymatgen.core import Structure, Molecule, Element
 
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core.surface import SlabGenerator
-from pymatgen.transformations.standard_transformations import RotationTransformation
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.core import StaticSetGenerator

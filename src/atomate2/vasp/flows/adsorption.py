@@ -13,7 +13,6 @@ from atomate2.vasp.jobs.adsorption import (
     run_adslab_jobs,
     run_adsorption_calculations
 )
-
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 
