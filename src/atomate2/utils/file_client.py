@@ -10,11 +10,14 @@ from functools import wraps
 from glob import glob
 from gzip import GzipFile
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
+
+if TYPE_CHECKING:
+    from types import TracebackType
 
 
 class FileClient:
@@ -136,9 +139,9 @@ class FileClient:
         path = str(self.abspath(path, host=host))
         try:
             self.get_sftp(host).stat(path)
-            return True
         except FileNotFoundError:
             return False
+        return True
 
     def is_file(self, path: str | Path, host: str | None = None) -> bool:
         """
@@ -471,11 +474,16 @@ class FileClient:
             connection["sftp"].close()
         self.connections = {}
 
-    def __enter__(self):
+    def __enter__(self) -> FileClient:  # noqa: PYI034
         """Support for "with" context."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Support for "with" context."""
         self.close()
 
@@ -531,7 +539,7 @@ def get_ssh_connection(
     return client
 
 
-def auto_fileclient(method: Callable | None = None):
+def auto_fileclient(method: Callable | None = None) -> Callable:
     """
     Automatically pass a FileClient to the function if not already present in kwargs.
 
@@ -547,9 +555,9 @@ def auto_fileclient(method: Callable | None = None):
         by the decorator.
     """
 
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def gen_fileclient(*args, **kwargs):
+        def gen_fileclient(*args, **kwargs) -> Any:
             file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
