@@ -12,9 +12,8 @@ from atomate2.vasp.jobs.adsorption import (
     moleculeRelaxMaker,
     generate_slab,
     generate_adslabs,
-    run_slab_job,
     run_adslabs_job,
-    run_adsorption_calculations
+    adsorption_calculations
 )
 
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -50,32 +49,28 @@ class AdsorptionMaker(Maker):
             surface_idx,
             prev_dir: str | Path | None = None,
             molecule_dft_energy: float | None = None,
+            slab_dft_energy: float | None = None,
     ) -> Flow:
 
         jobs = []
-        outputs: dict[str, list] = {
-            "configuration_number": [],
-            "adsorption_energy": [],
-            "dirs": [],
-        }
 
         molecule_structure = get_boxed_molecule(molecule)
 
         if self.molecule_dft_energy is None:
-            molOptimize = self.mol_relax_maker.make(molecule_structure, prev_dir=prev_dir)
-            molOptimize.append_name(f"molecule relaxation job")
-            jobs.append(molOptimize)
-            optimized_molecule = molOptimize.output.structure
+            mol_optimize_job = self.mol_relax_maker.make(molecule_structure, prev_dir=prev_dir)
+            mol_optimize_job.append_name(f"molecule relaxation job")
+            jobs.append(mol_optimize_job)
+            optimized_molecule = mol_optimize_job.output.structure
 
             mol_static_job = StaticMaker.make(molecule_structure)
             mol_static_job.append_name(f"molecule static job")
             jobs.append(mol_static_job)
             self.molecule_dft_energy = mol_static_job.output.output.energy
 
-        bulkOptimize = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
-        bulkOptimize.append_name(f"bulk relaxation job")
-        jobs.append(bulkOptimize)
-        optimized_bulk = bulkOptimize.output.structure
+        bulk_optimize_job = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
+        bulk_optimize_job.append_name(f"bulk relaxation job")
+        jobs.append(bulk_optimize_job)
+        optimized_bulk = bulk_optimize_job.output.structure
 
         generate_slab_structure = generate_slab(
             bulk_structure=optimized_bulk,
@@ -85,6 +80,17 @@ class AdsorptionMaker(Maker):
             min_lw=self.min_lw,
         )
         jobs.append(generate_slab_structure)
+
+        if self.slab_dft_energy is None:
+            slab_optimize_job = self.adslab_relax_maker.make(generate_slab_structure, prev_dir=prev_dir)
+            slab_optimize_job.append_name(f"slab relaxation job")
+            jobs.append(slab_optimize_job)
+            optimized_slab = slab_optimize_job.output.structure
+
+            slab_static_job = StaticMaker.make(optimized_slab)
+            slab_static_job.append_name(f"slab static job")
+            jobs.append(slab_static_job)
+            self.slab_dft_energy = slab_static_job.output.output.energy
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
@@ -96,33 +102,22 @@ class AdsorptionMaker(Maker):
         )
         jobs.append(generate_adslabs_structures)
 
-
-        vasp_slab_calcs = run_slab_job(
-            optimized_bulk,
-            optimized_molecule,
-            self.supercell_idx,
-            self.surface_idx,
-            self.prefer_90_degrees,
-            self.min_vacuum,
-            self.min_ads_length,
-            self.include_slab
-        )
-        jobs.append(vasp_slab_calcs)
-
         vasp_adslabs_calcs = run_adslabs_job(
-            optimized_bulk,
-            optimized_molecule,
-            self.supercell_idx,
-            self.surface_idx,
-            self.prefer_90_degrees,
-            self.min_vacuum,
-            self.min_ads_length,
-            self.include_slab
+            adslab_structures=generate_adslabs_structures.output,
+            relax_maker = self.adslab_relax_maker,
+            prev_dir=prev_dir,
         )
         jobs.append(vasp_adslabs_calcs)
 
-        adsorption_calc = run_adsorption_calculations()
+        adsorption_calc = adsorption_calculations(
+            bulk_structure=optimized_bulk,
+            molecule_structure=optimized_molecule,
+            surface_idx=self.surface_idx,
+            adslab_structures=generate_adslabs_structures.output,
+            adslabs_data=vasp_adslabs_calcs.output,
+            molecule_dft_energy=self.molecule_dft_energy,
+            slab_dft_energy=self.slab_dft_energy,
+        )
         jobs.append(adsorption_calc)
 
         return Flow(jobs, adsorption_calc.output)
-

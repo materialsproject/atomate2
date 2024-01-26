@@ -91,23 +91,69 @@ def generate_adslabs(
     return ads_slabs
 
 @job
-def run_slab_job(
-
-    ) -> Flow:
-
-    pass
-
-@job
 def run_adslabs_job(
-
+    adslab_structures: list[Structure],
+    relax_maker: adslabRelaxMaker,
+    prev_dir: str | Path | None = None,
     ) -> Flow:
 
-    pass
+    adsorption_jobs = []
+    ads_outputs: dict[str, list] = {
+        "configuration_number": [],
+        "adsorption_energy": [],
+        "dirs": [],
+    }
+
+    for i, ad_structure in enumerate(adslab_structures):
+        if prev_dir is not None:
+            ads_job = relax_maker.make(ad_structure, prev_dir=prev_dir)
+        else:
+            ads_job = relax_maker.make(ad_structure)
+        ads_job.append_name(f"configuration {i}")
+
+        adsorption_jobs.append(ads_job)
+        ads_outputs["configuration_number"].append(i)
+        ads_outputs["adsorption_energy"].append(ads_job.output.output.energy)
+        ads_outputs["dirs"].append(ads_job.output.dir_name)
+
+    adsorption_flow = Flow(ads_job, ads_outputs)
+    return Response(replace=adsorption_flow)
 
 @job
-def run_adsorption_calculations():
+def adsorption_calculations(
+        bulk_structure: Structure,
+        molecule_structure: Structure,
+        surface_idx,
+        adslab_structures: list[Structure],
+        ads_outputs: dict[str, list],
+        molecule_dft_energy: float,
+        slab_dft_energy: float,
+):
     """Calculating the adsorption energies."""
-    pass
+
+    bulk_composition = bulk_structure.composition
+    bulk_reduced_formula = bulk_composition.reduced_formula
+    molecule_composition = molecule_structure.composition
+    molecule_reduced_formula = molecule_composition.reduced_formula
+    flow_name = f"{bulk_reduced_formula}_{molecule_reduced_formula}_{surface_idx}"
+
+    outputs: dict[str, list] = {
+        "job_name": f"{flow_name}_adsorption_calculations",
+        "adsorption_configuration": [],
+        "configuration_number": [],
+        "adsorption_energy": [],
+        "dirs": [],
+    }
+
+    for i in ads_outputs:
+        outputs["adsorption_configuration"].append(adslab_structures[i])
+        outputs["configuration_number"].append(ads_outputs["configuration_number"][i])
+        ads_energy = ads_outputs["adsorption_energy"][i] - molecule_dft_energy - slab_dft_energy
+        outputs["adsorption_energy"].append(ads_energy)
+        outputs["dirs"].append(ads_outputs["dirs"][i])
+
+    return outputs
+
 
 @dataclass
 class moleculeRelaxMaker(BaseVaspMaker):
