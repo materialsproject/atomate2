@@ -46,10 +46,8 @@ def removeAdsorbate(slab):
     for i, site in enumerate(slab):
         if site.properties.get('surface_properties') == 'adsorbate':
             adsorbate_indices.append(i)
-
     # Reverse the indices list to avoid index shifting after removing sites
     adsorbate_indices.reverse()
-
     # Remove the adsorbate sites
     for idx in adsorbate_indices:
         slab.remove_sites([idx])
