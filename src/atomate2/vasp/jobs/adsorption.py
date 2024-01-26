@@ -30,12 +30,12 @@ logger = logging.getLogger(__name__)
 
 
 @job
-def get_molecule_structure(molecule: Molecule) -> Structure:
+def get_boxed_molecule(molecule: Molecule) -> Structure:
     """Get the molecule structure."""
     return molecule.get_boxed_structure(10, 10, 10, offset=np.array([5, 5, 5]))
 
 @job
-def generate_slab_job(
+def run_slab_job(
         structure: Structure,
         supercell_index,
         surface_idx,
@@ -45,7 +45,7 @@ def generate_slab_job(
 
 
 @job
-def generate_adslab_jobs(
+def run_adslab_jobs(
     bulk_structure,
     molecule_structure,
     min_slab_size,
@@ -113,7 +113,7 @@ class adslabRelaxMaker(BaseVaspMaker):
 
 @dataclass
 class StaticMaker(BaseVaspMaker):
-    name: str = "adsorption static calculation
+    name: str = "adsorption static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings={"grid_density": 7_000},
