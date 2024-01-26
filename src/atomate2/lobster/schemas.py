@@ -596,7 +596,7 @@ class StrongestBonds(BaseModel):
     )
 
 
-class LobsterTaskDocument(StructureMetadata):
+class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Definition of LOBSTER task document."""
 
     structure: Structure = Field(description="The structure used in this task")
@@ -742,7 +742,7 @@ class LobsterTaskDocument(StructureMetadata):
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = additional_fields or {}
+        additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
 
         # Read in lobsterout and lobsterin
