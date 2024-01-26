@@ -19,11 +19,7 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
-
     import numpy as np
-    from emmet.core.math import Matrix3D
-
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -34,15 +30,31 @@ def get_boxed_molecule(molecule: Molecule) -> Structure:
     """Get the molecule structure."""
     return molecule.get_boxed_structure(10, 10, 10, offset=np.array([5, 5, 5]))
 
-@job
-def run_slab_job(
-        structure: Structure,
-        supercell_index,
-        surface_idx,
-        prefer_90_degrees,
-        min_vacuum
-        ):
 
+@job
+def removeAdsorbate(slab):
+    """
+    Remove adsorbate from the given slab.
+
+    Parameters:
+    slab (Slab): A pymatgen Slab object, potentially with adsorbates.
+
+    Returns:
+    Slab: The modified slab with adsorbates removed.
+    """
+    adsorbate_indices = []
+    for i, site in enumerate(slab):
+        if site.properties.get('surface_properties') == 'adsorbate':
+            adsorbate_indices.append(i)
+
+    # Reverse the indices list to avoid index shifting after removing sites
+    adsorbate_indices.reverse()
+
+    # Remove the adsorbate sites
+    for idx in adsorbate_indices:
+        slab.remove_sites([idx])
+
+    return slab
 
 @job
 def run_adslab_jobs(
@@ -52,15 +64,23 @@ def run_adslab_jobs(
     surface_idx,
     min_vacuum_size,
     min_lw,
-    ):
+    include_slab=True,
+    ) -> Flow:
 
     slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False, center_slab=True)
     slab = slab_generator.get_slab()
-    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(molecule_structure, translate=True, min_lw)
+    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(molecule_structure, translate=True, min_lw=min_lw)
+
+    if include_slab:
+        H = Molecule([Element("H")], [[0, 0, 0]])
+        temp_slab = slab_generator.get_slab()
+        ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(H, translate=True, min_lw=min_lw)
+        pureSlab = removeAdsorbate(ads_slabs[0])
+
 
 @job
 def run_adsorption_calculations():
-    """Generate adsorption structures."""
+    """Calculating the adsorption energies."""
     pass
 
 @dataclass

@@ -10,7 +10,6 @@ from atomate2.vasp.jobs.adsorption import (
     adslabRelaxMaker,
     StaticMaker,
     moleculeRelaxMaker,
-    run_slab_job,
     run_adslab_jobs,
     run_adsorption_calculations
 )
@@ -40,7 +39,7 @@ class AdsorptionMaker(Maker):
 
     adslab_relax_maker: BaseVaspMaker = field(default_factory=adslabRelaxMaker())
 
-    static_energy_maker: BaseVaspMaker = field(default_factory=adslabStaticMaker())
+    static_energy_maker: BaseVaspMaker = field(default_factory=StaticMaker())
 
     def make(
             self,
@@ -69,19 +68,6 @@ class AdsorptionMaker(Maker):
         jobs.append(bulkOptimize)
         optimized_bulk = bulkOptimize.output.structure
 
-        slab_job = run_slab_job(
-            optimized_bulk,
-            self.supercell_idx,
-            self.surface_idx,
-            self.prefer_90_degrees,
-            self.min_vacuum
-        )
-        jobs.append(slab_job)
-        slab_static_job = StaticMaker.make(slab_job.output.structure)
-        jobs.append(slab_static_job)
-
-        slab_energy = slab_static_job.output.energy
-
         adslab_jobs = run_adslab_jobs(
             optimized_bulk,
             optimized_molecule,
@@ -89,7 +75,8 @@ class AdsorptionMaker(Maker):
             self.surface_idx,
             self.prefer_90_degrees,
             self.min_vacuum,
-            self.min_ads_length
+            self.min_ads_length,
+            self.include_slab
         )
         jobs.append(adslab_jobs)
 
