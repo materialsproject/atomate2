@@ -60,7 +60,6 @@ def generate_slab(
     surface_idx,
     min_vacuum_size: int,
     min_lw: float,
-
 ) -> Structure:
     """Generate the adsorption slabs."""
 
@@ -69,9 +68,9 @@ def generate_slab(
                                    center_slab=True)
     temp_slab = slab_generator.get_slab()
     ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(H, translate=True, min_lw=min_lw)
-    pureSlab = removeAdsorbate(ads_slabs[0])
+    slabOnly = removeAdsorbate(ads_slabs[0])
 
-    return pureSlab
+    return slabOnly
 
 @job(data=[Structure])
 def generate_adslabs(
@@ -81,7 +80,6 @@ def generate_adslabs(
     surface_idx,
     min_vacuum_size: int,
     min_lw: float,
-
 ) -> list[Structure]:
     """Generate the adsorption slabs."""
 
@@ -91,8 +89,6 @@ def generate_adslabs(
     ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(molecule_structure, translate=True,
                                                                          min_lw=min_lw)
     return ads_slabs
-
-
 
 @job
 def run_slab_job(
