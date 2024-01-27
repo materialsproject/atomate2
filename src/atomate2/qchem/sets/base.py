@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from monty.io import zopen
 from pymatgen.io.core import InputGenerator, InputSet
@@ -112,7 +112,7 @@ class QCInputSet(InputSet):
 @dataclass
 class QCInputGenerator(InputGenerator):
     """
-    A class to generate QChem input set.
+    A dataclass to generate QChem input set.
 
     Parameters
     ----------
@@ -132,8 +132,8 @@ class QCInputGenerator(InputGenerator):
 
     dft_rung : int
         Select the DFT functional among 5 recommended levels of theory,
-        in order of increasing accuracy/cost. 1 = B3LYP, 2=B3lYP+D3, 3=ωB97X-D,
-        4=ωB97X-V, 5=ωB97M-V. (Default: 4)
+        in order of increasing accuracy/cost. 1 = SPW92, 2 = B97-D3(BJ), 3 = B97M-V,
+        4 = ωB97M-V, 5 = ωB97M-(2). (Default: 4)
         To set a functional not given by one of the above, set the overwrite_inputs
         argument to {"method":"<NAME OF FUNCTIONAL>"}
         **Note that the "rungs" in this argument do NOT correspond to rungs on "Jacob's
@@ -159,7 +159,7 @@ class QCInputGenerator(InputGenerator):
         surface tension, aromaticity, electronegative halogenicity"
         Refer to the QChem manual for further details.
 
-    opt_variables : dict
+    opt_dict : dict
         A dictionary of opt sections, where each opt section is a key
         and the corresponding values are a list of strings. Strings must be formatted
         as instructed by the QChem manual.
@@ -168,7 +168,7 @@ class QCInputGenerator(InputGenerator):
         opt =
         {"CONSTRAINT": ["tors 2 3 4 5 25.0", "tors 2 5 7 9 80.0"], "FIXED": ["2 XY"]}
 
-    scan_variables : dict
+    scan_dict : dict
         A dictionary of scan variables. Because two constraints of the
         same type are allowed (for instance, two torsions or two bond stretches),
         each TYPE of variable (stre, bend, tors) should be its own key in the dict,
@@ -216,76 +216,42 @@ class QCInputGenerator(InputGenerator):
         the PCM "radii" setting to "read".**
         **Note that all keys must be given as strings, even when they are numbers!**
 
-    config_dict : dict
-        The config dictionary to use containing the base input set settings.
+    vdw_mode : str
+        Method of specifying custom van der Waals radii.
+        Either "atomic" (default) or "sequential".
+        In "atomic" mode, dict keys represent the atomic number
+        associated with each radius (e.g., 12 = carbon).
+        In "sequential" mode, dict keys represent the sequential position
+        of a single specific atom in the input structure.
+
     """
 
-    def __init__(
-        self,
-        job_type: str,
-        basis_set: str,
-        scf_algorithm: str,
-        dft_rung: int = 4,
-        pcm_dielectric: float | None = None,
-        smd_solvent: str | None = None,
-        custom_smd: str | None = None,
-        opt_variables: dict[str, list] | None = None,
-        scan_variables: dict[str, list] | None = None,
-        max_scf_cycles: int = 100,
-        geom_opt_max_cycles: int = 200,
-        plot_cubes: bool = False,
-        nbo_params: dict | None = None,
-        new_geom_opt: dict | None = None,
-        overwrite_inputs: dict | None = None,
-        vdw_mode: Literal["atomic", "sequential"] = "atomic",
-        rem_dict: dict | None = None,
-        opt_dict: dict | None = None,
-        pcm_dict: dict | None = None,
-        solv_dict: dict | None = None,
-        smx_dict: dict | None = None,
-        scan_dict: dict | None = None,
-        vdw_dict: dict | None = None,
-        plots_dict: dict | None = None,
-        nbo_dict: dict | None = None,
-        geom_opt_dict: dict | None = None,
-    ) -> None:
-        self.job_type = job_type
-        self.basis_set = basis_set
-        self.scf_algorithm = scf_algorithm
-        self.dft_rung = dft_rung
-        self.pcm_dielectric = pcm_dielectric
-        self.smd_solvent = smd_solvent
-        self.custom_smd = custom_smd
-        self.opt_variables = opt_variables
-        self.scan_variables = scan_variables
-        self.max_scf_cycles = max_scf_cycles
-        self.geom_opt_max_cycles = geom_opt_max_cycles
-        self.plot_cubes = plot_cubes
-        self.nbo_params = nbo_params
-        self.new_geom_opt = new_geom_opt
-        self.overwrite_inputs = overwrite_inputs
-        self.vdw_mode = vdw_mode
+    job_type: str = field(default=None)
+    basis_set: str = field(default=None)
+    scf_algorithm: str = field(default=None)
+    dft_rung: int = field(default=4)
+    pcm_dielectric: float = field(default=None)
+    smd_solvent: str = field(default=None)
+    custom_smd: str = field(default=None)
+    opt_dict: dict[str, Any] = field(default_factory=dict)
+    scan_dict: dict[str, Any] = field(default_factory=dict)
+    max_scf_cycles: int = field(default=100)
+    geom_opt_max_cycles: int = field(default=200)
+    plot_cubes: bool = field(default=False)
+    nbo_params: dict[str, Any] = field(default_factory=dict)
+    new_geom_opt: dict[str, Any] = field(default_factory=dict)
+    overwrite_inputs: dict[str, str] = field(default_factory=dict)
+    vdw_mode: Literal["atomic", "sequential"] = field(default="atomic")
+    rem_dict: dict[str, Any] = field(default_factory=dict)
+    vdw_dict: dict[str, float] = field(default_factory=dict)
+    pcm_dict: dict[str, Any] = field(default_factory=dict)
+    solv_dict: dict[str, Any] = field(default_factory=dict)
+    smx_dict: dict[str, Any] = field(default_factory=dict)
+    plots_dict: dict[str, Any] = field(default_factory=dict)
 
-        pcm_defaults = {
-            "heavypoints": "194",
-            "hpoints": "194",
-            "radii": "uff",
-            "theory": "cpcm",
-            "vdwscale": "1.1",
-        }
-
-        plots_defaults = {"grid_spacing": "0.05", "total_density": "0"}
-
-        opt_dict = {} if self.opt_variables is None else self.opt_variables
-
-        scan_dict = {} if self.scan_variables is None else self.scan_variables
-
-        pcm_dict = pcm_dict or {}
-        solv_dict = solv_dict or {}
-        smx_dict = smx_dict or {}
-        vdw_dict = vdw_dict or {}
-        plots_dict = plots_dict or {}
-        rem_dict = {
+    def __post_init__(self) -> None:
+        """Post init formatting of arguments."""
+        self.rem_dict = {
             "job_type": self.job_type,
             "basis": self.basis_set,
             "max_scf_cycles": str(self.max_scf_cycles),
@@ -299,35 +265,45 @@ class QCInputGenerator(InputGenerator):
             "sym_ignore": "true",
         }
 
-        func_list = ["b3lyp", "b3lyp", "wb97xd", "wb97xv", "wb97mv"]
-        qc_method = {i + 1: e for i, e in enumerate(func_list)}
+        rung_2_func = ["spw92", "b97d3", "b97mv", "wb97mv", "wb97m(2)"]
+        qc_method = {i + 1: e for i, e in enumerate(rung_2_func)}
 
-        if qc_method.get(self.dft_rung) is not None:
-            rem_dict["method"] = qc_method.get(self.dft_rung)
+        if qc_method.get(self.dft_rung):
+            self.rem_dict["method"] = qc_method.get(self.dft_rung)
         else:
-            raise ValueError("dft_rung should be between 1 and 5!")
+            raise ValueError("Provided DFT rung should be between 1 and 5!")
 
         if self.dft_rung == 2:
-            rem_dict["dft_D"] = "D3_BJ"
+            self.rem_dict["dft_D"] = "D3_BJ"
 
         if self.job_type.lower() in ["opt", "ts", "pes_scan"]:
-            rem_dict["geom_opt_max_cycles"] = str(self.geom_opt_max_cycles)
+            self.rem_dict["geom_opt_max_cycles"] = str(self.geom_opt_max_cycles)
 
-        if self.pcm_dielectric is not None and self.smd_solvent is not None:
-            raise ValueError("Only one of pcm or smd may be used for solvation.")
+        if self.pcm_dielectric and self.smd_solvent:
+            raise ValueError(
+                "Only one of pcm or smd may be used as an implicit solvent. Not both!"
+            )
 
-        if self.pcm_dielectric is not None:
-            pcm_dict = pcm_defaults
-            solv_dict["dielectric"] = self.pcm_dielectric
-            rem_dict["solvent_method"] = "pcm"
+        if self.pcm_dielectric:
+            pcm_defaults = {
+                "heavypoints": "194",
+                "hpoints": "194",
+                "radii": "uff",
+                "theory": "cpcm",
+                "vdwscale": "1.1",
+            }
 
-        if self.smd_solvent is not None:
+            self.pcm_dict = pcm_defaults
+            self.solv_dict["dielectric"] = self.pcm_dielectric
+            self.rem_dict["solvent_method"] = "pcm"
+
+        if self.smd_solvent:
             if self.smd_solvent == "custom":
-                smx_dict["solvent"] = "other"
+                self.smx_dict["solvent"] = "other"
             else:
-                smx_dict["solvent"] = self.smd_solvent
-            rem_dict["solvent_method"] = "smd"
-            rem_dict["ideriv"] = "1"
+                self.smx_dict["solvent"] = self.smd_solvent
+            self.rem_dict["solvent_method"] = "smd"
+            self.rem_dict["ideriv"] = "1"
             if self.smd_solvent in ("custom", "other") and self.custom_smd is None:
                 raise ValueError(
                     "A user-defined SMD requires passing custom_smd,"
@@ -337,49 +313,33 @@ class QCInputGenerator(InputGenerator):
                 )
 
         if self.plot_cubes:
-            plots_dict = plots_defaults
-            rem_dict["plots"] = "true"
-            rem_dict["make_cube_files"] = "true"
+            plots_defaults = {"grid_spacing": "0.05", "total_density": "0"}
+            self.plots_dict = plots_defaults
+            self.rem_dict["plots"] = "true"
+            self.rem_dict["make_cube_files"] = "true"
 
-        nbo_dict = self.nbo_params
-        if self.nbo_params is not None:
-            rem_dict["nbo"] = "true"
+        if self.nbo_params:
+            self.rem_dict["nbo"] = "true"
             if "version" in self.nbo_params:
                 if self.nbo_params["version"] == 7:
-                    rem_dict["nbo_external"] = "true"
+                    self.rem_dict["nbo_external"] = "true"
                 else:
                     raise RuntimeError(
                         "nbo params version should only be set to 7! Exiting..."
                     )
-            nbo_dict = {}
             for key in self.nbo_params:
-                if key != "version":
-                    nbo_dict[key] = self.nbo_params[key]
+                if key == "version":
+                    self.nbo_params.pop(key)
 
-        geom_opt_dict = self.new_geom_opt
-        if self.new_geom_opt is not None:
-            rem_dict["geom_opt2"] = "3"
-            if "maxiter" in self.new_geom_opt:
-                if self.new_geom_opt["maxiter"] != str(self.geom_opt_max_cycles):
-                    raise RuntimeError(
-                        "Max # of optimization cycles must be the same! Exiting..."
-                    )
-            else:
-                self.new_geom_opt["maxiter"] = str(self.geom_opt_max_cycles)
-            geom_opt_dict = {}
-            for key in self.new_geom_opt:
-                geom_opt_dict[key] = self.new_geom_opt[key]
+        if self.new_geom_opt:
+            self.rem_dict["geom_opt2"] = "3"
 
-        self.rem_dict = rem_dict
-        self.opt_dict = opt_dict
-        self.pcm_dict = pcm_dict
-        self.solv_dict = solv_dict
-        self.smx_dict = smx_dict
-        self.scan_dict = scan_dict
-        self.vdw_dict = vdw_dict
-        self.plots_dict = plots_dict
-        self.nbo_dict = nbo_dict
-        self.geom_opt_dict = geom_opt_dict
+        if "maxiter" in self.new_geom_opt and self.new_geom_opt["maxiter"] != str(
+            self.geom_opt_max_cycles
+        ):
+            raise RuntimeError(
+                "Max # of optimization cycles must be the same! Exiting..."
+            )
 
     def get_input_set(self, molecule: Molecule = None) -> QCInputSet:
         """
@@ -463,24 +423,7 @@ class QCInputGenerator(InputGenerator):
                 van_der_waals=self.vdw_dict,
                 vdw_mode=self.vdw_mode,
                 plots=self.plots_dict,
-                nbo=self.nbo_dict,
-                geom_opt=self.geom_opt_dict,
+                nbo=self.nbo_params,
+                geom_opt=self.new_geom_opt,
             )
         )
-
-    # def get_input_set_updates(self) -> dict:
-    #     """
-    #     Get updates to the input set for this calculation type.
-
-    #     Parameters
-    #     ----------
-
-    #     Returns
-    #     -------
-    #     dict
-    #         A dictionary of updates to apply.
-
-    #     Is this something which is even necessary
-    #     in context of QChem? Will have to discuss
-    #     """
-    #     raise NotImplementedError

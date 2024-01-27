@@ -14,49 +14,51 @@ logger = logging.getLogger(__name__)
 class SinglePointSetGenerator(QCInputGenerator):
     """Generate QChem Single Point input sets."""
 
-    def __init__(self) -> None:
-        super().__init__(job_type="sp", scf_algorithm="diis", basis_set="def2-tzvppd")
+    job_type: str = "sp"
+    scf_algorithm: str = "diis"
+    basis_set: str = "def2-tzvppd"
 
 
 @dataclass
 class OptSetGenerator(QCInputGenerator):
     """Generate QChem Optimization input sets."""
 
-    def __init__(self) -> None:
-        super().__init__(job_type="opt", scf_algorithm="diis", basis_set="def2-tzvppd")
+    job_type: str = "opt"
+    scf_algorithm: str = "diis"
+    basis_set: str = "def2-tzvppd"
 
 
 @dataclass
 class TransitionStateSetGenerator(QCInputGenerator):
     """Generate QChem Transition State calculation input sets."""
 
-    def __init__(self) -> None:
-        super().__init__(job_type="ts", scf_algorithm="diis", basis_set="def2-tzvppd")
+    job_type: str = "ts"
+    scf_algorithm: str = "diis"
+    basis_set: str = "def2-tzvppd"
 
 
 @dataclass
 class ForceSetGenerator(QCInputGenerator):
     """Generate QChem force input sets."""
 
-    def __init__(self) -> None:
-        super().__init__(
-            job_type="force", scf_algorithm="diis", basis_set="def2-tzvppd"
-        )
+    job_type: str = "force"
+    scf_algorithm: str = "diis"
+    basis_set: str = "def2-tzvppd"
 
 
 @dataclass
 class FreqSetGenerator(QCInputGenerator):
     """Generate QChem frequency calculation input sets."""
 
-    def __init__(self) -> None:
-        super().__init__(job_type="freq", scf_algorithm="diis", basis_set="def2-tzvppd")
+    job_type: str = "freq"
+    scf_algorithm: str = "diis"
+    basis_set: str = "def2-tzvppd"
 
 
 @dataclass
 class PESScanSetGenerator(QCInputGenerator):
     """Generate QChem PES scan input sets."""
 
-    def __init__(self) -> None:
-        super().__init__(
-            job_type="pes_scan", scf_algorithm="diis", basis_set="def2-tzvppd"
-        )
+    job_type: str = "pes_scan"
+    scf_algorithm: str = "diis"
+    basis_set: str = "def2-tzvppd"

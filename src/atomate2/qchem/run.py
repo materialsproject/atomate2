@@ -79,18 +79,6 @@ def run_qchem(
     qchem_cmd = expandvars(qchem_cmd)
     split_qchem_cmd = shlex.split(qchem_cmd)
 
-    # if "auto_npar" not in vasp_job_kwargs:
-    #     vasp_job_kwargs["auto_npar"] = False
-
-    # vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
-
-    # if job_type == JobType.DIRECT:
-    #     logger.info(f"Running command: {qchem_cmd}")
-    #     # return_code = subprocess.call(qchem_cmd, shell=True)
-    #     return_code = subprocess.call(qchem_cmd)
-    #     logger.info(f"{qchem_cmd} finished running with returncode: {return_code}")
-    #     return
-
     if job_type == JobType.NORMAL:
         jobs = [
             QCJob(
@@ -99,9 +87,6 @@ def run_qchem(
         ]
     else:
         raise ValueError(f"Unsupported job type: {job_type}")
-
-    # if wall_time is not None:
-    #     handlers = list(handlers) + [WalltimeHandler(wall_time=wall_time)]
 
     c = Custodian(
         handlers,
