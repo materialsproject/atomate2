@@ -111,7 +111,7 @@ class ConvergenceMaker(Maker):
             next_base_job.update_maker_kwargs(
                 {
                     "_set": {
-                        f"input_set_generator->user_parameters->"
+                        f"input_set_generator->user_params->"
                         f"{self.convergence_field}": self.convergence_steps[idx]
                     }
                 },

@@ -24,7 +24,7 @@ def test_base_maker(tmp_path, species_dir, mock_aims, si):
         "species_dir": (species_dir / "light").as_posix(),
     }
     # generate job
-    maker = RelaxMaker.full_relaxation(user_parameters=parameters)
+    maker = RelaxMaker.full_relaxation(user_params=parameters)
     maker.name = "relax_si"
     job = maker.make(si)
 
@@ -54,7 +54,7 @@ def test_relax_fixed_cell_maker(tmp_path, species_dir, mock_aims, si):
         "species_dir": (species_dir / "light").as_posix(),
     }
     # generate job
-    maker = RelaxMaker.fixed_cell_relaxation(user_parameters=parameters)
+    maker = RelaxMaker.fixed_cell_relaxation(user_params=parameters)
     maker.name = "relax_fixed_cell_si"
     structure = si.copy()
     structure.frac_coords[0, 0] += 0.25

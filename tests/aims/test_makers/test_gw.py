@@ -23,7 +23,7 @@ def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, o2):
         "species_dir": (species_dir / "light").as_posix(),
     }
     # generate job
-    maker = GWMaker(input_set_generator=GWSetGenerator(user_parameters=parameters))
+    maker = GWMaker(input_set_generator=GWSetGenerator(user_params=parameters))
     maker.name = "gw_o2"
     job = maker.make(o2)
 

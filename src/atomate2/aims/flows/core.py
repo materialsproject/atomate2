@@ -100,6 +100,6 @@ class DoubleRelaxMaker(Maker):
         makers = []
         for basis_set in species_defaults:
             parameters["species_dir"] = (species_dir / basis_set).as_posix()
-            input_set = RelaxSetGenerator(user_parameters=deepcopy(parameters))
+            input_set = RelaxSetGenerator(user_params=deepcopy(parameters))
             makers.append(RelaxMaker(input_set_generator=input_set))
         return cls(relax_maker1=makers[0], relax_maker2=makers[1])

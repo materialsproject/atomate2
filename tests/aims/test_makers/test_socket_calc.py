@@ -33,7 +33,7 @@ def test_static_socket_maker(si, species_dir, mock_aims, tmp_path):
     }
     # generate job
     maker = SocketIOStaticMaker(
-        input_set_generator=SocketIOSetGenerator(user_parameters=parameters)
+        input_set_generator=SocketIOSetGenerator(user_params=parameters)
     )
     maker.name = "socket"
     job = maker.make(atoms_list)

@@ -29,7 +29,7 @@ class PhononDisplacementMaker(BaseAimsMaker):
 
     input_set_generator: AimsInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_parameters={"compute_forces": True},
+            user_params={"compute_forces": True},
             user_kpoints_settings={"density": 5.0, "even": True},
         )
     )
@@ -56,7 +56,7 @@ class PhononDisplacementMakerSocket(SocketIOStaticMaker):
 
     input_set_generator: AimsInputGenerator = field(
         default_factory=lambda: SocketIOSetGenerator(
-            user_parameters={"compute_forces": True},
+            user_params={"compute_forces": True},
             user_kpoints_settings={"density": 5.0, "even": True},
         )
     )

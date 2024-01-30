@@ -28,7 +28,7 @@ def test_convergence(mock_aims, tmp_path, si, species_dir):
 
     parameters = {
         "maker": StaticMaker(
-            input_set_generator=StaticSetGenerator(user_parameters=input_set_parameters)
+            input_set_generator=StaticSetGenerator(user_params=input_set_parameters)
         ),
         "criterion_name": "energy_per_atom",
         "epsilon": 0.2,

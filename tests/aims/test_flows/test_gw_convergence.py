@@ -26,7 +26,7 @@ def test_gw_convergence(mock_aims, tmp_dir, o2, species_dir):
 
     parameters = {
         "maker": GWMaker(
-            input_set_generator=GWSetGenerator(user_parameters=input_set_parameters)
+            input_set_generator=GWSetGenerator(user_params=input_set_parameters)
         ),
         "criterion_name": "vbm",
         "epsilon": 0.05,

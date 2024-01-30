@@ -37,14 +37,14 @@ def test_phonon_flow(si, tmp_path, mock_aims, species_dir):
 
     parameters_phonon_disp = dict(compute_forces=True, **parameters)
     maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_parameters=parameters),
+        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters),
         static_energy_maker=StaticMaker(
-            input_set_generator=StaticSetGenerator(user_parameters=parameters)
+            input_set_generator=StaticSetGenerator(user_params=parameters)
         ),
         use_symmetrized_structure="primitive",
         phonon_displacement_maker=PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(
-                user_parameters=parameters_phonon_disp,
+                user_params=parameters_phonon_disp,
                 user_kpoints_settings={"density": 5.0, "even": True},
             )
         ),
@@ -132,15 +132,15 @@ def test_phonon_socket_flow(si, tmp_path, mock_aims, species_dir):
     # generate job
 
     maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_parameters=parameters),
+        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters),
         static_energy_maker=StaticMaker(
-            input_set_generator=StaticSetGenerator(user_parameters=parameters)
+            input_set_generator=StaticSetGenerator(user_params=parameters)
         ),
         use_symmetrized_structure="primitive",
         socket=True,
         phonon_displacement_maker=PhononDisplacementMakerSocket(
             input_set_generator=StaticSetGenerator(
-                user_parameters=parameters_phonon_disp,
+                user_params=parameters_phonon_disp,
                 user_kpoints_settings={"density": 5.0, "even": True},
             )
         ),
