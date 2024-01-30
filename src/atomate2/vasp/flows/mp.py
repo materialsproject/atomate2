@@ -232,9 +232,7 @@ class MPVaspLobsterMaker(VaspLobsterMaker):
     """
 
     name: str = "lobster"
-    relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: MPGGADoubleRelaxMaker()
-    )
+    relax_maker: BaseVaspMaker | None = field(default_factory=MPGGADoubleRelaxMaker)
     lobster_static_maker: BaseVaspMaker = field(
         default_factory=lambda: MPGGAStaticMaker(
             input_set_generator=MPGGAStaticSetGenerator(
@@ -254,7 +252,7 @@ class MPVaspLobsterMaker(VaspLobsterMaker):
             )
         )
     )
-    lobster_maker: LobsterMaker | None = field(default_factory=lambda: LobsterMaker())
+    lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
     delete_wavecars: bool = True
     address_min_basis: str | None = None
     address_max_basis: str | None = None
