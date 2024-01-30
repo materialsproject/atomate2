@@ -1313,9 +1313,9 @@ def read_saved_json(
     dict
         Returns a dictionary with lobster task json data corresponding to query.
     """
-    with gzip.open(filename, "rb") as f:
+    with gzip.open(filename, "rb") as file:
         lobster_data = {}
-        objects = ijson.items(f, "item", use_float=True)
+        objects = ijson.items(file, "item", use_float=True)
         for obj in objects:
             if query is None:
                 for field, data in obj.items():
