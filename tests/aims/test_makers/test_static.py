@@ -27,9 +27,7 @@ def test_static_maker(si, tmp_path, mock_aims, species_dir):
         "species_dir": (species_dir / "light").as_posix(),
     }
     # generate job
-    maker = StaticMaker(
-        input_set_generator=StaticSetGenerator(user_params=parameters)
-    )
+    maker = StaticMaker(input_set_generator=StaticSetGenerator(user_params=parameters))
     maker.name = "base"
     job = maker.make(si)
 
