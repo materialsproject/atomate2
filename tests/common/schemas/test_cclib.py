@@ -48,12 +48,11 @@ def test_cclib_taskdoc(test_dir):
 
     # Now we will try two possible extensions, but we will make sure that
     # it fails because the newest log file (.txt) is not valid
-    with open(p / "test.txt", "w") as f:
-        f.write("I am a dummy log file")
-    with pytest.raises(Exception) as e:
+    with open(p / "test.txt", "w") as file:
+        file.write("I am a dummy log file")
+    with pytest.raises(ValueError, match="Could not parse"):
         doc = TaskDocument.from_logfile(p, [".log", ".txt"]).dict()
     os.remove(p / "test.txt")
-    assert "Could not parse" in str(e.value)
 
     # Test a population analysis
     doc = TaskDocument.from_logfile(p, "psi_test.out", analysis="MBO").dict()

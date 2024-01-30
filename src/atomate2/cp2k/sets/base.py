@@ -106,14 +106,14 @@ class Cp2kInputSet(InputSet):
         }
         inputs.update(self.optional_files)
 
-        for k, v in inputs.items():
-            fn = v.get("filename")
-            obj = v.get("object")
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / fn, "wt") as f:
-                    f.write(str(obj))
-            elif not overwrite and (directory / fn).exists():
-                raise FileExistsError(f"{directory / fn} already exists.")
+        for key, val in inputs.items():
+            filename = val.get("filename")
+            obj = val.get("object")
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / filename, "wt") as file:
+                    file.write(str(obj))
+            elif not overwrite and (directory / filename).exists():
+                raise FileExistsError(f"{directory / filename} already exists.")
 
     @staticmethod
     def from_directory(
