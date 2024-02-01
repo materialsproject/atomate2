@@ -39,14 +39,17 @@ class AdsorptionMaker(Maker):
 
     static_energy_maker: BaseVaspMaker = field(default_factory=StaticMaker())
 
+    def __init__(self):
+        self.molecule_dft_energy = None
+
     def make(
             self,
             molecule: Molecule,
             structure: Structure,
             min_vacuum: float = 20.0,
             min_slab_size: float = 10.0,
-            min_lw: float = 10.0.
-            surface_idx,
+            min_lw: float = 10.0,
+            surface_idx = (0, 0, 1),
             prev_dir: str | Path | None = None,
             molecule_dft_energy: float | None = None,
             slab_dft_energy: float | None = None,
