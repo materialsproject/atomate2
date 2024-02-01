@@ -109,7 +109,7 @@ class VaspInputSet(InputSet):
                         # write POSCAR with more significant figures
                         file.write(val.get_str(significant_figures=16))
                     else:
-                        file.write(val.__str__())
+                        file.write(str(val))
             elif not overwrite and (directory / key).exists():
                 raise FileExistsError(f"{directory / key} already exists.")
 
