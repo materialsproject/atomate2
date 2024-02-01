@@ -30,6 +30,7 @@ class AdsorptionMaker(Maker):
     name: str = "adsorption"
     get_supercell_size_kwargs: dict = field(default_factory=dict)
 
+
     bulk_relax_maker: BaseVaspMaker = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
