@@ -258,6 +258,13 @@ VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: <<LOBSTER_CMD>>
 ```
 
+```{note}
+A LOBSTER workflow with settings compatible to LOBSTER database (Naik, A.A., et al. Sci Data 10, 610 (2023). https://doi.org/10.1038/s41597-023-02477-5 , currently being integrated into Materials Project) is also available now,
+which could be used by simply importing from atomate2.vasp.flows.mp > MPVaspLobsterMaker
+instead of VaspLobsterMaker. Rest of the things to execute the workflow stays same as
+shown below.
+```
+
 The corresponding flow could, for example, be started with the following code:
 
 ```py
