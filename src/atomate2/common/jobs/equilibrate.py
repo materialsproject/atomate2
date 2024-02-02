@@ -28,7 +28,7 @@ BUFFER = 0.1  # gives it enough room to slosh back
 class EquilibrateVolumeMaker(Maker):
     name: str = "equilibrate volume seacher"
     scale_factor_increment: float = 0.2
-    convergence_md_maker: Maker | None
+    convergence_md_maker: Maker | None = Maker
 
     @job
     def make(
