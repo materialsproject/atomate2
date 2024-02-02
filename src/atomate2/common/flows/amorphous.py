@@ -21,9 +21,9 @@ if TYPE_CHECKING:
 @dataclass
 class FastQuenchMaker(Maker):
     name: str = "fast quench"
-    relax_maker: Maker
+    relax_maker: Maker = Maker
     relax_maker2: Maker | None = None
-    static_maker: Maker
+    static_maker: Maker = Maker
 
     def make(self, structure: Structure) -> Flow:
         relax1 = self.relax_maker.make(structure)
@@ -46,7 +46,7 @@ class FastQuenchMaker(Maker):
 @dataclass
 class SlowQuenchMaker(Maker):
     name: str = "slow quench"
-    md_maker = MDMaker  # Goal is to eventually migrate to the general Maker
+    md_maker: Maker = MDMaker  # Goal is to eventually migrate to the general Maker
     quench_tempature_setup: dict = field(
         default_factory=lambda: {"start_temp": 3000, "end_temp": 500, "temp_step": 500}
     )
@@ -114,7 +114,7 @@ class MPMorphMDMaker(Maker):
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = (
         None  # May need to fix this into ForceFieldMDMaker later..)
     )
-    production_md_maker: Maker  # Same issue as line above
+    production_md_maker: Maker = Maker  # Same issue as line above
 
     def make(
         self,
