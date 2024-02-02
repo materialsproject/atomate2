@@ -27,7 +27,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
 
     name: str = "MP Morph vasp md"
     temperature: int = 300
-    end_temp: int | None = None
+    end_temp: int = 300
     steps_convergence: int = 2000
     steps_quench: int = 500  # check old MPMorph code
     quench_temps: dict = {
