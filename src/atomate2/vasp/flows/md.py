@@ -32,7 +32,11 @@ class MultiMDMaker(Maker):
     """
 
     name: str = "multi md"
-    md_makers: list[BaseVaspMaker] = field(default_factory=lambda: [MDMaker()])
+    md_makers: list[BaseVaspMaker] = field(
+        default_factory=lambda: [
+            MDMaker(copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)})
+        ]
+    )
 
     def make(
         self,
