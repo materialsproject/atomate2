@@ -10,16 +10,14 @@ from atomate2.vasp.sets.core import MDSetGenerator
 
 from pymatgen.io.vasp import Kpoints
 
+from atomate2.common.jobs.equilibrate import EquilibrateVolumeMaker
+from atomate2.common.flows.amorphous import (
+    FastQuenchMaker,
+    SlowQuenchMaker,
+    MPMorphMDMaker,
+)
+
 import math
-
-if TYPE_CHECKING:
-
-    from atomate2.common.jobs.equilibrate import EquilibrateVolumeMaker
-    from atomate2.common.flows.amorphous import (
-        FastQuenchMaker,
-        SlowQuenchMaker,
-        MPMorphMDMaker,
-    )
 
 
 @dataclass

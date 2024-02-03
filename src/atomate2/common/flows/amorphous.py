@@ -4,18 +4,56 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Flow, Maker
-from atomate2.common.jobs.equilibrate import EquilibrateVolumeMaker
+from jobflow import Flow, Maker, Response
+from atomate2.common.flows.eos import CommonEosMaker
 
 from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.sets.core import MDSetGenerator
 
+from atomate2.common.jobs.eos import apply_strain_to_structure
 import numpy as np
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core import Structure
+
+
+@dataclass
+class EquilibriumVolumeMaker(Maker):
+    name: str = "Equilibrium Volume Maker"
+    eos_maker: CommonEosMaker = field(
+        default_factory=lambda: CommonEosMaker(
+            eos_relax_maker=Maker(),
+            number_of_frames=3,
+        )
+    )  # check logic on this line
+
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        eos_flow = self.eos_maker.make(structure, prev_dir)
+
+        equil_volume, max_explored_volume, min_explored_volume = (
+            eos_flow.output["relax"]["V0"],
+            max(eos_flow.output["relax"]["volumes"]),
+            min(eos_flow.output["relax"]["volumes"]),
+        )
+
+        if equil_volume < max_explored_volume and equil_volume > min_explored_volume:
+            final_structure = structure.copy()
+            final_structure.scale_lattice(equil_volume)
+            return final_structure
+
+        elif equil_volume > max_explored_volume:
+            self.eos_maker.linear_strain = (0, 0.2)
+            self.eos_maker.number_of_frames = 2
+
+        elif equil_volume < min_explored_volume:
+            self.eos_maker.linear_strain = (-0.2, 0)
+            self.eos_maker.number_of_frames = 2
+
+        eos_flow_response = self.eos_maker.make(structure, eos_flow.output.dir_name)
+
+        return Response(replace=eos_flow_response, output=eos_flow_response.output)
 
 
 @dataclass
@@ -46,7 +84,7 @@ class FastQuenchMaker(Maker):
 @dataclass
 class SlowQuenchMaker(Maker):
     name: str = "slow quench"
-    md_maker: Maker = MDMaker  # Goal is to eventually migrate to the general Maker
+    md_maker: Maker = Maker  # Goal is to eventually migrate to the general Maker
     quench_tempature_setup: dict = field(
         default_factory=lambda: {"start_temp": 3000, "end_temp": 500, "temp_step": 500}
     )
@@ -108,13 +146,13 @@ class MPMorphMDMaker(Maker):
     """
 
     name: str = "MP Morph md"
-    convergence_md_maker: EquilibrateVolumeMaker | None = (
-        None  # check logic on this line
+    convergence_md_maker: CommonEosMaker = None  # check logic on this line
+    production_md_maker: Maker = (
+        Maker  # May need to fix this into ForceFieldMDMaker later..)
     )
-    quench_maker: FastQuenchMaker | SlowQuenchMaker | None = (
+    quench_maker: FastQuenchMaker | SlowQuenchMaker = (
         None  # May need to fix this into ForceFieldMDMaker later..)
     )
-    production_md_maker: Maker = Maker  # Same issue as line above
 
     def make(
         self,
@@ -141,52 +179,31 @@ class MPMorphMDMaker(Maker):
         Flow
             A flow containing series of molecular dynamics run (and relax+static).
         """
-        # Someone please help me make these if statements more efficient... :(
+        flow_jobs = []
 
         if self.convergence_md_maker is not None:
-            convergence_md_job = self.convergence_md_maker.make(structure, prev_dir)
+            convergence_flow = self.convergence_md_maker.make(structure, prev_dir)
+            flow_jobs.extend(convergence_flow.jobs)
 
-            if self.quench_maker is not None:
-                quench_job = self.quench_maker.make(
-                    convergence_md_job.output, convergence_md_job.output.dir_name
-                )
+            structure = convergence_flow.output.structure
+            prev_dir = convergence_flow.output.dir_name
 
-                production_md_job = self.production_md_maker.make(
-                    quench_job.output, quench_job.output.dir_name
-                )
+        production_flow = self.production_md_maker.make(structure, prev_dir)
 
-                return Flow(
-                    [convergence_md_job, quench_job, production_md_job],
-                    output=production_md_job.output,
-                    name="MPMorph Converge-Quench-Production MD",
-                )
+        structure = production_flow.output.structure
+        prev_dir = production_flow.output.dir_name
 
-            production_md_job = self.production_md_maker.make(
-                convergence_md_job.output, convergence_md_job.output.dir_name
-            )
-            return Flow(
-                [convergence_md_job, production_md_job],
-                output=production_md_job.output,
-                name="MPMorph Converge-Quench-Production MD",
-            )
-        if self.quench_maker is not None:
-            quench_job = self.quench_maker.make(structure, prev_dir)
+        if self.quench_maker:
+            quench_flow = self.quench_maker.make(structure, prev_dir)
+            flow_jobs.extend(quench_flow.jobs)
 
-            production_md_job = self.production_md_maker.make(
-                quench_job.output, quench_job.output.dir_name
-            )
+        production_flow = self.production_md_maker.make(structure, prev_dir)
+        flow_jobs.extend(production_flow.jobs)
 
-            return Flow(
-                [quench_job, production_md_job],
-                output=production_md_job.output,
-                name="MPMorph Converge-Quench-Production MD",
-            )
-
-        production_md_job = self.production_md_maker.make(structure, prev_dir)
         return Flow(
-            [production_md_job],
-            output=production_md_job.output,
-            name="MPMorph Converge-Quench-Production MD",
+            flow_jobs,
+            output=production_flow.output,
+            name=self.name,
         )
 
 
