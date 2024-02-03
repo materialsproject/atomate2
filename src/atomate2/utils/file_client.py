@@ -411,7 +411,7 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gzip -f {path!s}")
+            _, _stdout, _ = ssh.exec_command(f"gzip -f {path!s}")
 
     def gunzip(
         self,

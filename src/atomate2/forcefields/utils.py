@@ -114,18 +114,16 @@ class TrajectoryObserver:
         -------
             None
         """
-        with open(filename, "wb") as f:
-            pickle.dump(
-                {
-                    "energy": self.energies,
-                    "forces": self.forces,
-                    "stresses": self.stresses,
-                    "atom_positions": self.atom_positions,
-                    "cell": self.cells,
-                    "atomic_number": self.atoms.get_atomic_numbers(),
-                },
-                f,
-            )
+        traj_dict = {
+            "energy": self.energies,
+            "forces": self.forces,
+            "stresses": self.stresses,
+            "atom_positions": self.atom_positions,
+            "cell": self.cells,
+            "atomic_number": self.atoms.get_atomic_numbers(),
+        }
+        with open(filename, "wb") as file:
+            pickle.dump(traj_dict, file)
 
 
 class Relaxer:

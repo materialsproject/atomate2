@@ -94,11 +94,7 @@ class VaspInputSet(InputSet):
         if make_dir:
             os.makedirs(directory, exist_ok=True)
 
-        inputs = {
-            "INCAR": self.incar,
-            "KPOINTS": self.kpoints,
-            "POSCAR": self.poscar,
-        }
+        inputs = {"INCAR": self.incar, "KPOINTS": self.kpoints, "POSCAR": self.poscar}
         inputs.update(self.optional_files)
 
         if isinstance(self.potcar, Potcar):
@@ -106,16 +102,16 @@ class VaspInputSet(InputSet):
         else:
             inputs["POTCAR.spec"] = "\n".join(self.potcar)
 
-        for k, v in inputs.items():
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / k, "wt") as f:
-                    if isinstance(v, Poscar):
+        for key, val in inputs.items():
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / key, mode="wt") as file:
+                    if isinstance(val, Poscar):
                         # write POSCAR with more significant figures
-                        f.write(v.get_string(significant_figures=16))
+                        file.write(val.get_str(significant_figures=16))
                     else:
-                        f.write(v.__str__())
-            elif not overwrite and (directory / k).exists():
-                raise FileExistsError(f"{directory / k} already exists.")
+                        file.write(str(val))
+            elif not overwrite and (directory / key).exists():
+                raise FileExistsError(f"{directory / key} already exists.")
 
     @staticmethod
     def from_directory(
