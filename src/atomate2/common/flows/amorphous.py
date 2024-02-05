@@ -6,15 +6,17 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, Response
 from atomate2.common.flows.eos import CommonEosMaker
+from atomate2.common.jobs.eos import apply_strain_to_structure, postprocess_eos
 
-from atomate2.vasp.jobs.md import MDMaker
+from pymatgen.analysis.eos import EOSError
 from atomate2.vasp.sets.core import MDSetGenerator
 
-from atomate2.common.jobs.eos import apply_strain_to_structure
 import numpy as np
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    from jobflow import Job
 
     from pymatgen.core import Structure
 
@@ -22,38 +24,88 @@ if TYPE_CHECKING:
 @dataclass
 class EquilibriumVolumeMaker(Maker):
     name: str = "Equilibrium Volume Maker"
-    eos_maker: CommonEosMaker = field(
-        default_factory=lambda: CommonEosMaker(
-            eos_relax_maker=Maker(),
-            number_of_frames=3,
-        )
-    )  # check logic on this line
+    eos_relax_maker: Maker | None = None
+    postprocessor: Job = postprocess_eos  # TODO change to postprocess_pv_eos once ready
+    min_strain: float = 0.02
 
-    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        eos_flow = self.eos_maker.make(structure, prev_dir)
+    def make(
+        self,
+        structure: Structure,
+        prev_dir: str | Path | None = None,
+        flow_fit_outputs: dict | None = None,
+    ) -> Flow:
 
-        equil_volume, max_explored_volume, min_explored_volume = (
-            eos_flow.output["relax"]["V0"],
-            max(eos_flow.output["relax"]["volumes"]),
-            min(eos_flow.output["relax"]["volumes"]),
-        )
+        if flow_fit_outputs is None:
 
-        if equil_volume < max_explored_volume and equil_volume > min_explored_volume:
-            final_structure = structure.copy()
-            final_structure.scale_lattice(equil_volume)
-            return final_structure
+            eos_maker = CommonEosMaker(
+                name=self.name + " initial EOS fit",
+                initial_relax_maker=None,
+                eos_relax_maker=self.eos_relax_maker,
+                static_maker=None,
+                postprocessor=self.postprocessor,
+                number_of_frames=4,
+            )
+            eos_flow = eos_maker.make(structure=structure, prev_dir=prev_dir)
 
-        elif equil_volume > max_explored_volume:
-            self.eos_maker.linear_strain = (0, 0.2)
-            self.eos_maker.number_of_frames = 2
+            eos_tags = ("energies", "volumes", "pressure")
+            flow_fit_outputs = {
+                key: eos_flow.output["relax"].get(key, []) for key in eos_tags
+            }
 
-        elif equil_volume < min_explored_volume:
-            self.eos_maker.linear_strain = (-0.2, 0)
-            self.eos_maker.number_of_frames = 2
+            flow_fit_outputs["V0"] = eos_flow.output["relax"]["EOS"][
+                "birch_murnaghan"
+            ].get("V0")
+            flow_fit_outputs["Vmax"] = max(eos_flow.output["relax"]["volumes"])
+            flow_fit_outputs["Vmin"] = min(eos_flow.output["relax"]["volumes"])
 
-        eos_flow_response = self.eos_maker.make(structure, eos_flow.output.dir_name)
+        if flow_fit_outputs["V0"]:
+            if (
+                flow_fit_outputs["V0"] < flow_fit_outputs["Vmax"]
+                and flow_fit_outputs["V0"] > flow_fit_outputs["Vmin"]
+            ):
+                final_structure = structure.copy()
+                final_structure.scale_lattice(flow_fit_outputs["V0"])
+                return final_structure
 
-        return Response(replace=eos_flow_response, output=eos_flow_response.output)
+            elif flow_fit_outputs["V0"] > flow_fit_outputs["Vmax"]:
+                v_ref = flow_fit_outputs["Vmax"]
+
+            elif flow_fit_outputs["V0"] < flow_fit_outputs["Vmin"]:
+                v_ref = flow_fit_outputs["Vmin"]
+
+            eps_0 = (flow_fit_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
+            linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
+
+        else:
+            linear_strain = [-self.min_strain, self.min_strain]
+
+        deformation_matrices = [np.eye(3) * (1 + eps) for eps in linear_strain]
+        deformed_structures = apply_strain_to_structure(structure, deformation_matrices)
+
+        eos_jobs = []
+        for structure in deformed_structures:
+            eos_jobs.append(
+                self.eos_relax_maker.make(
+                    structure=structure,
+                    prev_dir=None,
+                )
+            )
+            flow_fit_outputs["energies"].append(eos_jobs[-1].output.output.energy)
+            flow_fit_outputs["volumes"].extend(eos_jobs[-1].ouput.structure.volume)
+            flow_fit_outputs["pressure"].append(
+                1 / 3 * np.trace(eos_jobs[-1].output.stress)
+            )
+
+        postprocess_job = self.postprocessor(flow_fit_outputs)
+        postprocess_job.name = self.name + "_" + postprocess_job.name
+        postprocess_output = postprocess_job.output
+        eos_jobs.append(postprocess_job)
+
+        recursive = self.make(structure, flow_fit_outputs)
+
+        new_eos_flow = Flow([*eos_jobs, recursive], output=postprocess_output)
+
+        return Response(replace=new_eos_flow, output=recursive.output)
 
 
 @dataclass
@@ -82,7 +134,7 @@ class FastQuenchMaker(Maker):
 
 
 @dataclass
-class SlowQuenchMaker(Maker):
+class SlowQuenchMaker(Maker):  # Work in Progress
     name: str = "slow quench"
     md_maker: Maker = Maker  # Goal is to eventually migrate to the general Maker
     quench_tempature_setup: dict = field(
@@ -146,7 +198,7 @@ class MPMorphMDMaker(Maker):
     """
 
     name: str = "MP Morph md"
-    convergence_md_maker: CommonEosMaker = None  # check logic on this line
+    convergence_md_maker: EquilibriumVolumeMaker = None  # check logic on this line
     production_md_maker: Maker = (
         Maker  # May need to fix this into ForceFieldMDMaker later..)
     )
