@@ -54,7 +54,7 @@ forcefields = [
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
-    "furo==2023.9.10",
+    "furo==2024.1.29",
     "ipython==8.21.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
