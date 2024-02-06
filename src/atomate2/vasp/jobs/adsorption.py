@@ -50,7 +50,6 @@ def removeAdsorbate(slab):
     # Remove the adsorbate sites
     for idx in adsorbate_indices:
         slab.remove_sites([idx])
-
     return slab
 
 @job(data=[Structure])
@@ -93,7 +92,7 @@ def generate_adslabs(
 @job
 def run_adslabs_job(
     adslab_structures: list[Structure],
-    relax_maker: adslabRelaxMaker,
+    relax_maker: AdslabRelaxMaker,
     prev_dir: str | Path | None = None,
     ) -> Flow:
 
@@ -156,7 +155,7 @@ def adsorption_calculations(
 
 
 @dataclass
-class moleculeRelaxMaker(BaseVaspMaker):
+class MoleculeRelaxMaker(BaseVaspMaker):
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
@@ -180,7 +179,7 @@ class moleculeRelaxMaker(BaseVaspMaker):
     )
 
 @dataclass
-class adslabRelaxMaker(BaseVaspMaker):
+class AdslabRelaxMaker(BaseVaspMaker):
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(

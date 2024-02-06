@@ -7,9 +7,9 @@ from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.adsorption import (
     get_boxed_molecule,
-    adslabRelaxMaker,
+    AdslabRelaxMaker,
     StaticMaker,
-    moleculeRelaxMaker,
+    MoleculeRelaxMaker,
     generate_slab,
     generate_adslabs,
     run_adslabs_job,
@@ -34,9 +34,9 @@ class AdsorptionMaker(Maker):
     bulk_relax_maker: BaseVaspMaker = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    mol_relax_maker: BaseVaspMaker = field(default_factory=moleculeRelaxMaker())
+    mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker())
 
-    adslab_relax_maker: BaseVaspMaker = field(default_factory=adslabRelaxMaker())
+    adslab_relax_maker: BaseVaspMaker = field(default_factory=AdslabRelaxMaker())
 
     static_energy_maker: BaseVaspMaker = field(default_factory=StaticMaker())
 
