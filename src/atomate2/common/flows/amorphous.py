@@ -6,9 +6,12 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, Response
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.common.jobs.eos import apply_strain_to_structure, postprocess_eos
+from atomate2.common.jobs.eos import (
+    apply_strain_to_structure,
+    postprocess_eos,
+    extract_eos_sampling_data,
+)
 
-from pymatgen.analysis.eos import EOSError
 from atomate2.vasp.sets.core import MDSetGenerator
 
 import numpy as np
@@ -26,7 +29,7 @@ class EquilibriumVolumeMaker(Maker):
     name: str = "Equilibrium Volume Maker"
     eos_relax_maker: Maker | None = None
     postprocessor: Job = postprocess_eos  # TODO change to postprocess_pv_eos once ready
-    min_strain: float = 0.02
+    min_strain: float = 0.5
 
     def make(
         self,
@@ -47,16 +50,7 @@ class EquilibriumVolumeMaker(Maker):
             )
             eos_flow = eos_maker.make(structure=structure, prev_dir=prev_dir)
 
-            eos_tags = ("energies", "volumes", "pressure")
-            flow_fit_outputs = {
-                key: eos_flow.output["relax"].get(key, []) for key in eos_tags
-            }
-
-            flow_fit_outputs["V0"] = eos_flow.output["relax"]["EOS"][
-                "birch_murnaghan"
-            ].get("V0")
-            flow_fit_outputs["Vmax"] = max(eos_flow.output["relax"]["volumes"])
-            flow_fit_outputs["Vmin"] = min(eos_flow.output["relax"]["volumes"])
+            eos_flow.jobs.append(extract_eos_sampling_data(eos_flow.output))
 
         if flow_fit_outputs["V0"]:
             if (

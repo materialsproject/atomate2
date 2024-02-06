@@ -55,9 +55,9 @@ def postprocess_eos(output: dict, eos_models: list[str] = None) -> dict:
     for jobtype in jobtypes:
         if len(list(output.get(jobtype, []))) == 0:
             continue
-
-        output[jobtype]["energies"].append(output[jobtype]["E0"])
-        output[jobtype]["volumes"].append(output[jobtype]["V0"])
+        if "E0" and "V0" in output[jobtype]:
+            output[jobtype]["energies"].append(output[jobtype]["E0"])
+            output[jobtype]["volumes"].append(output[jobtype]["V0"])
         for key in ("energies", "volumes"):
             output[jobtype][key] = np.array(output[jobtype][key])
 
@@ -113,3 +113,38 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
         )
         transformations += [ts]
     return transformations
+
+
+@job
+def extract_eos_sampling_data(
+    output: dict,
+) -> dict:  # TODO specify the dictionary format
+    """
+    Extracts the energy, volume, and pressure (if available) data from the output of an EOS flow.
+
+    Parameters
+    ----------
+    output : dict
+        The output of an EOS flow.
+
+    Returns
+    -------
+    dict
+        The energy, volume, pressure data dictionary from the output of an EOS flow.
+    """
+
+    eos_tags = ("energies", "volumes", "pressure")
+
+    flow_fit_outputs = {}
+
+    for key in eos_tags:
+        try:
+            flow_fit_outputs[key] = output["relax"][key]
+        except KeyError:
+            flow_fit_outputs[key] = []
+
+    flow_fit_outputs["V0"] = output["relax"]["EOS"]["birch_murnaghan"]["V0"]
+    flow_fit_outputs["Vmax"] = max(output["relax"]["volumes"])
+    flow_fit_outputs["Vmin"] = min(output["relax"]["volumes"])
+
+    return flow_fit_outputs

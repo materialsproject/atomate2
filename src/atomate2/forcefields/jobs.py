@@ -11,8 +11,6 @@ from jobflow import Maker, job
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer
 
-from atomate2.forcefields.sets import ASEMDInputs
-from ase.md import Langevin
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -145,78 +143,6 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
 
     def _evaluate_static(self, structure: Structure) -> dict:
         raise NotImplementedError
-
-
-@dataclass
-class ForceFieldMDMaker(ForceFieldRelaxMaker):
-    name: str = "ForceField MD Maker"
-    force_field_name: str = "Forcefield"
-    md_input_set: ASEMDInputs = field(default_factory=ASEMDInputs)  # works?
-    task_document_kwargs: dict = field(default_factory=dict)
-
-    @job(output_schema=ForceFieldTaskDocument)
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
-        """
-        Perform a molecular dynamics run of a structure using a force field.
-
-        Parameters
-        ----------
-        structure: .Structure
-            pymatgen structure.
-        prev_dir : str or Path or None
-            A previous calculation directory to copy output files from. Unused, just
-                added to match the method signature of other makers.
-        """
-        if self.steps < 0:
-            logger.warning(
-                "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
-            )
-
-        result = self._md_run(structure, self.md_input_set)
-
-        return ForceFieldTaskDocument.from_ase_compatible_result(
-            self.force_field_name,
-            result,
-            self.relax_cell,
-            self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
-            **self.task_document_kwargs,
-            **self.md_input_set,  # works?
-        )
-
-    def _relax(self, structure: Structure) -> dict:
-        raise NotImplementedError
-
-
-@dataclass
-class ForceFieldLangevinMDMaker(ForceFieldMDMaker):
-    name: str = "ForceField Langevin Maker"
-    force_field_name: str = "Forcefield"
-    md_input_set: ASEMDInputs = field(default_factory=ASEMDInputs)
-
-    def _md_run(self, structure: Structure, md_input_set: ASEMDInputs, *kwargs) -> dict:
-        atoms = structure.to_ase_atoms()
-        atoms.set_calculator(md_input_set.calculator)
-
-        md = Langevin(
-            atoms=atoms,
-            temperature_K=md_input_set.temperature,
-            timestep=md_input_set.timestep,
-            friction=md_input_set.friction,
-            trajectory=md_input_set.traj_fn,
-            logfile=md_input_set.log_fn,
-            loginterval=md_input_set.loginterval,
-            append_trajectory=md_input_set.append_trajectory,
-            **kwargs,
-        )
-
-        return md.run(
-            steps=md_input_set.steps,
-        )
 
 
 @dataclass

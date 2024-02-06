@@ -125,6 +125,10 @@ class CommonEosMaker(Maker):
 
         job_types = ("relax", "static") if self.static_maker else ("relax",)
         for key in job_types:
+            if key not in flow_output:
+                # If not, add the key with empty lists for energies and volumes
+                flow_output[key] = {"energies": [], "volumes": []}
+
             flow_output[key]["energies"] = []
             flow_output[key]["volumes"] = []
 
