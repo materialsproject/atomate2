@@ -147,4 +147,7 @@ def extract_eos_sampling_data(
     flow_fit_outputs["Vmax"] = max(output["relax"]["volumes"])
     flow_fit_outputs["Vmin"] = min(output["relax"]["volumes"])
 
+    flow_fit_outputs["V0<Vmax"] = flow_fit_outputs["V0"] < flow_fit_outputs["Vmax"]
+    flow_fit_outputs["V0>Vmin"] = flow_fit_outputs["V0"] > flow_fit_outputs["Vmin"]
+
     return flow_fit_outputs

@@ -55,21 +55,18 @@ class EquilibriumVolumeMaker(Maker):
 
             eos_jobs = [*eos_flow.jobs, extract_job]
 
-            working_outputs = extract_job.output
+            working_outputs = {**extract_job.output}
 
         else:
-            if (
-                working_outputs["V0"] < working_outputs["Vmax"]
-                and working_outputs["V0"] > working_outputs["Vmin"]
-            ):
+            if working_outputs["V0<Vmax"] and working_outputs["V0>Vmin"]:
                 final_structure = structure.copy()
                 final_structure.scale_lattice(working_outputs["V0"])
                 return final_structure
 
-            elif working_outputs["V0"] > working_outputs["Vmax"]:
+            elif not working_outputs["V0<Vmax"]:
                 v_ref = working_outputs["Vmax"]
 
-            elif working_outputs["V0"] < working_outputs["Vmin"]:
+            elif not working_outputs["V0>Vmin"]:
                 v_ref = working_outputs["Vmin"]
 
             eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
