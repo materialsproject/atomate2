@@ -8,7 +8,8 @@ from jobflow import Flow, Maker
 from atomate2.vasp.jobs.adsorption import (
     get_boxed_molecule,
     AdslabRelaxMaker,
-    StaticMaker,
+    SlabStaticMaker,
+    MolStaticMaker,
     MoleculeRelaxMaker,
     generate_slab,
     generate_adslabs,
@@ -66,7 +67,7 @@ class AdsorptionMaker(Maker):
             jobs.append(mol_optimize_job)
             optimized_molecule = mol_optimize_job.output.structure
 
-            mol_static_job = StaticMaker.make(molecule_structure)
+            mol_static_job = MolStaticMaker.make(molecule_structure)
             mol_static_job.append_name(f"molecule static job")
             jobs.append(mol_static_job)
             self.molecule_dft_energy = mol_static_job.output.output.energy
@@ -91,7 +92,7 @@ class AdsorptionMaker(Maker):
             jobs.append(slab_optimize_job)
             optimized_slab = slab_optimize_job.output.structure
 
-            slab_static_job = StaticMaker.make(optimized_slab)
+            slab_static_job = SlabStaticMaker.make(optimized_slab)
             slab_static_job.append_name(f"slab static job")
             jobs.append(slab_static_job)
             self.slab_dft_energy = slab_static_job.output.output.energy

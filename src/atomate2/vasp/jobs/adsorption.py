@@ -12,6 +12,7 @@ from pymatgen.core import Structure, Molecule, Element
 
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core.surface import SlabGenerator
+from pymatgen.io.vasp import Kpoints
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
@@ -159,7 +160,12 @@ class MoleculeRelaxMaker(BaseVaspMaker):
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 7_000},
+            user_kpoints_settings=Kpoints.from_dict({
+                'nkpoints': 0,
+                'generation_style': 'Gamma',
+                'kpoints': [[11, 11, 11]],
+                'usershift': [0, 0, 0],
+                'comment': 'Automatic mesh'}),
             user_incar_settings={
                 "ALGO": "Normal",
                 "IBRION": 2,
@@ -183,7 +189,12 @@ class AdslabRelaxMaker(BaseVaspMaker):
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 7_000},
+            user_kpoints_settings=Kpoints.from_dict({
+                'nkpoints': 0,
+                'generation_style': 'Gamma',
+                'kpoints': [[3, 3, 1]],
+                'usershift': [0, 0, 0],
+                'comment': 'Automatic mesh'}),
             user_incar_settings={
                 "ALGO": "Normal",
                 "IBRION": 2,
@@ -203,11 +214,42 @@ class AdslabRelaxMaker(BaseVaspMaker):
     )
 
 @dataclass
-class StaticMaker(BaseVaspMaker):
+class SlabStaticMaker(BaseVaspMaker):
     name: str = "adsorption static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 7_000},
+            user_kpoints_settings=Kpoints.from_dict({
+                'nkpoints': 0,
+                'generation_style': 'Gamma',
+                'kpoints': [[3, 3, 1]],
+                'usershift': [0, 0, 0],
+                'comment': 'Automatic mesh'}),
+            user_incar_settings={
+                "ALGO": "Normal",
+                "ENCUT": 700,
+                "GGA": "RP",
+                "EDIFF": 1e-7,
+                "LAECHG": False,
+                "LREAL": False,
+                "LCHARG": False,
+                "LDAU": False,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+@dataclass
+class MolStaticMaker(BaseVaspMaker):
+    name: str = "adsorption static calculation"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings=Kpoints.from_dict({
+                'nkpoints': 0,
+                'generation_style': 'Gamma',
+                'kpoints': [[11, 11, 11]],
+                'usershift': [0, 0, 0],
+                'comment': 'Automatic mesh'}),
             user_incar_settings={
                 "ALGO": "Normal",
                 "ENCUT": 700,
