@@ -2,6 +2,7 @@
 
 import logging
 from collections.abc import Sequence
+from itertools import starmap
 from typing import Any, Callable, Optional, Union
 
 import numpy as np
@@ -237,7 +238,7 @@ class CCDDocument(BaseModel):
             UUID of relaxed calculation in charge state (q2).
         """
 
-        def get_ent(
+        def get_cs_entry(
             struct: Structure,
             energy: float,
             dir_name: str,
@@ -249,14 +250,16 @@ class CCDDocument(BaseModel):
                 data={"dir_name": dir_name, "uuid": uuid},
             )
 
-        entries1 = [
-            get_ent(s, e, d, u)
-            for s, e, d, u in zip(structures1, energies1, static_dirs1, static_uuids1)
-        ]
-        entries2 = [
-            get_ent(s, e, d, u)
-            for s, e, d, u in zip(structures2, energies2, static_dirs2, static_uuids2)
-        ]
+        entries1 = list(
+            starmap(
+                get_cs_entry, zip(structures1, energies1, static_dirs1, static_uuids1)
+            )
+        )
+        entries2 = list(
+            starmap(
+                get_cs_entry, zip(structures2, energies2, static_dirs2, static_uuids2)
+            )
+        )
 
         return cls.from_entries(entries1, entries2, relaxed_uuid1, relaxed_uuid2)
 
