@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Flow, Maker, Response
+from jobflow import job, Flow, Maker, Response
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import (
     apply_strain_to_structure,
@@ -32,13 +32,15 @@ class EquilibriumVolumeMaker(Maker):
     extracting_job: Job = extract_eos_sampling_data
     min_strain: float = 0.5
 
+    @job
     def make(
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
         working_outputs: dict | None = None,
     ) -> Flow:
-
+        print("new print test")
+        print(working_outputs)
         if working_outputs is None:
 
             eos_maker = CommonEosMaker(
@@ -55,9 +57,10 @@ class EquilibriumVolumeMaker(Maker):
 
             eos_jobs = [*eos_flow.jobs, extract_job]
 
-            working_outputs = {**extract_job.output}
+            working_outputs = extract_job.output
 
         else:
+
             if working_outputs["V0<Vmax"] and working_outputs["V0>Vmin"]:
                 final_structure = structure.copy()
                 final_structure.scale_lattice(working_outputs["V0"])
@@ -96,7 +99,7 @@ class EquilibriumVolumeMaker(Maker):
             working_outputs = postprocess_job.output
             eos_jobs.append(postprocess_job)
 
-        recursive = self.make(structure, working_outputs)
+        recursive = self.make(structure=structure, working_outputs=working_outputs)
 
         new_eos_flow = Flow([*eos_jobs, recursive], output=working_outputs)
 

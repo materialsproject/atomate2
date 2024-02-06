@@ -151,3 +151,25 @@ def extract_eos_sampling_data(
     flow_fit_outputs["V0>Vmin"] = flow_fit_outputs["V0"] > flow_fit_outputs["Vmin"]
 
     return flow_fit_outputs
+
+
+@job
+def rescale_volume(structure: Structure, new_volume: float) -> Structure:
+    """
+    Rescale the input structure to a specified volume.
+
+    Parameters
+    ----------
+    structure : Structure
+        Input structure to rescale
+    volume : float
+        Target volume to rescale the input structure to
+    prev_dir : str or Path or None (default)
+        The previous directory in which the input structure was relaxed
+
+    Returns
+    -------
+    Structure
+        A rescaled structure to the target volume
+    """
+    return structure.scale_lattice(new_volume)
