@@ -35,10 +35,10 @@ class EquilibriumVolumeMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        flow_fit_outputs: dict | None = None,
+        working_outputs: dict | None = None,
     ) -> Flow:
 
-        if flow_fit_outputs is None:
+        if working_outputs is None:
 
             eos_maker = CommonEosMaker(
                 name=self.name + " initial EOS fit",
@@ -50,56 +50,63 @@ class EquilibriumVolumeMaker(Maker):
             )
             eos_flow = eos_maker.make(structure=structure, prev_dir=prev_dir)
 
-            eos_flow.jobs.append(extract_eos_sampling_data(eos_flow.output))
+            extract_job = extract_eos_sampling_data(eos_flow.output)
 
-        if flow_fit_outputs["V0"]:
-            if (
-                flow_fit_outputs["V0"] < flow_fit_outputs["Vmax"]
-                and flow_fit_outputs["V0"] > flow_fit_outputs["Vmin"]
-            ):
-                final_structure = structure.copy()
-                final_structure.scale_lattice(flow_fit_outputs["V0"])
-                return final_structure
+            eos_jobs = [*eos_flow.jobs, extract_job]
 
-            elif flow_fit_outputs["V0"] > flow_fit_outputs["Vmax"]:
-                v_ref = flow_fit_outputs["Vmax"]
-
-            elif flow_fit_outputs["V0"] < flow_fit_outputs["Vmin"]:
-                v_ref = flow_fit_outputs["Vmin"]
-
-            eps_0 = (flow_fit_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
-            linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
+            working_outputs = extract_job.output
 
         else:
-            linear_strain = [-self.min_strain, self.min_strain]
+            if working_outputs["V0"]:
+                if (
+                    working_outputs["V0"] < working_outputs["Vmax"]
+                    and working_outputs["V0"] > working_outputs["Vmin"]
+                ):
+                    final_structure = structure.copy()
+                    final_structure.scale_lattice(working_outputs["V0"])
+                    return final_structure
 
-        deformation_matrices = [np.eye(3) * (1 + eps) for eps in linear_strain]
-        deformed_structures = apply_strain_to_structure(structure, deformation_matrices)
+                elif working_outputs["V0"] > working_outputs["Vmax"]:
+                    v_ref = working_outputs["Vmax"]
 
-        eos_jobs = []
-        for structure in deformed_structures:
-            eos_jobs.append(
-                self.eos_relax_maker.make(
-                    structure=structure,
-                    prev_dir=None,
+                elif working_outputs["V0"] < working_outputs["Vmin"]:
+                    v_ref = working_outputs["Vmin"]
+
+                eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
+                linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
+
+            else:
+                linear_strain = [-self.min_strain, self.min_strain]
+
+            deformation_matrices = [np.eye(3) * (1 + eps) for eps in linear_strain]
+            deformed_structures = apply_strain_to_structure(
+                structure, deformation_matrices
+            )
+
+            eos_jobs = []
+            for structure in deformed_structures:
+                eos_jobs.append(
+                    self.eos_relax_maker.make(
+                        structure=structure,
+                        prev_dir=None,
+                    )
                 )
-            )
-            flow_fit_outputs["energies"].append(eos_jobs[-1].output.output.energy)
-            flow_fit_outputs["volumes"].extend(eos_jobs[-1].ouput.structure.volume)
-            flow_fit_outputs["pressure"].append(
-                1 / 3 * np.trace(eos_jobs[-1].output.stress)
-            )
+                working_outputs["energies"].append(eos_jobs[-1].output.output.energy)
+                working_outputs["volumes"].extend(eos_jobs[-1].ouput.structure.volume)
+                working_outputs["pressure"].append(
+                    1 / 3 * np.trace(eos_jobs[-1].output.stress)
+                )
 
-        postprocess_job = self.postprocessor(flow_fit_outputs)
-        postprocess_job.name = self.name + "_" + postprocess_job.name
-        postprocess_output = postprocess_job.output
-        eos_jobs.append(postprocess_job)
+            postprocess_job = self.postprocessor(working_outputs)
+            postprocess_job.name = self.name + "_" + postprocess_job.name
+            working_outputs = postprocess_job.output
+            eos_jobs.append(postprocess_job)
 
-        recursive = self.make(structure, flow_fit_outputs)
+        recursive = self.make(structure, working_outputs)
 
-        new_eos_flow = Flow([*eos_jobs, recursive], output=postprocess_output)
+        new_eos_flow = Flow([*eos_jobs, recursive], output=working_outputs)
 
-        return Response(replace=new_eos_flow, output=recursive.output)
+        return Response(replace=new_eos_flow, output=new_eos_flow.output)
 
 
 @dataclass
