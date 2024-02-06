@@ -29,6 +29,7 @@ class EquilibriumVolumeMaker(Maker):
     name: str = "Equilibrium Volume Maker"
     eos_relax_maker: Maker | None = None
     postprocessor: Job = postprocess_eos  # TODO change to postprocess_pv_eos once ready
+    extracting_job: Job = extract_eos_sampling_data
     min_strain: float = 0.5
 
     def make(
@@ -50,33 +51,29 @@ class EquilibriumVolumeMaker(Maker):
             )
             eos_flow = eos_maker.make(structure=structure, prev_dir=prev_dir)
 
-            extract_job = extract_eos_sampling_data(eos_flow.output)
+            extract_job = self.extracting_job(eos_flow.output)
 
             eos_jobs = [*eos_flow.jobs, extract_job]
 
             working_outputs = extract_job.output
 
         else:
-            if working_outputs["V0"]:
-                if (
-                    working_outputs["V0"] < working_outputs["Vmax"]
-                    and working_outputs["V0"] > working_outputs["Vmin"]
-                ):
-                    final_structure = structure.copy()
-                    final_structure.scale_lattice(working_outputs["V0"])
-                    return final_structure
+            if (
+                working_outputs["V0"] < working_outputs["Vmax"]
+                and working_outputs["V0"] > working_outputs["Vmin"]
+            ):
+                final_structure = structure.copy()
+                final_structure.scale_lattice(working_outputs["V0"])
+                return final_structure
 
-                elif working_outputs["V0"] > working_outputs["Vmax"]:
-                    v_ref = working_outputs["Vmax"]
+            elif working_outputs["V0"] > working_outputs["Vmax"]:
+                v_ref = working_outputs["Vmax"]
 
-                elif working_outputs["V0"] < working_outputs["Vmin"]:
-                    v_ref = working_outputs["Vmin"]
+            elif working_outputs["V0"] < working_outputs["Vmin"]:
+                v_ref = working_outputs["Vmin"]
 
-                eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
-                linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
-
-            else:
-                linear_strain = [-self.min_strain, self.min_strain]
+            eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
+            linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
             deformation_matrices = [np.eye(3) * (1 + eps) for eps in linear_strain]
             deformed_structures = apply_strain_to_structure(
@@ -92,7 +89,7 @@ class EquilibriumVolumeMaker(Maker):
                     )
                 )
                 working_outputs["energies"].append(eos_jobs[-1].output.output.energy)
-                working_outputs["volumes"].extend(eos_jobs[-1].ouput.structure.volume)
+                working_outputs["volumes"].append(eos_jobs[-1].ouput.structure.volume)
                 working_outputs["pressure"].append(
                     1 / 3 * np.trace(eos_jobs[-1].output.stress)
                 )
