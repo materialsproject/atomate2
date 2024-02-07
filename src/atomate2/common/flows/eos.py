@@ -2,19 +2,21 @@
 from __future__ import annotations
 
 import contextlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.eos import apply_strain_to_structure, postprocess_eos
+from atomate2.common.jobs.eos import PostProcessEosEnergy, apply_strain_to_structure
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from jobflow import Job
     from pymatgen.core import Structure
+
+    from atomate2.common.jobs.eos import EOSPostProcessor
 
 
 @dataclass
@@ -40,9 +42,9 @@ class CommonEosMaker(Maker):
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
-    postprocessor : .job
+    postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_eos`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation
@@ -55,7 +57,7 @@ class CommonEosMaker(Maker):
     static_maker: Maker = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
-    postprocessor: Job = postprocess_eos
+    postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
     _store_transformation_information: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
@@ -75,14 +77,22 @@ class CommonEosMaker(Maker):
         """
         jobs: dict[str, list[Job]] = {key: [] for key in ("relax", "static", "utility")}
 
-        flow_output = {}
+        job_types: tuple[str, ...] = (
+            ("relax", "static") if self.static_maker else ("relax",)
+        )
+        flow_output: dict[str, dict] = {
+            key: {quantity: [] for quantity in ("energy", "volume", "stress")}
+            for key in job_types
+        }
+
         # First step: optional relaxation of structure
         if self.initial_relax_maker:
             relax_flow = self.initial_relax_maker.make(
                 structure=structure, prev_dir=prev_dir
             )
             relax_flow.name = "EOS equilibrium relaxation"
-            flow_output["relax"] = {
+
+            flow_output["initial_relax"] = {
                 "E0": relax_flow.output.output.energy,
                 "V0": relax_flow.output.structure.volume,
             }
@@ -95,7 +105,7 @@ class CommonEosMaker(Maker):
                     structure=structure, prev_dir=prev_dir
                 )
                 equil_static.name = "EOS equilibrium static"
-                flow_output["static"] = {
+                flow_output["initial_static"] = {
                     "E0": equil_static.output.output.energy,
                     "V0": equil_static.output.structure.volume,
                 }
@@ -121,11 +131,6 @@ class CommonEosMaker(Maker):
         # apply strain to structures, return list of transformations
         transformations = apply_strain_to_structure(structure, deformation_l)
         jobs["utility"] += [transformations]
-
-        job_types = ("relax", "static") if self.static_maker else ("relax",)
-        for key in job_types:
-            flow_output[key]["energies"] = []
-            flow_output[key]["volumes"] = []
 
         for idef in range(self.number_of_frames):
             if self._store_transformation_information:
@@ -154,21 +159,22 @@ class CommonEosMaker(Maker):
                 static_job.name += f" {idef}"
                 jobs["static"].append(static_job)
 
-            for key in job_types:
-                flow_output[key]["energies"].append(jobs[key][-1].output.output.energy)
-                flow_output[key]["volumes"].append(
-                    jobs[key][-1].output.structure.volume
-                )
+        for key in job_types:
+            for i in range(len(jobs[key])):
+                flow_output[key]["energy"].append(jobs[key][i].output.output.energy)
+                flow_output[key]["volume"].append(jobs[key][i].output.structure.volume)
+                flow_output[key]["stress"].append(jobs[key][i].output.output.stress)
 
-        if self.postprocessor:
-            if self.number_of_frames < 3:
+        if self.postprocessor is not None:
+            if len(jobs["relax"]) < self.postprocessor.min_data_points:
                 raise ValueError(
-                    "To perform least squares EOS fit with four parameters, "
-                    "you must specify self.number_of_frames >= 3."
+                    "To perform least squares EOS fit with "
+                    f"{self.postprocessor.__class__}, you must specify "
+                    f"self.number_of_frames >= {self.postprocessor.min_data_points}."
                 )
 
-            postprocess = self.postprocessor(flow_output)
-            postprocess.name = self.name + "_" + postprocess.name
+            postprocess = self.postprocessor.make(flow_output)
+            postprocess.name = self.name + " postprocessing"
             flow_output = postprocess.output
             jobs["utility"] += [postprocess]
 

@@ -38,7 +38,7 @@ class CHGNetEosMaker(CommonEosMaker):
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_eos`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation
@@ -80,7 +80,7 @@ class M3GNetEosMaker(CommonEosMaker):
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_eos`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation
@@ -122,7 +122,7 @@ class MACEEosMaker(CommonEosMaker):
         Number of strain calculations to do for EOS fit, default = 6.
     postprocessor : .job
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_eos`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation

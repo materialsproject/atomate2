@@ -1,9 +1,11 @@
 import pytest
 from emmet.core.tasks import TaskDoc
 from jobflow import Flow, run_locally
+from monty.serialization import loadfn
 from pymatgen.core import Structure
 from pytest import approx
 
+from atomate2.common.jobs.eos import PostProcessEosPressure
 from atomate2.vasp.flows.eos import MPGGAEosDoubleRelaxMaker, MPGGAEosMaker
 from atomate2.vasp.jobs.eos import MPGGAEosStaticMaker
 
@@ -123,7 +125,7 @@ def test_mp_eos_maker(
         static_maker=static_maker,
         number_of_frames=nframes,
         linear_strain=linear_strain,
-        postprocessor=None,
+        postprocessor=PostProcessEosPressure(),
     ).make(structure)
 
     # ensure flow runs successfully
@@ -135,6 +137,11 @@ def test_mp_eos_maker(
             jobs.extend(list(job.jobs))
         else:
             jobs.append(job)
+
+    postprocess_uuid = next(
+        job.uuid for job in jobs if job.name == "MP GGA EOS Maker postprocessing"
+    )
+    flow_output = responses[postprocess_uuid][1].output
 
     jobs = {job.name: job.uuid for job in jobs if job.name in ref_paths}
     job_output = {
@@ -153,3 +160,20 @@ def test_mp_eos_maker(
         approx(ref_energies[key]) == job_output[key].calcs_reversed[0].output.energy
         for key in ref_energies
     )
+
+    ref_eos_fit = loadfn(f"{vasp_test_dir}/{base_ref_path}/Si_pressure_EOS_fit.json.gz")
+    job_types_to_check = ("relax", "static") if do_statics else ("relax",)
+    for job_type in job_types_to_check:
+        for key in ("energy", "volume", "EOS"):
+            data = flow_output[job_type][key]
+            if isinstance(data, list):
+                assert all(
+                    approx(ref_eos_fit[job_type][key][i]) == data[i]
+                    for i in range(len(data))
+                )
+            elif isinstance(data, dict):
+                assert all(
+                    approx(v) == data[k] for k, v in ref_eos_fit[job_type][key].items()
+                )
+            elif isinstance(data, (float, int)):
+                assert approx(ref_eos_fit[job_type][key]) == data
