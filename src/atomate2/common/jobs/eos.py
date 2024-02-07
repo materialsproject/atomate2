@@ -350,39 +350,24 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
     return transformations
 
 
-@job
-def extract_eos_sampling_data(
-    output: dict,
-) -> dict:  # TODO specify the dictionary format
-    """
-    Extracts the energy, volume, and pressure (if available) data from the output of an EOS flow.
+class MPMorphPVPostProcess(PostProcessEosPressure):
+    """Modified  p(V) fit to accomodate MPMorph."""
 
-    Parameters
-    ----------
-    output : dict
-        The output of an EOS flow.
+    def eval(self) -> None:
+        """Fit the input data to the Birch-Murnaghan pressure EOS."""
+        initial_pars = self._initial_fit()
+        for jobtype in self._use_job_types:
+            eos_params, ierr = leastsq(
+                self._objective, initial_pars[jobtype], args=(jobtype,)
+            )
 
-    Returns
-    -------
-    dict
-        The energy, volume, pressure data dictionary from the output of an EOS flow.
-    """
+            self[jobtype]["EOS"] = {}
+            if ierr not in (1, 2, 3, 4):
+                self[jobtype]["EOS"]["exception"] = "Optimal EOS parameters not found."
+            else:
+                for i, key in enumerate(["b0", "b1", "v0"]):
+                    self[jobtype]["EOS"][key] = eos_params[i]
 
-    eos_tags = ("energies", "volumes", "pressure")
-
-    flow_fit_outputs = {}
-
-    for key in eos_tags:
-        try:
-            flow_fit_outputs[key] = output["relax"][key]
-        except KeyError:
-            flow_fit_outputs[key] = []
-
-    flow_fit_outputs["V0"] = output["relax"]["EOS"]["birch_murnaghan"]["V0"]
-    flow_fit_outputs["Vmax"] = max(output["relax"]["volumes"])
-    flow_fit_outputs["Vmin"] = min(output["relax"]["volumes"])
-
-    flow_fit_outputs["V0<Vmax"] = flow_fit_outputs["V0"] < flow_fit_outputs["Vmax"]
-    flow_fit_outputs["V0>Vmin"] = flow_fit_outputs["V0"] > flow_fit_outputs["Vmin"]
-
-    return flow_fit_outputs
+        self["V0"] = self[jobtype]["EOS"].get("v0")
+        self["Vmax"] = max(self["relax"]["volume"])
+        self["Vmin"] = min(self["relax"]["volumes"])

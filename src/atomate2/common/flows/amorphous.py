@@ -8,8 +8,7 @@ from jobflow import Flow, Maker, Response
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import (
     apply_strain_to_structure,
-    postprocess_eos,
-    extract_eos_sampling_data,
+    MPMorphPVPostProcess,
 )
 
 from atomate2.vasp.sets.core import MDSetGenerator
@@ -19,6 +18,7 @@ import numpy as np
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from atomate2.common.jobs.eos import EOSPostProcessor
     from jobflow import Job
 
     from pymatgen.core import Structure
@@ -26,11 +26,31 @@ if TYPE_CHECKING:
 
 @dataclass
 class EquilibriumVolumeMaker(Maker):
+    """
+    Equilibrate structure using NVT + EOS fitting.
+    
+    Parameters
+    -----------
+    name : str = "Equilibrium Volume Maker"
+        Name of the flow
+    md_maker : Maker
+        Maker to perform NVT MD runs
+    postprocessor : atomate2.common.jobs.eos.EOSPostProcessor
+        Postprocessing step to fit the EOS
+    min_strain : float, default = 0.5
+        Minimum absolute percentage linear strain to apply to the structure
+    max_attempts : int | None = 20
+        Number of times to continue attempting to equilibrate the structure.
+        If None, the workflow will not terminate if an equilibrated structure
+        cannot be determined.
+    """
     name: str = "Equilibrium Volume Maker"
-    eos_relax_maker: Maker | None = None
-    postprocessor: Job = postprocess_eos  # TODO change to postprocess_pv_eos once ready
-    extracting_job: Job = extract_eos_sampling_data
+    md_maker: Maker | None = None
+    postprocessor: EOSPostProcessor = field(
+        default_factory=MPMorphPVPostProcess
+    )
     min_strain: float = 0.5
+    max_attempts : int | None = 20
 
     def make(
         self,
@@ -38,41 +58,65 @@ class EquilibriumVolumeMaker(Maker):
         prev_dir: str | Path | None = None,
         working_outputs: dict | None = None,
     ) -> Flow:
+        """
+        Run an NVT+EOS equilibration flow.
+
+        Parameters
+        -----------
+        structure : Structure
+            structure to equilibrate
+        prev_dir : str | Path | None (default)
+            path to copy files from
+        working_outputs : dict or None
+            contains the outputs of the flow as it recursively updates
+        
+        Returns
+        -------
+        .Flow, an MPMorph flow
+        """
 
         if working_outputs is None:
 
             eos_maker = CommonEosMaker(
                 name=self.name + " initial EOS fit",
                 initial_relax_maker=None,
-                eos_relax_maker=self.eos_relax_maker,
+                eos_relax_maker=self.md_maker,
                 static_maker=None,
-                postprocessor=self.postprocessor,
-                number_of_frames=4,
+                linear_strain = (-0.2, 0.2),
+                postprocessor = self.postprocessor,
+                number_of_frames = self.postprocessor.min_data_points,
             )
             eos_flow = eos_maker.make(structure=structure, prev_dir=prev_dir)
 
-            extract_job = self.extracting_job(eos_flow.output)
+            eos_jobs = [*eos_flow.jobs]
 
-            eos_jobs = [*eos_flow.jobs, extract_job]
-
-            working_outputs = {**extract_job.output}
+            working_outputs = eos_flow.output.copy()
 
         else:
-            if working_outputs["V0<Vmax"] and working_outputs["V0>Vmin"]:
+            if (
+                working_outputs["V0"] <= working_outputs["Vmax"]
+                and working_outputs["V0"] >= working_outputs["Vmin"]
+            ) or (
+                self.max_attempts 
+                and (
+                    len(working_outputs["relax"]["volume"])
+                    - self.postprocessor.min_data_points
+                ) >= self.max_attempts
+            ):
                 final_structure = structure.copy()
                 final_structure.scale_lattice(working_outputs["V0"])
                 return final_structure
 
-            elif not working_outputs["V0<Vmax"]:
+            elif working_outputs["V0"] > working_outputs["Vmax"]:
                 v_ref = working_outputs["Vmax"]
 
-            elif not working_outputs["V0>Vmin"]:
+            elif working_outputs["V0"] < working_outputs["Vmin"]:
                 v_ref = working_outputs["Vmin"]
 
             eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
-            deformation_matrices = [np.eye(3) * (1 + eps) for eps in linear_strain]
+            deformation_matrices = [np.eye(3) * (1. + eps) for eps in linear_strain]
             deformed_structures = apply_strain_to_structure(
                 structure, deformation_matrices
             )
@@ -85,18 +129,26 @@ class EquilibriumVolumeMaker(Maker):
                         prev_dir=None,
                     )
                 )
-                working_outputs["energies"].append(eos_jobs[-1].output.output.energy)
-                working_outputs["volumes"].append(eos_jobs[-1].ouput.structure.volume)
-                working_outputs["pressure"].append(
-                    1 / 3 * np.trace(eos_jobs[-1].output.stress)
+                working_outputs["relax"]["energy"].append(eos_jobs[-1].output.output.energy)
+                working_outputs["relax"]["volume"].append(eos_jobs[-1].ouput.structure.volume)
+                working_outputs["relax"]["stress"].append(eos_jobs[-1].output.stress)
+                working_outputs["relax"]["pressure"].append(
+                    1. / 3. * np.trace(eos_jobs[-1].output.stress)
                 )
 
-            postprocess_job = self.postprocessor(working_outputs)
+            # The postprocessor has a .fit and .make arg that do similar things
+            # The .make function is a jobflow Job and returns the dict as output
+            # The .fit function is a regular function that doesn't return anything
+            postprocess_job = self.postprocessor.make(working_outputs)
             postprocess_job.name = self.name + "_" + postprocess_job.name
             working_outputs = postprocess_job.output
             eos_jobs.append(postprocess_job)
 
-        recursive = self.make(structure, working_outputs)
+        recursive = self.make(
+            structure = structure,
+            prev_dir = None,
+            working_outputs = working_outputs
+        )
 
         new_eos_flow = Flow([*eos_jobs, recursive], output=working_outputs)
 
@@ -105,12 +157,14 @@ class EquilibriumVolumeMaker(Maker):
 
 @dataclass
 class FastQuenchMaker(Maker):
+    """TODO: docstr"""
     name: str = "fast quench"
     relax_maker: Maker = Maker
     relax_maker2: Maker | None = None
     static_maker: Maker = Maker
 
     def make(self, structure: Structure) -> Flow:
+        """TODO: docstr"""
         relax1 = self.relax_maker.make(structure)
         if self.relax_maker2 is not None:
             relax2 = self.relax_maker2.make(relax1.output.structure)
@@ -130,6 +184,7 @@ class FastQuenchMaker(Maker):
 
 @dataclass
 class SlowQuenchMaker(Maker):  # Work in Progress
+    """TODO: docstr"""
     name: str = "slow quench"
     md_maker: Maker = Maker  # Goal is to eventually migrate to the general Maker
     quench_tempature_setup: dict = field(
@@ -137,6 +192,7 @@ class SlowQuenchMaker(Maker):  # Work in Progress
     )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """TODO: docstr"""
         md_jobs = []
         for temp in np.arange(
             self.quench_tempature_setup["start_temp"],
