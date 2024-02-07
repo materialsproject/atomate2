@@ -370,4 +370,4 @@ class MPMorphPVPostProcess(PostProcessEosPressure):
 
         self["V0"] = self[jobtype]["EOS"].get("v0")
         self["Vmax"] = max(self["relax"]["volume"])
-        self["Vmin"] = min(self["relax"]["volumes"])
+        self["Vmin"] = min(self["relax"]["volume"])
