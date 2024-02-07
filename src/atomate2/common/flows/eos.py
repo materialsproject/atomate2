@@ -69,11 +69,11 @@ class CommonEosMaker(Maker):
         structure : Structure
             A pymatgen structure object.
         prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
+            A previous calculation directory to copy output files from.
 
         Returns
         -------
-        .Flow, and EOS flow
+        .Flow, an EOS flow
         """
         jobs: dict[str, list[Job]] = {key: [] for key in ("relax", "static", "utility")}
 
@@ -118,13 +118,14 @@ class CommonEosMaker(Maker):
             retstep=True,
         )
 
-        # Cell without applied strain already included from relax/equilibrium steps.
-        # Perturb this point (or these points) if included
-        zero_strain_mask = np.abs(strain_l) < 1.0e-15
-        if np.any(zero_strain_mask):
-            nzs = len(strain_l[zero_strain_mask])
-            shift = strain_delta / (nzs + 1.0) * np.linspace(-1.0, 1.0, nzs)
-            strain_l[np.abs(strain_l) < 1.0e-15] += shift
+        if self.initial_relax_maker:
+            # Cell without applied strain already included from relax/equilibrium steps.
+            # Perturb this point (or these points) if included
+            zero_strain_mask = np.abs(strain_l) < 1.0e-15
+            if np.any(zero_strain_mask):
+                nzs = len(strain_l[zero_strain_mask])
+                shift = strain_delta / (nzs + 1.0) * np.linspace(-1.0, 1.0, nzs)
+                strain_l[np.abs(strain_l) < 1.0e-15] += shift
 
         deformation_l = [(np.identity(3) * (1.0 + eps)).tolist() for eps in strain_l]
 
