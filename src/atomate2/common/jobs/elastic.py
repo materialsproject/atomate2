@@ -11,7 +11,6 @@ from jobflow import Flow, Response, job
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.analysis.elasticity import Deformation, Strain, Stress
 from pymatgen.core.tensors import symmetry_reduce
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
@@ -230,23 +229,3 @@ def fit_elastic_tensor(
         symprec=symprec,
         allow_elastically_unstable_structs=allow_elastically_unstable_structs,
     )
-
-
-@job
-def get_conventional_structure(structure: Structure, symprec: float) -> Structure:
-    """
-    Get the conventional standard structure.
-
-    Parameters
-    ----------
-    structure : ~pymatgen.core.structure.Structure
-        A pymatgen structure.
-    symprec : float
-        Symmetry precision to use in the reduction of symmetry.
-
-    Returns
-    -------
-        The conventional standard structure.
-    """
-    sga = SpacegroupAnalyzer(structure, symprec)
-    return sga.get_conventional_standard_structure()

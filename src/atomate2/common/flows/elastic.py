@@ -12,9 +12,9 @@ from atomate2 import SETTINGS
 from atomate2.common.jobs.elastic import (
     fit_elastic_tensor,
     generate_elastic_deformations,
-    get_conventional_structure,
     run_elastic_deformations,
 )
+from atomate2.common.jobs.utils import structure_to_conventional
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -116,7 +116,7 @@ class BaseElasticMaker(Maker, ABC):
                 equilibrium_stress = bulk.output.output.stress
 
         if conventional:
-            conv = get_conventional_structure(structure, self.symprec)
+            conv = structure_to_conventional(structure, self.symprec)
             jobs.append(conv)
             structure = conv.output
 
