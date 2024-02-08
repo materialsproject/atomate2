@@ -219,8 +219,8 @@ def get_supercell_from_prv_calc(
     )
 
     if sc_mat_ref is not None:
-        latt_ref = Lattice(sc_mat_ref)
-        latt_prv = Lattice(sc_mat_prv)
+        latt_ref = (uc_structure * sc_mat_ref).lattice
+        latt_prv = (uc_structure * sc_mat_prv).lattice
         if not (
             np.allclose(sorted(latt_ref.abc), sorted(latt_prv.abc))
             and np.allclose(sorted(latt_ref.angles), sorted(latt_prv.angles))
