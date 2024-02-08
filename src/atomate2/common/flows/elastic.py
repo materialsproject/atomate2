@@ -116,9 +116,9 @@ class BaseElasticMaker(Maker, ABC):
                 equilibrium_stress = bulk.output.output.stress
 
         if conventional:
-            conv = structure_to_conventional(structure, self.symprec)
-            jobs.append(conv)
-            structure = conv.output
+            stc = structure_to_conventional(structure, self.symprec)
+            jobs.append(stc)
+            structure = stc.output
 
         deformations = generate_elastic_deformations(
             structure,
