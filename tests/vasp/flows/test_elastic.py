@@ -1,3 +1,4 @@
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -10,7 +11,8 @@ from atomate2.vasp.powerups import (
 )
 
 
-def test_elastic(mock_vasp, clean_dir, si_structure):
+@pytest.mark.parametrize("conventional", [False])
+def test_elastic(mock_vasp, clean_dir, si_structure, conventional):
     # mapping from job name to directory containing test files
     ref_paths = {
         "elastic relax 1/6": "Si_elastic/elastic_relax_1_6",
@@ -40,7 +42,7 @@ def test_elastic(mock_vasp, clean_dir, si_structure):
 
     # generate flow
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
-    flow = ElasticMaker().make(si_prim)
+    flow = ElasticMaker().make(si_prim, conventional=conventional)
     flow = update_user_kpoints_settings(
         flow, {"grid_density": 100}, name_filter="relax"
     )
