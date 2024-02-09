@@ -55,7 +55,7 @@ def vasp_test_data(test_dir: Path) -> None:
     original_mapping = {}
     mapping = {}
     for output in outputs:
-        if not isinstance(output["output"], TaskDoc):
+        if not isinstance(output.output, TaskDoc):
             # this is not a VASP job
             continue
 
