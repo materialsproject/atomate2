@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.mp import (
     MPGGARelaxMaker,
@@ -198,6 +197,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
 if importlib.util.find_spec("ijson") is not None and importlib.util.find_spec(
     "lobsterpy"
 ):
+    from atomate2.lobster.jobs import LobsterMaker
     from atomate2.vasp.flows.lobster import VaspLobsterMaker
 
     # update potcars to 54, use correct W potcar
