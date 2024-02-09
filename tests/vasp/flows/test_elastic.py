@@ -11,7 +11,7 @@ from atomate2.vasp.powerups import (
 )
 
 
-@pytest.mark.parametrize("conventional", [False])
+@pytest.mark.parametrize("conventional", [False, True])
 def test_elastic(mock_vasp, clean_dir, si_structure, conventional):
     # mapping from job name to directory containing test files
     ref_paths = {
