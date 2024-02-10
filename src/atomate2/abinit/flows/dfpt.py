@@ -109,13 +109,15 @@ class DfptFlowMaker(Maker):
         static_job = update_user_kpoints_settings(  static_job, {"grid_density": 3000})
         static_job = update_user_abinit_settings(   static_job, {   'nstep': 500,
                                                                     'toldfe': 1e-22,
-                                                                    'chksymbreak': '0'}) # TO DO: modify to 500
+                                                                    'autoparal': 1,
+                                                                    'npfft': 1,
+                                                                    'chksymbreak': '0'})
         jobs = [static_job]
 
         if self.ddk_maker:
             # generate the perturbations for the DDK calculations
             ddk_perts = generate_ddk_perts(
-                gsinput=static_job.output.abinit_input,  # TODO: is that possible?
+                gsinput=static_job.output.abinit_input,
                 use_symmetries=self.use_ddk_sym,
             )
             jobs.append(ddk_perts)
@@ -131,7 +133,7 @@ class DfptFlowMaker(Maker):
         if self.dde_maker:
             # generate the perturbations for the DDE calculations
             dde_perts = generate_dde_perts(
-                gsinput=static_job.output.abinit_input,  # TODO: is that possible?
+                gsinput=static_job.output.abinit_input,
                 use_symmetries=self.use_dde_sym,
             )
             jobs.append(dde_perts)
@@ -147,7 +149,7 @@ class DfptFlowMaker(Maker):
         if self.dte_maker:
             # generate the perturbations for the DTE calculations
             dte_perts = generate_dte_perts(
-                gsinput=static_job.output.abinit_input,  # TODO: is that possible?
+                gsinput=static_job.output.abinit_input,
                 skip_permutations=self.dte_skip_permutations,
                 phonon_pert=self.dte_phonon_pert,
                 ixc=self.dte_ixc,

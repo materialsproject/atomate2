@@ -11,8 +11,8 @@ from abipy.flowtk.qutils import time2slurm
 from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import (
     INPUT_FILE_NAME,
-    MRGDDB_INPUT_FILE_NAME,
     LOG_FILE_NAME,
+    MRGDDB_INPUT_FILE_NAME,
     STDERR_FILE_NAME,
 )
 
@@ -34,8 +34,11 @@ def run_abinit(
     """Run ABINIT."""
     abinit_cmd = abinit_cmd or SETTINGS.ABINIT_CMD
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
+    command = []
+    if mpirun_cmd:
+        command.extend(mpirun_cmd.split())
+    command.append(abinit_cmd)
     start_time = start_time or time.time()
-    command = [mpirun_cmd, abinit_cmd] if mpirun_cmd is not None else [abinit_cmd]
 
     max_end_time = 0.0
     if wall_time is not None:
@@ -78,9 +81,12 @@ def run_mrgddb(
     """Run mrgddb."""
     mrgddb_cmd = mrgddb_cmd or SETTINGS.ABINIT_MRGDDB_CMD
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
+    command = []
+    if mpirun_cmd:
+        command.extend(mpirun_cmd.split())
+        command.extend(["-n", "1"])
+    command.extend([mrgddb_cmd, "--nostrict"])
     start_time = start_time or time.time()
-    command = [mpirun_cmd, "-n", "1", mrgddb_cmd, "--nostrict"] if mpirun_cmd is not None else [mrgddb_cmd]
-
 
     max_end_time = 0.0
     if wall_time is not None:
@@ -92,11 +98,13 @@ def run_mrgddb(
         command.extend(["--timelimit", time2slurm(mrgddb_timelimit)])
         max_end_time = start_time + wall_time
 
-    #command.append("< "+MRGDDB_INPUT_FILE_NAME)
+    # command.append("< "+MRGDDB_INPUT_FILE_NAME)
 
     status = "completed"
 
-    with open(MRGDDB_INPUT_FILE_NAME, "r") as stdin, open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
+    with open(MRGDDB_INPUT_FILE_NAME) as stdin, open(
+        LOG_FILE_NAME, "w"
+    ) as stdout, open(STDERR_FILE_NAME, "w") as stderr:
         process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
 
         if wall_time is not None:
