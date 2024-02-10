@@ -256,6 +256,8 @@ def generate_dte_perts(
         from pseudos.
     """
     # Call Abinit to get the list of irreducible perturbations
+    gsinput = gsinput.deepcopy()
+    gsinput.pop_vars(['autoparal', 'npfft'])
     perts = gsinput.abiget_irred_dteperts(
         phonon_pert=phonon_pert, ixc=ixc
     )  # TODO: quid manager?
