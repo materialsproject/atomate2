@@ -41,8 +41,8 @@ def test_elastic(mock_vasp, clean_dir, si_structure, conventional):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     # generate flow
-    si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
-    flow = ElasticMaker().make(si_prim, conventional=conventional)
+    si = SpacegroupAnalyzer(si_structure).get_conventional_standard_structure()
+    flow = ElasticMaker().make(si, conventional=conventional)
     flow = update_user_kpoints_settings(
         flow, {"grid_density": 100}, name_filter="relax"
     )
@@ -54,15 +54,16 @@ def test_elastic(mock_vasp, clean_dir, si_structure, conventional):
     # validation on the outputs
     elastic_output = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
+
     assert_allclose(
         elastic_output.elastic_tensor.ieee_format,
         [
-            [155.7923, 54.8871, 54.8871, 0.0, 0.0, 0.0],
-            [54.8871, 155.7923, 54.8871, 0.0, 0.0, 0.0],
-            [54.8871, 54.8871, 155.7923, 0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 94.6712, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 94.6712, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 0.0, 94.6712],
+            [156.175, 62.1577, 62.1577, 0.0, 0.0, 0.0],
+            [62.1577, 156.175, 62.1577, 0.0, 0.0, 0.0],
+            [62.1577, 62.1577, 156.175, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 73.8819, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 73.8819, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 73.8819],
         ],
         atol=1e-3,
     )
