@@ -1,6 +1,8 @@
 """General schemas for defect workflow outputs."""
 
 import logging
+from collections.abc import Sequence
+from itertools import starmap
 from typing import Any, Callable, Optional, Union
 
 import numpy as np
@@ -236,11 +238,11 @@ class CCDDocument(BaseModel):
             UUID of relaxed calculation in charge state (q2).
         """
 
-        def get_ent(
+        def get_cs_entry(
             struct: Structure,
             energy: float,
-            dir_name,
-            uuid,
+            dir_name: str,
+            uuid: str,
         ) -> ComputedStructureEntry:
             return ComputedStructureEntry(
                 structure=struct,
@@ -248,14 +250,16 @@ class CCDDocument(BaseModel):
                 data={"dir_name": dir_name, "uuid": uuid},
             )
 
-        entries1 = [
-            get_ent(s, e, d, u)
-            for s, e, d, u in zip(structures1, energies1, static_dirs1, static_uuids1)
-        ]
-        entries2 = [
-            get_ent(s, e, d, u)
-            for s, e, d, u in zip(structures2, energies2, static_dirs2, static_uuids2)
-        ]
+        entries1 = list(
+            starmap(
+                get_cs_entry, zip(structures1, energies1, static_dirs1, static_uuids1)
+            )
+        )
+        entries2 = list(
+            starmap(
+                get_cs_entry, zip(structures2, energies2, static_dirs2, static_uuids2)
+            )
+        )
 
         return cls.from_entries(entries1, entries2, relaxed_uuid1, relaxed_uuid2)
 
@@ -283,14 +287,16 @@ class CCDDocument(BaseModel):
 
         """
 
-        def find_entry(entries, uuid) -> tuple[int, ComputedStructureEntry]:
+        def find_entry(
+            entries: Sequence[ComputedStructureEntry], uuid: str
+        ) -> tuple[int, ComputedStructureEntry]:
             """Find the entry with the given UUID."""
-            for itr, entry in enumerate(entries):
+            for idx, entry in enumerate(entries):
                 if entry.data["uuid"] == uuid:
-                    return itr, entry
+                    return idx, entry
             raise ValueError(f"Could not find entry with UUID: {uuid}")
 
-        def dQ_entries(e1, e2) -> float:  # noqa: N802
+        def dQ_entries(e1: ComputedStructureEntry, e2: ComputedStructureEntry) -> float:  # noqa: N802
             """Get the displacement between two entries."""
             return get_dQ(e1.structure, e2.structure)
 
@@ -338,22 +344,22 @@ class CCDDocument(BaseModel):
             relaxed_index2=idx2,
         )
 
-    def get_taskdocs(self) -> list[list[TaskDoc]]:
+    def get_taskdocs(self) -> tuple[list[TaskDoc], list[TaskDoc]]:
         """Get the distorted task documents."""
 
-        def remove_host_name(dir_name) -> str:
+        def remove_host_name(dir_name: str) -> str:
             return dir_name.split(":")[-1]
 
-        return [
-            [
-                TaskDoc.from_directory(remove_host_name(dir_name))
-                for dir_name in self.static_dirs1
-            ],
-            [
-                TaskDoc.from_directory(remove_host_name(dir_name))
-                for dir_name in self.static_dirs2
-            ],
+        static1_task_docs = [
+            TaskDoc.from_directory(remove_host_name(dir_name))
+            for dir_name in self.static_dirs1
         ]
+        static2_task_docs = [
+            TaskDoc.from_directory(remove_host_name(dir_name))
+            for dir_name in self.static_dirs2
+        ]
+
+        return static1_task_docs, static2_task_docs
 
 
 def sort_pos_dist(

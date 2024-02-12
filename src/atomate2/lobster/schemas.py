@@ -596,7 +596,7 @@ class StrongestBonds(BaseModel):
     )
 
 
-class LobsterTaskDocument(StructureMetadata):
+class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Definition of LOBSTER task document."""
 
     structure: Structure = Field(description="The structure used in this task")
@@ -742,7 +742,7 @@ class LobsterTaskDocument(StructureMetadata):
         LobsterTaskDocument
             A task document for the lobster calculation.
         """
-        additional_fields = additional_fields or {}
+        additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
 
         # Read in lobsterout and lobsterin
@@ -766,10 +766,7 @@ class LobsterTaskDocument(StructureMetadata):
 
         # Do automatic bonding analysis with LobsterPy
         condensed_bonding_analysis = None
-        sb_icobi = None
-        sb_icohp = None
-        sb_icoop = None
-        describe = None
+        sb_icobi = sb_icohp = sb_icoop = describe = None
         struct = Structure.from_file(structure_path)
 
         # will perform two condensed bonding analysis computations
@@ -1066,7 +1063,7 @@ class LobsterTaskDocument(StructureMetadata):
                     are_coops=False,
                     are_cobis=False,
                 )
-                doc.__setattr__("cohp_data", cohp_obj)
+                doc.cohp_data = cohp_obj
 
             if coopcar_path.exists() and doc.coop_data is None:
                 coop_obj = CompleteCohp.from_file(
@@ -1076,7 +1073,7 @@ class LobsterTaskDocument(StructureMetadata):
                     are_coops=True,
                     are_cobis=False,
                 )
-                doc.__setattr__("coop_data", coop_obj)
+                doc.coop_data = coop_obj
 
             if cobicar_path.exists() and doc.cobi_data is None:
                 cobi_obj = CompleteCohp.from_file(
@@ -1086,7 +1083,7 @@ class LobsterTaskDocument(StructureMetadata):
                     are_coops=False,
                     are_cobis=True,
                 )
-                doc.__setattr__("cobi_data", cobi_obj)
+                doc.cobi_data = cobi_obj
             with gzip.open(
                 computational_data_json_save_dir, "wt", encoding="UTF-8"
             ) as file:
@@ -1099,7 +1096,7 @@ class LobsterTaskDocument(StructureMetadata):
                         # objects and other data json compatible dict format
                         data = {
                             attribute: jsanitize(
-                                doc.__getattribute__(attribute),
+                                getattr(doc, attribute),
                                 allow_bson=False,
                                 strict=True,
                                 enum_values=True,
@@ -1113,9 +1110,9 @@ class LobsterTaskDocument(StructureMetadata):
 
             # Again unset the cohp, cobi and coop data fields if not desired in the DB
             if not add_coxxcar_to_task_document:
-                doc.__setattr__("cohp_data", None)
-                doc.__setattr__("coop_data", None)
-                doc.__setattr__("cobi_data", None)
+                doc.cohp_data = None
+                doc.coop_data = None
+                doc.cobi_data = None
 
         return doc.model_copy(update=additional_fields)
 
@@ -1316,9 +1313,9 @@ def read_saved_json(
     dict
         Returns a dictionary with lobster task json data corresponding to query.
     """
-    with gzip.open(filename, "rb") as f:
+    with gzip.open(filename, "rb") as file:
         lobster_data = {}
-        objects = ijson.items(f, "item", use_float=True)
+        objects = ijson.items(file, "item", use_float=True)
         for obj in objects:
             if query is None:
                 for field, data in obj.items():
@@ -1339,11 +1336,9 @@ def read_saved_json(
                 lobster_data[query_key] = MontyDecoder().process_decoded(value)
             elif "lobsterpy_data" in query_key:
                 for field in lobster_data[query_key].__fields__:
-                    lobster_data[query_key].__setattr__(
-                        field,
-                        MontyDecoder().process_decoded(
-                            lobster_data[query_key].__getattribute__(field)
-                        ),
+                    val = MontyDecoder().process_decoded(
+                        getattr(lobster_data[query_key], field)
                     )
+                    setattr(lobster_data[query_key], field, val)
 
     return lobster_data

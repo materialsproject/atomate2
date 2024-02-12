@@ -80,7 +80,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Final output structure from the task"
     )
 
-    input: InputDoc = Field(  # noqa: A003
+    input: InputDoc = Field(
         None, description="The inputted information used to run this job."
     )
 

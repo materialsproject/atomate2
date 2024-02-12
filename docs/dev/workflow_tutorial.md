@@ -6,7 +6,7 @@ Every `atomate2` workflow is an instance of jobflow's `Flow ` class, which is a 
 
 In the context of computational materials science, `Flow ` objects are most easily created by a `Maker`, which contains a factory method make() that produces a `Flow `, given certain inputs. Typically, the input to `Maker`.make() includes atomic coordinate information in the form of a `pymatgen` `Structure` or `Molecule` object. So the basic signature looks like this:
 
-```python
+```py
 class ExampleMaker(Maker):
     def make(self, coordinates: Structure) -> Flow:
         # take the input coordinates and return a `Flow `
@@ -18,7 +18,7 @@ The `Maker` class usually contains most of the calculation parameters and other 
 One common task encountered in almost any materials science calculation is writing calculation input files to disk so they can be executed by the underlying software (e.g., VASP, Q-Chem, CP2K, etc.). This is preferably done via a `pymatgen` `InputSet` class. `InputSet` is essentially a dict-like container that specifies the files that need to be written, and their contents. Similarly to the way that `Maker` classes generate `Flow`s, `InputSet`s are most easily created by `InputGenerator` classes. `InputGenerator`
 have a method `get_input_set()` that typically takes atomic coordinates (e.g., a `Structure` or `Molecule` object) and produce an `InputSet`, e.g.,
 
-```python
+```py
 class ExampleInputGenerator(InputGenerator):
     def get_input_set(self, coordinates: Structure) -> InputSet:
         # take the input coordinates, determine appropriate
@@ -30,7 +30,7 @@ class ExampleInputGenerator(InputGenerator):
 
 **TODO - the code block below needs refinement. Not exactly sure how write_inputs() fits into a`Job`**
 
-```python
+```py
 class ExampleMaker(Maker):
     input_set_generator: ExampleInputGenerator = field(
         default_factory=ExampleInputGenerator
