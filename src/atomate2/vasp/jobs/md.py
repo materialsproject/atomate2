@@ -98,42 +98,40 @@ class MLMDMaker(MDMaker):
     input_set_generator: VaspInputGenerator = field(default_factory=MLMDSetGenerator)
 
     @classmethod
-    def train(cls, generator_kwargs=None, **kwargs) -> MLMDMaker:
+    def train(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
         """Train."""
         generator_kwargs = generator_kwargs or {}
         return cls(
             name="MLFF MD train",
             input_set_generator=MLMDSetGenerator(ml_mode="train", **generator_kwargs),
+            copy_vasp_kwargs={"additional_vasp_files": {"ML_ABN": "ML_AB"}},
             **kwargs,
         )
 
     @classmethod
-    def select(cls, generator_kwargs=None, **kwargs) -> MLMDMaker:
+    def select(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
         """Select."""
-        generator_kwargs = generator_kwargs or {}
-        return cls(
-            name="MLFF select",
-            input_set_generator=MLMDSetGenerator(ml_mode="select", **generator_kwargs),
-            **kwargs,
-        )
+        raise NotImplementedError
 
     @classmethod
-    def refit(cls, generator_kwargs=None, **kwargs) -> MLMDMaker:
+    def refit(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
         """Refit."""
         generator_kwargs = generator_kwargs or {}
         return cls(
             name="MLFF refit",
             input_set_generator=MLMDSetGenerator(ml_mode="refit", **generator_kwargs),
+            copy_vasp_kwargs={"additional_vasp_files": {"ML_ABN": "ML_AB"}},
             **kwargs,
         )
 
     @classmethod
-    def run(cls, generator_kwargs=None, **kwargs) -> MLMDMaker:
+    def run(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
         """Run."""
         generator_kwargs = generator_kwargs or {}
         return cls(
             name="MLFF MD run",
             input_set_generator=MLMDSetGenerator(ml_mode="run", **generator_kwargs),
+            copy_vasp_kwargs={"additional_vasp_files": {"ML_FFN": "ML_FF"}},
             **kwargs,
         )
 

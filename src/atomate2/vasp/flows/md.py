@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OutputReference
 
-from atomate2.vasp.jobs.md import MDMaker, md_output
+from atomate2.vasp.jobs.md import MDMaker, MLMDMaker, md_output
 from atomate2.vasp.sets.core import MDSetGenerator
 
 if TYPE_CHECKING:
@@ -107,6 +107,31 @@ class MultiMDMaker(Maker):
             prev_traj_ids=md_ref.full_traj_ids,
         )
 
+    @staticmethod
+    def _split_md(
+        nsteps: int, n_runs: int, start_temp: float, end_temp: float | None = None
+    ) -> list:
+        if end_temp is None:
+            end_temp = start_temp
+        # Split steps into balanced groups
+        nsteps_run = nsteps // n_runs
+        remaining = nsteps - n_runs * nsteps_run
+        nsteps_runs = [nsteps_run] * n_runs
+        for ii in range(remaining):
+            nsteps_runs[ii] += 1
+
+        # Adapt start and end temperatures to the number of steps in each run
+        delta_temp = end_temp - start_temp
+        start_temp_runs = []
+        end_temp_runs = []
+        prevrun_end_temp = start_temp
+        for irun in range(n_runs):
+            start_temp_runs.append(prevrun_end_temp)
+            prevrun_end_temp += delta_temp / nsteps * nsteps_runs[irun]
+            end_temp_runs.append(prevrun_end_temp)
+
+        return list(zip(nsteps_runs, start_temp_runs, end_temp_runs))
+
     @classmethod
     def from_parameters(
         cls,
@@ -147,20 +172,73 @@ class MultiMDMaker(Maker):
         -------
             A MultiMDMaker
         """
-        if end_temp is None:
-            end_temp = start_temp
         md_makers = []
-        start_temp_i = start_temp
-        increment = (end_temp - start_temp) / n_runs
-        for _ in range(n_runs):
-            end_temp_i = start_temp_i + increment
+        for nsteps_run, start_temp_run, end_temp_run in cls._split_md(
+            nsteps=nsteps, n_runs=n_runs, start_temp=start_temp, end_temp=end_temp
+        ):
             generator = MDSetGenerator(
-                nsteps=nsteps,
+                nsteps=nsteps_run,
                 time_step=time_step,
                 ensemble=ensemble,
-                start_temp=start_temp_i,
-                end_temp=end_temp_i,
+                start_temp=start_temp_run,
+                end_temp=end_temp_run,
             )
             md_makers.append(MDMaker(input_set_generator=generator))
-            start_temp_i = end_temp_i
+        return cls(md_makers=md_makers, **kwargs)
+
+    @classmethod
+    def onthefly_mlff(
+        cls,
+        nsteps: int,
+        time_step: float,
+        n_runs: int,
+        ensemble: str,
+        start_temp: float,
+        end_temp: float | None = None,
+        **kwargs,
+    ) -> MultiMDMaker:
+        """
+        Create an instance of the Maker based on the standard parameters.
+
+        Set values in the Flow maker, the Job Maker and the VaspInputGenerator,
+        using them to create the final instance of the Maker.
+
+        Parameters
+        ----------
+        nsteps: int
+            Number of time steps for simulations. The VASP `NSW` parameter.
+        time_step: float
+            The time step (in femtosecond) for the simulation. The VASP
+            `POTIM` parameter.
+        n_runs : int
+            Number of MD runs in the flow.
+        ensemble: str
+            Molecular dynamics ensemble to run. Options include `nvt`, `nve`, and `npt`.
+        start_temp: float
+            Starting temperature. The VASP `TEBEG` parameter.
+        end_temp: float or None
+            Final temperature. The VASP `TEEND` parameter. If None the same
+            as start_temp.
+        kwargs:
+            Other parameters passed
+
+        Returns
+        -------
+            A MultiMDMaker
+        """
+        md_makers = []
+        for nsteps_run, start_temp_run, end_temp_run in cls._split_md(
+            nsteps=nsteps, n_runs=n_runs, start_temp=start_temp, end_temp=end_temp
+        ):
+            md_makers.append(
+                MLMDMaker.train(
+                    generator_kwargs={
+                        "nsteps": nsteps_run,
+                        "time_step": time_step,
+                        "ensemble": ensemble,
+                        "start_temp": start_temp_run,
+                        "end_temp": end_temp_run,
+                    },
+                )
+            )
         return cls(md_makers=md_makers, **kwargs)
