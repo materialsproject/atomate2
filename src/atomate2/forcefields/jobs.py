@@ -465,3 +465,25 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         )
         relaxer = Relaxer(calculator, relax_cell=False)
         return relaxer.relax(structure, steps=1)
+
+
+@dataclass
+class PyACERelaxMaker(ForceFieldRelaxMaker):
+    name: str = "py-ace relax"
+    force_field_name: str = "Py-ACE"
+    relax_cell: bool = True
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+    model: str | Path | Sequence[str | Path] | None = None
+    model_kwargs: dict = field(default_factory=dict)
+
+    def _relax(self, structure: Structure) -> dict:
+        import pyace
+
+        calculator = pyace.PyACECalculator(basis_set=self.model, **self.model_kwargs)
+        relaxer = Relaxer(
+            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
+        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
