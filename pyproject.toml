@@ -71,7 +71,7 @@ strict = [
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
     "cclib==1.8",
-    "chgnet==0.3.3",
+    "chgnet==0.3.4",
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",
