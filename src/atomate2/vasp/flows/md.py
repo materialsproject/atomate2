@@ -111,6 +111,7 @@ class MultiMDMaker(Maker):
     def _split_md(
         nsteps: int, n_runs: int, start_temp: float, end_temp: float | None = None
     ) -> list:
+        """Get a balanced set of N runs for the required number of steps."""
         if end_temp is None:
             end_temp = start_temp
         # Split steps into balanced groups
@@ -198,7 +199,7 @@ class MultiMDMaker(Maker):
         **kwargs,
     ) -> MultiMDMaker:
         """
-        Create an instance of the Maker based on the standard parameters.
+        Create an on-the-fly MLFF-based MultiMDMaker based on the standard parameters.
 
         Set values in the Flow maker, the Job Maker and the VaspInputGenerator,
         using them to create the final instance of the Maker.
@@ -232,6 +233,72 @@ class MultiMDMaker(Maker):
         ):
             md_makers.append(
                 MLMDMaker.train(
+                    generator_kwargs={
+                        "nsteps": nsteps_run,
+                        "time_step": time_step,
+                        "ensemble": ensemble,
+                        "start_temp": start_temp_run,
+                        "end_temp": end_temp_run,
+                    },
+                )
+            )
+        return cls(md_makers=md_makers, **kwargs)
+
+    @classmethod
+    def production_run_mlff(
+        cls,
+        nsteps: int,
+        time_step: float,
+        ensemble: str,
+        start_temp: float,
+        end_temp: float | None = None,
+        n_runs: int = 1,
+        refit: bool = True,
+        **kwargs,
+    ) -> MultiMDMaker:
+        """
+        Create an on-the-fly MLFF-based MultiMDMaker based on the standard parameters.
+
+        Set values in the Flow maker, the Job Maker and the VaspInputGenerator,
+        using them to create the final instance of the Maker.
+
+        .. Note::
+            This can only work with a previous directory where training of .
+
+        Parameters
+        ----------
+        nsteps: int
+            Number of time steps for simulations. The VASP `NSW` parameter.
+        time_step: float
+            The time step (in femtosecond) for the simulation. The VASP
+            `POTIM` parameter.
+        n_runs : int
+            Number of MD runs in the flow.
+        ensemble: str
+            Molecular dynamics ensemble to run. Options include `nvt`, `nve`, and `npt`.
+        start_temp: float
+            Starting temperature. The VASP `TEBEG` parameter.
+        end_temp: float or None
+            Final temperature. The VASP `TEEND` parameter. If None the same
+            as start_temp.
+        refit: bool
+            Whether to refit the ML force field based on existing ML_AB file with
+            reference configurations.
+        kwargs:
+            Other parameters passed
+
+        Returns
+        -------
+            A MultiMDMaker
+        """
+        md_makers = []
+        if refit:
+            md_makers.append(MLMDMaker.refit())
+        for nsteps_run, start_temp_run, end_temp_run in cls._split_md(
+            nsteps=nsteps, n_runs=n_runs, start_temp=start_temp, end_temp=end_temp
+        ):
+            md_makers.append(
+                MLMDMaker.run(
                     generator_kwargs={
                         "nsteps": nsteps_run,
                         "time_step": time_step,
