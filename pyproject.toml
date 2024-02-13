@@ -54,8 +54,8 @@ forcefields = [
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
-    "furo==2023.9.10",
-    "ipython==8.20.0",
+    "furo==2024.1.29",
+    "ipython==8.21.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.6.0",
@@ -64,30 +64,30 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==7.4.4"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.0"]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
     "cclib==1.8",
-    "chgnet==0.3.3",
+    "chgnet==0.3.4",
     "click==8.1.7",
     "custodian==2023.10.9",
     "dscribe==2.1.0",
-    "emmet-core==0.76.2",
+    "emmet-core==0.77.1",
     "ijson==3.2.3",
-    "jobflow==0.1.16",
+    "jobflow==0.1.17",
     "lobsterpy==0.3.6",
     "mace-torch>=0.3.3",
-    "matgl==0.9.1",
+    "matgl==0.9.2",
     "monty==2023.9.25",
     "mp-api==0.39.5",
     "numpy",
     "phonopy==2.21.0",
     "pydantic-settings==2.1.0",
     "pydantic==2.4.2",
-    "pymatgen-analysis-defects==2024.1.12",
+    "pymatgen-analysis-defects==2024.2.9",
     "pymatgen==2023.12.18",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
@@ -148,37 +148,35 @@ exclude_lines = [
 target-version = "py39"
 select = ["ALL"]
 ignore = [
+    "ANN002",
+    "ANN003",
+    "ANN101",  # missing self type annotation
+    "ANN102",
+    "ANN401",
     "ARG002",  # unused method argument
+    "BLE001",
+    "C408",    # Unnecessary (dict/list/tuple) call - remove call
+    "C901",    # function too complex
     "COM812",  # trailing comma missing
+    "DTZ",     # datetime-tz-now
+    "EM",      # exception message must not use f-string literal
+    "ERA001",  # found commented out code
+    "FBT001",
+    "FBT002",
+    "FIX002",
+    "G004",    # logging uses fstring
     "PD011",   # pandas-use-of-dot-values
     "PERF203", # try-except-in-loop
     "PLR",     # pylint-refactor
     "PT004",   # pytest-missing-fixture-name-underscore
     "PT006",   # pytest-parametrize-names-wrong-type
+    "PT013",   # pytest-incorrect-pytest-import
+    "PTH",     # prefer Pathlib to os.path
     "RUF013",  # implicit-optional
-    # TODO remove PT011, pytest.raises() should always check err msg
-    "ANN002",
-    "ANN003",
-    "ANN101", # missing self type annotation
-    "ANN102",
-    "ANN401",
-    "BLE001",
-    "C408",   # Unnecessary (dict/list/tuple) call - remove call
-    "C901",   # function too complex
-    "DTZ",    # datetime-tz-now
-    "EM",     # exception message must not use f-string literal
-    "ERA001", # found commented out code
-    "FBT001",
-    "FBT002",
-    "FIX002",
-    "G004",   # logging uses fstring
-    "PT011",  # pytest-raises-too-broad
-    "PT013",  # pytest-incorrect-pytest-import
-    "PTH",    # prefer Pathlib to os.path
-    "S324",   # use of insecure hash function
-    "SLF",    # private member accessed outside class
-    "TD",     # TODOs
-    "TRY003", # long message outside exception class
+    "S324",    # use of insecure hash function
+    "SLF",     # private member accessed outside class
+    "TD",      # TODOs
+    "TRY003",  # long message outside exception class
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]

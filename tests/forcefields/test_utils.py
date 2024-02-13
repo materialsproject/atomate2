@@ -93,8 +93,7 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         ]
 
     if optimizer is None:
-        # None is invalid, should raise ValueError
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Optimizer cannot be None"):
             Relaxer(calculator=LennardJones(), optimizer=optimizer)
         return
 
