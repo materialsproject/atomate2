@@ -3,7 +3,7 @@ from typing import List, Union
 from atomate2.openmm.constants import OpenMMConstants
 import numpy as np
 import pathlib
-from atomate2.openmm.logger import logger
+# from atomate2.openmm.logger import logger
 
 
 class StateReports(BaseModel):
@@ -21,7 +21,7 @@ class StateReports(BaseModel):
         data = np.loadtxt(state_file, delimiter=',', skiprows=1)
 
         if len(data) == 0:
-            logger.warning(f"The loaded state file: {state_file}, was empty")
+            # logger.warning(f"The loaded state file: {state_file}, was empty")
             return StateReports()
         else:
             # Extract the data columns and set the corresponding class fields

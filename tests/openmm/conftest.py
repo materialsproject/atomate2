@@ -23,20 +23,19 @@ def platform_properties():
 
 
 @pytest.fixture(scope="session")
-def test_data_dir():
-    module_dir = Path(__file__).resolve().parent.parent
-    test_data_dir = Path(os.path.join(module_dir, "./test_data")).resolve()
-    return test_data_dir
+def openmm_data(test_dir):
+    return test_dir / "openmm"
+
+
+# @pytest.fixture(scope="session")
+# def alchemy_input_set_dir(openmm_data):
+#     alchemy_input_set_dir = openmm_data, "./minimized_alchemy_input_set"
+#     return alchemy_input_set_dir
 
 
 @pytest.fixture(scope="session")
-def alchemy_input_set_dir(test_data_dir):
-    alchemy_input_set_dir = Path(os.path.join(test_data_dir, "./minimized_alchemy_input_set")).resolve()
-    return alchemy_input_set_dir
-
-
-@pytest.fixture(scope="session")
-def alchemy_input_set(alchemy_input_set_dir):
+def alchemy_input_set(openmm_data):
+    alchemy_input_set_dir = openmm_data / "minimized_alchemy_input_set"
     input_set = OpenMMSet.from_directory(
         directory=alchemy_input_set_dir,
         topology_file=OpenMMConstants.TOPOLOGY_PDD_FILE_NAME.value,
@@ -49,8 +48,8 @@ def alchemy_input_set(alchemy_input_set_dir):
 
 
 @pytest.fixture
-def test_state_report_file(test_data_dir):
-    state_file = Path(os.path.join(test_data_dir, "./reporters/state.txt"))
+def test_state_report_file(openmm_data):
+    state_file = Path(os.path.join(openmm_data, "./reporters/state.txt"))
     return state_file.resolve()
 
 
