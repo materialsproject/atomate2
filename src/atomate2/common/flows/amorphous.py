@@ -91,7 +91,7 @@ class EquilibriumVolumeMaker(Maker):
 
             eos_jobs = [*eos_flow.jobs]
 
-            working_outputs = eos_flow.output.copy()
+            working_outputs = eos_flow.output
 
         else:
             if (
@@ -124,10 +124,10 @@ class EquilibriumVolumeMaker(Maker):
             )
 
             eos_jobs = []
-            for structure in deformed_structures:
+            for index in range(len(deformation_matrices)):
                 eos_jobs.append(
-                    self.eos_relax_maker.make(
-                        structure=structure,
+                    self.md_maker.make(
+                        structure=deformed_structures.output[index],
                         prev_dir=None,
                     )
                 )
@@ -135,11 +135,13 @@ class EquilibriumVolumeMaker(Maker):
                     eos_jobs[-1].output.output.energy
                 )
                 working_outputs["relax"]["volume"].append(
-                    eos_jobs[-1].ouput.structure.volume
+                    eos_jobs[-1].output.structure.volume
                 )
-                working_outputs["relax"]["stress"].append(eos_jobs[-1].output.stress)
+                working_outputs["relax"]["stress"].append(
+                    eos_jobs[-1].output.output.stress
+                )
                 working_outputs["relax"]["pressure"].append(
-                    1.0 / 3.0 * np.trace(eos_jobs[-1].output.stress)
+                    1.0 / 3.0 * np.trace(eos_jobs[-1].output.output.stress)
                 )
 
             # The postprocessor has a .fit and .make arg that do similar things
@@ -150,11 +152,13 @@ class EquilibriumVolumeMaker(Maker):
             working_outputs = postprocess_job.output
             eos_jobs.append(postprocess_job)
 
+            eos_flow = Flow(jobs=eos_jobs, output=eos_jobs[-1].output)
+
         recursive = self.make(
             structure=structure, prev_dir=None, working_outputs=working_outputs
         )
 
-        new_eos_flow = Flow([*eos_jobs, recursive], output=working_outputs)
+        new_eos_flow = Flow([eos_flow, recursive], output=working_outputs)
 
         return Response(replace=new_eos_flow, output=new_eos_flow.output)
 
