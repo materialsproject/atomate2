@@ -62,7 +62,11 @@ class EOSPostProcessor(dict, MSONable):
         """Fit the EOS according to a user-implemented function."""
         raise NotImplementedError
 
-    def fit(self, eos_flow_output: dict[str, Any]) -> None:
+    def fit(
+        self,
+        eos_flow_output: dict[str, Any],
+        additional_outputs: list[dict] | None = None,
+    ) -> None:
         """
         Fit the EOS.
 
@@ -81,6 +85,12 @@ class EOSPostProcessor(dict, MSONable):
             }
         """
         self.update(eos_flow_output)
+        if additional_outputs:
+            print(
+                "additional_outputs", additional_outputs
+            )  # TODO remove and replace with correct additional_outputs
+            print(self)
+
         self._use_job_types = [key for key in self.job_types if self.get(key)]
         if self.min_data_points and any(
             len(self[job_type].get("volume", [])) < self.min_data_points
@@ -95,7 +105,11 @@ class EOSPostProcessor(dict, MSONable):
         self.eval()
 
     @job
-    def make(self, eos_flow_output: dict[str, Any]) -> Job:
+    def make(
+        self,
+        eos_flow_output: dict[str, Any],
+        additional_outputs: list[dict] | None = None,
+    ) -> Job:
         """
         Run the fit as a jobflow job.
 
@@ -113,7 +127,7 @@ class EOSPostProcessor(dict, MSONable):
                     for <key> in ("relax", "static")
             }
         """
-        self.fit(eos_flow_output)
+        self.fit(eos_flow_output, additional_outputs)
         return self
 
 

@@ -131,23 +131,28 @@ class EquilibriumVolumeMaker(Maker):
                         prev_dir=None,
                     )
                 )
-                working_outputs["relax"]["energy"].append(
-                    eos_jobs[-1].output.output.energy
-                )
-                working_outputs["relax"]["volume"].append(
-                    eos_jobs[-1].output.structure.volume
-                )
-                working_outputs["relax"]["stress"].append(
-                    eos_jobs[-1].output.output.stress
-                )
-                working_outputs["relax"]["pressure"].append(
-                    1.0 / 3.0 * np.trace(eos_jobs[-1].output.output.stress)
-                )
+                # migrate into eos.py within if statement
+                # working_outputs["relax"]["energy"].append(
+                #    eos_jobs[-1].output.output.energy
+                # )
+                # working_outputs["relax"]["volume"].append(
+                #    eos_jobs[-1].output.structure.volume
+                # )
+                # working_outputs["relax"]["stress"].append(
+                #    eos_jobs[-1].output.output.stress
+                # )
+                # working_outputs["relax"]["pressure"].append(
+                #    1.0 / 3.0 * np.trace(eos_jobs[-1].output.output.stress)
+                # )
 
             # The postprocessor has a .fit and .make arg that do similar things
             # The .make function is a jobflow Job and returns the dict as output
             # The .fit function is a regular function that doesn't return anything
-            postprocess_job = self.postprocessor.make(working_outputs)
+            additional_job_outputs = [job.output for job in eos_jobs]
+            postprocess_job = self.postprocessor.make(
+                eos_flow_output=working_outputs,
+                additional_outputs=additional_job_outputs,
+            )
             postprocess_job.name = self.name + "_" + postprocess_job.name
             working_outputs = postprocess_job.output
             eos_jobs.append(postprocess_job)
