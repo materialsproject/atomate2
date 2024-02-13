@@ -1,6 +1,6 @@
 """Module to define various calculation types as Enums for CP2K."""
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from pathlib import Path
 
 from monty.serialization import loadfn
@@ -18,11 +18,11 @@ def run_type(inputs: dict) -> RunType:
     This is adapted from pymatgen to be far less unstable.
 
     Args:
-        dft: dictionary of dft parameters (standard from task doc)
+        dft: dictionary of DFT parameters (standard from task doc)
     """
     dft = inputs.get("dft")
 
-    def _variant_equal(v1, v2) -> bool:
+    def _variant_equal(v1: Sequence, v2: Sequence) -> bool:
         """Determine if two run_types are equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()

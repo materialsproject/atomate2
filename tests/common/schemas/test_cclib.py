@@ -1,9 +1,10 @@
 import gzip
+import json
 import os
 import shutil
 
 import pytest
-from monty.json import MontyDecoder, jsanitize
+from monty.json import MontyDecoder, MontyEncoder, jsanitize
 
 from atomate2.common.schemas.cclib import TaskDocument
 
@@ -47,12 +48,11 @@ def test_cclib_taskdoc(test_dir):
 
     # Now we will try two possible extensions, but we will make sure that
     # it fails because the newest log file (.txt) is not valid
-    with open(p / "test.txt", "w") as f:
-        f.write("I am a dummy log file")
-    with pytest.raises(Exception) as e:
+    with open(p / "test.txt", "w") as file:
+        file.write("I am a dummy log file")
+    with pytest.raises(ValueError, match="Could not parse"):
         doc = TaskDocument.from_logfile(p, [".log", ".txt"]).dict()
     os.remove(p / "test.txt")
-    assert "Could not parse" in str(e.value)
 
     # Test a population analysis
     doc = TaskDocument.from_logfile(p, "psi_test.out", analysis="MBO").dict()
@@ -100,3 +100,7 @@ def test_cclib_taskdoc(test_dir):
     # and decoded
     json_str = MontyDecoder().process_decoded(dct)
     assert "builder_meta=EmmetMeta" in json_str
+
+
+def test_model_validate():
+    TaskDocument.model_validate_json(json.dumps(TaskDocument(), cls=MontyEncoder))

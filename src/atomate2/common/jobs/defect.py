@@ -219,8 +219,8 @@ def get_supercell_from_prv_calc(
     )
 
     if sc_mat_ref is not None:
-        latt_ref = Lattice(sc_mat_ref)
-        latt_prv = Lattice(sc_mat_prv)
+        latt_ref = (uc_structure * sc_mat_ref).lattice
+        latt_prv = (uc_structure * sc_mat_prv).lattice
         if not (
             np.allclose(sorted(latt_ref.abc), sorted(latt_prv.abc))
             and np.allclose(sorted(latt_ref.angles), sorted(latt_prv.angles))
@@ -269,8 +269,8 @@ def bulk_supercell_calculation(
     """
     if get_planar_locpot is None:
 
-        def get_planar_locpot(tdoc):
-            return tdoc.calcs_reversed[0].output.locpot
+        def get_planar_locpot(task_doc: TaskDoc) -> NDArray:
+            return task_doc.calcs_reversed[0].output.locpot
 
     logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
@@ -458,7 +458,7 @@ def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dic
                 "defect_locpot": defect_locpot,
                 "bulk_dir_name": bulk_dir_name,
                 "bulk_locpot": bulk_locpot,
-                "bulk_uuid": bulk_summary.get("uuid", None),
+                "bulk_uuid": bulk_summary.get("uuid"),
                 "defect_uuid": qq_summary.get("uuid", None),
             }
         )

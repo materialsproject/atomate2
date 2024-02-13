@@ -51,7 +51,7 @@ class ElasticRelaxMaker(BaseVaspMaker):
     name: str = "elastic relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"grid_density": 7000},
+            user_kpoints_settings={"grid_density": 7_000},
             user_incar_settings={
                 "IBRION": 2,
                 "ISIF": 2,

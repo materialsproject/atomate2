@@ -47,7 +47,9 @@ class VaspDrone(AbstractDrone):
         except Exception:
             import traceback
 
-            logger.error(f"Error in {Path(path).absolute()}\n{traceback.format_exc()}")
+            logger.exception(
+                f"Error in {Path(path).absolute()}\n{traceback.format_exc()}"
+            )
             raise
         return doc
 
