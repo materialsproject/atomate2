@@ -183,12 +183,15 @@ class BaseAbinitMaker(Maker):
 
         # parse Abinit outputs
 
-        self.task_document_kwargs.update({"critical_events": self.critical_events})
+        #self.task_document_kwargs.update({"critical_events": self.critical_events})
         task_doc = AbinitTaskDoc.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,
         )
         task_doc.task_label = self.name
+        if len(task_doc.event_report.filter_types(self.critical_events))>0:
+            task_doc.state = TaskState.UNCONVERGED
+            task_doc.calcs_reversed[-1].has_abinit_completed = TaskState.UNCONVERGED # optional I think
 
         return self.get_response(
             task_document=task_doc,

@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Optional, Union
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from abipy.flowtk.events import AbinitCriticalWarning
+    #from abipy.flowtk.events import AbinitCriticalWarning
 
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
@@ -346,12 +346,12 @@ class Calculation(BaseModel):
             )
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
-            critical_events_report = report.filter_types(critical_events)
-            if critical_events_report:
-                for warning in critical_events_report.warnings:
-                    if type(warning) in AbiConvergenceWarning.all:
-                        has_abinit_completed = TaskState.UNCONVERGED
-                        break
+            #critical_events_report = report.filter_types(critical_events)
+            #if critical_events_report:
+                #for warning in critical_events_report.warnings:
+                #    if type(warning) in AbiConvergenceWarning.all:
+                #has_abinit_completed = TaskState.UNCONVERGED
+                        #break
 
         except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"

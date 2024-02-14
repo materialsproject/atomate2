@@ -42,16 +42,16 @@ HISTORY_JSON = "history.json"
 logger = logging.getLogger(__name__)
 
 
-class AbiConvergenceWarning:
-    """Possibilities of convergence warnings."""
-
-    all = (
-        ScfConvergenceWarning,
-        NscfConvergenceWarning,
-        RelaxConvergenceWarning,
-        QPSConvergenceWarning,
-        HaydockConvergenceWarning,
-    )
+#class AbiConvergenceWarning:
+#    """Possibilities of convergence warnings."""
+#
+#    all = (
+#        ScfConvergenceWarning,
+#        NscfConvergenceWarning,
+#        RelaxConvergenceWarning,
+#        QPSConvergenceWarning,
+#        HaydockConvergenceWarning,
+#    )
 
 
 class ErrorCode:
