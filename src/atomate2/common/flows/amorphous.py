@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import job, Flow, Maker, Response
-from atomate2.common.flows.eos import CommonEosMaker
+#from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import (
     apply_strain_to_structure,
     MPMorphPVPostProcess,
@@ -74,26 +74,15 @@ class EquilibriumVolumeMaker(Maker):
         -------
         .Flow, an MPMorph flow
         """
-        print("new print test")
-        print(working_outputs)
+
         if working_outputs is None:
-
-            eos_maker = CommonEosMaker(
-                name=self.name + " initial EOS fit",
-                initial_relax_maker=None,
-                eos_relax_maker=self.md_maker,
-                static_maker=None,
-                linear_strain=(-0.2, 0.2),
-                postprocessor=self.postprocessor,
-                number_of_frames=self.postprocessor.min_data_points,
-            )
-            eos_flow = eos_maker.make(structure=structure, prev_dir=prev_dir)
-
-            eos_jobs = [*eos_flow.jobs]
-
-            working_outputs = eos_flow.output
+            linear_strain = np.linspace(-0.2,0.2,self.postprocessor.min_data_points)
+            working_outputs : dict[str,dict] = {
+                "relax": { key : [] for key in ("energy","volume","stress",)}
+            }
 
         else:
+            
             if (
                 working_outputs["V0"] <= working_outputs["Vmax"]
                 and working_outputs["V0"] >= working_outputs["Vmin"]
@@ -118,6 +107,7 @@ class EquilibriumVolumeMaker(Maker):
             eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
+<<<<<<< Updated upstream
             deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
             deformed_structures = apply_strain_to_structure(
                 structure, deformation_matrices
@@ -161,9 +151,52 @@ class EquilibriumVolumeMaker(Maker):
 
         recursive = self.make(
             structure=structure, prev_dir=None, working_outputs=working_outputs
+=======
+        deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
+        deformed_structures = apply_strain_to_structure(
+            structure, deformation_matrices
+>>>>>>> Stashed changes
         )
 
-        new_eos_flow = Flow([eos_flow, recursive], output=working_outputs)
+        eos_jobs = []
+        for index in range(len(deformation_matrices)):
+            md_job = self.md_maker.make(
+                structure=deformed_structures.output[index],
+                prev_dir=None,
+            )
+            md_job.name = f"{self.name} {md_job.name} {len(working_outputs['relax']['energy'])+1}"
+            
+            working_outputs["relax"]["energy"].append(
+                md_job.output.output.energy
+            )
+            working_outputs["relax"]["volume"].append(
+                md_job.output.structure.volume
+            )
+            working_outputs["relax"]["stress"].append(
+                md_job.output.output.stress
+            )
+            eos_jobs.append(md_job)
+
+        # The postprocessor has a .fit and .make arg that do similar things
+        # The .make function is a jobflow Job and returns the dict as output
+        # The .fit function is a regular function that doesn't return anything
+        postprocess_job = self.postprocessor.make(working_outputs)
+        postprocess_job.name = self.name + "_" + postprocess_job.name
+        working_outputs = postprocess_job.output
+        eos_jobs.append(postprocess_job)
+
+        recursive = EquilibriumVolumeMaker(
+            md_maker=self.md_maker,
+            postprocessor=self.postprocessor,
+            min_strain=self.min_strain,
+            max_attempts=self.max_attempts
+        ).make(
+            structure=structure,
+            prev_dir=None, 
+            working_outputs=working_outputs,
+        )
+
+        new_eos_flow = Flow([*eos_jobs,recursive], output=working_outputs)
 
         return Response(replace=new_eos_flow, output=new_eos_flow.output)
 
