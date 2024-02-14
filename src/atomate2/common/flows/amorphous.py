@@ -107,55 +107,9 @@ class EquilibriumVolumeMaker(Maker):
             eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
-<<<<<<< Updated upstream
-            deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
-            deformed_structures = apply_strain_to_structure(
-                structure, deformation_matrices
-            )
-
-            eos_jobs = []
-            for index in range(len(deformation_matrices)):
-                eos_jobs.append(
-                    self.md_maker.make(
-                        structure=deformed_structures.output[index],
-                        prev_dir=None,
-                    )
-                )
-                # migrate into eos.py within if statement
-                # working_outputs["relax"]["energy"].append(
-                #    eos_jobs[-1].output.output.energy
-                # )
-                # working_outputs["relax"]["volume"].append(
-                #    eos_jobs[-1].output.structure.volume
-                # )
-                # working_outputs["relax"]["stress"].append(
-                #    eos_jobs[-1].output.output.stress
-                # )
-                # working_outputs["relax"]["pressure"].append(
-                #    1.0 / 3.0 * np.trace(eos_jobs[-1].output.output.stress)
-                # )
-
-            # The postprocessor has a .fit and .make arg that do similar things
-            # The .make function is a jobflow Job and returns the dict as output
-            # The .fit function is a regular function that doesn't return anything
-            additional_job_outputs = [job.output for job in eos_jobs]
-            postprocess_job = self.postprocessor.make(
-                eos_flow_output=working_outputs,
-                additional_outputs=additional_job_outputs,
-            )
-            postprocess_job.name = self.name + "_" + postprocess_job.name
-            working_outputs = postprocess_job.output
-            eos_jobs.append(postprocess_job)
-
-            eos_flow = Flow(jobs=eos_jobs, output=eos_jobs[-1].output)
-
-        recursive = self.make(
-            structure=structure, prev_dir=None, working_outputs=working_outputs
-=======
         deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
         deformed_structures = apply_strain_to_structure(
             structure, deformation_matrices
->>>>>>> Stashed changes
         )
 
         eos_jobs = []
