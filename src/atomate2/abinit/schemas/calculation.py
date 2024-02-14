@@ -66,12 +66,8 @@ class CalculationOutput(BaseModel):
         The Fermi level from the calculation in eV
     forces: List[Vector3D]
         Forces acting on each atom
-    all_forces: List[List[Vector3D]]
-        Forces acting on each atom for each structure in the output file
     stress: Matrix3D
         The stress on the cell
-    stresses: List[Matrix3D]
-        The atomic virial stresses
     is_metal: bool
         Whether the system is metallic
     bandgap: float
@@ -80,8 +76,6 @@ class CalculationOutput(BaseModel):
         The conduction band minimum in eV (if system is not metallic
     vbm: float
         The valence band maximum in eV (if system is not metallic)
-    atomic_steps: list[Structure]
-        Structures for each ionic step"
     """
 
     energy: float = Field(
@@ -102,15 +96,7 @@ class CalculationOutput(BaseModel):
     forces: Optional[list[Vector3D]] = Field(
         None, description="Forces acting on each atom"
     )
-    all_forces: Optional[list[list[Vector3D]]] = Field(
-        None,
-        description="Forces acting on each atom for each structure in the output file",
-    )
     stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
-    stresses: Optional[list[Matrix3D]] = Field(
-        None, description="The atomic virial stresses"
-    )
-
     is_metal: Optional[bool] = Field(None, description="Whether the system is metallic")
     bandgap: Optional[float] = Field(
         None, description="The band gap from the calculation in eV"
@@ -127,9 +113,6 @@ class CalculationOutput(BaseModel):
         None,
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
-    )
-    atomic_steps: Optional[list[Union[Structure]]] = Field(
-        None, description="Structures for each ionic step"
     )
 
     @classmethod
@@ -182,24 +165,13 @@ class CalculationOutput(BaseModel):
         if output.cart_stress_tensor is not None:
             stress = output.cart_stress_tensor.tolist()
 
-        stresses = None
-        # if output.stresses is not None:
-        #     stresses = [ensure_stress_full(st).tolist() for st in output.stresses]
-
-        all_forces = None
-        # if not any(ff is None for ff in output.all_forces):
-        #     all_forces = [f if (f is not None) else None for f in output.all_forces]
-
         return cls(
             structure=structure,
             energy=output.energy,
             energy_per_atom=output.energy_per_atom,
             **electronic_output,
-            # atomic_steps=None,
             forces=forces,
             stress=stress,
-            stresses=stresses,
-            all_forces=all_forces,
         )
 
 

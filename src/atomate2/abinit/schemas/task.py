@@ -21,7 +21,8 @@ from atomate2.abinit.schemas.calculation import (
     Calculation,
     TaskState,
 )
-from atomate2.abinit.utils import datetime_str
+# from atomate2.abinit.utils import datetime_str
+from atomate2.utils.datetime import datetime_str
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
@@ -99,8 +100,6 @@ class OutputDoc(BaseModel):
         Forces on atoms from the last calculation
     stress: Matrix3D
         Stress on the unit cell from the last calculation
-    all_forces: List[List[Vector3D]]
-        Forces on atoms from all calculations.
     """
 
     structure: Union[Structure] = Field(
@@ -126,9 +125,6 @@ class OutputDoc(BaseModel):
     stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
-    all_forces: Optional[list[list[Vector3D]]] = Field(
-        None, description="Forces on atoms from all calculations."
-    )
 
     @classmethod
     def from_abinit_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
@@ -153,8 +149,6 @@ class OutputDoc(BaseModel):
             vbm=calc_doc.output.vbm,
             forces=calc_doc.output.forces,
             stress=calc_doc.output.stress,
-            all_forces=calc_doc.output.all_forces,
-            trajectory=calc_doc.output.atomic_steps,
         )
 
 

@@ -238,8 +238,8 @@ def as_pseudo_table(pseudos):
     return PseudoTable(pseudos)
 
 
-class PrevOutput:
-    dirname_exts: str
+# class PrevOutput:
+#     dirname_exts: str
 
 
 @dataclass
@@ -617,20 +617,21 @@ class AbinitInputGenerator(InputGenerator):
         if factory_kwargs:
             total_factory_kwargs.update(factory_kwargs)
 
-        if isinstance(self.factory, str):  # needed bc the factory is stored as a
-            # str in the MongoDB
-            import abipy.abio.factories as abifact
+        generated_input = self.factory(**total_factory_kwargs)
+        # if isinstance(self.factory, str):  # needed bc the factory is stored as a
+        #     # str in the MongoDB
+        #     import abipy.abio.factories as abifact
 
-            if self.factory.split()[1] in dir(abifact):
-                generated_input = eval(
-                    "abifact." + self.factory.split()[1] + "(**total_factory_kwargs)"
-                )
-            else:
-                raise Exception(
-                    f"{self.factory.split()[1]} is not a valid abipy factory."
-                )
-        else:
-            generated_input = self.factory(**total_factory_kwargs)
+        #     if self.factory.split()[1] in dir(abifact):
+        #         generated_input = eval(
+        #             "abifact." + self.factory.split()[1] + "(**total_factory_kwargs)"
+        #         )
+        #     else:
+        #         raise Exception(
+        #             f"{self.factory.split()[1]} is not a valid abipy factory."
+        #         )
+        # else:
+        #     generated_input = self.factory(**total_factory_kwargs)
 
         if input_index is not None:
             generated_input = generated_input[input_index]
