@@ -11,7 +11,7 @@ from abipy.flowtk import events
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
-from pymatgen.core import Molecule, Structure
+from pymatgen.core import Structure
 
 from atomate2.abinit.files import load_abinit_input
 
@@ -40,11 +40,11 @@ class InputDoc(BaseModel):
 
     Parameters
     ----------
-    structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the final system
+    structure: Structure
+        The final pymatgen Structure of the final system
     """
 
-    structure: Union[Structure, Molecule] = Field(
+    structure: Union[Structure] = Field(
         None, description="The input structure object"
     )
     abinit_input: AbinitInput = Field(
@@ -81,9 +81,9 @@ class OutputDoc(BaseModel):
 
     Parameters
     ----------
-    structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the final system
-    trajectory: List[Structure or Molecule]
+    structure: Structure
+        The final pymatgen Structure of the final system
+    trajectory: List[Structure]
         The trajectory of output structures
     energy: float
         The final total DFT energy for the last calculation
@@ -103,10 +103,10 @@ class OutputDoc(BaseModel):
         Forces on atoms from all calculations.
     """
 
-    structure: Union[Structure, Molecule] = Field(
+    structure: Union[Structure] = Field(
         None, description="The output structure object"
     )
-    trajectory: Optional[Sequence[Union[Structure, Molecule]]] = Field(
+    trajectory: Optional[Sequence[Union[Structure]]] = Field(
         None, description="The trajectory of output structures"
     )
     energy: float = Field(
@@ -173,7 +173,7 @@ class AbinitTaskDoc(StructureMetadata):
         The input to the first calculation
     output: .OutputDoc
         The output of the final calculation
-    structure: Structure or Molecule
+    structure: Structure
         Final output structure from the task
     state: .TaskState
         State of this task
@@ -221,7 +221,7 @@ class AbinitTaskDoc(StructureMetadata):
     output: Optional[OutputDoc] = Field(
         None, description="The output of the final calculation"
     )
-    structure: Union[Structure, Molecule] = Field(
+    structure: Union[Structure] = Field(
         None, description="Final output atoms from the task"
     )
     state: Optional[TaskState] = Field(None, description="State of this task")

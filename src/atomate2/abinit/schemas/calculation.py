@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Optional, Union
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    #from abipy.flowtk.events import AbinitCriticalWarning
+    # from abipy.flowtk.events import AbinitCriticalWarning
 
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
@@ -20,12 +20,11 @@ from abipy.flowtk.utils import File
 from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
-from pymatgen.core import Molecule, Structure
+from pymatgen.core import Structure
 
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
-    AbiConvergenceWarning,
     get_event_report,
 )
 
@@ -61,8 +60,8 @@ class CalculationOutput(BaseModel):
         The final total DFT energy for the calculation
     energy_per_atom: float
         The final DFT energy per atom for the calculation
-    structure: Structure or Molecule
-        The final pymatgen Structure or Molecule of the system
+    structure: Structure
+        The final pymatgen Structure of the system
     efermi: float
         The Fermi level from the calculation in eV
     forces: List[Vector3D]
@@ -81,7 +80,7 @@ class CalculationOutput(BaseModel):
         The conduction band minimum in eV (if system is not metallic
     vbm: float
         The valence band maximum in eV (if system is not metallic)
-    atomic_steps: list[Structure or Molecule]
+    atomic_steps: list[Structure]
         Structures for each ionic step"
     """
 
@@ -92,7 +91,7 @@ class CalculationOutput(BaseModel):
         None, description="The final DFT energy per atom for the calculation"
     )
 
-    structure: Union[Structure, Molecule] = Field(
+    structure: Union[Structure] = Field(
         None, description="The final structure from the calculation"
     )
 
@@ -129,7 +128,7 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    atomic_steps: Optional[list[Union[Structure, Molecule]]] = Field(
+    atomic_steps: Optional[list[Union[Structure]]] = Field(
         None, description="Structures for each ionic step"
     )
 
@@ -346,12 +345,12 @@ class Calculation(BaseModel):
             )
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
-            #critical_events_report = report.filter_types(critical_events)
-            #if critical_events_report:
-                #for warning in critical_events_report.warnings:
-                #    if type(warning) in AbiConvergenceWarning.all:
-                #has_abinit_completed = TaskState.UNCONVERGED
-                        #break
+            # critical_events_report = report.filter_types(critical_events)
+            # if critical_events_report:
+            # for warning in critical_events_report.warnings:
+            #    if type(warning) in AbiConvergenceWarning.all:
+            # has_abinit_completed = TaskState.UNCONVERGED
+            # break
 
         except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"

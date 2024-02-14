@@ -7,13 +7,6 @@ from abipy.abio.outputs import AbinitOutputFile
 from abipy.dfpt.ddb import DdbFile
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
-from abipy.flowtk.events import (
-    HaydockConvergenceWarning,
-    NscfConvergenceWarning,
-    QPSConvergenceWarning,
-    RelaxConvergenceWarning,
-    ScfConvergenceWarning,
-)
 from abipy.flowtk.utils import Directory, File
 from monty.json import MSONable
 from monty.serialization import MontyDecoder
@@ -42,7 +35,7 @@ HISTORY_JSON = "history.json"
 logger = logging.getLogger(__name__)
 
 
-#class AbiConvergenceWarning:
+# class AbiConvergenceWarning:
 #    """Possibilities of convergence warnings."""
 #
 #    all = (
