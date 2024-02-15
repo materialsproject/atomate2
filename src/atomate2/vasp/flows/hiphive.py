@@ -12,16 +12,6 @@ import numpy as np
 # Jobflow packages
 from jobflow import Flow, Maker
 
-# Pymatgen packages
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.forcefields.flows.phonons import PhononMaker
-
-# Atomate2 packages
-from atomate2.vasp.jobs.core import (
-    DielectricMaker,
-    StaticMaker,
-    TightRelaxMaker,
-)
 from atomate2.common.jobs.phonons import (
     PhononDisplacementMaker,
     generate_frequencies_eigenvectors,
@@ -30,17 +20,23 @@ from atomate2.common.jobs.phonons import (
     get_total_energy_per_cell,
     run_phonon_displacements,
 )
+from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+
+# Pymatgen packages
+from atomate2.vasp.flows.core import DoubleRelaxMaker
+
+# Atomate2 packages
+from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.hiphive import (
-    generate_hiphive_displacements,
     collect_perturbed_structures,
+    generate_hiphive_displacements,
     quality_control,
     run_fc_to_pdos,
     run_hiphive,
     run_hiphive_renormalization,
     run_lattice_thermal_conductivity,
-    run_static_calculations,
 )
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -91,11 +87,21 @@ class HiphiveMaker(Maker):
         Name of the flows produced by this maker.
     task_document_kwargs (dict):
         Keyword arguments for task document, default is {"task_label": "dummy_label"}.
-    MPstatic_maker (BaseVaspMaker):
+    static_energy_maker (BaseVaspMaker):
         The VASP input generator for static calculations, default is StaticMaker.
     bulk_relax_maker (BaseVaspMaker | None):
         The VASP input generator for bulk relaxation,
         default is DoubleRelaxMaker using TightRelaxMaker.
+    phonon_displacement_maker (BaseVaspMaker | None):
+        The VASP input generator for phonon displacement calculations,
+        default is PhononDisplacementMaker.
+    min_length (float):
+        Minimum length of supercell lattice vectors in Angstroms, default is 13.0.
+    prefer_90_degrees (bool):
+        Whether to prefer 90 degree angles in supercell matrix,
+        default is True.
+    supercell_matrix_kwargs (dict):
+        Keyword arguments for supercell matrix calculation, default is {}.
     IMAGINARY_TOL (float):
         Imaginary frequency tolerance in THz, default is 0.025.
     MESH_DENSITY (float):
@@ -129,15 +135,6 @@ class HiphiveMaker(Maker):
     """
 
     name: str = "Lattice-Dynamics"
-    sym_reduce: bool = True
-    symprec: float = 1e-4
-    use_symmetrized_structure: str | None = None
-    kpath_scheme: str = "seekpath"
-    create_thermal_displacements: bool = True
-    store_force_constants: bool = True
-    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
-    fit_force_constant_hiphive: bool = True
-    code: str = "vasp"
     task_document_kwargs: dict = field(
         default_factory=lambda: {"task_label": "dummy_label"}
     )
@@ -146,15 +143,14 @@ class HiphiveMaker(Maker):
             input_set_generator=StaticSetGenerator(auto_ispin=True)
         )
     )
+    bulk_relax_maker: BaseVaspMaker | None = field(
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+    )
     phonon_displacement_maker: BaseVaspMaker | None = field(
         default_factory=lambda:PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(auto_lreal=True)
         )
     )
-    bulk_relax_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
-    )
-    born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
     min_length: float | None = 13.0
     prefer_90_degrees: bool = True
     supercell_matrix_kwargs: dict = field(default_factory=dict)
@@ -195,8 +191,6 @@ class HiphiveMaker(Maker):
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
         prev_vasp_dir: str | Path | None = None,
-        num_supercell_kwargs: dict | None = None,
-        perturbed_structure_kwargs: dict | None = None,
         calculate_lattice_thermal_conductivity: bool = True,
         renormalize: bool = True,
         renormalize_temperature: list = T_RENORM,
@@ -214,9 +208,7 @@ class HiphiveMaker(Maker):
         n_structures: float = None,
         fixed_displs: float = None,
         prev_dir_hiphive: str | Path | None = None,
-        born: list[Matrix3D] | None = None,
-         epsilon_static: Matrix3D | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the harmonic & anharmonic properties of phonon.
 
@@ -228,6 +220,10 @@ class HiphiveMaker(Maker):
             The A pymatgen structure of the material.
         bulk_modulus (float):
             Bulk modulus of the material in GPa.
+        supercell_matrix (Matrix3D, optional):
+            Supercell transformation matrix, default is None.
+        total_dft_energy_per_formula_unit (float, optional):
+            Total DFT energy per formula unit, default is None.
         fit_method (str, optional):
             Method for fitting force constants using hiphive, default is None.
         disp_cut (float, optional):
@@ -238,12 +234,6 @@ class HiphiveMaker(Maker):
         prev_vasp_dir (str | Path | None, optional):
             Previous vasp calculation directory to use for copying outputs.,
             default is None.
-        supercell_matrix_kwargs (dict, optional):
-            Keyword arguments for supercell matrix generation, default is None.
-        num_supercell_kwargs (dict, optional):
-            Keyword arguments for supercell enumeration, default is None.
-        perturbed_structure_kwargs (dict, optional):
-            Keyword arguments for perturbed structure generation, default is None.
         calculate_lattice_thermal_conductivity (bool, optional):
             Calculate lattice thermal conductivity, default is True.
         renormalize (bool, optional):
@@ -290,10 +280,9 @@ class HiphiveMaker(Maker):
         if isinstance(self.bulk_relax_maker, ForceFieldRelaxMaker):
             bulk = self.bulk_relax_maker.make(structure)
         else:
-            bulk = self.bulk_relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_vasp_dir)
         jobs.append(bulk)
         outputs.append(bulk.output)
-        print(bulk.output.structure)
         structure = bulk.output.structure
         prev_vasp_dir = bulk.output.dir_name
         bulk.update_metadata(
@@ -310,7 +299,7 @@ class HiphiveMaker(Maker):
             }
         )
 
-        # if supercell_matrix is None, supercell size will be determined after relax
+        # 2. if supercell_matrix is None, supercell size will be determined after relax
         # maker to ensure that cell lengths are really larger than threshold
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
@@ -321,32 +310,8 @@ class HiphiveMaker(Maker):
             )
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output
-        
-        # Computation of static energy
-        total_dft_energy = None
-        static_run_job_dir = None
-        static_run_uuid = None
-        if (self.static_energy_maker is not None) and (
-            total_dft_energy_per_formula_unit is None
-        ):
-            if isinstance(self.static_energy_maker, ForceFieldRelaxMaker):
-                static_job = self.static_energy_maker.make(structure)
-            else:
-                static_job = self.static_energy_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-            jobs.append(static_job)
-            total_dft_energy = static_job.output.output.energy
-            static_run_job_dir = static_job.output.dir_name
-            static_run_uuid = static_job.output.uuid
-            prev_vasp_dir = static_job.output.dir_name
-        elif total_dft_energy_per_formula_unit is not None:
-            # to make sure that one can reuse results from Doc
-            compute_total_energy_job = get_total_energy_per_cell(
-                total_dft_energy_per_formula_unit, structure
-            )
-            jobs.append(compute_total_energy_job)
-            total_dft_energy = compute_total_energy_job.output
-        
-        # get a phonon object from phonopy
+
+        # 3. get a phonon object from phonopy
         displacements = generate_hiphive_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
@@ -356,7 +321,7 @@ class HiphiveMaker(Maker):
         )
         jobs.append(displacements)
 
-        # perform the phonon displacement calculations
+        # 4. perform the phonon displacement calculations
         vasp_displacement_calcs = run_phonon_displacements(
             displacements=displacements.output,
             structure=structure,
@@ -367,7 +332,7 @@ class HiphiveMaker(Maker):
         jobs.append(vasp_displacement_calcs)
 
 
-        # 3.  Save "structure_data_{loop}.json", "relaxed_structures.json",
+        # 5. Save "structure_data_{loop}.json", "relaxed_structures.json",
         # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
         # files locally
         json_saver = collect_perturbed_structures(
@@ -394,7 +359,11 @@ class HiphiveMaker(Maker):
             }
         )
 
-        # 4. Hiphive Fitting of FCPs upto 4th order
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/MgO_555_paper"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready_old_disps"
+
+        # 6. Hiphive Fitting of FCPs upto 4th order
         fit_force_constant = run_hiphive(
             fit_method=fit_method,
             disp_cut=disp_cut,
@@ -403,7 +372,9 @@ class HiphiveMaker(Maker):
             mesh_density=mesh_density,
             imaginary_tol=imaginary_tol,
             prev_dir_json_saver=json_saver.output[3],
+            # prev_dir_json_saver=prev_dir_json_saver,
             loop=loops,
+            cutoffs=cutoffs
         )
         fit_force_constant.name += f" {loops}"
         jobs.append(fit_force_constant)
@@ -422,7 +393,7 @@ class HiphiveMaker(Maker):
             }
         )
 
-        # 6. Quality Control Job to check if the desired Test RMSE is achieved,
+        # 7. Quality Control Job to check if the desired Test RMSE is achieved,
         # if not, then increase the number of structures --
         # Using "addintion" feature of jobflow
         loops += 1
@@ -462,7 +433,7 @@ class HiphiveMaker(Maker):
             }
         )
 
-        # 7. Perform phonon renormalization to obtain temperature-dependent
+        # 8. Perform phonon renormalization to obtain temperature-dependent
         # force constants using hiPhive
         if renormalize:
             for temperature in renormalize_temperature:
@@ -495,7 +466,7 @@ class HiphiveMaker(Maker):
                     }
                 )
 
-        # 5. Extract Phonon Band structure & DOS from FC
+        # 9. Extract Phonon Band structure & DOS from FC
         if renormalize:
             fc_pdos_pb_to_db = run_fc_to_pdos(
                 renormalized=renormalize,
@@ -529,7 +500,7 @@ class HiphiveMaker(Maker):
             }
         )
 
-        # 8. Lattice thermal conductivity calculation using Sheng BTE
+        # 10. Lattice thermal conductivity calculation using Sheng BTE
         if calculate_lattice_thermal_conductivity:
             if renormalize:
                 temperatures = renormalize_temperature
@@ -586,4 +557,4 @@ class HiphiveMaker(Maker):
             }
         )
 
-        return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE")
+        return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE_{fixed_displs}")
