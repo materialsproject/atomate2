@@ -146,8 +146,8 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-select = ["ALL"]
-ignore = [
+lint.select = ["ALL"]
+lint.ignore = [
     "ANN002",
     "ANN003",
     "ANN101",  # missing self type annotation
@@ -177,12 +177,13 @@ ignore = [
     "SLF",     # private member accessed outside class
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
+    "S507",    # paramiko auto trust
 ]
-pydocstyle.convention = "numpy"
-isort.known-first-party = ["atomate2"]
-isort.split-on-trailing-comma = false
+lint.pydocstyle.convention = "numpy"
+lint.isort.known-first-party = ["atomate2"]
+lint.isort.split-on-trailing-comma = false
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
