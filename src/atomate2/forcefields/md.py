@@ -63,11 +63,11 @@ class ForceFieldMDMaker(Maker):
         The timestep of the MD run in ase time units
     md_steps : int = 500
         The number of MD steps to run
-    ensemble : str = "nve"
+    ensemble : str = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
     temperature : float | None = 300.
         The temperature in Kelvin
-    thermostat : str = "velocityverlet"
+    thermostat : str = "langevin"
         The thermostat to use. See _valid_thermostats for a list of options
     ase_md_kwargs : dict | None = None
         Options to pass to the ASE MD function
@@ -94,9 +94,9 @@ class ForceFieldMDMaker(Maker):
     force_field_name: str = "Forcefield"
     timestep: float | None = 0.2  # approx 2 fs
     md_steps: int = 500
-    ensemble: Literal["nve", "nvt", "npt"] = "nve"
+    ensemble: Literal["nve", "nvt", "npt"] = "nvt"
     temperature: float | None = 300.0
-    thermostat: str = "velocityverlet"
+    thermostat: str = "langevin"
     ase_md_kwargs: dict | None = None
     calculator_args: list | tuple | None = None
     calculator_kwargs: dict | None = None
