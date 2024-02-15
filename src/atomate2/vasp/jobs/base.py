@@ -214,7 +214,6 @@ class BaseVaspMaker(Maker):
 
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
-        print("vis-structure-2",structure,self.write_input_set_kwargs)
         # write vasp input files
         write_vasp_input_set(
             structure, self.input_set_generator, **self.write_input_set_kwargs

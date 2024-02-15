@@ -79,10 +79,7 @@ class EquilibriumVolumeMaker(Maker):
         if working_outputs is None:
             linear_strain = np.linspace(-0.2, 0.2, self.postprocessor.min_data_points)
             working_outputs: dict[str, dict] = {
-                "relax": {
-                    key: []
-                    for key in ("energy","volume","stress")
-                }
+                "relax": {key: [] for key in ("energy", "volume", "stress")}
             }
 
         else:
@@ -115,7 +112,9 @@ class EquilibriumVolumeMaker(Maker):
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
         deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
-        deformed_structures = _apply_strain_to_structure(structure, deformation_matrices)
+        deformed_structures = _apply_strain_to_structure(
+            structure, deformation_matrices
+        )
 
         eos_jobs = []
         for index in range(len(deformation_matrices)):
@@ -123,7 +122,9 @@ class EquilibriumVolumeMaker(Maker):
                 structure=deformed_structures[index].final_structure,
                 prev_dir=None,
             )
-            md_job.name = f"{self.name} {md_job.name} {len(working_outputs['relax']['energy'])+1}"
+            md_job.name = (
+                f"{self.name} {md_job.name} {len(working_outputs['relax']['energy'])+1}"
+            )
 
             working_outputs["relax"]["energy"].append(md_job.output.output.energy)
             working_outputs["relax"]["volume"].append(md_job.output.structure.volume)
@@ -270,7 +271,9 @@ class MPMorphMDMaker(Maker):
         flow_jobs = []
 
         if self.convergence_md_maker is not None:
-            convergence_flow = self.convergence_md_maker.make(structure, prev_dir = prev_dir)
+            convergence_flow = self.convergence_md_maker.make(
+                structure, prev_dir=prev_dir
+            )
             flow_jobs.append(convergence_flow)
 
             # convergence_flow only outputs a structure
@@ -278,15 +281,14 @@ class MPMorphMDMaker(Maker):
 
         self.production_md_maker.name = self.name + " production run"
         production_run = self.production_md_maker.make(
-            structure = structure,
-            prev_dir = prev_dir
+            structure=structure, prev_dir=prev_dir
         )
         flow_jobs.append(production_run)
 
         if self.quench_maker:
             quench_flow = self.quench_maker.make(
-                structure = production_run.output.structure,
-                prev_dir = production_run.output.dir_name
+                structure=production_run.output.structure,
+                prev_dir=production_run.output.dir_name,
             )
             flow_jobs += [quench_flow]
 
