@@ -95,7 +95,7 @@ def md_output(
     vasp_dir: str | Path,
     traj_ids: list[str],
     prev_traj_ids: list[str] | None,
-):
+) -> Response:
     """
     Collect output references of a multistep MD flow.
 

@@ -2,6 +2,7 @@
 
 import copy
 import logging
+from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
@@ -98,14 +99,16 @@ class PhononJobDirs(BaseModel):
     optimization_run_job_dir: Optional[str] = Field(
         None, description="Directory where optimization run was performed."
     )
+    taskdoc_run_job_dir: Optional[str] = Field(
+        None, description="Directory where taskdoc was generated."
+    )
 
 
-class PhononBSDOSDoc(StructureMetadata):
+class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the phonon workflow."""
 
     structure: Optional[Structure] = Field(
-        None,
-        description="Structure of Materials Project.",
+        None, description="Structure of Materials Project."
     )
 
     phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(
@@ -461,6 +464,7 @@ class PhononBSDOSDoc(StructureMetadata):
                 "static_run_job_dir": kwargs["static_run_job_dir"],
                 "born_run_job_dir": kwargs["born_run_job_dir"],
                 "optimization_run_job_dir": kwargs["optimization_run_job_dir"],
+                "taskdoc_run_job_dir": str(Path.cwd()),
             },
             uuids={
                 "displacements_uuids": displacement_data["uuids"],

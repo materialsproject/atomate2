@@ -16,10 +16,7 @@ from atomate2.vasp.jobs.core import (
     RelaxMaker,
     StaticMaker,
 )
-from atomate2.vasp.sets.core import (
-    HSEBSSetGenerator,
-    NonSCFSetGenerator,
-)
+from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
