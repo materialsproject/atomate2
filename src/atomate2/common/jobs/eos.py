@@ -325,8 +325,7 @@ class PostProcessEosPressure(EOSPostProcessor):
                     self[jobtype]["EOS"][key] = eos_params[i]
 
 
-@job
-def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
+def _apply_strain_to_structure(structure: Structure, deformations: list) -> list:
     """
     Apply strain(s) to input structure and return transformation(s) as list.
 
@@ -357,7 +356,7 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
         )
         transformations += [ts]
     return transformations
-
+apply_strain_to_structure = job(_apply_strain_to_structure)
 
 class MPMorphPVPostProcess(PostProcessEosPressure):
     """Modified  p(V) fit to accomodate MPMorph."""

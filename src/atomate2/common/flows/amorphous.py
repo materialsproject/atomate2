@@ -8,7 +8,7 @@ from jobflow import job, Flow, Maker, Response
 
 # from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import (
-    apply_strain_to_structure,
+    _apply_strain_to_structure,
     MPMorphPVPostProcess,
 )
 
@@ -57,7 +57,7 @@ class EquilibriumVolumeMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        working_outputs: dict | None = None,
+        working_outputs: dict[str, dict] | None = None,
     ) -> Flow:
         """
         Run an NVT+EOS equilibration flow.
@@ -81,15 +81,14 @@ class EquilibriumVolumeMaker(Maker):
             working_outputs: dict[str, dict] = {
                 "relax": {
                     key: []
-                    for key in (
-                        "energy",
-                        "volume",
-                        "stress",
-                    )
+                    for key in ("energy","volume","stress")
                 }
             }
 
         else:
+
+            self.postprocessor.fit(working_outputs)
+            working_outputs = dict(self.postprocessor)
 
             if (
                 working_outputs["V0"] <= working_outputs["Vmax"]
@@ -116,43 +115,22 @@ class EquilibriumVolumeMaker(Maker):
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
         deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
-        deformed_structures = apply_strain_to_structure(structure, deformation_matrices)
+        deformed_structures = _apply_strain_to_structure(structure, deformation_matrices)
 
         eos_jobs = []
         for index in range(len(deformation_matrices)):
             md_job = self.md_maker.make(
-                structure=deformed_structures.output[index].final_structure,
+                structure=deformed_structures[index].final_structure,
                 prev_dir=None,
             )
-            md_job.name = (
-                f"{self.name} {md_job.name} {len(working_outputs['relax']['energy'])+1}"
-            )
+            md_job.name = f"{self.name} {md_job.name} {len(working_outputs['relax']['energy'])+1}"
 
             working_outputs["relax"]["energy"].append(md_job.output.output.energy)
             working_outputs["relax"]["volume"].append(md_job.output.structure.volume)
             working_outputs["relax"]["stress"].append(md_job.output.output.stress)
             eos_jobs.append(md_job)
 
-        eos_jobs_outputs = [job.output for job in eos_jobs]
-
-        # The postprocessor has a .fit and .make arg that do similar things
-        # The .make function is a jobflow Job and returns the dict as output
-        # The .fit function is a regular function that doesn't return anything
-        postprocess_job = self.postprocessor.make(working_outputs)
-        postprocess_job.name = self.name + "_" + postprocess_job.name
-        working_outputs = postprocess_job.output
-        eos_jobs.append(postprocess_job)
-
-        eos_jobs.append(
-            deformed_structures
-        )  # must be appended after to ensure the md_job outputs are in order
-
-        recursive = EquilibriumVolumeMaker(
-            md_maker=self.md_maker,
-            postprocessor=self.postprocessor,
-            min_strain=self.min_strain,
-            max_attempts=self.max_attempts,
-        ).make(
+        recursive = self.make(
             structure=structure,
             prev_dir=None,
             working_outputs=working_outputs,

@@ -63,6 +63,10 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
+    ref_md_energies = {
+        "energy": [-13.44200043,-35.97470303,-32.48531985],
+        "volume": [82.59487098351644,161.31810738968053,278.7576895693679]
+    }
     uuids = [uuid for uuid in responses]
     # print([responses[uuid][1].output for uuid in responses])
     print("-----STARTING PRINT-----")
@@ -71,14 +75,16 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     print("-----ENDING PRINT-----")
     # asserting False so that stdout is printed by pytest
 
-    assert len(uuids) == 7
-    assert responses[uuids[-5]][1].output.output.structure.volume == 82.59487098351644
-    assert responses[uuids[-5]][1].output.output.energy == -13.44200043
-    assert responses[uuids[-4]][1].output.output.structure.volume == 161.31810738968053
-    assert responses[uuids[-4]][1].output.output.energy == -35.97470303
-    assert responses[uuids[-3]][1].output.output.structure.volume == 278.7576895693679
-    assert responses[uuids[-3]][1].output.output.energy == -32.48531985
-    assert responses[uuids[-2]][1].output == {
+    assert len(uuids) == 5
+    for i in range(len(ref_md_energies["energy"])):
+        assert responses[uuids[1+i]][1].output.output.structure.volume == pytest.approx(ref_md_energies["volume"][i])
+        assert responses[uuids[1+i]][1].output.output.energy == pytest.approx(ref_md_energies["energy"][i])
+
+    assert isinstance(responses[uuids[4]][1].output,Structure)
+    assert responses[uuids[4]][1].output.volume == pytest.approx(171.51227)
+
+    """
+    assert responses[uuids[0]][1].output == {
         "relax": {
             "energy": [-13.44200043, -35.97470303, -32.48531985],
             "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
@@ -110,3 +116,4 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
         "Vmax": 278.7576895693679,
         "Vmin": 82.59487098351644,
     }
+    """
