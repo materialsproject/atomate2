@@ -21,12 +21,13 @@ from atomate2.abinit.schemas.calculation import (
     Calculation,
     TaskState,
 )
-# from atomate2.abinit.utils import datetime_str
-from atomate2.utils.datetime import datetime_str
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
 )
+
+# from atomate2.abinit.utils import datetime_str
+from atomate2.utils.datetime import datetime_str
 
 # from emmet.core.tasks import get_uri
 from atomate2.utils.path import get_uri, strip_hostname
@@ -45,9 +46,7 @@ class InputDoc(BaseModel):
         The final pymatgen Structure of the final system
     """
 
-    structure: Union[Structure] = Field(
-        None, description="The input structure object"
-    )
+    structure: Union[Structure] = Field(None, description="The input structure object")
     abinit_input: AbinitInput = Field(
         None, description="AbinitInput used to perform calculation."
     )
@@ -102,9 +101,7 @@ class OutputDoc(BaseModel):
         Stress on the unit cell from the last calculation
     """
 
-    structure: Union[Structure] = Field(
-        None, description="The output structure object"
-    )
+    structure: Union[Structure] = Field(None, description="The output structure object")
     trajectory: Optional[Sequence[Union[Structure]]] = Field(
         None, description="The trajectory of output structures"
     )
