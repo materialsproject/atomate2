@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    pass
 
     # from abipy.flowtk.events import AbinitCriticalWarning
 
@@ -223,7 +223,7 @@ class Calculation(BaseModel):
         abinit_gsr_file: Path | str = "out_GSR.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
-        critical_events: Sequence[AbinitCriticalWarning] = (),
+        # critical_events: Sequence[AbinitCriticalWarning] = (),
         # volumetric_files: list[str] = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
