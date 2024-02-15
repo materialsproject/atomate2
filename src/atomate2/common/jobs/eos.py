@@ -12,6 +12,8 @@ from pymatgen.analysis.eos import EOS, EOSError
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
 )
+from emmet.core.tasks import TaskDoc
+
 from scipy.optimize import leastsq
 
 if TYPE_CHECKING:
@@ -65,7 +67,6 @@ class EOSPostProcessor(dict, MSONable):
     def fit(
         self,
         eos_flow_output: dict[str, Any],
-        additional_outputs: list[dict] | None = None,
     ) -> None:
         """
         Fit the EOS.
@@ -85,11 +86,6 @@ class EOSPostProcessor(dict, MSONable):
             }
         """
         self.update(eos_flow_output)
-        if additional_outputs:
-            print(
-                "additional_outputs", additional_outputs
-            )  # TODO remove and replace with correct additional_outputs
-            print(self)
 
         self._use_job_types = [key for key in self.job_types if self.get(key)]
         if self.min_data_points and any(
@@ -108,7 +104,6 @@ class EOSPostProcessor(dict, MSONable):
     def make(
         self,
         eos_flow_output: dict[str, Any],
-        additional_outputs: list[dict] | None = None,
     ) -> Job:
         """
         Run the fit as a jobflow job.
@@ -127,7 +122,7 @@ class EOSPostProcessor(dict, MSONable):
                     for <key> in ("relax", "static")
             }
         """
-        self.fit(eos_flow_output, additional_outputs)
+        self.fit(eos_flow_output)
         return self
 
 
