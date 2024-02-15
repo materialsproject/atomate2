@@ -128,10 +128,7 @@ class RelaxFlowMaker(Maker):
         )
         jobs = [relax_job1]
         for rlx_maker in self.relaxation_makers[1:]:
-            rlx_job = rlx_maker.make(
-                # structure=jobs[-1].output.structure, restart_from=jobs[-1].output
-                restart_from=jobs[-1].output.dir_name
-            )
+            rlx_job = rlx_maker.make(restart_from=jobs[-1].output.dir_name)
             jobs.append(rlx_job)
         return Flow(jobs, output=jobs[-1].output, name=self.name)
 

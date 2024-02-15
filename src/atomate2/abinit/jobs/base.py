@@ -183,7 +183,6 @@ class BaseAbinitMaker(Maker):
 
         # parse Abinit outputs
 
-        # self.task_document_kwargs.update({"critical_events": self.critical_events})
         task_doc = AbinitTaskDoc.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,

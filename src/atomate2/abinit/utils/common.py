@@ -35,18 +35,6 @@ HISTORY_JSON = "history.json"
 logger = logging.getLogger(__name__)
 
 
-# class AbiConvergenceWarning:
-#    """Possibilities of convergence warnings."""
-#
-#    all = (
-#        ScfConvergenceWarning,
-#        NscfConvergenceWarning,
-#        RelaxConvergenceWarning,
-#        QPSConvergenceWarning,
-#        HaydockConvergenceWarning,
-#    )
-
-
 class ErrorCode:
     """Error code to classify the errors."""
 
@@ -421,7 +409,6 @@ def get_event_report(ofile, mpiabort_file):
 
         return report
 
-    # except parser.Error as exc:
     except Exception as exc:
         # Return a report with an error entry with info on the exception.
         logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {exc!s}")

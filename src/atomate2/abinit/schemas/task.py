@@ -14,8 +14,6 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 
 from atomate2.abinit.files import load_abinit_input
-
-# from pymatgen.entries.computed_entries import ComputedEntry
 from atomate2.abinit.schemas.calculation import (
     AbinitObject,
     Calculation,
@@ -25,15 +23,10 @@ from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
 )
-
-# from atomate2.abinit.utils import datetime_str
 from atomate2.utils.datetime import datetime_str
-
-# from emmet.core.tasks import get_uri
 from atomate2.utils.path import get_uri, strip_hostname
 
 _T = TypeVar("_T", bound="AbinitTaskDoc")
-# _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
 logger = logging.getLogger(__name__)
 
 
@@ -172,10 +165,6 @@ class AbinitTaskDoc(StructureMetadata):
         List of Abinit objects included with this task document
     abinit_objects: Dict[.AbinitObject, Any]
         Abinit objects associated with this task
-    #entry: ComputedEntry
-        #The ComputedEntry from the task doc
-    #analysis: .AnalysisDoc
-        Summary of structural relaxation and forces
     task_label: str
         A description of the task
     tags: List[str]
@@ -225,12 +214,6 @@ class AbinitTaskDoc(StructureMetadata):
     abinit_objects: Optional[dict[AbinitObject, Any]] = Field(
         None, description="Abinit objects associated with this task"
     )
-    # entry: Optional[ComputedEntry] = Field(
-    #    None, description="The ComputedEntry from the task doc"
-    # )
-    # analysis: AnalysisDoc = Field(
-    #    None, description="Summary of structural relaxation and forces"
-    # )
     task_label: Optional[str] = Field(None, description="A description of the task")
     tags: Optional[list[str]] = Field(
         None, description="Metadata tags for this task document"
@@ -262,7 +245,6 @@ class AbinitTaskDoc(StructureMetadata):
     def from_directory(
         cls: type[_T],
         dir_name: Path | str,
-        # volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
         additional_fields: dict[str, Any] = None,
         **abinit_calculation_kwargs,
     ):
@@ -272,8 +254,6 @@ class AbinitTaskDoc(StructureMetadata):
         ----------
         dir_name: Path or str
             The path to the folder containing the calculation outputs.
-        #volumetric_files: Sequence[str]
-            #A volumetric files to search for.
         additional_fields: Dict[str, Any]
             Dictionary of additional fields to add to output document.
         **abinit_calculation_kwargs
@@ -291,9 +271,7 @@ class AbinitTaskDoc(StructureMetadata):
             additional_fields = {}
 
         dir_name = Path(dir_name)
-        task_files = _find_abinit_files(
-            dir_name
-        )  # , volumetric_files=volumetric_files)
+        task_files = _find_abinit_files(dir_name)
 
         if len(task_files) == 0:
             raise FileNotFoundError("No Abinit files found!")
@@ -307,7 +285,6 @@ class AbinitTaskDoc(StructureMetadata):
             calcs_reversed.append(calc_doc)
             all_abinit_objects.append(abinit_objects)
 
-        # analysis = AnalysisDoc.from_abinit_calc_docs(calcs_reversed)
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
@@ -348,7 +325,7 @@ class AbinitTaskDoc(StructureMetadata):
             "structure": calcs_reversed[-1].output.structure,
             "tags": tags,
         }
-        # doc = cls(**data)
+
         doc = cls(**ddict)
         doc = doc.model_copy(update=data)
         return doc.model_copy(update=additional_fields, deep=True)
@@ -356,7 +333,6 @@ class AbinitTaskDoc(StructureMetadata):
 
 def _find_abinit_files(
     path: Path | str,
-    # volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
 ) -> dict[str, Any]:
     """Find Abinit files in a directory.
 
@@ -369,8 +345,6 @@ def _find_abinit_files(
     ----------
     path: str or Path
         Path to a directory to search.
-    #volumetric_files: Sequence[str]
-        #Volumetric files to search for.
 
     Returns
     -------
@@ -381,7 +355,6 @@ def _find_abinit_files(
             {
                 task_name: {
                     "abinit_output_file": abinit_output_filename,
-                    #"volumetric_files": [v_hartree file, e_density file, etc],
     """
     task_names = ["precondition"] + [f"relax{i}" for i in range(9)]
     path = Path(path)
@@ -389,7 +362,6 @@ def _find_abinit_files(
 
     def _get_task_files(files, suffix=""):
         abinit_files = {}
-        # vol_files = []
         for file in files:
             # Here we make assumptions about the output file naming
             if file.match(f"*outdata/out_GSR{suffix}*"):
@@ -398,14 +370,6 @@ def _find_abinit_files(
                 abinit_files["abinit_log_file"] = Path(file).relative_to(path)
             elif file.match(f"*{MPIABORTFILE}{suffix}*"):
                 abinit_files["abinit_abort_file"] = Path(file).relative_to(path)
-        # for vol in volumetric_files:
-        #    _files = [f.name for f in files if f.match(f"*{vol}*cube{suffix}*")]
-        #    if _files:
-        #        vol_files.append(_files[0])
-
-        # if len(vol_files) > 0:
-        #    # add volumetric files if some were found or other cp2k files were found
-        #    abinit_files["volumetric_files"] = vol_files
 
         return abinit_files
 

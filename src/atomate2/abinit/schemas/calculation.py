@@ -10,13 +10,9 @@ from typing import TYPE_CHECKING, Optional, Union
 if TYPE_CHECKING:
     pass
 
-    # from abipy.flowtk.events import AbinitCriticalWarning
-
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
-
-# from pymatgen.io.common import VolumetricData
 from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
@@ -27,8 +23,6 @@ from atomate2.abinit.utils.common import (
     MPIABORTFILE,
     get_event_report,
 )
-
-# STORE_VOLUMETRIC_DATA = ("total_density",)
 
 logger = logging.getLogger(__name__)
 
@@ -118,8 +112,7 @@ class CalculationOutput(BaseModel):
     @classmethod
     def from_abinit_gsr(
         cls,
-        output: GsrFile,  # Must use auto_load kwarg when passed ; VT ???
-        # store_trajectory: bool = False,
+        output: GsrFile,  # Must use auto_load kwarg when passed
     ) -> CalculationOutput:
         """
         Create an Abinit output document from Abinit outputs.
@@ -128,8 +121,6 @@ class CalculationOutput(BaseModel):
         ----------
         output: .AbinitOutput
             An AbinitOutput object.
-        # store_trajectory: bool
-            # A flag setting to store output trajectory
 
         Returns
         -------
@@ -223,13 +214,6 @@ class Calculation(BaseModel):
         abinit_gsr_file: Path | str = "out_GSR.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
-        # critical_events: Sequence[AbinitCriticalWarning] = (),
-        # volumetric_files: list[str] = None,
-        parse_dos: str | bool = False,
-        parse_bandstructure: str | bool = False,
-        # store_trajectory: bool = False,
-        store_scf: bool = False,
-        # store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Calculation, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
@@ -240,38 +224,12 @@ class Calculation(BaseModel):
             The directory containing the calculation outputs.
         task_name: str
             The task name.
+        abinit_gsr_file: Path or str
+            Path to the GSR output of abinit job, relative to dir_name.
         abinit_log_file: Path or str
             Path to the main log of abinit job, relative to dir_name.
-        #volumetric_files: List[str]
-            #Path to volumetric (Cube) files, relative to dir_name.
-        parse_dos: str or bool
-            Whether to parse the DOS. Can be:
-
-            - "auto": Only parse DOS if there are no ionic steps.
-            - True: Always parse DOS.
-            - False: Never parse DOS.
-
-        parse_bandstructure: str or bool
-            How to parse the bandstructure. Can be:
-
-            - "auto": Parse the bandstructure with projections for NSCF calculations
-              and decide automatically if it's line or uniform mode.
-            - "line": Parse the bandstructure as a line mode calculation with
-              projections
-            - True: Parse the bandstructure as a uniform calculation with
-              projections .
-            - False: Parse the band structure without projects and just store
-              vbm, cbm, band_gap, is_metal and efermi rather than the full
-              band structure object.
-
-        store_trajectory: bool
-            Whether to store the ionic steps as a pmg trajectory object, which can be
-            pushed, to a bson data store, instead of as a list od dicts. Useful for
-            large trajectories.
-        store_scf: bool
-            Whether to store the SCF convergence data.
-        #store_volumetric_data: Sequence[str] or None
-            #Which volumetric files to store.
+        abinit_abort_file: Path or str
+            Path to the main abort file of abinit job, relative to dir_name.
 
         Returns
         -------
@@ -283,23 +241,9 @@ class Calculation(BaseModel):
         abinit_log_file = dir_name / abinit_log_file
         abinit_abort_file = dir_name / abinit_abort_file
 
-        # volumetric_files = [] if volumetric_files is None else volumetric_files
         abinit_gsr = GsrFile.from_file(abinit_gsr_file)
 
         completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
-
-        # output_file_paths = _get_output_file_paths(volumetric_files)
-        # abinit_objects: dict[AbinitObject, Any] = _get_volumetric_data(
-        #    dir_name, output_file_paths, store_volumetric_data
-        # )
-
-        # dos = _parse_dos(parse_dos, abinit_output)
-        # if dos is not None:
-        #    abinit_objects[AbinitObject.DOS] = dos  # type: ignore
-
-        # bandstructure = _parse_bandstructure(parse_bandstructure, abinit_output)
-        # if bandstructure is not None:
-        #    abinit_objects[AbinitObject.BANDSTRUCTURE] = bandstructure  # type: ignore
 
         output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
 
@@ -317,20 +261,10 @@ class Calculation(BaseModel):
             )
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
-            # critical_events_report = report.filter_types(critical_events)
-            # if critical_events_report:
-            # for warning in critical_events_report.warnings:
-            #    if type(warning) in AbiConvergenceWarning.all:
-            # has_abinit_completed = TaskState.UNCONVERGED
-            # break
 
         except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
-
-        # if store_trajectory:
-        #    traj = _parse_trajectory(abinit_output=abinit_output)
-        #    abinit_objects[AbinitObject.TRAJECTORY] = traj  # type: ignore
 
         return (
             cls(
@@ -341,9 +275,6 @@ class Calculation(BaseModel):
                 completed_at=completed_at,
                 output=output_doc,
                 event_report=report,
-                # output_file_paths={
-                # k.name.lower(): v for k, v in output_file_paths.items()
-                # },
             ),
             None,  # abinit_objects,
         )
