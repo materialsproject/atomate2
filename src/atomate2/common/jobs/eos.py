@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from jobflow import Job
     from pymatgen.core import Structure
 
+
 class EOSPostProcessor(dict, MSONable):
     """
     Fit data to an EOS.
@@ -355,7 +356,10 @@ def _apply_strain_to_structure(structure: Structure, deformations: list) -> list
         )
         transformations += [ts]
     return transformations
+
+
 apply_strain_to_structure = job(_apply_strain_to_structure)
+
 
 class MPMorphPVPostProcess(PostProcessEosPressure):
     """Modified  p(V) fit to accomodate MPMorph."""

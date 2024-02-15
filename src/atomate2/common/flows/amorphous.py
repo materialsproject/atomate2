@@ -79,7 +79,7 @@ class EquilibriumVolumeMaker(Maker):
         if working_outputs is None:
             linear_strain = np.linspace(-0.2, 0.2, self.postprocessor.min_data_points)
             working_outputs: dict[str, dict] = {
-                "relax": {key: [] for key in ("energy", "volume", "stress","pressure")}
+                "relax": {key: [] for key in ("energy", "volume", "stress", "pressure")}
             }
 
         else:
