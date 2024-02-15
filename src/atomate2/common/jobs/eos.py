@@ -23,7 +23,6 @@ if TYPE_CHECKING:
     from jobflow import Job
     from pymatgen.core import Structure
 
-
 class EOSPostProcessor(dict, MSONable):
     """
     Fit data to an EOS.
