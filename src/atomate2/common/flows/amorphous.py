@@ -136,9 +136,9 @@ class EquilibriumVolumeMaker(Maker):
             working_outputs=working_outputs,
         )
 
-        new_eos_flow = Flow([*eos_jobs, recursive], output=working_outputs)
+        new_eos_flow = Flow([*eos_jobs, recursive], output=recursive.output)
 
-        return Response(replace=new_eos_flow, output=new_eos_flow.output)
+        return Response(replace=new_eos_flow, output=recursive.output)
 
 
 @dataclass
@@ -238,12 +238,9 @@ class MPMorphMDMaker(Maker):
 
     name: str = "MP Morph md"
     convergence_md_maker: EquilibriumVolumeMaker = None  # check logic on this line
-    production_md_maker: Maker = (
-        Maker  # May need to fix this into ForceFieldMDMaker later..)
-    )
-    quench_maker: FastQuenchMaker | SlowQuenchMaker = (
-        None  # May need to fix this into ForceFieldMDMaker later..)
-    )
+    # May need to fix next two into ForceFieldMDMakers later..)
+    production_md_maker: Maker | None = None
+    quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def make(
         self,
@@ -273,27 +270,29 @@ class MPMorphMDMaker(Maker):
         flow_jobs = []
 
         if self.convergence_md_maker is not None:
-            convergence_flow = self.convergence_md_maker.make(structure, prev_dir)
-            flow_jobs.extend(convergence_flow.jobs)
+            convergence_flow = self.convergence_md_maker.make(structure, prev_dir = prev_dir)
+            flow_jobs.append(convergence_flow)
 
-            structure = convergence_flow.output.structure
-            prev_dir = convergence_flow.output.dir_name
+            # convergence_flow only outputs a structure
+            structure = convergence_flow.output
 
-        production_flow = self.production_md_maker.make(structure, prev_dir)
-
-        structure = production_flow.output.structure
-        prev_dir = production_flow.output.dir_name
+        self.production_md_maker.name = self.name + " production run"
+        production_run = self.production_md_maker.make(
+            structure = structure,
+            prev_dir = prev_dir
+        )
+        flow_jobs.append(production_run)
 
         if self.quench_maker:
-            quench_flow = self.quench_maker.make(structure, prev_dir)
-            flow_jobs.extend(quench_flow.jobs)
-
-        production_flow = self.production_md_maker.make(structure, prev_dir)
-        flow_jobs.extend(production_flow.jobs)
+            quench_flow = self.quench_maker.make(
+                structure = production_run.output.structure,
+                prev_dir = production_run.output.dir_name
+            )
+            flow_jobs += [quench_flow]
 
         return Flow(
             flow_jobs,
-            output=production_flow.output,
+            output=production_run.output,
             name=self.name,
         )
 
