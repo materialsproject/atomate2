@@ -17,6 +17,7 @@ from ase.md.velocitydistribution import (
     ZeroRotation,
 )
 from ase.md.verlet import VelocityVerlet
+from ase.units import bar, fs
 from jobflow import Maker, job
 from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -53,20 +54,31 @@ class ForceFieldMDMaker(Maker):
     """
     Perform MD with a forcefield.
 
+    Note that units are consistent with the VASP MD implementation.
+    - Temperature is in Kelvin (TEBEG and TEEND)
+    - Time steps are in femtoseconds (POTIM)
+    - Langevin NVT friction coefficients are in picoseconds^-1 (LANGEVIN_GAMMA)
+    - Pressure in kB (PSTRESS)
+
     Parameters
     ----------
     name : str
         The name of the MD Maker
     force_field_name : str
         The name of the forcefield (for provenance)
-    timestep : float | None = 0.2
-        The timestep of the MD run in ase time units
-    md_steps : int = 500
+    timestep : float | None = 2.
+        The timestep of the MD run in femtoseconds
+    md_steps : int = 1000
         The number of MD steps to run
     ensemble : str = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
-    temperature : float | None = 300.
-        The temperature in Kelvin
+    start_temperature : float | None = 300.
+        The temperature to initialize the system, in Kelvin.
+    end_temperature : float | None = 300.
+        The temperature to equilibrate towards, in Kelvin.
+        If start_temperature is a float and end_temperature is None,
+        the system will be initialized at and equilibrated towards
+        the start_temperature.
     thermostat : str = "langevin"
         The thermostat to use. See _valid_thermostats for a list of options
     ase_md_kwargs : dict | None = None
@@ -92,10 +104,12 @@ class ForceFieldMDMaker(Maker):
 
     name: str = "Forcefield MD"
     force_field_name: str = "Forcefield"
-    timestep: float | None = 0.2  # approx 2 fs
-    md_steps: int = 500
+    timestep: float | None = 2.0
+    md_steps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
-    temperature: float | None = 300.0
+    start_temperature: float | None = 300.0
+    end_temperature: float | None = 300.0
+    pressure: float | None = None
     thermostat: str = "langevin"
     ase_md_kwargs: dict | None = None
     calculator_args: list | tuple | None = None
@@ -109,6 +123,34 @@ class ForceFieldMDMaker(Maker):
             "ionic_step_data": ("energy", "forces", "magmoms", "stress")
         }
     )
+
+    def _get_ensemble_defaults(self, structure: Structure) -> None:
+        """Update ASE MD kwargs with defaults consistent with VASP MD."""
+        self.ase_md_kwargs = self.ase_md_kwargs or {}
+        if self.ensemble in ("nvt", "npt") and all(
+            self.ase_md_kwargs.get(key) is None
+            for key in ("temperature_K", "temperature")
+        ):
+            self.ase_md_kwargs["temperature_K"] = (
+                self.end_temperature if self.end_temperature else self.start_temperature
+            )
+
+        if self.ensemble == "npt":
+            # convert from kilobar to eV/Ang**3
+            self.ase_md_kwargs["pressure_au"] = (
+                self.pressure * 1.0e-3 / bar if self.pressure else 0.0
+            )
+
+        if self.thermostat == "langevin":
+            # Same default as in VASP
+            self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get("friction", 10.0)
+            # friction coefficient(s) specified in ev^-1, convert from picoseconds
+            if isinstance(self.ase_md_kwargs["friction"], list):
+                self.ase_md_kwargs["friction"] = [
+                    coeff * 1.0e-3 / fs for coeff in self.ase_md_kwargs["friction"]
+                ]
+            else:
+                self.ase_md_kwargs["friction"] *= 1.0e-3 / fs
 
     @job(output_schema=ForceFieldTaskDocument)
     def make(
@@ -127,9 +169,12 @@ class ForceFieldMDMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
+        self._get_ensemble_defaults(structure=structure)
+
         initial_velocities = structure.site_properties.get("velocities")
 
-        if self.thermostat.lower() not in _valid_thermostats[self.ensemble]:
+        self.thermostat = self.thermostat.lower()
+        if self.thermostat not in _valid_thermostats[self.ensemble]:
             raise ValueError(
                 f"{self.thermostat} thermostat not available for {self.ensemble}."
                 f"Available {self.ensemble} thermostats are:"
@@ -138,13 +183,16 @@ class ForceFieldMDMaker(Maker):
 
         if self.ensemble == "nve" and self.thermostat is None:
             self.thermostat = "velocityverlet"
-        md_func = _thermostats[f"{self.ensemble}_{self.thermostat.lower()}"]
+        md_func = _thermostats[f"{self.ensemble}_{self.thermostat}"]
 
         atoms = AseAtomsAdaptor.get_atoms(structure)
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
-        elif self.temperature:
-            MaxwellBoltzmannDistribution(atoms=atoms, temperature_K=self.temperature)
+
+        elif self.start_temperature:
+            MaxwellBoltzmannDistribution(
+                atoms=atoms, temperature_K=self.start_temperature
+            )
 
             if self.zero_linear_momentum:
                 Stationary(atoms)
@@ -163,9 +211,9 @@ class ForceFieldMDMaker(Maker):
 
         with contextlib.redirect_stdout(io.StringIO()):
             md_observer = TrajectoryObserver(atoms)
-            self.ase_md_kwargs = self.ase_md_kwargs or {}
+
             md_runner = md_func(
-                atoms=atoms, timestep=self.timestep, **self.ase_md_kwargs
+                atoms=atoms, timestep=self.timestep * fs, **self.ase_md_kwargs
             )
             md_runner.attach(md_observer, interval=self.traj_interval)
 
