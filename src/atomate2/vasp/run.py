@@ -18,6 +18,7 @@ from custodian import Custodian
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
+    KspacingMetalHandler,
     LargeSigmaHandler,
     MeshSymmetryErrorHandler,
     NonConvergingErrorHandler,
@@ -52,6 +53,7 @@ _DEFAULT_HANDLERS = (
     StdErrHandler(),
     LargeSigmaHandler(),
     IncorrectSmearingHandler(),
+    KspacingMetalHandler(),
 )
 _DEFAULT_VALIDATORS = (VasprunXMLValidator(), VaspFilesValidator())
 
