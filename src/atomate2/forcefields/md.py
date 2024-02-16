@@ -145,7 +145,7 @@ class ForceFieldMDMaker(Maker):
             # Same default as in VASP
             self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get("friction", 10.0)
             # friction coefficient(s) specified in ev^-1, convert from picoseconds
-            if isinstance(self.ase_md_kwargs["friction"], list):
+            if isinstance(self.ase_md_kwargs["friction"], (list, tuple)):
                 self.ase_md_kwargs["friction"] = [
                     coeff * 1.0e-3 / fs for coeff in self.ase_md_kwargs["friction"]
                 ]
