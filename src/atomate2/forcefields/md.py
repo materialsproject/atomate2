@@ -98,7 +98,7 @@ class ForceFieldMDMaker(Maker):
         Whether to initialize the atomic velocities with zero angular momentum
     task_document_kwargs: dict
         Options to pass to the TaskDoc. Default choice
-        {"ionic_step_data": ("energy", "forces", "magmoms", "stress",)}
+        {"store_trajectory": "partial"}
         is consistent with atomate2.vasp.md.MDMaker
     """
 
@@ -119,9 +119,7 @@ class ForceFieldMDMaker(Maker):
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
     task_document_kwargs: dict = field(
-        default_factory=lambda: {
-            "ionic_step_data": ("energy", "forces", "magmoms", "stress")
-        }
+        default_factory=lambda: {"store_trajectory": "partial"}
     )
 
     def _get_ensemble_defaults(self, structure: Structure) -> None:
@@ -210,7 +208,7 @@ class ForceFieldMDMaker(Maker):
         atoms.set_calculator(self._calculator())
 
         with contextlib.redirect_stdout(io.StringIO()):
-            md_observer = TrajectoryObserver(atoms)
+            md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
             md_runner = md_func(
                 atoms=atoms, timestep=self.timestep * fs, **self.ase_md_kwargs

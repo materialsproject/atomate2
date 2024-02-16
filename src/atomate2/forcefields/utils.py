@@ -64,7 +64,7 @@ class TrajectoryObserver:
     This is a hook in the relaxation process that saves the intermediate structures.
     """
 
-    def __init__(self, atoms: Atoms) -> None:
+    def __init__(self, atoms: Atoms, store_md_outputs: bool = False) -> None:
         """
         Initialize the Observer.
 
@@ -83,6 +83,11 @@ class TrajectoryObserver:
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
+        self._store_md_outputs = store_md_outputs
+        if self._store_md_outputs:
+            self.velocities: list[np.ndarray] = []
+            self.temperatures: list[float] = []
+
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
@@ -91,6 +96,10 @@ class TrajectoryObserver:
         self.stresses.append(self.atoms.get_stress())
         self.atom_positions.append(self.atoms.get_positions())
         self.cells.append(self.atoms.get_cell()[:])
+
+        if self._store_md_outputs:
+            self.velocities.append(self.atoms.get_velocities())
+            self.temperatures.append(self.atoms.get_temperature())
 
     def compute_energy(self) -> float:
         """
@@ -122,6 +131,10 @@ class TrajectoryObserver:
             "cell": self.cells,
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
+        if self._store_md_outputs:
+            traj_dict.update(
+                {"velocities": self.velocities, "temperature": self.temperatures}
+            )
         with open(filename, "wb") as file:
             pickle.dump(traj_dict, file)
 
