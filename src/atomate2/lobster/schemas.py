@@ -699,7 +699,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
     @requires(
         Analysis,
         "LobsterTaskDocument requires `lobsterpy` and `ijson` to function properly. "
-        "Please either reinstall atomate2 using atomate2[lobster]",
+        "Please reinstall atomate2 using atomate2[lobster]",
     )
     def from_directory(
         cls,
