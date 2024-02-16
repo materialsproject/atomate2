@@ -597,7 +597,9 @@ class StrongestBonds(BaseModel):
     )
 
 
-class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
+class LobsterTaskDocument(
+    StructureMetadata, extra="allow", arbitrary_types_allowed=True
+):  # type: ignore[call-arg]
     """Definition of LOBSTER task document."""
 
     structure: Structure = Field(description="The structure used in this task")
