@@ -19,7 +19,9 @@ class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
         None, description="The forces on each atom."
     )
     stress: Optional[Matrix3D] = Field(None, description="The stress on the lattice.")
-    structure: Structure = Field(None, description="The structure at this step.")
+    structure: Optional[Structure] = Field(
+        None, description="The structure at this step."
+    )
 
 
 class InputDoc(BaseModel):
