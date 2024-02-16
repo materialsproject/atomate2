@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import pytest
+from custodian.vasp.handlers import ErrorHandler
 from pymatgen.core import Lattice, Structure
 
+from atomate2.vasp.run import _DEFAULT_HANDLERS
 from atomate2.vasp.sets.base import _get_magmoms
 
 
@@ -51,3 +53,8 @@ def test_get_magmoms_with_specie() -> None:
     assert struct[0].specie.spin is None
     out = _get_magmoms(struct)
     assert out == [0.6, 0.6]
+
+
+def test_default_handlers():
+    assert len(_DEFAULT_HANDLERS) >= 8
+    assert all(isinstance(handler, ErrorHandler) for handler in _DEFAULT_HANDLERS)
