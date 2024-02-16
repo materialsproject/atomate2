@@ -7,7 +7,6 @@ import time
 from pathlib import Path
 from typing import Any, Optional, Union
 
-import ijson
 import numpy as np
 from emmet.core.structure import StructureMetadata
 from monty.dev import requires
@@ -33,9 +32,11 @@ from atomate2 import __version__
 from atomate2.utils.datetime import datetime_str
 
 try:
+    import ijson
     from lobsterpy.cohp.analyze import Analysis
     from lobsterpy.cohp.describe import Description
 except ImportError:
+    ijson = None
     Analysis = None
     Description = None
 
@@ -695,7 +696,11 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
     )
 
     @classmethod
-    @requires(Analysis, "lobsterpy must be installed to create an LobsterTaskDocument.")
+    @requires(
+        Analysis,
+        "LobsterTaskDocument requires `lobsterpy` and `ijson` to function properly. "
+        "Please either reinstall atomate2 using atomate2[lobster]",
+    )
     def from_directory(
         cls,
         dir_name: Union[Path, str],

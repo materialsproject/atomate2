@@ -8,14 +8,15 @@ In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 
 from __future__ import annotations
 
-import importlib.util
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
+from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.jobs.mp import (
     MPGGARelaxMaker,
     MPGGAStaticMaker,
@@ -194,79 +195,65 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         return Flow(jobs=jobs, output=output, name=self.name)
 
 
-if importlib.util.find_spec("ijson") is not None and importlib.util.find_spec(
-    "lobsterpy"
-):
-    from atomate2.lobster.jobs import LobsterMaker
-    from atomate2.vasp.flows.lobster import VaspLobsterMaker
+# update potcars to 54, use correct W potcar
+# use staticmaker for compatibility
+@dataclass
+class MPVaspLobsterMaker(VaspLobsterMaker):
+    """
+    Maker to perform a Lobster computation.
 
-    # update potcars to 54, use correct W potcar
-    # use staticmaker for compatibility
-    @dataclass
-    class MPVaspLobsterMaker(VaspLobsterMaker):
-        """
-        Maker to perform a Lobster computation.
+    The calculations performed are:
 
-        The calculations performed are:
+    1. Optional optimization.
+    2. Static calculation with ISYM=0.
+    3. Several Lobster computations testing several basis sets are performed.
 
-        1. Optional optimization.
-        2. Static calculation with ISYM=0.
-        3. Several Lobster computations testing several basis sets are performed.
+    .. Note::
 
-        .. Note::
+        The basis sets can only be changed with yaml files.
 
-            The basis sets can only be changed with yaml files.
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker : .BaseVaspMaker or None
+        A maker to perform a relaxation on the bulk. Set to ``None`` to skip the
+        bulk relaxation.
+    lobster_static_maker : .BaseVaspMaker
+        A maker to perform the computation of the wavefunction before the static
+        run. Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
+    lobster_maker : .LobsterMaker
+        A maker to perform the Lobster run.
+    delete_wavecars : bool
+        If true, all WAVECARs will be deleted after the run.
+    address_min_basis : str
+        A path to a yaml file including basis set information.
+    address_max_basis : str
+       A path to a yaml file including basis set information.
+    """
 
-        Parameters
-        ----------
-        name : str
-            Name of the flows produced by this maker.
-        relax_maker : .BaseVaspMaker or None
-            A maker to perform a relaxation on the bulk. Set to ``None`` to skip the
-            bulk relaxation.
-        lobster_static_maker : .BaseVaspMaker
-            A maker to perform the computation of the wavefunction before the static
-            run. Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
-        lobster_maker : .LobsterMaker
-            A maker to perform the Lobster run.
-        delete_wavecars : bool
-            If true, all WAVECARs will be deleted after the run.
-        address_min_basis : str
-            A path to a yaml file including basis set information.
-        address_max_basis : str
-           A path to a yaml file including basis set information.
-        """
-
-        name: str = "lobster"
-        relax_maker: BaseVaspMaker | None = field(default_factory=MPGGADoubleRelaxMaker)
-        lobster_static_maker: BaseVaspMaker = field(
-            default_factory=lambda: MPGGAStaticMaker(
-                input_set_generator=MPGGAStaticSetGenerator(
-                    user_potcar_functional="PBE_54",
-                    user_potcar_settings={"W": "W_sv"},
-                    user_kpoints_settings={"reciprocal_density": 310},
-                    user_incar_settings={
-                        "EDIFF": 1e-6,
-                        "NSW": 0,
-                        "LWAVE": True,
-                        "ISYM": 0,
-                        "IBRION": -1,
-                        "ISMEAR": -5,
-                        "LORBIT": 11,
-                        "ALGO": "Normal",
-                    },
-                )
+    name: str = "lobster"
+    relax_maker: BaseVaspMaker | None = field(default_factory=MPGGADoubleRelaxMaker)
+    lobster_static_maker: BaseVaspMaker = field(
+        default_factory=lambda: MPGGAStaticMaker(
+            input_set_generator=MPGGAStaticSetGenerator(
+                user_potcar_functional="PBE_54",
+                user_potcar_settings={"W": "W_sv"},
+                user_kpoints_settings={"reciprocal_density": 310},
+                user_incar_settings={
+                    "EDIFF": 1e-6,
+                    "NSW": 0,
+                    "LWAVE": True,
+                    "ISYM": 0,
+                    "IBRION": -1,
+                    "ISMEAR": -5,
+                    "LORBIT": 11,
+                    "ALGO": "Normal",
+                },
             )
         )
-        lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
-        delete_wavecars: bool = True
-        address_min_basis: str | None = None
-        address_max_basis: str | None = None
-else:
-    logger.info(
-        """
-    MPVaspLobsterMaker flow is currently disabled as lobsterpy and ijson are
-    not installed with standard atomate2 install. Please reinstall atomate2
-    using atomate2[lobster] if you want to use MPVaspLobsterMaker flow.
-    """
     )
+    lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
+    delete_wavecars: bool = True
+    address_min_basis: str | None = None
+    address_max_basis: str | None = None
