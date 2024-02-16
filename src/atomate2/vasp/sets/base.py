@@ -387,6 +387,7 @@ class VaspInputGenerator(InputGenerator):
         structure: Structure = None,
         prev_dir: str | Path = None,
         potcar_spec: bool = False,
+        get_previous_bandgap: bool = True,
     ) -> VaspInputSet:
         """
         Get a VASP input set.
@@ -406,6 +407,10 @@ class VaspInputGenerator(InputGenerator):
             input set with people who might not have a license to specific Potcar files.
             Given a "POTCAR.spec", the specific POTCAR file can be re-generated using
             pymatgen with the "generate_potcar" function in the pymatgen CLI.
+        get_previous_bandgap
+            Whether to get bandgap from previous calculation. This needs to be disabled
+            when vasp ML MD calculations are performed as the bandgap extraction will
+            fail.
 
         Returns
         -------
@@ -413,7 +418,7 @@ class VaspInputGenerator(InputGenerator):
             A VASP input set.
         """
         structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
-            structure, prev_dir
+            structure, prev_dir, get_previous_bandgap
         )
         prev_incar = prev_incar if self.inherit_incar else {}
         kwds = {
@@ -540,7 +545,10 @@ class VaspInputGenerator(InputGenerator):
         return n_electrons - (structure.charge if self.use_structure_charge else 0)
 
     def _get_previous(
-        self, structure: Structure = None, prev_dir: str | Path = None
+        self,
+        structure: Structure = None,
+        prev_dir: str | Path = None,
+        get_previous_bandgap: bool = True,
     ) -> tuple:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
@@ -571,12 +579,14 @@ class VaspInputGenerator(InputGenerator):
                 # VASP doesn't output efermi in vasprun if IBRION = 1
                 vasprun.efermi = outcar.efermi
 
-            bs = vasprun.get_band_structure(efermi="smart")
             prev_incar = vasprun.incar
             # use structure from CONTCAR as it is written to greater
             # precision than in the vasprun
             prev_structure = contcar.structure
-            bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
+
+            if get_previous_bandgap:
+                bs = vasprun.get_band_structure(efermi="smart")
+                bandgap = 0 if bs.is_metal() else bs.get_band_gap()["energy"]
 
             if self.auto_ispin:
                 # turn off spin when magmom for every site is smaller than 0.02.
