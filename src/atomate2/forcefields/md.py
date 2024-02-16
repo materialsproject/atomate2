@@ -216,7 +216,6 @@ class ForceFieldMDMaker(Maker):
             md_runner.attach(md_observer, interval=self.traj_interval)
 
             md_runner.run(steps=self.md_steps)
-            md_observer()
 
             if self.traj_file is not None:
                 md_observer.save(self.traj_file)
