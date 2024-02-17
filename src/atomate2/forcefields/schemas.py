@@ -152,7 +152,11 @@ class ForceFieldTaskDocument(StructureMetadata):
         ionic_step_data : tuple
             Which data to save from each ionic step.
         """
-        trajectory = result["trajectory"].__dict__
+        trajectory = {
+            key: value
+            for key, value in result["trajectory"].__dict__.items()
+            if not key.startswith("_")
+        }
 
         # NOTE: units for stresses were converted from eV/Angstrom³ to kBar
         # (* -1 from standard output)
@@ -224,8 +228,12 @@ class ForceFieldTaskDocument(StructureMetadata):
 
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
             magmom_data = {}
-            if all("magmoms" in obj for obj in (trajectory, ionic_step_data)):
-                magmom_data = {"magmoms": trajectory["magmoms"][idx].tolist()}
+            if trajectory.get("magmoms"):
+                magmom_data = {
+                    "magmoms": trajectory["magmoms"][idx].tolist()
+                    if "magmoms" in ionic_step_data
+                    else None
+                }
 
             ionic_step = IonicStep(
                 energy=energy,

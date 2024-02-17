@@ -91,7 +91,7 @@ class ForceFieldRelaxMaker(Maker):
 @dataclass
 class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
-    Maker to calculate forces and stresses using the CHGNet force field.
+    Maker to calculate forces and stresses using any force field.
 
     Parameters
     ----------
