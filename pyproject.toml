@@ -27,7 +27,7 @@ requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
-    "custodian>=2023.3.10",
+    "custodian>=2024.2.15",
     "emmet-core>=0.70.5",
     "jobflow>=0.1.11",
     "monty>=2023.9.25",
@@ -71,11 +71,11 @@ strict = [
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
     "cclib==1.8",
-    "chgnet==0.3.3",
+    "chgnet==0.3.4",
     "click==8.1.7",
-    "custodian==2023.10.9",
+    "custodian==2024.2.15",
     "dscribe==2.1.0",
-    "emmet-core==0.77.0",
+    "emmet-core==0.77.1",
     "ijson==3.2.3",
     "jobflow==0.1.17",
     "lobsterpy==0.3.6",
@@ -87,7 +87,7 @@ strict = [
     "phonopy==2.21.0",
     "pydantic-settings==2.1.0",
     "pydantic==2.4.2",
-    "pymatgen-analysis-defects==2024.1.12",
+    "pymatgen-analysis-defects==2024.2.9",
     "pymatgen==2023.12.18",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
@@ -146,8 +146,8 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-select = ["ALL"]
-ignore = [
+lint.select = ["ALL"]
+lint.ignore = [
     "ANN002",
     "ANN003",
     "ANN101",  # missing self type annotation
@@ -177,12 +177,13 @@ ignore = [
     "SLF",     # private member accessed outside class
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
+    "S507",    # paramiko auto trust
 ]
-pydocstyle.convention = "numpy"
-isort.known-first-party = ["atomate2"]
-isort.split-on-trailing-comma = false
+lint.pydocstyle.convention = "numpy"
+lint.isort.known-first-party = ["atomate2"]
+lint.isort.split-on-trailing-comma = false
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
