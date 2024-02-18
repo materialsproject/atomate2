@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.forcefields.jobs import MLFF
+from atomate2.forcefields import MLFF
 
 
 class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]

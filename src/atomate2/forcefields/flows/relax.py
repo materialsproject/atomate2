@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.forcefields.jobs import MLFF, CHGNetRelaxMaker, M3GNetRelaxMaker
+from atomate2.forcefields import MLFF
+from atomate2.forcefields.jobs import CHGNetRelaxMaker, M3GNetRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker
 
 if TYPE_CHECKING:

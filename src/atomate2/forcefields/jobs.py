@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
 
+from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer
 
@@ -19,15 +19,6 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
-
-
-class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
-    """Names of ML force fields."""
-
-    MACE = "MACE"
-    GAP = "GAP"
-    M3GNet = "M3GNet"
-    CHGNet = "CHGNet"
 
 
 @dataclass
