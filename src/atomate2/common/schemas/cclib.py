@@ -376,13 +376,15 @@ def _get_homos_lumos(
         The HOMO-LUMO gaps (eV), calculated as LUMO_alpha-HOMO_alpha and
         LUMO_beta-HOMO_beta
     """
-    homo_energies = [mo_energies[i][h] for i, h in enumerate(homo_indices)]
-    # Make sure that the HOMO+1 (i.e. LUMO) is in moenergies (sometimes virtual
+    homo_energies = [mo_energies[idx][homo] for idx, homo in enumerate(homo_indices)]
+    # Make sure that the HOMO+1 (i.e. LUMO) is in MO energies (sometimes virtual
     # orbitals aren't printed in the output)
-    for i, h in enumerate(homo_indices):
-        if len(mo_energies[i]) < h + 2:
+    for idx, homo in enumerate(homo_indices):
+        if len(mo_energies[idx]) < homo + 2:
             return homo_energies, None, None
-    lumo_energies = [mo_energies[i][h + 1] for i, h in enumerate(homo_indices)]
+    lumo_energies = [
+        mo_energies[idx][homo + 1] for idx, homo in enumerate(homo_indices)
+    ]
     homo_lumo_gaps = [
         lumo_energies[i] - homo_energies[i] for i in range(len(homo_energies))
     ]

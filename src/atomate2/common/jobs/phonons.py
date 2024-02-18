@@ -7,6 +7,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import numpy as np
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
@@ -25,7 +26,6 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import numpy as np
     from emmet.core.math import Matrix3D
 
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
@@ -156,11 +156,7 @@ def generate_phonon_displacements(
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
     if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: list[list[float]] | str = [
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ]
+        primitive_matrix: np.ndarray | str = np.eye(3)
     else:
         primitive_matrix = "auto"
     phonon = Phonopy(
