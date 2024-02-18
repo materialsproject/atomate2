@@ -806,10 +806,8 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             "dos_comparison": True,
             "n_bins": 256,
             "bva_comp": True,
+            **(calc_quality_kwargs or {}),
         }
-        if calc_quality_kwargs:
-            for args, values in calc_quality_kwargs.items():
-                calc_quality_kwargs_default[args] = values
 
         calc_quality_summary = CalcQualitySummary.from_directory(
             dir_name,
@@ -1319,16 +1317,12 @@ def read_saved_json(
         Returns a dictionary with lobster task json data corresponding to query.
     """
     with gzip.open(filename, "rb") as file:
-        lobster_data = {}
-        objects = ijson.items(file, "item", use_float=True)
-        for obj in objects:
-            if query is None:
-                for field, data in obj.items():
-                    lobster_data[field] = data
-            elif query in obj:
-                for field, data in obj.items():
-                    lobster_data[field] = data
-                break
+        lobster_data = {
+            field: data
+            for obj in ijson.items(file, "item", use_float=True)
+            for field, data in obj.items()
+            if query is None or query in obj
+        }
         if not lobster_data:
             raise ValueError(
                 "Please recheck the query argument. "
