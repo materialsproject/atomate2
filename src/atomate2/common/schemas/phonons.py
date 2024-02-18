@@ -249,7 +249,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         cell = get_phonopy_structure(structure)
 
         if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-            primitive_matrix: np.ndarray | str = np.eye(3)
+            primitive_matrix: Union[np.ndarray, str] = np.eye(3)
         else:
             primitive_matrix = "auto"
         phonon = Phonopy(
