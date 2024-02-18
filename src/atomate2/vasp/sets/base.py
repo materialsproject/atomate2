@@ -167,14 +167,21 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
+        ismear = self.incar.get("ISMEAR", 1)
+        sigma = self.incar.get("SIGMA", 0.2)
         if (
             all(k.is_metal for k in self.poscar.structure.composition)
             and self.incar.get("NSW", 0) > 0
-            and self.incar.get("ISMEAR", 1) < 1
+            and (ismear < 0 or (ismear == 0 and sigma > 0.05))
         ):
+            ismear_docs = "https://www.vasp.at/wiki/index.php/ISMEAR"
+            msg = ""
+            if ismear < 0:
+                msg = f"Relaxation of likely metal with ISMEAR < 0 ({ismear})."
+            elif ismear == 0 and sigma > 0.05:
+                msg = f"ISMEAR = 0 with a small SIGMA ({sigma}) detected."
             warnings.warn(
-                "Relaxation of likely metal with ISMEAR < 1 detected. Please see VASP "
-                "recommendations on ISMEAR for metals.",
+                f"{msg} See VASP recommendations on ISMEAR for metals ({ismear_docs}).",
                 BadInputSetWarning,
                 stacklevel=1,
             )
