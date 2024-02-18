@@ -81,11 +81,11 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
-        [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+        np.eye(3),
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
-        ((0, 0.5, 0.5), (0.5, 0, 0.5), (0.5, 0.5, 0)),
+        (np.ones((3, 3)) - np.eye(3)) / 2,
         atol=1e-8,
     )
     assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
