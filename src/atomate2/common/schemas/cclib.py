@@ -291,20 +291,16 @@ def cclib_calculate(
     )
 
     method = method.lower()
-    cube_methods = ["bader", "ddec6", "hirshfeld"]
+    cube_methods = ("bader", "ddec6", "hirshfeld")
 
     if method in cube_methods and not cube_file:
-        raise FileNotFoundError(
-            f"A cube file must be provided for {method}. Returning None."
-        )
-    if method in ["ddec6", "hirshfeld"] and not proatom_dir:
+        raise FileNotFoundError(f"A cube file must be provided for {method}.")
+    if method in ("ddec6", "hirshfeld") and not proatom_dir:
         if os.getenv("PROATOM_DIR") is None:
-            raise OSError("PROATOM_DIR environment variable not set. Returning None.")
+            raise OSError("PROATOM_DIR environment variable not set.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
-    if proatom_dir and not os.path.exists(proatom_dir):
-        raise FileNotFoundError(
-            f"Protatom directory {proatom_dir} does not exist. Returning None."
-        )
+    if proatom_dir and not os.path.isdir(proatom_dir):
+        raise FileNotFoundError(f"{proatom_dir=} does not exist.")
 
     if cube_file and method in cube_methods:
         vol = volume.read_from_cube(str(cube_file))
