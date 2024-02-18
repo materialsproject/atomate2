@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
@@ -20,10 +21,21 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
+    """Names of ML force fields."""
+
+    MACE = "MACE"
+    GAP = "GAP"
+    M3GNet = "M3GNet"
+    CHGNet = "CHGNet"
+
+
 @dataclass
 class ForceFieldRelaxMaker(Maker):
     """
     Base Maker to calculate forces and stresses using any force field.
+
+    Should be subclassed to use a specific force field.
 
     Parameters
     ----------
@@ -43,8 +55,8 @@ class ForceFieldRelaxMaker(Maker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "Forcefield relax"
-    force_field_name: str = "Forcefield"
+    name: str = "Force field relax"
+    force_field_name: str = "Force field"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -103,8 +115,8 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "ForceField static"
-    force_field_name: str = "Forcefield"
+    name: str = "Force field static"
+    force_field_name: str = "Force field"
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
@@ -165,8 +177,8 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "CHGNet relax"
-    force_field_name = "CHGNet"
+    name: str = f"{MLFF.CHGNet} relax"
+    force_field_name = f"{MLFF.CHGNet}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -195,8 +207,8 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "CHGNet static"
-    force_field_name = "CHGNet"
+    name: str = f"{MLFF.CHGNet} static"
+    force_field_name = f"{MLFF.CHGNet}"
     task_document_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
@@ -229,8 +241,8 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "M3GNet relax"
-    force_field_name: str = "M3GNet"
+    name: str = f"{MLFF.M3GNet} relax"
+    force_field_name: str = f"{MLFF.M3GNet}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -267,8 +279,8 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "M3GNet static"
-    force_field_name: str = "M3GNet"
+    name: str = f"{MLFF.M3GNet} static"
+    force_field_name: str = f"{MLFF.M3GNet}"
     task_document_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
@@ -315,8 +327,8 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
-    name: str = "MACE relax"
-    force_field_name: str = "MACE"
+    name: str = f"{MLFF.MACE} relax"
+    force_field_name: str = f"{MLFF.MACE}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -358,8 +370,8 @@ class MACEStaticMaker(ForceFieldStaticMaker):
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
-    name: str = "MACE static"
-    force_field_name: str = "MACE"
+    name: str = f"{MLFF.MACE} static"
+    force_field_name: str = f"{MLFF.MACE}"
     task_document_kwargs: dict = field(default_factory=dict)
     model: str | Path | Sequence[str | Path] | None = None
     model_kwargs: dict = field(default_factory=dict)
@@ -401,8 +413,8 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
-    name: str = "GAP relax"
-    force_field_name: str = "GAP"
+    name: str = f"{MLFF.GAP} relax"
+    force_field_name: str = f"{MLFF.GAP}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -447,8 +459,8 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
-    name: str = "GAP static"
-    force_field_name: str = "GAP"
+    name: str = f"{MLFF.GAP} static"
+    force_field_name: str = f"{MLFF.GAP}"
     task_document_kwargs: dict = field(default_factory=dict)
     potential_args_str: str = "IP GAP"
     potential_param_file_name: str | Path = "gap.xml"

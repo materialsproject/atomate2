@@ -10,6 +10,8 @@ from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
+from atomate2.forcefields.jobs import MLFF
+
 
 class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """Document defining the information at each ionic step."""
@@ -135,12 +137,11 @@ class ForceFieldTaskDocument(StructureMetadata):
         """
         trajectory = result["trajectory"].__dict__
 
-        # NOTE: units for stresses were converted from eV/Angstrom³ to kBar
-        # (* -1 from standard output)
+        # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
-        for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(
-                trajectory["stresses"][i] * -10 / GPa
+        for idx in range(len(trajectory["stresses"])):
+            trajectory["stresses"][idx] = voigt_6_to_full_3x3_stress(
+                trajectory["stresses"][idx] * -10 / GPa
             )
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -238,14 +239,16 @@ class ForceFieldTaskDocument(StructureMetadata):
             n_steps=n_steps,
         )
 
-        if forcefield_name == "M3GNet":
-            import matgl
+        # map force field name to its package name
+        pkg_name = {
+            MLFF.M3GNet: "matgl",
+            MLFF.CHGNet: "chgnet",
+            MLFF.MACE: "mace-torch",
+        }.get(forcefield_name)  # type: ignore[call-overload]
+        if pkg_name:
+            import importlib.metadata
 
-            version = matgl.__version__
-        elif forcefield_name == "CHGNet":
-            import chgnet
-
-            version = chgnet.__version__
+            version = importlib.metadata.version(pkg_name)
         else:
             version = "Unknown"
         return cls.from_structure(
