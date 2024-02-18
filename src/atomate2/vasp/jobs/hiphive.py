@@ -82,9 +82,6 @@ logger = initialize_logger(level=3)
 T_QHA = [
     i * 100 for i in range(21)
 ]  # Temp. for straight-up phonopy calculation of thermo. props. (free energy etc.)
-T_RENORM = [
-    1500
-]  # [i*100 for i in range(0,16)] # Temp. at which renorm. is to be performed
 # Temperature at which lattice thermal conductivity is calculated
 # If renorm. is performed, T_RENORM overrides T_KLAT for lattice thermal conductivity
 # T_KLAT = {"t_min":100,"t_max":1500,"t_step":100} #[i*100 for i in range(0,11)]
@@ -985,7 +982,7 @@ def fit_force_constants(
 
     cutoff_results = Parallel(n_jobs=min(os.cpu_count(),len(all_cutoffs)), backend="multiprocessing")(delayed(_run_cutoffs)(
         i, cutoffs, n_cutoffs, parent_structure, structures, supercell_matrix, fit_method,
-        disp_cut, imaginary_tol, fit_kwargs) for i, cutoffs in enumerate(all_cutoffs))
+        disp_cut, fit_kwargs) for i, cutoffs in enumerate(all_cutoffs))
 
     for result in cutoff_results:
         if result is None:
@@ -1077,8 +1074,9 @@ def _run_cutoffs(
         param_anharmonic = opt.parameters  # anharmonic force constant parameters
 
         parameters = np.concatenate((param_harmonic, param_anharmonic))  # combine
-        if nall != len(parameters):
-            raise ValueError("Length of parameters does not match nall.")
+        # if nall != len(parameters):
+        #     raise ValueError("Length of parameters does not match nall.")
+        assert(nall==len(parameters))
         logger.info(f"Training complete for cutoff: {i}, {cutoffs}")
 
     else:
@@ -1915,10 +1913,10 @@ def run_renormalization(
 
     return renorm_data
 
-
 def setup_TE_iter(
     cs, cutoffs, parent_structure, param, temperatures, dLfrac, supercell_matrix
 ):
+
     new_atoms = AseAtomsAdaptor.get_atoms(parent_structure)
     new_cell = Cell(
         np.transpose(
@@ -1932,6 +1930,7 @@ def setup_TE_iter(
     )
     new_cutoffs = [i * (1 + np.linalg.norm(dLfrac)) for i in cutoffs]
     fcs_TE = []  # not sure if this is correct
+
     while True:
         cs_TE = ClusterSpace(atoms, new_cutoffs, 1e-3, acoustic_sum_rules=True)
         if cs_TE.n_dofs == cs.n_dofs:

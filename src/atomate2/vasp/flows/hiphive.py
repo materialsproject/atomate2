@@ -160,7 +160,7 @@ class HiphiveMaker(Maker):
         i * 100 for i in range(21)
     ]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
     T_RENORM: ClassVar[list[int]] = [
-        300
+        100, 200, 300, 400, 500, 600, 700, 800, 900, 1000
     ]  # [i*100 for i in range(0,16)] # Temp. at which renorm. is to be performed
     # Temperature at which lattice thermal conductivity is calculated
     # If renormalization is performed,
@@ -173,7 +173,7 @@ class HiphiveMaker(Maker):
         300,
     ]  # [i*100 for i in range(0,16)]
     FIT_METHOD = "rfe"
-    RENORM_METHOD = "pseudoinverse"
+    RENORM_METHOD = "least_squares"
     RENORM_NCONFIG = 5  # Changed from 50
     RENORM_CONV_THRESH = 0.1  # meV/atom
     RENORM_MAX_ITER = 30  # Changed from 20
@@ -187,7 +187,7 @@ class HiphiveMaker(Maker):
         bulk_modulus: float,
         supercell_matrix: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
-        fit_method: str | None = None,
+        fit_method: str | None = FIT_METHOD,
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
         prev_vasp_dir: str | Path | None = None,
@@ -276,163 +276,167 @@ class HiphiveMaker(Maker):
         outputs = []
         loops = 1
 
-        # 1. Relax the structure
-        if isinstance(self.bulk_relax_maker, ForceFieldRelaxMaker):
-            bulk = self.bulk_relax_maker.make(structure)
-        else:
-            bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_vasp_dir)
-        jobs.append(bulk)
-        outputs.append(bulk.output)
-        structure = bulk.output.structure
-        prev_vasp_dir = bulk.output.dir_name
-        bulk.update_metadata(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"relax_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix_kwargs={self.supercell_matrix_kwargs}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        # # 1. Relax the structure
+        # if isinstance(self.bulk_relax_maker, ForceFieldRelaxMaker):
+        #     bulk = self.bulk_relax_maker.make(structure)
+        # else:
+        #     bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_vasp_dir)
+        # jobs.append(bulk)
+        # outputs.append(bulk.output)
+        # structure = bulk.output.structure
+        # prev_vasp_dir = bulk.output.dir_name
+        # bulk.update_metadata(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"relax_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"fixedDispls={fixed_displs}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix_kwargs={self.supercell_matrix_kwargs}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
-        # 2. if supercell_matrix is None, supercell size will be determined after relax
-        # maker to ensure that cell lengths are really larger than threshold
-        if supercell_matrix is None:
-            supercell_job = get_supercell_size(
-                structure,
-                self.min_length,
-                self.prefer_90_degrees,
-                **self.supercell_matrix_kwargs,
-            )
-            jobs.append(supercell_job)
-            supercell_matrix = supercell_job.output
+        # # 2. if supercell_matrix is None, supercell size will be determined after relax
+        # # maker to ensure that cell lengths are really larger than threshold
+        # if supercell_matrix is None:
+        #     supercell_job = get_supercell_size(
+        #         structure,
+        #         self.min_length,
+        #         self.prefer_90_degrees,
+        #         **self.supercell_matrix_kwargs,
+        #     )
+        #     jobs.append(supercell_job)
+        #     supercell_matrix = supercell_job.output
 
-        # 3. get a phonon object from phonopy
-        displacements = generate_hiphive_displacements(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            n_structures=n_structures,
-            fixed_displs=fixed_displs,
-            loop=loops,
-        )
-        jobs.append(displacements)
+        # # 3. get a phonon object from phonopy
+        # displacements = generate_hiphive_displacements(
+        #     structure=structure,
+        #     supercell_matrix=supercell_matrix,
+        #     n_structures=n_structures,
+        #     fixed_displs=fixed_displs,
+        #     loop=loops,
+        # )
+        # jobs.append(displacements)
 
-        # 4. perform the phonon displacement calculations
-        vasp_displacement_calcs = run_phonon_displacements(
-            displacements=displacements.output,
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            phonon_maker=self.phonon_displacement_maker,
-            prev_dir=prev_vasp_dir,
-        )
-        jobs.append(vasp_displacement_calcs)
+        # # 4. perform the phonon displacement calculations
+        # vasp_displacement_calcs = run_phonon_displacements(
+        #     displacements=displacements.output,
+        #     structure=structure,
+        #     supercell_matrix=supercell_matrix,
+        #     phonon_maker=self.phonon_displacement_maker,
+        #     prev_dir=prev_vasp_dir,
+        # )
+        # jobs.append(vasp_displacement_calcs)
 
 
-        # 5. Save "structure_data_{loop}.json", "relaxed_structures.json",
-        # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
-        # files locally
-        json_saver = collect_perturbed_structures(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            rattled_structures=vasp_displacement_calcs.output["structure"],
-            forces=vasp_displacement_calcs.output["forces"],
-            loop=loops,
-        )
-        json_saver.name += f" {loops}"
-        jobs.append(json_saver)
-        outputs.append(json_saver.output)
-        json_saver.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"json_saver_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix={supercell_matrix}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        # # 5. Save "structure_data_{loop}.json", "relaxed_structures.json",
+        # # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
+        # # files locally
+        # json_saver = collect_perturbed_structures(
+        #     structure=structure,
+        #     supercell_matrix=supercell_matrix,
+        #     rattled_structures=vasp_displacement_calcs.output["structure"],
+        #     forces=vasp_displacement_calcs.output["forces"],
+        #     loop=loops,
+        # )
+        # json_saver.name += f" {loops}"
+        # jobs.append(json_saver)
+        # outputs.append(json_saver.output)
+        # json_saver.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"json_saver_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"fixedDispls={fixed_displs}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix={supercell_matrix}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready"
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/MgO_555_paper"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/MgO_555_paper"
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready_old_disps"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready_Junsoo_8_disp"
 
-        # 6. Hiphive Fitting of FCPs upto 4th order
-        fit_force_constant = run_hiphive(
-            fit_method=fit_method,
-            disp_cut=disp_cut,
-            bulk_modulus=bulk_modulus,
-            temperature_qha=temperature_qha,
-            mesh_density=mesh_density,
-            imaginary_tol=imaginary_tol,
-            prev_dir_json_saver=json_saver.output[3],
-            # prev_dir_json_saver=prev_dir_json_saver,
-            loop=loops,
-            cutoffs=cutoffs
-        )
-        fit_force_constant.name += f" {loops}"
-        jobs.append(fit_force_constant)
-        outputs.append(fit_force_constant.output)
-        fit_force_constant.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"fit_force_constant_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix={supercell_matrix}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        # # 6. Hiphive Fitting of FCPs upto 4th order
+        # fit_force_constant = run_hiphive(
+        #     fit_method=fit_method,
+        #     disp_cut=disp_cut,
+        #     bulk_modulus=bulk_modulus,
+        #     temperature_qha=temperature_qha,
+        #     mesh_density=mesh_density,
+        #     imaginary_tol=imaginary_tol,
+        #     # prev_dir_json_saver=json_saver.output[3],
+        #     prev_dir_json_saver=prev_dir_json_saver,
+        #     loop=loops,
+        #     cutoffs=cutoffs
+        # )
+        # fit_force_constant.name += f" {loops}"
+        # jobs.append(fit_force_constant)
+        # outputs.append(fit_force_constant.output)
+        # fit_force_constant.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"fit_force_constant_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"fixedDispls={fixed_displs}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix={supercell_matrix}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
-        # 7. Quality Control Job to check if the desired Test RMSE is achieved,
-        # if not, then increase the number of structures --
-        # Using "addintion" feature of jobflow
-        loops += 1
-        n_structures += 1
-        logger.info(f"Number of structures increased to {n_structures}")
-        logger.info(f"loop = {loops}")
-        error_check_job = quality_control(
-            rmse_test=fit_force_constant.output[5],
-            n_structures=n_structures,
-            fixedDispls=fixed_displs,
-            loop=loops,
-            fit_method=fit_method,
-            disp_cut=disp_cut,
-            bulk_modulus=bulk_modulus,
-            temperature_qha=temperature_qha,
-            mesh_density=mesh_density,
-            imaginary_tol=imaginary_tol,
-            prev_dir_json_saver=json_saver.output[3],
-            prev_vasp_dir=prev_vasp_dir,
-            supercell_matrix=supercell_matrix,
-            # supercell_matrix_kwargs=supercell_matrix_kwargs,
-        )
-        error_check_job.name += f" {loops}"
-        jobs.append(error_check_job)
-        outputs.append(error_check_job.output)
-        error_check_job.metadata.update(
-            {
-                "tag": [
-                    f"error_check_job_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    # f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"supercell_matrix={supercell_matrix}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        # # 7. Quality Control Job to check if the desired Test RMSE is achieved,
+        # # if not, then increase the number of structures --
+        # # Using "addintion" feature of jobflow
+        # loops += 1
+        # n_structures += 1
+        # logger.info(f"Number of structures increased to {n_structures}")
+        # logger.info(f"loop = {loops}")
+        # error_check_job = quality_control(
+        #     rmse_test=fit_force_constant.output[5],
+        #     n_structures=n_structures,
+        #     fixedDispls=fixed_displs,
+        #     loop=loops,
+        #     fit_method=fit_method,
+        #     disp_cut=disp_cut,
+        #     bulk_modulus=bulk_modulus,
+        #     temperature_qha=temperature_qha,
+        #     mesh_density=mesh_density,
+        #     imaginary_tol=imaginary_tol,
+        #     prev_dir_json_saver=json_saver.output[3],
+        #     prev_vasp_dir=prev_vasp_dir,
+        #     supercell_matrix=supercell_matrix,
+        #     # supercell_matrix_kwargs=supercell_matrix_kwargs,
+        # )
+        # error_check_job.name += f" {loops}"
+        # jobs.append(error_check_job)
+        # outputs.append(error_check_job.output)
+        # error_check_job.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"error_check_job_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"fixedDispls={fixed_displs}",
+        #             f"dispCut={disp_cut}",
+        #             # f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"supercell_matrix={supercell_matrix}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
+
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-02-18-06-45-08-558794-51068"
+        prev_dir_hiphive = "/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/job_2024-02-18-06-45-08-558794-51068"
         # 8. Perform phonon renormalization to obtain temperature-dependent
         # force constants using hiPhive
         if renormalize:
@@ -447,7 +451,8 @@ class HiphiveMaker(Maker):
                     renorm_TE_iter=renormalize_thermal_expansion_iter,
                     bulk_modulus=bulk_modulus,
                     mesh_density=mesh_density,
-                    prev_dir_hiphive=fit_force_constant.output[4],
+                    # prev_dir_hiphive=fit_force_constant.output[4],
+                    prev_dir_hiphive=prev_dir_hiphive,
                     loop=loops,
                 )
                 renormalization.name += f" {temperature} {loops}"
@@ -466,95 +471,95 @@ class HiphiveMaker(Maker):
                     }
                 )
 
-        # 9. Extract Phonon Band structure & DOS from FC
-        if renormalize:
-            fc_pdos_pb_to_db = run_fc_to_pdos(
-                renormalized=renormalize,
-                renorm_temperature=renormalize_temperature,
-                mesh_density=mesh_density,
-                prev_dir_json_saver=renormalization.output[0],
-                loop=loops,
-            )
-        else:
-            fc_pdos_pb_to_db = run_fc_to_pdos(
-                renormalized=renormalize,
-                renorm_temperature=renormalize_temperature,
-                mesh_density=mesh_density,
-                prev_dir_json_saver=fit_force_constant.output[4],
-                loop=loops,
-            )
-        fc_pdos_pb_to_db.name += f" {loops}"
-        jobs.append(fc_pdos_pb_to_db)
-        outputs.append(fc_pdos_pb_to_db.output)
-        fc_pdos_pb_to_db.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"fc_pdos_pb_to_db_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix={supercell_matrix}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        # # 9. Extract Phonon Band structure & DOS from FC
+        # if renormalize:
+        #     fc_pdos_pb_to_db = run_fc_to_pdos(
+        #         renormalized=renormalize,
+        #         renorm_temperature=renormalize_temperature,
+        #         mesh_density=mesh_density,
+        #         prev_dir_json_saver=renormalization.output[0],
+        #         loop=loops,
+        #     )
+        # else:
+        #     fc_pdos_pb_to_db = run_fc_to_pdos(
+        #         renormalized=renormalize,
+        #         renorm_temperature=renormalize_temperature,
+        #         mesh_density=mesh_density,
+        #         prev_dir_json_saver=fit_force_constant.output[4],
+        #         loop=loops,
+        #     )
+        # fc_pdos_pb_to_db.name += f" {loops}"
+        # jobs.append(fc_pdos_pb_to_db)
+        # outputs.append(fc_pdos_pb_to_db.output)
+        # fc_pdos_pb_to_db.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"mp_id={mpid}",
+        #             f"fc_pdos_pb_to_db_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"fixedDispls={fixed_displs}",
+        #             f"dispCut={disp_cut}",
+        #             f"supercell_matrix={supercell_matrix}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
-        # 10. Lattice thermal conductivity calculation using Sheng BTE
-        if calculate_lattice_thermal_conductivity:
-            if renormalize:
-                temperatures = renormalize_temperature
-            else:
-                temperatures = thermal_conductivity_temperature
-            # Because of the way ShengBTE works, a temperature array that is not
-            # evenly spaced out (T_step) requires submission for each temperature
-            if not renormalize:
-                if isinstance(temperatures, dict):
-                    pass
-                elif type(temperatures) in [list, np.ndarray]:
-                    assert all(np.diff(temperatures) == np.diff(temperatures)[0])
-                    # if len(temperatures) == 0:
-                    #     # Handle the case when temperatures is empty
-                    #     pass
-                    # elif type(temperatures) in [list, np.ndarray]:
-                    #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+        # # 10. Lattice thermal conductivity calculation using Sheng BTE
+        # if calculate_lattice_thermal_conductivity:
+        #     if renormalize:
+        #         temperatures = renormalize_temperature
+        #     else:
+        #         temperatures = thermal_conductivity_temperature
+        #     # Because of the way ShengBTE works, a temperature array that is not
+        #     # evenly spaced out (T_step) requires submission for each temperature
+        #     if not renormalize:
+        #         if isinstance(temperatures, dict):
+        #             pass
+        #         elif type(temperatures) in [list, np.ndarray]:
+        #             assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+        #             # if len(temperatures) == 0:
+        #             #     # Handle the case when temperatures is empty
+        #             #     pass
+        #             # elif type(temperatures) in [list, np.ndarray]:
+        #             #     assert all(np.diff(temperatures) == np.diff(temperatures)[0])
 
-                lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-                    shengbte_cmd=shengbte_cmd,
-                    renormalized=renormalize,
-                    temperature=temperatures,
-                    loop=loops,
-                    prev_dir_hiphive=fit_force_constant.output[4],
-                    # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2023-11-01-04-50-29-927903-42200",
-                )
-            else:
-                for _t, T in enumerate(temperatures):
-                    if T == 0:
-                        continue
-                    lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-                        shengbte_cmd=shengbte_cmd,
-                        renormalized=renormalize,
-                        temperature=T,
-                        loop=loops,
-                        prev_dir_hiphive=fit_force_constant.output[4],
-                        # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2023-11-01-04-50-29-927903-42200",
-                    )
+        #         lattice_thermal_conductivity = run_lattice_thermal_conductivity(
+        #             shengbte_cmd=shengbte_cmd,
+        #             renormalized=renormalize,
+        #             temperature=temperatures,
+        #             loop=loops,
+        #             prev_dir_hiphive=fit_force_constant.output[4],
+        #             # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2023-11-01-04-50-29-927903-42200",
+        #         )
+        #     else:
+        #         for _t, T in enumerate(temperatures):
+        #             if T == 0:
+        #                 continue
+        #             lattice_thermal_conductivity = run_lattice_thermal_conductivity(
+        #                 shengbte_cmd=shengbte_cmd,
+        #                 renormalized=renormalize,
+        #                 temperature=T,
+        #                 loop=loops,
+        #                 prev_dir_hiphive=fit_force_constant.output[4],
+        #                 # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2023-11-01-04-50-29-927903-42200",
+        #             )
 
-        lattice_thermal_conductivity.name += f" {loops}"
-        jobs.append(lattice_thermal_conductivity)
-        outputs.append(lattice_thermal_conductivity.output)
-        lattice_thermal_conductivity.metadata.update(
-            {
-                "tag": [
-                    f"run_lattice_thermal_conductivity_{loops}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    # f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                    f"supercell_matrix={supercell_matrix}",
-                    f"loop={loops}",
-                ]
-            }
-        )
+        # lattice_thermal_conductivity.name += f" {loops}"
+        # jobs.append(lattice_thermal_conductivity)
+        # outputs.append(lattice_thermal_conductivity.output)
+        # lattice_thermal_conductivity.metadata.update(
+        #     {
+        #         "tag": [
+        #             f"run_lattice_thermal_conductivity_{loops}",
+        #             f"nConfigsPerStd={n_structures}",
+        #             f"fixedDispls={fixed_displs}",
+        #             f"dispCut={disp_cut}",
+        #             # f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+        #             f"supercell_matrix={supercell_matrix}",
+        #             f"loop={loops}",
+        #         ]
+        #     }
+        # )
 
         return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE_{fixed_displs}")
