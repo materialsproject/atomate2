@@ -170,7 +170,7 @@ class VaspInputSet(InputSet):
         ismear = self.incar.get("ISMEAR", 1)
         sigma = self.incar.get("SIGMA", 0.2)
         if (
-            all(k.is_metal for k in self.poscar.structure.composition)
+            all(elem.is_metal for elem in self.poscar.structure.composition)
             and self.incar.get("NSW", 0) > 0
             and (ismear < 0 or (ismear == 0 and sigma > 0.05))
         ):
@@ -186,11 +186,11 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in (
             "Normal",
             "All",
             "Damped",
-        ]:
+        ):
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -273,7 +273,7 @@ class VaspInputGenerator(InputGenerator):
     auto_kspacing
         If true, automatically use the VASP recommended KSPACING based on bandgap,
         i.e. higher kpoint spacing for insulators than metals. Can be boolean or float.
-        If float, then the value will interpreted as the bandgap in eV to use for the
+        If a float, the value will be interpreted as the bandgap in eV to use for the
         KSPACING calculation.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
