@@ -757,7 +757,8 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
 
     with pytest.raises(
         ValueError,
-        match="can only use other kpath schemes with the primitive standard structure",
+        match=f"You can't use {kpath_scheme=} with the primitive standard "
+        "structure, please use seekpath",
     ):
         PhononMaker(
             min_length=3.0,
@@ -788,7 +789,11 @@ def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpath_s
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
-    with pytest.raises(ValueError, match="can only use other kpath schemes with the"):
+    with pytest.raises(
+        ValueError,
+        match=f"You can't use {kpath_scheme=} with the primitive standard "
+        "structure, please use seekpath",
+    ):
         PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,
