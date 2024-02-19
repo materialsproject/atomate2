@@ -123,6 +123,23 @@ Atomate2 is released under a modified BSD license; the full text can be found [h
 The development of atomate2 has benefited from many people across several research groups.
 A full list of contributors can be found [here][contributors].
 
+## Citing atomate2
+
+A publication for `atomate2` is in preparation. In the meantime, please use [`citation.cff`](citation.cff) and the [Zenodo record](https://zenodo.org/badge/latestdoi/306414371) to cite `atomate2`.
+
+```bib
+@software{ganose_atomate2_2024,
+  author = {Ganose, Alex and Riebesell, Janosh and George, J. and Shen, Jimmy and S. Rosen, Andrew and Ashok Naik, Aakash and nwinner and Wen, Mingjian and rdguha1995 and Kuner, Matthew and Petretto, Guido and Zhu, Zhuoying and Horton, Matthew and Sahasrabuddhe, Hrushikesh and Kaplan, Aaron and Schmidt, Jonathan and Ertural, Christina and Kingsbury, Ryan and McDermott, Matt and Goodall, Rhys and Bonkowski, Alexander and Purcell, Thomas and Zügner, Daniel and Qi, Ji},
+  doi = {10.5281/zenodo.10677081},
+  license = {cc-by-4.0},
+  month = jan,
+  title = {{atomate2}},
+  url = {https://github.com/materialsproject/atomate2},
+  version = {0.0.13},
+  year = {2024}
+}
+```
+
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
