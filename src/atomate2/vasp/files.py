@@ -85,7 +85,7 @@ def copy_vasp_outputs(
     # find optional files; do not fail if KPOINTS is missing, this might be KSPACING
     # note: POTCAR files never have the relax extension, whereas KPOINTS files should
     optional_files = []
-    for file in ["POTCAR", "POTCAR.spec", "KPOINTS" + relax_ext]:
+    for file in ("POTCAR", "POTCAR.spec", "KPOINTS" + relax_ext):
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
             optional_files.append(found_file)

@@ -27,7 +27,7 @@ requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
-    "custodian>=2023.3.10",
+    "custodian>=2024.2.15",
     "emmet-core>=0.70.5",
     "jobflow>=0.1.11",
     "monty>=2023.9.25",
@@ -64,7 +64,7 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.0"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.1"]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
@@ -73,19 +73,19 @@ strict = [
     "cclib==1.8",
     "chgnet==0.3.4",
     "click==8.1.7",
-    "custodian==2023.10.9",
+    "custodian==2024.2.15",
     "dscribe==2.1.0",
     "emmet-core==0.77.1",
     "ijson==3.2.3",
     "jobflow==0.1.17",
     "lobsterpy==0.3.6",
     "mace-torch>=0.3.3",
-    "matgl==0.9.2",
+    "matgl==1.0.0",
     "monty==2023.9.25",
     "mp-api==0.39.5",
     "numpy",
-    "phonopy==2.21.0",
-    "pydantic-settings==2.1.0",
+    "phonopy==2.21.2",
+    "pydantic-settings==2.2.0",
     "pydantic==2.4.2",
     "pymatgen-analysis-defects==2024.2.9",
     "pymatgen==2023.12.18",
@@ -146,8 +146,8 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-select = ["ALL"]
-ignore = [
+lint.select = ["ALL"]
+lint.ignore = [
     "ANN002",
     "ANN003",
     "ANN101",  # missing self type annotation
@@ -177,12 +177,13 @@ ignore = [
     "SLF",     # private member accessed outside class
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
+    "S507",    # paramiko auto trust
 ]
-pydocstyle.convention = "numpy"
-isort.known-first-party = ["atomate2"]
-isort.split-on-trailing-comma = false
+lint.pydocstyle.convention = "numpy"
+lint.isort.known-first-party = ["atomate2"]
+lint.isort.split-on-trailing-comma = false
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
