@@ -4,6 +4,7 @@
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
+[![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677081-blue?logo=Zenodo&logoColor=white)](https://zenodo.org/records/10677081)
 
 [Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
@@ -133,7 +134,7 @@ A publication for `atomate2` is in preparation. In the meantime, please use [`ci
   doi = {10.5281/zenodo.10677081},
   license = {cc-by-4.0},
   month = jan,
-  title = {{atomate2}},
+  title = {atomate2},
   url = {https://github.com/materialsproject/atomate2},
   version = {0.0.13},
   year = {2024}
