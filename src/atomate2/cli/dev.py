@@ -1,7 +1,17 @@
 """Module containing command line scripts for developers."""
 
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import click
 from monty.json import jsanitize
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from jobflow import Maker
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -11,7 +21,7 @@ def dev() -> None:
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("test_dir")
-def vasp_test_data(test_dir) -> None:
+def vasp_test_data(test_dir: Path) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
@@ -154,10 +164,10 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
-def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
+def _potcar_to_potcar_spec(potcar_filename: str | Path, output_filename: Path) -> None:
     """Convert a POTCAR file to a POTCAR.spec file."""
     from pymatgen.io.vasp import Potcar
 
@@ -166,7 +176,7 @@ def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
-def abinit_script_maker():
+def abinit_script_maker() -> None:
     """Generate template script for abinit makers."""
     import os
     import sys
@@ -200,7 +210,7 @@ def abinit_script_maker():
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("structure_file", required=False)
 @click.option("--make-kwargs", "-mk", required=False)
-def abinit_generate_reference(structure_file, make_kwargs):
+def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     """Generate reference files for abinit test.
 
     This script expects there is a maker.json file and a structure file. The structure
@@ -252,7 +262,7 @@ def abinit_generate_reference(structure_file, make_kwargs):
     default=False,
     help="Whether to force overwrite of existing folders/files.",
 )
-def abinit_test_data(test_name, test_data_dir, force):
+def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> None:
     """Copy test data for ABINIT unit tests.
 
     This script expects there is a maker.json file, an initial_structure.json file,
@@ -304,7 +314,7 @@ def abinit_test_data(test_name, test_data_dir, force):
         maker_dir.mkdir(parents=True)
     test_dir = maker_dir / test_name
 
-    def _makedir(directory, force_overwrite):
+    def _makedir(directory: Path, force_overwrite: bool) -> None:
         if not directory.exists():
             directory.mkdir()
         elif not force_overwrite:
@@ -323,17 +333,17 @@ def abinit_test_data(test_name, test_data_dir, force):
         raise ValueError("Not all jobs have unique names")
 
     original_mapping = {}
-    mapping = {}
+    mapping: dict[Any, Any] = {}
 
     def _fake_dirdata(
-        src_dir,
-        dest_dir,
-        dirdata_name,
-        include_files=None,
-        include_fake_files=None,
-        force_overwrite=False,
-        allow_missing=True,
-    ):
+        src_dir: Path,
+        dest_dir: Path,
+        dirdata_name: str,
+        include_files: list | None = None,
+        include_fake_files: list | None = None,
+        force_overwrite: bool = False,
+        allow_missing: bool = True,
+    ) -> None:
         src_dirdata = src_dir / dirdata_name
         if not src_dirdata.exists():
             raise RuntimeError(f"Source directory {src_dirdata} does not exist")
@@ -368,17 +378,17 @@ def abinit_test_data(test_name, test_data_dir, force):
                     )
 
     def _fake_dirs(
-        src_dir,
-        dest_dir,
-        indata_files=None,
-        outdata_files=None,
-        tmpdata_files=None,
-        indata_fake_files=None,
-        outdata_fake_files=None,
-        tmpdata_fake_files=None,
-        force_overwrite=False,
-        allow_missing=True,
-    ):
+        src_dir: Path,
+        dest_dir: Path,
+        indata_files: list | None = None,
+        outdata_files: list | None = None,
+        tmpdata_files: list | None = None,
+        indata_fake_files: list | None = None,
+        outdata_fake_files: list | None = None,
+        tmpdata_fake_files: list | None = None,
+        force_overwrite: bool = False,
+        allow_missing: bool = True,
+    ) -> None:
         for dirdata_name, data_files, data_fake_files in zip(
             ("indata", "outdata", "tmpdata"),
             (indata_files, outdata_files, tmpdata_files),
@@ -551,10 +561,10 @@ class Test{maker_name}:
         assert output1.run_number == 1
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
-def save_abinit_maker(maker):
+def save_abinit_maker(maker: Maker) -> None:
     """Save maker, the script used to create it and additional metadata."""
     import datetime
     import inspect
@@ -612,7 +622,7 @@ def save_abinit_maker(maker):
         )
 
 
-def _find_sub_list(sublist, mainlist):
+def _find_sub_list(sublist: list | tuple, mainlist: list | tuple) -> list:
     sll = len(sublist)
     inds = [i for i, e in enumerate(mainlist) if e == sublist[0]]
 

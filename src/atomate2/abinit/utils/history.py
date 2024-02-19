@@ -1,11 +1,22 @@
 """Job history related objects."""
 
+from __future__ import annotations
+
 import collections
 import logging
 import os
 import traceback
+from typing import TYPE_CHECKING, Any
 
 from monty.json import MontyDecoder, MSONable, jsanitize
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from abipy.abio.inputs import AbinitInput
+    from abipy.flowtk.events import AbinitEvent
+    from abipy.flowtk.utils import Directory
+    from jobflow import Flow, Job
 
 from atomate2.abinit.utils.common import OUTDIR_NAME
 
@@ -24,7 +35,7 @@ class JobHistory(collections.deque, MSONable):
     track of the full history of the job.
     """
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """Create dictionary representation of the history."""
         items = [i.as_dict() if hasattr(i, "as_dict") else i for i in self]
 
@@ -35,23 +46,25 @@ class JobHistory(collections.deque, MSONable):
         }
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d: dict) -> JobHistory:
         """Create instance of the history from its dictionary representation."""
         dec = MontyDecoder()
         return cls([dec.process_decoded(i) for i in d["items"]])
 
-    def log_initialization(self, job, initialization_info=None):
+    def log_initialization(
+        self, job: Job | Flow, initialization_info: Any | None = None
+    ) -> None:
         """Log initialization information about the job."""
         details = {"job_class": job.__class__.__name__}
         if initialization_info:
             details["initialization_info"] = initialization_info
         self.append(JobEvent(JobEvent.INITIALIZED, details=details))
 
-    def log_corrections(self, corrections):
+    def log_corrections(self, corrections: Any | None) -> None:
         """Log corrections applied to the job."""
         self.append(JobEvent(JobEvent.CORRECTIONS, corrections))
 
-    def log_restart(self):
+    def log_restart(self) -> None:
         """Log that the job is restarted."""
         self.append(
             JobEvent(
@@ -59,7 +72,7 @@ class JobHistory(collections.deque, MSONable):
             )
         )
 
-    def log_start(self, workdir, start_time):
+    def log_start(self, workdir: Path | str | Directory, start_time: Any) -> None:
         """Log that the job has started."""
         self.append(
             JobEvent(
@@ -68,7 +81,7 @@ class JobHistory(collections.deque, MSONable):
             )
         )
 
-    def log_end(self, workdir):
+    def log_end(self, workdir: Path | str | Directory) -> None:
         """Log that the job has ended."""
         self.append(
             JobEvent(
@@ -78,7 +91,7 @@ class JobHistory(collections.deque, MSONable):
         )
 
     @property
-    def num_restarts(self):
+    def num_restarts(self) -> int:
         """Get the number of restarts of the job."""
         # TODO: what happens if a job starts but does not end (e.g. killed by walltime)
         #  how should we count the number of restarts ? do we need both START and
@@ -89,24 +102,24 @@ class JobHistory(collections.deque, MSONable):
         )  # [event for event in self if event.event_type == JobEvent.RESTART])
 
     @property
-    def run_number(self):
+    def run_number(self) -> int:
         """Get the number of the run."""
         return len(self.get_events_by_types(JobEvent.START))
 
     @property
-    def prev_dir(self):
+    def prev_dir(self) -> str:
         """Get the last run directory."""
         return os.path.join(
             self.get_events_by_types(JobEvent.END)[-1].details["workdir"]
         )
 
     @property
-    def prev_outdir(self):
+    def prev_outdir(self) -> str:
         """Get the output directory of the last run."""
         return os.path.join(self.prev_dir, OUTDIR_NAME)
 
     @property
-    def is_first_run(self):
+    def is_first_run(self) -> bool:
         """Determine if it is the first run of the job from the history."""
         nstart = len(self.get_events_by_types(JobEvent.START))
         if nstart == 0:
@@ -115,22 +128,24 @@ class JobHistory(collections.deque, MSONable):
             )
         return nstart == 1
 
-    def log_autoparal(self, optconf):
+    def log_autoparal(self, optconf: Any) -> None:
         """Log autoparal execution."""
         self.append(JobEvent(JobEvent.AUTOPARAL, details={"optconf": optconf}))
 
-    def log_unconverged(self):
+    def log_unconverged(self) -> None:
         """Log that the job is not converged."""
         self.append(JobEvent(JobEvent.UNCONVERGED))
 
-    def log_finalized(self, final_input=None):
+    def log_finalized(self, final_input: AbinitInput | None = None) -> None:
         """Log that the job is finalized."""
         details = {"total_run_time": self.get_total_run_time()}
         if final_input:
             details["final_input"] = final_input
         self.append(JobEvent(JobEvent.FINALIZED, details=details))
 
-    def log_converge_params(self, unconverged_params, abiinput):
+    def log_converge_params(
+        self, unconverged_params: dict, abiinput: AbinitInput
+    ) -> None:
         """Log the change of user-defined convergence parameters.
 
         An example is the convergence with respect to dilatmx when relaxing a structure.
@@ -143,7 +158,7 @@ class JobHistory(collections.deque, MSONable):
             }
         self.append(JobEvent(JobEvent.UNCONVERGED_PARAMS, details={"params": params}))
 
-    def log_error(self, exc):
+    def log_error(self, exc: Any) -> None:
         """Log an error in the job."""
         tb = traceback.format_exc()
         event_details = {"stacktrace": tb}
@@ -152,18 +167,18 @@ class JobHistory(collections.deque, MSONable):
             exception_details = exc.to_dict()
         except AttributeError:
             exception_details = None
-        except BaseException as e:
-            logger.error(f"Exception couldn't be serialized: {e} ")
+        except BaseException:
+            logger.exception("Exception couldn't be serialized")
             exception_details = None
         if exception_details:
             event_details["exception_details"] = exception_details
         self.append(JobEvent(JobEvent.ERROR, details=event_details))
 
-    def log_abinit_stop(self, run_time=None):
+    def log_abinit_stop(self, run_time: Any | None = None) -> None:
         """Log that abinit has stopped."""
         self.append(JobEvent(JobEvent.ABINIT_STOP, details={"run_time": run_time}))
 
-    def get_events_by_types(self, types):
+    def get_events_by_types(self, types: list | AbinitEvent) -> list:
         """Return the events in history of the selected types.
 
         Parameters
@@ -175,7 +190,7 @@ class JobHistory(collections.deque, MSONable):
 
         return [e for e in self if e.event_type in types]
 
-    def get_total_run_time(self):
+    def get_total_run_time(self) -> Any:
         """Get the total run time based summing the abinit stop event run times."""
         total_run_time = 0
         for te in self.get_events_by_types(JobEvent.ABINIT_STOP):
@@ -201,13 +216,13 @@ class JobEvent(MSONable):
     ERROR = "error"
     ABINIT_STOP = "abinit stop"
 
-    def __init__(self, event_type, details=None):
+    def __init__(self, event_type: AbinitEvent, details: Any | None = None) -> None:
         # TODO: add when and where the JobEvent occurred ?
         """Construct JobEvent object."""
         self.event_type = event_type
         self.details = details
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """Create dictionary representation of the job event."""
         d = {"event_type": self.event_type}
         if self.details:
@@ -217,7 +232,7 @@ class JobEvent(MSONable):
         return d
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d: dict) -> JobEvent:
         """Create instance of the job event from its dictionary representation."""
         dec = MontyDecoder()
         details = dec.process_decoded(d["details"]) if "details" in d else None

@@ -15,7 +15,7 @@ from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
 from monty.json import MontyEncoder, jsanitize
 from pymatgen.io.abinit.abiobjects import KSampling, KSamplingModes
-from pymatgen.io.abinit.pseudos import PseudoTable
+from pymatgen.io.abinit.pseudos import Pseudo, PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Kpoints
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -38,7 +38,7 @@ from atomate2.abinit.utils.common import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Sequence
 
     from pymatgen.core.structure import Structure
 
@@ -65,7 +65,7 @@ class AbinitInputSet(InputSet):
         abinit_input: AbinitInput,
         input_files: Iterable[tuple[str, str]] | None = None,
         link_files: bool = True,
-    ):
+    ) -> None:
         self.input_files = input_files
         self.link_files = link_files
         super().__init__(
@@ -83,7 +83,7 @@ class AbinitInputSet(InputSet):
         make_dir: bool = True,
         overwrite: bool = True,
         zip_inputs: bool = False,
-    ):
+    ) -> None:
         """Write Abinit input files to a directory."""
         # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
         #  the abinit input set also sets up links to previous files, sets up the
@@ -128,12 +128,12 @@ class AbinitInputSet(InputSet):
         return True
 
     @property
-    def abinit_input(self):
+    def abinit_input(self) -> AbinitInput:
         """Get the AbinitInput object."""
         return self[INPUT_FILE_NAME]
 
     @staticmethod
-    def set_workdir(workdir):
+    def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
         """Set up the working directory.
 
         This also sets up and creates standard input, output and temporary directories.
@@ -189,7 +189,7 @@ class AbinitInputSet(InputSet):
         """
         return self.abinit_input.remove_vars(keys=keys, strict=strict)
 
-    def runlevel(self):
+    def runlevel(self) -> set[str]:
         """Get the set of strings defining the calculation type."""
         return self.abinit_input.runlevel
 
@@ -201,12 +201,12 @@ class AbinitInputSet(InputSet):
         """
         return self.abinit_input.set_structure(structure)
 
-    def deepcopy(self):
+    def deepcopy(self) -> AbinitInputSet:
         """Deep copy of the input set."""
         return copy.deepcopy(self)
 
 
-def as_pseudo_table(pseudos):
+def as_pseudo_table(pseudos: str | Sequence[Pseudo]) -> PseudoTable:
     """Get the pseudos as a PseudoTable object.
 
     Parameters
@@ -308,7 +308,7 @@ class AbinitInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
 
-    def get_input_set(  # type: ignore
+    def get_input_set(
         self,
         structure: Structure = None,
         restart_from: str | tuple | list | Path | None = None,
@@ -670,7 +670,7 @@ class AbinitInputGenerator(InputGenerator):
             abinit_input.set_vars(**ksampling.abivars)
 
     @staticmethod
-    def _clean_none(abinit_input: AbinitInput | MultiDataset):
+    def _clean_none(abinit_input: AbinitInput | MultiDataset) -> None:
         """
         Remove the variables whose value is set to None from the AbinitInput.
 

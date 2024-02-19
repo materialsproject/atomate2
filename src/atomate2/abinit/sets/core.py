@@ -113,7 +113,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
             kpoints_settings=kpoints_settings,
         )
 
-    def _get_nband(self, prev_outputs):
+    def _get_nband(self, prev_outputs: list[str] | None) -> int:
         abinit_inputs = self.resolve_prev_inputs(
             prev_outputs, self.factory_prev_inputs_kwargs
         )

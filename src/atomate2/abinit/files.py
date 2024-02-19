@@ -16,7 +16,10 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from pathlib import Path
 
+    from abipy.abio.inputs import AbinitInput
     from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.sets.base import AbinitInputGenerator
 
 __all__ = [
     "out_to_in",
@@ -32,7 +35,7 @@ logger = logging.getLogger(__name__)
 ALL_ABIEXTS = abi_extensions()
 
 
-def fname2ext(filepath):
+def fname2ext(filepath: Path | str) -> None | str:
     """Get the abinit extension of a given filename.
 
     This will return None if no extension is found.
@@ -53,7 +56,7 @@ def out_to_in(
     indir: Path | str = INDIR_NAME,
     file_client: FileClient | None = None,
     link_files: bool = True,
-):
+) -> None:
     """
     Copy or link abinit output files to the Abinit input directory.
 
@@ -85,7 +88,9 @@ def out_to_in(
             file_client.copy(src_file, dest_file, src_host=src_host)
 
 
-def load_abinit_input(dirpath, fname="abinit_input.json"):
+def load_abinit_input(
+    dirpath: Path | str, fname: str = "abinit_input.json"
+) -> AbinitInput:
     """Load the AbinitInput object from a given directory.
 
     Parameters
@@ -111,11 +116,11 @@ def load_abinit_input(dirpath, fname="abinit_input.json"):
 
 def write_abinit_input_set(
     structure: Structure,
-    input_set_generator,
-    prev_outputs=None,
-    restart_from=None,
+    input_set_generator: AbinitInputGenerator,
+    prev_outputs: str | Path | list[str] | None = None,
+    restart_from: str | Path | list[str] | None = None,
     directory: str | Path = ".",
-):
+) -> None:
     """Write the abinit inputs for a given structure using a given generator.
 
     Parameters

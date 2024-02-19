@@ -14,15 +14,8 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 
 from atomate2.abinit.files import load_abinit_input
-from atomate2.abinit.schemas.calculation import (
-    AbinitObject,
-    Calculation,
-    TaskState,
-)
-from atomate2.abinit.utils.common import (
-    LOG_FILE_NAME,
-    MPIABORTFILE,
-)
+from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
+from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri, strip_hostname
 
@@ -247,7 +240,7 @@ class AbinitTaskDoc(StructureMetadata):
         dir_name: Path | str,
         additional_fields: dict[str, Any] = None,
         **abinit_calculation_kwargs,
-    ):
+    ) -> AbinitTaskDoc:
         """Create a task document from a directory containing Abinit files.
 
         Parameters
@@ -360,7 +353,7 @@ def _find_abinit_files(
     path = Path(path)
     task_files = {}
 
-    def _get_task_files(files, suffix=""):
+    def _get_task_files(files: list[Path], suffix: str = "") -> dict:
         abinit_files = {}
         for file in files:
             # Here we make assumptions about the output file naming

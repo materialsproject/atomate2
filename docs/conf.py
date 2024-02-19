@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 # -- Project information -----------------------------------------------------
 
 project = "atomate2"
-copyright = "2023, materialsproject"
+copyright = "2023, materialsproject"  # noqa: A001
 author = "Alex Ganose"
 
 # The short X.Y version

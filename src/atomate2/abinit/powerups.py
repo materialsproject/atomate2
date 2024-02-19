@@ -11,7 +11,12 @@ from pymatgen.io.abinit.abiobjects import KSampling
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 
 
-def update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter):
+def update_maker_kwargs(
+    class_filter: Maker | None,
+    dict_mod_updates: dict,
+    flow: Job | Flow | Maker,
+    name_filter: str | None,
+) -> Job | Flow | Maker:
     """
     Update an object inside a Job, a Flow or a Maker.
 

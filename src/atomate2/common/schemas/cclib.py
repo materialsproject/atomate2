@@ -34,22 +34,28 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     For the list of supported packages, see https://cclib.github.io
     """
 
-    molecule: Molecule = Field(None, description="Final output molecule from the task")
-    energy: float = Field(None, description="Final total energy")
-    dir_name: str = Field(None, description="Directory where the output is parsed")
-    logfile: str = Field(
+    molecule: Optional[Molecule] = Field(
+        None, description="Final output molecule from the task"
+    )
+    energy: Optional[float] = Field(None, description="Final total energy")
+    dir_name: Optional[str] = Field(
+        None, description="Directory where the output is parsed"
+    )
+    logfile: Optional[str] = Field(
         None, description="Path to the log file used in the post-processing analysis"
     )
-    attributes: dict = Field(
+    attributes: Optional[dict] = Field(
         None, description="Computed properties and calculation outputs"
     )
-    metadata: dict = Field(
+    metadata: Optional[dict] = Field(
         None,
         description="Calculation metadata, including input parameters and runtime "
         "statistics",
     )
-    task_label: str = Field(None, description="A description of the task")
-    tags: list[str] = Field(None, description="Optional tags for this task document")
+    task_label: Optional[str] = Field(None, description="A description of the task")
+    tags: Optional[list[str]] = Field(
+        None, description="Optional tags for this task document"
+    )
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
@@ -250,7 +256,7 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
 
 @requires(cclib, "cclib_calculate requires cclib to be installed.")
 def cclib_calculate(
-    cclib_obj,
+    cclib_obj: Any,
     method: str,
     cube_file: Union[Path, str],
     proatom_dir: Union[Path, str],
@@ -285,47 +291,43 @@ def cclib_calculate(
     )
 
     method = method.lower()
-    cube_methods = ["bader", "ddec6", "hirshfeld"]
+    cube_methods = ("bader", "ddec6", "hirshfeld")
 
     if method in cube_methods and not cube_file:
-        raise FileNotFoundError(
-            f"A cube file must be provided for {method}. Returning None."
-        )
-    if method in ["ddec6", "hirshfeld"] and not proatom_dir:
+        raise FileNotFoundError(f"A cube file must be provided for {method}.")
+    if method in ("ddec6", "hirshfeld") and not proatom_dir:
         if os.getenv("PROATOM_DIR") is None:
-            raise OSError("PROATOM_DIR environment variable not set. Returning None.")
+            raise OSError("PROATOM_DIR environment variable not set.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
-    if proatom_dir and not os.path.exists(proatom_dir):
-        raise FileNotFoundError(
-            f"Protatom directory {proatom_dir} does not exist. Returning None."
-        )
+    if proatom_dir and not os.path.isdir(proatom_dir):
+        raise FileNotFoundError(f"{proatom_dir=} does not exist.")
 
     if cube_file and method in cube_methods:
         vol = volume.read_from_cube(str(cube_file))
 
     if method == "bader":
-        m = Bader(cclib_obj, vol)
+        _method = Bader(cclib_obj, vol)
     elif method == "bickelhaupt":
-        m = Bickelhaupt(cclib_obj)
+        _method = Bickelhaupt(cclib_obj)
     elif method == "cpsa":
-        m = CSPA(cclib_obj)
+        _method = CSPA(cclib_obj)
     elif method == "ddec6":
-        m = DDEC6(cclib_obj, vol, str(proatom_dir))
+        _method = DDEC6(cclib_obj, vol, str(proatom_dir))
     elif method == "density":
-        m = Density(cclib_obj)
+        _method = Density(cclib_obj)
     elif method == "hirshfeld":
-        m = Hirshfeld(cclib_obj, vol, str(proatom_dir))
+        _method = Hirshfeld(cclib_obj, vol, str(proatom_dir))
     elif method == "lpa":
-        m = LPA(cclib_obj)
+        _method = LPA(cclib_obj)
     elif method == "mbo":
-        m = MBO(cclib_obj)
+        _method = MBO(cclib_obj)
     elif method == "mpa":
-        m = MPA(cclib_obj)
+        _method = MPA(cclib_obj)
     else:
-        raise ValueError(f"{method} is not supported.")
+        raise ValueError(f"{method=} is not supported.")
 
     try:
-        m.calculate()
+        _method.calculate()
     except AttributeError:
         return None
 
@@ -345,20 +347,20 @@ def cclib_calculate(
     ]
     calc_attributes = {}
     for attribute in avail_attributes:
-        if hasattr(m, attribute):
-            calc_attributes[attribute] = getattr(m, attribute)
+        if hasattr(_method, attribute):
+            calc_attributes[attribute] = getattr(_method, attribute)
     return calc_attributes
 
 
 def _get_homos_lumos(
-    moenergies: list[list[float]], homo_indices: list[int]
+    mo_energies: list[list[float]], homo_indices: list[int]
 ) -> tuple[list[float], Optional[list[float]], Optional[list[float]]]:
     """
     Calculate the HOMO, LUMO, and HOMO-LUMO gap energies in eV.
 
     Parameters
     ----------
-    moenergies
+    mo_energies
         List of MO energies. For restricted calculations, List[List[float]] is
         length one. For unrestricted, it is length two.
     homo_indices
@@ -374,13 +376,15 @@ def _get_homos_lumos(
         The HOMO-LUMO gaps (eV), calculated as LUMO_alpha-HOMO_alpha and
         LUMO_beta-HOMO_beta
     """
-    homo_energies = [moenergies[i][h] for i, h in enumerate(homo_indices)]
-    # Make sure that the HOMO+1 (i.e. LUMO) is in moenergies (sometimes virtual
+    homo_energies = [mo_energies[idx][homo] for idx, homo in enumerate(homo_indices)]
+    # Make sure that the HOMO+1 (i.e. LUMO) is in MO energies (sometimes virtual
     # orbitals aren't printed in the output)
-    for i, h in enumerate(homo_indices):
-        if len(moenergies[i]) < h + 2:
+    for idx, homo in enumerate(homo_indices):
+        if len(mo_energies[idx]) < homo + 2:
             return homo_energies, None, None
-    lumo_energies = [moenergies[i][h + 1] for i, h in enumerate(homo_indices)]
+    lumo_energies = [
+        mo_energies[idx][homo + 1] for idx, homo in enumerate(homo_indices)
+    ]
     homo_lumo_gaps = [
         lumo_energies[i] - homo_energies[i] for i in range(len(homo_energies))
     ]

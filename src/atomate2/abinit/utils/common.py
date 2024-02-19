@@ -1,7 +1,20 @@
 """Module with common file names and classes used for Abinit flows."""
 
+from __future__ import annotations
+
 import logging
 import os
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from abipy.abio.inputs import AbinitInput
+    from abipy.core.structure import Structure
+    from abipy.flowtk.events import EventReport
+    from jobflow import Flow, Job
+
+    from atomate2.abinit.utils.history import JobHistory
 
 from abipy.abio.outputs import AbinitOutputFile
 from abipy.dfpt.ddb import DdbFile
@@ -52,11 +65,13 @@ class ErrorCode:
 class AbiAtomateError(Exception):
     """Base class for the abinit errors in atomate."""
 
-    def __init__(self, msg):
+    ERROR_CODE = ErrorCode.ERROR
+
+    def __init__(self, msg: str) -> None:
         super().__init__(msg)
         self.msg = msg
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Create dictionary representation of the error."""
         return {"error_code": self.ERROR_CODE, "msg": self.msg}
 
@@ -73,13 +88,13 @@ class AbinitRuntimeError(AbiAtomateError):
 
     def __init__(
         self,
-        job=None,
-        msg=None,
-        num_errors=None,
-        num_warnings=None,
-        errors=None,
-        warnings=None,
-    ):
+        job: Job | Flow | None = None,
+        msg: str | None = None,
+        num_errors: int | None = None,
+        num_warnings: int | None = None,
+        errors: list | None = None,
+        warnings: list | None = None,
+    ) -> None:
         """Construct AbinitRuntimeError object.
 
         If the job has a report all the information will be extracted from it,
@@ -125,7 +140,7 @@ class AbinitRuntimeError(AbiAtomateError):
             self.warnings = warnings
         self.msg = msg
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Create dictionary representation of the error."""
         d = {"num_errors": self.num_errors, "num_warnings": self.num_warnings}
         if self.errors:
@@ -143,19 +158,19 @@ class AbinitRuntimeError(AbiAtomateError):
 
         return d
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """Create dictionary representation of the error."""
         return self.to_dict()
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d: dict) -> AbinitRuntimeError:
         """Create instance of the error from its dictionary representation."""
         dec = MontyDecoder()
         warnings = (
             [dec.process_decoded(w) for w in d["warnings"]] if "warnings" in d else []
         )
         errors = [dec.process_decoded(w) for w in d["errors"]] if "errors" in d else []
-        msg = d["error_message"] if "error_message" in d else None
+        msg = d.get("error_message")
 
         return cls(
             warnings=warnings,
@@ -173,16 +188,16 @@ class UnconvergedError(AbinitRuntimeError):
 
     def __init__(
         self,
-        job=None,
-        msg=None,
-        num_errors=None,
-        num_warnings=None,
-        errors=None,
-        warnings=None,
-        abinit_input=None,
-        restart_info=None,
-        history=None,
-    ):
+        job: Job | Flow | None = None,
+        msg: str | None = None,
+        num_errors: int | None = None,
+        num_warnings: int | None = None,
+        errors: list | None = None,
+        warnings: list | None = None,
+        abinit_input: AbinitInput | None = None,
+        restart_info: RestartInfo | None = None,
+        history: JobHistory | None = None,
+    ) -> None:
         """Construct UnconvergedError object.
 
         If the job has a report all the information will be extracted from it,
@@ -219,7 +234,7 @@ class UnconvergedError(AbinitRuntimeError):
         self.restart_info = restart_info
         self.history = history
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Create dictionary representation of the error."""
         d = super().to_dict()
         d["abinit_input"] = self.abinit_input.as_dict() if self.abinit_input else None
@@ -230,7 +245,7 @@ class UnconvergedError(AbinitRuntimeError):
         return d
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d: dict) -> UnconvergedError:
         """Create instance of the error from its dictionary representation."""
         dec = MontyDecoder()
         warnings = (
@@ -288,12 +303,12 @@ class PostProcessError(AbiAtomateError):
 class RestartInfo(MSONable):
     """Object that contains the information about the restart of a job."""
 
-    def __init__(self, previous_dir, num_restarts=0):
+    def __init__(self, previous_dir: Path | str, num_restarts: int = 0) -> None:
         self.previous_dir = previous_dir
         # self.reset = reset
         self.num_restarts = num_restarts
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """Create dictionary representation of the error."""
         return {
             "previous_dir": self.previous_dir,
@@ -304,7 +319,7 @@ class RestartInfo(MSONable):
         }
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d: dict) -> RestartInfo:
         """Create instance of the error from its dictionary representation."""
         return cls(
             previous_dir=d["previous_dir"],
@@ -313,17 +328,17 @@ class RestartInfo(MSONable):
         )
 
     @property
-    def prev_outdir(self):
+    def prev_outdir(self) -> Directory:
         """Get the Directory pointing to the output directory of the previous step."""
         return Directory(os.path.join(self.previous_dir, OUTDIR_NAME))
 
     @property
-    def prev_indir(self):
+    def prev_indir(self) -> Directory:
         """Get the Directory pointing to the input directory of the previous step."""
         return Directory(os.path.join(self.previous_dir, INDIR_NAME))
 
 
-def get_final_structure(dir_name):
+def get_final_structure(dir_name: Path | str) -> Structure:
     """Get the final/last structure of a calculation in a given directory.
 
     This functions tries to get the structure:
@@ -335,31 +350,34 @@ def get_final_structure(dir_name):
         # Open the GSR file.
         try:
             gsr_file = GsrFile(gsr_path)
-            return gsr_file.structure
         except Exception:
-            pass
+            logging.exception("Exception occurred")
+        else:
+            return gsr_file.structure
 
     ddb_path = Directory(os.path.join(dir_name, OUTDIR_NAME)).has_abiext("DDB")
     if ddb_path:
         # Open the GSR file.
         try:
             ddb_file = DdbFile(ddb_path)
-            return ddb_file.structure
         except Exception:
-            pass
+            logging.exception("Exception occurred")
+        else:
+            return ddb_file.structure
 
     out_path = File(os.path.join(dir_name, OUTPUT_FILE_NAME))
     if out_path.exists:
         try:
             ab_out = AbinitOutputFile.from_file(out_path.path)
-            return ab_out.final_structure
         except Exception:
-            pass
+            logging.exception("Exception occurred")
+        else:
+            return ab_out.final_structure
 
     raise RuntimeError("Could not get final structure.")
 
 
-def get_event_report(ofile, mpiabort_file):
+def get_event_report(ofile: File, mpiabort_file: File) -> EventReport | None:
     """Get report from abinit calculation.
 
     This analyzes the main output file for possible Errors or Warnings.
@@ -406,10 +424,9 @@ def get_event_report(ofile, mpiabort_file):
                     report.append(last_abort_event)
                 else:
                     report.append(last_abort_event)
-
-        return report
-
     except Exception as exc:
         # Return a report with an error entry with info on the exception.
         logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {exc!s}")
         return parser.report_exception(ofile.path, exc)
+    else:
+        return report

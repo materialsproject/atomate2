@@ -42,12 +42,12 @@ class JobSetupVars(NamedTuple):
 
 
 def setup_job(
-    structure,
-    prev_outputs,
-    restart_from,
-    history,
-    wall_time,
-):
+    structure: Structure,
+    prev_outputs: str | Path | list[str] | None,
+    restart_from: str | Path | list[str] | None,
+    history: JobHistory,
+    wall_time: int | None,
+) -> JobSetupVars:
     """Set up job."""
     # Get the start time.
     start_time = time.time()
@@ -127,12 +127,12 @@ class BaseAbinitMaker(Maker):
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Process post-init configuration."""
         self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
-    def calc_type(self):
+    def calc_type(self) -> str:
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
@@ -189,10 +189,10 @@ class BaseAbinitMaker(Maker):
         )
         task_doc.task_label = self.name
         if len(task_doc.event_report.filter_types(self.critical_events)) > 0:
-            task_doc.state = TaskState.UNCONVERGED
-            task_doc.calcs_reversed[
-                -1
-            ].has_abinit_completed = TaskState.UNCONVERGED  # optional I think
+            task_doc = task_doc.model_copy(update={"state": TaskState.UNCONVERGED})
+            task_doc.calcs_reversed[-1] = task_doc.calcs_reversed[-1].model_copy(
+                {"has_abinit_completed": TaskState.UNCONVERGED}
+            )  # optional I think
 
         return self.get_response(
             task_document=task_doc,
@@ -207,7 +207,7 @@ class BaseAbinitMaker(Maker):
         history: JobHistory,
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
-    ):
+    ) -> Response:
         """Get new job to restart abinit calculation."""
         if task_document.state == TaskState.SUCCESS:
             return Response(

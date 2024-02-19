@@ -7,6 +7,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import numpy as np
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.units import VaspToTHz
@@ -25,7 +26,6 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import numpy as np
     from emmet.core.math import Matrix3D
 
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
@@ -156,11 +156,7 @@ def generate_phonon_displacements(
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
     if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: list[list[float]] | str = [
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ]
+        primitive_matrix: np.ndarray | str = np.eye(3)
     else:
         primitive_matrix = "auto"
     phonon = Phonopy(
@@ -248,9 +244,9 @@ def generate_frequencies_eigenvectors(
 
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
-    displacements,
+    displacements: list[Structure],
     structure: Structure,
-    supercell_matrix,
+    supercell_matrix: Matrix3D,
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
     prev_dir: str | Path = None,
 ) -> Flow:
@@ -281,16 +277,16 @@ def run_phonon_displacements(
         "dirs": [],
     }
 
-    for i, displacement in enumerate(displacements):
+    for idx, displacement in enumerate(displacements):
         if prev_dir is not None:
             phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
         else:
             phonon_job = phonon_maker.make(displacement)
-        phonon_job.append_name(f" {i + 1}/{len(displacements)}")
+        phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
         # we will add some meta data
         info = {
-            "displacement_number": i,
+            "displacement_number": idx,
             "original_structure": structure,
             "supercell_matrix": supercell_matrix,
             "displaced_structure": displacement,
@@ -302,7 +298,7 @@ def run_phonon_displacements(
             )
 
         phonon_jobs.append(phonon_job)
-        outputs["displacement_number"].append(i)
+        outputs["displacement_number"].append(idx)
         outputs["uuids"].append(phonon_job.output.uuid)
         outputs["dirs"].append(phonon_job.output.dir_name)
         outputs["forces"].append(phonon_job.output.output.forces)

@@ -12,7 +12,7 @@ from abipy.flowtk.events import (
     RelaxConvergenceWarning,
     ScfConvergenceWarning,
 )
-from jobflow import job
+from jobflow import Job, job
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.sets.core import (
@@ -124,7 +124,7 @@ class NonSCFMaker(BaseAbinitMaker):
         restart_from: str | list[str] | None = None,
         history: JobHistory | None = None,
         mode: str = "uniform",
-    ):
+    ) -> Job:
         """
         Run a non-scf ABINIT job.
 
@@ -179,7 +179,7 @@ class RelaxMaker(BaseAbinitMaker):
     )
 
     @classmethod
-    def ionic_relaxation(cls, *args, **kwargs):
+    def ionic_relaxation(cls, *args, **kwargs) -> Job:
         """Create an ionic relaxation maker."""
         # TODO: add the possibility to tune the RelaxInputGenerator options
         #  in this class method.
@@ -189,7 +189,7 @@ class RelaxMaker(BaseAbinitMaker):
         )
 
     @classmethod
-    def full_relaxation(cls, *args, **kwargs):
+    def full_relaxation(cls, *args, **kwargs) -> Job:
         """Create a full relaxation maker."""
         # TODO: add the possibility to tune the RelaxInputGenerator options
         #  in this class method.

@@ -48,7 +48,7 @@ class BandStructureMaker(Maker):
         self,
         structure: Structure,
         restart_from: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Create a band structure flow.
 
@@ -107,7 +107,7 @@ class RelaxFlowMaker(Maker):
         self,
         structure: Structure | None = None,
         restart_from: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Create a relaxation flow.
 
@@ -133,7 +133,7 @@ class RelaxFlowMaker(Maker):
         return Flow(jobs, output=jobs[-1].output, name=self.name)
 
     @classmethod
-    def ion_ioncell_relaxation(cls, *args, **kwargs):
+    def ion_ioncell_relaxation(cls, *args, **kwargs) -> Flow:
         """Create a double relaxation (ionic relaxation + full relaxation)."""
         ion_rlx_maker = RelaxMaker.ionic_relaxation(*args, **kwargs)
         ioncell_rlx_maker = RelaxMaker.full_relaxation(*args, **kwargs)

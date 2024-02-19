@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -210,7 +210,7 @@ class Atomate2Settings(BaseSettings):
 
     @model_validator(mode="before")
     @classmethod
-    def load_default_settings(cls, values) -> dict:
+    def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
         Load settings from file or environment variables.
 

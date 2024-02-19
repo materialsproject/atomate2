@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 @dataclass
 class MatPesGGAStaticMaker(BaseVaspMaker):
     """
-    Maker to create VASP static job using r2SCAN by default.
+    Maker to create VASP static job using PBE by default.
 
     Parameters
     ----------

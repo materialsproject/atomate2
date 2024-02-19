@@ -146,10 +146,10 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    struct_GaN = Structure.from_file(test_dir / "structures" / "GaN.cif")
+    struct = Structure.from_file(test_dir / "structures" / "GaN.cif")
     defects = list(
         SubstitutionGenerator().get_defects(
-            structure=struct_GaN, substitution={"Ga": ["Mg"]}
+            structure=struct, substitution={"Ga": ["Mg"]}
         )
     )
 

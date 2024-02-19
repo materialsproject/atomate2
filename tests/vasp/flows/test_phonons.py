@@ -81,11 +81,11 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.supercell_matrix,
-        [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+        np.eye(3),
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
-        ((0, 0.5, 0.5), (0.5, 0, 0.5), (0.5, 0.5, 0)),
+        (np.ones((3, 3)) - np.eye(3)) / 2,
         atol=1e-8,
     )
     assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
@@ -180,44 +180,20 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [
-            5774.56699647,
-            5616.29786373,
-            4724.73684926,
-            3044.19341280,
-            696.34353154,
-        ],
+        [5774.56699647, 5616.29786373, 4724.73684926, 3044.19341280, 696.34353154],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [
-            0.0,
-            4.78666294,
-            13.02533234,
-            20.36075467,
-            26.39807246,
-        ],
+        [0.0, 4.78666294, 13.02533234, 20.36075467, 26.39807246],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [
-            0.0,
-            8.04749769,
-            15.97101906,
-            19.97032648,
-            21.87475268,
-        ],
+        [0.0, 8.04749769, 15.97101906, 19.97032648, 21.87475268],
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [
-            5774.56699647,
-            6094.96415750,
-            7329.80331668,
-            9152.41981241,
-            11255.57251541,
-        ],
+        [5774.56699647, 6094.96415750, 7329.80331668, 9152.41981241, 11255.57251541],
     )
 
     assert isinstance(
@@ -779,7 +755,11 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError,
+        match=f"You can't use {kpath_scheme=} with the primitive standard "
+        "structure, please use seekpath",
+    ):
         PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,
@@ -809,7 +789,11 @@ def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpath_s
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError,
+        match=f"You can't use {kpath_scheme=} with the primitive standard "
+        "structure, please use seekpath",
+    ):
         PhononMaker(
             min_length=3.0,
             bulk_relax_maker=None,

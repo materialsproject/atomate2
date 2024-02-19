@@ -18,11 +18,7 @@ from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 
-from atomate2.abinit.utils.common import (
-    LOG_FILE_NAME,
-    MPIABORTFILE,
-    get_event_report,
-)
+from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, get_event_report
 
 logger = logging.getLogger(__name__)
 

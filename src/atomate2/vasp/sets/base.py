@@ -7,6 +7,7 @@ import os
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -14,7 +15,6 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-_BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
+_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
 
 class VaspInputSet(InputSet):
@@ -94,11 +94,7 @@ class VaspInputSet(InputSet):
         if make_dir:
             os.makedirs(directory, exist_ok=True)
 
-        inputs = {
-            "INCAR": self.incar,
-            "KPOINTS": self.kpoints,
-            "POSCAR": self.poscar,
-        }
+        inputs = {"INCAR": self.incar, "KPOINTS": self.kpoints, "POSCAR": self.poscar}
         inputs.update(self.optional_files)
 
         if isinstance(self.potcar, Potcar):
@@ -106,16 +102,16 @@ class VaspInputSet(InputSet):
         else:
             inputs["POTCAR.spec"] = "\n".join(self.potcar)
 
-        for k, v in inputs.items():
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / k, "wt") as f:
-                    if isinstance(v, Poscar):
+        for key, val in inputs.items():
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / key, mode="wt") as file:
+                    if isinstance(val, Poscar):
                         # write POSCAR with more significant figures
-                        f.write(v.get_string(significant_figures=16))
+                        file.write(val.get_str(significant_figures=16))
                     else:
-                        f.write(v.__str__())
-            elif not overwrite and (directory / k).exists():
-                raise FileExistsError(f"{directory / k} already exists.")
+                        file.write(str(val))
+            elif not overwrite and (directory / key).exists():
+                raise FileExistsError(f"{directory / key} already exists.")
 
     @staticmethod
     def from_directory(
@@ -171,23 +167,30 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
+        ismear = self.incar.get("ISMEAR", 1)
+        sigma = self.incar.get("SIGMA", 0.2)
         if (
-            all(k.is_metal for k in self.poscar.structure.composition)
+            all(elem.is_metal for elem in self.poscar.structure.composition)
             and self.incar.get("NSW", 0) > 0
-            and self.incar.get("ISMEAR", 1) < 1
+            and (ismear < 0 or (ismear == 0 and sigma > 0.05))
         ):
+            ismear_docs = "https://www.vasp.at/wiki/index.php/ISMEAR"
+            msg = ""
+            if ismear < 0:
+                msg = f"Relaxation of likely metal with ISMEAR < 0 ({ismear})."
+            elif ismear == 0 and sigma > 0.05:
+                msg = f"ISMEAR = 0 with a small SIGMA ({sigma}) detected."
             warnings.warn(
-                "Relaxation of likely metal with ISMEAR < 1 detected. Please see VASP "
-                "recommendations on ISMEAR for metals.",
+                f"{msg} See VASP recommendations on ISMEAR for metals ({ismear_docs}).",
                 BadInputSetWarning,
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in (
             "Normal",
             "All",
             "Damped",
-        ]:
+        ):
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -236,8 +239,9 @@ class VaspInputGenerator(InputGenerator):
         so these keys can be defined in one of two ways, e.g. either
         {"LDAUU":{"O":{"Fe":5}}} to set LDAUU for Fe to 5 in an oxide, or
         {"LDAUU":{"Fe":5}} to set LDAUU to 5 regardless of the input structure.
-        To set magmoms, pass a dict mapping element symbols to magnetic moments, e.g.
-        {"MAGMOM": {"Co": 1}}.
+        To set magmoms, pass a dict mapping the strings of species to magnetic
+        moments, e.g. {"MAGMOM": {"Co": 1}} or {"MAGMOM": {"Fe2+,spin=4": 3.7}} in the
+        case of a site with Species("Fe2+", spin=4).
         If None is given, that key is unset. For example, {"ENCUT": None} will remove
         ENCUT from the incar settings.
     user_kpoints_settings
@@ -269,7 +273,7 @@ class VaspInputGenerator(InputGenerator):
     auto_kspacing
         If true, automatically use the VASP recommended KSPACING based on bandgap,
         i.e. higher kpoint spacing for insulators than metals. Can be boolean or float.
-        If float, then the value will interpreted as the bandgap in eV to use for the
+        If a float, the value will be interpreted as the bandgap in eV to use for the
         KSPACING calculation.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
@@ -438,10 +442,20 @@ class VaspInputGenerator(InputGenerator):
             bandgap=bandgap,
             ispin=ispin,
         )
+        site_properties = structure.site_properties
+        poscar = Poscar(
+            structure,
+            velocities=site_properties.get("velocities"),
+            predictor_corrector=site_properties.get("predictor_corrector"),
+            predictor_corrector_preamble=structure.properties.get(
+                "predictor_corrector_preamble"
+            ),
+            lattice_velocities=structure.properties.get("lattice_velocities"),
+        )
         return VaspInputSet(
             incar=incar,
             kpoints=kpoints,
-            poscar=Poscar(structure),
+            poscar=poscar,
             potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
         )
 
@@ -645,7 +659,7 @@ class VaspInputGenerator(InputGenerator):
             if k == "MAGMOM":
                 incar[k] = _get_magmoms(
                     structure,
-                    magmoms=self.user_incar_settings.get("MAGMOMS", {}),
+                    magmoms=self.user_incar_settings.get("MAGMOM", {}),
                     config_magmoms=config_magmoms,
                 )
             elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
@@ -716,7 +730,9 @@ class VaspInputGenerator(InputGenerator):
 
         # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
         # overwritten settings are changed back to the intended values.
-        _apply_incar_updates(incar, self.user_incar_settings)
+        # skip dictionary parameters to avoid dictionaries appearing in the INCAR
+        skip = ["LDAUU", "LDAUJ", "LDAUL", "MAGMOM"]
+        _apply_incar_updates(incar, self.user_incar_settings, skip=skip)
 
         return incar
 
@@ -879,15 +895,12 @@ class VaspInputGenerator(InputGenerator):
 
         return _combine_kpoints(base_kpoints, zero_weighted_kpoints, added_kpoints)
 
-    def _kspacing(self, incar_updates) -> float | None:
+    def _kspacing(self, incar_updates: dict[str, Any]) -> float | None:
         """Get KSPACING value based on the config dict, updates and user settings."""
-        if "KSPACING" in self.user_incar_settings:
-            return self.user_incar_settings["KSPACING"]
-        if "KSPACING" in incar_updates:
-            return incar_updates["KSPACING"]
-        if "KSPACING" in self.config_dict["INCAR"]:
-            return self.config_dict["INCAR"]["KSPACING"]
-        return None
+        key = "KSPACING"
+        return self.user_incar_settings.get(
+            key, incar_updates.get(key, self.config_dict["INCAR"].get(key))
+        )
 
 
 def _get_magmoms(
@@ -930,7 +943,9 @@ def _get_magmoms(
     return mag
 
 
-def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
+def _get_u_param(
+    lda_param: str, lda_config: dict[str, Any], structure: Structure
+) -> list[float]:
     """Get U parameters."""
     comp = structure.composition
     elements = sorted((el for el in comp.elements if comp[el] > 0), key=lambda e: e.X)
@@ -951,14 +966,18 @@ def _get_u_param(lda_param, lda_config, structure: Structure) -> list[float]:
     ]
 
 
-def _get_ediff(param, value, structure: Structure, incar_settings) -> float:
+def _get_ediff(
+    param: str, value: str | float, structure: Structure, incar_settings: dict[str, Any]
+) -> float:
     """Get EDIFF."""
     if incar_settings.get("EDIFF") is None and param == "EDIFF_PER_ATOM":
         return float(value) * structure.num_sites
     return float(incar_settings["EDIFF"])
 
 
-def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
+def _set_u_params(
+    incar: Incar, incar_settings: dict[str, Any], structure: Structure
+) -> None:
     """Modify INCAR for use with U parameters."""
     has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
 
@@ -980,7 +999,9 @@ def _set_u_params(incar: Incar, incar_settings, structure: Structure) -> None:
         incar.setdefault("LMAXMIX", 4)
 
 
-def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
+def _apply_incar_updates(
+    incar: dict[str, Any], updates: dict[str, Any], skip: Sequence[str] = ()
+) -> None:
     """
     Apply updates to an INCAR file.
 
@@ -1003,7 +1024,9 @@ def _apply_incar_updates(incar, updates, skip: Sequence[str] = ()) -> None:
             incar[key] = val
 
 
-def _remove_unused_incar_params(incar, skip: Sequence[str] = ()) -> None:
+def _remove_unused_incar_params(
+    incar: dict[str, Any], skip: Sequence[str] = ()
+) -> None:
     """
     Remove INCAR parameters that are not actively used by VASP.
 
