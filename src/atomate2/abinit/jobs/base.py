@@ -191,7 +191,7 @@ class BaseAbinitMaker(Maker):
         if len(task_doc.event_report.filter_types(self.critical_events)) > 0:
             task_doc = task_doc.model_copy(update={"state": TaskState.UNCONVERGED})
             task_doc.calcs_reversed[-1] = task_doc.calcs_reversed[-1].model_copy(
-                {"has_abinit_completed": TaskState.UNCONVERGED}
+                update={"has_abinit_completed": TaskState.UNCONVERGED}
             )  # optional I think
 
         return self.get_response(

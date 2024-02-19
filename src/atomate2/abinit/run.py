@@ -49,7 +49,7 @@ def run_abinit(
     command.append(INPUT_FILE_NAME)
 
     with open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
-        process = subprocess.Popen(command, stdout=stdout, stderr=stderr, shell=False)
+        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)  # noqa: S603
 
         if wall_time is not None:
             while True:
