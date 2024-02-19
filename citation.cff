@@ -1,0 +1,83 @@
+cff-version: 1.0.3
+message: If you use this software, please cite it using these metadata.
+title: atomate2
+doi: 10.5281/zenodo.10677081
+authors:
+  - given-names: Alex
+    family-names: Ganose
+    affiliation: "@virtualatoms"
+  - given-names: Janosh
+    family-names: Riebesell
+    affiliation: Cambridge University
+  - given-names: J.
+    family-names: George
+    affiliation: Federal Institute for Materials Research and Testing
+  - given-names: Jimmy
+    family-names: Shen
+    affiliation: LLNL
+  - given-names: Andrew
+    family-names: Rosen
+    name-particle: S.
+    affiliation: Princeton University
+  - given-names: Aakash
+    family-names: Naik
+    name-particle: Ashok
+    affiliation: Bundesanstalt für Materialforschung und -prüfung
+  - given-names: nwinner
+    family-names: ""
+    affiliation:
+  - given-names: Mingjian
+    family-names: Wen
+    affiliation: University of Houston
+  - given-names: rdguha1995
+    family-names: ""
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Matthew
+    family-names: Kuner
+    affiliation: University of California, Berkeley
+  - given-names: Guido
+    family-names: Petretto
+    affiliation:
+  - given-names: Zhuoying
+    family-names: Zhu
+    affiliation:
+  - given-names: Matthew
+    family-names: Horton
+    affiliation: Lawrence Berkeley National Lab, UC Berkeley
+  - given-names: Hrushikesh
+    family-names: Sahasrabuddhe
+    affiliation: "@hackingmaterials"
+  - given-names: Aaron
+    family-names: Kaplan
+    affiliation: Berkeley Lab
+  - given-names: Jonathan
+    family-names: Schmidt
+    affiliation:
+  - given-names: Christina
+    family-names: Ertural
+    affiliation: BAM
+  - given-names: Ryan
+    family-names: Kingsbury
+    affiliation: Princeton University
+  - given-names: Matt
+    family-names: McDermott
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Rhys
+    family-names: Goodall
+    affiliation:
+  - given-names: Alexander
+    family-names: Bonkowski
+    affiliation: RWTH Aachen University
+  - given-names: Thomas
+    family-names: Purcell
+    affiliation: Fritz Haber Institute
+  - given-names: Daniel
+    family-names: Zügner
+    affiliation:
+  - given-names: Ji
+    family-names: Qi
+    affiliation:
+version: 0.0.13
+date-released: 2024-01-08
+repository-code: https://github.com/materialsproject/atomate2
+license: cc-by-4.0
