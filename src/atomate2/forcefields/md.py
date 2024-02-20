@@ -66,19 +66,19 @@ class ForceFieldMDMaker(Maker):
         The name of the MD Maker
     force_field_name : str
         The name of the forcefield (for provenance)
-    timestep : float | None = 2.
-        The timestep of the MD run in femtoseconds
-    md_steps : int = 1000
+    time_step : float | None = 2.
+        The time_step of the MD run in femtoseconds
+    nsteps : int = 1000
         The number of MD steps to run
     ensemble : str = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
-    start_temperature : float | None = 300.
+    start_temp : float | None = 300.
         The temperature to initialize the system, in Kelvin.
-    end_temperature : float | None = 300.
+    end_temp : float | None = 300.
         The temperature to equilibrate towards, in Kelvin.
-        If start_temperature is a float and end_temperature is None,
+        If start_temp is a float and end_temp is None,
         the system will be initialized at and equilibrated towards
-        the start_temperature.
+        the start_temp.
     thermostat : str = "langevin"
         The thermostat to use. See _valid_thermostats for a list of options
     ase_md_kwargs : dict | None = None
@@ -104,11 +104,11 @@ class ForceFieldMDMaker(Maker):
 
     name: str = "Forcefield MD"
     force_field_name: str = "Forcefield"
-    timestep: float | None = 2.0
-    md_steps: int = 1000
+    time_step: float | None = 2.0
+    nsteps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
-    start_temperature: float | None = 300.0
-    end_temperature: float | None = 300.0
+    start_temp: float | None = 300.0
+    end_temp: float | None = 300.0
     pressure: float | None = None
     thermostat: str = "langevin"
     ase_md_kwargs: dict | None = None
@@ -130,7 +130,7 @@ class ForceFieldMDMaker(Maker):
             for key in ("temperature_K", "temperature")
         ):
             self.ase_md_kwargs["temperature_K"] = (
-                self.end_temperature if self.end_temperature else self.start_temperature
+                self.end_temp if self.end_temp else self.start_temp
             )
 
         if self.ensemble == "npt":
@@ -187,10 +187,8 @@ class ForceFieldMDMaker(Maker):
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
 
-        elif self.start_temperature:
-            MaxwellBoltzmannDistribution(
-                atoms=atoms, temperature_K=self.start_temperature
-            )
+        elif self.start_temp:
+            MaxwellBoltzmannDistribution(atoms=atoms, temperature_K=self.start_temp)
 
             if self.zero_linear_momentum:
                 Stationary(atoms)
@@ -211,11 +209,11 @@ class ForceFieldMDMaker(Maker):
             md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
             md_runner = md_func(
-                atoms=atoms, timestep=self.timestep * fs, **self.ase_md_kwargs
+                atoms=atoms, timestep=self.time_step * fs, **self.ase_md_kwargs
             )
             md_runner.attach(md_observer, interval=self.traj_interval)
 
-            md_runner.run(steps=self.md_steps)
+            md_runner.run(steps=self.nsteps)
 
             if self.traj_file is not None:
                 md_observer.save(self.traj_file)
@@ -227,7 +225,7 @@ class ForceFieldMDMaker(Maker):
             self.force_field_name,
             {"final_structure": structure, "trajectory": md_observer},
             relax_cell=(self.ensemble == "npt"),
-            steps=self.md_steps,
+            steps=self.nsteps,
             relax_kwargs=None,
             optimizer_kwargs=None,
             **self.task_document_kwargs,

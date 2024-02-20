@@ -13,7 +13,7 @@ _to_maker = {"CHGNet": CHGNetMDMaker, "M3GNet": M3GNetMDMaker, "MACE": MACEMDMak
 
 @pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE"])
 def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
-    md_steps = 5
+    nsteps = 5
 
     ref_energies_per_atom = {
         "CHGNet": -5.30686092376709,
@@ -26,9 +26,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
     # MACE changes the default dtype, ensure consistent dtype here
     torch.set_default_dtype(torch.float32)
 
-    job = _to_maker[ff_name](md_steps=md_steps, traj_file="md_traj.json.gz").make(
-        structure
-    )
+    job = _to_maker[ff_name](nsteps=nsteps, traj_file="md_traj.json.gz").make(structure)
     response = run_locally(job, ensure_success=True)
     taskdoc = response[next(iter(response))][1].output
 
@@ -40,7 +38,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
     # Check that we have the right number of MD steps
     # ASE logs the initial structure energy, and doesn"t count this as an MD step
     assert taskdoc.output.ionic_steps[0].structure == structure
-    assert len(taskdoc.output.ionic_steps) == md_steps + 1
+    assert len(taskdoc.output.ionic_steps) == nsteps + 1
 
     # Check that the ionic steps have the expected physical properties
     assert all(
@@ -51,7 +49,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
 
     # Check that the trajectory has expected physical properties
     assert taskdoc.included_objects == ["trajectory"]
-    assert len(taskdoc.forcefield_objects["trajectory"]) == md_steps + 1
+    assert len(taskdoc.forcefield_objects["trajectory"]) == nsteps + 1
     assert all(
         key in step
         for key in ("energy", "forces", "stress", "velocities", "temperature")
@@ -62,7 +60,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
     # stored to the task document
     traj_from_file = loadfn("md_traj.json.gz")
 
-    assert len(traj_from_file["energy"]) == md_steps + 1
+    assert len(traj_from_file["energy"]) == nsteps + 1
     _traj_key_to_object_key = {
         "stresses": "stress",
     }
@@ -74,5 +72,5 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
             ]
         )
         for key in ("energy", "temperature", "forces", "velocities")
-        for idx in range(md_steps + 1)
+        for idx in range(nsteps + 1)
     )
