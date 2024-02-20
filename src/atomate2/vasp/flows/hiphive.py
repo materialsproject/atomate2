@@ -506,8 +506,8 @@ class HiphiveMaker(Maker):
         #     }
         # )
 
-        prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-02-20-08-30-56-793694-50975"
-        # prev_dir_hiphive="/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/ShengBTE_reference_NaCl_4_disp_400K"
+        # prev_dir_hiphive="/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-02-20-08-30-56-793694-50975"
+        prev_dir_hiphive="/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/ShengBTE_reference_NaCl_4_disp_400K"
         # 10. Lattice thermal conductivity calculation using Sheng BTE
         if calculate_lattice_thermal_conductivity:
             if renormalize:
