@@ -187,6 +187,11 @@ class Atomate2Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_prefix="atomate2_")
 
+    # ShengBTE settings
+    SHENGBTE_CMD: str = Field(
+        "shengbte", description="Command to run 3 phonon ShengBTE."
+    )
+
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:

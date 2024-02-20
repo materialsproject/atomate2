@@ -18,6 +18,7 @@ from dataclasses import field
 from itertools import product
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
+from os.path import expandvars
 
 import numpy as np
 import phonopy as phpy
@@ -76,6 +77,9 @@ from atomate2.vasp.files import copy_hiphive_outputs
 # from atomate2.vasp.sets.core import MPStaticSetGenerator
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import StaticMaker
+from atomate2.settings import Atomate2Settings
+
+SETTINGS = Atomate2Settings()
 
 logger = initialize_logger(level=3)
 
@@ -1435,8 +1439,13 @@ def thermal_expansion(
 
 @job
 def run_shengbte(
-    shengbte_cmd, renormalized, temperature, control_kwargs, prev_dir_hiphive, loop
-):
+    shengbte_cmd: str = SETTINGS.SHENGBTE_CMD, # make this default as SETTINGS.VASP_CMD
+    renormalized: bool = None,
+    temperature: list(int) = None,
+    control_kwargs: dict = None,
+    prev_dir_hiphive: str = None,
+    loop: int = None,
+) -> None:
     """
     Thermal conductivity calculation using ShengBTE.
 
@@ -1456,6 +1465,9 @@ def run_shengbte(
         control_kwargs (dict): Options to be included in the ShengBTE control
             file.
     """
+    print(f"shengbte_cmd_newwwwwww = {shengbte_cmd}")
+    shengbte_cmd = expandvars(shengbte_cmd)
+
     logger.info("Running ShengBTE... 1")
 
     copy_hiphive_outputs(prev_dir_hiphive)
@@ -1533,6 +1545,10 @@ def run_shengbte(
     logger.info(
         f"Command {shengbte_cmd} finished running with returncode: {return_code}"
     )
+
+    # logger.info(f"Running command: {shengbte_cmd}")
+    # return_code = subprocess.call(shengbte_cmd, shell=True)  # noqa: S602
+    # logger.info(f"{shengbte_cmd} finished running with returncode: {return_code}")
 
     logger.info("Running ShengBTE... 6")
 
@@ -1946,7 +1962,6 @@ def setup_TE_iter(
 
 @job
 def run_lattice_thermal_conductivity(
-    shengbte_cmd: str,
     prev_dir_hiphive: str,
     loop: int,
     temperature: Union[float, dict],
@@ -2000,7 +2015,6 @@ def run_lattice_thermal_conductivity(
     logger.info("We are in Lattice Thermal Conductivity... 2")
 
     shengbte = run_shengbte(
-        shengbte_cmd=shengbte_cmd,
         renormalized=renormalized,
         temperature=temperature,
         control_kwargs=shengbte_control_kwargs,
