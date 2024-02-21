@@ -844,6 +844,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                 "dos_comparison": True,
                 "n_bins": 256,
                 "bva_comp": True,
+                **(calc_quality_kwargs or {}),
             }
             if calc_quality_kwargs:
                 for args, values in calc_quality_kwargs.items():
@@ -1272,11 +1273,11 @@ def _get_strong_bonds(
     sep_icohp: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
     sep_lengths: list[list[float]] = [[] for _ in range(len(bond_labels_unique))]
 
-    for i, val in enumerate(bond_labels_unique):
+    for idx, val in enumerate(bond_labels_unique):
         for j, val2 in enumerate(bonds):
             if val == val2:
-                sep_icohp[i].append(icohp_all[j])
-                sep_lengths[i].append(lengths[j])
+                sep_icohp[idx].append(icohp_all[j])
+                sep_lengths[idx].append(lengths[j])
 
     if are_cobis and not are_coops:
         prop = "ICOBI"
@@ -1286,7 +1287,7 @@ def _get_strong_bonds(
         prop = "ICOHP"
 
     bond_dict = {}
-    for i, lab in enumerate(bond_labels_unique):
+    for idx, lab in enumerate(bond_labels_unique):
         label = lab.split("-")
         label.sort()
         for rel_bnd in relevant_bonds:
@@ -1294,22 +1295,22 @@ def _get_strong_bonds(
             rel_bnd_list.sort()
             if label == rel_bnd_list:
                 if prop == "ICOHP":
-                    index = np.argmin(sep_icohp[i])
+                    index = np.argmin(sep_icohp[idx])
                     bond_dict.update(
                         {
                             rel_bnd: {
-                                prop: min(sep_icohp[i]),
-                                "length": sep_lengths[i][index],
+                                prop: min(sep_icohp[idx]),
+                                "length": sep_lengths[idx][index],
                             }
                         }
                     )
                 else:
-                    index = np.argmax(sep_icohp[i])
+                    index = np.argmax(sep_icohp[idx])
                     bond_dict.update(
                         {
                             rel_bnd: {
-                                prop: max(sep_icohp[i]),
-                                "length": sep_lengths[i][index],
+                                prop: max(sep_icohp[idx]),
+                                "length": sep_lengths[idx][index],
                             }
                         }
                     )
@@ -1339,16 +1340,12 @@ def read_saved_json(
         Returns a dictionary with lobster task json data corresponding to query.
     """
     with gzip.open(filename, "rb") as file:
-        lobster_data = {}
-        objects = ijson.items(file, "item", use_float=True)
-        for obj in objects:
-            if query is None:
-                for field, data in obj.items():
-                    lobster_data[field] = data
-            elif query in obj:
-                for field, data in obj.items():
-                    lobster_data[field] = data
-                break
+        lobster_data = {
+            field: data
+            for obj in ijson.items(file, "item", use_float=True)
+            for field, data in obj.items()
+            if query is None or query in obj
+        }
         if not lobster_data:
             raise ValueError(
                 "Please recheck the query argument. "

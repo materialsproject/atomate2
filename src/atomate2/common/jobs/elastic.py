@@ -128,7 +128,7 @@ def run_elastic_deformations(
     """
     relaxations = []
     outputs = []
-    for i, deformation in enumerate(deformations):
+    for idx, deformation in enumerate(deformations):
         # deform the structure
         dst = DeformStructureTransformation(deformation=deformation)
         ts = TransformedStructure(structure, transformations=[dst])
@@ -146,7 +146,7 @@ def run_elastic_deformations(
             elastic_job_kwargs[prev_dir_argname] = prev_dir
         # create the job
         relax_job = elastic_relax_maker.make(deformed_structure, **elastic_job_kwargs)
-        relax_job.append_name(f" {i + 1}/{len(deformations)}")
+        relax_job.append_name(f" {idx + 1}/{len(deformations)}")
         relaxations.append(relax_job)
 
         # extract the outputs we want
