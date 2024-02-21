@@ -6,6 +6,7 @@ import contextlib
 import logging
 from typing import TYPE_CHECKING
 
+import numpy as np
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from pymatgen.core import Structure
@@ -21,7 +22,6 @@ from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import numpy as np
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -153,11 +153,7 @@ def generate_phonon_displacements(
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
     if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: list[list[float]] | str = [
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ]
+        primitive_matrix: np.ndarray | str = np.eye(3)
     else:
         primitive_matrix = "auto"
 
