@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2023.12.18",
+    "pymatgen>=2024.2.20",
 ]
 
 [project.optional-dependencies]
@@ -88,7 +88,7 @@ strict = [
     "pydantic-settings==2.1.0",
     "pydantic==2.6.1",
     "pymatgen-analysis-defects==2024.2.9",
-    "pymatgen==2023.12.18",
+    "pymatgen==2024.2.20",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.9.0",
