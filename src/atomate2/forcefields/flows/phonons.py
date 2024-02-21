@@ -137,60 +137,6 @@ class PhononMaker(BasePhononMaker):
     @property
     def prev_calc_dir_argname(self) -> None:
         """Name of argument informing static maker of previous calculation directory.
-    
-    def make(
-        self,
-        structure: Structure,
-        born: list[Matrix3D] | None = None,
-        epsilon_static: Matrix3D | None = None,
-        total_dft_energy_per_formula_unit: float | None = None,
-        supercell_matrix: Matrix3D | None = None,
-    ) -> Flow:
-        """
-        Make flow to calculate the phonon properties.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure. Please start with a structure
-            that is nearly fully optimized as the internal optimizers
-            have very strict settings!
-        born: Matrix3D
-            The born charges and epsilon can be provided manually.
-            It can be provided in the VASP convention with information for
-            every atom in unit cell. Please be careful when converting
-            structures within in this workflow as this could lead to errors
-        epsilon_static: Matrix3D
-            The high-frequency dielectric constant.
-        total_dft_energy_per_formula_unit: float
-            It has to be given per formula unit (as a result in corresponding Doc)
-            Instead of recomputing the energy of the bulk structure every time,
-            this value can also be provided in eV. If it is provided,
-            the static run will be skipped. This energy is the typical
-            output DFT energy of the DFT workflow. No conversion needed.
-        supercell_matrix: list
-            instead of min_length, also a supercell_matrix can
-            be given, e.g. [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
-        """
-        use_symmetrized_structure = self.use_symmetrized_structure
-        kpath_scheme = self.kpath_scheme
-        valid_structs = (None, "primitive", "conventional")
-        if use_symmetrized_structure not in valid_structs:
-            raise ValueError(
-                f"Invalid {use_symmetrized_structure=}, use one of {valid_structs}"
-            )
-
-        if use_symmetrized_structure != "primitive" and kpath_scheme != "seekpath":
-            raise ValueError(
-                f"You can't use {kpath_scheme=} with the primitive standard "
-                "structure, please use seekpath"
-            )
-
-        valid_schemes = ("seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro")
-        if kpath_scheme not in valid_schemes:
-            raise ValueError(
-                f"{kpath_scheme=} is not implemented, use one of {valid_schemes}"
-            )
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
         has been left as a property to be implemented by the inheriting class.

@@ -138,67 +138,6 @@ class PhononMaker(BasePhononMaker):
         default_factory=PhononDisplacementMaker
     )
 
-    def make(
-        self,
-        structure: Structure,
-        prev_dir: str | Path | None = None,
-        born: list[Matrix3D] | None = None,
-        epsilon_static: Matrix3D | None = None,
-        total_dft_energy_per_formula_unit: float | None = None,
-        supercell_matrix: Matrix3D | None = None,
-    ) -> Flow:
-        """
-        Make flow to calculate the phonon properties.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure. Please start with a structure that is nearly fully
-            optimized as the internal optimizers have very strict settings!
-        prev_dir : str or Path or None
-            A previous vasp calculation directory to use for copying outputs.
-        born: Matrix3D
-            Instead of recomputing born charges and epsilon, these values can also be
-            provided manually. If born and epsilon_static are provided, the born run
-            will be skipped it can be provided in the VASP convention with information
-            for every atom in unit cell. Please be careful when converting structures
-            within in this workflow as this could lead to errors
-        epsilon_static: Matrix3D
-            The high-frequency dielectric constant to use instead of recomputing born
-            charges and epsilon. If born, epsilon_static are provided, the born run
-            will be skipped
-        total_dft_energy_per_formula_unit: float
-            It has to be given per formula unit (as a result in corresponding Doc).
-            Instead of recomputing the energy of the bulk structure every time, this
-            value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output DFT energy of the DFT workflow.
-            No conversion needed.
-        supercell_matrix: list
-            Instead of min_length, also a supercell_matrix can be given, e.g.
-            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
-        """
-        use_symmetrized_structure = self.use_symmetrized_structure
-        kpath_scheme = self.kpath_scheme
-        valid_structs = (None, "primitive", "conventional")
-        if use_symmetrized_structure not in valid_structs:
-            raise ValueError(
-                f"Invalid {use_symmetrized_structure=}, use one of {valid_structs}"
-            )
-
-        if use_symmetrized_structure != "primitive" and kpath_scheme != "seekpath":
-            raise ValueError(
-                f"You can't use {kpath_scheme=} with the primitive standard "
-                "structure, please use seekpath"
-            )
-
-        valid_schemes = ("seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro")
-        if kpath_scheme not in valid_schemes:
-            raise ValueError(
-                f"{kpath_scheme=} is not implemented, use one of {valid_schemes}"
-            )
-
-        jobs = []
-
     @property
     def prev_calc_dir_argname(self) -> str:
         """Name of argument informing static maker of previous calculation directory.

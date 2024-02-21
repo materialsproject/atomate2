@@ -147,7 +147,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
-
+    
     def make(
         self,
         structure: Structure,
@@ -188,33 +188,31 @@ class BasePhononMaker(Maker, ABC):
             Instead of min_length, also a supercell_matrix can be given, e.g.
             [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         """
+        use_symmetrized_structure = self.use_symmetrized_structure
+        kpath_scheme = self.kpath_scheme
+        valid_structs = (None, "primitive", "conventional")
+        if use_symmetrized_structure not in valid_structs:
+            raise ValueError(
+                f"Invalid {use_symmetrized_structure=}, use one of {valid_structs}"
+            )
+
+        if use_symmetrized_structure != "primitive" and kpath_scheme != "seekpath":
+            raise ValueError(
+                f"You can't use {kpath_scheme=} with the primitive standard "
+                "structure, please use seekpath"
+            )
+
+        valid_schemes = ("seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro")
+        if kpath_scheme not in valid_schemes:
+            raise ValueError(
+                f"{kpath_scheme=} is not implemented, use one of {valid_schemes}"
+            )
+        
         if self.code is None or self.code not in SUPPORTED_CODES:
             raise ValueError(
                 "The code variable must be passed and it must be a supported code."
                 f" Supported codes are: {SUPPORTED_CODES}"
             )
-
-        if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
-            raise ValueError(
-                "use_symmetrized_structure can only be primitive, conventional, None"
-            )
-
-        if (
-            not self.use_symmetrized_structure == "primitive"
-            and self.kpath_scheme != "seekpath"
-        ):
-            raise ValueError(
-                "You can only use other kpath schemes with the primitive standard "
-                "structure"
-            )
-
-        if self.kpath_scheme not in [
-            "seekpath",
-            "hinuma",
-            "setyawan_curtarolo",
-            "latimer_munro",
-        ]:
-            raise ValueError("kpath scheme is not implemented")
 
         jobs = []
 
