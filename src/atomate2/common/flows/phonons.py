@@ -147,7 +147,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
-    
+
     def make(
         self,
         structure: Structure,
@@ -207,7 +207,7 @@ class BasePhononMaker(Maker, ABC):
             raise ValueError(
                 f"{kpath_scheme=} is not implemented, use one of {valid_schemes}"
             )
-        
+
         if self.code is None or self.code not in SUPPORTED_CODES:
             raise ValueError(
                 "The code variable must be passed and it must be a supported code."
