@@ -9,7 +9,15 @@ from pathlib import Path
 from jobflow import Maker, job
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
-from pymatgen.io.lobster import Lobsterin
+from pymatgen.io.lobster import (
+    Bandoverlaps,
+    Charge,
+    Grosspop,
+    Icohplist,
+    Lobsterin,
+    MadelungEnergies,
+    SitePotential,
+)
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
@@ -56,7 +64,19 @@ class LobsterMaker(Maker):
     run_lobster_kwargs: dict = field(default_factory=dict)
     calculation_type: str = "standard"
 
-    @job(output_schema=LobsterTaskDocument, data=[CompleteCohp, LobsterCompleteDos])
+    @job(
+        output_schema=LobsterTaskDocument,
+        data=[
+            CompleteCohp,
+            LobsterCompleteDos,
+            Charge,
+            Bandoverlaps,
+            SitePotential,
+            Grosspop,
+            MadelungEnergies,
+            Icohplist,
+        ],
+    )
     def make(
         self,
         wavefunction_dir: str | Path = None,

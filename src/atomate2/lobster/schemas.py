@@ -720,8 +720,8 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         plot_kwargs: dict = None,
         calc_quality_kwargs: dict = None,
         save_cba_jsons: bool = True,
-        add_coxxcar_to_task_document: bool = True,
-        save_computational_data_jsons: bool = True,
+        add_coxxcar_to_task_document: bool = False,
+        save_computational_data_jsons: bool = False,
     ) -> "LobsterTaskDocument":
         """
         Create a task document from a directory containing LOBSTER files.

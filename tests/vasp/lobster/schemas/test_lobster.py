@@ -36,6 +36,7 @@ def test_lobster_task_document(lobster_test_dir):
         calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
+        add_coxxcar_to_task_document=True,
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
@@ -147,6 +148,7 @@ def test_lobster_task_document(lobster_test_dir):
         calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ba_sv", "O", "F"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
+        add_coxxcar_to_task_document=True,
     )
     assert_allclose(
         doc2.strongest_bonds_icohp.strongest_bonds["Ba-O"]["ICOHP"], -0.55689
@@ -199,6 +201,7 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
         calc_quality_kwargs={"n_bins": 100, "potcar_symbols": ["Ga_d", "As"]},
         save_cba_jsons=False,
         save_computational_data_jsons=False,
+        add_coxxcar_to_task_document=True,
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
