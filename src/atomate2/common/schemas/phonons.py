@@ -275,10 +275,17 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         cell = get_phonopy_structure(structure)
 
-        if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
+        if use_symmetrized_structure == "primitive":
             primitive_matrix: Union[np.ndarray, str] = np.eye(3)
         else:
             primitive_matrix = "auto"
+
+        # TARP: THIS IS BAD! Including for discussions sake
+        if cell.magnetic_moments is not None and primitive_matrix == "auto":
+            if np.any(cell.magnetic_moments != 0.0):
+                raise ValueError("For materials with magnetic moments specified use_symmetrized_structure must be 'primitive'")
+            cell.magnetic_moments = None
+
         phonon = Phonopy(
             cell,
             supercell_matrix,
