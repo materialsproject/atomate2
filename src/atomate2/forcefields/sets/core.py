@@ -62,10 +62,12 @@ class MDSetGenerator(InputGenerator):
     @staticmethod
     def _get_ensemble_defaults(ensemble: str) -> dict[str, Any]:
         """Get default params for the ensemble."""
+        from ase.md.npt import NPT
+        from ase.md.verlet import VelocityVerlet
         defaults = {
-            "nve": {"algorithm": "verlet"},
-            "nvt": {"algorithm": "nose-hoover"},
-            "npt": {"algorithm": "nose-hoover"},
+            "nve": {"dynamics": VelocityVerlet},
+            "nvt": {"dynamics": NPT},
+            "npt": {"dynamics": NPT},
         }
 
         try:

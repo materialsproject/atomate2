@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class MDMaker(Maker):
     """
-    Maker to perform an MD run using a force field.
+    Maker to perform an MD run using a force field wrapped in ASE calculator.
 
     Parameters
     ----------
@@ -44,7 +44,7 @@ class MDMaker(Maker):
         additonal pydantic document
     """
 
-    name: str = "Force field MD"
+    name: str = "ASE MD" # TODO: check the capitalization
     force_field_name: str = "Force field"
 
     # TODO: look back to see if we need BaseSetGenerator
@@ -58,7 +58,7 @@ class MDMaker(Maker):
         self, structure: Structure,
         calculator: Calculator,
         prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
+    ) -> Response:
         """
         Perform an MD run using a force field.
 
@@ -72,25 +72,41 @@ class MDMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
+        atoms = structure.to_ase_atoms()
         # read prevous md trajectory if any
         from_prev = prev_dir is not None
         if from_prev:
-            # TODO: implement reading previous MD trajectory
-            raise NotImplementedError("Reading previous MD trajectory not implemented")
+            # TODO: see if we need to abstract this
+            from ase.io import read
+
+            traj = read(f"{prev_dir}/trajectory.traj", index=":")
+
+            if atoms.get_chemical_formula() != traj[-1].get_chemical_formula():
+                raise ValueError(
+                    "The chemical formula of the structure and the last frame of the "
+                    "previous trajectory do not match."
+                )
+
+            atoms = traj[-1]
 
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
         # overwrite default input set
+        # NOTE: pass input as python dictionary or write input files
+        # now, we are passing input as python dictionary
         input_set = self.input_set_generator.get_input_set(
-            structure, **self.write_input_set_kwargs
+            atoms, **self.write_input_set_kwargs
         )
 
         # run ASE MD
-        result = run_ase_md(structure, calculator, input_set)
+        result = run_ase_md(atoms, calculator, input_set)
+
+        # TODO: parse ASE MD output
+        # TODO: gzip
 
         return Response(output=result)
         # NOTE: keep the following in case we want to return the result as pydantic
-        # document
+        # document like other job makers
         # return ForceFieldTaskDocument.from_ase_compatible_result(
         #     self.force_field_name,
         #     result,
