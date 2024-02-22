@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from ase.md.andersen import Andersen
 from ase.md.langevin import Langevin
+from ase.md.md import MolecularDynamics
 from ase.md.npt import NPT
 from ase.md.nptberendsen import NPTBerendsen
 from ase.md.nvtberendsen import NVTBerendsen
@@ -25,6 +26,7 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import TrajectoryObserver
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
     from typing import Literal
 
@@ -72,15 +74,20 @@ class ForceFieldMDMaker(Maker):
         The number of MD steps to run
     ensemble : str = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
-    start_temp : float | None = 300.
+    start_temp : float | Sequence | None = 300.
         The temperature to initialize the system, in Kelvin.
     end_temp : float | None = 300.
         The temperature to equilibrate towards, in Kelvin.
         If start_temp is a float and end_temp is None,
         the system will be initialized at and equilibrated towards
         the start_temp.
-    thermostat : str = "langevin"
-        The thermostat to use. See _valid_thermostats for a list of options
+    pressure: float | Sequence | None = None
+        The pressure in kilobar.
+    thermostat : str | ASE .MolecularDynamics = "langevin"
+        The thermostat to use. If thermostat is an ASE .MolecularDynamics
+        object, this uses the option specified explicitly by the user.
+        See _valid_thermostats for a list of pre-defined options when
+        specifying thermostat as a string.
     ase_md_kwargs : dict | None = None
         Options to pass to the ASE MD function
     calculator_args : Sequence | None = None
@@ -107,10 +114,10 @@ class ForceFieldMDMaker(Maker):
     time_step: float | None = 2.0
     nsteps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
-    start_temp: float | None = 300.0
+    start_temp: float | Sequence | None = 300.0
     end_temp: float | None = 300.0
-    pressure: float | None = None
-    thermostat: str = "langevin"
+    pressure: float | Sequence | None = None
+    thermostat: str | MolecularDynamics = "langevin"
     ase_md_kwargs: dict | None = None
     calculator_args: list | tuple | None = None
     calculator_kwargs: dict | None = None
@@ -122,7 +129,7 @@ class ForceFieldMDMaker(Maker):
         default_factory=lambda: {"store_trajectory": "partial"}
     )
 
-    def _get_ensemble_defaults(self, structure: Structure) -> None:
+    def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
         self.ase_md_kwargs = self.ase_md_kwargs or {}
         if self.ensemble in ("nvt", "npt") and all(
@@ -133,11 +140,9 @@ class ForceFieldMDMaker(Maker):
                 self.end_temp if self.end_temp else self.start_temp
             )
 
-        if self.ensemble == "npt":
+        if self.ensemble == "npt" and isinstance(self.pressure, float):
             # convert from kilobar to eV/Ang**3
-            self.ase_md_kwargs["pressure_au"] = (
-                self.pressure * 1.0e-3 / bar if self.pressure else 0.0
-            )
+            self.ase_md_kwargs["pressure_au"] = self.pressure * 1.0e-3 / bar
 
         if self.thermostat == "langevin":
             # Same default as in VASP
@@ -167,21 +172,27 @@ class ForceFieldMDMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        self._get_ensemble_defaults(structure=structure)
+        self._get_ensemble_defaults()
 
         initial_velocities = structure.site_properties.get("velocities")
 
-        self.thermostat = self.thermostat.lower()
-        if self.thermostat not in _valid_thermostats[self.ensemble]:
-            raise ValueError(
-                f"{self.thermostat} thermostat not available for {self.ensemble}."
-                f"Available {self.ensemble} thermostats are:"
-                " ".join(_valid_thermostats[self.ensemble])
-            )
+        if isinstance(self.thermostat, MolecularDynamics):
+            # Allow user to explicitly set dynamics run via thermostat
+            md_func = self.thermostat
 
-        if self.ensemble == "nve" and self.thermostat is None:
-            self.thermostat = "velocityverlet"
-        md_func = _thermostats[f"{self.ensemble}_{self.thermostat}"]
+        elif isinstance(self.thermostat, str):
+            # Otherwise, use known thermostat
+            self.thermostat = self.thermostat.lower()
+            if self.thermostat not in _valid_thermostats[self.ensemble]:
+                raise ValueError(
+                    f"{self.thermostat} thermostat not available for {self.ensemble}."
+                    f"Available {self.ensemble} thermostats are:"
+                    " ".join(_valid_thermostats[self.ensemble])
+                )
+
+            if self.ensemble == "nve" and self.thermostat is None:
+                self.thermostat = "velocityverlet"
+            md_func = _thermostats[f"{self.ensemble}_{self.thermostat}"]
 
         atoms = AseAtomsAdaptor.get_atoms(structure)
         if initial_velocities:
