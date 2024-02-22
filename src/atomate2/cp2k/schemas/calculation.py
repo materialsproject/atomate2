@@ -394,9 +394,9 @@ class Calculation(BaseModel):
             # TODO vasp version calls bader_analysis_from_path but cp2k
             # cube files don't support that yet, do it manually
             bader = {
-                "min_dist": [d["min_dist"] for d in ba.data],
-                "charge": [d["charge"] for d in ba.data],
-                "atomic_volume": [d["atomic_vol"] for d in ba.data],
+                "min_dist": [dct["min_dist"] for dct in ba.data],
+                "charge": [dct["charge"] for dct in ba.data],
+                "atomic_volume": [dct["atomic_vol"] for dct in ba.data],
                 "vacuum_charge": ba.vacuum_charge,
                 "vacuum_volume": ba.vacuum_volume,
                 "reference_used": bool(ba.chgref_filename),
@@ -479,9 +479,7 @@ def _get_basis_and_potential_files(dir_name: Path) -> dict[Cp2kObject, DataFile]
     """
     data: dict[Cp2kObject, DataFile] = {}
     if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type: ignore[index]
-            str(dir_name / "BASIS")
-        )
+        data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))  # type: ignore[index]
     if Path.exists(dir_name / "POTENTIAL"):
         data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore[index]
             str(dir_name / "POTENTIAL")
