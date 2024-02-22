@@ -170,7 +170,7 @@ class PostProcessEosEnergy(EOSPostProcessor):
                         "b0 GPa": float(eos.b0_GPa),
                     }
                 except EOSError as exc:
-                    self[jobtype]["EOS"][eos_name] = {"exception": exc}
+                    self[jobtype]["EOS"][eos_name] = {"exception": str(exc)}
 
 
 class PostProcessEosPressure(EOSPostProcessor):
