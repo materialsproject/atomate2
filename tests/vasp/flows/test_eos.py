@@ -126,7 +126,7 @@ def test_mp_eos_maker(
         number_of_frames=nframes,
         linear_strain=linear_strain,
         postprocessor=PostProcessEosPressure(),
-        _store_transformation_information=True,
+        _store_transformation_information=False,
     ).make(structure)
 
     # ensure flow runs successfully
