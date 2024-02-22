@@ -126,7 +126,7 @@ A full list of contributors can be found [here][contributors].
 
 ## Citing atomate2
 
-A publication for `atomate2` is in preparation. In the meantime, please use [`citation.cff`](citation.cff) and the [Zenodo record](https://zenodo.org/badge/latestdoi/306414371) to cite `atomate2`.
+A journal submission for `atomate2` is planned. In the meantime, please use [`citation.cff`](citation.cff) and the [Zenodo record](https://zenodo.org/badge/latestdoi/306414371) to cite `atomate2`.
 
 ```bib
 @software{ganose_atomate2_2024,

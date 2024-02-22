@@ -1,4 +1,4 @@
-cff-version: 1.0.3
+cff-version: 1.2.0
 message: If you use this software, please cite it using these metadata.
 title: atomate2
 doi: 10.5281/zenodo.10677081
@@ -112,3 +112,5 @@ version: 0.0.13
 date-released: 2024-01-08
 repository-code: https://github.com/materialsproject/atomate2
 license: cc-by-4.0
+license-url: https://github.com/materialsproject/atomate2/blob/main/LICENSE
+type: software
