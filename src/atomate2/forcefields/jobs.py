@@ -22,6 +22,58 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+class ForceFieldMDMaker(Maker):
+    """
+    Maker to perform an MD run using a force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    steps : int
+        Number of MD steps to perform.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = "Force field MD"
+    force_field_name: str = "Force field"
+    steps: int = 1000
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    @job(output_schema=ForceFieldTaskDocument)
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument:
+        """
+        Perform an MD run using a force field.
+
+        Parameters
+        ----------
+        structure: .Structure
+            pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
+        """
+        result = self._run(structure)
+
+        return ForceFieldTaskDocument.from_ase_compatible_result(
+            self.force_field_name,
+            result,
+            relax_cell=False,
+            steps=self.steps,
+            relax_kwargs=None,
+            optimizer_kwargs=None,
+            **self.task_document_kwargs,
+        )
+
+    def _run(self, structure: Structure) -> dict:
+        raise NotImplementedError
+
+@dataclass
 class ForceFieldRelaxMaker(Maker):
     """
     Base Maker to calculate forces and stresses using any force field.
@@ -314,7 +366,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
     model_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model) for
+        Further keywords (e.g. device, default_dtype, dispersion, model) for
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
