@@ -6,23 +6,26 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Maker, job
+from jobflow import Maker, Response, job
 
 from atomate2.forcefields import MLFF
+from atomate2.forcefields.run import run_ase_md
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.sets.core import MDSetGenerator
 from atomate2.forcefields.utils import Relaxer
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
 
+    from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
-class ForceFieldMDMaker(Maker):
+class MDMaker(Maker):
     """
     Maker to perform an MD run using a force field.
 
@@ -32,46 +35,71 @@ class ForceFieldMDMaker(Maker):
         The job name.
     force_field_name : str
         The name of the force field.
-    steps : int
-        Number of MD steps to perform.
+    input_set_generator : MDSetGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_input_set`.
     task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj: # TODO: see if we need
+        additonal pydantic document
     """
 
     name: str = "Force field MD"
     force_field_name: str = "Force field"
-    steps: int = 1000
+
+    # TODO: look back to see if we need BaseSetGenerator
+    input_set_generator: MDSetGenerator = field(default_factory=MDSetGenerator)
+    write_input_set_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=ForceFieldTaskDocument)
+    # TODO: see if we need ase job decorator
+    @job
     def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
+        self, structure: Structure,
+        calculator: Calculator,
+        prev_dir: str | Path | None = None
     ) -> ForceFieldTaskDocument:
         """
         Perform an MD run using a force field.
 
         Parameters
         ----------
-        structure: .Structure
+        structure: Structure
             pymatgen structure.
+        calculator: Calculator
+            ASE calculator.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        result = self._run(structure)
+        # read prevous md trajectory if any
+        from_prev = prev_dir is not None
+        if from_prev:
+            # TODO: implement reading previous MD trajectory
+            raise NotImplementedError("Reading previous MD trajectory not implemented")
 
-        return ForceFieldTaskDocument.from_ase_compatible_result(
-            self.force_field_name,
-            result,
-            relax_cell=False,
-            steps=self.steps,
-            relax_kwargs=None,
-            optimizer_kwargs=None,
-            **self.task_document_kwargs,
+        self.write_input_set_kwargs.setdefault("from_prev", from_prev)
+
+        # overwrite default input set
+        input_set = self.input_set_generator.get_input_set(
+            structure, **self.write_input_set_kwargs
         )
 
-    def _run(self, structure: Structure) -> dict:
-        raise NotImplementedError
+        # run ASE MD
+        result = run_ase_md(structure, calculator, input_set)
+
+        return Response(output=result)
+        # NOTE: keep the following in case we want to return the result as pydantic
+        # document
+        # return ForceFieldTaskDocument.from_ase_compatible_result(
+        #     self.force_field_name,
+        #     result,
+        #     relax_cell=False,
+        #     steps=self.steps,
+        #     relax_kwargs=None,
+        #     optimizer_kwargs=None,
+        #     **self.task_document_kwargs,
+        # )
 
 @dataclass
 class ForceFieldRelaxMaker(Maker):
