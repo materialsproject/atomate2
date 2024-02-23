@@ -189,25 +189,25 @@ class PhononMaker(Maker):
             Instead of min_length, also a supercell_matrix can be given, e.g.
             [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         """
-        if self.use_symmetrized_structure not in [None, "primitive", "conventional"]:
+        use_symmetrized_structure = self.use_symmetrized_structure
+        kpath_scheme = self.kpath_scheme
+        valid_structs = (None, "primitive", "conventional")
+        if use_symmetrized_structure not in valid_structs:
             raise ValueError(
-                "use_symmetrized_structure can only be primitive, conventional, None"
+                f"Invalid {use_symmetrized_structure=}, use one of {valid_structs}"
             )
 
-        if (
-            self.use_symmetrized_structure != "primitive"
-            and self.kpath_scheme != "seekpath"
-        ):
+        if use_symmetrized_structure != "primitive" and kpath_scheme != "seekpath":
             raise ValueError(
-                "You can only use other kpath schemes with the primitive standard "
-                "structure"
+                f"You can't use {kpath_scheme=} with the primitive standard "
+                "structure, please use seekpath"
             )
 
-        if (
-            self.kpath_scheme
-            not in "seekpath hinuma setyawan_curtarolo latimer_munro".split()
-        ):
-            raise ValueError("kpath scheme is not implemented")
+        valid_schemes = ("seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro")
+        if kpath_scheme not in valid_schemes:
+            raise ValueError(
+                f"{kpath_scheme=} is not implemented, use one of {valid_schemes}"
+            )
 
         jobs = []
 
