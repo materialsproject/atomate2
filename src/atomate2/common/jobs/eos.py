@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-class EOSPostProcessor(dict, MSONable):
+class EOSPostProcessor(MSONable):
     """
     Fit data to an EOS.
 
@@ -41,6 +41,9 @@ class EOSPostProcessor(dict, MSONable):
     job_types: tuple[str, ...] = ("relax", "static")
     min_data_points: int | None = None
 
+    def __init__(self) -> None:
+        self.results: dict[str, dict] = {}
+
     def sort_by_quantity(self, quantity: str = "volume") -> None:
         """
         Sort input data by given kwarg.
@@ -51,11 +54,11 @@ class EOSPostProcessor(dict, MSONable):
             kwarg to sort by
         """
         for job_type in self._use_job_types:
-            sort_by_vol = np.argsort(self[job_type][quantity])
+            sort_by_vol = np.argsort(self.results[job_type][quantity])
             for key in self.eos_attrs:
-                if self[job_type].get(key):
-                    self[job_type][key] = [
-                        self[job_type][key][index] for index in sort_by_vol
+                if self.results[job_type].get(key):
+                    self.results[job_type][key] = [
+                        self.results[job_type][key][index] for index in sort_by_vol
                     ]
 
     def eval(self) -> None:
@@ -80,10 +83,10 @@ class EOSPostProcessor(dict, MSONable):
                     for <key> in ("relax", "static")
             }
         """
-        self.update(eos_flow_output)
-        self._use_job_types = [key for key in self.job_types if self.get(key)]
+        self.results.update(eos_flow_output)
+        self._use_job_types = [key for key in self.job_types if self.results.get(key)]
         if self.min_data_points and any(
-            len(self[job_type].get("volume", [])) < self.min_data_points
+            len(self.results[job_type].get("volume", [])) < self.min_data_points
             for job_type in self._use_job_types
         ):
             raise ValueError(
@@ -114,7 +117,7 @@ class EOSPostProcessor(dict, MSONable):
             }
         """
         self.fit(eos_flow_output)
-        return self
+        return self.results
 
 
 class PostProcessEosEnergy(EOSPostProcessor):
@@ -159,18 +162,18 @@ class PostProcessEosEnergy(EOSPostProcessor):
     def eval(self) -> None:
         """Fit the input data to each EOS in `self.eos_models."""
         for jobtype in self._use_job_types:
-            self[jobtype]["EOS"] = {}
+            self.results[jobtype]["EOS"] = {}
             for eos_name in self.eos_models:
                 try:
                     eos = EOS(eos_name=eos_name).fit(
-                        self[jobtype]["volume"], self[jobtype]["energy"]
+                        self.results[jobtype]["volume"], self.results[jobtype]["energy"]
                     )
-                    self[jobtype]["EOS"][eos_name] = {
+                    self.results[jobtype]["EOS"][eos_name] = {
                         **eos.results,
                         "b0 GPa": float(eos.b0_GPa),
                     }
                 except EOSError as exc:
-                    self[jobtype]["EOS"][eos_name] = {"exception": str(exc)}
+                    self.results[jobtype]["EOS"][eos_name] = {"exception": str(exc)}
 
 
 class PostProcessEosPressure(EOSPostProcessor):
@@ -257,20 +260,25 @@ class PostProcessEosPressure(EOSPostProcessor):
         """
         init_pars = {}
         for jobtype in self._use_job_types:
-            if self[jobtype].get("stress") and (not self[jobtype].get("pressure")):
-                self[jobtype]["pressure"] = [
+            if self.results[jobtype].get("stress") and (
+                not self.results[jobtype].get("pressure")
+            ):
+                self.results[jobtype]["pressure"] = [
                     1.0 / 3.0 * np.trace(np.array(stress_tensor))
-                    for stress_tensor in self[jobtype]["stress"]
+                    for stress_tensor in self.results[jobtype]["stress"]
                 ]
             poly_pars = np.polyfit(
-                self[jobtype]["volume"],
-                np.array(self[jobtype]["pressure"]) / np.array(self[jobtype]["volume"]),
+                self.results[jobtype]["volume"],
+                np.array(self.results[jobtype]["pressure"])
+                / np.array(self.results[jobtype]["volume"]),
                 deg=2,
             )
 
             radicand = poly_pars[1] ** 2 - 4.0 * poly_pars[0] * poly_pars[2]
             if radicand < 0.0:
-                v0 = self[jobtype]["volume"][np.argmin(self[jobtype]["energy"])]
+                v0 = self.results[jobtype]["volume"][
+                    np.argmin(self.results[jobtype]["energy"])
+                ]
             else:
                 min_abs_pressure = 1e20
                 for i in range(2):
@@ -296,8 +304,10 @@ class PostProcessEosPressure(EOSPostProcessor):
         return init_pars
 
     def _objective(self, pars: Sequence, jobtype: str) -> float:
-        return np.array(self[jobtype]["pressure"]) - self._birch_murnaghan_pressure(
-            np.array(self[jobtype]["volume"]), *pars
+        return np.array(
+            self.results[jobtype]["pressure"]
+        ) - self._birch_murnaghan_pressure(
+            np.array(self.results[jobtype]["volume"]), *pars
         )
 
     def eval(self) -> None:
@@ -308,12 +318,14 @@ class PostProcessEosPressure(EOSPostProcessor):
                 self._objective, initial_pars[jobtype], args=(jobtype,)
             )
 
-            self[jobtype]["EOS"] = {}
+            self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self[jobtype]["EOS"]["exception"] = "Optimal EOS parameters not found."
+                self.results[jobtype]["EOS"][
+                    "exception"
+                ] = "Optimal EOS parameters not found."
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
-                    self[jobtype]["EOS"][key] = eos_params[i]
+                    self.results[jobtype]["EOS"][key] = eos_params[i]
 
 
 @job

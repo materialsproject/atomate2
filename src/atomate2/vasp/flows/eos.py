@@ -79,7 +79,7 @@ class EosMaker(CommonEosMaker):
         Name of the flows produced by this maker.
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
-    eos_relax_maker : .Maker | None
+    eos_relax_maker : .Maker
         Maker to relax deformationed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
@@ -87,9 +87,13 @@ class EosMaker(CommonEosMaker):
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
-    postprocessor : .job
+    postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_EOS`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
+    _store_transformation_information : .bool = False
+        Whether to store the information about transformations. Unfortunately
+        needed at present to handle issues with emmet and pydantic validation
+        TODO: remove this when clash is fixed
     """
 
     name: str = "EOS Maker"
@@ -143,7 +147,7 @@ class MPLegacyEosMaker(CommonEosMaker):
         Name of the flows produced by this maker.
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
-    eos_relax_maker : .Maker | None
+    eos_relax_maker : .Maker
         Maker to relax deformationed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
@@ -151,9 +155,13 @@ class MPLegacyEosMaker(CommonEosMaker):
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
-    postprocessor : .job
+    postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_EOS`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
+    _store_transformation_information : .bool = False
+        Whether to store the information about transformations. Unfortunately
+        needed at present to handle issues with emmet and pydantic validation
+        TODO: remove this when clash is fixed
     """
 
     name: str = "MP Legacy GGA EOS Maker"
@@ -216,7 +224,7 @@ class MPGGAEosMaker(CommonEosMaker):
         Name of the flows produced by this maker.
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
-    eos_relax_maker : .Maker | None
+    eos_relax_maker : .Maker
         Maker to relax deformationed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
@@ -224,9 +232,13 @@ class MPGGAEosMaker(CommonEosMaker):
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
-    postprocessor : .job
+    postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_EOS`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
+    _store_transformation_information : .bool = False
+        Whether to store the information about transformations. Unfortunately
+        needed at present to handle issues with emmet and pydantic validation
+        TODO: remove this when clash is fixed
     """
 
     name: str = "MP GGA EOS Maker"
@@ -280,7 +292,7 @@ class MPMetaGGAEosMaker(CommonEosMaker):
         Name of the flows produced by this maker.
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
-    eos_relax_maker : .Maker | None
+    eos_relax_maker : .Maker
         Maker to relax deformationed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
@@ -288,9 +300,13 @@ class MPMetaGGAEosMaker(CommonEosMaker):
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
-    postprocessor : .job
+    postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
-        `atomate2.common.jobs.postprocess_EOS`.
+        `atomate2.common.jobs.PostProcessEosEnergy`.
+    _store_transformation_information : .bool = False
+        Whether to store the information about transformations. Unfortunately
+        needed at present to handle issues with emmet and pydantic validation
+        TODO: remove this when clash is fixed
     """
 
     name: str = "MP Meta-GGA EOS Maker"
