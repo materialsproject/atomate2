@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import contextlib
 import io
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import numpy as np
 from ase.md.andersen import Andersen
 from ase.md.langevin import Langevin
 from ase.md.md import MolecularDynamics
@@ -21,12 +23,12 @@ from ase.md.verlet import VelocityVerlet
 from ase.units import bar, fs
 from jobflow import Maker, job
 from pymatgen.io.ase import AseAtomsAdaptor
+from scipy.interpolate import interp1d
 
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import TrajectoryObserver
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
     from pathlib import Path
     from typing import Literal
 
@@ -68,8 +70,8 @@ class ForceFieldMDMaker(Maker):
         The name of the MD Maker
     force_field_name : str
         The name of the forcefield (for provenance)
-    time_step : float | None = 2.
-        The time_step of the MD run in femtoseconds
+    timestep : float | None = 2.
+        The timestep of the MD run in femtoseconds
     nsteps : int = 1000
         The number of MD steps to run
     ensemble : str = "nvt"
@@ -111,13 +113,13 @@ class ForceFieldMDMaker(Maker):
 
     name: str = "Forcefield MD"
     force_field_name: str = "Forcefield"
-    time_step: float | None = 2.0
+    timestep: float | None = 2.0
     nsteps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
-    start_temp: float | Sequence | None = 300.0
+    dynamics: str | MolecularDynamics = "langevin"
+    temperature: float | Sequence | None = 300.0
     end_temp: float | None = 300.0
-    pressure: float | Sequence | None = None
-    thermostat: str | MolecularDynamics = "langevin"
+    pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
     calculator_args: list | tuple | None = None
     calculator_kwargs: dict | None = None
@@ -128,6 +130,31 @@ class ForceFieldMDMaker(Maker):
     task_document_kwargs: dict = field(
         default_factory=lambda: {"store_trajectory": "partial"}
     )
+
+    def _get_ensemble_schedule(self) -> None:
+        if isinstance(self.temperature, Sequence):
+            self.tschedule = np.interp(
+                np.arange(self.nsteps),
+                np.arange(len(self.temperature)),
+                self.temperature
+            )
+        else:
+            self.tschedule = np.full(self.nsteps, self.temperature)
+
+        if isinstance(self.pressure, Sequence):
+            self.pschedule = np.interp(
+                np.arange(self.nsteps),
+                np.arange(len(self.pressure)),
+                self.pressure
+            )
+        elif isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 4:
+            self.pschedule = interp1d(
+                np.arange(self.nsteps),
+                self.pressure,
+                kind="linear"
+            )
+        else:
+            self.pschedule = np.full(self.nsteps, self.pressure)
 
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
@@ -144,7 +171,7 @@ class ForceFieldMDMaker(Maker):
             # convert from kilobar to eV/Ang**3
             self.ase_md_kwargs["pressure_au"] = self.pressure * 1.0e-3 / bar
 
-        if self.thermostat == "langevin":
+        if self.dynamics == "langevin":
             # Same default as in VASP
             self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get("friction", 10.0)
             # friction coefficient(s) specified in ev^-1, convert from picoseconds
@@ -176,25 +203,25 @@ class ForceFieldMDMaker(Maker):
 
         initial_velocities = structure.site_properties.get("velocities")
 
-        if isinstance(self.thermostat, MolecularDynamics):
+        if isinstance(self.dynamics, MolecularDynamics):
             # Allow user to explicitly set dynamics run via thermostat
-            md_func = self.thermostat
+            md_func = self.dynamics
 
-        elif isinstance(self.thermostat, str):
+        elif isinstance(self.dynamics, str):
             # Otherwise, use known thermostat
-            self.thermostat = self.thermostat.lower()
-            if self.thermostat not in _valid_thermostats[self.ensemble]:
+            self.dynamics = self.dynamics.lower()
+            if self.dynamics not in _valid_thermostats[self.ensemble]:
                 raise ValueError(
-                    f"{self.thermostat} thermostat not available for {self.ensemble}."
+                    f"{self.dynamics} thermostat not available for {self.ensemble}."
                     f"Available {self.ensemble} thermostats are:"
                     " ".join(_valid_thermostats[self.ensemble])
                 )
 
-            if self.ensemble == "nve" and self.thermostat is None:
-                self.thermostat = "velocityverlet"
-            md_func = _thermostats[f"{self.ensemble}_{self.thermostat}"]
+            if self.ensemble == "nve" and self.dynamics is None:
+                self.dynamics = "velocityverlet"
+            md_func = _thermostats[f"{self.ensemble}_{self.dynamics}"]
 
-        atoms = AseAtomsAdaptor.get_atoms(structure)
+        atoms = structure.to_ase_atoms()
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
 
@@ -220,7 +247,7 @@ class ForceFieldMDMaker(Maker):
             md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
             md_runner = md_func(
-                atoms=atoms, timestep=self.time_step * fs, **self.ase_md_kwargs
+                atoms=atoms, timestep=self.timestep * fs, **self.ase_md_kwargs
             )
             md_runner.attach(md_observer, interval=self.traj_interval)
 
