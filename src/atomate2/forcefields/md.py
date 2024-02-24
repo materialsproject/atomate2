@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
+from ase import units
 from ase.md.andersen import Andersen
 from ase.md.langevin import Langevin
 from ase.md.md import MolecularDynamics
@@ -20,7 +21,6 @@ from ase.md.velocitydistribution import (
     ZeroRotation,
 )
 from ase.md.verlet import VelocityVerlet
-from ase.units import bar, fs
 from jobflow import Maker, job
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
@@ -35,8 +35,7 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
-
-_valid_thermostats: dict[str, tuple[str, ...]] = {
+_valid_dynamics: dict[str, tuple[str, ...]] = {
     "nve": ("velocityverlet",),
     "nvt": ("nose-hoover", "langevin", "andersen", "berendsen"),
     "npt": ("nose-hoover", "berendsen"),
@@ -88,10 +87,10 @@ class ForceFieldMDMaker(Maker):
     thermostat : str | ASE .MolecularDynamics = "langevin"
         The thermostat to use. If thermostat is an ASE .MolecularDynamics
         object, this uses the option specified explicitly by the user.
-        See _valid_thermostats for a list of pre-defined options when
+        See _valid_dynamics for a list of pre-defined options when
         specifying thermostat as a string.
     ase_md_kwargs : dict | None = None
-        Options to pass to the ASE MD function
+        Options except for temperature and pressure to pass into the ASE MD function
     calculator_args : Sequence | None = None
         args to pass to the ASE calculator class
     calculator_kwargs : dict | None = None
@@ -117,7 +116,7 @@ class ForceFieldMDMaker(Maker):
     nsteps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
     dynamics: str | MolecularDynamics = "langevin"
-    temperature: float | Sequence | None = 300.0
+    temperature: float | Sequence | np.ndarray | None = 300.0
     end_temp: float | None = 300.0
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
@@ -132,14 +131,33 @@ class ForceFieldMDMaker(Maker):
     )
 
     def _get_ensemble_schedule(self) -> None:
+
+        if self.ensemble == "nve":
+            # Distable thermostat and barostat
+            self.temperature = np.nan
+            self.pressure = np.nan
+            self.tschedule = np.full(self.nsteps, self.temperature)
+            self.pschedule = np.full(self.nsteps, self.pressure)
+            return
+
         if isinstance(self.temperature, Sequence):
             self.tschedule = np.interp(
                 np.arange(self.nsteps),
                 np.arange(len(self.temperature)),
                 self.temperature
             )
+        elif isinstance(self.temperature, np.ndarray) and self.temperature.ndim == 1:
+            self.tschedule = self.temperature
+        # NOTE: In ASE Langevin dynamics, the temperature are normally
+        # scalars, but in principle one quantity per atom could be specified by giving
+        # an array. This is not implemented yet here.
         else:
             self.tschedule = np.full(self.nsteps, self.temperature)
+
+        if self.ensemble == "nvt":
+            self.pressure = None
+            self.pschedule = np.full(self.nsteps, self.pressure)
+            return
 
         if isinstance(self.pressure, Sequence):
             self.pschedule = np.interp(
@@ -159,28 +177,51 @@ class ForceFieldMDMaker(Maker):
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
         self.ase_md_kwargs = self.ase_md_kwargs or {}
-        if self.ensemble in ("nvt", "npt") and all(
-            self.ase_md_kwargs.get(key) is None
-            for key in ("temperature_K", "temperature")
-        ):
-            self.ase_md_kwargs["temperature_K"] = (
-                self.end_temp if self.end_temp else self.start_temp
+
+        if self.ensemble == "nve":
+            self.ase_md_kwargs.pop("temperature", None)
+            self.ase_md_kwargs.pop("temperature_K", None)
+            self.ase_md_kwargs.pop("externalstress", None)
+        elif self.ensemble == "nvt":
+            self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
+            self.ase_md_kwargs.pop("externalstress", None)
+        elif self.ensemble == "npt":
+            self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
+            self.ase_md_kwargs["externalstress"] = (
+                self.pschedule[0] * 1.0e-3 / units.bar
             )
 
-        if self.ensemble == "npt" and isinstance(self.pressure, float):
-            # convert from kilobar to eV/Ang**3
-            self.ase_md_kwargs["pressure_au"] = self.pressure * 1.0e-3 / bar
 
-        if self.dynamics == "langevin":
-            # Same default as in VASP
-            self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get("friction", 10.0)
-            # friction coefficient(s) specified in ev^-1, convert from picoseconds
-            if isinstance(self.ase_md_kwargs["friction"], (list, tuple)):
-                self.ase_md_kwargs["friction"] = [
-                    coeff * 1.0e-3 / fs for coeff in self.ase_md_kwargs["friction"]
-                ]
-            else:
-                self.ase_md_kwargs["friction"] *= 1.0e-3 / fs
+        # NOTE: We take of the temperature in _get_ensemble_schedule instead
+        # if self.ensemble in ("nvt", "npt") and all(
+        #     self.ase_md_kwargs.get(key) is None
+        #     for key in ("temperature_K", "temperature")
+        # ):
+        #     self.ase_md_kwargs["temperature_K"] = (
+        #         self.end_temp if self.end_temp else self.start_temp
+        #     )
+
+        # NOTE: We take care of the units when passing into the ASE MD function
+        # if self.ensemble == "npt" and isinstance(self.pressure, float):
+        #     # convert from kilobar to eV/Ang**3
+        #     self.ase_md_kwargs["pressure_au"] = self.pressure * 1.0e-3 / bar
+
+        if self.dynamics.lower() == "langevin":
+            # NOTE: Unless we have a detailed documentation on the conversion of all
+            # parameters for all different ASE dyanmics, it is not a good idea to
+            # convert the parameters here. It is better to let the user to consult
+            # the ASE documentation and set the parameters themselves.
+            self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get(
+                "friction", 10.0 * 1e-3 / units.fs # Same default as in VASP: 10 ps^-1
+            )
+            # NOTE: same as above, user can specify per atom friction but we don't
+            # expect to change their intention to pass into ASE MD function
+            # if isinstance(self.ase_md_kwargs["friction"], (list, tuple)):
+            #     self.ase_md_kwargs["friction"] = [
+            #         coeff * 1.0e-3 / fs for coeff in self.ase_md_kwargs["friction"]
+            #     ]
+            # else:
+            #     self.ase_md_kwargs["friction"] *= 1.0e-3 / fs
 
     @job(output_schema=ForceFieldTaskDocument)
     def make(
@@ -199,22 +240,23 @@ class ForceFieldMDMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
+        self._get_ensemble_schedule()
         self._get_ensemble_defaults()
 
         initial_velocities = structure.site_properties.get("velocities")
 
         if isinstance(self.dynamics, MolecularDynamics):
-            # Allow user to explicitly set dynamics run via thermostat
+            # Allow user to explicitly run ASE Dynamics class
             md_func = self.dynamics
 
         elif isinstance(self.dynamics, str):
-            # Otherwise, use known thermostat
+            # Otherwise, use known dynamics
             self.dynamics = self.dynamics.lower()
-            if self.dynamics not in _valid_thermostats[self.ensemble]:
+            if self.dynamics not in _valid_dynamics[self.ensemble]:
                 raise ValueError(
                     f"{self.dynamics} thermostat not available for {self.ensemble}."
                     f"Available {self.ensemble} thermostats are:"
-                    " ".join(_valid_thermostats[self.ensemble])
+                    " ".join(_valid_dynamics[self.ensemble])
                 )
 
             if self.ensemble == "nve" and self.dynamics is None:
@@ -224,33 +266,42 @@ class ForceFieldMDMaker(Maker):
         atoms = structure.to_ase_atoms()
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
-
-        elif self.start_temp:
-            MaxwellBoltzmannDistribution(atoms=atoms, temperature_K=self.start_temp)
-
+        elif not np.isnan(self.tschedule).any():
+            MaxwellBoltzmannDistribution(
+                atoms=atoms,
+                temperature_K=self.tschedule[0],
+                rng=None # TODO: we might want to use a seed for reproducibility
+                )
             if self.zero_linear_momentum:
                 Stationary(atoms)
-
             if self.zero_angular_momentum:
                 ZeroRotation(atoms)
-
         else:
-            atoms.set_velocities(
-                [[0.0 for _ in range(3)] for _ in range(len(structure))]
-            )
+            # NOTE: ase has zero velocities by default already
+            pass
 
         self.calculator_args = self.calculator_args or []
         self.calculator_kwargs = self.calculator_kwargs or {}
-        atoms.set_calculator(self._calculator())
+        atoms.calc = self._calculator()
+
+        def callback(dyn: MolecularDynamics = md_func) -> None:
+            if self.ensemble == "nve":
+                return
+            dyn.set_temperature(self.tschedule[dyn.nsteps])
+            if self.ensemble == "nvt":
+                return
+            dyn.set_stress(self.pschedule[dyn.nsteps])
 
         with contextlib.redirect_stdout(io.StringIO()):
             md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
             md_runner = md_func(
-                atoms=atoms, timestep=self.timestep * fs, **self.ase_md_kwargs
+                atoms=atoms,
+                timestep=self.timestep * units.fs,
+                **self.ase_md_kwargs
             )
             md_runner.attach(md_observer, interval=self.traj_interval)
-
+            md_runner.attach(callback, interval=1)
             md_runner.run(steps=self.nsteps)
 
             if self.traj_file is not None:
