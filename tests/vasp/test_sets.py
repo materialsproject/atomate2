@@ -160,7 +160,7 @@ def test_set_u_params(structure, request) -> None:
         # ensure that there are LDAU* keys, and that they match expected values
         # in config_dict
         assert len([key for key in incar if key.startswith("LDAU")]) > 0
-        for ldau_key in ["LDAUU", "LDAUJ", "LDAUL"]:
+        for ldau_key in ("LDAUU", "LDAUJ", "LDAUL"):
             for idx, site in enumerate(structure):
                 assert incar[ldau_key][idx] == input_gen.config_dict["INCAR"][ldau_key][
                     "O"
