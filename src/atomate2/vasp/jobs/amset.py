@@ -237,7 +237,7 @@ def run_amset_deformations(
 
     statics = []
     outputs = []
-    for i, deformation in enumerate(deformations):
+    for idx, deformation in enumerate(deformations):
         # deform the structure
         dst = DeformStructureTransformation(deformation=deformation)
         deformed_structure = dst.apply_transformation(structure)
@@ -246,7 +246,7 @@ def run_amset_deformations(
         static_job = static_deformation_maker.make(
             deformed_structure, prev_dir=prev_dir
         )
-        static_job.append_name(f" {i + 1}/{len(deformations)}")
+        static_job.append_name(f" {idx + 1}/{len(deformations)}")
         statics.append(static_job)
 
         # extract the outputs we want (only the dir name)
@@ -298,7 +298,7 @@ def calculate_deformation_potentials(
     # as zero indexed
     symprec_str = "N" if symprec is None else str(symprec)
 
-    # TODO: Handle hostnames properly
+    # TODO: Handle host names properly
     bulk_dir = strip_hostname(bulk_dir)
     deformation_dirs = [strip_hostname(d) for d in deformation_dirs]
     args = [
@@ -307,7 +307,9 @@ def calculate_deformation_potentials(
         f"--symprec={symprec_str}",
     ]
     if ibands is not None:
-        bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
+        bands_str = ".".join(
+            ",".join([str(idx + 1) for idx in band_ids]) for band_ids in ibands
+        )
         args.append(f"--bands={bands_str}")
 
     runner = CliRunner()

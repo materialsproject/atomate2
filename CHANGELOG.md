@@ -7,9 +7,11 @@
 The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been modified. Previously, this function had custom arguments for previous calculation directories (e.g., `prev_vasp_dir`, `prev_cp2k_dir`). These arguments have been standardised to `prev_dir`. Accordingly, the approach used to chain workflows has now changed.
 
 ### New Features 🎉
+
 * Add setting `VASP_RUN_DDEC6: bool = False` by @janosh in https://github.com/materialsproject/atomate2/pull/587
 
 ### Bug Fixes 🐛
+
 * Resolve bandstructure datastore bug by @JaGeo in https://github.com/materialsproject/atomate2/pull/605
 * Fix `TypeError`: `PhononBSPlotter.save_plot()` got an unexpected keyword argument `img_format` by @janosh in https://github.com/materialsproject/atomate2/pull/625
 * `ForceFieldRelaxMaker` default `relax_cell` to `True` by @janosh in https://github.com/materialsproject/atomate2/pull/635
@@ -18,7 +20,9 @@ The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been 
 * Default `create_thermal_displacements` to `False` in VASP and forcefield `PhononMaker` by @janosh in https://github.com/materialsproject/atomate2/pull/647
 * Fix import of ASE filters when user has installed from PyPI and not gitlab by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/650
 * Mark schema fields with `None` default as `Optional` to pass pydantic v2 validation by @danielzuegner in https://github.com/materialsproject/atomate2/pull/651
+
 ### Enhancements 🛠
+
 * Breaking: Unify previous directory `Maker` API by @janosh in https://github.com/materialsproject/atomate2/pull/593
 * Add keyword `incar_exclude: Sequence[str] = None` to `fake_run_vasp()` by @janosh in https://github.com/materialsproject/atomate2/pull/599
 * Allow `prv_dir` to be used more in defect wf by @jmmshn in https://github.com/materialsproject/atomate2/pull/585
@@ -29,14 +33,19 @@ The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been 
 * Add optional 3rd static for PBE+U to `MatPesStaticFlowMaker` by @janosh in https://github.com/materialsproject/atomate2/pull/606
 * Use PyPI version of MACE by @utf in https://github.com/materialsproject/atomate2/pull/668
 * Multi step MD flow by @gpetretto in https://github.com/materialsproject/atomate2/pull/489
+
 ### Documentation 📖
+
 * Add @CompRhys to `contributors.md` by @CompRhys in https://github.com/materialsproject/atomate2/pull/612
+
 ### House-Keeping 🧹
+
 * Update GitHub Action versions by @janosh in https://github.com/materialsproject/atomate2/pull/640
 * Drop `flake8` by @janosh in https://github.com/materialsproject/atomate2/pull/658
 * Enable all `ruff` rules by default by @janosh in https://github.com/materialsproject/atomate2/pull/663
 
 ### New Contributors
+
 * @CompRhys made their first contribution in https://github.com/materialsproject/atomate2/pull/612
 * @danielzuegner made their first contribution in https://github.com/materialsproject/atomate2/pull/651
 
@@ -66,7 +75,7 @@ The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been 
 
 * Add StructureMetadata as baseclass for output documents by @gpetretto in https://github.com/materialsproject/atomate2/pull/514
 * Materials Project GGA and meta-GGA workflows by @janosh in https://github.com/materialsproject/atomate2/pull/504
-* [WIP] MP-compatible r2SCAN workflow (and a few general INCAR improvements) by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/362
+* MP-compatible r2SCAN workflow (and a few general INCAR improvements) by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/362
 * Update to Pydantic v2 by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/567
 * Add MatPES GGA and r2SCAN static makers by @janosh in https://github.com/materialsproject/atomate2/pull/532
 * Move elastic workflow to common and build force-field elastic workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/581

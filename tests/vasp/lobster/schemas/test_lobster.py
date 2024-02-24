@@ -271,7 +271,7 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     assert doc.chemsys == "As-Ga"
 
 
-def test_lobstertaskdocument_saved_jsons(lobster_test_dir):
+def test_lobster_task_doc_saved_jsons(lobster_test_dir):
     """
     Test if jsons saved are valid
     """
