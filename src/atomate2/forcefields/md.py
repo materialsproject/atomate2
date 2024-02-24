@@ -155,7 +155,7 @@ class ForceFieldMDMaker(Maker):
             self.tschedule = np.full(self.nsteps, self.temperature)
 
         if self.ensemble == "nvt":
-            self.pressure = None
+            self.pressure = np.nan
             self.pschedule = np.full(self.nsteps, self.pressure)
             return
 
