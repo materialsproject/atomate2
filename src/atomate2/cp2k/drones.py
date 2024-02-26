@@ -1,4 +1,4 @@
-"""Drones for parsing VASP calculations and related outputs."""
+"""Drones for parsing CP2K calculations and related outputs."""
 
 from __future__ import annotations
 
