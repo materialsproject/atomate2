@@ -1,8 +1,20 @@
+<<<<<<< HEAD:tests/test_data/vasp/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/INCAR
 ALGO = Normal
 EDIFF = 1e-06
 ENAUG = 1360
 ENCUT = 680
 ISMEAR = -5
+=======
+ALGO = Fast
+EDIFF = 1e-07
+EDIFFG = -0.001
+ENAUG = 1360
+ENCUT = 700
+GGA = Ps
+IBRION = 2
+ISIF = 3
+ISMEAR = 0
+>>>>>>> aaron/mlff_md:tests/test_data/vasp/Si_elastic/tight_relax_1/inputs/INCAR
 ISPIN = 2
 KPAR = 2
 KSPACING = 0.22
@@ -10,15 +22,22 @@ LAECHG = False
 LASPH = True
 LCHARG = False
 LELF = False
+<<<<<<< HEAD:tests/test_data/vasp/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/INCAR
 LMAXMIX = 6
+=======
+>>>>>>> aaron/mlff_md:tests/test_data/vasp/Si_elastic/tight_relax_1/inputs/INCAR
 LMIXTAU = True
 LORBIT = 11
 LREAL = False
 LVTOT = False
 LWAVE = False
+<<<<<<< HEAD:tests/test_data/vasp/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/INCAR
 MAGMOM = 2*0.0
 NCORE = 16
+=======
+MAGMOM = 8*0.6
+>>>>>>> aaron/mlff_md:tests/test_data/vasp/Si_elastic/tight_relax_1/inputs/INCAR
 NELM = 200
 NSW = 0
 PREC = Accurate
-SIGMA = 0.05
+SIGMA = 0.2

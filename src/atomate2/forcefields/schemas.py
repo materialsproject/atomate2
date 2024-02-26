@@ -1,14 +1,25 @@
 """Schema definitions for force field tasks."""
 
-from typing import Optional
+from typing import Any, Optional
 
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
+from emmet.core.utils import ValueEnum
+from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 from pymatgen.io.ase import AseAtomsAdaptor
+
+from atomate2.forcefields import MLFF
+
+
+class ForcefieldObject(ValueEnum):
+    """Types of forcefield data objects."""
+
+    TRAJECTORY = "trajectory"
 
 
 class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
@@ -104,6 +115,13 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Directory where the force field calculations are performed."
     )
 
+    included_objects: Optional[list[ForcefieldObject]] = Field(
+        None, description="list of forcefield objects included with this task document"
+    )
+    forcefield_objects: Optional[dict[ForcefieldObject, Any]] = Field(
+        None, description="Forcefield objects associated with this task"
+    )
+
     @classmethod
     def from_ase_compatible_result(
         cls,
@@ -114,6 +132,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
+        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
     ) -> "ForceFieldTaskDocument":
         """
         Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
@@ -135,14 +154,17 @@ class ForceFieldTaskDocument(StructureMetadata):
         ionic_step_data : tuple
             Which data to save from each ionic step.
         """
-        trajectory = result["trajectory"].__dict__
+        trajectory = {
+            key: value
+            for key, value in result["trajectory"].__dict__.items()
+            if not key.startswith("_")
+        }
 
-        # NOTE: units for stresses were converted from eV/Angstrom³ to kBar
-        # (* -1 from standard output)
+        # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
-        for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(
-                trajectory["stresses"][i] * -10 / GPa
+        for idx in range(len(trajectory["stresses"])):
+            trajectory["stresses"][idx] = voigt_6_to_full_3x3_stress(
+                trajectory["stresses"][idx] * -10 / GPa
             )
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -206,29 +228,47 @@ class ForceFieldTaskDocument(StructureMetadata):
                 cur_structure = None
 
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
-            if "magmoms" in trajectory:
-                ionic_step = IonicStep(
-                    energy=energy,
-                    forces=forces,
-                    magmoms=(
-                        trajectory["magmoms"][idx].tolist()
-                        if "magmoms" in ionic_step_data
-                        else None
-                    ),
-                    stress=stress,
-                    structure=cur_structure,
-                )
+            magmom_data = {}
+            if trajectory.get("magmoms"):
+                magmom_data = {
+                    "magmoms": trajectory["magmoms"][idx].tolist()
+                    if "magmoms" in ionic_step_data
+                    else None
+                }
 
-            # otherwise do not include "magmoms" in :obj:`ionic_step`
-            elif "magmoms" not in trajectory:
-                ionic_step = IonicStep(
-                    energy=energy,
-                    forces=forces,
-                    stress=stress,
-                    structure=cur_structure,
-                )
+            ionic_step = IonicStep(
+                energy=energy,
+                forces=forces,
+                stress=stress,
+                structure=cur_structure,
+                **magmom_data,
+            )
 
             ionic_steps.append(ionic_step)
+
+        forcefield_objects: dict[ForcefieldObject, Any] = {}
+        if store_trajectory != StoreTrajectoryOption.NO:
+            # For VASP calculations, the PARTIAL trajectory option removes
+            # electronic step info. There is no equivalent for forcefields,
+            # so we just save the same info for FULL and PARTIAL options.
+
+            traj_steps = [
+                step.model_dump(exclude=("structure",)) for step in ionic_steps
+            ]
+            for idx in range(n_steps):
+                if trajectory.get("temperatures"):
+                    traj_steps[idx]["temperature"] = trajectory.get("temperatures")[idx]
+                if trajectory.get("velocities"):
+                    traj_steps[idx]["velocities"] = trajectory["velocities"][
+                        idx
+                    ].tolist()
+
+            traj = Trajectory.from_structures(
+                [step.structure for step in ionic_steps],
+                frame_properties=traj_steps,
+                constant_lattice=False,
+            )
+            forcefield_objects[ForcefieldObject.TRAJECTORY] = traj  # type: ignore[index]
 
         output_doc = OutputDoc(
             structure=output_structure,
@@ -240,14 +280,16 @@ class ForceFieldTaskDocument(StructureMetadata):
             n_steps=n_steps,
         )
 
-        if forcefield_name == "M3GNet":
-            import matgl
+        # map force field name to its package name
+        pkg_name = {
+            MLFF.M3GNet: "matgl",
+            MLFF.CHGNet: "chgnet",
+            MLFF.MACE: "mace-torch",
+        }.get(forcefield_name)  # type: ignore[call-overload]
+        if pkg_name:
+            import importlib.metadata
 
-            version = matgl.__version__
-        elif forcefield_name == "CHGNet":
-            import chgnet
-
-            version = chgnet.__version__
+            version = importlib.metadata.version(pkg_name)
         else:
             version = "Unknown"
         return cls.from_structure(
@@ -257,4 +299,6 @@ class ForceFieldTaskDocument(StructureMetadata):
             output=output_doc,
             forcefield_name=forcefield_name,
             forcefield_version=version,
+            included_objects=list(forcefield_objects.keys()),
+            forcefield_objects=forcefield_objects,
         )

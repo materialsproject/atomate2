@@ -162,7 +162,7 @@ class ElectronPhononRenormalisationDoc(StructureMetadata):
                 "renormalisation"
             )
 
-        if len({b.is_spin_polarized for b in displacement_band_structures}) != 1:
+        if len({band.is_spin_polarized for band in displacement_band_structures}) != 1:
             raise ValueError(
                 "Some displacement bands structures are spin polarized and some are "
                 "spin paired. Cannot continue."
@@ -180,17 +180,20 @@ class ElectronPhononRenormalisationDoc(StructureMetadata):
 
         # discard metallic displacement calculations and log the issue
         keep = []
-        for i, band_structure in enumerate(displacement_band_structures):
+        for idx, band_structure in enumerate(displacement_band_structures):
             if band_structure.is_metal():
-                logger.warning("T = {} K band structure is metallic... skipping")
+                temp = temperatures[idx]
+                logger.warning(f"T = {temp} K band structure is metallic... skipping")
             else:
-                keep.append(i)
+                keep.append(idx)
 
-        temperatures = [temperatures[i] for i in keep]
-        displacement_band_structures = [displacement_band_structures[i] for i in keep]
-        displacement_structures = [displacement_structures[i] for i in keep]
-        displacement_dirs = [displacement_dirs[i] for i in keep]
-        displacement_uuids = [displacement_uuids[i] for i in keep]
+        temperatures = [temperatures[idx] for idx in keep]
+        displacement_band_structures = [
+            displacement_band_structures[idx] for idx in keep
+        ]
+        displacement_structures = [displacement_structures[idx] for idx in keep]
+        displacement_dirs = [displacement_dirs[idx] for idx in keep]
+        displacement_uuids = [displacement_uuids[idx] for idx in keep]
 
         vbm_band_indices, cbm_band_indices = _get_band_edge_indices(bulk_band_structure)
         bulk_vbm = bulk_band_structure.get_vbm()["energy"]

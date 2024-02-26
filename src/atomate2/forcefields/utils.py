@@ -11,13 +11,14 @@ from __future__ import annotations
 
 import contextlib
 import io
-import pickle
 import sys
 import warnings
 from typing import TYPE_CHECKING
 
+import numpy as np
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
+from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -39,7 +40,6 @@ if TYPE_CHECKING:
     from os import PathLike
     from typing import Any
 
-    import numpy as np
     from ase import Atoms
     from ase.calculators.calculator import Calculator
     from ase.filters import Filter
@@ -64,7 +64,7 @@ class TrajectoryObserver:
     This is a hook in the relaxation process that saves the intermediate structures.
     """
 
-    def __init__(self, atoms: Atoms) -> None:
+    def __init__(self, atoms: Atoms, store_md_outputs: bool = False) -> None:
         """
         Initialize the Observer.
 
@@ -83,6 +83,11 @@ class TrajectoryObserver:
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
+        self._store_md_outputs = store_md_outputs
+        if self._store_md_outputs:
+            self.velocities: list[np.ndarray] = []
+            self.temperatures: list[float] = []
+
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
@@ -91,6 +96,10 @@ class TrajectoryObserver:
         self.stresses.append(self.atoms.get_stress())
         self.atom_positions.append(self.atoms.get_positions())
         self.cells.append(self.atoms.get_cell()[:])
+
+        if self._store_md_outputs:
+            self.velocities.append(self.atoms.get_velocities())
+            self.temperatures.append(self.atoms.get_temperature())
 
     def compute_energy(self) -> float:
         """
@@ -104,7 +113,7 @@ class TrajectoryObserver:
 
     def save(self, filename: str | PathLike) -> None:
         """
-        Save the trajectory file.
+        Save the trajectory file using monty.serialization.
 
         Parameters
         ----------
@@ -114,6 +123,10 @@ class TrajectoryObserver:
         -------
             None
         """
+        dumpfn(self.as_dict(), filename)
+
+    def as_dict(self) -> dict:
+        """Make JSONable dict representation of the Trajectory."""
         traj_dict = {
             "energy": self.energies,
             "forces": self.forces,
@@ -122,8 +135,17 @@ class TrajectoryObserver:
             "cell": self.cells,
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
-        with open(filename, "wb") as file:
-            pickle.dump(traj_dict, file)
+        if self._store_md_outputs:
+            traj_dict.update(
+                {"velocities": self.velocities, "temperature": self.temperatures}
+            )
+        # sanitize dict
+        for key in traj_dict:
+            if all(isinstance(val, np.ndarray) for val in traj_dict[key]):
+                traj_dict[key] = [val.tolist() for val in traj_dict[key]]
+            elif isinstance(traj_dict[key], np.ndarray):
+                traj_dict[key] = traj_dict[key].tolist()
+        return traj_dict
 
 
 class Relaxer:
