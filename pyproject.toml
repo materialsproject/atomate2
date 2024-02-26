@@ -55,7 +55,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
     "furo==2024.1.29",
-    "ipython==8.21.0",
+    "ipython==8.22.1",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.6.0",
@@ -64,7 +64,7 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.1"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.2"]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
@@ -85,13 +85,13 @@ strict = [
     "mp-api==0.40.1",
     "numpy",
     "phonopy==2.21.2",
-    "pydantic-settings==2.2.0",
-    "pydantic==2.6.1",
-    "pymatgen-analysis-defects==2024.2.9",
+    "pydantic-settings==2.2.1",
+    "pydantic==2.6.2",
+    "pymatgen-analysis-defects==2024.2.24",
     "pymatgen==2023.12.18",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "typing-extensions==4.9.0",
+    "typing-extensions==4.10.0",
 ]
 
 [project.scripts]
