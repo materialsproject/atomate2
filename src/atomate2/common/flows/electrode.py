@@ -19,6 +19,8 @@ from atomate2.common.jobs.electrode import (
 )
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.alchemy import ElementLike
     from pymatgen.core.structure import Structure
     from pymatgen.entries.computed_entries import ComputedEntry
@@ -152,7 +154,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
         return Flow(jobs=jobs, output=output)
 
     @abstractmethod
-    def get_charge_density(self, prev_dir) -> VolumetricData:
+    def get_charge_density(self, prev_dir: Path | str) -> VolumetricData:
         """Get the charge density of a structure.
 
         Parameters

@@ -12,6 +12,8 @@ from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.alchemy import ElementLike
     from pymatgen.analysis.structure_matcher import StructureMatcher
     from pymatgen.core import Structure
@@ -176,7 +178,9 @@ def get_structure_group_doc(
 
 
 @job(output_schema=InsertionElectrodeDoc)
-def get_insertion_electrode_doc(computed_entries, working_ion_entry) -> Response:
+def get_insertion_electrode_doc(
+    computed_entries: ComputedEntry, working_ion_entry: ComputedEntry
+) -> Response:
     """Return a `InsertionElectrodeDoc`."""
     for ient in computed_entries:
         ient.data["material_id"] = ient.entry_id
@@ -284,7 +288,7 @@ def get_min_energy_summary(
 
 @job
 def get_charge_density_job(
-    prev_dir,
+    prev_dir: Path | str,
     get_charge_density: Callable,
 ) -> VolumetricData:
     """Get the charge density from a task document.

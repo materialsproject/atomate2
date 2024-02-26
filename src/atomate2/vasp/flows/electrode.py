@@ -55,7 +55,7 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
         The structure matcher to use to determine if additional insertion is needed.
     """
 
-    def get_charge_density(self, prev_dir) -> VolumetricData:
+    def get_charge_density(self, prev_dir: Path | str) -> VolumetricData:
         """Get the charge density of a structure.
 
         Parameters
