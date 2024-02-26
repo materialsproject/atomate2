@@ -163,13 +163,13 @@ class FormationEnergyMaker(Maker, ABC):
     relaxations that each defect supercell will undergo.
 
     This maker can be used as a stand-alone maker to calculate all of the data
-    needed to populate the `DefectEntry` object. However, for when building a
-    large defects database it is recommended to just use this maker with
-    `skip_bulk_relax` set to True (also set `collect_defect_entry_data` to False
+    needed to populate the `DefectEntry` object. However, for you can also use this
+    maker with `uc_bulk` set to True (also set `collect_defect_entry_data` to False
     and `bulk_relax_maker` to None).  This will skip the bulk supercell calculations
-    assuming that bulk unit cell calculations are of higher quality the database
-    should be
-
+    assuming that bulk unit cell calculations are of high enough quality to be used
+    directly.  In these cases, the bulk SC electrostatic potentials need to be
+    constructed without running a separate bulk SC calculation.  This is currently
+    implemented through the grid re-sampling tools in `mp-pyrho`.
 
     Attributes
     ----------
