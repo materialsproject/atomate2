@@ -114,7 +114,7 @@ atm dev vasp-test-data WF_NAME
 ```
 
 You should change WF_NAME to be a name for the workflow. Note, WF_NAME should not
-contain spaces or punctuation. For example, the elastic constant workflow test data was generated using `atm` dev vasp-test-data Si_elastic`.
+contain spaces or punctuation. For example, the elastic constant workflow test data was generated using `atm dev vasp-test-data Si_elastic`.
 
 This will generate a folder in the current directory called "WF_NAME" that contains
 the folders in the correct format.

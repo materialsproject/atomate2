@@ -60,8 +60,8 @@ def get_charged_structures(structure: Structure, charges: Iterable) -> list[Stru
         A dictionary with the two structures with the charge states added.
     """
     structs_out = [structure.copy() for _ in charges]
-    for i, q in enumerate(charges):
-        structs_out[i].set_charge(q)
+    for idx, q in enumerate(charges):
+        structs_out[idx].set_charge(q)
     return structs_out
 
 
@@ -108,15 +108,15 @@ def spawn_energy_curve_calcs(
         distorted_structure, nimages=s_distortions
     )
     # add all the distorted structures
-    for i, d_struct in enumerate(distorted_structures):
+    for idx, d_struct in enumerate(distorted_structures):
         static_job = static_maker.make(d_struct, prev_dir=prev_dir)
-        suffix = f" {i}" if add_name == "" else f" {add_name} {i}"
+        suffix = f" {idx}" if add_name == "" else f" {add_name} {idx}"
 
         # write some provenances data in info.json file
         info = {
             "relaxed_structure": relaxed_structure,
             "distorted_structure": distorted_structure,
-            "distortion": s_distortions[i],
+            "distortion": s_distortions[idx],
         }
         if add_info is not None:
             info.update(add_info)
@@ -300,7 +300,7 @@ def bulk_supercell_calculation(
 def spawn_defect_q_jobs(
     defect: Defect,
     relax_maker: RelaxMaker,
-    relaxed_sc_lattice: Lattice,
+    relaxed_sc_lattice: Lattice | None = None,
     sc_mat: NDArray | None = None,
     defect_index: int | str = "",
     add_info: dict | None = None,
@@ -355,7 +355,8 @@ def spawn_defect_q_jobs(
     sc_def_struct = defect.get_supercell_structure(
         sc_mat=sc_mat, relax_radius=relax_radius, perturb=perturb
     )
-    sc_def_struct.lattice = relaxed_sc_lattice
+    if relaxed_sc_lattice is not None:
+        sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
     for qq in defect.get_charge_states():
