@@ -69,11 +69,16 @@ class QChemDrone(AbstractDrone):
         """
         parent, subdirs, _ = path
         task_names = ["mol.qout.*"]
-        if set(task_names).intersection(subdirs):
-            return [parent]
-        if (
-            not any(parent.endswith(os.sep + r) for r in task_names)
-            and len(list(Path(parent).glob("mol.qout*"))) > 0
-        ):
-            return [parent]
-        return []
+        combined_paths = [parent + os.sep + sdir for sdir in subdirs]
+        rpath = []
+        for cpath in combined_paths:
+            fnames = os.listdir(cpath)
+            if any(name.startswith("mol.qout.") for name in fnames):
+                rpath.append(parent)
+
+            if (
+                not any(parent.endswith(os.sep + r) for r in task_names)
+                and len(list(Path(parent).glob("mol.qout*"))) > 0
+            ):
+                rpath.append(parent)
+        return rpath
