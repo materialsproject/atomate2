@@ -41,7 +41,7 @@ _valid_dynamics: dict[str, tuple[str, ...]] = {
     "npt": ("nose-hoover", "berendsen"),
 }
 
-_thermostats: dict = {
+_preset_dynamics: dict = {
     "nve_velocityverlet": VelocityVerlet,
     "nvt_andersen": Andersen,
     "nvt_berendsen": NVTBerendsen,
@@ -261,7 +261,7 @@ class ForceFieldMDMaker(Maker):
 
             if self.ensemble == "nve" and self.dynamics is None:
                 self.dynamics = "velocityverlet"
-            md_func = _thermostats[f"{self.ensemble}_{self.dynamics}"]
+            md_func = _preset_dynamics[f"{self.ensemble}_{self.dynamics}"]
 
         atoms = structure.to_ase_atoms()
         if initial_velocities:
@@ -290,7 +290,7 @@ class ForceFieldMDMaker(Maker):
             dyn.set_temperature(self.tschedule[dyn.nsteps])
             if self.ensemble == "nvt":
                 return
-            dyn.set_stress(self.pschedule[dyn.nsteps])
+            dyn.set_stress(self.pschedule[dyn.nsteps] * 1.0e-3 / units.bar)
 
         with contextlib.redirect_stdout(io.StringIO()):
             md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
@@ -330,7 +330,7 @@ class MACEMDMaker(ForceFieldMDMaker):
 
     name: str = "MACE MD"
     force_field_name: str = "MACE"
-    calculator_kwargs: dict = field(default_factory=lambda: {"dtype": "float32"})
+    calculator_kwargs: dict = field(default_factory=lambda: {"default_dtype": "float32"})
 
     def _calculator(self) -> Calculator:
         from mace.calculators import mace_mp
