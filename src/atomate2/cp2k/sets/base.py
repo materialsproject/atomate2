@@ -216,7 +216,7 @@ class Cp2kInputGenerator(InputGenerator):
         Cp2kInput
             A Cp2k input set.
         """
-        structure, prev_input, cp2k_output = self._get_previous(structure, prev_dir)
+        structure, prev_input, _cp2k_output = self._get_previous(structure, prev_dir)
 
         input_updates = self.get_input_updates(
             structure,
