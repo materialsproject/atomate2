@@ -52,3 +52,61 @@ def test_qc_sets(set_generator: QCInputGenerator, expected_job_type: str) -> Non
     assert qc_set.job_type == expected_job_type
     assert qc_set.basis_set == "def2-tzvppd"
     assert isinstance(qc_set.rem_dict, dict)
+
+
+@pytest.mark.parametrize(
+    "set_generator_pcm_d3, expected_job_type",
+    [
+        (SinglePointSetGenerator, "sp"),
+        (OptSetGenerator, "opt"),
+        (TransitionStateSetGenerator, "ts"),
+        (ForceSetGenerator, "force"),
+        (FreqSetGenerator, "freq"),
+        (PESScanSetGenerator, "pes_scan"),
+    ],
+)
+def test_extra_params_pcm(
+    set_generator_pcm_d3: QCInputGenerator, expected_job_type: str
+) -> None:
+    qc_set: QCInputGenerator = set_generator_pcm_d3(dft_rung=2, pcm_dielectric=78.39)
+    assert qc_set.rem_dict["dft_D"] == "D3_BJ"
+    assert qc_set.rem_dict["solvent_method"] == "pcm"
+
+    pcm_defaults = {
+        "heavypoints": "194",
+        "hpoints": "194",
+        "radii": "uff",
+        "theory": "cpcm",
+        "vdwscale": "1.1",
+    }
+
+    assert qc_set.pcm_dict == pcm_defaults
+    assert qc_set.solv_dict["dielectric"] == qc_set.pcm_dielectric
+    assert qc_set.scf_algorithm == "diis"
+    assert qc_set.job_type == expected_job_type
+    assert qc_set.basis_set == "def2-tzvppd"
+    assert isinstance(qc_set.rem_dict, dict)
+
+
+@pytest.mark.parametrize(
+    "set_generator_smd, expected_job_type",
+    [
+        (SinglePointSetGenerator, "sp"),
+        (OptSetGenerator, "opt"),
+        (TransitionStateSetGenerator, "ts"),
+        (ForceSetGenerator, "force"),
+        (FreqSetGenerator, "freq"),
+        (PESScanSetGenerator, "pes_scan"),
+    ],
+)
+def test_extra_params_smd(
+    set_generator_smd: QCInputGenerator, expected_job_type: str
+) -> None:
+    qc_set: QCInputGenerator = set_generator_smd(smd_solvent="water")
+    assert qc_set.rem_dict["solvent_method"] == "smd"
+    assert qc_set.rem_dict["ideriv"] == "1"
+    assert qc_set.smx_dict["solvent"] == "water"
+    assert qc_set.scf_algorithm == "diis"
+    assert qc_set.job_type == expected_job_type
+    assert qc_set.basis_set == "def2-tzvppd"
+    assert isinstance(qc_set.rem_dict, dict)
