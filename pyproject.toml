@@ -28,9 +28,9 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.2.15",
-    "emmet-core>=0.70.5",
+    "emmet-core>=0.78.0rc4",
     "jobflow>=0.1.11",
-    "monty>=2023.9.25",
+    "monty>=2024.2.2",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1,<2.5.2",
@@ -42,7 +42,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.6"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.7"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
 forcefields = [
     "ase>=3.22.1",
@@ -55,7 +55,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.0.1",
     "furo==2024.1.29",
-    "ipython==8.21.0",
+    "ipython==8.22.1",
     "jsonschema[format]",
     "myst_parser==2.0.0",
     "numpydoc==1.6.0",
@@ -64,7 +64,7 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.1"]
+tests = ["FireWorks==2.0.3", "pytest-cov==4.1.0", "pytest==8.0.2"]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
@@ -75,23 +75,24 @@ strict = [
     "click==8.1.7",
     "custodian==2024.2.15",
     "dscribe==2.1.0",
-    "emmet-core==0.77.1",
+    "emmet-core==0.78.0rc4",
     "ijson==3.2.3",
     "jobflow==0.1.17",
     "lobsterpy==0.3.6",
     "mace-torch>=0.3.3",
     "matgl==1.0.0",
     "monty==2024.2.2",
-    "mp-api==0.39.5",
+    "pymatgen==2024.2.8",
+    "mp-api==0.40.1",
     "numpy",
     "phonopy==2.21.2",
-    "pydantic-settings==2.2.0",
-    "pydantic==2.4.2",
-    "pymatgen-analysis-defects==2024.2.9",
+    "pydantic-settings==2.2.1",
+    "pydantic==2.6.2",
+    "pymatgen-analysis-defects==2024.2.24",
     "pymatgen==2024.2.8",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "typing-extensions==4.9.0",
+    "typing-extensions==4.10.0",
 ]
 
 [project.scripts]
