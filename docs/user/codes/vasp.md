@@ -232,6 +232,12 @@ converted into a dynamical matrix. To correct for polarization effects, a correc
 dynamical matrix based on BORN charges can be performed. Finally, phonon densities of states,
 phonon band structures and thermodynamic properties are computed.
 
+```{warning}
+The current implementation of the workflow does not consider the initial magnetic moments
+for the determination of the symmetry of the structure; therefore, they are removed from the structure.
+```
+
+
 ```{note}
 It is heavily recommended to symmetrize the structure before passing it to
 this flow. Otherwise, a different space group might be detected and too
