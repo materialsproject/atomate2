@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -150,6 +151,11 @@ def generate_phonon_displacements(
     code:
         code to perform the computations
     """
+    warnings.warn(
+        "Initial magnetic moments will not be considered for the determination "
+        "of the symmetry of the structure and thus will be removed now.",
+        stacklevel=1,
+    )
     cell = get_phonopy_structure(
         structure.remove_site_property(property_name="magmom")
         if "magmom" in structure.site_properties
