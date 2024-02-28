@@ -15,7 +15,7 @@ H2O = Molecule.from_file(file_name)
 
 def test_single_point_maker(mock_qchem, clean_dir):
     # mapping from job name to directory containing test files
-    ref_paths = {"single_point": "water_single_point"}
+    ref_paths = {"single point": "water_single_point"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     # fake_run_qchem_kwargs = {"single_point": {"qin_settings": None}}
