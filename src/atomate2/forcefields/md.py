@@ -24,6 +24,7 @@ from ase.md.verlet import VelocityVerlet
 from jobflow import Maker, job
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
+from scipy.linalg import schur
 
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import TrajectoryObserver
@@ -273,6 +274,10 @@ class ForceFieldMDMaker(Maker):
             md_func = _preset_dynamics[f"{self.ensemble}_{self.dynamics}"]
 
         atoms = structure.to_ase_atoms()
+
+        u, q = schur(atoms.get_cell(complete=True))
+        atoms.set_cell(u, scale_atoms=True)
+
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
         elif not np.isnan(self.tschedule).any():
@@ -299,6 +304,7 @@ class ForceFieldMDMaker(Maker):
             md_runner = md_func(
                 atoms=atoms,
                 timestep=self.timestep * units.fs,
+                # trajectory="trajectory.traj", # TODO: we might want implement taskdoc to save ase binary traj
                 **self.ase_md_kwargs
             )
 
