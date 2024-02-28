@@ -1,6 +1,9 @@
 import pytest
+import os
 from pymatgen.core.structure import Molecule
+from pymatgen.io.qchem.inputs import QCInput
 
+from atomate2.qchem.sets.base import QCInputSet
 from atomate2.qchem.sets.core import SinglePointSetGenerator
 
 
@@ -77,3 +80,26 @@ def test_overwrite(molecule, overwrite_inputs, request) -> None:
         assert in_set_smx["solvent"] == "water"
     elif in_set_scan:
         assert in_set_scan["stre"] == ["1 2 0.95 1.35 0.1"]
+
+
+@pytest.mark.parametrize(
+    "molecule",
+    [("water_mol")],
+)
+def test_write_set(molecule, clean_dir, request) -> None:
+    """
+    Test for ensuring whether overwrite_inputs correctly
+    changes the default input_set parameters.
+
+    Here, we use the StaticSetGenerator as an example,
+    but any input generator that has a passed overwrite_inputs
+    dict as an input argument could be used.
+    """
+    molecule = request.getfixturevalue(molecule)
+
+    input_gen = SinglePointSetGenerator()
+    in_set = input_gen.get_input_set(molecule)
+    in_set.write_input(directory="./inset_write", overwrite=True)
+    chk_input_set = QCInputSet.from_directory(directory="./inset_write")
+    assert os.path.isdir('./inset_write')
+    assert isinstance(chk_input_set.qcinput, QCInput)

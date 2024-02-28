@@ -103,7 +103,7 @@ class QCInputSet(InputSet):
             for name, obj in optional_files.items():
                 optional_inputs[name] = obj.from_file(directory / name)
 
-        return QCInputSet(**inputs, optional_files=optional_inputs)
+        return QCInputSet(inputs["input_dict"], optional_files=optional_inputs)
 
         # Todo
         # Implement is_valid property
