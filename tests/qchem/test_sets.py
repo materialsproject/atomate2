@@ -1,5 +1,6 @@
-import pytest
 import os
+
+import pytest
 from pymatgen.core.structure import Molecule
 from pymatgen.io.qchem.inputs import QCInput
 
@@ -101,5 +102,5 @@ def test_write_set(molecule, clean_dir, request) -> None:
     in_set = input_gen.get_input_set(molecule)
     in_set.write_input(directory="./inset_write", overwrite=True)
     chk_input_set = QCInputSet.from_directory(directory="./inset_write")
-    assert os.path.isdir('./inset_write')
+    assert os.path.isdir("./inset_write")
     assert isinstance(chk_input_set.qcinput, QCInput)
