@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import warnings
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -147,7 +149,16 @@ def generate_phonon_displacements(
     code:
         code to perform the computations
     """
-    cell = get_phonopy_structure(structure)
+    warnings.warn(
+        "Initial magnetic moments will not be considered for the determination "
+        "of the symmetry of the structure and thus will be removed now.",
+        stacklevel=1,
+    )
+    cell = get_phonopy_structure(
+        structure.remove_site_property(property_name="magmom")
+        if "magmom" in structure.site_properties
+        else structure
+    )
     factor = get_factor(code)
 
     # a bit of code repetition here as I currently
@@ -233,7 +244,9 @@ def generate_frequencies_eigenvectors(
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
     """
     return PhononBSDOSDoc.from_forces_born(
-        structure=structure,
+        structure=structure.remove_site_property(property_name="magmom")
+        if "magmom" in structure.site_properties
+        else structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
         sym_reduce=sym_reduce,
