@@ -320,14 +320,15 @@ class QCInputGenerator(InputGenerator):
 
         if self.nbo_params:
             self.rem_dict["nbo"] = "true"
-            if "version" in self.nbo_params:
-                if self.nbo_params["version"] == 7:
+            nbo_params_copy = self.nbo_params.copy()
+            if "version" in nbo_params_copy:
+                if nbo_params_copy["version"] == 7:
                     self.rem_dict["nbo_external"] = "true"
                 else:
                     raise RuntimeError(
                         "nbo params version should only be set to 7! Exiting..."
                     )
-            for key in self.nbo_params:
+            for key in nbo_params_copy:
                 if key == "version":
                     self.nbo_params.pop(key)
 
