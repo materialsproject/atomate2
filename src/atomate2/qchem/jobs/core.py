@@ -56,7 +56,7 @@ class SinglePointMaker(BaseQCMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "single_point"
+    name: str = "single point"
     input_set_generator: QCInputGenerator = field(
         default_factory=SinglePointSetGenerator
     )
@@ -160,7 +160,7 @@ class TransitionStateMaker(BaseQCMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "transition_state"
+    name: str = "transition state"
     input_set_generator: QCInputGenerator = field(
         default_factory=TransitionStateSetGenerator
     )
@@ -232,5 +232,5 @@ class PESScanMaker(BaseQCMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "pes_scan"
+    name: str = "PES scan"
     input_set_generator: QCInputGenerator = field(default_factory=PESScanSetGenerator)

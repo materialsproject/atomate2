@@ -122,5 +122,5 @@ def get_largest_opt_extension(
 
     if not numbers:
         return ""  # No matches found
-    max_relax = max(numbers, key=lambda x: int(x))
+    max_relax = max(numbers, key=int)
     return f".opt_{max_relax}"
