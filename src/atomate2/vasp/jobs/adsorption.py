@@ -99,6 +99,7 @@ def run_adslabs_job(
 
     adsorption_jobs = []
     ads_outputs: dict[str, list] = {
+        "job_name": "",
         "configuration_number": [],
         "adsorption_energy": [],
         "dirs": [],
@@ -113,7 +114,8 @@ def run_adslabs_job(
 
         adsorption_jobs.append(ads_job)
         ads_outputs["configuration_number"].append(i)
-        ads_outputs["adsorption_energy"].append(ads_job.output.output.energy)
+        ads_outputs["relaxed_structures"].append(i)
+        ads_outputs["adsorption_energy"].append(ads_job.output.structure)
         ads_outputs["dirs"].append(ads_job.output.dir_name)
 
     adsorption_flow = Flow(ads_job, ads_outputs)
