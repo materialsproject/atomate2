@@ -125,12 +125,15 @@ def should_stop_children(
         Whether to stop child jobs.
     """
     if task_document.state == "successful":
-        return False
+        if isinstance(handle_unsuccessful, bool):
+            return handle_unsuccessful
 
-    if isinstance(handle_unsuccessful, bool):
-        return handle_unsuccessful
+        if handle_unsuccessful == "error":
+            raise RuntimeError(
+                "Job was successful but children jobs need to be stopped!"
+            )
 
-    if handle_unsuccessful == "error":
+    if task_document.state == "unsuccessful":
         raise RuntimeError(
             "Job was not successful (perhaps your job did not converge within the "
             "limit of electronic/ionic iterations)!"
