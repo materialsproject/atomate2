@@ -198,7 +198,7 @@ class ForceFieldMDMaker(Maker):
         elif self.ensemble == "npt":
             self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
             self.ase_md_kwargs["externalstress"] = (
-                self.pschedule[0] * 1.0e-3 / units.bar
+                self.pschedule[0] * 1e3 * units.bar
             )
 
 
@@ -314,7 +314,7 @@ class ForceFieldMDMaker(Maker):
                 dyn.set_temperature(temperature_K=self.tschedule[dyn.nsteps])
                 if self.ensemble == "nvt":
                     return
-                dyn.set_stress(self.pschedule[dyn.nsteps] * 1.0e-3 / units.bar)
+                dyn.set_stress(self.pschedule[dyn.nsteps] * 1e3 * units.bar)
 
             md_runner.attach(md_observer, interval=self.traj_interval)
             md_runner.attach(callback, interval=1)

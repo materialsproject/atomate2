@@ -87,21 +87,23 @@ class TrajectoryObserver:
         if self._store_md_outputs:
             self.velocities: list[np.ndarray] = []
             self.temperatures: list[float] = []
-            self.stresses: list[np.ndarray] = []
 
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
-        self.stresses.append(self.atoms.get_stress())
+        # TODO: MD needs kinetic energy parts of stress, we might just need to refactor TrajectoryObserver
+        # Now it is safe for 0K relaxation as the atoms don't have momenta
+        self.stresses.append(self.atoms.get_stress(include_ideal_gas=True))
         self.atom_positions.append(self.atoms.get_positions())
         self.cells.append(self.atoms.get_cell()[:])
 
         if self._store_md_outputs:
             self.velocities.append(self.atoms.get_velocities())
             self.temperatures.append(self.atoms.get_temperature())
-            self.stresses.append(self.atoms.get_stress(voigt=True, include_ideal_gas=True))
+            # self.stresses.append(self.atoms.get_stress(voigt=True, include_ideal_gas=True))
+
 
     def compute_energy(self) -> float:
         """
@@ -141,7 +143,6 @@ class TrajectoryObserver:
             traj_dict.update({
                 "velocities": self.velocities,
                 "temperature": self.temperatures,
-                "stresses": self.stresses,
             })
         # sanitize dict
         for key in traj_dict:

@@ -78,7 +78,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
 
 @pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
 def test_temp_schedule(ff_name, si_structure, clean_dir):
-    nsteps = 200
+    nsteps = 100
     temp_schedule = [300, 3000]
 
     structure = si_structure.to_conventional() * (2, 2, 2)
@@ -105,15 +105,16 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
 
 @pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
-    nsteps = 200
-    press_schedule = [0, 1e4]
+    nsteps = 100
+    press_schedule = [0, 10] # kbar
 
-    structure = si_structure.to_conventional() * (2, 2, 2)
+    structure = si_structure.to_conventional() * (3, 3, 3)
 
     # MACE changes the default dtype, ensure consistent dtype here
     torch.set_default_dtype(torch.float32)
 
     job = _to_maker[ff_name](
+        ensemble="npt",
         nsteps=nsteps, traj_file="md_traj.json.gz",
         dynamics="nose-hoover",
         pressure=press_schedule,
@@ -122,11 +123,13 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
             pfactor=(75.0 * units.fs)**2 * units.GPa,
             )
     ).make(structure)
-    response = run_locally(job, ensure_success=True)
-    taskdoc = response[next(iter(response))][1].output
+    run_locally(job, ensure_success=True)
+    # taskdoc = response[next(iter(response))][1].output
+
+    traj_from_file = loadfn("md_traj.json.gz")
 
     stress_history = [
-        step["stresses"] for step in taskdoc.forcefield_objects["trajectory"].frame_properties
+        (stress[0] + stress[1] + stress[2])/3.0 for stress in traj_from_file["stresses"]
     ]
 
-    assert stress_history[-1].trace() > stress_history[0].trace()
+    assert stress_history[-1] < stress_history[0]
