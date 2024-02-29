@@ -24,6 +24,7 @@ from ase.md.verlet import VelocityVerlet
 from jobflow import Maker, job
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
+from scipy.linalg import schur
 
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import TrajectoryObserver
@@ -41,7 +42,7 @@ _valid_dynamics: dict[str, tuple[str, ...]] = {
     "npt": ("nose-hoover", "berendsen"),
 }
 
-_thermostats: dict = {
+_preset_dynamics: dict = {
     "nve_velocityverlet": VelocityVerlet,
     "nvt_andersen": Andersen,
     "nvt_berendsen": NVTBerendsen,
@@ -57,11 +58,19 @@ class ForceFieldMDMaker(Maker):
     """
     Perform MD with a forcefield.
 
-    Note that units are consistent with the VASP MD implementation.
+    Note the the following units are consistent with the VASP MD implementation:
     - Temperature is in Kelvin (TEBEG and TEEND)
     - Time steps are in femtoseconds (POTIM)
-    - Langevin NVT friction coefficients are in picoseconds^-1 (LANGEVIN_GAMMA)
     - Pressure in kB (PSTRESS)
+
+    The default dynamics is Langevin NVT consistent with VASP MD, with the friction
+    coefficient set to 10 ps^-1 (LANGEVIN_GAMMA).
+
+    For the rest of preset dynamics (`_valid_dynamics`) and custom dynamics inherited
+    from ASE (`MolecularDynamics`), the user can specify the dynamics as a string or an
+    ASE class into the `dynamics` attribute. In this case, please consult the ASE
+    documentation for the parameters and units to pass into the ASE MD function through
+    `ase_md_kwargs`.
 
     Parameters
     ----------
@@ -75,15 +84,14 @@ class ForceFieldMDMaker(Maker):
         The number of MD steps to run
     ensemble : str = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
-    start_temp : float | Sequence | None = 300.
-        The temperature to initialize the system, in Kelvin.
-    end_temp : float | None = 300.
-        The temperature to equilibrate towards, in Kelvin.
-        If start_temp is a float and end_temp is None,
-        the system will be initialized at and equilibrated towards
-        the start_temp.
+    temperature: float | Sequence | np.ndarray | None.
+        The temperature in Kelvin. If a sequence or 1D array, the temperature
+        schedule will be interpolated linearly between the given values. If a
+        float, the temperature will be constant throughout the run.
     pressure: float | Sequence | None = None
-        The pressure in kilobar.
+        The pressure in kilobar. If a sequence or 1D array, the pressure
+        schedule will be interpolated linearly between the given values. If a
+        float, the pressure will be constant throughout the run.
     thermostat : str | ASE .MolecularDynamics = "langevin"
         The thermostat to use. If thermostat is an ASE .MolecularDynamics
         object, this uses the option specified explicitly by the user.
@@ -117,7 +125,7 @@ class ForceFieldMDMaker(Maker):
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
     dynamics: str | MolecularDynamics = "langevin"
     temperature: float | Sequence | np.ndarray | None = 300.0
-    end_temp: float | None = 300.0
+    # end_temp: float | None = 300.0
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
     calculator_args: list | tuple | None = None
@@ -136,43 +144,45 @@ class ForceFieldMDMaker(Maker):
             # Distable thermostat and barostat
             self.temperature = np.nan
             self.pressure = np.nan
-            self.tschedule = np.full(self.nsteps, self.temperature)
-            self.pschedule = np.full(self.nsteps, self.pressure)
+            self.tschedule = np.full(self.nsteps+1, self.temperature)
+            self.pschedule = np.full(self.nsteps+1, self.pressure)
             return
 
-        if isinstance(self.temperature, Sequence):
+        if isinstance(self.temperature, Sequence) or (
+            isinstance(self.temperature, np.ndarray) and self.temperature.ndim == 1
+            ):
             self.tschedule = np.interp(
-                np.arange(self.nsteps),
+                np.arange(self.nsteps+1),
                 np.arange(len(self.temperature)),
                 self.temperature
             )
-        elif isinstance(self.temperature, np.ndarray) and self.temperature.ndim == 1:
-            self.tschedule = self.temperature
         # NOTE: In ASE Langevin dynamics, the temperature are normally
         # scalars, but in principle one quantity per atom could be specified by giving
         # an array. This is not implemented yet here.
         else:
-            self.tschedule = np.full(self.nsteps, self.temperature)
+            self.tschedule = np.full(self.nsteps+1, self.temperature)
 
         if self.ensemble == "nvt":
             self.pressure = np.nan
-            self.pschedule = np.full(self.nsteps, self.pressure)
+            self.pschedule = np.full(self.nsteps+1, self.pressure)
             return
 
-        if isinstance(self.pressure, Sequence):
+        if isinstance(self.pressure, Sequence) or (
+            isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 1
+            ):
             self.pschedule = np.interp(
-                np.arange(self.nsteps),
+                np.arange(self.nsteps+1),
                 np.arange(len(self.pressure)),
                 self.pressure
             )
         elif isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 4:
             self.pschedule = interp1d(
-                np.arange(self.nsteps),
+                np.arange(self.nsteps+1),
                 self.pressure,
                 kind="linear"
             )
         else:
-            self.pschedule = np.full(self.nsteps, self.pressure)
+            self.pschedule = np.full(self.nsteps+1, self.pressure)
 
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
@@ -261,9 +271,13 @@ class ForceFieldMDMaker(Maker):
 
             if self.ensemble == "nve" and self.dynamics is None:
                 self.dynamics = "velocityverlet"
-            md_func = _thermostats[f"{self.ensemble}_{self.dynamics}"]
+            md_func = _preset_dynamics[f"{self.ensemble}_{self.dynamics}"]
 
         atoms = structure.to_ase_atoms()
+
+        u, q = schur(atoms.get_cell(complete=True))
+        atoms.set_cell(u, scale_atoms=True)
+
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
         elif not np.isnan(self.tschedule).any():
@@ -284,22 +298,24 @@ class ForceFieldMDMaker(Maker):
         self.calculator_kwargs = self.calculator_kwargs or {}
         atoms.calc = self._calculator()
 
-        def callback(dyn: MolecularDynamics = md_func) -> None:
-            if self.ensemble == "nve":
-                return
-            dyn.set_temperature(self.tschedule[dyn.nsteps])
-            if self.ensemble == "nvt":
-                return
-            dyn.set_stress(self.pschedule[dyn.nsteps])
-
         with contextlib.redirect_stdout(io.StringIO()):
             md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
             md_runner = md_func(
                 atoms=atoms,
                 timestep=self.timestep * units.fs,
+                # trajectory="trajectory.traj", # TODO: we might want implement taskdoc to save ase binary traj
                 **self.ase_md_kwargs
             )
+
+            def callback(dyn: MolecularDynamics = md_runner) -> None:
+                if self.ensemble == "nve":
+                    return
+                dyn.set_temperature(temperature_K=self.tschedule[dyn.nsteps])
+                if self.ensemble == "nvt":
+                    return
+                dyn.set_stress(self.pschedule[dyn.nsteps] * 1.0e-3 / units.bar)
+
             md_runner.attach(md_observer, interval=self.traj_interval)
             md_runner.attach(callback, interval=1)
             md_runner.run(steps=self.nsteps)
@@ -330,7 +346,7 @@ class MACEMDMaker(ForceFieldMDMaker):
 
     name: str = "MACE MD"
     force_field_name: str = "MACE"
-    calculator_kwargs: dict = field(default_factory=lambda: {"dtype": "float32"})
+    calculator_kwargs: dict = field(default_factory=lambda: {"default_dtype": "float32"})
 
     def _calculator(self) -> Calculator:
         from mace.calculators import mace_mp

@@ -87,6 +87,7 @@ class TrajectoryObserver:
         if self._store_md_outputs:
             self.velocities: list[np.ndarray] = []
             self.temperatures: list[float] = []
+            self.stresses: list[np.ndarray] = []
 
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
@@ -100,6 +101,7 @@ class TrajectoryObserver:
         if self._store_md_outputs:
             self.velocities.append(self.atoms.get_velocities())
             self.temperatures.append(self.atoms.get_temperature())
+            self.stresses.append(self.atoms.get_stress(voigt=True, include_ideal_gas=True))
 
     def compute_energy(self) -> float:
         """
@@ -136,9 +138,11 @@ class TrajectoryObserver:
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
         if self._store_md_outputs:
-            traj_dict.update(
-                {"velocities": self.velocities, "temperature": self.temperatures}
-            )
+            traj_dict.update({
+                "velocities": self.velocities,
+                "temperature": self.temperatures,
+                "stresses": self.stresses,
+            })
         # sanitize dict
         for key in traj_dict:
             if all(isinstance(val, np.ndarray) for val in traj_dict[key]):
