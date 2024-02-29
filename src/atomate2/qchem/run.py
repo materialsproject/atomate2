@@ -132,6 +132,7 @@ def should_stop_children(
             raise RuntimeError(
                 "Job was successful but children jobs need to be stopped!"
             )
+        return False
 
     if task_document.state == "unsuccessful":
         raise RuntimeError(
