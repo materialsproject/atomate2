@@ -1,0 +1,6 @@
+get\_relaxed\_job\_summaries
+============================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_relaxed_job_summaries

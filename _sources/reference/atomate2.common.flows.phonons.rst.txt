@@ -1,0 +1,53 @@
+atomate2.common.flows.phonons
+=============================
+
+.. automodule:: atomate2.common.flows.phonons
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      BasePhononMaker
+      SUPPORTED_CODES
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

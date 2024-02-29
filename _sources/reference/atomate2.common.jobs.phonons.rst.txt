@@ -31,12 +31,6 @@ atomate2.common.jobs.phonons
       
    
    
-      
-   
-   
-      
-   
-   
    
    
    
@@ -55,9 +49,7 @@ atomate2.common.jobs.phonons
       :toctree:
       :nosignatures:
    
-      PhononDisplacementMaker
       TYPE_CHECKING
-      VaspToTHz
 
 
 

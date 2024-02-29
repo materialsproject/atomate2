@@ -1,0 +1,8 @@
+BasePhononMaker
+===============
+
+.. currentmodule:: atomate2.common.flows.phonons
+
+.. autoclass:: BasePhononMaker
+   :show-inheritance:
+   :members:

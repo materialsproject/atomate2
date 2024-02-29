@@ -1,0 +1,8 @@
+MPMetaGGAEosRelaxMaker
+======================
+
+.. currentmodule:: atomate2.vasp.jobs.eos
+
+.. autoclass:: MPMetaGGAEosRelaxMaker
+   :show-inheritance:
+   :members:

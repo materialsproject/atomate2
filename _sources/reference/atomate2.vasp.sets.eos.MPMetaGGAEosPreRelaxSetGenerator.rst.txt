@@ -1,0 +1,8 @@
+MPMetaGGAEosPreRelaxSetGenerator
+================================
+
+.. currentmodule:: atomate2.vasp.sets.eos
+
+.. autoclass:: MPMetaGGAEosPreRelaxSetGenerator
+   :show-inheritance:
+   :members:

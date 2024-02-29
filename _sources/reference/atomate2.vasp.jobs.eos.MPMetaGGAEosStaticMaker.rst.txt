@@ -1,0 +1,8 @@
+MPMetaGGAEosStaticMaker
+=======================
+
+.. currentmodule:: atomate2.vasp.jobs.eos
+
+.. autoclass:: MPMetaGGAEosStaticMaker
+   :show-inheritance:
+   :members:

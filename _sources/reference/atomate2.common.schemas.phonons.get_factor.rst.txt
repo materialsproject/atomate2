@@ -1,0 +1,6 @@
+get\_factor
+===========
+
+.. currentmodule:: atomate2.common.schemas.phonons
+
+.. autofunction:: get_factor

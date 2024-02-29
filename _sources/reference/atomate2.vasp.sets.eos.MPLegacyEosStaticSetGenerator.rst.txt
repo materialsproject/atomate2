@@ -1,0 +1,8 @@
+MPLegacyEosStaticSetGenerator
+=============================
+
+.. currentmodule:: atomate2.vasp.sets.eos
+
+.. autoclass:: MPLegacyEosStaticSetGenerator
+   :show-inheritance:
+   :members:

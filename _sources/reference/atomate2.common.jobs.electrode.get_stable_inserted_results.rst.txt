@@ -1,0 +1,6 @@
+get\_stable\_inserted\_results
+==============================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_stable_inserted_results

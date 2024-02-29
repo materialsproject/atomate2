@@ -1,0 +1,6 @@
+get\_computed\_entries
+======================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_computed_entries

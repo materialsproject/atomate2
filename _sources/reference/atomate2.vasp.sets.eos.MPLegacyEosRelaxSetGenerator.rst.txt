@@ -1,0 +1,8 @@
+MPLegacyEosRelaxSetGenerator
+============================
+
+.. currentmodule:: atomate2.vasp.sets.eos
+
+.. autoclass:: MPLegacyEosRelaxSetGenerator
+   :show-inheritance:
+   :members:

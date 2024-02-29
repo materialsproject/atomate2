@@ -1,0 +1,45 @@
+atomate2.vasp.jobs.phonons
+==========================
+
+.. automodule:: atomate2.vasp.jobs.phonons
+
+   
+
+
+
+   
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      PhononDisplacementMaker
+
+
+
+
+   
+   
+   
+
+
+

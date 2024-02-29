@@ -1,0 +1,6 @@
+update\_custodian\_handlers
+===========================
+
+.. currentmodule:: atomate2.common.powerups
+
+.. autofunction:: update_custodian_handlers

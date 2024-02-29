@@ -15,10 +15,12 @@ atomate2.vasp.powerups
       :toctree:
       :nosignatures:
    
+      add_metadata_to_flow
       update_user_incar_settings
       update_user_kpoints_settings
       update_user_potcar_functional
       update_user_potcar_settings
+      update_vasp_custodian_handlers
       update_vasp_input_generators
       use_auto_ispin
 
@@ -28,6 +30,8 @@ atomate2.vasp.powerups
 
 
 
+   
+   
    
    
    

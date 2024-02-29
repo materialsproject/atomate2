@@ -1,0 +1,8 @@
+EosDoubleRelaxMaker
+===================
+
+.. currentmodule:: atomate2.vasp.flows.eos
+
+.. autoclass:: EosDoubleRelaxMaker
+   :show-inheritance:
+   :members:

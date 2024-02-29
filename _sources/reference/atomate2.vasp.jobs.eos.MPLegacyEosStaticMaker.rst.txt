@@ -1,0 +1,8 @@
+MPLegacyEosStaticMaker
+======================
+
+.. currentmodule:: atomate2.vasp.jobs.eos
+
+.. autoclass:: MPLegacyEosStaticMaker
+   :show-inheritance:
+   :members:

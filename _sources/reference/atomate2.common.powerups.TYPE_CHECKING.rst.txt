@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.common.powerups
+
+.. autodata:: TYPE_CHECKING

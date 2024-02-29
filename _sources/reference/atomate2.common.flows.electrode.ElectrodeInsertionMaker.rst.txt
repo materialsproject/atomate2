@@ -1,0 +1,8 @@
+ElectrodeInsertionMaker
+=======================
+
+.. currentmodule:: atomate2.common.flows.electrode
+
+.. autoclass:: ElectrodeInsertionMaker
+   :show-inheritance:
+   :members:

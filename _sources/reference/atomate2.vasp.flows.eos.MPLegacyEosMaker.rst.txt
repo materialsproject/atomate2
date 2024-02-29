@@ -1,0 +1,8 @@
+MPLegacyEosMaker
+================
+
+.. currentmodule:: atomate2.vasp.flows.eos
+
+.. autoclass:: MPLegacyEosMaker
+   :show-inheritance:
+   :members:

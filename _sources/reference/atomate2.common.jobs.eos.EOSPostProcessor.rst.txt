@@ -1,0 +1,8 @@
+EOSPostProcessor
+================
+
+.. currentmodule:: atomate2.common.jobs.eos
+
+.. autoclass:: EOSPostProcessor
+   :show-inheritance:
+   :members:

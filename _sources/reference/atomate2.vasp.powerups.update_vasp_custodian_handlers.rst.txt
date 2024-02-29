@@ -1,0 +1,6 @@
+update\_vasp\_custodian\_handlers
+=================================
+
+.. currentmodule:: atomate2.vasp.powerups
+
+.. autofunction:: update_vasp_custodian_handlers

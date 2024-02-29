@@ -1,0 +1,8 @@
+MPLegacyEosDoubleRelaxMaker
+===========================
+
+.. currentmodule:: atomate2.vasp.flows.eos
+
+.. autoclass:: MPLegacyEosDoubleRelaxMaker
+   :show-inheritance:
+   :members:

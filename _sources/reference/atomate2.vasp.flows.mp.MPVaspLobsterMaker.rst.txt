@@ -1,0 +1,8 @@
+MPVaspLobsterMaker
+==================
+
+.. currentmodule:: atomate2.vasp.flows.mp
+
+.. autoclass:: MPVaspLobsterMaker
+   :show-inheritance:
+   :members:

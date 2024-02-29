@@ -1,0 +1,74 @@
+atomate2.common.jobs.electrode
+==============================
+
+.. automodule:: atomate2.common.jobs.electrode
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_charge_density_job
+      get_computed_entries
+      get_inserted_structures
+      get_insertion_electrode_doc
+      get_min_energy_summary
+      get_relaxed_job_summaries
+      get_stable_inserted_results
+      get_structure_group_doc
+
+
+
+   
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      RelaxJobSummary
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

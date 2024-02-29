@@ -1,0 +1,8 @@
+EosMaker
+========
+
+.. currentmodule:: atomate2.vasp.flows.eos
+
+.. autoclass:: EosMaker
+   :show-inheritance:
+   :members:

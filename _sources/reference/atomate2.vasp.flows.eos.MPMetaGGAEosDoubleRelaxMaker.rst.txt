@@ -1,0 +1,8 @@
+MPMetaGGAEosDoubleRelaxMaker
+============================
+
+.. currentmodule:: atomate2.vasp.flows.eos
+
+.. autoclass:: MPMetaGGAEosDoubleRelaxMaker
+   :show-inheritance:
+   :members:

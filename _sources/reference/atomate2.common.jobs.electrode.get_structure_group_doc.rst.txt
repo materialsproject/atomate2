@@ -1,0 +1,6 @@
+get\_structure\_group\_doc
+==========================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_structure_group_doc

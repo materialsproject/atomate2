@@ -1,0 +1,6 @@
+get\_inserted\_structures
+=========================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_inserted_structures

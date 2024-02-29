@@ -1,0 +1,8 @@
+MPMetaGGAEosStaticSetGenerator
+==============================
+
+.. currentmodule:: atomate2.vasp.sets.eos
+
+.. autoclass:: MPMetaGGAEosStaticSetGenerator
+   :show-inheritance:
+   :members:

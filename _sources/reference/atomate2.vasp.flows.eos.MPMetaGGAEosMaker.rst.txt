@@ -1,0 +1,8 @@
+MPMetaGGAEosMaker
+=================
+
+.. currentmodule:: atomate2.vasp.flows.eos
+
+.. autoclass:: MPMetaGGAEosMaker
+   :show-inheritance:
+   :members:

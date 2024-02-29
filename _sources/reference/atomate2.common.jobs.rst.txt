@@ -40,6 +40,8 @@ atomate2.common.jobs
 
    atomate2.common.jobs.defect
    atomate2.common.jobs.elastic
+   atomate2.common.jobs.electrode
+   atomate2.common.jobs.eos
    atomate2.common.jobs.phonons
    atomate2.common.jobs.utils
 

@@ -1,0 +1,8 @@
+CommonEosMaker
+==============
+
+.. currentmodule:: atomate2.common.flows.eos
+
+.. autoclass:: CommonEosMaker
+   :show-inheritance:
+   :members:

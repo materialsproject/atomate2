@@ -1,0 +1,6 @@
+SUPPORTED\_CODES
+================
+
+.. currentmodule:: atomate2.common.flows.phonons
+
+.. autodata:: SUPPORTED_CODES

@@ -44,8 +44,10 @@ atomate2.vasp.jobs
    atomate2.vasp.jobs.defect
    atomate2.vasp.jobs.elastic
    atomate2.vasp.jobs.elph
+   atomate2.vasp.jobs.eos
    atomate2.vasp.jobs.lobster
    atomate2.vasp.jobs.matpes
    atomate2.vasp.jobs.md
    atomate2.vasp.jobs.mp
+   atomate2.vasp.jobs.phonons
 

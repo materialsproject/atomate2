@@ -1,0 +1,56 @@
+atomate2.common.powerups
+========================
+
+.. automodule:: atomate2.common.powerups
+
+   
+
+
+
+   
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      add_metadata_to_flow
+      update_custodian_handlers
+
+
+
+   
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+
+
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+get\_min\_energy\_summary
+=========================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_min_energy_summary

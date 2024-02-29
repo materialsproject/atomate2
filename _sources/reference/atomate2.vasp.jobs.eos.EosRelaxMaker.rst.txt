@@ -1,0 +1,8 @@
+EosRelaxMaker
+=============
+
+.. currentmodule:: atomate2.vasp.jobs.eos
+
+.. autoclass:: EosRelaxMaker
+   :show-inheritance:
+   :members:

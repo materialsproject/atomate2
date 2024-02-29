@@ -1,0 +1,6 @@
+get\_insertion\_electrode\_doc
+==============================
+
+.. currentmodule:: atomate2.common.jobs.electrode
+
+.. autofunction:: get_insertion_electrode_doc

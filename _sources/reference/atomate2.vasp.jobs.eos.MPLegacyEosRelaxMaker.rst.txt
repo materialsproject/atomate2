@@ -1,0 +1,8 @@
+MPLegacyEosRelaxMaker
+=====================
+
+.. currentmodule:: atomate2.vasp.jobs.eos
+
+.. autoclass:: MPLegacyEosRelaxMaker
+   :show-inheritance:
+   :members:

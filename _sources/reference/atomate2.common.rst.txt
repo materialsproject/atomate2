@@ -42,6 +42,7 @@
    atomate2.common.files
    atomate2.common.flows
    atomate2.common.jobs
+   atomate2.common.powerups
    atomate2.common.schemas
    atomate2.common.utils
 

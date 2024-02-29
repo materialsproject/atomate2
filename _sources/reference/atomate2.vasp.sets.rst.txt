@@ -41,6 +41,7 @@ atomate2.vasp.sets
    atomate2.vasp.sets.base
    atomate2.vasp.sets.core
    atomate2.vasp.sets.defect
+   atomate2.vasp.sets.eos
    atomate2.vasp.sets.matpes
    atomate2.vasp.sets.mp
 

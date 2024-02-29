@@ -1,6 +1,0 @@
-VaspToTHz
-=========
-
-.. currentmodule:: atomate2.common.jobs.phonons
-
-.. autodata:: VaspToTHz

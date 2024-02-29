@@ -1,0 +1,6 @@
+apply\_strain\_to\_structure
+============================
+
+.. currentmodule:: atomate2.common.jobs.eos
+
+.. autofunction:: apply_strain_to_structure

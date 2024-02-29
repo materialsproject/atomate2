@@ -1,0 +1,8 @@
+PostProcessEosEnergy
+====================
+
+.. currentmodule:: atomate2.common.jobs.eos
+
+.. autoclass:: PostProcessEosEnergy
+   :show-inheritance:
+   :members:
