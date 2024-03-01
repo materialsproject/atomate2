@@ -83,9 +83,10 @@ class EquilibriumVolumeMaker(Maker):
             }
 
         else:
-
             self.postprocessor.fit(working_outputs)
-            working_outputs = dict(self.postprocessor)
+            print("____PRINTING_____")
+            print(self.postprocessor.results)
+            working_outputs = dict(self.postprocessor.results)
             working_outputs["relax"].pop("pressure")
 
             if (
