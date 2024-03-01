@@ -270,8 +270,11 @@ class ForceFieldMDMaker(Maker):
 
         atoms = structure.to_ase_atoms()
 
-        u, _ = schur(atoms.get_cell(complete=True))
-        atoms.set_cell(u, scale_atoms=True)
+        if md_func is NPT:
+            # Note that until md_func is instantiated, isinstance(md_func,NPT) is False
+            # ASE NPT implementation requires upper triangular cell
+            u, _ = schur(atoms.get_cell(complete=True))
+            atoms.set_cell(u, scale_atoms=True)
 
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
