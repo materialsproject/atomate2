@@ -81,7 +81,21 @@ class HiphiveMaker(BaseHiphiveMaker):
     )
     phonon_displacement_maker: BaseVaspMaker | None = field(
         default_factory=lambda:PhononDisplacementMaker(
-            input_set_generator=StaticSetGenerator(auto_lreal=True)
+            input_set_generator = StaticSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 500},
+            user_incar_settings={
+                "IBRION": 2,
+                "ISIF": 3,
+                "ENCUT": 700, # Changed this from 600
+                "EDIFF": 1e-7,
+                "LAECHG": False,
+                "ALGO": "Normal",
+                "NSW": 0,
+                "LCHARG": False,
+            },
+            auto_ispin=True,
+            auto_lreal=True,
+        )
         )
     )
 
