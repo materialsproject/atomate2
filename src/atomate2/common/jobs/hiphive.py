@@ -1436,15 +1436,15 @@ def thermal_expansion(
         dLfrac[t, :] = np.trapz(cte[: t + 1, :], temperature_np[: t + 1], axis=0)
     return np.nan_to_num(dLfrac)
 
-
 @job
-def run_shengbte(
+def run_thermal_cond_solver(
     shengbte_cmd: str = SETTINGS.SHENGBTE_CMD, # make this default as SETTINGS.VASP_CMD
-    renormalized: bool = None,
-    temperature: list(int) = None,
-    control_kwargs: dict = None,
-    prev_dir_hiphive: str = None,
-    loop: int = None,
+    renormalized: bool | None = None,
+    temperature: list(int) | None = None,
+    control_kwargs: dict | None = None,
+    prev_dir_hiphive: str | None = None,
+    loop: int | None = None,
+    therm_cond_solver: str | None = "almabte"
 ) -> None:
     """
     Thermal conductivity calculation using ShengBTE.
@@ -1465,8 +1465,15 @@ def run_shengbte(
         control_kwargs (dict): Options to be included in the ShengBTE control
             file.
     """
-    print(f"shengbte_cmd_newwwwwww = {shengbte_cmd}")
-    shengbte_cmd = expandvars(shengbte_cmd)
+    if therm_cond_solver == "almabte":
+        therm_cond_solver_cmd = SETTINGS.ALMABTE_CMD
+    elif therm_cond_solver == "shengbte":
+        therm_cond_solver_cmd = SETTINGS.SHENGBTE_CMD
+    elif therm_cond_solver == "phono3py":
+        therm_cond_solver_cmd = SETTINGS.PHONO3PY_CMD
+
+    print(f"shengbte_cmd_newwwwwww = {therm_cond_solver_cmd}")
+    therm_cond_solver_cmd = expandvars(therm_cond_solver_cmd)
 
     logger.info("Running ShengBTE... 1")
 
@@ -1476,17 +1483,6 @@ def run_shengbte(
         dumpfn(structure_data, "structure_data.json")
 
     logger.info("Running ShengBTE... 2")
-
-    # Create a symlink to ShengBTE
-
-    # ShengBTE = "ShengBTE"
-    # src = "/global/homes/h/hrushi99/code/shengbte_new3/shengbte/ShengBTE"
-    # dst = os.path.join(os.getcwd(), ShengBTE)
-
-    # with contextlib.suppress(FileExistsError):
-    #     os.symlink(src, dst)
-
-    logger.info("Running ShengBTE... 3")
 
     structure_data = loadfn("structure_data.json")
     structure = structure_data["structure"]
@@ -1525,25 +1521,22 @@ def run_shengbte(
     control = Control().from_structure(structure, **control_dict)
     control.to_file()
 
-    # shengbte_cmd = env_chk(self["shengbte_cmd"], fw_spec)
-    # shengbte_cmd = env_chk(shengbte_cmd, fw_spec)
-
-    if isinstance(shengbte_cmd, str):
-        shengbte_cmd = os.path.expandvars(shengbte_cmd)
-        shengbte_cmd = shlex.split(shengbte_cmd)
+    if isinstance(therm_cond_solver_cmd, str):
+        therm_cond_solver_cmd = os.path.expandvars(therm_cond_solver_cmd)
+        therm_cond_solver_cmd = shlex.split(therm_cond_solver_cmd)
 
     logger.info("Running ShengBTE... 5")
 
-    shengbte_cmd = list(shengbte_cmd)
-    logger.info(f"Running command: {shengbte_cmd}")
+    therm_cond_solver_cmd = list(therm_cond_solver_cmd)
+    logger.info(f"Running command: {therm_cond_solver_cmd}")
 
     with open("shengbte.out", "w") as f_std, open(
         "shengbte_err.txt", "w", buffering=1
     ) as f_err:
         # use line buffering for stderr
-        return_code = subprocess.call(shengbte_cmd, stdout=f_std, stderr=f_err)
+        return_code = subprocess.call(therm_cond_solver_cmd, stdout=f_std, stderr=f_err)
     logger.info(
-        f"Command {shengbte_cmd} finished running with returncode: {return_code}"
+        f"Command {therm_cond_solver_cmd} finished running with returncode: {return_code}"
     )
 
     # logger.info(f"Running command: {shengbte_cmd}")
@@ -1969,7 +1962,8 @@ def run_lattice_thermal_conductivity(
     name: str = "Lattice Thermal Conductivity",
     # prev_calc_dir: Optional[str] = None,
     # db_file: str = None,
-    shengbte_control_kwargs: Optional[dict] = None,
+    shengbte_control_kwargs: dict | None = None,
+    therm_cond_solver: str | None = "almabte"
 ) -> Response:
     """
     Calculate the lattice thermal conductivity using ShengBTE.
@@ -2014,12 +2008,13 @@ def run_lattice_thermal_conductivity(
 
     logger.info("We are in Lattice Thermal Conductivity... 2")
 
-    shengbte = run_shengbte(
+    shengbte = run_thermal_cond_solver(
         renormalized=renormalized,
         temperature=temperature,
         control_kwargs=shengbte_control_kwargs,
         prev_dir_hiphive=prev_dir_hiphive,
         loop=loop,
+        therm_cond_solver=therm_cond_solver
     )
 
     return Response(replace=shengbte)
