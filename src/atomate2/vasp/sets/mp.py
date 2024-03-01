@@ -9,10 +9,10 @@ In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from typing import TYPE_CHECKING
 
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 
 from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
@@ -21,10 +21,10 @@ if TYPE_CHECKING:
     from pymatgen.io.vasp import Outcar, Vasprun
 
 _BASE_MP_GGA_RELAX_SET = loadfn(
-    resource_filename("atomate2.vasp.sets", "BaseMPGGASet.yaml")
+    get_mod_path("atomate2.vasp.sets") / "BaseMPGGASet.yaml"
 )
 _BASE_MP_R2SCAN_RELAX_SET = loadfn(
-    resource_filename("atomate2.vasp.sets", "BaseMPR2SCANRelaxSet.yaml")
+    get_mod_path("atomate2.vasp.sets") / "BaseMPR2SCANRelaxSet.yaml"
 )
 
 
@@ -33,8 +33,9 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
     """Class to generate MP-compatible VASP GGA relaxation input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    auto_ismear: bool = False
     auto_kspacing: bool = True
-    inherit_incar: bool = False
+    inherit_incar: bool | None = False
 
 
 @dataclass
@@ -42,8 +43,9 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    auto_ismear: bool = False
     auto_kspacing: bool = True
-    inherit_incar: bool = False
+    inherit_incar: bool | None = False
 
     def get_incar_updates(
         self,
@@ -89,8 +91,10 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    auto_ismear: bool = False
     auto_kspacing: bool = True
-    inherit_incar: bool = False
+    bandgap_tol: float = 1e-4
+    inherit_incar: bool | None = False
 
     def get_incar_updates(
         self,
@@ -147,8 +151,9 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
     bandgap_tol: float = 1e-4
+    auto_ismear: bool = False
     auto_kspacing: bool = True
-    inherit_incar: bool = False
+    inherit_incar: bool | None = False
 
     def get_incar_updates(
         self,

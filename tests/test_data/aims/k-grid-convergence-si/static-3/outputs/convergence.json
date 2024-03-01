@@ -1,0 +1,1 @@
+{"criterion_name": "energy_per_atom", "criterion_values": [-7901.0179034638, -7901.2322951835, -7901.2937239442], "convergence_field_name": "k_grid", "convergence_field_values": [[3, 3, 3], [4, 4, 4], [5, 5, 5]], "converged": true, "idx": 2}

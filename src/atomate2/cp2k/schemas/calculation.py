@@ -84,7 +84,7 @@ class CalculationInput(BaseModel):
 
     @field_validator("atomic_kind_info", mode="before")
     @classmethod
-    def remove_unnecessary(cls, atomic_kind_info) -> dict:
+    def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
         for k in atomic_kind_info:
             if "total_pseudopotential_energy" in atomic_kind_info[k]:
@@ -93,7 +93,7 @@ class CalculationInput(BaseModel):
 
     @field_validator("dft", mode="before")
     @classmethod
-    def cleanup_dft(cls, dft) -> dict:
+    def cleanup_dft(cls, dft: dict) -> dict:
         """Convert UKS strings to UKS=True."""
         if any(v.upper() == "UKS" for v in dft.values()):
             dft["UKS"] = True
@@ -336,9 +336,9 @@ class Calculation(BaseModel):
               vbm, cbm, band_gap, is_metal and efermi rather than the full
               band structure object.
 
-        average_v_hartree
+        average_v_hartree : bool = True
             Whether to store the average of the V_HARTREE along the crystal axes.
-        run_bader
+        run_bader : bool = False
             Whether to run bader on the charge density.
         strip_dos_projections : bool
             Whether to strip the element and site projections from the density of
@@ -347,13 +347,13 @@ class Calculation(BaseModel):
         strip_bandstructure_projections : bool
             Whether to strip the element and site projections from the band structure.
             This can help reduce the size of DOS objects in systems with many atoms.
-        store_trajectory:
+        store_trajectory : bool = False
             Whether to store the ionic steps as a pmg trajectory object, which can be
             pushed, to a bson data store, instead of as a list od dicts. Useful for
             large trajectories.
-        store_scf:
+        store_scf : bool = False
             Whether to store the SCF convergence data.
-        store_volumetric_data
+        store_volumetric_data : tuple[str] | None = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA
             Which volumetric files to store.
 
         Returns
@@ -394,9 +394,9 @@ class Calculation(BaseModel):
             # TODO vasp version calls bader_analysis_from_path but cp2k
             # cube files don't support that yet, do it manually
             bader = {
-                "min_dist": [d["min_dist"] for d in ba.data],
-                "charge": [d["charge"] for d in ba.data],
-                "atomic_volume": [d["atomic_vol"] for d in ba.data],
+                "min_dist": [dct["min_dist"] for dct in ba.data],
+                "charge": [dct["charge"] for dct in ba.data],
+                "atomic_volume": [dct["atomic_vol"] for dct in ba.data],
                 "vacuum_charge": ba.vacuum_charge,
                 "vacuum_volume": ba.vacuum_volume,
                 "reference_used": bool(ba.chgref_filename),
@@ -479,9 +479,7 @@ def _get_basis_and_potential_files(dir_name: Path) -> dict[Cp2kObject, DataFile]
     """
     data: dict[Cp2kObject, DataFile] = {}
     if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(  # type: ignore[index]
-            str(dir_name / "BASIS")
-        )
+        data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))  # type: ignore[index]
     if Path.exists(dir_name / "POTENTIAL"):
         data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore[index]
             str(dir_name / "POTENTIAL")

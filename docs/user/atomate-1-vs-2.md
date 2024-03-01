@@ -2,6 +2,7 @@
 
 This document contains introductory context for people coming from atomate 1.
 One of atomate2's core ideas is to allow scaling from a single material, to 100 materials, or 100,000 materials. Therefore, both local submission options and a connection to workflow managers such as FireWorks exist. We plan to support more workflow managers in the future to further ease job submission.
+
 ## Relation between managers running the actual jobs and the workflow as written in `atomate2`
 
 There is no leakage between job manager and the workflow definition in `atomate2`. For example, Fireworks is not a required dependency of `atomate2` or `jobflow`. Any `atomate2` workflow can be run using the local manager or an extensible set of external providers, Fireworks just one among them. E.g. all tests are run with mocked calls to the executables using the local manager.

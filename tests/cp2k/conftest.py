@@ -135,7 +135,7 @@ def fake_run_cp2k(
     input_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["cp2k.inp"]] = _VFILES,
     clear_inputs: bool = True,
-):
+) -> None:
     """
     Emulate running CP2K and validate CP2K input files.
 
@@ -171,16 +171,16 @@ def fake_run_cp2k(
 
 @pytest.fixture()
 def check_input():
-    def _check_input(ref_path, user_input):
-        from pymatgen.io.cp2k.inputs import Cp2kInput
+    from pymatgen.io.cp2k.inputs import Cp2kInput
 
-        ref = Cp2kInput.from_file(ref_path / "inputs" / "cp2k.inp")
+    def _check_input(ref_path, user_input: Cp2kInput):
+        ref_input = Cp2kInput.from_file(ref_path / "inputs" / "cp2k.inp")
         user_input.verbosity(verbosity=False)
-        ref.verbosity(verbosity=False)
-        user_string = " ".join(user_input.get_string().lower().split())
+        ref_input.verbosity(verbosity=False)
+        user_string = " ".join(user_input.get_str().lower().split())
         user_hash = md5(user_string.encode("utf-8")).hexdigest()
 
-        ref_string = " ".join(ref.get_string().lower().split())
+        ref_string = " ".join(ref_input.get_str().lower().split())
         ref_hash = md5(ref_string.encode("utf-8")).hexdigest()
 
         if ref_hash != user_hash:
@@ -190,10 +190,7 @@ def check_input():
 
 
 def clear_cp2k_inputs():
-    for cp2k_file in (
-        "cp2k.inp",
-        "cp2k.out",
-    ):
+    for cp2k_file in ("cp2k.inp", "cp2k.out"):
         if Path(cp2k_file).exists():
             Path(cp2k_file).unlink()
     logger.info("Cleared cp2k inputs")

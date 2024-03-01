@@ -8,12 +8,15 @@ In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
+from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.jobs.mp import (
     MPGGARelaxMaker,
     MPGGAStaticMaker,
@@ -21,12 +24,16 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
+from atomate2.vasp.sets.mp import MPGGAStaticSetGenerator
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from jobflow import Job
     from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
@@ -100,9 +107,7 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         )
     )
 
-    def make(
-        self, structure: Structure, prev_vasp_dir: str | Path | None = None
-    ) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         1, 2 or 3-step flow with optional pre-relax and final static jobs.
 
@@ -110,7 +115,7 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -118,18 +123,14 @@ class MPGGADoubleRelaxStaticMaker(Maker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        jobs: list[Job] = []
-
-        relax_flow = self.relax_maker.make(
-            structure=structure, prev_vasp_dir=prev_vasp_dir
-        )
+        relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         output = relax_flow.output
-        jobs += [relax_flow]
+        jobs = [relax_flow]
 
         if self.static_maker:
             # Run a static calculation
             static_job = self.static_maker.make(
-                structure=output.structure, prev_vasp_dir=output.dir_name
+                structure=output.structure, prev_dir=output.dir_name
             )
             output = static_job.output
             jobs += [static_job]
@@ -162,9 +163,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         )
     )
 
-    def make(
-        self, structure: Structure, prev_vasp_dir: str | Path | None = None
-    ) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
 
@@ -174,7 +173,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -182,19 +181,79 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
         Flow
             A flow containing the MP relaxation workflow.
         """
-        jobs: list[Job] = []
-
-        relax_flow = self.relax_maker.make(
-            structure=structure, prev_vasp_dir=prev_vasp_dir
-        )
+        relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
         output = relax_flow.output
-        jobs += [relax_flow]
+        jobs = [relax_flow]
         if self.static_maker:
             # Run a static calculation (typically r2SCAN)
             static_job = self.static_maker.make(
-                structure=output.structure, prev_vasp_dir=output.dir_name
+                structure=output.structure, prev_dir=output.dir_name
             )
             output = static_job.output
             jobs += [static_job]
 
         return Flow(jobs=jobs, output=output, name=self.name)
+
+
+# update potcars to 54, use correct W potcar
+# use staticmaker for compatibility
+@dataclass
+class MPVaspLobsterMaker(VaspLobsterMaker):
+    """
+    Maker to perform a Lobster computation.
+
+    The calculations performed are:
+
+    1. Optional optimization.
+    2. Static calculation with ISYM=0.
+    3. Several Lobster computations testing several basis sets are performed.
+
+    .. Note::
+
+        The basis sets can only be changed with yaml files.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker : .BaseVaspMaker or None
+        A maker to perform a relaxation on the bulk. Set to ``None`` to skip the
+        bulk relaxation.
+    lobster_static_maker : .BaseVaspMaker
+        A maker to perform the computation of the wavefunction before the static
+        run. Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
+    lobster_maker : .LobsterMaker
+        A maker to perform the Lobster run.
+    delete_wavecars : bool
+        If true, all WAVECARs will be deleted after the run.
+    address_min_basis : str
+        A path to a yaml file including basis set information.
+    address_max_basis : str
+       A path to a yaml file including basis set information.
+    """
+
+    name: str = "lobster"
+    relax_maker: BaseVaspMaker | None = field(default_factory=MPGGADoubleRelaxMaker)
+    lobster_static_maker: BaseVaspMaker = field(
+        default_factory=lambda: MPGGAStaticMaker(
+            input_set_generator=MPGGAStaticSetGenerator(
+                user_potcar_functional="PBE_54",
+                user_potcar_settings={"W": "W_sv"},
+                user_kpoints_settings={"reciprocal_density": 310},
+                user_incar_settings={
+                    "EDIFF": 1e-6,
+                    "NSW": 0,
+                    "LWAVE": True,
+                    "ISYM": 0,
+                    "IBRION": -1,
+                    "ISMEAR": -5,
+                    "LORBIT": 11,
+                    "ALGO": "Normal",
+                },
+            )
+        )
+    )
+    lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
+    delete_wavecars: bool = True
+    address_min_basis: str | None = None
+    address_max_basis: str | None = None

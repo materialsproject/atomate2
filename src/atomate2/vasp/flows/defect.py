@@ -4,16 +4,13 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
+from emmet.core.tasks import TaskDoc
 from jobflow import Flow, Maker, OutputReference
 from jobflow.core.maker import recursive_call
-from pymatgen.io.vasp.outputs import Vasprun
 
-from atomate2.common.files import get_zfile
 from atomate2.common.flows import defect as defect_flows
-from atomate2.utils.file_client import FileClient
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
@@ -26,6 +23,7 @@ from atomate2.vasp.sets.defect import (
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
+    from pymatgen.entries.computed_entries import ComputedStructureEntry
 
     from atomate2.common.schemas.defects import CCDDocument
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -169,7 +167,9 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     bulk_relax_maker: BaseVaspMaker | None = None
     name: str = "formation energy"
 
-    def structure_from_prv(self, previous_dir: str) -> Structure:
+    def sc_entry_and_locpot_from_prv(
+        self, previous_dir: str
+    ) -> tuple[ComputedStructureEntry, dict]:
         """Copy the output structure from previous directory.
 
         Read the vasprun.xml file from the previous directory
@@ -182,15 +182,14 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
 
         Returns
         -------
-        structure: Structure
+        ComputedStructureEntry
         """
-        fc = FileClient()
-        # strip off the `hostname:` prefix
-        previous_dir = previous_dir.split(":")[-1]
-        files = fc.listdir(previous_dir)
-        vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
-        vasprun = Vasprun(vasprun_file)
-        return vasprun.final_structure
+        task_doc = TaskDoc.from_directory(previous_dir)
+        return task_doc.structure_entry, task_doc.calcs_reversed[0].output.locpot
+
+    def get_planar_locpot(self, task_doc: TaskDoc) -> dict:
+        """Get the planar-averaged electrostatic potential."""
+        return task_doc.calcs_reversed[0].output.locpot
 
     def validate_maker(self) -> None:
         """Check some key settings in the relax maker.

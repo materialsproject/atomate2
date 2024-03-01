@@ -1,4 +1,4 @@
-"""Job to prerelax a structure using an MD Potential."""
+"""Schema definitions for force field tasks."""
 
 from typing import Optional
 
@@ -6,12 +6,14 @@ from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
+from atomate2.forcefields import MLFF
 
-class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore[call-arg]
+
+class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """Document defining the information at each ionic step."""
 
     energy: float = Field(None, description="The free energy.")
@@ -135,12 +137,11 @@ class ForceFieldTaskDocument(StructureMetadata):
         """
         trajectory = result["trajectory"].__dict__
 
-        # NOTE: units for stresses were converted from ev/Angstrom³ to kbar
-        # (* -1 from standard output)
+        # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
-        for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(
-                trajectory["stresses"][i] * -10 / GPa
+        for idx in range(len(trajectory["stresses"])):
+            trajectory["stresses"][idx] = voigt_6_to_full_3x3_stress(
+                trajectory["stresses"][idx] * -10 / GPa
             )
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
@@ -178,55 +179,55 @@ class ForceFieldTaskDocument(StructureMetadata):
         n_steps = len(trajectory["energies"])
 
         ionic_steps = []
-        for i in range(n_steps):
-            cur_energy = (
-                trajectory["energies"][i] if "energy" in ionic_step_data else None
+        for idx in range(n_steps):
+            energy = (
+                trajectory["energies"][idx] if "energy" in ionic_step_data else None
             )
-            cur_forces = (
-                trajectory["forces"][i].tolist()
+            forces = (
+                trajectory["forces"][idx].tolist()
                 if "forces" in ionic_step_data
                 else None
             )
-            cur_stress = (
-                trajectory["stresses"][i].tolist()
+            stress = (
+                trajectory["stresses"][idx].tolist()
                 if "stress" in ionic_step_data
                 else None
             )
 
             if "structure" in ionic_step_data:
                 cur_structure = Structure(
-                    lattice=trajectory["cells"][i],
-                    coords=trajectory["atom_positions"][i],
+                    lattice=trajectory["cells"][idx],
+                    coords=trajectory["atom_positions"][idx],
                     species=species,
                     coords_are_cartesian=True,
                 )
             else:
                 cur_structure = None
 
-            # include "magmoms" in :obj:`cur_ionic_step` if the trajectory has "magmoms"
+            # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
             if "magmoms" in trajectory:
-                cur_ionic_step = IonicStep(
-                    energy=cur_energy,
-                    forces=cur_forces,
+                ionic_step = IonicStep(
+                    energy=energy,
+                    forces=forces,
                     magmoms=(
-                        trajectory["magmoms"][i].tolist()
+                        trajectory["magmoms"][idx].tolist()
                         if "magmoms" in ionic_step_data
                         else None
                     ),
-                    stress=cur_stress,
+                    stress=stress,
                     structure=cur_structure,
                 )
 
-            # otherwise do not include "magmoms" in :obj:`cur_ionic_step`
+            # otherwise do not include "magmoms" in :obj:`ionic_step`
             elif "magmoms" not in trajectory:
-                cur_ionic_step = IonicStep(
-                    energy=cur_energy,
-                    forces=cur_forces,
-                    stress=cur_stress,
+                ionic_step = IonicStep(
+                    energy=energy,
+                    forces=forces,
+                    stress=stress,
                     structure=cur_structure,
                 )
 
-            ionic_steps.append(cur_ionic_step)
+            ionic_steps.append(ionic_step)
 
         output_doc = OutputDoc(
             structure=output_structure,
@@ -238,14 +239,16 @@ class ForceFieldTaskDocument(StructureMetadata):
             n_steps=n_steps,
         )
 
-        if forcefield_name == "M3GNet":
-            import matgl
+        # map force field name to its package name
+        pkg_name = {
+            MLFF.M3GNet: "matgl",
+            MLFF.CHGNet: "chgnet",
+            MLFF.MACE: "mace-torch",
+        }.get(forcefield_name)  # type: ignore[call-overload]
+        if pkg_name:
+            import importlib.metadata
 
-            version = matgl.__version__
-        elif forcefield_name == "CHGNet":
-            import chgnet
-
-            version = chgnet.__version__
+            version = importlib.metadata.version(pkg_name)
         else:
             version = "Unknown"
         return cls.from_structure(

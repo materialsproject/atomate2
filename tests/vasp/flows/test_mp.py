@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import pytest
+from emmet.core.tasks import TaskDoc
+from jobflow import Maker, run_locally
 from pymatgen.core import Structure
 
-from atomate2.vasp.jobs.mp import (
-    MPMetaGGARelaxMaker,
-    MPPreRelaxMaker,
+from atomate2.vasp.flows.mp import (
+    MPGGADoubleRelaxMaker,
+    MPGGADoubleRelaxStaticMaker,
+    MPMetaGGADoubleRelaxStaticMaker,
 )
+from atomate2.vasp.jobs.mp import MPMetaGGARelaxMaker, MPPreRelaxMaker
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
-
-if TYPE_CHECKING:
-    from jobflow import Maker
 
 
 @pytest.mark.parametrize("name", ["test", None])
@@ -28,8 +27,6 @@ if TYPE_CHECKING:
 def test_mp_meta_gga_relax_custom_values(
     name: str, relax_maker: Maker | None, static_maker: Maker | None
 ):
-    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStaticMaker
-
     kwargs = {}
     if name:
         kwargs["name"] = name
@@ -48,12 +45,7 @@ def test_mp_meta_gga_relax_custom_values(
 
 
 def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.mp import MPMetaGGADoubleRelaxStaticMaker
-
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "Si_mp_meta_gga_relax/pbesol_pre_relax"
     ref_paths = {
         "MP pre-relax 1": pre_relax_dir,
@@ -83,12 +75,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.mp import MPGGADoubleRelaxStaticMaker
-
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
     ref_paths = {
         "MP GGA relax 1": pre_relax_dir,
@@ -112,12 +99,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.mp import MPGGADoubleRelaxMaker
-
-    # map from job name to directory containing reference output files
+    # map from job name to directory containing reference input/output files
     pre_relax_dir = "Si_mp_gga_relax/GGA_Relax_1"
     ref_paths = {
         "MP GGA relax 1": pre_relax_dir,

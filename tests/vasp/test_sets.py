@@ -7,24 +7,25 @@ from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
 @pytest.fixture(scope="module")
 def struct_no_magmoms() -> Structure:
-    """Dummy FeO structure with no magnetic moments defined."""
+    """Dummy FeO structure with expected +U corrections but no magnetic moments
+    defined."""
     return Structure(
         lattice=Lattice.cubic(3),
-        species=["Fe", "O"],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=("Fe", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
 @pytest.fixture(scope="module")
 def struct_with_spin() -> Structure:
     """Dummy FeO structure with spins defined."""
-    fe = Species("Fe2+", spin=4)
-    o = Species("O2-", spin=0.63)
+    iron = Species("Fe2+", spin=4)
+    oxi = Species("O2-", spin=0.63)
 
     return Structure(
         lattice=Lattice.cubic(3),
-        species=[fe, o],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=(iron, oxi),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
@@ -41,8 +42,8 @@ def struct_no_u_params() -> Structure:
     """Dummy SiO structure with no anticipated +U corrections"""
     return Structure(
         lattice=Lattice.cubic(3),
-        species=["Si", "O"],
-        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+        species=("Si", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
 
 
@@ -73,6 +74,10 @@ def test_user_incar_settings():
         "NSW": 5_000,
         "PREC": 10,  # wrong type, should be string.
         "SIGMA": 20,
+        "LDAUU": {"H": 5.0},
+        "LDAUJ": {"H": 6.0},
+        "LDAUL": {"H": 3.0},
+        "LDAUTYPE": 2,
     }
 
     static_set_generator = StaticSetGenerator(user_incar_settings=uis)
@@ -81,6 +86,8 @@ def test_user_incar_settings():
     for key in uis:
         if isinstance(incar[key], str):
             assert incar[key].lower() == uis[key].lower()
+        elif isinstance(uis[key], dict):
+            assert incar[key] == [uis[key][str(site.specie)] for site in structure]
         else:
             assert incar[key] == uis[key]
 
@@ -91,9 +98,9 @@ def test_user_incar_settings():
         ("struct_no_magmoms", {}),
         ("struct_with_magmoms", {}),
         ("struct_with_spin", {}),
-        ("struct_no_magmoms", {"MAGMOM": [3.7, 0.8]}),
-        ("struct_with_magmoms", {"MAGMOM": [3.7, 0.8]}),
-        ("struct_with_spin", {"MAGMOM": [3.7, 0.8]}),
+        ("struct_no_magmoms", {"MAGMOM": {"Fe": 3.7, "O": 0.8}}),
+        ("struct_with_magmoms", {"MAGMOM": {"Fe": 3.7, "O": 0.8}}),
+        ("struct_with_spin", {"MAGMOM": {"Fe2+,spin=4": 3.7, "O2-,spin=0.63": 0.8}}),
     ],
 )
 def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> None:
@@ -120,7 +127,9 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
     has_struct_spin = getattr(structure.species[0], "spin", None) is not None
 
     if user_incar_settings:  # case 1
-        assert incar_magmom == user_incar_settings["MAGMOM"]
+        assert incar_magmom == [
+            user_incar_settings["MAGMOM"][str(site.specie)] for site in structure
+        ]
     elif has_struct_magmom:  # case 2
         assert incar_magmom == structure.site_properties["magmom"]
     elif has_struct_spin:  # case 3
@@ -151,11 +160,11 @@ def test_set_u_params(structure, request) -> None:
         # ensure that there are LDAU* keys, and that they match expected values
         # in config_dict
         assert len([key for key in incar if key.startswith("LDAU")]) > 0
-        for LDAU_key in ["LDAUU", "LDAUJ", "LDAUL"]:
-            for isite, site in enumerate(structure):
-                assert incar[LDAU_key][isite] == input_gen.config_dict["INCAR"][
-                    LDAU_key
-                ]["O"].get(str(site.specie), 0)
+        for ldau_key in ("LDAUU", "LDAUJ", "LDAUL"):
+            for idx, site in enumerate(structure):
+                assert incar[ldau_key][idx] == input_gen.config_dict["INCAR"][ldau_key][
+                    "O"
+                ].get(str(site.specie), 0)
     else:
         # if no sites have a nonzero U value in the config_dict,
         # ensure that no keys starting with LDAU are in the INCAR
@@ -166,9 +175,9 @@ def test_set_u_params(structure, request) -> None:
     "bandgap, expected_params",
     [
         (0, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
-        (0.1, {"KSPACING": 0.269695615, "ISMEAR": -5, "SIGMA": 0.05}),
-        (1, {"KSPACING": 0.302352354, "ISMEAR": -5, "SIGMA": 0.05}),
-        (2, {"KSPACING": 0.349355136, "ISMEAR": -5, "SIGMA": 0.05}),
+        (0.1, {"KSPACING": 0.26969561, "ISMEAR": -5, "SIGMA": 0.05}),
+        (1, {"KSPACING": 0.30235235, "ISMEAR": -5, "SIGMA": 0.05}),
+        (2, {"KSPACING": 0.34935513, "ISMEAR": -5, "SIGMA": 0.05}),
         (5, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
         (10, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
     ],

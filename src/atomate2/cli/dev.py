@@ -1,6 +1,14 @@
 """Module containing command line scripts for developers."""
 
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import click
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -9,15 +17,32 @@ def dev() -> None:
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("test_dir")
-def vasp_test_data(test_dir) -> None:
+@click.argument(
+    "test_dir",
+)
+@click.option(
+    "--additional_file",
+    "-a",
+    multiple=True,
+    help="list of additional files to copy from each completed VASP directory. "
+    "Example: `--additional_file CHGCAR --additional_file LOCPOT`",
+)
+def vasp_test_data(test_dir: str | Path, additional_file: list[str]) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
     directory. Please refer to the atomate2 documentation on writing unit tests for more
     information.
+
+    Parameters
+    ----------
+    test_dir
+        The directory to write the test data to.
+        Should not contain spaces or punctuation.
+    additional_files
+        list of additional files to copy from each completed VASP directory.
+        Example: `--additional_file CHGCAR --additional_file LOCPOT`,
     """
-    import sys
     import warnings
     from pathlib import Path
     from pprint import pformat
@@ -34,7 +59,7 @@ def vasp_test_data(test_dir) -> None:
 
     if test_dir.exists():
         click.echo("test_data folder already exists, refusing to overwrite it")
-        sys.exit()
+        raise SystemExit(1)
 
     test_dir.mkdir()
 
@@ -103,6 +128,7 @@ def vasp_test_data(test_dir) -> None:
                 "vasprun*",
                 "OUTCAR*",
                 "*.json*",
+                *additional_file,
             ],
             allow_missing=True,
         )
@@ -154,10 +180,10 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
-def _potcar_to_potcar_spec(potcar_filename, output_filename) -> None:
+def _potcar_to_potcar_spec(potcar_filename: str | Path, output_filename: Path) -> None:
     """Convert a POTCAR file to a POTCAR.spec file."""
     from pymatgen.io.vasp import Potcar
 

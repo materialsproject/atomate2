@@ -1,8 +1,12 @@
 import gzip
+import json
 import os
 import shutil
 
 import pytest
+from monty.json import MontyDecoder, MontyEncoder, jsanitize
+
+from atomate2.common.schemas.cclib import TaskDocument
 
 try:
     import cclib
@@ -12,10 +16,6 @@ except ImportError:
 
 @pytest.mark.skipif(cclib is None, reason="requires cclib to be installed")
 def test_cclib_taskdoc(test_dir):
-    from monty.json import MontyDecoder, jsanitize
-
-    from atomate2.common.schemas.cclib import TaskDocument
-
     p = test_dir / "schemas"
 
     # Plain parsing of task doc. We do not check all cclib entries
@@ -36,24 +36,23 @@ def test_cclib_taskdoc(test_dir):
     assert doc["molecule"][0].coords == pytest.approx([0.397382, 0.0, 0.0])
     assert doc["last_updated"] is not None
     assert doc["attributes"]["homo_energies"] == pytest.approx(
-        [-7.054007346511501, -11.618445074798501]
+        [-7.05400734, -11.61844507]
     )
     assert doc["attributes"]["lumo_energies"] == pytest.approx(
-        [4.2384453353880005, -3.9423854660440005]
+        [4.23844533, -3.94238546]
     )
     assert doc["attributes"]["homo_lumo_gaps"] == pytest.approx(
-        [11.292452681899501, 7.6760596087545006]
+        [11.29245268, 7.67605960]
     )
-    assert doc["attributes"]["min_homo_lumo_gap"] == pytest.approx(7.6760596087545006)
+    assert doc["attributes"]["min_homo_lumo_gap"] == pytest.approx(7.67605960)
 
     # Now we will try two possible extensions, but we will make sure that
     # it fails because the newest log file (.txt) is not valid
-    with open(p / "test.txt", "w") as f:
-        f.write("I am a dummy log file")
-    with pytest.raises(Exception) as e:
+    with open(p / "test.txt", "w") as file:
+        file.write("I am a dummy log file")
+    with pytest.raises(ValueError, match="Could not parse"):
         doc = TaskDocument.from_logfile(p, [".log", ".txt"]).dict()
     os.remove(p / "test.txt")
-    assert "Could not parse" in str(e.value)
 
     # Test a population analysis
     doc = TaskDocument.from_logfile(p, "psi_test.out", analysis="MBO").dict()
@@ -101,3 +100,7 @@ def test_cclib_taskdoc(test_dir):
     # and decoded
     json_str = MontyDecoder().process_decoded(dct)
     assert "builder_meta=EmmetMeta" in json_str
+
+
+def test_model_validate():
+    TaskDocument.model_validate_json(json.dumps(TaskDocument(), cls=MontyEncoder))

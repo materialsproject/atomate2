@@ -5,14 +5,14 @@
 ## Introduction
 
 This guide will get you up and running in an environment for running high-throughput
-workflows with atomate2. atomate2 is built on the pymatgen, custodian, jobflow, and
-FireWorks libraries. Briefly:
+workflows with atomate2. atomate2 is built on the `pymatgen`, `custodian`, `jobflow`, and
+`FireWorks` libraries. Briefly:
 
-- [pymatgen] is used to create input files and analyze the output of materials science codes.
-- [custodian] runs your simulation code (e.g., VASP) and performs error checking/handling
+- [`pymatgen`] is used to create input files and analyze the output of materials science codes.
+- [`custodian`] runs your simulation code (e.g., VASP) and performs error checking/handling
   and checkpointing.
-- [jobflow] is used to design computational workflows.
-- [FireWorks] (optional) is used to manage and execute workflows on HPC machines.
+- [`jobflow`] is used to design computational workflows.
+- [`FireWorks`] (optional) is used to manage and execute workflows on HPC machines.
 
 Running and writing your own workflows are covered in later tutorials. For now, these
 topics will be covered in enough depth to get you set up and to help you know where to
@@ -21,10 +21,10 @@ troubleshoot if you're having problems.
 Note that this installation tutorial is VASP-centric since almost all functionality
 currently in atomate2 pertains to VASP.
 
-[pymatgen]: http://pymatgen.org
-[custodian]: https://materialsproject.github.io/custodian
-[fireworks]: https://materialsproject.github.io/fireworks
-[jobflow]: https://materialsproject.github.io/jobflow
+[`pymatgen`]: http://pymatgen.org
+[`custodian`]: https://materialsproject.github.io/custodian
+[`fireworks`]: https://materialsproject.github.io/fireworks
+[`jobflow`]: https://materialsproject.github.io/jobflow
 
 ### Objectives
 
@@ -76,16 +76,16 @@ MongoDB must be running and available to accept connections whenever you're runn
 workflows. Thus, it is strongly recommended that you have a server to run MongoDB or
 (simpler) use a hosting service. Your options are:
 
-- Use a commercial service to host your MongoDB instance. These are typically the
+1. Use a commercial service to host your MongoDB instance. These are typically the
   easiest to use and offer high-quality service but require payment for larger
   databases. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) offers a free 500 MB
-  server which is certainly enough to get started for small to medium size projects, and
+  server which is certainly enough to get started for small to medium-sized projects, and
   it is easy to upgrade or migrate your database if you exceed the free allocation.
-- Contact your supercomputing center to see if they offer MongoDB hosting (e.g., NERSC
+1. Contact your supercomputing center to see if they offer MongoDB hosting (e.g., NERSC
   has this, Google "request NERSC MongoDB database").
-- Self-host a MongoDB server.
+1. Self-host a MongoDB server.
 
-If you're just starting, we suggest the first (with a free plan) or second option
+If you're just starting, we suggest option 1 (with a free plan) or 2
 (if available to you). The third option will require you to open up network settings to
 accept outside connections properly which can sometimes be tricky.
 
@@ -113,7 +113,7 @@ issues later in this tutorial, some options are:
 
 ## Create a directory scaffold for atomate2
 
-Installing atomate2 includes installation of codes, configuration files, and various
+Installing atomate2 includes the installation of codes, configuration files, and various
 binaries and libraries. Thus, it is useful to create a directory structure that
 organizes all these items.
 
@@ -140,7 +140,7 @@ Make sure to create a Python 3.8+ environment as recent versions of atomate2 onl
 support Python 3.8 and higher.
 ```
 
-We highly recommended that you organize your installation of the atomate2 and the other
+We highly recommend that you organize your installation of the atomate2 and the other
 Python codes using a conda virtual environment. Some of the main benefits are:
 
 - Different Python projects that have conflicting packages can coexist on the same
@@ -194,7 +194,7 @@ that are unique only to these databases.
 
 Create the following files in `<<INSTALL_DIR>>/config`.
 
-### jobflow.yaml
+### `jobflow.yaml`
 
 The `jobflow.yaml` file contains the credentials of the MongoDB server that will store
 calculation outputs. The `jobflow.yaml` file requires you to enter the basic database
@@ -351,14 +351,13 @@ workflows.
 ### Define the workflow
 
 Workflows are written using the `jobflow` software. Essentially, individual stages of
-a workflow are simple Python functions. Jobflow provides a way to connect jobs together
-in a natural way. For more details on connecting jobs together see:
-[](connecting_vasp_jobs).
+a workflow are simple Python functions. Jobflow provides a way to connect jobs in a natural way.
+For more details on connecting jobs see: [](connecting_vasp_jobs).
 
 Go to the directory where you would like your calculations to run (i.e., your scratch
 or work directory) and create a file called `relax.py` containing:
 
-```python
+```py
 from atomate2.vasp.jobs.core import RelaxMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -416,7 +415,7 @@ on the Grid Engine scheduler, this would be using `qsub job.sh`.
 Once the job is finished, you can connect to the output database and check the job
 output.
 
-```python
+```py
 from jobflow import SETTINGS
 
 store = SETTINGS.JOB_STORE
