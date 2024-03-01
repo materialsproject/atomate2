@@ -362,6 +362,39 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
     return transformations
 
 
+def _apply_strain_to_structure(structure: Structure, deformations: list) -> list:
+    """
+    Apply strain(s) to input structure and return transformation(s) as list. Modified to not be a job
+
+    Parameters
+    ----------
+    structure: .Structure
+        Input structure to apply strain to
+    deformations: list[.Deformation]
+        A list of deformations to apply **independently** to the input
+        structure, in anticipation of performing an EOS fit.
+        Deformations should be of the form of a 3x3 matrix, e.g.,
+        [[1.2, 0., 0.], [0., 1.2, 0.], [0., 0., 1.2]]
+        or
+        ((1.2, 0., 0.), (0., 1.2, 0.), (0., 0., 1.2))
+
+    Returns
+    -------
+    list
+        A list of .TransformedStructure objects corresponding to the
+        list of input deformations.
+    """
+    transformations = []
+    for deformation in deformations:
+        # deform the structure
+        ts = TransformedStructure(
+            structure,
+            transformations=[DeformStructureTransformation(deformation=deformation)],
+        )
+        transformations += [ts]
+    return transformations
+
+
 class MPMorphPVPostProcess(PostProcessEosPressure):
     """Modified  p(V) fit to accomodate MPMorph."""
 
