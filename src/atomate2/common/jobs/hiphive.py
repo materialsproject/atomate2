@@ -5,27 +5,20 @@
 # ASE packages
 from __future__ import annotations
 
-import contextlib
-import csv
 import json
-import logging
 import os
 import shlex
 import subprocess
-import time
 from copy import copy
-from dataclasses import field
 from itertools import product
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
 from os.path import expandvars
+from typing import TYPE_CHECKING, Any, Union
 
 import numpy as np
 import phonopy as phpy
 import psutil
 import scipy as sp
 from ase import atoms
-from ase.atoms import Atoms
 from ase.cell import Cell
 
 # Hiphive packages
@@ -46,7 +39,7 @@ from hiphive.structure_generation.random_displacement import (
 from hiphive.utilities import get_displacements
 
 # Jobflow packages
-from jobflow import Flow, Response, job
+from jobflow import Response, job
 from joblib import Parallel, delayed
 
 # Pymatgen packages
@@ -56,7 +49,6 @@ from phono3py.phonon3.gruneisen import Gruneisen
 # Phonopy & Phono3py
 from phonopy import Phonopy
 from phonopy.structure.atoms import PhonopyAtoms
-from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import (
     get_phonon_band_structure_from_fc,
@@ -65,21 +57,18 @@ from pymatgen.io.phonopy import (
     get_phonopy_structure,
 )
 from pymatgen.io.shengbte import Control
-from pymatgen.transformations.advanced_transformations import (
-    CubicSupercellTransformation,
-)
 from pymatgen.transformations.standard_transformations import SupercellTransformation
 
+from atomate2.common.jobs.phonons import get_supercell_size, run_phonon_displacements
+from atomate2.settings import Atomate2Settings
 from atomate2.utils.log import initialize_logger
 from atomate2.vasp.files import copy_hiphive_outputs
 
-# Atomate2 packages
-# from atomate2.vasp.sets.core import MPStaticSetGenerator
-from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.jobs.core import StaticMaker
-from atomate2.settings import Atomate2Settings
+if TYPE_CHECKING:
+    from ase.atoms import Atoms
+    from pymatgen.core.structure import Structure
 
-SETTINGS = Atomate2Settings()
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 logger = initialize_logger(level=3)
 
@@ -94,16 +83,16 @@ T_THERMAL_CONDUCTIVITY = [0, 100, 200, 300]  # [i*100 for i in range(0,16)]
 IMAGINARY_TOL = 0.025  # in THz
 FIT_METHOD = "rfe"
 
-eV2J = sp.constants.elementary_charge
+ev2j = sp.constants.elementary_charge
 hbar = sp.constants.hbar  # J-s
-kB = sp.constants.Boltzmann  # J/K
+kb = sp.constants.Boltzmann  # J/K
 
 __all__ = [
-    "generate_hiphive_displacements"
-    "run_static_calculations",
+    "hiphive_static_calcs",
+    "generate_hiphive_displacements",
     "quality_control",
     "run_hiphive",
-    "run_shengbte",
+    "run_thermal_cond_solver",
     "run_fc_to_pdos",
     "run_hiphive_renormalization",
     "run_lattice_thermal_conductivity",
@@ -112,18 +101,88 @@ __all__ = [
 __author__ = "Alex Ganose, Junsoo Park, Zhuoying Zhu, Hrushikesh Sahasrabuddhe"
 __email__ = "aganose@lbl.gov, jsyony37@lbl.gov, zyzhu@lbl.gov, hpsahasrabuddhe@lbl.gov"
 
+@job
+def hiphive_static_calcs(
+                structure: Structure,
+                supercell_matrix: list[list[int]] | None = None,
+                min_length: float | None = None,
+                prefer_90_degrees: bool = True,
+                n_structures: int | None = None,
+                fixed_displs: list[float] = [0.01, 0.03, 0.08, 0.1],
+                loops: int | None = None,
+                prev_dir: str | None = None,
+                phonon_displacement_maker: BaseVaspMaker | None = None,
+                supercell_matrix_kwargs: dict[str, Any] | None = None
+        ) -> Response:
+    """Run the static calculations for hiPhive fitting."""
+    jobs = []
+    outputs: dict[str, list] = {
+        "supercell_matrix": [],
+        "forces": [],
+        "structure": [],
+        "all_structures": [],
+        "all_forces": [],
+        "structure_data": [],
+        "current_dir": [],
+    }
+    if supercell_matrix is None:
+        supercell_job = get_supercell_size(
+            structure,
+            min_length,
+            prefer_90_degrees,
+            **supercell_matrix_kwargs,
+        )
 
+        jobs.append(supercell_job)
+        supercell_matrix = supercell_job.output
+        outputs["supercell_matrix"] = supercell_job.output
 
+    displacements = generate_hiphive_displacements(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            n_structures=n_structures,
+            fixed_displs=fixed_displs,
+            loop=loops,
+        )
+    jobs.append(displacements)
+
+    vasp_displacement_calcs = run_phonon_displacements(
+            displacements=displacements.output,
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            phonon_maker=phonon_displacement_maker,
+            prev_dir=prev_dir,
+        )
+    jobs.append(vasp_displacement_calcs)
+    outputs["forces"] = vasp_displacement_calcs.output["forces"]
+    outputs["structure"] = vasp_displacement_calcs.output["structure"]
+
+    json_saver = collect_perturbed_structures(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            rattled_structures=outputs["structure"],
+            forces=outputs["forces"],
+            loop=loops,
+        )
+    jobs.append(json_saver)
+    outputs["all_structures"] = json_saver.output[0]
+    outputs["all_forces"] = json_saver.output[1]
+    outputs["structure_data"] = json_saver.output[2]
+    outputs["current_dir"] = json_saver.output[3]
+
+    return Response(addition=jobs, output=outputs)
 
 @job
 def generate_hiphive_displacements(
     structure: Structure,
-    supercell_matrix: np.array,
-    n_structures: int,
-    fixed_displs: list[float],
-    loop: int,
+    supercell_matrix: list[list[int]] | None = None,
+    n_structures: int | None = None,
+    fixed_displs: list[float] | None = None,
+    loop: int | None = None,
 ) -> list[Structure]:
-
+    """Job generates the perturbed structures for hiPhive fitting."""
+    if fixed_displs is None:
+        fixed_displs = [0.01, 0.03, 0.08, 0.1]
     logger.info(f"supercell_matrix = {supercell_matrix}")
     supercell_structure = SupercellTransformation(
             scaling_matrix=supercell_matrix
@@ -139,16 +198,10 @@ def generate_hiphive_displacements(
         structures_ase = generate_displaced_structures(
             supercell_ase, n_structures, fixed_displs[i], loop
         )
-        # for j in range(len(structures_ase)):
-        #     structures_ase_all.append(structures_ase[j])
-        # structures_ase_all = list(structures_ase)
         structures_ase_all.append(structures_ase)
-    # supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
-    # structures_ase =
-    # generate_mc_rattled_structures(supercell_ase, 3, 0.01, d_min=3.294)
-    # structures_ase_all.append(structures_ase)
 
     logger.info(f"structures_ase_all: {structures_ase_all}")
+
     # Convert back to pymatgen structure
     structures_pymatgen = []
     for atoms_ase in range(len(structures_ase_all)):
@@ -162,123 +215,14 @@ def generate_hiphive_displacements(
 
     return structures_pymatgen
 
-
-@job
-def run_static_calculations(
-    supercell_matrix_kwargs: dict[str, Any],
-    n_structures: int,
-    fixed_displs: list[float],
-    loop: int,
-    prev_vasp_dir: str | (Path | None),
-    mpstatic_maker: BaseVaspMaker = None,
-    structure: Optional[Structure] = None,
-    prev_dir_json_saver: Optional[str] = None,
-) -> Response:
-    """
-    Run static calculations.
-
-    Note, this job will replace itself with N static calculations, where N is
-    the number of deformations.
-
-    Args:
-        rattled_structures : list of Structures
-            A pymatgen Structure object.
-        prev_vasp_dir : str or Path or None
-            A previous VASP directory to use for copying VASP outputs.
-        MPstatic_maker : BaseVaspMaker
-            A VaspMaker object to use for generating VASP inputs.
-
-    Returns
-    -------
-        Response
-    """
-    # Generate the supercell ####
-    if prev_dir_json_saver is not None:
-        copy_hiphive_outputs(prev_dir_json_saver)
-        structure = loadfn("relaxed_structure.json")
-    else:
-        pass
-
-    if supercell_matrix_kwargs is not None:
-        min_atoms = supercell_matrix_kwargs["min_atoms"]
-        max_atoms = supercell_matrix_kwargs["max_atoms"]
-        min_length = supercell_matrix_kwargs["min_length"]
-        force_diagonal = supercell_matrix_kwargs["force_diagonal"]
-        supercell_structure = CubicSupercellTransformation(
-            min_atoms=min_atoms,
-            max_atoms=max_atoms,
-            min_length=min_length,
-            force_diagonal=force_diagonal,
-        ).apply_transformation(structure)
-        logger.info(f"supercell_structure: {supercell_structure}")
-    else:
-        q = [[5, 0, 0], [0, 5, 0], [0, 0, 5]]
-        # q = [[2, 0, 0],[0, 2, 0],[0, 0, 2]]
-        supercell_structure = SupercellTransformation(
-            scaling_matrix=q
-        ).apply_transformation(structure)
-        logger.info(f"supercell_structure: {supercell_structure}")
-
-    # Generate the rattled structures ####
-    structures_ase_all = []
-    # Convert to ASE atoms
-    for i in range(len(fixed_displs)):
-        supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
-        structures_ase = generate_displaced_structures(
-            supercell_ase, n_structures, fixed_displs[i], loop
-        )
-        # for j in range(len(structures_ase)):
-        #     structures_ase_all.append(structures_ase[j])
-        # structures_ase_all = list(structures_ase)
-        structures_ase_all.append(structures_ase)
-    # supercell_ase = AseAtomsAdaptor.get_atoms(supercell_structure)
-    # structures_ase =
-    # generate_mc_rattled_structures(supercell_ase, 3, 0.01, d_min=3.294)
-    # structures_ase_all.append(structures_ase)
-
-    logger.info(f"structures_ase_all: {structures_ase_all}")
-    # Convert back to pymatgen structure
-    structures_pymatgen = []
-    for atoms_ase in range(len(structures_ase_all)):
-        logger.info(f"atoms: {atoms_ase}")
-        logger.info(f"structures_ase_all[atoms]: {structures_ase_all[atoms_ase][0]}")
-        structure_i = AseAtomsAdaptor.get_structure(structures_ase_all[atoms_ase])
-        structures_pymatgen.append(structure_i)
-
-    for i in range(len(structures_pymatgen)):
-        structures_pymatgen[i].to(f"POSCAR_{i}", "poscar")
-
-    # Run the static calculations ####
-    all_jobs = []
-    outputs: dict[str, list] = {
-        "forces": [],
-        "structures": [],
-    }
-
-    if mpstatic_maker is None:
-        mpstatic_maker = StaticMaker()  # Assign the default value here
-
-    for i, structure in enumerate(structures_pymatgen):
-        logger.info(f"structure: {structure}")
-        static = mpstatic_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
-        static.name += f" {loop*3 - 1 - i}"
-        all_jobs.append(static)
-        outputs["forces"].append(static.output.output.forces)
-        outputs["structures"].append(static.output.output.structure)
-
-    static_flow = Flow(jobs=all_jobs, output=outputs)
-
-    return Response(replace=static_flow)
-
-
 @job
 def collect_perturbed_structures(
     structure: Structure,
-    supercell_matrix: list[list[int]],
-    rattled_structures: list[Structure],  # Add type annotation for rattled_structures
-    forces: Any,  # Add type annotation for forces
-    loop: int = None,
-    prev_dir_json_saver: Optional[str] = None,
+    supercell_matrix: list[list[int]] | None = None,
+    rattled_structures: list[Structure] | None = None,  # Add type annotation for rattled_structures
+    forces: Any | None = None,  # Add type annotation for forces
+    loop: int | None = None,
+    prev_dir_json_saver: str | None = None,
 ) -> list:
     """
     Aggregate the structures and forces of perturbed supercells.
@@ -293,110 +237,14 @@ def collect_perturbed_structures(
     Returns:
         None.
     """
-    if prev_dir_json_saver is not None:
-        # copy_hiphive_outputs(prev_dir_json_saver)
-        # structure = loadfn("relaxed_structure.json")
-        logger.info(f"scaling_matrix = {supercell_matrix}")
-        logger.info(f"structure = {structure}")
-        supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
-
-        # min_atoms = supercell_matrix_kwargs["min_atoms"]
-        # max_atoms = supercell_matrix_kwargs["max_atoms"]
-        # min_length = supercell_matrix_kwargs["min_length"]
-        # force_diagonal = supercell_matrix_kwargs["force_diagonal"]
-        # supercell = CubicSupercellTransformation(
-        #     min_atoms=min_atoms,
-        #     max_atoms=max_atoms,
-        #     min_length=min_length,
-        #     force_diagonal=force_diagonal,
-        # ).apply_transformation(structure)
-        # # supercell_matrix = [[5, 0, 0],[0, 5, 0],[0, 0, 5]]
-        # # supercell_matrix = [[6, 0, 0],[0, 6, 0],[0, 0, 6]]
-        # supercell_matrix = []
-        # for i in range(3):
-        #     lattice_vector_supercell = supercell.lattice.abc[i]
-        #     lattice_vector_prim_cell = structure.lattice.abc[i]
-        #     if i == 0:
-        #         supercell_matrix.append(
-        #             [
-        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-        #                 0,
-        #                 0,
-        #             ]
-        #         )
-        #     if i == 1:
-        #         supercell_matrix.append(
-        #             [
-        #                 0,
-        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-        #                 0,
-        #             ]
-        #         )
-        #     if i == 2:
-        #         supercell_matrix.append(
-        #             [
-        #                 0,
-        #                 0,
-        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-        #             ]
-        #         )
-
-        structure_data = {
-            "structure": structure,
-            "supercell_structure": supercell,
-            "supercell_matrix": supercell_matrix,
-        }
-    else:
-        logger.info(f"scaling_matrix = {supercell_matrix}")
-        logger.info(f"structure = {structure}")
-        supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
-
-        # min_atoms = supercell_matrix_kwargs["min_atoms"]
-        # max_atoms = supercell_matrix_kwargs["max_atoms"]
-        # min_length = supercell_matrix_kwargs["min_length"]
-        # force_diagonal = supercell_matrix_kwargs["force_diagonal"]
-        # supercell = CubicSupercellTransformation(
-        #     min_atoms=min_atoms,
-        #     max_atoms=max_atoms,
-        #     min_length=min_length,
-        #     force_diagonal=force_diagonal,
-        # ).apply_transformation(structure)
-        # # supercell_matrix = [[5, 0, 0],[0, 5, 0],[0, 0, 5]]
-        # # supercell_matrix = [[6, 0, 0],[0, 6, 0],[0, 0, 6]]
-        # supercell_matrix = []
-        # for i in range(3):
-        #     lattice_vector_supercell = supercell.lattice.abc[i]
-        #     lattice_vector_prim_cell = structure.lattice.abc[i]
-        #     if i == 0:
-        #         supercell_matrix.append(
-        #             [
-        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-        #                 0,
-        #                 0,
-        #             ]
-        #         )
-        #     if i == 1:
-        #         supercell_matrix.append(
-        #             [
-        #                 0,
-        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-        #                 0,
-        #             ]
-        #         )
-        #     if i == 2:
-        #         supercell_matrix.append(
-        #             [
-        #                 0,
-        #                 0,
-        #                 np.round(lattice_vector_supercell / lattice_vector_prim_cell),
-        #             ]
-        #         )
-
-        structure_data = {
-            "structure": structure,
-            "supercell_structure": supercell,
-            "supercell_matrix": supercell_matrix,
-        }
+    logger.info(f"scaling_matrix = {supercell_matrix}")
+    logger.info(f"structure = {structure}")
+    supercell = SupercellTransformation(scaling_matrix=supercell_matrix).apply_transformation(structure)
+    structure_data = {
+        "structure": structure,
+        "supercell_structure": supercell,
+        "supercell_matrix": supercell_matrix,
+    }
 
     dumpfn(rattled_structures, f"perturbed_structures_{loop}.json")
     dumpfn(forces, f"perturbed_forces_{loop}.json")
@@ -411,10 +259,7 @@ def collect_perturbed_structures(
     with open(f"perturbed_forces_{loop}.json") as file:
         all_forces_loop = json.load(file)
 
-    # structure_data = loadfn(f"structure_data_{loop}.json")
-
     # Convert list of lists to numpy arrayx
-    # all_forces_loop = np.array(all_forces_loop["forces"])
     all_forces_loop = np.array(all_forces_loop)
 
     output = [
@@ -459,210 +304,126 @@ def collect_perturbed_structures(
     return [all_structures, all_forces, structure_data, current_dir]
 
 
-@job
-def quality_control(
-    rmse_test: float,
-    n_structures: int,
-    fixed_displs: List[float],
-    loop: int,
-    fit_method: str,
-    disp_cut: float,
-    bulk_modulus: float,
-    temperature_qha: float,
-    mesh_density: float,
-    imaginary_tol: float,
-    prev_dir_json_saver: str,
-    prev_vasp_dir: str,
-    supercell_matrix_kwargs: List[List[int]],
-):
-    """
-    Check if the desired Test RMSE is achieved.
+# @job
+# def quality_control(
+#     rmse_test: float,
+#     n_structures: int,
+#     fixed_displs: list[float],
+#     loop: int,
+#     fit_method: str,
+#     disp_cut: float,
+#     bulk_modulus: float,
+#     temperature_qha: float,
+#     mesh_density: float,
+#     imaginary_tol: float,
+#     prev_dir_json_saver: str,
+#     prev_dir: str,
+#     supercell_matrix_kwargs: list[list[int]],
+# ):
+#     """
+#     Check if the desired Test RMSE is achieved.
 
-    If not, then increase the number of structures
-    """
-    if rmse_test > 0.010:
-        return Response(
-            addition=quality_control_job(
-                rmse_test,
-                n_structures,
-                fixed_displs,
-                loop,
-                fit_method,
-                disp_cut,
-                bulk_modulus,
-                temperature_qha,
-                mesh_density,
-                imaginary_tol,
-                prev_dir_json_saver,
-                prev_vasp_dir,
-                supercell_matrix_kwargs,
-            )
-        )
-    return None
+#     If not, then increase the number of structures
+#     """
+#     if rmse_test > 0.010:
+#         return Response(
+#             addition=quality_control_job(
+#                 rmse_test,
+#                 n_structures,
+#                 fixed_displs,
+#                 loop,
+#                 fit_method,
+#                 disp_cut,
+#                 bulk_modulus,
+#                 temperature_qha,
+#                 mesh_density,
+#                 imaginary_tol,
+#                 prev_dir_json_saver,
+#                 prev_vasp_dir,
+#                 supercell_matrix_kwargs,
+#             )
+#         )
+#     return None
 
 
-@job
-def quality_control_job(
-    rmse_test,
-    n_structures: int,
-    fixed_displs: List[float],
-    loop: int,
-    fit_method: str,
-    disp_cut: float,
-    bulk_modulus: float,
-    temperature_qha: float,
-    mesh_density: float,
-    imaginary_tol: float,
-    prev_dir_json_saver: str,
-    prev_vasp_dir: str,
-    supercell_matrix_kwargs: List[List[int]],
-):
-    """Increases the number of structures if the desired Test RMSE is not achieved."""
-    jobs = []
-    outputs = []
+# @job
+# def quality_control_job(
+#     rmse_test,
+#     n_structures: int,
+#     fixed_displs: List[float],
+#     loop: int,
+#     fit_method: str,
+#     disp_cut: float,
+#     bulk_modulus: float,
+#     temperature_qha: float,
+#     mesh_density: float,
+#     imaginary_tol: float,
+#     prev_dir_json_saver: str,
+#     prev_vasp_dir: str,
+#     supercell_matrix_kwargs: List[List[int]],
+# ):
+#     """Increases the number of structures if the desired Test RMSE is not achieved."""
+#     jobs = []
+#     outputs = []
 
-    # my_custom_set = MPStaticSetGenerator(user_incar_settings={"ISMEAR": 1})
-    # MPstatic_maker = MPStaticMaker(input_set_generator=my_custom_set)
-    MPstatic_maker: BaseVaspMaker = field(default_factory=StaticMaker)
+#     # 4. Quality Control Job to check if the desired Test RMSE is achieved,
+#     # if not, then increase the number of structures --
+#     # Using "addition" feature of jobflow
+#     loop += 1
+#     n_structures += 1
+#     # prev_dir_json_saver="/pscratch/sd/h/hrushi99/atomate2/InAs/
+#     # block_2023-06-16-04-09-51-792824/launcher_2023-06-23-23-58-57-102993/
+#     # launcher_2023-06-23-23-59-34-157381"
+#     error_check_job = quality_control(
+#         rmse_test=fw_fit_force_constant.output[5],
+#         n_structures=n_structures,
+#         fixedDispls=fixed_displs,
+#         loop=loop,
+#         fit_method=fit_method,
+#         disp_cut=disp_cut,
+#         bulk_modulus=bulk_modulus,
+#         temperature_qha=temperature_qha,
+#         mesh_density=mesh_density,
+#         imaginary_tol=imaginary_tol,
+#         prev_dir_json_saver=json_saver.output[3],
+#         # prev_dir_json_saver = prev_dir_json_saver,
+#         prev_vasp_dir=prev_vasp_dir,
+#         supercell_matrix_kwargs=supercell_matrix_kwargs,
+#     )
+#     error_check_job.name += f" {loop}"
+#     jobs.append(error_check_job)
+#     outputs.append(error_check_job.output)
+#     error_check_job.metadata.update(
+#         {
+#             "tag": [
+#                 f"error_check_job_{loop}",
+#                 f"nConfigsPerStd={n_structures}",
+#                 f"fixedDispls={fixed_displs}",
+#                 f"dispCut={disp_cut}",
+#                 f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
+#                 f"loop={loop}",
+#             ]
+#         }
+#     )
 
-    # 1. Generates supercell, performs fixed displ rattling and runs
-    # static calculations
-    vasp_static_calcs = run_static_calculations(
-        prev_dir_json_saver=prev_dir_json_saver,
-        supercell_matrix_kwargs=supercell_matrix_kwargs,
-        n_structures=n_structures,
-        fixed_displs=fixed_displs,
-        loop=loop,
-        prev_vasp_dir=prev_vasp_dir,
-        MPstatic_maker=MPstatic_maker,
-    )
-    jobs.append(vasp_static_calcs)
-    outputs.append(vasp_static_calcs.output)
-    vasp_static_calcs.metadata.update(
-        {
-            "tag": [
-                f"vasp_static_calcs_{loop}",
-                f"nConfigsPerStd={n_structures}",
-                f"fixedDispls={fixed_displs}",
-                f"dispCut={disp_cut}",
-                f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                f"loop={loop}",
-            ]
-        }
-    )
+#     flow = Flow(jobs=jobs, output=outputs)
 
-    # 2.  Save "structure_data_{loop}.json", "relaxed_structures.json",
-    # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
-    # files locally
-    json_saver = collect_perturbed_structures(
-        supercell_matrix_kwargs=supercell_matrix_kwargs,
-        rattled_structures=vasp_static_calcs.output,
-        forces=vasp_static_calcs.output,
-        prev_dir_json_saver=prev_dir_json_saver,
-        loop=loop,
-    )
-    json_saver.name += f" {loop}"
-    jobs.append(json_saver)
-    outputs.append(json_saver.output)
-    json_saver.metadata.update(
-        {
-            "tag": [
-                f"json_saver_{loop}",
-                f"nConfigsPerStd={n_structures}",
-                f"fixedDispls={fixed_displs}",
-                f"dispCut={disp_cut}",
-                f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                f"loop={loop}",
-            ]
-        }
-    )
+#     quality_control_job.name = f"quality_control_job {loop}"
 
-    # 3. Hiphive Fitting of FCPs upto 4th order
-    fw_fit_force_constant = run_hiphive(
-        fit_method=fit_method,
-        disp_cut=disp_cut,
-        bulk_modulus=bulk_modulus,
-        temperature_qha=temperature_qha,
-        mesh_density=mesh_density,
-        imaginary_tol=imaginary_tol,
-        prev_dir_json_saver=json_saver.output[3],
-        loop=loop,
-    )
-    fw_fit_force_constant.name += f" {loop}"
-    jobs.append(fw_fit_force_constant)
-    outputs.append(fw_fit_force_constant.output)
-    fw_fit_force_constant.metadata.update(
-        {
-            "tag": [
-                f"fw_fit_force_constant_{loop}",
-                f"nConfigsPerStd={n_structures}",
-                f"fixedDispls={fixed_displs}",
-                f"dispCut={disp_cut}",
-                f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                f"loop={loop}",
-            ]
-        }
-    )
-
-    # 4. Quality Control Job to check if the desired Test RMSE is achieved,
-    # if not, then increase the number of structures --
-    # Using "addition" feature of jobflow
-    loop += 1
-    n_structures += 1
-    # prev_dir_json_saver="/pscratch/sd/h/hrushi99/atomate2/InAs/
-    # block_2023-06-16-04-09-51-792824/launcher_2023-06-23-23-58-57-102993/
-    # launcher_2023-06-23-23-59-34-157381"
-    error_check_job = quality_control(
-        rmse_test=fw_fit_force_constant.output[5],
-        n_structures=n_structures,
-        fixedDispls=fixed_displs,
-        loop=loop,
-        fit_method=fit_method,
-        disp_cut=disp_cut,
-        bulk_modulus=bulk_modulus,
-        temperature_qha=temperature_qha,
-        mesh_density=mesh_density,
-        imaginary_tol=imaginary_tol,
-        prev_dir_json_saver=json_saver.output[3],
-        # prev_dir_json_saver = prev_dir_json_saver,
-        prev_vasp_dir=prev_vasp_dir,
-        supercell_matrix_kwargs=supercell_matrix_kwargs,
-    )
-    error_check_job.name += f" {loop}"
-    jobs.append(error_check_job)
-    outputs.append(error_check_job.output)
-    error_check_job.metadata.update(
-        {
-            "tag": [
-                f"error_check_job_{loop}",
-                f"nConfigsPerStd={n_structures}",
-                f"fixedDispls={fixed_displs}",
-                f"dispCut={disp_cut}",
-                f"supercell_matrix_kwargs={supercell_matrix_kwargs}",
-                f"loop={loop}",
-            ]
-        }
-    )
-
-    flow = Flow(jobs=jobs, output=outputs)
-
-    quality_control_job.name = f"quality_control_job {loop}"
-
-    return Response(addition=flow)
+#     return Response(addition=flow)
 
 
 @job
-# @explicit_serialize
 def run_hiphive(
-    cutoffs: Optional[list[list]] = None,
-    fit_method: str = None,
-    disp_cut: float = None,
-    bulk_modulus: float = None,
-    temperature_qha: float = None,
-    mesh_density: float = None,
-    imaginary_tol: float = None,
-    prev_dir_json_saver: str = None,
-    loop: int = None,
+    cutoffs: list[list] | None = None,
+    fit_method: str | None = None,
+    disp_cut: float | None = None,
+    bulk_modulus: float | None = None,
+    temperature_qha: float | None = None,
+    mesh_density: float | None = None,
+    imaginary_tol: float | None = None,
+    prev_dir_json_saver: str | None = None,
+    loop: int | None = None,
 ) -> list:
     """
     Fit force constants using hiPhive.
@@ -894,11 +655,11 @@ def fit_force_constants(
     structures: list[Atoms],
     all_cutoffs: list[list[float]],
     # separate_fit: bool,
-    disp_cut: float = 0.055,
-    imaginary_tol: float = IMAGINARY_TOL,
-    fit_method: str = FIT_METHOD,
-    n_jobs: int = -1,
-    fit_kwargs: Optional[dict] = None,
+    disp_cut: float | None = 0.055,
+    imaginary_tol: float | None = IMAGINARY_TOL,
+    fit_method: str | None = FIT_METHOD,
+    n_jobs: int | None = -1,
+    fit_kwargs: dict | None = None,
 ) -> tuple:
     """
     Fit FC using hiphive.
@@ -984,9 +745,10 @@ def fit_force_constants(
 
     logger.info("We are starting Joblib_s parallellized jobs")
 
-    cutoff_results = Parallel(n_jobs=min(os.cpu_count(),len(all_cutoffs)), backend="multiprocessing")(delayed(_run_cutoffs)(
-        i, cutoffs, n_cutoffs, parent_structure, structures, supercell_matrix, fit_method,
-        disp_cut, fit_kwargs) for i, cutoffs in enumerate(all_cutoffs))
+    cutoff_results = Parallel(n_jobs=min(os.cpu_count(),len(all_cutoffs)),
+                              backend="multiprocessing")(delayed(_run_cutoffs)(
+        i, cutoffs, n_cutoffs, parent_structure, structures, supercell_matrix,
+        fit_method, disp_cut, fit_kwargs) for i, cutoffs in enumerate(all_cutoffs))
 
     for result in cutoff_results:
         if result is None:
@@ -1027,7 +789,7 @@ def _run_cutoffs(
 
     if not is_cutoff_allowed(supercell_atoms, max(cutoffs)):
         logger.info("Skipping cutoff due as it is not commensurate with supercell size")
-        return None
+        return {}
 
     cs = ClusterSpace(supercell_atoms, cutoffs, symprec=1e-3, acoustic_sum_rules=True)
     logger.debug(cs.__repr__())
@@ -1111,7 +873,7 @@ def _run_cutoffs(
             "force_constants_potential": fcp,
         }
     except Exception:
-        return None
+        return {}
 
 
 def get_structure_container(
@@ -1186,7 +948,7 @@ def harmonic_properties(
     supercell_matrix: np.ndarray,
     fcs: ForceConstants,
     temperature: list,
-    imaginary_tol: float = IMAGINARY_TOL,
+    imaginary_tol: float | None = IMAGINARY_TOL,
 ) -> tuple[dict, Phonopy]:
     """
     Calculate harmonic properties.
@@ -1221,9 +983,9 @@ def harmonic_properties(
     logger.info("Thermal properties successfully run!")
 
     _, free_energy, entropy, heat_capacity = phonopy.get_thermal_properties()
-    free_energy *= 1000 / sp.constants.Avogadro / eV2J / natom  # kJ/mol to eV/atom
-    entropy *= 1 / sp.constants.Avogadro / eV2J / natom  # J/K/mol to eV/K/atom
-    heat_capacity *= 1 / sp.constants.Avogadro / eV2J / natom  # J/K/mol to eV/K/atom
+    free_energy *= 1000 / sp.constants.Avogadro / ev2j / natom  # kJ/mol to eV/atom
+    entropy *= 1 / sp.constants.Avogadro / ev2j / natom  # J/K/mol to eV/K/atom
+    heat_capacity *= 1 / sp.constants.Avogadro / ev2j / natom  # J/K/mol to eV/K/atom
 
     freq = phonopy.mesh.frequencies  # in THz
     # find imaginary modes at gamma
@@ -1258,7 +1020,7 @@ def anharmonic_properties(
     temperature: list,
     heat_capacity: np.ndarray,
     n_imaginary: float,
-    bulk_modulus: float = None,
+    bulk_modulus: float | None = None,
 ) -> dict:
     if n_imaginary == 0:
         logger.info("Evaluating anharmonic properties...")
@@ -1298,14 +1060,15 @@ def get_total_grun(
     else:
         for i in range(nptk):
             for j in range(nbands):
-                x = hbar * omega[i, j] / (2.0 * kB * T)
+                x = hbar * omega[i, j] / (2.0 * kb * T)
                 dBE = (x / np.sinh(x)) ** 2
                 weight += dBE * kweight[i]
                 total += dBE * kweight[i] * grun[i, j]
         total = total / weight
         grun_total_diag = np.array([total[0, 2], total[1, 1], total[2, 0]])
 
-        def percent_diff(a, b):
+        def percent_diff(a: float,
+                         b: float) -> float:
             return abs((a - b) / b)
 
         # This process preserves cell symmetry upon thermal expansion, i.e., it prevents
@@ -1356,7 +1119,7 @@ def gruneisen(
     fcs3: np.ndarray,
     temperature: list,
     heat_capacity: np.ndarray,  # in eV/K/atom
-    bulk_modulus: float = None,  # in GPa
+    bulk_modulus: float | None = None,  # in GPa
 ) -> tuple[list, list, np.ndarray]:
     gruneisen = Gruneisen(fcs2, fcs3, phonopy.supercell, phonopy.primitive)
     gruneisen.set_sampling_mesh(phonopy.mesh_numbers, is_gamma_center=True)
@@ -1380,7 +1143,7 @@ def gruneisen(
         dLfrac = None
     else:
         heat_capacity *= (
-            eV2J * phonopy.primitive.get_number_of_atoms()
+            ev2j * phonopy.primitive.get_number_of_atoms()
         )  # eV/K/atom to J/K
         vol = phonopy.primitive.get_volume()
         # cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
@@ -1438,9 +1201,8 @@ def thermal_expansion(
 
 @job
 def run_thermal_cond_solver(
-    shengbte_cmd: str = SETTINGS.SHENGBTE_CMD, # make this default as SETTINGS.VASP_CMD
     renormalized: bool | None = None,
-    temperature: list(int) | None = None,
+    temperature: list[int] | None = None,
     control_kwargs: dict | None = None,
     prev_dir_hiphive: str | None = None,
     loop: int | None = None,
@@ -1466,23 +1228,21 @@ def run_thermal_cond_solver(
             file.
     """
     if therm_cond_solver == "almabte":
-        therm_cond_solver_cmd = SETTINGS.ALMABTE_CMD
+        therm_cond_solver_cmd = Atomate2Settings.ALMABTE_CMD
     elif therm_cond_solver == "shengbte":
-        therm_cond_solver_cmd = SETTINGS.SHENGBTE_CMD
+        therm_cond_solver_cmd = Atomate2Settings.SHENGBTE_CMD
     elif therm_cond_solver == "phono3py":
-        therm_cond_solver_cmd = SETTINGS.PHONO3PY_CMD
+        therm_cond_solver_cmd = Atomate2Settings.PHONO3PY_CMD
 
-    print(f"shengbte_cmd_newwwwwww = {therm_cond_solver_cmd}")
+    logger.info(f"therm_cond_solver_cmd = {therm_cond_solver_cmd}")
     therm_cond_solver_cmd = expandvars(therm_cond_solver_cmd)
 
-    logger.info("Running ShengBTE... 1")
+    logger.info(f"Running {therm_cond_solver_cmd} command")
 
     copy_hiphive_outputs(prev_dir_hiphive)
     with open(f"structure_data_{loop}.json") as file:
         structure_data = json.load(file)
         dumpfn(structure_data, "structure_data.json")
-
-    logger.info("Running ShengBTE... 2")
 
     structure_data = loadfn("structure_data.json")
     structure = structure_data["structure"]
@@ -1506,7 +1266,7 @@ def run_thermal_cond_solver(
         else:
             raise ValueError("Unsupported temperature type, must be float or dict")
 
-    logger.info("Running ShengBTE... 4")
+    logger.info(f"Creating control dict")
 
     control_dict = {
         "scalebroad": 0.5,
@@ -1525,10 +1285,7 @@ def run_thermal_cond_solver(
         therm_cond_solver_cmd = os.path.expandvars(therm_cond_solver_cmd)
         therm_cond_solver_cmd = shlex.split(therm_cond_solver_cmd)
 
-    logger.info("Running ShengBTE... 5")
-
     therm_cond_solver_cmd = list(therm_cond_solver_cmd)
-    logger.info(f"Running command: {therm_cond_solver_cmd}")
 
     with open("shengbte.out", "w") as f_std, open(
         "shengbte_err.txt", "w", buffering=1
@@ -1543,8 +1300,6 @@ def run_thermal_cond_solver(
     # return_code = subprocess.call(shengbte_cmd, shell=True)  # noqa: S602
     # logger.info(f"{shengbte_cmd} finished running with returncode: {return_code}")
 
-    logger.info("Running ShengBTE... 6")
-
     if return_code == 1:
         raise RuntimeError(
             f"Running ShengBTE failed. Check '{os.getcwd()}/shengbte_err.txt' for "
@@ -1554,11 +1309,11 @@ def run_thermal_cond_solver(
 
 @job
 def run_fc_to_pdos(
-    renormalized: bool = None,
-    renorm_temperature: str = None,
-    mesh_density: float = None,
-    prev_dir_json_saver: str = None,
-    loop: int = None,
+    renormalized: bool | None = None,
+    renorm_temperature: str | None = None,
+    mesh_density: float | None = None,
+    prev_dir_json_saver: str | None = None,
+    loop: int | None = None,
 ) -> tuple:
     """
     FC to PDOS.
@@ -1628,7 +1383,10 @@ def run_fc_to_pdos(
     return uniform_bs, lm_bs, dos
 
 
-def _get_fc_fsid(structure, supercell_matrix, fcs, mesh_density):
+def _get_fc_fsid(structure: Structure,
+                 supercell_matrix: list[list[int]] | None = None, 
+                 fcs: ForceConstants | None = None, 
+                 mesh_density: float | None = None) -> tuple:
     phonopy_fc = fcs.get_fc_array(order=2)
 
     logger.info("Getting uniform phonon band structure.")
@@ -1645,27 +1403,6 @@ def _get_fc_fsid(structure, supercell_matrix, fcs, mesh_density):
     dos = get_phonon_dos_from_fc(
         structure, supercell_matrix, phonopy_fc, mesh_density=mesh_density
     )
-
-    # logger.info("Inserting phonon objects into database.")
-    # dos_fsid, _ = mmdb.insert_gridfs(
-    #     dos.to_json(), collection="phonon_dos_fs"
-    # )
-    # uniform_bs_fsid, _ = mmdb.insert_gridfs(
-    #     uniform_bs.to_json(), collection="phonon_bandstructure_fs"
-    # )
-    # lm_bs_fsid, _ = mmdb.insert_gridfs(
-    #     lm_bs.to_json(), collection="phonon_bandstructure_fs"
-    # )
-
-    # logger.info("Inserting force constants into database.")
-    # fc_json = json.dumps(
-    #     {str(k): v.tolist() for k, v in fcs.get_fc_dict().items()}
-    # )
-    # fc_fsid, _ = mmdb.insert_gridfs(
-    #     fc_json, collection="phonon_force_constants_fs"
-    # )
-
-    # return dos_fsid, uniform_bs_fsid, lm_bs_fsid, fc_fsid
     return uniform_bs, lm_bs, dos
 
 
@@ -1681,7 +1418,7 @@ def run_hiphive_renormalization(
     mesh_density: float,
     prev_dir_hiphive: str,
     loop: int,
-):
+) -> list[str]:
     """
     Phonon renormalization using hiPhive.
 
@@ -1719,14 +1456,6 @@ def run_hiphive_renormalization(
     supercell_structure = structure_data["supercell_structure"]
     supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
     supercell_matrix = np.array(structure_data["supercell_matrix"])
-
-    # temperature = temperature
-    # renorm_method = renorm_method
-    # nconfig = nconfig
-    # conv_thresh = conv_thresh
-    # max_iter = max_iter
-    # renorm_TE_iter = renorm_TE_iter
-    # bulk_modulus = bulk_modulus
 
     # Renormalization with DFT lattice
     renorm_data = run_renormalization(
@@ -1806,7 +1535,7 @@ def run_hiphive_renormalization(
     # write results
     logger.info("Writing renormalized results")
     # renorm_thermal_data = {}
-    renorm_thermal_data: Dict[str, Any] = {}
+    renorm_thermal_data: dict[str, Any] = {}
     fcs = renorm_data["fcs"]
     fcs.write("force_constants.fcs")
     thermal_keys = [
@@ -1857,7 +1586,7 @@ def run_renormalization(
     bulk_modulus: float = None,
     phonopy_orig: Phonopy = None,
     imaginary_tol: float = IMAGINARY_TOL,
-) -> Dict:
+) -> dict:
     """
     Run phonon renormalization.
 
@@ -1957,7 +1686,7 @@ def setup_TE_iter(
 def run_lattice_thermal_conductivity(
     prev_dir_hiphive: str,
     loop: int,
-    temperature: Union[float, dict],
+    temperature: float | dict,
     renormalized: bool,
     name: str = "Lattice Thermal Conductivity",
     # prev_calc_dir: Optional[str] = None,
