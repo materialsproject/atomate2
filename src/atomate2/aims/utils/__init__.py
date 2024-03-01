@@ -1,6 +1,5 @@
 """A collection of helper utils found in atomate2 package."""
 
-
 from datetime import datetime
 
 

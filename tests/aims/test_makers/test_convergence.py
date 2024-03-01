@@ -1,5 +1,4 @@
-""" A test for AIMS convergence maker (used for GW, for instance)
-"""
+"""A test for AIMS convergence maker (used for GW, for instance)"""
 
 import os
 
