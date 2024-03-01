@@ -13,6 +13,15 @@ import numpy as np
 # Jobflow packages
 from jobflow import Flow, Maker
 
+from atomate2.common.jobs.hiphive import (
+    collect_perturbed_structures,
+    generate_hiphive_displacements,
+    quality_control,
+    run_fc_to_pdos,
+    run_hiphive,
+    run_hiphive_renormalization,
+    run_lattice_thermal_conductivity,
+)
 from atomate2.common.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -29,15 +38,6 @@ from atomate2.vasp.flows.phonons import PhononMaker
 
 # Atomate2 packages
 from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
-from atomate2.vasp.jobs.hiphive import (
-    collect_perturbed_structures,
-    generate_hiphive_displacements,
-    quality_control,
-    run_fc_to_pdos,
-    run_hiphive,
-    run_hiphive_renormalization,
-    run_lattice_thermal_conductivity,
-)
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
@@ -368,35 +368,35 @@ class BaseHiphiveMaker(Maker, ABC):
         # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/Hiphive_reference_NaCl_3_displ"
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/Hiphive_reference_NaCl_4_displ"
 
-        # # 6. Hiphive Fitting of FCPs upto 4th order
-        # fit_force_constant = run_hiphive(
-        #     fit_method=fit_method,
-        #     disp_cut=disp_cut,
-        #     bulk_modulus=bulk_modulus,
-        #     temperature_qha=temperature_qha,
-        #     mesh_density=mesh_density,
-        #     imaginary_tol=imaginary_tol,
-        #     # prev_dir_json_saver=json_saver.output[3],
-        #     prev_dir_json_saver=prev_dir_json_saver,
-        #     loop=loops,
-        #     cutoffs=cutoffs
-        # )
-        # fit_force_constant.name += f" {loops}"
-        # jobs.append(fit_force_constant)
-        # outputs.append(fit_force_constant.output)
-        # fit_force_constant.metadata.update(
-        #     {
-        #         "tag": [
-        #             f"mp_id={mpid}",
-        #             f"fit_force_constant_{loops}",
-        #             f"nConfigsPerStd={n_structures}",
-        #             f"fixedDispls={fixed_displs}",
-        #             f"dispCut={disp_cut}",
-        #             f"supercell_matrix={supercell_matrix}",
-        #             f"loop={loops}",
-        #         ]
-        #     }
-        # )
+        # 6. Hiphive Fitting of FCPs upto 4th order
+        fit_force_constant = run_hiphive(
+            fit_method=fit_method,
+            disp_cut=disp_cut,
+            bulk_modulus=bulk_modulus,
+            temperature_qha=temperature_qha,
+            mesh_density=mesh_density,
+            imaginary_tol=imaginary_tol,
+            prev_dir_json_saver=json_saver.output[3],
+            # prev_dir_json_saver=prev_dir_json_saver,
+            loop=loops,
+            cutoffs=cutoffs
+        )
+        fit_force_constant.name += f" {loops}"
+        jobs.append(fit_force_constant)
+        outputs.append(fit_force_constant.output)
+        fit_force_constant.metadata.update(
+            {
+                "tag": [
+                    f"mp_id={mpid}",
+                    f"fit_force_constant_{loops}",
+                    f"nConfigsPerStd={n_structures}",
+                    f"fixedDispls={fixed_displs}",
+                    f"dispCut={disp_cut}",
+                    f"supercell_matrix={supercell_matrix}",
+                    f"loop={loops}",
+                ]
+            }
+        )
 
         # # 7. Quality Control Job to check if the desired Test RMSE is achieved,
         # # if not, then increase the number of structures --
@@ -566,7 +566,9 @@ class BaseHiphiveMaker(Maker, ABC):
         #     }
         # )
 
-        return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE_{fixed_displs}")
+        return Flow(jobs=jobs, output=outputs, name=f"{mpid}_ShengBTE_"
+                                                    f"{fixed_displs}_"
+                                                    f"{self.name}")
 
     @property
     @abstractmethod
