@@ -32,7 +32,7 @@ except ImportError:
     warnings.warn(
         "Due to errors in the implementation of gradients in the ASE"
         " ExpCellFilter, we recommend installing ASE from gitlab\n"
-        "    pip install git+https://gitlab.com/ase/ase\n"
+        "    pip install git+https://gitlab.com/ase/ase.git\n"
         "rather than PyPi to access FrechetCellFilter. See\n"
         "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
         "for more details. Otherwise, you must specify an alternate ASE Filter.",

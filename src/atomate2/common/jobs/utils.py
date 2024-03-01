@@ -112,12 +112,12 @@ def retrieve_structure_from_materials_project(
 
     with MPRester() as mpr:
         if use_task_id:
-            doc = mpr.tasks.get_data_by_id(material_id_or_task_id, fields=["structure"])
+            doc = mpr.tasks.search(material_id_or_task_id, fields=["structure"])[0]
             task_id = material_id_or_task_id
         else:
-            doc = mpr.materials.get_data_by_id(
+            doc = mpr.materials.search(
                 material_id_or_task_id, fields=["structure", "origins"]
-            )
+            )[0]
             origins = {prop.name: prop for prop in doc.origins}
             task_id = str(origins["structure"].task_id)
 
