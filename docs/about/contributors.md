@@ -103,6 +103,13 @@ University of Arizona
 [tpurcell90]: https://github.com/tpurcell90
 [0000-0003-4564-7206]: https://orcid.org/0000-0003-4564-7206
 
+**Andrei Sobolev** [![gh]][ansobolev] [![orc]][0000-0001-5086-6601] \
+Software Scientist \
+MS1P e.V.
+
+[ansobolev]: https://github.com/ansobolev
+[0000-0001-5086-6601]: https://orcid.org/0000-0001-5086-6601
+
 **Alexander Bonkowski** [![gh]][ab5424] [![orc]][0000-0002-0525-4742] \
 PhD student in Chemistry \
 RWTH Aachen University
