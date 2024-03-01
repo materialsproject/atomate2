@@ -8,7 +8,7 @@ from jobflow import job, Flow, Maker, Response
 
 # from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import (
-    _apply_strain_to_structure,
+    apply_strain_to_structure,
     MPMorphPVPostProcess,
 )
 
@@ -113,9 +113,7 @@ class EquilibriumVolumeMaker(Maker):
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
         deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
-        deformed_structures = _apply_strain_to_structure(
-            structure, deformation_matrices
-        )
+        deformed_structures = apply_strain_to_structure(structure, deformation_matrices)
 
         eos_jobs = []
         for index in range(len(deformation_matrices)):
