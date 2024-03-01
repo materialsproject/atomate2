@@ -1,4 +1,4 @@
-"""Define the VASP HiphiveMaker.
+"""Define the ForceField HiphiveMaker.
 
 Uses hiPhive, phono3py, phonopy & alma/shengbte for calculating harmonic & anharmonic
 props of phonon.
@@ -9,18 +9,15 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, ClassVar
+from typing import ClassVar
 
 from atomate2.common.flows.hiphive import BaseHiphiveMaker
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-
-# Atomate2 packages
-from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
-from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
-from atomate2.vasp.sets.core import StaticSetGenerator
-
-if TYPE_CHECKING:
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.forcefields.jobs import (
+    CHGNetRelaxMaker,
+    CHGNetStaticMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -113,18 +110,14 @@ class HiphiveMaker(BaseHiphiveMaker):
     task_document_kwargs: dict = field(
         default_factory=lambda: {"task_label": "dummy_label"}
     )
-    static_energy_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: StaticMaker(
-            input_set_generator=StaticSetGenerator(auto_ispin=True)
-        )
+    static_energy_maker: ForceFieldStaticMaker | None = field(
+        default_factory=CHGNetStaticMaker
     )
-    bulk_relax_maker: DoubleRelaxMaker = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+    bulk_relax_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
-    phonon_displacement_maker: BaseVaspMaker | None = field(
-        default_factory=lambda:PhononDisplacementMaker(
-            input_set_generator=StaticSetGenerator(auto_lreal=True)
-        )
+    phonon_displacement_maker: ForceFieldStaticMaker = field(
+        default_factory=CHGNetStaticMaker
     )
     min_length: float | None = 13.0
     prefer_90_degrees: bool = True
@@ -156,7 +149,7 @@ class HiphiveMaker(BaseHiphiveMaker):
     PHONO3PY_CMD = "phono3py --mesh 19 19 19 --fc3 --fc2 --br --dim 5 5 5"
 
     @property
-    def prev_calc_dir_argname(self) -> str:
+    def prev_calc_dir_argname(self) -> None:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
@@ -165,5 +158,5 @@ class HiphiveMaker(BaseHiphiveMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_dir"
+        return
 
