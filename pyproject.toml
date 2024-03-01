@@ -43,7 +43,7 @@ cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.7"]
-defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
+defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30", "python-ulid"]
 forcefields = [
     "ase>=3.22.1",
     "chgnet>=0.2.2",
@@ -92,6 +92,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.10.0",
+    "python-ulid==2.2.0"
 ]
 
 [project.scripts]

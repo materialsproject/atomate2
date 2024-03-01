@@ -71,7 +71,7 @@ def test_phonon_wf(clean_dir):
         ((0, 0.5, 0.5), (0.5, 0.0, 0.5), (0.5, 0.5, 0.0)),
         atol=1e-8,
     )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert responses[job.jobs[-1].uuid][1].output.code == "forcefields"
     assert isinstance(
         responses[job.jobs[-1].uuid][1].output.phonopy_settings,
         PhononComputationalSettings,
