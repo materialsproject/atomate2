@@ -16,10 +16,13 @@ import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
+from ase.calculators.singlepoint import SinglePointCalculator
+from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 try:
@@ -38,7 +41,7 @@ except ImportError:
 
 if TYPE_CHECKING:
     from os import PathLike
-    from typing import Any
+    from typing import Any, Literal
 
     from ase import Atoms
     from ase.calculators.calculator import Calculator
@@ -93,7 +96,8 @@ class TrajectoryObserver:
         # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
-        # TODO: MD needs kinetic energy parts of stress, we might just need to refactor TrajectoryObserver
+        # TODO: MD needs kinetic energy parts of stress,
+        #       we might just need to refactor TrajectoryObserver
         # Now it is safe for 0K relaxation as the atoms don't have momenta
         self.stresses.append(self.atoms.get_stress(include_ideal_gas=True))
         self.atom_positions.append(self.atoms.get_positions())
@@ -102,8 +106,9 @@ class TrajectoryObserver:
         if self._store_md_outputs:
             self.velocities.append(self.atoms.get_velocities())
             self.temperatures.append(self.atoms.get_temperature())
-            # self.stresses.append(self.atoms.get_stress(voigt=True, include_ideal_gas=True))
-
+            # self.stresses.append(self.atoms.get_stress(
+            #     voigt=True, include_ideal_gas=True)
+            # )
 
     def compute_energy(self) -> float:
         """
@@ -115,7 +120,9 @@ class TrajectoryObserver:
         """
         return self.atoms.get_potential_energy()
 
-    def save(self, filename: str | PathLike) -> None:
+    def save(
+        self, filename: str | PathLike | None, fmt: Literal["pmg", "ase"] = "ase"
+    ) -> None:
         """
         Save the trajectory file using monty.serialization.
 
@@ -127,23 +134,103 @@ class TrajectoryObserver:
         -------
             None
         """
-        dumpfn(self.as_dict(), filename)
+        filename = str(filename) if filename is not None else None
+        if fmt == "pmg":
+            self.to_pymatgen_trajectory(filename=filename)
+        elif fmt == "ase":
+            self.to_ase_trajectory(filename=filename)
+
+    def to_ase_trajectory(self, filename: str | None = "atoms.traj") -> AseTrajectory:
+        """
+        Convert to an ASE .Trajectory.
+
+        Parameters
+        ----------
+        filename : str | None
+            Name of the file to write the ASE trajectory to.
+            If None, no file is written.
+        """
+        for idx in range(len(self.cells)):
+            atoms = self.atoms.copy()
+            atoms.set_positions(self.atom_positions[idx])
+            atoms.set_cell(self.cells[idx])
+            atoms.set_velocities(self.velocities[idx])
+            atoms.calc = SinglePointCalculator(
+                atoms=atoms,
+                energy=self.energies[idx],
+                forces=self.forces[idx],
+                stress=self.stresses[idx],
+            )
+            with AseTrajectory(filename, "a" if idx > 0 else "w", atoms=atoms) as f:
+                f.write()
+
+        return AseTrajectory(filename, "r")
+
+    def to_pymatgen_trajectory(
+        self, filename: str | None = "trajectory.json.gz"
+    ) -> PmgTrajectory:
+        """
+        Convert the trajectory to a pymatgen .Trajectory object.
+
+        Parameters
+        ----------
+        filename : str or None
+            Name of the file to write the pymatgen trajectory to.
+            If None, no file is written.
+        """
+        n_md_steps = len(self.cells)
+        species = AseAtomsAdaptor.get_structure(self.atoms).species
+
+        structures = [
+            Structure(
+                lattice=self.cells[idx],
+                coords=self.atom_positions[idx],
+                species=species,
+                coords_are_cartesian=True,
+            )
+            for idx in range(n_md_steps)
+        ]
+
+        # sanitize trajectory entries
+        traj = self.as_dict()
+
+        frame_property_keys = ["energy", "forces", "stress"]
+        if self._store_md_outputs:
+            frame_property_keys += ["velocities", "temperature"]
+
+        frame_properties = [
+            {key: traj[key][idx] for key in frame_property_keys}
+            for idx in range(n_md_steps)
+        ]
+
+        traj = PmgTrajectory.from_structures(
+            structures,
+            frame_properties=frame_properties,
+            constant_lattice=False,
+        )
+
+        if filename:
+            dumpfn(traj, filename)
+
+        return traj
 
     def as_dict(self) -> dict:
         """Make JSONable dict representation of the Trajectory."""
         traj_dict = {
             "energy": self.energies,
             "forces": self.forces,
-            "stresses": self.stresses,
+            "stress": self.stresses,
             "atom_positions": self.atom_positions,
             "cell": self.cells,
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
         if self._store_md_outputs:
-            traj_dict.update({
-                "velocities": self.velocities,
-                "temperature": self.temperatures,
-            })
+            traj_dict.update(
+                {
+                    "velocities": self.velocities,
+                    "temperature": self.temperatures,
+                }
+            )
         # sanitize dict
         for key in traj_dict:
             if all(isinstance(val, np.ndarray) for val in traj_dict[key]):

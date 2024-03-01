@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
+from pymatgen.core.trajectory import Trajectory
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
@@ -15,10 +16,49 @@ from atomate2.forcefields.utils import Relaxer
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
+    from typing import Callable
 
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
+
+_FORCEFIELD_DATA_OBJECTS = [Trajectory]
+
+
+def forcefield_job(method: Callable) -> job:
+    """
+    Decorate the ``make`` method of forcefield job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    settings for all forcefield jobs. For example, it ensures that large data objects
+    (currently only trajectories) are all stored in the atomate2 data store.
+    It also configures the output schema to be a ForceFieldTaskDocument :obj:`.TaskDoc`.
+
+    Any makers that return forcefield jobs (not flows) should decorate the
+    ``make`` method with @forcefield_job. For example:
+
+    .. code-block:: python
+
+        class MyForcefieldMaker(Maker):
+            @forcefield_job
+            def make(structure):
+                # code to run forcefield job.
+                pass
+
+    Parameters
+    ----------
+    method : callable
+        A Maker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate forcefield jobs.
+    """
+    return job(
+        method, data=_FORCEFIELD_DATA_OBJECTS, output_schema=ForceFieldTaskDocument
+    )
 
 
 @dataclass
@@ -54,7 +94,7 @@ class ForceFieldRelaxMaker(Maker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=ForceFieldTaskDocument)
+    @forcefield_job
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> ForceFieldTaskDocument:
@@ -110,7 +150,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     force_field_name: str = "Force field"
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @job(output_schema=ForceFieldTaskDocument)
+    @forcefield_job
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> ForceFieldTaskDocument:
