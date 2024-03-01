@@ -94,11 +94,7 @@ class VaspInputSet(InputSet):
         if make_dir:
             os.makedirs(directory, exist_ok=True)
 
-        inputs = {
-            "INCAR": self.incar,
-            "KPOINTS": self.kpoints,
-            "POSCAR": self.poscar,
-        }
+        inputs = {"INCAR": self.incar, "KPOINTS": self.kpoints, "POSCAR": self.poscar}
         inputs.update(self.optional_files)
 
         if isinstance(self.potcar, Potcar):
@@ -106,16 +102,16 @@ class VaspInputSet(InputSet):
         else:
             inputs["POTCAR.spec"] = "\n".join(self.potcar)
 
-        for k, v in inputs.items():
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / k, "wt") as f:
-                    if isinstance(v, Poscar):
+        for key, val in inputs.items():
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / key, mode="wt") as file:
+                    if isinstance(val, Poscar):
                         # write POSCAR with more significant figures
-                        f.write(v.get_string(significant_figures=16))
+                        file.write(val.get_str(significant_figures=16))
                     else:
-                        f.write(v.__str__())
-            elif not overwrite and (directory / k).exists():
-                raise FileExistsError(f"{directory / k} already exists.")
+                        file.write(str(val))
+            elif not overwrite and (directory / key).exists():
+                raise FileExistsError(f"{directory / key} already exists.")
 
     @staticmethod
     def from_directory(
@@ -171,23 +167,30 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
+        ismear = self.incar.get("ISMEAR", 1)
+        sigma = self.incar.get("SIGMA", 0.2)
         if (
-            all(k.is_metal for k in self.poscar.structure.composition)
+            all(elem.is_metal for elem in self.poscar.structure.composition)
             and self.incar.get("NSW", 0) > 0
-            and self.incar.get("ISMEAR", 1) < 1
+            and (ismear < 0 or (ismear == 0 and sigma > 0.05))
         ):
+            ismear_docs = "https://www.vasp.at/wiki/index.php/ISMEAR"
+            msg = ""
+            if ismear < 0:
+                msg = f"Relaxation of likely metal with ISMEAR < 0 ({ismear})."
+            elif ismear == 0 and sigma > 0.05:
+                msg = f"ISMEAR = 0 with a small SIGMA ({sigma}) detected."
             warnings.warn(
-                "Relaxation of likely metal with ISMEAR < 1 detected. Please see VASP "
-                "recommendations on ISMEAR for metals.",
+                f"{msg} See VASP recommendations on ISMEAR for metals ({ismear_docs}).",
                 BadInputSetWarning,
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in (
             "Normal",
             "All",
             "Damped",
-        ]:
+        ):
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -270,7 +273,7 @@ class VaspInputGenerator(InputGenerator):
     auto_kspacing
         If true, automatically use the VASP recommended KSPACING based on bandgap,
         i.e. higher kpoint spacing for insulators than metals. Can be boolean or float.
-        If float, then the value will interpreted as the bandgap in eV to use for the
+        If a float, the value will be interpreted as the bandgap in eV to use for the
         KSPACING calculation.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the

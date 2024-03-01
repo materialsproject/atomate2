@@ -279,7 +279,7 @@ def _expand_strains(
         `generate_elastic_deformations()`.
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
-    symmops = sga.get_symmetry_operations(cartesian=True)
+    symm_ops = sga.get_symmetry_operations(cartesian=True)
 
     full_strains = deepcopy(strains)
     full_stresses = deepcopy(stresses)
@@ -287,9 +287,9 @@ def _expand_strains(
     full_job_dirs = deepcopy(job_dirs)
 
     mapping = TensorMapping(full_strains, [True for _ in full_strains])
-    for i, strain in enumerate(strains):
-        for symmop in symmops:
-            rotated_strain = strain.transform(symmop)
+    for idx, strain in enumerate(strains):
+        for symm_op in symm_ops:
+            rotated_strain = strain.transform(symm_op)
 
             # check if we have more than one perturbed strain component
             if sum(np.abs(rotated_strain.voigt) > tol) > 1:
@@ -304,8 +304,8 @@ def _expand_strains(
 
             # expand the other properties
             full_strains.append(rotated_strain)
-            full_stresses.append(stresses[i].transform(symmop))
-            full_uuids.append(uuids[i])
-            full_job_dirs.append(job_dirs[i])
+            full_stresses.append(stresses[idx].transform(symm_op))
+            full_uuids.append(uuids[idx])
+            full_job_dirs.append(job_dirs[idx])
 
     return full_strains, full_stresses, full_uuids, full_job_dirs

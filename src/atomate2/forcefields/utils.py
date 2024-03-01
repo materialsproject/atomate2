@@ -28,7 +28,7 @@ except ImportError:
     warnings.warn(
         "Due to errors in the implementation of gradients in the ASE"
         " ExpCellFilter, we recommend installing ASE from gitlab\n"
-        "    pip install git+https://gitlab.com/ase/ase\n"
+        "    pip install git+https://gitlab.com/ase/ase.git\n"
         "rather than PyPi to access FrechetCellFilter. See\n"
         "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
         "for more details. Otherwise, you must specify an alternate ASE Filter.",
@@ -114,18 +114,16 @@ class TrajectoryObserver:
         -------
             None
         """
-        with open(filename, "wb") as f:
-            pickle.dump(
-                {
-                    "energy": self.energies,
-                    "forces": self.forces,
-                    "stresses": self.stresses,
-                    "atom_positions": self.atom_positions,
-                    "cell": self.cells,
-                    "atomic_number": self.atoms.get_atomic_numbers(),
-                },
-                f,
-            )
+        traj_dict = {
+            "energy": self.energies,
+            "forces": self.forces,
+            "stresses": self.stresses,
+            "atom_positions": self.atom_positions,
+            "cell": self.cells,
+            "atomic_number": self.atoms.get_atomic_numbers(),
+        }
+        with open(filename, "wb") as file:
+            pickle.dump(traj_dict, file)
 
 
 class Relaxer:

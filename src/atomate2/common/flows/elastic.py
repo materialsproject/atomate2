@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OnMissing
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.jobs.elastic import (
@@ -15,6 +14,7 @@ from atomate2.common.jobs.elastic import (
     generate_elastic_deformations,
     run_elastic_deformations,
 )
+from atomate2.common.jobs.utils import structure_to_conventional
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -116,8 +116,9 @@ class BaseElasticMaker(Maker, ABC):
                 equilibrium_stress = bulk.output.output.stress
 
         if conventional:
-            sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
-            structure = sga.get_conventional_standard_structure()
+            stc = structure_to_conventional(structure, self.symprec)
+            jobs.append(stc)
+            structure = stc.output
 
         deformations = generate_elastic_deformations(
             structure,

@@ -70,7 +70,7 @@ class MatPesGGAStaticSetGenerator(VaspInputGenerator):
 
 @dataclass
 class MatPesMetaGGAStaticSetGenerator(MatPesGGAStaticSetGenerator):
-    """Class to generate MP-compatible VASP GGA static input sets."""
+    """Class to generate MP-compatible VASP meta-GGA static input sets."""
 
     def get_incar_updates(
         self,

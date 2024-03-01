@@ -62,14 +62,14 @@ def calculate_finite_diff(
 
     d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
 
-    for i, dir_name in enumerate(d_dir_names):
+    for idx, dir_name in enumerate(d_dir_names):
         # Copy a distorted WAVECAR to WAVECAR.qqq
         copy_files(dir_name, include_files=["WAVECAR.gz"], prefix="qqq.")
         gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
         rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
         run_vasp(**run_vasp_kwargs)
-        fc.copy("WSWQ", f"WSWQ.{i}")
+        fc.copy("WSWQ", f"WSWQ.{idx}")
 
     fd_doc = FiniteDifferenceDocument.from_directory(
         ".", ref_dir=ref_calc_dir, distorted_dirs=d_dir_names
