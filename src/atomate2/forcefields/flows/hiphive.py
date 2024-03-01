@@ -1,4 +1,4 @@
-"""Define the VASP HiphiveMaker.
+"""Define the ForceField HiphiveMaker.
 
 Uses hiPhive, phono3py, phonopy & alma/shengbte for calculating harmonic & anharmonic
 props of phonon.
@@ -9,18 +9,15 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, ClassVar
+from typing import ClassVar
 
 from atomate2.common.flows.hiphive import BaseHiphiveMaker
-from atomate2.vasp.flows.core import DoubleRelaxMaker
-
-# Atomate2 packages
-from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
-from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
-from atomate2.vasp.sets.core import StaticSetGenerator
-
-if TYPE_CHECKING:
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.forcefields.jobs import (
+    CHGNetRelaxMaker,
+    CHGNetStaticMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -70,37 +67,19 @@ class HiphiveMaker(BaseHiphiveMaker):
         default is PhononDisplacementMaker.
     """
 
-    name: str = "Lattice-Dynamics-VASP"
-    static_energy_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: StaticMaker(
-            input_set_generator=StaticSetGenerator(auto_ispin=True)
-        )
+    name: str = "Lattice-Dynamics-FORCE_FIELD"
+    static_energy_maker: ForceFieldStaticMaker | None = field(
+        default_factory=CHGNetStaticMaker
     )
-    bulk_relax_maker: DoubleRelaxMaker = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+    bulk_relax_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
-    phonon_displacement_maker: BaseVaspMaker | None = field(
-        default_factory=lambda:PhononDisplacementMaker(
-            input_set_generator = StaticSetGenerator(
-            user_kpoints_settings={"reciprocal_density": 500},
-            user_incar_settings={
-                "IBRION": 2,
-                "ISIF": 3,
-                "ENCUT": 700, # Changed this from 600
-                "EDIFF": 1e-7,
-                "LAECHG": False,
-                "ALGO": "Normal",
-                "NSW": 0,
-                "LCHARG": False,
-                "LREAL": True
-            },
-            auto_ispin=True,
-        )
-        )
+    phonon_displacement_maker: ForceFieldStaticMaker = field(
+        default_factory=CHGNetStaticMaker
     )
 
     @property
-    def prev_calc_dir_argname(self) -> str:
+    def prev_calc_dir_argname(self) -> None:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
@@ -109,4 +88,5 @@ class HiphiveMaker(BaseHiphiveMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_dir"
+        return
+

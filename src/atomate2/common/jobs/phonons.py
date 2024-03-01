@@ -347,6 +347,7 @@ def run_phonon_displacements(
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)
+            outputs["structure"].append(phonon_job.output.output.structure)
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)
