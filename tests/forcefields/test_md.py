@@ -32,7 +32,10 @@ def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
     matcher = StructureMatcher()
 
     job = _to_maker[ff_name](
-        nsteps=nsteps, traj_file="md_traj.json.gz", traj_file_fmt="pmg"
+        nsteps=nsteps,
+        traj_file="md_traj.json.gz",
+        traj_file_fmt="pmg",
+        task_document_kwargs={"store_trajectory": "partial"},
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     taskdoc = response[next(iter(response))][1].output

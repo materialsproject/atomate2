@@ -137,7 +137,10 @@ class ForceFieldMDMaker(Maker):
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
     task_document_kwargs: dict = field(
-        default_factory=lambda: {"store_trajectory": "partial"}
+        default_factory=lambda: {
+            "store_trajectory": "partial",
+            "ionic_step_data": ("energy",),  # energy is required in ionicsteps
+        }
     )
 
     def _get_ensemble_schedule(self) -> None:
