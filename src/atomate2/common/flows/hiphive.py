@@ -275,16 +275,7 @@ class BaseHiphiveMaker(Maker, ABC):
         outputs = []
         loops = 1
 
-        # # 1. Relax the structure
-        # if isinstance(self.bulk_relax_maker, ForceFieldRelaxMaker):
-        #     bulk = self.bulk_relax_maker.make(structure)
-        # else:
-        #     bulk = self.bulk_relax_maker.make(structure, prev_dir=prev_vasp_dir)
-        # jobs.append(bulk)
-        # outputs.append(bulk.output)
-        # structure = bulk.output.structure
-        # prev_vasp_dir = bulk.output.dir_name
-
+        # 1. Relax the structure
         if self.bulk_relax_maker is not None:
             # optionally relax the structure
             bulk_kwargs = {}
@@ -343,32 +334,32 @@ class BaseHiphiveMaker(Maker, ABC):
         jobs.append(vasp_displacement_calcs)
 
 
-        # # 5. Save "structure_data_{loop}.json", "relaxed_structures.json",
-        # # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
-        # # files locally
-        # json_saver = collect_perturbed_structures(
-        #     structure=structure,
-        #     supercell_matrix=supercell_matrix,
-        #     rattled_structures=vasp_displacement_calcs.output["structure"],
-        #     forces=vasp_displacement_calcs.output["forces"],
-        #     loop=loops,
-        # )
-        # json_saver.name += f" {loops}"
-        # jobs.append(json_saver)
-        # outputs.append(json_saver.output)
-        # json_saver.metadata.update(
-        #     {
-        #         "tag": [
-        #             f"mp_id={mpid}",
-        #             f"json_saver_{loops}",
-        #             f"nConfigsPerStd={n_structures}",
-        #             f"fixedDispls={fixed_displs}",
-        #             f"dispCut={disp_cut}",
-        #             f"supercell_matrix={supercell_matrix}",
-        #             f"loop={loops}",
-        #         ]
-        #     }
-        # )
+        # 5. Save "structure_data_{loop}.json", "relaxed_structures.json",
+        # "perturbed_forces_{loop}.json" and "perturbed_structures_{loop}.json"
+        # files locally
+        json_saver = collect_perturbed_structures(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            rattled_structures=vasp_displacement_calcs.output["structure"],
+            forces=vasp_displacement_calcs.output["forces"],
+            loop=loops,
+        )
+        json_saver.name += f" {loops}"
+        jobs.append(json_saver)
+        outputs.append(json_saver.output)
+        json_saver.metadata.update(
+            {
+                "tag": [
+                    f"mp_id={mpid}",
+                    f"json_saver_{loops}",
+                    f"nConfigsPerStd={n_structures}",
+                    f"fixedDispls={fixed_displs}",
+                    f"dispCut={disp_cut}",
+                    f"supercell_matrix={supercell_matrix}",
+                    f"loop={loops}",
+                ]
+            }
+        )
 
         # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_fitting_ready"
         # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/MgO_555_paper"
