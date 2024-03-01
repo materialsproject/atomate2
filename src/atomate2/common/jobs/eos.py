@@ -360,3 +360,26 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
         )
         transformations += [ts]
     return transformations
+
+
+class MPMorphPVPostProcess(PostProcessEosPressure):
+    """Modified  p(V) fit to accomodate MPMorph."""
+
+    def eval(self) -> None:
+        """Fit the input data to the Birch-Murnaghan pressure EOS."""
+        initial_pars = self._initial_fit()
+        for jobtype in self._use_job_types:
+            eos_params, ierr = leastsq(
+                self._objective, initial_pars[jobtype], args=(jobtype,)
+            )
+
+            self[jobtype]["EOS"] = {}
+            if ierr not in (1, 2, 3, 4):
+                self[jobtype]["EOS"]["exception"] = "Optimal EOS parameters not found."
+            else:
+                for i, key in enumerate(["b0", "b1", "v0"]):
+                    self[jobtype]["EOS"][key] = eos_params[i]
+
+        self["V0"] = self[jobtype]["EOS"].get("v0")
+        self["Vmax"] = max(self["relax"]["volume"])
+        self["Vmin"] = min(self["relax"]["volume"])
