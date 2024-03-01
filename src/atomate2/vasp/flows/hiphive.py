@@ -92,9 +92,9 @@ class HiphiveMaker(BaseHiphiveMaker):
                 "ALGO": "Normal",
                 "NSW": 0,
                 "LCHARG": False,
+                "LREAL": True
             },
             auto_ispin=True,
-            auto_lreal=True,
         )
         )
     )
