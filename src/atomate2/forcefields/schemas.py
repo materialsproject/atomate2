@@ -10,8 +10,10 @@ from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
+from pymatgen.core.trajectory import Trajectory
 
 from atomate2.forcefields import MLFF
+from atomate2.forcefields.utils import _get_pymatgen_trajectory_from_observer
 
 
 class ForcefieldObject(ValueEnum):
@@ -152,15 +154,26 @@ class ForceFieldTaskDocument(StructureMetadata):
         ionic_step_data : tuple
             Which data to save from each ionic step.
         """
-        trajectory = result["trajectory"]
+        if isinstance(result["trajectory"], Trajectory):
+            trajectory = result["trajectory"]
+        else:
+            trajectory = _get_pymatgen_trajectory_from_observer(
+                result["trajectory"],
+                frame_property_keys=["energies", "forces", "stresses", "magmoms"],
+            )
+
         n_steps = len(trajectory)
 
         # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
         for idx in range(n_steps):
-            trajectory.frame_properties[idx]["stress"] = voigt_6_to_full_3x3_stress(
-                [val * -10 / GPa for val in trajectory.frame_properties[idx]["stress"]]
-            )
+            if trajectory.frame_properties[idx].get("stress") is not None:
+                trajectory.frame_properties[idx]["stress"] = voigt_6_to_full_3x3_stress(
+                    [
+                        val * -10 / GPa
+                        for val in trajectory.frame_properties[idx]["stress"]
+                    ]
+                )
 
         input_structure = trajectory[0]
 
@@ -176,9 +189,12 @@ class ForceFieldTaskDocument(StructureMetadata):
         # number of steps for static calculations.
         if steps <= 1:
             steps = 1
-            trajectory = trajectory[0]
-            for key in trajectory.frame_properties:
-                trajectory.frame_properties[key] = [trajectory.frame_properties[key][0]]
+            n_steps = 1
+            trajectory = Trajectory.from_structures(
+                structures=[trajectory[0]],
+                frame_properties=[trajectory.frame_properties[0]],
+                constant_lattice=False,
+            )
             output_structure = input_structure
         else:
             output_structure = result["final_structure"]
@@ -200,7 +216,7 @@ class ForceFieldTaskDocument(StructureMetadata):
             cur_structure = trajectory[idx] if "structure" in ionic_step_data else None
 
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
-            if trajectory.frame_properties[idx].get("magmoms"):
+            if "magmoms" in trajectory.frame_properties[idx]:
                 _ionic_step_data.update(
                     {
                         "magmoms": trajectory.frame_properties[idx]["magmoms"]

@@ -61,6 +61,45 @@ OPTIMIZERS = {
 }
 
 
+def _get_pymatgen_trajectory_from_observer(
+    trajectory_observer: Any, frame_property_keys: list[str]
+) -> PmgTrajectory:
+    to_singluar = {"energies": "energy", "stresses": "stress"}
+
+    if hasattr(trajectory_observer, "as_dict"):
+        traj = trajectory_observer.as_dict()
+    else:
+        traj = trajectory_observer.__dict__
+
+    n_md_steps = len(traj["cells"])
+    species = AseAtomsAdaptor.get_structure(traj["atoms"]).species
+
+    structures = [
+        Structure(
+            lattice=traj["cells"][idx],
+            coords=traj["atom_positions"][idx],
+            species=species,
+            coords_are_cartesian=True,
+        )
+        for idx in range(n_md_steps)
+    ]
+
+    frame_properties = [
+        {
+            to_singluar.get(key, key): traj[key][idx]
+            for key in frame_property_keys
+            if key in traj
+        }
+        for idx in range(n_md_steps)
+    ]
+
+    return PmgTrajectory.from_structures(
+        structures,
+        frame_properties=frame_properties,
+        constant_lattice=False,
+    )
+
+
 class TrajectoryObserver:
     """Trajectory observer.
 
@@ -178,35 +217,12 @@ class TrajectoryObserver:
             Name of the file to write the pymatgen trajectory to.
             If None, no file is written.
         """
-        n_md_steps = len(self.cells)
-        species = AseAtomsAdaptor.get_structure(self.atoms).species
-
-        structures = [
-            Structure(
-                lattice=self.cells[idx],
-                coords=self.atom_positions[idx],
-                species=species,
-                coords_are_cartesian=True,
-            )
-            for idx in range(n_md_steps)
-        ]
-
-        # sanitize trajectory entries
-        traj = self.as_dict()
-
         frame_property_keys = ["energy", "forces", "stress"]
         if self._store_md_outputs:
             frame_property_keys += ["velocities", "temperature"]
 
-        frame_properties = [
-            {key: traj[key][idx] for key in frame_property_keys}
-            for idx in range(n_md_steps)
-        ]
-
-        traj = PmgTrajectory.from_structures(
-            structures,
-            frame_properties=frame_properties,
-            constant_lattice=False,
+        traj = _get_pymatgen_trajectory_from_observer(
+            self, frame_property_keys=frame_property_keys
         )
 
         if filename:
@@ -221,7 +237,8 @@ class TrajectoryObserver:
             "forces": self.forces,
             "stress": self.stresses,
             "atom_positions": self.atom_positions,
-            "cell": self.cells,
+            "cells": self.cells,
+            "atoms": self.atoms,
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
         if self._store_md_outputs:
@@ -324,4 +341,7 @@ class Relaxer:
             atoms = atoms.atoms
 
         struct = self.ase_adaptor.get_structure(atoms)
-        return {"final_structure": struct, "trajectory": obs}
+        return {
+            "final_structure": struct,
+            "trajectory": obs.to_pymatgen_trajectory(None),
+        }
