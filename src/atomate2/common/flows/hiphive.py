@@ -15,7 +15,7 @@ from jobflow import Flow, Maker
 
 from atomate2.common.jobs.hiphive import (
     hiphive_static_calcs,
-    quality_control,
+    # quality_control,
     run_fc_to_pdos,
     run_hiphive,
     run_hiphive_renormalization,
