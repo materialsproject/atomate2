@@ -13,7 +13,12 @@ from atomate2.common.jobs.phonons import (
     generate_phonon_displacements,
     get_supercell_size,
     get_total_energy_per_cell,
+    all_jobs,
     run_phonon_displacements,
+    run_phonon_displacements_mod,
+    chunk_and_aggregate_recur,
+    chunk_and_aggregate,
+    chunk_and_aggregate2
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
@@ -147,6 +152,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
+    chunk_size = 2
 
     def make(
         self,
@@ -285,30 +291,65 @@ class BasePhononMaker(Maker, ABC):
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
 
+        # gen_run_disp_calc = chunk_and_aggregate2(displacement=self.displacement,
+        #                                          sym_reduce=self.sym_reduce,
+        #                                          structure=structure,
+        #                                          supercell_matrix=supercell_matrix,
+        #                                          symprec=self.symprec,
+        #                                          use_symmetrized_structure=self.use_symmetrized_structure,
+        #                                          kpath_scheme=self.kpath_scheme,
+        #                                          code=self.code,
+        #                                          phonon_maker=self.phonon_displacement_maker,
+        #                                          chunk_size=self.chunk_size)
+
+        gen_run_disp_calc = chunk_and_aggregate_recur(displacement=self.displacement,
+                                                 sym_reduce=self.sym_reduce,
+                                                 structure=structure,
+                                                 supercell_matrix=supercell_matrix,
+                                                 symprec=self.symprec,
+                                                 use_symmetrized_structure=self.use_symmetrized_structure,
+                                                 kpath_scheme=self.kpath_scheme,
+                                                 code=self.code,
+                                                 phonon_maker=self.phonon_displacement_maker,
+                                                 chunk_size=self.chunk_size)
+
+        jobs.append(gen_run_disp_calc)
+
+
         # get a phonon object from phonopy
-        displacements = generate_phonon_displacements(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            displacement=self.displacement,
-            sym_reduce=self.sym_reduce,
-            symprec=self.symprec,
-            use_symmetrized_structure=self.use_symmetrized_structure,
-            kpath_scheme=self.kpath_scheme,
-            code=self.code,
-        )
-        jobs.append(displacements)
+        # displacements = generate_phonon_displacements(
+        #     structure=structure,
+        #     supercell_matrix=supercell_matrix,
+        #     displacement=self.displacement,
+        #     sym_reduce=self.sym_reduce,
+        #     symprec=self.symprec,
+        #     use_symmetrized_structure=self.use_symmetrized_structure,
+        #     kpath_scheme=self.kpath_scheme,
+        #     code=self.code,
+        # )
+        # jobs.append(displacements)
 
         # perform the phonon displacement calculations
-        displacement_calcs = run_phonon_displacements(
-            displacements=displacements.output,
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            phonon_maker=self.phonon_displacement_maker,
-            socket=self.socket,
-            prev_dir_argname=self.prev_calc_dir_argname,
-            prev_dir=prev_dir,
-        )
-        jobs.append(displacement_calcs)
+        # displacement_calcs = run_phonon_displacements(
+        #     displacements=displacements.output,
+        #     structure=structure,
+        #     supercell_matrix=supercell_matrix,
+        #     phonon_maker=self.phonon_displacement_maker,
+        #     socket=self.socket,
+        #     prev_dir_argname=self.prev_calc_dir_argname,
+        #     prev_dir=prev_dir,
+        # )
+
+        # displacement_calcs = chunk_and_aggregate(
+        #     displacements=displacements.output,
+        #     structure=structure,
+        #     supercell_matrix=supercell_matrix,
+        #     phonon_maker=self.phonon_displacement_maker,
+        #     # socket=self.socket,
+        #     # prev_dir_argname=self.prev_calc_dir_argname,
+        #     # prev_dir=prev_dir,
+        # )
+        # jobs.append(displacement_calcs)
 
         # Computation of BORN charges
         born_run_job_dir = None
@@ -338,7 +379,7 @@ class BasePhononMaker(Maker, ABC):
             kpath_scheme=self.kpath_scheme,
             code=self.code,
             structure=structure,
-            displacement_data=displacement_calcs.output,
+            displacement_data=gen_run_disp_calc.output,
             epsilon_static=epsilon_static,
             born=born,
             total_dft_energy=total_dft_energy,
