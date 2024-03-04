@@ -6,20 +6,116 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Maker, job
+from jobflow import Maker, Response, job
 
 from atomate2.forcefields import MLFF
+from atomate2.forcefields.run import run_ase_md
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.sets.core import MDSetGenerator
 from atomate2.forcefields.utils import Relaxer
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
 
+    from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
 
+
+@dataclass
+class MDMaker(Maker):
+    """
+    Maker to perform an MD run using a force field wrapped in ASE calculator.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    input_set_generator : MDSetGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_input_set`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj: # TODO: see if we need
+        additonal pydantic document
+    """
+
+    name: str = "ASE MD" # TODO: check the capitalization
+    force_field_name: str = "Force field"
+
+    # TODO: look back to see if we need BaseSetGenerator
+    input_set_generator: MDSetGenerator = field(default_factory=MDSetGenerator)
+    write_input_set_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    # TODO: see if we need ase job decorator
+    @job
+    def make(
+        self, structure: Structure,
+        calculator: Calculator,
+        prev_dir: str | Path | None = None
+    ) -> Response:
+        """
+        Perform an MD run using a force field.
+
+        Parameters
+        ----------
+        structure: Structure
+            pymatgen structure.
+        calculator: Calculator
+            ASE calculator.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
+        """
+        atoms = structure.to_ase_atoms()
+        # read prevous md trajectory if any
+        from_prev = prev_dir is not None
+        if from_prev:
+            # TODO: see if we need to abstract this
+            from ase.io import read
+
+            traj = read(f"{prev_dir}/trajectory.traj", index=":")
+
+            if atoms.get_chemical_formula() != traj[-1].get_chemical_formula():
+                raise ValueError(
+                    "The chemical formula of the structure and the last frame of the "
+                    "previous trajectory do not match."
+                )
+
+            atoms = traj[-1]
+
+        self.write_input_set_kwargs.setdefault("from_prev", from_prev)
+
+        # overwrite default input set
+        # NOTE: pass input as python dictionary or write input files
+        # now, we are passing input as python dictionary
+        input_set = self.input_set_generator.get_input_set(
+            atoms, **self.write_input_set_kwargs
+        )
+
+        # run ASE MD
+        result = run_ase_md(atoms, calculator, input_set)
+
+        # TODO: parse ASE MD output
+        # TODO: gzip
+
+        return Response(output=result)
+        # NOTE: keep the following in case we want to return the result as pydantic
+        # document like other job makers
+        # return ForceFieldTaskDocument.from_ase_compatible_result(
+        #     self.force_field_name,
+        #     result,
+        #     relax_cell=False,
+        #     steps=self.steps,
+        #     relax_kwargs=None,
+        #     optimizer_kwargs=None,
+        #     **self.task_document_kwargs,
+        # )
 
 @dataclass
 class ForceFieldRelaxMaker(Maker):
@@ -94,7 +190,7 @@ class ForceFieldRelaxMaker(Maker):
 @dataclass
 class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
-    Maker to calculate forces and stresses using the CHGNet force field.
+    Maker to calculate forces and stresses using ML force field.
 
     Parameters
     ----------
@@ -314,7 +410,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
     model_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model) for
+        Further keywords (e.g. device, default_dtype, dispersion, model) for
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
