@@ -97,6 +97,11 @@ def si_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "Si.cif")
 
 
+@pytest.fixture()
+def srtio3_structure(test_dir):
+    return Structure.from_file(test_dir / "structures" / "SrTiO3.cif")
+
+
 @pytest.fixture(autouse=True)
 def mock_jobflow_settings(memory_jobstore):
     """Mock the jobflow settings to use our specific jobstore (with data store)."""

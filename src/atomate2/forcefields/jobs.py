@@ -256,6 +256,105 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
 
 @dataclass
+class NequipRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Maker to perform a relaxation using a Nequip force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    model_path: str | Path
+        deployed model checkpoint to load with
+        :obj:`nequip.calculators.NequipCalculator.from_deployed_model()'`.
+    model_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model) for
+            :obj:`nequip.calculators.NequipCalculator()'`.
+    """
+
+    name: str = "Nequip relax"
+    force_field_name: str = "Nequip"
+    relax_cell: bool = True
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+    model_path: str | Path = ""
+    model_kwargs: dict = field(default_factory=dict)
+
+    def _relax(self, structure: Structure) -> dict:
+        from nequip.ase import nequip_calculator
+
+        calculator = nequip_calculator.NequIPCalculator.from_deployed_model(
+            self.model_path, **self.model_kwargs
+        )
+        relaxer = Relaxer(
+            calculator,
+            relax_cell=self.relax_cell,
+            **self.optimizer_kwargs,
+        )
+
+        return relaxer.relax(
+            structure,
+            steps=self.steps,
+            **self.relax_kwargs,
+        )
+
+
+@dataclass
+class NequipStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate energies, forces and stresses using a nequip force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the forcefield.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    model_path: str | Path
+        deployed model checkpoint to load with
+        :obj:`nequip.calculators.NequipCalculator()'`.
+    model_kwargs: dict[str, Any]
+        Further keywords (e.g. device, default_dtype, model) for
+            :obj:`nequip.calculators.NequipCalculator()'`.
+    """
+
+    name: str = "Nequip static"
+    force_field_name: str = "Nequip"
+    task_document_kwargs: dict = field(default_factory=dict)
+    model_path: str | Path = ""
+    model_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure: Structure) -> dict:
+        from nequip.ase import nequip_calculator
+
+        calculator = nequip_calculator.NequIPCalculator.from_deployed_model(
+            self.model_path, **self.model_kwargs
+        )
+        relaxer = Relaxer(calculator, relax_cell=False)
+
+        return relaxer.relax(
+            structure,
+            steps=1,
+        )
+
+
+@dataclass
 class M3GNetStaticMaker(ForceFieldStaticMaker):
     """
     Maker to calculate forces and stresses using the M3GNet force field.
