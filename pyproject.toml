@@ -43,7 +43,7 @@ cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.7"]
-defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
+defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30", "python-ulid"]
 forcefields = [
     "ase>=3.22.1",
     "chgnet>=0.2.2",
@@ -78,20 +78,21 @@ strict = [
     "emmet-core==0.78.0rc4",
     "ijson==3.2.3",
     "jobflow==0.1.17",
-    "lobsterpy==0.3.6",
+    "lobsterpy==0.3.8",
     "mace-torch>=0.3.3",
     "matgl==1.0.0",
     "monty==2024.2.2",
-    "mp-api==0.40.1",
+    "mp-api==0.40.2",
     "numpy",
     "phonopy==2.21.2",
     "pydantic-settings==2.2.1",
-    "pydantic==2.6.2",
+    "pydantic==2.6.3",
     "pymatgen-analysis-defects==2024.2.24",
-    "pymatgen==2023.12.18",
+    "pymatgen==2024.3.1",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.10.0",
+    "python-ulid==2.2.0"
 ]
 
 [project.scripts]

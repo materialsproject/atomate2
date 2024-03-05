@@ -175,6 +175,11 @@ class Atomate2Settings(BaseSettings):
         "to the simulation will be compressed. If False no file is compressed.",
     )
 
+    # FHI-aims settings
+    AIMS_CMD: str = Field(
+        "aims.x > aims.out", description="The default command used run FHI-aims"
+    )
+
     # Elastic constant settings
     ELASTIC_FITTING_METHOD: str = Field(
         "finite_difference", description="Elastic constant fitting method"

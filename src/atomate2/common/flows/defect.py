@@ -107,37 +107,11 @@ class ConfigurationCoordinateMaker(Maker):
         dir2 = relax2.output.dir_name
         struct1 = relax1.output.structure
         struct2 = relax2.output.structure
+        add_info1 = {"relaxed_uuid": relax1.uuid, "distorted_uuid": relax2.uuid}
+        add_info2 = {"relaxed_uuid": relax2.uuid, "distorted_uuid": relax1.uuid}
 
-        deformations1 = spawn_energy_curve_calcs(
-            struct1,
-            struct2,
-            distortions=self.distortions,
-            static_maker=self.static_maker,
-            prev_dir=dir1,
-            add_name="q1",
-            add_info={"relaxed_uuid": relax1.uuid, "distorted_uuid": relax2.uuid},
-        )
-
-        deformations2 = spawn_energy_curve_calcs(
-            struct2,
-            struct1,
-            distortions=self.distortions,
-            static_maker=self.static_maker,
-            prev_dir=dir2,
-            add_name="q2",
-            add_info={"relaxed_uuid": relax2.uuid, "distorted_uuid": relax1.uuid},
-        )
-
-        deformations1.append_name(" q1")
-        deformations2.append_name(" q2")
-
-        # distortion index with smallest absolute value
-        min_abs_index = min(
-            range(len(self.distortions)), key=lambda i: abs(self.distortions[i])
-        )
-
-        ccd_job = get_ccd_documents(
-            deformations1.output, deformations2.output, undistorted_index=min_abs_index
+        deformations1, deformations2, ccd_job = self.get_deformation_and_ccd_jobs(
+            struct1, struct2, dir1, dir2, add_info1, add_info2
         )
 
         return Flow(
@@ -152,6 +126,122 @@ class ConfigurationCoordinateMaker(Maker):
             output=ccd_job.output,
             name=name,
         )
+
+    def make_from_relaxed_structures(
+        self,
+        structure1: Structure,
+        structure2: Structure,
+    ) -> Flow:
+        """
+        Make a job for the calculation of the configuration coordinate diagram.
+
+        Parameters
+        ----------
+        structure1
+            The relaxed structure for charge state 1.
+        structure2
+            The relaxed structure for charge state 2.
+
+        Returns
+        -------
+        Flow
+            The full workflow for the calculation of the configuration coordinate
+            diagram.
+        """
+        # use a more descriptive name when possible
+        if not isinstance(structure1, OutputReference):
+            name = f"{self.name}: {structure1.formula}"
+            if not (
+                isinstance(structure1, OutputReference)
+                or isinstance(structure2, OutputReference)
+            ):
+                name = (
+                    f"{self.name}: {structure1.formula}"
+                    "({structure1.charge}-{structure2.charge})"
+                )
+
+        deformations1, deformations2, ccd_job = self.get_deformation_and_ccd_jobs(
+            structure1, structure2
+        )
+
+        return Flow(
+            jobs=[
+                deformations1,
+                deformations2,
+                ccd_job,
+            ],
+            output=ccd_job.output,
+            name=name,
+        )
+
+    def get_deformation_and_ccd_jobs(
+        self,
+        struct1: Structure,
+        struct2: Structure,
+        dir1: str | None = None,
+        dir2: str | None = None,
+        add_info1: dict | None = None,
+        add_info2: dict | None = None,
+    ) -> tuple[Job, Job, Job]:
+        """Get the deformation and CCD jobs for the given structures.
+
+        Parameters
+        ----------
+        struct1: Structure
+            The first structure.
+        struct2: Structure
+            The second structure.
+        dir1: str
+            The directory of the first structure.
+        dir2: str
+            The directory of the second structure.
+        add_info1: dict
+            Additional information to write
+        add_info2: dict
+            Additional information to write
+
+        Returns
+        -------
+        deformations1: Job
+            The deformation job for the first structure.
+        deformations2: Job
+            The deformation job for the second structure.
+        ccd_job: Job
+            The Job to construct the CCD document.
+        """
+        deformations1 = spawn_energy_curve_calcs(
+            struct1,
+            struct2,
+            distortions=self.distortions,
+            static_maker=self.static_maker,
+            prev_dir=dir1,
+            add_name="q1",
+            add_info=add_info1,
+        )
+
+        deformations2 = spawn_energy_curve_calcs(
+            struct2,
+            struct1,
+            distortions=self.distortions,
+            static_maker=self.static_maker,
+            prev_dir=dir2,
+            add_name="q2",
+            add_info=add_info2,
+        )
+
+        deformations1.append_name(" q1")
+        deformations2.append_name(" q2")
+
+        # distortion index with smallest absolute value
+        min_abs_index = min(
+            range(len(self.distortions)), key=lambda i: abs(self.distortions[i])
+        )
+
+        ccd_job = get_ccd_documents(
+            deformations1.output, deformations2.output, undistorted_index=min_abs_index
+        )
+
+        return deformations1, deformations2, ccd_job
 
 
 @dataclass
