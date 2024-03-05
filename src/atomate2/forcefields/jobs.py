@@ -280,7 +280,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         deployed model checkpoint to load with
         :obj:`nequip.calculators.NequipCalculator.from_deployed_model()'`.
     model_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model) for
+        Further keywords (e.g. device: Union[str, torch.device],
+        species_to_type_name: Optional[Dict[str, str]] = None) for
             :obj:`nequip.calculators.NequipCalculator()'`.
     """
 
@@ -330,7 +331,8 @@ class NequipStaticMaker(ForceFieldStaticMaker):
         deployed model checkpoint to load with
         :obj:`nequip.calculators.NequipCalculator()'`.
     model_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model) for
+        Further keywords (e.g. device: Union[str, torch.device],
+        species_to_type_name: Optional[Dict[str, str]] = None) for
             :obj:`nequip.calculators.NequipCalculator()'`.
     """
 
