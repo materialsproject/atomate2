@@ -10,7 +10,7 @@ from jobflow import Maker, job
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import Relaxer
+from atomate2.forcefields.utils import Relaxer, revert_default_dtype
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -331,11 +331,12 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     def _relax(self, structure: Structure) -> dict:
         from mace.calculators import mace_mp
 
-        calculator = mace_mp(model=self.model, **self.model_kwargs)
-        relaxer = Relaxer(
-            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
-        )
-        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+        with revert_default_dtype():
+            calculator = mace_mp(model=self.model, **self.model_kwargs)
+            relaxer = Relaxer(
+                calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
+            )
+            return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -370,9 +371,10 @@ class MACEStaticMaker(ForceFieldStaticMaker):
     def _evaluate_static(self, structure: Structure) -> dict:
         from mace.calculators import mace_mp
 
-        calculator = mace_mp(model=self.model, **self.model_kwargs)
-        relaxer = Relaxer(calculator, relax_cell=False)
-        return relaxer.relax(structure, steps=1)
+        with revert_default_dtype():
+            calculator = mace_mp(model=self.model, **self.model_kwargs)
+            relaxer = Relaxer(calculator, relax_cell=False)
+            return relaxer.relax(structure, steps=1)
 
 
 @dataclass
