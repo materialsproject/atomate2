@@ -125,7 +125,6 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
 
     assert_allclose(
         relax_output["trajectory"].frame_properties[-1]["stress"], expected_stresses
-    )
 
     if traj_file:
         assert os.path.isfile(traj_file)

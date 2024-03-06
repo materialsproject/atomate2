@@ -1,4 +1,5 @@
 """An FHI-aims jobflow runner."""
+
 from __future__ import annotations
 
 import json

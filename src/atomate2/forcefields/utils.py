@@ -14,6 +14,7 @@ import io
 import json
 import sys
 import warnings
+from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -46,6 +47,7 @@ except ImportError:
     )
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
     from os import PathLike
     from typing import Any, Literal
 
@@ -450,3 +452,18 @@ def ase_calculator(
         calculator = _calculator(**calculator_kwargs)
 
     return calculator
+
+@contextmanager
+def revert_default_dtype() -> Generator[None, None, None]:
+    """Context manager for torch.default_dtype.
+
+    Reverts it to whatever torch.get_default_dtype() was when entering the context.
+
+    Originally added for use with MACE(Relax|Static)Maker.
+    https://github.com/ACEsuit/mace/issues/328
+    """
+    import torch
+
+    orig = torch.get_default_dtype()
+    yield
+    torch.set_default_dtype(orig)

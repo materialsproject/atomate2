@@ -72,9 +72,10 @@ def test_cclib_taskdoc(test_dir):
     # Let's try a volumetric analysis
     # We'll gunzip the .cube.gz file because cclib can't read cube.gz files yet.
     # Can remove the gzip part when https://github.com/cclib/cclib/issues/108 is closed.
-    with gzip.open(p / "psi_test.cube.gz", "r") as f_in, open(
-        p / "psi_test.cube", "wb"
-    ) as f_out:
+    with (
+        gzip.open(p / "psi_test.cube.gz", "r") as f_in,
+        open(p / "psi_test.cube", "wb") as f_out,
+    ):
         shutil.copyfileobj(f_in, f_out)
     doc = TaskDocument.from_logfile(p, "psi_test.out", analysis=["Bader"]).dict()
     os.remove(p / "psi_test.cube")
