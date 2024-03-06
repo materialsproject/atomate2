@@ -11,19 +11,25 @@ from __future__ import annotations
 
 import contextlib
 import io
+import json
 import sys
 import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
+from ase.calculators.calculator import PropertyNotImplementedError
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
+from monty.json import MontyDecoder
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
+
+from atomate2.forcefields import MLFF
+from atomate2.forcefields.schemas import ForcefieldResult
 
 try:
     from ase.filters import FrechetCellFilter
@@ -58,6 +64,13 @@ OPTIMIZERS = {
     "SciPyFminCG": SciPyFminCG,
     "SciPyFminBFGS": SciPyFminBFGS,
     "BFGSLineSearch": BFGSLineSearch,
+}
+
+_ase_calculator_defaults = {
+    "gap": {
+        "args_str": "IP GAP",
+        "param_filename": "gap.xml",
+    }
 }
 
 
@@ -122,6 +135,10 @@ class TrajectoryObserver:
         self.energies: list[float] = []
         self.forces: list[np.ndarray] = []
         self.stresses: list[np.ndarray] = []
+
+        self._store_magmoms = True
+        self.magmoms: list[np.ndarray] = []
+
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
@@ -139,6 +156,13 @@ class TrajectoryObserver:
         #       we might just need to refactor TrajectoryObserver
         # Now it is safe for 0K relaxation as the atoms don't have momenta
         self.stresses.append(self.atoms.get_stress(include_ideal_gas=True))
+
+        if self._store_magmoms:
+            try:
+                self.magmoms.append(self.atoms.get_magnetic_moments())
+            except PropertyNotImplementedError:
+                self._store_magmoms = False
+
         self.atom_positions.append(self.atoms.get_positions())
         self.cells.append(self.atoms.get_cell()[:])
 
@@ -193,13 +217,19 @@ class TrajectoryObserver:
             atoms = self.atoms.copy()
             atoms.set_positions(self.atom_positions[idx])
             atoms.set_cell(self.cells[idx])
-            atoms.set_velocities(self.velocities[idx])
-            atoms.calc = SinglePointCalculator(
-                atoms=atoms,
-                energy=self.energies[idx],
-                forces=self.forces[idx],
-                stress=self.stresses[idx],
-            )
+
+            if self._store_md_outputs:
+                atoms.set_velocities(self.velocities[idx])
+
+            kwargs = {
+                "energy": self.energies[idx],
+                "forces": self.forces[idx],
+                "stress": self.stresses[idx],
+            }
+            if self._store_magmoms:
+                kwargs["magmom"] = self.magmoms[idx]
+
+            atoms.calc = SinglePointCalculator(atoms=atoms, **kwargs)
             with AseTrajectory(filename, "a" if idx > 0 else "w", atoms=atoms) as f:
                 f.write()
 
@@ -218,6 +248,8 @@ class TrajectoryObserver:
             If None, no file is written.
         """
         frame_property_keys = ["energy", "forces", "stress"]
+        if self._store_magmoms:
+            frame_property_keys += ["magmoms"]
         if self._store_md_outputs:
             frame_property_keys += ["velocities", "temperature"]
 
@@ -241,6 +273,10 @@ class TrajectoryObserver:
             "atoms": self.atoms,
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
+
+        if self._store_magmoms:
+            traj_dict["magmoms"] = self.magmoms
+
         if self._store_md_outputs:
             traj_dict.update(
                 {
@@ -298,7 +334,7 @@ class Relaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         **kwargs,
-    ) -> dict[str, Any]:
+    ) -> ForcefieldResult:
         """
         Relax the structure.
 
@@ -341,7 +377,76 @@ class Relaxer:
             atoms = atoms.atoms
 
         struct = self.ase_adaptor.get_structure(atoms)
-        return {
-            "final_structure": struct,
-            "trajectory": obs.to_pymatgen_trajectory(None),
-        }
+        traj = obs.to_pymatgen_trajectory(None)
+        is_force_conv = all(
+            np.linalg.norm(traj.frame_properties[-1]["forces"][i]) < abs(fmax)
+            for i in range(struct.num_sites)
+        )
+        return ForcefieldResult(
+            final_structure=struct, trajectory=traj, is_force_converged=is_force_conv
+        )
+
+
+def ase_calculator(
+    calculator_meta: str | dict, calculator_kwargs: dict | None = None
+) -> Calculator | None:
+    """
+    Create an ASE calculator from a given set of metadata.
+
+    Parameters
+    ----------
+    calculator_meta : str or dict
+        If a str, should be one of `atomate2.forcefields.MLFF`.
+        If a dict, should be decodable by `monty.json.MontyDecoder`.
+        For example, one can also call the CHGNet calculator as follows
+        ```
+            calculator_meta = {
+                "@module": "chgnet.model.dynamics",
+                "@callable": "CHGNetCalculator"
+            }
+        ```
+    calculator_kwargs : dict or None (default)
+        kwargs to pass to the calculator object
+
+    Returns
+    -------
+    ASE .Calculator
+    """
+    calculator = None
+
+    if isinstance(calculator_meta, str) and calculator_meta in [
+        f"{name}" for name in MLFF
+    ]:
+        calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
+        calculator_kwargs = calculator_kwargs or _ase_calculator_defaults.get(
+            calculator_meta, {}
+        )
+
+        if calculator_name == MLFF.CHGNet:
+            from chgnet.model.dynamics import CHGNetCalculator
+
+            calculator = CHGNetCalculator(**calculator_kwargs)
+
+        elif calculator_name == MLFF.M3GNet:
+            import matgl
+            from matgl.ext.ase import PESCalculator
+
+            potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+            calculator = PESCalculator(potential, **calculator_kwargs)
+
+        elif calculator_name == MLFF.MACE:
+            from mace.calculators import mace_mp
+
+            calculator = mace_mp(**calculator_kwargs)
+
+        elif calculator_name == MLFF.GAP:
+            from quippy.potential import Potential
+
+            calculator = Potential(**calculator_kwargs)
+
+    elif isinstance(calculator_meta, dict):
+        _calculator = MontyDecoder().decode(json.dumps(calculator_meta))
+        calculator_kwargs = calculator_kwargs or {}
+        calculator = _calculator(**calculator_kwargs)
+
+    return calculator

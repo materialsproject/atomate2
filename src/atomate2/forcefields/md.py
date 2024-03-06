@@ -26,9 +26,10 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
 from scipy.linalg import schur
 
+from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import forcefield_job
-from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import TrajectoryObserver
+from atomate2.forcefields.schemas import ForcefieldResult, ForceFieldTaskDocument
+from atomate2.forcefields.utils import TrajectoryObserver, ase_calculator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -100,8 +101,6 @@ class ForceFieldMDMaker(Maker):
         specifying thermostat as a string.
     ase_md_kwargs : dict | None = None
         Options except for temperature and pressure to pass into the ASE MD function
-    calculator_args : Sequence | None = None
-        args to pass to the ASE calculator class
     calculator_kwargs : dict | None = None
         kwargs to pass to the ASE calculator class
     traj_file : str | Path | None = None
@@ -120,7 +119,7 @@ class ForceFieldMDMaker(Maker):
     """
 
     name: str = "Forcefield MD"
-    force_field_name: str = "Forcefield"
+    force_field_name: str = f"{MLFF.Forcefield}"
     timestep: float | None = 2.0
     nsteps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
@@ -129,7 +128,6 @@ class ForceFieldMDMaker(Maker):
     # end_temp: float | None = 300.0
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
-    calculator_args: list | tuple | None = None
     calculator_kwargs: dict | None = None
     traj_file: str | Path | None = None
     traj_file_fmt: Literal["pmg", "ase"] = "ase"
@@ -292,7 +290,6 @@ class ForceFieldMDMaker(Maker):
             if self.zero_angular_momentum:
                 ZeroRotation(atoms)
 
-        self.calculator_args = self.calculator_args or []
         self.calculator_kwargs = self.calculator_kwargs or {}
         atoms.calc = self._calculator()
 
@@ -324,12 +321,13 @@ class ForceFieldMDMaker(Maker):
         structure = AseAtomsAdaptor.get_structure(atoms)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
+
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
-            {
-                "final_structure": structure,
-                "trajectory": md_observer.to_pymatgen_trajectory(None),
-            },
+            ForcefieldResult(
+                final_structure=structure,
+                trajectory=md_observer.to_pymatgen_trajectory(None),
+            ),
             relax_cell=(self.ensemble == "npt"),
             steps=self.nsteps,
             relax_kwargs=None,
@@ -338,46 +336,40 @@ class ForceFieldMDMaker(Maker):
         )
 
     def _calculator(self) -> Calculator:
-        """To be implemented by the user."""
-        return NotImplementedError
+        """ASE calculator, can be overwritten by user."""
+        return ase_calculator(self.force_field_name, self.calculator_kwargs)
 
 
+@dataclass
 class MACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with MACE."""
 
     name: str = "MACE MD"
-    force_field_name: str = "MACE"
+    force_field_name: str = f"{MLFF.MACE}"
     calculator_kwargs: dict = field(
         default_factory=lambda: {"default_dtype": "float32"}
     )
 
-    def _calculator(self) -> Calculator:
-        from mace.calculators import mace_mp
 
-        return mace_mp(*self.calculator_args, **self.calculator_kwargs)
-
-
+@dataclass
 class M3GNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with M3GNet."""
 
     name: str = "M3GNet MD"
-    force_field_name: str = "M3GNet"
-
-    def _calculator(self) -> Calculator:
-        import matgl
-        from matgl.ext.ase import PESCalculator
-
-        potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
-        return PESCalculator(potential, **self.calculator_kwargs)
+    force_field_name: str = f"{MLFF.M3GNet}"
 
 
+@dataclass
 class CHGNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with CHGNet."""
 
     name: str = "CHGNet MD"
-    force_field_name: str = "CHGNet"
+    force_field_name: str = f"{MLFF.CHGNet}"
 
-    def _calculator(self) -> Calculator:
-        from chgnet.model.dynamics import CHGNetCalculator
 
-        return CHGNetCalculator(*self.calculator_args, **self.calculator_kwargs)
+@dataclass
+class GAPMDMaker(ForceFieldMDMaker):
+    """Perform an MD run with GAP."""
+
+    name: str = "CHGNet MD"
+    force_field_name: str = f"{MLFF.GAP}"

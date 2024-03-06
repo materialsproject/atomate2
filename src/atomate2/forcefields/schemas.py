@@ -13,7 +13,19 @@ from pymatgen.core.structure import Structure
 from pymatgen.core.trajectory import Trajectory
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.utils import _get_pymatgen_trajectory_from_observer
+
+
+class ForcefieldResult(dict):
+    """Schema to store outputs in ForceFieldTaskDocument."""
+
+    def __init__(self, **kwargs: Any) -> None:
+        kwargs = {
+            "final_structure": None,
+            "trajectory": None,
+            "is_force_converged": None,
+            **kwargs,
+        }
+        super().__init__(**kwargs)
 
 
 class ForcefieldObject(ValueEnum):
@@ -122,6 +134,14 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Forcefield objects associated with this task"
     )
 
+    is_force_converged: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the calculation is converged with respect "
+            "to interatomic forces."
+        ),
+    )
+
     @classmethod
     def from_ase_compatible_result(
         cls,
@@ -154,13 +174,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         ionic_step_data : tuple
             Which data to save from each ionic step.
         """
-        if isinstance(result["trajectory"], Trajectory):
-            trajectory = result["trajectory"]
-        else:
-            trajectory = _get_pymatgen_trajectory_from_observer(
-                result["trajectory"],
-                frame_property_keys=["energies", "forces", "stresses", "magmoms"],
-            )
+        trajectory = result["trajectory"]
 
         n_steps = len(trajectory)
 
@@ -270,4 +284,5 @@ class ForceFieldTaskDocument(StructureMetadata):
             forcefield_version=version,
             included_objects=list(forcefield_objects.keys()),
             forcefield_objects=forcefield_objects,
+            is_force_converged=result.get("is_force_converged"),
         )
