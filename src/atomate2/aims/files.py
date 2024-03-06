@@ -1,4 +1,5 @@
 """Functions dealing with FHI-aims files."""
+
 from __future__ import annotations
 
 import logging

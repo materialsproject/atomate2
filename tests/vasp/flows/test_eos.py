@@ -85,18 +85,18 @@ def test_mp_eos_maker(
         "EOS MP GGA relax 2": expected_incar_relax,
     }
 
-    for i in range(2):
-        ref_paths[f"EOS MP GGA relax {1+i}"] = f"mp-149-PBE-EOS_MP_GGA_relax_{1+i}"
+    for idx in range(2):
+        ref_paths[f"EOS MP GGA relax {1+idx}"] = f"mp-149-PBE-EOS_MP_GGA_relax_{1+idx}"
 
-    for i in range(nframes):
-        ref_paths[
-            f"EOS MP GGA relax deformation {i}"
-        ] = f"mp-149-PBE-EOS_Deformation_Relax_{i}"
-        expected_incars[f"EOS MP GGA relax deformation {i}"] = expected_incar_deform
+    for idx in range(nframes):
+        ref_paths[f"EOS MP GGA relax deformation {idx}"] = (
+            f"mp-149-PBE-EOS_Deformation_Relax_{idx}"
+        )
+        expected_incars[f"EOS MP GGA relax deformation {idx}"] = expected_incar_deform
 
         if do_statics:
-            ref_paths[f"EOS MP GGA static {i}"] = f"mp-149-PBE-EOS_Static_{i}"
-            expected_incars[f"EOS MP GGA static {i}"] = expected_incar_static
+            ref_paths[f"EOS MP GGA static {idx}"] = f"mp-149-PBE-EOS_Static_{idx}"
+            expected_incars[f"EOS MP GGA static {idx}"] = expected_incar_static
 
     if do_statics:
         ref_paths["EOS equilibrium static"] = "mp-149-PBE-EOS_equilibrium_static"
