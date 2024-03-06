@@ -125,7 +125,7 @@ class PhononMaker(BasePhononMaker):
     socket: bool = False
     code: str = "aims"
     bulk_relax_maker: BaseAimsMaker | None = field(
-        default_factory=lambda: RelaxMaker.full_relaxation()
+        default_factory=RelaxMaker.full_relaxation
     )
     static_energy_maker: BaseAimsMaker | None = field(default_factory=StaticMaker)
     born_maker: BaseAimsMaker | None = None
