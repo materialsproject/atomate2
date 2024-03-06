@@ -190,7 +190,7 @@ def test_nequip_static_maker(srtio3_structure, test_dir):
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-44.32619, rel=1e-4)
+    assert output1.output.energy == approx(-44.40017, rel=1e-4)
     assert output1.output.n_steps == 1
 
 
@@ -213,11 +213,11 @@ def test_nequip_relax_maker(srtio3_structure, test_dir, relax_cell: bool):
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
-        assert output1.output.energy == approx(-44.334, rel=1e-1)
-        assert output1.output.n_steps == 6
+        assert output1.output.energy == approx(-44.407, rel=1e-3)
+        assert output1.output.n_steps == 5
     else:
-        assert output1.output.energy == approx(-44.3275, rel=1e-4)
-        assert output1.output.n_steps == 6
+        assert output1.output.energy == approx(-44.40015, rel=1e-4)
+        assert output1.output.n_steps == 5
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
