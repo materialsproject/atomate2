@@ -86,7 +86,9 @@ def test_mp_eos_maker(
     }
 
     for idx in range(2):
-        ref_paths[f"EOS MP GGA relax {1+idx}"] = f"mp-149-PBE-EOS_MP_GGA_relax_{1+idx}"
+        ref_paths[f"EOS MP GGA relax {idx + 1}"] = (
+            f"mp-149-PBE-EOS_MP_GGA_relax_{idx + 1}"
+        )
 
     for idx in range(nframes):
         ref_paths[f"EOS MP GGA relax deformation {idx}"] = (
