@@ -453,6 +453,7 @@ def ase_calculator(
 
     return calculator
 
+
 @contextmanager
 def revert_default_dtype() -> Generator[None, None, None]:
     """Context manager for torch.default_dtype.

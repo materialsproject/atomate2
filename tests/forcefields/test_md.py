@@ -1,4 +1,4 @@
-""" Tests for forcefield MD flows. """
+"""Tests for forcefield MD flows."""
 
 import numpy as np
 import pytest

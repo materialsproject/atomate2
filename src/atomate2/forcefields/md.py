@@ -1,4 +1,5 @@
 """Makers to perform MD with forcefields."""
+
 from __future__ import annotations
 
 import contextlib

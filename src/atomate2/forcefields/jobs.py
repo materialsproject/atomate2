@@ -11,8 +11,7 @@ from pymatgen.core.trajectory import Trajectory
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import Relaxer, ase_calculator, revert_default_dtype
-
+from atomate2.forcefields.utils import Relaxer, ase_calculator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -340,6 +339,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
+
 @dataclass
 class MACEStaticMaker(ForceFieldStaticMaker):
     """
@@ -366,6 +366,7 @@ class MACEStaticMaker(ForceFieldStaticMaker):
     name: str = f"{MLFF.MACE} static"
     force_field_name: str = f"{MLFF.MACE}"
     task_document_kwargs: dict = field(default_factory=dict)
+
 
 @dataclass
 class GAPRelaxMaker(ForceFieldRelaxMaker):
