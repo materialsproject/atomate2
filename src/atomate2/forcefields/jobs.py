@@ -11,7 +11,7 @@ from pymatgen.core.trajectory import Trajectory
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import Relaxer, ase_calculator
+from atomate2.forcefields.utils import Relaxer, ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -121,10 +121,11 @@ class ForceFieldRelaxMaker(Maker):
                 "Behavior may vary..."
             )
 
-        relaxer = Relaxer(
-            self._calculator(), relax_cell=self.relax_cell, **self.optimizer_kwargs
-        )
-        result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+        with revert_default_dtype():
+            relaxer = Relaxer(
+                self._calculator(), relax_cell=self.relax_cell, **self.optimizer_kwargs
+            )
+            result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,

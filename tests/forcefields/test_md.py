@@ -2,7 +2,6 @@
 
 import numpy as np
 import pytest
-import torch
 from ase import units
 from ase.io import Trajectory
 from jobflow import run_locally
@@ -12,9 +11,6 @@ from pymatgen.analysis.structure_matcher import StructureMatcher
 from atomate2.forcefields.md import CHGNetMDMaker, M3GNetMDMaker, MACEMDMaker
 
 _to_maker = {"CHGNet": CHGNetMDMaker, "M3GNet": M3GNetMDMaker, "MACE": MACEMDMaker}
-
-# MACE changes the default dtype, ensure consistent dtype here
-torch.set_default_dtype(torch.float32)
 
 
 @pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE"])

@@ -30,7 +30,11 @@ from scipy.linalg import schur
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import forcefield_job
 from atomate2.forcefields.schemas import ForcefieldResult, ForceFieldTaskDocument
-from atomate2.forcefields.utils import TrajectoryObserver, ase_calculator
+from atomate2.forcefields.utils import (
+    TrajectoryObserver,
+    ase_calculator,
+    revert_default_dtype,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -292,34 +296,36 @@ class ForceFieldMDMaker(Maker):
                 ZeroRotation(atoms)
 
         self.calculator_kwargs = self.calculator_kwargs or {}
-        atoms.calc = self._calculator()
 
-        with contextlib.redirect_stdout(io.StringIO()):
-            md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
+        with revert_default_dtype():
+            atoms.calc = self._calculator()
 
-            md_runner = md_func(
-                atoms=atoms,
-                timestep=self.timestep * units.fs,
-                **self.ase_md_kwargs,
-            )
+            with contextlib.redirect_stdout(io.StringIO()):
+                md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
-            md_runner.attach(md_observer, interval=self.traj_interval)
+                md_runner = md_func(
+                    atoms=atoms,
+                    timestep=self.timestep * units.fs,
+                    **self.ase_md_kwargs,
+                )
 
-            def _callback(dyn: MolecularDynamics = md_runner) -> None:
-                if self.ensemble == "nve":
-                    return
-                dyn.set_temperature(temperature_K=self.tschedule[dyn.nsteps])
-                if self.ensemble == "nvt":
-                    return
-                dyn.set_stress(self.pschedule[dyn.nsteps] * 1e3 * units.bar)
+                md_runner.attach(md_observer, interval=self.traj_interval)
 
-            md_runner.attach(_callback, interval=1)
-            md_runner.run(steps=self.nsteps)
+                def _callback(dyn: MolecularDynamics = md_runner) -> None:
+                    if self.ensemble == "nve":
+                        return
+                    dyn.set_temperature(temperature_K=self.tschedule[dyn.nsteps])
+                    if self.ensemble == "nvt":
+                        return
+                    dyn.set_stress(self.pschedule[dyn.nsteps] * 1e3 * units.bar)
 
-            if self.traj_file is not None:
-                md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
+                md_runner.attach(_callback, interval=1)
+                md_runner.run(steps=self.nsteps)
 
-        structure = AseAtomsAdaptor.get_structure(atoms)
+                if self.traj_file is not None:
+                    md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
+
+            structure = AseAtomsAdaptor.get_structure(atoms)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
 
