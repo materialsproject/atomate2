@@ -2,6 +2,8 @@ from typing import Callable
 from jobflow import job, Maker, Job
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 from atomate2.openmm.schemas.openmm_task_document import OpenMMTaskDocument
 from atomate2.openmm.schemas.physical_state import PhysicalState
 from atomate2.openmm.schemas.task_details import TaskDetails
@@ -10,6 +12,7 @@ from atomate2.openmm.schemas.state_reports import StateReports
 from atomate2.openmm.schemas.calculation_input import CalculationInput
 from atomate2.openmm.schemas.calculation_output import CalculationOutput
 from atomate2.openmm.constants import OpenMMConstants
+
 # from atomate2.openmm.logger import logger
 from openmm import Platform, Context
 from typing import Union, Optional
@@ -19,23 +22,9 @@ from tempfile import TemporaryDirectory, NamedTemporaryFile
 import copy
 import os
 
+from openff.interchange import Interchange
 
-def openmm_job(method: Callable):
-    """
-
-    Parameters
-    ----------
-    method : callable
-        A BaseOpenMMMaker.make method. This should not be specified directly and is
-        implied by the decorator.
-
-    Returns
-    -------
-    callable
-        A decorated version of the make function that will generate OpenMM jobs.
-    """
-    # todo: add data keyword argument to specify where to write bigger files like trajectory files
-    return job(method, output_schema=OpenMMTaskDocument)
+from atomate2.classical_md.common import openff_job
 
 
 @dataclass
@@ -52,28 +41,30 @@ class BaseOpenMMMaker(Maker):
         Set to True to turn on periodic boundary conditions for the trajectory file or False
         to turn off periodic boundary conditions.
     """
+
     name: str = "base openmm job"
-    platform_kwargs: Optional[dict] = field(default_factory=dict)
-    dcd_reporter_interval: Optional[int] = field(default=10000)
-    state_reporter_interval: Optional[int] = field(default=1000)
+    platform_name: Optional[dict] = field(default_factory=dict)
+    platform_properties: Optional[dict] = field(default_factory=dict)
+    state_interval: Optional[int] = field(default=1000)
+    dcd_interval: Optional[int] = field(default=10000)
     wrap_dcd: Optional[bool] = False
 
-    @openmm_job
+    @openff_job
     def make(
         self,
-        input_set: OpenMMSet,
-        output_dir: Optional[Union[str, Path]] = None,
+        interchange: Interchange,
+        prev_task: Optional[ClassicalMDTaskDocument] = None,
     ) -> Job:
         """
         OpenMM Job Maker where each Job consist of three major steps:
 
         1. Setup an OpenMM Simulation - _setup_base_openmm_task(...)
-        2. Run an OpenMM Simulation based task - _run_openmm(...)
+        2. Run an OpenMM Simulation based task - run_openmm(...)
         3. Close the OpenMM task - _close_base_openmm_task(...)
 
         The setup and closing logic should be broadly applicable to all OpenMM Jobs. The specifics
         of each OpenMM Job is to be defined by classes that are derived from BaseOpenMMMaker by
-        implementing the _run_openmm(...) method. If custom setup and closing log is desired, this
+        implementing the run_openmm(...) method. If custom setup and closing log is desired, this
         is achieved by BaseOpenMMMaker dervied classes overriding _setup_base_openmm_task(...) and
         _close_base_openmm_task(...) methods.
 
@@ -86,29 +77,78 @@ class BaseOpenMMMaker(Maker):
             persistent directory.
         """
         # Define output_dir if as a temporary directory if not provided
-        temp_dir = None     # Define potential pointer to temporary directory to keep in scope
-        if output_dir is None:
-            temp_dir = TemporaryDirectory()
-            output_dir = temp_dir.name
-            output_dir = Path(output_dir)
-        else:
-            output_dir = Path(output_dir)
-            output_dir.mkdir(parents=True, exist_ok=True)
+        # temp_dir = (
+        #     None  # Define potential pointer to temporary directory to keep in scope
+        # )
+        # if output_dir is None:
+        #     temp_dir = TemporaryDirectory()
+        #     output_dir = temp_dir.name
+        #     output_dir = Path(output_dir)
+        # else:
+        #     output_dir = Path(output_dir)
+        #     output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Setup simulation
-        sim = self._setup_base_openmm_task(input_set, output_dir)
+        output_dir = Path()
+        integrator = None
+
+        sim = self.make_simulation(interchange, integrator)
+
+        self.add_reporters(sim, output_dir)
 
         # Run the simulation
-        task_details = self._run_openmm(sim)
+        self.run_openmm(sim)
+
+        self.update_interchange(interchange, sim)
+
+        return self.create_task_doc(interchange)
 
         # Close the simulation
-        input_set = self._close_base_openmm_task(sim, input_set, sim.context, task_details, output_dir)
+        input_set = self._close_base_openmm_task(
+            sim, input_set, sim.context, task_details, output_dir
+        )
 
         return input_set
 
-    def _setup_base_openmm_task(self, input_set: OpenMMSet, output_dir: Path) -> Simulation:
+    def add_reporters(self, sim: Simulation, output_dir: Path):
+
+        # add dcd reporter
+        if self.dcd_interval > 0:
+            dcd_reporter = DCDReporter(
+                file=str(output_dir / "trajectory_dcd"),
+                reportInterval=self.dcd_interval,
+            )
+            sim.reporters.append(dcd_reporter)
+
+        # add state reporter
+        if self.state_interval > 0:
+            state_reporter = StateDataReporter(
+                file=str(output_dir / "state_txt"),
+                reportInterval=self.state_interval,
+                step=True,
+                potentialEnergy=True,
+                kineticEnergy=True,
+                totalEnergy=True,
+                temperature=True,
+                volume=True,
+                density=True,
+            )
+            sim.reporters.append(state_reporter)
+
+    def make_simulation(self, interchange, integrator):
+        platform_name = self.platform_name or "CPU"
+        platform = Platform.getPlatformByName(platform_name)
+        sim = interchange.to_openmm_simulation(
+            integrator,
+            platform=platform,
+            platformProperties=self.platform_properties,
+        )
+        return sim
+
+    def _setup_base_openmm_task(
+        self, input_set: OpenMMSet, output_dir: Path
+    ) -> Simulation:
         """
-        Initializes an OpenMM Simulation. Classes derived from BaseOpenMMMaker define the _run_openmm method
+        Initializes an OpenMM Simulation. Classes derived from BaseOpenMMMaker define the run_openmm method
         and implement the specifics of an OpenMM task.
 
         Parameters
@@ -132,24 +172,27 @@ class BaseOpenMMMaker(Maker):
         platform = Platform.getPlatformByName(platform_name)
 
         sim = input_set.get_simulation(
-            platform=platform,
-            platformProperties=platform_props
+            platform=platform, platformProperties=platform_props
         )
 
         # Add reporters
-        if self.dcd_reporter_interval > 0:
-            dcd_file_name = os.path.join(output_dir, OpenMMConstants.TRAJECTORY_DCD_FILE_NAME.value)
+        if self.dcd_interval > 0:
+            dcd_file_name = os.path.join(
+                output_dir, OpenMMConstants.TRAJECTORY_DCD_FILE_NAME.value
+            )
             dcd_reporter = DCDReporter(
                 file=dcd_file_name,
-                reportInterval=self.dcd_reporter_interval,
+                reportInterval=self.dcd_interval,
             )
             # logger.info(f"Created DCDReporter that will report to {dcd_file_name}")
             sim.reporters.append(dcd_reporter)
-        if self.state_reporter_interval > 0:
-            state_file_name = os.path.join(output_dir, OpenMMConstants.STATE_REPORT_CSV_FILE_NAME.value)
+        if self.state_interval > 0:
+            state_file_name = os.path.join(
+                output_dir, OpenMMConstants.STATE_REPORT_CSV_FILE_NAME.value
+            )
             state_reporter = StateDataReporter(
                 file=state_file_name,
-                reportInterval=self.state_reporter_interval,
+                reportInterval=self.state_interval,
                 step=True,
                 potentialEnergy=True,
                 kineticEnergy=True,
@@ -163,7 +206,16 @@ class BaseOpenMMMaker(Maker):
 
         return sim
 
-    def _run_openmm(self, simulation: Simulation) -> TaskDetails:
+    def update_interchange(self, interchange, sim):
+        state = sim.context.getState(
+            getPositions=True,
+            getVelocities=True,
+            enforcePeriodicBox=self.wrap_dcd,
+        )
+        interchange.positions = state.getPositions(asNumpy=True)
+        interchange.velocities = state.getVelocities(asNumpy=True)
+
+    def run_openmm(self, simulation: Simulation) -> TaskDetails:
         """
         Abstract method for holding the task specific logic to be ran by each job. Setting up of the Simulation
         is handled by _setup_base_openmm_task which passes a Simulation object to this method. This method will
@@ -180,9 +232,26 @@ class BaseOpenMMMaker(Maker):
         TaskDetails
 
         """
-        raise NotImplementedError("_run_openmm should be implemented by each class that derives from BaseOpenMMMaker.")
+        raise NotImplementedError(
+            "run_openmm should be implemented by each class that derives from BaseOpenMMMaker."
+        )
 
-    def _close_base_openmm_task(self, sim: Simulation, input_set: OpenMMSet, context: Context, task_details: TaskDetails, output_dir: Path):
+    def create_task_doc(
+        self,
+        interchange=None,
+        output_dir=None,
+        prev_task=None,
+    ):
+        return
+
+    def _close_base_openmm_task(
+        self,
+        sim: Simulation,
+        input_set: OpenMMSet,
+        context: Context,
+        task_details: TaskDetails,
+        output_dir: Path,
+    ):
 
         # Create an output OpenMMSet for CalculationOutput
         output_set = copy.deepcopy(input_set)
@@ -207,25 +276,22 @@ class BaseOpenMMMaker(Maker):
 
         output_set.write_input(output_dir)
 
-
         # Grab StateDataReporter and DCDReporter if present on simulation reporters
         state_reports, dcd_reports = None, None
-        if self.state_reporter_interval > 0:
+        if self.state_interval > 0:  # could check if file is present instead
             # todo: what happens when state_reporter_interval > 0, but nothing has been
             # reported, for example, Simulation.step was not called. Look at TaskDetails
             # for logic flow?
             state_file_name = os.path.join(output_dir, "state_csv")
             state_reports = StateReports.from_state_file(state_file_name)
-        if self.dcd_reporter_interval > 0:
+        if self.dcd_interval > 0:  # could check if file is present instead
             dcd_file_name = os.path.join(output_dir, "trajectory_dcd")
             dcd_reports = DCDReports(
-                location=dcd_file_name,
-                report_interval=self.dcd_reporter_interval
+                location=dcd_file_name, report_interval=self.dcd_interval
             )
 
         calculation_input = CalculationInput(
-            input_set=input_set,
-            physical_state=PhysicalState.from_input_set(input_set)
+            input_set=input_set, physical_state=PhysicalState.from_input_set(input_set)
         )
         calculation_output = CalculationOutput(
             input_set=output_set,
@@ -240,7 +306,6 @@ class BaseOpenMMMaker(Maker):
             physical_state=PhysicalState.from_input_set(output_set),
             calculation_input=calculation_input,
             calculation_output=calculation_output,
-
         )
 
         return task_doc
