@@ -31,6 +31,8 @@ jobs:
           # ase needed to get FrechetCellFilter used by ML force fields
           pip install git+https://gitlab.com/ase/ase
           pip install .[strict,docs]
+          pip install torch-runstats
+          pip install --no-dependencies nequip
 
       - name: Build
         run: sphinx-build docs docs_build
