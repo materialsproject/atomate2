@@ -1,3 +1,4 @@
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 from atomate2.openmm.schemas.physical_state import PhysicalState
 from typing import Union, Tuple, Optional, Dict
 from pathlib import Path
@@ -130,13 +131,9 @@ from typing import List, Union
 
 class CalculationInput(BaseModel):
 
-    molecule_specs: Optional[List] = Field(
-        None, description="Molecules within the box."
-    )
+    steps: int = Field(0, description="Total steps")
 
-    forcefield: Optional[str] = Field(None, description="forcefield")
-
-    water_model: Optional[str] = Field(None, description="Water Model.")
+    step_size: int = Field(None, description="")
 
     integrator: Optional[str] = Field(None, description="Total steps")
 
@@ -208,10 +205,6 @@ class Calculation(BaseModel):
         None, description="Whether VASP completed the calculation successfully"
     )
 
-    steps: int = Field(0, description="Total steps")
-
-    step_size: int = Field(None, description="")
-
     input: Optional[CalculationInput] = Field(
         None, description="VASP input settings for the calculation"
     )
@@ -241,38 +234,46 @@ class Calculation(BaseModel):
         return
 
 
-class TaskDoc(BaseModel, extra="allow"):
-    """Definition of the OpenMM task document."""
-
-    tags: Union[List[str], None] = Field(
-        [], title="tag", description="Metadata tagged to a given task."
-    )
-    dir_name: Optional[str] = Field(
-        None, description="The directory for this VASP task"
-    )
-    state: Optional[TaskState] = Field(None, description="State of this calculation")
-
-    calcs_reversed: Optional[List[Calculation]] = Field(
-        None,
-        title="Calcs reversed data",
-        description="Detailed data for each VASP calculation contributing to the task document.",
-    )
-
-    interchange: Optional[Interchange] = Field(
-        None, description="Final output structure from the task"
-    )
-
-    task_type: Optional[str] = Field(None, description="The type of calculation.")
-
-    task_label: Optional[str] = Field(None, description="A description of the task")
-
-    # additional_json
-
-    last_updated: Optional[datetime] = Field(
-        None,
-        description="Timestamp for the most recent calculation for this task document",
-    )
-
-    @classmethod
-    def from_directory_and_task(cls, dir_name, prev_task):
-        return
+# class TaskDocument(BaseModel, extra="allow"):
+#     """Definition of the OpenMM task document."""
+#
+#     tags: Union[List[str], None] = Field(
+#         [], title="tag", description="Metadata tagged to a given task."
+#     )
+#     dir_name: Optional[str] = Field(
+#         None, description="The directory for this VASP task"
+#     )
+#     state: Optional[TaskState] = Field(None, description="State of this calculation")
+#
+#     calcs_reversed: Optional[List[Calculation]] = Field(
+#         None,
+#         title="Calcs reversed data",
+#         description="Detailed data for each VASP calculation contributing to the task document.",
+#     )
+#
+#     interchange: Optional[Interchange] = Field(
+#         None, description="Final output structure from the task"
+#     )
+#
+#     molecule_specs: Optional[List] = Field(
+#         None, description="Molecules within the box."
+#     )
+#
+#     forcefield: Optional[str] = Field(None, description="forcefield")
+#
+#     water_model: Optional[str] = Field(None, description="Water Model.")
+#
+#     task_type: Optional[str] = Field(None, description="The type of calculation.")
+#
+#     task_label: Optional[str] = Field(None, description="A description of the task")
+#
+#     # additional_json
+#
+#     last_updated: Optional[datetime] = Field(
+#         None,
+#         description="Timestamp for the most recent calculation for this task document",
+#     )
+#
+#     @classmethod
+#     def from_directory_and_task(cls, dir_name, prev_task):
+#         return

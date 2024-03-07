@@ -11,6 +11,8 @@ from openmm.unit import elementary_charge, angstrom
 
 from pint import Quantity
 
+from atomate2.classical_md.schemas import InputMoleculeSpec, Geometry
+
 
 def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
     """
@@ -68,6 +70,7 @@ def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
 
     openff_mol.add_conformer(molgraph.molecule.cart_coords * angstrom)
     return openff_mol
+
 
 def get_atom_map(inferred_mol, openff_mol) -> Tuple[bool, Dict[int, int]]:
     """
@@ -130,7 +133,6 @@ def infer_openff_mol(
     molgraph = metal_edge_extender(molgraph)
     inferred_mol = molgraph_to_openff_mol(molgraph)
     return inferred_mol
-
 
 
 def add_conformers(
@@ -215,10 +217,10 @@ def assign_partial_charges(
         openff_mol.assign_partial_charges(charge_method)
     return openff_mol
 
+
 def process_mol_specs(
-    input_mol_dics: List[Union[Dict, InputMoleculeSpec]],
-    default_charge_method: str,
-    default_force_field: str,
+    input_mol_dicts: List[Union[Dict, InputMoleculeSpec]],
+    charge_method: str,
 ):
     """
     Processes a list of input molecular specifications, generating conformers, assigning partial charges, and creating output molecular specifications.
@@ -227,9 +229,9 @@ def process_mol_specs(
     ----------
     input_mol_specs : List[Union[Dict, InputMoleculeSpec]]
         A list of dictionaries containing input molecular specifications.
-    default_charge_method : str
+    charge_method : str
         The default charge method to be used if not specified in the input molecular specifications.
-    default_force_field : str
+    force_field : str
         The default force field to be used if not specified in the input molecular specifications.
 
     Returns
@@ -247,11 +249,12 @@ def process_mol_specs(
     if len(set([spec.smile for spec in input_mol_specs])) != len(input_mol_specs):
         raise ValueError("Smiles in input mol dicts must be unique.")
 
-
     # TODO: test this
     mol_specs = []
     for i, mol_dict in enumerate(input_mol_specs):
-        openff_mol = tk.Molecule.from_smiles(mol_dict.smile, allow_undefined_stereo=True)
+        openff_mol = tk.Molecule.from_smiles(
+            mol_dict.smile, allow_undefined_stereo=True
+        )
 
         # add conformers
         openff_mol, atom_map = add_conformers(
@@ -259,7 +262,7 @@ def process_mol_specs(
         )
 
         # assign partial charges
-        charge_method = mol_dict.charge_method or default_charge_method
+        charge_method = mol_dict.charge_method or charge_method
         openff_mol = assign_partial_charges(
             openff_mol, atom_map, charge_method, mol_dict.partial_charges
         )
@@ -271,7 +274,7 @@ def process_mol_specs(
             name=mol_dict.name,
             count=mol_dict.count,
             smile=mol_dict.smile,
-            force_field=mol_dict.force_field or default_force_field,  # type: ignore
+            force_field=mol_dict.force_field or force_field,  # type: ignore
             formal_charge=int(
                 np.sum(openff_mol.partial_charges.magnitude) / charge_scaling
             ),
@@ -280,43 +283,3 @@ def process_mol_specs(
         )
         mol_specs.append(mol_spec)
     return mol_specs
-
-
-def create_interchange(InterchangeSpec) -> Interchange:
-
-    mol_specs = process_mol_specs(
-        input_mol_dicts, self.default_charge_method, self.default_force_field
-    )
-
-    topology = pack_box(
-        molecules=[spec["openff_mol"] for spec in mol_specs],
-        number_of_copies=[spec["count"] for spec in mol_specs],
-        mass_density=mass_density,
-        **pack_box_kwargs
-    )
-
-    interchange = Interchange.from_smirnoff(
-        force_field=forcefield,
-        topology=topology,
-        charge_from_molecules=[spec["openff_mol"] for spec in mol_specs],
-        allow_nonintegral_charges=True,
-    )
-
-    return interchange
-
-
-def create_interchange_spec(
-    input_mol_dicts: List[Union[Dict, InputMoleculeSpec]],
-    forcefield: ForceField,
-    default_charge_method: str,
-    mass_density: float,
-    water_model,
-    **pack_box_kwargs,
-) -> InterchangeSpec:
-    return process_mol_specs(
-        input_mol_dicts, self.default_charge_method, self.default_force_field
-    )
-
-
-def derive_interchange_spec(interchange: Interchange) -> InterchangeSpec:
-    return
