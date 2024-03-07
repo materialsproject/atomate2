@@ -184,7 +184,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = NequipStaticMaker(
         task_document_kwargs=task_doc_kwargs,
-        model_path=test_dir / "forcefields" / "nequip" / "nequip_sto_test_ff.pth",
+        model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -208,7 +208,7 @@ def test_nequip_relax_maker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
-        model_path=test_dir / "forcefields" / "nequip" / "nequip_sto_test_ff.pth",
+        model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
