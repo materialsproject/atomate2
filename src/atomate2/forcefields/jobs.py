@@ -285,8 +285,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
             :obj:`nequip.calculators.NequipCalculator()'`.
     """
 
-    name: str = "Nequip relax"
-    force_field_name: str = "Nequip"
+    name: str = f"{MLFF.Nequip} relax"
+    force_field_name: str = f"{MLFF.Nequip}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -296,22 +296,16 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     model_kwargs: dict = field(default_factory=dict)
 
     def _relax(self, structure: Structure) -> dict:
-        from nequip.ase import nequip_calculator
+        from nequip.ase import NequIPCalculator
 
-        calculator = nequip_calculator.NequIPCalculator.from_deployed_model(
+        calculator = NequIPCalculator.from_deployed_model(
             self.model_path, **self.model_kwargs
         )
         relaxer = Relaxer(
-            calculator,
-            relax_cell=self.relax_cell,
-            **self.optimizer_kwargs,
+            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
         )
 
-        return relaxer.relax(
-            structure,
-            steps=self.steps,
-            **self.relax_kwargs,
-        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -324,7 +318,7 @@ class NequipStaticMaker(ForceFieldStaticMaker):
     name : str
         The job name.
     force_field_name : str
-        The name of the forcefield.
+        The name of the force field.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     model_path: str | Path
@@ -336,24 +330,21 @@ class NequipStaticMaker(ForceFieldStaticMaker):
             :obj:`nequip.calculators.NequipCalculator()'`.
     """
 
-    name: str = "Nequip static"
-    force_field_name: str = "Nequip"
+    name: str = f"{MLFF.Nequip} static"
+    force_field_name: str = f"{MLFF.Nequip}"
     task_document_kwargs: dict = field(default_factory=dict)
     model_path: str | Path = ""
     model_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
-        from nequip.ase import nequip_calculator
+        from nequip.ase import NequIPCalculator
 
-        calculator = nequip_calculator.NequIPCalculator.from_deployed_model(
+        calculator = NequIPCalculator.from_deployed_model(
             self.model_path, **self.model_kwargs
         )
         relaxer = Relaxer(calculator, relax_cell=False)
 
-        return relaxer.relax(
-            structure,
-            steps=1,
-        )
+        return relaxer.relax(structure, steps=1)
 
 
 @dataclass

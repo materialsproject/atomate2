@@ -98,7 +98,7 @@ def si_structure(test_dir):
 
 
 @pytest.fixture()
-def srtio3_structure(test_dir):
+def sr_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "SrTiO3.cif")
 
 

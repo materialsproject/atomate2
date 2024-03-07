@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 from jobflow import run_locally
+from pymatgen.core import Structure
 from pytest import approx, importorskip
 
 from atomate2.forcefields.jobs import (
@@ -37,7 +38,7 @@ def test_chgnet_static_maker(si_structure):
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
-def test_chgnet_relax_maker(si_structure, relax_cell: bool):
+def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -103,7 +104,7 @@ mace_paths = pytest.mark.parametrize(
 
 
 @mace_paths
-def test_mace_static_maker(si_structure, test_dir, model):
+def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -124,7 +125,9 @@ def test_mace_static_maker(si_structure, test_dir, model):
 
 @pytest.mark.parametrize("relax_cell", [True, False])
 @mace_paths
-def test_mace_relax_maker(si_structure, test_dir, model, relax_cell: bool):
+def test_mace_relax_maker(
+    si_structure: Structure, test_dir: Path, model, relax_cell: bool
+):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -151,7 +154,7 @@ def test_mace_relax_maker(si_structure, test_dir, model, relax_cell: bool):
         assert output1.output.n_steps == 4
 
 
-def test_gap_static_maker(si_structure, test_dir):
+def test_gap_static_maker(si_structure: Structure, test_dir):
     importorskip("quippy")
 
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
@@ -174,7 +177,7 @@ def test_gap_static_maker(si_structure, test_dir):
     assert output1.output.n_steps == 1
 
 
-def test_nequip_static_maker(srtio3_structure, test_dir):
+def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
@@ -182,7 +185,7 @@ def test_nequip_static_maker(srtio3_structure, test_dir):
     job = NequipStaticMaker(
         task_document_kwargs=task_doc_kwargs,
         model_path=test_dir / "forcefields" / "nequip" / "nequip_sto_test_ff.pth",
-    ).make(srtio3_structure)
+    ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -195,16 +198,18 @@ def test_nequip_static_maker(srtio3_structure, test_dir):
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
-def test_nequip_relax_maker(srtio3_structure, test_dir, relax_cell: bool):
+def test_nequip_relax_maker(
+    sr_ti_o3_structure: Structure, test_dir: Path, relax_cell: bool
+):
     # translate one atom to ensure a small number of relaxation steps are taken
-    srtio3_structure.translate_sites(0, [0, 0, 0.2])
+    sr_ti_o3_structure.translate_sites(0, [0, 0, 0.2])
     # generate job
     job = NequipRelaxMaker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
         model_path=test_dir / "forcefields" / "nequip" / "nequip_sto_test_ff.pth",
-    ).make(srtio3_structure)
+    ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -221,7 +226,7 @@ def test_nequip_relax_maker(srtio3_structure, test_dir, relax_cell: bool):
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
-def test_gap_relax_maker(si_structure, test_dir, relax_cell: bool):
+def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bool):
     importorskip("quippy")
 
     # translate one atom to ensure a small number of relaxation steps are taken
