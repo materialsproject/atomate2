@@ -658,19 +658,21 @@ class VaspInputGenerator(InputGenerator):
 
         # generate incar
         incar = Incar()
-        for k, v in incar_settings.items():
-            if k == "MAGMOM":
-                incar[k] = _get_magmoms(
+        for key, val in incar_settings.items():
+            if key == "MAGMOM":
+                incar[key] = get_magmoms(
                     structure,
                     magmoms=self.user_incar_settings.get("MAGMOM", {}),
                     config_magmoms=config_magmoms,
                 )
-            elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
-                incar[k] = _get_u_param(k, v, structure)
-            elif k.startswith("EDIFF") and k != "EDIFFG":
-                incar["EDIFF"] = _get_ediff(k, v, structure, incar_settings)
+            elif key in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get(
+                "LDAU", False
+            ):
+                incar[key] = _get_u_param(key, val, structure)
+            elif key.startswith("EDIFF") and key != "EDIFFG":
+                incar["EDIFF"] = _get_ediff(key, val, structure, incar_settings)
             else:
-                incar[k] = v
+                incar[key] = val
         _set_u_params(incar, incar_settings, structure)
 
         # apply previous incar settings, be careful not to override user_incar_settings
@@ -906,7 +908,7 @@ class VaspInputGenerator(InputGenerator):
         )
 
 
-def _get_magmoms(
+def get_magmoms(
     structure: Structure,
     magmoms: dict[str, float] = None,
     config_magmoms: dict[str, float] = None,

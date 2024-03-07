@@ -1,4 +1,5 @@
 """Define the Units for FHI-aims calculations."""
+
 from numpy import pi
 
 PI = pi

@@ -1,4 +1,5 @@
 """Schemas for FHI-aims calculation objects."""
+
 from __future__ import annotations
 
 import os
