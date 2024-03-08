@@ -83,9 +83,9 @@ T_THERMAL_CONDUCTIVITY = [0, 100, 200, 300]  # [i*100 for i in range(0,16)]
 IMAGINARY_TOL = 0.025  # in THz
 FIT_METHOD = "rfe"
 
-ev2j = sp.constants.elementary_charge
-hbar = sp.constants.hbar  # J-s
-kb = sp.constants.Boltzmann  # J/K
+eV2J = sp.constants.elementary_charge
+hbar = sp.constants.hbar # J-s
+kB = sp.constants.Boltzmann # J/K
 
 __all__ = [
     "hiphive_static_calcs",
@@ -947,14 +947,13 @@ def harmonic_properties(
     structure: Structure,
     supercell_matrix: np.ndarray,
     fcs: ForceConstants,
-    temperature: list,
-    imaginary_tol: float | None = IMAGINARY_TOL,
-) -> tuple[dict, Phonopy]:
+    temperature: List,
+    imaginary_tol: float = IMAGINARY_TOL
+) -> Tuple[Dict,Phonopy]:
     """
-    Calculate harmonic properties.
-
     Uses the force constants to extract phonon properties. Used for comparing
     the accuracy of force constant fits.
+
     Args:
         structure: The parent structure.
         supercell_matrix: The supercell transformation matrix.
@@ -962,242 +961,229 @@ def harmonic_properties(
         imaginary_tol: Tolerance used to decide if a phonon mode is imaginary,
             in THz.
 
-    Returns
-    -------
+    Returns:
         A tuple of the number of imaginary modes at Gamma, the minimum phonon
-        frequency at Gamma, and the free energy, entropy, and heat capacity.
+        frequency at Gamma, and the free energy, entropy, and heat capacity
     """
-    logger.info("Evaluating harmonic properties...")
+
+    logger.info('Evaluating harmonic properties...')
     fcs2 = fcs.get_fc_array(2)
-    fcs.get_fc_array(3)
+    fcs3 = fcs.get_fc_array(3)
     parent_phonopy = get_phonopy_structure(structure)
     phonopy = Phonopy(parent_phonopy, supercell_matrix=supercell_matrix)
     natom = phonopy.primitive.get_number_of_atoms()
-    mesh = supercell_matrix.diagonal() * 2
+    mesh = supercell_matrix.diagonal()*2
+    logger.info(f'Mesh: {mesh}')
 
     phonopy.set_force_constants(fcs2)
-    phonopy.set_mesh(
-        mesh, is_eigenvectors=True, is_mesh_symmetry=False
-    )  # run_mesh(is_gamma_center=True)
+    phonopy.set_mesh(mesh,is_eigenvectors=True,is_mesh_symmetry=False) #run_mesh(is_gamma_center=True)
     phonopy.run_thermal_properties(temperatures=temperature)
-    logger.info("Thermal properties successfully run!")
+    logger.info('Thermal properties successfully run!')
 
     _, free_energy, entropy, heat_capacity = phonopy.get_thermal_properties()
-    free_energy *= 1000 / sp.constants.Avogadro / ev2j / natom  # kJ/mol to eV/atom
-    entropy *= 1 / sp.constants.Avogadro / ev2j / natom  # J/K/mol to eV/K/atom
-    heat_capacity *= 1 / sp.constants.Avogadro / ev2j / natom  # J/K/mol to eV/K/atom
-
-    freq = phonopy.mesh.frequencies  # in THz
+    free_energy *= 1000/sp.constants.Avogadro/eV2J/natom # kJ/mol to eV/atom
+    entropy *= 1/sp.constants.Avogadro/eV2J/natom # J/K/mol to eV/K/atom
+    heat_capacity *= 1/sp.constants.Avogadro/eV2J/natom # J/K/mol to eV/K/atom
+    logger.info(f"Heat_capacity_harmonic_property: {heat_capacity}")
+    freq = phonopy.mesh.frequencies # in THz
+    logger.info(f'Frequencies: {freq}')
     # find imaginary modes at gamma
-    #    phonopy.run_qpoints([0, 0, 0])
-    #    gamma_eigs = phonopy.get_qpoints_dict()["frequencies"]
+#    phonopy.run_qpoints([0, 0, 0])
+#    gamma_eigs = phonopy.get_qpoints_dict()["frequencies"]
     n_imaginary = int(np.sum(freq < -np.abs(imaginary_tol)))
-    np.min(freq)
+    min_freq = np.min(freq)
 
     if n_imaginary == 0:
-        logger.info("No imaginary modes!")
-    else:  # do not calculate these if imaginary modes exist
-        logger.warning("Imaginary modes found!")
+        logger.info('No imaginary modes!')
+    else: # do not calculate these if imaginary modes exist
+        logger.warning('Imaginary modes found!')
 
-    # if len(temperature) == 1:
+    # if len(temperature)==1:
     #     temperature = temperature[0]
     #     free_energy = free_energy[0]
     #     entropy = entropy[0]
     #     heat_capacity = heat_capacity[0]
-
+    logger.info(f"Heat_capacity_harmonic_property[0]: {heat_capacity}")
+    temperature = temperature[0]
     return {
         "temperature": temperature,
         "free_energy": free_energy,
         "entropy": entropy,
         "heat_capacity": heat_capacity,
-        "n_imaginary": n_imaginary,
-    }, phonopy
+        "n_imaginary": n_imaginary
+        }, phonopy
 
 
 def anharmonic_properties(
     phonopy: Phonopy,
     fcs: ForceConstants,
-    temperature: list,
+    temperature: List,
     heat_capacity: np.ndarray,
     n_imaginary: float,
-    bulk_modulus: float | None = None,
-) -> dict:
+    bulk_modulus: float = None
+) -> Dict:
+
     if n_imaginary == 0:
-        logger.info("Evaluating anharmonic properties...")
+        logger.info('Evaluating anharmonic properties...')
         fcs2 = fcs.get_fc_array(2)
         fcs3 = fcs.get_fc_array(3)
-        grun, cte, dLfrac = gruneisen(
-            phonopy, fcs2, fcs3, temperature, heat_capacity, bulk_modulus=bulk_modulus
-        )
-    else:  # do not calculate these if imaginary modes exist
-        logger.warning(
-            "Gruneisen and thermal expansion cannot be calculated with "
-            "imaginary modes. All set to 0."
-        )
-        grun = [np.zeros((len(temperature), 3))]
-        cte = [np.zeros((len(temperature), 3))]
-        dLfrac = np.zeros((len(temperature), 3))
+        grun, cte, dLfrac = gruneisen(phonopy,fcs2,fcs3,temperature,heat_capacity,bulk_modulus=bulk_modulus)
+    else: # do not calculate these if imaginary modes exist
+        logger.warning('Gruneisen and thermal expansion cannot be calculated with imaginary modes. All set to 0.')
+        grun = np.zeros((len(temperature),3))
+        cte = np.zeros((len(temperature),3))
+        dLfrac = np.zeros((len(temperature),3))
 
     return {
         "gruneisen": grun,
         "thermal_expansion": cte,
         "expansion_fraction": dLfrac,
-    }
+        }
 
 
 def get_total_grun(
-    omega: np.ndarray, grun: np.ndarray, kweight: np.ndarray, T: float
+        omega: np.ndarray,
+        grun: np.ndarray,
+        kweight: np.ndarray,
+        T: float
 ) -> np.ndarray:
-    # total = 0
-    total = np.zeros((3, 3))
+    total = 0
     weight = 0
     nptk = omega.shape[0]
     nbands = omega.shape[1]
-    omega = abs(omega) * 1e12 * 2 * np.pi
-    if T == 0:
-        total = np.zeros((3, 3))
+    omega = abs(omega)*1e12*2*np.pi
+    if T==0:
+        total = np.zeros((3,3))
         grun_total_diag = np.zeros(3)
     else:
         for i in range(nptk):
             for j in range(nbands):
-                x = hbar * omega[i, j] / (2.0 * kb * T)
-                dBE = (x / np.sinh(x)) ** 2
-                weight += dBE * kweight[i]
-                total += dBE * kweight[i] * grun[i, j]
-        total = total / weight
-        grun_total_diag = np.array([total[0, 2], total[1, 1], total[2, 0]])
+                x = hbar*omega[i,j]/(2.0*kB*T)
+                dBE = (x/np.sinh(x))**2
+                weight += dBE*kweight[i]
+                total += dBE*kweight[i]*grun[i,j]
+        total = total/weight
+        grun_total_diag = np.array([total[0,2],total[1,1],total[2,0]])
 
-        def percent_diff(a: float,
-                         b: float) -> float:
-            return abs((a - b) / b)
-
+        def percent_diff(a,b):
+            return abs((a-b)/b)
         # This process preserves cell symmetry upon thermal expansion, i.e., it prevents
         # symmetry-identical directions from inadvertently expanding by different ratios
-        # when the Gruneisen routine returns slightly different ratios for
-        # those directions
-        avg012 = np.mean((grun_total_diag[0], grun_total_diag[1], grun_total_diag[2]))
-        avg01 = np.mean((grun_total_diag[0], grun_total_diag[1]))
-        avg02 = np.mean((grun_total_diag[0], grun_total_diag[2]))
-        avg12 = np.mean((grun_total_diag[1], grun_total_diag[2]))
-        if percent_diff(grun_total_diag[0], avg012) < 0.1:
-            if percent_diff(grun_total_diag[1], avg012) < 0.1:
-                if percent_diff(grun_total_diag[2], avg012) < 0.1:  # all siilar
+        # when/if the Gruneisen routine returns slightly different ratios for those directions
+        avg012 = np.mean((grun_total_diag[0],grun_total_diag[1],grun_total_diag[2]))
+        avg01 = np.mean((grun_total_diag[0],grun_total_diag[1]))
+        avg02 = np.mean((grun_total_diag[0],grun_total_diag[2]))
+        avg12 = np.mean((grun_total_diag[1],grun_total_diag[2]))
+        if percent_diff(grun_total_diag[0],avg012) < 0.1:
+            if percent_diff(grun_total_diag[1],avg012) < 0.1:
+                if percent_diff(grun_total_diag[2],avg012) < 0.1: # all siilar
                     grun_total_diag[0] = avg012
                     grun_total_diag[1] = avg012
                     grun_total_diag[2] = avg012
-                elif percent_diff(grun_total_diag[2], avg02) < 0.1:  # 0 and 2 similar
+                elif percent_diff(grun_total_diag[2],avg02) < 0.1: # 0 and 2 similar
                     grun_total_diag[0] = avg02
                     grun_total_diag[2] = avg02
-                elif percent_diff(grun_total_diag[2], avg12) < 0.1:  # 1 and 2 similar
+                elif percent_diff(grun_total_diag[2],avg12) < 0.1: # 1 and 2 similar
                     grun_total_diag[1] = avg12
                     grun_total_diag[2] = avg12
                 else:
                     pass
-            elif percent_diff(grun_total_diag[1], avg01) < 0.1:  # 0 and 1 similar
+            elif percent_diff(grun_total_diag[1],avg01) < 0.1: # 0 and 1 similar
                 grun_total_diag[0] = avg01
                 grun_total_diag[1] = avg01
-            elif percent_diff(grun_total_diag[1], avg12) < 0.1:  # 1 and 2 similar
+            elif percent_diff(grun_total_diag[1],avg12) < 0.1: # 1 and 2 similar
                 grun_total_diag[1] = avg12
                 grun_total_diag[2] = avg12
             else:
                 pass
-        elif percent_diff(grun_total_diag[0], avg01) < 0.1:  # 0 and 1 similar
+        elif percent_diff(grun_total_diag[0],avg01) < 0.1: # 0 and 1 similar
             grun_total_diag[0] = avg01
             grun_total_diag[1] = avg01
-        elif percent_diff(grun_total_diag[0], avg02) < 0.1:  # 0 and 2 similar
+        elif percent_diff(grun_total_diag[0],avg02) < 0.1: # 0 and 2 similar
             grun_total_diag[0] = avg02
             grun_total_diag[2] = avg02
-        else:  # nothing similar
+        else: # nothing similar
             pass
 
     return grun_total_diag
 
 
 def gruneisen(
-    phonopy: Phonopy,
-    fcs2: np.ndarray,
-    fcs3: np.ndarray,
-    temperature: list,
-    heat_capacity: np.ndarray,  # in eV/K/atom
-    bulk_modulus: float | None = None,  # in GPa
-) -> tuple[list, list, np.ndarray]:
-    gruneisen = Gruneisen(fcs2, fcs3, phonopy.supercell, phonopy.primitive)
-    gruneisen.set_sampling_mesh(phonopy.mesh_numbers, is_gamma_center=True)
+        phonopy: Phonopy,
+        fcs2: np.ndarray,
+        fcs3: np.ndarray,
+        temperature: List,
+        heat_capacity: np.ndarray, # in eV/K/atom
+        bulk_modulus: float = None # in GPa
+) -> Tuple[List,List]:
+
+    gruneisen = Gruneisen(fcs2,fcs3,phonopy.supercell,phonopy.primitive)
+    gruneisen.set_sampling_mesh(phonopy.mesh_numbers,is_gamma_center=True)
     gruneisen.run()
-    grun = gruneisen.get_gruneisen_parameters()  # (nptk,nmode,3,3)
+    grun = gruneisen.get_gruneisen_parameters() # (nptk,nmode,3,3)
     omega = gruneisen._frequencies
+    qp = gruneisen._qpoints
     kweight = gruneisen._weights
-    grun_tot = []
-    # for temp in temperature:
-    #     grun_tot.append(get_total_grun(omega, grun, kweight, temp))
-    # grun_tot = np.nan_to_num(np.array(grun_tot))
+    grun_tot = list()
+    for temp in temperature:
+        grun_tot.append(get_total_grun(omega,grun,kweight,temp))
+    grun_tot = np.nan_to_num(np.array(grun_tot))
 
-    grun_tot = [
-        np.nan_to_num(np.array(get_total_grun(omega, grun, kweight, temp)))
-        for temp in temperature
-    ]
+    # grun_tot = [
+    #     np.nan_to_num(np.array(get_total_grun(omega, grun, kweight, temp)))
+    #     for temp in temperature
+    # ]
 
-    # linear thermal expansion coefficient and fraction
+    # linear thermal expansion coefficeint and fraction
     if bulk_modulus is None:
         cte = None
         dLfrac = None
     else:
-        heat_capacity *= (
-            ev2j * phonopy.primitive.get_number_of_atoms()
-        )  # eV/K/atom to J/K
+        heat_capacity *= eV2J*phonopy.primitive.get_number_of_atoms() # eV/K/atom to J/K 
+        # Convert heat_capacity to an array if it's a scalar
+        # heat_capacity = np.array([heat_capacity])
+        logger.info(f"heat capacity = {heat_capacity}")
         vol = phonopy.primitive.get_volume()
-        # cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
-        # Check the shapes of the arrays
+
         logger.info(f"grun_tot: {grun_tot}")
+        logger.info(f"grun_tot shape: {grun_tot.shape}")
         logger.info(f"heat_capacity shape: {heat_capacity.shape}")
         logger.info(f"heat_capacity: {heat_capacity}")
         logger.info(f"vol: {vol}")
         logger.info(f"bulk_modulus: {bulk_modulus}")
-
-        # cte = np.array(grun_tot)*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
-        # cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus[0]*10**9)/3
+#        cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
         cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus*10**9)/3
-        # cte = (
-        #     grun_tot
-        #     * heat_capacity.repeat(3).reshape(len(heat_capacity), 3)
-        #     / (vol / 10**30)
-        #     / (bulk_modulus * 10**9)
-        #     / 3
-        # )
+        # cte = grun_tot*heat_capacity.repeat(3).reshape(1,3)/(vol/10**30)/(bulk_modulus*10**9)/3
         cte = np.nan_to_num(cte)
-        dLfrac = thermal_expansion(temperature, cte)
-        if len(temperature) == 1:
-            dLfrac = dLfrac[-1]
-        logger.info(f"Gruneisen: \n {grun_tot}")
-        logger.info(f"Coefficient of Thermal Expansion: \n {cte}")
-        logger.info(f"Linear Expansion Fraction: \n {dLfrac}")
-
+        if len(temperature)==1:
+            dLfrac = cte*temperature
+        else:
+            dLfrac = thermal_expansion(temperature, cte)
+        logger.info('Gruneisen: \n {}'.format(grun_tot))
+        logger.info('Coefficient of Thermal Expansion: \n {}'.format(cte))
+        logger.info('Linear Expansion Fraction: \n {}'.format(dLfrac))        
+        
     return grun_tot, cte, dLfrac
 
 
 def thermal_expansion(
-    temperature: list,
-    cte: np.ndarray,
+        temperature: list,
+        cte: np.array,
 ) -> np.ndarray:
-    assert len(temperature) == len(cte)
+    assert len(temperature)==len(cte)
     if 0 not in temperature:
-        temperature = [0, *temperature]
-        cte = np.array([np.array([0, 0, 0]), *list(cte)])
-    temperature_np = np.array(temperature)
-    # ind = np.argsort(temperature_np)
-    ind = np.array(np.argsort(temperature_np))
-    logger.info(f"ind = {ind}")
-    logger.info(f"temperature_np = {temperature_np}")
-    logger.info(f"cte = {cte}")
-    # temperature_np = temperature[ind]
-    temperature_np = temperature
-    # cte = np.array(cte)[ind]
-    cte = np.array(cte)
+        temperature = [0] + temperature
+        cte = np.array([np.array([0,0,0])] + list(cte))
+    temperature = np.array(temperature)
+    ind = np.argsort(temperature)
+    temperature = temperature[ind]
+    cte = np.array(cte)[ind]
     # linear expansion fraction
     dLfrac = copy(cte)
-    for t in range(len(temperature_np)):
-        dLfrac[t, :] = np.trapz(cte[: t + 1, :], temperature_np[: t + 1], axis=0)
-    return np.nan_to_num(dLfrac)
+    for t in range(len(temperature)):
+        dLfrac[t,:] = np.trapz(cte[:t+1,:],temperature[:t+1],axis=0)
+    dLfrac = np.nan_to_num(dLfrac)
+    return dLfrac
 
 @job
 def run_thermal_cond_solver(
@@ -1364,7 +1350,7 @@ def run_fc_to_pdos(
         logger.info("Finished inserting force constants and phonon data")
 
     else:
-        renorm_thermal_data = loadfn("renorm_thermal_data.json")
+        renorm_thermal_data = loadfn("thermal_data.json") # renorm_thermal_data.json
         fcs = ForceConstants.read("force_constants.fcs")
         T = renorm_thermal_data["temperature"]
 
@@ -1444,126 +1430,92 @@ def run_hiphive_renormalization(
     structure_data = loadfn(f"structure_data_{loop}.json")
     phonopy_orig = phpy.load("phonopy_params.yaml")
 
-    thermal_data = loadfn("thermal_data.json")
-    thermal_data = thermal_data["heat_capacity"]
+    # thermal_data = loadfn("thermal_data.json")
+    # thermal_data = thermal_data["heat_capacity"]
 
     cutoffs = fitting_data["cutoffs"]
     fit_method = fitting_data["fit_method"]
-    fitting_data["n_imaginary"]
-    fitting_data["imaginary_tol"]
+
+
+    # fitting_data["n_imaginary"]
+    # fitting_data["imaginary_tol"]
 
     parent_structure = structure_data["structure"]
     supercell_structure = structure_data["supercell_structure"]
-    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
     supercell_matrix = np.array(structure_data["supercell_matrix"])
 
+    parent_atoms = AseAtomsAdaptor.get_atoms(parent_structure)
+    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
+
+
     # Renormalization with DFT lattice
-    renorm_data = run_renormalization(
-        parent_structure,
-        supercell_atoms,
-        supercell_matrix,
-        cs,
-        fcs,
-        param,
-        temperature,
-        nconfig,
-        max_iter,
-        conv_thresh,
-        renorm_method,
-        fit_method,
-        bulk_modulus,
-        phonopy_orig,
-    )
+    TD_data = run_renormalization(parent_structure, supercell_structure, supercell_matrix,
+                                      cs, fcs, param, temperature, nconfig, renorm_method,
+                                      fit_method, bulk_modulus, phonopy_orig)
+    TD_structure_data = copy(structure_data)
+    TD_structure_data["structure"] = parent_structure
+    TD_structure_data["supercell_structure"] = supercell_structure
 
     # Additional renormalization with thermal expansion -
     # optional - just single "iteration" for now
     if renorm_TE_iter:
         n_TE_iter = 1
         for i in range(n_TE_iter):
-            if renorm_data is None or renorm_data["n_imaginary"] < 0:
+            if TD_data is None or TD_data["n_imaginary"] < 0:
                 # failed, incomplete, or still imaginary
                 break
             logger.info(
                 f"Renormalizing with thermally expanded lattice - iteration {i}"
             )
 
-            dLfrac = renorm_data["expansion_fraction"]
-            param = renorm_data["param"]
+            dLfrac = TD_data["expansion_fraction"]
+            param_TD = TD_data["param"]
 
-            parent_structure_TE, supercell_atoms_TE, cs_TE, fcs_TE = setup_TE_iter(
-                cs,
-                cutoffs,
-                parent_structure,
-                param,
-                temperature,
-                dLfrac,
-                supercell_matrix,
-            )
-            prim_TE_atoms = AseAtomsAdaptor.get_atoms(parent_structure_TE)
-            prim_TE_phonopy = PhonopyAtoms(
-                symbols=prim_TE_atoms.get_chemical_symbols(),
-                scaled_positions=prim_TE_atoms.get_scaled_positions(),
-                cell=prim_TE_atoms.cell,
-            )
-            phonopy_TE = Phonopy(
-                prim_TE_phonopy,
-                supercell_matrix=supercell_matrix,
-                primitive_matrix=None,
-            )
+            a, b, c, d, e, failed = setup_TE_renorm(
+                    cs,cutoffs,parent_atoms,supercell_atoms,param_TD,dLfrac,supercell_matrix
+                )
+            if not failed:
+                parent_structure_TD, supercell_structure_TD, cs_TD, phonopy_TD, fcs_TD  = a, b, c, d, e
+                TD_data = run_renormalization(parent_structure_TD, supercell_structure_TD, supercell_matrix,
+                                                cs_TD, fcs, param, temperature, nconfig,
+                                                renorm_method, fit_method, bulk_modulus,
+                                                phonopy_TD, param_TD, fcs_TD
+                                                )
+                TD_structure_data["structure"] = parent_structure_TD
+                TD_structure_data["supercell_structure"] = supercell_structure_TD
 
-            renorm_data = run_renormalization(
-                parent_structure_TE,
-                supercell_atoms_TE,
-                supercell_matrix,
-                cs_TE,
-                fcs_TE,
-                param,
-                temperature,
-                nconfig,
-                max_iter,
-                conv_thresh,
-                renorm_method,
-                fit_method,
-                bulk_modulus,
-                phonopy_TE,
-            )
-        structure_data["structure"] = parent_structure_TE
-        structure_data["supercell_structure"] = AseAtomsAdaptor.get_structure(
-            supercell_atoms_TE
-        )
-
+    # Thermodynamic integration for anharmonic free energy
+    TD_data = thermodynamic_integration_ifc(TD_data, # everything TD
+                                                fcs, # original
+                                                param, # original
+                                                )
     # write results
     logger.info("Writing renormalized results")
-    # renorm_thermal_data = {}
-    renorm_thermal_data: dict[str, Any] = {}
-    fcs = renorm_data["fcs"]
-    fcs.write("force_constants.fcs")
-    thermal_keys = [
-        "temperature",
-        "free_energy",
-        "entropy",
-        "heat_capacity",
-        "gruneisen",
-        "thermal_expansion",
-        "expansion_fraction",
-        "free_energy_correction_S",
-        "free_energy_correction_SC",
-    ]
-    renorm_thermal_data = {key: [] for key in thermal_keys}
-    for key in thermal_keys:
-        renorm_thermal_data[key].append(renorm_data[key])
-
-    logger.info(f"DEBUG: {renorm_data}")
-    if renorm_data["n_imaginary"] > 0:
-        logger.warning(f"Imaginary modes remain for {temperature} K!")
-        logger.warning("ShengBTE files not written")
-        logger.warning("No renormalization with thermal expansion")
+    fcs_TD = TD_data['fcs']
+    fcs_TD.write("force_constants.fcs")
+    if "n_imaginary" in TD_data:
+        thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
+                    "free_energy_correction_S","free_energy_correction_SC",
+                    "free_energy_correction_TI"]
     else:
-        logger.info("No imaginary modes! Writing ShengBTE files")
-        fcs.write_to_phonopy("FORCE_CONSTANTS_2ND".format(), format="text")
+        thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
+                    "gruneisen","thermal_expansion","expansion_fraction",
+                    "free_energy_correction_S","free_energy_correction_SC",
+                    "free_energy_correction_TI"]
+    TD_thermal_data = {key: [] for key in thermal_keys}
+    for key in thermal_keys:
+        TD_thermal_data[key].append(TD_data[key])
 
-    dumpfn(structure_data, "structure_data.json".format())
-    dumpfn(renorm_thermal_data, "renorm_thermal_data.json".format())
+    logger.info("DEBUG: ",TD_data)
+    if TD_data["n_imaginary"] > 0:
+        logger.warning('Imaginary modes remain still exist')
+        logger.warning('ShengBTE FORCE_CONSTANTS_2ND not written')
+    else:
+        logger.info("No imaginary modes! Writing ShengBTE FORCE_CONSTANTS_2ND...")
+        fcs_TD.write_to_phonopy("FORCE_CONSTANTS_2ND".format(temperature), format="text")
+
+    dumpfn(TD_structure_data, "structure_data.json")
+    dumpfn(TD_thermal_data, "thermal_data.json")
 
     current_dir = os.getcwd()
 
@@ -1572,19 +1524,19 @@ def run_hiphive_renormalization(
 
 def run_renormalization(
     structure: Structure,
-    supercell: Atoms,
+    supercell_structure: Structure,
     supercell_matrix: np.ndarray,
     cs: ClusterSpace,
     fcs: ForceConstants,
     param: np.ndarray,
     T: float,
     nconfig: int,
-    max_iter: int,
-    conv_tresh: float,
     renorm_method: str,
     fit_method: str,
     bulk_modulus: float = None,
     phonopy_orig: Phonopy = None,
+    param_TD: np.ndarray = None,
+    fcs_TD: ForceConstants = None,
     imaginary_tol: float = IMAGINARY_TOL,
 ) -> dict:
     """
@@ -1608,78 +1560,108 @@ def run_renormalization(
         frequency at Gamma, and the free energy, entropy, and heat capacity.
     """
     nconfig = int(nconfig)
-    renorm = Renormalization(cs, supercell, fcs, param, T, renorm_method, fit_method)
-    fcp, fcs, param = renorm.renormalize(nconfig)  # ,conv_tresh)
+    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
+    renorm = Renormalization(cs,supercell_atoms,param,fcs,T,renorm_method,fit_method,param_TD=param_TD,fcs_TD=fcs_TD)
+    fcp_TD, fcs_TD, param_TD = renorm.renormalize(nconfig)#,conv_tresh)
 
-    renorm_data, phonopy = harmonic_properties(
-        structure, supercell_matrix, fcs, [T], imaginary_tol
+    TD_data, phonopy_TD = harmonic_properties(
+        structure, supercell_matrix, fcs_TD, [T], imaginary_tol
     )
-
-    if renorm_data["n_imaginary"] == 0:
-        logger.info(f"Renormalized phonon is completely real at T = {T} K!")
-    anharmonic_data = anharmonic_properties(
-        phonopy,
-        fcs,
-        [T],
-        renorm_data["heat_capacity"],
-        renorm_data["n_imaginary"],
-        bulk_modulus=bulk_modulus,
-    )
-    #    else:
-    #        anharmonic_data = dict()
-    #        anharmonic_data["temperature"] = T
-    #        anharmonic_data["gruneisen"] = np.array([0,0,0])
-    #        anharmonic_data["thermal_expansion"] = np.array([0,0,0])
-    #        anharmonic_data["expansion_fraction"] = np.array([0,0,0])
-    renorm_data.update(anharmonic_data)
-
-    phonopy_orig.run_mesh()
-    phonopy.run_mesh()
-    omega0 = phonopy_orig.mesh.frequencies  # THz
-    omega_TD = phonopy.mesh.frequencies  # THz
-    evec = phonopy.mesh.eigenvectors
-    #    natom = phonopy.primitive.get_number_of_atoms()
-    correction_S, correction_SC = free_energy_correction(
-        omega0, omega_TD, evec, [T]
-    )  # eV/atom
-
-    renorm_data["free_energy_correction_S"] = correction_S[0]
-    renorm_data["free_energy_correction_SC"] = correction_SC[0]
-    renorm_data["fcp"] = fcp
-    renorm_data["fcs"] = fcs
-    renorm_data["param"] = param
-
-    return renorm_data
-
-def setup_TE_iter(
-    cs, cutoffs, parent_structure, param, temperatures, dLfrac, supercell_matrix
-):
-
-    new_atoms = AseAtomsAdaptor.get_atoms(parent_structure)
-    new_cell = Cell(
-        np.transpose(
-            [new_atoms.get_cell()[:, i] * (1 + dLfrac[0, i]) for i in range(3)]
+    logger.info(f"Heat capacity_TD_DATA: {TD_data['heat_capacity']}")
+    if TD_data["n_imaginary"] == 0:
+        logger.info(f'Renormalized phonon is completely real at T = {T} K!')
+        anharmonic_data = anharmonic_properties(
+            phonopy_TD, fcs_TD, [T], TD_data["heat_capacity"], TD_data["n_imaginary"], bulk_modulus=bulk_modulus
         )
-    )
-    new_atoms.set_cell(new_cell, scale_atoms=True)
-    parent_structure_TE = AseAtomsAdaptor.get_structure(new_atoms)
-    supercell_atoms_TE = AseAtomsAdaptor.get_atoms(
-        parent_structure_TE * supercell_matrix
-    )
-    new_cutoffs = [i * (1 + np.linalg.norm(dLfrac)) for i in cutoffs]
-    fcs_TE = []  # not sure if this is correct
+        TD_data.update(anharmonic_data)
 
+    # phonopy_orig.run_mesh()
+    # phonopy_TD.run_mesh()
+    mesh = supercell_matrix.diagonal()*2
+    phonopy_orig.set_mesh(mesh,is_eigenvectors=True,is_mesh_symmetry=False)
+    phonopy_TD.set_mesh(mesh,is_eigenvectors=True,is_mesh_symmetry=False)
+    omega_h = phonopy_orig.mesh.frequencies # THz
+    evec_h = phonopy_orig.mesh.eigenvectors
+    omega_TD = phonopy_TD.mesh.frequencies # THz
+    evec_TD = phonopy_TD.mesh.eigenvectors
+    logger.info(f'TD_data = {TD_data}')
+    logger.info(f'omega_h = {omega_h}')
+    logger.info(f'omega_TD = {omega_TD}')
+    logger.info(f'shape of omega_h = {omega_h.shape}')
+    logger.info(f'shape of omega_TD = {omega_TD.shape}') 
+    logger.info(f'evec_h = {evec_h}')
+    logger.info(f'evec_TD = {evec_TD}')
+    logger.info(f"phonopy_orig.mesh = {phonopy_orig.mesh}")
+    logger.info(f"phonopy_TD.mesh = {phonopy_TD.mesh}")
+    correction_S, correction_SC = free_energy_correction(omega_h,omega_TD,evec_h,evec_TD,[T]) # eV/atom
+
+    TD_data["supercell_structure"] = supercell_structure
+    TD_data["free_energy_correction_S"] = correction_S   # S = -(dF/dT)_V quasiparticle correction
+    TD_data["free_energy_correction_SC"] = correction_SC # SCPH 4th-order correction (perturbation theory)
+    TD_data["fcp"] = fcp_TD
+    TD_data["fcs"] = fcs_TD
+    TD_data["param"] = param_TD
+    TD_data['cs'] = cs
+
+    return TD_data
+
+def thermodynamic_integration_ifc(
+    TD_data: dict,
+    fcs: ForceConstants,
+    param: np.ndarray,
+    lambda_array: np.ndarray = np.array([0, 0.1, 0.3, 0.5, 0.7, 0.9, 1]),
+    TI_nconfig=3,
+) -> dict:
+    supercell_structure = TD_data["supercell_structure"]
+    cs = TD_data['cs']
+    fcs_TD = TD_data["fcs"]
+    param_TD = TD_data["param"]
+    T = TD_data['temperature']
+    logger.info(f"Temperature = {T}")
+    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
+    renorm = Renormalization(cs, supercell_atoms, param, fcs, T, 'least_squares', 'rfe', param_TD, fcs_TD)
+    matcov_TD, matcov_BO, matcov_TDBO = renorm.born_oppenheimer_qcv(TI_nconfig)
+    correction_TI = renorm.thermodynamic_integration(lambda_array, matcov_TD, matcov_BO, matcov_TDBO, TI_nconfig)
+    TD_data["free_energy_correction_TI"] = correction_TI
+    return TD_data
+
+def setup_TE_renorm(cs,cutoffs,parent_atoms,supercell_atoms,param,dLfrac,supercell_matrix):
+    parent_atoms_TE = copy(parent_atoms)
+    new_cell = Cell(np.transpose([parent_atoms_TE.get_cell()[:,i]*(1+dLfrac[0,i]) for i in range(3)]))
+    parent_atoms_TE.set_cell(new_cell,scale_atoms=True)
+    parent_structure_TE = AseAtomsAdaptor.get_structure(parent_atoms_TE)
+    supercell_atoms_TE = copy(supercell_atoms)
+    new_supercell = Cell(np.transpose([supercell_atoms_TE.get_cell()[:,i]*(1+dLfrac[0,i]) for i in range(3)]))
+    supercell_atoms_TE.set_cell(new_supercell,scale_atoms=True)
+    supercell_structure_TE = AseAtomsAdaptor.get_structure(supercell_atoms_TE)
+    count = 0
+    failed = False
+    cs_TE = ClusterSpace(parent_atoms_TE,cutoffs,symprec=1e-2,acoustic_sum_rules=True)
     while True:
-        cs_TE = ClusterSpace(atoms, new_cutoffs, 1e-3, acoustic_sum_rules=True)
+        count += 1
         if cs_TE.n_dofs == cs.n_dofs:
             break
-        if cs_TE.n_dofs > cs.n_dofs:
-            new_cutoffs = [i * 0.999 for i in new_cutoffs]
-        if cs_TE.n_dofs < cs.n_dofs:
-            new_cutoffs = [i * 1.001 for i in new_cutoffs]
-        new_fcp = ForceConstantPotential(cs_TE, param)
-        fcs_TE.append(new_fcp.get_force_constants(supercell_atoms_TE))
-    return parent_structure_TE, supercell_atoms_TE, cs_TE, fcs_TE
+        elif count>10:
+            logger.warning("Could not find ClusterSpace for expanded cell identical to the original cluster space!")
+            failed = True
+            break
+        elif count==1:
+            cutoffs_TE = [i*(1+np.linalg.norm(dLfrac)) for i in cutoffs]
+        elif cs_TE.n_dofs > cs.n_dofs:
+            cutoffs_TE = [i*0.999 for i in cutoffs_TE]
+        elif cs_TE.n_dofs < cs.n_dofs:
+            cutoffs_TE = [i*1.001 for i in cutoffs_TE]
+        cs_TE = ClusterSpace(parent_atoms_TE,cutoffs_TE,symprec=1e-2,acoustic_sum_rules=True)
+    if failed:
+        return None, None, None, None, None, failed
+    else:
+        fcp_TE = ForceConstantPotential(cs_TE, param)
+        fcs_TE = fcp_TE.get_force_constants(supercell_atoms_TE)
+        prim_TE_phonopy = PhonopyAtoms(symbols=parent_atoms_TE.get_chemical_symbols(),
+                                       scaled_positions=parent_atoms_TE.get_scaled_positions(),
+                                       cell=parent_atoms_TE.cell)
+        phonopy_TE = Phonopy(prim_TE_phonopy, supercell_matrix=supercell_matrix, primitive_matrix=None)
+        return parent_structure_TE, supercell_structure_TE, cs_TE, phonopy_TE, fcs_TE, failed
 
 
 @job
