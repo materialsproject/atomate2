@@ -144,7 +144,6 @@ class TrajectoryObserver:
 
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
-        # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
         # TODO: MD needs kinetic energy parts of stress,
