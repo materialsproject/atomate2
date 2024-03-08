@@ -131,7 +131,7 @@ class BaseHiphiveMaker(Maker, ABC):
         i * 100 for i in range(21)
     ]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
     T_RENORM: ClassVar[list[int]] = [
-        400 # 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000
+        100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 # 400
     ]  # [i*100 for i in range(0,16)] # Temp. at which renorm. is to be performed
     # Temperature at which lattice thermal conductivity is calculated
     # If renormalization is performed,
