@@ -8,30 +8,61 @@ from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.analysis.structure_matcher import StructureMatcher
 
-from atomate2.forcefields.md import CHGNetMDMaker, M3GNetMDMaker, MACEMDMaker
+from atomate2.forcefields.md import (
+    CHGNetMDMaker,
+    GAPMDMaker,
+    M3GNetMDMaker,
+    MACEMDMaker,
+    NequipMDMaker,
+)
 
-_to_maker = {"CHGNet": CHGNetMDMaker, "M3GNet": M3GNetMDMaker, "MACE": MACEMDMaker}
+_to_maker = {
+    "CHGNet": CHGNetMDMaker,
+    "M3GNet": M3GNetMDMaker,
+    "MACE": MACEMDMaker,
+    "GAP": GAPMDMaker,
+    "Nequip": NequipMDMaker,
+}
 
 
-@pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE"])
-def test_ml_ff_md_maker(ff_name, si_structure, clean_dir):
+@pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"])
+def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
     nsteps = 5
 
     ref_energies_per_atom = {
         "CHGNet": -5.280157089233398,
         "M3GNet": -5.387282371520996,
         "MACE": -5.311369895935059,
+        "GAP": -5.391255755606209,
+        "Nequip": -8.84670181274414,
     }
 
-    structure = si_structure.to_conventional() * (2, 2, 2)
     # ASE can slightly change tolerances on structure positions
     matcher = StructureMatcher()
+
+    calculator_kwargs = {}
+    calculator_args = []
+    unit_cell_structure = si_structure.copy()
+    if ff_name == "GAP":
+        calculator_kwargs = {
+            "args_str": "IP GAP",
+            "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
+        }
+    elif ff_name == "Nequip":
+        calculator_args = [
+            test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        ]
+        unit_cell_structure = sr_ti_o3_structure.copy()
+
+    structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
     job = _to_maker[ff_name](
         nsteps=nsteps,
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         task_document_kwargs={"store_trajectory": "partial"},
+        calculator_args=calculator_args,
+        calculator_kwargs=calculator_kwargs,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     taskdoc = response[next(iter(response))][1].output
