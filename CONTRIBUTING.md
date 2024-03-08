@@ -1,6 +1,6 @@
 # Contributing to atomate2
 
-We love your input! We want to make contributing to as easy and
+We love your input! We want to make contributing as easy and
 transparent as possible, whether it's:
 
 - Reporting a bug
@@ -32,20 +32,20 @@ make quick and meaningful fixes. When we confirm your bug report,
 we'll move it to the GitHub issues where its progress can be
 further tracked.
 
-## Contributing code modifications or additions through Github
+## Contributing code modifications or additions through GitHub
 
-We use github to host code, to track issues and feature requests,
+We use GitHub to host code, to track issues and feature requests,
 as well as accept pull requests. We maintain a list of all
 contributors [here](https://materialsproject.github.io/atomate2/contributors.html).
 
 Pull requests are the best way to propose changes to the codebase.
-Follow the [Github flow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
+Follow the [GitHub flow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
 for more information on this procedure.
 
 The basic procedure for making a PR is:
 
 - Fork the repo and create your branch from master.
-- Commit your improvements to your branch and push to your Github fork (repo).
+- Commit your improvements to your branch and push to your GitHub fork (repo).
 - When you're finished, go to your fork and make a Pull Request. It will
   automatically update if you need to make further changes.
 
