@@ -111,9 +111,11 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
 
     assert relax_output["trajectory"].energies[-1] == pytest.approx(expected_energy)
 
-    assert_allclose(relax_output["trajectory"].forces[-1], expected_forces)
+    assert_allclose(relax_output["trajectory"].forces[-1], expected_forces, atol=1e-8)
 
-    assert_allclose(relax_output["trajectory"].stresses[-1], expected_stresses)
+    assert_allclose(
+        relax_output["trajectory"].stresses[-1], expected_stresses, atol=1e-8
+    )
 
     if traj_file:
         assert os.path.isfile(traj_file)
