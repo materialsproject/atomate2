@@ -1,4 +1,5 @@
 """A definition of a MSON document representing an FHI-aims task."""
+
 from __future__ import annotations
 
 import json

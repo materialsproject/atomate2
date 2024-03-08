@@ -320,9 +320,9 @@ class PostProcessEosPressure(EOSPostProcessor):
 
             self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"][
-                    "exception"
-                ] = "Optimal EOS parameters not found."
+                self.results[jobtype]["EOS"]["exception"] = (
+                    "Optimal EOS parameters not found."
+                )
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
                     self.results[jobtype]["EOS"][key] = eos_params[i]

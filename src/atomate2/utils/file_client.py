@@ -1,6 +1,5 @@
 """Tools for remote file IO using paramiko."""
 
-
 from __future__ import annotations
 
 import shutil
@@ -403,9 +402,10 @@ class FileClient:
                 )
 
         if host is None:
-            with open(path, "rb") as f_in, GzipFile(
-                path_gz, "wb", compresslevel=compresslevel
-            ) as f_out:
+            with (
+                open(path, "rb") as f_in,
+                GzipFile(path_gz, "wb", compresslevel=compresslevel) as f_out,
+            ):
                 shutil.copyfileobj(f_in, f_out)
             shutil.copystat(path, path_gz)
             path.unlink()
