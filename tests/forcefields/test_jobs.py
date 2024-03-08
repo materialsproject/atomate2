@@ -187,13 +187,16 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
 
 
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
+    importorskip("nequip")
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = NequipStaticMaker(
         task_document_kwargs=task_doc_kwargs,
-        model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
+        calculator_args=[
+            test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        ],
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -210,6 +213,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
 def test_nequip_relax_maker(
     sr_ti_o3_structure: Structure, test_dir: Path, relax_cell: bool
 ):
+    importorskip("nequip")
     # translate one atom to ensure a small number of relaxation steps are taken
     sr_ti_o3_structure.translate_sites(0, [0, 0, 0.2])
     # generate job
@@ -217,7 +221,9 @@ def test_nequip_relax_maker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
-        model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
+        calculator_args=[
+            test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        ],
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully

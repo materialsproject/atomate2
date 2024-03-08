@@ -351,7 +351,7 @@ class ForceFieldMDMaker(Maker):
 class MACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with MACE."""
 
-    name: str = "MACE MD"
+    name: str = f"{MLFF.MACE} MD"
     force_field_name: str = f"{MLFF.MACE}"
     calculator_kwargs: dict = field(
         default_factory=lambda: {"default_dtype": "float32"}
@@ -362,7 +362,7 @@ class MACEMDMaker(ForceFieldMDMaker):
 class M3GNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with M3GNet."""
 
-    name: str = "M3GNet MD"
+    name: str = f"{MLFF.M3GNet} MD"
     force_field_name: str = f"{MLFF.M3GNet}"
 
 
@@ -370,7 +370,7 @@ class M3GNetMDMaker(ForceFieldMDMaker):
 class CHGNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with CHGNet."""
 
-    name: str = "CHGNet MD"
+    name: str = f"{MLFF.CHGNet} MD"
     force_field_name: str = f"{MLFF.CHGNet}"
 
 
@@ -378,5 +378,19 @@ class CHGNetMDMaker(ForceFieldMDMaker):
 class GAPMDMaker(ForceFieldMDMaker):
     """Perform an MD run with GAP."""
 
-    name: str = "CHGNet MD"
+    name: str = f"{MLFF.GAP} MD"
     force_field_name: str = f"{MLFF.GAP}"
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "args_str": "IP GAP",
+            "param_filename": "gap.xml",
+        }
+    )
+
+
+@dataclass
+class NequipMDMaker(ForceFieldMDMaker):
+    """Perform an MD run with nequip."""
+
+    name: str = f"{MLFF.Nequip} MD"
+    force_field_name: str = f"{MLFF.Nequip}"

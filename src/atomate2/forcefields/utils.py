@@ -68,13 +68,6 @@ OPTIMIZERS = {
     "BFGSLineSearch": BFGSLineSearch,
 }
 
-_ase_calculator_defaults = {
-    "gap": {
-        "args_str": "IP GAP",
-        "param_filename": "gap.xml",
-    }
-}
-
 
 def _get_pymatgen_trajectory_from_observer(
     trajectory_observer: Any, frame_property_keys: list[str]
@@ -390,7 +383,7 @@ class Relaxer:
 
 
 def ase_calculator(
-    calculator_meta: str | dict, calculator_kwargs: dict | None = None
+    calculator_meta: str | dict, *args: Any, **kwargs: Any
 ) -> Calculator | None:
     """
     Create an ASE calculator from a given set of metadata.
@@ -407,8 +400,8 @@ def ase_calculator(
                 "@callable": "CHGNetCalculator"
             }
         ```
-    calculator_kwargs : dict or None (default)
-        kwargs to pass to the calculator object
+    args : optional args to pass to a calculator
+    kwargs : optional kwargs to pass to a calculator
 
     Returns
     -------
@@ -420,36 +413,37 @@ def ase_calculator(
         f"{name}" for name in MLFF
     ]:
         calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
-        calculator_kwargs = calculator_kwargs or _ase_calculator_defaults.get(
-            calculator_meta, {}
-        )
 
         if calculator_name == MLFF.CHGNet:
             from chgnet.model.dynamics import CHGNetCalculator
 
-            calculator = CHGNetCalculator(**calculator_kwargs)
+            calculator = CHGNetCalculator(**kwargs)
 
         elif calculator_name == MLFF.M3GNet:
             import matgl
             from matgl.ext.ase import PESCalculator
 
             potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
-            calculator = PESCalculator(potential, **calculator_kwargs)
+            calculator = PESCalculator(potential, **kwargs)
 
         elif calculator_name == MLFF.MACE:
             from mace.calculators import mace_mp
 
-            calculator = mace_mp(**calculator_kwargs)
+            calculator = mace_mp(**kwargs)
 
         elif calculator_name == MLFF.GAP:
             from quippy.potential import Potential
 
-            calculator = Potential(**calculator_kwargs)
+            calculator = Potential(**kwargs)
+
+        elif calculator_name == MLFF.Nequip:
+            from nequip.ase import NequIPCalculator
+
+            calculator = NequIPCalculator.from_deployed_model(*args, **kwargs)
 
     elif isinstance(calculator_meta, dict):
         _calculator = MontyDecoder().decode(json.dumps(calculator_meta))
-        calculator_kwargs = calculator_kwargs or {}
-        calculator = _calculator(**calculator_kwargs)
+        calculator = _calculator(*args, **kwargs)
 
     return calculator
 

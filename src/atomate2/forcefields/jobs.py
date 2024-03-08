@@ -14,8 +14,9 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer, ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
-    from typing import Callable
+    from typing import Any, Callable
 
     from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
@@ -85,6 +86,8 @@ class ForceFieldRelaxMaker(Maker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_args : Sequence[Any]
+        Keyword arguments that will get passed to the ASE calculator.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -97,6 +100,7 @@ class ForceFieldRelaxMaker(Maker):
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
+    calculator_args: Sequence[Any] = field(default_factory=list)
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -139,7 +143,9 @@ class ForceFieldRelaxMaker(Maker):
 
     def _calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
-        return ase_calculator(self.force_field_name, self.calculator_kwargs)
+        return ase_calculator(
+            self.force_field_name, *self.calculator_args, **self.calculator_kwargs
+        )
 
 
 @dataclass
@@ -302,13 +308,6 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    model_path: str | Path
-        deployed model checkpoint to load with
-        :obj:`nequip.calculators.NequipCalculator.from_deployed_model()'`.
-    model_kwargs: dict[str, Any]
-        Further keywords (e.g. device: Union[str, torch.device],
-        species_to_type_name: Optional[Dict[str, str]] = None) for
-            :obj:`nequip.calculators.NequipCalculator()'`.
     """
 
     name: str = f"{MLFF.Nequip} relax"
@@ -318,20 +317,6 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-    model_path: str | Path = ""
-    model_kwargs: dict = field(default_factory=dict)
-
-    def _relax(self, structure: Structure) -> dict:
-        from nequip.ase import NequIPCalculator
-
-        calculator = NequIPCalculator.from_deployed_model(
-            self.model_path, **self.model_kwargs
-        )
-        relaxer = Relaxer(
-            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
-        )
-
-        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -347,30 +332,11 @@ class NequipStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    model_path: str | Path
-        deployed model checkpoint to load with
-        :obj:`nequip.calculators.NequipCalculator()'`.
-    model_kwargs: dict[str, Any]
-        Further keywords (e.g. device: Union[str, torch.device],
-        species_to_type_name: Optional[Dict[str, str]] = None) for
-            :obj:`nequip.calculators.NequipCalculator()'`.
     """
 
     name: str = f"{MLFF.Nequip} static"
     force_field_name: str = f"{MLFF.Nequip}"
     task_document_kwargs: dict = field(default_factory=dict)
-    model_path: str | Path = ""
-    model_kwargs: dict = field(default_factory=dict)
-
-    def _evaluate_static(self, structure: Structure) -> dict:
-        from nequip.ase import NequIPCalculator
-
-        calculator = NequIPCalculator.from_deployed_model(
-            self.model_path, **self.model_kwargs
-        )
-        relaxer = Relaxer(calculator, relax_cell=False)
-
-        return relaxer.relax(structure, steps=1)
 
 
 @dataclass
@@ -490,6 +456,12 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "args_str": "IP GAP",
+            "param_filename": "gap.xml",
+        }
+    )
     task_document_kwargs: dict = field(default_factory=dict)
 
 
@@ -511,3 +483,9 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     name: str = f"{MLFF.GAP} static"
     force_field_name: str = f"{MLFF.GAP}"
     task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "args_str": "IP GAP",
+            "param_filename": "gap.xml",
+        }
+    )
