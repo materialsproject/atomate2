@@ -41,7 +41,6 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
     matcher = StructureMatcher()
 
     calculator_kwargs = {}
-    calculator_args = []
     unit_cell_structure = si_structure.copy()
     if ff_name == "GAP":
         calculator_kwargs = {
@@ -49,9 +48,9 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
             "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
         }
     elif ff_name == "Nequip":
-        calculator_args = [
-            test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
-        ]
+        calculator_kwargs = {
+            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        }
         unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
@@ -61,7 +60,6 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         task_document_kwargs={"store_trajectory": "partial"},
-        calculator_args=calculator_args,
         calculator_kwargs=calculator_kwargs,
     ).make(structure)
     response = run_locally(job, ensure_success=True)

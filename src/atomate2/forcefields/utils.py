@@ -382,9 +382,7 @@ class Relaxer:
         )
 
 
-def ase_calculator(
-    calculator_meta: str | dict, *args: Any, **kwargs: Any
-) -> Calculator | None:
+def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | None:
     """
     Create an ASE calculator from a given set of metadata.
 
@@ -439,11 +437,11 @@ def ase_calculator(
         elif calculator_name == MLFF.Nequip:
             from nequip.ase import NequIPCalculator
 
-            calculator = NequIPCalculator.from_deployed_model(*args, **kwargs)
+            calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         _calculator = MontyDecoder().decode(json.dumps(calculator_meta))
-        calculator = _calculator(*args, **kwargs)
+        calculator = _calculator(**kwargs)
 
     return calculator
 

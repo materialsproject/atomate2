@@ -38,7 +38,7 @@ from atomate2.forcefields.utils import (
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any, Literal
+    from typing import Literal
 
     from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
@@ -106,8 +106,6 @@ class ForceFieldMDMaker(Maker):
         specifying thermostat as a string.
     ase_md_kwargs : dict | None = None
         Options except for temperature and pressure to pass into the ASE MD function
-    calculator_args : Sequence[Any]
-        args to pass to the ASE calculator class
     calculator_kwargs : dict
         kwargs to pass to the ASE calculator class
     traj_file : str | Path | None = None
@@ -135,7 +133,6 @@ class ForceFieldMDMaker(Maker):
     # end_temp: float | None = 300.0
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
-    calculator_args: Sequence[Any] = field(default_factory=list)
     calculator_kwargs: dict = field(default_factory=dict)
     traj_file: str | Path | None = None
     traj_file_fmt: Literal["pmg", "ase"] = "ase"
@@ -345,9 +342,7 @@ class ForceFieldMDMaker(Maker):
 
     def _calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
-        return ase_calculator(
-            self.force_field_name, *self.calculator_args, **self.calculator_kwargs
-        )
+        return ase_calculator(self.force_field_name, **self.calculator_kwargs)
 
 
 @dataclass

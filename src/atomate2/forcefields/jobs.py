@@ -14,9 +14,8 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer, ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
     from pathlib import Path
-    from typing import Any, Callable
+    from typing import Callable
 
     from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
@@ -86,8 +85,6 @@ class ForceFieldRelaxMaker(Maker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
-    calculator_args : Sequence[Any]
-        Keyword arguments that will get passed to the ASE calculator.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -100,7 +97,6 @@ class ForceFieldRelaxMaker(Maker):
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
-    calculator_args: Sequence[Any] = field(default_factory=list)
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -143,9 +139,7 @@ class ForceFieldRelaxMaker(Maker):
 
     def _calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
-        return ase_calculator(
-            self.force_field_name, *self.calculator_args, **self.calculator_kwargs
-        )
+        return ase_calculator(self.force_field_name, **self.calculator_kwargs)
 
 
 @dataclass
