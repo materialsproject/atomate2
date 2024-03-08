@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2023.12.18",
+    "pymatgen>=2024.3.1",
 ]
 
 [project.optional-dependencies]
@@ -43,7 +43,11 @@ cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.7"]
-defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30", "python-ulid"]
+defects = [
+    "dscribe>=1.2.0",
+    "pymatgen-analysis-defects>=2022.11.30",
+    "python-ulid",
+]
 forcefields = [
     "ase>=3.22.1",
     "chgnet>=0.2.2",
@@ -84,7 +88,7 @@ strict = [
     "lobsterpy==0.3.8",
     "mace-torch>=0.3.3",
     "matgl==1.0.0",
-    "monty==2024.2.2",
+    "monty==2024.2.26",
     "mp-api==0.40.2",
     "numpy",
     "phonopy==2.21.2",
@@ -92,6 +96,7 @@ strict = [
     "pydantic==2.6.3",
     "pymatgen-analysis-defects==2024.2.24",
     "pymatgen==2024.3.1",
+    "python-ulid==2.2.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "typing-extensions==4.10.0",
