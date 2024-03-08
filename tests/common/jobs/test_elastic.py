@@ -6,7 +6,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.jobs.elastic import generate_elastic_deformations
-from atomate2.common.schemas.elastic import _expand_strains
+from atomate2.common.schemas.elastic import expand_strains
 
 
 @pytest.mark.parametrize("conventional", [False, True])
@@ -25,7 +25,7 @@ def test_reduce_expand_strains(clean_dir, symmetry_structure, conventional):
     dummy_stresses = [Stress(np.zeros((3, 3)))] * len(reduced_strains)
     dummy = ["dummy"] * len(reduced_strains)
 
-    recovered_strains, _, _, _ = _expand_strains(
+    recovered_strains, _, _, _ = expand_strains(
         structure,
         reduced_strains,
         stresses=dummy_stresses,
