@@ -7,9 +7,9 @@ This tutorial is supposed to give the user a high-level overview of the key conc
 
 ## `Job` and `Flow` makers
 
-`Job` and `Flow` makers are dataclasses that inherit from the `Maker` [jobflow](https://github.com/materialsproject/jobflow/blob/main/src/jobflow/core/maker.py) dataclass. 
-The `Maker` is a base class for constructing the aforementioned `Job` and `Flow` objects. It is inheriting from the `MSONable` (Monty JSON) class, that allows job or flow output to be in a JSON serializable dict format. 
-This makes it easier to handle and unify output from the various computational chemistry tasks (e.g. chemical bonding analysis, elastic constant calculations, force field applications and many more) and of the many supported software packages (like VASP, phonopy and more).  <!--is there a list of supported software?-->
+`Job` and `Flow` makers are dataclasses that inherit from the `Maker` [jobflow](https://github.com/materialsproject/jobflow/blob/main/src/jobflow/core/maker.py) dataclass.
+The `Maker` is a base class for constructing the aforementioned `Job` and `Flow` objects. It is inheriting from the `MSONable` (Monty JSON) class, that allows job or flow output to be in a JSON serializable dict format.
+This makes it easier to handle and unify output from the various computational chemistry tasks (e.g. chemical bonding analysis, elastic constant calculations, force field applications and many more) and of the many supported software packages (like VASP, phonopy and more).  <!--is there a list of supported software on the github pages?-->
 The output data is handled with so-called `TaskDocuments` in a very convenient way.
 
 The `Maker` class from jobflow has two main functionalities, that are vital for any inheriting job or flow maker: the `make` function and the functionality to update keyword arguments (kwargs).
@@ -28,7 +28,7 @@ class Maker(MSONable):
     def update_kwargs(...):
 ```
 
-The functions that raise an `NotImplementedError` like the `make` function have be overridden for each specific job or flow maker with its own specific make functionalities. 
+The functions that raise an `NotImplementedError` like the `make` function have be overridden for each specific job or flow maker with its own specific make functionalities.
 
 An example for a `Job` `Maker` is the `LobsterMaker`:
 
@@ -53,7 +53,7 @@ class LobsterMaker(Maker):
         [...]
         """
 ```
-This class incorporates [LOBSTER](http://cohp.de/) specific input and output data, i.e. the `wavefunction_dir` and `basis_dict` as input in `make` that returns the `LobsterMaker`-class specific output as a `TaskDocument`. 
+This class incorporates [LOBSTER](http://cohp.de/) specific input and output data, i.e. the `wavefunction_dir` and `basis_dict` as input in `make` that returns the `LobsterMaker`-class specific output as a `TaskDocument`.
 As a job maker, this maker will then create jobs to execute the LOBSTER runs and store the output in the `LobsterTaskDocument` format.
 
 In contrast to a job maker, the `make` function of a `Flow Maker` will return a `Flow` object (sequential collection of `Job` objects or other `Flow` objects) instead of a task document.
@@ -81,7 +81,7 @@ In this particular case, the flow maker `BasePhononMaker` is also inheriting fro
 tbc
 
 # TaskDocument
-a TaskDocument (TaskDoc for short) is a dictioary object that contains all the information of the respective computational chemistry calculation run.
+a TaskDocument (TaskDoc for short) is a dictionary object that contains all the information of the respective computational chemistry calculation run.
 
 tbc
 
