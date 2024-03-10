@@ -10,6 +10,8 @@ This tutorial will give you a high-level overview of the key concepts in atomate
 `Job` and `Flow` makers are the workhorses of the atomate2 code framework. Their key role is to enable the user to execute a sequence of usually repetitive tasks and processes.
 To ease the management of such processes, tools like [jobflow](https://github.com/materialsproject/jobflow) can be used. The two essential building blocks of jobflow-based workflows in atomate2 are `Jobs` and `Flows`.
 
+### Basics
+
 A `Job` is a single computing job, and potentially can take any python function form, given that their inputs and outputs (return values) can be serialized in a JSON format.
 
 A `Flow` is a sequential collection of job or other flow objects. The connectivity and also execution order of the different jobs and flow is decided automatically from the job inputs. The output from one job (`job.output`) can be used as the input for the next one, which will therefore establish a connectivity between these two jobs. The connectivity between several jobs and flows can be arbitrary, depending on the purpose of the workflow.
@@ -17,6 +19,8 @@ A `Flow` is a sequential collection of job or other flow objects. The connectivi
 
 `Job` and `Flow` makers come in handy by providing a template schema to set up all kinds of computational chemistry tasks (e.g. chemical bonding analysis, elastic constant calculations, force field applications and many more) and to make it easier to handle and unify output from the various supported software packages (like VASP, phonopy and more). <!--is there a list of supported software on the GitHub pages?-->
 Because the job output data is stored in a JSON serializable dict format, it makes it possible to conveniently handle it with so-called `TaskDocuments`.<!--hyperref to TaskDoc-->
+
+### Technical Aspects
 
 The atomate2 `Job` and `Flow` makers are both dataclasses that inherit from the `Maker` [jobflow](https://github.com/materialsproject/jobflow/blob/main/src/jobflow/core/maker.py) dataclass.
 The `Maker` class from jobflow is a base class for constructing the aforementioned `Job` and `Flow` objects and has two main functionalities, that are vital for any inheriting job or flow maker: the `make` function and the functionality to update keyword arguments (kwargs).
@@ -36,6 +40,8 @@ class Maker(MSONable):
 ```
 
 If one needs to implement a new job or flow maker, it is important to pay attention to the functions that raise an `NotImplementedError`. Functions like the `make` function have to be overridden for each specific job or flow maker with its own specific functionalities.
+
+### Examples
 
 An example for a `Job Maker` is the `LobsterMaker`:
 
