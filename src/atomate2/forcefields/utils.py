@@ -6,28 +6,45 @@ The code has been released under BSD 3-Clause License
 and the following copyright applies:
 Copyright (c) 2022, Materials Virtual Lab.
 """
+
 from __future__ import annotations
 
 import contextlib
 import io
 import pickle
 import sys
+import warnings
+from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
-from ase.constraints import ExpCellFilter
-from ase.optimize.bfgs import BFGS
-from ase.optimize.bfgslinesearch import BFGSLineSearch
-from ase.optimize.fire import FIRE
-from ase.optimize.lbfgs import LBFGS, LBFGSLineSearch
-from ase.optimize.mdmin import MDMin
+from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
+try:
+    from ase.filters import FrechetCellFilter
+except ImportError:
+    FrechetCellFilter = None
+    warnings.warn(
+        "Due to errors in the implementation of gradients in the ASE"
+        " ExpCellFilter, we recommend installing ASE from gitlab\n"
+        "    pip install git+https://gitlab.com/ase/ase.git\n"
+        "rather than PyPi to access FrechetCellFilter. See\n"
+        "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
+        "for more details. Otherwise, you must specify an alternate ASE Filter.",
+        stacklevel=2,
+    )
+
 if TYPE_CHECKING:
+    from collections.abc import Generator
+    from os import PathLike
+    from typing import Any
+
     import numpy as np
     from ase import Atoms
     from ase.calculators.calculator import Calculator
+    from ase.filters import Filter
     from ase.optimize.optimize import Optimizer
 
 
@@ -47,10 +64,9 @@ class TrajectoryObserver:
     """Trajectory observer.
 
     This is a hook in the relaxation process that saves the intermediate structures.
-
     """
 
-    def __init__(self, atoms: Atoms):
+    def __init__(self, atoms: Atoms) -> None:
         """
         Initialize the Observer.
 
@@ -69,7 +85,7 @@ class TrajectoryObserver:
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
-    def __call__(self):
+    def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
         # TODO: maybe include magnetic moments
         self.energies.append(self.compute_energy())
@@ -88,7 +104,7 @@ class TrajectoryObserver:
         """
         return self.atoms.get_potential_energy()
 
-    def save(self, filename: str):
+    def save(self, filename: str | PathLike) -> None:
         """
         Save the trajectory file.
 
@@ -100,18 +116,16 @@ class TrajectoryObserver:
         -------
             None
         """
-        with open(filename, "wb") as f:
-            pickle.dump(
-                {
-                    "energy": self.energies,
-                    "forces": self.forces,
-                    "stresses": self.stresses,
-                    "atom_positions": self.atom_positions,
-                    "cell": self.cells,
-                    "atomic_number": self.atoms.get_atomic_numbers(),
-                },
-                f,
-            )
+        traj_dict = {
+            "energy": self.energies,
+            "forces": self.forces,
+            "stresses": self.stresses,
+            "atom_positions": self.atom_positions,
+            "cell": self.cells,
+            "atomic_number": self.atoms.get_atomic_numbers(),
+        }
+        with open(filename, "wb") as file:
+            pickle.dump(traj_dict, file)
 
 
 class Relaxer:
@@ -122,20 +136,20 @@ class Relaxer:
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
-    ):
+    ) -> None:
         """
         Initialize the Relaxer.
 
         Parameters
         ----------
-        calculator (ase Calculatur): an ase calculator
+        calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
-        relax_cell (bool): if True, cell parameters will be opitimized.
+        relax_cell (bool): if True, cell parameters will be optimized.
         """
         self.calculator = calculator
 
         if isinstance(optimizer, str):
-            optimizer_obj = OPTIMIZERS.get(optimizer, None)
+            optimizer_obj = OPTIMIZERS.get(optimizer)
         elif optimizer is None:
             raise ValueError("Optimizer cannot be None")
         else:
@@ -151,22 +165,30 @@ class Relaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
-        interval=1,
-        verbose=False,
+        interval: int = 1,
+        verbose: bool = False,
+        cell_filter: Filter = FrechetCellFilter,
         **kwargs,
-    ):
+    ) -> dict[str, Any]:
         """
         Relax the structure.
 
         Parameters
         ----------
-        atoms (Atoms): the atoms for relaxation
-        fmax (float): total force tolerance for relaxation convergence.
-        steps (int): max number of steps for relaxation
-        traj_file (str): the trajectory file for saving
-        interval (int): the step interval for saving the trajectories
-        verbose (bool): if True, screenoutput will be shown.
-        kwargs: further kwargs.
+        atoms : Atoms
+            The atoms for relaxation.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str
+            The trajectory file for saving.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        **kwargs
+            Further kwargs.
 
         Returns
         -------
@@ -179,17 +201,31 @@ class Relaxer:
         with contextlib.redirect_stdout(stream):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
-                atoms = ExpCellFilter(atoms)
+                atoms = cell_filter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
             optimizer.run(fmax=fmax, steps=steps)
             obs()
         if traj_file is not None:
             obs.save(traj_file)
-        if isinstance(atoms, ExpCellFilter):
+        if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
-        return {
-            "final_structure": self.ase_adaptor.get_structure(atoms),
-            "trajectory": obs,
-        }
+        struct = self.ase_adaptor.get_structure(atoms)
+        return {"final_structure": struct, "trajectory": obs}
+
+
+@contextmanager
+def revert_default_dtype() -> Generator[None, None, None]:
+    """Context manager for torch.default_dtype.
+
+    Reverts it to whatever torch.get_default_dtype() was when entering the context.
+
+    Originally added for use with MACE(Relax|Static)Maker.
+    https://github.com/ACEsuit/mace/issues/328
+    """
+    import torch
+
+    orig = torch.get_default_dtype()
+    yield
+    torch.set_default_dtype(orig)

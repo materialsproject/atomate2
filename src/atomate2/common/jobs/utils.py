@@ -12,12 +12,6 @@ from atomate2 import SETTINGS
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-__all__ = [
-    "structure_to_primitive",
-    "structure_to_conventional",
-    "retrieve_structure_from_materials_project",
-]
-
 
 @job
 def structure_to_primitive(
@@ -36,7 +30,6 @@ def structure_to_primitive(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
@@ -59,7 +52,6 @@ def structure_to_conventional(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_conventional_standard_structure()
@@ -120,12 +112,12 @@ def retrieve_structure_from_materials_project(
 
     with MPRester() as mpr:
         if use_task_id:
-            doc = mpr.tasks.get_data_by_id(material_id_or_task_id, fields=["structure"])
+            doc = mpr.tasks.search(material_id_or_task_id, fields=["structure"])[0]
             task_id = material_id_or_task_id
         else:
-            doc = mpr.materials.get_data_by_id(
+            doc = mpr.materials.search(
                 material_id_or_task_id, fields=["structure", "origins"]
-            )
+            )[0]
             origins = {prop.name: prop for prop in doc.origins}
             task_id = str(origins["structure"].task_id)
 

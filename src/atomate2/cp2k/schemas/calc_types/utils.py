@@ -1,6 +1,7 @@
 """Module to define various calculation types as Enums for CP2K."""
+
+from collections.abc import Iterable, Sequence
 from pathlib import Path
-from typing import Dict, Iterable
 
 from monty.serialization import loadfn
 from pymatgen.io.cp2k.inputs import Cp2kInput, Keyword, KeywordList
@@ -10,18 +11,18 @@ from atomate2.cp2k.schemas.calc_types import CalcType, RunType, TaskType
 _RUN_TYPE_DATA = loadfn(str(Path(__file__).parent.joinpath("run_types.yaml").resolve()))
 
 
-def run_type(inputs: Dict) -> RunType:
+def run_type(inputs: dict) -> RunType:
     """
     Determine the run_type from the CP2K input dict.
 
     This is adapted from pymatgen to be far less unstable.
 
     Args:
-        dft: dictionary of dft parameters (standard from task doc)
+        dft: dictionary of DFT parameters (standard from task doc)
     """
     dft = inputs.get("dft")
 
-    def _variant_equal(v1, v2) -> bool:
+    def _variant_equal(v1: Sequence, v2: Sequence) -> bool:
         """Determine if two run_types are equal."""
         if isinstance(v1, str) and isinstance(v2, str):
             return v1.strip().upper() == v2.strip().upper()
@@ -61,7 +62,7 @@ def run_type(inputs: Dict) -> RunType:
     return RunType(f"LDA{is_hubbard}")
 
 
-def task_type(inputs: Dict) -> TaskType:
+def task_type(inputs: dict) -> TaskType:
     """
     Determine the task type.
 
@@ -72,12 +73,12 @@ def task_type(inputs: Dict) -> TaskType:
     cp2k_run_type = inputs.get("cp2k_global", {}).get("Run_type", "")
     ci = Cp2kInput.from_dict(inputs["cp2k_input"])
 
-    if cp2k_run_type.upper() in [
+    if cp2k_run_type.upper() in (
         "ENERGY",
         "ENERGY_FORCE",
         "WAVEFUNCTION_OPTIMIZATION",
         "WFN_OPT",
-    ]:
+    ):
         if ci.check("FORCE_EVAL/DFT/SCF"):
             tmp = ci["force_eval"]["dft"]["scf"].get("MAX_SCF", Keyword("", 50))
             if tmp.values[0] == 1:
@@ -100,50 +101,50 @@ def task_type(inputs: Dict) -> TaskType:
         else:
             calc_type.append("Static")
 
-    elif cp2k_run_type.upper() in ["GEO_OPT", "GEOMETRY_OPTIMIZATION", "CELL_OPT"]:
+    elif cp2k_run_type.upper() in ("GEO_OPT", "GEOMETRY_OPTIMIZATION", "CELL_OPT"):
         calc_type.append("Structure Optimization")
 
-    elif cp2k_run_type.upper() in ["BAND"]:
+    elif cp2k_run_type.upper() == "BAND":
         calc_type.append("Band")
 
-    elif cp2k_run_type.upper() in ["MOLECULAR_DYNAMICS", "MD"]:
+    elif cp2k_run_type.upper() in ("MOLECULAR_DYNAMICS", "MD"):
         calc_type.append("Molecular Dynamics")
 
-    elif cp2k_run_type.upper() in ["MONTE_CARLO", "MC", "TMC", "TAMC"]:
+    elif cp2k_run_type.upper() in ("MONTE_CARLO", "MC", "TMC", "TAMC"):
         calc_type.append("Monte Carlo")
 
-    elif cp2k_run_type.upper() in ["LINEAR_RESPONSE", "LR"]:
+    elif cp2k_run_type.upper() in ("LINEAR_RESPONSE", "LR"):
         calc_type.append("Linear Response")
 
-    elif cp2k_run_type.upper() in ["VIBRATIONAL_ANALYSIS", "NORMAL_MODES"]:
+    elif cp2k_run_type.upper() in ("VIBRATIONAL_ANALYSIS", "NORMAL_MODES"):
         calc_type.append("Vibrational Analysis")
 
-    elif cp2k_run_type.upper() in ["ELECTRONIC_SPECTRA", "SPECTRA"]:
+    elif cp2k_run_type.upper() in ("ELECTRONIC_SPECTRA", "SPECTRA"):
         calc_type.append("Electronic Spectra")
 
-    elif cp2k_run_type.upper() in ["NEGF"]:
+    elif cp2k_run_type.upper() == "NEGF":
         calc_type.append("Non-equilibrium Green's Function")
 
-    elif cp2k_run_type.upper() in ["PINT", "DRIVER"]:
+    elif cp2k_run_type.upper() in ("PINT", "DRIVER"):
         calc_type.append("Path Integral")
 
-    elif cp2k_run_type.upper() in ["RT_PROPAGATION", "EHRENFEST_DYN"]:
+    elif cp2k_run_type.upper() in ("RT_PROPAGATION", "EHRENFEST_DYN"):
         calc_type.append("Real-time propagation")
 
-    elif cp2k_run_type.upper() in ["BSSE"]:
+    elif cp2k_run_type.upper() == "BSSE":
         calc_type.append("Base set superposition error")
 
-    elif cp2k_run_type.upper() in ["DEBUG"]:
+    elif cp2k_run_type.upper() == "DEBUG":
         calc_type.append("Debug analysis")
 
-    elif cp2k_run_type.upper() in ["NONE"]:
+    elif cp2k_run_type.upper() == "NONE":
         calc_type.append("None")
 
     return TaskType(" ".join(calc_type))
 
 
 def calc_type(
-    inputs: Dict,
+    inputs: dict,
 ) -> CalcType:
     """
     Determine the calc type.

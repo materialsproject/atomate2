@@ -1,19 +1,26 @@
-"""Job to prerelax a structure using an MD Potential."""
+"""Schema definitions for force field tasks."""
 
-from typing import List, Optional
+from typing import Optional
 
+from ase.stress import voigt_6_to_full_3x3_stress
+from ase.units import GPa
+from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
+from atomate2.forcefields import MLFF
 
-class IonicStep(BaseModel, extra=Extra.allow):  # type: ignore
+
+class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """Document defining the information at each ionic step."""
 
     energy: float = Field(None, description="The free energy.")
-    forces: List[List[float]] = Field(None, description="The forces on each atom.")
-    stress: List[float] = Field(None, description="The stress on the lattice.")
+    forces: Optional[list[list[float]]] = Field(
+        None, description="The forces on each atom."
+    )
+    stress: Optional[Matrix3D] = Field(None, description="The stress on the lattice.")
     structure: Structure = Field(None, description="The structure at this step.")
 
 
@@ -26,16 +33,13 @@ class InputDoc(BaseModel):
         description="Whether cell lattice was allowed to change during relaxation.",
     )
     steps: int = Field(
-        None,
-        description="Maximum number of steps allowed during relaxation.",
+        None, description="Maximum number of steps allowed during relaxation."
     )
-    relax_kwargs: dict = Field(
-        None,
-        description="Keyword arguments that passed to the relaxer function.",
+    relax_kwargs: Optional[dict] = Field(
+        None, description="Keyword arguments that passed to the relaxer function."
     )
-    optimizer_kwargs: dict = Field(
-        None,
-        description="Keyword arguments passed to the relaxer's optimizer.",
+    optimizer_kwargs: Optional[dict] = Field(
+        None, description="Keyword arguments passed to the relaxer's optimizer."
     )
 
 
@@ -51,18 +55,18 @@ class OutputDoc(BaseModel):
         description="Energy per atom of the final structure in units of eV/atom.",
     )
 
-    forces: List[List[float]] = Field(
+    forces: Optional[list[Vector3D]] = Field(
         None,
         description="The force on each atom in units of eV/A for the final structure.",
     )
 
     # NOTE: units for stresses were converted to kbar (* -10 from standard output)
     #       to comply with MP convention
-    stress: List[float] = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
-    ionic_steps: List[IonicStep] = Field(
+    ionic_steps: list[IonicStep] = Field(
         None, description="Step-by-step trajectory of the structural relaxation."
     )
 
@@ -110,14 +114,14 @@ class ForceFieldTaskDocument(StructureMetadata):
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
-    ):
+    ) -> "ForceFieldTaskDocument":
         """
         Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
 
         Parameters
         ----------
         forcefield_name : str
-            Name of the forcefield used.
+            Name of the force field used.
         result : dict
             The outputted results from the task.
         relax_cell : bool
@@ -133,10 +137,12 @@ class ForceFieldTaskDocument(StructureMetadata):
         """
         trajectory = result["trajectory"].__dict__
 
-        # NOTE: units for stresses were converted to kbar (* -10 from standard output)
-        # to comply with MP convention
-        for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = trajectory["stresses"][i] * -10
+        # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
+        # and to 3x3 matrix to comply with MP convention
+        for idx in range(len(trajectory["stresses"])):
+            trajectory["stresses"][idx] = voigt_6_to_full_3x3_stress(
+                trajectory["stresses"][idx] * -10 / GPa
+            )
 
         species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
 
@@ -173,55 +179,55 @@ class ForceFieldTaskDocument(StructureMetadata):
         n_steps = len(trajectory["energies"])
 
         ionic_steps = []
-        for i in range(n_steps):
-            cur_energy = (
-                trajectory["energies"][i] if "energy" in ionic_step_data else None
+        for idx in range(n_steps):
+            energy = (
+                trajectory["energies"][idx] if "energy" in ionic_step_data else None
             )
-            cur_forces = (
-                trajectory["forces"][i].tolist()
+            forces = (
+                trajectory["forces"][idx].tolist()
                 if "forces" in ionic_step_data
                 else None
             )
-            cur_stress = (
-                trajectory["stresses"][i].tolist()
+            stress = (
+                trajectory["stresses"][idx].tolist()
                 if "stress" in ionic_step_data
                 else None
             )
 
             if "structure" in ionic_step_data:
                 cur_structure = Structure(
-                    lattice=trajectory["cells"][i],
-                    coords=trajectory["atom_positions"][i],
+                    lattice=trajectory["cells"][idx],
+                    coords=trajectory["atom_positions"][idx],
                     species=species,
                     coords_are_cartesian=True,
                 )
             else:
                 cur_structure = None
 
-            # include "magmoms" in :obj:`cur_ionic_step` if the trajectory has "magmoms"
+            # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
             if "magmoms" in trajectory:
-                cur_ionic_step = IonicStep(
-                    energy=cur_energy,
-                    forces=cur_forces,
+                ionic_step = IonicStep(
+                    energy=energy,
+                    forces=forces,
                     magmoms=(
-                        trajectory["magmoms"][i].tolist()
+                        trajectory["magmoms"][idx].tolist()
                         if "magmoms" in ionic_step_data
                         else None
                     ),
-                    stress=cur_stress,
+                    stress=stress,
                     structure=cur_structure,
                 )
 
-            # otherwise do not include "magmoms" in :obj:`cur_ionic_step`
+            # otherwise do not include "magmoms" in :obj:`ionic_step`
             elif "magmoms" not in trajectory:
-                cur_ionic_step = IonicStep(
-                    energy=cur_energy,
-                    forces=cur_forces,
-                    stress=cur_stress,
+                ionic_step = IonicStep(
+                    energy=energy,
+                    forces=forces,
+                    stress=stress,
                     structure=cur_structure,
                 )
 
-            ionic_steps.append(cur_ionic_step)
+            ionic_steps.append(ionic_step)
 
         output_doc = OutputDoc(
             structure=output_structure,
@@ -233,14 +239,16 @@ class ForceFieldTaskDocument(StructureMetadata):
             n_steps=n_steps,
         )
 
-        if forcefield_name == "M3GNet":
-            import matgl
+        # map force field name to its package name
+        pkg_name = {
+            MLFF.M3GNet: "matgl",
+            MLFF.CHGNet: "chgnet",
+            MLFF.MACE: "mace-torch",
+        }.get(forcefield_name)  # type: ignore[call-overload]
+        if pkg_name:
+            import importlib.metadata
 
-            version = matgl.__version__
-        elif forcefield_name == "CHGNet":
-            import chgnet
-
-            version = chgnet.__version__
+            version = importlib.metadata.version(pkg_name)
         else:
             version = "Unknown"
         return cls.from_structure(

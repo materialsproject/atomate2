@@ -1,19 +1,25 @@
 """Core abinit flow makers."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import (
     LineNonSCFMaker,
     RelaxMaker,
     StaticMaker,
     UniformNonSCFMaker,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.jobs.base import BaseAbinitMaker
 
 
 @dataclass
@@ -43,7 +49,7 @@ class BandStructureMaker(Maker):
         self,
         structure: Structure,
         restart_from: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Create a band structure flow.
 
@@ -102,7 +108,7 @@ class RelaxFlowMaker(Maker):
         self,
         structure: Structure | None = None,
         restart_from: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Create a relaxation flow.
 
@@ -123,15 +129,12 @@ class RelaxFlowMaker(Maker):
         )
         jobs = [relax_job1]
         for rlx_maker in self.relaxation_makers[1:]:
-            rlx_job = rlx_maker.make(
-                # structure=jobs[-1].output.structure, restart_from=jobs[-1].output
-                restart_from=jobs[-1].output.dir_name
-            )
+            rlx_job = rlx_maker.make(restart_from=jobs[-1].output.dir_name)
             jobs.append(rlx_job)
         return Flow(jobs, output=jobs[-1].output, name=self.name)
 
     @classmethod
-    def ion_ioncell_relaxation(cls, *args, **kwargs):
+    def ion_ioncell_relaxation(cls, *args, **kwargs) -> Flow:
         """Create a double relaxation (ionic relaxation + full relaxation)."""
         ion_rlx_maker = RelaxMaker.ionic_relaxation(*args, **kwargs)
         ioncell_rlx_maker = RelaxMaker.full_relaxation(*args, **kwargs)

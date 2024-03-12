@@ -1,6 +1,7 @@
 """Schemas for elastic tensor fitting and related properties."""
+
 from copy import deepcopy
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -19,62 +20,65 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 
-__all__ = [
-    "DerivedProperties",
-    "FittingData",
-    "ElasticTensorDocument",
-    "ElasticDocument",
-]
-
 
 class DerivedProperties(BaseModel):
     """Properties derived from an elastic tensor."""
 
-    k_voigt: float = Field(None, description="Voigt average of the bulk modulus.")
-    k_reuss: float = Field(None, description="Reuss average of the bulk modulus.")
-    k_vrh: float = Field(
+    k_voigt: Optional[float] = Field(
+        None, description="Voigt average of the bulk modulus."
+    )
+    k_reuss: Optional[float] = Field(
+        None, description="Reuss average of the bulk modulus."
+    )
+    k_vrh: Optional[float] = Field(
         None, description="Voigt-Reuss-Hill average of the bulk modulus."
     )
-    g_voigt: float = Field(None, description="Voigt average of the shear modulus.")
-    g_reuss: float = Field(None, description="Reuss average of the shear modulus.")
-    g_vrh: float = Field(
+    g_voigt: Optional[float] = Field(
+        None, description="Voigt average of the shear modulus."
+    )
+    g_reuss: Optional[float] = Field(
+        None, description="Reuss average of the shear modulus."
+    )
+    g_vrh: Optional[float] = Field(
         None, description="Voigt-Reuss-Hill average of the shear modulus."
     )
-    universal_anisotropy: float = Field(
+    universal_anisotropy: Optional[float] = Field(
         None, description="Universal elastic anisotropy."
     )
-    homogeneous_poisson: float = Field(None, description="Homogeneous poisson ratio.")
-    y_mod: float = Field(
+    homogeneous_poisson: Optional[float] = Field(
+        None, description="Homogeneous poisson ratio."
+    )
+    y_mod: Optional[float] = Field(
         None,
         description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of "
         "the bulk and shear moduli.",
     )
-    trans_v: float = Field(
+    trans_v: Optional[float] = Field(
         None,
         description="Transverse sound velocity (SI units) obtained from the "
         "Voigt-Reuss-Hill average bulk modulus.",
     )
-    long_v: float = Field(
+    long_v: Optional[float] = Field(
         None,
         description="Longitudinal sound velocity (SI units) obtained from the "
         "Voigt-Reuss-Hill average bulk modulus.",
     )
-    snyder_ac: float = Field(
+    snyder_ac: Optional[float] = Field(
         None, description="Synder's acoustic sound velocity (SI units)."
     )
-    snyder_opt: float = Field(
+    snyder_opt: Optional[float] = Field(
         None, description="Synder's optical sound velocity (SI units)."
     )
-    snyder_total: float = Field(
+    snyder_total: Optional[float] = Field(
         None, description="Synder's total sound velocity (SI units)."
     )
-    clark_thermalcond: float = Field(
+    clark_thermalcond: Optional[float] = Field(
         None, description="Clarke's thermal conductivity (SI units)."
     )
-    cahill_thermalcond: float = Field(
+    cahill_thermalcond: Optional[float] = Field(
         None, description="Cahill's thermal conductivity (SI units)."
     )
-    debye_temperature: float = Field(
+    debye_temperature: Optional[float] = Field(
         None,
         description="Debye temperature from longitudinal and transverse sound "
         "velocities (SI units).",
@@ -84,20 +88,22 @@ class DerivedProperties(BaseModel):
 class FittingData(BaseModel):
     """Data used to fit elastic tensors."""
 
-    cauchy_stresses: List[Matrix3D] = Field(
+    cauchy_stresses: Optional[list[Matrix3D]] = Field(
         None, description="The Cauchy stresses used to fit the elastic tensor."
     )
-    strains: List[Matrix3D] = Field(
+    strains: Optional[list[Matrix3D]] = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: List[Matrix3D] = Field(
+    pk_stresses: Optional[list[Matrix3D]] = Field(
         None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations: List[Matrix3D] = Field(
+    deformations: Optional[list[Matrix3D]] = Field(
         None, description="The deformations corresponding to each strain state."
     )
-    uuids: List[str] = Field(None, description="The uuids of the deformation jobs.")
-    job_dirs: List[str] = Field(
+    uuids: Optional[list[str]] = Field(
+        None, description="The uuids of the deformation jobs."
+    )
+    job_dirs: Optional[list[Optional[str]]] = Field(
         None, description="The directories where the deformation jobs were run."
     )
 
@@ -105,32 +111,34 @@ class FittingData(BaseModel):
 class ElasticTensorDocument(BaseModel):
     """Raw and standardized elastic tensors."""
 
-    raw: MatrixVoigt = Field(None, description="Raw elastic tensor.")
-    ieee_format: MatrixVoigt = Field(None, description="Elastic tensor in IEEE format.")
+    raw: Optional[MatrixVoigt] = Field(None, description="Raw elastic tensor.")
+    ieee_format: Optional[MatrixVoigt] = Field(
+        None, description="Elastic tensor in IEEE format."
+    )
 
 
 class ElasticDocument(StructureMetadata):
     """Document containing elastic tensor information and related properties."""
 
-    structure: Structure = Field(
+    structure: Optional[Structure] = Field(
         None, description="The structure for which the elastic data is calculated."
     )
-    elastic_tensor: ElasticTensorDocument = Field(
+    elastic_tensor: Optional[ElasticTensorDocument] = Field(
         None, description="Fitted elastic tensor."
     )
-    eq_stress: Matrix3D = Field(
+    eq_stress: Optional[Matrix3D] = Field(
         None, description="The equilibrium stress of the structure."
     )
-    derived_properties: DerivedProperties = Field(
+    derived_properties: Optional[DerivedProperties] = Field(
         None, description="Properties derived from the elastic tensor."
     )
-    fitting_data: FittingData = Field(
+    fitting_data: Optional[FittingData] = Field(
         None, description="Data used to fit the elastic tensor."
     )
-    fitting_method: str = Field(
+    fitting_method: Optional[str] = Field(
         None, description="Method used to fit the elastic tensor."
     )
-    order: int = Field(
+    order: Optional[int] = Field(
         None, description="Order of the expansion of the elastic tensor."
     )
 
@@ -138,16 +146,16 @@ class ElasticDocument(StructureMetadata):
     def from_stresses(
         cls,
         structure: Structure,
-        stresses: List[Stress],
-        deformations: List[Deformation],
-        uuids: List[str],
-        job_dirs: List[str],
+        stresses: list[Stress],
+        deformations: list[Deformation],
+        uuids: list[str],
+        job_dirs: list[str],
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
         order: Optional[int] = None,
         equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
-    ):
+    ) -> "ElasticDocument":
         """
         Create an elastic document from strains and stresses.
 
@@ -183,7 +191,7 @@ class ElasticDocument(StructureMetadata):
         strains = [d.green_lagrange_strain for d in deformations]
 
         if symprec is not None:
-            strains, stresses, uuids, job_dirs = _expand_strains(
+            strains, stresses, uuids, job_dirs = expand_strains(
                 structure, strains, stresses, uuids, job_dirs, symprec
             )
 
@@ -214,7 +222,7 @@ class ElasticDocument(StructureMetadata):
                 strains, pk_stresses, eq_stress=eq_stress
             )
         else:
-            raise ValueError(f"Unsupported elastic fitting method {fitting_method}")
+            raise ValueError(f"Unsupported elastic {fitting_method=}")
 
         ieee = result.convert_to_ieee(structure)
         property_tensor = ieee if order == 2 else ElasticTensor(ieee[0])
@@ -249,15 +257,15 @@ class ElasticDocument(StructureMetadata):
         )
 
 
-def _expand_strains(
+def expand_strains(
     structure: Structure,
-    strains: List[Strain],
-    stresses: List[Stress],
-    uuids: List[str],
-    job_dirs: List[str],
+    strains: list[Strain],
+    stresses: list[Stress],
+    uuids: list[str],
+    job_dirs: list[str],
     symprec: float,
     tol: float = 1e-3,
-):
+) -> tuple[list, list, list[str], list[str]]:
     """
     Use symmetry to expand strains.
 
@@ -272,7 +280,7 @@ def _expand_strains(
         `generate_elastic_deformations()`.
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
-    symmops = sga.get_symmetry_operations(cartesian=True)
+    symm_ops = sga.get_symmetry_operations(cartesian=True)
 
     full_strains = deepcopy(strains)
     full_stresses = deepcopy(stresses)
@@ -280,9 +288,9 @@ def _expand_strains(
     full_job_dirs = deepcopy(job_dirs)
 
     mapping = TensorMapping(full_strains, [True for _ in full_strains])
-    for i, strain in enumerate(strains):
-        for symmop in symmops:
-            rotated_strain = strain.transform(symmop)
+    for idx, strain in enumerate(strains):
+        for symm_op in symm_ops:
+            rotated_strain = strain.transform(symm_op)
 
             # check if we have more than one perturbed strain component
             if sum(np.abs(rotated_strain.voigt) > tol) > 1:
@@ -297,8 +305,8 @@ def _expand_strains(
 
             # expand the other properties
             full_strains.append(rotated_strain)
-            full_stresses.append(stresses[i].transform(symmop))
-            full_uuids.append(uuids[i])
-            full_job_dirs.append(job_dirs[i])
+            full_stresses.append(stresses[idx].transform(symm_op))
+            full_uuids.append(uuids[idx])
+            full_job_dirs.append(job_dirs[idx])
 
     return full_strains, full_stresses, full_uuids, full_job_dirs

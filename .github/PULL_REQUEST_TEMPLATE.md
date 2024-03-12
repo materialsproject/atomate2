@@ -27,10 +27,9 @@ Before a pull request can be merged, the following items must be checked:
 
 * [ ] Code is in the [standard Python style](https://www.python.org/dev/peps/pep-0008/).
   The easiest way to handle this is to run the following in the **correct sequence** on
-  your local machine. Start with running [black](https://black.readthedocs.io/en/stable/index.html) on your new code. This will
-  automatically reformat your code to PEP8 conventions and removes most issues. Then run
-  [ruff](https://ruff.rs).
-* [ ] Docstrings have been added in the [Numpy docstring format](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html).
+  your local machine. Start with running [`ruff`](https://docs.astral.sh/ruff) and `ruff format` on your new code. This will
+  automatically reformat your code to PEP8 conventions and fix many linting issues.
+* [ ] Doc strings have been added in the [Numpy docstring format](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html).
   Run [ruff](https://beta.ruff.rs/docs/rules/#pydocstyle-d) on your code.
 * [ ] Type annotations are **highly** encouraged. Run [mypy](http://mypy-lang.org) to
   type check your code.

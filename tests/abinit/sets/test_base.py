@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional
 
 import numpy as np
 import pytest
@@ -198,8 +199,8 @@ class SomeAbinitInputSetGenerator(AbinitInputGenerator):
     calc_type: str = "some_calc"
 
     param1: int = 1
-    param2: Optional[float] = None
-    param3: List[int] = field(default_factory=list)
+    param2: float | None = None
+    param3: list[int] = field(default_factory=list)
     param4: str = "test_string"
 
     user_abinit_settings: dict = field(default_factory=dict)

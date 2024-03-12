@@ -29,7 +29,7 @@ def run_abinit(
     mpirun_cmd: str = None,
     wall_time: int = None,
     start_time: float = None,
-):
+) -> None:
     """Run ABINIT."""
     abinit_cmd = abinit_cmd or SETTINGS.ABINIT_CMD
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
@@ -48,10 +48,8 @@ def run_abinit(
 
     command.append(INPUT_FILE_NAME)
 
-    status = "completed"
-
     with open(LOG_FILE_NAME, "w") as stdout, open(STDERR_FILE_NAME, "w") as stderr:
-        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
+        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)  # noqa: S603
 
         if wall_time is not None:
             while True:
@@ -62,7 +60,6 @@ def run_abinit(
                 remaining_time = max_end_time - current_time
                 if remaining_time < 5 * SLEEP_TIME_STEP:
                     process.terminate()
-                    status = "killed"
 
         process.wait()
-    return status
+    return

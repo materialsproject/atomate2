@@ -9,7 +9,7 @@ from pymatgen.io.vasp import Incar
 from pymatgen.io.vasp.outputs import WSWQ
 
 from atomate2.common.files import copy_files, gunzip_files, gzip_files, rename_files
-from atomate2.common.jobs.defect import (
+from atomate2.common.jobs.defect import (  # noqa: F401
     bulk_supercell_calculation,
     get_ccd_documents,
     get_charged_structures,
@@ -25,27 +25,16 @@ from atomate2.vasp.schemas.defect import FiniteDifferenceDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "bulk_supercell_calculation",
-    "calculate_finite_diff",
-    "get_ccd_documents",
-    "get_charged_structures",
-    "get_supercell_from_prv_calc",
-    "spawn_defect_q_jobs",
-    "spawn_energy_curve_calcs",
-]
-# sort the list above
-
 
 @job(data=WSWQ, output_schema=FiniteDifferenceDocument)
 def calculate_finite_diff(
     distorted_calc_dirs: list[str],
     ref_calc_index: int,
     run_vasp_kwargs: dict | None = None,
-):
+) -> FiniteDifferenceDocument:
     """Run a post-processing VASP job for the finite difference overlap.
 
-    Reads the WAVECAR file and computs the desired quantities. This can be used in
+    Reads the WAVECAR file and computes the desired quantities. This can be used in
     cases where data from the same calculation is used multiple times.
 
     Since all of the standard outputs are presumably already stored in the database,
@@ -62,7 +51,7 @@ def calculate_finite_diff(
         previous calculations).
     """
     ref_calc_dir = distorted_calc_dirs[ref_calc_index]
-    run_vasp_kwargs = {} if run_vasp_kwargs is None else run_vasp_kwargs
+    run_vasp_kwargs = run_vasp_kwargs or {}
     fc = FileClient()
     copy_vasp_outputs(ref_calc_dir, additional_vasp_files=["WAVECAR"], file_client=fc)
 
@@ -73,14 +62,14 @@ def calculate_finite_diff(
 
     d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
 
-    for i, dir_name in enumerate(d_dir_names):
+    for idx, dir_name in enumerate(d_dir_names):
         # Copy a distorted WAVECAR to WAVECAR.qqq
         copy_files(dir_name, include_files=["WAVECAR.gz"], prefix="qqq.")
         gunzip_files(include_files="qqq.WAVECAR*", allow_missing=True)
         rename_files({"qqq.WAVECAR": "WAVECAR.qqq"})
 
         run_vasp(**run_vasp_kwargs)
-        fc.copy("WSWQ", f"WSWQ.{i}")
+        fc.copy("WSWQ", f"WSWQ.{idx}")
 
     fd_doc = FiniteDifferenceDocument.from_directory(
         ".", ref_dir=ref_calc_dir, distorted_dirs=d_dir_names
