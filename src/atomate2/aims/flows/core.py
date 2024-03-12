@@ -1,4 +1,5 @@
 """(Work)flows for FHI-aims."""
+
 from __future__ import annotations
 
 from copy import deepcopy

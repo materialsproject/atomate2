@@ -1,4 +1,5 @@
 """GW workflows for FHI-aims with automatic convergence."""
+
 from dataclasses import dataclass, field
 
 from atomate2.aims.jobs.convergence import ConvergenceMaker

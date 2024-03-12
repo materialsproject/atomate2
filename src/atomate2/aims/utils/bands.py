@@ -2,6 +2,7 @@
 
 Copied from GIMS as of now; should be in its own dedicated FHI-aims python package.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypedDict
