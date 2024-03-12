@@ -154,7 +154,9 @@ def adsorption_calculations(
         outputs["adsorption_energy"].append(ads_energy)
         outputs["dirs"].append(ads_outputs["dirs"][i])
 
-    return outputs
+        sorted_outputs = sorted(zip(outputs["adsorption_configuration"], outputs["configuration_number"], outputs["adsorption_energy"], outputs["dirs"]), key=lambda x: x[2])
+
+    return sorted_outputs
 
 
 @dataclass

@@ -39,7 +39,9 @@ class AdsorptionMaker(Maker):
 
     adslab_relax_maker: BaseVaspMaker = field(default_factory=AdslabRelaxMaker())
 
-    static_energy_maker: BaseVaspMaker = field(default_factory=StaticMaker())
+    slab_static_energy_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker())
+
+    mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
 
     def __init__(self):
         self.molecule_dft_energy = None
