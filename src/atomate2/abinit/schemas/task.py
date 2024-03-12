@@ -1,4 +1,5 @@
 """A definition of a MSON document representing an Abinit task."""
+
 from __future__ import annotations
 
 import logging

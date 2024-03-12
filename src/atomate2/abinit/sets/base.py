@@ -1,4 +1,5 @@
 """Module defining base abinit input set and generator."""
+
 from __future__ import annotations
 
 import copy
