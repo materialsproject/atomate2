@@ -1,30 +1,38 @@
-from typing import Callable
-from jobflow import job, Maker, Job
-from dataclasses import dataclass, field
-from pathlib import Path
-
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument
-from atomate2.openmm.schemas.openmm_task_document import OpenMMTaskDocument
-from atomate2.openmm.schemas.physical_state import PhysicalState
-from atomate2.openmm.schemas.task_details import TaskDetails
-from atomate2.openmm.schemas.dcd_reports import DCDReports
-from atomate2.openmm.schemas.state_reports import StateReports
-from atomate2.openmm.schemas.calculation_input import CalculationInput
-from atomate2.openmm.schemas.calculation_output import CalculationOutput
-from atomate2.openmm.constants import OpenMMConstants
-
-# from atomate2.openmm.logger import logger
-from openmm import Platform, Context
-from typing import Union, Optional
-from openmm.app import DCDReporter, StateDataReporter, PDBReporter
-from openmm.app.simulation import Simulation
-from tempfile import TemporaryDirectory, NamedTemporaryFile
 import copy
-import os
+import time
+from typing import Optional
+from dataclasses import dataclass, field
+from datetime import datetime
+
+from pathlib import Path
+from jobflow import Maker, Response
+
+from atomate2.classical_md.core import openff_job
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument
+from atomate2.classical_md.openmm.schemas.tasks import (
+    Calculation,
+    CalculationInput,
+    CalculationOutput,
+)
 
 from openff.interchange import Interchange
 
-from atomate2.classical_md.common import openff_job
+from openmm import Platform, LangevinMiddleIntegrator
+from openmm.unit import kelvin, picoseconds
+from openmm.app import DCDReporter, StateDataReporter
+from openmm.app.simulation import Simulation
+
+
+OPENMM_MAKER_DEFAULTS = {
+    "step_size": 0.001,
+    "platform_name": "CPU",
+    "platform_properties": {},
+    "state_interval": 1000,
+    "dcd_interval": 10000,
+    "wrap_dcd": False,
+    "temperature": 298,
+    "friction_coefficient": 1,
+}
 
 
 @dataclass
@@ -43,18 +51,23 @@ class BaseOpenMMMaker(Maker):
     """
 
     name: str = "base openmm job"
-    platform_name: Optional[dict] = field(default_factory=dict)
-    platform_properties: Optional[dict] = field(default_factory=dict)
-    state_interval: Optional[int] = field(default=1000)
-    dcd_interval: Optional[int] = field(default=10000)
-    wrap_dcd: Optional[bool] = False
+    steps: Optional[int] = field(default=None)
+    step_size: Optional[float] = field(default=None)
+    platform_name: Optional[dict] = field(default=None)
+    platform_properties: Optional[dict] = field(default=None)
+    state_interval: Optional[int] = field(default=None)
+    dcd_interval: Optional[int] = field(default=None)
+    wrap_dcd: Optional[bool] = field(default=None)
+    temperature: Optional[float] = field(default=None)
+    friction_coefficient: Optional[float] = field(default=None)
 
     @openff_job
     def make(
         self,
         interchange: Interchange,
         prev_task: Optional[ClassicalMDTaskDocument] = None,
-    ) -> Job:
+        output_dir: Optional[str | Path] = None,
+    ) -> Response:
         """
         OpenMM Job Maker where each Job consist of three major steps:
 
@@ -70,60 +83,55 @@ class BaseOpenMMMaker(Maker):
 
         Parameters
         ----------
-        input_set : OpenMMSet
-            pymatgen.io.openmm OpenMMSet object instance.
-        output_dir : Optional[Union[str, Path]]
-            Path to directory for writing state and DCD trajectory files. This could be a temp or
-            persistent directory.
+        interchange : Interchange
+            An Interchange object containing the molecular mechanics data.
+        prev_task : Optional[ClassicalMDTaskDocument]
+            The previous task document. If not provided, a new task document will be created.
+        output_dir : Optional[str | Path]
         """
-        # Define output_dir if as a temporary directory if not provided
-        # temp_dir = (
-        #     None  # Define potential pointer to temporary directory to keep in scope
-        # )
-        # if output_dir is None:
-        #     temp_dir = TemporaryDirectory()
-        #     output_dir = temp_dir.name
-        #     output_dir = Path(output_dir)
-        # else:
-        #     output_dir = Path(output_dir)
-        #     output_dir.mkdir(parents=True, exist_ok=True)
+        # Define output_dir if as a temporary directory if not provided?
+        dir_name = Path(output_dir)
 
-        output_dir = Path()
-        integrator = None
+        sim = self.create_simulation(interchange, prev_task)
 
-        sim = self.make_simulation(interchange, integrator)
-
-        self.add_reporters(sim, output_dir)
+        self.add_reporters(sim, dir_name, prev_task)
 
         # Run the simulation
+        start = time.time()
         self.run_openmm(sim)
+        elapsed_time = time.time() - start
 
-        self.update_interchange(interchange, sim)
+        self.update_interchange(interchange, sim, prev_task)
 
-        return self.create_task_doc(interchange)
+        del sim
 
-        # Close the simulation
-        input_set = self._close_base_openmm_task(
-            sim, input_set, sim.context, task_details, output_dir
-        )
+        # could consider writing out simulation details to directory
 
-        return input_set
+        task_doc = self.create_task_doc(interchange, elapsed_time, dir_name, prev_task)
 
-    def add_reporters(self, sim: Simulation, output_dir: Path):
+        return Response(output=task_doc)
+
+    def add_reporters(
+        self,
+        sim: Simulation,
+        dir_name: Path,
+        prev_task: ClassicalMDTaskDocument | None,
+    ):
 
         # add dcd reporter
         if self.dcd_interval > 0:
             dcd_reporter = DCDReporter(
-                file=str(output_dir / "trajectory_dcd"),
-                reportInterval=self.dcd_interval,
+                file=str(dir_name / "trajectory_dcd"),
+                reportInterval=self.from_prev_task(prev_task, "dcd_interval"),
+                enforcePeriodicBox=self.from_prev_task(prev_task, "wrap_dcd"),
             )
             sim.reporters.append(dcd_reporter)
 
         # add state reporter
         if self.state_interval > 0:
             state_reporter = StateDataReporter(
-                file=str(output_dir / "state_txt"),
-                reportInterval=self.state_interval,
+                file=str(dir_name / "state_csv"),
+                reportInterval=self.from_prev_task(prev_task, "state_interval"),
                 step=True,
                 potentialEnergy=True,
                 kineticEnergy=True,
@@ -134,88 +142,7 @@ class BaseOpenMMMaker(Maker):
             )
             sim.reporters.append(state_reporter)
 
-    def make_simulation(self, interchange, integrator):
-        platform_name = self.platform_name or "CPU"
-        platform = Platform.getPlatformByName(platform_name)
-        sim = interchange.to_openmm_simulation(
-            integrator,
-            platform=platform,
-            platformProperties=self.platform_properties,
-        )
-        return sim
-
-    def _setup_base_openmm_task(
-        self, input_set: OpenMMSet, output_dir: Path
-    ) -> Simulation:
-        """
-        Initializes an OpenMM Simulation. Classes derived from BaseOpenMMMaker define the run_openmm method
-        and implement the specifics of an OpenMM task.
-
-        Parameters
-        ----------
-        input_set : OpenMMSet
-            OpenMM set for initializing an OpenMM Simulation.
-        output_dir : Optional[Union[str, Path]]
-            Path to directory for writing state and DCD trajectory files. This could be a temp or
-            persistent directory.
-
-        Returns
-        -------
-        sim : Simulation
-            OpenMM Simulation from OpenMMSet.
-        """
-
-        # Setup compute platform and get a Simulation
-        platform_name = self.platform_kwargs.get("platform")
-        platform_name = platform_name if platform_name is not None else "CPU"
-        platform_props = self.platform_kwargs.get("platform_properties")
-        platform = Platform.getPlatformByName(platform_name)
-
-        sim = input_set.get_simulation(
-            platform=platform, platformProperties=platform_props
-        )
-
-        # Add reporters
-        if self.dcd_interval > 0:
-            dcd_file_name = os.path.join(
-                output_dir, OpenMMConstants.TRAJECTORY_DCD_FILE_NAME.value
-            )
-            dcd_reporter = DCDReporter(
-                file=dcd_file_name,
-                reportInterval=self.dcd_interval,
-            )
-            # logger.info(f"Created DCDReporter that will report to {dcd_file_name}")
-            sim.reporters.append(dcd_reporter)
-        if self.state_interval > 0:
-            state_file_name = os.path.join(
-                output_dir, OpenMMConstants.STATE_REPORT_CSV_FILE_NAME.value
-            )
-            state_reporter = StateDataReporter(
-                file=state_file_name,
-                reportInterval=self.state_interval,
-                step=True,
-                potentialEnergy=True,
-                kineticEnergy=True,
-                totalEnergy=True,
-                temperature=True,
-                volume=True,
-                density=True,
-            )
-            # logger.info(f"Created DCDReporter that will report to {state_file_name}")
-            sim.reporters.append(state_reporter)
-
-        return sim
-
-    def update_interchange(self, interchange, sim):
-        state = sim.context.getState(
-            getPositions=True,
-            getVelocities=True,
-            enforcePeriodicBox=self.wrap_dcd,
-        )
-        interchange.positions = state.getPositions(asNumpy=True)
-        interchange.velocities = state.getVelocities(asNumpy=True)
-
-    def run_openmm(self, simulation: Simulation) -> TaskDetails:
+    def run_openmm(self, simulation: Simulation):
         """
         Abstract method for holding the task specific logic to be ran by each job. Setting up of the Simulation
         is handled by _setup_base_openmm_task which passes a Simulation object to this method. This method will
@@ -233,79 +160,97 @@ class BaseOpenMMMaker(Maker):
 
         """
         raise NotImplementedError(
-            "run_openmm should be implemented by each class that derives from BaseOpenMMMaker."
+            "`run_openmm` should be implemented by each child class."
         )
+
+    def from_prev_task(self, prev_task: ClassicalMDTaskDocument | None, attribute: str):
+        prev_task = prev_task or ClassicalMDTaskDocument()
+
+        # retrieve previous CalculationInput through multiple Optional fields
+        if prev_task.calcs_reversed:
+            prev_input = prev_task.calcs_reversed[0].input
+        else:
+            prev_input = None
+
+        # TODO: test this
+        return (
+            getattr(self, attribute)
+            or prev_input.get(attribute, None)
+            or OPENMM_MAKER_DEFAULTS.get(attribute, None)
+        )
+
+    def create_integrator(
+        self,
+        prev_task: ClassicalMDTaskDocument | None,
+    ):
+        return LangevinMiddleIntegrator(
+            self.from_prev_task(prev_task, "temperature") * kelvin,
+            self.from_prev_task(prev_task, "friction_coefficient") / picoseconds,
+            self.from_prev_task(prev_task, "step_size") * picoseconds,
+        )
+
+    def create_simulation(
+        self,
+        interchange: Interchange,
+        prev_task: Optional[ClassicalMDTaskDocument] = None,
+    ):
+        # get integrator from string?
+        # openmm_integrator = getattr(openmm, self.integrator)
+
+        integrator = self.create_integrator(prev_task)
+        platform = Platform.getPlatformByName(
+            self.from_prev_task(prev_task, "platform_name")
+        )
+        platform_properties = self.from_prev_task(prev_task, "platform_properties")
+
+        sim = interchange.to_openmm_simulation(
+            integrator,
+            platform=platform,
+            platformProperties=platform_properties,
+        )
+        return sim
+
+    def update_interchange(self, interchange, sim, prev_task):
+        state = sim.context.getState(
+            getPositions=True,
+            getVelocities=True,
+            enforcePeriodicBox=self.from_prev_task(prev_task, "wrap_dcd"),
+        )
+        # TODO: update box vectors, correct units
+        interchange.positions = state.getPositions(asNumpy=True)
+        interchange.velocities = state.getVelocities(asNumpy=True)
 
     def create_task_doc(
         self,
-        interchange=None,
-        output_dir=None,
-        prev_task=None,
-    ):
-        return
-
-    def _close_base_openmm_task(
-        self,
-        sim: Simulation,
-        input_set: OpenMMSet,
-        context: Context,
-        task_details: TaskDetails,
-        output_dir: Path,
+        interchange: Interchange,
+        elapsed_time: Optional[float] = None,
+        dir_name: Optional[Path] = None,
+        prev_task: Optional[ClassicalMDTaskDocument] = None,
     ):
 
-        # Create an output OpenMMSet for CalculationOutput
-        output_set = copy.deepcopy(input_set)
-        state = StateInput(
-            context.getState(
-                getPositions=True,
-                getVelocities=True,
-                enforcePeriodicBox=True,
-            )
-        )
-        # overwrite input set topology with topology from simulation
-        with NamedTemporaryFile(suffix=".pdb") as tmp:
-            pdb_reporter = PDBReporter(tmp.name, 1)
-            pdb_reporter.report(sim, sim.context.getState(getPositions=True))
-            topology = TopologyInput.from_file(tmp.name)
+        maker_attrs = copy.deepcopy(vars(self))
+        job_name = maker_attrs.pop("name")
 
-        integrator = IntegratorInput(sim.context.getIntegrator())
-
-        output_set[output_set.state_file] = state
-        output_set[output_set.topology_file] = topology
-        output_set[output_set.integrator_file] = integrator
-
-        output_set.write_input(output_dir)
-
-        # Grab StateDataReporter and DCDReporter if present on simulation reporters
-        state_reports, dcd_reports = None, None
-        if self.state_interval > 0:  # could check if file is present instead
-            # todo: what happens when state_reporter_interval > 0, but nothing has been
-            # reported, for example, Simulation.step was not called. Look at TaskDetails
-            # for logic flow?
-            state_file_name = os.path.join(output_dir, "state_csv")
-            state_reports = StateReports.from_state_file(state_file_name)
-        if self.dcd_interval > 0:  # could check if file is present instead
-            dcd_file_name = os.path.join(output_dir, "trajectory_dcd")
-            dcd_reports = DCDReports(
-                location=dcd_file_name, report_interval=self.dcd_interval
-            )
-
-        calculation_input = CalculationInput(
-            input_set=input_set, physical_state=PhysicalState.from_input_set(input_set)
-        )
-        calculation_output = CalculationOutput(
-            input_set=output_set,
-            physical_state=PhysicalState.from_input_set(output_set),
-            state_reports=state_reports,
-            dcd_reports=dcd_reports,
-            task_details=task_details,
+        calc = Calculation(
+            dir_name=dir_name,
+            has_openmm_completed=True,
+            input=CalculationInput(**maker_attrs),
+            output=CalculationOutput.from_directory(dir_name, elapsed_time),
+            completed_at=str(datetime.now()),
+            task_name=job_name,
+            calc_type=self.__class__.__name__,  # TODO: will this return the right name?
         )
 
-        task_doc = OpenMMTaskDocument(
-            input_set=output_set,
-            physical_state=PhysicalState.from_input_set(output_set),
-            calculation_input=calculation_input,
-            calculation_output=calculation_output,
-        )
+        prev_task = prev_task or ClassicalMDTaskDocument()
 
-        return task_doc
+        return ClassicalMDTaskDocument(
+            tags=None,  # TODO: where do tags come from?
+            dir_name=dir_name,
+            state="successful",
+            calcs_reversed=[calc] + (prev_task.calcs_reversed or []),
+            interchange=interchange,
+            molecule_specs=prev_task.molecule_specs,
+            forcefield=prev_task.forcefield,
+            task_name=calc.task_name,
+            last_updated=datetime.now(),
+        )
