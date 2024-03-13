@@ -245,6 +245,9 @@ def process_mol_specs(
         for mol_dict in input_mol_dicts
     ]
 
+    # TODO: allow multiple input mols with the same smile and name
+    #  but merge them together later to allow different geometries.
+
     # assert uniqueness of smiles in mol_specs
     if len(set([spec.smile for spec in input_mol_specs])) != len(input_mol_specs):
         raise ValueError("Smiles in input mol dicts must be unique.")
