@@ -45,7 +45,7 @@ class NPTMaker(BaseOpenMMMaker):
         barostat_force_index = system.addForce(
             MonteCarloBarostat(
                 self.pressure * atmosphere,
-                self.temperature * kelvin,
+                sim.context.getIntegrator().getTemperature(),
                 pressure_update_frequency,
             )
         )
@@ -101,11 +101,13 @@ class TempChangeMaker(BaseOpenMMMaker):
             sim.step(self.steps // self.temp_steps)
 
     def create_integrator(self, prev_task):
+
+        # we do this dance so resolve_attr takes its value from the previous task
         temp_holder, self.temperature = self.temperature, None
-        self.starting_temperature = self.from_prev_task(prev_task, "temperature")
+        self.starting_temperature = self.resolve_attr(prev_task, "temperature")
         self.temperature = temp_holder
         return LangevinMiddleIntegrator(
             self.starting_temperature * kelvin,
-            self.from_prev_task(prev_task, "friction_coefficient") / picoseconds,
-            self.from_prev_task(prev_task, "step_size") * picoseconds,
+            self.resolve_attr(prev_task, "friction_coefficient") / picoseconds,
+            self.resolve_attr(prev_task, "step_size") * picoseconds,
         )

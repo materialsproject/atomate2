@@ -122,8 +122,8 @@ class BaseOpenMMMaker(Maker):
         if self.dcd_interval > 0:
             dcd_reporter = DCDReporter(
                 file=str(dir_name / "trajectory_dcd"),
-                reportInterval=self.from_prev_task(prev_task, "dcd_interval"),
-                enforcePeriodicBox=self.from_prev_task(prev_task, "wrap_dcd"),
+                reportInterval=self.resolve_attr(prev_task, "dcd_interval"),
+                enforcePeriodicBox=self.resolve_attr(prev_task, "wrap_dcd"),
             )
             sim.reporters.append(dcd_reporter)
 
@@ -131,7 +131,7 @@ class BaseOpenMMMaker(Maker):
         if self.state_interval > 0:
             state_reporter = StateDataReporter(
                 file=str(dir_name / "state_csv"),
-                reportInterval=self.from_prev_task(prev_task, "state_interval"),
+                reportInterval=self.resolve_attr(prev_task, "state_interval"),
                 step=True,
                 potentialEnergy=True,
                 kineticEnergy=True,
@@ -163,7 +163,7 @@ class BaseOpenMMMaker(Maker):
             "`run_openmm` should be implemented by each child class."
         )
 
-    def from_prev_task(self, prev_task: ClassicalMDTaskDocument | None, attribute: str):
+    def resolve_attr(self, prev_task: ClassicalMDTaskDocument | None, attr: str):
         prev_task = prev_task or ClassicalMDTaskDocument()
 
         # retrieve previous CalculationInput through multiple Optional fields
@@ -174,9 +174,9 @@ class BaseOpenMMMaker(Maker):
 
         # TODO: test this
         return (
-            getattr(self, attribute)
-            or prev_input.get(attribute, None)
-            or OPENMM_MAKER_DEFAULTS.get(attribute, None)
+            getattr(self, attr)
+            or prev_input.get(attr, None)
+            or OPENMM_MAKER_DEFAULTS.get(attr, None)
         )
 
     def create_integrator(
@@ -184,9 +184,9 @@ class BaseOpenMMMaker(Maker):
         prev_task: ClassicalMDTaskDocument | None,
     ):
         return LangevinMiddleIntegrator(
-            self.from_prev_task(prev_task, "temperature") * kelvin,
-            self.from_prev_task(prev_task, "friction_coefficient") / picoseconds,
-            self.from_prev_task(prev_task, "step_size") * picoseconds,
+            self.resolve_attr(prev_task, "temperature") * kelvin,
+            self.resolve_attr(prev_task, "friction_coefficient") / picoseconds,
+            self.resolve_attr(prev_task, "step_size") * picoseconds,
         )
 
     def create_simulation(
@@ -199,9 +199,9 @@ class BaseOpenMMMaker(Maker):
 
         integrator = self.create_integrator(prev_task)
         platform = Platform.getPlatformByName(
-            self.from_prev_task(prev_task, "platform_name")
+            self.resolve_attr(prev_task, "platform_name")
         )
-        platform_properties = self.from_prev_task(prev_task, "platform_properties")
+        platform_properties = self.resolve_attr(prev_task, "platform_properties")
 
         sim = interchange.to_openmm_simulation(
             integrator,
@@ -214,7 +214,7 @@ class BaseOpenMMMaker(Maker):
         state = sim.context.getState(
             getPositions=True,
             getVelocities=True,
-            enforcePeriodicBox=self.from_prev_task(prev_task, "wrap_dcd"),
+            enforcePeriodicBox=self.resolve_attr(prev_task, "wrap_dcd"),
         )
         # TODO: update box vectors, correct units
         interchange.positions = state.getPositions(asNumpy=True)
