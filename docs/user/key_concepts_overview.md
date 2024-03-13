@@ -100,3 +100,5 @@ tbc
 
 # Builder
 tbc
+
+#TODO exercises?
