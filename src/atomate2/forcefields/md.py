@@ -99,11 +99,11 @@ class ForceFieldMDMaker(Maker):
         The pressure in kilobar. If a sequence or 1D array, the pressure
         schedule will be interpolated linearly between the given values. If a
         float, the pressure will be constant throughout the run.
-    thermostat : str | ASE .MolecularDynamics = "langevin"
-        The thermostat to use. If thermostat is an ASE .MolecularDynamics
+    dynamics : str | ASE .MolecularDynamics = "langevin"
+        The dynamical thermostat to use. If dynamics is an ASE .MolecularDynamics
         object, this uses the option specified explicitly by the user.
         See _valid_dynamics for a list of pre-defined options when
-        specifying thermostat as a string.
+        specifying dynamics as a string.
     ase_md_kwargs : dict | None = None
         Options except for temperature and pressure to pass into the ASE MD function
     calculator_kwargs : dict
@@ -111,15 +111,24 @@ class ForceFieldMDMaker(Maker):
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
+    traj_file_fmt : Literal["ase","pmg"]
+        The format of the trajectory file to write. If "ase", writes an
+        ASE trajectory, if "pmg", writes a Pymatgen trajectory.
     traj_interval : int
         The step interval for saving the trajectories.
+    mb_velocity_seed : int | None = None
+        If an int, a random number seed for generating initial velocities
+        from a Maxwell-Boltzmann distribution.
     zero_linear_momentum : bool = False
         Whether to initialize the atomic velocities with zero linear momentum
     zero_angular_momentum : bool = False
         Whether to initialize the atomic velocities with zero angular momentum
     task_document_kwargs: dict
         Options to pass to the TaskDoc. Default choice
-        {"store_trajectory": "partial"}
+        {
+            "store_trajectory": "partial",
+            "ionic_step_data": ("energy",),
+        }
         is consistent with atomate2.vasp.md.MDMaker
     """
 
@@ -130,13 +139,13 @@ class ForceFieldMDMaker(Maker):
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
     dynamics: str | MolecularDynamics = "langevin"
     temperature: float | Sequence | np.ndarray | None = 300.0
-    # end_temp: float | None = 300.0
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
     calculator_kwargs: dict = field(default_factory=dict)
     traj_file: str | Path | None = None
     traj_file_fmt: Literal["pmg", "ase"] = "ase"
     traj_interval: int = 1
+    mb_velocity_seed: int | None = None
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
     task_document_kwargs: dict = field(
@@ -202,37 +211,11 @@ class ForceFieldMDMaker(Maker):
             self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
             self.ase_md_kwargs["externalstress"] = self.pschedule[0] * 1e3 * units.bar
 
-        # NOTE: We take in the temperature in _get_ensemble_schedule instead
-        # if self.ensemble in ("nvt", "npt") and all(
-        #     self.ase_md_kwargs.get(key) is None
-        #     for key in ("temperature_K", "temperature")
-        # ):
-        #     self.ase_md_kwargs["temperature_K"] = (
-        #         self.end_temp if self.end_temp else self.start_temp
-        #     )
-
-        # NOTE: We take care of the units when passing into the ASE MD function
-        # if self.ensemble == "npt" and isinstance(self.pressure, float):
-        #     # convert from kilobar to eV/Ang**3
-        #     self.ase_md_kwargs["pressure_au"] = self.pressure * 1.0e-3 / bar
-
         if self.dynamics.lower() == "langevin":
-            # NOTE: Unless we have a detailed documentation on the conversion of all
-            # parameters for all different ASE dynamics, it is not a good idea to
-            # convert the parameters here. It is better to let the user to consult
-            # the ASE documentation and set the parameters themselves.
             self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get(
                 "friction",
                 10.0 * 1e-3 / units.fs,  # Same default as in VASP: 10 ps^-1
             )
-            # NOTE: same as above, user can specify per atom friction but we don't
-            # expect to change their intention to pass into ASE MD function
-            # if isinstance(self.ase_md_kwargs["friction"], (list, tuple)):
-            #     self.ase_md_kwargs["friction"] = [
-            #         coeff * 1.0e-3 / fs for coeff in self.ase_md_kwargs["friction"]
-            #     ]
-            # else:
-            #     self.ase_md_kwargs["friction"] *= 1.0e-3 / fs
 
     @forcefield_job
     def make(
@@ -288,7 +271,7 @@ class ForceFieldMDMaker(Maker):
             MaxwellBoltzmannDistribution(
                 atoms=atoms,
                 temperature_K=self.tschedule[0],
-                rng=None,  # TODO: we might want to use a seed for reproducibility
+                rng=np.random.default_rng(seed=self.mb_velocity_seed),
             )
             if self.zero_linear_momentum:
                 Stationary(atoms)

@@ -146,10 +146,12 @@ class TrajectoryObserver:
         """Save the properties of an Atoms during the relaxation."""
         self.energies.append(self.compute_energy())
         self.forces.append(self.atoms.get_forces())
-        # TODO: MD needs kinetic energy parts of stress,
-        #       we might just need to refactor TrajectoryObserver
-        # Now it is safe for 0K relaxation as the atoms don't have momenta
-        self.stresses.append(self.atoms.get_stress(include_ideal_gas=True))
+        # MD needs kinetic energy parts of stress, relaxations do not
+        # When _store_md_outputs is True, ideal gas contribution to
+        # stress is included.
+        self.stresses.append(
+            self.atoms.get_stress(include_ideal_gas=self._store_md_outputs)
+        )
 
         if self._store_magmoms:
             try:
@@ -163,9 +165,6 @@ class TrajectoryObserver:
         if self._store_md_outputs:
             self.velocities.append(self.atoms.get_velocities())
             self.temperatures.append(self.atoms.get_temperature())
-            # self.stresses.append(self.atoms.get_stress(
-            #     voigt=True, include_ideal_gas=True)
-            # )
 
     def compute_energy(self) -> float:
         """
