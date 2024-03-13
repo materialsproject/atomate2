@@ -30,20 +30,6 @@ class Geometry(BaseModel):
         return xyz
 
 
-@dataclass
-class MoleculeSpec(MSONable):
-    """
-    A molecule schema to be output by OpenMMGenerators.
-    """
-
-    name: str
-    count: int
-    smile: str
-    formal_charge: int
-    charge_method: str
-    molgraph: MoleculeGraph
-
-
 class InputMoleculeSpec(BaseModel):
     """
     A molecule schema to be used for input to OpenMMSolutionGen.
@@ -138,6 +124,21 @@ class InputMoleculeSpec(BaseModel):
         return charge_method
 
 
+@dataclass
+class MoleculeSpec(MSONable):
+    """
+    A molecule schema to be output by OpenMMGenerators.
+    """
+
+    name: str
+    count: int
+    smile: str
+    formal_charge: int
+    charge_method: str
+    molgraph: MoleculeGraph
+    # TODO: include openff mol?
+
+
 class ClassicalMDTaskDocument(BaseModel, extra="allow"):
     """Definition of the OpenMM task document."""
 
@@ -159,7 +160,7 @@ class ClassicalMDTaskDocument(BaseModel, extra="allow"):
         None, description="Final output structure from the task"
     )
 
-    molecule_specs: Optional[List] = Field(
+    molecule_specs: Optional[List[MoleculeSpec]] = Field(
         None, description="Molecules within the box."
     )
 
@@ -167,8 +168,8 @@ class ClassicalMDTaskDocument(BaseModel, extra="allow"):
 
     task_type: Optional[str] = Field(None, description="The type of calculation.")
 
-    task_label: Optional[str] = Field(None, description="A description of the task")
-
+    # task_label: Optional[str] = Field(None, description="A description of the task")
+    # TODO: where does task_label get added
     # additional_json
 
     last_updated: Optional[datetime] = Field(
