@@ -117,4 +117,3 @@ class Calculation(BaseModel):
         None,
         description="Return calculation type (run type + task_type). or just new thing",
     )
-
