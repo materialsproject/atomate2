@@ -1,43 +1,52 @@
-from atomate2.openmm.jobs.base_openmm_maker import BaseOpenMMMaker
-from atomate2.openmm.schemas.task_details import TaskDetails
-from dataclasses import dataclass, asdict
-from openmm.openmm import MonteCarloBarostat
-from openmm.unit import kelvin, atmosphere
+from typing import Optional
+from dataclasses import dataclass
+
 import numpy as np
+
+from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
+
+from openmm import LangevinMiddleIntegrator
+from openmm.openmm import MonteCarloBarostat
+from openmm.unit import kelvin, atmosphere, picoseconds
 
 
 @dataclass
 class EnergyMinimizationMaker(BaseOpenMMMaker):
     name: str = "energy minimization"
+    steps: int = 0
     # TODO: add default kwargs for Simulation.minimizeEnergy?
     # tolerance
     # maxIterations : int
 
-    def _run_openmm(self, sim):
+    def run_openmm(self, sim):
+
+        assert self.steps == 0, "Energy minimization should have 0 steps."
 
         # Minimize the energy
         sim.minimizeEnergy()
-        return TaskDetails.from_maker(self)
 
 
 @dataclass
 class NPTMaker(BaseOpenMMMaker):
-    steps: int = 1000000
     name: str = "npt simulation"
-    temperature: float = 298
+    steps: int = 1000000
     pressure: float = 1
-    frequency: int = 10
+    step_size: Optional[float] = None
+    temperature: Optional[float] = None
+    friction_coefficient: Optional[float] = None
+    # frequency: int = 10
 
-    def _run_openmm(self, sim):
+    def run_openmm(self, sim):
         # Add barostat to system
         context = sim.context
         system = context.getSystem()
-        assert (
-            system.usesPeriodicBoundaryConditions()
-        ), "system must use periodic boundary conditions for pressure equilibration."
+
+        pressure_update_frequency = 10
         barostat_force_index = system.addForce(
             MonteCarloBarostat(
-                self.pressure * atmosphere, self.temperature * kelvin, 10
+                self.pressure * atmosphere,
+                self.temperature * kelvin,
+                pressure_update_frequency,
             )
         )
 
@@ -51,61 +60,52 @@ class NPTMaker(BaseOpenMMMaker):
         system.removeForce(barostat_force_index)
         context.reinitialize(preserveState=True)
 
-        return TaskDetails.from_maker(self)
-
 
 @dataclass
 class NVTMaker(BaseOpenMMMaker):
-    steps: int = 1000000
     name: str = "nvt simulation"
-    temperature: float = 298
+    steps: int = 1000000
+    step_size: Optional[float] = None
+    temperature: Optional[float] = None
+    friction_coefficient: Optional[float] = None
 
-    def _run_openmm(self, sim):
-        integrator = sim.context.getIntegrator()
-        integrator.setTemperature(self.temperature * kelvin)
+    def run_openmm(self, sim):
 
         # Run the simulation
         sim.step(self.steps)
 
-        return TaskDetails.from_maker(self)
-
 
 @dataclass
 class TempChangeMaker(BaseOpenMMMaker):
-    steps: int = 1000000
     name: str = "temperature change"
-    final_temp: float = 298
-    temp_steps: int = 100
+    steps: int = 1000000
+    temp_steps = 100
+    step_size: Optional[float] = None
+    temperature: Optional[float] = None
+    friction_coefficient: Optional[float] = None
+    starting_temperature: Optional[float] = None
 
-    def _run_openmm(self, sim):
-        # Add barostat to system
+    def run_openmm(self, sim):
         integrator = sim.context.getIntegrator()
-        start_temp = integrator.getTemperature()
 
-        # Heating temperature
-        delta_t = abs(self.final_temp * kelvin - start_temp)
-        if delta_t < 1e-6 * kelvin:
-            raise ValueError(
-                f"Final temperature {self.final_temp} is too close to "
-                f"starting temperature {start_temp}, make sure the "
-                f"TempChangeMaker has a temperature differential."
-            )
-        temp_step_size = delta_t / self.temp_steps
+        start_temp = self.starting_temperature * kelvin
+        end_temp = self.temperature * kelvin
+
+        temp_step_size = abs(end_temp - start_temp) / self.temp_steps
         for temp in np.arange(
             start_temp + temp_step_size,
-            self.final_temp * kelvin + temp_step_size,
+            end_temp + temp_step_size,
             temp_step_size,
         ):
             integrator.setTemperature(temp * kelvin)
             sim.step(self.steps // self.temp_steps)
 
-        # TODO: we could also write out task_details like this?
-        task_details = asdict(self)
-
-        task_details = TaskDetails(
-            task_name=self.name,
-            task_kwargs={**asdict(self)},
-            platform_kwargs=self.platform_kwargs,
-            total_steps=self.steps,
+    def create_integrator(self, prev_task):
+        temp_holder, self.temperature = self.temperature, None
+        self.starting_temperature = self.from_prev_task(prev_task, "temperature")
+        self.temperature = temp_holder
+        return LangevinMiddleIntegrator(
+            self.starting_temperature * kelvin,
+            self.from_prev_task(prev_task, "friction_coefficient") / picoseconds,
+            self.from_prev_task(prev_task, "step_size") * picoseconds,
         )
-        return TaskDetails.from_maker(self)
