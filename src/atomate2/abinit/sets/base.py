@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
-import abipy.abio.factories as abifact
 
 from abipy.abio.inputs import AbinitInput, MultiDataset
 from abipy.flowtk.psrepos import get_repo_from_name
