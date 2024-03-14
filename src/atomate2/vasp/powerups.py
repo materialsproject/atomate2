@@ -8,7 +8,57 @@ from typing import Any
 from jobflow import Flow, Job, Maker
 from pymatgen.io.vasp import Kpoints
 
+from atomate2.common.powerups import add_metadata_to_flow as base_add_metadata_to_flow
+from atomate2.common.powerups import update_custodian_handlers as base_custodian_handler
 from atomate2.vasp.jobs.base import BaseVaspMaker
+
+
+def update_vasp_input_generators(
+    flow: Job | Flow | Maker,
+    dict_mod_updates: dict[str, Any],
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseVaspMaker,
+) -> Job | Flow | Maker:
+    """
+    Update any VaspInputGenerators or Makers in the flow.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    dict_mod_updates : dict
+        The updates to apply. Existing keys will not be modified unless explicitly
+        specified in ``dict_mod_updates``.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the VaspMaker class used to generate the flows. Note the class
+        filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated incar settings.
+    """
+    updated_flow = deepcopy(flow)
+    if isinstance(updated_flow, Maker):
+        updated_flow = updated_flow.update_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    else:
+        updated_flow.update_maker_kwargs(
+            {"_set": dict_mod_updates},
+            name_filter=name_filter,
+            class_filter=class_filter,
+            dict_mod=True,
+        )
+    return updated_flow
 
 
 def update_user_incar_settings(
@@ -44,26 +94,15 @@ def update_user_incar_settings(
     Job or Flow or Maker
         A copy of the input flow/job/maker modified to use the updated incar settings.
     """
-    dict_mod_updates = {
-        f"input_set_generator->user_incar_settings->{k}": v
-        for k, v in incar_updates.items()
-    }
-    updated_flow = deepcopy(flow)
-    if isinstance(updated_flow, Maker):
-        updated_flow = updated_flow.update_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    else:
-        updated_flow.update_maker_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    return updated_flow
+    return update_vasp_input_generators(
+        flow=flow,
+        dict_mod_updates={
+            f"input_set_generator->user_incar_settings->{k}": v
+            for k, v in incar_updates.items()
+        },
+        name_filter=name_filter,
+        class_filter=class_filter,
+    )
 
 
 def update_user_potcar_settings(
@@ -99,26 +138,15 @@ def update_user_potcar_settings(
     Job or Flow or Maker
         A copy of the input flow/job/maker modified to use the updated potcar settings.
     """
-    dict_mod_updates = {
-        f"input_set_generator->user_potcar_settings->{k}": v
-        for k, v in potcar_updates.items()
-    }
-    updated_flow = deepcopy(flow)
-    if isinstance(updated_flow, Maker):
-        updated_flow = updated_flow.update_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    else:
-        updated_flow.update_maker_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    return updated_flow
+    return update_vasp_input_generators(
+        flow=flow,
+        dict_mod_updates={
+            f"input_set_generator->user_potcar_settings->{k}": v
+            for k, v in potcar_updates.items()
+        },
+        name_filter=name_filter,
+        class_filter=class_filter,
+    )
 
 
 def update_user_potcar_functional(
@@ -153,25 +181,14 @@ def update_user_potcar_functional(
     Job or Flow or Maker
         A copy of the input flow/job/maker modified to use the updated potcar settings.
     """
-    dict_mod_updates = {
-        "input_set_generator->user_potcar_functional": potcar_functional
-    }
-    updated_flow = deepcopy(flow)
-    if isinstance(updated_flow, Maker):
-        updated_flow = updated_flow.update_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    else:
-        updated_flow.update_maker_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    return updated_flow
+    return update_vasp_input_generators(
+        flow=flow,
+        dict_mod_updates={
+            "input_set_generator->user_potcar_functional": potcar_functional
+        },
+        name_filter=name_filter,
+        class_filter=class_filter,
+    )
 
 
 def update_user_kpoints_settings(
@@ -217,23 +234,12 @@ def update_user_kpoints_settings(
             f"input_set_generator->user_kpoints_settings->{k}": v
             for k, v in kpoints_updates.items()
         }
-
-    updated_flow = deepcopy(flow)
-    if isinstance(updated_flow, Maker):
-        updated_flow = updated_flow.update_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    else:
-        updated_flow.update_maker_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    return updated_flow
+    return update_vasp_input_generators(
+        flow=flow,
+        dict_mod_updates=dict_mod_updates,
+        name_filter=name_filter,
+        class_filter=class_filter,
+    )
 
 
 def use_auto_ispin(
@@ -267,21 +273,64 @@ def use_auto_ispin(
     Job or Flow or Maker
         A copy of the input flow/job/maker but with auto_ispin set.
     """
-    dict_mod_updates = {"input_set_generator->auto_ispin": value}
+    return update_vasp_input_generators(
+        flow=flow,
+        dict_mod_updates={"input_set_generator->auto_ispin": value},
+        name_filter=name_filter,
+        class_filter=class_filter,
+    )
 
-    updated_flow = deepcopy(flow)
-    if isinstance(updated_flow, Maker):
-        updated_flow = updated_flow.update_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    else:
-        updated_flow.update_maker_kwargs(
-            {"_set": dict_mod_updates},
-            name_filter=name_filter,
-            class_filter=class_filter,
-            dict_mod=True,
-        )
-    return updated_flow
+
+def add_metadata_to_flow(
+    flow: Flow, additional_fields: dict, class_filter: Maker = BaseVaspMaker
+) -> Flow:
+    """
+    Return the VASP flow with additional field(metadata) to the task doc.
+
+    This allows adding metadata to the task-docs, could be useful
+    to query results from DB.
+
+    Parameters
+    ----------
+    flow : Flow
+        The flow to which to add metadata.
+    additional_fields : dict
+        A dict with metadata.
+    class_filter: .BaseVaspMaker
+        The Maker to which additional metadata needs to be added
+
+    Returns
+    -------
+    Flow
+        Flow with added metadata to the task-doc.
+    """
+    return base_add_metadata_to_flow(
+        flow=flow, class_filter=class_filter, additional_fields=additional_fields
+    )
+
+
+def update_vasp_custodian_handlers(
+    flow: Flow, custom_handlers: tuple, class_filter: Maker = BaseVaspMaker
+) -> Flow:
+    """
+    Return the flow with custom custodian handlers for VASP jobs.
+
+    This allows user to selectively set error correcting handlers for VASP jobs
+    or completely unset error handlers.
+
+    Parameters
+    ----------
+    flow:
+    custom_handlers : tuple
+        A tuple with custodian handlers.
+    class_filter: .Maker
+        The Maker to which custom custodian handler needs to be added
+
+    Returns
+    -------
+    Flow
+        Flow with modified custodian handlers.
+    """
+    return base_custodian_handler(
+        flow=flow, custom_handlers=custom_handlers, class_filter=class_filter
+    )

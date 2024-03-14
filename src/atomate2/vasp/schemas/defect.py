@@ -2,14 +2,12 @@
 
 import logging
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from pydantic import BaseModel, Field
 from pymatgen.io.vasp.outputs import WSWQ
 
 logger = logging.getLogger(__name__)
-
-__all__ = ["FiniteDifferenceDocument"]
 
 
 class FiniteDifferenceDocument(BaseModel):
@@ -19,7 +17,7 @@ class FiniteDifferenceDocument(BaseModel):
     from distorted structures.
     """
 
-    wswqs: List[WSWQ]
+    wswqs: list[WSWQ]
 
     dir_name: str = Field(
         None, description="Directory where the WSWQ calculations are performed"
@@ -27,7 +25,7 @@ class FiniteDifferenceDocument(BaseModel):
     ref_dir: str = Field(
         None, description="Directory where the reference W(0) wavefunction comes from"
     )
-    distorted_dirs: List[str] = Field(
+    distorted_dirs: list[str] = Field(
         None,
         description="Directories where the distorted W(Q) wavefunctions come from",
     )
@@ -37,7 +35,7 @@ class FiniteDifferenceDocument(BaseModel):
         cls,
         directory: Union[str, Path],
         ref_dir: Optional[Union[str, Path]] = None,
-        distorted_dirs: Optional[List[str]] = None,
+        distorted_dirs: Optional[list[str]] = None,
     ) -> "FiniteDifferenceDocument":
         """
         Read the FiniteDiff file.
@@ -59,9 +57,7 @@ class FiniteDifferenceDocument(BaseModel):
         wswq_dir = Path(directory)
         files = list(Path(wswq_dir).glob("WSWQ.[0-9]*"))
         ordered_files = sorted(files, key=lambda x: int(x.name.split(".")[1]))
-        wswq_documents = []
-        for f in ordered_files:
-            wswq_documents.append(WSWQ.from_file(f))
+        wswq_documents = [WSWQ.from_file(file) for file in ordered_files]
 
         return cls(
             wswqs=wswq_documents,

@@ -3,9 +3,8 @@
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
 
-import numpy as np
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
 from monty.json import jsanitize
@@ -22,13 +21,12 @@ try:
 except ImportError:
     cclib = None
 
-__all__ = ["TaskDocument"]
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDocument")
 
 
-class TaskDocument(MoleculeMetadata):
+class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     """
     Definition of a cclib-generated task document.
 
@@ -36,43 +34,47 @@ class TaskDocument(MoleculeMetadata):
     For the list of supported packages, see https://cclib.github.io
     """
 
-    molecule: Molecule = Field(None, description="Final output molecule from the task")
-    energy: float = Field(None, description="Final total energy")
-    dir_name: str = Field(None, description="Directory where the output is parsed")
-    logfile: str = Field(
+    molecule: Optional[Molecule] = Field(
+        None, description="Final output molecule from the task"
+    )
+    energy: Optional[float] = Field(None, description="Final total energy")
+    dir_name: Optional[str] = Field(
+        None, description="Directory where the output is parsed"
+    )
+    logfile: Optional[str] = Field(
         None, description="Path to the log file used in the post-processing analysis"
     )
-    attributes: Dict = Field(
+    attributes: Optional[dict] = Field(
         None, description="Computed properties and calculation outputs"
     )
-    metadata: Dict = Field(
+    metadata: Optional[dict] = Field(
         None,
         description="Calculation metadata, including input parameters and runtime "
         "statistics",
     )
-    task_label: str = Field(None, description="A description of the task")
-    tags: List[str] = Field(None, description="Optional tags for this task document")
+    task_label: Optional[str] = Field(None, description="A description of the task")
+    tags: Optional[list[str]] = Field(
+        None, description="Optional tags for this task document"
+    )
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
     @requires(cclib, "The cclib TaskDocument requires cclib to be installed.")
     def from_logfile(
-        cls: Type[_T],
+        cls: type[_T],
         dir_name: Union[str, Path],
-        logfile_extensions: Union[str, List[str]],
+        logfile_extensions: Union[str, list[str]],
         store_trajectory: bool = False,
-        additional_fields: Optional[Dict[str, Any]] = None,
-        analysis: Optional[Union[str, List[str]]] = None,
+        additional_fields: Optional[dict[str, Any]] = None,
+        analysis: Optional[Union[str, list[str]]] = None,
         proatom_dir: Optional[Union[Path, str]] = None,
-    ) -> _T:
+    ) -> "TaskDocument":
         """
         Create a TaskDocument from a log file.
 
@@ -124,7 +126,7 @@ class TaskDocument(MoleculeMetadata):
 
         logger.info(f"Getting task doc from {logfile}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
 
         # Let's parse the log file with cclib
         cclib_obj = ccread(logfile, logging.ERROR)
@@ -144,10 +146,10 @@ class TaskDocument(MoleculeMetadata):
         metadata = jsanitize(cclib_obj.metadata)
 
         # monty datetime bug workaround: github.com/materialsvirtuallab/monty/issues/275
-        if metadata.get("wall_time", None):
-            metadata["wall_time"] = [str(m) for m in metadata["wall_time"]]
-        if metadata.get("cpu_time", None):
-            metadata["cpu_time"] = [str(m) for m in metadata["cpu_time"]]
+        if wall_time := metadata.get("wall_time"):
+            metadata["wall_time"] = [*map(str, wall_time)]
+        if cpu_time := metadata.get("cpu_time"):
+            metadata["cpu_time"] = [*map(str, cpu_time)]
 
         # Get the final energy to store as its own key/value pair
         energy = (
@@ -160,12 +162,12 @@ class TaskDocument(MoleculeMetadata):
         # the input if it is XYZ-formatted though since the Molecule object
         # does not support internal coordinates or Gaussian Z-matrix.
         if (
-            cclib_obj.metadata.get("coord_type", None) == "xyz"
-            and cclib_obj.metadata.get("coords", None) is not None
+            cclib_obj.metadata.get("coord_type") == "xyz"
+            and cclib_obj.metadata.get("coords") is not None
         ):
-            coords_obj = np.array(cclib_obj.metadata["coords"])
-            input_species = [Element(e) for e in coords_obj[:, 0]]
-            input_coords = coords_obj[:, 1:].tolist()
+            coords_obj = cclib_obj.metadata["coords"]
+            input_species = [Element(row[0]) for row in coords_obj]
+            input_coords = [row[1:] for row in coords_obj]
             input_molecule = Molecule(
                 input_species,
                 input_coords,
@@ -200,7 +202,6 @@ class TaskDocument(MoleculeMetadata):
         initial_molecule = molecules[0]
         final_molecule = molecules[-1]
         attributes["molecule_initial"] = initial_molecule
-        attributes["molecule_final"] = final_molecule
         if store_trajectory:
             attributes["trajectory"] = molecules
 
@@ -224,7 +225,7 @@ class TaskDocument(MoleculeMetadata):
 
         # Calculate any properties
         if analysis:
-            if type(analysis) == str:
+            if isinstance(analysis, str):
                 analysis = [analysis]
             analysis = [a.lower() for a in analysis]
 
@@ -249,17 +250,17 @@ class TaskDocument(MoleculeMetadata):
             attributes=attributes,
             metadata=metadata,
         )
-        doc = doc.copy(update=additional_fields)
-        return doc
+        doc.molecule = final_molecule
+        return doc.model_copy(update=additional_fields)
 
 
 @requires(cclib, "cclib_calculate requires cclib to be installed.")
 def cclib_calculate(
-    cclib_obj,
+    cclib_obj: Any,
     method: str,
     cube_file: Union[Path, str],
     proatom_dir: Union[Path, str],
-) -> Optional[Dict[str, Any]]:
+) -> Optional[dict[str, Any]]:
     """
     Run a cclib population analysis.
 
@@ -290,47 +291,43 @@ def cclib_calculate(
     )
 
     method = method.lower()
-    cube_methods = ["bader", "ddec6", "hirshfeld"]
+    cube_methods = ("bader", "ddec6", "hirshfeld")
 
     if method in cube_methods and not cube_file:
-        raise FileNotFoundError(
-            f"A cube file must be provided for {method}. Returning None."
-        )
-    if method in ["ddec6", "hirshfeld"] and not proatom_dir:
-        if "PROATOM_DIR" not in os.environ:
-            raise OSError("PROATOM_DIR environment variable not set. Returning None.")
+        raise FileNotFoundError(f"A cube file must be provided for {method}.")
+    if method in ("ddec6", "hirshfeld") and not proatom_dir:
+        if os.getenv("PROATOM_DIR") is None:
+            raise OSError("PROATOM_DIR environment variable not set.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
-    if proatom_dir and not os.path.exists(proatom_dir):
-        raise FileNotFoundError(
-            f"Protatom directory {proatom_dir} does not exist. Returning None."
-        )
+    if proatom_dir and not os.path.isdir(proatom_dir):
+        raise FileNotFoundError(f"{proatom_dir=} does not exist.")
 
     if cube_file and method in cube_methods:
         vol = volume.read_from_cube(str(cube_file))
 
     if method == "bader":
-        m = Bader(cclib_obj, vol)
+        _method = Bader(cclib_obj, vol)
     elif method == "bickelhaupt":
-        m = Bickelhaupt(cclib_obj)
+        _method = Bickelhaupt(cclib_obj)
     elif method == "cpsa":
-        m = CSPA(cclib_obj)
+        _method = CSPA(cclib_obj)
     elif method == "ddec6":
-        m = DDEC6(cclib_obj, vol, str(proatom_dir))
+        _method = DDEC6(cclib_obj, vol, str(proatom_dir))
     elif method == "density":
-        m = Density(cclib_obj)
+        _method = Density(cclib_obj)
     elif method == "hirshfeld":
-        m = Hirshfeld(cclib_obj, vol, str(proatom_dir))
+        _method = Hirshfeld(cclib_obj, vol, str(proatom_dir))
     elif method == "lpa":
-        m = LPA(cclib_obj)
+        _method = LPA(cclib_obj)
     elif method == "mbo":
-        m = MBO(cclib_obj)
+        _method = MBO(cclib_obj)
     elif method == "mpa":
-        m = MPA(cclib_obj)
+        _method = MPA(cclib_obj)
     else:
-        raise ValueError(f"{method} is not supported.")
+        raise ValueError(f"{method=} is not supported.")
 
     try:
-        m.calculate()
+        _method.calculate()
     except AttributeError:
         return None
 
@@ -350,20 +347,20 @@ def cclib_calculate(
     ]
     calc_attributes = {}
     for attribute in avail_attributes:
-        if hasattr(m, attribute):
-            calc_attributes[attribute] = getattr(m, attribute)
+        if hasattr(_method, attribute):
+            calc_attributes[attribute] = getattr(_method, attribute)
     return calc_attributes
 
 
 def _get_homos_lumos(
-    moenergies: List[List[float]], homo_indices: List[int]
-) -> Tuple[List[float], Optional[List[float]], Optional[List[float]]]:
+    mo_energies: list[list[float]], homo_indices: list[int]
+) -> tuple[list[float], Optional[list[float]], Optional[list[float]]]:
     """
     Calculate the HOMO, LUMO, and HOMO-LUMO gap energies in eV.
 
     Parameters
     ----------
-    moenergies
+    mo_energies
         List of MO energies. For restricted calculations, List[List[float]] is
         length one. For unrestricted, it is length two.
     homo_indices
@@ -379,13 +376,15 @@ def _get_homos_lumos(
         The HOMO-LUMO gaps (eV), calculated as LUMO_alpha-HOMO_alpha and
         LUMO_beta-HOMO_beta
     """
-    homo_energies = [moenergies[i][h] for i, h in enumerate(homo_indices)]
-    # Make sure that the HOMO+1 (i.e. LUMO) is in moenergies (sometimes virtual
+    homo_energies = [mo_energies[idx][homo] for idx, homo in enumerate(homo_indices)]
+    # Make sure that the HOMO+1 (i.e. LUMO) is in MO energies (sometimes virtual
     # orbitals aren't printed in the output)
-    for i, h in enumerate(homo_indices):
-        if len(moenergies[i]) < h + 2:
+    for idx, homo in enumerate(homo_indices):
+        if len(mo_energies[idx]) < homo + 2:
             return homo_energies, None, None
-    lumo_energies = [moenergies[i][h + 1] for i, h in enumerate(homo_indices)]
+    lumo_energies = [
+        mo_energies[idx][homo + 1] for idx, homo in enumerate(homo_indices)
+    ]
     homo_lumo_gaps = [
         lumo_energies[i] - homo_energies[i] for i in range(len(homo_energies))
     ]

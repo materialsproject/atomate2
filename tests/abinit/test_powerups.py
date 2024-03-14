@@ -52,7 +52,7 @@ def test_update_user_settings(powerup, attribute, settings):
     # test name filter
     drm = RelaxFlowMaker()
     flow = drm.make(1)
-    print(flow)
+
     flow = powerup_func(
         flow, settings, name_filter="Relaxation calculation (ions only)"
     )

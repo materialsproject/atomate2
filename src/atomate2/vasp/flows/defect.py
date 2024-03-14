@@ -4,19 +4,14 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
+from emmet.core.tasks import TaskDoc
 from jobflow import Flow, Maker, OutputReference
 from jobflow.core.maker import recursive_call
-from pymatgen.core.structure import Structure
-from pymatgen.io.vasp.outputs import Vasprun
 
-from atomate2.common.files import get_zfile
 from atomate2.common.flows import defect as defect_flows
-from atomate2.common.schemas.defects import CCDDocument
-from atomate2.utils.file_client import FileClient
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 from atomate2.vasp.jobs.defect import calculate_finite_diff
 from atomate2.vasp.sets.defect import (
@@ -25,6 +20,13 @@ from atomate2.vasp.sets.defect import (
     ChargeStateStaticSetGenerator,
     HSEChargeStateRelaxSetGenerator,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core.structure import Structure
+    from pymatgen.entries.computed_entries import ComputedStructureEntry
+
+    from atomate2.common.schemas.defects import CCDDocument
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 logger = logging.getLogger(__name__)
 
@@ -58,9 +60,7 @@ HSE_DOUBLE_RELAX = DoubleRelaxMaker(
             user_kpoints_settings=SPECIAL_KPOINT
         ),
         task_document_kwargs={"store_volumetric_data": ["locpot"]},
-        copy_vasp_kwargs={
-            "additional_vasp_files": ("WAVECAR",),
-        },
+        copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
     ),
 )
 GRID_KEYS = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
@@ -87,6 +87,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         messy, it is recommended for each implementation of this maker to check
         some of the most important settings in the `relax_maker`.  Please see
         `FormationEnergyMaker.validate_maker` for more details.
+
     bulk_relax_maker: Maker
         If None, the same `defect_relax_maker` will be used for the bulk supercell.
         A maker to used to perform the bulk supercell calculation. For marginally
@@ -104,8 +105,55 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
             ng_settings = dict(zip(params, ng + ngf))
             relax_maker = update_user_incar_settings(relax_maker, ng_settings)
+
     name: str
         The name of the flow created by this maker.
+
+    relax_radius:
+        The radius to include around the defect site for the relaxation.
+        If "auto", the radius will be set to the maximum that will fit inside
+        a periodic cell. If None, all atoms will be relaxed.
+
+    perturb:
+        The amount to perturb the sites in the supercell. Only perturb the
+        sites with selective dynamics set to True. So this setting only works
+        with `relax_radius`.
+
+    collect_defect_entry_data: bool
+        Whether to collect the defect entry data at the end of the flow.
+        If True, the output of all the charge states for each symmetry distinct
+        defect will be collected into a list of dictionaries that can be used
+        to create a DefectEntry. The data here can be trivially combined with
+        phase diagram data from the materials project API to create the formation
+        energy diagrams.
+
+        .. note::
+        Once we remove the requirement for explicit bulk supercell calculations,
+        this setting will be removed.  It is only needed because the bulk supercell
+        locpot is currently needed for the finite-size correction calculation.
+
+        Output format for the DefectEntry data:
+        .. code-block:: python
+        [
+            {
+                'bulk_dir_name': 'computer1:/folder1',
+                'bulk_locpot': {...},
+                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
+                'defect_dir_name': 'computer1:/folder2',
+                'defect_entry': {...},
+                'defect_locpot': {...},
+                'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
+            },
+            {
+                'bulk_dir_name': 'computer1:/folder3',
+                'bulk_locpot': {...},
+                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
+                'defect_dir_name': 'computer1:/folder4',
+                'defect_entry': {...},
+                'defect_locpot': {...},
+                'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
+            }
+        ]
     """
 
     defect_relax_maker: BaseVaspMaker = field(
@@ -119,7 +167,9 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     bulk_relax_maker: BaseVaspMaker | None = None
     name: str = "formation energy"
 
-    def structure_from_prv(self, previous_dir: str):
+    def sc_entry_and_locpot_from_prv(
+        self, previous_dir: str
+    ) -> tuple[ComputedStructureEntry, dict]:
         """Copy the output structure from previous directory.
 
         Read the vasprun.xml file from the previous directory
@@ -132,17 +182,16 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
 
         Returns
         -------
-        structure: Structure
+        ComputedStructureEntry
         """
-        fc = FileClient()
-        # strip off the `hostname:` prefix
-        previous_dir = previous_dir.split(":")[-1]
-        files = fc.listdir(previous_dir)
-        vasprun_file = Path(previous_dir) / get_zfile(files, "vasprun.xml")
-        vasprun = Vasprun(vasprun_file)
-        return vasprun.final_structure
+        task_doc = TaskDoc.from_directory(previous_dir)
+        return task_doc.structure_entry, task_doc.calcs_reversed[0].output.locpot
 
-    def validate_maker(self):
+    def get_planar_locpot(self, task_doc: TaskDoc) -> dict:
+        """Get the planar-averaged electrostatic potential."""
+        return task_doc.calcs_reversed[0].output.locpot
+
+    def validate_maker(self) -> None:
         """Check some key settings in the relax maker.
 
         Since this workflow is pretty complex but allows you to use any
@@ -154,7 +203,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             `ISIF = 2` and `use_structure_charge = True`
         """
 
-        def check_defect_relax_maker(relax_maker: RelaxMaker):
+        def check_defect_relax_maker(relax_maker: RelaxMaker) -> RelaxMaker:
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
@@ -199,7 +248,7 @@ class ConfigurationCoordinateMaker(defect_flows.ConfigurationCoordinateMaker):
     static_maker: BaseVaspMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=DEFECT_STATIC_GENERATOR)
     )
-    name: str = "config. coordinate"
+    name: str = "config coordinate"
 
 
 @dataclass
@@ -222,7 +271,7 @@ class NonRadiativeMaker(Maker):
         structure: Structure,
         charge_state1: int,
         charge_state2: int,
-    ):
+    ) -> Flow:
         """Create the job for Non-Radiative defect capture.
 
         Make a job for the calculation of the configuration coordinate diagram.

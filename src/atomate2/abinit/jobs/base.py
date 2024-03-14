@@ -5,33 +5,40 @@ from __future__ import annotations
 import logging
 import os
 import time
-from collections import namedtuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import ClassVar, Sequence
+from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple
 
 import jobflow
-from abipy.flowtk.events import as_event_class
 from jobflow import Maker, Response, job
-from pymatgen.core.structure import Structure
 
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
-from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
-from atomate2.abinit.sets.base import AbinitInputGenerator
+from atomate2.abinit.schemas.calculation import TaskState
+from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from abipy.flowtk.events import AbinitCriticalWarning
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.sets.base import AbinitInputGenerator
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["abinit_job", "setup_job", "BaseAbinitMaker"]
 
 
-JobSetupVars = namedtuple(
-    "JobSetupVars",
-    ["start_time", "history", "workdir", "abipy_manager", "wall_time"],
-)
+class JobSetupVars(NamedTuple):
+    start_time: float
+    history: JobHistory
+    workdir: str
+    abipy_manager: None  # To change in the future
+    wall_time: int | None
 
 def abinit_job(method: Callable):
     """
@@ -69,12 +76,12 @@ def abinit_job(method: Callable):
 
 
 def setup_job(
-    structure,
-    prev_outputs,
-    restart_from,
-    history,
-    wall_time,
-):
+    structure: Structure,
+    prev_outputs: str | Path | list[str] | None,
+    restart_from: str | Path | list[str] | None,
+    history: JobHistory,
+    wall_time: int | None,
+) -> JobSetupVars:
     """Set up job."""
     # Get the start time.
     start_time = time.time()
@@ -116,7 +123,7 @@ def setup_job(
 
     # set walltime, if possible
     # TODO: see in set_walltime, where to put this walltime_command
-    wall_time = wall_time
+    # wall_time = wall_time
     return JobSetupVars(
         start_time=start_time,
         history=history,
@@ -141,24 +148,25 @@ class BaseAbinitMaker(Maker):
         The wall time for the job.
     run_abinit_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_abinit`.
+    task_document_kwargs : dict[str, Any]
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
     """
 
     input_set_generator: AbinitInputGenerator
     name: str = "base abinit job"
     wall_time: int | None = None
-    run_abinit_kwargs: dict = field(default_factory=dict)
+    run_abinit_kwargs: dict[str, Any] = field(default_factory=dict)
+    task_document_kwargs: dict[str, Any] = field(default_factory=dict)
 
     # class variables
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ()
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Process post-init configuration."""
-        self.critical_events = [
-            as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
-        ]
+        self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
-    def calc_type(self):
+    def calc_type(self) -> str:
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
@@ -169,7 +177,7 @@ class BaseAbinitMaker(Maker):
         prev_outputs: str | Path | list[str] | None = None,
         restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
-    ) -> jobflow.Flow | jobflow.Job:
+    ) -> jobflow.Job:
         """
         Return an ABINIT jobflow.Job.
 
@@ -201,21 +209,24 @@ class BaseAbinitMaker(Maker):
         )
 
         # Run abinit
-        run_status = run_abinit(
+        run_abinit(
             wall_time=config.wall_time,
             start_time=config.start_time,
             **self.run_abinit_kwargs,
         )
 
         # parse Abinit outputs
-        run_number = config.history.run_number
-        task_doc = AbinitTaskDocument.from_directory(
-            config.workdir,
-            critical_events=self.critical_events,
-            run_number=run_number,
-            run_status=run_status,
+
+        task_doc = AbinitTaskDoc.from_directory(
+            Path.cwd(),
+            **self.task_document_kwargs,
         )
         task_doc.task_label = self.name
+        if len(task_doc.event_report.filter_types(self.critical_events)) > 0:
+            task_doc = task_doc.model_copy(update={"state": TaskState.UNCONVERGED})
+            task_doc.calcs_reversed[-1] = task_doc.calcs_reversed[-1].model_copy(
+                update={"has_abinit_completed": TaskState.UNCONVERGED}
+            )  # optional I think
 
         return self.get_response(
             task_document=task_doc,
@@ -226,13 +237,13 @@ class BaseAbinitMaker(Maker):
 
     def get_response(
         self,
-        task_document: AbinitTaskDocument,
+        task_document: AbinitTaskDoc,
         history: JobHistory,
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
-    ):
+    ) -> Response:
         """Get new job to restart abinit calculation."""
-        if task_document.state == Status.SUCCESS:
+        if task_document.state == TaskState.SUCCESS:
             return Response(
                 output=task_document,
             )
@@ -243,13 +254,13 @@ class BaseAbinitMaker(Maker):
             unconverged_error = UnconvergedError(
                 self,
                 msg=f"Unconverged after {history.run_number} runs.",
-                abinit_input=task_document.abinit_input,
+                abinit_input=task_document.input.abinit_input,
                 history=history,
             )
             return Response(
                 output=task_document,
                 stop_children=True,
-                stop_jobflow=True,
+                stop_jobflow=False,
                 stored_data={"error": unconverged_error},
             )
 

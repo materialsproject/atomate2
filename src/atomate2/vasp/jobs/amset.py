@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from click.testing import CliRunner
-from emmet.core.math import Vector3D
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
 from pymatgen.core.tensors import symmetry_reduce
 from pymatgen.transformations.standard_transformations import (
     DeformStructureTransformation,
@@ -21,7 +20,6 @@ from atomate2.utils.file_client import FileClient
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import HSEBSMaker, NonSCFMaker
-from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     HSEBSSetGenerator,
     HSEStaticSetGenerator,
@@ -29,16 +27,13 @@ from atomate2.vasp.sets.core import (
     StaticSetGenerator,
 )
 
-__all__ = [
-    "DenseUniformMaker",
-    "StaticDeformationMaker",
-    "HSEDenseUniformMaker",
-    "HSEStaticDeformationMaker",
-    "run_amset_deformations",
-    "calculate_deformation_potentials",
-    "calculate_polar_phonon_frequency",
-    "generate_wavefunction_coefficients",
-]
+if TYPE_CHECKING:
+    from typing import Any
+
+    from emmet.core.math import Vector3D
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 
 @dataclass
@@ -205,9 +200,9 @@ class HSEDenseUniformMaker(HSEBSMaker):
 def run_amset_deformations(
     structure: Structure,
     symprec: float = SETTINGS.SYMPREC,
-    prev_vasp_dir: str | Path | None = None,
+    prev_dir: str | Path | None = None,
     static_deformation_maker: BaseVaspMaker | None = None,
-):
+) -> Response:
     """
     Run amset deformations.
 
@@ -221,7 +216,7 @@ def run_amset_deformations(
     symprec : float
         Symmetry precision used to reduce the number of deformations. Set to None for
         no symmetry reduction.
-    prev_vasp_dir : str or Path or None
+    prev_dir : str or Path or None
         A previous VASP directory to use for copying VASP outputs.
     static_deformation_maker : .BaseVaspMaker or None
         A VaspMaker to use to generate the static deformation jobs.
@@ -242,16 +237,16 @@ def run_amset_deformations(
 
     statics = []
     outputs = []
-    for i, deformation in enumerate(deformations):
+    for idx, deformation in enumerate(deformations):
         # deform the structure
         dst = DeformStructureTransformation(deformation=deformation)
         deformed_structure = dst.apply_transformation(structure)
 
         # create the job
         static_job = static_deformation_maker.make(
-            deformed_structure, prev_vasp_dir=prev_vasp_dir
+            deformed_structure, prev_dir=prev_dir
         )
-        static_job.append_name(f" {i + 1}/{len(deformations)}")
+        static_job.append_name(f" {idx + 1}/{len(deformations)}")
         statics.append(static_job)
 
         # extract the outputs we want (only the dir name)
@@ -267,7 +262,7 @@ def calculate_deformation_potentials(
     deformation_dirs: list[str],
     symprec: float = SETTINGS.SYMPREC,
     ibands: tuple[list[int], list[int]] = None,
-):
+) -> dict[str, str]:
     """
     Generate the deformation.h5 (containing deformation potentials) using AMSET.
 
@@ -303,7 +298,7 @@ def calculate_deformation_potentials(
     # as zero indexed
     symprec_str = "N" if symprec is None else str(symprec)
 
-    # TODO: Handle hostnames properly
+    # TODO: Handle host names properly
     bulk_dir = strip_hostname(bulk_dir)
     deformation_dirs = [strip_hostname(d) for d in deformation_dirs]
     args = [
@@ -312,7 +307,9 @@ def calculate_deformation_potentials(
         f"--symprec={symprec_str}",
     ]
     if ibands is not None:
-        bands_str = ".".join(",".join([str(idx + 1) for idx in b]) for b in ibands)
+        bands_str = ".".join(
+            ",".join([str(idx + 1) for idx in band_ids]) for band_ids in ibands
+        )
         args.append(f"--bands={bands_str}")
 
     runner = CliRunner()
@@ -329,7 +326,7 @@ def calculate_polar_phonon_frequency(
     frequencies: list[float],
     eigenvectors: list[Vector3D],
     born_effective_charges: list[Vector3D],
-):
+) -> dict[str, list[float]]:
     """
     Calculate the polar phonon frequency using amset.
 
@@ -369,7 +366,7 @@ def calculate_polar_phonon_frequency(
 
 
 @job
-def generate_wavefunction_coefficients(dir_name: str):
+def generate_wavefunction_coefficients(dir_name: str) -> dict[str, Any]:
     """
     Generate wavefunction.h5 file using amset.
 
@@ -447,7 +444,7 @@ def _extract_ibands(log: str) -> tuple[list[int], ...]:
             if "up" in result_splits[i + 1]:
                 # up listed first
                 return aibands, bibands
-            else:
+            else:  # noqa: RET505
                 # down listed first
                 return bibands, aibands
     raise ValueError("Could not find ibands in log.")

@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 
 from abipy.abio.input_tags import SCF
 from abipy.abio.inputs import AbinitInput
@@ -13,8 +14,8 @@ class SomeAISG1(AbinitInputGenerator):
     calc_type: str = "some_calc1"
 
     param1: int = 1
-    param2: Optional[float] = None
-    param3: List[int] = field(default_factory=list)
+    param2: float | None = None
+    param3: list[int] = field(default_factory=list)
     param4: str = "test_string1"
 
     user_abinit_settings: dict = field(
@@ -38,9 +39,9 @@ class SomeAISG2(AbinitInputGenerator):
 
     param1: int = 2
     # param2: Optional[float] = None
-    param3: List[int] = field(default_factory=list)
+    param3: list[int] = field(default_factory=list)
     param4: str = "test_string2"
-    param5: Dict[int, str] = field(default_factory=lambda: {1: "1"})
+    param5: dict[int, str] = field(default_factory=lambda: {1: "1"})
 
     user_abinit_settings: dict = field(default_factory=dict)
 

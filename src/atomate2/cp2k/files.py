@@ -5,18 +5,21 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import Sequence
+from typing import TYPE_CHECKING
 
-from pymatgen.core import Structure
 from pymatgen.io.cp2k.outputs import Cp2kOutput
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
-__all__ = ["copy_cp2k_outputs", "write_cp2k_input_set"]
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from pymatgen.core import Structure
+
+    from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +32,7 @@ def copy_cp2k_outputs(
     additional_cp2k_files: list[str] | None = None,
     restart_to_input: bool = True,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy CP2K output files to the current directory.
 
@@ -146,7 +149,7 @@ def get_largest_relax_extension(
         return ""
 
     numbers = [re.search(r".relax(\d+)", file.name).group(1) for file in relax_files]
-    max_relax = max(numbers, key=lambda x: int(x))
+    max_relax = max(numbers, key=int)
     return f".relax{max_relax}"
 
 
@@ -158,7 +161,7 @@ def write_cp2k_input_set(
     apply_input_updates: bool = True,
     optional_files: dict | None = None,
     **kwargs,
-):
+) -> None:
     """
     Write CP2K input set.
 
@@ -198,7 +201,7 @@ def cleanup_cp2k_outputs(
     host: str | None = None,
     file_patterns: Sequence[str] = ("*bak*",),
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Remove unnecessary files.
 

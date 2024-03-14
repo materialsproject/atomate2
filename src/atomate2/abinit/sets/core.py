@@ -1,8 +1,9 @@
 """Module defining core Abinit input set generators."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 import numpy as np
 from abipy.abio.factories import (
@@ -13,12 +14,14 @@ from abipy.abio.factories import (
     scf_input,
 )
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
-from abipy.abio.inputs import AbinitInput
-from pymatgen.core import Structure
-from pymatgen.io.abinit import PseudoTable
-from pymatgen.io.abinit.abiobjects import KSampling
 
 from atomate2.abinit.sets.base import AbinitInputGenerator
+
+if TYPE_CHECKING:
+    from abipy.abio.inputs import AbinitInput
+    from pymatgen.core import Structure
+    from pymatgen.io.abinit import PseudoTable
+    from pymatgen.io.abinit.abiobjects import KSampling
 
 __all__ = [
     "StaticSetGenerator",
@@ -36,9 +39,7 @@ class StaticSetGenerator(AbinitInputGenerator):
 
     calc_type: str = "static"
     factory: Callable = scf_input
-    restart_from_deps: tuple = field(
-        default_factory=lambda: tuple(GS_RESTART_FROM_DEPS)
-    )
+    restart_from_deps: tuple = GS_RESTART_FROM_DEPS
 
     def get_abinit_input(
         self,
@@ -113,7 +114,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
             kpoints_settings=kpoints_settings,
         )
 
-    def _get_nband(self, prev_outputs):
+    def _get_nband(self, prev_outputs: list[str] | None) -> int:
         abinit_inputs = self.resolve_prev_inputs(
             prev_outputs, self.factory_prev_inputs_kwargs
         )
@@ -121,7 +122,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
             raise RuntimeError(
                 f"Should have exactly one previous output. Found {len(abinit_inputs)}"
             )
-        previous_abinit_input = list(abinit_inputs.values())[0]
+        previous_abinit_input = next(iter(abinit_inputs.values()))
         nband = previous_abinit_input.get(
             "nband",
             previous_abinit_input.structure.num_valence_electrons(
@@ -189,7 +190,7 @@ class DdkInputGenerator(AbinitInputGenerator):
         input_index: int | None = None,
     ) -> AbinitInput:
         """Get the abinit input for Ddk calculation."""
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 @dataclass
@@ -198,9 +199,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
 
     calc_type: str = "relaxation"
     factory: Callable = ion_ioncell_relax_input
-    restart_from_deps: tuple = field(
-        default_factory=lambda: tuple(GS_RESTART_FROM_DEPS)
-    )
+    restart_from_deps: tuple = GS_RESTART_FROM_DEPS
     relax_cell: bool = True
     tolmxf: float = 5.0e-5
 
@@ -224,7 +223,8 @@ class RelaxSetGenerator(AbinitInputGenerator):
         abinit_settings["tolmxf"] = self.tolmxf
         if input_index is None:
             input_index = 1 if self.relax_cell else 0
-        abinit_input = super().get_abinit_input(
+
+        return super().get_abinit_input(
             structure=structure,
             pseudos=pseudos,
             prev_outputs=prev_outputs,
@@ -233,5 +233,3 @@ class RelaxSetGenerator(AbinitInputGenerator):
             kpoints_settings=kpoints_settings,
             input_index=input_index,
         )
-
-        return abinit_input

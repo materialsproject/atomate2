@@ -7,15 +7,6 @@ from pathlib import Path
 
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
-__all__ = [
-    "copy_files",
-    "delete_files",
-    "rename_files",
-    "gzip_files",
-    "gunzip_files",
-    "get_zfile",
-]
-
 
 @auto_fileclient
 def copy_files(
@@ -29,7 +20,7 @@ def copy_files(
     allow_missing: bool = False,
     file_client: FileClient | None = None,
     link_files: bool = False,
-):
+) -> None:
     r"""
     Copy files between source and destination folders.
 
@@ -93,7 +84,7 @@ def delete_files(
     exclude_files: list[str | Path] | None = None,
     allow_missing: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     r"""
     Delete files in a directory.
 
@@ -140,7 +131,7 @@ def rename_files(
     host: str | None = None,
     allow_missing: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Delete files in a directory.
 
@@ -184,7 +175,7 @@ def gzip_files(
     allow_missing: bool = False,
     force: bool = False,
     file_client: FileClient = None,
-):
+) -> None:
     r"""
     Gzip files in a directory.
 
@@ -237,7 +228,7 @@ def gunzip_files(
     allow_missing: bool = False,
     force: bool = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     r"""
     Gunzip files in a directory.
 
@@ -342,7 +333,9 @@ def find_and_filter_files(
 
 
 def get_zfile(
-    directory_listing: list[Path], base_name: str, allow_missing: bool = False
+    directory_listing: list[Path],
+    base_name: str,
+    allow_missing: bool = False,
 ) -> Path | None:
     """
     Find gzipped or non-gzipped versions of a file in a directory listing.
@@ -363,10 +356,38 @@ def get_zfile(
         found, then ``None`` will be returned.
     """
     for file in directory_listing:
-        if file.name in [base_name, base_name + ".gz", base_name + ".GZ"]:
+        if file.name in (base_name, f"{base_name}.gz", f"{base_name}.GZ"):
             return file
 
     if allow_missing:
         return None
 
     raise FileNotFoundError(f"Could not find {base_name} or {base_name}.gz file.")
+
+
+def gzip_output_folder(
+    directory: str | Path, setting: bool | str, files_list: list[str]
+) -> None:
+    """
+    Zip the content of the output folder based on the specific code setting.
+
+    Parameters
+    ----------
+    directory: str or Path or None
+        Directory in which to gzip files.
+    setting: bool or str
+        the setting determining which files to zip. If True all the files in
+        the directory will be zipped, if "atomate" only the files in
+        files_list, if False no file will be zipped.
+    files_list: list of str
+        list of files to be zipped in case setting is "atomate"
+    """
+    if setting == "atomate":
+        gzip_files(
+            directory=directory,
+            include_files=files_list,
+            allow_missing=True,
+            force=True,
+        )
+    elif setting:
+        gzip_files(directory=directory, force=True)

@@ -4,13 +4,17 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import ClassVar, Sequence
+from typing import TYPE_CHECKING, ClassVar
 
-from jobflow import job
-from pymatgen.core.structure import Structure
+from abipy.flowtk.events import (
+    AbinitCriticalWarning,
+    NscfConvergenceWarning,
+    RelaxConvergenceWarning,
+    ScfConvergenceWarning,
+)
+from jobflow import Job, job
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.sets.base import AbinitInputGenerator
 from atomate2.abinit.sets.core import (
     LineNonSCFSetGenerator,
     NonSCFSetGenerator,
@@ -19,7 +23,14 @@ from atomate2.abinit.sets.core import (
     StaticSetGenerator,
     UniformNonSCFSetGenerator,
 )
-from atomate2.abinit.utils.history import JobHistory
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.sets.base import AbinitInputGenerator
+    from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +53,9 @@ class StaticMaker(BaseAbinitMaker):
         default_factory=StaticSetGenerator
     )
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        ScfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -61,7 +74,9 @@ class LineNonSCFMaker(BaseAbinitMaker):
         default_factory=LineNonSCFSetGenerator
     )
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -80,7 +95,9 @@ class UniformNonSCFMaker(BaseAbinitMaker):
         default_factory=UniformNonSCFSetGenerator
     )
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -95,7 +112,9 @@ class NonSCFMaker(BaseAbinitMaker):
     )
 
     # Non dataclass variables:
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
     @job
     def make(
@@ -105,7 +124,7 @@ class NonSCFMaker(BaseAbinitMaker):
         restart_from: str | list[str] | None = None,
         history: JobHistory | None = None,
         mode: str = "uniform",
-    ):
+    ) -> Job:
         """
         Run a non-scf ABINIT job.
 
@@ -141,7 +160,9 @@ class NonSCFWfqMaker(NonSCFMaker):
     )
 
     # Non dataclass variables:
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
 
 @dataclass
@@ -153,26 +174,25 @@ class RelaxMaker(BaseAbinitMaker):
     name: str = "Relaxation calculation"
 
     # non-dataclass variables
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("RelaxConvergenceWarning",)
-    # structure_fixed: ClassVar[bool] = False
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        RelaxConvergenceWarning,
+    )
 
     @classmethod
-    def ionic_relaxation(cls, *args, **kwargs):
+    def ionic_relaxation(cls, *args, **kwargs) -> Job:
         """Create an ionic relaxation maker."""
         # TODO: add the possibility to tune the RelaxInputGenerator options
         #  in this class method.
         return cls(
-            # input_set_generator=RelaxSetGenerator(relax_cell=False, *args, **kwargs),
-            input_set_generator=RelaxSetGenerator(relax_cell=False, **kwargs),
+            input_set_generator=RelaxSetGenerator(*args, relax_cell=False, **kwargs),
             name=cls.name + " (ions only)",
         )
 
     @classmethod
-    def full_relaxation(cls, *args, **kwargs):
+    def full_relaxation(cls, *args, **kwargs) -> Job:
         """Create a full relaxation maker."""
         # TODO: add the possibility to tune the RelaxInputGenerator options
         #  in this class method.
         return cls(
-            # input_set_generator=RelaxSetGenerator(relax_cell=True, *args, **kwargs)
-            input_set_generator=RelaxSetGenerator(relax_cell=True, **kwargs)
+            input_set_generator=RelaxSetGenerator(*args, relax_cell=True, **kwargs)
         )

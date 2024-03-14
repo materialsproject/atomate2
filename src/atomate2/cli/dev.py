@@ -1,24 +1,50 @@
 """Module containing command line scripts for developers."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import click
 from monty.json import jsanitize
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from jobflow import Maker
+
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
-def dev():
+def dev() -> None:
     """Tools for atomate2 developers."""
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("test_dir")
-def vasp_test_data(test_dir):
+@click.argument(
+    "test_dir",
+)
+@click.option(
+    "--additional_file",
+    "-a",
+    multiple=True,
+    help="list of additional files to copy from each completed VASP directory. "
+    "Example: `--additional_file CHGCAR --additional_file LOCPOT`",
+)
+def vasp_test_data(test_dir: str | Path, additional_file: list[str]) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
     directory. Please refer to the atomate2 documentation on writing unit tests for more
     information.
+
+    Parameters
+    ----------
+    test_dir
+        The directory to write the test data to.
+        Should not contain spaces or punctuation.
+    additional_files
+        list of additional files to copy from each completed VASP directory.
+        Example: `--additional_file CHGCAR --additional_file LOCPOT`,
     """
-    import sys
     import warnings
     from pathlib import Path
     from pprint import pformat
@@ -35,7 +61,7 @@ def vasp_test_data(test_dir):
 
     if test_dir.exists():
         click.echo("test_data folder already exists, refusing to overwrite it")
-        sys.exit()
+        raise SystemExit(1)
 
     test_dir.mkdir()
 
@@ -104,6 +130,7 @@ def vasp_test_data(test_dir):
                 "vasprun*",
                 "OUTCAR*",
                 "*.json*",
+                *additional_file,
             ],
             allow_missing=True,
         )
@@ -144,22 +171,21 @@ def test_my_flow(mock_vasp, clean_dir, si_structure):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    # !!! Generate job
     job = MyMaker().make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
-    # !!! validation on the outputs
+    # validate the outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.85037078)
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
-def _potcar_to_potcar_spec(potcar_filename, output_filename):
+def _potcar_to_potcar_spec(potcar_filename: str | Path, output_filename: Path) -> None:
     """Convert a POTCAR file to a POTCAR.spec file."""
     from pymatgen.io.vasp import Potcar
 
@@ -168,7 +194,7 @@ def _potcar_to_potcar_spec(potcar_filename, output_filename):
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
-def abinit_script_maker():
+def abinit_script_maker() -> None:
     """Generate template script for abinit makers."""
     import os
     import sys
@@ -202,7 +228,7 @@ def abinit_script_maker():
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("structure_file", required=False)
 @click.option("--make-kwargs", "-mk", required=False)
-def abinit_generate_reference(structure_file, make_kwargs):
+def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     """Generate reference files for abinit test.
 
     This script expects there is a maker.json file and a structure file. The structure
@@ -254,7 +280,7 @@ def abinit_generate_reference(structure_file, make_kwargs):
     default=False,
     help="Whether to force overwrite of existing folders/files.",
 )
-def abinit_test_data(test_name, test_data_dir, force):
+def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> None:
     """Copy test data for ABINIT unit tests.
 
     This script expects there is a maker.json file, an initial_structure.json file,
@@ -306,7 +332,7 @@ def abinit_test_data(test_name, test_data_dir, force):
         maker_dir.mkdir(parents=True)
     test_dir = maker_dir / test_name
 
-    def _makedir(directory, force_overwrite):
+    def _makedir(directory: Path, force_overwrite: bool) -> None:
         if not directory.exists():
             directory.mkdir()
         elif not force_overwrite:
@@ -325,17 +351,17 @@ def abinit_test_data(test_name, test_data_dir, force):
         raise ValueError("Not all jobs have unique names")
 
     original_mapping = {}
-    mapping = {}
+    mapping: dict[Any, Any] = {}
 
     def _fake_dirdata(
-        src_dir,
-        dest_dir,
-        dirdata_name,
-        include_files=None,
-        include_fake_files=None,
-        force_overwrite=False,
-        allow_missing=True,
-    ):
+        src_dir: Path,
+        dest_dir: Path,
+        dirdata_name: str,
+        include_files: list | None = None,
+        include_fake_files: list | None = None,
+        force_overwrite: bool = False,
+        allow_missing: bool = True,
+    ) -> None:
         src_dirdata = src_dir / dirdata_name
         if not src_dirdata.exists():
             raise RuntimeError(f"Source directory {src_dirdata} does not exist")
@@ -359,8 +385,7 @@ def abinit_test_data(test_name, test_data_dir, force):
                 if not src_fpath.exists():
                     if allow_missing:
                         continue
-                    else:
-                        raise RuntimeError(f"File {src_fpath} does not exist")
+                    raise RuntimeError(f"File {src_fpath} does not exist")
                 if src_fpath.is_symlink():
                     dest_fpath.write_text(f"SYMBOLIC_LINK TO {src_fpath.resolve()}")
                 elif src_fpath.is_file():
@@ -371,17 +396,17 @@ def abinit_test_data(test_name, test_data_dir, force):
                     )
 
     def _fake_dirs(
-        src_dir,
-        dest_dir,
-        indata_files=None,
-        outdata_files=None,
-        tmpdata_files=None,
-        indata_fake_files=None,
-        outdata_fake_files=None,
-        tmpdata_fake_files=None,
-        force_overwrite=False,
-        allow_missing=True,
-    ):
+        src_dir: Path,
+        dest_dir: Path,
+        indata_files: list | None = None,
+        outdata_files: list | None = None,
+        tmpdata_files: list | None = None,
+        indata_fake_files: list | None = None,
+        outdata_fake_files: list | None = None,
+        tmpdata_fake_files: list | None = None,
+        force_overwrite: bool = False,
+        allow_missing: bool = True,
+    ) -> None:
         for dirdata_name, data_files, data_fake_files in zip(
             ("indata", "outdata", "tmpdata"),
             (indata_files, outdata_files, tmpdata_files),
@@ -554,10 +579,10 @@ class Test{maker_name}:
         assert output1.run_number == 1
     """
 
-    print(test_function_str)
+    print(test_function_str)  # noqa: T201
 
 
-def save_abinit_maker(maker):
+def save_abinit_maker(maker: Maker) -> None:
     """Save maker, the script used to create it and additional metadata."""
     import datetime
     import inspect
@@ -575,10 +600,16 @@ def save_abinit_maker(maker):
     author_mail = None
     if git:
         name = subprocess.run(
-            "git config user.name".split(), capture_output=True, encoding="utf-8"
+            "git config user.name".split(),  # noqa: S603
+            capture_output=True,
+            encoding="utf-8",
+            check=True,
         )
         mail = subprocess.run(
-            "git config user.email".split(), capture_output=True, encoding="utf-8"
+            "git config user.email".split(),  # noqa: S603
+            capture_output=True,
+            encoding="utf-8",
+            check=True,
         )
         if name.returncode == 0:
             author = name.stdout.strip()
@@ -609,11 +640,8 @@ def save_abinit_maker(maker):
         )
 
 
-def _find_sub_list(sublist, mainlist):
-    results = []
+def _find_sub_list(sublist: list | tuple, mainlist: list | tuple) -> list:
     sll = len(sublist)
-    for ind in (i for i, e in enumerate(mainlist) if e == sublist[0]):
-        if mainlist[ind : ind + sll] == sublist:
-            results.append((ind, ind + sll))
+    inds = [i for i, e in enumerate(mainlist) if e == sublist[0]]
 
-    return results
+    return [(ind, ind + sll) for ind in inds if mainlist[ind : ind + sll] == sublist]

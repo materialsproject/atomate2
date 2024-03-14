@@ -1,14 +1,14 @@
 """Module defining base abinit input set and generator."""
+
 from __future__ import annotations
 
 import copy
 import json
 import logging
 import os
-from collections import namedtuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
 import abipy.abio.factories as abifact
@@ -17,9 +17,8 @@ from abipy.abio.inputs import AbinitInput, MultiDataset
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
 from monty.json import MontyEncoder, jsanitize
-from pymatgen.core.structure import Structure
 from pymatgen.io.abinit.abiobjects import KSampling, KSamplingModes
-from pymatgen.io.abinit.pseudos import PseudoTable
+from pymatgen.io.abinit.pseudos import Pseudo, PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Kpoints
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -40,6 +39,11 @@ from atomate2.abinit.utils.common import (
     InitializationError,
     get_final_structure,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
+    from pymatgen.core.structure import Structure
 
 __all__ = ["AbinitInputSet", "AbinitInputGenerator"]
 
@@ -64,7 +68,7 @@ class AbinitInputSet(InputSet):
         abinit_input: AbinitInput,
         input_files: Iterable[tuple[str, str]] | None = None,
         link_files: bool = True,
-    ):
+    ) -> None:
         self.input_files = input_files
         self.link_files = link_files
         super().__init__(
@@ -82,7 +86,7 @@ class AbinitInputSet(InputSet):
         make_dir: bool = True,
         overwrite: bool = True,
         zip_inputs: bool = False,
-    ):
+    ) -> None:
         """Write Abinit input files to a directory."""
         # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
         #  the abinit input set also sets up links to previous files, sets up the
@@ -133,12 +137,12 @@ class AbinitInputSet(InputSet):
         return True
 
     @property
-    def abinit_input(self):
+    def abinit_input(self) -> AbinitInput:
         """Get the AbinitInput object."""
         return self[INPUT_FILE_NAME]
 
     @staticmethod
-    def set_workdir(workdir):
+    def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
         """Set up the working directory.
 
         This also sets up and creates standard input, output and temporary directories.
@@ -194,7 +198,7 @@ class AbinitInputSet(InputSet):
         """
         return self.abinit_input.remove_vars(keys=keys, strict=strict)
 
-    def runlevel(self):
+    def runlevel(self) -> set[str]:
         """Get the set of strings defining the calculation type."""
         return self.abinit_input.runlevel
 
@@ -206,12 +210,12 @@ class AbinitInputSet(InputSet):
         """
         return self.abinit_input.set_structure(structure)
 
-    def deepcopy(self):
+    def deepcopy(self) -> AbinitInputSet:
         """Deep copy of the input set."""
         return copy.deepcopy(self)
 
 
-def as_pseudo_table(pseudos):
+def as_pseudo_table(pseudos: str | Sequence[Pseudo]) -> PseudoTable:
     """Get the pseudos as a PseudoTable object.
 
     Parameters
@@ -230,21 +234,17 @@ def as_pseudo_table(pseudos):
         # in case a single path to a pseudopotential file has been passed
         if os.path.isfile(pseudos):
             return PseudoTable(pseudos)
-        else:
-            pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
-            repo = get_repo_from_name(pseudo_repo_name)
-            if not repo.is_installed():
-                msg = (
-                    f"Pseudo repository {pseudo_repo_name} is not installed "
-                    f"in {repo.dirpath}. "
-                    f"Use abips.py to install it."
-                )
-                raise RuntimeError(msg)
-            return repo.get_pseudos(table_name)
+        pseudo_repo_name, table_name = pseudos.rsplit(":", 1)
+        repo = get_repo_from_name(pseudo_repo_name)
+        if not repo.is_installed():
+            msg = (
+                f"Pseudo repository {pseudo_repo_name} is not installed "
+                f"in {repo.dirpath}. "
+                f"Use abips.py to install it."
+            )
+            raise RuntimeError(msg)
+        return repo.get_pseudos(table_name)
     return PseudoTable(pseudos)
-
-
-PrevOutput = namedtuple("PrevOutput", "dirname exts")
 
 
 @dataclass
@@ -281,7 +281,7 @@ class AbinitInputGenerator(InputGenerator):
     restart_from_deps:
         Defines the files that needs to be linked from previous calculations in
         case of restart. The format is a tuple where each element is a list of
-        "|" separated runelevels (as defined in the AbinitInput object) followed
+        "|" separated run levels (as defined in the AbinitInput object) followed
         by a colon and a list of "|" list of extensions of files that needs to
         be linked. The runlevel defines the type of calculations from which the
         file can be linked. An example is (f"{NSCF}:WFK",).
@@ -289,7 +289,7 @@ class AbinitInputGenerator(InputGenerator):
         Defines the files that needs to be linked from previous calculations and
         are required for the execution of the current calculation.
         The format is a tuple where each element is a list of  "|" separated
-        runelevels (as defined in the AbinitInput object) followed by a colon and
+        run levels (as defined in the AbinitInput object) followed by a colon and
         a list of "|" list of extensions of files that needs to be linked.
         The runlevel defines the type of calculations from which the file can
         be linked. An example is (f"{NSCF}:WFK",).
@@ -317,7 +317,7 @@ class AbinitInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
 
-    def get_input_set(  # type: ignore
+    def get_input_set(
         self,
         structure: Structure = None,
         restart_from: str | tuple | list | Path | None = None,
@@ -474,8 +474,8 @@ class AbinitInputGenerator(InputGenerator):
     def _get_in_file_name(out_filepath: str) -> str:
         in_file = os.path.basename(out_filepath)
         in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
-        in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
-        return in_file
+
+        return os.path.basename(in_file).replace("WFQ", "WFK", 1)
 
     @staticmethod
     def resolve_dep_exts(prev_dir: str, exts: list[str]) -> tuple:
@@ -575,7 +575,6 @@ class AbinitInputGenerator(InputGenerator):
             The index to be used to select the AbinitInput in case a factory
             returns a MultiDataset.
 
-
         Returns
         -------
             An AbinitInput
@@ -623,11 +622,7 @@ class AbinitInputGenerator(InputGenerator):
         if factory_kwargs:
             total_factory_kwargs.update(factory_kwargs)
 
-        if isinstance(self.factory, str):   #needed bc the factory is stored as a
-                                            #str in the MongoDB
-            generated_input = eval('abifact.'+self.factory.split()[1]+'(**total_factory_kwargs)')
-        else:
-            generated_input = self.factory(**total_factory_kwargs)
+        generated_input = self.factory(**total_factory_kwargs)
 
         if input_index is not None:
             generated_input = generated_input[input_index]
@@ -684,7 +679,7 @@ class AbinitInputGenerator(InputGenerator):
             abinit_input.set_vars(**ksampling.abivars)
 
     @staticmethod
-    def _clean_none(abinit_input: AbinitInput | MultiDataset):
+    def _clean_none(abinit_input: AbinitInput | MultiDataset) -> None:
         """
         Remove the variables whose value is set to None from the AbinitInput.
 
@@ -792,7 +787,7 @@ class AbinitInputGenerator(InputGenerator):
 
         if base_kpoints and not added_kpoints:
             return base_kpoints
-        elif added_kpoints and not base_kpoints:
+        if added_kpoints and not base_kpoints:
             return added_kpoints
 
         # do some sanity checking
