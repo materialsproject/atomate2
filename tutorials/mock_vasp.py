@@ -5,8 +5,8 @@ import os
 import shutil
 import sys
 import tempfile
+from collections.abc import Generator
 from pathlib import Path
-from typing import Iter
 
 from pytest import MonkeyPatch
 
@@ -19,7 +19,7 @@ from conftest import _mock_vasp  # noqa: E402
 
 
 @contextlib.contextmanager
-def mock_vasp(ref_paths: dict) -> Iter:
+def mock_vasp(ref_paths: dict) -> Generator:
     """Mock VASP functions.
 
     Parameters
