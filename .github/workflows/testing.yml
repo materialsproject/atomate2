@@ -59,7 +59,7 @@ jobs:
           pip install --no-deps nequip
 
       - name: Test Notebooks
-        run: pytest --nbmake ./tutorials/content
+        run: pytest --nbmake ./tutorials
 
       - name: Test
         env:
