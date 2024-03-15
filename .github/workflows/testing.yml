@@ -58,6 +58,9 @@ jobs:
           pip install torch-runstats
           pip install --no-deps nequip
 
+      - name: Test Notebooks
+        run: pytest --nbmake ./tutorials/content
+
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
@@ -68,9 +71,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-
-      - name: Test Notebooks
-        run: pytest --nbmake ./tutorials/content
 
   docs:
     runs-on: ubuntu-latest
