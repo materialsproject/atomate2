@@ -84,14 +84,14 @@ def mock_vasp(
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    yield from _mock_vasp_func(monkeypatch, vasp_test_dir)
+    yield from _mock_vasp(monkeypatch, vasp_test_dir)
 
 
-def _mock_vasp_func(
+def _mock_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path
 ) -> Generator[Callable[[Any, Any], Any], None, None]:
     """
-    Isolated version of the mock_vasp fixture that can be used in other fixtures.
+    Isolated version of the mock_vasp fixture that can be used in other contexts.
     """
 
     def mock_run_vasp(*args, **kwargs):
