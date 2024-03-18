@@ -66,3 +66,5 @@ docs/reference/atomate2.*
 
 # see https://github.com/materialsproject/atomate2/issues/345
 *.doctrees*
+
+.ipynb_checkpoints
