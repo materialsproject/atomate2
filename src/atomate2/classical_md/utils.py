@@ -1,3 +1,6 @@
+import copy
+from pathlib import Path
+
 import pymatgen
 from pymatgen.analysis.graphs import MoleculeGraph
 from pymatgen.core import Element
@@ -11,7 +14,7 @@ from openmm.unit import elementary_charge, angstrom
 
 from pint import Quantity
 
-from atomate2.classical_md.schemas import InputMoleculeSpec, Geometry
+from atomate2.classical_md.schemas import InputMoleculeSpec, Geometry, MoleculeSpec
 
 
 def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
@@ -135,9 +138,7 @@ def infer_openff_mol(
     return inferred_mol
 
 
-def add_conformers(
-    openff_mol: tk.Molecule, geometries: List[Geometry], max_conformers: int
-):
+def add_conformer(openff_mol: tk.Molecule, geometry: Geometry):
     """
     Adds conformers to an OpenFF Molecule based on the provided geometries or generates conformers up to the specified maximum number.
 
@@ -145,7 +146,7 @@ def add_conformers(
     ----------
     openff_mol : openff.toolkit.topology.Molecule
         The OpenFF Molecule to add conformers to.
-    geometries : List[Geometry]:
+    geometry : Geometry:
         A list of Geometry objects containing the coordinates of the conformers to be added.
     max_conformers : int
         The maximum number of conformers to be generated if no geometries are provided.
@@ -158,23 +159,22 @@ def add_conformers(
 
     """
     # TODO: test this
-    atom_map = None
-    if geometries:
-        for geometry in geometries:
-            inferred_mol = infer_openff_mol(geometry.xyz)
-            is_isomorphic, atom_map = get_atom_map(inferred_mol, openff_mol)
-            if not is_isomorphic:
-                raise ValueError(
-                    f"An isomorphism cannot be found between smile {openff_mol.to_smiles()} "
-                    f"and the provided geometry {geometry.xyz}."
-                )
-            new_mol = pymatgen.core.Molecule.from_sites(
-                [geometry.xyz.sites[i] for i in atom_map.values()]
+    if geometry:
+        # for geometry in geometries:
+        inferred_mol = infer_openff_mol(geometry.xyz)
+        is_isomorphic, atom_map = get_atom_map(inferred_mol, openff_mol)
+        if not is_isomorphic:
+            raise ValueError(
+                f"An isomorphism cannot be found between smile {openff_mol.to_smiles()} "
+                f"and the provided geometry {geometry.xyz}."
             )
-            openff_mol.add_conformer(new_mol.cart_coords * angstrom)
+        new_mol = pymatgen.core.Molecule.from_sites(
+            [geometry.xyz.sites[i] for i in atom_map.values()]
+        )
+        openff_mol.add_conformer(new_mol.cart_coords * angstrom)
     else:
         atom_map = {i: i for i in range(openff_mol.n_atoms)}
-        openff_mol.generate_conformers(n_conformers=max_conformers or 1)
+        openff_mol.generate_conformers(n_conformers=1)
     return openff_mol, atom_map
 
 
@@ -218,71 +218,187 @@ def assign_partial_charges(
     return openff_mol
 
 
-def process_mol_specs(
-    input_mol_dicts: List[Union[Dict, InputMoleculeSpec]],
-    charge_method: str,
+# def process_mol_specs(
+#     input_mol_dicts: List[Dict | InputMoleculeSpec],
+# ) -> List[MoleculeSpec]:
+#     """
+#     Processes a list of input molecular specifications, generating conformers, assigning partial charges, and creating output molecular specifications.
+#
+#     Parameters
+#     ----------
+#     input_mol_dicts : List[Union[Dict, InputMoleculeSpec]]
+#         A list of dictionaries containing input molecular specifications.
+#     charge_method : str
+#         The default charge method to be used if not specified in the input molecular specifications.
+#
+#     Returns
+#     -------
+#     List[MoleculeSpec]
+#         A list of dictionaries containing processed molecular specifications.
+#     """
+#     # coerce all input_mol_dicts to InputMoleculeSpec
+#     input_mol_specs = [
+#         InputMoleculeSpec(**mol_dict) if isinstance(mol_dict, dict) else mol_dict
+#         for mol_dict in input_mol_dicts
+#     ]
+#
+#     # assert uniqueness of smiles in mol_specs
+#     if len(set([spec.smile for spec in input_mol_specs])) != len(input_mol_specs):
+#         raise ValueError("Smiles in input mol dicts must be unique.")
+#
+#     # TODO: test this
+#     mol_specs = []
+#     for i, input_mol_spec in enumerate(input_mol_specs):
+#         openff_mol = tk.Molecule.from_smiles(
+#             input_mol_spec.smile, allow_undefined_stereo=True
+#         )
+#
+#         # add conformer
+#         openff_mol, atom_map = add_conformer(
+#             openff_mol, input_mol_spec.geometry, input_mol_spec.max_conformers
+#         )
+#         # TODO: how can we better specify the defaults?
+#         # assign partial charges
+#         charge_method = input_mol_spec.charge_method or "am1bcc"
+#         openff_mol = assign_partial_charges(
+#             openff_mol, atom_map, charge_method, input_mol_spec.partial_charges
+#         )
+#         charge_scaling = input_mol_spec.charge_scaling or 1
+#         openff_mol.partial_charges = openff_mol.partial_charges * charge_scaling
+#
+#         # create mol_spec
+#         mol_spec = MoleculeSpec(
+#             name=input_mol_spec.name,
+#             count=input_mol_spec.count,
+#             # smile=input_mol_spec.smile,
+#             formal_charge=int(
+#                 np.sum(openff_mol.partial_charges.magnitude) / charge_scaling
+#             ),
+#             charge_method=charge_method,
+#             openff_mol=openff_mol,
+#         )
+#         mol_specs.append(mol_spec)
+#
+#     mol_specs.sort(key=lambda x: x.smile + (x.name or ""))
+#
+#     return mol_specs
+
+
+def create_openff_mol(
+    smile: str,
+    geometry: Union[pymatgen.core.Molecule, str, Path] = None,
+    charge_scaling: float = 1,
+    partial_charges: List[float] = None,
+    backup_charge_method: str = "am1bcc",
 ):
+    if isinstance(geometry, (str, Path)):
+        geometry = pymatgen.core.Molecule.from_file(str(geometry))
+
+    if partial_charges is not None:
+        if geometry is None:
+            raise ValueError("geometries must be set if partial_charges is set")
+        if len(partial_charges) != len(geometry):
+            raise ValueError(
+                "partial charges must have same length & order as geometry"
+            )
+
+    openff_mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
+
+    # add conformer
+    openff_mol, atom_map = add_conformer(openff_mol, geometry)
+    # assign partial charges
+    openff_mol = assign_partial_charges(
+        openff_mol, atom_map, backup_charge_method, partial_charges
+    )
+    openff_mol.partial_charges *= charge_scaling
+
+    return openff_mol
+
+
+def create_mol_spec(
+    smile: str,
+    count: int,
+    name: str = None,
+    charge_scaling: float = 1,
+    charge_method: str = None,
+    geometry: Union[pymatgen.core.Molecule, str, Path] = None,
+    partial_charges: List[float] = None,
+) -> MoleculeSpec:
     """
     Processes a list of input molecular specifications, generating conformers, assigning partial charges, and creating output molecular specifications.
 
     Parameters
     ----------
-    input_mol_specs : List[Union[Dict, InputMoleculeSpec]]
-        A list of dictionaries containing input molecular specifications.
-    charge_method : str
+    smile: str
+        The SMILES string of the molecule.
+    count: int
+        The number of molecules to be created.
+    name: str
+        The name of the molecule.
+    charge_scaling: float
+        The scaling factor to be applied to the partial charges.
+    charge_method: str
         The default charge method to be used if not specified in the input molecular specifications.
-    force_field : str
-        The default force field to be used if not specified in the input molecular specifications.
+    geometry: Union[pymatgen.core.Molecule, str, Path]
+        The geometry of the molecule.
+    partial_charges: List[float]
+        A list of partial charges to be assigned to the molecule, or None to use the charge method.
 
     Returns
     -------
-    List[dict]
+    List[MoleculeSpec]
         A list of dictionaries containing processed molecular specifications.
     """
-    # coerce all input_mol_dicts to InputMoleculeSpec
-    input_mol_specs = [
-        InputMoleculeSpec(**mol_dict) if isinstance(mol_dict, dict) else mol_dict
-        for mol_dict in input_mol_dicts
-    ]
-
-    # TODO: allow multiple input mols with the same smile and name
-    #  but merge them together later to allow different geometries.
-
-    # assert uniqueness of smiles in mol_specs
-    if len(set([spec.smile for spec in input_mol_specs])) != len(input_mol_specs):
-        raise ValueError("Smiles in input mol dicts must be unique.")
-
     # TODO: test this
-    mol_specs = []
-    for i, mol_dict in enumerate(input_mol_specs):
-        openff_mol = tk.Molecule.from_smiles(
-            mol_dict.smile, allow_undefined_stereo=True
-        )
 
-        # add conformers
-        openff_mol, atom_map = add_conformers(
-            openff_mol, mol_dict.geometries, mol_dict.max_conformers
-        )
+    if charge_method is None:
+        if partial_charges:
+            charge_method = "custom"
+        else:
+            charge_method = "am1bcc"
 
-        # assign partial charges
-        charge_method = mol_dict.charge_method or charge_method
-        openff_mol = assign_partial_charges(
-            openff_mol, atom_map, charge_method, mol_dict.partial_charges
-        )
-        charge_scaling = mol_dict.charge_scaling or 1
-        openff_mol.partial_charges = openff_mol.partial_charges * charge_scaling
+    openff_mol = create_openff_mol(
+        smile,
+        geometry,
+        charge_scaling,
+        partial_charges,
+        charge_method,
+    )
 
-        # create mol_spec
-        mol_spec = dict(
-            name=mol_dict.name,
-            count=mol_dict.count,
-            smile=mol_dict.smile,
-            force_field=mol_dict.force_field or force_field,  # type: ignore
-            formal_charge=int(
-                np.sum(openff_mol.partial_charges.magnitude) / charge_scaling
-            ),
-            charge_method=charge_method,
-            openff_mol=openff_mol,
-        )
-        mol_specs.append(mol_spec)
-    return mol_specs
+    # create mol_spec
+    return MoleculeSpec(
+        name=(name or smile),
+        count=count,
+        formal_charge=int(
+            np.sum(openff_mol.partial_charges.magnitude) / charge_scaling
+        ),
+        charge_method=charge_method,
+        openff_mol=openff_mol,
+    )
+
+
+def merge_specs_by_name_and_smile(mol_specs: List[MoleculeSpec]) -> List[MoleculeSpec]:
+    """
+    Merges molecular specifications with the same name and smile into a
+    single molecular specification.
+
+    Parameters
+    ----------
+    mol_specs : List[MoleculeSpec]
+        A list of molecular specifications.
+
+    Returns
+    -------
+    List[MoleculeSpec]
+        A list of molecular specifications with unique names and smiles.
+
+    """
+    mol_specs = copy.deepcopy(mol_specs)
+    merged_spec_dict = {}
+    for spec in mol_specs:
+        key = (spec.openff_mol.to_smiles(), spec.name)
+        if key in merged_spec_dict:
+            merged_spec_dict[key].count += spec.count
+        else:
+            merged_spec_dict[key] = spec
+    return list(merged_spec_dict.values())
