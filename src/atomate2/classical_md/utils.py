@@ -14,7 +14,7 @@ from openmm.unit import elementary_charge, angstrom
 
 from pint import Quantity
 
-from atomate2.classical_md.schemas import InputMoleculeSpec, Geometry, MoleculeSpec
+from atomate2.classical_md.schemas import MoleculeSpec
 
 
 def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
@@ -138,7 +138,7 @@ def infer_openff_mol(
     return inferred_mol
 
 
-def add_conformer(openff_mol: tk.Molecule, geometry: Geometry):
+def add_conformer(openff_mol: tk.Molecule, geometry: pymatgen.core.Molecule):
     """
     Adds conformers to an OpenFF Molecule based on the provided geometries or generates conformers up to the specified maximum number.
 

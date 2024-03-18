@@ -1,4 +1,3 @@
-from pymatgen.io.openmm.sets import OpenMMSet
 from atomate2.openmm.constants import OpenMMConstants
 from pathlib import Path
 import jobflow
