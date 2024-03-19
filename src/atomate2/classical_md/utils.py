@@ -161,15 +161,15 @@ def add_conformer(openff_mol: tk.Molecule, geometry: pymatgen.core.Molecule):
     # TODO: test this
     if geometry:
         # for geometry in geometries:
-        inferred_mol = infer_openff_mol(geometry.xyz)
+        inferred_mol = infer_openff_mol(geometry)
         is_isomorphic, atom_map = get_atom_map(inferred_mol, openff_mol)
         if not is_isomorphic:
             raise ValueError(
                 f"An isomorphism cannot be found between smile {openff_mol.to_smiles()} "
-                f"and the provided geometry {geometry.xyz}."
+                f"and the provided molecule {geometry}."
             )
         new_mol = pymatgen.core.Molecule.from_sites(
-            [geometry.xyz.sites[i] for i in atom_map.values()]
+            [geometry.sites[i] for i in atom_map.values()]
         )
         openff_mol.add_conformer(new_mol.cart_coords * angstrom)
     else:
@@ -336,3 +336,13 @@ def merge_specs_by_name_and_smile(mol_specs: List[MoleculeSpec]) -> List[Molecul
         else:
             merged_spec_dict[key] = spec
     return list(merged_spec_dict.values())
+
+
+from openff.toolkit.topology.molecule import Molecule
+
+
+def openff_mol_as_monty_dict(self):
+    mol_dict = self.to_dict()
+    mol_dict["@module"] = "openff.toolkit.topology"
+    mol_dict["@class"] = "Molecule"
+    return mol_dict
