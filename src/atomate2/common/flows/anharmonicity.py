@@ -22,7 +22,9 @@ from atomate2.common.jobs.anharmonicity import (
     get_force_constants,
     build_dyn_mat,
     get_emode_efreq,
-    displace_structure
+    displace_structure,
+    get_anharmonic_force,
+    calc_sigma_A_oneshot
 )
 
 import numpy as np
@@ -40,7 +42,6 @@ if TYPE_CHECKING:
 SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
 
 @dataclass
-# Include ABC?
 class BaseAnharmonicityMaker(Maker):
     name: str = "anharmonicity"
     displacement: float = 0.01
@@ -50,6 +51,9 @@ class BaseAnharmonicityMaker(Maker):
     eigenmodes: np.ndarray = None
     eigenfreq: np.ndarray = None
     displaced_supercell: np.ndarray = None
+    DFT_forces: list[np.ndarray] = []
+    anharmonic_forces: np.ndarray
+    sigma_A_oneshot: float
 
     def make(
         self,
@@ -97,10 +101,13 @@ class BaseAnharmonicityMaker(Maker):
         )
         jobs.append(displacement_calcs)
 
+        # Recover DFT calculated forces
+        self.DFT_forces = displacement_calcs.output["forces"]
+
         # Get force constants
         force_consts = get_force_constants(
             phonon = self.phonon,
-            displacement_data = displacement_calcs.output,
+            forces_DFT = self.DFT_forces
         )
         jobs.append(force_consts)
         self.fc = force_consts.output
@@ -119,6 +126,8 @@ class BaseAnharmonicityMaker(Maker):
         jobs.append(eig_calc)
         self.eigenfreq, self.eigenmodes = eig_calc.output
 
+        # Generate the displaced supercell 
+        # TODO: Check if this is really needed or if Phonopy already found F^(2)
         displace_supercell = displace_structure(
             phonon = self.phonon,
             eig_vec = self.eigenmodes,
@@ -127,3 +136,19 @@ class BaseAnharmonicityMaker(Maker):
         )
         jobs.append(displace_supercell)
         self.displaced_supercell = displace_supercell.output
+
+        # Calculate the anharmonic contribution to the forces
+        get_force_anharmonic = get_anharmonic_force(
+            phonon = self.phonon,
+            DFT_forces = self.DFT_forces
+        )
+        jobs.append(get_force_anharmonic)
+        self.anharmonic_forces = get_force_anharmonic.output
+
+        # Calculate oneshot approximation of sigma_A
+        calc_sigma_A_os = calc_sigma_A_oneshot(
+            anharmonic_force = self.anharmonic_forces,
+            DFT_forces = self.DFT_forces   
+        )
+        jobs.append(calc_sigma_A_os)
+        self.sigma_A_oneshot = calc_sigma_A_os.output

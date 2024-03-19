@@ -100,7 +100,7 @@ def generate_phonon_displacements(
 @job
 def get_force_constants(
     phonon: Phonopy,
-    displacement_data: dict[str, list],
+    forces_DFT: list[np.ndarray]
 ) -> np.ndarray:
     """
     Get the force constants for a perturbed Phonopy object.
@@ -109,12 +109,10 @@ def get_force_constants(
     ----------
     phonon: Phonopy
         Phonopy object
-    displacement_data: dict[str, list]:
-        outputs from the displacements
+    forces_DFT: list[np.ndarray]
+        DFT forces used to find the force constants
     """
-    set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-
-    phonon.produce_force_constants(forces=set_of_forces)
+    phonon.produce_force_constants(forces=forces_DFT)
 
     force_constants = phonon.get_force_constants()
     return force_constants
@@ -195,3 +193,44 @@ def displace_structure(
     displaced_supercell = phonon.supercell - displacements
 
     return displaced_supercell
+
+@job
+def get_anharmonic_force(
+    phonon: Phonopy,
+    DFT_forces: list[np.ndarray]
+) -> np.ndarray:
+    """
+    Uses DFT calculated forces ( F^DFT ) and harmonic approximation forces ( F^(2) )
+    to find the anharmonic force via F^A = F^DFT - F^(2)
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        The phonon object to get F^(2) from
+    DFT_forces: list[np.ndarray]
+        Matrix of DFT_forces
+    """
+
+    DFT_forces_np = np.array(DFT_forces)
+    harmonic_force = phonon.forces
+    anharmonic_force = DFT_forces_np - harmonic_force
+    return anharmonic_force
+
+@job
+def calc_sigma_A_oneshot(
+    anharmonic_force: np.ndarray,
+    DFT_forces: list[np.ndarray]
+) -> float:
+    """
+    Calculates the one-shot approximation of sigma_A as the RMSE of the harmonic model 
+    divided by the standard deviation of the force distribution.
+
+    Parameters
+    ----------
+    anharmonic_force: np.ndarray
+        Matrix of anharmonic forces
+    DFT_forces: list[np.ndarray]
+        Matrix of DFT forces
+    """
+    DFT_forces_np = np.array(DFT_forces)
+    return np.std(np.ndarray.flatten(anharmonic_force))/np.std(np.ndarray.flatten(DFT_forces_np))
