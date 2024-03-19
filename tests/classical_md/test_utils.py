@@ -135,10 +135,7 @@ def test_create_openff_mol(mol_files):
 
 
 def test_create_mol_spec(mol_files):
-    smile = "CCO"
-    count = 10
-    name = "ethanol"
-    geometry = mol_files["CCO_xyz"]
+    smile, count, name, geometry = "CCO", 10, "ethanol", mol_files["CCO_xyz"]
     partial_charges = np.load(mol_files["CCO_charges"])
     mol_spec = create_mol_spec(
         smile, count, name, 1.0, "am1bcc", geometry, partial_charges
@@ -152,19 +149,13 @@ def test_create_mol_spec(mol_files):
 
 
 def test_merge_specs_by_name_and_smile(mol_files):
-    smile1 = "CCO"
-    count1 = 5
-    name1 = "ethanol"
-    geometry1 = mol_files["CCO_xyz"]
+    smile1, count1, name1, geometry1 = "CCO", 5, "ethanol", mol_files["CCO_xyz"]
     partial_charges1 = np.load(mol_files["CCO_charges"])
     mol_spec1 = create_mol_spec(
         smile1, count1, name1, 1.0, "am1bcc", geometry1, partial_charges1
     )
 
-    smile2 = "CCO"
-    count2 = 8
-    name2 = "ethanol"
-    geometry2 = mol_files["CCO_xyz"]
+    smile2, count2, name2, geometry2 = "CCO", 8, "ethanol", mol_files["CCO_xyz"]
     partial_charges2 = np.load(mol_files["CCO_charges"])
     mol_spec2 = create_mol_spec(
         smile2, count2, name2, 1.0, "am1bcc", geometry2, partial_charges2
@@ -174,3 +165,11 @@ def test_merge_specs_by_name_and_smile(mol_files):
     merged_specs = merge_specs_by_name_and_smile(mol_specs)
     assert len(merged_specs) == 1
     assert merged_specs[0].count == count1 + count2
+
+    mol_specs[1].name = "ethanol2"
+    merged_specs = merge_specs_by_name_and_smile(mol_specs)
+    assert len(merged_specs) == 2
+    assert merged_specs[0].name == name1
+    assert merged_specs[0].count == count1
+    assert merged_specs[1].name == "ethanol2"
+    assert merged_specs[1].count == count2
