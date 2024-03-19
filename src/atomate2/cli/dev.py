@@ -1,6 +1,5 @@
 """Module containing command line scripts for developers."""
 
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -17,13 +16,31 @@ def dev() -> None:
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("test_dir")
-def vasp_test_data(test_dir: Path) -> None:
+@click.argument(
+    "test_dir",
+)
+@click.option(
+    "--additional_file",
+    "-a",
+    multiple=True,
+    help="list of additional files to copy from each completed VASP directory. "
+    "Example: `--additional_file CHGCAR --additional_file LOCPOT`",
+)
+def vasp_test_data(test_dir: str | Path, additional_file: list[str]) -> None:
     """Generate test data for VASP unit tests.
 
     This script expects there is an outputs.json file and job folders in the current
     directory. Please refer to the atomate2 documentation on writing unit tests for more
     information.
+
+    Parameters
+    ----------
+    test_dir
+        The directory to write the test data to.
+        Should not contain spaces or punctuation.
+    additional_files
+        list of additional files to copy from each completed VASP directory.
+        Example: `--additional_file CHGCAR --additional_file LOCPOT`,
     """
     import warnings
     from pathlib import Path
@@ -110,6 +127,7 @@ def vasp_test_data(test_dir: Path) -> None:
                 "vasprun*",
                 "OUTCAR*",
                 "*.json*",
+                *additional_file,
             ],
             allow_missing=True,
         )

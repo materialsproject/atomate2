@@ -241,7 +241,7 @@ def calculate_electron_phonon_renormalisation(
         )
 
     # filter band structures that are None (i.e., the displacement calculation failed)
-    keep = [i for i, b in enumerate(displacement_band_structures) if b is not None]
+    keep = [idx for idx, b in enumerate(displacement_band_structures) if b is not None]
     temperatures = [temperatures[i] for i in keep]
     displacement_band_structures = [displacement_band_structures[i] for i in keep]
     displacement_structures = [displacement_structures[i] for i in keep]

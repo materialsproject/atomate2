@@ -291,20 +291,16 @@ def cclib_calculate(
     )
 
     method = method.lower()
-    cube_methods = ["bader", "ddec6", "hirshfeld"]
+    cube_methods = ("bader", "ddec6", "hirshfeld")
 
     if method in cube_methods and not cube_file:
-        raise FileNotFoundError(
-            f"A cube file must be provided for {method}. Returning None."
-        )
-    if method in ["ddec6", "hirshfeld"] and not proatom_dir:
+        raise FileNotFoundError(f"A cube file must be provided for {method}.")
+    if method in ("ddec6", "hirshfeld") and not proatom_dir:
         if os.getenv("PROATOM_DIR") is None:
-            raise OSError("PROATOM_DIR environment variable not set. Returning None.")
+            raise OSError("PROATOM_DIR environment variable not set.")
         proatom_dir = os.path.expandvars(os.environ["PROATOM_DIR"])
-    if proatom_dir and not os.path.exists(proatom_dir):
-        raise FileNotFoundError(
-            f"Protatom directory {proatom_dir} does not exist. Returning None."
-        )
+    if proatom_dir and not os.path.isdir(proatom_dir):
+        raise FileNotFoundError(f"{proatom_dir=} does not exist.")
 
     if cube_file and method in cube_methods:
         vol = volume.read_from_cube(str(cube_file))
@@ -380,13 +376,15 @@ def _get_homos_lumos(
         The HOMO-LUMO gaps (eV), calculated as LUMO_alpha-HOMO_alpha and
         LUMO_beta-HOMO_beta
     """
-    homo_energies = [mo_energies[i][h] for i, h in enumerate(homo_indices)]
-    # Make sure that the HOMO+1 (i.e. LUMO) is in moenergies (sometimes virtual
+    homo_energies = [mo_energies[idx][homo] for idx, homo in enumerate(homo_indices)]
+    # Make sure that the HOMO+1 (i.e. LUMO) is in MO energies (sometimes virtual
     # orbitals aren't printed in the output)
-    for i, h in enumerate(homo_indices):
-        if len(mo_energies[i]) < h + 2:
+    for idx, homo in enumerate(homo_indices):
+        if len(mo_energies[idx]) < homo + 2:
             return homo_energies, None, None
-    lumo_energies = [mo_energies[i][h + 1] for i, h in enumerate(homo_indices)]
+    lumo_energies = [
+        mo_energies[idx][homo + 1] for idx, homo in enumerate(homo_indices)
+    ]
     homo_lumo_gaps = [
         lumo_energies[i] - homo_energies[i] for i in range(len(homo_energies))
     ]

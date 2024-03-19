@@ -1,4 +1,5 @@
 """Core definition of a CP2K task document."""
+
 import logging
 from collections import OrderedDict
 from pathlib import Path
