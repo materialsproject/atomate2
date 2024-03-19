@@ -27,3 +27,7 @@ def test_monty_serialization():
     deserialized_smiles = deserialized_mol.to_smiles(
         isomeric=True, explicit_hydrogens=False, mapped=False
     )
+
+
+def test_calc_output_from_directory():
+    assert False

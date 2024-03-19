@@ -40,3 +40,27 @@ def test_base_openmm_maker(alchemy_input_set, job_store, task_details, caplog):
 
     # Validate NotImplementedError in captured logs
     assert "NotImplementedError" in caplog.record_tuples[2][2]
+
+
+def test_add_reporters():
+    assert False
+
+
+def test_resolve_attr():
+    assert False
+
+
+def test_create_integrator():
+    assert False
+
+
+def test_create_simulation():
+    assert False
+
+
+def test_update_interchange():
+    assert False
+
+
+def test_create_task_doc():
+    assert False
