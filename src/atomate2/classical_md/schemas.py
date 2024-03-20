@@ -1,17 +1,12 @@
 from datetime import datetime
-from pathlib import Path
-from typing import Union, Optional, List, Any
-
-import pymatgen
-from emmet.core.vasp.task_valid import TaskState
-from monty.json import MSONable
-from openff import toolkit as tk
-from openff.interchange import Interchange
-from pydantic import BaseModel, field_validator, confloat, PositiveInt, Field
-
-# from pydantic.dataclasses import dataclass
-from pymatgen.analysis.graphs import MoleculeGraph
+from typing import Optional, List
 from dataclasses import dataclass
+
+from pydantic import BaseModel, Field
+from openff import toolkit as tk
+from monty.json import MSONable
+
+from emmet.core.vasp.task_valid import TaskState
 
 
 @dataclass

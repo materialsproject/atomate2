@@ -9,7 +9,6 @@ from jobflow import Maker, Response, Job
 
 from atomate2.classical_md.core import openff_job
 
-# from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 from atomate2.classical_md.openmm.schemas.tasks import (
     Calculation,
     CalculationInput,

@@ -1,11 +1,8 @@
-from tempfile import TemporaryDirectory
-
 from typing import Optional, Union
 from pathlib import Path
 from dataclasses import dataclass, field
 from jobflow import Maker, Flow
-from typing import Dict, Tuple
-from openmm import Platform
+from typing import Tuple
 
 from openff.interchange import Interchange
 

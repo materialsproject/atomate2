@@ -1,6 +1,10 @@
-from typing import Optional, Dict, Callable, List
-from pathlib import Path
+from typing import Dict, Callable, List
 import copy
+
+from openff.toolkit import ForceField
+from openff.interchange import Interchange
+from openff.interchange.components._packmol import pack_box
+from openff.units import unit
 
 from jobflow import job
 from emmet.core.vasp.task_valid import TaskState
@@ -10,12 +14,6 @@ from atomate2.classical_md.utils import (
     merge_specs_by_name_and_smile,
     create_mol_spec,
 )
-
-from openff.toolkit import ForceField
-from openff.interchange import Interchange
-from openff.interchange.components._packmol import pack_box
-from openff.units import unit
-
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
