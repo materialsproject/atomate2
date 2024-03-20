@@ -40,7 +40,7 @@ class AnnealMaker(Maker):
         steps: Union[int, Tuple[int, int, int]] = 1500000,
         temp_steps: Union[int, Tuple[int, int, int]] = 100,
         job_names: Tuple[str, str, str] = ("raise temp", "hold temp", "lower temp"),
-        base_kwargs: Dict = None,
+        **kwargs,
     ):
         if isinstance(steps, int):
             steps = (steps // 3, steps // 3, steps - 2 * (steps // 3))
@@ -52,17 +52,17 @@ class AnnealMaker(Maker):
             name=job_names[0],
             temperature=anneal_temp,
             temp_steps=temp_steps[0],
-            **base_kwargs,
+            **kwargs,
         )
         nvt_maker = NVTMaker(
-            steps=steps[1], name=job_names[1], temperature=anneal_temp, **base_kwargs
+            steps=steps[1], name=job_names[1], temperature=anneal_temp, **kwargs
         )
         lower_temp_maker = TempChangeMaker(
             steps=steps[2],
             name=job_names[2],
             temperature=final_temp,
             temp_steps=temp_steps[2],
-            **base_kwargs,
+            **kwargs,
         )
         return cls(
             name=name,
@@ -169,15 +169,15 @@ class ProductionMaker(Maker):
             output_dir=output_dir,
         )
 
-        anneal_job = self.anneal_maker.make(
+        anneal_flow = self.anneal_maker.make(
             interchange=pressure_job.output.interchange,
             prev_task=pressure_job.output,
             output_dir=output_dir,
         )
 
         nvt_job = self.nvt_maker.make(
-            interchange=anneal_job.output.interchange,
-            prev_task=anneal_job.output,
+            interchange=anneal_flow.output.interchange,
+            prev_task=anneal_flow.output,
             output_dir=output_dir,
         )
 
@@ -185,7 +185,7 @@ class ProductionMaker(Maker):
             [
                 energy_job,
                 pressure_job,
-                anneal_job,
+                anneal_flow,
                 nvt_job,
             ],
             output=nvt_job.output,
