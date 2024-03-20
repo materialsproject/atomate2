@@ -95,7 +95,7 @@ class BaseOpenMMMaker(Maker):
         else:
             interchange = copy.deepcopy(interchange)
 
-        # Define output_dir if as a temporary directory if not provided?
+        # TODO: Define output_dir if as a temporary directory if not provided?
         dir_name = Path(output_dir)
 
         sim = self.create_simulation(interchange, prev_task)
