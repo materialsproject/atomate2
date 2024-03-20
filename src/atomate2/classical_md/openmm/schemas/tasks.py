@@ -83,7 +83,7 @@ class CalculationOutput(BaseModel):
     ):
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {
-            '#"Step"': "steps_reported",
+            '#"Step"': "output_steps",
             "Potential Energy (kJ/mole)": "potential_energy",
             "Kinetic Energy (kJ/mole)": "kinetic_energy",
             "Total Energy (kJ/mole)": "total_energy",
@@ -109,8 +109,8 @@ class CalculationOutput(BaseModel):
         return CalculationOutput(
             dir_name=str(dir_name),
             elapsed_time=elapsed_time,
-            dcd_file=state_file_name,
-            state_file=dcd_file_name,
+            dcd_file=dcd_file_name,
+            state_file=state_file_name,
             **attributes,
         )
 
