@@ -41,8 +41,8 @@ def openff_job(method: Callable):
 def generate_interchange(
     mol_specs: List[MoleculeSpec] | List[dict],
     mass_density: float,
-    force_field: str | Path | List[str | Path] = "openff_unconstrained-2.1.1.offxml",
-    pack_box_kwargs: Optional[Dict] = None,
+    force_field: str = "openff_unconstrained-2.1.1.offxml",
+    pack_box_kwargs: Dict = {},
 ):
     if all(isinstance(spec, dict) for spec in mol_specs):
         mol_specs = [create_mol_spec(**spec) for spec in mol_specs]
@@ -63,6 +63,9 @@ def generate_interchange(
     # TODO: document this
     mol_specs = merge_specs_by_name_and_smile(mol_specs)
 
+    # TODO: ForceField doesn't currently support iterables, fix this
+    # force_field: str | Path | List[str | Path] = "openff_unconstrained-2.1.1.offxml",
+
     # valid FFs: https://github.com/openforcefield/openff-forcefields
     interchange = Interchange.from_smirnoff(
         force_field=ForceField(force_field),
@@ -71,17 +74,21 @@ def generate_interchange(
         allow_nonintegral_charges=True,
     )
 
+    # currently not needed because ForceField isn't correctly supporting iterables
+
     # coerce force_field to a str or list of str
-    if not isinstance(force_field, list):
-        force_field = [force_field]
-    ff_list = [ff.name if isinstance(ff, Path) else ff for ff in force_field]
-    force_field_names = ff_list if len(force_field) > 1 else ff_list[0]
+    # if not isinstance(force_field, list):
+    #     force_field = [force_field]
+    # ff_list = [ff.name if isinstance(ff, Path) else ff for ff in force_field]
+    # force_field_names = ff_list if len(force_field) > 1 else ff_list[0]
+
+    interchange_dict = interchange.dict()
 
     task_doc = ClassicalMDTaskDocument(
         state=TaskState.SUCCESS,
-        interchange=interchange,
+        interchange=interchange_dict,
         molecule_specs=mol_specs,
-        forcefield=force_field_names,
+        forcefield=force_field,
     )
 
     return task_doc
