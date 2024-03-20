@@ -1,6 +1,6 @@
 from datetime import datetime
 from pathlib import Path
-from typing import Union, Optional, List
+from typing import Union, Optional, List, Any
 
 import pymatgen
 from emmet.core.vasp.task_valid import TaskState
@@ -44,7 +44,7 @@ class ClassicalMDTaskDocument(BaseModel, extra="allow"):
         description="Detailed data for each VASP calculation contributing to the task document.",
     )
 
-    interchange: Optional[dict] = Field(
+    interchange: Optional[str] = Field(
         None, description="Final output structure from the task"
     )
 

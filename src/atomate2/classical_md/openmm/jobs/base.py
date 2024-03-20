@@ -235,17 +235,22 @@ class BaseOpenMMMaker(Maker):
         interchange: Interchange,
         elapsed_time: Optional[float] = None,
         dir_name: Optional[Path] = None,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
-    ) -> ClassicalMDTaskDocument:
+        prev_task: Optional[OpenMMTaskDocument] = None,
+    ) -> OpenMMTaskDocument:
 
         maker_attrs = copy.deepcopy(vars(self))
         job_name = maker_attrs.pop("name")
+
+        prev_calcs = getattr(prev_task, "calcs_reversed", None) or []
+        n_prev_steps = sum(calc.input.steps for calc in prev_calcs)
 
         calc = Calculation(
             dir_name=str(dir_name),
             has_openmm_completed=True,
             input=CalculationInput(**maker_attrs),
-            output=CalculationOutput.from_directory(dir_name, elapsed_time),
+            output=CalculationOutput.from_directory(
+                dir_name, elapsed_time, n_prev_steps
+            ),
             completed_at=str(datetime.now()),
             task_name=job_name,
             calc_type=self.__class__.__name__,  # TODO: will this return the right name?
