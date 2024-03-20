@@ -2,12 +2,9 @@ from openff.toolkit.topology.molecule import Molecule
 from openff.interchange import Interchange
 from openff.toolkit.topology import Topology
 
-
 from pydantic import parse
 
 
-#
-#
 def openff_mol_as_monty_dict(self):
     mol_dict = self.to_dict()
     mol_dict["@module"] = "openff.toolkit.topology"
