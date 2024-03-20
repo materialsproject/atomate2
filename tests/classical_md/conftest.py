@@ -12,10 +12,29 @@ from openff.units import unit
 
 from atomate2.classical_md.utils import merge_specs_by_name_and_smile, create_mol_spec
 
+from jobflow import run_locally
+
+
+@pytest.fixture
+def run_job():
+    def run_job(job):
+        response_dict = run_locally(job, ensure_success=True)
+        return response_dict[job.uuid][1].output
+
+    return run_job
+
 
 @pytest.fixture
 def md_task_doc():
     return None
+
+
+@pytest.fixture
+def mol_specs_small():
+    return [
+        create_mol_spec("CCO", 10, name="ethanol"),
+        create_mol_spec("O", 20, name="water"),
+    ]
 
 
 @pytest.fixture
@@ -44,7 +63,7 @@ def interchange():
 
 
 @pytest.fixture
-def tmp_path():
+def temp_dir():
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
 
