@@ -15,10 +15,10 @@ from atomate2.classical_md.openmm.schemas.tasks import (
 )
 
 
-def test_add_reporters(interchange, tmp_path):
+def test_add_reporters(interchange, temp_dir):
     maker = BaseOpenMMMaker(dcd_interval=100, state_interval=50, wrap_dcd=True)
     sim = maker.create_simulation(interchange)
-    dir_name = tmp_path / "test_output"
+    dir_name = temp_dir / "test_output"
     dir_name.mkdir()
 
     maker.add_reporters(sim, dir_name)
@@ -86,9 +86,9 @@ def test_update_interchange(interchange):
     assert np.all(interchange.box == start_box)
 
 
-def test_create_task_doc(interchange, tmp_path):
+def test_create_task_doc(interchange, temp_dir):
     maker = BaseOpenMMMaker(steps=1000, temperature=300)
-    dir_name = tmp_path / "test_output"
+    dir_name = temp_dir / "test_output"
     dir_name.mkdir()
 
     task_doc = maker.create_task_doc(interchange, elapsed_time=10.5, dir_name=dir_name)
@@ -103,10 +103,7 @@ def test_create_task_doc(interchange, tmp_path):
     assert task_doc.interchange == interchange
 
 
-def test_make(interchange, tmp_path):
-
-    temp_dir = tmp_path / "test_output"
-    temp_dir.mkdir()
+def test_make(interchange, temp_dir, run_job):
 
     # Create an instance of BaseOpenMMMaker
     maker = BaseOpenMMMaker(
@@ -126,14 +123,10 @@ def test_make(interchange, tmp_path):
     base_job = maker.make(interchange, output_dir=temp_dir)
     assert isinstance(base_job, Job)
 
-    response_dict = run_locally(base_job, ensure_success=True)
-    response = response_dict[base_job.uuid][1]
-
-    # Assert that the response contains the expected output
-    assert isinstance(response.output, ClassicalMDTaskDocument)
+    task_doc = run_job(base_job)
 
     # Assert the specific values in the task document
-    task_doc = response.output
+    assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.state == "successful"
     assert task_doc.dir_name == str(temp_dir)
     assert task_doc.interchange == interchange
@@ -154,33 +147,3 @@ def test_make(interchange, tmp_path):
     assert calc.completed_at is not None
     assert calc.task_name == "base openmm job"
     assert calc.calc_type == "BaseOpenMMMaker"
-
-
-# def test_serialize_interchange(interchange):
-#     from openff.interchange import Interchange
-#     from pydantic import parse
-#
-#     interchange_dict = interchange.dict()
-#
-#     # from json
-#     interchange2 = Interchange(**interchange_dict)
-#
-#     interchange_str = interchange.json()
-#     interchange3 = Interchange.parse_raw(interchange_str)
-#
-#     # assert interchange == interchange2
-#     assert interchange.Config == interchange2.Config
-#     # assert interchange.box == interchange2.box
-#     # assert interchange.positions == interchange2.positions
-#     # assert interchange.velocities == interchange2.velocities
-#     # assert interchange.topology == interchange2.topology
-#     # assert interchange.collections == interchange2.collections
-#     # assert interchange.mdconfig == interchange2.mdconfig
-#
-#     # all versions
-#     assert np.all(interchange.box) == np.all(interchange2.box)
-#     assert np.all(interchange.positions) == np.all(interchange2.positions)
-#     assert np.all(interchange.velocities) == np.all(interchange2.velocities)
-#     assert interchange.topology == interchange2.topology
-#     assert interchange.collections == interchange2.collections
-#     assert interchange.mdconfig == interchange2.mdconfig
