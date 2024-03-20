@@ -7,6 +7,8 @@ from emmet.core.vasp.task_valid import TaskState
 
 import pandas as pd
 
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument
+
 
 class CalculationInput(BaseModel, extra="allow"):
 
@@ -80,6 +82,7 @@ class CalculationOutput(BaseModel):
         cls,
         dir_name: Path | str,
         elapsed_time: Optional[float] = None,
+        n_prev_steps: Optional[int] = None,
     ):
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {
@@ -96,6 +99,7 @@ class CalculationOutput(BaseModel):
             data = pd.read_csv(state_file, header=0)
             data = data.rename(columns=column_name_map)
             data = data.filter(items=column_name_map.values())
+            data["output_steps"] += n_prev_steps
             attributes = data.to_dict(orient="list")
             state_file_name = state_file.name
         else:
@@ -142,4 +146,13 @@ class Calculation(BaseModel):
     calc_type: Optional[str] = Field(
         None,
         description="Return calculation type (run type + task_type). or just new thing",
+    )
+
+
+class OpenMMTaskDocument(ClassicalMDTaskDocument):
+
+    calcs_reversed: Optional[List[Calculation]] = Field(
+        None,
+        title="Calcs reversed data",
+        description="Detailed data for each OpenMM calculation contributing to the task document.",
     )
