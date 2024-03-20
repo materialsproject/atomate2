@@ -15,7 +15,7 @@ def test_generate_interchange(mol_specs_small, run_job):
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.forcefield == force_field
 
-    interchange = Interchange(**task_doc.interchange)
+    interchange = Interchange.parse_raw(task_doc.interchange)
     assert isinstance(interchange, Interchange)
 
     topology = interchange.topology
