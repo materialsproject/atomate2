@@ -50,6 +50,11 @@ def tmp_path():
 
 
 @pytest.fixture
+def output_dir(test_dir):
+    return test_dir / "classical_md" / "output_dir"
+
+
+@pytest.fixture
 def classical_md_data(test_dir):
     return test_dir / "classical_md"
 
