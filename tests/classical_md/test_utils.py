@@ -1,6 +1,12 @@
 import pytest
 
 import openff.toolkit as tk
+
+from openff.toolkit.topology.molecule import Molecule
+from openff.interchange import Interchange
+from openff.toolkit.topology import Topology
+from openff.units import Quantity
+
 import numpy as np
 
 import pymatgen
@@ -173,3 +179,57 @@ def test_merge_specs_by_name_and_smile(mol_files):
     assert merged_specs[0].count == count1
     assert merged_specs[1].name == "ethanol2"
     assert merged_specs[1].count == count2
+
+
+def test_openff_mol_as_from_monty_dict():
+    mol = Molecule.from_smiles("CCO")
+    mol_dict = mol.as_dict()
+    reconstructed_mol = Molecule.from_dict(mol_dict)
+
+    assert mol.to_smiles() == reconstructed_mol.to_smiles()
+    assert mol.n_atoms == reconstructed_mol.n_atoms
+    assert mol.n_bonds == reconstructed_mol.n_bonds
+    assert mol.n_angles == reconstructed_mol.n_angles
+    assert mol.n_propers == reconstructed_mol.n_propers
+    assert mol.n_impropers == reconstructed_mol.n_impropers
+
+
+def test_openff_topology_as_from_monty_dict():
+    topology = Topology.from_molecules([Molecule.from_smiles("CCO")])
+    topology_dict = topology.as_dict()
+    reconstructed_topology = Topology.from_dict(topology_dict)
+
+    assert topology.n_molecules == reconstructed_topology.n_molecules
+    assert topology.n_atoms == reconstructed_topology.n_atoms
+    assert topology.n_bonds == reconstructed_topology.n_bonds
+    assert topology.box_vectors == reconstructed_topology.box_vectors
+
+
+def test_openff_interchange_as_from_monty_dict(interchange):
+    # interchange = Interchange.from_smirnoff("openff-2.0.0.offxml", "CCO")
+    interchange_dict = interchange.as_dict()
+    reconstructed_interchange = Interchange.from_dict(interchange_dict)
+
+    assert np.all(interchange.positions == reconstructed_interchange.positions)
+    assert np.all(interchange.velocities == reconstructed_interchange.velocities)
+    assert np.all(interchange.box == reconstructed_interchange.box)
+
+    assert interchange.mdconfig == reconstructed_interchange.mdconfig
+
+    topology = interchange.topology
+    reconstructed_topology = reconstructed_interchange.topology
+
+    assert topology.n_molecules == reconstructed_topology.n_molecules
+    assert topology.n_atoms == reconstructed_topology.n_atoms
+    assert topology.n_bonds == reconstructed_topology.n_bonds
+    assert np.all(topology.box_vectors == reconstructed_topology.box_vectors)
+
+
+def test_openff_quantity_as_from_monty_dict():
+    quantity = Quantity(1.0, "kilocalorie / mole")
+    quantity_dict = quantity.as_dict()
+    reconstructed_quantity = Quantity.from_dict(quantity_dict)
+
+    assert quantity.magnitude == reconstructed_quantity.magnitude
+    assert quantity.units == reconstructed_quantity.units
+    assert quantity == reconstructed_quantity

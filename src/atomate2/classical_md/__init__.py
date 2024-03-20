@@ -40,7 +40,7 @@ def openff_interchange_from_monty_dict(cls, d):
 
 
 Interchange.as_dict = openff_interchange_as_monty_dict
-Interchange.from_dict = openff_interchange_from_monty_dict
+Interchange.from_dict = classmethod(openff_interchange_from_monty_dict)
 
 
 from openff.units import Quantity
@@ -63,4 +63,4 @@ def openff_quantity_from_monty_dict(cls, d):
 
 
 Quantity.as_dict = openff_quantity_as_monty_dict
-Quantity.from_dict = openff_quantity_from_monty_dict
+Quantity.from_dict = classmethod(openff_quantity_from_monty_dict)
