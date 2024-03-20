@@ -8,11 +8,13 @@ from pathlib import Path
 from jobflow import Maker, Response, Job
 
 from atomate2.classical_md.core import openff_job
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument
+
+# from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 from atomate2.classical_md.openmm.schemas.tasks import (
     Calculation,
     CalculationInput,
     CalculationOutput,
+    OpenMMTaskDocument,
 )
 
 from openff.interchange import Interchange
@@ -64,8 +66,8 @@ class BaseOpenMMMaker(Maker):
     @openff_job
     def make(
         self,
-        interchange: Interchange | dict,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
+        interchange: Interchange | str,
+        prev_task: Optional[OpenMMTaskDocument] = None,
         output_dir: Optional[str | Path] = None,
     ) -> Job:
         """
@@ -85,13 +87,13 @@ class BaseOpenMMMaker(Maker):
         ----------
         interchange : Interchange
             An Interchange object containing the molecular mechanics data.
-        prev_task : Optional[ClassicalMDTaskDocument]
+        prev_task : Optional[OpenMMTaskDocument]
             The previous task document. If not provided, a new task document will be created.
         output_dir : Optional[str | Path]
         """
         # this is needed because interchange is currently using pydantic.v1
-        if isinstance(interchange, dict):
-            interchange = Interchange(**interchange)
+        if not isinstance(interchange, Interchange):
+            interchange = Interchange.parse_raw(interchange)
         else:
             interchange = copy.deepcopy(interchange)
 
@@ -121,7 +123,7 @@ class BaseOpenMMMaker(Maker):
         self,
         sim: Simulation,
         dir_name: Path,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
+        prev_task: Optional[OpenMMTaskDocument] = None,
     ):
 
         # add dcd reporter
@@ -171,10 +173,8 @@ class BaseOpenMMMaker(Maker):
             "`run_openmm` should be implemented by each child class."
         )
 
-    def resolve_attr(
-        self, attr: str, prev_task: Optional[ClassicalMDTaskDocument] = None
-    ):
-        prev_task = prev_task or ClassicalMDTaskDocument()
+    def resolve_attr(self, attr: str, prev_task: Optional[OpenMMTaskDocument] = None):
+        prev_task = prev_task or OpenMMTaskDocument()
 
         # retrieve previous CalculationInput through multiple Optional fields
         if prev_task.calcs_reversed:
@@ -182,16 +182,17 @@ class BaseOpenMMMaker(Maker):
         else:
             prev_input = None
 
-        # TODO: test this
-        return (
+        attr_value = (
             getattr(self, attr, None)
             or getattr(prev_input, attr, None)
             or OPENMM_MAKER_DEFAULTS.get(attr, None)
         )
+        setattr(self, attr, attr_value)
+        return getattr(self, attr)
 
     def create_integrator(
         self,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
+        prev_task: Optional[OpenMMTaskDocument] = None,
     ):
         return LangevinMiddleIntegrator(
             self.resolve_attr("temperature", prev_task) * kelvin,
@@ -202,7 +203,7 @@ class BaseOpenMMMaker(Maker):
     def create_simulation(
         self,
         interchange: Interchange,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
+        prev_task: Optional[OpenMMTaskDocument] = None,
     ):
         # get integrator from string?
         # openmm_integrator = getattr(openmm, self.integrator)
@@ -256,16 +257,16 @@ class BaseOpenMMMaker(Maker):
             calc_type=self.__class__.__name__,  # TODO: will this return the right name?
         )
 
-        prev_task = prev_task or ClassicalMDTaskDocument()
+        prev_task = prev_task or OpenMMTaskDocument()
 
-        interchange_dict = interchange.dict()
+        interchange_json = interchange.json()
 
-        return ClassicalMDTaskDocument(
+        return OpenMMTaskDocument(
             tags=None,  # TODO: where do tags come from?
             dir_name=str(dir_name),
             state="successful",
             calcs_reversed=[calc] + (prev_task.calcs_reversed or []),
-            interchange=interchange_dict,
+            interchange=interchange_json,
             molecule_specs=prev_task.molecule_specs,
             forcefield=prev_task.forcefield,
             task_name=calc.task_name,
