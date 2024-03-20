@@ -81,8 +81,8 @@ class CalculationOutput(BaseModel):
     def from_directory(
         cls,
         dir_name: Path | str,
+        n_prev_steps: int = 0,
         elapsed_time: Optional[float] = None,
-        n_prev_steps: Optional[int] = None,
     ):
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {

@@ -82,11 +82,11 @@ def generate_interchange(
     # ff_list = [ff.name if isinstance(ff, Path) else ff for ff in force_field]
     # force_field_names = ff_list if len(force_field) > 1 else ff_list[0]
 
-    interchange_dict = interchange.dict()
+    interchange_json = interchange.json()
 
     task_doc = ClassicalMDTaskDocument(
         state=TaskState.SUCCESS,
-        interchange=interchange_dict,
+        interchange=interchange_json,
         molecule_specs=mol_specs,
         forcefield=force_field,
     )
