@@ -336,13 +336,3 @@ def merge_specs_by_name_and_smile(mol_specs: List[MoleculeSpec]) -> List[Molecul
         else:
             merged_spec_dict[key] = spec
     return list(merged_spec_dict.values())
-
-
-from openff.toolkit.topology.molecule import Molecule
-
-
-def openff_mol_as_monty_dict(self):
-    mol_dict = self.to_dict()
-    mol_dict["@module"] = "openff.toolkit.topology"
-    mol_dict["@class"] = "Molecule"
-    return mol_dict
