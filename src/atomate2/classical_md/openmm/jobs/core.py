@@ -7,23 +7,25 @@ from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
 
 from openmm import LangevinMiddleIntegrator
 from openmm.openmm import MonteCarloBarostat
-from openmm.unit import kelvin, atmosphere, picoseconds
+from openmm.unit import kelvin, atmosphere, picoseconds, kilojoules_per_mole, nanometer
 
 
 @dataclass
 class EnergyMinimizationMaker(BaseOpenMMMaker):
     name: str = "energy minimization"
     steps: int = 0
-    # TODO: add default kwargs for Simulation.minimizeEnergy?
-    # tolerance
-    # maxIterations : int
+    tolerance: float = 10
+    max_iterations: int = 0
 
     def run_openmm(self, sim):
 
         assert self.steps == 0, "Energy minimization should have 0 steps."
 
         # Minimize the energy
-        sim.minimizeEnergy()
+        sim.minimizeEnergy(
+            tolerance=self.tolerance * kilojoules_per_mole / nanometer,
+            maxIterations=self.max_iterations,
+        )
 
 
 @dataclass
@@ -34,19 +36,18 @@ class NPTMaker(BaseOpenMMMaker):
     step_size: Optional[float] = None
     temperature: Optional[float] = None
     friction_coefficient: Optional[float] = None
-    # frequency: int = 10
+    pressure_update_frequency: int = 10
 
     def run_openmm(self, sim):
         # Add barostat to system
         context = sim.context
         system = context.getSystem()
 
-        pressure_update_frequency = 10
         barostat_force_index = system.addForce(
             MonteCarloBarostat(
                 self.pressure * atmosphere,
                 sim.context.getIntegrator().getTemperature(),
-                pressure_update_frequency,
+                self.pressure_update_frequency,
             )
         )
 
@@ -79,7 +80,7 @@ class NVTMaker(BaseOpenMMMaker):
 class TempChangeMaker(BaseOpenMMMaker):
     name: str = "temperature change"
     steps: int = 1000000
-    temp_steps = 100
+    temp_steps: int = 100
     step_size: Optional[float] = None
     temperature: Optional[float] = None
     friction_coefficient: Optional[float] = None

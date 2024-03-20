@@ -1,88 +1,68 @@
+from atomate2.classical_md.openmm.jobs.core import (
+    EnergyMinimizationMaker,
+    NPTMaker,
+    NVTMaker,
+    TempChangeMaker,
+)
 from jobflow import run_locally
 
-from atomate2.openmm.jobs.openmm_set_maker import OpenMMSetMaker
-
-from maggma.stores import MemoryStore
+import numpy as np
 
 
-def test_openmm_set_maker(job_store):
-    input_mol_dicts = [
-        {"smile": "O", "count": 200},
-        {"smile": "CCO", "count": 20},
-    ]
+def test_energy_minimization_maker(interchange, tmp_path):
 
-    set_maker = OpenMMSetMaker()
+    temp_dir = tmp_path / "test_output"
+    temp_dir.mkdir()
 
-    set_job = set_maker.make(input_mol_dicts=input_mol_dicts, density=1)
+    maker = EnergyMinimizationMaker(max_iterations=1)
 
-    responses = run_locally(set_job, store=job_store)
+    base_job = maker.make(interchange, output_dir=temp_dir)
+    response_dict = run_locally(base_job, ensure_success=True)
+    task_doc = response_dict[base_job.uuid][1].output
 
-    print("hi")
-
-
-def test_energy_minimization_maker(alchemy_input_set, job_store):
-    from atomate2.openmm.jobs.energy_minimization_maker import EnergyMinimizationMaker
-    from jobflow import run_locally
-
-    energy_minimization_job_maker = EnergyMinimizationMaker(dcd_reporter_interval=1)
-    energy_minimization_job = energy_minimization_job_maker.make(input_set=alchemy_input_set)
-    run_locally(energy_minimization_job, store=job_store)
+    assert np.any(task_doc.interchange["positions"] != interchange.positions)
 
 
-def test_npt_maker(alchemy_input_set, job_store):
-    from atomate2.openmm.jobs.energy_minimization_maker import EnergyMinimizationMaker
-    from atomate2.openmm.schemas.openmm_task_document import OpenMMTaskDocument
-    from atomate2.openmm.jobs.npt_maker import NPTMaker
-    from jobflow import Flow, run_locally
+def test_npt_maker(interchange, tmp_path):
+    temp_dir = tmp_path / "test_output"
+    temp_dir.mkdir()
 
-    energy_minimization_job_maker = EnergyMinimizationMaker()
-    npt_job_maker = NPTMaker(
-        steps=1000,
-        dcd_reporter_interval=10,
-        state_reporter_interval=10,
-    )
-    energy_minimization_job = energy_minimization_job_maker.make(input_set=alchemy_input_set)
-    npt_job = npt_job_maker.make(input_set=energy_minimization_job.output.calculation_output.input_set)
-    flow = Flow(
-        jobs=[
-            energy_minimization_job,
-            npt_job,
-        ]
-    )
+    maker = NPTMaker(steps=10, pressure=0.1, pressure_update_frequency=1)
 
-    response = run_locally(flow=flow, store=job_store, ensure_success=True)
-    output = response[npt_job.uuid][1].output
-    assert isinstance(output, OpenMMTaskDocument)
+    base_job = maker.make(interchange, output_dir=temp_dir)
+    response_dict = run_locally(base_job, ensure_success=True)
+    task_doc = response_dict[base_job.uuid][1].output
 
-    with job_store.docs_store as s:
-        doc = s.query_one({"uuid": npt_job.uuid})
-        assert doc["output"]["@class"] == "OpenMMTaskDocument"
+    # test that coordinates and box size has changed
+    assert np.any(task_doc.interchange["positions"] != interchange.positions)
+    assert np.any(task_doc.interchange["box"] != interchange.box)
 
-def test_nvt_maker(alchemy_input_set, job_store):
-    from atomate2.openmm.jobs.energy_minimization_maker import EnergyMinimizationMaker
-    from atomate2.openmm.schemas.openmm_task_document import OpenMMTaskDocument
-    from atomate2.openmm.jobs.nvt_maker import NVTMaker
-    from jobflow import Flow, run_locally
 
-    energy_minimization_job_maker = EnergyMinimizationMaker()
-    nvt_job_maker = NVTMaker(
-        steps=1000,
-        dcd_reporter_interval=10,
-        state_reporter_interval=10,
-    )
-    energy_minimization_job = energy_minimization_job_maker.make(input_set=alchemy_input_set)
-    nvt_job = nvt_job_maker.make(input_set=energy_minimization_job.output.calculation_output.input_set)
-    flow = Flow(
-        jobs=[
-            energy_minimization_job,
-            nvt_job,
-        ]
-    )
+def test_nvt_maker(interchange, tmp_path):
+    temp_dir = tmp_path / "test_output"
+    temp_dir.mkdir()
 
-    response = run_locally(flow=flow, store=job_store, ensure_success=True)
-    output = response[nvt_job.uuid][1].output
-    assert isinstance(output, OpenMMTaskDocument)
+    maker = NVTMaker(steps=10)
 
-    with job_store.docs_store as s:
-        doc = s.query_one({"uuid": nvt_job.uuid})
-        assert doc["output"]["@class"] == "OpenMMTaskDocument"
+    base_job = maker.make(interchange, output_dir=temp_dir)
+    response_dict = run_locally(base_job, ensure_success=True)
+    task_doc = response_dict[base_job.uuid][1].output
+
+    # test that coordinates have changed
+    assert np.any(task_doc.interchange["positions"] != interchange.positions)
+
+
+def test_temp_change_maker(interchange, tmp_path):
+    temp_dir = tmp_path / "test_output"
+    temp_dir.mkdir()
+
+    maker = TempChangeMaker(steps=10, temperature=310, temp_steps=10)
+
+    base_job = maker.make(interchange, output_dir=temp_dir)
+    response_dict = run_locally(base_job, ensure_success=True)
+    task_doc = response_dict[base_job.uuid][1].output
+
+    # test that coordinates have changed and starting temperature is present and correct
+    assert np.any(task_doc.interchange["positions"] != interchange.positions)
+    assert task_doc.calcs_reversed[0].input.temperature == 310
+    assert task_doc.calcs_reversed[0].input.starting_temperature == 298
