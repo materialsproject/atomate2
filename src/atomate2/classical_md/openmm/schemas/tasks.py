@@ -10,56 +10,70 @@ import pandas as pd
 
 class CalculationInput(BaseModel, extra="allow"):
 
-    steps: int = Field(0, description="Total steps")
+    steps: Optional[int] = Field(0, description="Total steps")
 
-    step_size: int = Field(None, description="")
+    step_size: Optional[float] = Field(None, description="")
 
-    platform_name: str = Field(None, description="Platform name")
+    platform_name: Optional[str] = Field(None, description="Platform name")
 
-    platform_properties: dict = Field(None, description="Platform properties")
+    platform_properties: Optional[dict] = Field(None, description="Platform properties")
 
-    state_interval: int = Field(None, description="")
+    state_interval: Optional[int] = Field(None, description="")
 
-    dcd_interval: int = Field(None, description="Report interval")
+    dcd_interval: Optional[int] = Field(None, description="Report interval")
 
-    wrap_dcd: bool = Field(None, description="Wrap particles or not")
+    wrap_dcd: Optional[bool] = Field(None, description="Wrap particles or not")
 
-    temperature: float = Field(
+    temperature: Optional[float] = Field(
         None, description="Final temperature for the calculation"
     )
 
-    pressure: float = Field(None, description="Pressure for the calculation")
+    pressure: Optional[float] = Field(None, description="Pressure for the calculation")
 
-    friction_coefficient: float = Field(
+    friction_coefficient: Optional[float] = Field(
         None, description="Friction coefficient for the calculation"
     )
-
-    # integrator: Optional[str] = Field(None, description="Total steps")
 
 
 class CalculationOutput(BaseModel):
 
-    dir_name: str = Field(None, description="The directory for this OpenMM task")
+    dir_name: Optional[str] = Field(
+        None, description="The directory for this OpenMM task"
+    )
 
-    steps: List[int] = Field(None, description="List of steps")
+    dcd_file: Optional[str] = Field(
+        None, description="Path to the DCD file relative to `dir_name`"
+    )
 
-    time: List[float] = Field(None, description="List of times")
+    state_file: Optional[str] = Field(
+        None, description="Path to the state file relative to `dir_name`"
+    )
 
-    potential_energy: List[float] = Field(
+    output_steps: Optional[List[int]] = Field(None, description="List of steps")
+
+    time: Optional[List[float]] = Field(None, description="List of times")
+
+    potential_energy: Optional[List[float]] = Field(
         None, description="List of potential energies"
     )
 
-    kinetic_energy: List[float] = Field(None, description="List of kinetic energies")
+    kinetic_energy: Optional[List[float]] = Field(
+        None, description="List of kinetic energies"
+    )
 
-    total_energy: List[float] = Field(None, description="List of total energies")
+    total_energy: Optional[List[float]] = Field(
+        None, description="List of total energies"
+    )
 
-    temperature: List[float] = Field(None, description="List of temperatures")
+    temperature: Optional[List[float]] = Field(None, description="List of temperatures")
 
-    volume: List[float] = Field(None, description="List of volumes")
+    volume: Optional[List[float]] = Field(None, description="List of volumes")
 
-    density: List[float] = Field(None, description="List of densities")
+    density: Optional[List[float]] = Field(None, description="List of densities")
 
-    elapsed_time: float = Field(None, description="Elapsed time for the calculation")
+    elapsed_time: Optional[float] = Field(
+        None, description="Elapsed time for the calculation"
+    )
 
     @classmethod
     def from_directory(
@@ -68,9 +82,8 @@ class CalculationOutput(BaseModel):
         elapsed_time: Optional[float] = None,
     ):
         state_file = Path(dir_name) / "state_csv"
-        data = pd.read_csv(state_file, header=0)
         column_name_map = {
-            '#"Step"': "steps",
+            '#"Step"': "steps_reported",
             "Potential Energy (kJ/mole)": "potential_energy",
             "Kinetic Energy (kJ/mole)": "kinetic_energy",
             "Total Energy (kJ/mole)": "total_energy",
@@ -78,13 +91,26 @@ class CalculationOutput(BaseModel):
             "Box Volume (nm^3)": "volume",
             "Density (g/mL)": "density",
         }
-        data = data.rename(columns=column_name_map)
-        data = data.filter(items=column_name_map.values())
-        attributes = data.to_dict(orient="list")
+        state_is_not_empty = state_file.exists() and state_file.stat().st_size > 0
+        if state_is_not_empty:
+            data = pd.read_csv(state_file, header=0)
+            data = data.rename(columns=column_name_map)
+            data = data.filter(items=column_name_map.values())
+            attributes = data.to_dict(orient="list")
+            state_file_name = state_file.name
+        else:
+            attributes = {name: None for name in column_name_map.values()}
+            state_file_name = None
 
-        return CalculationInput(
-            dir_name=dir_name,
+        dcd_file = Path(dir_name) / "trajectory_dcd"
+        dcd_is_not_empty = dcd_file.exists() and dcd_file.stat().st_size > 0
+        dcd_file_name = dcd_file.name if dcd_is_not_empty else None
+
+        return CalculationOutput(
+            dir_name=str(dir_name),
             elapsed_time=elapsed_time,
+            dcd_file=state_file_name,
+            state_file=dcd_file_name,
             **attributes,
         )
 
