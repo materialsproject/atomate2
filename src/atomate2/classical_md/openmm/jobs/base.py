@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from pathlib import Path
-from jobflow import Maker, Response
+from jobflow import Maker, Response, Job
 
 from atomate2.classical_md.core import openff_job
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
@@ -53,7 +53,7 @@ class BaseOpenMMMaker(Maker):
     name: str = "base openmm job"
     steps: Optional[int] = field(default=None)
     step_size: Optional[float] = field(default=None)
-    platform_name: Optional[dict] = field(default=None)
+    platform_name: Optional[str] = field(default=None)
     platform_properties: Optional[dict] = field(default=None)
     state_interval: Optional[int] = field(default=None)
     dcd_interval: Optional[int] = field(default=None)
@@ -64,10 +64,10 @@ class BaseOpenMMMaker(Maker):
     @openff_job
     def make(
         self,
-        interchange: Interchange,
+        interchange: Interchange | dict,
         prev_task: Optional[ClassicalMDTaskDocument] = None,
         output_dir: Optional[str | Path] = None,
-    ) -> Response:
+    ) -> Job:
         """
         OpenMM Job Maker where each Job consist of three major steps:
 
@@ -89,6 +89,12 @@ class BaseOpenMMMaker(Maker):
             The previous task document. If not provided, a new task document will be created.
         output_dir : Optional[str | Path]
         """
+        # this is needed because interchange is currently using pydantic.v1
+        if isinstance(interchange, dict):
+            interchange = Interchange(**interchange)
+        else:
+            interchange = copy.deepcopy(interchange)
+
         # Define output_dir if as a temporary directory if not provided?
         dir_name = Path(output_dir)
 
@@ -119,19 +125,21 @@ class BaseOpenMMMaker(Maker):
     ):
 
         # add dcd reporter
-        if self.dcd_interval > 0:
+        dcd_interval = self.resolve_attr("dcd_interval", prev_task)
+        if dcd_interval > 0:
             dcd_reporter = DCDReporter(
                 file=str(dir_name / "trajectory_dcd"),
-                reportInterval=self.resolve_attr("dcd_interval", prev_task),
+                reportInterval=dcd_interval,
                 enforcePeriodicBox=self.resolve_attr("wrap_dcd", prev_task),
             )
             sim.reporters.append(dcd_reporter)
 
         # add state reporter
-        if self.state_interval > 0:
+        state_interval = self.resolve_attr("state_interval", prev_task)
+        if state_interval > 0:
             state_reporter = StateDataReporter(
                 file=str(dir_name / "state_csv"),
-                reportInterval=self.resolve_attr("state_interval", prev_task),
+                reportInterval=state_interval,
                 step=True,
                 potentialEnergy=True,
                 kineticEnergy=True,
@@ -176,8 +184,8 @@ class BaseOpenMMMaker(Maker):
 
         # TODO: test this
         return (
-            getattr(self, attr)
-            or prev_input.get(attr, None)
+            getattr(self, attr, None)
+            or getattr(prev_input, attr, None)
             or OPENMM_MAKER_DEFAULTS.get(attr, None)
         )
 
@@ -218,9 +226,9 @@ class BaseOpenMMMaker(Maker):
             getVelocities=True,
             enforcePeriodicBox=self.resolve_attr("wrap_dcd", prev_task),
         )
-        # TODO: update box vectors, correct units
         interchange.positions = state.getPositions(asNumpy=True)
         interchange.velocities = state.getVelocities(asNumpy=True)
+        interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
 
     def create_task_doc(
         self,
@@ -228,13 +236,13 @@ class BaseOpenMMMaker(Maker):
         elapsed_time: Optional[float] = None,
         dir_name: Optional[Path] = None,
         prev_task: Optional[ClassicalMDTaskDocument] = None,
-    ):
+    ) -> ClassicalMDTaskDocument:
 
         maker_attrs = copy.deepcopy(vars(self))
         job_name = maker_attrs.pop("name")
 
         calc = Calculation(
-            dir_name=dir_name,
+            dir_name=str(dir_name),
             has_openmm_completed=True,
             input=CalculationInput(**maker_attrs),
             output=CalculationOutput.from_directory(dir_name, elapsed_time),
@@ -245,14 +253,17 @@ class BaseOpenMMMaker(Maker):
 
         prev_task = prev_task or ClassicalMDTaskDocument()
 
+        interchange_dict = interchange.dict()
+
         return ClassicalMDTaskDocument(
             tags=None,  # TODO: where do tags come from?
-            dir_name=dir_name,
+            dir_name=str(dir_name),
             state="successful",
             calcs_reversed=[calc] + (prev_task.calcs_reversed or []),
-            interchange=interchange,
+            interchange=interchange_dict,
             molecule_specs=prev_task.molecule_specs,
             forcefield=prev_task.forcefield,
             task_name=calc.task_name,
+            task_type="test",
             last_updated=datetime.now(),
         )
