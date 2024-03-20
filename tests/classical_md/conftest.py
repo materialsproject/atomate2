@@ -19,7 +19,7 @@ from jobflow import run_locally
 def run_job():
     def run_job(job):
         response_dict = run_locally(job, ensure_success=True)
-        return response_dict[job.uuid][1].output
+        return list(response_dict.values())[-1][1].output
 
     return run_job
 
