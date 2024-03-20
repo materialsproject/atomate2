@@ -94,7 +94,7 @@ class CalculationOutput(BaseModel):
         None, description="The final structure from the calculation"
     )
 
-    efermi: float = Field(
+    efermi: Optional[float] = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
@@ -151,12 +151,15 @@ class CalculationOutput(BaseModel):
         structure = output.final_structure
 
         electronic_output = {
-            "efermi": output.fermi_energy,
+            "efermi": None,
             "vbm": output.vbm,
             "cbm": output.cbm,
             "bandgap": output.band_gap,
             "direct_bandgap": output.direct_band_gap,
         }
+
+        if output.ferm_energy is not None:
+            electronic_output["efermi"] = output.ferm_energy
 
         forces = None
         if output.forces is not None:
