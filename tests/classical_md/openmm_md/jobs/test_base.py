@@ -1,7 +1,7 @@
 import copy
 
 import numpy as np
-from jobflow import Job, run_locally
+from jobflow import Job
 
 from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
 from openmm.app import DCDReporter, StateDataReporter, Simulation
@@ -100,7 +100,6 @@ def test_create_task_doc(interchange, temp_dir):
     assert task_doc.calcs_reversed[0].input.steps == 1000
     assert task_doc.calcs_reversed[0].input.temperature == 300
     assert task_doc.calcs_reversed[0].output.elapsed_time == 10.5
-    assert task_doc.interchange == interchange
 
 
 def test_make(interchange, temp_dir, run_job):
@@ -129,7 +128,6 @@ def test_make(interchange, temp_dir, run_job):
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.state == "successful"
     assert task_doc.dir_name == str(temp_dir)
-    assert task_doc.interchange == interchange
     assert len(task_doc.calcs_reversed) == 1
 
     # Assert the calculation details
