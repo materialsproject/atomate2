@@ -34,8 +34,8 @@ def openff_interchange_as_monty_dict(self):
 
 def openff_interchange_from_monty_dict(cls, d):
     d = d.copy()
-    d.pop("@module")
-    d.pop("@class")
+    d.pop("@module", None)
+    d.pop("@class", None)
     return cls(**d)
 
 
@@ -56,8 +56,8 @@ def openff_quantity_as_monty_dict(self):
 
 def openff_quantity_from_monty_dict(cls, d):
     d = d.copy()
-    d.pop("@module")
-    d.pop("@class")
+    d.pop("@module", None)
+    d.pop("@class", None)
     q_tuple = (d["magnitude"], d["unit"])
     return cls.from_tuple(q_tuple)
 
