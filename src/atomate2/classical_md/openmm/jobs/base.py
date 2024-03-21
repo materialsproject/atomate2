@@ -58,10 +58,10 @@ class BaseOpenMMMaker(Maker):
             Interchange.to_openmm_simulation.
         platform_properties (Optional[dict]): Properties for the OpenMM platform, passed to
             Interchange.to_openmm_simulation.
-        state_interval (Optional[int]): The interval for saving simulation state. To not
-            save state, set keyword argument to 0.
-        dcd_interval (Optional[int]): The interval for saving DCD frames. To not save DCD
-            frames, set keyword argument to 0.
+        state_interval (Optional[int]): The interval for saving simulation state. To record
+            no state, set to 0.
+        dcd_interval (Optional[int]): The interval for saving DCD frames. To record no DCD,
+            set to 0.
         wrap_dcd (Optional[bool]): Whether to wrap DCD coordinates.
         temperature (Optional[float]): The simulation temperature (kelvin).
         friction_coefficient (Optional[float]): The friction coefficient for the integrator
@@ -200,7 +200,12 @@ class BaseOpenMMMaker(Maker):
             "`run_openmm` should be implemented by each child class."
         )
 
-    def _resolve_attr(self, attr: str, prev_task: Optional[OpenMMTaskDocument] = None):
+    def _resolve_attr(
+        self,
+        attr: str,
+        prev_task: Optional[OpenMMTaskDocument] = None,
+        add_defaults: Optional[dict] = None,
+    ):
         """
         Resolves an attribute and set its value.
 
@@ -213,6 +218,8 @@ class BaseOpenMMMaker(Maker):
         Args:
             attr (str): The name of the attribute to resolve.
             prev_task (Optional[OpenMMTaskDocument]): The previous task document.
+            add_defaults (Optional[dict]): Additional default values to use,
+                overrides `OPENMM_MAKER_DEFAULTS`.
 
         Returns:
             The resolved attribute value.
@@ -225,12 +232,14 @@ class BaseOpenMMMaker(Maker):
         else:
             prev_input = None
 
+        defaults = {**OPENMM_MAKER_DEFAULTS, **(add_defaults or {})}
+
         if getattr(self, attr, None) is not None:
             attr_value = getattr(self, attr)
         elif getattr(prev_input, attr, None) is not None:
             attr_value = getattr(prev_input, attr)
         else:
-            attr_value = OPENMM_MAKER_DEFAULTS.get(attr, None)
+            attr_value = defaults.get(attr, None)
 
         setattr(self, attr, attr_value)
         return getattr(self, attr)

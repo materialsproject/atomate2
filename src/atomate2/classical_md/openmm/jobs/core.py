@@ -14,12 +14,35 @@ from atomate2.classical_md.utils import create_array_summing_to
 
 @dataclass
 class EnergyMinimizationMaker(BaseOpenMMMaker):
+    """
+    A maker class for performing energy minimization using OpenMM.
+
+    This class inherits from BaseOpenMMMaker, only new attributes are documented.
+
+    Attributes:
+        name (str): The name of the energy minimization job. Default is "energy minimization".
+        steps (int): The number of minimization steps. Must be equal to 0.
+        tolerance (float): The energy tolerance for minimization. Default is 10 kj/nm.
+        max_iterations (int): The maximum number of minimization iterations. Default is 0, which
+            means no maximum.
+    """
+
     name: str = "energy minimization"
     steps: int = 0
     tolerance: float = 10
     max_iterations: int = 0
 
     def run_openmm(self, sim):
+        """
+        Runs the energy minimization with OpenMM.
+
+        This method performs energy minimization on the molecular system using the OpenMM simulation
+        package. It minimizes the energy of the system based on the specified tolerance and maximum
+        number of iterations.
+
+        Args:
+            sim (Simulation): The OpenMM simulation object.
+        """
 
         assert self.steps == 0, "Energy minimization should have 0 steps."
 
@@ -32,15 +55,33 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
 
 @dataclass
 class NPTMaker(BaseOpenMMMaker):
+    """
+    A maker class for performing NPT (isothermal-isobaric) simulations using OpenMM.
+
+    This class inherits from BaseOpenMMMaker, only new attributes are documented.
+
+    Attributes:
+        name (str): The name of the NPT simulation job. Default is "npt simulation".
+        steps (int): The number of simulation steps. Default is 1000000.
+        pressure (float): The pressure of the simulation in atmospheres. Default is 1 atm.
+        pressure_update_frequency (int): The number of steps between pressure update attempts.
+    """
+
     name: str = "npt simulation"
     steps: int = 1000000
     pressure: float = 1
-    step_size: Optional[float] = None
-    temperature: Optional[float] = None
-    friction_coefficient: Optional[float] = None
     pressure_update_frequency: int = 10
 
     def run_openmm(self, sim):
+        """
+        Evolve the simulation for self.steps in the NPT ensemble.
+
+        This adds a Monte Carlo barostat to the system to put it into NPT, runs the
+        simulation for the specified number of steps, and then removes the barostat.
+
+        Args:
+        sim (Simulation): The OpenMM simulation object.
+        """
         # Add barostat to system
         context = sim.context
         system = context.getSystem()
@@ -66,13 +107,26 @@ class NPTMaker(BaseOpenMMMaker):
 
 @dataclass
 class NVTMaker(BaseOpenMMMaker):
+    """
+    A maker class for performing NVT (canonical ensemble) simulations using OpenMM.
+
+    This class inherits from BaseOpenMMMaker, only new attributes are documented.
+
+    Attributes:
+        name (str): The name of the NVT simulation job. Default is "nvt simulation".
+        steps (int): The number of simulation steps. Default is 1000000.
+    """
+
     name: str = "nvt simulation"
     steps: int = 1000000
-    step_size: Optional[float] = None
-    temperature: Optional[float] = None
-    friction_coefficient: Optional[float] = None
 
     def run_openmm(self, sim):
+        """
+        Evolve the simulation with OpenMM for self.steps.
+
+        Args:
+            sim (Simulation): The OpenMM simulation object.
+        """
 
         # Run the simulation
         sim.step(self.steps)
@@ -80,15 +134,38 @@ class NVTMaker(BaseOpenMMMaker):
 
 @dataclass
 class TempChangeMaker(BaseOpenMMMaker):
+    """
+    A maker class for performing simulations with temperature changes using OpenMM.
+
+    This class inherits from BaseOpenMMMaker and provides functionality for running simulations
+    with temperature changes using the OpenMM simulation package.
+
+    Attributes:
+    name (str): The name of the temperature change job. Default is "temperature change".
+    steps (int): The total number of simulation steps. Default is 1000000.
+    temp_steps (int): The number of steps over which the temperature is raised, by
+        default will be set to steps / 10000.
+    starting_temperature (Optional[float]): The starting temperature of the simulation.
+        If not provided it will inherit from the previous task.
+    """
+
     name: str = "temperature change"
     steps: int = 1000000
-    temp_steps: int = 100
-    step_size: Optional[float] = None
-    temperature: Optional[float] = None
-    friction_coefficient: Optional[float] = None
+    temp_steps: Optional[int] = None
     starting_temperature: Optional[float] = None
 
     def run_openmm(self, sim):
+        """
+        Evolve the simulation for self.steps while gradually changing the
+        temperature to self.temperature.
+
+        Temp steps determine how many gradiations there are between the starting and final
+        temperature. At each gradiation, the system is evolved for a number of steps such that
+        the total number of steps is self.steps.
+
+        Args:
+            sim (Simulation): The OpenMM simulation object.
+        """
         integrator = sim.context.getIntegrator()
 
         temps_arr = np.linspace(
@@ -100,6 +177,11 @@ class TempChangeMaker(BaseOpenMMMaker):
             sim.step(n_steps)
 
     def _create_integrator(self, prev_task) -> LangevinMiddleIntegrator:
+        # we resolve this here because prev_task is available
+        self.temp_steps = self._resolve_attr(
+            "temp_steps", prev_task, add_defaults={"temp_steps": self.steps // 10000}
+        )
+
         # we do this dance so _resolve_attr takes its value from the previous task
         temp_holder, self.temperature = self.temperature, None
         self.starting_temperature = self._resolve_attr("temperature", prev_task)
