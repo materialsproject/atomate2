@@ -16,7 +16,7 @@ from atomate2.classical_md.openmm.schemas.tasks import (
 
 
 def test_add_reporters(interchange, temp_dir):
-    maker = BaseOpenMMMaker(dcd_interval=100, state_interval=50, wrap_dcd=True)
+    maker = BaseOpenMMMaker(dcd_interval=100, state_interval=50, wrap_dcd=True, steps=1)
     sim = maker.create_simulation(interchange)
     dir_name = temp_dir / "test_output"
     dir_name.mkdir()

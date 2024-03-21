@@ -82,7 +82,8 @@ class CalculationOutput(BaseModel):
         cls,
         dir_name: Path | str,
         elapsed_time: Optional[float] = None,
-        n_prev_steps: int = 0,
+        steps: int = None,
+        state_interval: int = None,
     ):
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {
@@ -95,11 +96,15 @@ class CalculationOutput(BaseModel):
             "Density (g/mL)": "density",
         }
         state_is_not_empty = state_file.exists() and state_file.stat().st_size > 0
-        if state_is_not_empty:
+        state_steps = state_interval and steps and steps // state_interval or 0
+        if state_is_not_empty and (state_steps > 0):
             data = pd.read_csv(state_file, header=0)
             data = data.rename(columns=column_name_map)
             data = data.filter(items=column_name_map.values())
-            data["output_steps"] += n_prev_steps
+            old_data = data  # TODO: remove
+            # select only the last state_steps steps
+            data = data.iloc[-state_steps:]
+            # data["output_steps"] += n_prev_steps
             attributes = data.to_dict(orient="list")
             state_file_name = state_file.name
         else:

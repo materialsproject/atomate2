@@ -93,5 +93,14 @@ def test_production_maker(interchange, tmp_path, run_job):
     calc_output = task_doc.calcs_reversed[0].output
     assert len(calc_output.output_steps) == 5
 
+    all_steps = [calc.output.output_steps for calc in task_doc.calcs_reversed]
+    assert all_steps == [
+        [1, 2, 3, 4, 5],
+        [1],
+        [1, 2],
+        [1, 2],
+        [1, 2, 3, 4, 5],
+        None,
+    ]
     # Test that the state interval is respected
-    assert calc_output.output_steps == list(range(11, 16))
+    assert calc_output.output_steps == list(range(1, 6))
