@@ -11,9 +11,7 @@ from emmet.core.vasp.task_valid import TaskState
 
 @dataclass
 class MoleculeSpec(MSONable):
-    """
-    A molecule schema to be output by OpenMMGenerators.
-    """
+    """A molecule schema to be output by OpenMMGenerators."""
 
     name: str
     count: int
@@ -53,7 +51,6 @@ class ClassicalMDTaskDocument(BaseModel, extra="allow"):
 
     # task_label: Optional[str] = Field(None, description="A description of the task")
     # TODO: where does task_label get added
-    # additional_json
 
     last_updated: Optional[datetime] = Field(
         None,

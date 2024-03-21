@@ -19,17 +19,33 @@ from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 def openff_job(method: Callable):
     """
+    Decorate the ``make`` method of ClassicalMD job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    settings for all ClassicalMD jobs. Namely, configures the output schema to be a
+    :obj:`.ClassicalMDTaskDocument`.
+
+    Any makers that return classical md jobs (not flows) should decorate the ``make`` method
+    with @openff_job. For example:
+
+    .. code-block:: python
+
+        class MyClassicalMDMaker(BaseOpenMMMaker):
+            @openff_job
+            def make(structure):
+                # code to run OpenMM job.
+                pass
 
     Parameters
     ----------
     method : callable
-        A BaseOpenMMMaker.make method. This should not be specified directly and is
+        A BaseVaspMaker.make method. This should not be specified directly and is
         implied by the decorator.
 
     Returns
     -------
     callable
-        A decorated version of the make function that will generate OpenMM jobs.
+        A decorated version of the make function that will generate jobs.
     """
     # todo: add data keyword argument to specify where to write bigger files like trajectory files
     return job(method, output_schema=ClassicalMDTaskDocument)
@@ -42,6 +58,47 @@ def generate_interchange(
     force_field: str = "openff_unconstrained-2.1.1.offxml",
     pack_box_kwargs: Dict = {},
 ):
+    """
+    Generates an OpenFF Interchange object from a list of molecule specifications.
+
+    This function takes a list of molecule specifications (either as
+    MoleculeSpec objects or dictionaries), a target mass density, and
+    optional force field and box packing parameters. It processes the molecule
+    specifications, packs them into a box using the specified mass density, and
+    creates an OpenFF Interchange object using the specified force field.
+
+    If you'd like to have multiple distinct input geometries, you
+    can pass multiple mol_specs with the same name and SMILES string.
+    After packing the box, they will be merged into a single mol_spec
+    and treated as a single component in the resulting system.
+
+
+    Args:
+    mol_specs (List[MoleculeSpec] | List[dict]): A list of molecule specifications, either
+        as MoleculeSpec objects or dictionaries that can be passed to `create_mol_spec` to
+        create MoleculeSpec objects. See the `create_mol_spec` function for details on the
+        expected format of the dictionaries.
+    mass_density (float): The target mass density for packing the molecules into a box, kg/L.
+    force_field (str, optional): The name of the force field to use for creating the
+        Interchange object. This is passed directly to openff.toolkit.ForceField.
+        Default is "openff_unconstrained-2.1.1.offxml".
+    pack_box_kwargs (Dict, optional): Additional keyword arguments to pass to the
+        toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
+
+    Returns:
+    ClassicalMDTaskDocument: A task document containing the generated OpenFF Interchange
+        object, molecule specifications, and force field information.
+
+    Notes:
+    - The function assumes that all dictionaries in the mol_specs list can be used to
+    create valid MoleculeSpec objects.
+    - The function sorts the molecule specifications based on their SMILES string and name
+    before packing the box.
+    - The function uses the merge_specs_by_name_and_smile function to merge molecule
+    specifications with the same name and SMILES string.
+    - The function currently does not support passing a list of force fields due to
+    limitations in the OpenFF Toolkit.
+    """
     if all(isinstance(spec, dict) for spec in mol_specs):
         mol_specs = [create_mol_spec(**spec) for spec in mol_specs]
     assert all(
@@ -58,7 +115,6 @@ def generate_interchange(
         **pack_box_kwargs
     )
 
-    # TODO: document this
     mol_specs = merge_specs_by_name_and_smile(mol_specs)
 
     # TODO: ForceField doesn't currently support iterables, fix this
