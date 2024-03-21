@@ -43,8 +43,9 @@ class AdsorptionMaker(Maker):
 
     mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
 
-    def __init__(self):
+    def __init__(self, ):
         self.molecule_dft_energy = None
+        self.min_size = min_size
 
     def make(
             self,
@@ -58,12 +59,36 @@ class AdsorptionMaker(Maker):
             molecule_dft_energy: float | None = None,
             slab_dft_energy: float | None = None,
     ) -> Flow:
+        """
+        Parameters
+        ----------
+        molecule
+        structure: .Structure
+            A pymatgen structure object.
+        min_vacuum:
+        min_slab_size:
+        Minimum size in angstroms of layers containing atoms.
+        min_lw: minimum length and width of the slab, only used
+                if repeat is None
+        surface_idx: Miller index of plane parallel to surface.
+        prev_dir: str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        molecule_dft_energy
+        slab_dft_energy
+
+        Returns
+        -------
+
+        """
 
         jobs = []
 
         molecule_structure = get_boxed_molecule(molecule)
 
         if self.molecule_dft_energy is None:
+            """warning no energy relaxtion"""
+            """double check self"""
             mol_optimize_job = self.mol_relax_maker.make(molecule_structure, prev_dir=prev_dir)
             mol_optimize_job.append_name(f"molecule relaxation job")
             jobs.append(mol_optimize_job)
