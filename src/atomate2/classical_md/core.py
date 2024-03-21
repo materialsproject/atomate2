@@ -56,7 +56,7 @@ def generate_interchange(
     mol_specs: List[MoleculeSpec] | List[dict],
     mass_density: float,
     force_field: str = "openff_unconstrained-2.1.1.offxml",
-    pack_box_kwargs: Dict = {},
+    pack_box_kwargs: Dict = None,
 ):
     """
     Generates an OpenFF Interchange object from a list of molecule specifications.
@@ -108,6 +108,7 @@ def generate_interchange(
     mol_specs = copy.deepcopy(mol_specs)
     mol_specs.sort(key=lambda x: x.openff_mol.to_smiles() + x.name)
 
+    pack_box_kwargs = pack_box_kwargs or {}
     topology = pack_box(
         molecules=[spec.openff_mol for spec in mol_specs],
         number_of_copies=[spec.count for spec in mol_specs],
