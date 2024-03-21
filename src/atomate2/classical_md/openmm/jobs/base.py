@@ -115,20 +115,20 @@ class BaseOpenMMMaker(Maker):
         )
         dir_name.mkdir(exist_ok=True, parents=True)
 
-        sim = self.create_simulation(interchange, prev_task)
+        sim = self._create_simulation(interchange, prev_task)
 
-        self.add_reporters(sim, dir_name, prev_task)
+        self._add_reporters(sim, dir_name, prev_task)
 
         # Run the simulation
         start = time.time()
         self.run_openmm(sim)
         elapsed_time = time.time() - start
 
-        self.update_interchange(interchange, sim, prev_task)
+        self._update_interchange(interchange, sim, prev_task)
 
         del sim
 
-        task_doc = self.create_task_doc(interchange, elapsed_time, dir_name, prev_task)
+        task_doc = self._create_task_doc(interchange, elapsed_time, dir_name, prev_task)
 
         # write out task_doc json to output dir
         with open(dir_name / "taskdoc_json", "w") as file:
@@ -136,7 +136,7 @@ class BaseOpenMMMaker(Maker):
 
         return Response(output=task_doc)
 
-    def add_reporters(
+    def _add_reporters(
         self,
         sim: Simulation,
         dir_name: Path,
@@ -155,19 +155,19 @@ class BaseOpenMMMaker(Maker):
 
         """
 
-        has_steps = self.resolve_attr("steps", prev_task) > 0
+        has_steps = self._resolve_attr("steps", prev_task) > 0
         # add dcd reporter
-        dcd_interval = self.resolve_attr("dcd_interval", prev_task)
+        dcd_interval = self._resolve_attr("dcd_interval", prev_task)
         if has_steps & (dcd_interval > 0):
             dcd_reporter = DCDReporter(
                 file=str(dir_name / "trajectory_dcd"),
                 reportInterval=dcd_interval,
-                enforcePeriodicBox=self.resolve_attr("wrap_dcd", prev_task),
+                enforcePeriodicBox=self._resolve_attr("wrap_dcd", prev_task),
             )
             sim.reporters.append(dcd_reporter)
 
         # add state reporter
-        state_interval = self.resolve_attr("state_interval", prev_task)
+        state_interval = self._resolve_attr("state_interval", prev_task)
         if has_steps & (state_interval > 0):
             state_reporter = StateDataReporter(
                 file=str(dir_name / "state_csv"),
@@ -200,7 +200,7 @@ class BaseOpenMMMaker(Maker):
             "`run_openmm` should be implemented by each child class."
         )
 
-    def resolve_attr(self, attr: str, prev_task: Optional[OpenMMTaskDocument] = None):
+    def _resolve_attr(self, attr: str, prev_task: Optional[OpenMMTaskDocument] = None):
         """
         Resolves an attribute and set its value.
 
@@ -235,7 +235,7 @@ class BaseOpenMMMaker(Maker):
         setattr(self, attr, attr_value)
         return getattr(self, attr)
 
-    def create_integrator(
+    def _create_integrator(
         self,
         prev_task: Optional[OpenMMTaskDocument] = None,
     ) -> Integrator:
@@ -252,12 +252,12 @@ class BaseOpenMMMaker(Maker):
             LangevinMiddleIntegrator: The created OpenMM integrator.
         """
         return LangevinMiddleIntegrator(
-            self.resolve_attr("temperature", prev_task) * kelvin,
-            self.resolve_attr("friction_coefficient", prev_task) / picoseconds,
-            self.resolve_attr("step_size", prev_task) * picoseconds,
+            self._resolve_attr("temperature", prev_task) * kelvin,
+            self._resolve_attr("friction_coefficient", prev_task) / picoseconds,
+            self._resolve_attr("step_size", prev_task) * picoseconds,
         )
 
-    def create_simulation(
+    def _create_simulation(
         self,
         interchange: Interchange,
         prev_task: Optional[OpenMMTaskDocument] = None,
@@ -275,11 +275,11 @@ class BaseOpenMMMaker(Maker):
         Returns:
             Simulation: The created OpenMM simulation object.
         """
-        integrator = self.create_integrator(prev_task)
+        integrator = self._create_integrator(prev_task)
         platform = Platform.getPlatformByName(
-            self.resolve_attr("platform_name", prev_task)
+            self._resolve_attr("platform_name", prev_task)
         )
-        platform_properties = self.resolve_attr("platform_properties", prev_task)
+        platform_properties = self._resolve_attr("platform_properties", prev_task)
 
         sim = interchange.to_openmm_simulation(
             integrator,
@@ -288,7 +288,7 @@ class BaseOpenMMMaker(Maker):
         )
         return sim
 
-    def update_interchange(self, interchange, sim, prev_task):
+    def _update_interchange(self, interchange, sim, prev_task):
         """
         Updates the Interchange object with the current simulation state.
 
@@ -304,13 +304,13 @@ class BaseOpenMMMaker(Maker):
         state = sim.context.getState(
             getPositions=True,
             getVelocities=True,
-            enforcePeriodicBox=self.resolve_attr("wrap_dcd", prev_task),
+            enforcePeriodicBox=self._resolve_attr("wrap_dcd", prev_task),
         )
         interchange.positions = state.getPositions(asNumpy=True)
         interchange.velocities = state.getVelocities(asNumpy=True)
         interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
 
-    def create_task_doc(
+    def _create_task_doc(
         self,
         interchange: Interchange,
         elapsed_time: Optional[float] = None,
@@ -344,8 +344,8 @@ class BaseOpenMMMaker(Maker):
             output=CalculationOutput.from_directory(
                 dir_name,
                 elapsed_time,
-                self.resolve_attr("steps", prev_task),
-                self.resolve_attr("state_interval", prev_task),
+                self._resolve_attr("steps", prev_task),
+                self._resolve_attr("state_interval", prev_task),
             ),
             completed_at=str(datetime.now()),
             task_name=job_name,

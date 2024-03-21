@@ -99,13 +99,13 @@ class TempChangeMaker(BaseOpenMMMaker):
             integrator.setTemperature(temp * kelvin)
             sim.step(n_steps)
 
-    def create_integrator(self, prev_task) -> LangevinMiddleIntegrator:
-        # we do this dance so resolve_attr takes its value from the previous task
+    def _create_integrator(self, prev_task) -> LangevinMiddleIntegrator:
+        # we do this dance so _resolve_attr takes its value from the previous task
         temp_holder, self.temperature = self.temperature, None
-        self.starting_temperature = self.resolve_attr("temperature", prev_task)
-        self.temperature = temp_holder or self.resolve_attr("temperature", prev_task)
+        self.starting_temperature = self._resolve_attr("temperature", prev_task)
+        self.temperature = temp_holder or self._resolve_attr("temperature", prev_task)
         return LangevinMiddleIntegrator(
             self.starting_temperature * kelvin,
-            self.resolve_attr("friction_coefficient", prev_task) / picoseconds,
-            self.resolve_attr("step_size", prev_task) * picoseconds,
+            self._resolve_attr("friction_coefficient", prev_task) / picoseconds,
+            self._resolve_attr("step_size", prev_task) * picoseconds,
         )
