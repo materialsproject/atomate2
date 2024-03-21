@@ -1,11 +1,13 @@
-from openff.toolkit.topology.molecule import Molecule
+"""Module for classical md workflows."""
+
+from typing import Dict
+
 from openff.interchange import Interchange
 from openff.toolkit.topology import Topology
+from openff.toolkit.topology.molecule import Molecule
 
-from pydantic import parse
 
-
-def openff_mol_as_monty_dict(self):
+def openff_mol_as_monty_dict(self: Molecule) -> dict:
     mol_dict = self.to_dict()
     mol_dict["@module"] = "openff.toolkit.topology"
     mol_dict["@class"] = "Molecule"
@@ -15,24 +17,24 @@ def openff_mol_as_monty_dict(self):
 Molecule.as_dict = openff_mol_as_monty_dict
 
 
-def openff_topology_as_monty_dict(self):
-    mol_dict = self.to_dict()
-    mol_dict["@module"] = "openff.toolkit.topology"
-    mol_dict["@class"] = "Topology"
-    return mol_dict
+def openff_topology_as_monty_dict(self: Topology) -> dict:
+    top_dict = self.to_dict()
+    top_dict["@module"] = "openff.toolkit.topology"
+    top_dict["@class"] = "Topology"
+    return top_dict
 
 
 Topology.as_dict = openff_topology_as_monty_dict
 
 
-def openff_interchange_as_monty_dict(self):
-    mol_dict = self.dict()
-    mol_dict["@module"] = "openff.interchange"
-    mol_dict["@class"] = "Interchange"
-    return mol_dict
+def openff_interchange_as_monty_dict(self: Interchange) -> dict:
+    int_dict = self.dict()
+    int_dict["@module"] = "openff.interchange"
+    int_dict["@class"] = "Interchange"
+    return int_dict
 
 
-def openff_interchange_from_monty_dict(cls, d):
+def openff_interchange_from_monty_dict(cls, d: dict) -> Interchange:
     d = d.copy()
     d.pop("@module", None)
     d.pop("@class", None)
@@ -46,7 +48,7 @@ Interchange.from_dict = classmethod(openff_interchange_from_monty_dict)
 from openff.units import Quantity
 
 
-def openff_quantity_as_monty_dict(self):
+def openff_quantity_as_monty_dict(self: Quantity) -> dict:
     q_tuple = self.to_tuple()
     q_dict = {"magnitude": q_tuple[0], "unit": q_tuple[1]}
     q_dict["@module"] = "openff.units"
