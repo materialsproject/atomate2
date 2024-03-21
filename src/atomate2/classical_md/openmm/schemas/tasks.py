@@ -101,10 +101,7 @@ class CalculationOutput(BaseModel):
             data = pd.read_csv(state_file, header=0)
             data = data.rename(columns=column_name_map)
             data = data.filter(items=column_name_map.values())
-            old_data = data  # TODO: remove
-            # select only the last state_steps steps
             data = data.iloc[-state_steps:]
-            # data["output_steps"] += n_prev_steps
             attributes = data.to_dict(orient="list")
             state_file_name = state_file.name
         else:
