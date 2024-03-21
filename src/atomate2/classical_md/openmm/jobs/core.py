@@ -9,6 +9,8 @@ from openmm import LangevinMiddleIntegrator
 from openmm.openmm import MonteCarloBarostat
 from openmm.unit import kelvin, atmosphere, picoseconds, kilojoules_per_mole, nanometer
 
+from atomate2.classical_md.utils import create_array_summing_to
+
 
 @dataclass
 class EnergyMinimizationMaker(BaseOpenMMMaker):
@@ -89,23 +91,19 @@ class TempChangeMaker(BaseOpenMMMaker):
     def run_openmm(self, sim):
         integrator = sim.context.getIntegrator()
 
-        start_temp = self.starting_temperature * kelvin
-        end_temp = self.temperature * kelvin
-
-        temp_step_size = abs(end_temp - start_temp) / self.temp_steps
-        for temp in np.arange(
-            start_temp + temp_step_size,
-            end_temp + temp_step_size,
-            temp_step_size,
-        ):
+        temps_arr = np.linspace(
+            self.starting_temperature, self.temperature, self.temp_steps
+        )
+        steps_arr = create_array_summing_to(self.steps, self.temp_steps)
+        for temp, n_steps in zip(temps_arr, steps_arr):
             integrator.setTemperature(temp * kelvin)
-            sim.step(self.steps // self.temp_steps)
+            sim.step(n_steps)
 
     def create_integrator(self, prev_task) -> LangevinMiddleIntegrator:
         # we do this dance so resolve_attr takes its value from the previous task
         temp_holder, self.temperature = self.temperature, None
         self.starting_temperature = self.resolve_attr("temperature", prev_task)
-        self.temperature = temp_holder
+        self.temperature = temp_holder or self.resolve_attr("temperature", prev_task)
         return LangevinMiddleIntegrator(
             self.starting_temperature * kelvin,
             self.resolve_attr("friction_coefficient", prev_task) / picoseconds,
