@@ -112,8 +112,7 @@ class BaseOpenMMMaker(Maker):
 
         del sim
 
-        # could consider writing out simulation details to directory
-
+        # TODO: write out task_doc to directory
         task_doc = self.create_task_doc(interchange, elapsed_time, dir_name, prev_task)
 
         return Response(output=task_doc)
