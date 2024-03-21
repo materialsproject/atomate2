@@ -1,12 +1,13 @@
-from datetime import datetime
-from typing import Optional, List
-from dataclasses import dataclass
+"""Schemas for classical MD package."""
 
-from pydantic import BaseModel, Field
-from openff import toolkit as tk
-from monty.json import MSONable
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Optional
 
 from emmet.core.vasp.task_valid import TaskState
+from monty.json import MSONable
+from openff import toolkit as tk
+from pydantic import BaseModel, Field
 
 
 @dataclass
@@ -23,7 +24,7 @@ class MoleculeSpec(MSONable):
 class ClassicalMDTaskDocument(BaseModel, extra="allow"):
     """Definition of the OpenMM task document."""
 
-    tags: Optional[List[str]] = Field(
+    tags: Optional[list[str]] = Field(
         [], title="tag", description="Metadata tagged to a given task."
     )
     dir_name: Optional[str] = Field(
@@ -31,21 +32,22 @@ class ClassicalMDTaskDocument(BaseModel, extra="allow"):
     )
     state: Optional[TaskState] = Field(None, description="State of this calculation")
 
-    calcs_reversed: Optional[List] = Field(
+    calcs_reversed: Optional[list] = Field(
         None,
         title="Calcs reversed data",
-        description="Detailed data for each VASP calculation contributing to the task document.",
+        description="Detailed data for each VASP calculation contributing to "
+        "the task document.",
     )
 
     interchange: Optional[str] = Field(
         None, description="Final output structure from the task"
     )
 
-    molecule_specs: Optional[List[MoleculeSpec]] = Field(
+    molecule_specs: Optional[list[MoleculeSpec]] = Field(
         None, description="Molecules within the box."
     )
 
-    forcefield: Optional[str | List[str]] = Field(None, description="forcefield")
+    forcefield: Optional[str | list[str]] = Field(None, description="forcefield")
 
     task_type: Optional[str] = Field(None, description="The type of calculation.")
 
