@@ -1,23 +1,22 @@
-from typing import Dict, Callable, List
-import copy
+"""Core jobs for classical MD module."""
 
-from openff.toolkit import ForceField
+from __future__ import annotations
+
+import copy
+from typing import Callable
+
+from emmet.core.vasp.task_valid import TaskState
+from jobflow import Job, job
 from openff.interchange import Interchange
 from openff.interchange.components._packmol import pack_box
+from openff.toolkit import ForceField
 from openff.units import unit
 
-from jobflow import job
-from emmet.core.vasp.task_valid import TaskState
-
-from atomate2.classical_md.schemas import MoleculeSpec
-from atomate2.classical_md.utils import (
-    merge_specs_by_name_and_smile,
-    create_mol_spec,
-)
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument, MoleculeSpec
+from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smile
 
 
-def openff_job(method: Callable):
+def openff_job(method: Callable) -> Job:
     """
     Decorate the ``make`` method of ClassicalMD job makers.
 
@@ -25,8 +24,8 @@ def openff_job(method: Callable):
     settings for all ClassicalMD jobs. Namely, configures the output schema to be a
     :obj:`.ClassicalMDTaskDocument`.
 
-    Any makers that return classical md jobs (not flows) should decorate the ``make`` method
-    with @openff_job. For example:
+    Any makers that return classical md jobs (not flows) should decorate the ``make``
+    method with @openff_job. For example:
 
     .. code-block:: python
 
@@ -47,19 +46,20 @@ def openff_job(method: Callable):
     callable
         A decorated version of the make function that will generate jobs.
     """
-    # todo: add data keyword argument to specify where to write bigger files like trajectory files
+    # todo: add data keyword argument to specify where to write
+    #  bigger files like trajectory files
     return job(method, output_schema=ClassicalMDTaskDocument)
 
 
 @openff_job
 def generate_interchange(
-    mol_specs: List[MoleculeSpec] | List[dict],
+    mol_specs: list[MoleculeSpec] | list[dict],
     mass_density: float,
     force_field: str = "openff_unconstrained-2.1.1.offxml",
-    pack_box_kwargs: Dict = None,
-):
+    pack_box_kwargs: dict = None,
+) -> ClassicalMDTaskDocument:
     """
-    Generates an OpenFF Interchange object from a list of molecule specifications.
+    Generate an OpenFF Interchange object from a list of molecule specifications.
 
     This function takes a list of molecule specifications (either as
     MoleculeSpec objects or dictionaries), a target mass density, and
@@ -74,26 +74,30 @@ def generate_interchange(
 
 
     Args:
-    mol_specs (List[MoleculeSpec] | List[dict]): A list of molecule specifications, either
-        as MoleculeSpec objects or dictionaries that can be passed to `create_mol_spec` to
-        create MoleculeSpec objects. See the `create_mol_spec` function for details on the
-        expected format of the dictionaries.
-    mass_density (float): The target mass density for packing the molecules into a box, kg/L.
+    mol_specs (List[MoleculeSpec] | List[dict]): A list of
+        molecule specifications, either as MoleculeSpec objects or
+        dictionaries that can be passed to `create_mol_spec` to create
+        MoleculeSpec objects. See the `create_mol_spec` function
+        for details on the expected format of the dictionaries.
+    mass_density (float): The target mass density for packing the molecules into
+        a box, kg/L.
     force_field (str, optional): The name of the force field to use for creating the
         Interchange object. This is passed directly to openff.toolkit.ForceField.
         Default is "openff_unconstrained-2.1.1.offxml".
     pack_box_kwargs (Dict, optional): Additional keyword arguments to pass to the
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
 
-    Returns:
+    Returns
+    -------
     ClassicalMDTaskDocument: A task document containing the generated OpenFF Interchange
         object, molecule specifications, and force field information.
 
-    Notes:
+    Notes
+    -----
     - The function assumes that all dictionaries in the mol_specs list can be used to
     create valid MoleculeSpec objects.
-    - The function sorts the molecule specifications based on their SMILES string and name
-    before packing the box.
+    - The function sorts the molecule specifications based on their SMILES string
+    and name before packing the box.
     - The function uses the merge_specs_by_name_and_smile function to merge molecule
     specifications with the same name and SMILES string.
     - The function currently does not support passing a list of force fields due to
@@ -101,9 +105,8 @@ def generate_interchange(
     """
     if all(isinstance(spec, dict) for spec in mol_specs):
         mol_specs = [create_mol_spec(**spec) for spec in mol_specs]
-    assert all(
-        isinstance(spec, MoleculeSpec) for spec in mol_specs
-    ), "mol_specs must be a list of dicts or MoleculeSpec"
+    if not all(isinstance(spec, MoleculeSpec) for spec in mol_specs):
+        raise ValueError("mol_specs must be a list of dicts or MoleculeSpec")
 
     mol_specs = copy.deepcopy(mol_specs)
     mol_specs.sort(key=lambda x: x.openff_mol.to_smiles() + x.name)
@@ -113,7 +116,7 @@ def generate_interchange(
         molecules=[spec.openff_mol for spec in mol_specs],
         number_of_copies=[spec.count for spec in mol_specs],
         mass_density=mass_density * unit.grams / unit.milliliter,
-        **pack_box_kwargs
+        **pack_box_kwargs,
     )
 
     mol_specs = merge_specs_by_name_and_smile(mol_specs)
@@ -139,11 +142,9 @@ def generate_interchange(
 
     interchange_json = interchange.json()
 
-    task_doc = ClassicalMDTaskDocument(
+    return ClassicalMDTaskDocument(
         state=TaskState.SUCCESS,
         interchange=interchange_json,
         molecule_specs=mol_specs,
         forcefield=force_field,
     )
-
-    return task_doc
