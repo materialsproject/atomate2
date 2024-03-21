@@ -8,7 +8,7 @@ from pymatgen.analysis.local_env import OpenBabelNN, metal_edge_extender
 
 import openff.toolkit as tk
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Optional
 import numpy as np
 from openmm.unit import elementary_charge, angstrom
 
@@ -19,17 +19,16 @@ from atomate2.classical_md.schemas import MoleculeSpec
 
 def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
     """
-    Convert a Pymatgen MoleculeGraph to an OpenFF Molecule.
+    Converts a Pymatgen MoleculeGraph to an OpenFF Molecule.
 
-    If partial charges, formal charges, and aromaticity are present in site properties
-    they will be mapped onto atoms. If bond order and bond aromaticity are present in
-    edge weights and edge properties they will be mapped onto bonds.
+    Maps partial charges, formal charges, and aromaticity from site properties onto atoms.
+    Maps bond order and bond aromaticity from edge weights and edge properties onto bonds.
 
     Args:
-        molgraph: PyMatGen MoleculeGraph
+        molgraph (MoleculeGraph): The Pymatgen MoleculeGraph to be converted.
 
     Returns:
-        openff_mol: OpenFF Molecule
+        tk.Molecule: The converted OpenFF Molecule.
     """
     # create empty openff_mol and prepare a periodic table
     p_table = {str(el): el.Z for el in Element}
@@ -77,7 +76,19 @@ def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
 
 def get_atom_map(inferred_mol, openff_mol) -> Tuple[bool, Dict[int, int]]:
     """
-    Get a mapping between two openff Molecules.
+    Computes an atom mapping between two OpenFF Molecules.
+
+    Attempts to find an isomorphism between the molecules, considering various matching
+    criteria such as formal charges, stereochemistry, and bond orders. Returns the atom
+    mapping if an isomorphism is found, otherwise returns an empty mapping.
+
+    Args:
+        inferred_mol (tk.Molecule): The first OpenFF Molecule.
+        openff_mol (tk.Molecule): The second OpenFF Molecule.
+
+    Returns:
+        Tuple[bool, Dict[int, int]]: A tuple containing a boolean indicating if an
+            isomorphism was found and a dictionary representing the atom mapping.
     """
     # do not apply formal charge restrictions
     kwargs = dict(
@@ -123,14 +134,17 @@ def infer_openff_mol(
     mol_geometry: pymatgen.core.Molecule,
 ) -> tk.Molecule:
     """
-    Infer an OpenFF molecule from a pymatgen Molecule.
+    Infers an OpenFF Molecule from a Pymatgen Molecule.
+
+    Constructs a MoleculeGraph from the Pymatgen Molecule using the OpenBabelNN local
+    environment strategy and extends metal edges. Converts the resulting MoleculeGraph
+    to an OpenFF Molecule using molgraph_to_openff_mol.
 
     Args:
-        mol_geometry: A pymatgen Molecule
+        mol_geometry (pymatgen.core.Molecule): The Pymatgen Molecule to infer from.
 
     Returns:
-        an OpenFF Molecule
-
+        tk.Molecule: The inferred OpenFF Molecule.
     """
     molgraph = MoleculeGraph.with_local_env_strategy(mol_geometry, OpenBabelNN())
     molgraph = metal_edge_extender(molgraph)
@@ -138,25 +152,21 @@ def infer_openff_mol(
     return inferred_mol
 
 
-def add_conformer(openff_mol: tk.Molecule, geometry: pymatgen.core.Molecule):
+def add_conformer(openff_mol: tk.Molecule, geometry: Optional[pymatgen.core.Molecule]):
     """
-    Adds conformers to an OpenFF Molecule based on the provided geometries or generates conformers up to the specified maximum number.
+    Adds conformers to an OpenFF Molecule based on the provided geometry.
 
-    Parameters
-    ----------
-    openff_mol : openff.toolkit.topology.Molecule
-        The OpenFF Molecule to add conformers to.
-    geometry : Geometry:
-        A list of Geometry objects containing the coordinates of the conformers to be added.
-    max_conformers : int
-        The maximum number of conformers to be generated if no geometries are provided.
+    If a geometry is provided, infers an OpenFF Molecule from it, finds an atom mapping
+    between the inferred molecule and the input molecule, and adds the conformer coordinates
+    to the input molecule. If no geometry is provided, generates a single conformer.
 
-    Returns
-    -------
-    openff.toolkit.topology.Molecule, Dict[int, int]
-        A tuple containing the OpenFF Molecule with added conformers and a dictionary representing the atom mapping between the input and output molecules.
+    Args:
+        openff_mol (tk.Molecule): The OpenFF Molecule to add conformers to.
+            geometry (pymatgen.core.Molecule): The geometry to use for adding conformers.
 
-
+    Returns:
+        Tuple[tk.Molecule, Dict[int, int]]: A tuple containing the updated OpenFF Molecule
+            with added conformers and a dictionary representing the atom mapping.
     """
     # TODO: test this
     if geometry:
@@ -185,23 +195,21 @@ def assign_partial_charges(
     partial_charges: Union[None, List[float]],
 ):
     """
-    Assigns partial charges to an OpenFF Molecule using the provided partial charges or a specified charge method.
+    Assigns partial charges to an OpenFF Molecule.
 
-    Parameters
-    ----------
-    openff_mol : openff.toolkit.topology.Molecule
-        The OpenFF Molecule to assign partial charges to.
-    partial_charges : List[float]
-        A list of partial charges to be assigned to the molecule, or None to use the charge method.
-    charge_method : str
-        The charge method to be used if partial charges are not provided.
-    atom_map : Dict[int, int]
-        A dictionary representing the atom mapping between the input and output molecules.
+    If partial charges are provided, assigns them to the molecule based on the atom mapping.
+    If the molecule has only one atom, assigns the total charge as the partial charge.
+    Otherwise, assigns partial charges using the specified charge method.
 
-    Returns
-    -------
-    openff.toolkit.topology.Molecule
-        The OpenFF Molecule with assigned partial charges.
+    Args:
+        openff_mol (tk.Molecule): The OpenFF Molecule to assign partial charges to.
+        atom_map (Dict[int, int]): A dictionary representing the atom mapping.
+        charge_method (str): The charge method to use if partial charges are not provided.
+        partial_charges (Union[None, List[float]]): A list of partial charges to assign,
+            or None to use the charge method.
+
+    Returns:
+        tk.Molecule: The OpenFF Molecule with assigned partial charges.
 
     """
     # TODO: test this
@@ -220,11 +228,31 @@ def assign_partial_charges(
 
 def create_openff_mol(
     smile: str,
-    geometry: Union[pymatgen.core.Molecule, str, Path] = None,
+    geometry: Optional[Union[pymatgen.core.Molecule, str, Path]] = None,
     charge_scaling: float = 1,
-    partial_charges: List[float] = None,
+    partial_charges: Optional[List[float]] = None,
     backup_charge_method: str = "am1bcc",
 ):
+    """
+    Creates an OpenFF Molecule from a SMILES string and optional geometry.
+
+    Constructs an OpenFF Molecule from the provided SMILES string, adds conformers based on
+    the provided geometry (if any), assigns partial charges using the specified method or
+    provided partial charges, and applies charge scaling.
+
+    Args:
+        smile (str): The SMILES string of the molecule.
+        geometry (Union[pymatgen.core.Molecule, str, Path], optional): The geometry to use
+            for adding conformers. Can be a Pymatgen Molecule, file path, or None.
+        charge_scaling (float, optional): The scaling factor for partial charges. Default is 1.
+        partial_charges (List[float], optional): A list of partial charges to assign, or None
+            to use the charge method.
+        backup_charge_method (str, optional): The backup charge method to use if partial charges
+            are not provided. Default is "am1bcc".
+
+    Returns:
+        tk.Molecule: The created OpenFF Molecule.
+    """
     if isinstance(geometry, (str, Path)):
         geometry = pymatgen.core.Molecule.from_file(str(geometry))
 
@@ -259,29 +287,25 @@ def create_mol_spec(
     partial_charges: List[float] = None,
 ) -> MoleculeSpec:
     """
-    Processes a list of input molecular specifications, generating conformers, assigning partial charges, and creating output molecular specifications.
+    Creates a MoleculeSpec from a SMILES string and other parameters.
 
-    Parameters
-    ----------
-    smile: str
-        The SMILES string of the molecule.
-    count: int
-        The number of molecules to be created.
-    name: str
-        The name of the molecule.
-    charge_scaling: float
-        The scaling factor to be applied to the partial charges.
-    charge_method: str
-        The default charge method to be used if not specified in the input molecular specifications.
-    geometry: Union[pymatgen.core.Molecule, str, Path]
-        The geometry of the molecule.
-    partial_charges: List[float]
-        A list of partial charges to be assigned to the molecule, or None to use the charge method.
+    Constructs an OpenFF Molecule using create_openff_mol and creates a MoleculeSpec
+    with the specified parameters.
 
-    Returns
-    -------
-    List[MoleculeSpec]
-        A list of dictionaries containing processed molecular specifications.
+    Args:
+    smile (str): The SMILES string of the molecule.
+    count (int): The number of molecules to create.
+    name (str, optional): The name of the molecule. If not provided, defaults to the SMILES string.
+    charge_scaling (float, optional): The scaling factor for partial charges. Default is 1.
+    charge_method (str, optional): The charge method to use if partial charges are not provided.
+        If not specified, defaults to "custom" if partial charges are provided, else "am1bcc".
+    geometry (Union[pymatgen.core.Molecule, str, Path], optional): The geometry to use for
+        adding conformers. Can be a Pymatgen Molecule, file path, or None.
+    partial_charges (List[float], optional): A list of partial charges to assign, or None to
+        use the charge method.
+
+    Returns:
+        MoleculeSpec: The created MoleculeSpec
     """
     # TODO: test this
 
@@ -313,19 +337,16 @@ def create_mol_spec(
 
 def merge_specs_by_name_and_smile(mol_specs: List[MoleculeSpec]) -> List[MoleculeSpec]:
     """
-    Merges molecular specifications with the same name and smile into a
-    single molecular specification.
+    Merges MoleculeSpecs with the same name and SMILES string.
 
-    Parameters
-    ----------
-    mol_specs : List[MoleculeSpec]
-        A list of molecular specifications.
+    Groups MoleculeSpecs by their name and SMILES string, and merges the counts of specs
+    with matching name and SMILES. Returns a list of unique MoleculeSpecs.
 
-    Returns
-    -------
-    List[MoleculeSpec]
-        A list of molecular specifications with unique names and smiles.
+    Args:
+        mol_specs (List[MoleculeSpec]): A list of MoleculeSpecs to merge.
 
+    Returns:
+        List[MoleculeSpec]: A list of merged MoleculeSpecs with unique name and SMILES combinations.
     """
     mol_specs = copy.deepcopy(mol_specs)
     merged_spec_dict = {}
@@ -339,6 +360,19 @@ def merge_specs_by_name_and_smile(mol_specs: List[MoleculeSpec]) -> List[Molecul
 
 
 def create_array_summing_to(total_sum, n_pieces):
+    """
+    Creates a NumPy array with n_pieces elements that sum up to total_sum.
+
+    Divides total_sum by n_pieces to determine the base value for each element. Distributes
+    the remainder evenly among the elements.
+
+    Args:
+        total_sum (int): The desired sum of the array elements.
+        n_pieces (int): The number of elements in the array.
+
+    Returns:
+        numpy.ndarray: A 1D NumPy array with n_pieces elements summing up to total_sum.
+    """
     div, mod = np.divmod(total_sum, n_pieces)
     array = np.full(n_pieces, div)
     array[:mod] += 1
