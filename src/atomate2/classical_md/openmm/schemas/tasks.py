@@ -1,16 +1,17 @@
-from typing import Optional, List, Union
+"""Schemas for OpenMM tasks."""
+
 from pathlib import Path
-
-from pydantic import BaseModel, Field
-
-from emmet.core.vasp.task_valid import TaskState
+from typing import Optional, Union
 
 import pandas as pd
+from emmet.core.vasp.task_valid import TaskState
+from pydantic import BaseModel, Field
 
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
 class CalculationInput(BaseModel, extra="allow"):
+    """OpenMM input settings for a job, these are the attributes of the OpenMMMaker."""
 
     steps: Optional[int] = Field(0, description="Total steps")
 
@@ -38,6 +39,7 @@ class CalculationInput(BaseModel, extra="allow"):
 
 
 class CalculationOutput(BaseModel):
+    """OpenMM calculation output files and extracted data."""
 
     dir_name: Optional[str] = Field(
         None, description="The directory for this OpenMM task"
@@ -51,27 +53,27 @@ class CalculationOutput(BaseModel):
         None, description="Path to the state file relative to `dir_name`"
     )
 
-    output_steps: Optional[List[int]] = Field(None, description="List of steps")
+    output_steps: Optional[list[int]] = Field(None, description="List of steps")
 
-    time: Optional[List[float]] = Field(None, description="List of times")
+    time: Optional[list[float]] = Field(None, description="List of times")
 
-    potential_energy: Optional[List[float]] = Field(
+    potential_energy: Optional[list[float]] = Field(
         None, description="List of potential energies"
     )
 
-    kinetic_energy: Optional[List[float]] = Field(
+    kinetic_energy: Optional[list[float]] = Field(
         None, description="List of kinetic energies"
     )
 
-    total_energy: Optional[List[float]] = Field(
+    total_energy: Optional[list[float]] = Field(
         None, description="List of total energies"
     )
 
-    temperature: Optional[List[float]] = Field(None, description="List of temperatures")
+    temperature: Optional[list[float]] = Field(None, description="List of temperatures")
 
-    volume: Optional[List[float]] = Field(None, description="List of volumes")
+    volume: Optional[list[float]] = Field(None, description="List of volumes")
 
-    density: Optional[List[float]] = Field(None, description="List of densities")
+    density: Optional[list[float]] = Field(None, description="List of densities")
 
     elapsed_time: Optional[float] = Field(
         None, description="Elapsed time for the calculation"
@@ -84,7 +86,8 @@ class CalculationOutput(BaseModel):
         elapsed_time: Optional[float] = None,
         steps: int = None,
         state_interval: int = None,
-    ):
+    ) -> "CalculationOutput":
+        """Extract data from the output files in the directory."""
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {
             '#"Step"': "output_steps",
@@ -122,6 +125,7 @@ class CalculationOutput(BaseModel):
 
 
 class Calculation(BaseModel):
+    """All input and output data for an OpenMM calculation."""
 
     dir_name: Optional[str] = Field(
         None, description="The directory for this OpenMM calculation"
@@ -152,9 +156,11 @@ class Calculation(BaseModel):
 
 
 class OpenMMTaskDocument(ClassicalMDTaskDocument):
+    """Definition of the OpenMM task document."""
 
-    calcs_reversed: Optional[List[Calculation]] = Field(
+    calcs_reversed: Optional[list[Calculation]] = Field(
         None,
         title="Calcs reversed data",
-        description="Detailed data for each OpenMM calculation contributing to the task document.",
+        description="Detailed data for each OpenMM calculation contributing to the "
+        "task document.",
     )
