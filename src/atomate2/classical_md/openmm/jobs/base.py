@@ -124,9 +124,10 @@ class BaseOpenMMMaker(Maker):
         prev_task: Optional[OpenMMTaskDocument] = None,
     ):
 
+        has_steps = self.resolve_attr("steps", prev_task) > 0
         # add dcd reporter
         dcd_interval = self.resolve_attr("dcd_interval", prev_task)
-        if dcd_interval > 0:
+        if has_steps & (dcd_interval > 0):
             dcd_reporter = DCDReporter(
                 file=str(dir_name / "trajectory_dcd"),
                 reportInterval=dcd_interval,
@@ -136,7 +137,7 @@ class BaseOpenMMMaker(Maker):
 
         # add state reporter
         state_interval = self.resolve_attr("state_interval", prev_task)
-        if state_interval > 0:
+        if has_steps & (state_interval > 0):
             state_reporter = StateDataReporter(
                 file=str(dir_name / "state_csv"),
                 reportInterval=state_interval,
@@ -147,6 +148,7 @@ class BaseOpenMMMaker(Maker):
                 temperature=True,
                 volume=True,
                 density=True,
+                append=(dir_name / "state_csv").exists(),
             )
             sim.reporters.append(state_reporter)
 
@@ -242,19 +244,24 @@ class BaseOpenMMMaker(Maker):
         maker_attrs = copy.deepcopy(vars(self))
         job_name = maker_attrs.pop("name")
 
-        prev_calcs = getattr(prev_task, "calcs_reversed", None) or []
-        n_prev_steps = sum(calc.input.steps for calc in prev_calcs)
+        # prev_calcs = getattr(prev_task, "calcs_reversed", None) or []
+        # n_prev_steps = sum(calc.input.steps for calc in prev_calcs)
+        # steps = self.resolve_attr("steps", prev_task)
+        # state_interval = self.resolve_attr("state_interval", prev_task)
 
         calc = Calculation(
             dir_name=str(dir_name),
             has_openmm_completed=True,
             input=CalculationInput(**maker_attrs),
             output=CalculationOutput.from_directory(
-                dir_name, elapsed_time, n_prev_steps
+                dir_name,
+                elapsed_time,
+                self.resolve_attr("steps", prev_task),
+                self.resolve_attr("state_interval", prev_task),
             ),
             completed_at=str(datetime.now()),
             task_name=job_name,
-            calc_type=self.__class__.__name__,  # TODO: will this return the right name?
+            calc_type=self.__class__.__name__,
         )
 
         prev_task = prev_task or OpenMMTaskDocument()
