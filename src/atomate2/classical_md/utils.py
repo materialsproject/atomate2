@@ -336,3 +336,10 @@ def merge_specs_by_name_and_smile(mol_specs: List[MoleculeSpec]) -> List[Molecul
         else:
             merged_spec_dict[key] = spec
     return list(merged_spec_dict.values())
+
+
+def create_array_summing_to(total_sum, n_pieces):
+    div, mod = np.divmod(total_sum, n_pieces)
+    array = np.full(n_pieces, div)
+    array[:mod] += 1
+    return array

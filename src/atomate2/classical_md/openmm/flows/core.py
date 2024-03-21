@@ -13,6 +13,7 @@ from atomate2.classical_md.openmm.jobs.core import (
     TempChangeMaker,
 )
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
+from atomate2.classical_md.utils import create_array_summing_to
 
 
 @dataclass
@@ -40,7 +41,7 @@ class AnnealMaker(Maker):
         **kwargs,
     ):
         if isinstance(steps, int):
-            steps = (steps // 3, steps // 3, steps - 2 * (steps // 3))
+            steps = tuple(create_array_summing_to(steps, 3))
         if isinstance(temp_steps, int):
             temp_steps = (temp_steps, temp_steps, temp_steps)
 
