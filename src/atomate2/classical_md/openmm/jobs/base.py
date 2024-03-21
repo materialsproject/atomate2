@@ -181,11 +181,13 @@ class BaseOpenMMMaker(Maker):
         else:
             prev_input = None
 
-        attr_value = (
-            getattr(self, attr, None)
-            or getattr(prev_input, attr, None)
-            or OPENMM_MAKER_DEFAULTS.get(attr, None)
-        )
+        if getattr(self, attr, None) is not None:
+            attr_value = getattr(self, attr)
+        elif getattr(prev_input, attr, None) is not None:
+            attr_value = getattr(prev_input, attr)
+        else:
+            attr_value = OPENMM_MAKER_DEFAULTS.get(attr, None)
+
         setattr(self, attr, attr_value)
         return getattr(self, attr)
 
