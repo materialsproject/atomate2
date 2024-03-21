@@ -68,7 +68,7 @@ class BaseOpenMMMaker(Maker):
         interchange: Interchange | str,
         prev_task: Optional[OpenMMTaskDocument] = None,
         output_dir: Optional[str | Path] = None,
-    ) -> Job:
+    ) -> Response:
         """
         OpenMM Job Maker where each Job consist of three major steps:
 
@@ -112,8 +112,11 @@ class BaseOpenMMMaker(Maker):
 
         del sim
 
-        # TODO: write out task_doc to directory
         task_doc = self.create_task_doc(interchange, elapsed_time, dir_name, prev_task)
+
+        # write out task_doc json to output dir
+        with open(dir_name / "taskdoc_json", "w") as file:
+            file.write(task_doc.json())
 
         return Response(output=task_doc)
 
