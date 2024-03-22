@@ -51,12 +51,12 @@ jobs:
         #   chgnet 0.2.1 depends on pymatgen>=2023.5.31
         #   emmet-core 0.70.0 depends on pymatgen>=2023.10.11
         run: |
-          python -m pip install --upgrade pip
+          pip install uv
           # ase needed to get FrechetCellFilter used by ML force fields
-          pip install git+https://gitlab.com/ase/ase
-          pip install .[strict,tests]
-          pip install torch-runstats
-          pip install --no-deps nequip
+          # TODO remove next line installing ase from main branch when FrechetCellFilter is released
+          uv pip install --upgrade 'ase@git+https://gitlab.com/ase/ase' --system
+          uv pip install .[strict,tests] --system
+          uv pip install --no-deps nequip --system
 
       - name: Test
         env:
