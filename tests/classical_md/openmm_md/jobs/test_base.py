@@ -2,17 +2,13 @@ import copy
 
 import numpy as np
 from jobflow import Job
-
-from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
-from openmm.app import DCDReporter, StateDataReporter, Simulation
+from openmm.app import DCDReporter, Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
 from openmm.unit import kelvin, picoseconds
 
+from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
+from atomate2.classical_md.openmm.schemas.tasks import Calculation, CalculationInput
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
-from atomate2.classical_md.openmm.schemas.tasks import (
-    Calculation,
-    CalculationInput,
-)
 
 
 def test_add_reporters(interchange, temp_dir):
@@ -116,7 +112,11 @@ def test_make(interchange, temp_dir, run_job):
     )
 
     # monkey patch to allow running the test without openmm
-    BaseOpenMMMaker.run_openmm = lambda self, sim: None
+
+    def do_nothing(self, sim):
+        pass
+
+    BaseOpenMMMaker.run_openmm = do_nothing
 
     # Call the make method
     base_job = maker.make(interchange, output_dir=temp_dir)

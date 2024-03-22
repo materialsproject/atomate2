@@ -1,12 +1,12 @@
 from jobflow import Flow
 
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 from atomate2.classical_md.openmm.flows.core import AnnealMaker, ProductionMaker
 from atomate2.classical_md.openmm.jobs.core import (
     EnergyMinimizationMaker,
     NPTMaker,
     NVTMaker,
 )
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
 def test_anneal_maker(interchange, tmp_path, run_job):

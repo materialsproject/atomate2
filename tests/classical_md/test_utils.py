@@ -1,31 +1,27 @@
-import pytest
-
+import numpy as np
 import openff.toolkit as tk
-
-from openff.toolkit.topology.molecule import Molecule
+import pymatgen
+import pytest
 from openff.interchange import Interchange
 from openff.toolkit.topology import Topology
+from openff.toolkit.topology.molecule import Molecule
 from openff.units import Quantity
-
-import numpy as np
-
-import pymatgen
 from pymatgen.analysis.graphs import MoleculeGraph
 
+from atomate2.classical_md.schemas import MoleculeSpec
 from atomate2.classical_md.utils import (
-    molgraph_to_openff_mol,
-    infer_openff_mol,
-    get_atom_map,
     add_conformer,
     assign_partial_charges,
-    create_openff_mol,
     create_mol_spec,
+    create_openff_mol,
+    get_atom_map,
+    infer_openff_mol,
     merge_specs_by_name_and_smile,
+    molgraph_to_openff_mol,
 )
-from atomate2.classical_md.schemas import MoleculeSpec
 
 
-@pytest.fixture
+@pytest.fixture()
 def mol_files(classical_md_data):
     geo_dir = classical_md_data / "molecule_charge_files"
     return {

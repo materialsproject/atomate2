@@ -1,7 +1,7 @@
 from openff.interchange import Interchange
 
 from atomate2.classical_md.core import generate_interchange
-from atomate2.classical_md.schemas import MoleculeSpec, ClassicalMDTaskDocument
+from atomate2.classical_md.schemas import ClassicalMDTaskDocument, MoleculeSpec
 
 
 def test_generate_interchange(mol_specs_small, run_job):

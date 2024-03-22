@@ -1,21 +1,17 @@
-from pathlib import Path
-import jobflow
-import pytest
 import tempfile
-import os
+from pathlib import Path
 
+import pytest
+from jobflow import run_locally
 from openff.interchange import Interchange
-from openff.toolkit import ForceField
 from openff.interchange.components._packmol import pack_box
-
+from openff.toolkit import ForceField
 from openff.units import unit
 
-from atomate2.classical_md.utils import merge_specs_by_name_and_smile, create_mol_spec
-
-from jobflow import run_locally
+from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smile
 
 
-@pytest.fixture
+@pytest.fixture()
 def run_job():
     def run_job(job):
         response_dict = run_locally(job, ensure_success=True)
@@ -24,12 +20,12 @@ def run_job():
     return run_job
 
 
-@pytest.fixture
+@pytest.fixture()
 def md_task_doc():
     return None
 
 
-@pytest.fixture
+@pytest.fixture()
 def mol_specs_small():
     return [
         create_mol_spec("CCO", 10, name="ethanol"),
@@ -37,7 +33,7 @@ def mol_specs_small():
     ]
 
 
-@pytest.fixture
+@pytest.fixture()
 def interchange():
 
     o = create_mol_spec("O", 300)
@@ -62,22 +58,22 @@ def interchange():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def temp_dir():
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
 
 
-@pytest.fixture
+@pytest.fixture()
 def output_dir(test_dir):
     return test_dir / "classical_md" / "output_dir"
 
 
-@pytest.fixture
+@pytest.fixture()
 def classical_md_data(test_dir):
     return test_dir / "classical_md"
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_state_report_file(classical_md_data):
     return classical_md_data / "reporters" / "state.txt"

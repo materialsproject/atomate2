@@ -1,3 +1,4 @@
+import numpy as np
 from openff.interchange import Interchange
 
 from atomate2.classical_md.openmm.jobs.core import (
@@ -6,8 +7,6 @@ from atomate2.classical_md.openmm.jobs.core import (
     NVTMaker,
     TempChangeMaker,
 )
-
-import numpy as np
 
 
 def test_energy_minimization_maker(interchange, temp_dir, run_job):

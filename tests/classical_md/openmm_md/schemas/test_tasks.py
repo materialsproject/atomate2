@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import numpy as np
 
-from pathlib import Path
 from atomate2.classical_md.openmm.schemas.tasks import CalculationOutput
 
 
