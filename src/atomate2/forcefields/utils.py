@@ -14,6 +14,7 @@ import io
 import pickle
 import sys
 import warnings
+from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
@@ -28,7 +29,7 @@ except ImportError:
     warnings.warn(
         "Due to errors in the implementation of gradients in the ASE"
         " ExpCellFilter, we recommend installing ASE from gitlab\n"
-        "    pip install git+https://gitlab.com/ase/ase\n"
+        "    pip install git+https://gitlab.com/ase/ase.git\n"
         "rather than PyPi to access FrechetCellFilter. See\n"
         "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
         "for more details. Otherwise, you must specify an alternate ASE Filter.",
@@ -36,6 +37,7 @@ except ImportError:
     )
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
     from os import PathLike
     from typing import Any
 
@@ -211,3 +213,19 @@ class Relaxer:
 
         struct = self.ase_adaptor.get_structure(atoms)
         return {"final_structure": struct, "trajectory": obs}
+
+
+@contextmanager
+def revert_default_dtype() -> Generator[None, None, None]:
+    """Context manager for torch.default_dtype.
+
+    Reverts it to whatever torch.get_default_dtype() was when entering the context.
+
+    Originally added for use with MACE(Relax|Static)Maker.
+    https://github.com/ACEsuit/mace/issues/328
+    """
+    import torch
+
+    orig = torch.get_default_dtype()
+    yield
+    torch.set_default_dtype(orig)

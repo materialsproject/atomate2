@@ -8,6 +8,7 @@ In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -24,6 +25,8 @@ from atomate2.vasp.jobs.mp import (
     MPPreRelaxMaker,
 )
 from atomate2.vasp.sets.mp import MPGGAStaticSetGenerator
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -194,8 +197,6 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
 
 # update potcars to 54, use correct W potcar
 # use staticmaker for compatibility
-
-
 @dataclass
 class MPVaspLobsterMaker(VaspLobsterMaker):
     """
@@ -219,8 +220,8 @@ class MPVaspLobsterMaker(VaspLobsterMaker):
         A maker to perform a relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
     lobster_static_maker : .BaseVaspMaker
-        A maker to perform the computation of the wavefunction before the static run.
-        Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
+        A maker to perform the computation of the wavefunction before the static
+        run. Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
     lobster_maker : .LobsterMaker
         A maker to perform the Lobster run.
     delete_wavecars : bool

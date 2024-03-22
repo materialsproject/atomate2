@@ -597,9 +597,9 @@ class HSEBSSetGenerator(VaspInputGenerator):
             kpoints["zero_weighted_line_density"] = self.line_density
 
         elif self.mode == "uniform_dense":
-            kpoints[
-                "zero_weighted_reciprocal_density"
-            ] = self.zero_weighted_reciprocal_density
+            kpoints["zero_weighted_reciprocal_density"] = (
+                self.zero_weighted_reciprocal_density
+            )
 
         added_kpoints = deepcopy(self.added_kpoints)
         if vasprun is not None and self.mode == "gap":

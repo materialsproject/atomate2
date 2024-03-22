@@ -164,7 +164,7 @@ def update_user_incar_settings_maker(
 
 @job
 def get_lobster_jobs(
-    lobster_maker: LobsterMaker,
+    lobster_maker: LobsterMaker | None,
     basis_dict: dict,
     optimization_dir: Path | str,
     optimization_uuid: str,
@@ -176,7 +176,7 @@ def get_lobster_jobs(
 
     Parameters
     ----------
-    lobster_maker : .LobsterMaker
+    lobster_maker : .LobsterMaker or None
         maker for the Lobster jobs
     basis_dict : dict
         dict including basis set information.
@@ -205,16 +205,15 @@ def get_lobster_jobs(
         "lobster_task_documents": [],
     }
 
-    if lobster_maker is None:
-        lobster_maker = LobsterMaker()
+    lobster_maker = lobster_maker or LobsterMaker()
 
-    for i, basis in enumerate(basis_dict):
-        lobsterjob = lobster_maker.make(wavefunction_dir=static_dir, basis_dict=basis)
-        lobsterjob.append_name(f"_run_{i}")
-        outputs["lobster_uuids"].append(lobsterjob.output.uuid)
-        outputs["lobster_dirs"].append(lobsterjob.output.dir_name)
-        outputs["lobster_task_documents"].append(lobsterjob.output)
-        jobs.append(lobsterjob)
+    for idx, basis in enumerate(basis_dict):
+        lobster_job = lobster_maker.make(wavefunction_dir=static_dir, basis_dict=basis)
+        lobster_job.append_name(f"_run_{idx}")
+        outputs["lobster_uuids"].append(lobster_job.output.uuid)
+        outputs["lobster_dirs"].append(lobster_job.output.dir_name)
+        outputs["lobster_task_documents"].append(lobster_job.output)
+        jobs.append(lobster_job)
 
     flow = Flow(jobs, output=outputs)
     return Response(replace=flow)

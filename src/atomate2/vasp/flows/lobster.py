@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
+from monty.dev import requires
 
 from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
@@ -17,6 +18,15 @@ from atomate2.vasp.jobs.lobster import (
     update_user_incar_settings_maker,
 )
 from atomate2.vasp.sets.core import NonSCFSetGenerator, StaticSetGenerator
+
+try:
+    import ijson
+    from lobsterpy.cohp.analyze import Analysis
+    from lobsterpy.cohp.describe import Description
+except ImportError:
+    ijson = None
+    Analysis = None
+    Description = None
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -101,6 +111,11 @@ class VaspLobsterMaker(Maker):
     address_min_basis: str | None = None
     address_max_basis: str | None = None
 
+    @requires(
+        Analysis,
+        "This flow requires lobsterpy and ijson to function properly. "
+        "Please reinstall atomate2 using atomate2[lobster]",
+    )
     def make(
         self,
         structure: Structure,

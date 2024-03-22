@@ -8,8 +8,9 @@ from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
 
+from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import Relaxer
+from atomate2.forcefields.utils import Relaxer, revert_default_dtype
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -24,6 +25,8 @@ logger = logging.getLogger(__name__)
 class ForceFieldRelaxMaker(Maker):
     """
     Base Maker to calculate forces and stresses using any force field.
+
+    Should be subclassed to use a specific force field.
 
     Parameters
     ----------
@@ -43,8 +46,8 @@ class ForceFieldRelaxMaker(Maker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "Forcefield relax"
-    force_field_name: str = "Forcefield"
+    name: str = "Force field relax"
+    force_field_name: str = "Force field"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -103,8 +106,8 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "ForceField static"
-    force_field_name: str = "Forcefield"
+    name: str = "Force field static"
+    force_field_name: str = "Force field"
     task_document_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldTaskDocument)
@@ -165,8 +168,8 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "CHGNet relax"
-    force_field_name = "CHGNet"
+    name: str = f"{MLFF.CHGNet} relax"
+    force_field_name = f"{MLFF.CHGNet}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -195,8 +198,8 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "CHGNet static"
-    force_field_name = "CHGNet"
+    name: str = f"{MLFF.CHGNet} static"
+    force_field_name = f"{MLFF.CHGNet}"
     task_document_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
@@ -229,8 +232,8 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "M3GNet relax"
-    force_field_name: str = "M3GNet"
+    name: str = f"{MLFF.M3GNet} relax"
+    force_field_name: str = f"{MLFF.M3GNet}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -253,6 +256,98 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
 
 @dataclass
+class NequipRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Maker to perform a relaxation using a Nequip force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    model_path: str | Path
+        deployed model checkpoint to load with
+        :obj:`nequip.calculators.NequipCalculator.from_deployed_model()'`.
+    model_kwargs: dict[str, Any]
+        Further keywords (e.g. device: Union[str, torch.device],
+        species_to_type_name: Optional[Dict[str, str]] = None) for
+            :obj:`nequip.calculators.NequipCalculator()'`.
+    """
+
+    name: str = f"{MLFF.Nequip} relax"
+    force_field_name: str = f"{MLFF.Nequip}"
+    relax_cell: bool = True
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+    model_path: str | Path = ""
+    model_kwargs: dict = field(default_factory=dict)
+
+    def _relax(self, structure: Structure) -> dict:
+        from nequip.ase import NequIPCalculator
+
+        calculator = NequIPCalculator.from_deployed_model(
+            self.model_path, **self.model_kwargs
+        )
+        relaxer = Relaxer(
+            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
+        )
+
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+
+
+@dataclass
+class NequipStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate energies, forces and stresses using a nequip force field.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    model_path: str | Path
+        deployed model checkpoint to load with
+        :obj:`nequip.calculators.NequipCalculator()'`.
+    model_kwargs: dict[str, Any]
+        Further keywords (e.g. device: Union[str, torch.device],
+        species_to_type_name: Optional[Dict[str, str]] = None) for
+            :obj:`nequip.calculators.NequipCalculator()'`.
+    """
+
+    name: str = f"{MLFF.Nequip} static"
+    force_field_name: str = f"{MLFF.Nequip}"
+    task_document_kwargs: dict = field(default_factory=dict)
+    model_path: str | Path = ""
+    model_kwargs: dict = field(default_factory=dict)
+
+    def _evaluate_static(self, structure: Structure) -> dict:
+        from nequip.ase import NequIPCalculator
+
+        calculator = NequIPCalculator.from_deployed_model(
+            self.model_path, **self.model_kwargs
+        )
+        relaxer = Relaxer(calculator, relax_cell=False)
+
+        return relaxer.relax(structure, steps=1)
+
+
+@dataclass
 class M3GNetStaticMaker(ForceFieldStaticMaker):
     """
     Maker to calculate forces and stresses using the M3GNet force field.
@@ -267,8 +362,8 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = "M3GNet static"
-    force_field_name: str = "M3GNet"
+    name: str = f"{MLFF.M3GNet} static"
+    force_field_name: str = f"{MLFF.M3GNet}"
     task_document_kwargs: dict = field(default_factory=dict)
 
     def _evaluate_static(self, structure: Structure) -> dict:
@@ -315,8 +410,8 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
-    name: str = "MACE relax"
-    force_field_name: str = "MACE"
+    name: str = f"{MLFF.MACE} relax"
+    force_field_name: str = f"{MLFF.MACE}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -328,11 +423,12 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     def _relax(self, structure: Structure) -> dict:
         from mace.calculators import mace_mp
 
-        calculator = mace_mp(model=self.model, **self.model_kwargs)
-        relaxer = Relaxer(
-            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
-        )
-        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+        with revert_default_dtype():
+            calculator = mace_mp(model=self.model, **self.model_kwargs)
+            relaxer = Relaxer(
+                calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
+            )
+            return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
 
 @dataclass
@@ -358,8 +454,8 @@ class MACEStaticMaker(ForceFieldStaticMaker):
             :obj:`mace.calculators.MACECalculator()'`.
     """
 
-    name: str = "MACE static"
-    force_field_name: str = "MACE"
+    name: str = f"{MLFF.MACE} static"
+    force_field_name: str = f"{MLFF.MACE}"
     task_document_kwargs: dict = field(default_factory=dict)
     model: str | Path | Sequence[str | Path] | None = None
     model_kwargs: dict = field(default_factory=dict)
@@ -367,9 +463,10 @@ class MACEStaticMaker(ForceFieldStaticMaker):
     def _evaluate_static(self, structure: Structure) -> dict:
         from mace.calculators import mace_mp
 
-        calculator = mace_mp(model=self.model, **self.model_kwargs)
-        relaxer = Relaxer(calculator, relax_cell=False)
-        return relaxer.relax(structure, steps=1)
+        with revert_default_dtype():
+            calculator = mace_mp(model=self.model, **self.model_kwargs)
+            relaxer = Relaxer(calculator, relax_cell=False)
+            return relaxer.relax(structure, steps=1)
 
 
 @dataclass
@@ -401,8 +498,8 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
-    name: str = "GAP relax"
-    force_field_name: str = "GAP"
+    name: str = f"{MLFF.GAP} relax"
+    force_field_name: str = f"{MLFF.GAP}"
     relax_cell: bool = True
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
@@ -447,8 +544,8 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         Further keywords for :obj:`quippy.potential.Potential()'`.
     """
 
-    name: str = "GAP static"
-    force_field_name: str = "GAP"
+    name: str = f"{MLFF.GAP} static"
+    force_field_name: str = f"{MLFF.GAP}"
     task_document_kwargs: dict = field(default_factory=dict)
     potential_args_str: str = "IP GAP"
     potential_param_file_name: str | Path = "gap.xml"

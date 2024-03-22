@@ -34,7 +34,7 @@ def test_gunzip_force_overwrites(tmp_path):
 
 
 def test_zip_outputs(tmp_dir):
-    for file_name in ["a", "b"]:
+    for file_name in ("a", "b"):
         (Path.cwd() / file_name).touch()
 
     gzip_output_folder(directory=Path.cwd(), setting=False, files_list=["a"])

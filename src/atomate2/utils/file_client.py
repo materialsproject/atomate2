@@ -1,6 +1,5 @@
 """Tools for remote file IO using paramiko."""
 
-
 from __future__ import annotations
 
 import shutil
@@ -403,9 +402,10 @@ class FileClient:
                 )
 
         if host is None:
-            with open(path, "rb") as f_in, GzipFile(
-                path_gz, "wb", compresslevel=compresslevel
-            ) as f_out:
+            with (
+                open(path, "rb") as f_in,
+                GzipFile(path_gz, "wb", compresslevel=compresslevel) as f_out,
+            ):
                 shutil.copyfileobj(f_in, f_out)
             shutil.copystat(path, path_gz)
             path.unlink()
@@ -465,7 +465,7 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gunzip -f {path!s}")
+            _stdin, _stdout, _stderr = ssh.exec_command(f"gunzip -f {path!s}")
 
     def close(self) -> None:
         """Close all connections."""

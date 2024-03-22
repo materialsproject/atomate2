@@ -326,7 +326,9 @@ def find_and_filter_files(
 
 
 def get_zfile(
-    directory_listing: list[Path], base_name: str, allow_missing: bool = False
+    directory_listing: list[Path],
+    base_name: str,
+    allow_missing: bool = False,
 ) -> Path | None:
     """
     Find gzipped or non-gzipped versions of a file in a directory listing.
@@ -347,7 +349,7 @@ def get_zfile(
         found, then ``None`` will be returned.
     """
     for file in directory_listing:
-        if file.name in [base_name, f"{base_name}.gz", f"{base_name}.GZ"]:
+        if file.name in (base_name, f"{base_name}.gz", f"{base_name}.GZ"):
             return file
 
     if allow_missing:
