@@ -20,6 +20,11 @@ jobs:
           channels: conda-forge
           python-version: "3.9"
 
+      - name: Install dependencies
+        run: |
+          micromamba install --name atomate2 --file pyproject.toml --channel conda-forge
+          micromamba run -n atomate2 pip install .[dev]
+
       - uses: pre-commit/action@v3.0.0
 
   test:
@@ -46,7 +51,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          micromamba install --name atomate2 --file requirements.txt --channel conda-forge
+          micromamba install --name atomate2 --file pyproject.toml --channel conda-forge
           micromamba run -n atomate2 pip install .[strict,tests]
 
       - name: Test
@@ -75,7 +80,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          micromamba install --name atomate2 --file requirements.txt --channel conda-forge
+          micromamba install --name atomate2 --file pyproject.toml --channel conda-forge
           micromamba run -n atomate2 pip install .[strict,docs]
 
       - name: Build
