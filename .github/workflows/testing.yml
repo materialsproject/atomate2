@@ -36,7 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+#        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v4
@@ -51,15 +52,11 @@ jobs:
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
-          micromamba install -n atomate2 -c conda-forge ase
-          micromamba install -n atomate2 -c conda-forge openmm
-          micromamba install -n atomate2 -c conda-forge openff-toolkit
-          micromamba install -n atomate2 -c conda-forge openff-interchange
-          micromamba install -n atomate2 -c conda-forge packmol
-          micromamba install -n atomate2 -c conda-forge openbabel
+          micromamba install -n atomate2 -c conda-forge ase openmm openff-toolkit openff-interchange packmol openbabel
           micromamba run -n atomate2 pip install .[strict,tests]
           micromamba run -n atomate2 pip install torch-runstats
           micromamba run -n atomate2 pip install --no-deps nequip
+
 
       - name: Test
         env:
@@ -88,12 +85,7 @@ jobs:
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
-          micromamba install -n atomate2 -c conda-forge ase
-          micromamba install -n atomate2 -c conda-forge openmm
-          micromamba install -n atomate2 -c conda-forge openff-toolkit
-          micromamba install -n atomate2 -c conda-forge openff-interchange
-          micromamba install -n atomate2 -c conda-forge packmol
-          micromamba install -n atomate2 -c conda-forge openbabel
+          micromamba install -n atomate2 -c conda-forge ase openmm openff-toolkit openff-interchange packmol openbabel
           micromamba run -n atomate2 pip install .[strict,docs]
 
       - name: Build

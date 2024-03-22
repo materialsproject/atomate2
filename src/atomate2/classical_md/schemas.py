@@ -49,7 +49,7 @@ class ClassicalMDTaskDocument(BaseModel, extra="allow"):  # type: ignore[call-ar
         None, description="Molecules within the box."
     )
 
-    forcefield: Optional[str | list[str]] = Field(None, description="forcefield")
+    forcefield: Optional[str] = Field(None, description="forcefield")
 
     task_type: Optional[str] = Field(None, description="The type of calculation.")
 
