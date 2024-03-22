@@ -99,7 +99,6 @@ def test_create_task_doc(interchange, temp_dir):
 
 
 def test_make(interchange, temp_dir, run_job):
-
     # Create an instance of BaseOpenMMMaker
     maker = BaseOpenMMMaker(
         steps=1000,

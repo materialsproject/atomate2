@@ -10,7 +10,6 @@ from atomate2.classical_md.openmm.jobs.core import (
 
 
 def test_energy_minimization_maker(interchange, temp_dir, run_job):
-
     maker = EnergyMinimizationMaker(max_iterations=1)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)
@@ -20,7 +19,6 @@ def test_energy_minimization_maker(interchange, temp_dir, run_job):
 
 
 def test_npt_maker(interchange, temp_dir, run_job):
-
     maker = NPTMaker(steps=10, pressure=0.1, pressure_update_frequency=1)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)
@@ -32,7 +30,6 @@ def test_npt_maker(interchange, temp_dir, run_job):
 
 
 def test_nvt_maker(interchange, temp_dir, run_job):
-
     maker = NVTMaker(steps=10, state_interval=1)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)
@@ -50,7 +47,6 @@ def test_nvt_maker(interchange, temp_dir, run_job):
 
 
 def test_temp_change_maker(interchange, temp_dir, run_job):
-
     maker = TempChangeMaker(steps=10, temperature=310, temp_steps=10)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)

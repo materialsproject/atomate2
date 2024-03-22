@@ -35,7 +35,6 @@ def mol_specs_small():
 
 @pytest.fixture()
 def interchange():
-
     o = create_mol_spec("O", 300)
     cco = create_mol_spec("CCO", 10)
     cco2 = create_mol_spec("CCO", 20, name="cco2")
