@@ -150,3 +150,13 @@ def symmetry_structure(test_dir, request):
     See https://github.com/hackingmaterials/amset/blob/main/tests/conftest.py
     """
     return loadfn(test_dir / "symmetry_structures" / f"{request.param}.json.gz")
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--abinit-integration",
+        action="store_true",
+        default=False,
+        help="Run abinit integration tests. "
+        "This basically runs the same tests but without the mocking.",
+    )
