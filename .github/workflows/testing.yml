@@ -47,12 +47,12 @@ jobs:
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
-          micromamba install -n atomate2 -c conda-forge --file .github/conda_requirements.txt
-          # ase needed to get FrechetCellFilter used by ML force fields
           micromamba run -n atomate2 pip install git+https://gitlab.com/ase/ase
+          # ase needed to get FrechetCellFilter used by ML force fields
           micromamba run -n atomate2 pip install .[strict,tests]
           micromamba run -n atomate2 pip install torch-runstats
           micromamba run -n atomate2 pip install --no-deps nequip
+          micromamba install -n atomate2 -c conda-forge --file .github/conda_requirements.txt
 
 
       - name: Test
