@@ -16,7 +16,7 @@ from atomate2.common.schemas.phonons import (
 from atomate2.vasp.flows.phonons import PhononMaker
 
 
-def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
+def test_phonon_wf_vasp_only_displacements3(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -137,7 +137,7 @@ def test_phonon_wf_only_displacements3(mock_vasp, clean_dir):
 
 
 # structure will be kept in the format that was transferred
-def test_phonon_wf_only_displacements_no_structural_transformation(
+def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     mock_vasp, clean_dir
 ):
     structure = Structure(
@@ -278,7 +278,7 @@ def test_phonon_wf_only_displacements_no_structural_transformation(
 @pytest.mark.parametrize(
     "kpath_scheme", ["seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
+def test_phonon_wf_vasp_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -369,7 +369,7 @@ def test_phonon_wf_only_displacements_kpath(mock_vasp, clean_dir, kpath_scheme):
 
 
 # test supply of born charges, epsilon, DFT energy, supercell
-def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
+def test_phonon_wf_vasp_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -416,7 +416,7 @@ def test_phonon_wf_only_displacements_add_inputs_raises(mock_vasp, clean_dir):
 
 
 # test supply of born charges, epsilon, DFT energy, supercell
-def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
+def test_phonon_wf_vasp_only_displacements_add_inputs(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -526,7 +526,7 @@ def test_phonon_wf_only_displacements_add_inputs(mock_vasp, clean_dir):
 
 
 # test optional parameters
-def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
+def test_phonon_wf_vasp_only_displacements_optional_settings(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -625,7 +625,7 @@ def test_phonon_wf_only_displacements_optional_settings(mock_vasp, clean_dir):
 
 
 # test run including all steps of the computation for Si
-def test_phonon_wf_all_steps(mock_vasp, clean_dir):
+def test_phonon_wf_vasp_all_steps(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -737,7 +737,7 @@ def test_phonon_wf_all_steps(mock_vasp, clean_dir):
 @pytest.mark.parametrize(
     "kpath_scheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
+def test_phonon_wf_vasp_only_displacements_kpath_raises_no_cell_change(
     mock_vasp, clean_dir, kpath_scheme
 ):
     structure = Structure(
@@ -774,7 +774,9 @@ def test_phonon_wf_only_displacements_kpath_raises_no_cell_change(
 @pytest.mark.parametrize(
     "kpath_scheme", ["hinuma", "setyawan_curtarolo", "latimer_munro"]
 )
-def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpath_scheme):
+def test_phonon_wf_vasp_only_displacements_kpath_raises(
+    mock_vasp, clean_dir, kpath_scheme
+):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
@@ -805,7 +807,7 @@ def test_phonon_wf_only_displacements_kpath_raises(mock_vasp, clean_dir, kpath_s
         ).make(structure)
 
 
-def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
+def test_phonon_wf_vasp_all_steps_na_cl(mock_vasp, clean_dir):
     structure = Structure(
         lattice=[
             [5.691694, 0.000000, 0.000000],
@@ -858,7 +860,7 @@ def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
         ],
     )
 
-    def test_phonon_wf_all_steps_na_cl(mock_vasp, clean_dir):
+    def test_phonon_wf_vasp_all_steps_na_cl(mock_vasp, clean_dir):
         structure = Structure(
             lattice=[
                 [2.30037148, -3.98436029, 0.00000000],
