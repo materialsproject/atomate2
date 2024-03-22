@@ -53,9 +53,9 @@ jobs:
         run: |
           pip install uv
           # ase needed to get FrechetCellFilter used by ML force fields
+          uv pip install .[strict,tests] --system
           # TODO remove next line installing ase from main branch when FrechetCellFilter is released
           uv pip install --upgrade 'ase@git+https://gitlab.com/ase/ase' --system
-          uv pip install .[strict,tests] --system
           uv pip install --no-deps nequip --system
 
       - name: Test
