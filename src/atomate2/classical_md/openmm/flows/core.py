@@ -25,16 +25,19 @@ if TYPE_CHECKING:
 
 @dataclass
 class AnnealMaker(Maker):
-    """
-    A maker class for making annealing workflows.
+    """A maker class for making annealing workflows.
 
     Attributes
     ----------
-    name (str): The name of the annealing job. Default is "anneal".
-    raise_temp_maker (TempChangeMaker): The maker for raising the temperature.
+    name : str
+        The name of the annealing job. Default is "anneal".
+    raise_temp_maker : TempChangeMaker
+        The maker for raising the temperature.
         Default is a TempChangeMaker with a target temperature of 400.
-    nvt_maker (NVTMaker): The maker for holding the temperature. Default is an NVTMaker.
-    lower_temp_maker (TempChangeMaker): The maker for lowering the temperature.
+    nvt_maker : NVTMaker
+        The maker for holding the temperature. Default is an NVTMaker.
+    lower_temp_maker : TempChangeMaker
+        The maker for lowering the temperature.
         Default is a TempChangeMaker.
     """
 
@@ -56,29 +59,37 @@ class AnnealMaker(Maker):
         job_names: tuple[str, str, str] = ("raise temp", "hold temp", "lower temp"),
         **kwargs,
     ) -> AnnealMaker:
-        """
-        Create an AnnealMaker from the specified temperatures, steps, and job names.
+        """Create an AnnealMaker from the specified temperatures, steps, and job names.
 
-        Args:
-            name (str): The name of the annealing job. Default is "anneal".
-            anneal_temp (int): The annealing temperature. Default is 400.
-            final_temp (int): The final temperature after annealing. Default is 298.
-            steps (int or tuple): The number of steps for each stage of annealing.
-                If an integer is provided, it will be divided into three equal parts.
-                If a tuple of three integers is provided, each value represents the
-                steps for the corresponding stage. Default is 1500000.
-            temp_steps (int or tuple): The number of temperature steps for raising and
-                lowering the temperature. If an integer is provided, it will be used
-                for both stages. If a tuple of three integers is provided, each value
-                represents the temperature steps for the corresponding stage.
-                Default is None and all jobs will automatically determine temp_steps.
-            job_names (tuple): The names for the jobs in each stage of annealing.
-                Default is ("raise temp", "hold temp", "lower temp").
-            **kwargs: Additional keyword arguments to be passed to the job makers.
+        Parameters
+        ----------
+        name : str, optional
+            The name of the annealing job. Default is "anneal".
+        anneal_temp : int, optional
+            The annealing temperature. Default is 400.
+        final_temp : int, optional
+            The final temperature after annealing. Default is 298.
+        steps : int or Tuple[int, int, int], optional
+            The number of steps for each stage of annealing.
+            If an integer is provided, it will be divided into three equal parts.
+            If a tuple of three integers is provided, each value represents the
+            steps for the corresponding stage. Default is 1500000.
+        temp_steps : int or Tuple[int, int, int], optional
+            The number of temperature steps for raising and
+            lowering the temperature. If an integer is provided, it will be used
+            for both stages. If a tuple of three integers is provided, each value
+            represents the temperature steps for the corresponding stage.
+            Default is None and all jobs will automatically determine temp_steps.
+        job_names : Tuple[str, str, str], optional
+            The names for the jobs in each stage of annealing.
+            Default is ("raise temp", "hold temp", "lower temp").
+        **kwargs
+            Additional keyword arguments to be passed to the job makers.
 
         Returns
         -------
-            AnnealMaker: An AnnealMaker instance with the specified parameters.
+        AnnealMaker
+            An AnnealMaker instance with the specified parameters.
         """
         if isinstance(steps, int):
             steps = tuple(create_list_summing_to(steps, 3))
@@ -115,8 +126,7 @@ class AnnealMaker(Maker):
         prev_task: ClassicalMDTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Flow:
-        """
-        Anneal the simulation at the specified temperature.
+        """Anneal the simulation at the specified temperature.
 
         Annealing takes place in 3 stages, heating, holding, and cooling.
         After heating, and holding, the system will cool to the temperature in
@@ -128,7 +138,7 @@ class AnnealMaker(Maker):
             Interchange object containing the system to be annealed.
         prev_task : Optional[ClassicalMDTaskDocument]
             Previous task to use as a starting point for the annealing.
-        output_dir : str
+        output_dir : Optional[str]
             Directory to write reporter files to.
 
         Returns
@@ -161,19 +171,23 @@ class AnnealMaker(Maker):
 
 @dataclass
 class ProductionMaker(Maker):
-    """
-    Run a production simulation.
+    """Run a production simulation.
 
     The production simulation links together energy minimization, NPT equilibration,
     annealing, and NVT production.
 
     Attributes
     ----------
-        name (str): The name of the production job. Default is "production".
-        energy_maker (EnergyMinimizationMaker): The maker for energy minimization.
-        npt_maker (NPTMaker): The maker for NPT equilibration.
-        anneal_maker (AnnealMaker): The maker for annealing.
-        nvt_maker (NVTMaker): The maker for NVT production.
+    name : str
+        The name of the production job. Default is "production".
+    energy_maker : EnergyMinimizationMaker
+        The maker for energy minimization.
+    npt_maker : NPTMaker
+        The maker for NPT equilibration.
+    anneal_maker : AnnealMaker
+        The maker for annealing.
+    nvt_maker : NVTMaker
+        The maker for NVT production.
     """
 
     name: str = "production"
@@ -190,22 +204,23 @@ class ProductionMaker(Maker):
         prev_task: ClassicalMDTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Flow:
-        """
-        Run the production simulation using the provided Interchange object.
+        """Run the production simulation using the provided Interchange object.
 
         Parameters
         ----------
-        interchange (Interchange): The Interchange object containing the system
+        interchange : Interchange
+            The Interchange object containing the system
             to simulate.
-        prev_task (ClassicalMDTaskDocument, optional): The previous task to use as
+        prev_task : Optional[ClassicalMDTaskDocument]
+            The previous task to use as
             a starting point for the production simulation.
-        output_dir (str or Path, optional): The directory to write reporter files to.
+        output_dir : Optional[Union[str, Path]]
+            The directory to write reporter files to.
 
         Returns
         -------
-            Flow: A Flow object containing the OpenMM jobs for the simulation.
-
-
+        Flow
+            A Flow object containing the OpenMM jobs for the simulation.
         """
         energy_job = self.energy_maker.make(
             interchange=interchange,

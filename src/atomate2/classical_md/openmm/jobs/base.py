@@ -40,8 +40,7 @@ OPENMM_MAKER_DEFAULTS = {
 
 @dataclass
 class BaseOpenMMMaker(Maker):
-    """
-    Base class for OpenMM simulation makers.
+    """Base class for OpenMM simulation makers.
 
     This class provides a foundation for creating OpenMM simulation
     makers. It includes common attributes and methods for setting up,
@@ -54,21 +53,31 @@ class BaseOpenMMMaker(Maker):
 
     Attributes
     ----------
-        name (str): The name of the OpenMM job.
-        steps (Optional[int]): The number of simulation steps to run.
-        step_size (Optional[float]): The size of each simulation step (picoseconds).
-        platform_name (Optional[str]): The name of the OpenMM platform to use, passed to
-            Interchange.to_openmm_simulation.
-        platform_properties (Optional[dict]): Properties for the OpenMM platform,
-            passed to Interchange.to_openmm_simulation.
-        state_interval (Optional[int]): The interval for saving simulation state.
-            To record no state, set to 0.
-        dcd_interval (Optional[int]): The interval for saving DCD frames. To record
-            no DCD, set to 0.
-        wrap_dcd (Optional[bool]): Whether to wrap DCD coordinates.
-        temperature (Optional[float]): The simulation temperature (kelvin).
-        friction_coefficient (Optional[float]): The friction coefficient for the
-            integrator (inverse picoseconds).
+    name : str
+        The name of the OpenMM job.
+    steps : Optional[int]
+        The number of simulation steps to run.
+    step_size : Optional[float]
+        The size of each simulation step (picoseconds).
+    platform_name : Optional[str]
+        The name of the OpenMM platform to use, passed to
+        Interchange.to_openmm_simulation.
+    platform_properties : Optional[dict]
+        Properties for the OpenMM platform,
+        passed to Interchange.to_openmm_simulation.
+    state_interval : Optional[int]
+        The interval for saving simulation state.
+        To record no state, set to 0.
+    dcd_interval : Optional[int]
+        The interval for saving DCD frames. To record
+        no DCD, set to 0.
+    wrap_dcd : Optional[bool]
+        Whether to wrap DCD coordinates.
+    temperature : Optional[float]
+        The simulation temperature (kelvin).
+    friction_coefficient : Optional[float]
+        The friction coefficient for the
+        integrator (inverse picoseconds).
     """
 
     name: str = "base openmm job"
@@ -89,24 +98,27 @@ class BaseOpenMMMaker(Maker):
         prev_task: OpenMMTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run an OpenMM calculation.
+        """Run an OpenMM calculation.
 
         This method sets up an OpenMM simulation, runs the simulation based
         on the specific job logic defined in run_openmm, and closes the
         simulation. It returns a response containing the output task document.
 
-        Args:
-        interchange (Interchange | str): An Interchange object or a JSON string of
-            the Interchange object.
-        prev_task (Optional[OpenMMTaskDocument]): The previous task document.
-        output_dir (Optional[str | Path]): The directory to save the output files.
+        Parameters
+        ----------
+        interchange : Union[Interchange, str]
+            An Interchange object or a JSON string of the Interchange object.
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document.
+        output_dir : Optional[Union[str, Path]]
+            The directory to save the output files.
             Resolution order is output_dir > prev_task.dir_name > Path.cwd(). Will
             create a directory if needed.
 
         Returns
         -------
-            Response: A response object containing the output task document.
+        Response
+            A response object containing the output task document.
         """
         # this is needed because interchange is currently using pydantic.v1
         if not isinstance(interchange, Interchange):
@@ -146,17 +158,19 @@ class BaseOpenMMMaker(Maker):
         dir_name: Path,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> None:
-        """
-        Add reporters to the OpenMM simulation.
+        """Add reporters to the OpenMM simulation.
 
         This method adds DCD and state reporters to the OpenMM
         simulation based on the specified intervals and settings.
 
-        Args:
-            sim (Simulation): The OpenMM simulation object.
-            dir_name (Path): The directory to save the reporter output files.
-            prev_task (Optional[OpenMMTaskDocument]): The previous task document.
-
+        Parameters
+        ----------
+        sim : Simulation
+            The OpenMM simulation object.
+        dir_name : Path
+            The directory to save the reporter output files.
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document.
         """
         has_steps = self._resolve_attr("steps", prev_task) > 0
         # add dcd reporter
@@ -187,19 +201,21 @@ class BaseOpenMMMaker(Maker):
             sim.reporters.append(state_reporter)
 
     def run_openmm(self, simulation: Simulation) -> NoReturn:
-        """
-        Abstract method for running the OpenMM simulation.
+        """Abstract method for running the OpenMM simulation.
 
         This method should be implemented by subclasses to
         define the specific simulation logic. It takes an
         OpenMM simulation object and evolves the simulation.
 
-        Args:
-            simulation (Simulation): The OpenMM simulation object.
+        Parameters
+        ----------
+        simulation : Simulation
+            The OpenMM simulation object.
 
         Raises
         ------
-            NotImplementedError: If the method is not implemented by a subclass.
+        NotImplementedError
+            If the method is not implemented by a subclass.
         """
         raise NotImplementedError(
             "`run_openmm` should be implemented by each child class."
@@ -211,8 +227,7 @@ class BaseOpenMMMaker(Maker):
         prev_task: OpenMMTaskDocument | None = None,
         add_defaults: dict | None = None,
     ) -> Any:
-        """
-        Resolve an attribute and set its value.
+        """Resolve an attribute and set its value.
 
         This method retrieves the value of an attribute from the current maker,
         previous task input, or a default value (in that order of priority). It
@@ -220,14 +235,19 @@ class BaseOpenMMMaker(Maker):
 
         Default values are defined in `OPENMM_MAKER_DEFAULTS`.
 
-        Args:
-            attr (str): The name of the attribute to resolve.
-            prev_task (Optional[OpenMMTaskDocument]): The previous task document.
-            add_defaults (Optional[dict]): Additional default values to use,
-                overrides `OPENMM_MAKER_DEFAULTS`.
+        Parameters
+        ----------
+        attr : str
+            The name of the attribute to resolve.
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document.
+        add_defaults : Optional[dict]
+            Additional default values to use,
+            overrides `OPENMM_MAKER_DEFAULTS`.
 
         Returns
         -------
+        Any
             The resolved attribute value.
         """
         prev_task = prev_task or OpenMMTaskDocument()
@@ -254,18 +274,20 @@ class BaseOpenMMMaker(Maker):
         self,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> Integrator:
-        """
-        Create an OpenMM integrator.
+        """Create an OpenMM integrator.
 
         This method creates a Langevin middle integrator based on the
         resolved temperature, friction coefficient, and step size.
 
-        Args:
-            prev_task (Optional[OpenMMTaskDocument]): The previous task document.
+        Parameters
+        ----------
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document.
 
         Returns
         -------
-            LangevinMiddleIntegrator: The created OpenMM integrator.
+        LangevinMiddleIntegrator
+            The created OpenMM integrator.
         """
         return LangevinMiddleIntegrator(
             self._resolve_attr("temperature", prev_task) * kelvin,
@@ -278,19 +300,22 @@ class BaseOpenMMMaker(Maker):
         interchange: Interchange,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> Simulation:
-        """
-        Create an OpenMM simulation.
+        """Create an OpenMM simulation.
 
         This method creates an OpenMM simulation using the provided Interchange object,
         the get_integrator method, and the platform and platform_properties attributes.
 
-        Args:
-            interchange (Interchange): The Interchange object containing the MD data.
-            prev_task (Optional[OpenMMTaskDocument]): The previous task document.
+        Parameters
+        ----------
+        interchange : Interchange
+            The Interchange object containing the MD data.
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document.
 
         Returns
         -------
-            Simulation: The created OpenMM simulation object.
+        Simulation
+            The created OpenMM simulation object.
         """
         integrator = self._create_integrator(prev_task)
         platform = Platform.getPlatformByName(
@@ -310,17 +335,19 @@ class BaseOpenMMMaker(Maker):
         sim: Simulation,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> None:
-        """
-        Update the Interchange object with the current simulation state.
+        """Update the Interchange object with the current simulation state.
 
         This method updates the positions, velocities, and box vectors of the
         Interchange object based on the current state of the OpenMM simulation.
 
-        Args:
-        interchange (Interchange): The Interchange object to update.
-        sim (Simulation): The OpenMM simulation object.
-        prev_task (OpenMMTaskDocument): The previous task document.
-
+        Parameters
+        ----------
+        interchange : Interchange
+            The Interchange object to update.
+        sim : Simulation
+            The OpenMM simulation object.
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document.
         """
         state = sim.context.getState(
             getPositions=True,
@@ -338,24 +365,27 @@ class BaseOpenMMMaker(Maker):
         dir_name: Path | None = None,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> OpenMMTaskDocument:
-        """
-        Create a task document for the OpenMM job.
+        """Create a task document for the OpenMM job.
 
         This method creates an OpenMMTaskDocument based on the current
         maker attributes, previous task document, and simulation results.
 
-        Args:
-            interchange (Interchange): The updated Interchange object.
-            elapsed_time (Optional[float]): The elapsed time of the simulation. Default
-                is None.
-            dir_name (Optional[Path]): The directory where the output files are saved.
+        Parameters
+        ----------
+        interchange : Interchange
+            The updated Interchange object.
+        elapsed_time : Optional[float]
+            The elapsed time of the simulation. Default is None.
+        dir_name : Optional[Path]
+            The directory where the output files are saved.
             Default is None.
-            prev_task (Optional[OpenMMTaskDocument]): The previous task document.
-                Default is None.
+        prev_task : Optional[OpenMMTaskDocument]
+            The previous task document. Default is None.
 
         Returns
         -------
-            OpenMMTaskDocument: The created task document.
+        OpenMMTaskDocument
+            The created task document.
         """
         maker_attrs = copy.deepcopy(dict(vars(self)))
         job_name = maker_attrs.pop("name")

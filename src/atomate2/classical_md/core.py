@@ -17,8 +17,7 @@ from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and
 
 
 def openff_job(method: Callable) -> job:
-    """
-    Decorate the ``make`` method of ClassicalMD job makers.
+    """Decorate the ``make`` method of ClassicalMD job makers.
 
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all ClassicalMD jobs. Namely, configures the output schema to be a
@@ -58,8 +57,7 @@ def generate_interchange(
     force_field: str = "openff_unconstrained-2.1.1.offxml",
     pack_box_kwargs: dict = None,
 ) -> ClassicalMDTaskDocument:
-    """
-    Generate an OpenFF Interchange object from a list of molecule specifications.
+    """Generate an OpenFF Interchange object from a list of molecule specifications.
 
     This function takes a list of molecule specifications (either as
     MoleculeSpec objects or dictionaries), a target mass density, and
@@ -72,24 +70,28 @@ def generate_interchange(
     After packing the box, they will be merged into a single mol_spec
     and treated as a single component in the resulting system.
 
-
-    Args:
-    mol_specs (List[MoleculeSpec | dict]): A list of
-        molecule specifications, either as MoleculeSpec objects or
+    Parameters
+    ----------
+    input_mol_specs : List[Union[MoleculeSpec, dict]]
+        A list of molecule specifications, either as MoleculeSpec objects or
         dictionaries that can be passed to `create_mol_spec` to create
         MoleculeSpec objects. See the `create_mol_spec` function
         for details on the expected format of the dictionaries.
-    mass_density (float): The target mass density for packing the molecules into
+    mass_density : float
+        The target mass density for packing the molecules into
         a box, kg/L.
-    force_field (str, optional): The name of the force field to use for creating the
+    force_field : str, optional
+        The name of the force field to use for creating the
         Interchange object. This is passed directly to openff.toolkit.ForceField.
         Default is "openff_unconstrained-2.1.1.offxml".
-    pack_box_kwargs (Dict, optional): Additional keyword arguments to pass to the
+    pack_box_kwargs : Dict, optional
+        Additional keyword arguments to pass to the
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
 
     Returns
     -------
-    ClassicalMDTaskDocument: A task document containing the generated OpenFF Interchange
+    ClassicalMDTaskDocument
+        A task document containing the generated OpenFF Interchange
         object, molecule specifications, and force field information.
 
     Notes
