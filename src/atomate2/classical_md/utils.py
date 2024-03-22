@@ -367,7 +367,7 @@ def merge_specs_by_name_and_smile(mol_specs: list[MoleculeSpec]) -> list[Molecul
     return list(merged_spec_dict.values())
 
 
-def create_array_summing_to(total_sum: int, n_pieces: int) -> np.ndarray:
+def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
     """
     Create a NumPy array with n_pieces elements that sum up to total_sum.
 
@@ -382,7 +382,5 @@ def create_array_summing_to(total_sum: int, n_pieces: int) -> np.ndarray:
     -------
         numpy.ndarray: A 1D NumPy array with n_pieces elements summing up to total_sum.
     """
-    div, mod = np.divmod(total_sum, n_pieces)
-    array = np.full(n_pieces, div)
-    array[:mod] += 1
-    return array
+    div, mod = total_sum // n_pieces, total_sum % n_pieces
+    return [div + 1] * mod + [div] * (n_pieces - mod)

@@ -13,7 +13,7 @@ from atomate2.classical_md.openmm.jobs.core import (
     NVTMaker,
     TempChangeMaker,
 )
-from atomate2.classical_md.utils import create_array_summing_to
+from atomate2.classical_md.utils import create_list_summing_to
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -81,8 +81,8 @@ class AnnealMaker(Maker):
             AnnealMaker: An AnnealMaker instance with the specified parameters.
         """
         if isinstance(steps, int):
-            steps = tuple(create_array_summing_to(steps, 3))
-        if isinstance(temp_steps, int):
+            steps = tuple(create_list_summing_to(steps, 3))
+        if isinstance(temp_steps, int) or temp_steps is None:
             temp_steps = (temp_steps, temp_steps, temp_steps)
 
         raise_temp_maker = TempChangeMaker(

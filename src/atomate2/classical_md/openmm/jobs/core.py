@@ -10,7 +10,7 @@ from openmm import Integrator, LangevinMiddleIntegrator, MonteCarloBarostat
 from openmm.unit import atmosphere, kelvin, kilojoules_per_mole, nanometer, picoseconds
 
 from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
-from atomate2.classical_md.utils import create_array_summing_to
+from atomate2.classical_md.utils import create_list_summing_to
 
 if TYPE_CHECKING:
     from openmm.app import Simulation
@@ -184,8 +184,8 @@ class TempChangeMaker(BaseOpenMMMaker):
         temps_arr = np.linspace(
             self.starting_temperature, self.temperature, self.temp_steps
         )
-        steps_arr = create_array_summing_to(self.steps, self.temp_steps)
-        for temp, n_steps in zip(temps_arr, steps_arr):
+        steps_list = create_list_summing_to(self.steps, self.temp_steps)
+        for temp, n_steps in zip(temps_arr, steps_list):
             integrator.setTemperature(temp * kelvin)
             sim.step(n_steps)
 
@@ -193,8 +193,9 @@ class TempChangeMaker(BaseOpenMMMaker):
         self, prev_task: OpenMMTaskDocument | None = None
     ) -> Integrator:
         # we resolve this here because prev_task is available
+        temp_steps_default = (self.steps // 10000) or 1
         self.temp_steps = self._resolve_attr(
-            "temp_steps", prev_task, add_defaults={"temp_steps": self.steps // 10000}
+            "temp_steps", prev_task, add_defaults={"temp_steps": temp_steps_default}
         )
 
         # we do this dance so _resolve_attr takes its value from the previous task
