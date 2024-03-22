@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          micromamba install --name atomate2 --file pyproject.toml --channel conda-forge
+          micromamba create --name atomate2 --file pyproject.toml --channel conda-forge
           micromamba run -n atomate2 pip install .[dev]
 
       - uses: pre-commit/action@v3.0.0
@@ -51,7 +51,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          micromamba install --name atomate2 --file pyproject.toml --channel conda-forge
+          micromamba create --name atomate2 --file pyproject.toml --channel conda-forge
           micromamba run -n atomate2 pip install .[strict,tests]
 
       - name: Test
@@ -80,7 +80,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          micromamba install --name atomate2 --file pyproject.toml --channel conda-forge
+          micromamba create --name atomate2 --file pyproject.toml --channel conda-forge
           micromamba run -n atomate2 pip install .[strict,docs]
 
       - name: Build
