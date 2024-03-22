@@ -1,10 +1,11 @@
-from typing import Optional, Union
-from pathlib import Path
-from dataclasses import dataclass, field
-from jobflow import Maker, Flow
-from typing import Tuple
+"""Core flows for OpenMM module."""
 
-from openff.interchange import Interchange
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
+
+from jobflow import Flow, Maker
 
 from atomate2.classical_md.openmm.jobs.core import (
     EnergyMinimizationMaker,
@@ -12,14 +13,29 @@ from atomate2.classical_md.openmm.jobs.core import (
     NVTMaker,
     TempChangeMaker,
 )
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 from atomate2.classical_md.utils import create_array_summing_to
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from openff.interchange import Interchange
+
+    from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
 @dataclass
 class AnnealMaker(Maker):
     """
-    steps : Union[Tuple[int, int, int], int]
+    A maker class for making annealing workflows.
+
+    Attributes
+    ----------
+    name (str): The name of the annealing job. Default is "anneal".
+    raise_temp_maker (TempChangeMaker): The maker for raising the temperature.
+        Default is a TempChangeMaker with a target temperature of 400.
+    nvt_maker (NVTMaker): The maker for holding the temperature. Default is an NVTMaker.
+    lower_temp_maker (TempChangeMaker): The maker for lowering the temperature.
+        Default is a TempChangeMaker.
     """
 
     name: str = "anneal"
@@ -35,11 +51,35 @@ class AnnealMaker(Maker):
         name: str = "anneal",
         anneal_temp: int = 400,
         final_temp: int = 298,
-        steps: Union[int, Tuple[int, int, int]] = 1500000,
-        temp_steps: Union[int, Tuple[int, int, int]] = 100,
-        job_names: Tuple[str, str, str] = ("raise temp", "hold temp", "lower temp"),
+        steps: int | tuple[int, int, int] = 1500000,
+        temp_steps: int | tuple[int, int, int] | None = None,
+        job_names: tuple[str, str, str] = ("raise temp", "hold temp", "lower temp"),
         **kwargs,
-    ):
+    ) -> AnnealMaker:
+        """
+        Create an AnnealMaker from the specified temperatures, steps, and job names.
+
+        Args:
+            name (str): The name of the annealing job. Default is "anneal".
+            anneal_temp (int): The annealing temperature. Default is 400.
+            final_temp (int): The final temperature after annealing. Default is 298.
+            steps (int or tuple): The number of steps for each stage of annealing.
+                If an integer is provided, it will be divided into three equal parts.
+                If a tuple of three integers is provided, each value represents the
+                steps for the corresponding stage. Default is 1500000.
+            temp_steps (int or tuple): The number of temperature steps for raising and
+                lowering the temperature. If an integer is provided, it will be used
+                for both stages. If a tuple of three integers is provided, each value
+                represents the temperature steps for the corresponding stage.
+                Default is None and all jobs will automatically determine temp_steps.
+            job_names (tuple): The names for the jobs in each stage of annealing.
+                Default is ("raise temp", "hold temp", "lower temp").
+            **kwargs: Additional keyword arguments to be passed to the job makers.
+
+        Returns
+        -------
+            AnnealMaker: An AnnealMaker instance with the specified parameters.
+        """
         if isinstance(steps, int):
             steps = tuple(create_array_summing_to(steps, 3))
         if isinstance(temp_steps, int):
@@ -72,15 +112,15 @@ class AnnealMaker(Maker):
     def make(
         self,
         interchange: Interchange,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
-        output_dir: Optional[Union[str, Path]] = None,
-    ):
+        prev_task: ClassicalMDTaskDocument | None = None,
+        output_dir: str | Path | None = None,
+    ) -> Flow:
         """
         Anneal the simulation at the specified temperature.
 
-        Annealing takes place in 3 stages, heating, holding, and cooling. The three
-        elements of steps specify the length of each stage. After heating, and holding,
-        the system will cool to its original temperature.
+        Annealing takes place in 3 stages, heating, holding, and cooling.
+        After heating, and holding, the system will cool to the temperature in
+        prev_task.
 
         Parameters
         ----------
@@ -96,7 +136,6 @@ class AnnealMaker(Maker):
         Job
             A OpenMM job containing one npt run.
         """
-
         raise_temp_job = self.raise_temp_maker.make(
             interchange=interchange,
             prev_task=prev_task,
@@ -123,7 +162,18 @@ class AnnealMaker(Maker):
 @dataclass
 class ProductionMaker(Maker):
     """
-    Class for running
+    Run a production simulation.
+
+    The production simulation links together energy minimization, NPT equilibration,
+    annealing, and NVT production.
+
+    Attributes
+    ----------
+        name (str): The name of the production job. Default is "production".
+        energy_maker (EnergyMinimizationMaker): The maker for energy minimization.
+        npt_maker (NPTMaker): The maker for NPT equilibration.
+        anneal_maker (AnnealMaker): The maker for annealing.
+        nvt_maker (NVTMaker): The maker for NVT production.
     """
 
     name: str = "production"
@@ -137,24 +187,26 @@ class ProductionMaker(Maker):
     def make(
         self,
         interchange: Interchange,
-        prev_task: Optional[ClassicalMDTaskDocument] = None,
-        output_dir: Optional[Union[str, Path]] = None,
-    ):
+        prev_task: ClassicalMDTaskDocument | None = None,
+        output_dir: str | Path | None = None,
+    ) -> Flow:
         """
+        Run the production simulation using the provided Interchange object.
 
         Parameters
         ----------
-        interchange : Interchange
-            Interchange object containing the system to be annealed.
-        prev_task : Optional[ClassicalMDTaskDocument]
-            Previous task to use as a starting point for the annealing.
-        output_dir : str
-            Directory to write reporter files to.
+        interchange (Interchange): The Interchange object containing the system
+            to simulate.
+        prev_task (ClassicalMDTaskDocument, optional): The previous task to use as
+            a starting point for the production simulation.
+        output_dir (str or Path, optional): The directory to write reporter files to.
+
         Returns
         -------
+            Flow: A Flow object containing the OpenMM jobs for the simulation.
+
 
         """
-
         energy_job = self.energy_maker.make(
             interchange=interchange,
             prev_task=prev_task,
