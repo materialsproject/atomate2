@@ -47,6 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
+          micromamba run -n atomate2 python -m pip install --upgrade pip
           micromamba run -n atomate2 pip install git+https://gitlab.com/ase/ase
           # ase needed to get FrechetCellFilter used by ML force fields
           micromamba run -n atomate2 pip install .[strict,tests]
