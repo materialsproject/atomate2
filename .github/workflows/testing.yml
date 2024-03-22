@@ -50,6 +50,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
           micromamba install -n atomate2 -c conda-forge ase
           micromamba install -n atomate2 -c conda-forge openmm
           micromamba install -n atomate2 -c conda-forge openff-toolkit
@@ -86,6 +87,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
           micromamba install -n atomate2 -c conda-forge ase
           micromamba install -n atomate2 -c conda-forge openmm
           micromamba install -n atomate2 -c conda-forge openff-toolkit
