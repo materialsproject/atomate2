@@ -13,7 +13,7 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-def test_phonon_wf(clean_dir):
+def test_phonon_wf_force_field(clean_dir):
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
