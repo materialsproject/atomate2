@@ -1,4 +1,3 @@
-import torch
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -15,9 +14,6 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 def test_phonon_wf(clean_dir):
-    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
-    torch.set_default_dtype(torch.float32)
-
     structure = Structure(
         lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
         species=["Si", "Si"],
