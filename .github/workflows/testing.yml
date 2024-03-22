@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
-          micromamba install -n atomate2 -c conda-forge ase openmm openff-toolkit openff-interchange packmol openbabel
+          micromamba install -n atomate2 -c conda-forge --file .github/conda_requirements.txt
           micromamba run -n atomate2 pip install .[strict,tests]
           micromamba run -n atomate2 pip install torch-runstats
           micromamba run -n atomate2 pip install --no-deps nequip
