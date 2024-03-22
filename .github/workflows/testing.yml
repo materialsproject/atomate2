@@ -96,7 +96,6 @@ jobs:
           micromamba install -n atomate2 -c conda-forge
           micromamba run -n atomate2 pip install .[strict,tests]
 
-
       - name: Test
         run: micromamba run -n atomate2 pytest tests/classical_md/ --cov=atomate2 --cov-report=xml
 
