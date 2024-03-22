@@ -21,7 +21,6 @@ jobs:
 
       - uses: pre-commit/action@v3.0.0
 
-
   test:
     services:
       local_mongodb:
@@ -56,11 +55,13 @@ jobs:
           # ase needed to get FrechetCellFilter used by ML force fields
           pip install git+https://gitlab.com/ase/ase
           pip install .[strict,tests]
+          pip install torch-runstats
+          pip install --no-deps nequip
 
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: pytest --cov=atomate2 --cov-report=xml --ignore tests/classical_md
+        run: pytest --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -78,8 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-#        python-version: ["3.9", "3.10", "3.11"]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v4
@@ -94,11 +94,8 @@ jobs:
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} -c conda-forge --yes
-          micromamba install -n atomate2 -c conda-forge --file .github/conda_requirements.txt
+          micromamba install -n atomate2 -c conda-forge --file .github/classical_md_requirements.txt
           micromamba run -n atomate2 pip install .[strict,tests]
-#          micromamba run -n atomate2 python -m pip install --upgrade pip
-#          micromamba run -n atomate2 pip install torch-runstats
-#          micromamba run -n atomate2 pip install --no-deps nequip
 
 
       - name: Test
