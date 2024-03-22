@@ -85,15 +85,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: mamba-org/setup-micromamba@main
-        with:
-          environment-file: .github/classical_md_requirements.txt
-          environment-name: atomate2
-          channels: conda-forge
 
       - name: Install dependencies
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} --yes
-          micromamba install -n atomate2 -c conda-forge
+          micromamba install -n atomate2 -c conda-forge --file requirements.txt --yes
           micromamba run -n atomate2 pip install .[strict,tests]
 
       - name: Test
