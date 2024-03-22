@@ -44,6 +44,13 @@ mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.6"]
 defects = ["dscribe>=1.2.0", "pymatgen-analysis-defects>=2022.11.30"]
+classical_md = [
+    "openmm>=8.1.0",
+    "openff-toolkit>=0.14.0",
+    "openff-interchange>=0.3.22",
+    "packmol>=20.2.2",
+    "openbabel>=3.1.1",
+]
 forcefields = [
     "ase>=3.22.1",
     "chgnet>=0.2.2",
