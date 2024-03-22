@@ -1,5 +1,7 @@
 """Schemas for OpenMM tasks."""
 
+from __future__ import annotations
+
 from pathlib import Path
 from typing import Optional, Union
 
@@ -86,7 +88,7 @@ class CalculationOutput(BaseModel):
         elapsed_time: Optional[float] = None,
         steps: int = None,
         state_interval: int = None,
-    ) -> "CalculationOutput":
+    ) -> CalculationOutput:
         """Extract data from the output files in the directory."""
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {
