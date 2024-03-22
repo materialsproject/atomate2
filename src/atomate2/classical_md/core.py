@@ -53,7 +53,7 @@ def openff_job(method: Callable) -> job:
 
 @openff_job
 def generate_interchange(
-    mol_specs: list[MoleculeSpec] | list[dict],
+    input_mol_specs: list[MoleculeSpec | dict],
     mass_density: float,
     force_field: str = "openff_unconstrained-2.1.1.offxml",
     pack_box_kwargs: dict = None,
@@ -74,7 +74,7 @@ def generate_interchange(
 
 
     Args:
-    mol_specs (List[MoleculeSpec] | List[dict]): A list of
+    mol_specs (List[MoleculeSpec | dict]): A list of
         molecule specifications, either as MoleculeSpec objects or
         dictionaries that can be passed to `create_mol_spec` to create
         MoleculeSpec objects. See the `create_mol_spec` function
@@ -103,12 +103,15 @@ def generate_interchange(
     - The function currently does not support passing a list of force fields due to
     limitations in the OpenFF Toolkit.
     """
-    if all(isinstance(spec, dict) for spec in mol_specs):
-        mol_specs = [create_mol_spec(**spec) for spec in mol_specs]
-    if not all(isinstance(spec, MoleculeSpec) for spec in mol_specs):
-        raise ValueError("mol_specs must be a list of dicts or MoleculeSpec")
+    mol_specs: list[MoleculeSpec] = []
+    for spec in input_mol_specs:
+        if isinstance(spec, dict):
+            mol_specs.append(create_mol_spec(**spec))
+        elif isinstance(spec, MoleculeSpec):
+            mol_specs.append(copy.deepcopy(spec))
+        else:
+            raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
 
-    mol_specs = copy.deepcopy(mol_specs)
     mol_specs.sort(key=lambda x: x.openff_mol.to_smiles() + x.name)
 
     pack_box_kwargs = pack_box_kwargs or {}

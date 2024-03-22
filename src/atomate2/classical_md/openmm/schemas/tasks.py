@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
-class CalculationInput(BaseModel, extra="allow"):
+class CalculationInput(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """OpenMM input settings for a job, these are the attributes of the OpenMMMaker."""
 
     steps: Optional[int] = Field(0, description="Total steps")

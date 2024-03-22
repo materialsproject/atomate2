@@ -6,8 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import numpy as np
-from openmm import LangevinMiddleIntegrator
-from openmm.openmm import MonteCarloBarostat
+from openmm import Integrator, LangevinMiddleIntegrator, MonteCarloBarostat
 from openmm.unit import atmosphere, kelvin, kilojoules_per_mole, nanometer, picoseconds
 
 from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
@@ -191,8 +190,8 @@ class TempChangeMaker(BaseOpenMMMaker):
             sim.step(n_steps)
 
     def _create_integrator(
-        self, prev_task: OpenMMTaskDocument
-    ) -> LangevinMiddleIntegrator:
+        self, prev_task: OpenMMTaskDocument | None = None
+    ) -> Integrator:
         # we resolve this here because prev_task is available
         self.temp_steps = self._resolve_attr(
             "temp_steps", prev_task, add_defaults={"temp_steps": self.steps // 10000}

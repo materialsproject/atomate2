@@ -21,7 +21,7 @@ class MoleculeSpec(MSONable):
     openff_mol: tk.Molecule
 
 
-class ClassicalMDTaskDocument(BaseModel, extra="allow"):
+class ClassicalMDTaskDocument(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """Definition of the OpenMM task document."""
 
     tags: Optional[list[str]] = Field(

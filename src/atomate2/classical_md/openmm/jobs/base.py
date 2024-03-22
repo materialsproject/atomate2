@@ -305,7 +305,10 @@ class BaseOpenMMMaker(Maker):
         )
 
     def _update_interchange(
-        self, interchange: Interchange, sim: Simulation, prev_task: OpenMMTaskDocument
+        self,
+        interchange: Interchange,
+        sim: Simulation,
+        prev_task: OpenMMTaskDocument | None = None,
     ) -> None:
         """
         Update the Interchange object with the current simulation state.
@@ -354,7 +357,7 @@ class BaseOpenMMMaker(Maker):
         -------
             OpenMMTaskDocument: The created task document.
         """
-        maker_attrs = copy.deepcopy(vars(self))
+        maker_attrs = copy.deepcopy(dict(vars(self)))
         job_name = maker_attrs.pop("name")
 
         calc = Calculation(

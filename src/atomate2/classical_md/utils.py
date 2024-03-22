@@ -217,9 +217,8 @@ def assign_partial_charges(
     # assign partial charges
     if partial_charges is not None:
         partial_charges = np.array(partial_charges)
-        openff_mol.partial_charges = (
-            partial_charges[list(atom_map.values())] * elementary_charge
-        )
+        chargs = partial_charges[list(atom_map.values())]  # type: ignore[call-overload]
+        openff_mol.partial_charges = chargs * elementary_charge
     elif openff_mol.n_atoms == 1:
         openff_mol.partial_charges = (
             np.array([openff_mol.total_charge.magnitude]) * elementary_charge
@@ -358,7 +357,7 @@ def merge_specs_by_name_and_smile(mol_specs: list[MoleculeSpec]) -> list[Molecul
         combinations.
     """
     mol_specs = copy.deepcopy(mol_specs)
-    merged_spec_dict = {}
+    merged_spec_dict: dict[tuple[str, str], MoleculeSpec] = {}
     for spec in mol_specs:
         key = (spec.openff_mol.to_smiles(), spec.name)
         if key in merged_spec_dict:
