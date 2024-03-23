@@ -87,12 +87,14 @@ class CalculationOutput(BaseModel):
     def from_directory(
         cls,
         dir_name: Path | str,
+        state_file_name: str,
+        dcd_file_name: str,
         elapsed_time: Optional[float] = None,
-        steps: int = None,
-        state_interval: int = None,
+        steps: Optional[int] = None,
+        state_interval: Optional[int] = None,
     ) -> CalculationOutput:
         """Extract data from the output files in the directory."""
-        state_file = Path(dir_name) / "state_csv"
+        state_file = Path(dir_name) / state_file_name
         column_name_map = {
             '#"Step"': "steps",
             "Potential Energy (kJ/mole)": "potential_energy",
@@ -110,14 +112,13 @@ class CalculationOutput(BaseModel):
             data = data.filter(items=column_name_map.values())
             data = data.iloc[-state_steps:]
             attributes = data.to_dict(orient="list")
-            state_file_name = state_file.name
         else:
             attributes = {name: None for name in column_name_map.values()}
             state_file_name = None
 
-        dcd_file = Path(dir_name) / "trajectory_dcd"
+        dcd_file = Path(dir_name) / dcd_file_name
         dcd_is_not_empty = dcd_file.exists() and dcd_file.stat().st_size > 0
-        dcd_file_name = dcd_file.name if dcd_is_not_empty else None
+        dcd_file_name = dcd_file_name if dcd_is_not_empty else None
 
         return CalculationOutput(
             dir_name=str(dir_name),

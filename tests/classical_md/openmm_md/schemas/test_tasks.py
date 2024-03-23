@@ -8,7 +8,12 @@ from atomate2.classical_md.openmm.schemas.tasks import CalculationOutput
 def test_calc_output_from_directory(output_dir):
     # Call the from_directory function
     calc_out = CalculationOutput.from_directory(
-        output_dir, elapsed_time=10.0, steps=1500, state_interval=100
+        output_dir,
+        "state_csv",
+        "trajectory_dcd",
+        elapsed_time=10.0,
+        steps=1500,
+        state_interval=100,
     )
 
     # Assert the expected attributes of the CalculationOutput object

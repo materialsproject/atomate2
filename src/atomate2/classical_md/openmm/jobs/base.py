@@ -35,6 +35,8 @@ OPENMM_MAKER_DEFAULTS = {
     "wrap_dcd": False,
     "temperature": 298,
     "friction_coefficient": 1,
+    "state_file_name": "state_csv",
+    "trajectory_file_name": "trajectory_dcd",
 }
 
 
@@ -90,6 +92,8 @@ class BaseOpenMMMaker(Maker):
     wrap_dcd: bool | None = field(default=None)
     temperature: float | None = field(default=None)
     friction_coefficient: float | None = field(default=None)
+    state_file_name: str | None = field(default=None)
+    trajectory_file_name: str | None = field(default=None)
 
     @openff_job
     def make(
@@ -175,9 +179,10 @@ class BaseOpenMMMaker(Maker):
         has_steps = self._resolve_attr("n_steps", prev_task) > 0
         # add dcd reporter
         dcd_interval = self._resolve_attr("dcd_interval", prev_task)
+        trajectory_file_name = self._resolve_attr("trajectory_file_name", prev_task)
         if has_steps & (dcd_interval > 0):
             dcd_reporter = DCDReporter(
-                file=str(dir_name / "trajectory_dcd"),
+                file=str(dir_name / trajectory_file_name),
                 reportInterval=dcd_interval,
                 enforcePeriodicBox=self._resolve_attr("wrap_dcd", prev_task),
             )
@@ -185,9 +190,10 @@ class BaseOpenMMMaker(Maker):
 
         # add state reporter
         state_interval = self._resolve_attr("state_interval", prev_task)
+        state_file_name = self._resolve_attr("state_file_name", prev_task)
         if has_steps & (state_interval > 0):
             state_reporter = StateDataReporter(
-                file=str(dir_name / "state_csv"),
+                file=str(dir_name / state_file_name),
                 reportInterval=state_interval,
                 step=True,
                 potentialEnergy=True,
@@ -196,7 +202,7 @@ class BaseOpenMMMaker(Maker):
                 temperature=True,
                 volume=True,
                 density=True,
-                append=(dir_name / "state_csv").exists(),
+                append=(dir_name / state_file_name).exists(),
             )
             sim.reporters.append(state_reporter)
 
@@ -396,6 +402,8 @@ class BaseOpenMMMaker(Maker):
             input=CalculationInput(**maker_attrs),
             output=CalculationOutput.from_directory(
                 dir_name,
+                self._resolve_attr("state_file_name", prev_task),
+                self._resolve_attr("trajectory_file_name", prev_task),
                 elapsed_time,
                 self._resolve_attr("n_steps", prev_task),
                 self._resolve_attr("state_interval", prev_task),
