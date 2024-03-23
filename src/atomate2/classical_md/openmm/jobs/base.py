@@ -34,13 +34,13 @@ OPENMM_MAKER_DEFAULTS = {
     "friction_coefficient": 1,
     "platform_name": "CPU",
     "platform_properties": {},
-    "state_file_name": "state",
     "state_interval": 1000,
-    "trajectory_file_name": "trajectory",
-    "trajectory_interval": 10000,
-    "wrap_trajectory": False,
-    "trajectory_file_type": "dcd",
+    "state_file_name": "state",
+    "traj_interval": 10000,
+    "wrap_traj": False,
     "report_velocities": False,
+    "traj_file_name": "trajectory",
+    "traj_file_type": "dcd",
 }
 
 
@@ -76,22 +76,22 @@ class BaseOpenMMMaker(Maker):
     platform_properties : Optional[dict]
         Properties for the OpenMM platform,
         passed to Interchange.to_openmm_simulation.
-    state_file_name : Optional[str]
-        The name of the state file to save.
     state_interval : Optional[int]
         The interval for saving simulation state.
         To record no state, set to 0.
-    trajectory_file_name : Optional[str]
-        The name of the trajectory file to save.
-    trajectory_interval : Optional[int]
+    state_file_name : Optional[str]
+        The name of the state file to save.
+    traj_interval : Optional[int]
         The interval for saving trajectory frames. To record
         no trajectory, set to 0.
-    wrap_trajectory : Optional[bool]
+    wrap_traj : Optional[bool]
         Whether to wrap trajectory coordinates.
-    trajectory_file_type : Optional[str]
-        The type of trajectory file to save. Options are "dcd" and "hdf5".
     report_velocities : Optional[bool]
         Whether to report velocities in the trajectory file.
+    traj_file_name : Optional[str]
+        The name of the trajectory file to save.
+    traj_file_type : Optional[str]
+        The type of trajectory file to save. Options are "dcd" and "hdf5".
     """
 
     name: str = "base openmm job"
@@ -101,13 +101,13 @@ class BaseOpenMMMaker(Maker):
     friction_coefficient: float | None = field(default=None)
     platform_name: str | None = field(default=None)
     platform_properties: dict | None = field(default=None)
-    state_file_name: str | None = field(default=None)
     state_interval: int | None = field(default=None)
-    trajectory_file_name: str | None = field(default=None)
-    trajectory_interval: int | None = field(default=None)
-    wrap_trajectory: bool | None = field(default=None)
-    trajectory_file_type: str | None = field(default=None)
+    state_file_name: str | None = field(default=None)
+    traj_interval: int | None = field(default=None)
+    wrap_traj: bool | None = field(default=None)
     report_velocities: bool | None = field(default=None)
+    traj_file_name: str | None = field(default=None)
+    traj_file_type: str | None = field(default=None)
 
     @openff_job
     def make(
@@ -192,9 +192,9 @@ class BaseOpenMMMaker(Maker):
         """
         has_steps = self._resolve_attr("n_steps", prev_task) > 0
         # add trajectory reporter
-        traj_interval = self._resolve_attr("trajectory_interval", prev_task)
-        traj_file_name = self._resolve_attr("trajectory_file_name", prev_task)
-        traj_file_type = self._resolve_attr("trajectory_file_type", prev_task)
+        traj_interval = self._resolve_attr("traj_interval", prev_task)
+        traj_file_name = self._resolve_attr("traj_file_name", prev_task)
+        traj_file_type = self._resolve_attr("traj_file_type", prev_task)
         report_velocities = self._resolve_attr("report_velocities", prev_task)
         if has_steps & (traj_interval > 0):
             traj_file = dir_name / f"{traj_file_name}_{traj_file_type}"
@@ -207,7 +207,7 @@ class BaseOpenMMMaker(Maker):
                 dcd_reporter = DCDReporter(
                     file=str(traj_file),
                     reportInterval=traj_interval,
-                    enforcePeriodicBox=self._resolve_attr("wrap_trajectory", prev_task),
+                    enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
                 )
                 sim.reporters.append(dcd_reporter)
             elif traj_file_type == "hdf5":
@@ -218,7 +218,7 @@ class BaseOpenMMMaker(Maker):
                     position = re_match.start(1)
                     new_count = int(re_match.group(1) or 1) + 1
                     new_name = f"{traj_file_name[:position]}{new_count}"
-                    self.trajectory_file_name = new_name
+                    self.traj_file_name = new_name
                     traj_file = dir_name / f"{new_name}_{traj_file_type}"
 
                 hdf5_reporter = HDF5Reporter(
@@ -226,7 +226,7 @@ class BaseOpenMMMaker(Maker):
                     reportInterval=traj_interval,
                     cell=True,
                     velocities=self._resolve_attr("report_velocities", prev_task),
-                    enforcePeriodicBox=self._resolve_attr("wrap_trajectory", prev_task),
+                    enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
                 )
                 sim.reporters.append(hdf5_reporter)
             else:
@@ -402,7 +402,7 @@ class BaseOpenMMMaker(Maker):
         state = sim.context.getState(
             getPositions=True,
             getVelocities=True,
-            enforcePeriodicBox=self._resolve_attr("wrap_trajectory", prev_task),
+            enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
         )
         interchange.positions = state.getPositions(asNumpy=True)
         interchange.velocities = state.getVelocities(asNumpy=True)
@@ -440,8 +440,8 @@ class BaseOpenMMMaker(Maker):
         maker_attrs = copy.deepcopy(dict(vars(self)))
         job_name = maker_attrs.pop("name")
         state_file_name = self._resolve_attr("state_file_name", prev_task)
-        traj_file_name = self._resolve_attr("trajectory_file_name", prev_task)
-        traj_file_type = self._resolve_attr("trajectory_file_type", prev_task)
+        traj_file_name = self._resolve_attr("traj_file_name", prev_task)
+        traj_file_type = self._resolve_attr("traj_file_type", prev_task)
         calc = Calculation(
             dir_name=str(dir_name),
             has_openmm_completed=True,

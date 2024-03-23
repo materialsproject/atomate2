@@ -25,9 +25,9 @@ class CalculationInput(BaseModel, extra="allow"):  # type: ignore[call-arg]
 
     state_interval: Optional[int] = Field(None, description="")
 
-    trajectory_interval: Optional[int] = Field(None, description="Report interval")
+    traj_interval: Optional[int] = Field(None, description="Report interval")
 
-    wrap_trajectory: Optional[bool] = Field(None, description="Wrap particles or not")
+    wrap_traj: Optional[bool] = Field(None, description="Wrap particles or not")
 
     temperature: Optional[float] = Field(
         None, description="Final temperature for the calculation"

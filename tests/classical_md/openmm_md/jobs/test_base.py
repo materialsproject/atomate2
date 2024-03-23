@@ -13,7 +13,7 @@ from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 def test_add_reporters(interchange, temp_dir):
     maker = BaseOpenMMMaker(
-        trajectory_interval=100, state_interval=50, wrap_trajectory=True, n_steps=1
+        traj_interval=100, state_interval=50, wrap_traj=True, n_steps=1
     )
     sim = maker._create_simulation(interchange)
     dir_name = temp_dir / "test_output"
@@ -65,7 +65,7 @@ def test_create_simulation(interchange):
 
 def test_update_interchange(interchange):
     interchange = copy.deepcopy(interchange)
-    maker = BaseOpenMMMaker(wrap_trajectory=True)
+    maker = BaseOpenMMMaker(wrap_traj=True)
     sim = maker._create_simulation(interchange)
     start_positions = interchange.positions
     start_velocities = interchange.velocities
@@ -107,7 +107,7 @@ def test_make(interchange, temp_dir, run_job):
         step_size=0.002,
         platform_name="CPU",
         state_interval=100,
-        trajectory_interval=50,
+        traj_interval=50,
         temperature=300,
         friction_coefficient=1,
     )
@@ -139,7 +139,7 @@ def test_make(interchange, temp_dir, run_job):
     assert calc.input.step_size == 0.002
     assert calc.input.platform_name == "CPU"
     assert calc.input.state_interval == 100
-    assert calc.input.trajectory_interval == 50
+    assert calc.input.traj_interval == 50
     assert calc.input.temperature == 300
     assert calc.input.friction_coefficient == 1
     assert calc.output is not None

@@ -57,7 +57,7 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
         n_steps=3,
         temp_steps=1,
         platform_name="CPU",
-        trajectory_file_type="hdf5",
+        traj_file_type="hdf5",
         report_velocities=True,
     )
 
