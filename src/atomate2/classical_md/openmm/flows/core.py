@@ -54,7 +54,7 @@ class AnnealMaker(Maker):
         name: str = "anneal",
         anneal_temp: int = 400,
         final_temp: int = 298,
-        steps: int | tuple[int, int, int] = 1500000,
+        n_steps: int | tuple[int, int, int] = 1500000,
         temp_steps: int | tuple[int, int, int] | None = None,
         job_names: tuple[str, str, str] = ("raise temp", "hold temp", "lower temp"),
         **kwargs,
@@ -69,7 +69,7 @@ class AnnealMaker(Maker):
             The annealing temperature. Default is 400.
         final_temp : int, optional
             The final temperature after annealing. Default is 298.
-        steps : int or Tuple[int, int, int], optional
+        n_steps : int or Tuple[int, int, int], optional
             The number of steps for each stage of annealing.
             If an integer is provided, it will be divided into three equal parts.
             If a tuple of three integers is provided, each value represents the
@@ -91,23 +91,23 @@ class AnnealMaker(Maker):
         AnnealMaker
             An AnnealMaker instance with the specified parameters.
         """
-        if isinstance(steps, int):
-            steps = tuple(create_list_summing_to(steps, 3))
+        if isinstance(n_steps, int):
+            n_steps = tuple(create_list_summing_to(n_steps, 3))
         if isinstance(temp_steps, int) or temp_steps is None:
             temp_steps = (temp_steps, temp_steps, temp_steps)
 
         raise_temp_maker = TempChangeMaker(
-            steps=steps[0],
+            n_steps=n_steps[0],
             name=job_names[0],
             temperature=anneal_temp,
             temp_steps=temp_steps[0],
             **kwargs,
         )
         nvt_maker = NVTMaker(
-            steps=steps[1], name=job_names[1], temperature=anneal_temp, **kwargs
+            n_steps=n_steps[1], name=job_names[1], temperature=anneal_temp, **kwargs
         )
         lower_temp_maker = TempChangeMaker(
-            steps=steps[2],
+            n_steps=n_steps[2],
             name=job_names[2],
             temperature=final_temp,
             temp_steps=temp_steps[2],

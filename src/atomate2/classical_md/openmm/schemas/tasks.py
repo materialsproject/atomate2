@@ -15,7 +15,7 @@ from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 class CalculationInput(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """OpenMM input settings for a job, these are the attributes of the OpenMMMaker."""
 
-    steps: Optional[int] = Field(0, description="Total steps")
+    n_steps: Optional[int] = Field(0, description="Total steps")
 
     step_size: Optional[float] = Field(None, description="")
 
@@ -55,7 +55,9 @@ class CalculationOutput(BaseModel):
         None, description="Path to the state file relative to `dir_name`"
     )
 
-    output_steps: Optional[list[int]] = Field(None, description="List of steps")
+    steps: Optional[list[int]] = Field(
+        None, description="Steps where outputs are reported"
+    )
 
     time: Optional[list[float]] = Field(None, description="List of times")
 
@@ -92,7 +94,7 @@ class CalculationOutput(BaseModel):
         """Extract data from the output files in the directory."""
         state_file = Path(dir_name) / "state_csv"
         column_name_map = {
-            '#"Step"': "output_steps",
+            '#"Step"': "steps",
             "Potential Energy (kJ/mole)": "potential_energy",
             "Kinetic Energy (kJ/mole)": "kinetic_energy",
             "Total Energy (kJ/mole)": "total_energy",

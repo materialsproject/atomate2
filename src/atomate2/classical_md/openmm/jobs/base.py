@@ -55,7 +55,7 @@ class BaseOpenMMMaker(Maker):
     ----------
     name : str
         The name of the OpenMM job.
-    steps : Optional[int]
+    n_steps : Optional[int]
         The number of simulation steps to run.
     step_size : Optional[float]
         The size of each simulation step (picoseconds).
@@ -81,7 +81,7 @@ class BaseOpenMMMaker(Maker):
     """
 
     name: str = "base openmm job"
-    steps: int | None = field(default=None)
+    n_steps: int | None = field(default=None)
     step_size: float | None = field(default=None)
     platform_name: str | None = field(default=None)
     platform_properties: dict | None = field(default=None)
@@ -172,7 +172,7 @@ class BaseOpenMMMaker(Maker):
         prev_task : Optional[OpenMMTaskDocument]
             The previous task document.
         """
-        has_steps = self._resolve_attr("steps", prev_task) > 0
+        has_steps = self._resolve_attr("n_steps", prev_task) > 0
         # add dcd reporter
         dcd_interval = self._resolve_attr("dcd_interval", prev_task)
         if has_steps & (dcd_interval > 0):
@@ -397,7 +397,7 @@ class BaseOpenMMMaker(Maker):
             output=CalculationOutput.from_directory(
                 dir_name,
                 elapsed_time,
-                self._resolve_attr("steps", prev_task),
+                self._resolve_attr("n_steps", prev_task),
                 self._resolve_attr("state_interval", prev_task),
             ),
             completed_at=str(datetime.now()),

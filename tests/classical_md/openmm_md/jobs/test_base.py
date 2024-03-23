@@ -12,7 +12,9 @@ from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
 def test_add_reporters(interchange, temp_dir):
-    maker = BaseOpenMMMaker(dcd_interval=100, state_interval=50, wrap_dcd=True, steps=1)
+    maker = BaseOpenMMMaker(
+        dcd_interval=100, state_interval=50, wrap_dcd=True, n_steps=1
+    )
     sim = maker._create_simulation(interchange)
     dir_name = temp_dir / "test_output"
     dir_name.mkdir()
@@ -83,7 +85,7 @@ def test_update_interchange(interchange):
 
 
 def test_create_task_doc(interchange, temp_dir):
-    maker = BaseOpenMMMaker(steps=1000, temperature=300)
+    maker = BaseOpenMMMaker(n_steps=1000, temperature=300)
     dir_name = temp_dir / "test_output"
     dir_name.mkdir()
 
@@ -93,7 +95,7 @@ def test_create_task_doc(interchange, temp_dir):
     assert task_doc.dir_name == str(dir_name)
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 1
-    assert task_doc.calcs_reversed[0].input.steps == 1000
+    assert task_doc.calcs_reversed[0].input.n_steps == 1000
     assert task_doc.calcs_reversed[0].input.temperature == 300
     assert task_doc.calcs_reversed[0].output.elapsed_time == 10.5
 
@@ -101,7 +103,7 @@ def test_create_task_doc(interchange, temp_dir):
 def test_make(interchange, temp_dir, run_job):
     # Create an instance of BaseOpenMMMaker
     maker = BaseOpenMMMaker(
-        steps=1000,
+        n_steps=1000,
         step_size=0.002,
         platform_name="CPU",
         state_interval=100,
@@ -133,7 +135,7 @@ def test_make(interchange, temp_dir, run_job):
     calc = task_doc.calcs_reversed[0]
     assert calc.dir_name == str(temp_dir)
     assert calc.has_openmm_completed is True
-    assert calc.input.steps == 1000
+    assert calc.input.n_steps == 1000
     assert calc.input.step_size == 0.002
     assert calc.input.platform_name == "CPU"
     assert calc.input.state_interval == 100

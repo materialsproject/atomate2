@@ -23,14 +23,13 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
     """A maker class for performing energy minimization using OpenMM.
 
     This class inherits from BaseOpenMMMaker, only new attributes are documented.
+    n_steps must be 0.
 
     Attributes
     ----------
     name : str
         The name of the energy minimization job.
         Default is "energy minimization".
-    steps : int
-        The number of minimization steps. Must be equal to 0.
     tolerance : float
         The energy tolerance for minimization. Default is 10 kj/nm.
     max_iterations : int
@@ -39,7 +38,7 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
     """
 
     name: str = "energy minimization"
-    steps: int = 0
+    n_steps: int = 0
     tolerance: float = 10
     max_iterations: int = 0
 
@@ -55,7 +54,7 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
         sim : Simulation
             The OpenMM simulation object.
         """
-        if self.steps != 0:
+        if self.n_steps != 0:
             raise ValueError("Energy minimization should have 0 steps.")
 
         # Minimize the energy
@@ -75,7 +74,7 @@ class NPTMaker(BaseOpenMMMaker):
     ----------
     name : str
         The name of the NPT simulation job. Default is "npt simulation".
-    steps : int
+    n_steps : int
         The number of simulation steps. Default is 1000000.
     pressure : float
         The pressure of the simulation in atmospheres.
@@ -86,12 +85,12 @@ class NPTMaker(BaseOpenMMMaker):
     """
 
     name: str = "npt simulation"
-    steps: int = 1000000
+    n_steps: int = 1000000
     pressure: float = 1
     pressure_update_frequency: int = 10
 
     def run_openmm(self, sim: Simulation) -> None:
-        """Evolve the simulation for self.steps in the NPT ensemble.
+        """Evolve the simulation for self.n_steps in the NPT ensemble.
 
         This adds a Monte Carlo barostat to the system to put it into NPT, runs the
         simulation for the specified number of steps, and then removes the barostat.
@@ -117,7 +116,7 @@ class NPTMaker(BaseOpenMMMaker):
         context.reinitialize(preserveState=True)
 
         # Run the simulation
-        sim.step(self.steps)
+        sim.step(self.n_steps)
 
         # Remove thermostat and update context
         system.removeForce(barostat_force_index)
@@ -134,15 +133,15 @@ class NVTMaker(BaseOpenMMMaker):
     ----------
     name : str
         The name of the NVT simulation job. Default is "nvt simulation".
-    steps : int
+    n_steps : int
         The number of simulation steps. Default is 1000000.
     """
 
     name: str = "nvt simulation"
-    steps: int = 1000000
+    n_steps: int = 1000000
 
     def run_openmm(self, sim: Simulation) -> None:
-        """Evolve the simulation with OpenMM for self.steps.
+        """Evolve the simulation with OpenMM for self.n_steps.
 
         Parameters
         ----------
@@ -150,7 +149,7 @@ class NVTMaker(BaseOpenMMMaker):
             The OpenMM simulation object.
         """
         # Run the simulation
-        sim.step(self.steps)
+        sim.step(self.n_steps)
 
 
 @dataclass
@@ -165,7 +164,7 @@ class TempChangeMaker(BaseOpenMMMaker):
     ----------
     name : str
         The name of the temperature change job. Default is "temperature change".
-    steps : int
+    n_steps : int
         The total number of simulation steps. Default is 1000000.
     temp_steps : Optional[int]
         The number of steps over which the temperature is raised, by
@@ -176,7 +175,7 @@ class TempChangeMaker(BaseOpenMMMaker):
     """
 
     name: str = "temperature change"
-    steps: int = 1000000
+    n_steps: int = 1000000
     temp_steps: int | None = None
     starting_temperature: float | None = None
 
@@ -186,7 +185,7 @@ class TempChangeMaker(BaseOpenMMMaker):
         self.temperature is the final temperature. self.temp_steps
         determines how many gradiations there are between the starting and
         final temperature. At each gradiation, the system is evolved for a
-        number of steps such that the total number of steps is self.steps.
+        number of steps such that the total number of steps is self.n_steps.
 
         Parameters
         ----------
@@ -195,11 +194,11 @@ class TempChangeMaker(BaseOpenMMMaker):
         """
         integrator = sim.context.getIntegrator()
 
-        temps_arr = np.linspace(
+        temps = np.linspace(
             self.starting_temperature, self.temperature, self.temp_steps
         )
-        steps_list = create_list_summing_to(self.steps, self.temp_steps)
-        for temp, n_steps in zip(temps_arr, steps_list):
+        steps = create_list_summing_to(self.n_steps, self.temp_steps)
+        for temp, n_steps in zip(temps, steps):
             integrator.setTemperature(temp * kelvin)
             sim.step(n_steps)
 
@@ -207,7 +206,7 @@ class TempChangeMaker(BaseOpenMMMaker):
         self, prev_task: OpenMMTaskDocument | None = None
     ) -> Integrator:
         # we resolve this here because prev_task is available
-        temp_steps_default = (self.steps // 10000) or 1
+        temp_steps_default = (self.n_steps // 10000) or 1
         self.temp_steps = self._resolve_attr(
             "temp_steps", prev_task, add_defaults={"temp_steps": temp_steps_default}
         )

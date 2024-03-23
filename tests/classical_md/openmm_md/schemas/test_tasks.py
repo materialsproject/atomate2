@@ -19,7 +19,7 @@ def test_calc_output_from_directory(output_dir):
     assert calc_out.state_file == "state_csv"
 
     # Assert the contents of the state data
-    assert np.array_equal(calc_out.output_steps[:3], [100, 200, 300])
+    assert np.array_equal(calc_out.steps[:3], [100, 200, 300])
     assert np.allclose(calc_out.potential_energy[:3], [-26192.4, -25648.6, -25149.6])
     assert np.allclose(calc_out.kinetic_energy[:3], [609.4, 1110.4, 1576.4], atol=0.1)
     assert np.allclose(calc_out.total_energy[:3], [-25583.1, -24538.1, -23573.2])

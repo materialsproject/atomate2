@@ -19,7 +19,7 @@ def test_energy_minimization_maker(interchange, temp_dir, run_job):
 
 
 def test_npt_maker(interchange, temp_dir, run_job):
-    maker = NPTMaker(steps=10, pressure=0.1, pressure_update_frequency=1)
+    maker = NPTMaker(n_steps=10, pressure=0.1, pressure_update_frequency=1)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)
@@ -30,7 +30,7 @@ def test_npt_maker(interchange, temp_dir, run_job):
 
 
 def test_nvt_maker(interchange, temp_dir, run_job):
-    maker = NVTMaker(steps=10, state_interval=1)
+    maker = NVTMaker(n_steps=10, state_interval=1)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)
@@ -40,14 +40,14 @@ def test_nvt_maker(interchange, temp_dir, run_job):
 
     # Test length of state attributes in calculation output
     calc_output = task_doc.calcs_reversed[0].output
-    assert len(calc_output.output_steps) == 10
+    assert len(calc_output.steps) == 10
 
     # Test that the state interval is respected
-    assert calc_output.output_steps == list(range(1, 11))
+    assert calc_output.steps == list(range(1, 11))
 
 
 def test_temp_change_maker(interchange, temp_dir, run_job):
-    maker = TempChangeMaker(steps=10, temperature=310, temp_steps=10)
+    maker = TempChangeMaker(n_steps=10, temperature=310, temp_steps=10)
     base_job = maker.make(interchange, output_dir=temp_dir)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)

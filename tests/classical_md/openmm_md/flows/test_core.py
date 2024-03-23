@@ -15,7 +15,7 @@ def test_anneal_maker(interchange, tmp_path, run_job):
         name="test_anneal",
         anneal_temp=500,
         final_temp=300,
-        steps=30,
+        n_steps=30,
         temp_steps=1,
         job_names=("heat", "hold", "cool"),
         platform_name="CPU",
@@ -34,18 +34,18 @@ def test_anneal_maker(interchange, tmp_path, run_job):
     # Check the individual jobs in the flow
     raise_temp_job = anneal_flow.jobs[0]
     assert raise_temp_job.maker.name == "heat"
-    assert raise_temp_job.maker.steps == 10
+    assert raise_temp_job.maker.n_steps == 10
     assert raise_temp_job.maker.temperature == 500
     assert raise_temp_job.maker.temp_steps == 1
 
     nvt_job = anneal_flow.jobs[1]
     assert nvt_job.maker.name == "hold"
-    assert nvt_job.maker.steps == 10
+    assert nvt_job.maker.n_steps == 10
     assert nvt_job.maker.temperature == 500
 
     lower_temp_job = anneal_flow.jobs[2]
     assert lower_temp_job.maker.name == "cool"
-    assert lower_temp_job.maker.steps == 10
+    assert lower_temp_job.maker.n_steps == 10
     assert lower_temp_job.maker.temperature == 300
     assert lower_temp_job.maker.temp_steps == 1
 
@@ -55,11 +55,11 @@ def test_production_maker(interchange, tmp_path, run_job):
     production_maker = ProductionMaker(
         name="test_production",
         energy_maker=EnergyMinimizationMaker(),
-        npt_maker=NPTMaker(steps=5, pressure=1.0, state_interval=1),
+        npt_maker=NPTMaker(n_steps=5, pressure=1.0, state_interval=1),
         anneal_maker=AnnealMaker.from_temps_and_steps(
-            steps=5, anneal_temp=400, final_temp=300
+            anneal_temp=400, final_temp=300, n_steps=5
         ),
-        nvt_maker=NVTMaker(steps=5),
+        nvt_maker=NVTMaker(n_steps=5),
     )
 
     # Run the ProductionMaker flow
@@ -77,7 +77,7 @@ def test_production_maker(interchange, tmp_path, run_job):
 
     npt_job = production_flow.jobs[1]
     assert isinstance(npt_job.maker, NPTMaker)
-    assert npt_job.maker.steps == 5
+    assert npt_job.maker.n_steps == 5
     assert npt_job.maker.pressure == 1.0
 
     anneal_flow = production_flow.jobs[2]
@@ -87,13 +87,13 @@ def test_production_maker(interchange, tmp_path, run_job):
 
     nvt_job = production_flow.jobs[3]
     assert isinstance(nvt_job.maker, NVTMaker)
-    assert nvt_job.maker.steps == 5
+    assert nvt_job.maker.n_steps == 5
 
     # Test length of state attributes in calculation output
     calc_output = task_doc.calcs_reversed[0].output
-    assert len(calc_output.output_steps) == 5
+    assert len(calc_output.steps) == 5
 
-    all_steps = [calc.output.output_steps for calc in task_doc.calcs_reversed]
+    all_steps = [calc.output.steps for calc in task_doc.calcs_reversed]
     assert all_steps == [
         [1, 2, 3, 4, 5],
         [1],
@@ -103,4 +103,4 @@ def test_production_maker(interchange, tmp_path, run_job):
         None,
     ]
     # Test that the state interval is respected
-    assert calc_output.output_steps == list(range(1, 6))
+    assert calc_output.steps == list(range(1, 6))
