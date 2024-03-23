@@ -13,7 +13,7 @@ from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 def test_add_reporters(interchange, temp_dir):
     maker = BaseOpenMMMaker(
-        trajectory_interval=100, state_interval=50, wrap_dcd=True, n_steps=1
+        trajectory_interval=100, state_interval=50, wrap_trajectory=True, n_steps=1
     )
     sim = maker._create_simulation(interchange)
     dir_name = temp_dir / "test_output"
@@ -65,7 +65,7 @@ def test_create_simulation(interchange):
 
 def test_update_interchange(interchange):
     interchange = copy.deepcopy(interchange)
-    maker = BaseOpenMMMaker(wrap_dcd=True)
+    maker = BaseOpenMMMaker(wrap_trajectory=True)
     sim = maker._create_simulation(interchange)
     start_positions = interchange.positions
     start_velocities = interchange.velocities

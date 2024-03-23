@@ -50,11 +50,36 @@ def test_anneal_maker(interchange, tmp_path, run_job):
     assert lower_temp_job.maker.temp_steps == 1
 
 
+def test_hdf5_writing(interchange, tmp_path, run_job):
+    # Create an instance of AnnealMaker with custom parameters
+    anneal_maker = AnnealMaker.from_temps_and_steps(
+        name="test_anneal",
+        n_steps=3,
+        temp_steps=1,
+        platform_name="CPU",
+        trajectory_file_type="hdf5",
+        report_velocities=True,
+    )
+
+    # Run the AnnealMaker flow
+    anneal_flow = anneal_maker.make(interchange, output_dir=tmp_path)
+
+    task_doc = run_job(anneal_flow)
+
+    calc_output_names = [calc.output.dcd_file for calc in task_doc.calcs_reversed]
+    assert len(list(tmp_path.iterdir())) == 5
+    assert set(calc_output_names) == {
+        "trajectory3_hdf5",
+        "trajectory2_hdf5",
+        "trajectory_hdf5",
+    }
+
+
 def test_production_maker(interchange, tmp_path, run_job):
     # Create an instance of ProductionMaker with custom parameters
     production_maker = ProductionMaker(
         name="test_production",
-        energy_maker=EnergyMinimizationMaker(),
+        energy_maker=EnergyMinimizationMaker(max_iterations=1),
         npt_maker=NPTMaker(n_steps=5, pressure=1.0, state_interval=1),
         anneal_maker=AnnealMaker.from_temps_and_steps(
             anneal_temp=400, final_temp=300, n_steps=5

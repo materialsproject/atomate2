@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import re
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -10,6 +11,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, NoReturn
 
 from jobflow import Maker, Response
+from mdtraj.reporters.hdf5reporter import HDF5Reporter
 from openff.interchange import Interchange
 from openmm import Integrator, LangevinMiddleIntegrator, Platform
 from openmm.app import DCDReporter, StateDataReporter
@@ -28,15 +30,17 @@ if TYPE_CHECKING:
 
 OPENMM_MAKER_DEFAULTS = {
     "step_size": 0.001,
-    "platform_name": "CPU",
-    "platform_properties": {},
-    "state_interval": 1000,
-    "trajectory_interval": 10000,
-    "wrap_dcd": False,
     "temperature": 298,
     "friction_coefficient": 1,
-    "state_file_name": "state_csv",
-    "trajectory_file_name": "trajectory_dcd",
+    "platform_name": "CPU",
+    "platform_properties": {},
+    "state_file_name": "state",
+    "state_interval": 1000,
+    "trajectory_file_name": "trajectory",
+    "trajectory_interval": 10000,
+    "wrap_trajectory": False,
+    "trajectory_file_type": "dcd",
+    "report_velocities": False,
 }
 
 
@@ -61,39 +65,49 @@ class BaseOpenMMMaker(Maker):
         The number of simulation steps to run.
     step_size : Optional[float]
         The size of each simulation step (picoseconds).
+    temperature : Optional[float]
+        The simulation temperature (kelvin).
+    friction_coefficient : Optional[float]
+        The friction coefficient for the
+        integrator (inverse picoseconds).
     platform_name : Optional[str]
         The name of the OpenMM platform to use, passed to
         Interchange.to_openmm_simulation.
     platform_properties : Optional[dict]
         Properties for the OpenMM platform,
         passed to Interchange.to_openmm_simulation.
+    state_file_name : Optional[str]
+        The name of the state file to save.
     state_interval : Optional[int]
         The interval for saving simulation state.
         To record no state, set to 0.
+    trajectory_file_name : Optional[str]
+        The name of the trajectory file to save.
     trajectory_interval : Optional[int]
-        The interval for saving DCD frames. To record
-        no DCD, set to 0.
-    wrap_dcd : Optional[bool]
-        Whether to wrap DCD coordinates.
-    temperature : Optional[float]
-        The simulation temperature (kelvin).
-    friction_coefficient : Optional[float]
-        The friction coefficient for the
-        integrator (inverse picoseconds).
+        The interval for saving trajectory frames. To record
+        no trajectory, set to 0.
+    wrap_trajectory : Optional[bool]
+        Whether to wrap trajectory coordinates.
+    trajectory_file_type : Optional[str]
+        The type of trajectory file to save. Options are "dcd" and "hdf5".
+    report_velocities : Optional[bool]
+        Whether to report velocities in the trajectory file.
     """
 
     name: str = "base openmm job"
     n_steps: int | None = field(default=None)
     step_size: float | None = field(default=None)
-    platform_name: str | None = field(default=None)
-    platform_properties: dict | None = field(default=None)
-    state_interval: int | None = field(default=None)
-    trajectory_interval: int | None = field(default=None)
-    wrap_dcd: bool | None = field(default=None)
     temperature: float | None = field(default=None)
     friction_coefficient: float | None = field(default=None)
+    platform_name: str | None = field(default=None)
+    platform_properties: dict | None = field(default=None)
     state_file_name: str | None = field(default=None)
+    state_interval: int | None = field(default=None)
     trajectory_file_name: str | None = field(default=None)
+    trajectory_interval: int | None = field(default=None)
+    wrap_trajectory: bool | None = field(default=None)
+    trajectory_file_type: str | None = field(default=None)
+    report_velocities: bool | None = field(default=None)
 
     @openff_job
     def make(
@@ -177,23 +191,53 @@ class BaseOpenMMMaker(Maker):
             The previous task document.
         """
         has_steps = self._resolve_attr("n_steps", prev_task) > 0
-        # add dcd reporter
-        trajectory_interval = self._resolve_attr("trajectory_interval", prev_task)
-        trajectory_file_name = self._resolve_attr("trajectory_file_name", prev_task)
-        if has_steps & (trajectory_interval > 0):
-            dcd_reporter = DCDReporter(
-                file=str(dir_name / trajectory_file_name),
-                reportInterval=trajectory_interval,
-                enforcePeriodicBox=self._resolve_attr("wrap_dcd", prev_task),
-            )
-            sim.reporters.append(dcd_reporter)
+        # add trajectory reporter
+        traj_interval = self._resolve_attr("trajectory_interval", prev_task)
+        traj_file_name = self._resolve_attr("trajectory_file_name", prev_task)
+        traj_file_type = self._resolve_attr("trajectory_file_type", prev_task)
+        report_velocities = self._resolve_attr("report_velocities", prev_task)
+        if has_steps & (traj_interval > 0):
+            traj_file = dir_name / f"{traj_file_name}_{traj_file_type}"
+            if traj_file_type == "dcd":
+                if report_velocities:
+                    raise ValueError(
+                        "DCDReporter does not support reporting velocities. If you'd"
+                        "like to report velocities, switch to HDF5 format."
+                    )
+                dcd_reporter = DCDReporter(
+                    file=str(traj_file),
+                    reportInterval=traj_interval,
+                    enforcePeriodicBox=self._resolve_attr("wrap_trajectory", prev_task),
+                )
+                sim.reporters.append(dcd_reporter)
+            elif traj_file_type == "hdf5":
+                # sadly, our hdf5 implementation cannot append
+                if traj_file.exists():
+                    # logic to increment count on file name
+                    re_match = re.search(rf"(\d*)_{traj_file_type}", traj_file.name)
+                    position = re_match.start(1)
+                    new_count = int(re_match.group(1) or 1) + 1
+                    new_name = f"{traj_file_name[:position]}{new_count}"
+                    self.trajectory_file_name = new_name
+                    traj_file = dir_name / f"{new_name}_{traj_file_type}"
+
+                hdf5_reporter = HDF5Reporter(
+                    file=str(traj_file),
+                    reportInterval=traj_interval,
+                    cell=True,
+                    velocities=self._resolve_attr("report_velocities", prev_task),
+                    enforcePeriodicBox=self._resolve_attr("wrap_trajectory", prev_task),
+                )
+                sim.reporters.append(hdf5_reporter)
+            else:
+                raise ValueError(f"Unsupported trajectory file type: {traj_file_type}")
 
         # add state reporter
         state_interval = self._resolve_attr("state_interval", prev_task)
         state_file_name = self._resolve_attr("state_file_name", prev_task)
         if has_steps & (state_interval > 0):
             state_reporter = StateDataReporter(
-                file=str(dir_name / state_file_name),
+                file=f"{dir_name / state_file_name}_csv",
                 reportInterval=state_interval,
                 step=True,
                 potentialEnergy=True,
@@ -202,7 +246,7 @@ class BaseOpenMMMaker(Maker):
                 temperature=True,
                 volume=True,
                 density=True,
-                append=(dir_name / state_file_name).exists(),
+                append=(dir_name / (state_file_name + "_csv")).exists(),
             )
             sim.reporters.append(state_reporter)
 
@@ -358,7 +402,7 @@ class BaseOpenMMMaker(Maker):
         state = sim.context.getState(
             getPositions=True,
             getVelocities=True,
-            enforcePeriodicBox=self._resolve_attr("wrap_dcd", prev_task),
+            enforcePeriodicBox=self._resolve_attr("wrap_trajectory", prev_task),
         )
         interchange.positions = state.getPositions(asNumpy=True)
         interchange.velocities = state.getVelocities(asNumpy=True)
@@ -395,15 +439,17 @@ class BaseOpenMMMaker(Maker):
         """
         maker_attrs = copy.deepcopy(dict(vars(self)))
         job_name = maker_attrs.pop("name")
-
+        state_file_name = self._resolve_attr("state_file_name", prev_task)
+        traj_file_name = self._resolve_attr("trajectory_file_name", prev_task)
+        traj_file_type = self._resolve_attr("trajectory_file_type", prev_task)
         calc = Calculation(
             dir_name=str(dir_name),
             has_openmm_completed=True,
             input=CalculationInput(**maker_attrs),
             output=CalculationOutput.from_directory(
                 dir_name,
-                self._resolve_attr("state_file_name", prev_task),
-                self._resolve_attr("trajectory_file_name", prev_task),
+                f"{state_file_name}_csv",
+                f"{traj_file_name}_{traj_file_type}",
                 elapsed_time,
                 self._resolve_attr("n_steps", prev_task),
                 self._resolve_attr("state_interval", prev_task),
