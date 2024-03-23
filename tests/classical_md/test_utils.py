@@ -15,6 +15,7 @@ from atomate2.classical_md.utils import (
     create_mol_spec,
     create_openff_mol,
     get_atom_map,
+    increment_name,
     infer_openff_mol,
     merge_specs_by_name_and_smile,
     molgraph_to_openff_mol,
@@ -229,3 +230,20 @@ def test_openff_quantity_as_from_monty_dict():
     assert quantity.magnitude == reconstructed_quantity.magnitude
     assert quantity.units == reconstructed_quantity.units
     assert quantity == reconstructed_quantity
+
+
+def test_increment_file_name():
+    test_cases = [
+        ("report_dcd", "dcd", "_", "report2"),
+        ("report_123_dcd", "dcd", "_", "report_124"),
+        ("report.dcd", "dcd", ".", "report2"),
+        ("report.123.dcd", "dcd", ".", "report.124"),
+        ("report-dcd", "dcd", "-", "report2"),
+        ("report-123-dcd", "dcd", "-", "report-124"),
+    ]
+
+    for file_name, extension, delimiter, expected_output in test_cases:
+        result = increment_name(file_name, extension, delimiter)
+        assert (
+            result == expected_output
+        ), f"Failed for case: {file_name}, {extension}, {delimiter}"

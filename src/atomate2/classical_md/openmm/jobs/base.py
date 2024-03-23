@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import copy
-import re
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -24,6 +23,7 @@ from atomate2.classical_md.openmm.schemas.tasks import (
     CalculationOutput,
     OpenMMTaskDocument,
 )
+from atomate2.classical_md.utils import increment_name
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation
@@ -198,7 +198,12 @@ class BaseOpenMMMaker(Maker):
         report_velocities = self._resolve_attr("report_velocities", prev_task)
         if has_steps & (traj_interval > 0):
             traj_file = dir_name / f"{traj_file_name}_{traj_file_type}"
+
             if traj_file_type == "dcd":
+                if traj_file.exists():
+                    self.traj_file_name = increment_name(traj_file.name, traj_file_type)
+                    traj_file = dir_name / f"{self.traj_file_name}_{traj_file_type}"
+
                 if report_velocities:
                     raise ValueError(
                         "DCDReporter does not support reporting velocities. If you'd"
@@ -210,16 +215,11 @@ class BaseOpenMMMaker(Maker):
                     enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
                 )
                 sim.reporters.append(dcd_reporter)
+
             elif traj_file_type == "hdf5":
-                # sadly, our hdf5 implementation cannot append
                 if traj_file.exists():
-                    # logic to increment count on file name
-                    re_match = re.search(rf"(\d*)_{traj_file_type}", traj_file.name)
-                    position = re_match.start(1)
-                    new_count = int(re_match.group(1) or 1) + 1
-                    new_name = f"{traj_file_name[:position]}{new_count}"
-                    self.traj_file_name = new_name
-                    traj_file = dir_name / f"{new_name}_{traj_file_type}"
+                    self.traj_file_name = increment_name(traj_file.name, traj_file_type)
+                    traj_file = dir_name / f"{self.traj_file_name}_{traj_file_type}"
 
                 hdf5_reporter = HDF5Reporter(
                     file=str(traj_file),
