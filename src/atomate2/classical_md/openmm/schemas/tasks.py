@@ -25,7 +25,7 @@ class CalculationInput(BaseModel, extra="allow"):  # type: ignore[call-arg]
 
     state_interval: Optional[int] = Field(None, description="")
 
-    dcd_interval: Optional[int] = Field(None, description="Report interval")
+    trajectory_interval: Optional[int] = Field(None, description="Report interval")
 
     wrap_dcd: Optional[bool] = Field(None, description="Wrap particles or not")
 

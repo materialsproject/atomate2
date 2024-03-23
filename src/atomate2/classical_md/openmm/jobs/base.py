@@ -31,7 +31,7 @@ OPENMM_MAKER_DEFAULTS = {
     "platform_name": "CPU",
     "platform_properties": {},
     "state_interval": 1000,
-    "dcd_interval": 10000,
+    "trajectory_interval": 10000,
     "wrap_dcd": False,
     "temperature": 298,
     "friction_coefficient": 1,
@@ -70,7 +70,7 @@ class BaseOpenMMMaker(Maker):
     state_interval : Optional[int]
         The interval for saving simulation state.
         To record no state, set to 0.
-    dcd_interval : Optional[int]
+    trajectory_interval : Optional[int]
         The interval for saving DCD frames. To record
         no DCD, set to 0.
     wrap_dcd : Optional[bool]
@@ -88,7 +88,7 @@ class BaseOpenMMMaker(Maker):
     platform_name: str | None = field(default=None)
     platform_properties: dict | None = field(default=None)
     state_interval: int | None = field(default=None)
-    dcd_interval: int | None = field(default=None)
+    trajectory_interval: int | None = field(default=None)
     wrap_dcd: bool | None = field(default=None)
     temperature: float | None = field(default=None)
     friction_coefficient: float | None = field(default=None)
@@ -178,12 +178,12 @@ class BaseOpenMMMaker(Maker):
         """
         has_steps = self._resolve_attr("n_steps", prev_task) > 0
         # add dcd reporter
-        dcd_interval = self._resolve_attr("dcd_interval", prev_task)
+        trajectory_interval = self._resolve_attr("trajectory_interval", prev_task)
         trajectory_file_name = self._resolve_attr("trajectory_file_name", prev_task)
-        if has_steps & (dcd_interval > 0):
+        if has_steps & (trajectory_interval > 0):
             dcd_reporter = DCDReporter(
                 file=str(dir_name / trajectory_file_name),
-                reportInterval=dcd_interval,
+                reportInterval=trajectory_interval,
                 enforcePeriodicBox=self._resolve_attr("wrap_dcd", prev_task),
             )
             sim.reporters.append(dcd_reporter)
