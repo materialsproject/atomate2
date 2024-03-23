@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from pathlib import Path
     import numpy as np
     from atomate2.vasp.sets.base import VaspInputGenerator
-
+from collections import defaultdict
 logger = logging.getLogger(__name__)
 
 
@@ -94,31 +94,28 @@ def generate_adslabs(
 def run_adslabs_job(
     adslab_structures: list[Structure],
     relax_maker: AdslabRelaxMaker,
-    prev_dir: str | Path | None = None,
+    static_maker: SlabStaticMaker
     ) -> Flow:
 
     adsorption_jobs = []
-    ads_outputs: dict[str, list] = {
-        "job_name": "",
-        "configuration_number": [],
-        "adsorption_energy": [],
-        "dirs": [],
-    }
+    ads_outputs = defaultdict(list)
 
     for i, ad_structure in enumerate(adslab_structures):
-        if prev_dir is not None:
-            ads_job = relax_maker.make(ad_structure, prev_dir=prev_dir)
-        else:
-            ads_job = relax_maker.make(ad_structure)
+        ads_job = relax_maker.make(ad_structure)
         ads_job.append_name(f"configuration {i}")
 
         adsorption_jobs.append(ads_job)
         ads_outputs["configuration_number"].append(i)
-        ads_outputs["relaxed_structures"].append(i)
-        ads_outputs["adsorption_energy"].append(ads_job.output.structure)
+        ads_outputs["relaxed_structures"].append(ads_job.output.structure)
+
+        static_job = static_maker.make(ads_job.output.structure)
+        static_job.append_name(f"static configuration {i}")
+        adsorption_jobs.append(static_job)
+
+        ads_outputs["static_energy"].append(static_job.output.energy)
         ads_outputs["dirs"].append(ads_job.output.dir_name)
 
-    adsorption_flow = Flow(ads_job, ads_outputs)
+    adsorption_flow = Flow(adsorption_jobs, ads_outputs)
     return Response(replace=adsorption_flow)
 
 @job
@@ -132,7 +129,6 @@ def adsorption_calculations(
         slab_dft_energy: float,
 ):
     """Calculating the adsorption energies."""
-
     bulk_composition = bulk_structure.composition
     bulk_reduced_formula = bulk_composition.reduced_formula
     molecule_composition = molecule_structure.composition
@@ -147,14 +143,15 @@ def adsorption_calculations(
         "dirs": [],
     }
 
-    for i in ads_outputs:
-        outputs["adsorption_configuration"].append(adslab_structures[i])
-        outputs["configuration_number"].append(ads_outputs["configuration_number"][i])
-        ads_energy = ads_outputs["adsorption_energy"][i] - molecule_dft_energy - slab_dft_energy
+    for i, ad_structure in enumerate(adslab_structures):
+        outputs["adsorption_configuration"].append(ad_structure)
+        outputs["configuration_number"].append(i)
+        ads_energy = ads_outputs["static_energy"][i] - molecule_dft_energy - slab_dft_energy
         outputs["adsorption_energy"].append(ads_energy)
         outputs["dirs"].append(ads_outputs["dirs"][i])
 
-        sorted_outputs = sorted(zip(outputs["adsorption_configuration"], outputs["configuration_number"], outputs["adsorption_energy"], outputs["dirs"]), key=lambda x: x[2])
+        sorted_outputs = sorted(zip(outputs["adsorption_configuration"], outputs["configuration_number"],
+                                    outputs["adsorption_energy"], outputs["dirs"]), key=lambda x: x[2])
 
     return sorted_outputs
 

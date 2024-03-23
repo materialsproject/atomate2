@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-
 from atomate2.vasp.jobs.adsorption import (
     get_boxed_molecule,
     AdslabRelaxMaker,
@@ -16,7 +15,6 @@ from atomate2.vasp.jobs.adsorption import (
     run_adslabs_job,
     adsorption_calculations
 )
-
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import TightRelaxMaker
 
@@ -29,6 +27,7 @@ if TYPE_CHECKING:
 class AdsorptionMaker(Maker):
     """Makes a flow for calculating adsorption energies."""
     name: str = "adsorption"
+    # do we need this?
     get_supercell_size_kwargs: dict = field(default_factory=dict)
 
 
@@ -43,9 +42,6 @@ class AdsorptionMaker(Maker):
 
     mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
 
-    def __init__(self, ):
-        self.molecule_dft_energy = None
-        self.min_size = min_size
 
     def make(
             self,
@@ -54,10 +50,9 @@ class AdsorptionMaker(Maker):
             min_vacuum: float = 20.0,
             min_slab_size: float = 10.0,
             min_lw: float = 10.0,
-            surface_idx = (0, 0, 1),
-            prev_dir: str | Path | None = None,
-            molecule_dft_energy: float | None = None,
-            slab_dft_energy: float | None = None,
+            surface_idx=(0, 0, 1),
+            prev_dir_mol: str | Path | None = None,
+            prev_dir_bulk: str | Path | None = None
     ) -> Flow:
         """
         Parameters
@@ -86,69 +81,83 @@ class AdsorptionMaker(Maker):
 
         molecule_structure = get_boxed_molecule(molecule)
 
-        if self.molecule_dft_energy is None:
-            """warning no energy relaxtion"""
-            """double check self"""
-            mol_optimize_job = self.mol_relax_maker.make(molecule_structure, prev_dir=prev_dir)
+        if self.mol_relax_maker is not None:
+            mol_optimize_job = self.mol_relax_maker.make(molecule_structure, prev_dir=prev_dir_mol)
             mol_optimize_job.append_name(f"molecule relaxation job")
             jobs.append(mol_optimize_job)
+
             optimized_molecule = mol_optimize_job.output.structure
+            prev_dir = mol_optimize_job.output.dir_name
+        else:
+            prev_dir = prev_dir_mol
+            optimized_molecule = molecule_structure
 
-            mol_static_job = MolStaticMaker.make(molecule_structure)
-            mol_static_job.append_name(f"molecule static job")
-            jobs.append(mol_static_job)
-            self.molecule_dft_energy = mol_static_job.output.output.energy
+        mol_static_job = self.mol_static_energy_maker.make(molecule_structure, prev_dir=prev_dir)
+        mol_static_job.append_name(f"molecule static job")
+        jobs.append(mol_static_job)
 
-        bulk_optimize_job = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
-        bulk_optimize_job.append_name(f"bulk relaxation job")
-        jobs.append(bulk_optimize_job)
-        optimized_bulk = bulk_optimize_job.output.structure
+        molecule_dft_energy = mol_static_job.output.output.energy
+
+        if self.bulk_relax_maker is not None:
+            bulk_optimize_job = self.bulk_relax_maker.make(structure, prev_dir=prev_dir_bulk)
+            bulk_optimize_job.append_name(f"bulk relaxation job")
+            jobs.append(bulk_optimize_job)
+
+            optimized_bulk = bulk_optimize_job.output.structure
+        else:
+            optimized_bulk = structure
 
         generate_slab_structure = generate_slab(
             bulk_structure=optimized_bulk,
-            min_slab_size=self.min_slab_size,
-            surface_idx=self.surface_idx,
-            min_vacuum_size=self.min_vacuum,
-            min_lw=self.min_lw,
+            min_slab_size=min_slab_size,
+            surface_idx=surface_idx,
+            min_vacuum_size=min_vacuum,
+            min_lw=min_lw,
         )
         jobs.append(generate_slab_structure)
-
-        if self.slab_dft_energy is None:
-            slab_optimize_job = self.adslab_relax_maker.make(generate_slab_structure, prev_dir=prev_dir)
-            slab_optimize_job.append_name(f"slab relaxation job")
-            jobs.append(slab_optimize_job)
-            optimized_slab = slab_optimize_job.output.structure
-
-            slab_static_job = SlabStaticMaker.make(optimized_slab)
-            slab_static_job.append_name(f"slab static job")
-            jobs.append(slab_static_job)
-            self.slab_dft_energy = slab_static_job.output.output.energy
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
             molecule_structure=optimized_molecule,
-            min_slab_size=self.min_slab_size,
-            surface_idx=self.surface_idx,
-            min_vacuum_size=self.min_vacuum,
-            min_lw=self.min_lw,
+            min_slab_size=min_slab_size,
+            surface_idx=surface_idx,
+            min_vacuum_size=min_vacuum,
+            min_lw=min_lw,
         )
         jobs.append(generate_adslabs_structures)
 
+        if self.adslab_relax_maker is None:
+            raise ValueError("adslab_relax_maker shouldn't be Null.")
+
+        # slab relaxation without adsoprtion
+        slab_optimize_job = self.adslab_relax_maker.make(generate_slab_structure)
+        slab_optimize_job.append_name(f"slab relaxation job")
+        jobs.append(slab_optimize_job)
+
+        optimized_slab = slab_optimize_job.output.structure
+        prev_dir = slab_optimize_job.output.dir_name
+
+        slab_static_job = self.slab_static_energy_maker.make(optimized_slab, prev_dir=prev_dir)
+        slab_static_job.append_name(f"slab static job")
+        jobs.append(slab_static_job)
+
+        slab_dft_energy = slab_static_job.output.energy
+
         vasp_adslabs_calcs = run_adslabs_job(
-            adslab_structures=generate_adslabs_structures.output,
-            relax_maker = self.adslab_relax_maker,
-            prev_dir=prev_dir,
+            adslab_structures=generate_adslabs_structures,
+            relax_maker=self.adslab_relax_maker,
+            static_maker=self.slab_static_energy_maker
         )
         jobs.append(vasp_adslabs_calcs)
 
         adsorption_calc = adsorption_calculations(
             bulk_structure=optimized_bulk,
             molecule_structure=optimized_molecule,
-            surface_idx=self.surface_idx,
-            adslab_structures=generate_adslabs_structures.output,
+            surface_idx=surface_idx,
+            adslab_structures=generate_adslabs_structures,
             adslabs_data=vasp_adslabs_calcs.output,
-            molecule_dft_energy=self.molecule_dft_energy,
-            slab_dft_energy=self.slab_dft_energy,
+            molecule_dft_energy=molecule_dft_energy,
+            slab_dft_energy=slab_dft_energy,
         )
         jobs.append(adsorption_calc)
 
