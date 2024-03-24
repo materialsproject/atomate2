@@ -70,7 +70,7 @@ class LobsterMaker(Maker):
         [...]
         """
 ```
-This class incorporates [LOBSTER](http://cohp.de/) specific input and output data, i.e. the `wavefunction_dir` and `basis_dict` as input in `make` that returns the `LobsterMaker`-class specific output as a `TaskDocument`.
+This class incorporates [LOBSTER](http://cohp.de/) specific input and output data, i.e. the `wavefunction_dir` and `basis_dict` as input in `make` that returns the `LobsterMaker`-class specific output as a `TaskDocument`. Also the `make` functions is annotated by the `@job` decorator, turning this maker into a job maker.
 As a job maker, this maker will then create jobs to execute the LOBSTER runs and store the output in the `LobsterTaskDocument` format.
 
 In contrast to a job maker, the `make` function of a `Flow Maker` will return a `Flow` object instead of a task document.
