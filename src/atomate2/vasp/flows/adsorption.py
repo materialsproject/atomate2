@@ -23,58 +23,88 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure, Molecule
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
+
 @dataclass
 class AdsorptionMaker(Maker):
-    """Makes a flow for calculating adsorption energies."""
+    """
+    This flow calculates the adsorption energy of a molecule on a surface.
+
+    The flow consists of the following steps:
+    1. Optimize the molecule structure and calculate its static energy.
+    2. Optimize the bulk structure.
+    3. Generate a slab structure using the optimized bulk structure and calculate its static energy.
+    4. Generate adsorption sites on the slab and calculate corresponding static energy.
+    5. Calculate the adsorption energy by calculating the energy difference between the slab with
+    adsorbed molecule and the sum of the slab without the adsorbed molecule and the molecule.
+
+    Parameters
+    ----------
+    name: str
+        Name of the flow.
+    get_supercell_size_kwargs: dict
+        Arguments to pass to get_supercell_size function.
+    bulk_relax_maker: BaseVaspMaker
+        Maker for bulk relaxation.
+    mol_relax_maker: BaseVaspMaker
+        Maker for molecule relaxation.
+    adslab_relax_maker: BaseVaspMaker
+        Maker for slab relaxation with adsorption.
+    slab_static_energy_maker: BaseVaspMaker
+        Maker for slab static energy calculation.
+    mol_static_energy_maker: BaseVaspMaker
+        Maker for molecule static energy calculation.
+    """
     name: str = "adsorption"
     # do we need this?
     get_supercell_size_kwargs: dict = field(default_factory=dict)
 
-
     bulk_relax_maker: BaseVaspMaker = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
-    mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker())
+    mol_relax_maker: MoleculeRelaxMaker = field(default_factory=MoleculeRelaxMaker())
 
-    adslab_relax_maker: BaseVaspMaker = field(default_factory=AdslabRelaxMaker())
+    adslab_relax_maker: AdslabRelaxMaker = field(default_factory=AdslabRelaxMaker())
 
-    slab_static_energy_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker())
+    slab_static_energy_maker: SlabStaticMaker = field(default_factory=SlabStaticMaker())
 
-    mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
+    mol_static_energy_maker: MolStaticMaker = field(default_factory=MolStaticMaker())
 
-
-    def make(
-            self,
-            molecule: Molecule,
-            structure: Structure,
-            min_vacuum: float = 20.0,
-            min_slab_size: float = 10.0,
-            min_lw: float = 10.0,
-            surface_idx=(0, 0, 1),
-            prev_dir_mol: str | Path | None = None,
-            prev_dir_bulk: str | Path | None = None
-    ) -> Flow:
+    def make(self,
+             molecule: Molecule,
+             structure: Structure,
+             min_vacuum: float = 20.0,
+             min_slab_size: float = 10.0,
+             min_lw: float = 10.0,
+             surface_idx=(0, 0, 1),
+             prev_dir_mol: str | Path | None = None,
+             prev_dir_bulk: str | Path | None = None
+             ) -> Flow:
         """
+        Generate a flow for calculating adsorption energies.
+
         Parameters
         ----------
-        molecule
-        structure: .Structure
-            A pymatgen structure object.
-        min_vacuum:
-        min_slab_size:
-        Minimum size in angstroms of layers containing atoms.
-        min_lw: minimum length and width of the slab, only used
-                if repeat is None
-        surface_idx: Miller index of plane parallel to surface.
-        prev_dir: str or Path or None
+        molecule: Molecule
+            A pymatgen molecule object. The molecule to be adsorbed.
+        structure: Structure
+            A pymatgen structure object. The bulk structure to be used for slab generation.
+        min_vacuum: float
+            The minimum size of the vacuum region. In Angstroms or number of hkl planes.
+        min_slab_size: float
+            The minimum size of layers of the slab. In Angstroms or number of hkl planes.
+        min_lw: float
+            Minimum length and width of the slab
+        surface_idx: tuple
+            Miller index [h, k, l] of plane parallel to surface.
+        prev_dir_mol: str or Path or None
             A previous VASP calculation directory to copy output files from.
-
-        molecule_dft_energy
-        slab_dft_energy
+        prev_dir_bulk: str or Path or None
+            A previous VASP calculation directory to copy output files from.
 
         Returns
         -------
-
+        Flow
+            A flow object for calculating adsorption energies.
         """
 
         jobs = []
@@ -161,4 +191,4 @@ class AdsorptionMaker(Maker):
         )
         jobs.append(adsorption_calc)
 
-        return Flow(jobs, adsorption_calc.output)
+        return Flow(jobs, adsorption_calc)

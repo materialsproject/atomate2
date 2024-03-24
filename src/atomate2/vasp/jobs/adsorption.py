@@ -27,20 +27,35 @@ logger = logging.getLogger(__name__)
 
 @job
 def get_boxed_molecule(molecule: Molecule) -> Structure:
-    """Get the molecule structure."""
+    """Get the molecule structure.
+
+    Parameters
+    ----------
+    molecule: Molecule
+        The molecule to be adsorbed.
+
+    Returns
+    -------
+    Structure
+        The molecule structure.
+    """
     return molecule.get_boxed_structure(10, 10, 10, offset=np.array([5, 5, 5]))
 
 
 @job
-def removeAdsorbate(slab):
+def removeAdsorbate(slab: Structure) -> Structure:
     """
     Remove adsorbate from the given slab.
 
-    Parameters:
-    slab (Slab): A pymatgen Slab object, potentially with adsorbates.
+    Parameters
+    ----------
+    slab: Structure
+        A pymatgen Slab object, potentially with adsorbates.
 
-    Returns:
-    Slab: The modified slab with adsorbates removed.
+    Returns
+    -------
+    Structure
+        The modified slab with adsorbates removed.
     """
     adsorbate_indices = []
     for i, site in enumerate(slab):
@@ -53,15 +68,37 @@ def removeAdsorbate(slab):
         slab.remove_sites([idx])
     return slab
 
+
 @job(data=[Structure])
 def generate_slab(
     bulk_structure: Structure,
-    min_slab_size: int,
-    surface_idx,
-    min_vacuum_size: int,
+    min_slab_size: float,
+    surface_idx: tuple,
+    min_vacuum_size: float,
     min_lw: float,
 ) -> Structure:
-    """Generate the adsorption slabs."""
+    """Generate the adsorption slabs without adsorbates.
+
+    Parameters
+    ----------
+    bulk_structure: Structure
+        The bulk/unit cell structure.
+    min_slab_size: float
+        The minimum size of the slab. In Angstroms or number of hkl planes.
+        See pymatgen.core.surface.SlabGenerator for more details.
+    surface_idx: tuple
+        The Miller index [h, k, l] of the surface.
+    min_vacuum_size: float
+        The minimum size of the vacuum region. In Angstroms or number of hkl planes.
+        See pymatgen.core.surface.SlabGenerator for more details.
+    min_lw: float
+        The minimum length and width of the slab.
+
+    Returns
+    -------
+    Structure
+        The slab structure without adsorbates.
+    """
 
     H = Molecule([Element("H")], [[0, 0, 0]])
     slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False,
@@ -72,16 +109,38 @@ def generate_slab(
 
     return slabOnly
 
+
 @job(data=[Structure])
 def generate_adslabs(
     bulk_structure: Structure,
     molecule_structure: Structure,
-    min_slab_size: int,
-    surface_idx,
-    min_vacuum_size: int,
+    min_slab_size: float,
+    surface_idx: tuple,
+    min_vacuum_size: float,
     min_lw: float,
 ) -> list[Structure]:
-    """Generate the adsorption slabs."""
+    """Generate the adsorption slabs with adsorbates.
+
+    Parameters
+    ----------
+    bulk_structure: Structure
+        The bulk/unit cell structure.
+    molecule_structure: Structure
+        The molecule to be adsorbed.
+    min_slab_size: float
+        The minimum size of the slab. In Angstroms or number of hkl planes.
+    surface_idx: tuple
+        The Miller index [h, k, l] of the surface.
+    min_vacuum_size: float
+        The minimum size of the vacuum region. In Angstroms or number of hkl planes.
+    min_lw: float
+        The minimum length and width of the slab.
+
+    Returns
+    -------
+    list[Structure]
+        The list of all possible configurations of slab structures with adsorbates.
+    """
 
     slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False,
                                    center_slab=True)
@@ -96,6 +155,22 @@ def run_adslabs_job(
     relax_maker: AdslabRelaxMaker,
     static_maker: SlabStaticMaker
     ) -> Flow:
+    """Workflow of running the adsorption slab calculations.
+
+    Parameters
+    ----------
+    adslab_structures: list[Structure]
+        The list of all possible configurations of slab structures with adsorbates.
+    relax_maker: AdslabRelaxMaker
+        The relaxation maker for the adsorption slab structures.
+    static_maker: SlabStaticMaker
+        The static maker for the adsorption slab structures.
+
+    Returns
+    -------
+    Flow
+        The flow of the adsorption slab calculations.
+    """
 
     adsorption_jobs = []
     ads_outputs = defaultdict(list)
@@ -122,13 +197,38 @@ def run_adslabs_job(
 def adsorption_calculations(
         bulk_structure: Structure,
         molecule_structure: Structure,
-        surface_idx,
+        surface_idx: tuple,
         adslab_structures: list[Structure],
         ads_outputs: dict[str, list],
         molecule_dft_energy: float,
         slab_dft_energy: float,
-):
-    """Calculating the adsorption energies."""
+) -> list:
+    """Calculating the adsorption energies by subtracting
+    the energies of the adsorbate, slab, and adsorbate-slab.
+
+    Parameters
+    ----------
+    bulk_structure: Structure
+        The bulk/unit cell structure.
+    molecule_structure: Structure
+        The molecule to be adsorbed.
+    surface_idx: tuple
+        The Miller index [h, k, l] of the surface.
+    adslab_structures: list[Structure]
+        The list of all possible configurations of slab structures with adsorbates.
+    ads_outputs: dict[str, list]
+        The outputs of the adsorption calculations.
+    molecule_dft_energy: float
+        The static energy of the molecule.
+    slab_dft_energy: float
+        The static energy of the slab.
+
+    Returns
+    -------
+    list
+        The list of (adsorption configurations, configuration number, adsorption energy, directories)
+        sorted by adsorption energy.
+    """
     bulk_composition = bulk_structure.composition
     bulk_reduced_formula = bulk_composition.reduced_formula
     molecule_composition = molecule_structure.composition
@@ -158,6 +258,16 @@ def adsorption_calculations(
 
 @dataclass
 class MoleculeRelaxMaker(BaseVaspMaker):
+    """
+    Maker for molecule relaxation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the relaxation calculation.
+    """
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
@@ -187,6 +297,16 @@ class MoleculeRelaxMaker(BaseVaspMaker):
 
 @dataclass
 class AdslabRelaxMaker(BaseVaspMaker):
+    """
+    Maker for adsorption slab relaxation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the relaxation calculation.
+    """
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
@@ -216,6 +336,16 @@ class AdslabRelaxMaker(BaseVaspMaker):
 
 @dataclass
 class SlabStaticMaker(BaseVaspMaker):
+    """
+    Maker for slab static energy calculation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the static energy calculation.
+    """
     name: str = "adsorption static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
@@ -242,6 +372,16 @@ class SlabStaticMaker(BaseVaspMaker):
 
 @dataclass
 class MolStaticMaker(BaseVaspMaker):
+    """
+    Maker for molecule static energy calculation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the static energy calculation.
+    """
     name: str = "adsorption static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
