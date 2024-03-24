@@ -207,7 +207,7 @@ The CP2K TaskDoc is additionally also inheriting from `MoleculeMetadata`.
 class TaskDocument(StructureMetadata, MoleculeMetadata):
     """Definition of CP2K task document."""
 ```
-In this case, the TaskDoc can store structure or molecule metadata and CP"K-specific objects.
+In this case, the TaskDoc can store structure or molecule metadata and CP2K-specific objects.
 
 # Builder
 
