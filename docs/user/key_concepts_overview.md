@@ -259,6 +259,9 @@ class ElasticBuilder(Builder):
         [...]
 ```
 
-In case of the `ElaticBuilder`, the step of getting all the items that shall be processed involves finding all deformation documents with the same formula.
+In case of the `ElasticBuilder`, the step of getting all the items that shall be processed involves finding all deformation documents with the same formula.
 Then during the data and item processing stage, the deformations will be grouped by their parent structures.
 Finally, the processed items are compiled into an ElasticDocument from the group of tasks and the new elastic documents are added to the elasticity store.
+
+
+#TODO exercises?
