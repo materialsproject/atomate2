@@ -256,7 +256,6 @@ class ElasticBuilder(Builder):
         Insert new elastic documents into the elasticity store.
         [...]
         """
-        [...]
 ```
 
 In case of the `ElasticBuilder`, the step of getting all the items that shall be processed involves finding all deformation documents with the same formula.
