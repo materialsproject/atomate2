@@ -71,7 +71,7 @@ def test_update_interchange(interchange):
     start_velocities = interchange.velocities
     start_box = interchange.box
 
-    # Run the simulation for a few steps
+    # Run the simulation for one step
     sim.step(1)
 
     maker._update_interchange(interchange, sim, None)
