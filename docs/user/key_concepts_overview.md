@@ -114,7 +114,6 @@ class InputSet(MSONable, MutableMapping):
     containers for all calculation input data.
     [...]
     """
-    [...]
     def write_input(
         self,
         directory: str | Path,
@@ -126,7 +125,6 @@ class InputSet(MSONable, MutableMapping):
         Write Inputs to one or more files.
         [...]
         """
-        [...]
 
     @classmethod
     def from_directory(cls, directory: str | Path):
@@ -149,14 +147,12 @@ class VaspInputSet(InputSet):
     A class to represent a set of VASP inputs.
     [...]
     """
-    [...]
 
     def write_input(self,..., potcar_spec: bool = False) -> None:
         """
         Write VASP input files to a directory.
         [...]
         """
-        [...]
 
     @staticmethod
     def from_directory(...) -> VaspInputSet:
@@ -164,7 +160,6 @@ class VaspInputSet(InputSet):
         Load a set of VASP inputs from a directory.
         [...]
         """
-        [...]
 
     @property
     def is_valid(self) -> bool:
@@ -215,14 +210,11 @@ class Builder(MSONable, metaclass=ABCMeta):
 
     @abstractmethod
     def get_items(self) -> Iterable:
-    [...]
 
     def process_item(self, item: Any) -> Any:
-    [...]
 
     @abstractmethod
     def update_targets(self, items: List):
-    [...]
 ```
 The `Builder` class has three main functionalities that are `get_items` to retrieve data from the source store(s), `process_item` to handle the input items and create an output document to be then added to the target store(s) by `update_target`.
 
@@ -235,22 +227,16 @@ class ElasticBuilder(Builder):
     The elastic builder compiles deformation tasks into an elastic document.
     [...]
     """
-    [...]
-
     def get_items(self) -> Generator:
         """
         Get all items to process into elastic documents.
         [...]
         """
-        [...]
-
     def process_item(self, tasks: list[dict]) -> list[ElasticDocument]:
         """
         Process deformation tasks into elasticity documents.
         [...]
         """
-        [...]
-
     def update_targets(self, items: list[ElasticDocument]) -> None:
         """
         Insert new elastic documents into the elasticity store.
