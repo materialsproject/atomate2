@@ -199,7 +199,7 @@ The `ForceFieldTaskDocument` inherits from the `StructureMetadata` class:
 class ForceFieldTaskDocument(StructureMetadata):
     """Document containing information on structure relaxation using a force field."""
 ```
-It then provides the user will all information concerning a force field-based structure relaxation calculation, like the resulting relaxed structure, and force field-specific metadata like the force field name or version.
+It then provides the user with all information concerning a force field-based structure relaxation calculation, like the resulting relaxed structure, and force field-specific metadata like the force field name or version.
 
 
 The CP2K TaskDoc is additionally also inheriting from `MoleculeMetadata`.
