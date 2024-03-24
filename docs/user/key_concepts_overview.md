@@ -22,7 +22,7 @@ The following figure demonstrates a very general example of a flow (Total flow) 
 ![Flow example](../_static/example_flow.png)
 
 `Job` and `Flow` makers come in handy by providing a template schema to set up all kinds of electronic structure calculation and computational chemistry tasks (e.g. chemical bonding analysis, elastic constant calculations, force field applications and many more) and to make it easier to handle and unify output from the various supported software packages (like VASP, phonopy and more). <!--is there a list of supported software on the GitHub pages?-->
-Because the job output data is stored in a JSON serializable dict format, it makes it possible to conveniently handle it with so-called `TaskDocuments`.<!--hyperref to TaskDoc?-->
+Because the job output data is stored in a JSON serializable dict format, it makes it possible to conveniently handle it with so-called [`TaskDocuments`](#taskdocument).
 
 ### Technical Aspects
 
@@ -168,7 +168,7 @@ class VaspInputSet(InputSet):
         [...]
         """
 ```
-VASP needs several inputs files (INCAR, POSCAR, POTCAR and KPOINTS) in order to run, which can be written to a directory using the `write_input` method. If needed, only POTCAR.spec instead of the full POTCAR can be written out, that will only contain the pseudopotential names (e.g. Li_sv).
+VASP needs several inputs files (INCAR, POSCAR, POTCAR and KPOINTS) in order to run, which can be written to a directory using the `write_input` method. If needed, only POTCAR.spec instead of the full POTCAR can be written out, that will only contain the [pseudopotential names](https://www.vasp.at/wiki/index.php/Available_PAW_potentials) (e.g. Li_sv).
 If necessary, it is also possible to specify optional files. The `VaspInputSet` also provides the possibility to check if the constructed input set is valid, to avoid conflicting input setup (e.g. concerning the ISMEAR and KPOINTS settings).
 
 The corresponding input generator is the `VaspInputGenerator`.
@@ -178,9 +178,36 @@ A `TaskDocument` (TaskDoc for short) is a dictionary object that contains all th
 
 ## Basics
 
+`TaskDocuments` are schemas that contain and store all the information of a calculation run, like the (resulting) structure, input data (`InputDoc`), output data (`OutputDoc`), task directory name (`dir_name`) and many more items depending on the respective prerequisites of the computational software that is used.
+Task documents are a very practical way to transfer (input and output) data between two different jobs. E.g. when the structure or path to the (current) job directory is needed in the next step, it can be passed in form of `taskdoc.structure` and `taskdoc.dir_name`, with `taskdoc` as an example instance of the task document class in question.
+
 ## Technical Aspects
 
+In atomate2, the `TaskDocument` objects inherit from the [emmet](https://github.com/materialsproject/emmet/) classes `StructureMetadata` or `MoleculeMetadata`.
+
+```
+class StructureMetadata(EmmetBaseModel):
+    """Mix-in class for structure metadata."""
+```
+They contain the structure or molecule metadata, tailored to the variety of computational software.
+
 ## Examples
+
+The `ForceFieldTaskDocument` inherits from the `StructureMetadata` class:
+
+```
+class ForceFieldTaskDocument(StructureMetadata):
+    """Document containing information on structure relaxation using a force field."""
+```
+It then provides the user will all information concerning a force field-based structure relaxation calculation, like the resulting relaxed structure, and force field-specific metadata like the force field name or version.
+
+
+The CP2K TaskDoc is additionally also inheriting from `MoleculeMetadata`.
+```
+class TaskDocument(StructureMetadata, MoleculeMetadata):
+    """Definition of CP2K task document."""
+```
+In this case, the TaskDoc can store structure or molecule metadata and CP"K-specific objects.
 
 # Builder
 
