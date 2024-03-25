@@ -1,12 +1,16 @@
 """Tests for forcefield MD flows."""
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 from ase import units
 from ase.io import Trajectory
+from ase.md.verlet import VelocityVerlet
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.analysis.structure_matcher import StructureMatcher
+from pymatgen.core import Structure
 
 from atomate2.forcefields.md import (
     CHGNetMDMaker,
@@ -150,6 +154,48 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
             for key in ("energy", "temperature", "forces", "velocities")
             for idx in range(1, nsteps + 1)
         )
+
+
+def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
+    # This test serves two purposes:
+    # 1. Test the NVE calculator
+    # 2. Test specifying the `dynamics` kwarg of the `MDMaker` as a str
+    #    vs. as an ase.md.md.MolecularDyanmics object
+
+    output = {}
+    for k in ["from_str", "from_dyn"]:
+        if k == "from_str":
+            dyn = "velocityverlet"
+        elif k == "from_dyn":
+            dyn = VelocityVerlet
+
+        job = CHGNetMDMaker(
+            ensemble="nve",
+            dynamics=dyn,
+            nsteps=50,
+            traj_file=None,
+        ).make(si_structure)
+
+        response = run_locally(job, ensure_success=True)
+        output[k] = response[next(iter(response))][1].output
+
+    # check that energy and volume are constants
+    assert output["from_str"].output.energy == pytest.approx(-10.6, abs=0.1)
+    assert output["from_str"].output.structure.volume == pytest.approx(
+        output["from_str"].input.structure.volume
+    )
+    assert all(
+        step.energy == pytest.approx(-10.6, abs=0.1)
+        for step in output["from_str"].output.ionic_steps
+    )
+
+    # ensure that output is consistent if molecular dynamics object is specified
+    # as str or as MolecularDynamics object
+    assert all(
+        output["from_str"].output.__getattribute__(attr)
+        == output["from_dyn"].output.__getattribute__(attr)
+        for attr in ("energy", "forces", "stress", "structure")
+    )
 
 
 @pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])

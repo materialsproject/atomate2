@@ -6,6 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import Maker, job
 from pymatgen.core.trajectory import Trajectory
 
@@ -229,6 +230,9 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+    )
 
 
 @dataclass
@@ -247,6 +251,9 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     name: str = f"{MLFF.CHGNet} static"
     force_field_name: str = f"{MLFF.CHGNet}"
     task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+    )
 
 
 @dataclass
@@ -279,6 +286,9 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+    )
 
 
 @dataclass
@@ -351,6 +361,9 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
     name: str = f"{MLFF.M3GNet} static"
     force_field_name: str = f"{MLFF.M3GNet}"
     task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+    )
 
 
 @dataclass

@@ -211,7 +211,7 @@ class ForceFieldMDMaker(Maker):
             self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
             self.ase_md_kwargs["externalstress"] = self.pschedule[0] * 1e3 * units.bar
 
-        if self.dynamics.lower() == "langevin":
+        if isinstance(self.dynamics, str) and self.dynamics.lower() == "langevin":
             self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get(
                 "friction",
                 10.0 * 1e-3 / units.fs,  # Same default as in VASP: 10 ps^-1
@@ -239,12 +239,8 @@ class ForceFieldMDMaker(Maker):
 
         initial_velocities = structure.site_properties.get("velocities")
 
-        if isinstance(self.dynamics, MolecularDynamics):
-            # Allow user to explicitly run ASE Dynamics class
-            md_func = self.dynamics
-
-        elif isinstance(self.dynamics, str):
-            # Otherwise, use known dynamics
+        if isinstance(self.dynamics, str):
+            # Use known dynamics if `self.dynamics` is a str
             self.dynamics = self.dynamics.lower()
             if self.dynamics not in _valid_dynamics[self.ensemble]:
                 raise ValueError(
@@ -256,6 +252,10 @@ class ForceFieldMDMaker(Maker):
             if self.ensemble == "nve" and self.dynamics is None:
                 self.dynamics = "velocityverlet"
             md_func = _preset_dynamics[f"{self.ensemble}_{self.dynamics}"]
+
+        elif issubclass(self.dynamics, MolecularDynamics):
+            # Allow user to explicitly run ASE Dynamics class
+            md_func = self.dynamics
 
         atoms = structure.to_ase_atoms()
 

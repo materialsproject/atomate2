@@ -94,9 +94,9 @@ def test_m3gnet_relax_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert not output1.is_force_converged
+    assert output1.is_force_converged
     assert output1.output.energy == approx(-10.8, abs=0.2)
-    assert output1.output.n_steps == max_step + 2
+    assert output1.output.n_steps == 13
 
 
 mace_paths = pytest.mark.parametrize(
