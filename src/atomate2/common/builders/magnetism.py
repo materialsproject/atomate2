@@ -98,7 +98,6 @@ class MagneticOrderingsBuilder(Builder):
             self.tasks.distinct("output.formula_pretty", criteria=criteria)
         )
         results = self.tasks.groupby("output.formula_pretty", criteria=criteria)
-        self.logger.info("Aggregation complete")
 
         for n_formula, (keys, docs) in enumerate(results):
             formula = keys["output"]["formula_pretty"]
@@ -201,15 +200,21 @@ def _group_orderings(
     list[list[dict]]
         The tasks grouped by their parent structure.
     """
+    tasks = [dict(task) for task in tasks]
+
     grouped_tasks = [[tasks[0]]]
     sm = StructureMatcher(ltol=ltol, stol=stol, angle_tol=angle_tol)
 
     for task in tasks[1:]:
-        parent_structure = task["metadata"]["parent_structure"]
+        parent_structure = MontyDecoder().process_decoded(
+            task["metadata"]["parent_structure"]
+        )
 
         match = False
         for group in grouped_tasks:
-            group_parent_structure = group[0]["metadata"]["parent_structure"]
+            group_parent_structure = MontyDecoder().process_decoded(
+                group[0]["metadata"]["parent_structure"]
+            )
 
             #  parent structure lattice/coords may be same but in different order
             #  so we need to be more rigorous in checking equivalence
@@ -221,4 +226,4 @@ def _group_orderings(
         if not match:
             grouped_tasks.append([task])
 
-    return grouped_tasks
+    return MontyDecoder().process_decoded(grouped_tasks)
