@@ -1,8 +1,10 @@
 import os
 
 import pytest
+from ase.build import bulk
 from ase.calculators.lj import LennardJones
 from ase.optimize import BFGS
+from ase.spacegroup.symmetrize import check_symmetry
 from numpy.testing import assert_allclose
 from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -119,3 +121,23 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
 
     if traj_file:
         assert os.path.isfile(traj_file)
+
+
+@pytest.mark.parametrize(("fix_symmetry"), [(True), (False)])
+def test_fix_symmetry(fix_symmetry):
+    # adapted from the example at https://wiki.fysik.dtu.dk/ase/ase/constraints.html#the-fixsymmetry-class
+    relaxer = Relaxer(
+        calculator=LennardJones(), relax_cell=True, fix_symmetry=fix_symmetry
+    )
+    atoms_al = bulk("Al", "bcc", a=2 / 3**0.5, cubic=True)
+    atoms_al = atoms_al * [2, 2, 2]
+    atoms_al.positions[0, 0] += 1.0e-7
+    symmetry_init = check_symmetry(atoms_al, 1.0e-6, verbose=True)
+    final_struct = relaxer.relax(atoms=atoms_al)["final_structure"]
+    symmetry_final = check_symmetry(
+        AseAtomsAdaptor.get_atoms(final_struct), 1.0e-6, verbose=True
+    )
+    if fix_symmetry:
+        assert symmetry_init["number"] == symmetry_final["number"]
+    else:
+        assert symmetry_init["number"] != symmetry_final["number"]
