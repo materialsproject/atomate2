@@ -277,3 +277,4 @@ Finally, the processed items are compiled into an ElasticDocument from the group
 
 
 #TODO exercises?
+#construct a flow for a doublerelaxmaker/etc. based on CHGnetRelax/Static and compare your result with the [doublerelaxmaker for vasp](https://materialsproject.github.io/atomate2/user/codes/vasp.html#list-of-vasp-workflows)
