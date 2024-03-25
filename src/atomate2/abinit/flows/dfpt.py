@@ -1,4 +1,5 @@
 """DFPT abinit flow makers."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -8,12 +9,11 @@ from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.jobs.core import (
-    StaticMaker,
-)
-from atomate2.abinit.jobs.mrgddb import (
-    MrgddbMaker,
-)
+from atomate2.abinit.jobs.core import StaticMaker
+
+# from atomate2.abinit.jobs.mrgddb import (
+#     MrgddbMaker,
+# )
 from atomate2.abinit.jobs.response import (
     DdeMaker,
     DdkMaker,
@@ -28,7 +28,7 @@ from atomate2.abinit.jobs.response import (
 from atomate2.abinit.powerups import (
     update_factory_kwargs,
     update_user_abinit_settings,
-    update_user_kpoints_settings
+    update_user_kpoints_settings,
 )
 
 
@@ -76,7 +76,7 @@ class DfptFlowMaker(Maker):
         default_factory=DdeMaker
     )  # | VT: replace by bool?
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
-    mrgddb_maker: Maker | None = None #field(default_factory=MrgddbMaker)  # |
+    # mrgddb_maker: Maker | None = None #field(default_factory=MrgddbMaker)  # |
     use_ddk_sym: bool | None = False
     use_dde_sym: bool | None = False
     dte_skip_permutations: bool | None = False
@@ -104,20 +104,33 @@ class DfptFlowMaker(Maker):
             A DFPT flow
         """
         static_job = self.static_maker.make(structure, restart_from=restart_from)
-        #To avoid metallic case=occopt=3 which is not okay wrt. DFPT and occopt 1 with spin polarization requires spinmagntarget
-        static_job = update_factory_kwargs(         static_job, {'smearing': 'nosmearing', 'spin_mode': 'unpolarized'})
-        static_job = update_user_kpoints_settings(  static_job, {"grid_density": 3000})
-        static_job = update_user_abinit_settings(   static_job, {   'nstep': 500,
-                                                                    'toldfe': 1e-22,
-                                                                    'autoparal': 1,
-                                                                    'npfft': 1,
-                                                                    'chksymbreak': '0'})
+        # To avoid metallic case=occopt=3 which is not okay wrt. DFPT and occopt 1 with spin polarization requires spinmagntarget
+        static_job = update_factory_kwargs(
+            static_job, {"smearing": "nosmearing", "spin_mode": "unpolarized"}
+        )
+        # static_job = update_user_kpoints_settings(  static_job, {"grid_density": 3000})
+        # static_job = update_user_abinit_settings(   static_job, {   'nstep': 500,
+        #                                                             'toldfe': 1e-22,
+        #                                                             'autoparal': 1,
+        #                                                             'npfft': 1,
+        #                                                             'chksymbreak': '0'})
+        static_job = update_user_kpoints_settings(static_job, {"grid_density": 1000})
+        static_job = update_user_abinit_settings(
+            static_job,
+            {
+                "nstep": 500,
+                "toldfe": 1e-6,
+                "autoparal": 1,
+                "npfft": 1,
+                "chksymbreak": "0",
+            },
+        )
         jobs = [static_job]
 
         if self.ddk_maker:
             # generate the perturbations for the DDK calculations
             ddk_perts = generate_ddk_perts(
-                gsinput=static_job.output.abinit_input,
+                gsinput=static_job.output.input.abinit_input,
                 use_symmetries=self.use_ddk_sym,
             )
             jobs.append(ddk_perts)
@@ -133,7 +146,7 @@ class DfptFlowMaker(Maker):
         if self.dde_maker:
             # generate the perturbations for the DDE calculations
             dde_perts = generate_dde_perts(
-                gsinput=static_job.output.abinit_input,
+                gsinput=static_job.output.input.abinit_input,
                 use_symmetries=self.use_dde_sym,
             )
             jobs.append(dde_perts)
@@ -141,7 +154,7 @@ class DfptFlowMaker(Maker):
             # perform the DDE calculations
             dde_calcs = run_dde_rf(
                 perturbations=dde_perts.output,
-                prev_outputs=[[static_job.output.dir_name], ddk_calcs.output['dirs']],
+                prev_outputs=[[static_job.output.dir_name], ddk_calcs.output["dirs"]],
                 structure=structure,
             )
             jobs.append(dde_calcs)
@@ -149,7 +162,7 @@ class DfptFlowMaker(Maker):
         if self.dte_maker:
             # generate the perturbations for the DTE calculations
             dte_perts = generate_dte_perts(
-                gsinput=static_job.output.abinit_input,
+                gsinput=static_job.output.input.abinit_input,
                 skip_permutations=self.dte_skip_permutations,
                 phonon_pert=self.dte_phonon_pert,
                 ixc=self.dte_ixc,
@@ -161,22 +174,23 @@ class DfptFlowMaker(Maker):
                 perturbations=dte_perts.output,
                 prev_outputs=[
                     [static_job.output.dir_name],
-                    #ddk_calcs.output["dirs"], #not sure this is needed
-                    dde_calcs.output["dirs"]],
+                    # ddk_calcs.output["dirs"], #not sure this is needed
+                    dde_calcs.output["dirs"],
+                ],
                 structure=structure,
             )
             jobs.append(dte_calcs)
 
-        if self.mrgddb_maker:
-            #merge the DDE and DTE DDB.
-            
-            prev_outputs = [dde_calcs.output["dirs"], dte_calcs.output["dirs"]]
-            
-            mrgddb_job = self.mrgddb_maker.make(
-                prev_outputs=prev_outputs,
-            )
-            
-            jobs.append(mrgddb_job)
+        # if self.mrgddb_maker:
+        #     #merge the DDE and DTE DDB.
+
+        #     prev_outputs = [dde_calcs.output["dirs"], dte_calcs.output["dirs"]]
+
+        #     mrgddb_job = self.mrgddb_maker.make(
+        #         prev_outputs=prev_outputs,
+        #     )
+
+        #     jobs.append(mrgddb_job)
 
         # TODO: implement the possibility of other DFPT WFs (phonons,...)
         # if self.wfq_maker:
@@ -195,13 +209,13 @@ class DfptFlowMaker(Maker):
         ddk_maker = DdkMaker()
         dde_maker = DdeMaker()
         dte_maker = DteMaker()
-        mrgddb_maker = MrgddbMaker()
+        # mrgddb_maker = MrgddbMaker()
         return cls(
             name="Chi2 SHG",
             ddk_maker=ddk_maker,
             dde_maker=dde_maker,
             dte_maker=dte_maker,
-            mrgddb_maker=mrgddb_maker,
+            # mrgddb_maker=mrgddb_maker,
             use_ddk_sym=False,
             use_dde_sym=False,
             dte_skip_permutations=False,

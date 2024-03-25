@@ -16,7 +16,7 @@ from pymatgen.core import Structure
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
-from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE
+from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, OUTPUT_FILE_NAME
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri, strip_hostname
 
@@ -92,10 +92,10 @@ class OutputDoc(BaseModel):
     trajectory: Optional[Sequence[Union[Structure]]] = Field(
         None, description="The trajectory of output structures"
     )
-    energy: float = Field(
+    energy: Optional[float] = Field(
         None, description="The final total DFT energy for the last calculation"
     )
-    energy_per_atom: float = Field(
+    energy_per_atom: Optional[float] = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
     bandgap: Optional[float] = Field(
@@ -108,6 +108,12 @@ class OutputDoc(BaseModel):
     )
     stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
+    )
+    walltime: Optional[float] = Field(
+        None, description="Overall walltime to complete the calculation."
+    )
+    cputime: Optional[float] = Field(
+        None, description="Overall cputime to complete the calculation."
     )
 
     @classmethod
@@ -133,6 +139,8 @@ class OutputDoc(BaseModel):
             vbm=calc_doc.output.vbm,
             forces=calc_doc.output.forces,
             stress=calc_doc.output.stress,
+            walltime=calc_doc.output.walltime,
+            cputime=calc_doc.output.cputime,
         )
 
 
@@ -364,6 +372,8 @@ def _find_abinit_files(
                 abinit_files["abinit_log_file"] = Path(file).relative_to(path)
             elif file.match(f"*{MPIABORTFILE}{suffix}*"):
                 abinit_files["abinit_abort_file"] = Path(file).relative_to(path)
+            elif file.match(f"*{OUTPUT_FILE_NAME}{suffix}*"):
+                abinit_files["abinit_out_file"] = Path(file).relative_to(path)
 
         return abinit_files
 
