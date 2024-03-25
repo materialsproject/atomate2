@@ -247,7 +247,7 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-### Lobster
+### LOBSTER
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
 
@@ -264,7 +264,7 @@ VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: <<LOBSTER_CMD>>
 ```
 
-To run VASP and LOBSTER within one combined job script, please remember that you can easily add the number of threads to the LOBSTER run command in the following way:
+To run VASP and LOBSTER within one combined job script (e.g., via the `run_locally` command in Python), please remember that you can easily add the number of threads to the LOBSTER run command in the following way:
 ```bash
 LOBSTER_CMD: OMP_NUM_THREADS=48 path_to_lobster_folder/lobster-5.0.0
 ```
@@ -272,7 +272,7 @@ LOBSTER_CMD: OMP_NUM_THREADS=48 path_to_lobster_folder/lobster-5.0.0
 ```{note}
 A LOBSTER workflow with settings compatible to LOBSTER database (Naik, A.A., et al. Sci Data 10, 610 (2023). https://doi.org/10.1038/s41597-023-02477-5 , currently being integrated into Materials Project) is also available now,
 which could be used by simply importing from atomate2.vasp.flows.mp > MPVaspLobsterMaker
-instead of VaspLobsterMaker. Rest of the things to execute the workflow stays same as
+instead of VaspLobsterMaker. Everything else that is required to execute the workflow stays same as
 shown below.
 ```
 
