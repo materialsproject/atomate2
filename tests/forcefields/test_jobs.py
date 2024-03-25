@@ -197,9 +197,15 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert output1.output.n_steps == 1
 
 
-@pytest.mark.parametrize("relax_cell", [True, False])
+@pytest.mark.parametrize(
+    ("relax_cell", "fix_symmetry"),
+    ([True, False], [False, False], [True, True], [False, True]),
+)
 def test_nequip_relax_maker(
-    sr_ti_o3_structure: Structure, test_dir: Path, relax_cell: bool
+    sr_ti_o3_structure: Structure,
+    test_dir: Path,
+    relax_cell: bool,
+    fix_symmetry: bool,
 ):
     # translate one atom to ensure a small number of relaxation steps are taken
     sr_ti_o3_structure.translate_sites(0, [0, 0, 0.2])
@@ -208,9 +214,10 @@ def test_nequip_relax_maker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
+        fix_symmetry=fix_symmetry,
         model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
     ).make(sr_ti_o3_structure)
-
+    print(fix_symmetry, relax_cell)
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
