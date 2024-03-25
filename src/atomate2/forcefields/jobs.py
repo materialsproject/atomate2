@@ -276,6 +276,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer()`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
     model_path: str | Path
         deployed model checkpoint to load with
         :obj:`nequip.calculators.NequipCalculator.from_deployed_model()'`.
@@ -288,6 +290,7 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.Nequip} relax"
     force_field_name: str = f"{MLFF.Nequip}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -302,7 +305,10 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
             self.model_path, **self.model_kwargs
         )
         relaxer = Relaxer(
-            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
+            calculator,
+            relax_cell=self.relax_cell,
+            fix_symmetry=self.fix_symmetry,
+            **self.optimizer_kwargs,
         )
 
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
@@ -413,6 +419,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.MACE} relax"
     force_field_name: str = f"{MLFF.MACE}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -426,7 +433,10 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         with revert_default_dtype():
             calculator = mace_mp(model=self.model, **self.model_kwargs)
             relaxer = Relaxer(
-                calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
+                calculator,
+                relax_cell=self.relax_cell,
+                fix_symmetry=self.fix_symmetry,
+                **self.optimizer_kwargs,
             )
             return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
@@ -501,6 +511,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.GAP} relax"
     force_field_name: str = f"{MLFF.GAP}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -518,7 +529,10 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
             **self.potential_kwargs,
         )
         relaxer = Relaxer(
-            calculator, **self.optimizer_kwargs, relax_cell=self.relax_cell
+            calculator,
+            **self.optimizer_kwargs,
+            relax_cell=self.relax_cell,
+            fix_symmetry=self.fix_symmetry,
         )
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
