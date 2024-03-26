@@ -780,6 +780,14 @@ class VaspInputGenerator(InputGenerator):
             # If length is in kpoints settings use Kpoints.automatic
             return Kpoints.automatic(kconfig["length"])
 
+        if kconfig.get("gamma_only"):
+            return Kpoints(
+                comment="Gamma only",
+                num_kpts=1,
+                kpts=[[0, 0, 0]],
+                kpts_weights=[1.0],
+            )
+
         base_kpoints = None
         if kconfig.get("line_density"):
             # handle line density generation

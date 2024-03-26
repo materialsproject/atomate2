@@ -188,24 +188,27 @@ class FastQuenchMaker(Maker):
         Flow
             A flow containing series of relax and static runs.
         """
+        jobs : list[Job] = []
+        
         relax1 = self.relax_maker.make(structure, prev_dir=prev_dir)
+        jobs += [relax1]
+        structure = relax1.output.structure
+        prev_dir = relax1.output.dir_name
+
         if self.relax_maker2 is not None:
             relax2 = self.relax_maker2.make(
-                relax1.output.structure, prev_dir=relax1.output.dir_name
+                structure, prev_dir=prev_dir
             )
-            static = self.static_maker.make(
-                relax2.output.structure, prev_dir=relax2.output.dir_name
-            )
-            return Flow(
-                [relax1, relax2, static],
-                output=static.output,
-                name=self.name,
-            )
+            jobs += [relax2]
+            structure = relax2.output.structure
+            prev_dir = relax2.output.dir_name
+
         static = self.static_maker.make(
-            relax1.output.structure, prev_dir=relax1.output.dir_name
+            structure, prev_dir=prev_dir
         )
+        jobs += [static]
         return Flow(
-            [relax1, static],
+            jobs,
             output=static.output,
             name=self.name,
         )
