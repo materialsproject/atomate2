@@ -13,20 +13,14 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-def test_phonon_wf_force_field(clean_dir):
-    structure = Structure(
-        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
-        species=["Si", "Si"],
-        coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
-    )
-
+def test_phonon_wf_force_field(clean_dir, si_structure: Structure):
     flow = PhononMaker(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
-    ).make(structure)
+    ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
