@@ -69,7 +69,8 @@ def test_lobster_uniform_maker(mock_vasp, mock_lobster, clean_dir, memory_jobsto
     job = VaspLobsterMaker(
         lobster_maker=LobsterMaker(
             task_document_kwargs={
-                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10}
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10},
+                "add_coxxcar_to_task_document": True,
             },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
@@ -146,7 +147,8 @@ def test_lobstermaker(mock_vasp, mock_lobster, clean_dir, memory_jobstore):
         lobster_static_maker=LobsterStaticMaker(),
         lobster_maker=LobsterMaker(
             task_document_kwargs={
-                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10}
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10},
+                "add_coxxcar_to_task_document": True,
             },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
@@ -224,7 +226,7 @@ def test_lobstermaker_delete(mock_vasp, mock_lobster, clean_dir, memory_jobstore
         lobster_static_maker=LobsterStaticMaker(),
         lobster_maker=LobsterMaker(
             task_document_kwargs={
-                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10}
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10},
             },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
@@ -308,6 +310,7 @@ def test_mp_vasp_lobstermaker(
                 "calc_quality_kwargs": {"potcar_symbols": ["Fe_pv"], "n_bins": 10},
                 "save_computational_data_jsons": False,
                 "save_cba_jsons": False,
+                "add_coxxcar_to_task_document": False,
             },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
