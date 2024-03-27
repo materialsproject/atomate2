@@ -3,14 +3,17 @@
 ## v0.0.14
 
 ### New Features 🎉
+
 * Add lobster mp workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/634
 * Add FHI-aims DFT calculator by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/562
 * Electrode Workflow by @jmmshn in https://github.com/materialsproject/atomate2/pull/655
 * Equation of state (EOS) workflows by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/623
+
 ### Bug Fixes 🐛
+
 * Skip final LDAU/J/L/MAGMOM updates and fix setting MAGMOM via `user_incar_settings` by @JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/648
 * Prep for next `pymatgen` release by @janosh in https://github.com/materialsproject/atomate2/pull/690
-* [bug fix] SC Matrix Checking Logic by @jmmshn in https://github.com/materialsproject/atomate2/pull/704
+* fix SC Matrix Checking Logic by @jmmshn in https://github.com/materialsproject/atomate2/pull/704
 * Fix elastic conventional structure by @mjwen in https://github.com/materialsproject/atomate2/pull/706
 * Add `KspacingMetalHandler` to VASP `_DEFAULT_HANDLERS` by @janosh in https://github.com/materialsproject/atomate2/pull/600
 * Fix import error [ijson] by @naik-aakash in https://github.com/materialsproject/atomate2/pull/708
@@ -18,24 +21,31 @@
 * Update minimum `monty` version, allow newer `pydantic` by @mkhorton in https://github.com/materialsproject/atomate2/pull/720
 * Fix phonon + Lobster flow by removing magmoms before passing to `phonopy` by @naik-aakash in https://github.com/materialsproject/atomate2/pull/751
 * Fix MP query by @utf in https://github.com/materialsproject/atomate2/pull/755
+
 ### Enhancements 🛠
+
 * add directory of task doc generation to phonon schema by @JaGeo in https://github.com/materialsproject/atomate2/pull/674
 * Ensure MP VASP sets don't use auto_ismear, few other fixes by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/673
 * Schema update > Update plot example LOBSTER workflow by @naik-aakash in https://github.com/materialsproject/atomate2/pull/682
 * Modify `BadInputSetWarning` logic for relaxations of a likely metal by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/727
 * Define `MLFF` `Enum` to ensure consistent force field names by @janosh in https://github.com/materialsproject/atomate2/pull/729
+
 ### Documentation 📖
+
 * Update doc: adding metadata to flow by @naik-aakash in https://github.com/materialsproject/atomate2/pull/638
 * Fix hyperlink in Docs by @naik-aakash in https://github.com/materialsproject/atomate2/pull/686
 * Correct typo in doc by @JiQi535 in https://github.com/materialsproject/atomate2/pull/716
 * Fix docstring on `MatPesMetaGGAStaticSetGenerator` by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/725
 * Add `citation.cff` file, Zenodo record and readme "How to cite" section by @janosh in https://github.com/materialsproject/atomate2/pull/731
+
 ### House-Keeping 🧹
+
 * Address TODO re missing asserts in `test_elastic_wf_with_mace()` by @janosh in https://github.com/materialsproject/atomate2/pull/679
 * Update lobsterpy version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/683
 * Fix all ruff PT011 (not checking error message when testing exceptions) by @janosh in https://github.com/materialsproject/atomate2/pull/698
 
 ## New Contributors
+
 * @JonathanSchmidt1 made their first contribution in https://github.com/materialsproject/atomate2/pull/648
 * @rdguha1995 made their first contribution in https://github.com/materialsproject/atomate2/pull/161
 * @JiQi535 made their first contribution in https://github.com/materialsproject/atomate2/pull/716

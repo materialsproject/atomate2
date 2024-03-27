@@ -1,4 +1,5 @@
 """Define common EOS flow agnostic to electronic-structure code."""
+
 from __future__ import annotations
 
 import contextlib
