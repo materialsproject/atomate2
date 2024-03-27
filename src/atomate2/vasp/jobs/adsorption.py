@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-import contextlib
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import numpy as np
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure, Molecule, Element
-
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
+from pymatgen.core import Element, Molecule, Structure
 from pymatgen.core.surface import SlabGenerator
 from pymatgen.io.vasp import Kpoints
 
@@ -18,10 +17,10 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
-    from pathlib import Path
-    import numpy as np
     from atomate2.vasp.sets.base import VaspInputGenerator
+
 from collections import defaultdict
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,7 +42,7 @@ def get_boxed_molecule(molecule: Molecule) -> Structure:
 
 
 @job
-def removeAdsorbate(slab: Structure) -> Structure:
+def remove_adsorbate(slab: Structure) -> Structure:
     """
     Remove adsorbate from the given slab.
 
@@ -59,7 +58,7 @@ def removeAdsorbate(slab: Structure) -> Structure:
     """
     adsorbate_indices = []
     for i, site in enumerate(slab):
-        if site.properties.get('surface_properties') == 'adsorbate':
+        if site.properties.get("surface_properties") == "adsorbate":
             adsorbate_indices.append(i)
     # Reverse the indices list to avoid index shifting after removing sites
     adsorbate_indices.reverse()
@@ -99,15 +98,22 @@ def generate_slab(
     Structure
         The slab structure without adsorbates.
     """
-
-    H = Molecule([Element("H")], [[0, 0, 0]])
-    slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False,
-                                   center_slab=True)
+    hydrogen = Molecule([Element("H")], [[0, 0, 0]])
+    slab_generator = SlabGenerator(
+        bulk_structure,
+        surface_idx,
+        min_slab_size,
+        min_vacuum_size,
+        primitive=False,
+        center_slab=True,
+    )
     temp_slab = slab_generator.get_slab()
-    ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(H, translate=True, min_lw=min_lw)
-    slabOnly = removeAdsorbate(ads_slabs[0])
+    ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(
+        hydrogen, translate=True, min_lw=min_lw
+    )
+    slab_only = remove_adsorbate(ads_slabs[0])
 
-    return slabOnly
+    return slab_only  # noqa: RET504
 
 
 @job(data=[Structure])
@@ -141,20 +147,27 @@ def generate_adslabs(
     list[Structure]
         The list of all possible configurations of slab structures with adsorbates.
     """
-
-    slab_generator = SlabGenerator(bulk_structure, surface_idx, min_slab_size, min_vacuum_size, primitive=False,
-                                   center_slab=True)
+    slab_generator = SlabGenerator(
+        bulk_structure,
+        surface_idx,
+        min_slab_size,
+        min_vacuum_size,
+        primitive=False,
+        center_slab=True,
+    )
     slab = slab_generator.get_slab()
-    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(molecule_structure, translate=True,
-                                                                         min_lw=min_lw)
-    return ads_slabs
+    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(
+        molecule_structure, translate=True, min_lw=min_lw
+    )
+    return ads_slabs  # noqa: RET504
+
 
 @job
 def run_adslabs_job(
     adslab_structures: list[Structure],
     relax_maker: AdslabRelaxMaker,
-    static_maker: SlabStaticMaker
-    ) -> Flow:
+    static_maker: SlabStaticMaker,
+) -> Flow:
     """Workflow of running the adsorption slab calculations.
 
     Parameters
@@ -171,7 +184,6 @@ def run_adslabs_job(
     Flow
         The flow of the adsorption slab calculations.
     """
-
     adsorption_jobs = []
     ads_outputs = defaultdict(list)
 
@@ -193,18 +205,19 @@ def run_adslabs_job(
     adsorption_flow = Flow(adsorption_jobs, ads_outputs)
     return Response(replace=adsorption_flow)
 
+
 @job
 def adsorption_calculations(
-        bulk_structure: Structure,
-        molecule_structure: Structure,
-        surface_idx: tuple,
-        adslab_structures: list[Structure],
-        ads_outputs: dict[str, list],
-        molecule_dft_energy: float,
-        slab_dft_energy: float,
+    # bulk_structure: Structure,
+    # molecule_structure: Structure,
+    # surface_idx: tuple,
+    adslab_structures: list[Structure],
+    ads_outputs: dict[str, list],
+    molecule_dft_energy: float,
+    slab_dft_energy: float,
 ) -> list:
-    """Calculating the adsorption energies by subtracting
-    the energies of the adsorbate, slab, and adsorbate-slab.
+    """Calculate the adsorption energies by subtracting the energies of
+    the adsorbate, slab, and adsorbate-slab.
 
     Parameters
     ----------
@@ -226,17 +239,16 @@ def adsorption_calculations(
     Returns
     -------
     list
-        The list of (adsorption configurations, configuration number, adsorption energy, directories)
-        sorted by adsorption energy.
-    """
-    bulk_composition = bulk_structure.composition
-    bulk_reduced_formula = bulk_composition.reduced_formula
-    molecule_composition = molecule_structure.composition
-    molecule_reduced_formula = molecule_composition.reduced_formula
-    flow_name = f"{bulk_reduced_formula}_{molecule_reduced_formula}_{surface_idx}"
+        The list of (adsorption configurations, configuration number,
+        adsorption energy, directories) sorted by adsorption energy.
+    """  # noqa: D205
+    # bulk_composition = bulk_structure.composition
+    # bulk_reduced_formula = bulk_composition.reduced_formula
+    # molecule_composition = molecule_structure.composition
+    # molecule_reduced_formula = molecule_composition.reduced_formula
+    # flow_name = f"{bulk_reduced_formula}_{molecule_reduced_formula}_{surface_idx}"
 
     outputs: dict[str, list] = {
-        "job_name": f"{flow_name}_adsorption_calculations",
         "adsorption_configuration": [],
         "configuration_number": [],
         "adsorption_energy": [],
@@ -246,20 +258,28 @@ def adsorption_calculations(
     for i, ad_structure in enumerate(adslab_structures):
         outputs["adsorption_configuration"].append(ad_structure)
         outputs["configuration_number"].append(i)
-        ads_energy = ads_outputs["static_energy"][i] - molecule_dft_energy - slab_dft_energy
+        ads_energy = (
+            ads_outputs["static_energy"][i] - molecule_dft_energy - slab_dft_energy
+        )
         outputs["adsorption_energy"].append(ads_energy)
         outputs["dirs"].append(ads_outputs["dirs"][i])
 
-        sorted_outputs = sorted(zip(outputs["adsorption_configuration"], outputs["configuration_number"],
-                                    outputs["adsorption_energy"], outputs["dirs"]), key=lambda x: x[2])
+        sorted_outputs = sorted(
+            zip(
+                outputs["adsorption_configuration"],
+                outputs["configuration_number"],
+                outputs["adsorption_energy"],
+                outputs["dirs"],
+            ),
+            key=lambda x: x[2],
+        )
 
     return sorted_outputs
 
 
 @dataclass
 class MoleculeRelaxMaker(BaseVaspMaker):
-    """
-    Maker for molecule relaxation.
+    """Maker for molecule relaxation.
 
     Parameters
     ----------
@@ -268,15 +288,19 @@ class MoleculeRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the relaxation calculation.
     """
+
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict({
-                'nkpoints': 0,
-                'generation_style': 'Gamma',
-                'kpoints': [[11, 11, 11]],
-                'usershift': [0, 0, 0],
-                'comment': 'Automatic mesh'}),
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[11, 11, 11]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
             user_incar_settings={
                 "ALGO": "Normal",
                 "IBRION": 2,
@@ -294,11 +318,11 @@ class MoleculeRelaxMaker(BaseVaspMaker):
             auto_ispin=True,
         )
     )
+
 
 @dataclass
 class AdslabRelaxMaker(BaseVaspMaker):
-    """
-    Maker for adsorption slab relaxation.
+    """Maker for adsorption slab relaxation.
 
     Parameters
     ----------
@@ -307,15 +331,19 @@ class AdslabRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the relaxation calculation.
     """
+
     name: str = "adsorption relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict({
-                'nkpoints': 0,
-                'generation_style': 'Gamma',
-                'kpoints': [[3, 3, 1]],
-                'usershift': [0, 0, 0],
-                'comment': 'Automatic mesh'}),
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[3, 3, 1]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
             user_incar_settings={
                 "ALGO": "Normal",
                 "IBRION": 2,
@@ -334,10 +362,10 @@ class AdslabRelaxMaker(BaseVaspMaker):
         )
     )
 
+
 @dataclass
 class SlabStaticMaker(BaseVaspMaker):
-    """
-    Maker for slab static energy calculation.
+    """Maker for slab static energy calculation.
 
     Parameters
     ----------
@@ -346,15 +374,19 @@ class SlabStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the static energy calculation.
     """
+
     name: str = "adsorption static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict({
-                'nkpoints': 0,
-                'generation_style': 'Gamma',
-                'kpoints': [[3, 3, 1]],
-                'usershift': [0, 0, 0],
-                'comment': 'Automatic mesh'}),
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[3, 3, 1]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
             user_incar_settings={
                 "ALGO": "Normal",
                 "ENCUT": 700,
@@ -370,10 +402,10 @@ class SlabStaticMaker(BaseVaspMaker):
         )
     )
 
+
 @dataclass
 class MolStaticMaker(BaseVaspMaker):
-    """
-    Maker for molecule static energy calculation.
+    """Maker for molecule static energy calculation.
 
     Parameters
     ----------
@@ -382,15 +414,19 @@ class MolStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the static energy calculation.
     """
+
     name: str = "adsorption static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict({
-                'nkpoints': 0,
-                'generation_style': 'Gamma',
-                'kpoints': [[11, 11, 11]],
-                'usershift': [0, 0, 0],
-                'comment': 'Automatic mesh'}),
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[11, 11, 11]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
             user_incar_settings={
                 "ALGO": "Normal",
                 "ENCUT": 700,
