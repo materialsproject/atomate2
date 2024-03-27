@@ -491,7 +491,6 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     name: str = f"{MLFF.GAP} static"
     force_field_name: str = f"{MLFF.GAP}"
     task_document_kwargs: dict = field(default_factory=dict)
-<<<<<<< HEAD
     potential_args_str: str = "IP GAP"
     potential_param_file_name: str | Path = "gap.xml"
     potential_kwargs: dict = field(default_factory=dict)
@@ -528,11 +527,10 @@ class PyACERelaxMaker(ForceFieldRelaxMaker):
             calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
         )
         return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
-=======
+
     calculator_kwargs: dict = field(
         default_factory=lambda: {
             "args_str": "IP GAP",
             "param_filename": "gap.xml",
         }
     )
->>>>>>> 7b8f584b65762e15c09a4ad3c646ce0e997c90b3
