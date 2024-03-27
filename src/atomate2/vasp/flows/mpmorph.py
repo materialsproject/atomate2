@@ -146,7 +146,8 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = SlowQuenchMaker(
-                    quench_tempature_setup=self.quench_tempature_setup
+                    md_maker=self.md_maker,
+                    quench_tempature_setup=self.quench_tempature_setup,
                 )
             elif isinstance(self.quench_maker, FastQuenchMaker):
                 self.quench_maker = FastQuenchMaker(

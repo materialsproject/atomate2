@@ -14,6 +14,7 @@ from atomate2.common.flows.mpmorph import (
 )
 
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 import math
 
@@ -61,6 +62,10 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         MDMaker to generate the equilibrium volumer searcher; inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
     production_md_maker : ForceFieldMDMaker
         MDMaker to generate the production run(s); inherits from ForceFieldMDMaker (MLFF)
+    relax_maker: ForceFieldRelaxMaker = None
+        Used for FastQuench only. Check out atomate2.forcefields.jobs and all available ForceFieldRelaxMaker.
+    static_maker: ForceFieldStaticMaker = None
+        Used for FastQuench only. Check out atomate2.forcefields.jobs and all available ForceFieldStaticMaker.
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MDMaker that quenchs structure from high temperature to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
@@ -69,7 +74,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     name: str = "MP Morph VASP MD Maker"
     temperature: int = 300
     end_temp: int = 300  # DEPRECATED: Unusable for MLFF
-    steps_convergence: int | None = None
+    steps_convergence: int = 5000
     steps_total_production: int = 10000
 
     quench_tempature_setup: dict | None = None
@@ -78,74 +83,37 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     convergence_md_maker: EquilibriumVolumeMaker | None = None
     production_md_maker: ForceFieldMDMaker = ForceFieldMDMaker
 
+    relax_maker: ForceFieldRelaxMaker | None = None
+    static_maker: ForceFieldRelaxMaker | None = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
 
-        # TODO: check if this properly updates INCAR for all MD runs
-        if self.steps_convergence is None:
-            self.md_maker = update_user_incar_settings(
-                flow=self.md_maker,
-                incar_updates={
-                    "TEBEG": self.temperature,
-                    "TEEND": self.temperature,  # Equilibrium volume search is only at single temperature (temperature sweep not allowed)
-                },
-            )
-        elif (
-            self.steps_convergence is not None
-        ):  # TODO: make this elif statement more efficient
-            self.md_maker = update_user_incar_settings(
-                flow=self.md_maker,
-                incar_updates={
-                    "TEBEG": self.temperature,
-                    "TEEND": self.end_temp,
-                    "NSW": self.steps_convergence,
-                },
-            )
+        self.md_maker = self.md_maker(
+            name="MLFF MD Maker",
+            temperature=self.temperature,
+            nsteps=self.steps_convergence,
+        )
         self.convergence_md_maker = EquilibriumVolumeMaker(
             name="MP Morph VASP Equilibrium Volume Maker", md_maker=self.md_maker
         )
 
-        if self.steps_single_production_run is None:
-            self.steps_single_production_run = self.steps_total_production
-
-        self.production_md_maker = update_user_incar_settings(
-            flow=self.production_md_maker,
-            incar_updates={
-                "TEBEG": self.temperature,
-                "TEEND": self.end_temp,
-                "NSW": self.steps_single_production_run,
-            },
+        self.production_md_maker = self.md_maker(
+            name="Production Run MLFF MD Maker",
+            temperature=self.temperature,
+            nsteps=self.steps_total_production,
         )
-
-        if self.steps_total_production > self.steps_single_production_run:
-            n_prod_md_steps = math.ceil(
-                self.steps_total_production / self.steps_single_production_run
-            )
-            self.production_md_maker = Response(
-                replace=MultiMDMaker(
-                    md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
-                )
-            )
 
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = SlowQuenchMaker(
-                    quench_tempature_setup=self.quench_tempature_setup
+                    md_maker=self.md_maker,
+                    quench_tempature_setup=self.quench_tempature_setup,
                 )
             elif isinstance(self.quench_maker, FastQuenchMaker):
                 self.quench_maker = FastQuenchMaker(
-                    relax_maker=MPPreRelaxMaker,
-                    relax_maker2=MPMetaGGARelaxMaker(
-                        copy_vasp_kwargs={
-                            "additional_vasp_files": ("WAVECAR", "CHGCAR")
-                        }
-                    ),
-                    static_maker=MPMetaGGAStaticMaker(
-                        copy_vasp_kwargs={
-                            "additional_vasp_files": ("WAVECAR", "CHGCAR")
-                        }
-                    ),
+                    relax_maker=self.relax_maker,
+                    static_maker=self.static_maker,
                 )
 
         return super().make.original(self, structure=structure, prev_dir=prev_dir)
