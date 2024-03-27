@@ -32,8 +32,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     (optional) for the volume followed by quench (optional) from high temperature to low temperature
-    and finally a production run(s) at a given temperature. Production run is broken up into multiple
-    smaller steps to ensure simulation does not hit wall time limits.
+    and finally a production run(s) at a given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -84,7 +83,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     production_md_maker: ForceFieldMDMaker = ForceFieldMDMaker
 
     relax_maker: ForceFieldRelaxMaker | None = None
-    static_maker: ForceFieldRelaxMaker | None = None
+    static_maker: ForceFieldStaticMaker | None = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
