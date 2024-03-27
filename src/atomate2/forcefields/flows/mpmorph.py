@@ -6,6 +6,13 @@ from typing import TYPE_CHECKING
 
 from jobflow import Response
 
+from atomate2.common.flows.mpmorph import (
+    FastQuenchMaker,
+    SlowQuenchMaker,
+    MPMorphMDMaker,
+    EquilibriumVolumeMaker,
+)
+
 from atomate2.forcefields.md import ForceFieldMDMaker
 
 import math
@@ -16,12 +23,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pathlib import Path
     from jobflow import Flow, Maker
-    from atomate2.common.flows.mpmorph import (
-        FastQuenchMaker,
-        SlowQuenchMaker,
-        MPMorphMDMaker,
-        EquilibriumVolumeMaker,
-    )
 
 
 @dataclass

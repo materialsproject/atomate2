@@ -363,6 +363,7 @@ class SlowQuenchMaker(Maker):  # Work in Progress
                 if temp == self.quench_tempature_setup["start_temp"]
                 else md_jobs[-1].output.dir_name
             )
+
             if self.md_maker is MDMaker:
                 md_job = self.md_maker(
                     input_set_generator=MDSetGenerator(
