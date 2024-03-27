@@ -11,8 +11,9 @@ from atomate2.common.jobs.eos import (
     _apply_strain_to_structure,
     MPMorphPVPostProcess,
 )
-
+from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.sets.core import MDSetGenerator
+from atomate2.forcefields.md import ForceFieldMDMaker
 
 import numpy as np
 
@@ -145,148 +146,6 @@ class EquilibriumVolumeMaker(Maker):
 
 
 @dataclass
-class FastQuenchMaker(Maker):
-    """Fast quench flow for quenching high temperature structures to 0K
-
-    Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
-    Adapted from MPMorph Workflow
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    relax_maker :  Maker
-        Relax Maker
-    relax_maker2 :  Maker or None
-        Relax Maker for a second relaxation; useful for tighter convergence
-    static_maker : Maker
-        Static Maker
-    """
-
-    name: str = "fast quench"
-    relax_maker: Maker = Maker
-    relax_maker2: Maker | None = None
-    static_maker: Maker = Maker
-
-    def make(
-        self,
-        structure: Structure,
-        prev_dir: str | Path | None = None,
-    ) -> Flow:
-        """
-        Create a fast quench flow with relax and static makers.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object.
-        prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
-
-        Returns
-        -------
-        Flow
-            A flow containing series of relax and static runs.
-        """
-        jobs : list[Job] = []
-        
-        relax1 = self.relax_maker.make(structure, prev_dir=prev_dir)
-        jobs += [relax1]
-        structure = relax1.output.structure
-        prev_dir = relax1.output.dir_name
-
-        if self.relax_maker2 is not None:
-            relax2 = self.relax_maker2.make(
-                structure, prev_dir=prev_dir
-            )
-            jobs += [relax2]
-            structure = relax2.output.structure
-            prev_dir = relax2.output.dir_name
-
-        static = self.static_maker.make(
-            structure, prev_dir=prev_dir
-        )
-        jobs += [static]
-        return Flow(
-            jobs,
-            output=static.output,
-            name=self.name,
-        )
-
-
-@dataclass
-class SlowQuenchMaker(Maker):  # Work in Progress
-    """Slow quench flow for quenching high temperature structures to low temperature
-
-    Quench's a provided structure with a molecular dyanmics run from a desired high temperature to
-    a desired low temperature. Adapted from MPMorph Workflow.
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    md_maker :  Maker
-        MD Maker
-    quench_tempature_setup : dict[str, int]
-        Quench temperature setup; defaults to start temperature: 3000K, end tempature: 500K, tempature step: 500K}
-    """
-
-    name: str = "slow quench"
-    md_maker: Maker = Maker
-    quench_tempature_setup: dict = field(
-        default_factory=lambda: {"start_temp": 3000, "end_temp": 500, "temp_step": 500}
-    )
-
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> Flow:  # TODO : md_maker only works for MDSetGenerator now
-        """
-        Create a fast quench flow with md maker.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object.
-        prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
-
-        Returns
-        -------
-        Flow
-            A flow containing series of relax and static runs.
-        """
-        md_jobs = []
-        for temp in np.arange(
-            self.quench_tempature_setup["start_temp"],
-            self.quench_tempature_setup["end_temp"],
-            -self.quench_tempature_setup["temp_step"],
-        ):  # check if this is the best way to unpack
-
-            prev_dir = (
-                None
-                if temp == self.quench_tempature_setup["start_temp"]
-                else md_jobs[-1].output.dir_name
-            )
-
-            md_job = self.md_maker(
-                input_set_generator=MDSetGenerator(
-                    start_temp=temp,
-                    end_temp=temp - self.quench_tempature_setup["temp_step"],
-                )
-            ).make(structure, prev_dir)
-
-            md_jobs.append(md_job)
-
-            structure = md_job.output.structure
-
-        return Flow(
-            md_jobs,
-            output=md_jobs[-1].output,
-            name=self.name,
-        )
-
-
-@dataclass
 class MPMorphMDMaker(Maker):
     """Base MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
 
@@ -295,7 +154,7 @@ class MPMorphMDMaker(Maker):
     and finally a production run(s) at a given temperature. Production run is broken up into multiple
     smaller steps to ensure simulation does not hit wall time limits.
 
-    Check atomate2.vasp.flows.amorphous for MPMorphVaspMDMaker
+    Check atomate2.vasp.flows.mpmorph for MPMorphVaspMDMaker
 
     Parameters
     ----------
@@ -372,4 +231,163 @@ class MPMorphMDMaker(Maker):
         )
 
 
-# To Do: VolumeTemperatureSweepMaker
+@dataclass
+class FastQuenchMaker(Maker):
+    """Fast quench flow for quenching high temperature structures to 0K
+
+    Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
+    Adapted from MPMorph Workflow
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker :  Maker
+        Relax Maker
+    relax_maker2 :  Maker or None
+        Relax Maker for a second relaxation; useful for tighter convergence
+    static_maker : Maker
+        Static Maker
+    """
+
+    name: str = "fast quench"
+    relax_maker: Maker = Maker
+    relax_maker2: Maker | None = None
+    static_maker: Maker = Maker
+
+    def make(
+        self,
+        structure: Structure,
+        prev_dir: str | Path | None = None,
+    ) -> Flow:
+        """
+        Create a fast quench flow with relax and static makers.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        prev_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A flow containing series of relax and static runs.
+        """
+        jobs: list[Job] = []
+
+        relax1 = self.relax_maker.make(structure, prev_dir=prev_dir)
+        jobs += [relax1]
+        structure = relax1.output.structure
+        prev_dir = relax1.output.dir_name
+
+        if self.relax_maker2 is not None:
+            relax2 = self.relax_maker2.make(structure, prev_dir=prev_dir)
+            jobs += [relax2]
+            structure = relax2.output.structure
+            prev_dir = relax2.output.dir_name
+
+        static = self.static_maker.make(structure, prev_dir=prev_dir)
+        jobs += [static]
+        return Flow(
+            jobs,
+            output=static.output,
+            name=self.name,
+        )
+
+
+@dataclass
+class SlowQuenchMaker(Maker):  # Work in Progress
+    """Slow quench flow for quenching high temperature structures to low temperature
+
+    Quench's a provided structure with a molecular dyanmics run from a desired high temperature to
+    a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
+    and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
+    Adapted from MPMorph Workflow.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    md_maker :  Maker
+        Can only be an MDMaker or ForceFieldMDMaker #WORK IN PROGRESS
+    quench_tempature_setup : dict[str, int]
+        Quench temperature setup; defaults to start temperature: 3000K, end tempature: 500K, tempature step: 500K, nsteps: 1000
+    """
+
+    name: str = "slow quench"
+    md_maker: Maker | MDMaker | ForceFieldMDMaker = Maker
+    quench_tempature_setup: dict = field(
+        default_factory=lambda: {
+            "start_temp": 3000,
+            "end_temp": 500,
+            "temp_step": 500,
+            "nsteps": 1000,
+        }
+    )
+
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> Flow:  # TODO : md_maker only works for VASP and MLFF_MD now
+        """
+        Create a slow quench flow with md maker.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        prev_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A flow containing series of relax and static runs.
+        """
+
+        if self.md_maker is not MDMaker and self.md_maker is not ForceFieldMDMaker:
+            raise ValueError(
+                "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
+            )
+
+        md_jobs = []
+        for temp in np.arange(
+            self.quench_tempature_setup["start_temp"],
+            self.quench_tempature_setup["end_temp"],
+            -self.quench_tempature_setup["temp_step"],
+        ):
+
+            prev_dir = (
+                None
+                if temp == self.quench_tempature_setup["start_temp"]
+                else md_jobs[-1].output.dir_name
+            )
+            if self.md_maker is MDMaker:
+                md_job = self.md_maker(
+                    input_set_generator=MDSetGenerator(
+                        start_temp=temp,
+                        end_temp=temp,
+                        nsteps=self.quench_tempature_setup["nsteps"],
+                    )
+                ).make(structure, prev_dir)
+
+            elif self.md_maker is ForceFieldMDMaker:
+                md_job = self.md_maker(
+                    temperature=temp, nsteps=self.quench_tempature_setup["nsteps"]
+                ).make(
+                    structure,
+                    prev_dir,
+                )
+            md_jobs.append(md_job)
+
+            structure = md_job.output.structure
+
+        return Flow(
+            md_jobs,
+            output=md_jobs[-1].output,
+            name=self.name,
+        )
+
+
+# TODO: Amorphous structure maker, Amorphour limit, and VolumeTemperatureSweepMaker
