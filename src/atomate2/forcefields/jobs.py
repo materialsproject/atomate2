@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -74,6 +75,8 @@ class ForceFieldRelaxMaker(Maker):
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
+        if "dir_name" not in self.task_document_kwargs:
+            self.task_document_kwargs.update({"dir_name": os.getcwd()})
 
         result = self._relax(structure)
 

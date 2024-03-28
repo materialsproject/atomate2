@@ -114,6 +114,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
+        **task_document_kwargs,
     ) -> "ForceFieldTaskDocument":
         """
         Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
@@ -258,4 +259,5 @@ class ForceFieldTaskDocument(StructureMetadata):
             output=output_doc,
             forcefield_name=forcefield_name,
             forcefield_version=version,
+            **task_document_kwargs,
         )

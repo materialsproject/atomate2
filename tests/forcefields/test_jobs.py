@@ -252,3 +252,16 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
     else:
         assert output1.output.energy == approx(-10.8523, rel=1e-4)
         assert output1.output.n_steps == 17
+
+
+def test_check_force_field_task_doc(si_structure: Structure):
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure.translate_sites(0, [0, 0, 0.1])
+
+    # generate job
+    job = CHGNetRelaxMaker(steps=25).make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    assert Path(responses[job.uuid][1].output.dir_name).exists()
