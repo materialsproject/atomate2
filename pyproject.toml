@@ -52,7 +52,7 @@ forcefields = [
     "ase>=3.22.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=0.9.0",
+    "matgl>=1.0.0",
     "quippy-ase>=0.9.14",
 ]
 docs = [

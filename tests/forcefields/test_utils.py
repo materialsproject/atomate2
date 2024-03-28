@@ -6,7 +6,13 @@ from ase.optimize import BFGS
 from numpy.testing import assert_allclose
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.forcefields.utils import FrechetCellFilter, Relaxer, TrajectoryObserver
+from atomate2.forcefields import MLFF
+from atomate2.forcefields.utils import (
+    FrechetCellFilter,
+    Relaxer,
+    TrajectoryObserver,
+    ase_calculator,
+)
 
 
 def test_safe_import():
@@ -41,14 +47,14 @@ def test_trajectory_observer(si_structure, test_dir, tmp_dir):
     ]
     assert_allclose(traj.stresses[0], expected_stresses, atol=1e-8)
 
-    save_file_name = "log_file.json.gz"
+    save_file_name = "log_file.traj"
     traj.save(save_file_name)
     assert os.path.isfile(save_file_name)
 
 
 @pytest.mark.parametrize(
     ("optimizer", "traj_file"),
-    [("BFGS", None), (None, None), (BFGS, "log_file.json.gz")],
+    [("BFGS", None), (None, None), (BFGS, "log_file.traj")],
 )
 def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
     if FrechetCellFilter:
@@ -109,13 +115,28 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         for key in expected_lattice
     } == pytest.approx(expected_lattice)
 
-    assert relax_output["trajectory"].energies[-1] == pytest.approx(expected_energy)
-
-    assert_allclose(relax_output["trajectory"].forces[-1], expected_forces, atol=1e-8)
+    assert relax_output["trajectory"].frame_properties[-1]["energy"] == pytest.approx(
+        expected_energy
+    )
 
     assert_allclose(
-        relax_output["trajectory"].stresses[-1], expected_stresses, atol=1e-8
+        relax_output["trajectory"].frame_properties[-1]["forces"], expected_forces
+    )
+
+    assert_allclose(
+        relax_output["trajectory"].frame_properties[-1]["stress"], expected_stresses
     )
 
     if traj_file:
         assert os.path.isfile(traj_file)
+
+
+def test_ext_load():
+    forcefield_to_callable = {
+        "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
+        "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
+    }
+    for forcefield in ["CHGNet", "MACE"]:
+        calc_from_decode = ase_calculator(forcefield_to_callable[forcefield])
+        calc_from_preset = ase_calculator(f"{MLFF(forcefield)}")
+        assert isinstance(calc_from_decode, type(calc_from_preset))

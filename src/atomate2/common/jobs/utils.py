@@ -40,7 +40,7 @@ def structure_to_conventional(
     structure: Structure, symprec: float = SETTINGS.SYMPREC
 ) -> Structure:
     """
-    Job hat creates a standard conventional structure.
+    Job that creates a standard conventional structure.
 
     Parameters
     ----------
