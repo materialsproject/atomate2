@@ -22,22 +22,6 @@ from atomate2.classical_md.utils import (
 )
 
 
-@pytest.fixture()
-def mol_files(classical_md_data):
-    geo_dir = classical_md_data / "molecule_charge_files"
-    return {
-        "CCO_xyz": str(geo_dir / "CCO.xyz"),
-        "CCO_charges": str(geo_dir / "CCO.npy"),
-        "FEC_r_xyz": str(geo_dir / "FEC-r.xyz"),
-        "FEC_s_xyz": str(geo_dir / "FEC-s.xyz"),
-        "FEC_charges": str(geo_dir / "FEC.npy"),
-        "PF6_xyz": str(geo_dir / "PF6.xyz"),
-        "PF6_charges": str(geo_dir / "PF6.npy"),
-        "Li_charges": str(geo_dir / "Li.npy"),
-        "Li_xyz": str(geo_dir / "Li.xyz"),
-    }
-
-
 def test_molgraph_to_openff_pf6(mol_files):
     """transform a water MoleculeGraph to a OpenFF water molecule"""
     pf6_mol = pymatgen.core.Molecule.from_file(mol_files["PF6_xyz"])

@@ -20,7 +20,7 @@ class MoleculeSpec(MSONable):
     count: int
     formal_charge: int
     charge_method: str
-    openff_mol: tk.Molecule
+    openff_mol: tk.Molecule  # a tk.Molecule object serialized with to_dict
 
 
 class ClassicalMDTaskDocument(BaseModel, extra="allow"):  # type: ignore[call-arg]
