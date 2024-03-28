@@ -1,11 +1,12 @@
 import copy
 
 import numpy as np
-from jobflow import Job
+from jobflow import Flow, Job
 from openmm.app import DCDReporter, Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
 from openmm.unit import kelvin, picoseconds
 
+from atomate2.classical_md.core import generate_interchange
 from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.classical_md.openmm.schemas.tasks import Calculation, CalculationInput
 from atomate2.classical_md.schemas import ClassicalMDTaskDocument
@@ -146,3 +147,29 @@ def test_make(interchange, temp_dir, run_job):
     assert calc.completed_at is not None
     assert calc.task_name == "base openmm job"
     assert calc.calc_type == "BaseOpenMMMaker"
+
+
+def test_make_from_prev(temp_dir, run_job):
+    mol_specs_dicts = [
+        {"smile": "CCO", "count": 50, "name": "ethanol"},
+        {"smile": "O", "count": 300, "name": "water"},
+    ]
+    inter_job = generate_interchange(mol_specs_dicts, 1)
+
+    # Create an instance of BaseOpenMMMaker
+    maker = BaseOpenMMMaker(n_steps=10)
+
+    # monkey patch to allow running the test without openmm
+    def do_nothing(self, sim):
+        pass
+
+    BaseOpenMMMaker.run_openmm = do_nothing
+
+    # Call the make method
+    base_job = maker.make(
+        inter_job.output.interchange,
+        output_dir=temp_dir,
+        prev_task=inter_job.output,
+    )
+
+    run_job(Flow([inter_job, base_job]))
