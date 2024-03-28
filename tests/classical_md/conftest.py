@@ -1,6 +1,7 @@
 import tempfile
 from pathlib import Path
 
+import numpy as np
 import pytest
 from jobflow import run_locally
 from openff.interchange import Interchange
@@ -21,11 +22,6 @@ def run_job():
 
 
 @pytest.fixture()
-def md_task_doc():
-    return None
-
-
-@pytest.fixture()
 def mol_specs_small():
     return [
         create_mol_spec("CCO", 10, name="ethanol"),
@@ -34,6 +30,44 @@ def mol_specs_small():
 
 
 @pytest.fixture()
+def classical_md_data(test_dir):
+    return test_dir / "classical_md"
+
+
+@pytest.fixture()
+def mol_files(classical_md_data):
+    geo_dir = classical_md_data / "molecule_charge_files"
+    return {
+        "CCO_xyz": str(geo_dir / "CCO.xyz"),
+        "CCO_charges": str(geo_dir / "CCO.npy"),
+        "FEC_r_xyz": str(geo_dir / "FEC-r.xyz"),
+        "FEC_s_xyz": str(geo_dir / "FEC-s.xyz"),
+        "FEC_charges": str(geo_dir / "FEC.npy"),
+        "PF6_xyz": str(geo_dir / "PF6.xyz"),
+        "PF6_charges": str(geo_dir / "PF6.npy"),
+        "Li_charges": str(geo_dir / "Li.npy"),
+        "Li_xyz": str(geo_dir / "Li.xyz"),
+    }
+
+
+@pytest.fixture()
+def mol_specs_salt(mol_files):
+    charges = np.load(mol_files["PF6_charges"])
+    return [
+        create_mol_spec("CCO", 10, name="ethanol"),
+        create_mol_spec("O", 20, name="water"),
+        create_mol_spec("[Li+]", 5, name="li"),
+        create_mol_spec(
+            "F[P-](F)(F)(F)(F)F",
+            5,
+            name="pf6",
+            partial_charges=charges,
+            geometry=mol_files["PF6_xyz"],
+        ),
+    ]
+
+
+@pytest.fixture(scope="package")
 def interchange():
     o = create_mol_spec("O", 300)
     cco = create_mol_spec("CCO", 10)
@@ -66,13 +100,3 @@ def temp_dir():
 @pytest.fixture()
 def output_dir(test_dir):
     return test_dir / "classical_md" / "output_dir"
-
-
-@pytest.fixture()
-def classical_md_data(test_dir):
-    return test_dir / "classical_md"
-
-
-@pytest.fixture()
-def test_state_report_file(classical_md_data):
-    return classical_md_data / "reporters" / "state.txt"
