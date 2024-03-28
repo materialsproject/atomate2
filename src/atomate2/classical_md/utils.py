@@ -417,3 +417,93 @@ def increment_name(file_name: str, extension: str, delimiter: str = "_") -> str:
     position = re_match.start(1)
     new_count = int(re_match.group(1) or 1) + 1
     return f"{file_name[:position]}{new_count}"
+
+
+def calculate_elyte_composition(
+    solvents: dict[str, float],
+    salts: dict[str, float],
+    solvent_densities: dict = None,
+) -> dict[str, float]:
+    """Calculate the normalized mass ratios of an electrolyte solution.
+
+    Parameters
+    ----------
+    solvents : dict
+        Dictionary of solvent SMILES strings and their relative volume fraction.
+    salts : dict
+        Dictionary of salt SMILES strings and their molarities.
+    solvent_densities : dict
+        Dictionary of solvent SMILES strings and their densities (g/ml).
+
+    Returns
+    -------
+    dict
+        A dictionary containing the normalized mass ratios of molecules in
+        the electrolyte solution.
+    """
+    # Set default value for solvent_densities if not provided
+    solvent_densities = solvent_densities or {}
+
+    # Check if all solvents have corresponding densities
+    if set(solvents.keys()) > set(solvent_densities.keys()):
+        raise ValueError("solvent_densities must contain densities for all solvents.")
+    # normalize volume ratios
+    total_vol = sum(solvents.values())
+    solvents = {smile: vol / total_vol for smile, vol in solvents.items()}
+
+    # Convert volume ratios to mass ratios using solvent densities
+    mass_ratio = {
+        smile: vol * solvent_densities[smile] for smile, vol in solvents.items()
+    }
+
+    # Calculate the molecular weights of the solvent
+    masses = {el.Z: el.atomic_mass for el in Element}
+    salt_mws = {}
+    for smile in salts:
+        mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
+        salt_mws[smile] = sum([masses[atom.atomic_number] for atom in mol.atoms])
+
+    # Convert salt mole ratios to mass ratios
+    salt_mass_ratio = {
+        salt: molarity * salt_mws[salt] / 1000 for salt, molarity in salts.items()
+    }
+
+    # Combine solvent and salt mass ratios
+    combined_mass_ratio = {**mass_ratio, **salt_mass_ratio}
+
+    # Calculate the total mass
+    total_mass = sum(combined_mass_ratio.values())
+
+    # Normalize the mass ratios
+    return {species: mass / total_mass for species, mass in combined_mass_ratio.items()}
+
+
+def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float]:
+    """Calculate the number of mols needed to yield a given mass ratio.
+
+    Parameters
+    ----------
+    species : list of str
+        Dictionary of species SMILES strings and their relative mass fractions.
+    n_mol : float
+        Total number of mols. Returned array will sum to near n_mol.
+
+
+    Returns
+    -------
+    numpy.ndarray
+        n_mols: Number of each SMILES needed for the given mass ratio.
+    """
+    masses = {el.Z: el.atomic_mass for el in Element}
+
+    mws = []
+    for smile in species:
+        mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
+        mws.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
+
+    mol_ratio = np.array(list(species.values())) / np.array(mws)
+    mol_ratio /= sum(mol_ratio)
+    return {
+        smile: int(np.round(ratio * n_mol))
+        for smile, ratio in zip(species.keys(), mol_ratio)
+    }

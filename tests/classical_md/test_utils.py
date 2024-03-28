@@ -231,3 +231,29 @@ def test_increment_file_name():
         assert (
             result == expected_output
         ), f"Failed for case: {file_name}, {extension}, {delimiter}"
+
+
+def test_calculate_elyte_composition():
+    from atomate2.classical_md.utils import (
+        calculate_elyte_composition,
+        counts_from_masses,
+    )
+
+    vol_ratio = {"O": 0.5, "CCO": 0.5}
+    salts = {"[Li+]": 1.0, "F[P-](F)(F)(F)(F)F": 1.0}
+    solvent_densities = {"O": 1.0, "CCO": 0.8}
+
+    comp_dict = calculate_elyte_composition(vol_ratio, salts, solvent_densities)
+    counts = counts_from_masses(comp_dict, 100)
+    assert sum(counts.values()) == 100
+
+    mol_ratio = {
+        "[Li+]": 0.00616,
+        "F[P-](F)(F)(F)(F)F": 0.128,
+        "C1COC(=O)O1": 0.245,  # EC
+        "CCOC(=O)OC": 0.462,  # EMC
+        "CC#N": 0.130,
+        "FC1COC(=O)O1": 0.028,
+    }
+    counts2 = counts_from_masses(mol_ratio, 1000)
+    assert np.allclose(sum(counts2.values()), 1000, atol=5)
