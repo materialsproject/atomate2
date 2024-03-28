@@ -5,8 +5,8 @@ from jobflow import run_locally
 from pymatgen.analysis.magnetism.analyzer import Ordering
 from pymatgen.core import Structure
 
-from atomate2.vasp.flows.magnetism import MagneticOrderingsMaker
-from atomate2.vasp.schemas.magnetism import MagneticOrderingsDocument
+from atomate2.common.flows.magnetism import MagneticOrderingsMaker
+from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 
 
 def test_magnetic_orderings(mock_vasp, clean_dir, test_dir):

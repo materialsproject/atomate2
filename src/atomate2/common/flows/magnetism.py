@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import warnings
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from abc import ABC
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
@@ -15,11 +15,14 @@ from atomate2.common.jobs.magnetism import (
     postprocess_orderings,
     run_ordering_calculations,
 )
+from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
+from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from pymatgen.core.structure import Structure
+
 
 __all__ = ["MagneticOrderingsMaker"]
 
@@ -34,15 +37,17 @@ class MagneticOrderingsMaker(Maker, ABC):
     total energy. The lowest energy ordering is the predicted ground-state collinear
     ordering.
 
-    This workflow showed decent performance using VASP for a wide range of test
-    materials in a benchmark. It was originally implemented in atomate (v1) for VASP as
-    the MagneticOrderingsWF. Please refer to the following paper for more information
-    and cite appropriately:
+    This workflow was benchmarked with VASP for a wide range of test materials. It was
+    originally implemented in atomate (v1) for VASP as the MagneticOrderingsWF. Please
+    refer to the following paper for more information and cite appropriately:
 
         Horton, M.K., Montoya, J.H., Liu, M. et al. High-throughput prediction of the
         ground-state collinear magnetic order of inorganic materials using Density
         Functional Theory. npj Computational Materials 5, 64 (2019).
         https://doi.org/10.1038/s41524-019-0199-7
+
+    .. Note::
+        Implementations for other DFT codes are possible.
 
     .. Note::
         Good performance of this workflow is ultimately dependent on an appropriate
@@ -54,12 +59,12 @@ class MagneticOrderingsMaker(Maker, ABC):
     name : str
         Name of the flows produced by this Maker.
     static_maker : Maker
-        Maker used to perform static calculations for total energy (e.g., with VASP this
-        would be atomate2.vasp.jobs.StaticMaker).
+        Maker used to perform static calculations for total energy. The default DFT code
+        used is VASP with atomate2.vasp.jobs.StaticMaker.
     relax_maker : Maker | None
-        Maker used to perform relaxations of the enumerated structures (e.g., with VASP
-        this would be atomate2.vasp.jobs.RelaxMaker). If None, relaxations will be
-        skipped (i.e., only static calculations).
+        Maker used to perform relaxations of the enumerated structures. The default DFT
+        code used is VASP with atomate2.vasp.jobs.RelaxMaker. If this field is None,
+        relaxations will be skipped (i.e., only static calculations are performed).
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
         in µB. Generally these are chosen to be high-spin, since they can relax to a
@@ -80,8 +85,12 @@ class MagneticOrderingsMaker(Maker, ABC):
         None.
     """
 
-    static_maker: Maker
-    relax_maker: Maker | None
+    static_maker: Maker = field(
+        default_factory=lambda: StaticMaker(
+            input_set_generator=StaticSetGenerator(user_incar_settings={"EDIFF": 1e-7})
+        )
+    )
+    relax_maker: Maker | None = field(default_factory=RelaxMaker)
     default_magmoms: dict[Element, float] | None = None
     strategies: Sequence[
         Literal[
@@ -98,7 +107,7 @@ class MagneticOrderingsMaker(Maker, ABC):
     transformation_kwargs: dict | None = None
     name: str = "magnetic_orderings"
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure that the static and relax makers come from the same base maker.
 
         This ensures that the same DFT code is used for both calculations.
@@ -114,15 +123,17 @@ class MagneticOrderingsMaker(Maker, ABC):
         else:
             static_base_maker_name = self.static_maker.__class__.__mro__[1].__name__
             relax_base_maker_name = self.relax_maker.__class__.__mro__[1].__name__
-            assert relax_base_maker_name == static_base_maker_name, (
-                "relax and static makers must come from the same base maker (e.g.,"
-                " BaseVaspMaker)!"
-            )
+            if relax_base_maker_name != static_base_maker_name:
+                warnings.warn(
+                    "The provided static and relax makers do not use the "
+                    "same DFT code! Please check the base maker used.",
+                    stacklevel=2,
+                )
 
     def make(
         self,
         structure: Structure,
-    ):
+    ) -> Flow:
         """Make a flow to calculate collinear magnetic orderings for a given structure.
 
         Parameters
@@ -164,7 +175,7 @@ class MagneticOrderingsMaker(Maker, ABC):
             relax_maker=self.relax_maker,
         )
 
-        postprocessing = postprocess_orderings(calculations.output, self._build_doc_fn)
+        postprocessing = postprocess_orderings(calculations.output)
         jobs = [orderings, calculations, postprocessing]
 
         return Flow(
@@ -172,11 +183,3 @@ class MagneticOrderingsMaker(Maker, ABC):
             output=postprocessing.output,
             name=f"{self.name} ({structure.composition.reduced_formula})",
         )
-
-    @abstractmethod
-    def _build_doc_fn(self, tasks):
-        """Wrap the function MagneticOrderingsDocument.from_tasks.
-
-        The specific MagneticOrderingsDocument class used will depend on the DFT code,
-        so this has been left to be implemented by the inheriting class.
-        """

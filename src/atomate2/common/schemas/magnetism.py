@@ -1,9 +1,11 @@
 """Schemas for magnetic ordering calculations."""
+
 from __future__ import annotations
 
 from typing import Optional
 
 import numpy as np
+from emmet.core.tasks import TaskDoc
 from pydantic import BaseModel, Field
 from pymatgen.analysis.magnetism.analyzer import (
     CollinearMagneticStructureAnalyzer,
@@ -103,21 +105,40 @@ class MagneticOrderingRelaxation(BaseModel):
 
     @classmethod
     def from_task_document(
-        cls, task_document, uuid: str | None = None
+        cls, task_document: TaskDoc, uuid: str | None = None
     ) -> MagneticOrderingRelaxation:
-        """Construct a MagneticOrderingRelaxation output doc from a task document.
+        """Construct a MagneticOrderingRelaxation from a task document.
 
-        This is to be implemented for the DFT code of choice.
+        This does not include the uuid, which must be provided separately.
+
+        .. Warning:: Currently, the TaskDoc defined in emmet is VASP-specific.
+            Ensure that the TaskDoc provided contains an InputDoc with a magnetic
+            moments field.
         """
-        raise NotImplementedError
+        dir_name = task_document.dir_name
+        structure = task_document.structure
+        input_structure = task_document.input.structure
+        if not input_structure.site_properties.get("magmom"):
+            input_structure.add_site_property(  # input struct likely has no magmoms
+                "magmom", task_document.input.magnetic_moments
+            )
+        energy = task_document.output.energy
+
+        return cls.from_structures_and_energies(
+            input_structure=input_structure,
+            output_structure=structure,
+            output_energy=energy,
+            uuid=uuid,
+            dir_name=dir_name,
+        )
 
 
 class MagneticOrderingOutput(BaseModel):
     """Defines the output for a *static* magnetic ordering calculation.
 
     This is used within the construction of the MagneticOrderingDocument. If a
-    relaxation was performed, this information will be stored within the
-    relax_output field.
+    relaxation was performed, this information will be stored within the relax_output
+    field.
     """
 
     uuid: Optional[str] = Field(None, description="Unique ID of the calculation.")
@@ -219,13 +240,36 @@ class MagneticOrderingOutput(BaseModel):
 
     @classmethod
     def from_task_document(
-        cls, task_document, uuid: str | None = None
+        cls,
+        task_document: TaskDoc,
+        uuid: str | None = None,
+        relax_output: MagneticOrderingRelaxation | None = None,
     ) -> MagneticOrderingOutput:
-        """Construct a MagnetismOutput from a task document.
+        """Construct a MagneticOrderingOutput from a task document.
 
-        This is to be implemented for the DFT code of choice.
+        This does not include the uuid, which must be set separately.
+
+        .. Warning:: Currently, the TaskDoc defined in emmet is VASP-specific.
+            Ensure that the TaskDoc provided contains an InputDoc with a
+            magnetic moments field.
         """
-        raise NotImplementedError
+        dir_name = task_document.dir_name
+        structure = task_document.structure
+        input_structure = task_document.input.structure
+        if not input_structure.site_properties.get("magmom"):
+            input_structure.add_site_property(  # input struct likely has no magmoms
+                "magmom", task_document.input.magnetic_moments
+            )
+        energy = task_document.output.energy
+
+        return cls.from_structures_and_energies(
+            input_structure=input_structure,
+            output_structure=structure,
+            output_energy=energy,
+            uuid=uuid,
+            dir_name=dir_name,
+            relax_output=relax_output,
+        )
 
 
 class MagneticOrderingsDocument(BaseModel):
@@ -303,17 +347,13 @@ class MagneticOrderingsDocument(BaseModel):
         )
 
     @classmethod
-    def from_tasks(cls, tasks: list[dict]):
+    def from_tasks(cls, tasks: list[dict]) -> MagneticOrderingsDocument:
         """Construct a MagneticOrderingsDocument from a list of task dicts.
 
-        This uses the _build_relax_output and _build_static_output methods to construct
-        the MagneticOrderingRelaxation and MagneticOrderingOutput docs, respectively.
-        These methods need to be implemented for the DFT code of choice.
-
-        Note: this function assumes the tasks contain the keys "output" and "metadata".
-        These keys are automatically constructed when jobflow stores its outputs;
-        however, you may need to put the data in this format if using this manually (as
-        in a postprocessing job).
+        .. Note:: this function assumes the tasks contain the keys "output" and
+        "metadata". These keys are automatically constructed when jobflow stores its
+        outputs; however, you may need to put the data in this format if using this
+        manually (as in a postprocessing job).
         """
         parent_structure = tasks[0]["metadata"]["parent_structure"]
 
@@ -329,12 +369,12 @@ class MagneticOrderingsDocument(BaseModel):
             relax_output = None
             for r_task in relax_tasks:
                 if r_task["uuid"] == task["metadata"]["parent_uuid"]:
-                    relax_output = cls._build_relax_output(
+                    relax_output = MagneticOrderingRelaxation.from_task_document(
                         r_task["output"],
                         uuid=r_task["uuid"],
                     )
                     break
-            output = cls._build_static_output(
+            output = MagneticOrderingOutput.from_task_document(
                 task["output"],
                 uuid=task["uuid"],
                 relax_output=relax_output,
@@ -342,18 +382,6 @@ class MagneticOrderingsDocument(BaseModel):
             outputs.append(output)
 
         return cls.from_outputs(outputs, parent_structure=parent_structure)
-
-    @staticmethod
-    def _build_relax_output(relax_task, uuid=None) -> MagneticOrderingRelaxation:
-        """Wrap the function MagneticOrderingRelaxation.from_task_document."""
-        raise NotImplementedError
-
-    @staticmethod
-    def _build_static_output(
-        static_task, uuid=None, relax_output=None
-    ) -> MagneticOrderingOutput:
-        """Wrap the function MagneticOrderingOutput.from_task_document."""
-        raise NotImplementedError
 
 
 def _compare_ordering_and_symmetry(
@@ -389,7 +417,7 @@ def _compare_ordering_and_symmetry(
     )
     symmetry_changed = output_symmetry != input_symmetry
 
-    input = MagneticOrderingInput(
+    input_doc = MagneticOrderingInput(
         structure=input_structure,
         ordering=input_ordering,
         magmoms=list(input_magmoms),
@@ -397,7 +425,7 @@ def _compare_ordering_and_symmetry(
     )
 
     return {
-        "input": input,
+        "input": input_doc,
         "magmoms": list(output_magmoms),
         "ordering": output_ordering,
         "symmetry": output_symmetry,

@@ -3,18 +3,18 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable, Literal
+from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator
+
+from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from emmet.core.tasks import TaskDoc
     from pymatgen.core.structure import Structure
-
-    from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 
 
 logger = logging.getLogger(__name__)
@@ -129,7 +129,7 @@ def run_ordering_calculations(
         if relax_maker is not None:
             relax_job = relax_maker.make(struct)
             relax_job.append_name(" " + name)
-            relax_job.metadata.update(metadata)
+            relax_job.metadata.update(metadata)  # type: ignore[union-attr]
             jobs.append(relax_job)
 
             structure = relax_job.output.structure
@@ -140,18 +140,20 @@ def run_ordering_calculations(
         static_job.append_name(" " + name)
 
         metadata["parent_uuid"] = parent_uuid
-        static_job.metadata.update(metadata)
+        static_job.metadata.update(metadata)  # type: ignore[union-attr]
 
         jobs.append(static_job)
 
-    flow = Flow(jobs, output=[(j.output, j.metadata, j.uuid) for j in jobs])
+    flow = Flow(
+        jobs,
+        output=[(j.output, j.metadata, j.uuid) for j in jobs],  # type: ignore[union-attr]
+    )
     return Response(replace=flow)
 
 
 @job(name="postprocess orderings")
 def postprocess_orderings(
     tasks_metadata_uuids: list[tuple[TaskDoc, dict, str]],
-    build_doc_fn: Callable[[list[dict]], MagneticOrderingsDocument] = None,
 ) -> MagneticOrderingsDocument:
     """Identify ground state ordering and build summary document.
 
@@ -166,8 +168,7 @@ def postprocess_orderings(
         each job. This format is used to construct a dict that mimics how job data is
         stored and provided to the builder input.
     build_doc_fn : Callable[[list[dict]], MagneticOrderingsDocument]
-        A function to build the summary document from a list of dicts. This function
-        depends on the DFT code of choice.
+        A function to build the summary document from a list of dicts.
 
     Returns
     -------
@@ -178,4 +179,5 @@ def postprocess_orderings(
         {"output": output, "metadata": metadata, "uuid": uuid}  # mimic builder input
         for output, metadata, uuid in tasks_metadata_uuids
     ]
-    return build_doc_fn(tasks)
+
+    return MagneticOrderingsDocument.from_tasks(tasks)
