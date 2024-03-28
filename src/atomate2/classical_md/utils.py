@@ -339,7 +339,7 @@ def create_mol_spec(
     # TODO: test this
 
     if charge_method is None:
-        charge_method = "custom" if partial_charges else "am1bcc"
+        charge_method = "custom" if partial_charges is not None else "am1bcc"
 
     openff_mol = create_openff_mol(
         smile,
