@@ -329,7 +329,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
-        # with phonon.load("phonopy.yaml") the phonopy API can be used
+        # with phonopy.load("phonopy.yaml") the phonopy API can be used
         phonon.save("phonopy.yaml")
 
         # get phonon band structure
