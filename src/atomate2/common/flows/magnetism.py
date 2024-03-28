@@ -46,8 +46,14 @@ class MagneticOrderingsMaker(Maker, ABC):
         Functional Theory. npj Computational Materials 5, 64 (2019).
         https://doi.org/10.1038/s41524-019-0199-7
 
-    .. Note::
-        Implementations for other DFT codes are possible.
+    .. Warning::
+        This Maker can be trivially implemented for your DFT code of choice by
+        utilizing the appropriate static/relax makers. However, for postprocessing to
+        work, one must ensure that the calculation outputs can be processed into a
+        MagneticOrderingsDocument. As the TaskDoc class is currently defined for VASP,
+        one should ensure that the corresponding fields are present in the output
+        documents of their DFT code. For example: the TaskDoc.input.magnetic_moments
+        field should be present.
 
     .. Note::
         Good performance of this workflow is ultimately dependent on an appropriate
@@ -170,7 +176,7 @@ class MagneticOrderingsMaker(Maker, ABC):
         )
 
         calculations = run_ordering_calculations(
-            orderings.output,
+            orderings.output,  # pylint: disable=no-member
             static_maker=self.static_maker,
             relax_maker=self.relax_maker,
         )
