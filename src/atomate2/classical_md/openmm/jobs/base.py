@@ -91,7 +91,7 @@ class BaseOpenMMMaker(Maker):
     traj_file_name : Optional[str]
         The name of the trajectory file to save.
     traj_file_type : Optional[str]
-        The type of trajectory file to save. Options are "dcd" and "hdf5".
+        The type of trajectory file to save. Options are "dcd" and "h5".
     """
 
     name: str = "base openmm job"
@@ -216,7 +216,7 @@ class BaseOpenMMMaker(Maker):
                 )
                 sim.reporters.append(dcd_reporter)
 
-            elif traj_file_type == "hdf5":
+            elif traj_file_type == "h5":
                 if traj_file.exists():
                     self.traj_file_name = increment_name(traj_file.name, traj_file_type)
                     traj_file = dir_name / f"{self.traj_file_name}_{traj_file_type}"

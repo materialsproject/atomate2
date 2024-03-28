@@ -57,7 +57,7 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
         n_steps=3,
         temp_steps=1,
         platform_name="CPU",
-        traj_file_type="hdf5",
+        traj_file_type="h5",
         report_velocities=True,
     )
 
@@ -69,9 +69,9 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
     calc_output_names = [calc.output.dcd_file for calc in task_doc.calcs_reversed]
     assert len(list(tmp_path.iterdir())) == 5
     assert set(calc_output_names) == {
-        "trajectory3_hdf5",
-        "trajectory2_hdf5",
-        "trajectory_hdf5",
+        "trajectory3_h5",
+        "trajectory2_h5",
+        "trajectory_h5",
     }
 
 
