@@ -9,7 +9,7 @@ from typing import Optional
 from emmet.core.vasp.task_valid import TaskState
 from monty.json import MSONable
 from openff import toolkit as tk
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 @dataclass
@@ -20,7 +20,19 @@ class MoleculeSpec(MSONable):
     count: int
     formal_charge: int
     charge_method: str
-    openff_mol: tk.Molecule  # a tk.Molecule object serialized with to_dict
+    openff_mol: str  # a tk.Molecule object serialized with to_json
+
+    @field_validator("openff_mol")
+    @classmethod
+    def _validate_openff_mol(cls, v: str) -> str:
+        try:
+            tk.Molecule.from_json(v)
+        except Exception as e:
+            raise ValueError(
+                "MoleculeSpec.openff_mol must be able to be"
+                "parsed with Molecule.from_json."
+            ) from e
+        return v
 
 
 class ClassicalMDTaskDocument(BaseModel, extra="allow"):  # type: ignore[call-arg]

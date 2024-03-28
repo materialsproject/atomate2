@@ -357,7 +357,7 @@ def create_mol_spec(
             np.sum(openff_mol.partial_charges.magnitude) / charge_scaling
         ),
         charge_method=charge_method,
-        openff_mol=openff_mol,
+        openff_mol=openff_mol.to_json(),
     )
 
 
@@ -380,7 +380,7 @@ def merge_specs_by_name_and_smile(mol_specs: list[MoleculeSpec]) -> list[Molecul
     mol_specs = copy.deepcopy(mol_specs)
     merged_spec_dict: dict[tuple[str, str], MoleculeSpec] = {}
     for spec in mol_specs:
-        key = (spec.openff_mol.to_smiles(), spec.name)
+        key = (tk.Molecule.from_json(spec.openff_mol).to_smiles(), spec.name)
         if key in merged_spec_dict:
             merged_spec_dict[key].count += spec.count
         else:

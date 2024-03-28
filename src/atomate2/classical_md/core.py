@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 from typing import Callable
 
+import openff.toolkit as tk
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import job
 from openff.interchange import Interchange
@@ -114,11 +115,13 @@ def generate_interchange(
         else:
             raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
 
-    mol_specs.sort(key=lambda x: x.openff_mol.to_smiles() + x.name)
+    mol_specs.sort(
+        key=lambda x: tk.Molecule.from_json(x.openff_mol).to_smiles() + x.name
+    )
 
     pack_box_kwargs = pack_box_kwargs or {}
     topology = pack_box(
-        molecules=[spec.openff_mol for spec in mol_specs],
+        molecules=[tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs],
         number_of_copies=[spec.count for spec in mol_specs],
         mass_density=mass_density * unit.grams / unit.milliliter,
         **pack_box_kwargs,
@@ -133,7 +136,9 @@ def generate_interchange(
     interchange = Interchange.from_smirnoff(
         force_field=ForceField(force_field),
         topology=topology,
-        charge_from_molecules=[spec.openff_mol for spec in mol_specs],
+        charge_from_molecules=[
+            tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs
+        ],
         allow_nonintegral_charges=True,
     )
 

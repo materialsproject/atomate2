@@ -2,6 +2,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+import openff.toolkit as tk
 import pytest
 from jobflow import run_locally
 from openff.interchange import Interchange
@@ -73,10 +74,12 @@ def interchange():
     cco = create_mol_spec("CCO", 10)
     cco2 = create_mol_spec("CCO", 20, name="cco2")
     mol_specs = [o, cco, cco2]
-    mol_specs.sort(key=lambda x: x.openff_mol.to_smiles() + x.name)
+    mol_specs.sort(
+        key=lambda x: tk.Molecule.from_json(x.openff_mol).to_smiles() + x.name
+    )
 
     topology = pack_box(
-        molecules=[spec.openff_mol for spec in mol_specs],
+        molecules=[tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs],
         number_of_copies=[spec.count for spec in mol_specs],
         mass_density=0.8 * unit.grams / unit.milliliter,
     )
@@ -86,7 +89,9 @@ def interchange():
     return Interchange.from_smirnoff(
         force_field=ForceField("openff_unconstrained-2.1.1.offxml"),
         topology=topology,
-        charge_from_molecules=[spec.openff_mol for spec in mol_specs],
+        charge_from_molecules=[
+            tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs
+        ],
         allow_nonintegral_charges=True,
     )
 

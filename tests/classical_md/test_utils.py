@@ -132,7 +132,7 @@ def test_create_mol_spec(mol_files):
     assert mol_spec.count == count
     assert mol_spec.formal_charge == int(np.sum(partial_charges))
     assert mol_spec.charge_method == "am1bcc"
-    assert isinstance(mol_spec.openff_mol, tk.Molecule)
+    assert isinstance(tk.Molecule.from_json(mol_spec.openff_mol), tk.Molecule)
 
 
 def test_merge_specs_by_name_and_smile(mol_files):
