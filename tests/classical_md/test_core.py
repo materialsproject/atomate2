@@ -45,3 +45,18 @@ def test_generate_interchange(mol_specs_small, run_job):
     assert task_doc.molecule_specs[0].count == 10
     assert task_doc.molecule_specs[1].name == "water"
     assert task_doc.molecule_specs[1].count == 20
+
+
+def test_generate_interchange_salt(mol_specs_salt, run_job):
+    mass_density = 1
+    force_field = "openff_unconstrained-2.1.1.offxml"
+    mol_specs = mol_specs_salt
+
+    job = generate_interchange(mol_specs, mass_density, force_field)
+    task_doc = run_job(job)
+
+    assert len(task_doc.molecule_specs) == 4
+    assert task_doc.molecule_specs[1].name == "ethanol"
+    assert task_doc.molecule_specs[1].count == 10
+    assert task_doc.molecule_specs[2].name == "water"
+    assert task_doc.molecule_specs[2].count == 20
