@@ -171,6 +171,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
+
 @dataclass
 class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     """
