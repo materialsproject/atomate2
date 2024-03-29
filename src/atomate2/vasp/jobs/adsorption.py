@@ -289,7 +289,7 @@ class MoleculeRelaxMaker(BaseVaspMaker):
         The input set generator for the relaxation calculation.
     """
 
-    name: str = "adsorption relaxation"
+    name: str = "molecule relaxation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
@@ -415,7 +415,7 @@ class MolStaticMaker(BaseVaspMaker):
         The input set generator for the static energy calculation.
     """
 
-    name: str = "adsorption static calculation"
+    name: str = "moelcule static calculation"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
