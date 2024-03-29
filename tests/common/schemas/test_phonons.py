@@ -61,18 +61,11 @@ def test_model_validate(model_cls):
     assert isinstance(validated, model_cls)
 
 
-def test_check_phonon_output_filenames(clean_dir):
+def test_check_phonon_output_filenames(clean_dir, si_structure):
     from jobflow import run_locally
-    from pymatgen.core.structure import Structure
 
     from atomate2.forcefields.flows.phonons import PhononMaker
     from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
-
-    structure = Structure(
-        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
-        species=["Si"],
-        coords=[[0, 0, 0]],
-    )
 
     phojob = PhononMaker(
         bulk_relax_maker=CHGNetRelaxMaker(steps=5),
@@ -83,7 +76,7 @@ def test_check_phonon_output_filenames(clean_dir):
             "filename_BS": "phonon_BS_test.png",
             "filename_DOS": "phonon_DOS_test.pdf",
         },
-    ).make(structure=structure)
+    ).make(structure=si_structure)
 
     run_locally(phojob, ensure_success=True)
 
