@@ -1,4 +1,5 @@
 import json
+import os
 
 import numpy as np
 import pytest
@@ -58,3 +59,38 @@ def test_phonon_bs_dos_doc():
 def test_model_validate(model_cls):
     validated = model_cls.model_validate_json(json.dumps(model_cls(), cls=MontyEncoder))
     assert isinstance(validated, model_cls)
+
+
+def test_check_phonon_output_filenames(clean_dir):
+    from jobflow import run_locally
+    from pymatgen.core.structure import Structure
+
+    from atomate2.forcefields.flows.phonons import PhononMaker
+    from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
+
+    structure = Structure(
+        lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+        species=["Si"],
+        coords=[[0, 0, 0]],
+    )
+
+    phojob = PhononMaker(
+        bulk_relax_maker=CHGNetRelaxMaker(steps=5),
+        phonon_displacement_maker=CHGNetStaticMaker(),
+        static_energy_maker=CHGNetStaticMaker(),
+        store_force_constants=False,
+        generate_frequencies_eigenvectors_kwargs={
+            "filename_BS": "phonon_BS_test.png",
+            "filename_DOS": "phonon_DOS_test.pdf",
+        },
+    ).make(structure=structure)
+
+    run_locally(phojob, ensure_success=True)
+
+    files = os.listdir(os.getcwd())
+
+    for png in [file for file in files if file.endswith(".png")]:
+        assert png == "phonon_BS_test.png"
+
+    for pdf in [file for file in files if file.endswith(".pdf")]:
+        assert pdf == "phonon_DOS_test.pdf"
