@@ -57,8 +57,13 @@ class BaseAnharmonicityMaker(Maker):
     sym_reduce: bool = True
     symprec: float = 1e-4
     use_symmetrized_structure: str | None = None
-    kpath_scheme: str = "seekpath",
+    kpath_scheme: str = "seekpath"
     code: str = None
+    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
+        None
+    )
+    socket: bool = False
+    
 
     def make(
         self,
