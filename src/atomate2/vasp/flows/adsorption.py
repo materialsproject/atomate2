@@ -57,7 +57,7 @@ class AdsorptionMaker(Maker):
         Maker for molecule static energy calculation.
     """  # noqa: E501
 
-    name: str = "adsorption"
+    name: str = "adsorption workflow"
 
     mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker)
 
@@ -196,4 +196,4 @@ class AdsorptionMaker(Maker):
         )
         jobs += [adsorption_calc]
 
-        return Flow(jobs, adsorption_calc)
+        return Flow(jobs, output=adsorption_calc.output, name=self.name)
