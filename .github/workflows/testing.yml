@@ -53,7 +53,6 @@ jobs:
           python -m pip install --upgrade pip
           # ase needed to get FrechetCellFilter used by ML force fields
           pip install git+https://gitlab.com/ase/ase
-          pip install torch<=2.2.1 # incompatibility with dgl if newer versions are used
           pip install .[strict,tests]
           pip install torch-runstats
           pip install --no-deps nequip
