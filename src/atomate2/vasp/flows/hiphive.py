@@ -84,17 +84,41 @@ class HiphiveMaker(BaseHiphiveMaker):
             input_set_generator = StaticSetGenerator(
             user_kpoints_settings={"reciprocal_density": 500},
             user_incar_settings={
-                "IBRION": 2,
-                "ISIF": 3,
-                "ENCUT": 700, # Changed this from 600
-                "EDIFF": 1e-7,
-                "LAECHG": False,
+                # "IBRION": 2,
+                # "ISIF": 3,
+                # "ENCUT": 600, # Changed this from 600
+                # "EDIFF": 1e-7,
+                # "LAECHG": False,
+                # "ALGO": "Normal",
+                # "NSW": 0,
+                # "LCHARG": False,
+                # "LREAL": True
+
+                "ADDGRID": True,
                 "ALGO": "Normal",
-                "NSW": 0,
+                "EDIFF": 1e-06,
+                "ENCUT": 600,
+                "GGA": "PS",
+                "IBRION": -1,
+                "ISIF": 3,
+                "ISMEAR": 0,
+                "ISPIN": 2,
+                "LAECHG": False,
+                "LASPH": True,
                 "LCHARG": False,
-                "LREAL": True
+                "LORBIT": 11,
+                "LREAL": "Auto",
+                "LVHAR": False,
+                "LVTOT": False,
+                "LWAVE": False,
+                # "MAGMOM": 250*0.6,
+                "NCORE": 6,
+                "NELM": 100,
+                "NSW": 0,
+                "PREC": "Accurate",
+                "SIGMA": 0.1,
             },
-            auto_ispin=True,
+            # auto_ispin=True,
         )
         )
     )
