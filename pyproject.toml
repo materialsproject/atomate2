@@ -58,7 +58,10 @@ forcefields = [
     "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
 anharmonicphonons = [
-	"phono3py",
+    "phonopy>=2.21.0",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
 	"ase>=3.22.1",]
 docs = [
     "FireWorks==2.0.3",
@@ -109,7 +112,6 @@ strict = [
     "torch==2.2.1",
     "typing-extensions==4.12.2",
     "python-ulid==2.2.0",
-    "phono3py==2.5.1"
 ]
 
 [project.scripts]
@@ -199,6 +201,7 @@ ignore = [
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
     "S507",    # paramiko auto trust
+    "SLF",     # private member accessed outside class
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
 ]
