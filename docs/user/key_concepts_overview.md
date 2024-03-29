@@ -22,7 +22,7 @@ The diagram below illustrates a very general example of a flow (Total flow) comp
 ![Flow example](../_static/example_flow.png)
 
 `Job` and `Flow` makers come in handy by providing a template schema to set up diverse electronic structure calculation and computational chemistry tasks (e.g. chemical bonding analysis, elastic constant calculations, force field applications and many more) and to make it easier to handle and unify output from the various supported software packages (like VASP, phonopy and more).
-Given that the job output data is stored in a JSON serializable dict format, it makes it possible to conveniently handle it with so-called [`TaskDocuments`](#taskdocument).
+Given that the job output data is stored in a JSON serializable dict format, it makes it possible to conveniently handle the final output with so-called [`TaskDocuments`](#taskdocument).
 
 ### Technical Aspects
 
@@ -71,9 +71,9 @@ class LobsterMaker(Maker):
         """
 ```
 This class incorporates [LOBSTER](http://cohp.de/) specific input and output data, i.e. the `wavefunction_dir` and `basis_dict` as input in `make` that returns the `LobsterMaker`-class specific output as a `TaskDocument`. Also, note how the `make` functions is annotated by the `@job` decorator. This small addition to `make` turns the maker into a job maker.
-As the name job maker implies, this maker will then create jobs to execute the LOBSTER runs and store the output in the `LobsterTaskDocument` format.
+As the name "job maker" implies, this maker will then create jobs to execute the LOBSTER runs and store the output in the `LobsterTaskDocument` format.
 
-What changes need to be made to turn a maker into a `Flow Maker`? The `make` function needs to be adjusted to return a `Flow` object instead of a task document.
+What changes need to be made to turn a maker into a `Flow Maker`? In that case, the `make` function needs to be adjusted to return a `Flow` object instead of a task document.
 As an example we take the `BasePhononMaker` (that can be used in combination with VASP or the various (machine-learned) force fields):
 ```
 @dataclass
@@ -332,4 +332,4 @@ Finally, the builder compiles the processed items into an ElasticDocument from t
 
 # Exercises
 
-Construct a flow for a `DoubleRelaxMaker` (a workflow consisting of two relax jobs) based on the `CHGNetRelaxMaker` and `CHGNetStaticMaker`. Then add a final non-SCF static job. Compare your result with the [DoubleRelaxMaker for VASP](https://materialsproject.github.io/atomate2/user/codes/vasp.html#list-of-vasp-workflows). Try to replicate one of the other VASP workflows as well!
+Construct a flow for a `DoubleRelaxMaker` (a workflow consisting of two relax jobs) based on the `CHGNetRelaxMaker`. Then add a final non-SCF static job using the `CHGNetStaticMaker`. Compare your result with the [DoubleRelaxMaker for VASP](https://materialsproject.github.io/atomate2/user/codes/vasp.html#list-of-vasp-workflows). Try to replicate one of the other VASP workflows as well!
