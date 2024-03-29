@@ -49,9 +49,9 @@ class AdsorptionMaker(Maker):
         Maker for bulk relaxation.
     mol_relax_maker: BaseVaspMaker
         Maker for molecule relaxation.
-    adslab_relax_maker: BaseVaspMaker
+    slab_relax_maker: BaseVaspMaker
         Maker for slab relaxation with adsorption.
-    slab_static_energy_maker: BaseVaspMaker
+    slab_static_maker: BaseVaspMaker
         Maker for slab static energy calculation.
     mol_static_energy_maker: BaseVaspMaker
         Maker for molecule static energy calculation.
@@ -59,15 +59,15 @@ class AdsorptionMaker(Maker):
 
     name: str = "adsorption"
 
-    mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker())
+    mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker)
 
-    mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
+    mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker)
 
-    bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker())
+    bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker)
 
-    adslab_relax_maker: BaseVaspMaker = field(default_factory=SlabRelaxMaker())
+    slab_relax_maker: BaseVaspMaker = field(default_factory=SlabRelaxMaker)
 
-    adslab_static_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker())
+    slab_static_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker)
 
     def make(
         self,
@@ -129,7 +129,7 @@ class AdsorptionMaker(Maker):
         mol_static_job.append_name("molecule static job")
         jobs.append(mol_static_job)
 
-        molecule_dft_energy = mol_static_job.output.energy
+        molecule_dft_energy = mol_static_job.output.output.energy
 
         if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
@@ -161,29 +161,27 @@ class AdsorptionMaker(Maker):
         )
         jobs.append(generate_adslabs_structures)
 
-        if self.adslab_relax_maker:
+        if self.slab_relax_maker is None:
             raise ValueError("adslab_relax_maker shouldn't be Null.")
 
         # slab relaxation without adsoprtion
-        slab_optimize_job = self.adslab_relax_maker.make(generate_slab_structure)
+        slab_optimize_job = self.slab_relax_maker.make(generate_slab_structure)
         slab_optimize_job.append_name("slab relaxation job")
         jobs.append(slab_optimize_job)
 
         optimized_slab = slab_optimize_job.output.structure
         prev_dir = slab_optimize_job.output.dir_name
 
-        slab_static_job = self.slab_static_energy_maker.make(
-            optimized_slab, prev_dir=prev_dir
-        )
+        slab_static_job = self.slab_static_maker.make(optimized_slab, prev_dir=prev_dir)
         slab_static_job.append_name("slab static job")
         jobs.append(slab_static_job)
 
-        slab_dft_energy = slab_static_job.output.energy
+        slab_dft_energy = slab_static_job.output.output.energy
 
         vasp_adslabs_calcs = run_adslabs_job(
             adslab_structures=generate_adslabs_structures,
-            relax_maker=self.adslab_relax_maker,
-            static_maker=self.adslab_static_maker,
+            relax_maker=self.slab_relax_maker,
+            static_maker=self.slab_static_maker,
         )
         jobs.append(vasp_adslabs_calcs)
 
