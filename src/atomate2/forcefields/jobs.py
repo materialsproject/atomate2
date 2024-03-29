@@ -148,6 +148,10 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
     Maker to calculate forces and stresses using any force field.
 
+    Note that while `steps = 1` by default, the user could override
+    this setting along with cell shape relaxation (`relax_cell = False`
+    by default).
+
     Parameters
     ----------
     name : str
@@ -166,41 +170,6 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-
-    @forcefield_job
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
-        """
-        Perform a relaxation of a structure using a force field.
-
-        Parameters
-        ----------
-        structure: .Structure
-            pymatgen structure.
-        prev_dir : str or Path or None
-            A previous calculation directory to copy output files from. Unused, just
-                added to match the method signature of other makers.
-        """
-        if self.steps < 0:
-            logger.warning(
-                "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
-            )
-
-        static_calc = Relaxer(self._calculator(), relax_cell=False)
-        result = static_calc.relax(structure, steps=1)
-
-        return ForceFieldTaskDocument.from_ase_compatible_result(
-            forcefield_name=self.force_field_name,
-            result=result,
-            relax_cell=False,
-            steps=1,
-            relax_kwargs=None,
-            optimizer_kwargs=None,
-            **self.task_document_kwargs,
-        )
-
 
 @dataclass
 class CHGNetRelaxMaker(ForceFieldRelaxMaker):

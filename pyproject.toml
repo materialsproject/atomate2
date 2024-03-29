@@ -50,6 +50,7 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
+    "torch<=2.2.1", # incompatibility with dgl if newer versions are used
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.0.0",
