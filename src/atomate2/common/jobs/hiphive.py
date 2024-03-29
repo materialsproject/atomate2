@@ -1440,6 +1440,9 @@ def run_hiphive_renormalization(
     # thermal_data = loadfn("thermal_data.json")
     # thermal_data = thermal_data["heat_capacity"]
 
+    n_imaginary_orig = fitting_data["n_imaginary"]
+    imag_modes_bool = n_imaginary_orig > 0 # True if imaginary modes exist
+
     cutoffs = fitting_data["cutoffs"]
     fit_method = fitting_data["fit_method"]
 
@@ -1490,8 +1493,6 @@ def run_hiphive_renormalization(
                                                 )
                 TD_structure_data["structure"] = parent_structure_TD
                 TD_structure_data["supercell_structure"] = supercell_structure_TD
-
-    imag_modes_bool = TD_data["n_imaginary"] > 0 # True if imaginary modes exist
 
     # Thermodynamic integration for anharmonic free energy
     TD_data = thermodynamic_integration_ifc(
