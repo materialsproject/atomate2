@@ -48,6 +48,7 @@ from phono3py.phonon3.gruneisen import Gruneisen
 
 # Phonopy & Phono3py
 from phonopy import Phonopy
+from phonopy.interface.hiphive_interface import phonopy_atoms_to_ase
 from phonopy.structure.atoms import PhonopyAtoms
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import (
@@ -57,6 +58,7 @@ from pymatgen.io.phonopy import (
     get_phonopy_structure,
 )
 from pymatgen.io.shengbte import Control
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import SupercellTransformation
 
 from atomate2.common.jobs.phonons import get_supercell_size, run_phonon_displacements
@@ -78,7 +80,8 @@ T_QHA = [
 # Temperature at which lattice thermal conductivity is calculated
 # If renorm. is performed, T_RENORM overrides T_KLAT for lattice thermal conductivity
 # T_KLAT = {"t_min":100,"t_max":1500,"t_step":100} #[i*100 for i in range(0,11)]
-T_KLAT = 300  # [i*100 for i in range(0,11)]
+# T_KLAT = [300]  # [i*100 for i in range(0,11)]
+T_KLAT = {"min":100,"max":1000,"step":100} #[i*100 for i in range(0,11)]
 T_THERMAL_CONDUCTIVITY = [0, 100, 200, 300]  # [i*100 for i in range(0,16)]
 IMAGINARY_TOL = 0.025  # in THz
 FIT_METHOD = "rfe"
@@ -170,7 +173,7 @@ def hiphive_static_calcs(
     outputs["structure_data"] = json_saver.output[2]
     outputs["current_dir"] = json_saver.output[3]
 
-    return Response(addition=jobs, output=outputs)
+    return Response(replace=jobs, output=outputs)
 
 @job
 def generate_hiphive_displacements(
@@ -447,6 +450,7 @@ def run_hiphive(
     """
     logger.info(f"cutoffs = {cutoffs}")
     logger.info(f"disp_cut is {disp_cut}")
+    logger.info(f"prev_dir_json_saver is {prev_dir_json_saver} this is for def run_hiphive")
 
     copy_hiphive_outputs(prev_dir_json_saver)
 
@@ -458,9 +462,12 @@ def run_hiphive(
     supercell_structure = structure_data["supercell_structure"]
     supercell_matrix = np.array(structure_data["supercell_matrix"])
 
+    parent_structure = SpacegroupAnalyzer(parent_structure).find_primitive() #TODO refactor this later
+
     if cutoffs is None:
         cutoffs = get_cutoffs(supercell_structure)
         logger.info(f"cutoffs is {cutoffs}")
+        # cutoffs = [cutoffs[7], cutoffs[18], cutoffs[21], cutoffs[24], cutoffs[25]] #TODO, for testing purpose. Remove this line later
     else:
         pass
 
@@ -492,20 +499,20 @@ def run_hiphive(
         mean_displacements = np.linalg.norm(displacements, axis=1).mean()
         logger.info(f"Mean displacements while reading individual displacements: {mean_displacements}")
 
-    logger.info(f'forces in 0th structure are {structures[0].get_array("forces")}')
-    logger.info(
-        f'displacements in 0th structure are {structures[0].get_array("displacements")}'
-    )
+    # logger.info(f'forces in 0th structure are {structures[0].get_array("forces")}')
+    # logger.info(
+    #     f'displacements in 0th structure are {structures[0].get_array("displacements")}'
+    # )
 
-    logger.info(f'forces in 1st structure are {structures[1].get_array("forces")}')
-    logger.info(
-        f'displacements in 1st structure are {structures[1].get_array("displacements")}'
-    )
+    # logger.info(f'forces in 1st structure are {structures[1].get_array("forces")}')
+    # logger.info(
+    #     f'displacements in 1st structure are {structures[1].get_array("displacements")}'
+    # )
 
-    logger.info(f'forces in 2nd structure are {structures[2].get_array("forces")}')
-    logger.info(
-        f'displacements in 2nd structure are {structures[2].get_array("displacements")}'
-    )
+    # logger.info(f'forces in 2nd structure are {structures[2].get_array("forces")}')
+    # logger.info(
+    #     f'displacements in 2nd structure are {structures[2].get_array("displacements")}'
+    # )
 
     all_cutoffs = cutoffs
     logger.info(f"all_cutoffs is {all_cutoffs}")
@@ -560,10 +567,15 @@ def run_hiphive(
     if fitting_data["n_imaginary"] == 0:
         logger.info("No imaginary modes! Writing ShengBTE files")
         atoms = AseAtomsAdaptor.get_atoms(parent_structure)
-        fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3)
+        # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3)
         fcs.write_to_phonopy("FORCE_CONSTANTS_2ND", format="text")
         ForceConstants.write_to_phonopy(fcs, "fc2.hdf5", "hdf5")
-        ForceConstants.write_to_phono3py(fcs, "fc3.hdf5", 3)
+        ForceConstants.write_to_phono3py(fcs, "fc3.hdf5", "hdf5")
+        ### detour from hdf5
+        supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
+        FCS = ForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3)
+        FCS.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3, fc_tol=1e-4)
+
     else:
         logger.info("ShengBTE files not written due to imaginary modes.")
         logger.info("You may want to perform phonon renormalization.")
@@ -947,9 +959,9 @@ def harmonic_properties(
     structure: Structure,
     supercell_matrix: np.ndarray,
     fcs: ForceConstants,
-    temperature: List,
+    temperature: list,
     imaginary_tol: float = IMAGINARY_TOL
-) -> Tuple[Dict,Phonopy]:
+) -> tuple[dict,Phonopy]:
     """
     Uses the force constants to extract phonon properties. Used for comparing
     the accuracy of force constant fits.
@@ -1129,11 +1141,6 @@ def gruneisen(
         grun_tot.append(get_total_grun(omega,grun,kweight,temp))
     grun_tot = np.nan_to_num(np.array(grun_tot))
 
-    # grun_tot = [
-    #     np.nan_to_num(np.array(get_total_grun(omega, grun, kweight, temp)))
-    #     for temp in temperature
-    # ]
-
     # linear thermal expansion coefficeint and fraction
     if bulk_modulus is None:
         cte = None
@@ -1153,7 +1160,6 @@ def gruneisen(
         logger.info(f"bulk_modulus: {bulk_modulus}")
 #        cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
         cte = grun_tot*heat_capacity.repeat(3).reshape(len(heat_capacity),3)/(vol/10**30)/(bulk_modulus*10**9)/3
-        # cte = grun_tot*heat_capacity.repeat(3).reshape(1,3)/(vol/10**30)/(bulk_modulus*10**9)/3
         cte = np.nan_to_num(cte)
         if len(temperature)==1:
             dLfrac = cte*temperature
@@ -1214,11 +1220,11 @@ def run_thermal_cond_solver(
             file.
     """
     if therm_cond_solver == "almabte":
-        therm_cond_solver_cmd = Atomate2Settings.ALMABTE_CMD
+        therm_cond_solver_cmd = Atomate2Settings().ALMABTE_CMD
     elif therm_cond_solver == "shengbte":
-        therm_cond_solver_cmd = Atomate2Settings.SHENGBTE_CMD
+        therm_cond_solver_cmd = Atomate2Settings().SHENGBTE_CMD
     elif therm_cond_solver == "phono3py":
-        therm_cond_solver_cmd = Atomate2Settings.PHONO3PY_CMD
+        therm_cond_solver_cmd = Atomate2Settings().PHONO3PY_CMD
 
     logger.info(f"therm_cond_solver_cmd = {therm_cond_solver_cmd}")
     therm_cond_solver_cmd = expandvars(therm_cond_solver_cmd)
@@ -1233,10 +1239,14 @@ def run_thermal_cond_solver(
     structure_data = loadfn("structure_data.json")
     structure = structure_data["structure"]
     supercell_matrix = structure_data["supercell_matrix"]
+    
+    structure = SpacegroupAnalyzer(structure).find_primitive() #TODO refactor this later
 
     logger.info(f"Temperature = {temperature}")
 
     temperature = temperature if temperature is not None else T_KLAT
+    logger.info(f"Temperature = {temperature}")
+    logger.info(f"type of temperature = {type(temperature)}")
 
     renormalized = renormalized if renormalized is not None else False
 
@@ -1246,9 +1256,9 @@ def run_thermal_cond_solver(
         if isinstance(temperature, (int, float)):
             pass
         elif isinstance(temperature, dict):
-            temperature["t_min"]
-            temperature["t_max"]
-            temperature["t_step"]
+            temperature["min"]
+            temperature["max"]
+            temperature["step"]
         else:
             raise ValueError("Unsupported temperature type, must be float or dict")
 
@@ -1296,7 +1306,7 @@ def run_thermal_cond_solver(
 @job
 def run_fc_to_pdos(
     renormalized: bool | None = None,
-    renorm_temperature: str | None = None,
+    # renorm_temperature: str | None = None,
     mesh_density: float | None = None,
     prev_dir_json_saver: str | None = None,
     loop: int | None = None,
@@ -1328,7 +1338,7 @@ def run_fc_to_pdos(
     logger.info(f"loop = {loop}")
 
     renormalized = renormalized if renormalized else False
-    renorm_temperature = renorm_temperature if renorm_temperature else None
+    # renorm_temperature = renorm_temperature if renorm_temperature else None
     mesh_density = mesh_density if mesh_density else 100.0
 
     structure_data = loadfn(f"structure_data_{loop}.json")
@@ -1366,7 +1376,7 @@ def run_fc_to_pdos(
             f"Finished inserting renormalized force constants and phonon data at {T} K"
         )
 
-    return uniform_bs, lm_bs, dos
+    return uniform_bs, lm_bs, dos, prev_dir_json_saver
 
 
 def _get_fc_fsid(structure: Structure,
@@ -1397,14 +1407,11 @@ def run_hiphive_renormalization(
     temperature: float,
     renorm_method: str,
     nconfig: int,
-    conv_thresh: float,
-    max_iter: int,
     renorm_TE_iter: bool,
     bulk_modulus: float,
-    mesh_density: float,
     prev_dir_hiphive: str,
     loop: int,
-) -> list[str]:
+) -> list[str, dict[str, Any]]:
     """
     Phonon renormalization using hiPhive.
 
@@ -1484,16 +1491,21 @@ def run_hiphive_renormalization(
                 TD_structure_data["structure"] = parent_structure_TD
                 TD_structure_data["supercell_structure"] = supercell_structure_TD
 
+    imag_modes_bool = TD_data["n_imaginary"] > 0 # True if imaginary modes exist
+
     # Thermodynamic integration for anharmonic free energy
-    TD_data = thermodynamic_integration_ifc(TD_data, # everything TD
-                                                fcs, # original
-                                                param, # original
-                                                )
+    TD_data = thermodynamic_integration_ifc(
+        TD_data, # everything TD
+        fcs, # original
+        param, # original
+        imag_modes_bool, # if False, only uses lambda=0
+        )
     # write results
     logger.info("Writing renormalized results")
     fcs_TD = TD_data['fcs']
     fcs_TD.write("force_constants.fcs")
-    if "n_imaginary" in TD_data:
+    # if "n_imaginary" in TD_data:
+    if TD_data["n_imaginary"] != 0:
         thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
                     "free_energy_correction_S","free_energy_correction_SC",
                     "free_energy_correction_TI"]
@@ -1519,7 +1531,7 @@ def run_hiphive_renormalization(
 
     current_dir = os.getcwd()
 
-    return [current_dir]
+    return [current_dir, TD_thermal_data]
 
 
 def run_renormalization(
@@ -1611,6 +1623,7 @@ def thermodynamic_integration_ifc(
     param: np.ndarray,
     lambda_array: np.ndarray = np.array([0, 0.1, 0.3, 0.5, 0.7, 0.9, 1]),
     TI_nconfig=3,
+    imag_modes_bool: bool = True
 ) -> dict:
     supercell_structure = TD_data["supercell_structure"]
     cs = TD_data['cs']
@@ -1621,6 +1634,8 @@ def thermodynamic_integration_ifc(
     supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
     renorm = Renormalization(cs, supercell_atoms, param, fcs, T, 'least_squares', 'rfe', param_TD, fcs_TD)
     matcov_TD, matcov_BO, matcov_TDBO = renorm.born_oppenheimer_qcv(TI_nconfig)
+    if not imag_modes_bool:
+        lambda_array = np.array([0])
     correction_TI = renorm.thermodynamic_integration(lambda_array, matcov_TD, matcov_BO, matcov_TDBO, TI_nconfig)
     TD_data["free_energy_correction_TI"] = correction_TI
     return TD_data
@@ -1699,6 +1714,7 @@ def run_lattice_thermal_conductivity(
     # files needed to run ShengBTE
 
     logger.info("We are in Lattice Thermal Conductivity... 1")
+    logger.info(f"previ_dir_hiphive in def run_lattice_thermal_conductivity = {prev_dir_hiphive}")
 
 
     if renormalized:
@@ -1727,5 +1743,15 @@ def run_lattice_thermal_conductivity(
         loop=loop,
         therm_cond_solver=therm_cond_solver
     )
+    shengbte.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) #change to gpu_fworker
+    shengbte.name += f" {temperature} {loop}"
+    shengbte.metadata.update(
+        {
+            "tag": [
+                f"run_thermal_cond_solver_{loop}",
+                f"loop={loop}",
+            ]
+        }
+    )
 
-    return Response(replace=shengbte)
+    return Response(addition=shengbte)
