@@ -1,4 +1,5 @@
 """Functions dealing with FHI-aims files."""
+
 from __future__ import annotations
 
 import logging
@@ -17,8 +18,6 @@ if TYPE_CHECKING:
     from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
-
-__all__ = ["copy_aims_outputs", "write_aims_input_set", "cleanup_aims_outputs"]
 
 
 @auto_fileclient

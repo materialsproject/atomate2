@@ -1,4 +1,5 @@
 """Schemas for elastic tensor fitting and related properties."""
+
 from copy import deepcopy
 from typing import Optional
 
@@ -190,7 +191,7 @@ class ElasticDocument(StructureMetadata):
         strains = [d.green_lagrange_strain for d in deformations]
 
         if symprec is not None:
-            strains, stresses, uuids, job_dirs = _expand_strains(
+            strains, stresses, uuids, job_dirs = expand_strains(
                 structure, strains, stresses, uuids, job_dirs, symprec
             )
 
@@ -256,7 +257,7 @@ class ElasticDocument(StructureMetadata):
         )
 
 
-def _expand_strains(
+def expand_strains(
     structure: Structure,
     strains: list[Strain],
     stresses: list[Stress],
