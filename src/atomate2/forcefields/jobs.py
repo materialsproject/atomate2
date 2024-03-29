@@ -75,8 +75,7 @@ class ForceFieldRelaxMaker(Maker):
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
-        if "dir_name" not in self.task_document_kwargs:
-            self.task_document_kwargs.update({"dir_name": os.getcwd()})
+        self.task_document_kwargs.setdefault("dir_name", os.getcwd())
 
         result = self._relax(structure)
 
