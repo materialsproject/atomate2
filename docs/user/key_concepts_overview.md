@@ -332,4 +332,4 @@ Finally, the builder compiles the processed items into an ElasticDocument from t
 
 # Exercises
 
-Construct a flow for a `DoubleRelaxMaker` (a workflow consisting of two relax jobs) based on the `CHGNetRelaxMaker`. Then add a final non-SCF static job using the `CHGNetStaticMaker`. Compare your result with the [DoubleRelaxMaker for VASP](https://materialsproject.github.io/atomate2/user/codes/vasp.html#list-of-vasp-workflows). Try to replicate one of the other VASP workflows as well!
+Construct a flow for a `DoubleRelaxMaker` (a workflow consisting of two relax jobs) based on the `CHGNetRelaxMaker`. Then add a final non-SCF static job using the `CHGNetStaticMaker`. Compare your result with the [DoubleRelaxMaker for VASP](https://materialsproject.github.io/atomate2/reference/atomate2.vasp.flows.core.DoubleRelaxMaker.html#atomate2.vasp.flows.core.DoubleRelaxMaker). Try to replicate one of the other [VASP workflows](https://materialsproject.github.io/atomate2/user/codes/vasp.html#list-of-vasp-workflows) as well!
