@@ -54,6 +54,11 @@ class BaseAnharmonicityMaker(Maker):
     DFT_forces: list[np.ndarray] = []
     anharmonic_forces: np.ndarray
     sigma_A_oneshot: float
+    sym_reduce: bool = True
+    symprec: float = 1e-4
+    use_symmetrized_structure: str | None = None
+    kpath_scheme: str = "seekpath",
+    code: str = None
 
     def make(
         self,
@@ -74,7 +79,7 @@ class BaseAnharmonicityMaker(Maker):
             supercell_matrix = supercell_job.output
         
         # Get phonopy object
-        displacements = generate_phonon_displacements(
+        phonon_displacements = generate_phonon_displacements(
             structure = structure,
             supercell_matrix = supercell_matrix,
             displacement = self.displacement,
@@ -84,14 +89,14 @@ class BaseAnharmonicityMaker(Maker):
             kpath_scheme = self.kpath_scheme,
             code = self.code,
         )
-        jobs.append(displacements)
+        jobs.append(phonon_displacements)
 
         # Recover Phonopy object for use
-        self.phonon = displacements.output[1]
+        displacements, self.phonon = phonon_displacements.output[1]
 
         # Run displacement calculations
         displacement_calcs = run_phonon_displacements(
-            displacements = displacements.output,
+            displacements = displacements,
             structure = structure,
             supercell_matrix = supercell_matrix,
             phonon_maker = self.phonon_displacement_maker,
