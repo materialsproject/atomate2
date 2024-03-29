@@ -15,28 +15,74 @@ from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 class CalculationInput(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """OpenMM input settings for a job, these are the attributes of the OpenMMMaker."""
 
-    n_steps: Optional[int] = Field(0, description="Total steps")
-
-    step_size: Optional[float] = Field(None, description="")
-
-    platform_name: Optional[str] = Field(None, description="Platform name")
-
-    platform_properties: Optional[dict] = Field(None, description="Platform properties")
-
-    state_interval: Optional[int] = Field(None, description="")
-
-    traj_interval: Optional[int] = Field(None, description="Report interval")
-
-    wrap_traj: Optional[bool] = Field(None, description="Wrap particles or not")
-
-    temperature: Optional[float] = Field(
-        None, description="Final temperature for the calculation"
+    n_steps: Optional[int] = Field(
+        None, description="The number of simulation steps to run."
     )
 
-    pressure: Optional[float] = Field(None, description="Pressure for the calculation")
+    step_size: Optional[float] = Field(
+        None, description="The size of each simulation step (picoseconds)."
+    )
+
+    temperature: Optional[float] = Field(
+        None, description="The simulation temperature (kelvin)."
+    )
 
     friction_coefficient: Optional[float] = Field(
-        None, description="Friction coefficient for the calculation"
+        None,
+        description=(
+            "The friction coefficient for the integrator " "(inverse picoseconds)."
+        ),
+    )
+
+    platform_name: Optional[str] = Field(
+        None,
+        description=(
+            "The name of the OpenMM platform to use, passed to "
+            "Interchange.to_openmm_simulation."
+        ),
+    )
+
+    platform_properties: Optional[dict] = Field(
+        None,
+        description=(
+            "Properties for the OpenMM platform, passed to "
+            "Interchange.to_openmm_simulation."
+        ),
+    )
+
+    state_interval: Optional[int] = Field(
+        None,
+        description=(
+            "The interval for saving simulation state. For no state, set to 0."
+        ),
+    )
+
+    state_file_name: Optional[str] = Field(
+        None, description="The name of the state file to save."
+    )
+
+    traj_interval: Optional[int] = Field(
+        None,
+        description=(
+            "The interval for saving trajectory frames. For no trajectory, set to 0."
+        ),
+    )
+
+    wrap_traj: Optional[bool] = Field(
+        None, description="Whether to wrap trajectory coordinates."
+    )
+
+    report_velocities: Optional[bool] = Field(
+        None, description="Whether to report velocities in the trajectory file."
+    )
+
+    traj_file_name: Optional[str] = Field(
+        None, description="The name of the trajectory file to save."
+    )
+
+    traj_file_type: Optional[str] = Field(
+        None,
+        description="The type of trajectory file to save. Options are 'dcd' and 'h5'.",
     )
 
 
