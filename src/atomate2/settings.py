@@ -242,12 +242,12 @@ class Atomate2Settings(BaseSettings):
 
     # ShengBTE settings
     SHENGBTE_CMD: str = Field(
-        "shengbte", description="Command to run 3 phonon ShengBTE."
+        "ShengBTE", description="Command to run 3 phonon ShengBTE."
     )
 
     # AlmaBTE settings
     ALMABTE_CMD: str = Field(
-        "almabte", description="Command to run 4 phonon AlmaBTE."
+        "ShengBTE", description="Command to run 4 phonon AlmaBTE."
     )
 
     # Phono3py settings
