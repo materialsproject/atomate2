@@ -278,6 +278,49 @@ def adsorption_calculations(
 
 
 @dataclass
+class BulkRelaxMaker(BaseVaspMaker):
+    """Maker for molecule relaxation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the relaxation calculation.
+    """
+
+    name: str = "molecule relaxation"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[11, 11, 11]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
+            user_incar_settings={
+                "ALGO": "Normal",
+                "IBRION": 2,
+                "ISIF": 3,
+                "ENCUT": 700,
+                "GGA": "RP",
+                "EDIFF": 1e-5,
+                "LAECHG": False,
+                "LREAL": False,
+                "LCHARG": False,
+                "LDAU": False,
+                "NSW": 300,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+
+@dataclass
 class MoleculeRelaxMaker(BaseVaspMaker):
     """Maker for molecule relaxation.
 

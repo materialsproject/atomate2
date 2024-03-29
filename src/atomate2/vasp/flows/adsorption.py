@@ -7,9 +7,9 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.adsorption import (
     AdslabRelaxMaker,
+    BulkRelaxMaker,
     MoleculeRelaxMaker,
     MolStaticMaker,
     SlabStaticMaker,
@@ -19,7 +19,6 @@ from atomate2.vasp.jobs.adsorption import (
     get_boxed_molecule,
     run_adslabs_job,
 )
-from atomate2.vasp.jobs.core import TightRelaxMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -46,8 +45,6 @@ class AdsorptionMaker(Maker):
     ----------
     name: str
         Name of the flow.
-    get_supercell_size_kwargs: dict
-        Arguments to pass to get_supercell_size function.
     bulk_relax_maker: BaseVaspMaker
         Maker for bulk relaxation.
     mol_relax_maker: BaseVaspMaker
@@ -61,19 +58,16 @@ class AdsorptionMaker(Maker):
     """  # noqa: E501
 
     name: str = "adsorption"
-    # do we need this?
-    get_supercell_size_kwargs: dict = field(default_factory=dict)
 
-    bulk_relax_maker: BaseVaspMaker = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
-    )
-    mol_relax_maker: MoleculeRelaxMaker = field(default_factory=MoleculeRelaxMaker())
+    bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker())
 
-    adslab_relax_maker: AdslabRelaxMaker = field(default_factory=AdslabRelaxMaker())
+    mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker())
 
-    slab_static_energy_maker: SlabStaticMaker = field(default_factory=SlabStaticMaker())
+    adslab_relax_maker: BaseVaspMaker = field(default_factory=AdslabRelaxMaker())
 
-    mol_static_energy_maker: MolStaticMaker = field(default_factory=MolStaticMaker())
+    slab_static_energy_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker())
+
+    mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
 
     def make(
         self,
@@ -117,7 +111,7 @@ class AdsorptionMaker(Maker):
 
         molecule_structure = get_boxed_molecule(molecule)
 
-        if self.mol_relax_maker is not None:
+        if self.mol_relax_maker:
             mol_optimize_job = self.mol_relax_maker.make(
                 molecule_structure, prev_dir=prev_dir_mol
             )
@@ -136,9 +130,9 @@ class AdsorptionMaker(Maker):
         mol_static_job.append_name("molecule static job")
         jobs.append(mol_static_job)
 
-        molecule_dft_energy = mol_static_job.output.output.energy
+        molecule_dft_energy = mol_static_job.output.energy
 
-        if self.bulk_relax_maker is not None:
+        if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
                 structure, prev_dir=prev_dir_bulk
             )
@@ -168,7 +162,7 @@ class AdsorptionMaker(Maker):
         )
         jobs.append(generate_adslabs_structures)
 
-        if self.adslab_relax_maker is None:
+        if self.adslab_relax_maker:
             raise ValueError("adslab_relax_maker shouldn't be Null.")
 
         # slab relaxation without adsoprtion
