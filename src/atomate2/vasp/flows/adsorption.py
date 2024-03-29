@@ -8,10 +8,10 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.adsorption import (
-    AdslabRelaxMaker,
     BulkRelaxMaker,
     MoleculeRelaxMaker,
     MolStaticMaker,
+    SlabRelaxMaker,
     SlabStaticMaker,
     adsorption_calculations,
     generate_adslabs,
@@ -59,15 +59,15 @@ class AdsorptionMaker(Maker):
 
     name: str = "adsorption"
 
-    bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker())
-
     mol_relax_maker: BaseVaspMaker = field(default_factory=MoleculeRelaxMaker())
 
-    adslab_relax_maker: BaseVaspMaker = field(default_factory=AdslabRelaxMaker())
-
-    slab_static_energy_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker())
-
     mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker())
+
+    bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker())
+
+    adslab_relax_maker: BaseVaspMaker = field(default_factory=SlabRelaxMaker())
+
+    adslab_static_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker())
 
     def make(
         self,
@@ -108,7 +108,6 @@ class AdsorptionMaker(Maker):
             A flow object for calculating adsorption energies.
         """  # noqa: E501
         jobs = []
-
         molecule_structure = get_boxed_molecule(molecule)
 
         if self.mol_relax_maker:
@@ -184,7 +183,7 @@ class AdsorptionMaker(Maker):
         vasp_adslabs_calcs = run_adslabs_job(
             adslab_structures=generate_adslabs_structures,
             relax_maker=self.adslab_relax_maker,
-            static_maker=self.slab_static_energy_maker,
+            static_maker=self.adslab_static_maker,
         )
         jobs.append(vasp_adslabs_calcs)
 

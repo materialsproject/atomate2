@@ -165,7 +165,7 @@ def generate_adslabs(
 @job
 def run_adslabs_job(
     adslab_structures: list[Structure],
-    relax_maker: AdslabRelaxMaker,
+    relax_maker: SlabRelaxMaker,
     static_maker: SlabStaticMaker,
 ) -> Flow:
     """Workflow of running the adsorption slab calculations.
@@ -364,7 +364,7 @@ class MoleculeRelaxMaker(BaseVaspMaker):
 
 
 @dataclass
-class AdslabRelaxMaker(BaseVaspMaker):
+class SlabRelaxMaker(BaseVaspMaker):
     """Maker for adsorption slab relaxation.
 
     Parameters
