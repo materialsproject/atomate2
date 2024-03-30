@@ -224,5 +224,10 @@ class Atomate2Settings(BaseSettings):
                     raise SyntaxError(
                         f"{env_var_name} at {config_file_path} is unparsable"
                     ) from None
+        # warn if config path is not the default but file doesn't exist
+        elif config_file_path != Path(_DEFAULT_CONFIG_FILE_PATH).expanduser():
+            warnings.warn(
+                f"{env_var_name} at {config_file_path} does not exist", stacklevel=2
+            )
 
         return {**new_values, **values}
