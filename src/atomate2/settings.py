@@ -10,6 +10,7 @@ from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _DEFAULT_CONFIG_FILE_PATH = "~/.atomate2.yaml"
+_ENV_PREFIX = "atomate2_"
 
 
 class Atomate2Settings(BaseSettings):
@@ -190,7 +191,7 @@ class Atomate2Settings(BaseSettings):
         None, description="Additional settings applied to AMSET settings file."
     )
 
-    model_config = SettingsConfigDict(env_prefix="atomate2_")
+    model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)
 
     @model_validator(mode="before")
     @classmethod
