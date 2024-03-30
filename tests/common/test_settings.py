@@ -60,3 +60,8 @@ def test_empty_and_invalid_config_file(
         "Input should be a valid number",
     ):
         Atomate2Settings()
+
+    # test warning if config path is non-default and file does not exist
+    config_file_path.unlink()
+    with pytest.warns(UserWarning, match=f"{env_var_name} at .+ does not exist"):
+        Atomate2Settings()
