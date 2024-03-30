@@ -158,8 +158,8 @@ class CalculationOutput(BaseModel):
             "direct_bandgap": output.direct_band_gap,
         }
 
-        if output.ferm_energy is not None:
-            electronic_output["efermi"] = output.ferm_energy
+        if output.fermi_energy is not None:
+            electronic_output["efermi"] = output.fermi_energy
 
         forces = None
         if output.forces is not None:
