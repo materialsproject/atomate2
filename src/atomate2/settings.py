@@ -206,14 +206,15 @@ class Atomate2Settings(BaseSettings):
         """
         from monty.serialization import loadfn
 
-        config_file_path = values.get("CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
+        config_file_path = values.get(key := "CONFIG_FILE", _DEFAULT_CONFIG_FILE_PATH)
+        env_var_name = f"{_ENV_PREFIX.upper()}{key}"
         config_file_path = Path(config_file_path).expanduser()
 
         new_values = {}
         if config_file_path.exists():
             if config_file_path.stat().st_size == 0:
                 warnings.warn(
-                    f"Using atomate2 config file at {config_file_path} but it's empty",
+                    f"Using {env_var_name} at {config_file_path} but it's empty",
                     stacklevel=2,
                 )
             else:
@@ -221,7 +222,7 @@ class Atomate2Settings(BaseSettings):
                     new_values.update(loadfn(config_file_path))
                 except ValueError:
                     raise SyntaxError(
-                        f"atomate2 config file at {config_file_path} is unparsable"
+                        f"{env_var_name} at {config_file_path} is unparsable"
                     ) from None
 
         return {**new_values, **values}

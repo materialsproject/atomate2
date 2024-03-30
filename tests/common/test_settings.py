@@ -1,16 +1,16 @@
-import os
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
-from atomate2.settings import Atomate2Settings
+from atomate2.settings import _ENV_PREFIX, Atomate2Settings
 
 
-def test_empty_and_invalid_config_file(clean_dir):
-    # set path to load settings from though ATOMATE2_CONFIG_FILE env variable
+def test_empty_and_invalid_config_file(clean_dir, monkeypatch: pytest.MonkeyPatch):
+    # set path to load settings from with ATOMATE2_CONFIG_FILE env variable
     config_file_path = Path.cwd() / "test-atomate2-config.yaml"
-    os.environ["ATOMATE2_CONFIG_FILE"] = str(config_file_path)
+    env_var_name = f"{_ENV_PREFIX.upper()}CONFIG_FILE"
+    monkeypatch.setenv(env_var_name, str(config_file_path))
 
     settings = Atomate2Settings()
     assert str(config_file_path) == settings.CONFIG_FILE
@@ -20,24 +20,20 @@ def test_empty_and_invalid_config_file(clean_dir):
     assert settings.VASP_RUN_DDEC6 is False
     assert settings.DDEC6_ATOMIC_DENSITIES_DIR is None
 
-    # test warning if config file is empty
+    # test warning if config file exists but is empty
     config_file_path.touch()
-    with pytest.warns(
-        UserWarning, match="Using atomate2 config file at .+ but it's empty"
-    ):
+    with pytest.warns(UserWarning, match=f"Using {env_var_name} at .+ but it's empty"):
         Atomate2Settings()
 
     # test error if the file exists and contains invalid YAML
     with open(config_file_path, "w") as file:
         file.write("invalid yaml")
-
-    with pytest.raises(SyntaxError, match="atomate2 config file at"):
+    with pytest.raises(SyntaxError, match=f"{env_var_name} at"):
         Atomate2Settings()
 
     # test error if the file exists and contains invalid settings
     with open(config_file_path, "w") as file:
         file.write("VASP_CMD: 42")
-
     with pytest.raises(
         ValidationError,
         match="1 validation error for Atomate2Settings\nVASP_CMD\n  "
@@ -45,9 +41,9 @@ def test_empty_and_invalid_config_file(clean_dir):
     ):
         Atomate2Settings()
 
+    # another invalid setting
     with open(config_file_path, "w") as file:
         file.write("BANDGAP_TOL: invalid")
-
     with pytest.raises(
         ValidationError,
         match="1 validation error for Atomate2Settings\nBANDGAP_TOL\n  "
