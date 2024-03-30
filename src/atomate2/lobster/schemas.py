@@ -298,6 +298,7 @@ class CondensedBondingAnalysis(BaseModel):
         cls,
         dir_name: Union[str, Path],
         save_cohp_plots: bool = True,
+        lobsterpy_kwargs: dict = None,
         plot_kwargs: dict = None,
         which_bonds: str = "all",
     ) -> tuple:
@@ -311,12 +312,15 @@ class CondensedBondingAnalysis(BaseModel):
         save_cohp_plots : bool.
             Bool to indicate whether automatic cohp plots and jsons
             from lobsterpy will be generated.
+        lobsterpy_kwargs : dict.
+            kwargs to change default lobsterpy automatic analysis parameters.
         plot_kwargs : dict.
             kwargs to change plotting options in lobsterpy.
         which_bonds: str.
             mode for condensed bonding analysis: "cation-anion" and "all".
         """
         plot_kwargs = plot_kwargs or {}
+        lobsterpy_kwargs = lobsterpy_kwargs or {}
         dir_name = Path(dir_name)
         cohpcar_path = Path(zpath(dir_name / "COHPCAR.lobster"))
         charge_path = Path(zpath(dir_name / "CHARGE.lobster"))
@@ -325,6 +329,20 @@ class CondensedBondingAnalysis(BaseModel):
         icobilist_path = Path(zpath(dir_name / "ICOBILIST.lobster"))
         icooplist_path = Path(zpath(dir_name / "ICOOPLIST.lobster"))
 
+        # Update lobsterpy analysis parameters with user supplied parameters
+        lobsterpy_kwargs_updated = {
+            "are_cobis": False,
+            "are_coops": False,
+            "cutoff_icohp": 0.10,
+            "noise_cutoff": 0.1,
+            "orbital_cutoff": 0.05,
+            "orbital_resolved": False,
+            "start": None,
+            "summed_spins": False,  # we will always use spin polarization here
+            "type_charge": None,
+            **lobsterpy_kwargs,
+        }
+
         try:
             start = time.time()
             analyse = Analysis(
@@ -332,9 +350,8 @@ class CondensedBondingAnalysis(BaseModel):
                 path_to_icohplist=icohplist_path,
                 path_to_cohpcar=cohpcar_path,
                 path_to_charge=charge_path,
-                summed_spins=False,  # we will always use spin polarization here
-                cutoff_icohp=0.10,
                 which_bonds=which_bonds,
+                **lobsterpy_kwargs_updated,
             )
             cba_run_time = time.time() - start
             # initialize lobsterpy condensed bonding analysis
@@ -368,7 +385,7 @@ class CondensedBondingAnalysis(BaseModel):
                 type_charges=analyse.type_charge,
                 cohp_plot_data=CohpPlotData(data=cba_cohp_plot_data),
                 cutoff_icohp=analyse.cutoff_icohp,
-                summed_spins=False,
+                summed_spins=lobsterpy_kwargs_updated.get("summed_spins"),
                 which_bonds=analyse.which_bonds,
                 final_dict_bonds=DictBonds(data=analyse.final_dict_bonds),
                 final_dict_ions=DictIons(data=analyse.final_dict_ions),
@@ -544,6 +561,7 @@ class CalcQualitySummary(BaseModel):
             A task document summarizing quality of the lobster calculation.
         """
         dir_name = Path(dir_name)
+        calc_quality_kwargs = calc_quality_kwargs or {}
         band_overlaps_path = Path(zpath(dir_name / "bandOverlaps.lobster"))
         charge_path = Path(zpath(dir_name / "CHARGE.lobster"))
         doscar_path = Path(
@@ -563,7 +581,14 @@ class CalcQualitySummary(BaseModel):
         structure_path = Path(zpath(dir_name / "POSCAR"))
         vasprun_path = Path(zpath(dir_name / "vasprun.xml"))
 
-        calc_quality_kwargs = {} if calc_quality_kwargs is None else calc_quality_kwargs
+        # Update calc quality kwargs supplied by user
+        calc_quality_kwargs_updated = {
+            "e_range": [-20, 0],
+            "dos_comparison": True,
+            "n_bins": 256,
+            "bva_comp": True,
+            **calc_quality_kwargs,
+        }
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
             path_to_poscar=structure_path,
             path_to_vasprun=vasprun_path,
@@ -573,7 +598,7 @@ class CalcQualitySummary(BaseModel):
             path_to_lobsterin=lobsterin_path,
             path_to_lobsterout=lobsterout_path,
             path_to_bandoverlaps=band_overlaps_path,
-            **calc_quality_kwargs,
+            **calc_quality_kwargs_updated,
         )
         return CalcQualitySummary(**cal_quality_dict)
 
@@ -589,8 +614,6 @@ class StrongestBonds(BaseModel):
         description="Denotes whether the information "
         "is for cation-anion pairs or all bonds",
     )
-    are_coops: bool = Field(description="Denotes whether the file consists of ICOOPs")
-    are_cobis: bool = Field(escription="Denotes whether the file consists of ICOBIs")
     strongest_bonds: Optional[dict] = Field(
         None,
         description="Dict with infos on bond strength and bond length,.",
@@ -714,13 +737,14 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         cls,
         dir_name: Union[Path, str],
         additional_fields: dict = None,
+        add_coxxcar_to_task_document: bool = False,
         analyze_outputs: bool = True,
+        calc_quality_kwargs: dict = None,
+        lobsterpy_kwargs: dict = None,
+        plot_kwargs: dict = None,
         store_lso_dos: bool = False,
         save_cohp_plots: bool = True,
-        plot_kwargs: dict = None,
-        calc_quality_kwargs: dict = None,
         save_cba_jsons: bool = True,
-        add_coxxcar_to_task_document: bool = False,
         save_computational_data_jsons: bool = False,
     ) -> "LobsterTaskDocument":
         """
@@ -732,24 +756,26 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             The path to the folder containing the calculation outputs.
         additional_fields : dict.
             Dictionary of additional fields to add to output document.
+        add_coxxcar_to_task_document : bool.
+            Bool to indicate whether to add COHPCAR, COOPCAR, COBICAR data objects
+            to the task document.
         analyze_outputs: bool.
             If True, will enable lobsterpy analysis.
+        calc_quality_kwargs : dict.
+            kwargs to change calc quality summary options in lobsterpy.
+        lobsterpy_kwargs : dict.
+            kwargs to change default lobsterpy automatic analysis parameters.
+        plot_kwargs : dict.
+            kwargs to change plotting options in lobsterpy.
         store_lso_dos : bool.
             Whether to store the LSO DOS.
         save_cohp_plots : bool.
             Bool to indicate whether automatic cohp plots and jsons
             from lobsterpy will be generated.
-        plot_kwargs : dict.
-            kwargs to change plotting options in lobsterpy.
-        calc_quality_kwargs : dict.
-            kwargs to change calc quality summary options in lobsterpy.
         save_cba_jsons : bool.
             Bool to indicate whether condensed bonding analysis jsons
             should be saved, consists of outputs from lobsterpy analysis,
             calculation quality summary, lobster dos, charges and madelung energies
-        add_coxxcar_to_task_document : bool.
-            Bool to indicate whether to add COHPCAR, COOPCAR, COBICAR data objects
-            to the task document
         save_computational_data_jsons : bool.
             Bool to indicate whether computational data jsons
             should be saved
@@ -824,6 +850,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                     dir_name,
                     save_cohp_plots=save_cohp_plots,
                     plot_kwargs=plot_kwargs,
+                    lobsterpy_kwargs=lobsterpy_kwargs,
                     which_bonds="all",
                 )
                 (
@@ -836,23 +863,14 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                     dir_name,
                     save_cohp_plots=save_cohp_plots,
                     plot_kwargs=plot_kwargs,
+                    lobsterpy_kwargs=lobsterpy_kwargs,
                     which_bonds="cation-anion",
                 )
             # Get lobster calculation quality summary data
-            calc_quality_kwargs_default = {
-                "e_range": [-20, 0],
-                "dos_comparison": True,
-                "n_bins": 256,
-                "bva_comp": True,
-                **(calc_quality_kwargs or {}),
-            }
-            if calc_quality_kwargs:
-                for args, values in calc_quality_kwargs.items():
-                    calc_quality_kwargs_default[args] = values
 
             calc_quality_summary = CalcQualitySummary.from_directory(
                 dir_name,
-                calc_quality_kwargs=calc_quality_kwargs_default,
+                calc_quality_kwargs=calc_quality_kwargs,
             )
 
             calc_quality_text = Description.get_calc_quality_description(
@@ -1222,8 +1240,6 @@ def _identify_strongest_bonds(
             )
             output.append(
                 StrongestBonds(
-                    are_cobis=are_cobis,
-                    are_coops=are_coops,
                     strongest_bonds=bond_dict,
                     which_bonds=analyse.which_bonds,
                 )
