@@ -37,7 +37,15 @@ class MagneticOrderingsMaker(Maker, ABC):
     total energy. The lowest energy ordering is the predicted ground-state collinear
     ordering.
 
-    This workflow was benchmarked with VASP for a wide range of test materials. It was
+    This Maker can be trivially implemented for your DFT code of choice by
+    utilizing the appropriate static/relax makers. However, for postprocessing to
+    work correctly, one must ensure that the calculation outputs can be processed into a
+    MagneticOrderingsDocument. As the TaskDoc class is currently defined only for
+    VASP, one should ensure that the task document returned during their DFT runs
+    contains the necessary parameters (e.g., TaskDoc.input.magnetic_moments).
+    This warning will be removed once a universal TaskDoc is implemented (Issue #741).
+
+    This workflow was benchmarked with VASP for a wide range of test materials and
     originally implemented in atomate (v1) for VASP as the MagneticOrderingsWF. Please
     refer to the following paper for more information and cite appropriately:
 
@@ -45,15 +53,6 @@ class MagneticOrderingsMaker(Maker, ABC):
         ground-state collinear magnetic order of inorganic materials using Density
         Functional Theory. npj Computational Materials 5, 64 (2019).
         https://doi.org/10.1038/s41524-019-0199-7
-
-    .. Warning::
-        This Maker can be trivially implemented for your DFT code of choice by
-        utilizing the appropriate static/relax makers. However, for postprocessing to
-        work, one must ensure that the calculation outputs can be processed into a
-        MagneticOrderingsDocument. As the TaskDoc class is currently defined for VASP,
-        one should ensure that the corresponding fields are present in the output
-        documents of their DFT code. For example: the TaskDoc.input.magnetic_moments
-        field should be present.
 
     .. Note::
         Good performance of this workflow is ultimately dependent on an appropriate
@@ -65,11 +64,11 @@ class MagneticOrderingsMaker(Maker, ABC):
     name : str
         Name of the flows produced by this Maker.
     static_maker : Maker
-        Maker used to perform static calculations for total energy. The default DFT code
-        used is VASP with atomate2.vasp.jobs.StaticMaker.
+        Maker used to perform static calculations for total energy. VASP is selected as
+        the default DFT code (atomate2.vasp.jobs.StaticMaker).
     relax_maker : Maker | None
-        Maker used to perform relaxations of the enumerated structures. The default DFT
-        code used is VASP with atomate2.vasp.jobs.RelaxMaker. If this field is None,
+        Maker used to perform relaxations of the enumerated structures. VASP is selected
+        as the default DFT code (atomate2.vasp.jobs.RelaxMaker). If this field is None,
         relaxations will be skipped (i.e., only static calculations are performed).
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
@@ -91,6 +90,7 @@ class MagneticOrderingsMaker(Maker, ABC):
         None.
     """
 
+    name: str = "magnetic_orderings"
     static_maker: Maker = field(
         default_factory=lambda: StaticMaker(
             input_set_generator=StaticSetGenerator(user_incar_settings={"EDIFF": 1e-7})
@@ -111,7 +111,6 @@ class MagneticOrderingsMaker(Maker, ABC):
     automatic: bool = True
     truncate_by_symmetry: bool = True
     transformation_kwargs: dict | None = None
-    name: str = "magnetic_orderings"
 
     def __post_init__(self) -> None:
         """Ensure that the static and relax makers come from the same base maker.
