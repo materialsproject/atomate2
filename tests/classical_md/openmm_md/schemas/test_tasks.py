@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-from atomate2.classical_md.openmm.schemas.tasks import CalculationOutput
+from atomate2.classical_md.openmm.schemas import CalculationOutput
 
 
 def test_calc_output_from_directory(output_dir):

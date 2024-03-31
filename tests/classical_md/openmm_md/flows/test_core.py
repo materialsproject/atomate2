@@ -1,7 +1,7 @@
 from jobflow import Flow
 
 from atomate2.classical_md.openmm.flows.core import AnnealMaker, ProductionMaker
-from atomate2.classical_md.openmm.jobs.core import (
+from atomate2.classical_md.openmm.jobs import (
     EnergyMinimizationMaker,
     NPTMaker,
     NVTMaker,
