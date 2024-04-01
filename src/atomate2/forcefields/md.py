@@ -85,9 +85,11 @@ class ForceFieldMDMaker(Maker):
         The name of the MD Maker
     force_field_name : str
         The name of the forcefield (for provenance)
-    timestep : float | None = 2.
-        The timestep of the MD run in femtoseconds
-    nsteps : int = 1000
+    time_step : float | None = None.
+        The timestep of the MD run, specified in ASE's units.
+        If `None`, defaults to 0.5 fs if a structure contains an isotope of
+        hydrogen and 2 fs otherwise.
+    n_steps : int = 1000
         The number of MD steps to run
     ensemble : str = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
@@ -134,8 +136,8 @@ class ForceFieldMDMaker(Maker):
 
     name: str = "Forcefield MD"
     force_field_name: str = f"{MLFF.Forcefield}"
-    timestep: float | None = 2.0
-    nsteps: int = 1000
+    time_step: float | None = None
+    n_steps: int = 1000
     ensemble: Literal["nve", "nvt", "npt"] = "nvt"
     dynamics: str | MolecularDynamics = "langevin"
     temperature: float | Sequence | np.ndarray | None = 300.0
@@ -160,15 +162,15 @@ class ForceFieldMDMaker(Maker):
             # Distable thermostat and barostat
             self.temperature = np.nan
             self.pressure = np.nan
-            self.tschedule = np.full(self.nsteps + 1, self.temperature)
-            self.pschedule = np.full(self.nsteps + 1, self.pressure)
+            self.tschedule = np.full(self.n_steps + 1, self.temperature)
+            self.pschedule = np.full(self.n_steps + 1, self.pressure)
             return
 
         if isinstance(self.temperature, Sequence) or (
             isinstance(self.temperature, np.ndarray) and self.temperature.ndim == 1
         ):
             self.tschedule = np.interp(
-                np.arange(self.nsteps + 1),
+                np.arange(self.n_steps + 1),
                 np.arange(len(self.temperature)),
                 self.temperature,
             )
@@ -176,25 +178,25 @@ class ForceFieldMDMaker(Maker):
         # scalars, but in principle one quantity per atom could be specified by giving
         # an array. This is not implemented yet here.
         else:
-            self.tschedule = np.full(self.nsteps + 1, self.temperature)
+            self.tschedule = np.full(self.n_steps + 1, self.temperature)
 
         if self.ensemble == "nvt":
             self.pressure = np.nan
-            self.pschedule = np.full(self.nsteps + 1, self.pressure)
+            self.pschedule = np.full(self.n_steps + 1, self.pressure)
             return
 
         if isinstance(self.pressure, Sequence) or (
             isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 1
         ):
             self.pschedule = np.interp(
-                np.arange(self.nsteps + 1), np.arange(len(self.pressure)), self.pressure
+                np.arange(self.n_steps + 1), np.arange(len(self.pressure)), self.pressure
             )
         elif isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 4:
             self.pschedule = interp1d(
-                np.arange(self.nsteps + 1), self.pressure, kind="linear"
+                np.arange(self.n_steps + 1), self.pressure, kind="linear"
             )
         else:
-            self.pschedule = np.full(self.nsteps + 1, self.pressure)
+            self.pschedule = np.full(self.n_steps + 1, self.pressure)
 
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
@@ -236,6 +238,12 @@ class ForceFieldMDMaker(Maker):
         """
         self._get_ensemble_schedule()
         self._get_ensemble_defaults()
+
+        if self.time_step is None:
+            # If a structure contains an isotope of hydrogen, set default `time_step`
+            # to 0.5 fs, and 2 fs otherwise.
+            has_h_isotope = any(element.Z == 1 for element in structure.composition)
+            self.time_step = (0.5 if has_h_isotope else 2.) * units.fs
 
         initial_velocities = structure.site_properties.get("velocities")
 
@@ -286,7 +294,7 @@ class ForceFieldMDMaker(Maker):
 
                 md_runner = md_func(
                     atoms=atoms,
-                    timestep=self.timestep * units.fs,
+                    timestep=self.time_step,
                     **self.ase_md_kwargs,
                 )
 
@@ -301,7 +309,7 @@ class ForceFieldMDMaker(Maker):
                     dyn.set_stress(self.pschedule[dyn.nsteps] * 1e3 * units.bar)
 
                 md_runner.attach(_callback, interval=1)
-                md_runner.run(steps=self.nsteps)
+                md_runner.run(steps=self.n_steps)
 
                 if self.traj_file is not None:
                     md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
@@ -317,7 +325,7 @@ class ForceFieldMDMaker(Maker):
                 trajectory=md_observer.to_pymatgen_trajectory(None),
             ),
             relax_cell=(self.ensemble == "npt"),
-            steps=self.nsteps,
+            steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
             **self.task_document_kwargs,

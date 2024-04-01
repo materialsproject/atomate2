@@ -138,9 +138,10 @@ class TrajectoryObserver:
         self.cells: list[np.ndarray] = []
 
         self._store_md_outputs = store_md_outputs
-        if self._store_md_outputs:
-            self.velocities: list[np.ndarray] = []
-            self.temperatures: list[float] = []
+        # `self.{velocities,temperatures}` always initialized,
+        # but data is only stored / saved to trajectory for MD runs 
+        self.velocities: list[np.ndarray] = []
+        self.temperatures: list[float] = []
 
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""

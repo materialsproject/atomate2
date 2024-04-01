@@ -31,7 +31,7 @@ _to_maker = {
 
 @pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"])
 def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
-    nsteps = 5
+    n_steps = 5
 
     ref_energies_per_atom = {
         "CHGNet": -5.280157089233398,
@@ -60,7 +60,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
     job = _to_maker[ff_name](
-        nsteps=nsteps,
+        n_steps=n_steps,
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         task_document_kwargs={"store_trajectory": "partial"},
@@ -77,7 +77,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
     # Check that we have the right number of MD steps
     # ASE logs the initial structure energy, and doesn't count this as an MD step
     assert matcher.fit(taskdoc.output.ionic_steps[0].structure, structure)
-    assert len(taskdoc.output.ionic_steps) == nsteps + 1
+    assert len(taskdoc.output.ionic_steps) == n_steps + 1
 
     # Check that the ionic steps have the expected physical properties
     assert all(
@@ -88,7 +88,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
 
     # Check that the trajectory has expected physical properties
     assert taskdoc.included_objects == ["trajectory"]
-    assert len(taskdoc.forcefield_objects["trajectory"]) == nsteps + 1
+    assert len(taskdoc.forcefield_objects["trajectory"]) == n_steps + 1
     assert all(
         key in step
         for key in ("energy", "forces", "stress", "velocities", "temperature")
@@ -98,7 +98,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
 
 @pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
 def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
-    nsteps = 5
+    n_steps = 5
 
     # Check that traj file written to disk is consistent with trajectory
     # stored to the task document
@@ -112,7 +112,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
 
     structure = si_structure.to_conventional() * (2, 2, 2)
     job = _to_maker[ff_name](
-        nsteps=nsteps,
+        n_steps=n_steps,
         traj_file=traj_file,
         traj_file_fmt=traj_file_fmt,
     ).make(structure)
@@ -121,7 +121,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
 
     traj_from_file = traj_file_loader(traj_file)
 
-    assert len(traj_from_file) == nsteps + 1
+    assert len(traj_from_file) == n_steps + 1
 
     if traj_file_fmt == "pmg":
         assert all(
@@ -132,7 +132,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
                 .get(key)
             )
             for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(nsteps + 1)
+            for idx in range(n_steps + 1)
         )
     elif traj_file_fmt == "ase":
         traj_as_dict = [
@@ -142,7 +142,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
                 "forces": traj_from_file[idx].get_forces(),
                 "velocities": traj_from_file[idx].get_velocities(),
             }
-            for idx in range(1, nsteps + 1)
+            for idx in range(1, n_steps + 1)
         ]
         assert all(
             np.all(
@@ -152,7 +152,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
                 .get(key)
             )
             for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(1, nsteps + 1)
+            for idx in range(1, n_steps + 1)
         )
 
 
@@ -172,7 +172,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         job = CHGNetMDMaker(
             ensemble="nve",
             dynamics=dyn,
-            nsteps=50,
+            n_steps=50,
             traj_file=None,
         ).make(si_structure)
 
@@ -200,13 +200,13 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
 
 @pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
 def test_temp_schedule(ff_name, si_structure, clean_dir):
-    nsteps = 100
+    n_steps = 100
     temp_schedule = [300, 3000]
 
     structure = si_structure.to_conventional() * (2, 2, 2)
 
     job = _to_maker[ff_name](
-        nsteps=nsteps,
+        n_steps=n_steps,
         traj_file=None,
         dynamics="nose-hoover",
         temperature=temp_schedule,
@@ -225,14 +225,14 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
 
 @pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
-    nsteps = 100
+    n_steps = 100
     press_schedule = [0, 10]  # kbar
 
     structure = si_structure.to_conventional() * (3, 3, 3)
 
     job = _to_maker[ff_name](
         ensemble="npt",
-        nsteps=nsteps,
+        n_steps=n_steps,
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         dynamics="nose-hoover",
