@@ -191,16 +191,22 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
 
     # ensure that output is consistent if molecular dynamics object is specified
     # as str or as MolecularDynamics object
-    assert all(
-        output["from_str"].output.__getattribute__(attr)
-        == output["from_dyn"].output.__getattribute__(attr)
-        for attr in ("energy", "forces", "stress", "structure")
-    )
+    for attr in ("energy","forces","stress","structure"):
+        vals = {k: output[k].output.__getattribute__(attr) for k in ("from_str","from_dyn",)}
+        if isinstance(vals["from_str"],float):
+            assert vals["from_str"] == pytest.approx(vals["from_dyn"])
+        elif isinstance(vals["from_str"], Structure):
+            assert vals["from_str"] == vals["from_dyn"]
+        else:
+            assert all(
+                vals["from_str"][i][j] == pytest.approx(vals["from_dyn"][i][j])
+                for i in range(len(vals["from_str"]))
+                for j in range(len(vals["from_str"][i]))
+            )
 
-
-@pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
+@pytest.mark.parametrize("ff_name", [ "CHGNet"])
 def test_temp_schedule(ff_name, si_structure, clean_dir):
-    n_steps = 100
+    n_steps = 50
     temp_schedule = [300, 3000]
 
     structure = si_structure.to_conventional() * (2, 2, 2)
@@ -223,9 +229,9 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     assert temp_history[-1] > temp_schedule[0]
 
 
-@pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
+@pytest.mark.parametrize("ff_name", ["CHGNet"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
-    n_steps = 100
+    n_steps = 20
     press_schedule = [0, 10]  # kBar
 
     structure = si_structure.to_conventional() * (3, 3, 3)

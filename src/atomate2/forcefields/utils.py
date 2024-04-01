@@ -30,7 +30,7 @@ from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.schemas import ForceFieldResult
+from atomate2.forcefields.schemas import ForcefieldResult
 
 try:
     from ase.filters import FrechetCellFilter
@@ -323,7 +323,7 @@ class Relaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         **kwargs,
-    ) -> ForceFieldResult:
+    ) -> ForcefieldResult:
         """
         Relax the structure.
 
@@ -371,7 +371,7 @@ class Relaxer:
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
-        return ForceFieldResult(
+        return ForcefieldResult(
             final_structure=struct, trajectory=traj, is_force_converged=is_force_conv
         )
 

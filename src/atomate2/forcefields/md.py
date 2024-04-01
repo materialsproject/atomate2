@@ -29,7 +29,7 @@ from scipy.linalg import schur
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import forcefield_job
-from atomate2.forcefields.schemas import ForceFieldResult, ForceFieldTaskDocument
+from atomate2.forcefields.schemas import ForcefieldResult, ForceFieldTaskDocument
 from atomate2.forcefields.utils import (
     TrajectoryObserver,
     ase_calculator,
@@ -154,6 +154,16 @@ class ForceFieldMDMaker(Maker):
         }
     )
 
+    @staticmethod
+    def _interpolate_quantity(values : Sequence | np.ndarray, n_pts: int) -> np.ndarray:
+        """ Utility function to interpolate temperature / pressure on a schedule. """
+        n_vals = len(values)
+        return np.interp(
+            np.arange(n_pts + 1)*n_vals/(n_pts - 1),
+            np.arange(n_vals),
+            values,
+        )
+
     def _get_ensemble_schedule(self) -> None:
         if self.ensemble == "nve":
             # Disable thermostat and barostat
@@ -166,11 +176,7 @@ class ForceFieldMDMaker(Maker):
         if isinstance(self.temperature, Sequence) or (
             isinstance(self.temperature, np.ndarray) and self.temperature.ndim == 1
         ):
-            self.t_schedule = np.interp(
-                np.arange(self.n_steps + 1),
-                np.arange(len(self.temperature)),
-                self.temperature,
-            )
+            self.t_schedule = self._interpolate_quantity(self.temperature, self.n_steps)
         # NOTE: In ASE Langevin dynamics, the temperature are normally
         # scalars, but in principle one quantity per atom could be specified by giving
         # an array. This is not implemented yet here.
@@ -185,11 +191,7 @@ class ForceFieldMDMaker(Maker):
         if isinstance(self.pressure, Sequence) or (
             isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 1
         ):
-            self.p_schedule = np.interp(
-                np.arange(self.n_steps + 1),
-                np.arange(len(self.pressure)),
-                self.pressure,
-            )
+            self.p_schedule = self._interpolate_quantity(self.pressure, self.n_steps)
         elif isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 4:
             self.p_schedule = interp1d(
                 np.arange(self.n_steps + 1), self.pressure, kind="linear"
@@ -319,7 +321,7 @@ class ForceFieldMDMaker(Maker):
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
-            ForceFieldResult(
+            ForcefieldResult(
                 final_structure=structure,
                 trajectory=md_observer.to_pymatgen_trajectory(None),
             ),

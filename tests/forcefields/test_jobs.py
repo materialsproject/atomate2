@@ -5,6 +5,8 @@ from jobflow import run_locally
 from pymatgen.core import Structure
 from pytest import approx, importorskip
 
+from importlib.metadata import version as get_imported_version
+
 from atomate2.forcefields.jobs import (
     CHGNetRelaxMaker,
     CHGNetStaticMaker,
@@ -36,6 +38,7 @@ def test_chgnet_static_maker(si_structure):
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
+    assert output1.forcefield_version == get_imported_version("chgnet")
 
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
@@ -79,6 +82,7 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.output.energy == approx(-10.8, abs=0.2)
     assert output1.output.n_steps == 1
 
+    assert output1.forcefield_version == get_imported_version("matgl")
 
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -127,6 +131,7 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-0.068231, rel=1e-4)
     assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("mace-torch")
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
@@ -184,7 +189,7 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-10.8523, rel=1e-4)
     assert output1.output.n_steps == 1
-
+    assert output1.forcefield_version == get_imported_version("quippy-ase")
 
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     importorskip("nequip")
@@ -207,7 +212,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-44.40017, rel=1e-4)
     assert output1.output.n_steps == 1
-
+    assert output1.forcefield_version == get_imported_version("nequip")
 
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_nequip_relax_maker(
