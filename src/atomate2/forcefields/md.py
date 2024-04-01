@@ -155,11 +155,11 @@ class ForceFieldMDMaker(Maker):
     )
 
     @staticmethod
-    def _interpolate_quantity(values : Sequence | np.ndarray, n_pts: int) -> np.ndarray:
-        """ Utility function to interpolate temperature / pressure on a schedule. """
+    def _interpolate_quantity(values: Sequence | np.ndarray, n_pts: int) -> np.ndarray:
+        """Interpolate temperature / pressure on a schedule."""
         n_vals = len(values)
         return np.interp(
-            np.arange(n_pts + 1)*n_vals/(n_pts - 1),
+            np.arange(n_pts + 1) * n_vals / (n_pts - 1),
             np.arange(n_vals),
             values,
         )

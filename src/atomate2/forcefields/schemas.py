@@ -265,13 +265,15 @@ class ForceFieldTaskDocument(StructureMetadata):
 
         # map force field name to its package name
         pkg_names = {
-            MLFF.M3GNet: "matgl",
-            MLFF.CHGNet: "chgnet",
-            MLFF.MACE: "mace-torch",
-            MLFF.GAP: "quippy-ase",
-            MLFF.Nequip: "nequip",
+            str(k): v
+            for k, v in {
+                MLFF.M3GNet: "matgl",
+                MLFF.CHGNet: "chgnet",
+                MLFF.MACE: "mace-torch",
+                MLFF.GAP: "quippy-ase",
+                MLFF.Nequip: "nequip",
+            }.items()
         }
-        pkg_names = {str(k): v for k,v in pkg_names.items()}
         pkg_name = pkg_names.get(forcefield_name)
         if pkg_name:
             import importlib.metadata
