@@ -29,7 +29,7 @@ from scipy.linalg import schur
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import forcefield_job
-from atomate2.forcefields.schemas import ForcefieldResult, ForceFieldTaskDocument
+from atomate2.forcefields.schemas import ForceFieldResult, ForceFieldTaskDocument
 from atomate2.forcefields.utils import (
     TrajectoryObserver,
     ase_calculator,
@@ -63,7 +63,7 @@ _preset_dynamics: dict = {
 @dataclass
 class ForceFieldMDMaker(Maker):
     """
-    Perform MD with a forcefield.
+    Perform MD with a force field.
 
     Note the the following units are consistent with the VASP MD implementation:
     - `temperature` in Kelvin (TEBEG and TEEND)
@@ -127,10 +127,7 @@ class ForceFieldMDMaker(Maker):
         Whether to initialize the atomic velocities with zero angular momentum
     task_document_kwargs: dict
         Options to pass to the TaskDoc. Default choice
-        {
-            "store_trajectory": "partial",
-            "ionic_step_data": ("energy",),
-        }
+            {"store_trajectory": "partial", "ionic_step_data": ("energy",),}
         is consistent with atomate2.vasp.md.MDMaker
     """
 
@@ -153,23 +150,23 @@ class ForceFieldMDMaker(Maker):
     task_document_kwargs: dict = field(
         default_factory=lambda: {
             "store_trajectory": "partial",
-            "ionic_step_data": ("energy",),  # energy is required in ionicsteps
+            "ionic_step_data": ("energy",),  # energy is required in ionic steps
         }
     )
 
     def _get_ensemble_schedule(self) -> None:
         if self.ensemble == "nve":
-            # Distable thermostat and barostat
+            # Disable thermostat and barostat
             self.temperature = np.nan
             self.pressure = np.nan
-            self.tschedule = np.full(self.n_steps + 1, self.temperature)
-            self.pschedule = np.full(self.n_steps + 1, self.pressure)
+            self.t_schedule = np.full(self.n_steps + 1, self.temperature)
+            self.p_schedule = np.full(self.n_steps + 1, self.pressure)
             return
 
         if isinstance(self.temperature, Sequence) or (
             isinstance(self.temperature, np.ndarray) and self.temperature.ndim == 1
         ):
-            self.tschedule = np.interp(
+            self.t_schedule = np.interp(
                 np.arange(self.n_steps + 1),
                 np.arange(len(self.temperature)),
                 self.temperature,
@@ -178,27 +175,27 @@ class ForceFieldMDMaker(Maker):
         # scalars, but in principle one quantity per atom could be specified by giving
         # an array. This is not implemented yet here.
         else:
-            self.tschedule = np.full(self.n_steps + 1, self.temperature)
+            self.t_schedule = np.full(self.n_steps + 1, self.temperature)
 
         if self.ensemble == "nvt":
             self.pressure = np.nan
-            self.pschedule = np.full(self.n_steps + 1, self.pressure)
+            self.p_schedule = np.full(self.n_steps + 1, self.pressure)
             return
 
         if isinstance(self.pressure, Sequence) or (
             isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 1
         ):
-            self.pschedule = np.interp(
+            self.p_schedule = np.interp(
                 np.arange(self.n_steps + 1),
                 np.arange(len(self.pressure)),
                 self.pressure,
             )
         elif isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 4:
-            self.pschedule = interp1d(
+            self.p_schedule = interp1d(
                 np.arange(self.n_steps + 1), self.pressure, kind="linear"
             )
         else:
-            self.pschedule = np.full(self.n_steps + 1, self.pressure)
+            self.p_schedule = np.full(self.n_steps + 1, self.pressure)
 
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
@@ -209,11 +206,11 @@ class ForceFieldMDMaker(Maker):
             self.ase_md_kwargs.pop("temperature_K", None)
             self.ase_md_kwargs.pop("externalstress", None)
         elif self.ensemble == "nvt":
-            self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
+            self.ase_md_kwargs["temperature_K"] = self.t_schedule[0]
             self.ase_md_kwargs.pop("externalstress", None)
         elif self.ensemble == "npt":
-            self.ase_md_kwargs["temperature_K"] = self.tschedule[0]
-            self.ase_md_kwargs["externalstress"] = self.pschedule[0] * 1e3 * units.bar
+            self.ase_md_kwargs["temperature_K"] = self.t_schedule[0]
+            self.ase_md_kwargs["externalstress"] = self.p_schedule[0] * 1e3 * units.bar
 
         if isinstance(self.dynamics, str) and self.dynamics.lower() == "langevin":
             self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get(
@@ -277,10 +274,10 @@ class ForceFieldMDMaker(Maker):
 
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
-        elif not np.isnan(self.tschedule).any():
+        elif not np.isnan(self.t_schedule).any():
             MaxwellBoltzmannDistribution(
                 atoms=atoms,
-                temperature_K=self.tschedule[0],
+                temperature_K=self.t_schedule[0],
                 rng=np.random.default_rng(seed=self.mb_velocity_seed),
             )
             if self.zero_linear_momentum:
@@ -305,10 +302,10 @@ class ForceFieldMDMaker(Maker):
                 def _callback(dyn: MolecularDynamics = md_runner) -> None:
                     if self.ensemble == "nve":
                         return
-                    dyn.set_temperature(temperature_K=self.tschedule[dyn.nsteps])
+                    dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
                     if self.ensemble == "nvt":
                         return
-                    dyn.set_stress(self.pschedule[dyn.nsteps] * 1e3 * units.bar)
+                    dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
 
                 md_runner.attach(_callback, interval=1)
                 md_runner.run(steps=self.n_steps)
@@ -322,7 +319,7 @@ class ForceFieldMDMaker(Maker):
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
-            ForcefieldResult(
+            ForceFieldResult(
                 final_structure=structure,
                 trajectory=md_observer.to_pymatgen_trajectory(None),
             ),
@@ -372,10 +369,7 @@ class GAPMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.GAP} MD"
     force_field_name: str = f"{MLFF.GAP}"
     calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "args_str": "IP GAP",
-            "param_filename": "gap.xml",
-        }
+        default_factory=lambda: {"args_str": "IP GAP", "param_filename": "gap.xml"}
     )
 
 

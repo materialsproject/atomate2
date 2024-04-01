@@ -20,7 +20,7 @@ from atomate2.forcefields.md import (
     NequipMDMaker,
 )
 
-_to_maker = {
+name_to_maker = {
     "CHGNet": CHGNetMDMaker,
     "M3GNet": M3GNetMDMaker,
     "MACE": MACEMDMaker,
@@ -59,7 +59,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
-    job = _to_maker[ff_name](
+    job = name_to_maker[ff_name](
         n_steps=n_steps,
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
@@ -67,32 +67,32 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
         calculator_kwargs=calculator_kwargs,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
-    taskdoc = response[next(iter(response))][1].output
+    task_doc = response[next(iter(response))][1].output
 
     # Check that energies are reasonably close to reference values
-    assert taskdoc.output.energy / len(structure) == pytest.approx(
+    assert task_doc.output.energy / len(structure) == pytest.approx(
         ref_energies_per_atom[ff_name], abs=0.1
     )
 
     # Check that we have the right number of MD steps
     # ASE logs the initial structure energy, and doesn't count this as an MD step
-    assert matcher.fit(taskdoc.output.ionic_steps[0].structure, structure)
-    assert len(taskdoc.output.ionic_steps) == n_steps + 1
+    assert matcher.fit(task_doc.output.ionic_steps[0].structure, structure)
+    assert len(task_doc.output.ionic_steps) == n_steps + 1
 
     # Check that the ionic steps have the expected physical properties
     assert all(
         key in step.model_dump()
         for key in ("energy", "forces", "stress", "structure")
-        for step in taskdoc.output.ionic_steps
+        for step in task_doc.output.ionic_steps
     )
 
     # Check that the trajectory has expected physical properties
-    assert taskdoc.included_objects == ["trajectory"]
-    assert len(taskdoc.forcefield_objects["trajectory"]) == n_steps + 1
+    assert task_doc.included_objects == ["trajectory"]
+    assert len(task_doc.forcefield_objects["trajectory"]) == n_steps + 1
     assert all(
         key in step
         for key in ("energy", "forces", "stress", "velocities", "temperature")
-        for step in taskdoc.forcefield_objects["trajectory"].frame_properties
+        for step in task_doc.forcefield_objects["trajectory"].frame_properties
     )
 
 
@@ -111,13 +111,13 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         traj_file_loader = Trajectory
 
     structure = si_structure.to_conventional() * (2, 2, 2)
-    job = _to_maker[ff_name](
+    job = name_to_maker[ff_name](
         n_steps=n_steps,
         traj_file=traj_file,
         traj_file_fmt=traj_file_fmt,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
-    taskdoc = response[next(iter(response))][1].output
+    task_doc = response[next(iter(response))][1].output
 
     traj_from_file = traj_file_loader(traj_file)
 
@@ -127,7 +127,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         assert all(
             np.all(
                 traj_from_file.frame_properties[idx][key]
-                == taskdoc.forcefield_objects["trajectory"]
+                == task_doc.forcefield_objects["trajectory"]
                 .frame_properties[idx]
                 .get(key)
             )
@@ -147,7 +147,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         assert all(
             np.all(
                 traj_as_dict[idx - 1][key]
-                == taskdoc.forcefield_objects["trajectory"]
+                == task_doc.forcefield_objects["trajectory"]
                 .frame_properties[idx]
                 .get(key)
             )
@@ -205,7 +205,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
 
     structure = si_structure.to_conventional() * (2, 2, 2)
 
-    job = _to_maker[ff_name](
+    job = name_to_maker[ff_name](
         n_steps=n_steps,
         traj_file=None,
         dynamics="nose-hoover",
@@ -213,11 +213,11 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
         ase_md_kwargs=dict(ttime=50.0 * units.fs, pfactor=None),
     ).make(structure)
     response = run_locally(job, ensure_success=True)
-    taskdoc = response[next(iter(response))][1].output
+    task_doc = response[next(iter(response))][1].output
 
     temp_history = [
         step["temperature"]
-        for step in taskdoc.forcefield_objects["trajectory"].frame_properties
+        for step in task_doc.forcefield_objects["trajectory"].frame_properties
     ]
 
     assert temp_history[-1] > temp_schedule[0]
@@ -226,11 +226,11 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
 @pytest.mark.parametrize("ff_name", ["MACE", "CHGNet"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
     n_steps = 100
-    press_schedule = [0, 10]  # kbar
+    press_schedule = [0, 10]  # kBar
 
     structure = si_structure.to_conventional() * (3, 3, 3)
 
-    job = _to_maker[ff_name](
+    job = name_to_maker[ff_name](
         ensemble="npt",
         n_steps=n_steps,
         traj_file="md_traj.json.gz",
@@ -243,7 +243,7 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
         ),
     ).make(structure)
     run_locally(job, ensure_success=True)
-    # taskdoc = response[next(iter(response))][1].output
+    # task_doc = response[next(iter(response))][1].output
 
     traj_from_file = loadfn("md_traj.json.gz")
 

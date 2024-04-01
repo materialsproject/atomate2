@@ -15,7 +15,7 @@ from pymatgen.core.trajectory import Trajectory
 from atomate2.forcefields import MLFF
 
 
-class ForcefieldResult(dict):
+class ForceFieldResult(dict):
     """Schema to store outputs in ForceFieldTaskDocument."""
 
     def __init__(self, **kwargs: Any) -> None:
@@ -28,8 +28,8 @@ class ForcefieldResult(dict):
         super().__init__(**kwargs)
 
 
-class ForcefieldObject(ValueEnum):
-    """Types of forcefield data objects."""
+class ForceFieldObject(ValueEnum):
+    """Types of force field data objects."""
 
     TRAJECTORY = "trajectory"
 
@@ -127,10 +127,10 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Directory where the force field calculations are performed."
     )
 
-    included_objects: Optional[list[ForcefieldObject]] = Field(
-        None, description="list of forcefield objects included with this task document"
+    included_objects: Optional[list[ForceFieldObject]] = Field(
+        None, description="list of force field objects included with this task document"
     )
-    forcefield_objects: Optional[dict[ForcefieldObject, Any]] = Field(
+    forcefield_objects: Optional[dict[ForceFieldObject, Any]] = Field(
         None, description="Forcefield objects associated with this task"
     )
 
@@ -214,7 +214,7 @@ class ForceFieldTaskDocument(StructureMetadata):
             output_structure = result["final_structure"]
 
         final_energy = trajectory.frame_properties[-1]["energy"]
-        final_energy_per_atom = final_energy / input_structure.num_sites
+        final_energy_per_atom = final_energy / len(input_structure)
         final_forces = trajectory.frame_properties[-1]["forces"]
         final_stress = trajectory.frame_properties[-1]["stress"]
 
@@ -246,12 +246,12 @@ class ForceFieldTaskDocument(StructureMetadata):
 
             ionic_steps.append(ionic_step)
 
-        forcefield_objects: dict[ForcefieldObject, Any] = {}
+        forcefield_objects: dict[ForceFieldObject, Any] = {}
         if store_trajectory != StoreTrajectoryOption.NO:
             # For VASP calculations, the PARTIAL trajectory option removes
             # electronic step info. There is no equivalent for forcefields,
             # so we just save the same info for FULL and PARTIAL options.
-            forcefield_objects[ForcefieldObject.TRAJECTORY] = trajectory  # type: ignore[index]
+            forcefield_objects[ForceFieldObject.TRAJECTORY] = trajectory  # type: ignore[index]
 
         output_doc = OutputDoc(
             structure=output_structure,

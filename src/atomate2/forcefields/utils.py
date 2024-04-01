@@ -30,7 +30,7 @@ from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.schemas import ForcefieldResult
+from atomate2.forcefields.schemas import ForceFieldResult
 
 try:
     from ase.filters import FrechetCellFilter
@@ -272,12 +272,7 @@ class TrajectoryObserver:
             traj_dict["magmoms"] = self.magmoms
 
         if self._store_md_outputs:
-            traj_dict.update(
-                {
-                    "velocities": self.velocities,
-                    "temperature": self.temperatures,
-                }
-            )
+            traj_dict.update(velocities=self.velocities, temperature=self.temperatures)
         # sanitize dict
         for key in traj_dict:
             if all(isinstance(val, np.ndarray) for val in traj_dict[key]):
@@ -328,7 +323,7 @@ class Relaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         **kwargs,
-    ) -> ForcefieldResult:
+    ) -> ForceFieldResult:
         """
         Relax the structure.
 
@@ -373,10 +368,10 @@ class Relaxer:
         struct = self.ase_adaptor.get_structure(atoms)
         traj = obs.to_pymatgen_trajectory(None)
         is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][i]) < abs(fmax)
-            for i in range(struct.num_sites)
+            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
+            for idx in range(len(struct))
         )
-        return ForcefieldResult(
+        return ForceFieldResult(
             final_structure=struct, trajectory=traj, is_force_converged=is_force_conv
         )
 
