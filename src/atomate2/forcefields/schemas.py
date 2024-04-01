@@ -268,6 +268,8 @@ class ForceFieldTaskDocument(StructureMetadata):
             MLFF.M3GNet: "matgl",
             MLFF.CHGNet: "chgnet",
             MLFF.MACE: "mace-torch",
+            MLFF.GAP: "quippy-ase",
+            MLFF.Nequip: "nequip",
         }.get(forcefield_name)  # type: ignore[call-overload]
         if pkg_name:
             import importlib.metadata
