@@ -66,9 +66,9 @@ class ForceFieldMDMaker(Maker):
     Perform MD with a forcefield.
 
     Note the the following units are consistent with the VASP MD implementation:
-    - Temperature is in Kelvin (TEBEG and TEEND)
-    - Time steps are in femtoseconds (POTIM)
-    - Pressure in kB (PSTRESS)
+    - `temperature` in Kelvin (TEBEG and TEEND)
+    - `time_step` in femtoseconds (POTIM)
+    - `pressure` in kB (PSTRESS)
 
     The default dynamics is Langevin NVT consistent with VASP MD, with the friction
     coefficient set to 10 ps^-1 (LANGEVIN_GAMMA).
@@ -86,7 +86,7 @@ class ForceFieldMDMaker(Maker):
     force_field_name : str
         The name of the forcefield (for provenance)
     time_step : float | None = None.
-        The timestep of the MD run, specified in ASE's units.
+        The timestep of the MD run in fs.
         If `None`, defaults to 0.5 fs if a structure contains an isotope of
         hydrogen and 2 fs otherwise.
     n_steps : int = 1000
@@ -245,7 +245,7 @@ class ForceFieldMDMaker(Maker):
             # If a structure contains an isotope of hydrogen, set default `time_step`
             # to 0.5 fs, and 2 fs otherwise.
             has_h_isotope = any(element.Z == 1 for element in structure.composition)
-            self.time_step = (0.5 if has_h_isotope else 2.0) * units.fs
+            self.time_step = 0.5 if has_h_isotope else 2.0
 
         initial_velocities = structure.site_properties.get("velocities")
 
@@ -296,7 +296,7 @@ class ForceFieldMDMaker(Maker):
 
                 md_runner = md_func(
                     atoms=atoms,
-                    timestep=self.time_step,
+                    timestep=self.time_step * units.fs,
                     **self.ase_md_kwargs,
                 )
 
