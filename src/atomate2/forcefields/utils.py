@@ -139,7 +139,7 @@ class TrajectoryObserver:
 
         self._store_md_outputs = store_md_outputs
         # `self.{velocities,temperatures}` always initialized,
-        # but data is only stored / saved to trajectory for MD runs 
+        # but data is only stored / saved to trajectory for MD runs
         self.velocities: list[np.ndarray] = []
         self.temperatures: list[float] = []
 

@@ -189,7 +189,9 @@ class ForceFieldMDMaker(Maker):
             isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 1
         ):
             self.pschedule = np.interp(
-                np.arange(self.n_steps + 1), np.arange(len(self.pressure)), self.pressure
+                np.arange(self.n_steps + 1),
+                np.arange(len(self.pressure)),
+                self.pressure,
             )
         elif isinstance(self.pressure, np.ndarray) and self.pressure.ndim == 4:
             self.pschedule = interp1d(
@@ -243,7 +245,7 @@ class ForceFieldMDMaker(Maker):
             # If a structure contains an isotope of hydrogen, set default `time_step`
             # to 0.5 fs, and 2 fs otherwise.
             has_h_isotope = any(element.Z == 1 for element in structure.composition)
-            self.time_step = (0.5 if has_h_isotope else 2.) * units.fs
+            self.time_step = (0.5 if has_h_isotope else 2.0) * units.fs
 
         initial_velocities = structure.site_properties.get("velocities")
 
