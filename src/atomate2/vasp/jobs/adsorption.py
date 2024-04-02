@@ -14,7 +14,7 @@ from pymatgen.core.surface import SlabGenerator
 from pymatgen.io.vasp import Kpoints
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -292,7 +292,7 @@ class BulkRelaxMaker(BaseVaspMaker):
 
     name: str = "bulk relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
+        default_factory=lambda: RelaxSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
                 {
                     "nkpoints": 0,
@@ -303,15 +303,10 @@ class BulkRelaxMaker(BaseVaspMaker):
                 }
             ),
             user_incar_settings={
-                "ALGO": "Normal",
-                "IBRION": 2,
                 "ISIF": 3,
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-5,
-                # "LAECHG": False,
-                # "LREAL": False,
-                # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
                 "NELM": 500,
@@ -335,7 +330,7 @@ class MolRelaxMaker(BaseVaspMaker):
 
     name: str = "molecule relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
+        default_factory=lambda: RelaxSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
                 {
                     "nkpoints": 0,
@@ -346,15 +341,10 @@ class MolRelaxMaker(BaseVaspMaker):
                 }
             ),
             user_incar_settings={
-                "ALGO": "Normal",
-                "IBRION": 2,
                 "ISIF": 2,
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-5,
-                # "LAECHG": False,
-                # "LREAL": False,
-                # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
                 "NELM": 500,
@@ -389,14 +379,12 @@ class MolStaticMaker(BaseVaspMaker):
                 }
             ),
             user_incar_settings={
-                "ALGO": "Normal",
                 "ENCUT": 700,
+                "IBRION": -1,
                 "GGA": "RP",
                 "EDIFF": 1e-7,
-                # "LAECHG": False,
-                # "LREAL": False,
-                # "LCHARG": False,
                 "LDAU": False,
+                "NSW": 0,
                 "NELM": 500,
             },
             auto_ispin=True,
@@ -418,7 +406,7 @@ class SlabRelaxMaker(BaseVaspMaker):
 
     name: str = "adsorption relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
+        default_factory=lambda: RelaxSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
                 {
                     "nkpoints": 0,
@@ -429,15 +417,10 @@ class SlabRelaxMaker(BaseVaspMaker):
                 }
             ),
             user_incar_settings={
-                "ALGO": "Normal",
-                "IBRION": 2,
                 "ISIF": 2,
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-5,
-                # "LAECHG": False,
-                # "LREAL": False,
-                # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
                 "NELM": 500,
@@ -472,14 +455,12 @@ class SlabStaticMaker(BaseVaspMaker):
                 }
             ),
             user_incar_settings={
-                "ALGO": "Normal",
                 "ENCUT": 700,
+                "IBRION": -1,
                 "GGA": "RP",
                 "EDIFF": 1e-7,
-                # "LAECHG": False,
-                # "LREAL": False,
-                # "LCHARG": False,
                 "LDAU": False,
+                "NSW": 0,
                 "NELM": 500,
             },
             auto_ispin=True,
