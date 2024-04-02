@@ -132,7 +132,9 @@ class AdsorptionMaker(Maker):
 
             prev_dir = mol_optimize_job.output.dir_name
 
-            joblog["job1: molecule relaxation job"]["output"] = mol_optimize_job.output
+            joblog["job1: molecule relaxation job"]["output"] = (
+                mol_optimize_job.output.structure
+            )
 
         else:
             prev_dir = prev_dir_mol
@@ -145,7 +147,7 @@ class AdsorptionMaker(Maker):
 
         molecule_dft_energy = mol_static_job.output.output.energy
 
-        joblog["job2: molecule static job"]["output"] = mol_static_job.output
+        joblog["job2: molecule static job"]["output"] = molecule_dft_energy
 
         if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
@@ -156,7 +158,7 @@ class AdsorptionMaker(Maker):
 
             optimized_bulk = bulk_optimize_job.output.structure
 
-            joblog["job3: bulk relaxation job"]["output"] = bulk_optimize_job.output
+            joblog["job3: bulk relaxation job"]["output"] = optimized_bulk
 
         else:
             optimized_bulk = structure
@@ -195,7 +197,7 @@ class AdsorptionMaker(Maker):
         optimized_slab = slab_optimize_job.output.structure
         prev_dir = slab_optimize_job.output.dir_name
 
-        joblog["job6: slab relaxation job"]["output"] = slab_optimize_job.output
+        joblog["job6: slab relaxation job"]["output"] = optimized_slab
 
         slab_static_job = self.slab_static_maker.make(optimized_slab, prev_dir=prev_dir)
         slab_static_job.append_name("slab static job")
@@ -203,7 +205,7 @@ class AdsorptionMaker(Maker):
 
         slab_dft_energy = slab_static_job.output.output.energy
 
-        joblog["job7: slab static job"]["output"] = slab_static_job.output
+        joblog["job7: slab static job"]["output"] = slab_dft_energy
 
         run_ads_calculation = run_adslabs_job(
             adslab_structures=adslab_structures,
