@@ -174,9 +174,6 @@ class AdsorptionMaker(Maker):
         # jobs += [generate_adslabs_structures]
         adslab_structures = generate_adslabs_structures
 
-        if self.slab_relax_maker is None:
-            raise ValueError("adslab_relax_maker shouldn't be Null.")
-
         # slab relaxation without adsorption
         slab_optimize_job = self.slab_relax_maker.make(slab_structure, prev_dir=None)
         slab_optimize_job.append_name("slab relaxation job")
