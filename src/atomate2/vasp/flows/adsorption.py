@@ -60,6 +60,16 @@ class AdsorptionMaker(Maker):
 
     name: str = "adsorption workflow"
 
+    # mol_relax_maker: BaseVaspMaker = field(default_factory=MolRelaxMaker)
+    #
+    # mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker)
+    #
+    # bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker)
+    #
+    # slab_relax_maker: BaseVaspMaker = field(default_factory=SlabRelaxMaker)
+    #
+    # slab_static_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker)
+
     mol_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=MolRelaxMaker
     )
