@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Flow, Response, job
+from jobflow import job
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core import Element, Molecule, Structure
 from pymatgen.core.surface import SlabGenerator
@@ -18,7 +18,6 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -159,48 +158,48 @@ def generate_adslabs(
     return ads_slabs  # noqa: RET504
 
 
-@job
-def run_adslabs_job(
-    adslab_structures: list[Structure],
-    relax_maker: SlabRelaxMaker,
-    static_maker: SlabStaticMaker,
-) -> Flow:
-    """Workflow of running the adsorption slab calculations.
-
-    Parameters
-    ----------
-    adslab_structures: list[Structure]
-        The list of all possible configurations of slab structures with adsorbates.
-    relax_maker: AdslabRelaxMaker
-        The relaxation maker for the adsorption slab structures.
-    static_maker: SlabStaticMaker
-        The static maker for the adsorption slab structures.
-
-    Returns
-    -------
-    Flow
-        The flow of the adsorption slab calculations.
-    """
-    adsorption_jobs = []
-    ads_outputs = defaultdict(list)
-
-    for i, ad_structure in enumerate(adslab_structures):
-        ads_job = relax_maker.make(ad_structure)
-        ads_job.append_name(f"configuration {i}")
-
-        adsorption_jobs.append(ads_job)
-        ads_outputs["configuration_number"].append(i)
-        ads_outputs["relaxed_structures"].append(ads_job.output.structure)
-
-        static_job = static_maker.make(ads_job.output.structure)
-        static_job.append_name(f"static configuration {i}")
-        adsorption_jobs.append(static_job)
-
-        ads_outputs["static_energy"].append(static_job.output.energy)
-        ads_outputs["dirs"].append(ads_job.output.dir_name)
-
-    adsorption_flow = Flow(adsorption_jobs, output=ads_outputs)
-    return Response(replace=adsorption_flow)
+# @job
+# def run_adslabs_job(
+#     adslab_structures: list[Structure],
+#     relax_maker: SlabRelaxMaker,
+#     static_maker: SlabStaticMaker,
+# ) -> Flow:
+#     """Workflow of running the adsorption slab calculations.
+#
+#     Parameters
+#     ----------
+#     adslab_structures: list[Structure]
+#         The list of all possible configurations of slab structures with adsorbates.
+#     relax_maker: AdslabRelaxMaker
+#         The relaxation maker for the adsorption slab structures.
+#     static_maker: SlabStaticMaker
+#         The static maker for the adsorption slab structures.
+#
+#     Returns
+#     -------
+#     Flow
+#         The flow of the adsorption slab calculations.
+#     """
+#     adsorption_jobs = []
+#     ads_outputs = defaultdict(list)
+#
+#     for i, ad_structure in enumerate(adslab_structures):
+#         ads_job = relax_maker.make(ad_structure)
+#         ads_job.append_name(f"configuration {i}")
+#
+#         adsorption_jobs.append(ads_job)
+#         ads_outputs["configuration_number"].append(i)
+#         ads_outputs["relaxed_structures"].append(ads_job.output.structure)
+#
+#         static_job = static_maker.make(ads_job.output.structure)
+#         static_job.append_name(f"static configuration {i}")
+#         adsorption_jobs.append(static_job)
+#
+#         ads_outputs["static_energy"].append(static_job.output.energy)
+#         ads_outputs["dirs"].append(ads_job.output.dir_name)
+#
+#     adsorption_flow = Flow(adsorption_jobs, output=ads_outputs)
+#     return Response(replace=adsorption_flow)
 
 
 @job
