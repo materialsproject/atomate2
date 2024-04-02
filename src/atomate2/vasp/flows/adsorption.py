@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -17,6 +16,7 @@ from atomate2.vasp.jobs.adsorption import (
     adsorption_calculations,
     generate_adslabs,
     generate_slab,
+    run_adslabs_job,
 )
 
 if TYPE_CHECKING:
@@ -189,24 +189,13 @@ class AdsorptionMaker(Maker):
 
         slab_dft_energy = slab_static_job.output.output.energy
 
-        adsorption_jobs = []
-        ads_outputs = defaultdict(list)
-
-        for i, ad_structure in enumerate(adslab_structures):
-            ads_job = self.slab_relax_maker.make(ad_structure)
-            ads_job.append_name(f"relax adsorption job {i}")
-            adsorption_jobs.append(ads_job)
-            ads_outputs["configuration_number"].append(i)
-            ads_outputs["relaxed_structures"].append(ads_job.output.structure)
-
-            static_job = self.slab_static_maker.make(ads_job.output.structure)
-            static_job.append_name(f"static adsorption job {i}")
-            adsorption_jobs.append(static_job)
-
-            ads_outputs["static_energy"].append(static_job.output.energy)
-            ads_outputs["dirs"].append(ads_job.output.dir_name)
-
-        jobs += [adsorption_jobs]
+        run_ads_calculation = run_adslabs_job(
+            adslab_structures=adslab_structures,
+            relax_maker=self.slab_relax_maker,
+            static_maker=self.slab_static_maker,
+        )
+        jobs += [run_ads_calculation]
+        ads_outputs = run_ads_calculation.output
 
         adsorption_calc = adsorption_calculations(
             # bulk_structure=optimized_bulk,
