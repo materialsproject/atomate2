@@ -336,7 +336,7 @@ class MolRelaxMaker(BaseVaspMaker):
                 {
                     "nkpoints": 0,
                     "generation_style": "Gamma",
-                    "kpoints": [[11, 11, 11]],
+                    "kpoints": [[3, 3, 3]],
                     "usershift": [0, 0, 0],
                     "comment": "Automatic mesh",
                 }
@@ -353,6 +353,46 @@ class MolRelaxMaker(BaseVaspMaker):
                 # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+
+@dataclass
+class MolStaticMaker(BaseVaspMaker):
+    """Maker for molecule static energy calculation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the static energy calculation.
+    """
+
+    name: str = "molecule static maker - "
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[3, 3, 3]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
+            user_incar_settings={
+                "ALGO": "Normal",
+                "ENCUT": 700,
+                "GGA": "RP",
+                "EDIFF": 1e-7,
+                # "LAECHG": False,
+                # "LREAL": False,
+                # "LCHARG": False,
+                "LDAU": False,
                 "NELM": 500,
             },
             auto_ispin=True,
@@ -423,46 +463,6 @@ class SlabStaticMaker(BaseVaspMaker):
                     "nkpoints": 0,
                     "generation_style": "Gamma",
                     "kpoints": [[3, 3, 1]],
-                    "usershift": [0, 0, 0],
-                    "comment": "Automatic mesh",
-                }
-            ),
-            user_incar_settings={
-                "ALGO": "Normal",
-                "ENCUT": 700,
-                "GGA": "RP",
-                "EDIFF": 1e-7,
-                # "LAECHG": False,
-                # "LREAL": False,
-                # "LCHARG": False,
-                "LDAU": False,
-                "NELM": 500,
-            },
-            auto_ispin=True,
-        )
-    )
-
-
-@dataclass
-class MolStaticMaker(BaseVaspMaker):
-    """Maker for molecule static energy calculation.
-
-    Parameters
-    ----------
-    name: str
-        The name of the flow produced by the maker.
-    input_set_generator: VaspInputGenerator
-        The input set generator for the static energy calculation.
-    """
-
-    name: str = "molecule static maker - "
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict(
-                {
-                    "nkpoints": 0,
-                    "generation_style": "Gamma",
-                    "kpoints": [[11, 11, 11]],
                     "usershift": [0, 0, 0],
                     "comment": "Automatic mesh",
                 }
