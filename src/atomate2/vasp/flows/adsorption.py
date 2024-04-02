@@ -9,7 +9,6 @@ from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.jobs.adsorption import (
     BulkRelaxMaker,
-    MolRelaxMaker,
     MolStaticMaker,
     SlabRelaxMaker,
     SlabStaticMaker,
@@ -60,33 +59,19 @@ class AdsorptionMaker(Maker):
 
     name: str = "adsorption workflow"
 
-    # mol_relax_maker: BaseVaspMaker = field(default_factory=MolRelaxMaker)
-    #
-    # mol_static_energy_maker: BaseVaspMaker = field(default_factory=MolStaticMaker)
-    #
-    # bulk_relax_maker: BaseVaspMaker = field(default_factory=BulkRelaxMaker)
-    #
-    # slab_relax_maker: BaseVaspMaker = field(default_factory=SlabRelaxMaker)
-    #
-    # slab_static_maker: BaseVaspMaker = field(default_factory=SlabStaticMaker)
-
-    mol_relax_maker: None | ForceFieldRelaxMaker | BaseVaspMaker = field(
-        default_factory=MolRelaxMaker
-    )
-
-    mol_static_energy_maker: None | ForceFieldRelaxMaker | BaseVaspMaker = field(
+    mol_static_energy_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=MolStaticMaker
     )
 
-    bulk_relax_maker: None | ForceFieldRelaxMaker | BaseVaspMaker = field(
+    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=BulkRelaxMaker
     )
 
-    slab_relax_maker: None | ForceFieldRelaxMaker | BaseVaspMaker = field(
+    slab_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=SlabRelaxMaker
     )
 
-    slab_static_maker: None | ForceFieldRelaxMaker | BaseVaspMaker = field(
+    slab_static_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=SlabStaticMaker
     )
 
