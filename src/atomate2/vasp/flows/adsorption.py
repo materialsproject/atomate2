@@ -132,7 +132,7 @@ class AdsorptionMaker(Maker):
         jobs += [mol_static_job]
 
         mol_sta_output = mol_static_job.output
-        molecule_dft_energy = mol_sta_output.energy
+        molecule_dft_energy = mol_sta_output.output.energy
 
         if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
@@ -164,7 +164,6 @@ class AdsorptionMaker(Maker):
             min_lw=min_lw,
         )
         jobs += [generate_adslabs_structures]
-
         adslab_structures = generate_adslabs_structures.output
 
         if self.slab_relax_maker is None:
