@@ -192,9 +192,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     # ensure that output is consistent if molecular dynamics object is specified
     # as str or as MolecularDynamics object
     for attr in ("energy", "forces", "stress", "structure"):
-        vals = {
-            k: output[k].output.__getattribute__(attr) for k in ("from_str", "from_dyn")
-        }
+        vals = {k: getattr(output[k].output, attr) for k in ("from_str", "from_dyn")}
         if isinstance(vals["from_str"], float):
             assert vals["from_str"] == pytest.approx(vals["from_dyn"])
         elif isinstance(vals["from_str"], Structure):
