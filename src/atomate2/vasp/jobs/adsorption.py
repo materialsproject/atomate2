@@ -287,7 +287,7 @@ class BulkRelaxMaker(BaseVaspMaker):
         The input set generator for the relaxation calculation.
     """
 
-    name: str = "bulk relaxation"
+    name: str = "bulk relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
@@ -330,7 +330,7 @@ class MolRelaxMaker(BaseVaspMaker):
         The input set generator for the relaxation calculation.
     """
 
-    name: str = "molecule relaxation"
+    name: str = "molecule relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
@@ -373,7 +373,7 @@ class SlabRelaxMaker(BaseVaspMaker):
         The input set generator for the relaxation calculation.
     """
 
-    name: str = "adsorption relaxation"
+    name: str = "adsorption relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
@@ -416,7 +416,7 @@ class SlabStaticMaker(BaseVaspMaker):
         The input set generator for the static energy calculation.
     """
 
-    name: str = "adsorption static calculation"
+    name: str = "adsorption static maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
@@ -456,7 +456,7 @@ class MolStaticMaker(BaseVaspMaker):
         The input set generator for the static energy calculation.
     """
 
-    name: str = "molecule static calculation"
+    name: str = "molecule static maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
             user_kpoints_settings=Kpoints.from_dict(
