@@ -72,7 +72,7 @@ def generate_slab(
     surface_idx: tuple,
     min_vacuum_size: float,
     min_lw: float,
-) -> Response:
+) -> Structure:
     """Generate the adsorption slabs without adsorbates.
 
     Parameters
@@ -95,9 +95,7 @@ def generate_slab(
     Structure
         The slab structure without adsorbates.
     """
-    jobs = []
     hydrogen = Molecule([Element("H")], [[0, 0, 0]])
-    jobs.append(hydrogen)
     slab_generator = SlabGenerator(
         bulk_structure,
         surface_idx,
@@ -106,28 +104,24 @@ def generate_slab(
         primitive=False,
         center_slab=True,
     )
-    jobs.append(slab_generator)
     temp_slab = slab_generator.get_slab()
-    jobs.append(temp_slab)
     ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(
         hydrogen, translate=True, min_lw=min_lw
     )
-    jobs.append(ads_slabs)
-    slab_only = remove_adsorbate(ads_slabs[0])
-    jobs.append(slab_only)
+    # slab_only = remove_adsorbate(ads_slabs[0])
 
-    return Response(replace=jobs, output=slab_only)
+    return remove_adsorbate(ads_slabs[0])
 
 
 @job
 def generate_adslabs(
     bulk_structure: Structure,
-    molecule_structure: Structure,
+    molecule_structure: Molecule,
     min_slab_size: float,
     surface_idx: tuple,
     min_vacuum_size: float,
     min_lw: float,
-) -> Response:
+) -> list[Structure]:
     """Generate the adsorption slabs with adsorbates.
 
     Parameters
@@ -150,7 +144,6 @@ def generate_adslabs(
     list[Structure]
         The list of all possible configurations of slab structures with adsorbates.
     """
-    jobs = []
     slab_generator = SlabGenerator(
         bulk_structure,
         surface_idx,
@@ -159,14 +152,15 @@ def generate_adslabs(
         primitive=False,
         center_slab=True,
     )
-    jobs.append(slab_generator)
     slab = slab_generator.get_slab()
-    jobs.append(slab)
-    ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(
+
+    # ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(
+    #     molecule_structure, translate=True, min_lw=min_lw
+    # )
+
+    return AdsorbateSiteFinder(slab).generate_adsorption_structures(
         molecule_structure, translate=True, min_lw=min_lw
     )
-    jobs.append(ads_slabs)
-    return Response(replace=jobs, output=ads_slabs)
 
 
 @job

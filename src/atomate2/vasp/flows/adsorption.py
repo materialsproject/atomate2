@@ -129,10 +129,8 @@ class AdsorptionMaker(Maker):
             jobs += [mol_optimize_job]
 
             prev_dir = mol_optimize_job.output.dir_name
-            optimized_molecule = mol_optimize_job.output.structure
         else:
             prev_dir = prev_dir_mol
-            optimized_molecule = molecule_structure
 
         mol_static_job = self.mol_static_maker.make(
             molecule_structure, prev_dir=prev_dir
@@ -166,7 +164,7 @@ class AdsorptionMaker(Maker):
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
-            molecule_structure=optimized_molecule,
+            molecule_structure=molecule,
             min_slab_size=min_slab_size,
             surface_idx=surface_idx,
             min_vacuum_size=min_vacuum,
