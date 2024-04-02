@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
     from pymatgen.core.structure import Molecule, Structure
 
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -64,7 +64,7 @@ class AdsorptionMaker(Maker):
         default_factory=MolRelaxMaker
     )
 
-    mol_static_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
+    mol_static_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
         default_factory=MolStaticMaker
     )
 
@@ -76,7 +76,7 @@ class AdsorptionMaker(Maker):
         default_factory=SlabRelaxMaker
     )
 
-    slab_static_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
+    slab_static_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
         default_factory=SlabStaticMaker
     )
 
