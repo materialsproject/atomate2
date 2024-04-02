@@ -94,7 +94,9 @@ def generate_slab(
     Structure
         The slab structure without adsorbates.
     """
+    jobs = []
     hydrogen = Molecule([Element("H")], [[0, 0, 0]])
+    jobs.append(hydrogen)
     slab_generator = SlabGenerator(
         bulk_structure,
         surface_idx,
@@ -103,13 +105,17 @@ def generate_slab(
         primitive=False,
         center_slab=True,
     )
+    jobs.append(slab_generator)
     temp_slab = slab_generator.get_slab()
+    jobs.append(temp_slab)
     ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(
         hydrogen, translate=True, min_lw=min_lw
     )
+    jobs.append(ads_slabs)
     slab_only = remove_adsorbate(ads_slabs[0])
+    jobs.append(slab_only)
 
-    return Response(output=slab_only)
+    return Response(replace=jobs, output=slab_only)
 
 
 @job
@@ -143,6 +149,7 @@ def generate_adslabs(
     list[Structure]
         The list of all possible configurations of slab structures with adsorbates.
     """
+    jobs = []
     slab_generator = SlabGenerator(
         bulk_structure,
         surface_idx,
@@ -151,11 +158,14 @@ def generate_adslabs(
         primitive=False,
         center_slab=True,
     )
+    jobs.append(slab_generator)
     slab = slab_generator.get_slab()
+    jobs.append(slab)
     ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(
         molecule_structure, translate=True, min_lw=min_lw
     )
-    return Response(output=ads_slabs)
+    jobs.append(ads_slabs)
+    return Response(replace=jobs, output=ads_slabs)
 
 
 # @job
