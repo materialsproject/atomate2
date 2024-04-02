@@ -160,7 +160,8 @@ class AdsorptionMaker(Maker):
             min_vacuum_size=min_vacuum,
             min_lw=min_lw,
         )
-        # jobs += [generate_slab_structure]
+
+        jobs += [generate_slab_structure]
         slab_structure = generate_slab_structure
 
         generate_adslabs_structures = generate_adslabs(
@@ -171,7 +172,7 @@ class AdsorptionMaker(Maker):
             min_vacuum_size=min_vacuum,
             min_lw=min_lw,
         )
-        # jobs += [generate_adslabs_structures]
+        jobs += [generate_adslabs_structures]
         adslab_structures = generate_adslabs_structures
 
         # slab relaxation without adsorption
@@ -193,14 +194,13 @@ class AdsorptionMaker(Maker):
 
         for i, ad_structure in enumerate(adslab_structures):
             ads_job = self.slab_relax_maker.make(ad_structure)
-            ads_job.append_name(f"configuration {i}")
-
+            ads_job.append_name(f"relax adsorption job {i}")
             adsorption_jobs.append(ads_job)
             ads_outputs["configuration_number"].append(i)
             ads_outputs["relaxed_structures"].append(ads_job.output.structure)
 
             static_job = self.slab_static_maker.make(ads_job.output.structure)
-            static_job.append_name(f"static configuration {i}")
+            static_job.append_name(f"static adsorption job {i}")
             adsorption_jobs.append(static_job)
 
             ads_outputs["static_energy"].append(static_job.output.energy)
