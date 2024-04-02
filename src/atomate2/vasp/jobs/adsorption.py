@@ -213,7 +213,7 @@ def adsorption_calculations(
     # molecule_structure: Structure,
     # surface_idx: tuple,
     adslab_structures: list[Structure],
-    ads_outputs: dict[str, list],
+    adslabs_data: dict[str, list],
     molecule_dft_energy: float,
     slab_dft_energy: float,
 ) -> list:
@@ -260,10 +260,10 @@ def adsorption_calculations(
         outputs["adsorption_configuration"].append(ad_structure)
         outputs["configuration_number"].append(i)
         ads_energy = (
-            ads_outputs["static_energy"][i] - molecule_dft_energy - slab_dft_energy
+            adslabs_data["static_energy"][i] - molecule_dft_energy - slab_dft_energy
         )
         outputs["adsorption_energy"].append(ads_energy)
-        outputs["dirs"].append(ads_outputs["dirs"][i])
+        outputs["dirs"].append(adslabs_data["dirs"][i])
 
         sorted_outputs = sorted(
             zip(
