@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -134,7 +135,7 @@ class AdsorptionMaker(Maker):
 
             joblog["job1: molecule relaxation job"]["output"] = (
                 mol_optimize_job.output.structure
-            )
+            ).as_dict()
 
         else:
             prev_dir = prev_dir_mol
@@ -147,7 +148,7 @@ class AdsorptionMaker(Maker):
 
         molecule_dft_energy = mol_static_job.output.output.energy
 
-        joblog["job2: molecule static job"]["output"] = molecule_dft_energy
+        joblog["job2: molecule static job"]["output"] = molecule_dft_energy.as_dict()
 
         if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
@@ -158,7 +159,7 @@ class AdsorptionMaker(Maker):
 
             optimized_bulk = bulk_optimize_job.output.structure
 
-            joblog["job3: bulk relaxation job"]["output"] = optimized_bulk
+            joblog["job3: bulk relaxation job"]["output"] = optimized_bulk.as_dict()
 
         else:
             optimized_bulk = structure
@@ -174,7 +175,7 @@ class AdsorptionMaker(Maker):
         jobs += [generate_slab_structure]
         slab_structure = generate_slab_structure.output
 
-        joblog["job4: generate slab structure"]["output"] = slab_structure
+        joblog["job4: generate slab structure"]["output"] = slab_structure.as_dict()
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
@@ -187,7 +188,9 @@ class AdsorptionMaker(Maker):
         jobs += [generate_adslabs_structures]
         adslab_structures = generate_adslabs_structures.output
 
-        joblog["job5: generate adslabs structures"]["output"] = adslab_structures
+        joblog["job5: generate adslabs structures"]["output"] = (
+            adslab_structures.as_dict()
+        )
 
         # slab relaxation without adsorption
         slab_optimize_job = self.slab_relax_maker.make(slab_structure, prev_dir=None)
@@ -197,7 +200,7 @@ class AdsorptionMaker(Maker):
         optimized_slab = slab_optimize_job.output.structure
         prev_dir = slab_optimize_job.output.dir_name
 
-        joblog["job6: slab relaxation job"]["output"] = optimized_slab
+        joblog["job6: slab relaxation job"]["output"] = optimized_slab.as_dict()
 
         slab_static_job = self.slab_static_maker.make(optimized_slab, prev_dir=prev_dir)
         slab_static_job.append_name("slab static job")
@@ -205,7 +208,7 @@ class AdsorptionMaker(Maker):
 
         slab_dft_energy = slab_static_job.output.output.energy
 
-        joblog["job7: slab static job"]["output"] = slab_dft_energy
+        joblog["job7: slab static job"]["output"] = slab_dft_energy.as_dict()
 
         run_ads_calculation = run_adslabs_job(
             adslab_structures=adslab_structures,
@@ -215,7 +218,7 @@ class AdsorptionMaker(Maker):
         jobs += [run_ads_calculation]
         ads_outputs = run_ads_calculation.output
 
-        joblog["job8: run adsorption calculations"]["output"] = ads_outputs
+        joblog["job8: run adsorption calculations"]["output"] = ads_outputs.as_dict()
 
         adsorption_calc = adsorption_calculations(
             # bulk_structure=optimized_bulk,
@@ -228,9 +231,9 @@ class AdsorptionMaker(Maker):
         )
         jobs += [adsorption_calc]
 
-        joblog["job9: adsorption calculations"]["output"] = adsorption_calc.output
-
-        import json
+        joblog["job9: adsorption calculations"]["output"] = (
+            adsorption_calc.output.as_dict()
+        )
 
         with open("joblog.json", "w") as f:
             json.dump(joblog, f, indent=4)
