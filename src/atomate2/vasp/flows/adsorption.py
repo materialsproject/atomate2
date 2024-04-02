@@ -117,14 +117,14 @@ class AdsorptionMaker(Maker):
             mol_optimize_job.append_name("molecule relaxation job")
             jobs += [mol_optimize_job]
 
+            # prev_dir = mol_optimize_job.output.dir_name
             optimized_molecule = mol_optimize_job.output.structure
-            prev_dir = mol_optimize_job.output.dir_name
         else:
-            prev_dir = prev_dir_mol
+            # prev_dir = prev_dir_mol
             optimized_molecule = molecule_structure
 
         mol_static_job = self.mol_static_energy_maker.make(
-            molecule_structure, prev_dir=prev_dir
+            molecule_structure, prev_dir=prev_dir_mol
         )
         mol_static_job.append_name("molecule static job")
         jobs += [mol_static_job]
@@ -150,6 +150,7 @@ class AdsorptionMaker(Maker):
             min_lw=min_lw,
         )
         jobs += [generate_slab_structure]
+        slab_structure = generate_slab_structure.output
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
@@ -161,11 +162,13 @@ class AdsorptionMaker(Maker):
         )
         jobs += [generate_adslabs_structures]
 
+        adslab_structures = generate_adslabs_structures.output
+
         if self.slab_relax_maker is None:
             raise ValueError("adslab_relax_maker shouldn't be Null.")
 
-        # slab relaxation without adsoprtion
-        slab_optimize_job = self.slab_relax_maker.make(generate_slab_structure)
+        # slab relaxation without adsorption
+        slab_optimize_job = self.slab_relax_maker.make(slab_structure, prev_dir=None)
         slab_optimize_job.append_name("slab relaxation job")
         jobs += [slab_optimize_job]
 
@@ -179,7 +182,7 @@ class AdsorptionMaker(Maker):
         slab_dft_energy = slab_static_job.output.output.energy
 
         vasp_adslabs_calcs = run_adslabs_job(
-            adslab_structures=generate_adslabs_structures,
+            adslab_structures=adslab_structures,
             relax_maker=self.slab_relax_maker,
             static_maker=self.slab_static_maker,
         )
