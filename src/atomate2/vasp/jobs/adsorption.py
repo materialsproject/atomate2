@@ -24,7 +24,6 @@ from collections import defaultdict
 logger = logging.getLogger(__name__)
 
 
-@job
 def get_boxed_molecule(molecule: Molecule) -> Structure:
     """Get the molecule structure.
 
@@ -41,7 +40,6 @@ def get_boxed_molecule(molecule: Molecule) -> Structure:
     return molecule.get_boxed_structure(10, 10, 10, offset=np.array([5, 5, 5]))
 
 
-@job
 def remove_adsorbate(slab: Structure) -> Structure:
     """
     Remove adsorbate from the given slab.
@@ -68,7 +66,7 @@ def remove_adsorbate(slab: Structure) -> Structure:
     return slab
 
 
-@job(data=[Structure])
+@job
 def generate_slab(
     bulk_structure: Structure,
     min_slab_size: float,
@@ -116,7 +114,7 @@ def generate_slab(
     return slab_only  # noqa: RET504
 
 
-@job(data=[Structure])
+@job
 def generate_adslabs(
     bulk_structure: Structure,
     molecule_structure: Structure,

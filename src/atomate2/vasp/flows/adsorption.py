@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import numpy as np
 from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.jobs.adsorption import (
@@ -16,7 +17,7 @@ from atomate2.vasp.jobs.adsorption import (
     adsorption_calculations,
     generate_adslabs,
     generate_slab,
-    get_boxed_molecule,
+    # get_boxed_molecule,
     run_adslabs_job,
 )
 
@@ -107,8 +108,11 @@ class AdsorptionMaker(Maker):
         Flow
             A flow object for calculating adsorption energies.
         """  # noqa: E501
+        molecule_structure = molecule.get_boxed_structure(
+            10, 10, 10, offset=np.array([5, 5, 5])
+        )
+
         jobs: list[Job] = []
-        molecule_structure = get_boxed_molecule(molecule)
 
         if self.mol_relax_maker:
             mol_optimize_job = self.mol_relax_maker.make(
@@ -117,10 +121,8 @@ class AdsorptionMaker(Maker):
             mol_optimize_job.append_name("molecule relaxation job")
             jobs += [mol_optimize_job]
 
-            mol_rex_output = mol_optimize_job.output
-
-            prev_dir = mol_rex_output.dir_name
-            optimized_molecule = mol_rex_output.structure
+            prev_dir = mol_optimize_job.output.dir_name
+            optimized_molecule = mol_optimize_job.output.structure
         else:
             prev_dir = prev_dir_mol
             optimized_molecule = molecule_structure
@@ -131,8 +133,7 @@ class AdsorptionMaker(Maker):
         mol_static_job.append_name("molecule static job")
         jobs += [mol_static_job]
 
-        mol_sta_output = mol_static_job.output
-        molecule_dft_energy = mol_sta_output.output.energy
+        molecule_dft_energy = mol_static_job.output.output.energy
 
         if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
