@@ -200,7 +200,7 @@ def run_adslabs_job(
         static_job.append_name(f"static configuration {i}")
         adsorption_jobs.append(static_job)
 
-        ads_outputs["static_energy"].append(static_job.output.energy)
+        ads_outputs["static_energy"].append(static_job.output.output.energy)
         ads_outputs["dirs"].append(ads_job.output.dir_name)
 
     ads_flow = Flow(adsorption_jobs, ads_outputs)
