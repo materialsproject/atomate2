@@ -1,6 +1,6 @@
 
 
-### Installing Atomate2 with OpenMM
+### Installing Atomate2 from source with OpenMM
 
 ```bash
 # setting up our conda environment
@@ -39,22 +39,20 @@ from atomate2.classical_md.openmm.jobs.core import (
 )
 from pymatgen.core.structure import Molecule
 
-charges = np.array([1.34, -0.39, -0.39, -0.39, -0.39, -0.39, -0.39])
+pf6_charges = np.array([1.34, -0.39, -0.39, -0.39, -0.39, -0.39, -0.39])
 
-positions_str = """
-7
-
-P 0.0 0.0 0.0
-F 1.6 0.0 0.0
-F -1.6 0.0 0.0
-F 0.0 1.6 0.0
-F 0.0 -1.6 0.0
-F 0.0 0.0 1.6
-F 0.0 0.0 -1.6
-"""
-
-# Create the Molecule object from the positions string
-molecule = Molecule.from_str(positions_str, fmt="xyz")
+pf6 = Molecule(
+    ["P", "F", "F", "F", "F", "F", "F"],
+    [
+        [0.0, 0.0, 0.0],
+        [1.6, 0.0, 0.0],
+        [-1.6, 0.0, 0.0],
+        [0.0, 1.6, 0.0],
+        [0.0, -1.6, 0.0],
+        [0.0, 0.0, 1.6],
+        [0.0, 0.0, -1.6],
+    ],
+)
 
 mol_specs_dicts = [
     {"smile": "C1COC(=O)O1", "count": 100, "name": "EC"},
@@ -63,8 +61,8 @@ mol_specs_dicts = [
         "smile": "F[P-](F)(F)(F)(F)F",
         "count": 50,
         "name": "PF6",
-        "partial_charges": charges,
-        "geometry": molecule,
+        "partial_charges": pf6_charges,
+        "geometry": pf6,
         "charge_scaling": 0.8,
         "charge_method": "RESP",
     },
