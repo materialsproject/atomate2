@@ -64,7 +64,6 @@ def remove_adsorbate(slab: Structure) -> Structure:
     return slab
 
 
-@job
 def generate_slab(
     bulk_structure: Structure,
     min_slab_size: float,
@@ -112,7 +111,6 @@ def generate_slab(
     return slab_only  # noqa: RET504
 
 
-@job
 def generate_adslabs(
     bulk_structure: Structure,
     molecule_structure: Structure,

@@ -160,8 +160,8 @@ class AdsorptionMaker(Maker):
             min_vacuum_size=min_vacuum,
             min_lw=min_lw,
         )
-        jobs += [generate_slab_structure]
-        slab_structure = generate_slab_structure.output
+        # jobs += [generate_slab_structure]
+        slab_structure = generate_slab_structure
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
@@ -171,8 +171,8 @@ class AdsorptionMaker(Maker):
             min_vacuum_size=min_vacuum,
             min_lw=min_lw,
         )
-        jobs += [generate_adslabs_structures]
-        adslab_structures = generate_adslabs_structures.output
+        # jobs += [generate_adslabs_structures]
+        adslab_structures = generate_adslabs_structures
 
         if self.slab_relax_maker is None:
             raise ValueError("adslab_relax_maker shouldn't be Null.")
