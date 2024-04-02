@@ -6,7 +6,6 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-import numpy as np
 from jobflow import Flow, Response, job
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core import Element, Molecule, Structure
@@ -37,7 +36,7 @@ def get_boxed_molecule(molecule: Molecule) -> Structure:
     Structure
         The molecule structure.
     """
-    return molecule.get_boxed_structure(10, 10, 10, offset=np.array([5, 5, 5]))
+    return molecule.get_boxed_structure(10, 10, 10)
 
 
 def remove_adsorbate(slab: Structure) -> Structure:
@@ -306,6 +305,9 @@ class BulkRelaxMaker(BaseVaspMaker):
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-5,
+                # "LAECHG": False,
+                # "LREAL": False,
+                # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
                 "NELM": 500,
@@ -346,6 +348,9 @@ class MolRelaxMaker(BaseVaspMaker):
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-5,
+                # "LAECHG": False,
+                # "LREAL": False,
+                # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
                 "NELM": 500,
@@ -386,6 +391,9 @@ class SlabRelaxMaker(BaseVaspMaker):
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-5,
+                # "LAECHG": False,
+                # "LREAL": False,
+                # "LCHARG": False,
                 "LDAU": False,
                 "NSW": 300,
                 "NELM": 500,
@@ -424,6 +432,9 @@ class SlabStaticMaker(BaseVaspMaker):
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-7,
+                # "LAECHG": False,
+                # "LREAL": False,
+                # "LCHARG": False,
                 "LDAU": False,
                 "NELM": 500,
             },
@@ -461,6 +472,9 @@ class MolStaticMaker(BaseVaspMaker):
                 "ENCUT": 700,
                 "GGA": "RP",
                 "EDIFF": 1e-7,
+                # "LAECHG": False,
+                # "LREAL": False,
+                # "LCHARG": False,
                 "LDAU": False,
                 "NELM": 500,
             },

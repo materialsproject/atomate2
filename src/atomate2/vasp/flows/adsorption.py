@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-import numpy as np
 from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.jobs.adsorption import (
@@ -108,9 +107,7 @@ class AdsorptionMaker(Maker):
         Flow
             A flow object for calculating adsorption energies.
         """  # noqa: E501
-        molecule_structure = molecule.get_boxed_structure(
-            10, 10, 10, offset=np.array([5, 5, 5])
-        )
+        molecule_structure = molecule.get_boxed_structure(10, 10, 10)
 
         jobs: list[Job] = []
 
