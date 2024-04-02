@@ -159,9 +159,9 @@ class ForceFieldMDMaker(Maker):
         """Interpolate temperature / pressure on a schedule."""
         n_vals = len(values)
         return np.interp(
-            np.arange(n_pts + 1) * n_vals / (n_pts - 1),
-            np.arange(n_vals),
-            values,
+            np.linspace(0, n_vals-1, n_pts+1),
+            np.linspace(0, n_vals-1, n_vals),
+            values
         )
 
     def _get_ensemble_schedule(self) -> None:
