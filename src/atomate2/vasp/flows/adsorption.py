@@ -162,7 +162,7 @@ class AdsorptionMaker(Maker):
         )
 
         jobs += [generate_slab_structure]
-        slab_structure = generate_slab_structure
+        slab_structure = generate_slab_structure.output
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
@@ -173,7 +173,7 @@ class AdsorptionMaker(Maker):
             min_lw=min_lw,
         )
         jobs += [generate_adslabs_structures]
-        adslab_structures = generate_adslabs_structures
+        adslab_structures = generate_adslabs_structures.output
 
         # slab relaxation without adsorption
         slab_optimize_job = self.slab_relax_maker.make(slab_structure, prev_dir=None)

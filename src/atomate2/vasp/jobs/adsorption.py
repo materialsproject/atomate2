@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import job
+from jobflow import Response, job
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core import Element, Molecule, Structure
 from pymatgen.core.surface import SlabGenerator
@@ -64,13 +64,14 @@ def remove_adsorbate(slab: Structure) -> Structure:
     return slab
 
 
+@job
 def generate_slab(
     bulk_structure: Structure,
     min_slab_size: float,
     surface_idx: tuple,
     min_vacuum_size: float,
     min_lw: float,
-) -> Structure:
+) -> Response:
     """Generate the adsorption slabs without adsorbates.
 
     Parameters
@@ -108,9 +109,10 @@ def generate_slab(
     )
     slab_only = remove_adsorbate(ads_slabs[0])
 
-    return slab_only  # noqa: RET504
+    return Response(output=slab_only)
 
 
+@job
 def generate_adslabs(
     bulk_structure: Structure,
     molecule_structure: Structure,
@@ -118,7 +120,7 @@ def generate_adslabs(
     surface_idx: tuple,
     min_vacuum_size: float,
     min_lw: float,
-) -> list[Structure]:
+) -> Response:
     """Generate the adsorption slabs with adsorbates.
 
     Parameters
@@ -153,7 +155,7 @@ def generate_adslabs(
     ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(
         molecule_structure, translate=True, min_lw=min_lw
     )
-    return ads_slabs  # noqa: RET504
+    return Response(output=ads_slabs)
 
 
 # @job
