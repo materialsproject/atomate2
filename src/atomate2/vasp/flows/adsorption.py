@@ -117,8 +117,10 @@ class AdsorptionMaker(Maker):
             mol_optimize_job.append_name("molecule relaxation job")
             jobs += [mol_optimize_job]
 
-            prev_dir = mol_optimize_job.output.dir_name
-            optimized_molecule = mol_optimize_job.output.structure
+            mol_rex_output = mol_optimize_job.output
+
+            prev_dir = mol_rex_output.dir_name
+            optimized_molecule = mol_rex_output.structure
         else:
             prev_dir = prev_dir_mol
             optimized_molecule = molecule_structure
@@ -129,7 +131,8 @@ class AdsorptionMaker(Maker):
         mol_static_job.append_name("molecule static job")
         jobs += [mol_static_job]
 
-        molecule_dft_energy = mol_static_job.output.output.energy
+        mol_sta_output = mol_static_job.output
+        molecule_dft_energy = mol_sta_output.energy
 
         if self.bulk_relax_maker:
             bulk_optimize_job = self.bulk_relax_maker.make(
