@@ -55,7 +55,7 @@ class AdsorptionMaker(Maker):
         Maker for slab relaxation with adsorption.
     slab_static_maker: BaseVaspMaker
         Maker for slab static energy calculation.
-    mol_static_energy_maker: BaseVaspMaker
+    mol_static_maker: BaseVaspMaker
         Maker for molecule static energy calculation.
     """  # noqa: E501
 
@@ -189,8 +189,8 @@ class AdsorptionMaker(Maker):
         adslab_structures = generate_adslabs_structures.output
 
         joblog["job5: generate adslabs structures"]["output"] = (
-            adslab_structures.as_dict()
-        )
+            adslab_structures
+        ).as_dict()
 
         # slab relaxation without adsorption
         slab_optimize_job = self.slab_relax_maker.make(slab_structure, prev_dir=None)
@@ -232,8 +232,8 @@ class AdsorptionMaker(Maker):
         jobs += [adsorption_calc]
 
         joblog["job9: adsorption calculations"]["output"] = (
-            adsorption_calc.output.as_dict()
-        )
+            adsorption_calc.output
+        ).as_dict()
 
         with open("joblog.json", "w") as f:
             json.dump(joblog, f, indent=4)

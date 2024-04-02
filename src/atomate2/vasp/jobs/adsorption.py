@@ -7,7 +7,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Response, job
+from jobflow import Flow, Response, job
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core import Element, Molecule, Structure
 from pymatgen.core.surface import SlabGenerator
@@ -168,7 +168,7 @@ def run_adslabs_job(
     adslab_structures: list[Structure],
     relax_maker: SlabRelaxMaker,
     static_maker: SlabStaticMaker,
-) -> Response:
+) -> Flow:
     """Workflow of running the adsorption slab calculations.
 
     Parameters
@@ -203,7 +203,8 @@ def run_adslabs_job(
         ads_outputs["static_energy"].append(static_job.output.energy)
         ads_outputs["dirs"].append(ads_job.output.dir_name)
 
-    return Response(output=ads_outputs)
+    ads_flow = Flow(adsorption_jobs, ads_outputs)
+    return Response(replace=ads_flow)
 
 
 @job
