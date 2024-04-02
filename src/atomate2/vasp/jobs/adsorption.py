@@ -310,8 +310,8 @@ class BulkRelaxMaker(BaseVaspMaker):
                 "LREAL": False,
                 "LCHARG": False,
                 "LDAU": False,
-                "NSW": 300,
-                "NELM": 500,
+                "NSW": 1,
+                "NELM": 2,
             },
             auto_ispin=True,
         )
@@ -353,8 +353,8 @@ class MolRelaxMaker(BaseVaspMaker):
                 "LREAL": False,
                 "LCHARG": False,
                 "LDAU": False,
-                "NSW": 300,
-                "NELM": 500,
+                "NSW": 1,
+                "NELM": 2,
             },
             auto_ispin=True,
         )
@@ -396,8 +396,8 @@ class SlabRelaxMaker(BaseVaspMaker):
                 "LREAL": False,
                 "LCHARG": False,
                 "LDAU": False,
-                "NSW": 300,
-                "NELM": 500,
+                "NSW": 1,
+                "NELM": 2,
             },
             auto_ispin=True,
         )
@@ -437,7 +437,7 @@ class SlabStaticMaker(BaseVaspMaker):
                 "LREAL": False,
                 "LCHARG": False,
                 "LDAU": False,
-                "NELM": 500,
+                "NELM": 2,
             },
             auto_ispin=True,
         )
@@ -477,7 +477,7 @@ class MolStaticMaker(BaseVaspMaker):
                 "LREAL": False,
                 "LCHARG": False,
                 "LDAU": False,
-                "NELM": 500,
+                "NELM": 2,
             },
             auto_ispin=True,
         )
