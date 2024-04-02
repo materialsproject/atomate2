@@ -9,6 +9,7 @@ from jobflow import Flow, Job, Maker
 
 from atomate2.vasp.jobs.adsorption import (
     BulkRelaxMaker,
+    MolRelaxMaker,
     MolStaticMaker,
     SlabRelaxMaker,
     SlabStaticMaker,
@@ -58,6 +59,10 @@ class AdsorptionMaker(Maker):
     """  # noqa: E501
 
     name: str = "adsorption workflow"
+
+    mol_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
+        default_factory=MolRelaxMaker
+    )
 
     mol_static_energy_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=MolStaticMaker
