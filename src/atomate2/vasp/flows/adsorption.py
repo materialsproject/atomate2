@@ -64,7 +64,7 @@ class AdsorptionMaker(Maker):
         default_factory=MolRelaxMaker
     )
 
-    mol_static_energy_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
+    mol_static_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
         default_factory=MolStaticMaker
     )
 
@@ -135,7 +135,7 @@ class AdsorptionMaker(Maker):
             prev_dir = prev_dir_mol
             optimized_molecule = molecule_structure
 
-        mol_static_job = self.mol_static_energy_maker.make(
+        mol_static_job = self.mol_static_maker.make(
             molecule_structure, prev_dir=prev_dir
         )
         mol_static_job.append_name("molecule static job")
