@@ -50,9 +50,10 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
+    "torch<=2.2.1", # incompatibility with dgl if newer versions are used
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=0.9.0",
+    "matgl>=1.0.0",
     "quippy-ase>=0.9.14",
 ]
 anharmonicphonons = [
@@ -77,6 +78,7 @@ strict = [
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
+    "torch==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",

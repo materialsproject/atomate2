@@ -39,8 +39,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: pyproject.toml
+
 
       - name: Install dependencies
         # ERROR: Cannot install atomate2 and atomate2[strict,tests]==0.0.1 because these package versions have conflicting dependencies.
