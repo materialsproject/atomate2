@@ -193,6 +193,32 @@ class Atomate2Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)
 
+    # QChem specific settings
+
+    QCHEM_CMD: str = Field(
+        "qchem_std", description="Command to run standard version of qchem."
+    )
+
+    QCHEM_CUSTODIAN_MAX_ERRORS: int = Field(
+        5, description="Maximum number of errors to correct before custodian gives up"
+    )
+
+    QCHEM_MAX_CORES: int = Field(4, description="Maximum number of cores for QCJob")
+
+    QCHEM_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
+        "fizzle",
+        description="Three-way toggle on what to do if the job looks OK but is actually"
+        " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
+        "stop children. - False: do nothing, continue with workflow as normal. 'error':"
+        " throw an error",
+    )
+
+    QCHEM_STORE_ADDITIONAL_JSON: bool = Field(
+        default=True,
+        description="Ingest any additional JSON data present into database when "
+        "parsing QChem directories useful for storing duplicate of FW.json",
+    )
+
     # ShengBTE settings
     SHENGBTE_CMD: str = Field(
         "shengbte", description="Command to run 3 phonon ShengBTE."
