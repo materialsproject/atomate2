@@ -1,3 +1,5 @@
+import os
+
 import torch
 from jobflow import run_locally
 from numpy.testing import assert_allclose
@@ -29,7 +31,11 @@ def test_phonon_wf(clean_dir):
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
-        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        generate_frequencies_eigenvectors_kwargs={
+            "tstep": 100,
+            "filename_BS": "phonon_BS_test.png",
+            "filename_DOS": "phonon_DOS_test.pdf",
+        },
     ).make(structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -100,3 +106,12 @@ def test_phonon_wf(clean_dir):
         [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
         atol=1000,
     )
+
+    # checking phonon output filenames
+    files = os.listdir(os.getcwd())
+
+    for png in [file for file in files if file.endswith(".png")]:
+        assert png == "phonon_BS_test.png"
+
+    for pdf in [file for file in files if file.endswith(".pdf")]:
+        assert pdf == "phonon_DOS_test.pdf"
