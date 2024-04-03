@@ -174,8 +174,8 @@ class ForceFieldTaskDocument(StructureMetadata):
             Keyword arguments that will get passed to :obj:`Relaxer()`.
         ionic_step_data : tuple
             Which data to save from each ionic step.
-        store_trajectory: 
-            StoreTrajectoryOption
+        store_trajectory:
+            whether to set the StoreTrajectoryOption
         task_document_kwargs : dict
             Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
         """
