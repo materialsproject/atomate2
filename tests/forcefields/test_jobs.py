@@ -1,3 +1,4 @@
+from importlib.metadata import version as get_imported_version
 from pathlib import Path
 
 import pytest
@@ -36,14 +37,17 @@ def test_chgnet_static_maker(si_structure):
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
+    assert output1.forcefield_version == get_imported_version("chgnet")
+
 
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
+    max_step = 25
     # generate job
-    job = CHGNetRelaxMaker(steps=25, relax_cell=relax_cell).make(si_structure)
+    job = CHGNetRelaxMaker(steps=max_step, relax_cell=relax_cell).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -51,11 +55,14 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.n_steps >= 12
     if relax_cell:
+        assert not output1.is_force_converged
+        assert output1.output.n_steps == max_step + 2
         assert output1.output.energy == approx(-10.62461, abs=1e-2)
         assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00251674, rel=1e-1)
     else:
+        assert output1.is_force_converged
+        assert output1.output.n_steps == 13
         assert output1.output.energy == approx(-10.6274, rel=1e-2)
         assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00303572, rel=1e-2)
 
@@ -75,13 +82,16 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.output.energy == approx(-10.8, abs=0.2)
     assert output1.output.n_steps == 1
 
+    assert output1.forcefield_version == get_imported_version("matgl")
+
 
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
     # generate job
-    job = M3GNetRelaxMaker(steps=25).make(si_structure)
+    max_step = 25
+    job = M3GNetRelaxMaker(steps=max_step).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -89,8 +99,9 @@ def test_m3gnet_relax_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.is_force_converged
     assert output1.output.energy == approx(-10.8, abs=0.2)
-    assert output1.output.n_steps == 27
+    assert output1.output.n_steps == 24
 
 
 mace_paths = pytest.mark.parametrize(
@@ -109,9 +120,9 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
-    job = MACEStaticMaker(model=model, task_document_kwargs=task_doc_kwargs).make(
-        si_structure
-    )
+    job = MACEStaticMaker(
+        calculator_kwargs={"model": model}, task_document_kwargs=task_doc_kwargs
+    ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -121,6 +132,7 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-0.068231, rel=1e-4)
     assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("mace-torch")
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
@@ -134,7 +146,7 @@ def test_mace_relax_maker(
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACERelaxMaker(
-        model=model,
+        calculator_kwargs={"model": model},
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
@@ -145,6 +157,7 @@ def test_mace_relax_maker(
 
     # validating the outputs of the job
     output1 = responses[job.uuid][1].output
+    assert output1.is_force_converged
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
         assert output1.output.energy == approx(-0.0526856, rel=1e-1)
@@ -162,8 +175,10 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     # generate job
     # Test files have been provided by Yuanbin Liu (University of Oxford)
     job = GAPStaticMaker(
-        potential_args_str="IP GAP",
-        potential_param_file_name=test_dir / "forcefields" / "gap" / "gap_file.xml",
+        calculator_kwargs={
+            "args_str": "IP GAP",
+            "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
+        },
         task_document_kwargs=task_doc_kwargs,
     ).make(si_structure)
 
@@ -175,16 +190,20 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-10.8523, rel=1e-4)
     assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("quippy-ase")
 
 
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
+    importorskip("nequip")
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = NequipStaticMaker(
         task_document_kwargs=task_doc_kwargs,
-        model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
+        calculator_kwargs={
+            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        },
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -195,12 +214,14 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-44.40017, rel=1e-4)
     assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("nequip")
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_nequip_relax_maker(
     sr_ti_o3_structure: Structure, test_dir: Path, relax_cell: bool
 ):
+    importorskip("nequip")
     # translate one atom to ensure a small number of relaxation steps are taken
     sr_ti_o3_structure.translate_sites(0, [0, 0, 0.2])
     # generate job
@@ -208,7 +229,9 @@ def test_nequip_relax_maker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
-        model_path=test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth",
+        calculator_kwargs={
+            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        },
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -234,9 +257,13 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
 
     # generate job
     # Test files have been provided by Yuanbin Liu (University of Oxford)
+    max_step = 25
     job = GAPRelaxMaker(
-        potential_param_file_name=test_dir / "forcefields" / "gap" / "gap_file.xml",
-        steps=25,
+        calculator_kwargs={
+            "args_str": "IP GAP",
+            "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
+        },
+        steps=max_step,
         relax_cell=relax_cell,
     ).make(si_structure)
 
@@ -247,8 +274,10 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
+        assert not output1.is_force_converged
         assert output1.output.energy == approx(-13.08492, rel=1e-2)
-        assert output1.output.n_steps == 27
+        assert output1.output.n_steps == max_step + 2
     else:
+        assert output1.is_force_converged
         assert output1.output.energy == approx(-10.8523, rel=1e-4)
         assert output1.output.n_steps == 17
