@@ -16,6 +16,8 @@ from atomate2.common.flows.mpmorph import (
 from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
+from atomate2.common.jobs.eos import MPMorphEVPostProcess, MPMorphPVPostProcess
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -95,8 +97,10 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             class_filter=ForceFieldMDMaker,
         )
         self.convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker", md_maker=self.md_maker
-        )
+            name="MP Morph VASP Equilibrium Volume Maker",
+            md_maker=self.md_maker,
+            postprocessor=MPMorphEVPostProcess(),
+        )  # TODO: check EV versus PV
 
         self.production_md_maker = self.md_maker.update_kwargs(
             update=dict(
