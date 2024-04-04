@@ -421,23 +421,35 @@ class MPMorphPVPostProcess(PostProcessEosPressure):
 
 class MPMorphEVPostProcess(PostProcessEosEnergy):
     """Modified  E(V) fit to accomodate MPMorph."""
+    eos_models: tuple[str, ...] = (
+        "vinet",
+        "birch_murnaghan",
+        "birch",
+        "pourier_tarantola",
+        "murnaghan",
+    )
 
+    
     def eval(self) -> None:
         """Fit the input data to the Birch-Murnaghan pressure EOS."""
-        initial_pars = self._initial_fit()
         for jobtype in self._use_job_types:
-            eos_params, ierr = leastsq(
-                self._objective, initial_pars[jobtype], args=(jobtype,)
-            )
             self.results[jobtype]["EOS"] = {}
-            if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"][
-                    "exception"
-                ] = "Optimal EOS parameters not found."
-            else:
-                for i, key in enumerate(["b0", "b1", "v0"]):
-                    self.results[jobtype]["EOS"][key] = eos_params[i]
+            for eos_name in self.eos_models:
+                try:
+                    eos = EOS(eos_name=eos_name).fit(
+                        self.results[jobtype]["volume"], self.results[jobtype]["energy"]
+                    )
+                    self.results[jobtype]["EOS"][eos_name] = {
+                        **eos.results,
+                        "b0 GPa": float(eos.b0_GPa),
+                    }
+                except EOSError as exc:
+                    self.results[jobtype]["EOS"][eos_name] = {"exception": str(exc)}
+        
+        for eos_func in self.eos_models:
+            if v0 := self.results[jobtype]["EOS"][eos_func].get("v0"):
+                self.results["V0"] = v0
+                break
 
-        self.results["V0"] = self.results[jobtype]["EOS"].get("v0")
         self.results["Vmax"] = max(self.results["relax"]["volume"])
         self.results["Vmin"] = min(self.results["relax"]["volume"])
