@@ -379,7 +379,7 @@ class NequipMDMaker(ForceFieldMDMaker):
 
 
 @dataclass
-class LJMD(ForceFieldMDMaker):
+class LJMDMaker(ForceFieldMDMaker):
     name: str = "LJ MD"
 
     def _calculator(self):

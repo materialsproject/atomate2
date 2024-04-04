@@ -537,7 +537,7 @@ class PyACERelaxMaker(ForceFieldRelaxMaker):
 
 
 @dataclass
-class LJRelax(ForceFieldRelaxMaker):
+class LJRelaxMaker(ForceFieldRelaxMaker):
     name: str = "LJ relax"
 
     def _calculator(self):
@@ -547,7 +547,7 @@ class LJRelax(ForceFieldRelaxMaker):
 
 
 @dataclass
-class LJStatic(ForceFieldStaticMaker):
+class LJStaticMaker(ForceFieldStaticMaker):
     name: str = "LJ static"
 
     def _calculator(self):
