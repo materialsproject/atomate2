@@ -76,7 +76,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
 
     quench_tempature_setup: dict | None = None
 
-    md_maker: ForceFieldMDMaker | None = ForceFieldMDMaker
+    md_maker: ForceFieldMDMaker | None = field(default_factory=ForceFieldMDMaker)
     convergence_md_maker: EquilibriumVolumeMaker | None = None
     production_md_maker: ForceFieldMDMaker = ForceFieldMDMaker
 
@@ -85,20 +85,21 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-
+        print(type(self.md_maker), type(self.md_maker()))
         self.md_maker = self.md_maker.update_kwargs(
-            dict(
-                name="MLFF MD Maker",
-                temperature=self.temperature,
-                nsteps=self.steps_convergence,
-            )
+            update={
+                "name": "MLFF MD Maker",
+                "temperature": self.temperature,
+                "nsteps": self.steps_convergence,
+            },
+            class_filter=ForceFieldMDMaker,
         )
         self.convergence_md_maker = EquilibriumVolumeMaker(
             name="MP Morph VASP Equilibrium Volume Maker", md_maker=self.md_maker
         )
 
         self.production_md_maker = self.md_maker.update_kwargs(
-            dict(
+            update=dict(
                 name="Production Run MLFF MD Maker",
                 temperature=self.temperature,
                 nsteps=self.steps_total_production,
@@ -108,14 +109,14 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = self.quench_maker.update_kwargs(
-                    dict(
+                    update=dict(
                         md_maker=self.md_maker,
                         quench_tempature_setup=self.quench_tempature_setup,
                     )
                 )
             elif isinstance(self.quench_maker, FastQuenchMaker):
                 self.quench_maker = self.quench_maker.update_kwargs(
-                    dict(
+                    update=dict(
                         relax_maker=self.relax_maker,
                         static_maker=self.static_maker,
                     )
