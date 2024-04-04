@@ -39,8 +39,7 @@ class VaspDrone(AbstractDrone):
         TaskDoc
             A VASP task document.
         """
-        if path is None:
-            path = Path.cwd()
+        path = path or Path.cwd()
 
         try:
             doc = TaskDoc.from_directory(path, **self.task_document_kwargs)
