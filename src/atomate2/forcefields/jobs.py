@@ -276,6 +276,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
