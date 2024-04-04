@@ -78,14 +78,14 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
 
     md_maker: ForceFieldMDMaker | None = field(default_factory=ForceFieldMDMaker)
     convergence_md_maker: EquilibriumVolumeMaker | None = None
-    production_md_maker: ForceFieldMDMaker = ForceFieldMDMaker
+    production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
 
     relax_maker: ForceFieldRelaxMaker | None = None
     static_maker: ForceFieldStaticMaker | None = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        print(type(self.md_maker), type(self.md_maker()))
+        print(type(self.md_maker))
         self.md_maker = self.md_maker.update_kwargs(
             update={
                 "name": "MLFF MD Maker",
@@ -121,4 +121,4 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
                         static_maker=self.static_maker,
                     )
                 )
-        return super().make.original(self, structure=structure, prev_dir=prev_dir)
+        return super().make(structure=structure, prev_dir=prev_dir)
