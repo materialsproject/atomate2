@@ -151,15 +151,12 @@ class CalculationOutput(BaseModel):
         structure = output.final_structure
 
         electronic_output = {
-            "efermi": None,
+            "efermi": getattr(output.fermi_energy, None),
             "vbm": output.vbm,
             "cbm": output.cbm,
             "bandgap": output.band_gap,
             "direct_bandgap": output.direct_band_gap,
         }
-
-        if output.fermi_energy is not None:
-            electronic_output["efermi"] = output.fermi_energy
 
         forces = None
         if output.forces is not None:
