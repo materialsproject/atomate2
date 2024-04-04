@@ -108,6 +108,6 @@ def test_phonon_wf(clean_dir, tmp_path: Path):
         atol=1000,
     )
 
-    # check phonon output filenames
+    # check phonon plots exist
     assert os.path.isfile(filename_bs)
     assert os.path.isfile(filename_dos)
