@@ -128,7 +128,7 @@ class PhononJobDirs(BaseModel):
         None, description="Directory where optimization run was performed."
     )
     taskdoc_run_job_dir: Optional[str] = Field(
-        None, description="Directory where taskdoc was generated."
+        None, description="Directory where task doc was generated."
     )
 
 
