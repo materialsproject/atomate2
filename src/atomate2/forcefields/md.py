@@ -36,6 +36,7 @@ from atomate2.forcefields.utils import (
     revert_default_dtype,
 )
 
+
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Literal
@@ -375,3 +376,13 @@ class NequipMDMaker(ForceFieldMDMaker):
 
     name: str = f"{MLFF.Nequip} MD"
     force_field_name: str = f"{MLFF.Nequip}"
+
+
+@dataclass
+class LJMD(ForceFieldMDMaker):
+    name: str = "LJ MD"
+
+    def _calculator(self):
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones()

@@ -534,3 +534,23 @@ class PyACERelaxMaker(ForceFieldRelaxMaker):
             "param_filename": "gap.xml",
         }
     )
+
+
+@dataclass
+class LJRelax(ForceFieldRelaxMaker):
+    name: str = "LJ relax"
+
+    def _calculator(self):
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones()
+
+
+@dataclass
+class LJStatic(ForceFieldStaticMaker):
+    name: str = "LJ static"
+
+    def _calculator(self):
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones()
