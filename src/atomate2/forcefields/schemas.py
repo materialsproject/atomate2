@@ -153,6 +153,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         optimizer_kwargs: dict = None,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
+        **task_document_kwargs,
     ) -> "ForceFieldTaskDocument":
         """
         Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
@@ -173,6 +174,10 @@ class ForceFieldTaskDocument(StructureMetadata):
             Keyword arguments that will get passed to :obj:`Relaxer()`.
         ionic_step_data : tuple
             Which data to save from each ionic step.
+        store_trajectory:
+            whether to set the StoreTrajectoryOption
+        task_document_kwargs : dict
+            Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
         """
         trajectory = result["trajectory"]
 
@@ -291,4 +296,5 @@ class ForceFieldTaskDocument(StructureMetadata):
             included_objects=list(forcefield_objects.keys()),
             forcefield_objects=forcefield_objects,
             is_force_converged=result.get("is_force_converged"),
+            **task_document_kwargs,
         )
