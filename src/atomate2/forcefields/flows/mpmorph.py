@@ -129,7 +129,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
                 nsteps=self.steps_total_production,
             )
         )
-        print(type(self.quench_maker))
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = SlowQuenchMaker(
@@ -226,7 +225,6 @@ class MPMorphLJMDMaker(MPMorphMDMaker):
                 nsteps=self.steps_total_production,
             )
         )
-        print(type(self.quench_maker))
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = SlowQuenchMaker(
@@ -323,7 +321,6 @@ class MPMorphCHGNetMDMaker(MPMorphMDMaker):
                 nsteps=self.steps_total_production,
             )
         )
-        print(type(self.quench_maker))
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = SlowQuenchMaker(
@@ -517,7 +514,6 @@ class MPMorphMACEMDMaker(MPMorphMDMaker):
                 nsteps=self.steps_total_production,
             )
         )
-        print(type(self.quench_maker))
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
                 self.quench_maker = SlowQuenchMaker(
