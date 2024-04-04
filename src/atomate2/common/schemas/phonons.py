@@ -360,7 +360,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
         new_plotter.save_plot(
-            filename=kwargs.get("filename_bs", "phonon_band_structure.eps"),
+            filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
             units=kwargs.get("units", "THz"),
         )
 
@@ -389,7 +389,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         new_plotter_dos = PhononDosPlotter()
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
-            filename=kwargs.get("filename_dos", "phonon_dos.eps"),
+            filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
             units=kwargs.get("units", "THz"),
         )
 
