@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import torch
 from jobflow import run_locally
@@ -16,7 +17,7 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-def test_phonon_wf(clean_dir):
+def test_phonon_wf(clean_dir, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
     torch.set_default_dtype(torch.float32)
 
@@ -33,8 +34,8 @@ def test_phonon_wf(clean_dir):
         prefer_90_degrees=False,
         generate_frequencies_eigenvectors_kwargs={
             "tstep": 100,
-            "filename_BS": "phonon_BS_test.png",
-            "filename_DOS": "phonon_DOS_test.pdf",
+            "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
+            "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
         },
     ).make(structure)
 
@@ -107,11 +108,6 @@ def test_phonon_wf(clean_dir):
         atol=1000,
     )
 
-    # checking phonon output filenames
-    files = os.listdir(os.getcwd())
-
-    for png in [file for file in files if file.endswith(".png")]:
-        assert png == "phonon_BS_test.png"
-
-    for pdf in [file for file in files if file.endswith(".pdf")]:
-        assert pdf == "phonon_DOS_test.pdf"
+    # check phonon output filenames
+    assert os.path.isfile(filename_bs)
+    assert os.path.isfile(filename_dos)
