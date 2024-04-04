@@ -164,4 +164,4 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
                     ),
                 )
 
-        return super().make.original(self, structure=structure, prev_dir=prev_dir)
+        return super().make(structure=structure, prev_dir=prev_dir)
