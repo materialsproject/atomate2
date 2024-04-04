@@ -66,6 +66,9 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         assert output1.output.energy == approx(-10.6274, rel=1e-2)
         assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00303572, rel=1e-2)
 
+    # check the force_field_task_doc attributes
+    assert Path(responses[job.uuid][1].output.dir_name).exists()
+
 
 def test_m3gnet_static_maker(si_structure):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}

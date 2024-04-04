@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -121,6 +122,7 @@ class ForceFieldRelaxMaker(Maker):
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
+        self.task_document_kwargs.setdefault("dir_name", os.getcwd())
 
         with revert_default_dtype():
             relaxer = Relaxer(
