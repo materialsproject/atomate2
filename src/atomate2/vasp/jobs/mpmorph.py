@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
+
 @dataclass
 class BaseMPMorphMDMaker(MDMaker):
     """
@@ -41,8 +42,7 @@ class BaseMPMorphMDMaker(MDMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name : str = "MPMorph MD Maker"
-    input_set_generator : VaspInputGenerator = field(
-        default_factory = MPMorphMDSetGenerator
+    name: str = "MPMorph MD Maker"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=MPMorphMDSetGenerator
     )
-

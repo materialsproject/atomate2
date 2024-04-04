@@ -1,7 +1,7 @@
 """Flows adapted from MPMorph *link to origin github repo*"""
 
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Response
@@ -89,9 +89,9 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
 
     quench_tempature_setup: dict | None = None
 
-    md_maker: MDMaker | None = BaseMPMorphMDMaker
+    md_maker: MDMaker | None = field(default_factory=BaseMPMorphMDMaker)
     convergence_md_maker: EquilibriumVolumeMaker | None = None
-    production_md_maker: Maker = BaseMPMorphMDMaker
+    production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
 
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
