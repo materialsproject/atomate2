@@ -87,7 +87,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        print(type(self.md_maker))
         self.md_maker = self.md_maker.update_kwargs(
             update={
                 "name": "MLFF MD Maker",
@@ -109,20 +108,16 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
                 nsteps=self.steps_total_production,
             )
         )
-
+        print(type(self.quench_maker))
         if self.quench_maker is not None:
             if isinstance(self.quench_maker, SlowQuenchMaker):
-                self.quench_maker = self.quench_maker.update_kwargs(
-                    update=dict(
-                        md_maker=self.md_maker,
-                        quench_tempature_setup=self.quench_tempature_setup,
-                    )
+                self.quench_maker = SlowQuenchMaker(
+                    md_maker=self.md_maker,
+                    quench_tempature_setup=self.quench_tempature_setup,
                 )
             elif isinstance(self.quench_maker, FastQuenchMaker):
-                self.quench_maker = self.quench_maker.update_kwargs(
-                    update=dict(
-                        relax_maker=self.relax_maker,
-                        static_maker=self.static_maker,
-                    )
+                self.quench_maker = FastQuenchMaker(
+                    relax_maker=self.relax_maker,
+                    static_maker=self.static_maker,
                 )
         return super().make(structure=structure, prev_dir=prev_dir)

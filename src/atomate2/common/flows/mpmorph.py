@@ -346,11 +346,6 @@ class SlowQuenchMaker(Maker):  # Work in Progress
             A flow containing series of relax and static runs.
         """
 
-        if self.md_maker is not MDMaker and self.md_maker is not ForceFieldMDMaker:
-            raise ValueError(
-                "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
-            )
-
         md_jobs = []
         for temp in np.arange(
             self.quench_tempature_setup["start_temp"],
@@ -364,8 +359,8 @@ class SlowQuenchMaker(Maker):  # Work in Progress
                 else md_jobs[-1].output.dir_name
             )
 
-            if self.md_maker is MDMaker:
-                md_job = self.md_maker(
+            if isinstance(self.md_maker, MDMaker):
+                md_job = MDMaker(
                     input_set_generator=MDSetGenerator(
                         start_temp=temp,
                         end_temp=temp,
@@ -373,13 +368,22 @@ class SlowQuenchMaker(Maker):  # Work in Progress
                     )
                 ).make(structure, prev_dir)
 
-            elif self.md_maker is ForceFieldMDMaker:
-                md_job = self.md_maker(
-                    temperature=temp, nsteps=self.quench_tempature_setup["nsteps"]
-                ).make(
+            elif isinstance(self.md_maker, ForceFieldMDMaker):
+                self.md_maker = self.md_maker.update_kwargs(
+                    update={
+                        "temperature": temp,
+                        "nsteps": self.quench_tempature_setup["nsteps"],
+                    }
+                )
+                md_job = self.md_maker.make(
                     structure,
                     prev_dir,
                 )
+            else:
+                raise ValueError(
+                    "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
+                )
+
             md_jobs.append(md_job)
 
             structure = md_job.output.structure
