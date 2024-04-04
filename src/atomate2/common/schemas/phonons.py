@@ -128,7 +128,7 @@ class PhononJobDirs(BaseModel):
         None, description="Directory where optimization run was performed."
     )
     taskdoc_run_job_dir: Optional[str] = Field(
-        None, description="Directory where taskdoc was generated."
+        None, description="Directory where task doc was generated."
     )
 
 
@@ -329,7 +329,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
-        # with phonon.load("phonopy.yaml") the phonopy API can be used
+        # with phonopy.load("phonopy.yaml") the phonopy API can be used
         phonon.save("phonopy.yaml")
 
         # get phonon band structure
@@ -359,9 +359,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
         )
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
-
         new_plotter.save_plot(
-            "phonon_band_structure.eps", units=kwargs.get("units", "THz")
+            filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+            units=kwargs.get("units", "THz"),
         )
 
         # will determine if imaginary modes are present in the structure
@@ -389,7 +389,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         new_plotter_dos = PhononDosPlotter()
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
-            filename="phonon_dos.eps", units=kwargs.get("units", "THz")
+            filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+            units=kwargs.get("units", "THz"),
         )
 
         # compute vibrational part of free energies per formula unit
