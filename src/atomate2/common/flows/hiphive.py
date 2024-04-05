@@ -18,6 +18,7 @@ from atomate2.common.jobs.hiphive import (
     # quality_control,
     run_fc_to_pdos,
     run_hiphive,
+    run_hiphive_individually,
     run_hiphive_renormalization,
     run_lattice_thermal_conductivity,
 )
@@ -35,7 +36,6 @@ if TYPE_CHECKING:
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.flows.core import DoubleRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
-from emmet.core.math import Matrix3D
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +127,7 @@ class BaseHiphiveMaker(Maker, ABC):
         i * 100 for i in range(21)
     ]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
     T_RENORM: ClassVar[list[int]] = [
-        1500, 2000, 2500, 2700, 3000 # 300, 500, 600, 700, 800, 900, 1000
+        10 # 300, 500, 600, 700, 800, 900, 1000, 1500, 2500, 2700, 3000
     ]  # [i*100 for i in range(0,16)] # Temp. at which renorm. is to be performed
     # If renormalization is performed,
     # T_RENORM overrides T_KLAT for lattice thermal conductivity
@@ -228,7 +228,7 @@ class BaseHiphiveMaker(Maker, ABC):
             if self.prev_calc_dir_argname is not None:
                 bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
             bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
-            bulk.update_config({"manager_config": {"_fworker": "gpu_fworker"}}) #change to gpu_fworker
+            bulk.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
             jobs.append(bulk)
             outputs.append(bulk.output)
             structure = bulk.output.structure
@@ -260,7 +260,7 @@ class BaseHiphiveMaker(Maker, ABC):
                 min_length=self.min_length,
                 prefer_90_degrees=self.prefer_90_degrees,
                 n_structures=n_structures,
-                fixed_displs=fixed_displs,
+                # fixed_displs=fixed_displs,
                 loops=loops,
                 prev_dir=prev_dir,
                 phonon_displacement_maker=self.phonon_displacement_maker,
@@ -268,18 +268,34 @@ class BaseHiphiveMaker(Maker, ABC):
         )
         jobs.append(static_calcs)
 
+
         # 3. Hiphive Fitting of FCPs upto 4th order
-        fit_force_constant = run_hiphive(
-            fit_method=fit_method,
-            disp_cut=disp_cut,
-            bulk_modulus=bulk_modulus,
-            temperature_qha=temperature_qha,
-            mesh_density=mesh_density,
-            imaginary_tol=imaginary_tol,
-            prev_dir_json_saver=static_calcs.output["current_dir"],
-            loop=loops,
-            cutoffs=cutoffs
-        )
+        if n_structures >= 10:
+            fit_force_constant = run_hiphive_individually(
+                mpid = mpid,
+                cutoffs = cutoffs,
+                fit_method = fit_method,
+                disp_cut = disp_cut,
+                bulk_modulus = bulk_modulus,
+                temperature_qha = temperature_qha,
+                imaginary_tol = imaginary_tol,
+                prev_dir_json_saver = static_calcs.output["current_dir"],
+                # prev_dir_json_saver = prev_dir_json_saver,
+                loop = loops,
+            )
+        else:
+            fit_force_constant = run_hiphive(
+                fit_method=fit_method,
+                disp_cut=disp_cut,
+                bulk_modulus=bulk_modulus,
+                temperature_qha=temperature_qha,
+                mesh_density=mesh_density,
+                imaginary_tol=imaginary_tol,
+                prev_dir_json_saver=static_calcs.output["current_dir"],
+                # prev_dir_json_saver=prev_dir_json_saver,
+                loop=loops,
+                cutoffs=cutoffs
+            )
         fit_force_constant.name += f" {loops}"
         fit_force_constant.update_config({"manager_config": {"_fworker": "cpu_reg_fworker"}})
         jobs.append(fit_force_constant)
@@ -350,12 +366,10 @@ class BaseHiphiveMaker(Maker, ABC):
                     temperature=temperature,
                     renorm_method=renormalize_method,
                     nconfig=nconfig,
-                    conv_thresh=renormalize_conv_thresh,
-                    max_iter=renormalize_max_iter,
                     renorm_TE_iter=renormalize_thermal_expansion_iter,
                     bulk_modulus=bulk_modulus,
-                    mesh_density=mesh_density,
-                    prev_dir_hiphive=fit_force_constant.output[4],
+                    prev_dir_hiphive=fit_force_constant.output["current_dir"],
+                    # prev_dir_hiphive=prev_dir_hiphive,
                     loop=loops,
                 )
                 renormalization.name += f" {temperature} {loops}"
@@ -378,12 +392,14 @@ class BaseHiphiveMaker(Maker, ABC):
                     }
                 )
 
+
         # 5. Extract Phonon Band structure & DOS from FC
         # for 0K
         fc_pdos_pb_to_db = run_fc_to_pdos(
                 renormalized=renormalize,
                 mesh_density=mesh_density,
-                prev_dir_json_saver=fit_force_constant.output[4],
+                prev_dir_json_saver=fit_force_constant.output["current_dir"],
+                # prev_dir_json_saver=prev_dir_hiphive,
                 loop=loops,
             )
         fc_pdos_pb_to_db.name += f" {loops} 0K"
@@ -432,7 +448,7 @@ class BaseHiphiveMaker(Maker, ABC):
                     }
                 )
 
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-03-28-05-45-16-259235-19145"
+
         # 6. Lattice thermal conductivity calculation using Sheng BTE
         if calculate_lattice_thermal_conductivity:
             if renormalize:
@@ -450,11 +466,11 @@ class BaseHiphiveMaker(Maker, ABC):
                     renormalized=renormalize,
                     temperature=temperatures,
                     loop=loops,
-                    prev_dir_hiphive=fit_force_constant.output[4],
+                    prev_dir_hiphive=fit_force_constant.output["current_dir"],
                     therm_cond_solver= self.THERM_COND_SOLVER
                 )
                 lattice_thermal_conductivity.name += f" {temperatures} {loops}"
-                lattice_thermal_conductivity.update_config({"manager_config": {"_fworker": "gpu_fworker"}}) #change to gpu_fworker
+                lattice_thermal_conductivity.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
                 jobs.append(lattice_thermal_conductivity)
                 outputs.append(lattice_thermal_conductivity.output)
                 lattice_thermal_conductivity.metadata.update(
@@ -485,7 +501,7 @@ class BaseHiphiveMaker(Maker, ABC):
                     )
 
                     lattice_thermal_conductivity.name += f" {T} {loops}"
-                    lattice_thermal_conductivity.update_config({"manager_config": {"_fworker": "gpu_fworker"}}) #change to gpu_fworker
+                    lattice_thermal_conductivity.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
                     jobs.append(lattice_thermal_conductivity)
                     outputs.append(lattice_thermal_conductivity.output)
                     lattice_thermal_conductivity.metadata.update(
