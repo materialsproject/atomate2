@@ -101,16 +101,18 @@ def si_structure(test_dir):
 def sr_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "SrTiO3.cif")
 
+
 @pytest.fixture()
 def ba_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "BaTiO3.cif")
 
-@pytest.fixture
+
+@pytest.fixture()
 def input_structure(request):
     if request.param == "si_structure":
         return request.getfixturevalue("si_structure")
-    elif request.param == "ba_ti_o3_structure":
-        return request.getfixturevalue("ba_ti_o3_structure")
+    return request.getfixturevalue("ba_ti_o3_structure")
+
 
 @pytest.fixture(autouse=True)
 def mock_jobflow_settings(memory_jobstore):

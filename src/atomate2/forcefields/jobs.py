@@ -83,6 +83,7 @@ class ForceFieldRelaxMaker(Maker):
         Whether to allow the cell shape/volume to change during relaxation.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
     symprec : float = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
@@ -144,6 +145,8 @@ class ForceFieldRelaxMaker(Maker):
             self.force_field_name,
             result,
             self.relax_cell,
+            self.fix_symmetry,
+            self.symprec,
             self.steps,
             self.relax_kwargs,
             self.optimizer_kwargs,
@@ -197,6 +200,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         Whether to allow the cell shape/volume to change during relaxation.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
     symprec : float = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
@@ -259,6 +263,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         Whether to allow the cell shape/volume to change during relaxation.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
     symprec : float = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
@@ -300,12 +305,9 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         Whether to allow the cell shape/volume to change during relaxation.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
     symprec : float = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
-    fix_symmetry : bool = False
-        Whether to fix the symmetry during relaxation.
-    symprec : float
-        Tolerance for symmetry finding in case of `fix_symmetry=True`.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -385,6 +387,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Whether to allow the cell shape/volume to change during relaxation.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
     symprec : float = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
@@ -459,6 +462,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Whether to allow the cell shape/volume to change during relaxation.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
     symprec : float = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
