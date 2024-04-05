@@ -12,14 +12,12 @@ import subprocess
 from copy import copy
 from itertools import product
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Union
-from dataclasses import field
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import phonopy as phpy
 import psutil
 import scipy as sp
-from ase import atoms
 from ase.cell import Cell
 
 # Hiphive packages
@@ -95,7 +93,7 @@ __all__ = [
     "hiphive_static_calcs",
     "generate_hiphive_displacements",
     "quality_control",
-    "hiphive_cutoff"
+    "run_hiphive_individually"
     "run_hiphive",
     "run_thermal_cond_solver",
     "run_fc_to_pdos",
@@ -202,7 +200,13 @@ def generate_hiphive_displacements(
         largest_disp = largest_displacement[row]
 
         ratio = int(largest_disp/smallest_disp)
-        factors = np.sqrt(np.linspace(1,ratio**2,n_structures))
+        if 60 >= n_structures >= 4:
+            logger.info(f"n_structures inside if statement >= 4 is {n_structures}")
+            factors = np.sqrt(np.linspace(1,ratio**2,n_structures))
+        elif n_structures < 4   :
+            factors = np.sqrt(np.linspace(1,ratio**2,4))
+        else:
+            factors = np.sqrt(np.linspace(1,ratio**2,60))
         amplitudes = (smallest_disp*factors).round(3)
         logger.info(f"amplitudes = {amplitudes}")
         fixed_displs = amplitudes.tolist()
@@ -437,7 +441,7 @@ def collect_perturbed_structures(
 
 #     return Response(addition=flow)
 @job
-def hiphive_cutoff(
+def run_hiphive_individually(
     mpid: str = None,
     cutoffs: list[list] | None = None,
     fit_method: str | None = None,
@@ -461,7 +465,14 @@ def hiphive_cutoff(
     else:
         pass
 
-    jobs_hiphive = []
+    jobs = []
+    outputs: dict[str, list] = {
+        "thermal_data": [],
+        "anharmonic_data": [],
+        "fitting_data": [],
+        "param": [],
+        "current_dir": []
+    }
     outputs_hiphive = []
     for _, i in enumerate(cutoffs):
         logger.info(f"cutoffs is {i}")
@@ -477,7 +488,7 @@ def hiphive_cutoff(
         )
         run_hiphive_cutoffs.name += f" {loop} {i}"
         run_hiphive_cutoffs.update_config({"manager_config": {"_fworker": "cpu_reg_fworker"}})
-        jobs_hiphive.append(run_hiphive_cutoffs)
+        jobs.append(run_hiphive_cutoffs)
         outputs_hiphive.append(run_hiphive_cutoffs.output)
         run_hiphive_cutoffs.metadata.update(
             {
@@ -492,9 +503,92 @@ def hiphive_cutoff(
                 ]
             }
         )
-    hiphive_cutoff_flow = Flow(jobs_hiphive, outputs_hiphive)
-    return Response(replace=hiphive_cutoff_flow)
 
+    job_collect_hiphive_outputs = collect_hiphive_outputs(
+        fit_method=fit_method,
+        disp_cut=disp_cut,
+        imaginary_tol=imaginary_tol,
+        outputs=outputs_hiphive
+    )
+    job_collect_hiphive_outputs.name += f" {loop} {i}"
+    job_collect_hiphive_outputs.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
+    jobs.append(job_collect_hiphive_outputs)
+
+    outputs["thermal_data"] = job_collect_hiphive_outputs.output[0]
+    outputs["anharmonic_data"] = job_collect_hiphive_outputs.output[1]
+    outputs["fitting_data"] = job_collect_hiphive_outputs.output[2]
+    outputs["param"] = job_collect_hiphive_outputs.output[3]
+    outputs["current_dir"] = job_collect_hiphive_outputs.output[4]
+
+    job_collect_hiphive_outputs.metadata.update(
+        {
+            "tag": [
+                f"mp_id={mpid}",
+                f"cutoffs={i}",
+                f"fit_method={fit_method}",
+                f"disp_cut={disp_cut}",
+                f"bulk_modulus={bulk_modulus}",
+                f"imaginary_tol={imaginary_tol}",
+                f"prev_dir_json_saver={prev_dir_json_saver}",
+            ]
+        }
+    )
+
+    return Response(replace=jobs, output=outputs)
+
+@job
+def collect_hiphive_outputs(
+    fit_method: str | None = None,
+    disp_cut: float | None = None,
+    imaginary_tol: float | None = None,
+    outputs: list[dict] | None = None,
+) -> list :
+    logger.info("We are in collect_hiphive_outputs")
+
+    # Initialize best_fit with high initial values for comparison
+    fitting_data: dict[str, Any] = {
+        "cutoffs": [],
+        "rmse_test": [],
+        "fit_method": fit_method,
+        "disp_cut": disp_cut,
+        "imaginary_tol": imaginary_tol,
+        "best_cutoff": None,
+        "best_rmse": np.inf,
+        "n_imaginary": None
+    }
+
+    best_fit = {
+        "rmse_test": np.inf,
+        "directory": None,
+    }
+    # Assuming outputs_hiphive is a list of dictionaries with the results
+    for result in outputs:
+        if result is None:
+            continue
+
+        # Assuming result is a dictionary with keys: 'cutoffs', 'rmse_test', etc.
+        fitting_data["cutoffs"].append(result["fitting_data"]["cutoffs"][0])
+        fitting_data["rmse_test"].append(result["fitting_data"]["rmse_test"][0])
+
+        # Update best_fit if the current result has a lower rmse_test
+        # Add additional conditions as needed
+        if (
+            result["fitting_data"]["rmse_test"][0] < best_fit["rmse_test"]
+        ):
+            best_fit["directory"] = result["current_dir"]
+            fitting_data["best_cutoff"] = result["fitting_data"]["cutoffs"][0]
+            fitting_data["best_rmse"] = result["fitting_data"]["rmse_test"][0]
+            best_fit["rmse_test"] = result["fitting_data"]["rmse_test"][0]
+            fitting_data["n_imaginary"] = result["fitting_data"]["n_imaginary"]
+
+    copy_hiphive_outputs(best_fit["directory"])
+    thermal_data = loadfn("thermal_data.json")
+    dumpfn(fitting_data, "fitting_data.json")
+    param = np.loadtxt("parameters.txt")
+
+    current_dir = os.getcwd()
+    logger.info(f"current_dir = {current_dir}")
+    return [thermal_data, thermal_data, fitting_data, param, current_dir]
 
 @job
 def run_hiphive(
@@ -503,7 +597,6 @@ def run_hiphive(
     disp_cut: float | None = None,
     bulk_modulus: float | None = None,
     temperature_qha: float | None = None,
-    mesh_density: float | None = None,
     imaginary_tol: float | None = None,
     prev_dir_json_saver: str | None = None,
     loop: int | None = None,
@@ -546,6 +639,7 @@ def run_hiphive(
 
     if cutoffs is None:
         cutoffs = get_cutoffs(supercell_structure)
+        cutoffs = [[6, 3.5, 3]]
         logger.info(f"cutoffs is {cutoffs}")
     else:
         pass
@@ -576,7 +670,8 @@ def run_hiphive(
         structures.append(atoms)
 
         mean_displacements = np.linalg.norm(displacements, axis=1).mean()
-        logger.info(f"Mean displacements while reading individual displacements: {mean_displacements}")
+        logger.info(f"Mean displacements while reading individual displacements: "
+                    f"{mean_displacements}")
 
     all_cutoffs = cutoffs
     logger.info(f"all_cutoffs is {all_cutoffs}")
@@ -594,6 +689,7 @@ def run_hiphive(
     if fcs is None:
         raise RuntimeError("Could not find a force constant solution")
 
+    logger.info("Saving Harmonic props")
     thermal_data, phonopy = harmonic_properties(
         parent_structure, supercell_matrix, fcs, t_qha, imaginary_tol
     )
@@ -606,25 +702,31 @@ def run_hiphive(
         thermal_data["n_imaginary"],
         bulk_modulus,
     )
-
+    logger.info("Saving phonopy_params")
     phonopy.save("phonopy_params.yaml")
     fitting_data["n_imaginary"] = thermal_data.pop("n_imaginary")
     thermal_data.update(anharmonic_data)
+    logger.info("Saving fitting_data")
     dumpfn(fitting_data, "fitting_data.json")
+    logger.info("Saving thermal_data")
     dumpfn(thermal_data, "thermal_data.json")
 
     logger.info("Writing cluster space and force_constants")
     logger.info(f"{type(fcs)}")
 
     if isinstance(fcs, ForceConstants):
+        logger.info("Writing force_constants")
         fcs.write("force_constants.fcs")
     else:
         logger.info("fcs is not an instance of ForceConstants")
 
+    logger.info("Saving parameters")
     np.savetxt("parameters.txt", param)
 
     if isinstance(cs, ClusterSpace):
+        logger.info("Writing cluster_space")
         cs.write("cluster_space.cs")
+        logger.info("cluster_space writing is complete")
     else:
         logger.info("cs is not an instance of ClusterSpace")
 
@@ -639,14 +741,21 @@ def run_hiphive(
         supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
         FCS = ForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3)
         FCS.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3, fc_tol=1e-4)
-
     else:
         logger.info("ShengBTE files not written due to imaginary modes.")
         logger.info("You may want to perform phonon renormalization.")
 
     current_dir = os.getcwd()
 
-    return [thermal_data, anharmonic_data, fitting_data, param, current_dir]
+    outputs: dict[str, list] = {
+        "thermal_data": thermal_data,
+        "anharmonic_data": anharmonic_data,
+        "fitting_data": fitting_data,
+        "param": param,
+        "current_dir": current_dir
+    }
+
+    return outputs
 
 
 def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
@@ -790,7 +899,8 @@ def fit_force_constants(
         "disp_cut": disp_cut,
         "imaginary_tol": imaginary_tol,
         #        "max_n_imaginary": max_n_imaginary,
-        "best": None,
+        "best_cutoff": None,
+        "best_rmse": np.inf
     }
 
     best_fit = {
@@ -843,7 +953,8 @@ def fit_force_constants(
             #            and result["n_imaginary"] < best_fit["n_imaginary"]
         ):
             best_fit.update(result)
-            fitting_data["best"] = result["cutoffs"]
+            fitting_data["best_cutoff"] = result["cutoffs"]
+            fitting_data["best_rmse"] = result["rmse_test"]
 
     logger.info("Finished fitting force constants.")
 
@@ -1230,10 +1341,10 @@ def gruneisen(
             dLfrac = cte*temperature
         else:
             dLfrac = thermal_expansion(temperature, cte)
-        logger.info('Gruneisen: \n {}'.format(grun_tot))
-        logger.info('Coefficient of Thermal Expansion: \n {}'.format(cte))
-        logger.info('Linear Expansion Fraction: \n {}'.format(dLfrac))        
-        
+        logger.info(f"Gruneisen: \n {grun_tot}")
+        logger.info(f"Coefficient of Thermal Expansion: \n {cte}")
+        logger.info(f"Linear Expansion Fraction: \n {dLfrac}")
+
     return grun_tot, cte, dLfrac
 
 
@@ -1304,7 +1415,7 @@ def run_thermal_cond_solver(
     structure_data = loadfn("structure_data.json")
     structure = structure_data["structure"]
     supercell_matrix = structure_data["supercell_matrix"]
-    
+
     structure = SpacegroupAnalyzer(structure).find_primitive() #TODO refactor this later
 
     logger.info(f"Temperature = {temperature}")
@@ -1327,7 +1438,7 @@ def run_thermal_cond_solver(
         else:
             raise ValueError("Unsupported temperature type, must be float or dict")
 
-    logger.info(f"Creating control dict")
+    logger.info("Creating control dict")
 
     control_dict = {
         "scalebroad": 0.5,
