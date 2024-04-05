@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 from jobflow import run_locally
 from pymatgen.core import Structure
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx, importorskip
 
 from atomate2.forcefields.jobs import (
@@ -41,80 +42,64 @@ def test_chgnet_static_maker(si_structure):
 
 
 @pytest.mark.parametrize(
-    "input_structure, fix_symmetry, relax_cell, symprec",
-    [
-        ("si_structure", False, False, None),
-        ("si_structure", False, True, None),
-        ("ba_ti_o3_structure", True, True, 1e-2),
-        ("ba_ti_o3_structure", False, True, 1e-2),
-        ("ba_ti_o3_structure", True, True, 1e-1),
-    ],
-    indirect=["input_structure"],
+    "fix_symmetry", "symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
-def test_chgnet_relax_maker(
-    request,
-    input_structure,
-    test_dir: Path,
-    relax_cell: bool,
+def test_chgnet_relax_maker_fix_symmetry(
+    ba_ti_o3_structure: Structure,
     fix_symmetry: bool,
     symprec: float,
 ):
-    if input_structure == request.getfixturevalue("ba_ti_o3_structure"):
-        from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-        # translate one atom to break symmetry but stay below symprec threshold
-        input_structure.translate_sites(1, [symprec / 10.0, 0, 0])
-        job = CHGNetRelaxMaker(
-            relax_kwargs={"fmax": 0.01},
-            fix_symmetry=fix_symmetry,
-            symprec=symprec,
-        ).make(input_structure)
-        # get space group number of input structure
-        initial_space_group = SpacegroupAnalyzer(
-            input_structure, symprec=symprec
-        ).get_space_group_number()
-        responses = run_locally(job, ensure_success=True)
-        output1 = responses[job.uuid][1].output
-        assert output1.is_force_converged
-        final_space_group = SpacegroupAnalyzer(
-            output1.output.structure, symprec=symprec
-        ).get_space_group_number()
-        if fix_symmetry:
-            assert initial_space_group == final_space_group
-        else:
-            assert initial_space_group != final_space_group
+    # translate one atom to break symmetry but stay below symprec threshold
+    ba_ti_o3_structure.translate_sites(1, [symprec / 10.0, 0, 0])
+    job = MACERelaxMaker(
+        relax_kwargs={"fmax": 0.01},
+        fix_symmetry=fix_symmetry,
+        symprec=symprec,
+    ).make(ba_ti_o3_structure)
+    # get space group number of input structure
+    initial_space_group = SpacegroupAnalyzer(
+        ba_ti_o3_structure, symprec=symprec
+    ).get_space_group_number()
+    responses = run_locally(job, ensure_success=True)
+    output1 = responses[job.uuid][1].output
+    assert output1.is_force_converged
+    final_space_group = SpacegroupAnalyzer(
+        output1.output.structure, symprec=symprec
+    ).get_space_group_number()
+    if fix_symmetry:
+        assert initial_space_group == final_space_group
     else:
-        # translate one atom to ensure a small number of relaxation steps are taken
-        input_structure.translate_sites(0, [0, 0, 0.1])
-        max_step = 25
-        # generate job
-        job = CHGNetRelaxMaker(steps=max_step, relax_cell=relax_cell).make(
-            input_structure
-        )
+        assert initial_space_group != final_space_group
 
-        # run the flow or job and ensure that it finished running successfully
-        responses = run_locally(job, ensure_success=True)
 
-        # validate job outputs
-        output1 = responses[job.uuid][1].output
-        assert isinstance(output1, ForceFieldTaskDocument)
-        if relax_cell:
-            assert not output1.is_force_converged
-            assert output1.output.n_steps == max_step + 2
-            assert output1.output.energy == approx(-10.62461, abs=1e-2)
-            assert output1.output.ionic_steps[-1].magmoms[0] == approx(
-                0.00251674, rel=1e-1
-            )
-        else:
-            assert output1.is_force_converged
-            assert output1.output.n_steps == 13
-            assert output1.output.energy == approx(-10.6274, rel=1e-2)
-            assert output1.output.ionic_steps[-1].magmoms[0] == approx(
-                0.00303572, rel=1e-2
-            )
+@pytest.mark.parametrize("relax_cell", [True, False])
+def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure.translate_sites(0, [0, 0, 0.1])
 
-        # check the force_field_task_doc attributes
-        assert Path(responses[job.uuid][1].output.dir_name).exists()
+    max_step = 25
+    # generate job
+    job = CHGNetRelaxMaker(steps=max_step, relax_cell=relax_cell).make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate job outputs
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    if relax_cell:
+        assert not output1.is_force_converged
+        assert output1.output.n_steps == max_step + 2
+        assert output1.output.energy == approx(-10.62461, abs=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00251674, rel=1e-1)
+    else:
+        assert output1.is_force_converged
+        assert output1.output.n_steps == 13
+        assert output1.output.energy == approx(-10.6274, rel=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00303572, rel=1e-2)
+
+    # check the force_field_task_doc attributes
+    assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
 def test_m3gnet_static_maker(si_structure):
@@ -186,75 +171,67 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
 
 
 @pytest.mark.parametrize(
-    "input_structure, fix_symmetry, relax_cell, symprec",
-    [
-        ("si_structure", False, False, None),
-        ("si_structure", False, True, None),
-        ("ba_ti_o3_structure", True, True, 1e-2),
-        ("ba_ti_o3_structure", False, True, 1e-2),
-        ("ba_ti_o3_structure", True, True, 1e-1),
-    ],
-    indirect=["input_structure"],
+    "fix_symmetry", "symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
 @mace_paths
-def test_mace_relax_maker(
-    request,
-    input_structure,
-    test_dir: Path,
-    model,
-    relax_cell: bool,
+def test_mace_relax_maker_fix_symmetry(
+    ba_ti_o3_structure: Structure,
     fix_symmetry: bool,
     symprec: float,
 ):
-    if input_structure == request.getfixturevalue("ba_ti_o3_structure"):
-        from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-        # translate one atom to break symmetry but stay below symprec threshold
-        input_structure.translate_sites(1, [symprec / 10.0, 0, 0])
-        job = MACERelaxMaker(
-            relax_kwargs={"fmax": 0.01},
-            fix_symmetry=fix_symmetry,
-            symprec=symprec,
-        ).make(input_structure)
-        # get space group number of input structure
-        initial_space_group = SpacegroupAnalyzer(
-            input_structure, symprec=symprec
-        ).get_space_group_number()
-        responses = run_locally(job, ensure_success=True)
-        output1 = responses[job.uuid][1].output
-        assert output1.is_force_converged
-        final_space_group = SpacegroupAnalyzer(
-            output1.output.structure, symprec=symprec
-        ).get_space_group_number()
-        if fix_symmetry:
-            assert initial_space_group == final_space_group
-        else:
-            assert initial_space_group != final_space_group
+    # translate one atom to break symmetry but stay below symprec threshold
+    ba_ti_o3_structure.translate_sites(1, [symprec / 10.0, 0, 0])
+    job = MACERelaxMaker(
+        relax_kwargs={"fmax": 0.01},
+        fix_symmetry=fix_symmetry,
+        symprec=symprec,
+    ).make(ba_ti_o3_structure)
+    # get space group number of input structure
+    initial_space_group = SpacegroupAnalyzer(
+        ba_ti_o3_structure, symprec=symprec
+    ).get_space_group_number()
+    responses = run_locally(job, ensure_success=True)
+    output1 = responses[job.uuid][1].output
+    assert output1.is_force_converged
+    final_space_group = SpacegroupAnalyzer(
+        output1.output.structure, symprec=symprec
+    ).get_space_group_number()
+    if fix_symmetry:
+        assert initial_space_group == final_space_group
     else:
-        # translate one atom to ensure a small number of relaxation steps are taken
-        input_structure.translate_sites(0, [0, 0, 0.1])
-        # generate job
-        # NOTE the test model is not trained on Si, so the energy is not accurate
-        job = MACERelaxMaker(
-            calculator_kwargs={"model": model},
-            steps=25,
-            optimizer_kwargs={"optimizer": "BFGSLineSearch"},
-            relax_cell=relax_cell,
-        ).make(input_structure)
+        assert initial_space_group != final_space_group
 
-        # run the flow or job and ensure that it finished running successfully
-        responses = run_locally(job, ensure_success=True)
 
-        # validating the outputs of the job
-        output1 = responses[job.uuid][1].output
-        assert output1.is_force_converged
-        assert isinstance(output1, ForceFieldTaskDocument)
-        if relax_cell:
-            assert output1.output.energy == approx(-0.0526856, rel=1e-1)
-            assert output1.output.n_steps >= 4
-        else:
-            assert output1.output.energy == approx(-0.051912, rel=1e-4)
-            assert output1.output.n_steps == 4
+@pytest.mark.parametrize("relax_cell", [True, False])
+@mace_paths
+def test_mace_relax_maker(
+    si_structure: Structure, test_dir: Path, model, relax_cell: bool
+):
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure.translate_sites(0, [0, 0, 0.1])
+
+    # generate job
+    # NOTE the test model is not trained on Si, so the energy is not accurate
+    job = MACERelaxMaker(
+        calculator_kwargs={"model": model},
+        steps=25,
+        optimizer_kwargs={"optimizer": "BFGSLineSearch"},
+        relax_cell=relax_cell,
+    ).make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validating the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert output1.is_force_converged
+    assert isinstance(output1, ForceFieldTaskDocument)
+    if relax_cell:
+        assert output1.output.energy == approx(-0.0526856, rel=1e-1)
+        assert output1.output.n_steps >= 4
+    else:
+        assert output1.output.energy == approx(-0.051912, rel=1e-4)
+        assert output1.output.n_steps == 4
 
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
