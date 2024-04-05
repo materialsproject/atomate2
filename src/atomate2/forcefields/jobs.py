@@ -145,11 +145,11 @@ class ForceFieldRelaxMaker(Maker):
             self.force_field_name,
             result,
             self.relax_cell,
-            self.fix_symmetry,
-            self.symprec,
             self.steps,
             self.relax_kwargs,
             self.optimizer_kwargs,
+            self.fix_symmetry,
+            self.symprec,
             **self.task_document_kwargs,
         )
 
