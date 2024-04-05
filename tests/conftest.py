@@ -107,13 +107,6 @@ def ba_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "BaTiO3.cif")
 
 
-@pytest.fixture()
-def input_structure(request):
-    if request.param == "si_structure":
-        return request.getfixturevalue("si_structure")
-    return request.getfixturevalue("ba_ti_o3_structure")
-
-
 @pytest.fixture(autouse=True)
 def mock_jobflow_settings(memory_jobstore):
     """Mock the jobflow settings to use our specific jobstore (with data store)."""

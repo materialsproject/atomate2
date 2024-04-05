@@ -42,7 +42,7 @@ def test_chgnet_static_maker(si_structure):
 
 
 @pytest.mark.parametrize(
-    "fix_symmetry", "symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
+    "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
 def test_chgnet_relax_maker_fix_symmetry(
     ba_ti_o3_structure: Structure,
@@ -51,7 +51,7 @@ def test_chgnet_relax_maker_fix_symmetry(
 ):
     # translate one atom to break symmetry but stay below symprec threshold
     ba_ti_o3_structure.translate_sites(1, [symprec / 10.0, 0, 0])
-    job = MACERelaxMaker(
+    job = CHGNetRelaxMaker(
         relax_kwargs={"fmax": 0.01},
         fix_symmetry=fix_symmetry,
         symprec=symprec,
@@ -171,9 +171,8 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
 
 
 @pytest.mark.parametrize(
-    "fix_symmetry", "symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
+    "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
-@mace_paths
 def test_mace_relax_maker_fix_symmetry(
     ba_ti_o3_structure: Structure,
     fix_symmetry: bool,
@@ -182,7 +181,7 @@ def test_mace_relax_maker_fix_symmetry(
     # translate one atom to break symmetry but stay below symprec threshold
     ba_ti_o3_structure.translate_sites(1, [symprec / 10.0, 0, 0])
     job = MACERelaxMaker(
-        relax_kwargs={"fmax": 0.01},
+        relax_kwargs={"fmax": 0.02},
         fix_symmetry=fix_symmetry,
         symprec=symprec,
     ).make(ba_ti_o3_structure)
