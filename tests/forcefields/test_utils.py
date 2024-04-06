@@ -161,6 +161,6 @@ def test_fix_symmetry(fix_symmetry):
     final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1)["final_structure"]
     symmetry_final = check_symmetry(final_struct.to_ase_atoms(), 1e-6)
     if fix_symmetry:
-        assert symmetry_init["number"] == symmetry_final["number"]
+        assert symmetry_init["number"] == symmetry_final["number"] == 229
     else:
-        assert symmetry_init["number"] != symmetry_final["number"]
+        assert symmetry_init["number"] != symmetry_final["number"] == 99
