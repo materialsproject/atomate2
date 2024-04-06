@@ -285,7 +285,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
 
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),
-    [(True, False), (False, False), (True, True), (False, True)],
+    [(True, False), (False, True)],
 )
 def test_nequip_relax_maker(
     sr_ti_o3_structure: Structure,
@@ -301,10 +301,12 @@ def test_nequip_relax_maker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
+        fix_symmetry=fix_symmetry,
         calculator_kwargs={
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         },
     ).make(sr_ti_o3_structure)
+
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
@@ -317,6 +319,11 @@ def test_nequip_relax_maker(
     else:
         assert output1.output.energy == approx(-44.40015, rel=1e-4)
         assert output1.output.n_steps == 5
+
+    # fix_symmetry makes no difference for this structure relaxer combo
+    # just testing that passing fix_symmetry doesn't break
+    final_spg_num = output1.output.structure.get_space_group_info()[1]
+    assert final_spg_num == 99
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
