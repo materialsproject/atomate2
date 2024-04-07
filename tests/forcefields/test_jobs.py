@@ -201,13 +201,26 @@ def test_mace_relax_maker_fix_symmetry(
         assert initial_space_group != final_space_group
 
 
+@pytest.mark.parametrize(
+    "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
+)
 @pytest.mark.parametrize("relax_cell", [True, False])
 @mace_paths
-def test_mace_relax_maker(
-    si_structure: Structure, test_dir: Path, model, relax_cell: bool
+def test_mace_relax_makera(
+    si_structure: Structure,
+    model,
+    relax_cell: bool,
+    fix_symmetry: bool,
+    symprec: float,
 ):
+    _, init_spg_num = si_structure.get_space_group_info()
+    assert init_spg_num == 227
+
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
+
+    _, init_spg_num = si_structure.get_space_group_info()
+    assert init_spg_num == 12
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
@@ -216,6 +229,9 @@ def test_mace_relax_maker(
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
+        fix_symmetry=fix_symmetry,
+        symprec=symprec,
+        relax_kwargs={"fmax": 0.04},
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -231,6 +247,13 @@ def test_mace_relax_maker(
     else:
         assert output1.output.energy == approx(-0.051912, rel=1e-4)
         assert output1.output.n_steps == 4
+
+    # get space group number of input structure
+    _, final_spg_num = output1.output.structure.get_space_group_info()
+    if fix_symmetry:
+        assert init_spg_num == final_spg_num == 12
+    else:
+        assert init_spg_num != final_spg_num == 227
 
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
