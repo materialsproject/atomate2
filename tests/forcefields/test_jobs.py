@@ -241,6 +241,18 @@ def test_mace_relax_makera(
     output1 = responses[job.uuid][1].output
     assert output1.is_force_converged
     assert isinstance(output1, ForceFieldTaskDocument)
+    from ase.spacegroup.symmetrize import check_symmetry, is_subgroup
+    from pymatgen.io.ase import AseAtomsAdaptor
+
+    si_atoms = AseAtomsAdaptor.get_atoms(si_structure)
+    symmetry_ops_init = check_symmetry(si_atoms, symprec=1.0e-3)
+    si_atoms_final = AseAtomsAdaptor.get_atoms(output1.output.structure)
+    symmetry_ops_final = check_symmetry(si_atoms_final, symprec=1.0e-3)
+    if fix_symmetry:
+        assert is_subgroup(symmetry_ops_init, symmetry_ops_final)
+    else:
+        assert not is_subgroup(symmetry_ops_init, symmetry_ops_final)
+
     if relax_cell:
         assert output1.output.energy == approx(-0.0526856, rel=1e-1)
         assert output1.output.n_steps >= 4
