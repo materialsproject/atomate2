@@ -75,7 +75,7 @@ strict = [
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
-    "torch==2.2.1",
+    "torch==2.2.2",
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",
