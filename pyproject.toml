@@ -38,6 +38,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+abinit = ["abipy>=0.9.3"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
@@ -72,7 +73,7 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2"]
+tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2", "pytest-mock==3.14.0"]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
