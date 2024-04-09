@@ -90,7 +90,7 @@ class EquilibriumVolumeMaker(Maker):
             print("_______________________")
             working_outputs = dict(self.postprocessor.results)
             working_outputs["relax"].pop(
-                "pressure"
+                "pressure", None
             )  # TODO: Check why this is needed? It breaks recursion for MLFFs who uses EV EOS fits
 
             if (
