@@ -140,7 +140,7 @@ class MPMorphVaspSkeletonMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphVASPMDMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMDMaker(MPMorphVaspSkeletonMDMaker):
     """Skeleton VASP MPMorph flow for volume equilibration and single production run via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -180,7 +180,7 @@ class MPMorphVASPMDMaker(MPMorphVaspSkeletonMDMaker):
 
 
 @dataclass
-class MPMorphVASPMultiMDMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMultiMDMaker(MPMorphVaspSkeletonMDMaker):
     """VASP MPMorph flow for volume equilibration and multiple production runs via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -220,7 +220,7 @@ class MPMorphVASPMultiMDMaker(MPMorphVaspSkeletonMDMaker):
 
 
 @dataclass
-class MPMorphVASPMDSlowQuenchMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMDSlowQuenchMaker(MPMorphVaspSkeletonMDMaker):
     """VASP MPMorph flow for volume equilibration, multiple production runs, and slow quench via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
