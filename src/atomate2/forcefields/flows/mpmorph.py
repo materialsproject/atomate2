@@ -158,7 +158,7 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
 
 
 @dataclass
-class FastQuenchMLFFMDMaker(SlowQuenchMaker):
+class FastQuenchMLFFMDMaker(FastQuenchMaker):
     """Fast quench flow for quenching high temperature structures to 0K with MLFF.
 
     Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
@@ -184,7 +184,7 @@ class FastQuenchMLFFMDMaker(SlowQuenchMaker):
 
 
 @dataclass
-class MPMorphLJMDMaker(MPMorphMDMaker):
+class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
     """Lennard Jones ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -220,7 +220,7 @@ class MPMorphLJMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchLJMDMaker(MPMorphMDMaker):
+class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     """Lennard Jones ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -260,7 +260,7 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchLJMDMaker(MPMorphMDMaker):
+class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
     """Lennard Jones ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -303,7 +303,7 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphCHGNetMDMaker(MPMorphMDMaker):
+class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
     """CHGNet ML ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -341,7 +341,7 @@ class MPMorphCHGNetMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMDMaker):
+class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     """CHGNet ML ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -383,7 +383,7 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchCHGNetMDMaker(MPMorphMDMaker):
+class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     """CHGNet ML ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -428,7 +428,7 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphM3GNetMDMaker(MPMorphMDMaker):
+class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
     """M3GNet ML ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -466,7 +466,7 @@ class MPMorphM3GNetMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMDMaker):
+class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     """M3GNet ML ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -508,7 +508,7 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchM3GNetMDMaker(MPMorphMDMaker):
+class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     """M3GNet ML ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -553,7 +553,7 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphMACEMDMaker(MPMorphMDMaker):
+class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
     """MACE ML ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -591,7 +591,7 @@ class MPMorphMACEMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchMACEMDMaker(MPMorphMDMaker):
+class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     """MACE ML ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -633,7 +633,7 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchMACEMDMaker(MPMorphMDMaker):
+class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     """MACE ML ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
