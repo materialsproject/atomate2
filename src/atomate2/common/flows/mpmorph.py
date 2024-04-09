@@ -1,4 +1,4 @@
-"""Flows adapted from MPMorph *link to origin github repo*"""
+"""Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
 
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -363,7 +363,9 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
                 else md_jobs[-1].output.dir_name
             )
 
-            md_job = self.call_md_maker(structure, prev_dir, temp=temp, nsteps=nsteps)
+            md_job = self.call_md_maker(
+                structure, prev_dir, temp=temp, nsteps=self.quench_nsteps
+            )
             """ # Logic of call_md_maker is to substitute the following code:
             if isinstance(self.md_maker, MDMaker):
                 md_job = MDMaker(

@@ -84,6 +84,10 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
 
     name: str = "vasp slow quench"
     md_maker: BaseVaspMaker = field(default_factory=BaseMPMorphMDMaker)
+    quench_start_temperature: int = 3000
+    quench_end_temperature: int = 500
+    quench_temperature_step: int = 500
+    quench_nsteps: int = 1000
 
     def call_md_maker(self, structure, prev_dir, temp, nsteps):
         """Call the MD maker to create the MD jobs for VASP Only."""
@@ -101,7 +105,7 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
 
 
 @dataclass
-class FastQuenchVaspMDMaker(SlowQuenchMaker):
+class FastQuenchVaspMaker(SlowQuenchMaker):
     """Fast quench flow for quenching high temperature structures to 0K with MLFF.
 
     Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
