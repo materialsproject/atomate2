@@ -85,13 +85,13 @@ class EquilibriumVolumeMaker(Maker):
 
         else:
             self.postprocessor.fit(working_outputs)
-            print("____EOS FIT PARAMS_____")
-            print(self.postprocessor.results)
-            print("_______________________")
+            # print("____EOS FIT PARAMS_____")
+            # print(self.postprocessor.results)
+            # print("_______________________")
             working_outputs = dict(self.postprocessor.results)
             working_outputs["relax"].pop(
                 "pressure", None
-            )  # TODO: Check why this is needed? It breaks recursion for MLFFs who uses EV EOS fits
+            )  # remove pressure from working_outputs
 
             if (
                 working_outputs["V0"] <= working_outputs["Vmax"]
