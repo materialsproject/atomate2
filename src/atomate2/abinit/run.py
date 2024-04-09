@@ -99,9 +99,11 @@ def run_mrgddb(
 
     status = "completed"
 
-    with open(MRGDDB_INPUT_FILE_NAME) as stdin, open(
-        LOG_FILE_NAME, "w"
-    ) as stdout, open(STDERR_FILE_NAME, "w") as stderr:
+    with (
+        open(MRGDDB_INPUT_FILE_NAME) as stdin,
+        open(LOG_FILE_NAME, "w") as stdout,
+        open(STDERR_FILE_NAME, "w") as stderr,
+    ):
         process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
 
         if wall_time is not None:

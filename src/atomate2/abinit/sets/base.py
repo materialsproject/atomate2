@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
-
 from abipy.abio.inputs import AbinitInput, MultiDataset
 from abipy.flowtk.psrepos import get_repo_from_name
 from abipy.flowtk.utils import Directory, irdvars_for_ext
@@ -122,11 +121,12 @@ class AbinitInputSet(InputSet):
             if ext is None:
                 return False
             # Need to consider irdddk to read 1WF files
-            if ext=="1WF": #VT
-                if ("ird1wf" in self.abinit_input or \
-                    "irdddk" in self.abinit_input):   #VT
-                    return (self.abinit_input["ird1wf"] == 1 or \
-                            self.abinit_input["irdddk"] == 1)    #VT
+            if ext == "1WF":  # VT
+                if "ird1wf" in self.abinit_input or "irdddk" in self.abinit_input:  # VT
+                    return (
+                        self.abinit_input["ird1wf"] == 1
+                        or self.abinit_input["irdddk"] == 1
+                    )  # VT
             irdvars = irdvars_for_ext(ext)
             for irdvar, irdval in irdvars.items():
                 if irdvar not in self.abinit_input:

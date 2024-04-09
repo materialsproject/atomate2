@@ -45,8 +45,8 @@ def fname2ext(filepath: Path | str) -> None | str:
     if "_" not in filename:
         return None
     ext = filename.split("_")[-1].replace(".nc", "")
-    if "1WF" in ext: #VT
-        ext = "1WF"  #VT
+    if "1WF" in ext:  # VT
+        ext = "1WF"  # VT
     if ext not in ALL_ABIEXTS:
         return None
     return ext
@@ -177,7 +177,9 @@ def write_mrgddb_input_set(
         workdir=directory,
     )
     if not mis.validate():
-        raise RuntimeError("MrgddbInputSet is not valid. Some previous outputs \
-        do not exist.")
+        raise RuntimeError(
+            "MrgddbInputSet is not valid. Some previous outputs \
+        do not exist."
+        )
 
     mis.write_input(directory=directory, make_dir=True, overwrite=False)
