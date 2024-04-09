@@ -55,7 +55,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     end_temp : int = 300
         End temperature of the equilibrium volume search and production run in Kelvin, default 300K. Use only for lowering temperarture for production run
     md_maker : BaseMPMorphMDMaker
-        MDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD; inherits  from MDMaker (VASP)
+        MDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD; inherits from MDMaker (VASP)
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     steps_single_production_run: int | None = 5000

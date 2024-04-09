@@ -298,7 +298,7 @@ class FastQuenchMaker(Maker):
 
 
 @dataclass
-class SlowQuenchMaker(Maker):  # Work in Progress
+class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
     """Slow quench flow for quenching high temperature structures to low temperature
 
     Quench's a provided structure with a molecular dyanmics run from a desired high temperature to
@@ -310,26 +310,30 @@ class SlowQuenchMaker(Maker):  # Work in Progress
     ----------
     name : str
         Name of the flows produced by this maker.
-    md_maker :  Maker
-        Can only be an MDMaker or ForceFieldMDMaker #WORK IN PROGRESS
-    quench_tempature_setup : dict[str, int]
-        Quench temperature setup; defaults to start temperature: 3000K, end tempature: 500K, tempature step: 500K, nsteps: 1000
+    md_maker :  Maker | None = None
+        Can only be an MDMaker or ForceFieldMDMaker. Defaults to None. If None, will not work. #WORK IN PROGRESS.
+    quench_start_temperature : int = 3000
+        Starting temperature for quench; default 3000K
+    quench_end_temperature : int = 500
+        Ending temperature for quench; default 500K
+    quench_temperature_step : int = 500
+        Temperature step for quench; default 500K drop
+    quench_nsteps : int = 1000
+        Number of steps for quench; default 1000 steps
     """
 
     name: str = "slow quench"
-    md_maker: Maker | MDMaker | ForceFieldMDMaker = Maker
-    quench_tempature_setup: dict = field(
-        default_factory=lambda: {
-            "start_temp": 3000,
-            "end_temp": 500,
-            "temp_step": 500,
-            "nsteps": 1000,
-        }
-    )
+    md_maker: Maker | None = None
+    quench_start_temperature: int = 3000
+    quench_end_temperature: int = 500
+    quench_temperature_step: int = 500
+    quench_nsteps: int = 1000
 
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> Flow:  # TODO : md_maker only works for VASP and MLFF_MD now
+    ) -> (
+        Flow
+    ):  # TODO : main objective: modified to work with other MD codes; Only works for VASP and MLFF_MD now.
         """
         Create a slow quench flow with md maker.
 
@@ -348,17 +352,19 @@ class SlowQuenchMaker(Maker):  # Work in Progress
 
         md_jobs = []
         for temp in np.arange(
-            self.quench_tempature_setup["start_temp"],
-            self.quench_tempature_setup["end_temp"],
-            -self.quench_tempature_setup["temp_step"],
+            self.quench_start_temperature,
+            self.quench_end_temperature,
+            -self.quench_temperature_step,
         ):
 
             prev_dir = (
                 None
-                if temp == self.quench_tempature_setup["start_temp"]
+                if temp == self.quench_start_temperature
                 else md_jobs[-1].output.dir_name
             )
 
+            md_job = self.call_md_maker(structure, prev_dir, temp=temp, nsteps=nsteps)
+            """ # Logic of call_md_maker is to substitute the following code:
             if isinstance(self.md_maker, MDMaker):
                 md_job = MDMaker(
                     input_set_generator=MDSetGenerator(
@@ -382,7 +388,7 @@ class SlowQuenchMaker(Maker):  # Work in Progress
             else:
                 raise ValueError(
                     "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
-                )
+                )"""
 
             md_jobs.append(md_job)
 
@@ -393,6 +399,16 @@ class SlowQuenchMaker(Maker):  # Work in Progress
             output=md_jobs[-1].output,
             name=self.name,
         )
+
+    def call_md_maker(self, structure, prev_dir, temp, nsteps):
+        if not (
+            isinstance(self.md_maker, MDMaker)
+            or isinstance(self.md_maker, ForceFieldMDMaker)
+        ):
+            raise ValueError(
+                "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
+            )
+        return self.md_maker.make(structure, prev_dir)
 
 
 # TODO: Amorphous structure maker, Amorphour limit, and VolumeTemperatureSweepMaker
