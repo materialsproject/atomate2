@@ -1,4 +1,4 @@
-"""Flows adapted from MPMorph *link to origin github repo*""" # TODO: Add link to origin github repo
+"""Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
 
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -87,7 +87,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     convergence_md_maker: EquilibriumVolumeMaker | None = None
     production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
 
-    quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
+    quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         self.md_maker = self.md_maker.update_kwargs(
@@ -146,15 +146,12 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         """Call the MD maker to create the MD jobs for VASP Only."""
         self.md_maker = self.md_maker.update_kwargs(
             update={
-                "name": "MLFF MD Maker",
+                "name": "Slow quenchMLFF MD Maker",
                 "temperature": temp,
                 "nsteps": nsteps,
-            },
-            class_filter=ForceFieldMDMaker,
+            }
         )
-        return self.md_maker.make(
-            structure=structure, prev_dir=prev_dir, temperature=temp, nsteps=nsteps
-        )
+        return self.md_maker.make(structure=structure, prev_dir=prev_dir)
 
 
 @dataclass
