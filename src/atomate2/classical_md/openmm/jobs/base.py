@@ -42,6 +42,7 @@ OPENMM_MAKER_DEFAULTS = {
     "report_velocities": False,
     "traj_file_name": "trajectory",
     "traj_file_type": "dcd",
+    "embed_traj": False,
 }
 
 
