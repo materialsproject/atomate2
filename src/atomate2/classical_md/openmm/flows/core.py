@@ -121,7 +121,7 @@ class AnnealMaker(Maker):
 
     def make(
         self,
-        interchange: Interchange,
+        interchange: Interchange | bytes,
         prev_task: ClassicalMDTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Flow:
@@ -199,7 +199,7 @@ class ProductionMaker(Maker):
 
     def make(
         self,
-        interchange: Interchange,
+        interchange: Interchange | bytes,
         prev_task: ClassicalMDTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Flow:
