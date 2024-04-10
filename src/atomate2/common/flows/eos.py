@@ -166,7 +166,7 @@ class CommonEosMaker(Maker):
                 output = jobs[key][idx].output.output
                 flow_output[key]["energy"] += [output.energy]
                 flow_output[key]["volume"] += [output.structure.volume]
-                flow_output[key]["stress"] += [output.output.stress]
+                flow_output[key]["stress"] += [output.stress]
 
         if self.postprocessor is not None:
             min_points = self.postprocessor.min_data_points
