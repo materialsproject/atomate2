@@ -1,3 +1,4 @@
+import pytest
 from jobflow import Flow
 
 from atomate2.classical_md.openmm.flows.core import AnnealMaker, ProductionMaker
@@ -50,6 +51,7 @@ def test_anneal_maker(interchange, tmp_path, run_job):
     assert lower_temp_job.maker.temp_steps == 1
 
 
+@pytest.mark.skip("HDF5 writing is currently broken in MDAnalysis.")
 def test_hdf5_writing(interchange, tmp_path, run_job):
     # Create an instance of AnnealMaker with custom parameters
     anneal_maker = AnnealMaker.from_temps_and_steps(
