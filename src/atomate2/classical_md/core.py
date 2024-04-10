@@ -8,7 +8,7 @@ from typing import Callable
 import openff.toolkit as tk
 from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
 from emmet.core.vasp.task_valid import TaskState
-from jobflow import job
+from jobflow import Response, job
 from openff.interchange import Interchange
 from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
@@ -59,7 +59,7 @@ def generate_interchange(
     mass_density: float,
     force_field: str = "openff_unconstrained-2.1.1.offxml",
     pack_box_kwargs: dict = None,
-) -> ClassicalMDTaskDocument:
+) -> Response:
     """Generate an OpenFF Interchange object from a list of molecule specifications.
 
     This function takes a list of molecule specifications (either as
@@ -155,9 +155,10 @@ def generate_interchange(
     interchange_json = interchange.json()
     interchange_bytes = interchange_json.encode("utf-8")
 
-    return ClassicalMDTaskDocument(
+    task_doc = ClassicalMDTaskDocument(
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,
         molecule_specs=mol_specs,
         forcefield=force_field,
     )
+    return Response(output=task_doc)

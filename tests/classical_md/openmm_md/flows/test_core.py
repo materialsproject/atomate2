@@ -175,5 +175,3 @@ def test_traj_blob_embed(interchange, tmp_path, run_job):
     parsed_output = task_doc_parsed.calcs_reversed[0].output
 
     assert parsed_output.traj_blob == calc_output.traj_blob
-
-    return
