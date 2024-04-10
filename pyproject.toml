@@ -49,11 +49,8 @@ defects = [
     "python-ulid",
 ]
 classical_md = [
-    "openmm>=8.1.0",
-    "openff-toolkit>=0.14.0",
-    "openff-interchange>=0.3.22",
-    "packmol>=20.2.2",
-    "openbabel>=3.1.1",
+    "mdanalysis>=2.7.0",
+    "openmm-mdanalysis-reporter>=0.1.0"
 ]
 forcefields = [
     "ase>=3.22.1",
