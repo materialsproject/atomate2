@@ -2,6 +2,7 @@ import copy
 
 import numpy as np
 from emmet.core.classical_md import ClassicalMDTaskDocument
+from emmet.core.classical_md.openmm import Calculation, CalculationInput
 from jobflow import Flow, Job
 from openmm.app import DCDReporter, Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
@@ -9,7 +10,6 @@ from openmm.unit import kelvin, picoseconds
 
 from atomate2.classical_md.core import generate_interchange
 from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
-from atomate2.classical_md.openmm.schemas.tasks import Calculation, CalculationInput
 
 
 def test_add_reporters(interchange, temp_dir):

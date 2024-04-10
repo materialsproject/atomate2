@@ -9,6 +9,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, NoReturn
 
+from emmet.core.classical_md.openmm import (
+    Calculation,
+    CalculationInput,
+    CalculationOutput,
+    OpenMMTaskDocument,
+)
 from jobflow import Maker, Response
 from mdtraj.reporters.hdf5reporter import HDF5Reporter
 from openff.interchange import Interchange
@@ -17,12 +23,6 @@ from openmm.app import DCDReporter, StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
 from atomate2.classical_md.core import openff_job
-from atomate2.classical_md.openmm.schemas.tasks import (
-    Calculation,
-    CalculationInput,
-    CalculationOutput,
-    OpenMMTaskDocument,
-)
 from atomate2.classical_md.utils import increment_name
 
 if TYPE_CHECKING:

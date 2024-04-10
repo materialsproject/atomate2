@@ -1,8 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-
-from atomate2.classical_md.openmm.schemas import CalculationOutput
+from emmet.core.classical_md.openmm import CalculationOutput
 
 
 def test_calc_output_from_directory(output_dir):
