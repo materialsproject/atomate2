@@ -71,7 +71,7 @@ class QCInputSet(InputSet):
         for k, v in inputs.items():
             if v is not None and (overwrite or not (directory / k).exists()):
                 with zopen(directory / k, "wt") as f:
-                    f.write(v.__str__())
+                    f.write(str(v))
             elif not overwrite and (directory / k).exists():
                 raise FileExistsError(f"{directory / k} already exists.")
 

@@ -71,7 +71,7 @@ class EosSetGenerator(VaspInputGenerator):
             "LCHARG": False,
             "ISIF": 3,
             "IBRION": 2,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "ENCUT": 680,
             "ENAUG": 1360,
             "LREAL": False,
@@ -83,8 +83,6 @@ class EosSetGenerator(VaspInputGenerator):
 
 
 # MPLegacy prefix = MP PBE-GGA compatible with atomate implementation
-
-
 @dataclass
 class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
     """Class to generate atomate1-MP-compatible VASP GGA EOS relax input sets."""
@@ -128,7 +126,7 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
             "LCHARG": False,
             "ISIF": 3,
             "IBRION": 2,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "ENCUT": 600,
             "LREAL": False,
             "LWAVE": True,
@@ -211,7 +209,7 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
         return {
             "NSW": 0,
             "LCHARG": False,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "ENCUT": 600,
             "LREAL": False,
             "LWAVE": False,
@@ -223,8 +221,6 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
 
 
 # MPGGA prefix = MP GGA compatible
-
-
 @dataclass
 class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP GGA EOS relax input sets."""
@@ -268,7 +264,7 @@ class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
             "LCHARG": False,
             "ISIF": 3,
             "IBRION": 2,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "ALGO": "FAST",
             "LREAL": False,
             "LWAVE": True,
@@ -322,7 +318,7 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
             "NSW": 0,
             "LCHARG": False,
             "IBRION": -1,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "ALGO": "NORMAL",
             "LREAL": False,
             "LWAVE": False,
@@ -334,8 +330,6 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
 
 
 # MPMetaGGA prefix = MP r2SCAN meta-GGA compatible
-
-
 @dataclass
 class MPMetaGGAEosStaticSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP Meta-GGA static input sets."""
@@ -375,7 +369,7 @@ class MPMetaGGAEosStaticSetGenerator(VaspInputGenerator):
             A dictionary of updates to apply.
         """
         return {
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "ALGO": "NORMAL",
             "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
             "NSW": 0,
@@ -447,7 +441,7 @@ class MPMetaGGAEosRelaxSetGenerator(VaspInputGenerator):
             "NSW": 99,
             "ISIF": 3,
             "IBRION": 2,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "LREAL": False,
             "ISMEAR": 0,
             "SIGMA": 0.05,
@@ -511,7 +505,7 @@ class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
             "NSW": 99,
             "ISIF": 3,
             "IBRION": 2,
-            "EDIFF": 1.0e-6,
+            "EDIFF": 1e-6,
             "EDIFFG": -0.05,
             "LREAL": False,
             "ISMEAR": 0,
