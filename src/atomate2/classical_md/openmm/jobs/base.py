@@ -16,14 +16,15 @@ from emmet.core.classical_md.openmm import (
     OpenMMTaskDocument,
 )
 from jobflow import Maker, Response
-from mdtraj.reporters.hdf5reporter import HDF5Reporter
+from mdareporter.mdareporter import MDAReporter
 from openff.interchange import Interchange
 from openmm import Integrator, LangevinMiddleIntegrator, Platform
-from openmm.app import DCDReporter, StateDataReporter
+from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
 from atomate2.classical_md.core import openff_job
-from atomate2.classical_md.utils import increment_name
+
+# from atomate2.classical_md.utils import increment_name
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation
@@ -91,7 +92,8 @@ class BaseOpenMMMaker(Maker):
     traj_file_name : Optional[str]
         The name of the trajectory file to save.
     traj_file_type : Optional[str]
-        The type of trajectory file to save. Options are "dcd" and "h5".
+        The type of trajectory file to save. Supports any output format
+        supported by MDAnalysis.
     """
 
     name: str = "base openmm job"
@@ -165,7 +167,7 @@ class BaseOpenMMMaker(Maker):
         task_doc = self._create_task_doc(interchange, elapsed_time, dir_name, prev_task)
 
         # write out task_doc json to output dir
-        with open(dir_name / "taskdoc_json", "w") as file:
+        with open(dir_name / "taskdoc.json", "w") as file:
             file.write(task_doc.json())
 
         return Response(output=task_doc)
@@ -197,47 +199,21 @@ class BaseOpenMMMaker(Maker):
         traj_file_type = self._resolve_attr("traj_file_type", prev_task)
         report_velocities = self._resolve_attr("report_velocities", prev_task)
         if has_steps & (traj_interval > 0):
-            traj_file = dir_name / f"{traj_file_name}_{traj_file_type}"
-
-            if traj_file_type == "dcd":
-                if traj_file.exists():
-                    self.traj_file_name = increment_name(traj_file.name, traj_file_type)
-                    traj_file = dir_name / f"{self.traj_file_name}_{traj_file_type}"
-
-                if report_velocities:
-                    raise ValueError(
-                        "DCDReporter does not support reporting velocities. If you'd"
-                        "like to report velocities, switch to HDF5 format."
-                    )
-                dcd_reporter = DCDReporter(
-                    file=str(traj_file),
-                    reportInterval=traj_interval,
-                    enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
-                )
-                sim.reporters.append(dcd_reporter)
-
-            elif traj_file_type == "h5":
-                if traj_file.exists():
-                    self.traj_file_name = increment_name(traj_file.name, traj_file_type)
-                    traj_file = dir_name / f"{self.traj_file_name}_{traj_file_type}"
-
-                hdf5_reporter = HDF5Reporter(
-                    file=str(traj_file),
-                    reportInterval=traj_interval,
-                    cell=True,
-                    velocities=self._resolve_attr("report_velocities", prev_task),
-                    enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
-                )
-                sim.reporters.append(hdf5_reporter)
-            else:
-                raise ValueError(f"Unsupported trajectory file type: {traj_file_type}")
+            if report_velocities:
+                raise ValueError("Reporting velocities is not currently supported.")
+            traj_reporter = MDAReporter(
+                file=str(dir_name / f"{traj_file_name}.{traj_file_type}"),
+                reportInterval=traj_interval,
+                enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
+            )
+            sim.reporters.append(traj_reporter)
 
         # add state reporter
         state_interval = self._resolve_attr("state_interval", prev_task)
         state_file_name = self._resolve_attr("state_file_name", prev_task)
         if has_steps & (state_interval > 0):
             state_reporter = StateDataReporter(
-                file=f"{dir_name / state_file_name}_csv",
+                file=f"{dir_name / state_file_name}.csv",
                 reportInterval=state_interval,
                 step=True,
                 potentialEnergy=True,
@@ -246,7 +222,7 @@ class BaseOpenMMMaker(Maker):
                 temperature=True,
                 volume=True,
                 density=True,
-                append=(dir_name / (state_file_name + "_csv")).exists(),
+                append=(dir_name / (state_file_name + ".csv")).exists(),
             )
             sim.reporters.append(state_reporter)
 
@@ -448,8 +424,8 @@ class BaseOpenMMMaker(Maker):
             input=CalculationInput(**maker_attrs),
             output=CalculationOutput.from_directory(
                 dir_name,
-                f"{state_file_name}_csv",
-                f"{traj_file_name}_{traj_file_type}",
+                f"{state_file_name}.csv",
+                f"{traj_file_name}.{traj_file_type}",
                 elapsed_time,
                 self._resolve_attr("n_steps", prev_task),
                 self._resolve_attr("state_interval", prev_task),

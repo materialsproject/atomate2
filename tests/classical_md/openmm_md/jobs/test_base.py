@@ -4,7 +4,8 @@ import numpy as np
 from emmet.core.classical_md import ClassicalMDTaskDocument
 from emmet.core.classical_md.openmm import Calculation, CalculationInput
 from jobflow import Flow, Job
-from openmm.app import DCDReporter, Simulation, StateDataReporter
+from mdareporter import MDAReporter
+from openmm.app import Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
 from openmm.unit import kelvin, picoseconds
 
@@ -23,7 +24,7 @@ def test_add_reporters(interchange, temp_dir):
     maker._add_reporters(sim, dir_name)
 
     assert len(sim.reporters) == 2
-    assert isinstance(sim.reporters[0], DCDReporter)
+    assert isinstance(sim.reporters[0], MDAReporter)
     next_dcd = sim.reporters[0].describeNextReport(sim)
     assert next_dcd[0] == 100  # steps until next report
     assert next_dcd[5] is True  # enforce periodic boundaries

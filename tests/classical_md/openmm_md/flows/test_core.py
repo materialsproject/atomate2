@@ -1,5 +1,8 @@
+import pytest
 from emmet.core.classical_md import ClassicalMDTaskDocument
 from jobflow import Flow
+from MDAnalysis import Universe
+from openff.interchange import Interchange
 
 from atomate2.classical_md.openmm.flows.core import AnnealMaker, ProductionMaker
 from atomate2.classical_md.openmm.jobs import (
@@ -50,6 +53,7 @@ def test_anneal_maker(interchange, tmp_path, run_job):
     assert lower_temp_job.maker.temp_steps == 1
 
 
+@pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
 def test_hdf5_writing(interchange, tmp_path, run_job):
     # Create an instance of AnnealMaker with custom parameters
     anneal_maker = AnnealMaker.from_temps_and_steps(
@@ -80,7 +84,7 @@ def test_production_maker(interchange, tmp_path, run_job):
     production_maker = ProductionMaker(
         name="test_production",
         energy_maker=EnergyMinimizationMaker(max_iterations=1),
-        npt_maker=NPTMaker(n_steps=5, pressure=1.0, state_interval=1),
+        npt_maker=NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
         anneal_maker=AnnealMaker.from_temps_and_steps(
             anneal_temp=400, final_temp=300, n_steps=5
         ),
@@ -129,3 +133,12 @@ def test_production_maker(interchange, tmp_path, run_job):
     ]
     # Test that the state interval is respected
     assert calc_output.steps == list(range(1, 6))
+
+    taskdoc = ClassicalMDTaskDocument.parse_file(tmp_path / "taskdoc.json")
+    interchange = Interchange.parse_raw(taskdoc.interchange)
+
+    topology = interchange.to_openmm_topology()
+
+    u = Universe(topology, str(tmp_path / "trajectory.dcd"))
+
+    assert len(u.trajectory) == 5
