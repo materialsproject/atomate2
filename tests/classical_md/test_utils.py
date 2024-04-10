@@ -2,13 +2,13 @@ import numpy as np
 import openff.toolkit as tk
 import pymatgen
 import pytest
+from emmet.core.classical_md import MoleculeSpec
 from openff.interchange import Interchange
 from openff.toolkit.topology import Topology
 from openff.toolkit.topology.molecule import Molecule
 from openff.units import Quantity
 from pymatgen.analysis.graphs import MoleculeGraph
 
-from atomate2.classical_md.schemas import MoleculeSpec
 from atomate2.classical_md.utils import (
     add_conformer,
     assign_partial_charges,

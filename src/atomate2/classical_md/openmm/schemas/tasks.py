@@ -6,10 +6,9 @@ from pathlib import Path
 from typing import Optional, Union
 
 import pandas as pd
+from emmet.core.classical_md import ClassicalMDTaskDocument
 from emmet.core.vasp.task_valid import TaskState
 from pydantic import BaseModel, Field
-
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
 class CalculationInput(BaseModel, extra="allow"):  # type: ignore[call-arg]

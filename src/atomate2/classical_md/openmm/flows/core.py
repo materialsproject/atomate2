@@ -18,9 +18,8 @@ from atomate2.classical_md.utils import create_list_summing_to
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from emmet.core.classical_md import ClassicalMDTaskDocument
     from openff.interchange import Interchange
-
-    from atomate2.classical_md.schemas import ClassicalMDTaskDocument
 
 
 @dataclass

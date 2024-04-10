@@ -6,6 +6,7 @@ import copy
 from typing import Callable
 
 import openff.toolkit as tk
+from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import job
 from openff.interchange import Interchange
@@ -13,7 +14,6 @@ from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
 from openff.units import unit
 
-from atomate2.classical_md.schemas import ClassicalMDTaskDocument, MoleculeSpec
 from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smile
 
 

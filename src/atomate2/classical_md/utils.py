@@ -9,13 +9,12 @@ from pathlib import Path
 import numpy as np
 import openff.toolkit as tk
 import pymatgen
+from emmet.core.classical_md import MoleculeSpec
 from openmm.unit import angstrom, elementary_charge
 from pint import Quantity
 from pymatgen.analysis.graphs import MoleculeGraph
 from pymatgen.analysis.local_env import OpenBabelNN, metal_edge_extender
 from pymatgen.core import Element
-
-from atomate2.classical_md.schemas import MoleculeSpec
 
 
 def molgraph_to_openff_mol(molgraph: MoleculeGraph) -> tk.Molecule:
