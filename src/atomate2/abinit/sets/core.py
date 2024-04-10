@@ -23,14 +23,8 @@ if TYPE_CHECKING:
     from pymatgen.io.abinit import PseudoTable
     from pymatgen.io.abinit.abiobjects import KSampling
 
-__all__ = [
-    "StaticSetGenerator",
-    "NonSCFSetGenerator",
-    "RelaxSetGenerator",
-]
 
-
-GS_RESTART_FROM_DEPS: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
+GS_RESTART_FROM_DEPS = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
 
 
 @dataclass
@@ -123,13 +117,13 @@ class NonSCFSetGenerator(AbinitInputGenerator):
                 f"Should have exactly one previous output. Found {len(abinit_inputs)}"
             )
         previous_abinit_input = next(iter(abinit_inputs.values()))
-        nband = previous_abinit_input.get(
+        n_band = previous_abinit_input.get(
             "nband",
             previous_abinit_input.structure.num_valence_electrons(
                 previous_abinit_input.pseudos
             ),
         )
-        return int(np.ceil(nband * self.nbands_factor))
+        return int(np.ceil(n_band * self.nbands_factor))
 
 
 @dataclass
@@ -154,7 +148,7 @@ class NonScfWfqInputGenerator(AbinitInputGenerator):
 
     calc_type: str = "nscf_wfq"
 
-    wfq_tol: dict = field(default_factory=lambda: {"tolwfr": 1.0e-18})
+    wfq_tol: dict = field(default_factory=lambda: {"tolwfr": 1e-18})
 
     restart_from_deps: tuple = (f"{NSCF}:WFQ",)
     prev_outputs_deps: tuple = (f"{SCF}:DEN",)
@@ -201,7 +195,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
     factory: Callable = ion_ioncell_relax_input
     restart_from_deps: tuple = GS_RESTART_FROM_DEPS
     relax_cell: bool = True
-    tolmxf: float = 5.0e-5
+    tolmxf: float = 5e-5
 
     def get_abinit_input(
         self,

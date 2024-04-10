@@ -43,7 +43,6 @@ if TYPE_CHECKING:
 
     from pymatgen.core.structure import Structure
 
-__all__ = ["AbinitInputSet", "AbinitInputGenerator"]
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +98,7 @@ class AbinitInputSet(InputSet):
             zip_inputs=zip_inputs,
         )
         del self.inputs["abinit_input.json"]
-        indir, outdir, tmpdir = self.set_workdir(workdir=directory)
+        indir, _outdir, _tmpdir = self.set_workdir(workdir=directory)
 
         if self.input_files:
             out_to_in(
@@ -718,7 +717,7 @@ class AbinitInputGenerator(InputGenerator):
         if kconfig.get("line_density"):
             # handle line density generation
             kpath = HighSymmKpath(structure, **kconfig.get("kpath_kwargs", {}))
-            frac_k_points, k_points_labels = kpath.get_kpoints(
+            frac_k_points, _k_points_labels = kpath.get_kpoints(
                 line_density=kconfig["line_density"], coords_are_cartesian=False
             )
             base_kpoints = KSampling(
