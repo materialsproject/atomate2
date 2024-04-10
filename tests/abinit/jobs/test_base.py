@@ -59,10 +59,10 @@ class SomeAISG2(AbinitInputGenerator):
 @dataclass
 class SomeMaker1(BaseAbinitMaker):
     name: str = "SomeMaker1 calculation"
-    input_set_generator: SomeAISG1 = field(default_factory=lambda: SomeAISG1())
+    input_set_generator: SomeAISG1 = field(default_factory=SomeAISG1)
 
 
 @dataclass
 class SomeMaker2(BaseAbinitMaker):
     name: str = "SomeMaker2 calculation"
-    input_set_generator: SomeAISG2 = field(default_factory=lambda: SomeAISG2())
+    input_set_generator: SomeAISG2 = field(default_factory=SomeAISG2)
