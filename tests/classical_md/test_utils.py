@@ -218,19 +218,19 @@ def test_openff_quantity_as_from_monty_dict():
 
 def test_increment_file_name():
     test_cases = [
-        ("report_dcd", "dcd", "_", "report2"),
-        ("report_123_dcd", "dcd", "_", "report_124"),
-        ("report.dcd", "dcd", ".", "report2"),
-        ("report.123.dcd", "dcd", ".", "report.124"),
-        ("report-dcd", "dcd", "-", "report2"),
-        ("report-123-dcd", "dcd", "-", "report-124"),
+        ("report", "report2"),
+        ("report123", "report124"),
+        ("report.123", "report.124"),
+        ("report-123", "report-124"),
+        ("report-dcd", "report-dcd2"),
+        ("report.123.dcd", "report.123.dcd2"),
     ]
 
-    for file_name, extension, delimiter, expected_output in test_cases:
-        result = increment_name(file_name, extension, delimiter)
+    for file_name, expected_output in test_cases:
+        result = increment_name(file_name)
         assert (
             result == expected_output
-        ), f"Failed for case: {file_name}, {extension}, {delimiter}"
+        ), f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
 
 
 def test_calculate_elyte_composition():

@@ -70,7 +70,7 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
 
     task_doc = run_job(anneal_flow)
 
-    calc_output_names = [calc.output.dcd_file for calc in task_doc.calcs_reversed]
+    calc_output_names = [calc.output.traj_file for calc in task_doc.calcs_reversed]
     assert len(list(tmp_path.iterdir())) == 5
     assert set(calc_output_names) == {
         "trajectory3_h5",
@@ -133,12 +133,10 @@ def test_production_maker(interchange, tmp_path, run_job):
     ]
     # Test that the state interval is respected
     assert calc_output.steps == list(range(1, 6))
+    assert calc_output.traj_file == "trajectory5.dcd"
 
-    taskdoc = ClassicalMDTaskDocument.parse_file(tmp_path / "taskdoc.json")
-    interchange = Interchange.parse_raw(taskdoc.interchange)
-
+    interchange = Interchange.parse_raw(task_doc.interchange)
     topology = interchange.to_openmm_topology()
-
-    u = Universe(topology, str(tmp_path / "trajectory.dcd"))
+    u = Universe(topology, str(tmp_path / "trajectory5.dcd"))
 
     assert len(u.trajectory) == 5

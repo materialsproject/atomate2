@@ -23,8 +23,7 @@ from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
 from atomate2.classical_md.core import openff_job
-
-# from atomate2.classical_md.utils import increment_name
+from atomate2.classical_md.utils import increment_name
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation
@@ -202,8 +201,13 @@ class BaseOpenMMMaker(Maker):
         if has_steps & (traj_interval > 0):
             if report_velocities:
                 raise ValueError("Reporting velocities is not currently supported.")
+
+            traj_file = dir_name / f"{traj_file_name}.{traj_file_type}"
+            if traj_file.exists():
+                self.traj_file_name = increment_name(traj_file_name)
+
             traj_reporter = MDAReporter(
-                file=str(dir_name / f"{traj_file_name}.{traj_file_type}"),
+                file=str(dir_name / f"{self.traj_file_name}.{traj_file_type}"),
                 reportInterval=traj_interval,
                 enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
             )

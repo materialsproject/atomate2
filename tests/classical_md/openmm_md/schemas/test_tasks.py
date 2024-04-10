@@ -8,8 +8,8 @@ def test_calc_output_from_directory(output_dir):
     # Call the from_directory function
     calc_out = CalculationOutput.from_directory(
         output_dir,
-        "state_csv",
-        "trajectory_dcd",
+        "state.csv",
+        "trajectory.dcd",
         elapsed_time=10.0,
         steps=1500,
         state_interval=100,
@@ -19,8 +19,8 @@ def test_calc_output_from_directory(output_dir):
     assert isinstance(calc_out, CalculationOutput)
     assert calc_out.dir_name == str(output_dir)
     assert calc_out.elapsed_time == 10.0
-    assert calc_out.dcd_file == "trajectory_dcd"
-    assert calc_out.state_file == "state_csv"
+    assert calc_out.traj_file == "trajectory.dcd"
+    assert calc_out.state_file == "state.csv"
 
     # Assert the contents of the state data
     assert np.array_equal(calc_out.steps[:3], [100, 200, 300])
@@ -32,5 +32,5 @@ def test_calc_output_from_directory(output_dir):
     assert np.allclose(calc_out.density[:3], [1.0, 0.99, 0.99], atol=0.1)
 
     # Assert the existence of the DCD and state files
-    assert Path(calc_out.dir_name, calc_out.dcd_file).exists()
+    assert Path(calc_out.dir_name, calc_out.traj_file).exists()
     assert Path(calc_out.dir_name, calc_out.state_file).exists()

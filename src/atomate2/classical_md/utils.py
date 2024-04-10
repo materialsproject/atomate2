@@ -413,10 +413,10 @@ def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
     return [div + 1] * mod + [div] * (n_pieces - mod)
 
 
-def increment_name(file_name: str, extension: str, delimiter: str = "_") -> str:
+def increment_name(file_name: str) -> str:
     """Increment the count in a file name."""
     # logic to increment count on file name
-    re_match = re.search(rf"(\d*){delimiter}{extension}", file_name)
+    re_match = re.search(r"(\d*)$", file_name)
     position = re_match.start(1)
     new_count = int(re_match.group(1) or 1) + 1
     return f"{file_name[:position]}{new_count}"
