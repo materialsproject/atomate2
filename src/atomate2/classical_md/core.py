@@ -46,9 +46,11 @@ def openff_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate jobs.
     """
-    # todo: add data keyword argument to specify where to write
-    #  bigger files like trajectory files
-    return job(method, output_schema=ClassicalMDTaskDocument)
+    return job(
+        method,
+        output_schema=ClassicalMDTaskDocument,
+        data=["interchange", "traj_blob"],
+    )
 
 
 @openff_job
