@@ -11,7 +11,7 @@ def test_calc_output_from_directory(output_dir):
         "state.csv",
         "trajectory.dcd",
         elapsed_time=10.0,
-        steps=1500,
+        n_steps=1500,
         state_interval=100,
     )
 

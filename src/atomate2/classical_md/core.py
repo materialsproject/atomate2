@@ -153,10 +153,11 @@ def generate_interchange(
     # force_field_names = ff_list if len(force_field) > 1 else ff_list[0]
 
     interchange_json = interchange.json()
+    interchange_bytes = interchange_json.encode("utf-8")
 
     return ClassicalMDTaskDocument(
         state=TaskState.SUCCESS,
-        interchange=interchange_json,
+        interchange=interchange_bytes,
         molecule_specs=mol_specs,
         forcefield=force_field,
     )

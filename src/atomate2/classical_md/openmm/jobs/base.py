@@ -110,11 +110,12 @@ class BaseOpenMMMaker(Maker):
     report_velocities: bool | None = field(default=None)
     traj_file_name: str | None = field(default=None)
     traj_file_type: str | None = field(default=None)
+    embed_traj: bool | None = field(default=None)
 
     @openff_job
     def make(
         self,
-        interchange: Interchange | str,
+        interchange: Interchange | bytes,
         prev_task: OpenMMTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Response:
@@ -141,7 +142,9 @@ class BaseOpenMMMaker(Maker):
             A response object containing the output task document.
         """
         # this is needed because interchange is currently using pydantic.v1
-        if not isinstance(interchange, Interchange):
+        if isinstance(interchange, bytes):
+            interchange = interchange.decode("utf-8")
+        if isinstance(interchange, str):
             interchange = Interchange.parse_raw(interchange)
         else:
             interchange = copy.deepcopy(interchange)
@@ -431,9 +434,10 @@ class BaseOpenMMMaker(Maker):
                 dir_name,
                 f"{state_file_name}.csv",
                 f"{traj_file_name}.{traj_file_type}",
-                elapsed_time,
-                self._resolve_attr("n_steps", prev_task),
-                self._resolve_attr("state_interval", prev_task),
+                elapsed_time=elapsed_time,
+                n_steps=self._resolve_attr("n_steps", prev_task),
+                state_interval=self._resolve_attr("state_interval", prev_task),
+                embed_traj=self._resolve_attr("embed_traj", prev_task),
             ),
             completed_at=str(datetime.now()),
             task_name=job_name,
@@ -443,13 +447,14 @@ class BaseOpenMMMaker(Maker):
         prev_task = prev_task or OpenMMTaskDocument()
 
         interchange_json = interchange.json()
+        interchange_bytes = interchange_json.encode("utf-8")
 
         return OpenMMTaskDocument(
             tags=None,  # TODO: where do tags come from?
             dir_name=str(dir_name),
             state="successful",
             calcs_reversed=[calc] + (prev_task.calcs_reversed or []),
-            interchange=interchange_json,
+            interchange=interchange_bytes,
             molecule_specs=prev_task.molecule_specs,
             forcefield=prev_task.forcefield,
             task_name=calc.task_name,
