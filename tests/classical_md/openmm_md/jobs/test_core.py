@@ -40,10 +40,10 @@ def test_nvt_maker(interchange, temp_dir, run_job):
 
     # Test length of state attributes in calculation output
     calc_output = task_doc.calcs_reversed[0].output
-    assert len(calc_output.steps) == 10
+    assert len(calc_output.steps_reported) == 10
 
     # Test that the state interval is respected
-    assert calc_output.steps == list(range(1, 11))
+    assert calc_output.steps_reported == list(range(1, 11))
 
 
 def test_temp_change_maker(interchange, temp_dir, run_job):

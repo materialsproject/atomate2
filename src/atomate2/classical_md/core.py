@@ -159,6 +159,6 @@ def generate_interchange(
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,
         molecule_specs=mol_specs,
-        forcefield=force_field,
+        force_field=force_field,
     )
     return Response(output=task_doc)

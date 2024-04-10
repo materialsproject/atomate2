@@ -122,9 +122,9 @@ def test_production_maker(interchange, tmp_path, run_job):
 
     # Test length of state attributes in calculation output
     calc_output = task_doc.calcs_reversed[0].output
-    assert len(calc_output.steps) == 5
+    assert len(calc_output.steps_reported) == 5
 
-    all_steps = [calc.output.steps for calc in task_doc.calcs_reversed]
+    all_steps = [calc.output.steps_reported for calc in task_doc.calcs_reversed]
     assert all_steps == [
         [1, 2, 3, 4, 5],
         [1],
@@ -134,7 +134,7 @@ def test_production_maker(interchange, tmp_path, run_job):
         None,
     ]
     # Test that the state interval is respected
-    assert calc_output.steps == list(range(1, 6))
+    assert calc_output.steps_reported == list(range(1, 6))
     assert calc_output.traj_file == "trajectory5.dcd"
 
     interchange = Interchange.parse_raw(task_doc.interchange)

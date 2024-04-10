@@ -130,7 +130,7 @@ def test_create_mol_spec(mol_files):
     assert isinstance(mol_spec, MoleculeSpec)
     assert mol_spec.name == name
     assert mol_spec.count == count
-    assert mol_spec.formal_charge == int(np.sum(partial_charges))
+    assert mol_spec.charge_scaling == 1.0
     assert mol_spec.charge_method == "am1bcc"
     assert isinstance(tk.Molecule.from_json(mol_spec.openff_mol), tk.Molecule)
 

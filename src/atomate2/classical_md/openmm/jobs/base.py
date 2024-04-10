@@ -456,7 +456,7 @@ class BaseOpenMMMaker(Maker):
             calcs_reversed=[calc] + (prev_task.calcs_reversed or []),
             interchange=interchange_bytes,
             molecule_specs=prev_task.molecule_specs,
-            forcefield=prev_task.forcefield,
+            force_field=prev_task.force_field,
             task_name=calc.task_name,
             task_type="test",
             last_updated=datetime.now(),

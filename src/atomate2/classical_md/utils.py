@@ -339,8 +339,6 @@ def create_mol_spec(
     MoleculeSpec
         The created MoleculeSpec
     """
-    # TODO: test this
-
     if charge_method is None:
         charge_method = "custom" if partial_charges is not None else "am1bcc"
 
@@ -356,9 +354,7 @@ def create_mol_spec(
     return MoleculeSpec(
         name=(name or smile),
         count=count,
-        formal_charge=int(
-            np.sum(openff_mol.partial_charges.magnitude) / charge_scaling
-        ),
+        charge_scaling=charge_scaling,
         charge_method=charge_method,
         openff_mol=openff_mol.to_json(),
     )
