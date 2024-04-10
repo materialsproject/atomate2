@@ -1,5 +1,7 @@
+import numpy as np
 import pytest
 from emmet.core.classical_md import ClassicalMDTaskDocument
+from emmet.core.classical_md.openmm import OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
 from openff.interchange import Interchange
@@ -140,3 +142,38 @@ def test_production_maker(interchange, tmp_path, run_job):
     u = Universe(topology, str(tmp_path / "trajectory5.dcd"))
 
     assert len(u.trajectory) == 5
+
+
+def test_traj_blob_embed(interchange, tmp_path, run_job):
+    nvt = NVTMaker(n_steps=2, traj_interval=1, embed_traj=True)
+
+    # Run the ProductionMaker flow
+    nvt_job = nvt.make(interchange, output_dir=tmp_path)
+    task_doc = run_job(nvt_job)
+
+    interchange = Interchange.parse_raw(task_doc.interchange)
+    topology = interchange.to_openmm_topology()
+    u = Universe(topology, str(tmp_path / "trajectory.dcd"))
+
+    assert len(u.trajectory) == 2
+
+    calc_output = task_doc.calcs_reversed[0].output
+    assert calc_output.traj_blob is not None
+
+    # Write the bytes back to a file
+    with open(tmp_path / "doc_trajectory.dcd", "wb") as f:
+        f.write(calc_output.traj_blob)
+
+    u2 = Universe(topology, str(tmp_path / "doc_trajectory.dcd"))
+
+    assert np.all(u.atoms.positions == u2.atoms.positions)
+
+    with open(tmp_path / "taskdoc.json") as file:
+        json_data = file.read()
+
+    task_doc_parsed = OpenMMTaskDocument.parse_raw(json_data)
+    parsed_output = task_doc_parsed.calcs_reversed[0].output
+
+    assert parsed_output.traj_blob == calc_output.traj_blob
+
+    return
