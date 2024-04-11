@@ -38,6 +38,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+abinit = ["abipy>=0.9.3"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
@@ -50,30 +51,32 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
+    "torch<=2.2.1", # incompatibility with dgl if newer versions are used
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=0.9.0",
+    "matgl>=1.0.0",
     "quippy-ase>=0.9.14",
 ]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
     "furo==2024.1.29",
-    "ipython==8.22.2",
+    "ipython==8.23.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
-    "numpydoc==1.6.0",
+    "numpydoc==1.7.0",
     "sphinx-copybutton==0.5.2",
     "sphinx==7.2.6",
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2"]
+tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2", "pytest-mock==3.14.0"]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
+    "torch==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",
@@ -85,18 +88,18 @@ strict = [
     "lobsterpy==0.3.8",
     "mace-torch>=0.3.3",
     "matgl==1.0.0",
-    "monty==2024.2.26",
+    "monty==2024.3.31",
     "mp-api==0.40.2",
     "numpy",
-    "phonopy==2.22.0",
+    "phonopy==2.22.1",
     "pydantic-settings==2.2.1",
     "pydantic==2.6.4",
     "pymatgen-analysis-defects==2024.2.24",
     "pymatgen==2024.3.1",
-    "python-ulid==2.3.0",
+    "python-ulid==2.4.0.post0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "typing-extensions==4.10.0",
+    "typing-extensions==4.11.0",
 ]
 
 [project.scripts]

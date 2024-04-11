@@ -191,7 +191,54 @@ class Atomate2Settings(BaseSettings):
         None, description="Additional settings applied to AMSET settings file."
     )
 
+    # ABINIT settings
+    ABINIT_MPIRUN_CMD: Optional[str] = Field(None, description="Mpirun command.")
+    ABINIT_CMD: str = Field("abinit", description="Abinit command.")
+    ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
+    ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")
+    ABINIT_COPY_DEPS: bool = Field(
+        default=False,
+        description="Copy (True) or link file dependencies between jobs.",
+    )
+    ABINIT_AUTOPARAL: bool = Field(
+        default=False,
+        description="Use autoparal to determine optimal parallel configuration.",
+    )
+    ABINIT_ABIPY_MANAGER_FILE: Optional[str] = Field(
+        None,
+        description="Config file for task manager of abipy.",
+    )
+    ABINIT_MAX_RESTARTS: int = Field(
+        5, description="Maximum number of restarts of a job."
+    )
+
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)
+
+    # QChem specific settings
+
+    QCHEM_CMD: str = Field(
+        "qchem_std", description="Command to run standard version of qchem."
+    )
+
+    QCHEM_CUSTODIAN_MAX_ERRORS: int = Field(
+        5, description="Maximum number of errors to correct before custodian gives up"
+    )
+
+    QCHEM_MAX_CORES: int = Field(4, description="Maximum number of cores for QCJob")
+
+    QCHEM_HANDLE_UNSUCCESSFUL: Union[str, bool] = Field(
+        "fizzle",
+        description="Three-way toggle on what to do if the job looks OK but is actually"
+        " unconverged (either electronic or ionic). - True: mark job as COMPLETED, but "
+        "stop children. - False: do nothing, continue with workflow as normal. 'error':"
+        " throw an error",
+    )
+
+    QCHEM_STORE_ADDITIONAL_JSON: bool = Field(
+        default=True,
+        description="Ingest any additional JSON data present into database when "
+        "parsing QChem directories useful for storing duplicate of FW.json",
+    )
 
     @model_validator(mode="before")
     @classmethod
