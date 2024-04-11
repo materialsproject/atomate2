@@ -30,9 +30,7 @@ __all__ = [
     "write_mrgddb_input_set",
 ]
 
-
 logger = logging.getLogger(__name__)
-
 
 ALL_ABIEXTS = abi_extensions()
 

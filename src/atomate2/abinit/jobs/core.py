@@ -34,8 +34,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["StaticMaker", "NonSCFMaker", "RelaxMaker"]
-
 
 @dataclass
 class StaticMaker(BaseAbinitMaker):
