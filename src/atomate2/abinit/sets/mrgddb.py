@@ -1,44 +1,29 @@
 """Module defining base mrgddb input set and generator."""
+
 from __future__ import annotations
 
 import copy
-import json
 import logging
 import os
 import time
 from collections import namedtuple
-from dataclasses import dataclass, field
+from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Iterable
 
-import numpy as np
-from abipy.abio.input_tags import DDE, DDK, DTE, MOLECULAR_DYNAMICS, RELAX, SCF
-from abipy.abio.inputs import AbinitInput, MultiDataset
-from abipy.flowtk.psrepos import get_repo_from_name
+from abipy.abio.input_tags import DDE, DTE
 from abipy.flowtk.utils import Directory, irdvars_for_ext
-from monty.json import MontyEncoder, jsanitize
-from pymatgen.core.structure import Structure
-from pymatgen.io.abinit.abiobjects import KSampling, KSamplingModes
-from pymatgen.io.abinit.pseudos import PseudoTable
 from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.vasp import Kpoints
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatgen.symmetry.bandstructure import HighSymmKpath
 
-from atomate2 import SETTINGS
-from atomate2.abinit.files import fname2ext, load_abinit_input, out_to_in
+from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.utils.common import (
-    INDATA_PREFIX,
     INDATAFILE_PREFIX,
     INDIR_NAME,
     MRGDDB_INPUT_FILE_NAME,
-    OUTDATA_PREFIX,
     OUTDATAFILE_PREFIX,
     OUTDIR_NAME,
-    TMPDATA_PREFIX,
     TMPDIR_NAME,
     InitializationError,
-    get_final_structure,
 )
 
 __all__ = ["MrgddbInputSet", "MrgddbInputGenerator", "MrgddbSetGenerator"]
@@ -70,7 +55,6 @@ class MrgddbInputSet(InputSet):
             }
         )
 
-
     def write_input(
         self,
         directory: str | Path,
@@ -90,7 +74,6 @@ class MrgddbInputSet(InputSet):
         )
         indir, outdir, tmpdir = self.set_workdir(workdir=directory)
 
-
     def validate(self) -> bool:
         """Validate the input set.
 
@@ -99,7 +82,7 @@ class MrgddbInputSet(InputSet):
         if not self.input_files:
             return False
         for _out_filepath, in_file in self.input_files:
-            if not os.path.isfile(_out_filepath) or in_file!='in_DDB':
+            if not os.path.isfile(_out_filepath) or in_file != "in_DDB":
                 return False
         return True
 
@@ -135,7 +118,6 @@ class MrgddbInputSet(InputSet):
     def deepcopy(self):
         """Deep copy of the input set."""
         return copy.deepcopy(self)
-
 
 
 PrevOutput = namedtuple("PrevOutput", "dirname exts")
@@ -257,7 +239,6 @@ class MrgddbInputGenerator(InputGenerator):
 
         return deps_irdvars, input_files
 
-
     @staticmethod
     def _get_in_file_name(out_filepath: str) -> str:
         in_file = os.path.basename(out_filepath)
@@ -350,7 +331,6 @@ class MrgddbInputGenerator(InputGenerator):
                 f"No previous_outputs. Required for {self.__class__.__name__}."
             )
 
-
         if not self.prev_outputs_deps and prev_outputs:
             msg = (
                 f"Previous outputs not allowed for {self.__class__.__name__} "
@@ -362,16 +342,16 @@ class MrgddbInputGenerator(InputGenerator):
         irdvars, files = self.resolve_deps(prev_outputs, self.prev_outputs_deps)
 
         workdir = os.path.abspath(workdir)
-        outdir = Directory(os.path.join(workdir, OUTDIR_NAME, 'out_DDB'))
-        
+        outdir = Directory(os.path.join(workdir, OUTDIR_NAME, "out_DDB"))
+
         generated_input = str(outdir)
-        generated_input+="\n"
-        generated_input+=f"DDBs merged on {time.asctime()}"
-        generated_input+="\n"
-        generated_input+=f"{len(files)}"
+        generated_input += "\n"
+        generated_input += f"DDBs merged on {time.asctime()}"
+        generated_input += "\n"
+        generated_input += f"{len(files)}"
         for file_path, file_name in files:
-            generated_input+="\n"
-            generated_input+=f"{file_path}"
+            generated_input += "\n"
+            generated_input += f"{file_path}"
 
         return generated_input
 
@@ -381,7 +361,7 @@ class MrgddbSetGenerator(MrgddbInputGenerator):
     """Class to generate Mrgddb input sets."""
 
     calc_type: str = "mrgddb_merge"
-    restart_from_deps: tuple = None #(f"{MRGDDB}:DDB",) #TODO: name is MRGDDB ?
+    restart_from_deps: tuple = None  # (f"{MRGDDB}:DDB",) #TODO: name is MRGDDB ?
     prev_outputs_deps: tuple = (f"{DDE}:DDB", f"{DTE}:DDB")
 
     def get_mrgddb_input(
@@ -390,7 +370,6 @@ class MrgddbSetGenerator(MrgddbInputGenerator):
         workdir: str | Path | None = ".",
     ) -> str:
         """Get Mrgddb input (str) to merge the DDE and DTE DDB."""
-
         return super().get_mrgddb_input(
             prev_outputs=prev_outputs,
         )

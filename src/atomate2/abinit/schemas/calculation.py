@@ -292,9 +292,8 @@ class Calculation(BaseModel):
             if not output_doc:
                 output_doc = output_doc_gsr
             else:
-                output_doc = output_doc.model_copy(
-                    update=dict(output_doc_gsr), deep=True
-                )
+                update_data = output_doc_gsr.model_dump(exclude_unset=True)
+                output_doc = output_doc.model_copy(update=update_data, deep=True)
 
         completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
 

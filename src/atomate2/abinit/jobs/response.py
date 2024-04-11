@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import itertools
 import logging
-import os
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import ClassVar, Sequence
+from typing import ClassVar
 
 from abipy.abio.inputs import AbinitInput
-from abipy.flowtk.utils import Directory
+from abipy.flowtk.events import (
+    AbinitCriticalWarning,
+    NscfConvergenceWarning,
+    ScfConvergenceWarning,
+)
 from jobflow import Flow, Response, job
 from pymatgen.core.structure import Structure
 
@@ -21,7 +25,6 @@ from atomate2.abinit.sets.response import (
     DdkSetGenerator,
     DteSetGenerator,
 )
-from atomate2.abinit.utils.common import OUTDIR_NAME
 from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -53,7 +56,9 @@ class DdkMaker(BaseAbinitMaker):
     name: str = "DDK calculation"
     input_set_generator: AbinitInputGenerator = field(default_factory=DdkSetGenerator)
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        NscfConvergenceWarning,
+    )
 
     @job
     def make(
@@ -100,7 +105,9 @@ class DdeMaker(BaseAbinitMaker):
     name: str = "DDE calculation"
     input_set_generator: AbinitInputGenerator = field(default_factory=DdeSetGenerator)
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        ScfConvergenceWarning,
+    )
 
     @job
     def make(
@@ -147,7 +154,9 @@ class DteMaker(BaseAbinitMaker):
     name: str = "DTE calculation"
     input_set_generator: AbinitInputGenerator = field(default_factory=DteSetGenerator)
 
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        ScfConvergenceWarning,
+    )
 
     @job
     def make(
@@ -257,7 +266,7 @@ def generate_dte_perts(
     """
     # Call Abinit to get the list of irreducible perturbations
     gsinput = gsinput.deepcopy()
-    gsinput.pop_vars(['autoparal', 'npfft'])
+    gsinput.pop_vars(["autoparal", "npfft"])
     perts = gsinput.abiget_irred_dteperts(
         phonon_pert=phonon_pert, ixc=ixc
     )  # TODO: quid manager?
@@ -314,7 +323,9 @@ def run_ddk_rf(
             #   factory_prev_inputs_kwargs already used
         )
         ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
-        #ddk_job = update_user_abinit_settings(ddk_job, {'tolwfr': 1e-8}) #VT TO REMOVE, ONLY FOR TESTING
+        ddk_job = update_user_abinit_settings(
+            ddk_job, {"tolwfr": 1e-1}
+        )  # VT TO REMOVE, ONLY FOR TESTING
 
         ddk_jobs.append(ddk_job)
         outputs["dirs"].append(ddk_job.output.dir_name)  # TODO: determine outputs
@@ -326,7 +337,7 @@ def run_ddk_rf(
 @job
 def run_dde_rf(
     perturbations: list[dict],
-    dde_maker: BaseAbinitMaker | None = DdeMaker(), # field(default_factory=DdeMaker),
+    dde_maker: BaseAbinitMaker | None = DdeMaker(),  # field(default_factory=DdeMaker),
     prev_outputs: list[str] | None = None,
     structure: Structure | None = None,
 ):
@@ -351,7 +362,7 @@ def run_dde_rf(
     prev_outputs = [item for sublist in prev_outputs for item in sublist]
     # Create symlink out_DDK pointing to out_1WF... to force the use of irdddk
     # instead of ird1wf later on
-    #for ddk_dir_path in prev_outputs[1:]:
+    # for ddk_dir_path in prev_outputs[1:]:
     #    ddk_dir_out = Directory(os.path.join(ddk_dir_path, OUTDIR_NAME))
     #    ddk_dir_out.symlink_abiext('1WF', 'DDK')
 
@@ -359,10 +370,13 @@ def run_dde_rf(
         dde_job = dde_maker.make(
             perturbation=pert,
             prev_outputs=prev_outputs,
-            #structure=structure,
+            # structure=structure,
         )
         dde_job.append_name(f"{ipert+1}/{len(perturbations)}")
-        dde_job = update_user_abinit_settings(dde_job, {'irdddk': 1, 'ird1wf': 0})#, 'tolvrs': 1e-8}) #VT TO REMOVE TOLVRS ONLY FOR TESTING
+        # dde_job = update_user_abinit_settings(dde_job, {'irdddk': 1, 'ird1wf': 0})
+        dde_job = update_user_abinit_settings(
+            dde_job, {"irdddk": 1, "ird1wf": 0, "tolvrs": 1e-1}
+        )  # VT TO REMOVE TOLVRS ONLY FOR TESTING
 
         dde_jobs.append(dde_job)
         outputs["dirs"].append(dde_job.output.dir_name)  # TODO: determine outputs
@@ -374,7 +388,7 @@ def run_dde_rf(
 @job
 def run_dte_rf(
     perturbations: list[dict],
-    dte_maker: BaseAbinitMaker | None = DteMaker(), # field(default_factory=DteMaker),
+    dte_maker: BaseAbinitMaker | None = DteMaker(),  # field(default_factory=DteMaker),
     prev_outputs: list[str] | None = None,
     structure: Structure | None = None,
 ):
@@ -402,7 +416,7 @@ def run_dte_rf(
         dte_job = dte_maker.make(
             perturbation=pert,
             prev_outputs=prev_outputs,
-            #structure=structure,
+            # structure=structure,
         )
         dte_job.append_name(f"{ipert+1}/{len(perturbations)}")
 
@@ -412,12 +426,11 @@ def run_dte_rf(
     dte_flow = Flow(dte_jobs, outputs)
     return Response(replace=dte_flow)
 
+
 @job
-def anaddb_nlo(
-    prev_outputs: list[str]
-):
+def anaddb_nlo(prev_outputs: list[str]):
     """
     Analyzes the final DDB (anaddb) to retrieve the SHG tensor and the
     dielectric tensor.
     """
-    prev_output = prev_outputs + ''
+    prev_output = prev_outputs + ""

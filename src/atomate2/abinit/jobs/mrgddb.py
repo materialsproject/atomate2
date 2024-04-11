@@ -2,29 +2,23 @@
 
 from __future__ import annotations
 
-import itertools
 import logging
-import os
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import ClassVar, Sequence
+from pathlib import Path
+from typing import ClassVar
 
-from abipy.abio.inputs import AbinitInput
-from abipy.flowtk.utils import Directory
-from jobflow import Flow, Maker, Response, job
-from pymatgen.core.structure import Structure
+import jobflow
+from abipy.flowtk.events import AbinitCriticalWarning
+from jobflow import Maker, Response, job
 
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_mrgddb_input_set
-from atomate2.abinit.jobs.base import BaseAbinitMaker, setup_job
-from atomate2.abinit.powerups import update_user_abinit_settings
+from atomate2.abinit.jobs.base import setup_job
 from atomate2.abinit.run import run_mrgddb
-from atomate2.abinit.schemas.core import AbinitTaskDocument, Status
-from atomate2.abinit.schemas.mrgddb import MrgddbTaskDocument
-from atomate2.abinit.sets.mrgddb import (
-    MrgddbInputGenerator,
-    MrgddbSetGenerator,
-)
-from atomate2.abinit.utils.common import OUTDIR_NAME
+from atomate2.abinit.schemas.calculation import TaskState
+from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
+from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator, MrgddbSetGenerator
 from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -43,31 +37,30 @@ class MrgddbMaker(Maker):
     name : str
         The job name.
     """
-    
-    #_calc_type: str = "mrgddb_merge" #VT need to remove this because of the @property below
+
+    # _calc_type: str = "mrgddb_merge" #VT need to remove this because of the @property below
     # would have been okay in a child class with @dataclass
     name: str = "Merge DDB"
-    input_set_generator: MrgddbInputGenerator = field(default_factory=MrgddbSetGenerator)
-    #input_set_generator: MrgddbInputGenerator = MrgddbSetGenerator()
+    input_set_generator: MrgddbInputGenerator = field(
+        default_factory=MrgddbSetGenerator
+    )
+    # input_set_generator: MrgddbInputGenerator = MrgddbSetGenerator()
     wall_time: int | None = None
 
     # TODO: is there a critical events for this?
-    #CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
+    # CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
     # class variables
-    #CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
-    CRITICAL_EVENTS: ClassVar[Sequence[str]] = ()
+    # CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Process post-init configuration."""
-        self.critical_events = [
-            as_event_class(ce_name) for ce_name in self.CRITICAL_EVENTS
-        ]
+        self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
     def calc_type(self):
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
-
 
     @job
     def make(
@@ -107,20 +100,22 @@ class MrgddbMaker(Maker):
         )
 
         # Run mrgddb
-        run_status = run_mrgddb(
+        run_mrgddb(
             wall_time=config.wall_time,
             start_time=config.start_time,
         )
 
         # parse Mrgddb DDB output
-        run_number = config.history.run_number
-        task_doc = MrgddbTaskDocument.from_directory( # TODO: MrgddbTaskDocument ?
-            config.workdir,
-            critical_events=self.critical_events,
-            run_number=run_number,
-            run_status=run_status,
+        task_doc = MrgddbTaskDoc.from_directory(
+            Path.cwd(),
+            # **self.task_document_kwargs,
         )
         task_doc.task_label = self.name
+        if len(task_doc.event_report.filter_types(self.critical_events)) > 0:
+            task_doc = task_doc.model_copy(update={"state": TaskState.UNCONVERGED})
+            task_doc.calcs_reversed[-1] = task_doc.calcs_reversed[-1].model_copy(
+                update={"has_abinit_completed": TaskState.UNCONVERGED}
+            )  # optional I think
 
         return self.get_response(
             task_document=task_doc,
@@ -131,18 +126,18 @@ class MrgddbMaker(Maker):
 
     def get_response(
         self,
-        task_document: MrgddbTaskDocument, #TODO: MrgddbTaskDocument ?
+        task_document: MrgddbTaskDoc,
         history: JobHistory,
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
-    ):
+    ) -> Response:
         """Get new job to restart mrgddb calculation."""
-        if task_document.state == Status.SUCCESS:
+        if task_document.state == TaskState.SUCCESS:
             return Response(
                 output=task_document,
             )
 
-        #if history.run_number > max_restarts:
+        # if history.run_number > max_restarts:
         #    # TODO: check here if we should stop jobflow or children or
         #    #  if we should throw an error.
         #    unconverged_error = UnconvergedError(

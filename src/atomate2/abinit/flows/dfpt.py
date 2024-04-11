@@ -10,10 +10,7 @@ from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import StaticMaker
-
-# from atomate2.abinit.jobs.mrgddb import (
-#     MrgddbMaker,
-# )
+from atomate2.abinit.jobs.mrgddb import MrgddbMaker
 from atomate2.abinit.jobs.response import (
     DdeMaker,
     DdkMaker,
@@ -76,7 +73,7 @@ class DfptFlowMaker(Maker):
         default_factory=DdeMaker
     )  # | VT: replace by bool?
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
-    # mrgddb_maker: Maker | None = None #field(default_factory=MrgddbMaker)  # |
+    mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
     use_ddk_sym: bool | None = False
     use_dde_sym: bool | None = False
     dte_skip_permutations: bool | None = False
@@ -141,6 +138,9 @@ class DfptFlowMaker(Maker):
                 prev_outputs=static_job.output.dir_name,
                 structure=structure,
             )
+            ddk_calcs = update_factory_kwargs(
+                ddk_calcs, {"ddk_tol": 1.0e-4}
+            )  # VT to remove
             jobs.append(ddk_calcs)
 
         if self.dde_maker:
@@ -157,6 +157,9 @@ class DfptFlowMaker(Maker):
                 prev_outputs=[[static_job.output.dir_name], ddk_calcs.output["dirs"]],
                 structure=structure,
             )
+            dde_calcs = update_factory_kwargs(
+                dde_calcs, {"dde_tol": 1.0e-4}
+            )  # VT to remove
             jobs.append(dde_calcs)
 
         if self.dte_maker:
@@ -179,18 +182,19 @@ class DfptFlowMaker(Maker):
                 ],
                 structure=structure,
             )
+            # dte_calcs = dte_calcs.update_factory_kwargs({"dte_tol":1.0e-10}) #VT to remove
             jobs.append(dte_calcs)
 
-        # if self.mrgddb_maker:
-        #     #merge the DDE and DTE DDB.
+        if self.mrgddb_maker:
+            # merge the DDE and DTE DDB.
 
-        #     prev_outputs = [dde_calcs.output["dirs"], dte_calcs.output["dirs"]]
+            prev_outputs = [dde_calcs.output["dirs"], dte_calcs.output["dirs"]]
 
-        #     mrgddb_job = self.mrgddb_maker.make(
-        #         prev_outputs=prev_outputs,
-        #     )
+            mrgddb_job = self.mrgddb_maker.make(
+                prev_outputs=prev_outputs,
+            )
 
-        #     jobs.append(mrgddb_job)
+            jobs.append(mrgddb_job)
 
         # TODO: implement the possibility of other DFPT WFs (phonons,...)
         # if self.wfq_maker:
@@ -209,13 +213,13 @@ class DfptFlowMaker(Maker):
         ddk_maker = DdkMaker()
         dde_maker = DdeMaker()
         dte_maker = DteMaker()
-        # mrgddb_maker = MrgddbMaker()
+        mrgddb_maker = MrgddbMaker()
         return cls(
             name="Chi2 SHG",
             ddk_maker=ddk_maker,
             dde_maker=dde_maker,
             dte_maker=dte_maker,
-            # mrgddb_maker=mrgddb_maker,
+            mrgddb_maker=mrgddb_maker,
             use_ddk_sym=False,
             use_dde_sym=False,
             dte_skip_permutations=False,

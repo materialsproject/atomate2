@@ -1,4 +1,5 @@
 """Module defining response function Abinit input set generators."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -11,10 +12,7 @@ from abipy.abio.factories import (
 )
 from abipy.abio.input_tags import DDE, DDK, DTE, MOLECULAR_DYNAMICS, RELAX, SCF
 
-from atomate2.abinit.sets.core import (
-    NonSCFSetGenerator,
-    StaticSetGenerator,
-)
+from atomate2.abinit.sets.core import NonSCFSetGenerator, StaticSetGenerator
 
 __all__ = [
     "DdkSetGenerator",

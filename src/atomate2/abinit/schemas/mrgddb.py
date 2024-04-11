@@ -2,117 +2,273 @@
 
 import logging
 import os
-import numpy as np
+from datetime import datetime
 from pathlib import Path
-#from typing import Type, TypeVar, Union, Optional, List
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-from abipy.abilab import abiopen
-from abipy.abio.inputs import AbinitInput
+# from typing import Type, TypeVar, Union, Optional, List
+from typing import Any, Optional, TypeVar, Union
+
+from abipy.dfpt.ddb import DdbFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
-from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
-from atomate2.abinit.files import load_abinit_input
-from atomate2.abinit.utils.common import (
-    LOG_FILE_NAME,
-    MPIABORTFILE,
-    OUTPUT_FILE_NAME,
-    get_event_report,
-    get_final_structure,
-)
+from atomate2.abinit.schemas.calculation import AbinitObject, TaskState
+from atomate2.abinit.utils.common import get_event_report
+from atomate2.utils.path import get_uri, strip_hostname
 
-_T = TypeVar("_T", bound="MrgddbTaskDocument")
+_T = TypeVar("_T", bound="MrgddbTaskDoc")
 
 logger = logging.getLogger(__name__)
 
 
-class Status(ValueEnum):
-    """Abinit calculation state."""
-
-    # TODO: merge this somewhere with vasp => common calculation schema ?
-
-    SUCCESS = "successful"
-    UNCONVERGED = "unconverged"
-    FAILED = "failed"
-
-
-class JobMetadata(BaseModel):
-    """Definition of job metadata fields."""
-
-    dir_name: str = Field(None, description="The directory of this job.")
-    calc_type: str = Field(None, description="The type of calculation of this job.")
-
-
-class MrgddbTaskDocument(StructureMetadata):
-    """Definition of task document about an Mrgddb Job."""
-
-    state: Status = Field(None, description="State of this job.")
-    run_number: int = Field(None, description="Run number of this job.")
-    dir_name: str = Field(None, description="The directory of this job.")
-    event_report: events.EventReport = Field(
-        None, description="Event report of this mrgddb job."
+class CalculationOutput(BaseModel):
+    structure: Union[Structure] = Field(
+        None, description="The final structure from the calculation"
     )
-    task_label: str = Field(None, description="The label for this job/task.")
-    structure: Structure = Field(None, description="Final structure.")
-    dijk: Any = Field(None, description="Conventional SHG tensor in pm/V")
-    epsij: Any = Field(None, description="Dielectric tensor")
+    dijk: Optional[list] = Field(
+        None, description="Conventional SHG tensor in pm/V (Chi^(2)/2)"
+    )
+    epsinf: Optional[list] = Field(
+        None, description="Electronic contribution to the dielectric tensor"
+    )
 
     @classmethod
-    def from_directory(
-        cls: Type[_T],
-        dir_name: Union[Path, str],
-        source: str = "log",
-        critical_events=None,
-        run_number=1,
-        run_status=None,
-    ) -> _T:
-        """Build MrgddbTaskDocument from directory."""
-        # Files required for the job analysis.
-        # TODO: See if we can put the AbinitInputFile object here from
-        #  abipy.abivars.AbinitInputFile (currently not MSONable)
-        # input_file = File(os.path.join(dir_name, INPUT_FILE_NAME))
-        output_file = File(os.path.join(dir_name, OUTPUT_FILE_NAME))
-        log_file = File(os.path.join(dir_name, LOG_FILE_NAME))
-        mpiabort_file = File(os.path.join(dir_name, MPIABORTFILE))
-        ofile = {"output": output_file, "log": log_file}[source]
+    def from_abinit_outddb(
+        cls,
+        output: DdbFile,
+    ):
+        structure = output.structure
+
+        dijk = list(output.anaget_nlo(voigt=False, units="pm/V"))
+        epsinf = list(output.anaget_epsinf_and_becs()[0])
+
+        return cls(
+            structure=structure,
+            dijk=dijk,
+            epsinf=epsinf,
+        )
+
+
+class Calculation(BaseModel):
+    dir_name: str = Field(None, description="The directory for this Abinit calculation")
+    abinit_version: str = Field(
+        None, description="Abinit version used to perform the calculation"
+    )
+    has_abinit_completed: TaskState = Field(
+        None, description="Whether Abinit completed the calculation successfully"
+    )
+    output: Optional[CalculationOutput] = Field(
+        None, description="The Abinit calculation output"
+    )
+    completed_at: str = Field(
+        None, description="Timestamp for when the calculation was completed"
+    )
+    event_report: events.EventReport = Field(
+        None, description="Event report of this abinit job."
+    )
+    output_file_paths: Optional[dict[str, str]] = Field(
+        None,
+        description="Paths (relative to dir_name) of the Abinit output files "
+        "associated with this calculation",
+    )
+
+    @classmethod
+    def from_abinit_files(
+        cls,
+        dir_name: Path | str,
+        task_name: str,
+        abinit_outddb_file: Path | str = "out_DDB",
+        abinit_mrglog_file: Path | str = "run.log",
+    ):
+        dir_name = Path(dir_name)
+        abinit_outddb_file = dir_name / abinit_outddb_file
+
+        output_doc = None
+        if abinit_outddb_file.exists():
+            abinit_outddb = DdbFile.from_file(abinit_outddb_file)
+            output_doc = CalculationOutput.from_abinit_outddb(abinit_outddb)
+
+            completed_at = str(
+                datetime.fromtimestamp(os.stat(abinit_outddb_file).st_mtime)
+            )
 
         report = None
-        # TODO: How to detect which status it has here ?
-        #  UNCONVERGED would be for scf/nscf/relax when it's not yet converged
-        #  FAILED should be for a job that failed for other reasons.
-        #  What about a job that has been killed by the run_abinit (i.e. before
-        #  Slurm or PBS kills it) ?
-        state = Status.UNCONVERGED
-
+        has_abinit_completed = TaskState.FAILED
         try:
-            report = get_event_report(ofile=ofile, mpiabort_file=mpiabort_file)
-            critical_events_report = report.filter_types(critical_events)
-            if not critical_events_report:
-                state = Status.SUCCESS
+            report = get_event_report(
+                ofile=File(abinit_mrglog_file), mpiabort_file=File("whatever")
+            )
+            if report.run_completed or abinit_outddb_file.exists():
+                # VT: abinit_outddb_file should not be necessary but
+                # report.run_completed is False even when it completed...
+                has_abinit_completed = TaskState.SUCCESS
 
         except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
-        
-        out_DDB = str(os.path.join(dir_name, "outdata", "out_DDB"))
-        with abiopen(out_DDB) as abifile:
-            structure = abifile.structure
-            dijk = abifile.anaget_nlo(voigt=False)
-            epsij = abifile.anaget_epsinf_and_becs()[0]
 
-        doc = cls.from_structure(
-            meta_structure=structure,
-            include_structure=True,
-            dir_name=dir_name,
-            event_report=report,
-            state=state,
-            run_number=run_number,
-            structure=structure,
-            dijk=dijk,
-            epsij=epsij
+        return (
+            cls(
+                dir_name=str(dir_name),
+                task_name=task_name,
+                abinit_version=str(abinit_outddb.version),
+                has_abinit_completed=has_abinit_completed,
+                completed_at=completed_at,
+                output=output_doc,
+                event_report=report,
+            ),
+            None,  # abinit_objects,
         )
-        return doc
+
+
+class OutputDoc(BaseModel):
+    structure: Union[Structure] = Field(None, description="The output structure object")
+    dijk: Optional[list] = Field(
+        None, description="Conventional SHG tensor in pm/V (Chi^(2)/2)"
+    )
+    epsinf: Optional[list] = Field(
+        None, description="Electronic contribution to the dielectric tensor"
+    )
+
+    @classmethod
+    def from_abinit_calc_doc(cls, calc_doc: Calculation):
+        return cls(
+            structure=calc_doc.output.structure,
+            dijk=calc_doc.output.dijk,
+            epsinf=calc_doc.output.epsinf,
+        )
+
+
+class MrgddbTaskDoc(StructureMetadata):
+    """Definition of task document about an Mrgddb Job."""
+
+    dir_name: Optional[str] = Field(
+        None, description="The directory for this Abinit task"
+    )
+    completed_at: Optional[str] = Field(
+        None, description="Timestamp for when this task was completed"
+    )
+    output: Optional[OutputDoc] = Field(
+        None, description="The output of the final calculation"
+    )
+    structure: Union[Structure] = Field(
+        None, description="Final output atoms from the task"
+    )
+    state: Optional[TaskState] = Field(None, description="State of this task")
+    event_report: Optional[events.EventReport] = Field(
+        None, description="Event report of this abinit job."
+    )
+    included_objects: Optional[list[AbinitObject]] = Field(
+        None, description="List of Abinit objects included with this task document"
+    )
+    abinit_objects: Optional[dict[AbinitObject, Any]] = Field(
+        None, description="Abinit objects associated with this task"
+    )
+    task_label: Optional[str] = Field(None, description="A description of the task")
+    tags: Optional[list[str]] = Field(
+        None, description="Metadata tags for this task document"
+    )
+
+    @classmethod
+    def from_directory(
+        cls: type[_T],
+        dir_name: Path | str,
+        additional_fields: dict[str, Any] = None,
+        **abinit_calculation_kwargs,
+    ):
+        """Build MrgddbTaskDoc from directory."""
+        logger.info(f"Getting task doc in: {dir_name}")
+
+        if additional_fields is None:
+            additional_fields = {}
+
+        dir_name = Path(dir_name)
+        task_files = _find_abinit_files(dir_name)
+
+        if len(task_files) == 0:
+            raise FileNotFoundError("No Abinit files found!")
+
+        calcs_reversed = []
+        all_abinit_objects = []
+        for task_name, files in task_files.items():
+            calc_doc, abinit_objects = Calculation.from_abinit_files(
+                dir_name, task_name, **files, **abinit_calculation_kwargs
+            )
+            calcs_reversed.append(calc_doc)
+            all_abinit_objects.append(abinit_objects)
+
+        tags = additional_fields.get("tags")
+
+        dir_name = get_uri(dir_name)  # convert to full uri path
+        dir_name = strip_hostname(
+            dir_name
+        )  # VT: TODO to put here?necessary with laptop at least...
+
+        # only store objects from last calculation
+        # TODO: make this an option
+        abinit_objects = all_abinit_objects[-1]
+        included_objects = None
+        if abinit_objects:
+            included_objects = list(abinit_objects.keys())
+
+        # rewrite the original structure save!
+
+        if isinstance(calcs_reversed[-1].output.structure, Structure):
+            attr = "from_structure"
+            dat = {
+                "structure": calcs_reversed[-1].output.structure,
+                "meta_structure": calcs_reversed[-1].output.structure,
+                "include_structure": True,
+            }
+        doc = getattr(cls, attr)(**dat)
+        ddict = doc.dict()
+
+        data = {
+            "abinit_objects": abinit_objects,
+            "calcs_reversed": calcs_reversed,
+            "completed_at": calcs_reversed[-1].completed_at,
+            "dir_name": dir_name,
+            "event_report": calcs_reversed[-1].event_report,
+            "included_objects": included_objects,
+            # "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
+            "meta_structure": calcs_reversed[-1].output.structure,
+            "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
+            "state": calcs_reversed[-1].has_abinit_completed,
+            "structure": calcs_reversed[-1].output.structure,
+            "tags": tags,
+        }
+
+        doc = cls(**ddict)
+        doc = doc.model_copy(update=data)
+        return doc.model_copy(update=additional_fields, deep=True)
+
+
+def _find_abinit_files(
+    path: Path | str,
+) -> dict[str, Any]:
+    """Find Abinit files"""
+    path = Path(path)
+    task_files = {}
+
+    def _get_task_files(files: list[Path], suffix: str = "") -> dict:
+        abinit_files = {}
+        for file in files:
+            # Here we make assumptions about the output file naming
+            if file.match(f"*outdata/out_DDB{suffix}*"):
+                abinit_files["abinit_outddb_file"] = Path(file).relative_to(path)
+            elif file.match(f"*run.log{suffix}*"):
+                abinit_files["abinit_mrglog_file"] = Path(file).relative_to(path)
+
+        return abinit_files
+
+    # get any matching file from the root folder
+    standard_files = _get_task_files(
+        list(path.glob("*")) + list(path.glob("outdata/*"))
+    )
+    if len(standard_files) > 0:
+        task_files["standard"] = standard_files
+
+    return task_files
