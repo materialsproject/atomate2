@@ -11,8 +11,6 @@ from pymatgen.apps.borg.hive import AbstractDrone
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["VaspDrone"]
-
 
 class VaspDrone(AbstractDrone):
     """
@@ -24,7 +22,7 @@ class VaspDrone(AbstractDrone):
         Additional keyword args passed to :obj:`.TaskDoc.from_directory`.
     """
 
-    def __init__(self, **task_document_kwargs):
+    def __init__(self, **task_document_kwargs) -> None:
         self.task_document_kwargs = task_document_kwargs
 
     def assimilate(self, path: str | Path | None = None) -> TaskDoc:
@@ -41,15 +39,16 @@ class VaspDrone(AbstractDrone):
         TaskDoc
             A VASP task document.
         """
-        if path is None:
-            path = Path.cwd()
+        path = path or Path.cwd()
 
         try:
             doc = TaskDoc.from_directory(path, **self.task_document_kwargs)
         except Exception:
             import traceback
 
-            logger.error(f"Error in {Path(path).absolute()}\n{traceback.format_exc()}")
+            logger.exception(
+                f"Error in {Path(path).absolute()}\n{traceback.format_exc()}"
+            )
             raise
         return doc
 

@@ -3,19 +3,19 @@ name: testing
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    tags: ["v*"]
   pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.8"
+          python-version: "3.9"
           cache: pip
           cache-dependency-path: pyproject.toml
 
@@ -31,21 +31,33 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: pyproject.toml
+
 
       - name: Install dependencies
+        # ERROR: Cannot install atomate2 and atomate2[strict,tests]==0.0.1 because these package versions have conflicting dependencies.
+        # The conflict is caused by:
+        #   atomate2[strict,tests] 0.0.1 depends on pymatgen>=2023.10.4
+        #   atomate2[strict,tests] 0.0.1 depends on pymatgen==2023.10.4; extra == "strict"
+        # ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+        #   chgnet 0.2.1 depends on pymatgen>=2023.5.31
+        #   emmet-core 0.70.0 depends on pymatgen>=2023.10.11
         run: |
           python -m pip install --upgrade pip
-            pip install .[strict,tests]
+          mkdir -p ~/.abinit/pseudos
+          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
+          # ase needed to get FrechetCellFilter used by ML force fields
+          pip install git+https://gitlab.com/ase/ase
+          pip install .[strict,tests,abinit]
+          pip install torch-runstats
+          pip install --no-deps nequip
 
       - name: Test
         env:
@@ -62,9 +74,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
@@ -73,6 +85,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # ase needed to get FrechetCellFilter used by ML force fields
+          pip install git+https://gitlab.com/ase/ase
           pip install .[strict,docs]
 
       - name: Build

@@ -7,8 +7,6 @@ import os
 import socket
 from pathlib import Path
 
-__all__ = ["get_uri", "strip_hostname"]
-
 
 def get_uri(dir_name: str | Path) -> str:
     """
@@ -56,7 +54,9 @@ def strip_hostname(uri_path: str | Path) -> str:
     return dir_name
 
 
-def find_recent_logfile(dir_name: Path | str, logfile_extensions: str | list[str]):
+def find_recent_logfile(
+    dir_name: Path | str, logfile_extensions: str | list[str]
+) -> str:
     """
     Find the most recent logfile in a given directory.
 

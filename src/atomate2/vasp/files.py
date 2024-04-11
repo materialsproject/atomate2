@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_files
@@ -13,11 +13,11 @@ from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from pymatgen.core import Structure
 
     from atomate2.vasp.sets.base import VaspInputGenerator
-
-__all__ = ["copy_vasp_outputs", "get_largest_relax_extension"]
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def copy_vasp_outputs(
     contcar_to_poscar: bool = True,
     force_overwrite: bool | str = False,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy VASP output files to the current directory.
 
@@ -77,14 +77,14 @@ def copy_vasp_outputs(
     # find optional files; do not fail if KPOINTS is missing, this might be KSPACING
     # note: POTCAR files never have the relax extension, whereas KPOINTS files should
     optional_files = []
-    for file in ["POTCAR", "POTCAR.spec", "KPOINTS" + relax_ext]:
+    for file in ("POTCAR", "POTCAR.spec", "KPOINTS" + relax_ext):
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
             optional_files.append(found_file)
 
     # check at least one type of POTCAR file is included
     if len([f for f in optional_files if "POTCAR" in f.name]) == 0:
-        raise FileNotFoundError("Could not find POTCAR file to copy.")
+        raise FileNotFoundError(f"Could not find a POTCAR file in {src_dir!r} to copy")
 
     copy_files(
         src_dir,
@@ -148,7 +148,7 @@ def get_largest_relax_extension(
         return ""
 
     numbers = [re.search(r".relax(\d+)", file.name).group(1) for file in relax_files]
-    max_relax = max(numbers, key=lambda x: int(x))
+    max_relax = max(numbers, key=int)
     return f".relax{max_relax}"
 
 
@@ -161,7 +161,7 @@ def write_vasp_input_set(
     potcar_spec: bool = False,
     clean_prev: bool = True,
     **kwargs,
-):
+) -> None:
     """
     Write VASP input set.
 

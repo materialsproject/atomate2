@@ -12,8 +12,6 @@ from atomate2.cp2k.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["Cp2kDrone"]
-
 
 class Cp2kDrone(AbstractDrone):
     """
@@ -25,7 +23,7 @@ class Cp2kDrone(AbstractDrone):
         Additional keyword args passed to :obj:`.TaskDocument.from_directory`.
     """
 
-    def __init__(self, **task_document_kwargs):
+    def __init__(self, **task_document_kwargs) -> None:
         self.task_document_kwargs = task_document_kwargs
 
     def assimilate(self, path: str | Path | None = None) -> TaskDocument:
@@ -42,15 +40,16 @@ class Cp2kDrone(AbstractDrone):
         TaskDocument
             A CP2K task document.
         """
-        if path is None:
-            path = Path.cwd()
+        path = path or Path.cwd()
 
         try:
             doc = TaskDocument.from_directory(path, **self.task_document_kwargs)
         except Exception:
             import traceback
 
-            logger.error(f"Error in {Path(path).absolute()}\n{traceback.format_exc()}")
+            logger.exception(
+                f"Error in {Path(path).absolute()}\n{traceback.format_exc()}"
+            )
             raise
         return doc
 

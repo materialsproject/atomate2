@@ -1,14 +1,28 @@
 import pytest
+from emmet.core.tasks import TaskDoc
+from emmet.core.vasp.calculation import VaspObject
+from jobflow import run_locally
+from pymatgen.electronic_structure.bandstructure import (
+    BandStructure,
+    BandStructureSymmLine,
+)
+
+from atomate2.vasp.flows.core import (
+    BandStructureMaker,
+    DoubleRelaxMaker,
+    HSEBandStructureMaker,
+    HSELineModeBandStructureMaker,
+    HSEOpticsMaker,
+    HSEUniformBandStructureMaker,
+    LineModeBandStructureMaker,
+    OpticsMaker,
+    UniformBandStructureMaker,
+)
+from atomate2.vasp.jobs.core import RelaxMaker
+from atomate2.vasp.sets.core import RelaxSetGenerator
 
 
 def test_double_relax(mock_vasp, clean_dir, si_structure):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.core import DoubleRelaxMaker
-    from atomate2.vasp.jobs.core import RelaxMaker
-    from atomate2.vasp.sets.core import RelaxSetGenerator
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "relax 1": "Si_double_relax/relax_1",
@@ -75,15 +89,6 @@ def test_double_relax(mock_vasp, clean_dir, si_structure):
 
 
 def test_band_structure(mock_vasp, clean_dir, si_structure):
-    from emmet.core.vasp.calculation import VaspObject
-    from jobflow import run_locally
-    from pymatgen.electronic_structure.bandstructure import (
-        BandStructure,
-        BandStructureSymmLine,
-    )
-
-    from atomate2.vasp.flows.core import BandStructureMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "non-scf line": "Si_band_structure/non-scf_line",
@@ -128,12 +133,6 @@ def test_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_uniform_band_structure(mock_vasp, clean_dir, si_structure):
-    from emmet.core.vasp.calculation import VaspObject
-    from jobflow import run_locally
-    from pymatgen.electronic_structure.bandstructure import BandStructure
-
-    from atomate2.vasp.flows.core import UniformBandStructureMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "non-scf uniform": "Si_band_structure/non-scf_uniform",
@@ -171,12 +170,6 @@ def test_uniform_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
-    from emmet.core.vasp.calculation import VaspObject
-    from jobflow import run_locally
-    from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
-
-    from atomate2.vasp.flows.core import LineModeBandStructureMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "non-scf line": "Si_band_structure/non-scf_line",
@@ -210,15 +203,6 @@ def test_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
-    from emmet.core.vasp.calculation import VaspObject
-    from jobflow import run_locally
-    from pymatgen.electronic_structure.bandstructure import (
-        BandStructure,
-        BandStructureSymmLine,
-    )
-
-    from atomate2.vasp.flows.core import HSEBandStructureMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "hse band structure line": "Si_hse_band_structure/hse_band_structure_line",
@@ -265,12 +249,6 @@ def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_uniform_band_structure(mock_vasp, clean_dir, si_structure):
-    from emmet.core.vasp.calculation import VaspObject
-    from jobflow import run_locally
-    from pymatgen.electronic_structure.bandstructure import BandStructure
-
-    from atomate2.vasp.flows.core import HSEUniformBandStructureMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "hse band structure uniform": "Si_hse_band_structure/"
@@ -310,12 +288,6 @@ def test_hse_uniform_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
-    from emmet.core.vasp.calculation import VaspObject
-    from jobflow import run_locally
-    from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
-
-    from atomate2.vasp.flows.core import HSELineModeBandStructureMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "hse band structure line": "Si_hse_band_structure/hse_band_structure_line",
@@ -350,11 +322,6 @@ def test_hse_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
 
 
 def test_optics(mock_vasp, clean_dir, si_structure):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.core import OpticsMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {"optics": "Si_optics/optics", "static": "Si_optics/static"}
 
@@ -390,11 +357,6 @@ def test_optics(mock_vasp, clean_dir, si_structure):
 
 
 def test_hse_optics(mock_vasp, clean_dir, si_structure):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-
-    from atomate2.vasp.flows.core import HSEOpticsMaker
-
     # mapping from job name to directory containing test files
     ref_paths = {
         "hse optics": "Si_hse_optics/hse_optics",

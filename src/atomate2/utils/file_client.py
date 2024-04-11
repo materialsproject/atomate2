@@ -1,8 +1,9 @@
 """Tools for remote file IO using paramiko."""
 
-
 from __future__ import annotations
 
+import errno
+import os
 import shutil
 import stat
 import warnings
@@ -10,13 +11,14 @@ from functools import wraps
 from glob import glob
 from gzip import GzipFile
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
 
-__all__ = ["FileClient", "auto_fileclient"]
+if TYPE_CHECKING:
+    from types import TracebackType
 
 
 class FileClient:
@@ -43,13 +45,13 @@ class FileClient:
         self,
         key_filename: str | Path = "~/.ssh/id_rsa",
         config_filename: str | Path = "~/.ssh/config",
-    ):
+    ) -> None:
         self.key_filename = key_filename
         self.config_filename = config_filename
 
         self.connections: dict[str, dict[str, Any]] = {}
 
-    def connect(self, host: str):
+    def connect(self, host: str) -> None:
         """
         Connect to a remote host.
 
@@ -138,9 +140,9 @@ class FileClient:
         path = str(self.abspath(path, host=host))
         try:
             self.get_sftp(host).stat(path)
-            return True
         except FileNotFoundError:
             return False
+        return True
 
     def is_file(self, path: str | Path, host: str | None = None) -> bool:
         """
@@ -219,7 +221,7 @@ class FileClient:
         dest_filename: str | Path,
         src_host: str | None = None,
         dest_host: str | None = None,
-    ):
+    ) -> None:
         """
         Copy a file from source to destination.
 
@@ -259,7 +261,31 @@ class FileClient:
                 "Copying between two different remote hosts is not supported."
             )
 
-    def remove(self, path: str | Path, host: str | None = None):
+    def link(
+        self,
+        src_filename: str | Path,
+        dest_filename: str | Path,
+    ) -> None:
+        """
+        Link a file from source to destination.
+
+        Parameters
+        ----------
+        src_filename : str or Path
+            Full path to source file.
+        dest_filename : str or Path
+            Full path to destination file.
+        """
+        try:
+            os.symlink(src_filename, dest_filename)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                os.remove(dest_filename)
+                os.symlink(src_filename, dest_filename)
+            else:
+                raise
+
+    def remove(self, path: str | Path, host: str | None = None) -> None:
         """
         Remove a file (does not work on directories).
 
@@ -281,7 +307,7 @@ class FileClient:
         old_path: str | Path,
         new_path: str | Path,
         host: str | None = None,
-    ):
+    ) -> None:
         """
         Rename (move) a file.
 
@@ -354,7 +380,7 @@ class FileClient:
         host: str | None = None,
         compresslevel: int = 6,
         force: bool | str = False,
-    ):
+    ) -> None:
         """
         Gzip a file.
 
@@ -402,22 +428,23 @@ class FileClient:
                 )
 
         if host is None:
-            with open(path, "rb") as f_in, GzipFile(
-                path_gz, "wb", compresslevel=compresslevel
-            ) as f_out:
+            with (
+                open(path, "rb") as f_in,
+                GzipFile(path_gz, "wb", compresslevel=compresslevel) as f_out,
+            ):
                 shutil.copyfileobj(f_in, f_out)
             shutil.copystat(path, path_gz)
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gzip -f {path!s}")
+            _, _stdout, _ = ssh.exec_command(f"gzip -f {path!s}")
 
     def gunzip(
         self,
         path: str | Path,
         host: str | None = None,
         force: bool | str = False,
-    ):
+    ) -> None:
         """
         Ungzip a file.
 
@@ -464,20 +491,25 @@ class FileClient:
             path.unlink()
         else:
             ssh = self.get_ssh(host)
-            _, stdout, _ = ssh.exec_command(f"gunzip -f {path!s}")
+            _stdin, _stdout, _stderr = ssh.exec_command(f"gunzip -f {path!s}")
 
-    def close(self):
+    def close(self) -> None:
         """Close all connections."""
         for connection in self.connections.values():
             connection["ssh"].close()
             connection["sftp"].close()
         self.connections = {}
 
-    def __enter__(self):
+    def __enter__(self) -> FileClient:  # noqa: PYI034
         """Support for "with" context."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Support for "with" context."""
         self.close()
 
@@ -533,7 +565,7 @@ def get_ssh_connection(
     return client
 
 
-def auto_fileclient(method: Callable | None = None):
+def auto_fileclient(method: Callable | None = None) -> Callable:
     """
     Automatically pass a FileClient to the function if not already present in kwargs.
 
@@ -549,9 +581,9 @@ def auto_fileclient(method: Callable | None = None):
         by the decorator.
     """
 
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def gen_fileclient(*args, **kwargs):
+        def gen_fileclient(*args, **kwargs) -> Any:
             file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:

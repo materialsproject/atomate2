@@ -7,7 +7,7 @@
 Once you have a working installation of atomate2, you'll want to jump in and start
 running workflows. Atomate2 includes many workflows with reasonable settings that can
 get you started. This tutorial will quickly guide you through customizing and running a
-workflow to calculate the bandstructure of MgO.
+workflow to calculate the band structure of MgO.
 
 ### Objectives
 
@@ -16,7 +16,7 @@ workflow to calculate the bandstructure of MgO.
 
 ### Prerequisites
 
-In order for you to complete this tutorial you need
+For you to complete this tutorial you need
 
 * A working installation of atomate2.
 
@@ -60,7 +60,7 @@ workflow.
 
 Create a Python script named `mgo_bandstructure.py` with the following contents:
 
-```python
+```py
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -116,7 +116,7 @@ results will be in your database.
 Finally, we'll plot the results that we calculated. Simply run the following Python
 code, either as a script or on the Python prompt.
 
-```python
+```py
 from jobflow import SETTINGS
 from pymatgen.electronic_structure.plotter import DosPlotter, BSPlotter
 from pymatgen.electronic_structure.dos import CompleteDos
@@ -136,7 +136,7 @@ dos = CompleteDos.from_dict(result["output"]["vasp_objects"]["dos"])
 # plot the DOS
 dos_plotter = DosPlotter()
 dos_plotter.add_dos_dict(dos.get_element_dos())
-dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10), img_format="pdf")
+dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10))
 
 # get the line mode bandstructure from the database
 result = store.query_one(
@@ -150,7 +150,7 @@ bandstructure = BandStructureSymmLine.from_dict(
 
 # plot the line mode band structure
 bs_plotter = BSPlotter(bandstructure)
-bs_plotter.save_plot("MgO-bandstructure.pdf", img_format="pdf")
+bs_plotter.save_plot("MgO-bandstructure.pdf")
 ```
 
 If you open the saved figures, you should see a plot of your DOS and bandstructure!

@@ -1,25 +1,29 @@
-def test_CCDDocument(vasp_test_dir):
+from collections import defaultdict
+
+from emmet.core.tasks import TaskDoc
+
+from atomate2.common.schemas.defects import CCDDocument
+
+
+def test_ccd_document(vasp_test_dir):
     """
     Test the CCDDocument schema, this test needs to be placed here
     since we are using the VASP TaskDocuments for testing.
     """
-    from collections import defaultdict
-
-    from emmet.core.tasks import TaskDoc
-
-    from atomate2.common.schemas.defects import CCDDocument
 
     def is_strict_minimum(min_index, arr):
         min_val = arr[min_index]
-        return all(not (i != min_index and val < min_val) for i, val in enumerate(arr))
+        return all(
+            not (idx != min_index and val < min_val) for idx, val in enumerate(arr)
+        )
 
     static_tasks1: list[TaskDoc] = []
     static_tasks2: list[TaskDoc] = []
     static_dirs1: list[str] = []
     static_dirs2: list[str] = []
-    for i in range(5):
-        sdir1 = vasp_test_dir / "Si_config_coord" / f"static_q1_{i}" / "outputs"
-        sdir2 = vasp_test_dir / "Si_config_coord" / f"static_q2_{i}" / "outputs"
+    for idx in range(5):
+        sdir1 = vasp_test_dir / "Si_config_coord" / f"static_q1_{idx}" / "outputs"
+        sdir2 = vasp_test_dir / "Si_config_coord" / f"static_q2_{idx}" / "outputs"
         static_tasks1.append(TaskDoc.from_directory(sdir1))
         static_tasks2.append(TaskDoc.from_directory(sdir2))
         static_dirs1.append(str(sdir1))
@@ -34,26 +38,24 @@ def test_CCDDocument(vasp_test_dir):
         for task, sdir in zip(static_tasks2, static_dirs2)
     ]
 
-    inputdict = defaultdict(list)
+    input_dict = defaultdict(list)
 
     for s, e, sdir in inputs1:
-        inputdict["structures1"].append(s)
-        inputdict["energies1"].append(e)
-        inputdict["static_dirs1"].append(sdir)
-        inputdict["static_uuids1"].append(sdir)
+        input_dict["structures1"].append(s)
+        input_dict["energies1"].append(e)
+        input_dict["static_dirs1"].append(sdir)
+        input_dict["static_uuids1"].append(sdir)
 
     for s, e, sdir in inputs2:
-        inputdict["structures2"].append(s)
-        inputdict["energies2"].append(e)
-        inputdict["static_dirs2"].append(sdir)
-        inputdict["static_uuids2"].append(sdir)
+        input_dict["structures2"].append(s)
+        input_dict["energies2"].append(e)
+        input_dict["static_dirs2"].append(sdir)
+        input_dict["static_uuids2"].append(sdir)
 
-    inputdict["relaxed_uuid1"] = static_dirs1[2]
-    inputdict["relaxed_uuid2"] = static_dirs2[2]
+    input_dict["relaxed_uuid1"] = static_dirs1[2]
+    input_dict["relaxed_uuid2"] = static_dirs2[2]
 
-    ccd_doc = CCDDocument.from_task_outputs(
-        **inputdict,
-    )
+    ccd_doc = CCDDocument.from_task_outputs(**input_dict)
 
     # create the CCD document
     # ccd_doc = CCDDocument.from_struct_en(static_tasks1, static_tasks2, s0, s1)

@@ -14,8 +14,6 @@ from atomate2.amset.files import copy_amset_files, write_amset_settings
 from atomate2.amset.run import check_converged, run_amset
 from atomate2.amset.schemas import AmsetTaskDocument
 
-__all__ = ["AmsetMaker"]
-
 logger = logging.getLogger(__name__)
 
 
@@ -44,11 +42,11 @@ class AmsetMaker(Maker):
     def make(
         self,
         settings: dict,
-        prev_amset_dir: str | Path = None,
+        prev_dir: str | Path = None,
         wavefunction_dir: str | Path = None,
         deformation_dir: str | Path = None,
         bandstructure_dir: str | Path = None,
-    ):
+    ) -> Response:
         """
         Run an AMSET calculation.
 
@@ -56,7 +54,7 @@ class AmsetMaker(Maker):
         ----------
         settings : dict
             Amset settings.
-        prev_amset_dir : str or Path
+        prev_dir : str or Path
             A previous AMSET calculation directory to copy output files from. The
             previous directory is also used to check for transport convergence.
         wavefunction_dir : str or Path
@@ -68,14 +66,12 @@ class AmsetMaker(Maker):
             band_structure_data.json).
         """
         # copy previous inputs
-        from_prev = prev_amset_dir is not None
-        if prev_amset_dir is not None:
-            copy_amset_files(prev_amset_dir)
+        from_prev = prev_dir is not None
+        if prev_dir is not None:
+            copy_amset_files(prev_dir)
         else:
             if bandstructure_dir is None:
-                raise ValueError(
-                    "Either prev_amset_dir or bandstructure_dir must be set"
-                )
+                raise ValueError("Either prev_dir or bandstructure_dir must be set")
 
             copy_amset_files(bandstructure_dir)
 
@@ -118,7 +114,7 @@ class AmsetMaker(Maker):
         if self.resubmit and not converged:
             replace = self.make(
                 {"interpolation_factor": settings.get("interpolation_factor", 10) + 5},
-                prev_amset_dir=task_doc.dir_name,
+                prev_dir=task_doc.dir_name,
             )
 
         return Response(output=task_doc, replace=replace)

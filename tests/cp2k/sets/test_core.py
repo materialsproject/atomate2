@@ -13,18 +13,18 @@ def test_input_generators(si_structure, basis_and_potential):
         StaticSetGenerator,
     )
 
-    for gen in [
+    for gen in (
         StaticSetGenerator(user_input_settings=basis_and_potential),
         HybridStaticSetGenerator(user_input_settings=basis_and_potential),
-    ]:
+    ):
         input_set = gen.get_input_set(si_structure)
         assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "ENERGY_FORCE"
         assert input_set.cp2k_input.check("FORCE_EVAL/DFT/KPOINTS")
 
-    for gen in [
+    for gen in (
         RelaxSetGenerator(user_input_settings=basis_and_potential),
         HybridRelaxSetGenerator(user_input_settings=basis_and_potential),
-    ]:
+    ):
         input_set = gen.get_input_set(si_structure)
         assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "GEO_OPT"
         assert input_set.cp2k_input.get("MOTION")
@@ -32,10 +32,10 @@ def test_input_generators(si_structure, basis_and_potential):
             0
         ] == pytest.approx(0.1)
 
-    for gen in [
+    for gen in (
         CellOptSetGenerator(user_input_settings=basis_and_potential),
         HybridCellOptSetGenerator(user_input_settings=basis_and_potential),
-    ]:
+    ):
         input_set = gen.get_input_set(si_structure)
         assert input_set.cp2k_input["GLOBAL"]["RUN_TYPE"].values[0] == "CELL_OPT"
 

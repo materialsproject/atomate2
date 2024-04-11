@@ -12,12 +12,13 @@ import logging
 import shlex
 import subprocess
 from os.path import expandvars
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
+    KspacingMetalHandler,
     LargeSigmaHandler,
     MeshSymmetryErrorHandler,
     NonConvergingErrorHandler,
@@ -35,17 +36,13 @@ from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from custodian.custodian import ErrorHandler, Validator
     from emmet.core.tasks import TaskDoc
 
 
-__all__ = [
-    "JobType",
-    "run_vasp",
-    "should_stop_children",
-]
-
-_DEFAULT_HANDLERS = (
+DEFAULT_HANDLERS = (
     VaspErrorHandler(),
     MeshSymmetryErrorHandler(),
     UnconvergedErrorHandler(),
@@ -56,6 +53,7 @@ _DEFAULT_HANDLERS = (
     StdErrHandler(),
     LargeSigmaHandler(),
     IncorrectSmearingHandler(),
+    KspacingMetalHandler(),
 )
 _DEFAULT_VALIDATORS = (VasprunXMLValidator(), VaspFilesValidator())
 
@@ -70,7 +68,7 @@ class JobType(ValueEnum):
     - ``NORMAL``: Normal custodian :obj:`.VaspJob`.
     - ``DOUBLE_RELAXATION``: Custodian double relaxation run from
       :obj:`.VaspJob.double_relaxation_run`.
-    - ``METAGGA_OPT``: Custodian metagga optimization run from
+    - ``METAGGA_OPT``: Custodian meta-GGA optimization run from
       :obj:`.VaspJob.metagga_opt_run`.
     - ``FULL_OPT``: Custodian full optimization run from
       :obj:`.VaspJob.full_opt_run`.
@@ -89,12 +87,12 @@ def run_vasp(
     vasp_gamma_cmd: str = SETTINGS.VASP_GAMMA_CMD,
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
-    handlers: Sequence[ErrorHandler] = _DEFAULT_HANDLERS,
+    handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
-):
+) -> None:
     """
     Run VASP.
 
@@ -124,8 +122,8 @@ def run_vasp(
     custodian_kwargs : dict
         Keyword arguments that are passed to :obj:`.Custodian`.
     """
-    vasp_job_kwargs = {} if vasp_job_kwargs is None else vasp_job_kwargs
-    custodian_kwargs = {} if custodian_kwargs is None else custodian_kwargs
+    vasp_job_kwargs = vasp_job_kwargs or {}
+    custodian_kwargs = custodian_kwargs or {}
 
     vasp_cmd = expandvars(vasp_cmd)
     vasp_gamma_cmd = expandvars(vasp_gamma_cmd)
@@ -134,11 +132,11 @@ def run_vasp(
 
     vasp_job_kwargs.setdefault("auto_npar", False)
 
-    vasp_job_kwargs.update({"gamma_vasp_cmd": split_vasp_gamma_cmd})
+    vasp_job_kwargs.update(gamma_vasp_cmd=split_vasp_gamma_cmd)
 
     if job_type == JobType.DIRECT:
         logger.info(f"Running command: {vasp_cmd}")
-        return_code = subprocess.call(vasp_cmd, shell=True)
+        return_code = subprocess.call(vasp_cmd, shell=True)  # noqa: S602
         logger.info(f"{vasp_cmd} finished running with returncode: {return_code}")
         return
 
@@ -151,12 +149,12 @@ def run_vasp(
     elif job_type == JobType.FULL_OPT:
         jobs = VaspJob.full_opt_run(split_vasp_cmd, **vasp_job_kwargs)
     else:
-        raise ValueError(f"Unsupported job type: {job_type}")
+        raise ValueError(f"Unsupported {job_type=}")
 
     if wall_time is not None:
         handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
 
-    c = Custodian(
+    custodian_manager = Custodian(
         handlers,
         jobs,
         validators=validators,
@@ -166,7 +164,7 @@ def run_vasp(
     )
 
     logger.info("Running VASP using custodian.")
-    c.run()
+    custodian_manager.run()
 
 
 def should_stop_children(
@@ -205,4 +203,4 @@ def should_stop_children(
             "limit of electronic/ionic iterations)!"
         )
 
-    raise RuntimeError(f"Unknown option for defuse_unsuccessful: {handle_unsuccessful}")
+    raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")
