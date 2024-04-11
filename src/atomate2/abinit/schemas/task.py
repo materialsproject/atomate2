@@ -13,6 +13,7 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from pymatgen.io.abinit.pseudos import AbinitPseudo
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
@@ -37,6 +38,9 @@ class InputDoc(BaseModel):
     abinit_input: AbinitInput = Field(
         None, description="AbinitInput used to perform calculation."
     )
+    pseudopotentials: list[AbinitPseudo] = Field(
+        None, description="List of the AbinitPseudo used to perform calculation."
+    )
     xc: str = Field(
         None, description="Exchange-correlation functional used if not the default"
     )
@@ -59,6 +63,7 @@ class InputDoc(BaseModel):
         return cls(
             structure=abinit_input.structure,
             abinit_input=abinit_input,
+            pseudopotentials=abinit_input.pseudos,
             xc=str(abinit_input.pseudos[0].xc.name),
         )
 

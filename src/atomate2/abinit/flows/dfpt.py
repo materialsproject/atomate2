@@ -142,7 +142,6 @@ class DfptFlowMaker(Maker):
             ddk_calcs = run_ddk_rf(
                 perturbations=ddk_perts.output,
                 prev_outputs=static_job.output.dir_name,
-                structure=structure,
             )
             ddk_calcs = update_factory_kwargs(
                 ddk_calcs, {"ddk_tol": 1.0e-4}
@@ -161,7 +160,6 @@ class DfptFlowMaker(Maker):
             dde_calcs = run_dde_rf(
                 perturbations=dde_perts.output,
                 prev_outputs=[[static_job.output.dir_name], ddk_calcs.output["dirs"]],
-                structure=structure,
             )
             dde_calcs = update_factory_kwargs(
                 dde_calcs, {"dde_tol": 1.0e-4}
@@ -186,7 +184,6 @@ class DfptFlowMaker(Maker):
                     # ddk_calcs.output["dirs"], #not sure this is needed
                     dde_calcs.output["dirs"],
                 ],
-                structure=structure,
             )
             jobs.append(dte_calcs)
 

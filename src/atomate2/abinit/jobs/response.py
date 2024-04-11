@@ -296,7 +296,7 @@ def generate_dte_perts(
 @job
 def run_ddk_rf(
     perturbations: list[dict],
-    ddk_maker: DdkMaker | None,
+    ddk_maker: DdkMaker | None = None,
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -339,7 +339,7 @@ def run_ddk_rf(
 @job
 def run_dde_rf(
     perturbations: list[dict],
-    dde_maker: DdeMaker | None,
+    dde_maker: DdeMaker | None = None,
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -389,7 +389,7 @@ def run_dde_rf(
 @job
 def run_dte_rf(
     perturbations: list[dict],
-    dte_maker: DteMaker | None,
+    dte_maker: DteMaker | None = None,
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
