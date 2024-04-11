@@ -4,28 +4,32 @@ from __future__ import annotations
 
 import itertools
 import logging
-from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from abipy.abio.inputs import AbinitInput
 from abipy.flowtk.events import (
     AbinitCriticalWarning,
     NscfConvergenceWarning,
     ScfConvergenceWarning,
 )
-from jobflow import Flow, Response, job
-from pymatgen.core.structure import Structure
+from jobflow import Flow, Job, Response, job
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.powerups import update_user_abinit_settings
-from atomate2.abinit.sets.base import AbinitInputGenerator
 from atomate2.abinit.sets.response import (
     DdeSetGenerator,
     DdkSetGenerator,
     DteSetGenerator,
 )
-from atomate2.abinit.utils.history import JobHistory
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from abipy.abio.inputs import AbinitInput
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.sets.base import AbinitInputGenerator
+    from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +72,7 @@ class DdkMaker(BaseAbinitMaker):
         restart_from: str | list[str] | None = None,
         history: JobHistory | None = None,
         perturbation: dict | None = None,
-    ):
+    ) -> Job:
         """
         Run a DDK ABINIT job.
 
@@ -117,7 +121,7 @@ class DdeMaker(BaseAbinitMaker):
         restart_from: str | list[str] | None = None,
         history: JobHistory | None = None,
         perturbation: dict | None = None,
-    ):
+    ) -> Job:
         """
         Run a DDE ABINIT job.
 
@@ -166,7 +170,7 @@ class DteMaker(BaseAbinitMaker):
         restart_from: str | list[str] | None = None,
         history: JobHistory | None = None,
         perturbation: dict | None = None,
-    ):
+    ) -> Job:
         """
         Run a DTE ABINIT job.
 
@@ -191,11 +195,11 @@ class DteMaker(BaseAbinitMaker):
 
 @job
 def generate_ddk_perts(
-    gsinput: AbinitInput = field(default_factory=AbinitInput),
+    gsinput: AbinitInput,
     # TODO: or gsinput via prev_outputs?
     use_symmetries: bool | None = False,
     qpt: list | None = None,
-):
+) -> list[dict[str, int]]:
     """
     Generate the perturbations for the DDK calculations.
 
@@ -219,10 +223,10 @@ def generate_ddk_perts(
 
 @job
 def generate_dde_perts(
-    gsinput: AbinitInput = field(default_factory=AbinitInput),
+    gsinput: AbinitInput,
     # TODO: or gsinput via prev_outputs?
     use_symmetries: bool | None = False,
-):
+) -> list[dict[str, int]]:
     """
     Generate the perturbations for the DDE calculations.
 
@@ -243,12 +247,12 @@ def generate_dde_perts(
 
 @job
 def generate_dte_perts(
-    gsinput: AbinitInput = field(default_factory=AbinitInput),
+    gsinput: AbinitInput,
     # TODO: or gsinput via prev_outputs?
     skip_permutations: bool | None = False,
     phonon_pert: bool | None = False,
     ixc: int | None = None,
-):
+) -> list[dict[str, int]]:
     """
     Generate the perturbations for the DTE calculations.
 
@@ -292,11 +296,9 @@ def generate_dte_perts(
 @job
 def run_ddk_rf(
     perturbations: list[dict],
-    ddk_maker: BaseAbinitMaker
-    | None = DdkMaker(),  # field(default_factory=DdkMaker), removed because "'Field' object has no attribute 'make'"
+    ddk_maker: DdkMaker | None,
     prev_outputs: list[str] | None = None,
-    structure: Structure | None = None,
-):
+) -> Flow:
     """
     Run the DDK calculations.
 
@@ -337,10 +339,9 @@ def run_ddk_rf(
 @job
 def run_dde_rf(
     perturbations: list[dict],
-    dde_maker: BaseAbinitMaker | None = DdeMaker(),  # field(default_factory=DdeMaker),
+    dde_maker: DdeMaker | None,
     prev_outputs: list[str] | None = None,
-    structure: Structure | None = None,
-):
+) -> Flow:
     """
     Run the DDE calculations.
 
@@ -388,10 +389,9 @@ def run_dde_rf(
 @job
 def run_dte_rf(
     perturbations: list[dict],
-    dte_maker: BaseAbinitMaker | None = DteMaker(),  # field(default_factory=DteMaker),
+    dte_maker: DteMaker | None,
     prev_outputs: list[str] | None = None,
-    structure: Structure | None = None,
-):
+) -> Flow:
     """
     Run the DTE calculations.
 
@@ -425,12 +425,3 @@ def run_dte_rf(
 
     dte_flow = Flow(dte_jobs, outputs)
     return Response(replace=dte_flow)
-
-
-@job
-def anaddb_nlo(prev_outputs: list[str]):
-    """
-    Analyzes the final DDB (anaddb) to retrieve the SHG tensor and the
-    dielectric tensor.
-    """
-    prev_output = prev_outputs + ""

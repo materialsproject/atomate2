@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 import jobflow
-from abipy.flowtk.events import AbinitCriticalWarning
 from jobflow import Maker, Response, job
 
 from atomate2 import SETTINGS
@@ -19,7 +17,13 @@ from atomate2.abinit.run import run_mrgddb
 from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
 from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator, MrgddbSetGenerator
-from atomate2.abinit.utils.history import JobHistory
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from abipy.flowtk.events import AbinitCriticalWarning
+
+    from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +42,8 @@ class MrgddbMaker(Maker):
         The job name.
     """
 
-    # _calc_type: str = "mrgddb_merge" #VT need to remove this because of the @property below
+    # VT need to remove the following because of the @property below
+    # _calc_type: str = "mrgddb_merge"
     # would have been okay in a child class with @dataclass
     name: str = "Merge DDB"
     input_set_generator: MrgddbInputGenerator = field(
@@ -58,14 +63,14 @@ class MrgddbMaker(Maker):
         self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
-    def calc_type(self):
+    def calc_type(self) -> str:
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
     @job
     def make(
         self,
-        prev_outputs: str | Path | list[str] | None = None,
+        prev_outputs: list[str] | None = None,
         restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
     ) -> jobflow.Flow | jobflow.Job:

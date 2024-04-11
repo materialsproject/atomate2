@@ -121,12 +121,13 @@ class AbinitInputSet(InputSet):
             if ext is None:
                 return False
             # Need to consider irdddk to read 1WF files
-            if ext == "1WF":  # VT
-                if "ird1wf" in self.abinit_input or "irdddk" in self.abinit_input:  # VT
-                    return (
-                        self.abinit_input["ird1wf"] == 1
-                        or self.abinit_input["irdddk"] == 1
-                    )  # VT
+            # VT
+            if ext == "1WF" and (
+                "ird1wf" in self.abinit_input or "irdddk" in self.abinit_input
+            ):
+                return (
+                    self.abinit_input["ird1wf"] == 1 or self.abinit_input["irdddk"] == 1
+                )  # VT
             irdvars = irdvars_for_ext(ext)
             for irdvar, irdval in irdvars.items():
                 if irdvar not in self.abinit_input:

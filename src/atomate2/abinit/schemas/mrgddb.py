@@ -1,12 +1,14 @@
 """Core definitions of Abinit calculations documents."""
 
+from __future__ import annotations
+
 import logging
 import os
 from datetime import datetime
 from pathlib import Path
 
 # from typing import Type, TypeVar, Union, Optional, List
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, Union
 
 from abipy.dfpt.ddb import DdbFile
 from abipy.flowtk import events
@@ -19,12 +21,22 @@ from atomate2.abinit.schemas.calculation import AbinitObject, TaskState
 from atomate2.abinit.utils.common import get_event_report
 from atomate2.utils.path import get_uri, strip_hostname
 
-_T = TypeVar("_T", bound="MrgddbTaskDoc")
-
 logger = logging.getLogger(__name__)
 
 
 class CalculationOutput(BaseModel):
+    """Document defining Mrgddb calculation outputs.
+
+    Parameters
+    ----------
+    structure: Structure
+        The final pymatgen Structure of the system
+    dijk: list (3x3x3)
+        The conventional static SHG tensor in pm/V (Chi^(2)/2)
+    epsinf: list (3x3)
+        The electronic contribution to the dielectric tensor
+    """
+
     structure: Union[Structure] = Field(
         None, description="The final structure from the calculation"
     )
@@ -39,9 +51,20 @@ class CalculationOutput(BaseModel):
     def from_abinit_outddb(
         cls,
         output: DdbFile,
-    ):
-        structure = output.structure
+    ) -> CalculationOutput:
+        """
+        Create an Mrgddb output document from the merged Abinit out_DDB file.
 
+        Parameters
+        ----------
+        output: .DdbFile
+            A DdbFile object.
+
+        Returns
+        -------
+        The Mrgddb calculation output document.
+        """
+        structure = output.structure
         dijk = list(output.anaget_nlo(voigt=False, units="pm/V"))
         epsinf = list(output.anaget_epsinf_and_becs()[0])
 
@@ -53,11 +76,30 @@ class CalculationOutput(BaseModel):
 
 
 class Calculation(BaseModel):
+    """Full Mrgddb calculation (inputs) and outputs.
+
+    Parameters
+    ----------
+    dir_name: str
+        The directory for this Mrgddb calculation
+    ddb_version: str
+        DDB version
+    has_mrgddb_completed: .TaskState
+        Whether Mrgddb completed the merge successfully
+    output: .CalculationOutput
+        The Mrgddb calculation output
+    completed_at: str
+        Timestamp for when the merge was completed
+    output_file_paths: Dict[str, str]
+        Paths (relative to dir_name) of the Mrgddb output files
+        associated with this calculation
+    """
+
     dir_name: str = Field(None, description="The directory for this Abinit calculation")
-    abinit_version: str = Field(
+    ddb_version: str = Field(
         None, description="Abinit version used to perform the calculation"
     )
-    has_abinit_completed: TaskState = Field(
+    has_mrgddb_completed: TaskState = Field(
         None, description="Whether Abinit completed the calculation successfully"
     )
     output: Optional[CalculationOutput] = Field(
@@ -82,7 +124,26 @@ class Calculation(BaseModel):
         task_name: str,
         abinit_outddb_file: Path | str = "out_DDB",
         abinit_mrglog_file: Path | str = "run.log",
-    ):
+    ) -> tuple[Calculation, dict[AbinitObject, dict]]:
+        """
+        Create a Mrgddb calculation document from a directory and file paths.
+
+        Parameters
+        ----------
+        dir_name: Path or str
+            The directory containing the calculation outputs.
+        task_name: str
+            The task name.
+        abinit_outddb_file: Path or str
+            Path to the merged DDB file, relative to dir_name.
+        abinit_mrglog_file: Path or str
+            Path to the main log of mrgddb job, relative to dir_name.
+
+        Returns
+        -------
+        .Calculation
+            A Mrgddb calculation document.
+        """
         dir_name = Path(dir_name)
         abinit_outddb_file = dir_name / abinit_outddb_file
 
@@ -96,7 +157,7 @@ class Calculation(BaseModel):
             )
 
         report = None
-        has_abinit_completed = TaskState.FAILED
+        has_mrgddb_completed = TaskState.FAILED
         try:
             report = get_event_report(
                 ofile=File(abinit_mrglog_file), mpiabort_file=File("whatever")
@@ -104,7 +165,7 @@ class Calculation(BaseModel):
             if report.run_completed or abinit_outddb_file.exists():
                 # VT: abinit_outddb_file should not be necessary but
                 # report.run_completed is False even when it completed...
-                has_abinit_completed = TaskState.SUCCESS
+                has_mrgddb_completed = TaskState.SUCCESS
 
         except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
@@ -114,8 +175,8 @@ class Calculation(BaseModel):
             cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
-                abinit_version=str(abinit_outddb.version),
-                has_abinit_completed=has_abinit_completed,
+                ddb_version=str(abinit_outddb.version),
+                has_mrgddb_completed=has_mrgddb_completed,
                 completed_at=completed_at,
                 output=output_doc,
                 event_report=report,
@@ -125,6 +186,18 @@ class Calculation(BaseModel):
 
 
 class OutputDoc(BaseModel):
+    """Summary of the outputs for a Mrgddb calculation.
+
+    Parameters
+    ----------
+    structure: Structure
+        The final pymatgen Structure of the final system
+    dijk: list (3x3x3)
+        The conventional static SHG tensor in pm/V (Chi^(2)/2)
+    epsinf: list (3x3)
+        The electronic contribution to the dielectric tensor
+    """
+
     structure: Union[Structure] = Field(None, description="The output structure object")
     dijk: Optional[list] = Field(
         None, description="Conventional SHG tensor in pm/V (Chi^(2)/2)"
@@ -134,7 +207,19 @@ class OutputDoc(BaseModel):
     )
 
     @classmethod
-    def from_abinit_calc_doc(cls, calc_doc: Calculation):
+    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
+        """Create a summary from an abinit CalculationDocument.
+
+        Parameters
+        ----------
+        calc_doc: .Calculation
+            A Mrgddb calculation document.
+
+        Returns
+        -------
+        .OutputDoc
+            The calculation output summary.
+        """
         return cls(
             structure=calc_doc.output.structure,
             dijk=calc_doc.output.dijk,
@@ -143,7 +228,29 @@ class OutputDoc(BaseModel):
 
 
 class MrgddbTaskDoc(StructureMetadata):
-    """Definition of task document about an Mrgddb Job."""
+    """Definition of task document about an Mrgddb Job.
+
+    Parameters
+    ----------
+    dir_name: str
+        The directory for this Abinit task
+    completed_at: str
+        Timestamp for when this task was completed
+    output: .OutputDoc
+        The output of the final calculation
+    structure: Structure
+        Final output structure from the task
+    state: .TaskState
+        State of this task
+    included_objects: List[.AbinitObject]
+        List of Abinit objects included with this task document
+    abinit_objects: Dict[.AbinitObject, Any]
+        Abinit objects associated with this task
+    task_label: str
+        A description of the task
+    tags: List[str]
+        Metadata tags for this task document
+    """
 
     dir_name: Optional[str] = Field(
         None, description="The directory for this Abinit task"
@@ -174,12 +281,28 @@ class MrgddbTaskDoc(StructureMetadata):
 
     @classmethod
     def from_directory(
-        cls: type[_T],
+        cls,
         dir_name: Path | str,
         additional_fields: dict[str, Any] = None,
         **abinit_calculation_kwargs,
-    ):
-        """Build MrgddbTaskDoc from directory."""
+    ) -> MrgddbTaskDoc:
+        """Create a task document from a directory containing Abinit/Mrgddb files.
+
+        Parameters
+        ----------
+        dir_name: Path or str
+            The path to the folder containing the calculation outputs.
+        additional_fields: Dict[str, Any]
+            Dictionary of additional fields to add to output document.
+        **abinit_calculation_kwargs
+            Additional parsing options that will be passed to the
+            :obj:`.Calculation.from_abinit_files` function.
+
+        Returns
+        -------
+        .MrgddbTaskDoc
+            A task document for the calculation.
+        """
         logger.info(f"Getting task doc in: {dir_name}")
 
         if additional_fields is None:
@@ -236,7 +359,7 @@ class MrgddbTaskDoc(StructureMetadata):
             # "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
             "meta_structure": calcs_reversed[-1].output.structure,
             "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
-            "state": calcs_reversed[-1].has_abinit_completed,
+            "state": calcs_reversed[-1].has_mrgddb_completed,
             "structure": calcs_reversed[-1].output.structure,
             "tags": tags,
         }
@@ -249,7 +372,7 @@ class MrgddbTaskDoc(StructureMetadata):
 def _find_abinit_files(
     path: Path | str,
 ) -> dict[str, Any]:
-    """Find Abinit files"""
+    """Find Abinit files."""
     path = Path(path)
     task_files = {}
 

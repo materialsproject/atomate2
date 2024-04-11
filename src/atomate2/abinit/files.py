@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.base import AbinitInputGenerator
+    from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
 
 __all__ = [
     "out_to_in",
@@ -152,11 +153,11 @@ def write_abinit_input_set(
 
 
 def write_mrgddb_input_set(
-    input_set_generator,
-    prev_outputs=None,
-    restart_from=None,
+    input_set_generator: MrgddbInputGenerator,
+    prev_outputs: str | Path | list[str] | None = None,
+    restart_from: str | Path | list[str] | None = None,
     directory: str | Path = ".",
-):
+) -> None:
     """Write the mrgddb input using a given generator.
 
     Parameters
@@ -171,15 +172,15 @@ def write_mrgddb_input_set(
     directory
         Directory in which to write the abinit inputs.
     """
-    mis = input_set_generator.get_input_set(
+    mrgis = input_set_generator.get_input_set(
         restart_from=restart_from,
         prev_outputs=prev_outputs,
         workdir=directory,
     )
-    if not mis.validate():
+    if not mrgis.validate():
         raise RuntimeError(
             "MrgddbInputSet is not valid. Some previous outputs \
         do not exist."
         )
 
-    mis.write_input(directory=directory, make_dir=True, overwrite=False)
+    mrgis.write_input(directory=directory, make_dir=True, overwrite=False)

@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import StaticMaker
 from atomate2.abinit.jobs.mrgddb import MrgddbMaker
 from atomate2.abinit.jobs.response import (
@@ -27,6 +25,13 @@ from atomate2.abinit.powerups import (
     update_user_abinit_settings,
     update_user_kpoints_settings,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.abinit.jobs.base import BaseAbinitMaker
 
 
 @dataclass
@@ -84,7 +89,7 @@ class DfptFlowMaker(Maker):
         self,
         structure: Structure | None = None,
         restart_from: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Create a DFPT flow.
 
@@ -101,16 +106,17 @@ class DfptFlowMaker(Maker):
             A DFPT flow
         """
         static_job = self.static_maker.make(structure, restart_from=restart_from)
-        # To avoid metallic case=occopt=3 which is not okay wrt. DFPT and occopt 1 with spin polarization requires spinmagntarget
+        # To avoid metallic case=occopt=3 which is not okay wrt. DFPT \
+        # and occopt 1 with spin polarization requires spinmagntarget
         static_job = update_factory_kwargs(
             static_job, {"smearing": "nosmearing", "spin_mode": "unpolarized"}
         )
-        # static_job = update_user_kpoints_settings(  static_job, {"grid_density": 3000})
-        # static_job = update_user_abinit_settings(   static_job, {   'nstep': 500,
-        #                                                             'toldfe': 1e-22,
-        #                                                             'autoparal': 1,
-        #                                                             'npfft': 1,
-        #                                                             'chksymbreak': '0'})
+        # static_job = update_user_kpoints_settings(static_job,{"grid_density": 3000})
+        # static_job = update_user_abinit_settings( static_job,{'nstep': 500,
+        #                                                          'toldfe': 1e-22,
+        #                                                          'autoparal': 1,
+        #                                                          'npfft': 1,
+        #                                                          'chksymbreak': '0'})
         static_job = update_user_kpoints_settings(static_job, {"grid_density": 1000})
         static_job = update_user_abinit_settings(
             static_job,
@@ -182,7 +188,6 @@ class DfptFlowMaker(Maker):
                 ],
                 structure=structure,
             )
-            # dte_calcs = dte_calcs.update_factory_kwargs({"dte_tol":1.0e-10}) #VT to remove
             jobs.append(dte_calcs)
 
         if self.mrgddb_maker:
@@ -203,7 +208,7 @@ class DfptFlowMaker(Maker):
         return Flow(jobs, output=jobs[-1].output, name=self.name)  # TODO: fix outputs
 
     @classmethod
-    def shg(cls, *args, **kwargs):
+    def shg(cls) -> Flow:
         """Chi2 SHG.
 
         Create a DFPT flow to compute the static nonlinear optical

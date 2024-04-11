@@ -74,7 +74,7 @@ def run_mrgddb(
     mpirun_cmd: str = None,
     wall_time: int = None,
     start_time: float = None,
-):
+) -> None:
     """Run mrgddb."""
     mrgddb_cmd = mrgddb_cmd or SETTINGS.ABINIT_MRGDDB_CMD
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
@@ -95,16 +95,12 @@ def run_mrgddb(
         command.extend(["--timelimit", time2slurm(mrgddb_timelimit)])
         max_end_time = start_time + wall_time
 
-    # command.append("< "+MRGDDB_INPUT_FILE_NAME)
-
-    status = "completed"
-
     with (
         open(MRGDDB_INPUT_FILE_NAME) as stdin,
         open(LOG_FILE_NAME, "w") as stdout,
         open(STDERR_FILE_NAME, "w") as stderr,
     ):
-        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
+        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)  # noqa: S603
 
         if wall_time is not None:
             while True:
@@ -115,7 +111,6 @@ def run_mrgddb(
                 remaining_time = max_end_time - current_time
                 if remaining_time < 5 * SLEEP_TIME_STEP:
                     process.terminate()
-                    status = "killed"
 
         process.wait()
-    return status
+    return

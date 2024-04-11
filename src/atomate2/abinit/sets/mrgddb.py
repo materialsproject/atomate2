@@ -6,10 +6,9 @@ import copy
 import logging
 import os
 import time
-from collections import namedtuple
-from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from abipy.abio.input_tags import DDE, DTE
 from abipy.flowtk.utils import Directory, irdvars_for_ext
@@ -25,6 +24,9 @@ from atomate2.abinit.utils.common import (
     TMPDIR_NAME,
     InitializationError,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 __all__ = ["MrgddbInputSet", "MrgddbInputGenerator", "MrgddbSetGenerator"]
 
@@ -47,7 +49,7 @@ class MrgddbInputSet(InputSet):
         self,
         mrgddb_input: str = None,
         input_files: Iterable[tuple[str, str]] | None = None,
-    ):
+    ) -> None:
         self.input_files = input_files
         super().__init__(
             inputs={
@@ -61,7 +63,7 @@ class MrgddbInputSet(InputSet):
         make_dir: bool = True,
         overwrite: bool = True,
         zip_inputs: bool = False,
-    ):
+    ) -> None:
         """Write Mrgddb input file to a directory."""
         # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
         #  the abinit input set also sets up links to previous files, sets up the
@@ -87,12 +89,12 @@ class MrgddbInputSet(InputSet):
         return True
 
     @property
-    def mrgddb_input(self):
+    def mrgddb_input(self) -> str:
         """Get the Mrgddb input (str)."""
         return self[MRGDDB_INPUT_FILE_NAME]
 
     @staticmethod
-    def set_workdir(workdir):
+    def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
         """Set up the working directory.
 
         This also sets up and creates standard input, output and temporary directories.
@@ -111,16 +113,13 @@ class MrgddbInputSet(InputSet):
 
         return indir, outdir, tmpdir
 
-    def runlevel(self):
+    def runlevel(self) -> set[str]:
         """Get the set of strings defining the calculation type."""
         return self.abinit_input.runlevel
 
-    def deepcopy(self):
+    def deepcopy(self) -> MrgddbInputSet:
         """Deep copy of the input set."""
         return copy.deepcopy(self)
-
-
-PrevOutput = namedtuple("PrevOutput", "dirname exts")
 
 
 @dataclass
@@ -153,7 +152,7 @@ class MrgddbInputGenerator(InputGenerator):
     restart_from_deps: str | tuple | None = None
     prev_outputs_deps: str | tuple | None = None
 
-    def get_input_set(  # type: ignore
+    def get_input_set(
         self,
         restart_from: str | tuple | list | Path | None = None,
         prev_outputs: str | tuple | list | Path | None = None,
@@ -176,28 +175,28 @@ class MrgddbInputGenerator(InputGenerator):
         restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
 
-        all_irdvars = {}
         input_files = []
-        if restart_from is not None:
-            # Use the previous mrgddb input
-            mrgddb_input = load_mrgddb_input(restart_from[0])
-            # Files for restart
-            irdvars, files = self.resolve_deps(
-                restart_from, deps=self.restart_from_deps
+        # all_irdvars = {}
+        # if restart_from is not None:
+        #     # Use the previous mrgddb input
+        #     mrgddb_input = load_mrgddb_input(restart_from[0])
+        #     # Files for restart
+        #     irdvars, files = self.resolve_deps(
+        #         restart_from, deps=self.restart_from_deps
+        #     )
+        #     all_irdvars.update(irdvars)
+        #     input_files.extend(files)
+        # else:
+        if prev_outputs is not None and not self.prev_outputs_deps:
+            raise RuntimeError(
+                f"Previous outputs not allowed for {self.__class__.__name__}."
             )
-            all_irdvars.update(irdvars)
-            input_files.extend(files)
-        else:
-            if prev_outputs is not None and not self.prev_outputs_deps:
-                raise RuntimeError(
-                    f"Previous outputs not allowed for {self.__class__.__name__}."
-                )
-            irdvars, files = self.resolve_deps(prev_outputs, self.prev_outputs_deps)
-            input_files.extend(files)
-            mrgddb_input = self.get_mrgddb_input(
-                prev_outputs=prev_outputs,
-                workdir=workdir,
-            )
+        irdvars, files = self.resolve_deps(prev_outputs, self.prev_outputs_deps)
+        input_files.extend(files)
+        mrgddb_input = self.get_mrgddb_input(
+            prev_outputs=prev_outputs,
+            workdir=workdir,
+        )
 
         return MrgddbInputSet(
             mrgddb_input=mrgddb_input,
@@ -243,8 +242,7 @@ class MrgddbInputGenerator(InputGenerator):
     def _get_in_file_name(out_filepath: str) -> str:
         in_file = os.path.basename(out_filepath)
         in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
-        in_file = os.path.basename(in_file).replace("WFQ", "WFK", 1)
-        return in_file
+        return os.path.basename(in_file).replace("WFQ", "WFK", 1)
 
     @staticmethod
     def resolve_dep_exts(prev_dir: str, exts: list[str]) -> tuple:
@@ -349,7 +347,7 @@ class MrgddbInputGenerator(InputGenerator):
         generated_input += f"DDBs merged on {time.asctime()}"
         generated_input += "\n"
         generated_input += f"{len(files)}"
-        for file_path, file_name in files:
+        for file_path, _ in files:
             generated_input += "\n"
             generated_input += f"{file_path}"
 
