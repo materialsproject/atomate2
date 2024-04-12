@@ -143,9 +143,6 @@ class DfptFlowMaker(Maker):
                 perturbations=ddk_perts.output,
                 prev_outputs=static_job.output.dir_name,
             )
-            ddk_calcs = update_factory_kwargs(
-                ddk_calcs, {"ddk_tol": 1.0e-4}
-            )  # VT to remove
             jobs.append(ddk_calcs)
 
         if self.dde_maker:
@@ -161,9 +158,6 @@ class DfptFlowMaker(Maker):
                 perturbations=dde_perts.output,
                 prev_outputs=[[static_job.output.dir_name], ddk_calcs.output["dirs"]],
             )
-            dde_calcs = update_factory_kwargs(
-                dde_calcs, {"dde_tol": 1.0e-4}
-            )  # VT to remove
             jobs.append(dde_calcs)
 
         if self.dte_maker:
