@@ -84,7 +84,8 @@ class DdkMaker(BaseAbinitMaker):
             Direction of the perturbation for the DDK calculation.
             Abipy format.
         """
-        self.input_set_generator.factory_kwargs = {"ddk_pert": perturbation}
+        if perturbation:
+            self.input_set_generator.factory_kwargs.update({"ddk_pert": perturbation})
 
         return super().make.original(
             self,
@@ -133,7 +134,8 @@ class DdeMaker(BaseAbinitMaker):
             Direction of the perturbation for the DDE calculation.
             Abipy format.
         """
-        self.input_set_generator.factory_kwargs = {"dde_pert": perturbation}
+        if perturbation:
+            self.input_set_generator.factory_kwargs.update({"dde_pert": perturbation})
 
         return super().make.original(
             self,
@@ -182,7 +184,8 @@ class DteMaker(BaseAbinitMaker):
             Direction of the perturbation for the DTE calculation.
             Abipy format.
         """
-        self.input_set_generator.factory_kwargs = {"dte_pert": perturbation}
+        if perturbation:
+            self.input_set_generator.factory_kwargs.update({"dte_pert": perturbation})
 
         return super().make.original(
             self,
