@@ -1,4 +1,6 @@
 def test_ddk_run_silicon_carbide_standard(mock_abinit, abinit_test_dir, clean_dir):
+    import os
+
     from jobflow import run_locally
     from monty.serialization import loadfn
 
@@ -11,7 +13,10 @@ def test_ddk_run_silicon_carbide_standard(mock_abinit, abinit_test_dir, clean_di
     maker_info = loadfn(test_dir / "maker.json.gz")
     maker = maker_info["maker"]
     ref_paths = loadfn(test_dir / "ref_paths.json.gz")
-    prev_outputs = test_dir / "prev_outputs"
+    prev_outputs = [
+        test_dir / "prev_outputs" / subdir
+        for subdir in next(os.walk(test_dir / "prev_outputs"))[1]
+    ]
 
     mock_abinit(ref_paths)
 
