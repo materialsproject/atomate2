@@ -40,8 +40,8 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class MPMorphVaspSkeletonMDMaker(MPMorphMDMaker):
-    """Skeleton VASP MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
+class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
+    """Base VASP MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     (optional) for the volume followed by quench (optional) from high temperature to low temperature
@@ -140,7 +140,7 @@ class MPMorphVaspSkeletonMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
     """Skeleton VASP MPMorph flow for volume equilibration and single production run via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -180,7 +180,7 @@ class MPMorphVaspMDMaker(MPMorphVaspSkeletonMDMaker):
 
 
 @dataclass
-class MPMorphVaspMultiMDMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
     """VASP MPMorph flow for volume equilibration and multiple production runs via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -220,7 +220,7 @@ class MPMorphVaspMultiMDMaker(MPMorphVaspSkeletonMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDSlowQuenchMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
     """VASP MPMorph flow for volume equilibration, multiple production runs, and slow quench via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
@@ -270,7 +270,7 @@ class MPMorphVaspMDSlowQuenchMaker(MPMorphVaspSkeletonMDMaker):
 
 
 @dataclass
-class MPMorphVASPMDFastQuenchMaker(MPMorphVaspSkeletonMDMaker):
+class MPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
     """VASP MPMorph flow for volume equilibration, multiple production runs, and slow quench via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting

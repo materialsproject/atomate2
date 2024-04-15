@@ -343,3 +343,15 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
         172.7682
     )
     assert responses[uuids[5]][1].output.output.energy == pytest.approx(-38.1286)
+
+
+def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
+    pass
+
+
+def test_mpmoprh_vasp_slow_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
+    pass
+
+
+def test_mpmorph_vasp_fast_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
+    pass

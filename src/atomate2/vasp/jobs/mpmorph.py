@@ -14,7 +14,7 @@ from atomate2.vasp.jobs.mp import (
     MPPreRelaxMaker,
 )
 
-from atomate2.common.flows.mpmorph import SlowQuenchMaker
+from atomate2.common.flows.mpmorph import SlowQuenchMaker, FastQuenchMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
@@ -105,7 +105,7 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
 
 
 @dataclass
-class FastQuenchVaspMaker(SlowQuenchMaker):
+class FastQuenchVaspMaker(FastQuenchMaker):
     """Fast quench flow for quenching high temperature structures to 0K with MLFF.
 
     Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
