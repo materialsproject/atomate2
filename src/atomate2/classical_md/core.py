@@ -59,6 +59,7 @@ def generate_interchange(
     mass_density: float,
     force_field: str = "openff_unconstrained-2.1.1.offxml",
     pack_box_kwargs: dict = None,
+    tags: list[str] = None,
 ) -> Response:
     """Generate an OpenFF Interchange object from a list of molecule specifications.
 
@@ -90,6 +91,8 @@ def generate_interchange(
     pack_box_kwargs : Dict, optional
         Additional keyword arguments to pass to the
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
+    tags : List[str], optional
+        A list of tags to attach to the task document.
 
     Returns
     -------
@@ -160,5 +163,6 @@ def generate_interchange(
         interchange=interchange_bytes,
         molecule_specs=mol_specs,
         force_field=force_field,
+        tags=tags,
     )
     return Response(output=task_doc)
