@@ -48,10 +48,6 @@ defects = [
     "pymatgen-analysis-defects>=2022.11.30",
     "python-ulid",
 ]
-classical_md = [
-    "mdanalysis>=2.7.0",
-    "openmm-mdanalysis-reporter>=0.1.0"
-]
 forcefields = [
     "ase>=3.22.1",
     "torch<=2.2.1", # incompatibility with dgl if newer versions are used
