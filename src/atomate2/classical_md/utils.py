@@ -506,3 +506,28 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
         smile: int(np.round(ratio * n_mol))
         for smile, ratio in zip(species.keys(), mol_ratio)
     }
+
+
+def create_mol_dicts(
+    counts: dict[str, float],
+    ion_charge_scaling: float,
+    name_lookup: dict[str, str] = None,
+    xyz_charge_lookup: dict[str, tuple] = None,
+) -> list[dict]:
+    """Create lists of mol specs from just counts. Still rudimentary."""
+    spec_dicts = []
+    for smile, count in counts.items():
+        spec_dict = {
+            "smile": smile,
+            "count": count,
+            "name": name_lookup.get(smile, smile),
+        }
+        if bool(re.search(r"[+-]", smile)):
+            spec_dict["charge_scaling"] = ion_charge_scaling
+        xyz_charge = xyz_charge_lookup.get(smile)
+        if xyz_charge is not None:
+            spec_dict["geometry"] = xyz_charge[0]
+            spec_dict["partial_charges"] = xyz_charge[1]
+            spec_dict["charge_method"] = "RESP"
+        spec_dicts.append(spec_dict)
+    return spec_dicts
