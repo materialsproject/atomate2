@@ -220,8 +220,12 @@ class BaseOpenMMMaker(Maker):
         state_interval = self._resolve_attr("state_interval", prev_task)
         state_file_name = self._resolve_attr("state_file_name", prev_task)
         if has_steps & (state_interval > 0):
+            state_file = dir_name / f"{state_file_name}.csv"
+            if state_file.exists():
+                self.state_file_name = increment_name(state_file_name)
+
             state_reporter = StateDataReporter(
-                file=f"{dir_name / state_file_name}.csv",
+                file=f"{dir_name / self.state_file_name}.csv",
                 reportInterval=state_interval,
                 step=True,
                 potentialEnergy=True,
@@ -230,7 +234,6 @@ class BaseOpenMMMaker(Maker):
                 temperature=True,
                 volume=True,
                 density=True,
-                append=(dir_name / (state_file_name + ".csv")).exists(),
             )
             sim.reporters.append(state_reporter)
 
@@ -435,8 +438,6 @@ class BaseOpenMMMaker(Maker):
                 f"{state_file_name}.csv",
                 f"{traj_file_name}.{traj_file_type}",
                 elapsed_time=elapsed_time,
-                n_steps=self._resolve_attr("n_steps", prev_task),
-                state_interval=self._resolve_attr("state_interval", prev_task),
                 embed_traj=self._resolve_attr("embed_traj", prev_task),
             ),
             completed_at=str(datetime.now()),

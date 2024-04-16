@@ -136,6 +136,7 @@ def test_production_maker(interchange, tmp_path, run_job):
     # Test that the state interval is respected
     assert calc_output.steps_reported == list(range(1, 6))
     assert calc_output.traj_file == "trajectory5.dcd"
+    assert calc_output.state_file == "state5.csv"
 
     interchange = Interchange.parse_raw(task_doc.interchange)
     topology = interchange.to_openmm_topology()
