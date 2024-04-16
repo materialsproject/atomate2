@@ -10,7 +10,7 @@ from atomate2.vasp.jobs.eos import MPGGAEosRelaxMaker, MPGGAEosStaticMaker
 expected_incar_relax = {
     "ISIF": 3,
     "IBRION": 2,
-    "EDIFF": 1.0e-6,
+    "EDIFF": 1e-6,
     "ISMEAR": 0,
     "SIGMA": 0.05,
     "LMAXMIX": 6,
