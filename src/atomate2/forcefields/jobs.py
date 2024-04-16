@@ -479,31 +479,16 @@ class PyACERelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-    model: str | Path | Sequence[str | Path] | None = None
-    model_kwargs: dict = field(default_factory=dict)
 
-    def _relax(self, structure: Structure) -> dict:
+    def _calculator(self) -> Calculator:
         import pyace
-
-        calculator = pyace.PyACECalculator(basis_set=self.model, **self.model_kwargs)
-        relaxer = Relaxer(
-            calculator, relax_cell=self.relax_cell, **self.optimizer_kwargs
-        )
-        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
-
-    calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "args_str": "IP GAP",
-            "param_filename": "gap.xml",
-        }
-    )
-
+        return pyace.PyACECalculator(**self.calculator_kwargs)
 
 @dataclass
 class LJRelaxMaker(ForceFieldRelaxMaker):
     name: str = "LJ relax"
 
-    def _calculator(self):
+    def _calculator(self) -> Calculator:
         from ase.calculators.lj import LennardJones
 
         return LennardJones()
@@ -513,7 +498,7 @@ class LJRelaxMaker(ForceFieldRelaxMaker):
 class LJStaticMaker(ForceFieldStaticMaker):
     name: str = "LJ static"
 
-    def _calculator(self):
+    def _calculator(self) -> Calculator:
         from ase.calculators.lj import LennardJones
 
         return LennardJones()
