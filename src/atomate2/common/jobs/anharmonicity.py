@@ -130,7 +130,7 @@ def prefactor(
     r: np.ndarray
         Bravais lattice points
     """
-    return np.exp(j*q @ r)
+    return np.exp(1j*q @ r)
 
 @job  
 def build_dyn_mat(
