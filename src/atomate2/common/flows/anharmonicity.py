@@ -10,6 +10,7 @@ from jobflow import Flow, Maker
 
 # TODO: NEED TO CHANGE
 from atomate2.common.jobs.phonons import (
+    generate_phonon_displacements,
     generate_frequencies_eigenvectors,
     get_supercell_size,
     get_total_energy_per_cell,
@@ -17,8 +18,8 @@ from atomate2.common.jobs.phonons import (
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from phonopy import Phonopy
+from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from atomate2.common.jobs.anharmonicity import (
-    generate_phonon_displacements,
     get_force_constants,
     build_dyn_mat,
     get_emode_efreq,
@@ -26,6 +27,7 @@ from atomate2.common.jobs.anharmonicity import (
     get_anharmonic_force,
     calc_sigma_A_oneshot
 )
+from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 
 import numpy as np
 
@@ -63,14 +65,16 @@ class BaseAnharmonicityMaker(Maker):
         None
     )
     socket: bool = False
-    
+    store_force_constants: bool = True
 
     def make(
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
         supercell_matrix: Matrix3D | None = None,
-        temperature: float = 300
+        temperature: float = 300,
+        total_dft_energy_per_formula_unit: float | None = None,
+        npoints_band: float = 101
     ) -> Flow:
         jobs = []
         if supercell_matrix is None:
@@ -83,6 +87,32 @@ class BaseAnharmonicityMaker(Maker):
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output
         
+        # Computation of static energy
+        total_dft_energy = None
+        static_run_job_dir = None
+        static_run_uuid = None
+        if (self.static_energy_maker is not None) and (
+            total_dft_energy_per_formula_unit is None
+        ):
+            static_job_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                static_job_kwargs[self.prev_calc_dir_argname] = prev_dir
+            static_job = self.static_energy_maker.make(
+                structure=structure, **static_job_kwargs
+            )
+            jobs.append(static_job)
+            total_dft_energy = static_job.output.output.energy
+            static_run_job_dir = static_job.output.dir_name
+            static_run_uuid = static_job.output.uuid
+            prev_dir = static_job.output.dir_name
+        elif total_dft_energy_per_formula_unit is not None:
+            # to make sure that one can reuse results from Doc
+            compute_total_energy_job = get_total_energy_per_cell(
+                total_dft_energy_per_formula_unit, structure
+            )
+            jobs.append(compute_total_energy_job)
+            total_dft_energy = compute_total_energy_job.output
+
         # Get phonopy object
         phonon_displacements = generate_phonon_displacements(
             structure = structure,
@@ -97,7 +127,7 @@ class BaseAnharmonicityMaker(Maker):
         jobs.append(phonon_displacements)
 
         # Recover Phonopy object for use
-        displacements, self.phonon = phonon_displacements.output[1]
+        displacements = phonon_displacements.output
 
         # Run displacement calculations
         displacement_calcs = run_phonon_displacements(
@@ -114,13 +144,47 @@ class BaseAnharmonicityMaker(Maker):
         # Recover DFT calculated forces
         self.DFT_forces = displacement_calcs.output["forces"]
 
-        # Get force constants
-        force_consts = get_force_constants(
-            phonon = self.phonon,
-            forces_DFT = self.DFT_forces
+        phonon_collect = generate_frequencies_eigenvectors(
+            supercell_matrix = supercell_matrix,
+            displacement = self.displacement,
+            sym_reduce = self.sym_reduce,
+            symprec = self.symprec,
+            use_symmetrized_structure = self.use_symmetrized_structure,
+            kpath_scheme = self.kpath_scheme,
+            code = self.code,
+            structure = structure,
+            displacement_data = displacement_calcs.output,
+            total_dft_energy = total_dft_energy,
+            store_force_constants = self.store_force_constants
         )
-        jobs.append(force_consts)
-        self.fc = force_consts.output
+
+        jobs.append(phonon_collect)
+        phononBSDOS = phonon_collect.output
+        self.fc = phononBSDOS.force_constants
+
+        # # Get force constants (I think this is redundant due to PhononBSDOSDoc)
+        # force_consts = get_force_constants(
+        #     phonon = self.phonon,
+        #     forces_DFT = self.DFT_forces
+        # )
+        # jobs.append(force_consts)
+        # self.fc = force_consts.output
+
+        # get phonon band structure
+        kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
+            structure = structure,
+            kpath_scheme = self.kpath_scheme,
+            symprec = self.symprec,
+        )
+
+        # Get q points
+        qpoints, connections = get_band_qpoints_and_path_connections(
+            kpath_concrete, 
+            npoints = npoints_band
+        )
+
+        # Get lattice points
+        lattice_points = structure.lattice
 
         # Build Dynamical Matrix and get it
         dyn_mat = build_dyn_mat(
