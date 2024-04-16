@@ -46,7 +46,7 @@ def generate_phonon_displacements(
     use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
-) -> tuple[list[Structure], Phonopy]:
+)  -> list[Structure]:
     """
     Generate displaced structures with phonopy.
 
@@ -94,8 +94,7 @@ def generate_phonon_displacements(
     phonon.generate_displacements(distance=displacement)
 
     supercells = phonon.supercells_with_displacements
-
-    return ([get_pmg_structure(cell) for cell in supercells], phonon)
+    return [get_pmg_structure(cell) for cell in supercells]
 
 @job
 def get_force_constants(
@@ -116,6 +115,22 @@ def get_force_constants(
 
     force_constants = phonon.get_force_constants()
     return force_constants
+
+def prefactor(
+        q: np.ndarray,
+        r: np.ndarray,
+) -> float:
+    """
+    Computes exp(i*q*r) for use in computing the dynamical matrix
+
+    Parameters
+    ----------
+    q: np.ndarray
+        Phonon wave vector
+    r: np.ndarray
+        Bravais lattice points
+    """
+    return np.exp(j*q @ r)
 
 @job  
 def build_dyn_mat(
