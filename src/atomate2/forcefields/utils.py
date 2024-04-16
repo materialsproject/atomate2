@@ -138,9 +138,10 @@ class TrajectoryObserver:
         self.cells: list[np.ndarray] = []
 
         self._store_md_outputs = store_md_outputs
-        if self._store_md_outputs:
-            self.velocities: list[np.ndarray] = []
-            self.temperatures: list[float] = []
+        # `self.{velocities,temperatures}` always initialized,
+        # but data is only stored / saved to trajectory for MD runs
+        self.velocities: list[np.ndarray] = []
+        self.temperatures: list[float] = []
 
     def __call__(self) -> None:
         """Save the properties of an Atoms during the relaxation."""
@@ -271,12 +272,7 @@ class TrajectoryObserver:
             traj_dict["magmoms"] = self.magmoms
 
         if self._store_md_outputs:
-            traj_dict.update(
-                {
-                    "velocities": self.velocities,
-                    "temperature": self.temperatures,
-                }
-            )
+            traj_dict.update(velocities=self.velocities, temperature=self.temperatures)
         # sanitize dict
         for key in traj_dict:
             if all(isinstance(val, np.ndarray) for val in traj_dict[key]):
@@ -372,8 +368,8 @@ class Relaxer:
         struct = self.ase_adaptor.get_structure(atoms)
         traj = obs.to_pymatgen_trajectory(None)
         is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][i]) < abs(fmax)
-            for i in range(struct.num_sites)
+            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
+            for idx in range(len(struct))
         )
         return ForcefieldResult(
             final_structure=struct, trajectory=traj, is_force_converged=is_force_conv

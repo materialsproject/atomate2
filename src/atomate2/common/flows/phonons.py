@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
+SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
 @dataclass

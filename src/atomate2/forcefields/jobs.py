@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -13,7 +14,6 @@ from pymatgen.core.trajectory import Trajectory
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import Relaxer, ase_calculator, revert_default_dtype
-
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -122,6 +122,7 @@ class ForceFieldRelaxMaker(Maker):
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
+        self.task_document_kwargs.setdefault("dir_name", os.getcwd())
 
         with revert_default_dtype():
             relaxer = Relaxer(
@@ -149,6 +150,10 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
     Maker to calculate forces and stresses using any force field.
 
+    Note that while `steps = 1` by default, the user could override
+    this setting along with cell shape relaxation (`relax_cell = False`
+    by default).
+
     Parameters
     ----------
     name : str
@@ -167,40 +172,6 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
-
-    @forcefield_job
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
-        """
-        Perform a relaxation of a structure using a force field.
-
-        Parameters
-        ----------
-        structure: .Structure
-            pymatgen structure.
-        prev_dir : str or Path or None
-            A previous calculation directory to copy output files from. Unused, just
-                added to match the method signature of other makers.
-        """
-        if self.steps < 0:
-            logger.warning(
-                "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
-            )
-
-        static_calc = Relaxer(self._calculator(), relax_cell=False)
-        result = static_calc.relax(structure, steps=1)
-
-        return ForceFieldTaskDocument.from_ase_compatible_result(
-            forcefield_name=self.force_field_name,
-            result=result,
-            relax_cell=False,
-            steps=1,
-            relax_kwargs=None,
-            optimizer_kwargs=None,
-            **self.task_document_kwargs,
-        )
 
 
 @dataclass
@@ -491,20 +462,12 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     name: str = f"{MLFF.GAP} static"
     force_field_name: str = f"{MLFF.GAP}"
     task_document_kwargs: dict = field(default_factory=dict)
-    potential_args_str: str = "IP GAP"
-    potential_param_file_name: str | Path = "gap.xml"
-    potential_kwargs: dict = field(default_factory=dict)
-
-    def _evaluate_static(self, structure: Structure) -> dict:
-        from quippy.potential import Potential
-
-        calculator = Potential(
-            args_str=self.potential_args_str,
-            param_filename=str(self.potential_param_file_name),
-            **self.potential_kwargs,
-        )
-        relaxer = Relaxer(calculator, relax_cell=False)
-        return relaxer.relax(structure, steps=1)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "args_str": "IP GAP",
+            "param_filename": "gap.xml",
+        }
+    )
 
 
 @dataclass
