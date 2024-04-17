@@ -16,6 +16,7 @@ from atomate2.vasp.sets.core import (
     HSERelaxSetGenerator,
     HSEStaticSetGenerator,
     HSETightRelaxSetGenerator,
+    MVLGWSetGenerator,
     NonSCFSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
@@ -382,6 +383,66 @@ class HSEBSMaker(BaseVaspMaker):
         # copy previous inputs
         if prev_dir is not None:
             self.copy_vasp_kwargs.setdefault("additional_vasp_files", ("CHGCAR",))
+
+        return super().make.original(self, structure, prev_dir)
+
+
+@dataclass
+class MVLGWBSMaker(BaseVaspMaker):
+    """
+    Maker to create Materials Virtual Lab GW band structure jobs.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "Materials Virtual Lab GW band structure"
+    input_set_generator: VaspInputGenerator = field(default_factory=MVLGWSetGenerator)
+
+    @vasp_job
+    def make(
+        self,
+        structure: Structure,
+        prev_dir: str | Path | None = None,
+        mode: Literal["static", "diag", "gw"] = "static",
+    ) -> Response:
+        """
+        Run a Materials Virtual Lab GW band structure VASP job.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        prev_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+        mode : str = "static"
+            Type of band structure calculation. Options are:
+            - "static": A static calculation to prepare the gound-state DFT
+                        wavefunctions and eigenvalues.
+            - "diag": Compute the polarizability and dielectric function.
+            - "gw": Compute G0W0 quasiparticle energies.
+        """
+        self.input_set_generator.mode = mode.upper()
 
         return super().make.original(self, structure, prev_dir)
 
