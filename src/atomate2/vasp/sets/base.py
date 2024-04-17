@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
+_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseMVLGWSet.yaml")
 
 
 class VaspInputSet(InputSet):
