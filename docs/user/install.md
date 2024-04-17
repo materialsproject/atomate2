@@ -182,7 +182,7 @@ pip install atomate2[phonons]
 ```
 
 More detailed instructions can be found 
-[../dev/dev_install.md](here).
+[here](../dev/dev_install.md)
 
 ## Configure calculation output database
 
