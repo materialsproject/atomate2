@@ -175,6 +175,15 @@ To install the packages run:
 pip install atomate2
 ```
 
+If you would like to use more specialized capabilities of atomate2 such as thethe phonon workflows, you would need to run
+
+```bash
+pip install atomate2[phonons]
+```
+
+More detailed instructions can be found 
+[../dev/dev_install.md](here).
+
 ## Configure calculation output database
 
 The next step is to configure your MongoDB database that will be used to store
