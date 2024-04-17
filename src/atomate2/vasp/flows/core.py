@@ -12,6 +12,7 @@ from jobflow import Flow, Maker
 from atomate2.vasp.jobs.core import (
     HSEBSMaker,
     HSEStaticMaker,
+    MVLGWMaker,
     NonSCFMaker,
     RelaxMaker,
     StaticMaker,
@@ -168,6 +169,59 @@ class BandStructureMaker(Maker):
 
         if bandstructure_type not in ("both", "line", "uniform"):
             raise ValueError(f"Unrecognised {bandstructure_type=}")
+
+        return Flow(jobs, outputs, name=self.name)
+
+
+@dataclass
+class MVLGWBandStructureMaker(Maker):
+    """
+    Maker to generate VASP band structures with Materials Virtual Lab GW setup.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    gw_maker : .BaseVaspMaker
+        The maker to use for the GW calculation.
+    """
+
+    name: str = "band structure"
+    gw_maker: BaseVaspMaker = field(default_factory=MVLGWMaker)
+
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """
+        Create a band structure flow.
+
+        Parameters
+        ----------
+        structure : Structure
+            A pymatgen structure object.
+        prev_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A band structure flow.
+        """
+        static_job = self.gw_maker.make(structure, prev_dir=prev_dir, mode="Static")
+        diag_job = self.gw_maker.make(
+            static_job.output.structure,
+            prev_dir=static_job.output.dir_name,
+            mode="DIAG",
+        )
+        qs_job = self.gw_maker.make(
+            diag_job.output.structure, prev_dir=diag_job.output.dir_name, mode="GW"
+        )
+
+        jobs = [static_job, diag_job, qs_job]
+
+        outputs = {
+            "static": static_job.output,
+            "diag": diag_job.output,
+            "qs": qs_job.output,
+        }
 
         return Flow(jobs, outputs, name=self.name)
 
