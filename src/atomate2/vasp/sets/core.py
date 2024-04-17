@@ -749,11 +749,7 @@ class MVLGWSetGenerator(VaspInputGenerator):
     ) -> dict:
         """Get updates to the INCAR config for this calculation type."""
         updates: dict[str, str | float | int | bool] = {}
-        nbands = (
-            int(self.prev_vasprun.parameters["NBANDS"])
-            if self.prev_vasprun is not None
-            else None
-        )
+        nbands = None
 
         if self.mode == "STATIC":
             # TODO: the VaspInputGenerator._get_incar() method
