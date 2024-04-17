@@ -259,7 +259,7 @@ class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
     quench_maker: SlowQuenchVaspMaker = field(
         default_factory=lambda: SlowQuenchVaspMaker(
-            quench_nsteps=1000,
+            quench_n_steps=1000,
             quench_temperature_step=500,
             quench_end_temperature=500,
             quench_start_temperature=3000,
@@ -345,7 +345,7 @@ class MPMorphVaspOldMDMaker(MPMorphMDMaker):
             "start_temp": 3000, # Starting temperature for quench
             "end_temp": 500, # Ending temperature for quench
             "temp_step": 500, # Temperature step for quench
-            "nsteps": 1000, # Number of steps for quench
+            "n_steps": 1000, # Number of steps for quench
         }
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher; inherits from EquilibriumVolumeMaker and MDMaker (VASP)

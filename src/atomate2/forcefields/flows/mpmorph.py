@@ -94,7 +94,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             update={
                 "name": "MLFF MD Maker",
                 "temperature": self.temperature,
-                "nsteps": self.steps_convergence,
+                "n_steps": self.steps_convergence,
             },
             class_filter=ForceFieldMDMaker,
         )
@@ -108,7 +108,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             update=dict(
                 name="Production Run MLFF MD Maker",
                 temperature=self.temperature,
-                nsteps=self.steps_total_production,
+                n_steps=self.steps_total_production,
             )
         )
 
@@ -134,7 +134,7 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         Ending temperature for quench; default 500K
     quench_temperature_step : int = 500
         Temperature step for quench; default 500K drop
-    quench_nsteps : int = 1000
+    quench_n_steps : int = 1000
         Number of steps for quench; default 1000 steps
     """
 
@@ -145,7 +145,7 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         self,
         structure : Structure,
         temp : float,
-        nsteps : int,
+        n_steps : int,
         prev_dir : str | Path | None = None
     ) -> Flow | Job:
         """Call the MD maker to create the MD jobs for VASP Only."""
@@ -153,7 +153,7 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
             update={
                 "name": "Slow quenchMLFF MD Maker",
                 "temperature": temp,
-                "nsteps": nsteps,
+                "n_steps": n_steps,
             }
         )
         return self.md_maker.make(structure=structure, prev_dir=prev_dir)

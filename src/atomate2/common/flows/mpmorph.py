@@ -328,7 +328,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
         Ending temperature for quench; default 500K
     quench_temperature_step : int = 500
         Temperature step for quench; default 500K drop
-    quench_nsteps : int = 1000
+    quench_n_steps : int = 1000
         Number of steps for quench; default 1000 steps
     """
 
@@ -337,7 +337,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
     quench_start_temperature: int = 3000
     quench_end_temperature: int = 500
     quench_temperature_step: int = 500
-    quench_nsteps: int = 1000
+    quench_n_steps: int = 1000
 
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
@@ -374,7 +374,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             )
 
             md_job = self.call_md_maker(
-                structure, prev_dir, temp=temp, nsteps=self.quench_nsteps
+                structure, prev_dir, temp=temp, n_steps=self.quench_n_steps
             )
             """ # Logic of call_md_maker is to substitute the following code:
             if isinstance(self.md_maker, MDMaker):
@@ -382,7 +382,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
                     input_set_generator=MDSetGenerator(
                         start_temp=temp,
                         end_temp=temp,
-                        nsteps=self.quench_tempature_setup["nsteps"],
+                        n_steps=self.quench_tempature_setup["n_steps"],
                     )
                 ).make(structure, prev_dir)
 
@@ -390,7 +390,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
                 self.md_maker = self.md_maker.update_kwargs(
                     update={
                         "temperature": temp,
-                        "nsteps": self.quench_tempature_setup["nsteps"],
+                        "n_steps": self.quench_tempature_setup["n_steps"],
                     }
                 )
                 md_job = self.md_maker.make(
@@ -412,7 +412,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             name=self.name,
         )
 
-    def call_md_maker(self, structure, prev_dir, temp, nsteps):
+    def call_md_maker(self, structure, prev_dir, temp, n_steps):
         if not (
             isinstance(self.md_maker, MDMaker)
             or isinstance(self.md_maker, ForceFieldMDMaker)
