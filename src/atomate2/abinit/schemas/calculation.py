@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+import pandas as pd
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
@@ -12,6 +13,8 @@ if TYPE_CHECKING:
     pass
 
 from abipy.electrons.gsr import GsrFile
+from abipy.electrons.scr import ScrFile
+from abipy.electrons.gw import SigresFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.math import Matrix3D, Vector3D
@@ -105,6 +108,19 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
+    qp_corr_vbm: Optional[float] = Field(
+        None,
+        description="The valence band maximum, or HOMO for molecules, in eV "
+        "(if system is not metallic)",
+    )
+    qp_corr_cbm: Optional[float] = Field(
+        None,
+        description="The valence band maximum, or HOMO for molecules, in eV "
+        "(if system is not metallic)",
+    )
+
+    class Config:
+        arbitrary_types_allowed = True
 
     @classmethod
     def from_abinit_gsr(
@@ -161,6 +177,111 @@ class CalculationOutput(BaseModel):
             forces=forces,
             stress=stress,
         )
+    @classmethod
+    def from_abinit_scr(
+        cls,
+        output: ScrFile,  # Must use auto_load kwarg when passed
+    ) -> CalculationOutput:
+        """
+        Create an Abinit output document from Abinit outputs.
+
+        Parameters
+        ----------
+        output: .AbinitOutput
+            An AbinitOutput object.
+
+        Returns
+        -------
+        The Abinit calculation output document.
+        """
+        structure = output.structure  # final structure by default for GSR
+
+        # In case no conduction bands were included
+        try:
+            cbm = output.ebands.get_edge_state("cbm").eig
+            bandgap = output.ebands.fundamental_gaps[
+                0
+            ].energy  # [0] for one spin channel only
+            direct_bandgap = output.ebands.direct_gaps[0].energy
+        except ValueError:
+            cbm = None
+            bandgap = None
+            direct_bandgap = None
+
+        electronic_output = {
+            "efermi": float(output.ebands.fermie),
+            "vbm": output.ebands.get_edge_state("vbm").eig,
+            "cbm": cbm,
+            "bandgap": bandgap,
+            "direct_bandgap": direct_bandgap,
+        }
+
+        #forces = None
+        #if output.cart_forces is not None:
+        #    forces = output.cart_forces.tolist()
+
+        #stress = None
+        #if output.cart_stress_tensor is not None:
+        #    stress = output.cart_stress_tensor.tolist()
+        return cls(
+            structure=structure,
+            energy=0.0,
+            energy_per_atom=0.0,
+            **electronic_output,
+            #forces=forces,
+            #stress=stress,
+        )
+    @classmethod
+    def from_abinit_sig(
+        cls,
+        output: SigresFile,  # Must use auto_load kwarg when passed
+    ) -> CalculationOutput:
+        """
+        Create an Abinit output document from Abinit outputs.
+
+        Parameters
+        ----------
+        output: .AbinitOutput
+            An AbinitOutput object.
+
+        Returns
+        -------
+        The Abinit calculation output document.
+        """
+        structure = output.structure  # final structure by default for GSR
+
+        # In case no conduction bands were included
+        ivbm=output.ebands.get_edge_state("vbm")
+        icbm=output.ebands.get_edge_state("cbm")
+        vbm=output.get_qpcorr(ivbm.spin, ivbm.kpoint, ivbm.band).re_qpe
+        cbm=output.get_qpcorr(icbm.spin, icbm.kpoint, icbm.band).re_qpe
+        bandgap=cbm-vbm
+        direct_bandgap=None
+        electronic_output = {
+            "efermi": float(output.ebands.fermie),
+            "vbm": vbm, 
+            "cbm": cbm,
+            "bandgap": bandgap,
+            "direct_bandgap": direct_bandgap,
+        }
+        #forces = None
+        #if output.cart_forces is not None:
+        #    forces = output.cart_forces.tolist()
+
+        #stress = None
+        #if output.cart_stress_tensor is not None:
+        #    stress = output.cart_stress_tensor.tolist()
+
+        #qp_data=output.get_dataframe()
+        return cls(
+            structure=structure,
+            energy=0.0,
+            energy_per_atom=0.0,
+            **electronic_output,
+            #qp_data=qp_data,
+            #forces=forces,
+            #stress=stress,
+        )
 
 
 class Calculation(BaseModel):
@@ -208,9 +329,13 @@ class Calculation(BaseModel):
         cls,
         dir_name: Path | str,
         task_name: str,
+
         abinit_gsr_file: Path | str = "out_GSR.nc",
+        abinit_scr_file: Path | str = "out_SCR.nc",
+        abinit_sig_file: Path | str = "out_SIGRES.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
+
     ) -> tuple[Calculation, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
@@ -235,14 +360,27 @@ class Calculation(BaseModel):
         """
         dir_name = Path(dir_name)
         abinit_gsr_file = dir_name / abinit_gsr_file
+        abinit_scr_file = dir_name / abinit_scr_file
+        abinit_sig_file = dir_name / abinit_sig_file
         abinit_log_file = dir_name / abinit_log_file
         abinit_abort_file = dir_name / abinit_abort_file
-
-        abinit_gsr = GsrFile.from_file(abinit_gsr_file)
+        if os.path.isfile(abinit_gsr_file):
+            abinit_gsr = GsrFile.from_file(abinit_gsr_file)
+            output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
+            abinit_version = abinit_gsr.abinit_version
+        elif os.path.isfile(abinit_scr_file):
+            abinit_scr = ScrFile.from_file(abinit_scr_file)
+            output_doc = CalculationOutput.from_abinit_scr(abinit_scr)
+            abinit_version = abinit_scr.abinit_version
+        elif os.path.isfile(abinit_sig_file):
+            abinit_sig = SigresFile.from_file(abinit_sig_file)
+            output_doc = CalculationOutput.from_abinit_sig(abinit_sig)
+            abinit_version = abinit_sig.abinit_version
+        else:
+            print("No ouput file found.")
 
         completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
 
-        output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
 
         report = None
         has_abinit_completed = TaskState.FAILED
@@ -267,7 +405,7 @@ class Calculation(BaseModel):
             cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
-                abinit_version=abinit_gsr.abinit_version,
+                abinit_version=abinit_version,
                 has_abinit_completed=has_abinit_completed,
                 completed_at=completed_at,
                 output=output_doc,
