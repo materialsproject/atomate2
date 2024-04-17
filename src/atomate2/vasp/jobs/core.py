@@ -388,9 +388,11 @@ class HSEBSMaker(BaseVaspMaker):
 
 
 @dataclass
-class MVLGWBSMaker(BaseVaspMaker):
+class MVLGWMaker(BaseVaspMaker):
     """
-    Maker to create Materials Virtual Lab GW band structure jobs.
+    Maker to create Materials Virtual Lab GW jobs.
+
+    This class can make the jobs for the typical three stapes of the GW calculation.
 
     Parameters
     ----------
