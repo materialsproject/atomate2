@@ -490,8 +490,7 @@ class LJRelaxMaker(ForceFieldRelaxMaker):
 
     def _calculator(self) -> Calculator:
         from ase.calculators.lj import LennardJones
-
-        return LennardJones()
+        return LennardJones(**self.calculator_kwargs)
 
 
 @dataclass
@@ -500,5 +499,4 @@ class LJStaticMaker(ForceFieldStaticMaker):
 
     def _calculator(self) -> Calculator:
         from ase.calculators.lj import LennardJones
-
-        return LennardJones()
+        return LennardJones(**self.calculator_kwargs)

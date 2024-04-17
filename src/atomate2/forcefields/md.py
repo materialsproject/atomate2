@@ -381,3 +381,16 @@ class NequipMDMaker(ForceFieldMDMaker):
 
     name: str = f"{MLFF.Nequip} MD"
     force_field_name: str = f"{MLFF.Nequip}"
+
+
+@dataclass
+class LJMDMaker(ForceFieldMDMaker):
+    """ Perform an MD run with a Lennard-Jones potential """
+    name: str = f"Lennard-Jones MD"
+    force_field_name: str = f"Lennard-Jones"
+
+    def _calculator(self) -> Calculator:
+        """ASE calculator, can be overwritten by user."""
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones(**self.calculator_kwargs)
