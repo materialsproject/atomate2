@@ -4,8 +4,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Response
-
 from atomate2.common.flows.mpmorph import (
     FastQuenchMaker,
     SlowQuenchMaker,
@@ -44,7 +42,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pathlib import Path
-    from jobflow import Flow, Maker
+    from jobflow import Flow, Job
 
 
 @dataclass
@@ -89,7 +87,9 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
 
     quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
 
-    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+    def _post_init_update(self) -> None:
+        """ Ensure that forcefield makers correctly set temperature. """
+
         self.md_maker = self.md_maker.update_kwargs(
             update={
                 "name": "MLFF MD Maker",
@@ -111,7 +111,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
                 nsteps=self.steps_total_production,
             )
         )
-        return super().make(structure=structure, prev_dir=prev_dir)
 
 
 @dataclass
@@ -142,7 +141,13 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
     name: str = "ForceField slow quench"
     md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
 
-    def call_md_maker(self, structure, prev_dir, temp, nsteps):
+    def call_md_maker(
+        self,
+        structure : Structure,
+        temp : float,
+        nsteps : int,
+        prev_dir : str | Path | None = None
+    ) -> Flow | Job:
         """Call the MD maker to create the MD jobs for VASP Only."""
         self.md_maker = self.md_maker.update_kwargs(
             update={

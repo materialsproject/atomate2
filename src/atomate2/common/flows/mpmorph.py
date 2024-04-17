@@ -176,7 +176,7 @@ class MPMorphMDMaker(Maker):
     """
 
     name: str = "MP Morph md"
-    convergence_md_maker: EquilibriumVolumeMaker = None  # check logic on this line
+    convergence_md_maker: EquilibriumVolumeMaker | None = None  # check logic on this line
     # May need to fix next two into ForceFieldMDMakers later..)
     production_md_maker: Maker | None = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
@@ -237,9 +237,7 @@ class MPMorphMDMaker(Maker):
             name=self.name,
         )
 
-    def _post_init_update(
-        self, *args, **kwargs
-    ) -> None:  # TODO: Future plan for code specific post update
+    def _post_init_update(self) -> None:
         pass
 
 

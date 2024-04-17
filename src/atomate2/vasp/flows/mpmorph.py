@@ -88,7 +88,8 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
 
     quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
 
-    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+    def _post_init_update(self) -> None:
+        """ Ensure that VASP input sets correctly set temperature. """
 
         # TODO: check if this properly updates INCAR for all MD runs
         if self.steps_convergence is None:
@@ -135,9 +136,6 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
                     md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
                 )
             )
-
-        return super().make(structure=structure, prev_dir=prev_dir)
-
 
 @dataclass
 class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
