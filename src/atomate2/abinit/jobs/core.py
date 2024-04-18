@@ -233,10 +233,14 @@ class ConvergenceMaker(Maker):
     epsilon: float = 0.001
     convergence_field: str = field(default_factory=str)
     convergence_steps: list = field(default_factory=list)
+
     def __post_init__(self):
         self.last_idx = len(self.convergence_steps)
 
-    def make(self, structure):
+    def make(
+        self, 
+        structure: Structure,
+        prev_outputs: str | Path = None):
         """A top-level flow controlling convergence iteration
 
         Parameters
@@ -244,7 +248,7 @@ class ConvergenceMaker(Maker):
             atoms : MSONableAtoms
                 a structure to run a job
         """
-        convergence_job = self.convergence_iteration(structure)
+        convergence_job = self.convergence_iteration(structure, prev_outputs=prev_outputs)
         return Flow([convergence_job], output=convergence_job.output)
 
     @job
@@ -252,6 +256,7 @@ class ConvergenceMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path = None,
+        prev_outputs: str | Path = None,
     ) -> Response:
         """
         Runs several jobs with changing inputs consecutively to investigate
@@ -285,7 +290,7 @@ class ConvergenceMaker(Maker):
 
         if idx < self.last_idx and not converged:
             # finding next jobs
-            base_job = self.maker.make(structure)
+            base_job = self.maker.make(structure, prev_outputs=prev_outputs)
             next_base_job = update_user_abinit_settings(flow=base_job, abinit_updates={self.convergence_field: self.convergence_steps[idx]})
             next_base_job.append_name(append_str=f" {idx}")
 
@@ -296,7 +301,7 @@ class ConvergenceMaker(Maker):
             )
 
             next_job = self.convergence_iteration(
-                structure, prev_dir=next_base_job.output.dir_name
+                structure, prev_dir=next_base_job.output.dir_name, prev_outputs=prev_outputs,
             )
 
             replace_flow = Flow(

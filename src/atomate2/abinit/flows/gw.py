@@ -56,17 +56,40 @@ class GWbandsMaker(Maker):
 @dataclass
 class G0W0Maker(Maker):
     """
-    Maker to generate G0W0 flows.
+    Maker to perform G0W0 calculation from previous GWbands calculation.
+
+    This is a screening calculation followed by a sigma calculations, 
+    one can perform QP corrections only for bandedges (useful for 
+    convergence calculations) or at all k-points.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    scr_maker : .BaseAbinitMaker
+        The maker to use for the screening calculation.
+    sigma_maker : .BaseAbinitMaker
+        The maker to use for the sigma calculations.
+    gw_qprange: int
+           0 - Compute the QP corrections only for the fundamental and the direct gap
+
+        +num - Compute the QP corrections for all the k-points in the irreducible zone
+               , and include num bands above and below the Fermi level.
+
+        -num - Compute the QP corrections for all the k-points in the irreducible zone. 
+               Include all occupied states and num empty states.
+
     """
 
     name: str = "G0W0 calculation"
-    nscf_output: str = None
     scr_maker: BaseAbinitMaker = field(default_factory=ScreeningMaker)
     sigma_maker: BaseAbinitMaker = field(default_factory=SigmaMaker)
+    gw_qprange: int = 0
 
     def make(
         self,
         structure: Structure,
+        prev_outputs: str = None, 
         restart_from: Optional[Union[str, Path]] = None
     ):
         """
@@ -76,6 +99,9 @@ class G0W0Maker(Maker):
         ----------
         structure : Structure
             A pymatgen structure object.
+        prev_outputs : str 
+            One previous directory where ncsf 
+            calculation were performed.
         restart_from : str or Path or None
             One previous directory to restart from.
 
@@ -86,18 +112,18 @@ class G0W0Maker(Maker):
         """
 		 
         scr_job = self.scr_maker.make(
-            prev_outputs=[self.nscf_output], 
+            prev_outputs=prev_outputs, 
         )
         m_scr_job = update_user_abinit_settings(
             flow=scr_job, 
             abinit_updates={"iomode": 3}
         )
         sigma_job = self.sigma_maker.make(
-            prev_outputs=[self.nscf_output, scr_job.output.dir_name],
+            prev_outputs=[prev_outputs, scr_job.output.dir_name],
         )
         m_sigma_job = update_user_abinit_settings(
             flow=sigma_job, 
-            abinit_updates={"gw_qprange": 0, "iomode": 3}
+            abinit_updates={"gw_qprange": self.gw_qprange, "iomode": 3}
         )
         return Flow([m_scr_job, m_sigma_job], output=m_sigma_job.output, name=self.name)
 
@@ -105,63 +131,6 @@ class G0W0Maker(Maker):
 class G0W0ConvergenceMaker(Maker):
     """
     Maker to generate convergence of G0W0 calculations.
-    """
-
-    name: str = "G0W0 calculation"
-    scf_maker: StaticMaker = field(default_factory=StaticMaker)
-    nscf_maker: NonSCFMaker = field(default_factory=NonSCFMaker)
-    scr_makers: List[ScreeningMaker] = field(default_factory=lambda: [ScreeningMaker()])
-    sigma_makers: List[SigmaMaker] = field(default_factory=lambda: [SigmaMaker()])
-
-    def __post_init__(self):
-        # TODO: make some checks on the input sets, e.g.:
-        #  - non scf has to be uniform
-        #  - set istwfk ? or check that it is "*1" ?
-        #  - kpoint shifts ?
-        pass
-
-    def make(
-        self,
-        structure: Structure,
-        restart_from: Optional[Union[str, Path]] = None,
-    ):
-        """
-        Create a convergence G0W0 flow.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure object.
-        restart_from : str or Path or None
-            One previous directory to restart from.
-
-        Returns
-        -------
-        Flow
-            A G0W0 flow.
-        """
-
-        scf_job = self.scf_maker.make(structure, restart_from=restart_from)
-        nscf_job = self.nscf_maker.make(
-            prev_outputs=scf_job.output.dir_name, mode="uniform"
-        )
-        jobs = [scf_job, nscf_job]
-        for scr_maker in self.scr_makers:
-            scr_job = scr_maker.make(prev_outputs=nscf_job.output.dir_name)
-            jobs.append(scr_job)
-            for sigma_maker in self.sigma_makers:
-                sigma_job = sigma_maker.make(
-                    prev_outputs=[nscf_job.output.dir_name, scr_job.output.dir_name]
-                )
-                jobs.append(sigma_job)
-
-        return Flow(jobs, name=self.name)
-
-
-@dataclass
-class PeriodicGWConvergenceMaker(Maker):
-    """
-    A maker to perform a GW workflow with automatic convergence in FHI-aims.
 
     Parameters
     ----------
@@ -199,13 +168,8 @@ class PeriodicGWConvergenceMaker(Maker):
         restart_from: Optional[Union[str, Path]] = None,
     ):
 	
-        #scf_job = self.scf_maker.make(structure, restart_from=restart_from)
-        #nscf_job = self.nscf_maker.make(
-        #    prev_outputs=scf_job.output.dir_name, mode="uniform"
-        #)
-            #scr_job = self.scr_maker.make(prev_outputs=["../nscf"],abinit_settings={self.convergence_field: value})
-        #static = GWbandsMaker().make(structure)
-        gw_maker = G0W0Maker(nscf_output='/home/ucl/modl/tbiswas/abinit_run/nscf')
+        static = GWbandsMaker().make(structure)
+        gw_maker = G0W0Maker()
         convergence = ConvergenceMaker(
             maker=gw_maker,
             epsilon=self.epsilon,
@@ -213,6 +177,6 @@ class PeriodicGWConvergenceMaker(Maker):
             convergence_field=self.convergence_field,
             convergence_steps=self.convergence_steps,
         )
-        gw = convergence.make(structure)
-        return Flow([gw], gw.output, name=self.name)
+        gw = convergence.make(structure, prev_outputs=static.output.dir_name)
+        return Flow([static, gw], gw.output, name=self.name)
 
