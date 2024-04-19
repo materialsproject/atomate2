@@ -385,7 +385,8 @@ class NequipMDMaker(ForceFieldMDMaker):
 
 @dataclass
 class LJMDMaker(ForceFieldMDMaker):
-    """ Perform an MD run with a Lennard-Jones potential """
+    """Perform an MD run with a Lennard-Jones potential"""
+
     name: str = f"Lennard-Jones MD"
     force_field_name: str = f"Lennard-Jones"
 
@@ -394,3 +395,16 @@ class LJMDMaker(ForceFieldMDMaker):
         from ase.calculators.lj import LennardJones
 
         return LennardJones(**self.calculator_kwargs)
+
+
+@dataclass
+class PACEMDMaker(ForceFieldMDMaker):
+    """Perform an MD run with PACE."""
+
+    name: str = f"Py-ACE MD"
+    force_field_name: str = f"Py-ACE"
+
+    def _calculator(self) -> Calculator:
+        import pyace
+
+        return pyace.PyACECalculator(**self.calculator_kwargs)

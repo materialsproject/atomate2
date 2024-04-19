@@ -88,11 +88,10 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
 
     def _post_init_update(self) -> None:
-        """ Ensure that forcefield makers correctly set temperature. """
+        """Ensure that forcefield makers correctly set temperature."""
 
         self.md_maker = self.md_maker.update_kwargs(
             update={
-                "name": "MLFF MD Maker",
                 "temperature": self.temperature,
                 "n_steps": self.steps_convergence,
             },
@@ -143,10 +142,10 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
 
     def call_md_maker(
         self,
-        structure : Structure,
-        temp : float,
-        n_steps : int,
-        prev_dir : str | Path | None = None
+        structure: Structure,
+        temp: float,
+        n_steps: int,
+        prev_dir: str | Path | None = None,
     ) -> Flow | Job:
         """Call the MD maker to create the MD jobs for VASP Only."""
         self.md_maker = self.md_maker.update_kwargs(

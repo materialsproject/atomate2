@@ -88,17 +88,20 @@ class EquilibriumVolumeMaker(Maker):
 
         else:
             self.postprocessor.fit(working_outputs)
-            # print("____EOS FIT PARAMS_____")
-            # print(self.postprocessor.results)
-            # print("_______________________")
+            print("____EOS FIT PARAMS_____")
+            print(self.postprocessor.results)
+            print("_______________________")
             working_outputs = dict(self.postprocessor.results)
             working_outputs["relax"].pop(
                 "pressure", None
             )  # remove pressure from working_outputs
-
             if (
-                working_outputs["V0"] <= working_outputs["Vmax"]
-                and working_outputs["V0"] >= working_outputs["Vmin"]
+                working_outputs.get("V0") is None
+            ):  # breaks whole flow here if EOS is not fitted properly
+                return Response(output=working_outputs, stop_children=True)
+            if (
+                working_outputs.get("V0") <= working_outputs.get("Vmax")
+                and working_outputs.get("V0") >= working_outputs.get("Vmin")
             ) or (
                 self.max_attempts
                 and (
@@ -111,10 +114,10 @@ class EquilibriumVolumeMaker(Maker):
                 final_structure.scale_lattice(working_outputs["V0"])
                 return final_structure
 
-            elif working_outputs["V0"] > working_outputs["Vmax"]:
+            elif working_outputs.get("V0") > working_outputs.get("Vmax"):
                 v_ref = working_outputs["Vmax"]
 
-            elif working_outputs["V0"] < working_outputs["Vmin"]:
+            elif working_outputs.get("V0") < working_outputs.get("Vmax"):
                 v_ref = working_outputs["Vmin"]
 
             eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
@@ -176,7 +179,9 @@ class MPMorphMDMaker(Maker):
     """
 
     name: str = "MP Morph md"
-    convergence_md_maker: EquilibriumVolumeMaker | None = None  # check logic on this line
+    convergence_md_maker: EquilibriumVolumeMaker | None = (
+        None  # check logic on this line
+    )
     # May need to fix next two into ForceFieldMDMakers later..)
     production_md_maker: Maker | None = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
