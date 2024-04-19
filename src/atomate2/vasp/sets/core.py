@@ -749,7 +749,7 @@ class MVLGWSetGenerator(VaspInputGenerator):
     ) -> dict:
         """Get updates to the INCAR config for this calculation type."""
         updates: dict[str, str | float | int | bool] = {}
-        nbands = None
+        nbands = int(vasprun.parameters["NBANDS"]) if vasprun is not None else None
 
         if self.mode == "STATIC":
             # TODO: the VaspInputGenerator._get_incar() method
@@ -766,7 +766,16 @@ class MVLGWSetGenerator(VaspInputGenerator):
             updates.update(
                 {
                     "ALGO": "Exact",
-                    "NELM": 1,
+                    # In pymatgen/io/vasp/MVLGWSet.yaml,
+                    # the default value of NELM is 100;
+                    # but in the pymatgen.io.vasp.sets.MVLGWSet,
+                    # the default value of NELM for DIAG calculation
+                    # is manually set to be 1.
+                    # If 1 were used, the NSCF calculation would not converge,
+                    # and Custodian would not proceed with later calculations.
+                    # Here, I decide to keep the default value of NELM
+                    # to be 100 as defined in pymatgen.io.vasp.sets MVLGWSet.yaml.
+                    "NELM": 100,
                     "LOPTICS": True,
                     "LPEAD": True,
                 }

@@ -212,7 +212,9 @@ class MVLGWBandStructureMaker(Maker):
             mode="DIAG",
         )
         qs_job = self.gw_maker.make(
-            diag_job.output.structure, prev_dir=diag_job.output.dir_name, mode="GW"
+            diag_job.output.structure,
+            prev_dir=diag_job.output.dir_name,
+            mode="GW",
         )
 
         jobs = [static_job, diag_job, qs_job]
