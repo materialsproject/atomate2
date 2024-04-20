@@ -25,7 +25,8 @@ from atomate2.common.jobs.anharmonicity import (
     get_emode_efreq,
     displace_structure,
     get_anharmonic_force,
-    calc_sigma_A_oneshot
+    calc_sigma_A_oneshot,
+    get_masses
 )
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 
@@ -160,7 +161,7 @@ class BaseAnharmonicityMaker(Maker):
 
         jobs.append(phonon_collect)
         phononBSDOS = phonon_collect.output
-        self.fc = phononBSDOS.force_constants
+        self.fc = phononBSDOS.force_constants.force_constants
 
         # # Get force constants (I think this is redundant due to PhononBSDOSDoc)
         # force_consts = get_force_constants(
@@ -179,16 +180,22 @@ class BaseAnharmonicityMaker(Maker):
 
         # Get q points
         qpoints, connections = get_band_qpoints_and_path_connections(
-            kpath_concrete, 
+            kpath_concrete,     
             npoints = npoints_band
         )
 
-        # Get lattice points
-        lattice_points = structure.lattice
-
         # Build Dynamical Matrix and get it
         dyn_mat = build_dyn_mat(
-            phonon = self.phonon,
+            structure = structure,
+            force_constants = self.fc,
+            supercell = supercell_matrix,
+            qpoints = qpoints,
+            code = self.code,
+            symprec = self.symprec,
+            sym_reduce = self.sym_reduce,
+            use_symmetrized_structure = self.use_symmetrized_structure,
+            kpath_scheme = self.kpath_scheme,
+            kpath_concrete = kpath_concrete
         )
         jobs.append(dyn_mat)
         self.dynamical_matrix = dyn_mat.output

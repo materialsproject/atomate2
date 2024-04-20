@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Optional
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.harmonic.dynamical_matrix import DynamicalMatrix
+from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
@@ -116,39 +117,72 @@ def get_force_constants(
     force_constants = phonon.get_force_constants()
     return force_constants
 
-def prefactor(
-        q: np.ndarray,
-        r: np.ndarray,
-) -> float:
-    """
-    Computes exp(i*q*r) for use in computing the dynamical matrix
-
-    Parameters
-    ----------
-    q: np.ndarray
-        Phonon wave vector
-    r: np.ndarray
-        Bravais lattice points
-    """
-    return np.exp(1j*q @ r)
-
-@job  
+@job 
 def build_dyn_mat(
-    phonon: Phonopy
-) -> Optional[np.ndarray]:
+    structure: Structure,
+    force_constants: list,
+    supercell: np.ndarray,
+    qpoints: list,
+    code: str,
+    symprec: float,
+    sym_reduce: bool,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str,
+    kpath_concrete: list
+) -> np.ndarray:
     """
-    Gets the dynamical matrix of a Phonopy object
-    
+    Builds and returns the dynamical matrix through Phonopy
+
     Parameters
     ----------
-    phonon: Phonopy
-        Phonopy object to find dynamical matrix for
+    structure: Structure
+        Fully optimized input structure to use for making phonon
+    force_constants: list
+        List of the force constants
+    supercell: np.ndarray
+        array to describe supercell
+    qpoints: list
+        list of q-points to calculate dynamic matrix at
+    code: str
+        code to perform the computations
+    symprec: float
+        precision to determine symmetry
+    sym_reduce: bool
+        if True, symmetry will be used to generate displacements
+    use_symmetrized_structure: str or None
+        Primitive, conventional, or None
+    kpath_scheme:
+        scheme to generate kpath
+    kpath_concrete:
+        list of paths
     """
+    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
+        primitive_matrix: np.ndarray | str = np.eye(3)
+    else:
+        primitive_matrix = "auto"
 
-    # Gets dynamical matrix in form of DynamicalMatrix class (defined by Phonopy)
-    dynamical_matrix_obj = phonon.dynamical_matrix()
-    dynamical_matrix = dynamical_matrix_obj.dynamical_matrix()
-    return dynamical_matrix
+    # Generate Phonopy object and set force constants
+    cell = get_phonopy_structure(structure)
+    phonon = Phonopy(cell, 
+                    supercell_matrix = supercell,
+                    primitive_matrix = primitive_matrix,
+                    factor = get_factor(code),
+                    symprec = symprec,
+                    is_symmetry = sym_reduce)
+    phonon.force_constants = force_constants
+
+    # Convert qpoints into array of 3-element arrays
+    qpoints, _ = get_band_qpoints_and_path_connections(kpath_concrete)
+    q_vectors = []
+    for i in range(len(qpoints)):
+        for j in range(len(qpoints[i])):
+            q_vectors.append(qpoints[i][j])
+    q_vectors = np.array(q_vectors)
+
+    # To get dynamical matrix
+    phonon.run_qpoints(q_vectors)
+    dyn_mat = phonon.dynamical_matrix.dynamical_matrix
+    return dyn_mat
 
 @job
 def get_emode_efreq(
