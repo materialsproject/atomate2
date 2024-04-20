@@ -18,6 +18,7 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 from atomate2.common.jobs.phonons import generate_phonon_displacements, run_phonon_displacements
+from jobflow import run_locally
 
 from scipy.constants import physical_constants
 
@@ -36,66 +37,6 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
-
-@job(data=[Structure])
-def generate_phonon_displacements(
-    structure: Structure,
-    supercell_matrix: np.array,
-    displacement: float,
-    sym_reduce: bool,
-    symprec: float,
-    use_symmetrized_structure: str | None,
-    kpath_scheme: str,
-    code: str,
-)  -> list[Structure]:
-    """
-    Generate displaced structures with phonopy.
-
-    Parameters
-    ----------
-    structure: Structure object
-        Fully optimized input structure for phonon run
-    supercell_matrix: np.array
-        array to describe supercell matrix
-    displacement: float
-        displacement in Angstrom
-    sym_reduce: bool
-        if True, symmetry will be used to generate displacements
-    symprec: float
-        precision to determine symmetry
-    use_symmetrized_structure: str or None
-        primitive, conventional or None
-    kpath_scheme: str
-        scheme to generate kpath
-    code:
-        code to perform the computations
-    """
-    cell = get_phonopy_structure(structure)
-    factor = get_factor(code)
-
-    # a bit of code repetition here as I currently
-    # do not see how to pass the phonopy object?
-    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: list[list[float]] | str = [
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ]
-    else:
-        primitive_matrix = "auto"
-
-    phonon = Phonopy(
-        cell,
-        supercell_matrix,
-        primitive_matrix=primitive_matrix,
-        factor=factor,
-        symprec=symprec,
-        is_symmetry=sym_reduce,
-    )
-    phonon.generate_displacements(distance=displacement)
-
-    supercells = phonon.supercells_with_displacements
-    return [get_pmg_structure(cell) for cell in supercells]
 
 @job
 def get_force_constants(
@@ -116,6 +57,50 @@ def get_force_constants(
 
     force_constants = phonon.get_force_constants()
     return force_constants
+
+def make_phonon(
+    structure: Structure,
+    supercell: np.ndarray,
+    code: str,
+    symprec: float,
+    sym_reduce: bool,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str, 
+) -> Phonopy:
+    """
+    Builds a Phonopy object
+
+    Parameters
+    ----------
+    structure: Structure
+        Fully optimized input structure to use for making phonon
+    supercell: np.ndarray
+        array to describe supercell
+    code: str
+        code to perform the computations
+    symprec: float
+        precision to determine symmetry
+    sym_reduce: bool
+        if True, symmetry will be used to generate displacements
+    use_symmetrized_structure: str or None
+        Primitive, conventional, or None
+    kpath_scheme:
+        scheme to generate kpath
+    """
+    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
+        primitive_matrix: np.ndarray | str = np.eye(3)
+    else:
+        primitive_matrix = "auto"
+
+    # Generate Phonopy object
+    cell = get_phonopy_structure(structure)
+    phonon = Phonopy(cell, 
+                    supercell_matrix = supercell,
+                    primitive_matrix = primitive_matrix,
+                    factor = get_factor(code),
+                    symprec = symprec,
+                    is_symmetry = sym_reduce)
+    return phonon
 
 @job 
 def build_dyn_mat(
@@ -156,19 +141,14 @@ def build_dyn_mat(
     kpath_concrete:
         list of paths
     """
-    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: np.ndarray | str = np.eye(3)
-    else:
-        primitive_matrix = "auto"
-
-    # Generate Phonopy object and set force constants
-    cell = get_phonopy_structure(structure)
-    phonon = Phonopy(cell, 
-                    supercell_matrix = supercell,
-                    primitive_matrix = primitive_matrix,
-                    factor = get_factor(code),
-                    symprec = symprec,
-                    is_symmetry = sym_reduce)
+    # Set Phonopy object's force constants
+    phonon = make_phonon(structure = structure,
+                        supercell = supercell,
+                        code = code,
+                        symprec = symprec,
+                        sym_reduce = sym_reduce,
+                        use_symmetrized_structure = use_symmetrized_structure,
+                        kpath_scheme = kpath_scheme)
     phonon.force_constants = force_constants
 
     # Convert qpoints into array of 3-element arrays
@@ -245,7 +225,14 @@ def displace_structure(
 
 @job
 def get_anharmonic_force(
-    phonon: Phonopy,
+    structure: Structure,
+    supercell: np.ndarray,
+    displacement: float,
+    code: str,
+    symprec: float,
+    sym_reduce: bool,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str,
     DFT_forces: list[np.ndarray]
 ) -> np.ndarray:
     """
@@ -254,12 +241,49 @@ def get_anharmonic_force(
 
     Parameters
     ----------
-    phonon: Phonopy
-        The phonon object to get F^(2) from
+    structure: Structure
+        Fully optimized input structure to use for making phonon
+    supercell: np.ndarray
+        array to describe supercell
+    displacement: float
+        displacement in Angstrom
+    code: str
+        code to perform the computations
+    symprec: float
+        precision to determine symmetry
+    sym_reduce: bool
+        if True, symmetry will be used to generate displacements
+    use_symmetrized_structure: str or None
+        Primitive, conventional, or None
+    kpath_scheme:
+        scheme to generate kpath
     DFT_forces: list[np.ndarray]
         Matrix of DFT_forces
     """
+    phonon = make_phonon(structure = structure,
+                        supercell = supercell,
+                        code = code,
+                        symprec = symprec,
+                        sym_reduce = sym_reduce,
+                        use_symmetrized_structure = use_symmetrized_structure,
+                        kpath_scheme = kpath_scheme)
+    
+    disp_job = generate_phonon_displacements(structure = structure,
+                                             supercell_matrix = supercell,
+                                             displacement = displacement,
+                                             sym_reduce = sym_reduce,
+                                             symprec = symprec,
+                                             use_symmetrized_structure = use_symmetrized_structure,
+                                             kpath_scheme = kpath_scheme,
+                                             code = code)
+    disp_response = run_locally(disp_job, ensure_success=True)
+    displacements = disp_response[disp_job.uuid][1].output
 
+    run_displacements = run_phonon_displacements(displacements = displacements,
+                                                 structure = structure,
+                                                 supercell_matrix = supercell)
+    responses = run_locally(run_displacements, create_folders=True, ensure_success=True)
+    #TODO: Figure out how to run run_phonon_displacements
     DFT_forces_np = np.array(DFT_forces)
     harmonic_force = phonon.forces
     anharmonic_force = DFT_forces_np - harmonic_force
