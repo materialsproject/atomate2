@@ -757,6 +757,7 @@ class MVLGWSetGenerator(VaspInputGenerator):
             #       So, I manually set them here.
             updates.update(
                 {
+                    "ALGO": "Normal",
                     "ISMEAR": 0,
                     "SIGMA": 0.01,
                 }
@@ -776,6 +777,8 @@ class MVLGWSetGenerator(VaspInputGenerator):
                     # Here, I decide to keep the default value of NELM
                     # to be 100 as defined in pymatgen.io.vasp.sets MVLGWSet.yaml.
                     "NELM": 100,
+                    "ISMEAR": 0,
+                    "SIGMA": 0.01,
                     "LOPTICS": True,
                     "LPEAD": True,
                 }
@@ -791,6 +794,8 @@ class MVLGWSetGenerator(VaspInputGenerator):
                 {
                     "ALGO": "GW0",
                     "NELM": 1,
+                    "ISMEAR": 0,
+                    "SIGMA": 0.01,
                     "NOMEGA": 80,
                     "ENCUTGW": 250,
                     "EDIFF": None,
