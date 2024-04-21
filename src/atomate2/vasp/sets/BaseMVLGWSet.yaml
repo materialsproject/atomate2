@@ -1,5 +1,4 @@
 # Default VASP settings for GW calculations used by the Materials Virtual Lab.
-PARENT: VASPIncarBase
 INCAR:
   ALGO: Normal
   EDIFF: 1.0e-8
@@ -13,6 +12,37 @@ INCAR:
   NELM: 100
   PREC: Accurate
   SIGMA: 0.01
+  MAGMOM:
+    Ce: 5
+    Ce3+: 1
+    Co: 0.6
+    Co3+: 0.6
+    Co4+: 1
+    Cr: 5
+    Dy3+: 5
+    Er3+: 3
+    Eu: 10
+    Eu2+: 7
+    Eu3+: 6
+    Fe: 5
+    Gd3+: 7
+    Ho3+: 4
+    La3+: 0.6
+    Lu3+: 0.6
+    Mn: 5
+    Mn3+: 4
+    Mn4+: 3
+    Mo: 5
+    Nd3+: 3
+    Ni: 5
+    Pm3+: 4
+    Pr3+: 2
+    Sm3+: 5
+    Tb3+: 6
+    Tm3+: 2
+    V: 5
+    W: 5
+    Yb3+: 1
 KPOINTS:
   reciprocal_density: 100
 POTCAR_FUNCTIONAL: PBE_54
