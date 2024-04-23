@@ -40,14 +40,17 @@ from atomate2.forcefields.md import (
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from jobflow import Flow, Job
     from pymatgen.core import Structure
     from pathlib import Path
-    from jobflow import Flow, Job
+    from typing import Any
+    
 
 
 @dataclass
 class MPMorphMLFFMDMaker(MPMorphMDMaker):
-    """ML ForceField MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
+    """
+    ML ForceField MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     (optional) for the volume followed by a production run(s) at a given temperature
@@ -74,6 +77,8 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MLFFMDMaker that quenchs structure from high temperature to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
+    quench_maker_kwargs : dict or None (default)
+        If a dict, options to pass to `quench_maker`.
     """
 
     name: str = "MP Morph MLFF MD Maker"
@@ -86,6 +91,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
 
     quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
+    quench_maker_kwargs : dict[str,Any] | None = None
 
     def _post_init_update(self) -> None:
         """Ensure that forcefield makers correctly set temperature."""
@@ -111,12 +117,18 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             )
         )
 
+        self.quench_maker_kwargs = self.quench_maker_kwargs or {}        
+        if len(self.quench_maker_kwargs) > 0:
+            self.quench_maker = self.quench_maker.update_kwargs(
+                update = self.quench_maker_kwargs,
+                class_filter = type(self.quench_maker)
+            )
 
 @dataclass
 class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
     """Slow quench flow for quenching high temperature structures to low temperature using ForceFieldMDMaker.
 
-    Quench's a provided structure with a molecular dyanmics run from a desired high temperature to
+    Quenches a provided structure with a molecular dyanmics run from a desired high temperature to
     a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
     and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
     Adapted from MPMorph Workflow.
@@ -255,7 +267,7 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(
-        default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=LJMDMaker())
+        default_factory= SlowQuenchMLFFMDMaker
     )
 
 
