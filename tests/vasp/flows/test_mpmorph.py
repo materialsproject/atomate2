@@ -1,19 +1,17 @@
 """Test MPMorph VASP flows."""
 
 import pytest
+from jobflow import run_locally
+from pymatgen.core import Structure
+from pymatgen.io.vasp import Kpoints
 
 from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker, MPMorphMDMaker
 from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.sets.core import MDSetGenerator
 from atomate2.vasp.run import _DEFAULT_HANDLERS
-from pymatgen.io.vasp import Kpoints
-from jobflow import run_locally
-
-from pymatgen.core import Structure
+from atomate2.vasp.sets.core import MDSetGenerator
 
 
 def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
-
     ref_paths = {
         "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/Si_0.8",
         "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/Si_1.0",
@@ -37,7 +35,7 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     )
     incar_settings = {
         "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
-        "LREAL": "Auto",  # Peform calculation in real space for AIMD due to large unit cell size
+        "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
         "LAECHG": False,  # Don't need AECCAR for AIMD
         "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
@@ -125,7 +123,6 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
-
     ref_paths = {
         "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/recursion/Si_3.48",
         "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/recursion/Si_4.35",
@@ -150,7 +147,7 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
     )
     incar_settings = {
         "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
-        "LREAL": "Auto",  # Peform calculation in real space for AIMD due to large unit cell size
+        "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
         "LAECHG": False,  # Don't need AECCAR for AIMD
         "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
@@ -237,7 +234,6 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
 
 
 def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
-
     ref_paths = {
         "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/Si_0.8",
         "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/Si_1.0",
@@ -263,7 +259,7 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
     )
     incar_settings = {
         "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
-        "LREAL": "Auto",  # Peform calculation in real space for AIMD due to large unit cell size
+        "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
         "LAECHG": False,  # Don't need AECCAR for AIMD
         "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below

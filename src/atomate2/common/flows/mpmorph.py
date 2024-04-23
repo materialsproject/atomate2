@@ -1,32 +1,27 @@
 """Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
 
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
-
-from jobflow import job, Flow, Maker, Response
-
-# from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.common.jobs.eos import (
-    _apply_strain_to_structure,
-    MPMorphPVPostProcess,
-)
-from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.sets.core import MDSetGenerator
-from atomate2.forcefields.md import ForceFieldMDMaker
+from typing import TYPE_CHECKING, Union
 
 import numpy as np
-
-from typing import Union
+from jobflow import Flow, Maker, Response, job
 from pymatgen.core import Composition
+
+# from atomate2.common.flows.eos import CommonEosMaker
+from atomate2.common.jobs.eos import MPMorphPVPostProcess, _apply_strain_to_structure
+from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.vasp.jobs.md import MDMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Any
+
+    from jobflow import Job
+    from pymatgen.core import Structure
 
     from atomate2.common.jobs.eos import EOSPostProcessor
-    from jobflow import Job
-
-    from pymatgen.core import Structure
 
 
 @dataclass
@@ -35,7 +30,7 @@ class EquilibriumVolumeMaker(Maker):
     Equilibrate structure using NVT + EOS fitting.
 
     Parameters
-    -----------
+    ----------
     name : str = "Equilibrium Volume Maker"
         Name of the flow
     md_maker : Maker
@@ -61,13 +56,13 @@ class EquilibriumVolumeMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        working_outputs: dict[str, dict] | None = None,
+        working_outputs: dict[str, Any] | None = None,
     ) -> Flow:
         """
         Run an NVT+EOS equilibration flow.
 
         Parameters
-        -----------
+        ----------
         structure : Structure
             structure to equilibrate
         prev_dir : str | Path | None (default)
@@ -79,10 +74,9 @@ class EquilibriumVolumeMaker(Maker):
         -------
         .Flow, an MPMorph flow
         """
-
         if working_outputs is None:
             linear_strain = np.linspace(-0.2, 0.2, self.postprocessor.min_data_points)
-            working_outputs: dict[str, dict] = {
+            working_outputs = {
                 "relax": {key: [] for key in ("energy", "volume", "stress", "pressure")}
             }
 
@@ -316,7 +310,7 @@ class FastQuenchMaker(Maker):
 class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
     """Slow quench flow for quenching high temperature structures to low temperature
 
-    Quench's a provided structure with a molecular dyanmics run from a desired high temperature to
+    Quench's a provided structure with a molecular dynamics run from a desired high temperature to
     a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
     and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
     Adapted from MPMorph Workflow.
@@ -346,9 +340,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
 
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> (
-        Flow
-    ):  # TODO : main objective: modified to work with other MD codes; Only works for VASP and MLFF_MD now.
+    ) -> Flow:  # TODO : main objective: modified to work with other MD codes; Only works for VASP and MLFF_MD now.
         """
         Create a slow quench flow with md maker.
 
@@ -364,8 +356,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
         Flow
             A flow containing series of relax and static runs.
         """
-
-        md_jobs = []
+        md_jobs: list[Job] = []
         for temp in np.arange(
             self.quench_start_temperature,
             self.quench_end_temperature,

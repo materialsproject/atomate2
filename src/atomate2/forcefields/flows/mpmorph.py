@@ -1,50 +1,43 @@
 """Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
 
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.common.flows.mpmorph import (
-    FastQuenchMaker,
-    SlowQuenchMaker,
-    MPMorphMDMaker,
     EquilibriumVolumeMaker,
+    FastQuenchMaker,
+    MPMorphMDMaker,
+    SlowQuenchMaker,
 )
-
-from atomate2.forcefields.md import ForceFieldMDMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
-
-from atomate2.common.jobs.eos import MPMorphEVPostProcess, MPMorphPVPostProcess
-
+from atomate2.common.jobs.eos import MPMorphEVPostProcess
 from atomate2.forcefields.jobs import (
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
     CHGNetRelaxMaker,
     CHGNetStaticMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+    LJRelaxMaker,
+    LJStaticMaker,
     M3GNetRelaxMaker,
     M3GNetStaticMaker,
     MACERelaxMaker,
     MACEStaticMaker,
-    LJRelaxMaker,
-    LJStaticMaker,
 )
 from atomate2.forcefields.md import (
-    ForceFieldMDMaker,
     CHGNetMDMaker,
+    ForceFieldMDMaker,
+    LJMDMaker,
     M3GNetMDMaker,
     MACEMDMaker,
-    LJMDMaker,
 )
 
-
-from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
-    from jobflow import Flow, Job
-    from pymatgen.core import Structure
     from pathlib import Path
     from typing import Any
-    
+
+    from jobflow import Flow, Job
+    from pymatgen.core import Structure
 
 
 @dataclass
@@ -91,11 +84,10 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
 
     quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
-    quench_maker_kwargs : dict[str,Any] | None = None
+    quench_maker_kwargs: dict[str, Any] | None = None
 
     def _post_init_update(self) -> None:
         """Ensure that forcefield makers correctly set temperature."""
-
         self.md_maker = self.md_maker.update_kwargs(
             update={
                 "temperature": self.temperature,
@@ -117,18 +109,18 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             )
         )
 
-        self.quench_maker_kwargs = self.quench_maker_kwargs or {}        
+        self.quench_maker_kwargs = self.quench_maker_kwargs or {}
         if len(self.quench_maker_kwargs) > 0:
             self.quench_maker = self.quench_maker.update_kwargs(
-                update = self.quench_maker_kwargs,
-                class_filter = type(self.quench_maker)
+                update=self.quench_maker_kwargs, class_filter=type(self.quench_maker)
             )
+
 
 @dataclass
 class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
     """Slow quench flow for quenching high temperature structures to low temperature using ForceFieldMDMaker.
 
-    Quenches a provided structure with a molecular dyanmics run from a desired high temperature to
+    Quenches a provided structure with a molecular dynamics run from a desired high temperature to
     a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
     and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
     Adapted from MPMorph Workflow.
@@ -237,7 +229,7 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temeprature to low temperature.
+    temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -266,9 +258,7 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     production_md_maker: LJMDMaker = field(
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
-    quench_maker: SlowQuenchMLFFMDMaker = field(
-        default_factory= SlowQuenchMLFFMDMaker
-    )
+    quench_maker: SlowQuenchMLFFMDMaker = field(default_factory=SlowQuenchMLFFMDMaker)
 
 
 @dataclass
@@ -358,7 +348,7 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temeprature to low temperature.
+    temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -483,7 +473,7 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temeprature to low temperature.
+    temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -608,7 +598,7 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temeprature to low temperature.
+    temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 

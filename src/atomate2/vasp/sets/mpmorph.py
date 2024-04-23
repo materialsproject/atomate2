@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from atomate2.vasp.sets.core import MDSetGenerator
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.io.vasp import Outcar, Vasprun
+
 
 @dataclass
 class MPMorphMDSetGenerator(MDSetGenerator):
@@ -32,14 +32,14 @@ class MPMorphMDSetGenerator(MDSetGenerator):
     **kwargs
         Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
-    
+
     auto_ismear: bool = False
     auto_kspacing: bool = True
-    auto_ispin : bool = False
+    auto_ispin: bool = False
     inherit_incar: bool | None = False
-    ensemble : str = "nvt"
-    time_step : float = 2
-    nsteps : int = 2000
+    ensemble: str = "nvt"
+    time_step: float = 2
+    nsteps: int = 2000
 
     def get_incar_updates(
         self,
@@ -70,23 +70,24 @@ class MPMorphMDSetGenerator(MDSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-
         updates = super().get_incar_updates(
-            structure = structure,
-            prev_incar = prev_incar,
-            bandgap = bandgap,
-            vasprun = vasprun,
-            outcar = outcar
+            structure=structure,
+            prev_incar=prev_incar,
+            bandgap=bandgap,
+            vasprun=vasprun,
+            outcar=outcar,
         )
-        updates.update({
-            "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
-            "LREAL": "Auto",  # Peform calculation in real space for AIMD due to large unit cell size
-            "LAECHG": False,  # Don't need AECCAR for AIMD
-            "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
-            "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
-            "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
-            "LDAUPRINT": 0,
-        })
+        updates.update(
+            {
+                "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
+                "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
+                "LAECHG": False,  # Don't need AECCAR for AIMD
+                "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
+                "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
+                "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
+                "LDAUPRINT": 0,
+            }
+        )
 
         return updates
 

@@ -1,42 +1,38 @@
 """Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
 
 from __future__ import annotations
+
+import math
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Response
 
 from atomate2.common.flows.mpmorph import (
-    FastQuenchMaker,
-    SlowQuenchMaker,
-    MPMorphMDMaker,
     EquilibriumVolumeMaker,
+    FastQuenchMaker,
+    MPMorphMDMaker,
+    SlowQuenchMaker,
 )
-
 from atomate2.vasp.flows.md import MultiMDMaker
 from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.jobs.mpmorph import (
-    BaseMPMorphMDMaker,
-    SlowQuenchVaspMaker,
-    FastQuenchVaspMaker,
-)
-
-from atomate2.vasp.powerups import update_user_incar_settings
-
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-
-import math
-
-from typing import TYPE_CHECKING
+from atomate2.vasp.jobs.mpmorph import (
+    BaseMPMorphMDMaker,
+    FastQuenchVaspMaker,
+    SlowQuenchVaspMaker,
+)
+from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
     from pathlib import Path
-    from jobflow import Flow, Maker
+
+    from jobflow import Flow
+    from pymatgen.core import Structure
 
 
 @dataclass
@@ -89,8 +85,7 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
     quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
 
     def _post_init_update(self) -> None:
-        """ Ensure that VASP input sets correctly set temperature. """
-
+        """Ensure that VASP input sets correctly set temperature."""
         # TODO: check if this properly updates INCAR for all MD runs
         if self.steps_convergence is None:
             self.md_maker = update_user_incar_settings(
@@ -136,6 +131,7 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
                     md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
                 )
             )
+
 
 @dataclass
 class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
@@ -372,7 +368,6 @@ class MPMorphVaspOldMDMaker(MPMorphMDMaker):
     quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-
         # TODO: check if this properly updates INCAR for all MD runs
         if self.steps_convergence is None:
             self.md_maker = update_user_incar_settings(

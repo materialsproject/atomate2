@@ -482,7 +482,9 @@ class PyACERelaxMaker(ForceFieldRelaxMaker):
 
     def _calculator(self) -> Calculator:
         import pyace
+
         return pyace.PyACECalculator(**self.calculator_kwargs)
+
 
 @dataclass
 class LJRelaxMaker(ForceFieldRelaxMaker):
@@ -490,6 +492,7 @@ class LJRelaxMaker(ForceFieldRelaxMaker):
 
     def _calculator(self) -> Calculator:
         from ase.calculators.lj import LennardJones
+
         return LennardJones(**self.calculator_kwargs)
 
 
@@ -499,4 +502,5 @@ class LJStaticMaker(ForceFieldStaticMaker):
 
     def _calculator(self) -> Calculator:
         from ase.calculators.lj import LennardJones
+
         return LennardJones(**self.calculator_kwargs)

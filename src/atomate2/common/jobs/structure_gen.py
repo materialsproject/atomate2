@@ -1,5 +1,4 @@
 ### TODO:AmorphousMaker class from original MPMorph github repo. Plans to be integrated into atomate2
-from __future__ import division
 
 import os
 import shutil
@@ -12,7 +11,7 @@ from pymatgen.ext.matproj import MPRester
 from pymatgen.io.vasp.inputs import Poscar
 
 
-class AmorphousMaker(object):
+class AmorphousMaker:
     def __init__(
         self,
         el_num_dict: dict,
@@ -41,7 +40,7 @@ class AmorphousMaker(object):
                 e.g. tol = 2.0 angstroms
             packmol_path (str): path to the packmol executable
             clean (bool): whether the intermedite files generated are deleted.
-            xyz_paths (list): list of paths (str) to xyz files correpsonding to
+            xyz_paths (list): list of paths (str) to xyz files corresponding to
                 molecules, if given so in el_num_dict. File names must match the
                 molecule formula.
             time_seed (bool): whether to generate a random seed based on system time
@@ -84,12 +83,12 @@ class AmorphousMaker(object):
 
     def call_packmol(self):
         """
-        Returns:
+        Returns
+        -------
             A dict of coordinates of atoms for each element type
             e.g. {'V': [[4.969925, 8.409291, 5.462153], [9.338829, 9.638388, 9.179811], ...]
                   'Li': [[5.244308, 8.918049, 1.014577], [2.832759, 3.605796, 2.330589], ...]}
         """
-
         # this ensures periodic boundaries don't cause problems
         pm_l = self.tol / 2
         pm_h = self.box_scale - self.tol / 2
@@ -143,22 +142,22 @@ class AmorphousMaker(object):
 
     def xyz_to_dict(self, filename: str):
         """
-        This is a generic xyz to dictionary convertor.
+        This is a generic xyz to dictionary converter.
         Used to get the structure from packmol output.
         """
-        with open(filename, "r") as f:
+        with open(filename) as f:
             lines = f.readlines()
             N = int(lines[0].rstrip("\n"))
-            el_dict = {}
+            el_dict: dict[str, list] = {}
             for line in lines[2:]:
                 l = line.rstrip("\n").split()
                 if l[0] in el_dict:
                     el_dict[l[0]].append([float(i) for i in l[1:]])
                 else:
                     el_dict[l[0]] = [[float(i) for i in l[1:]]]
-        if N != sum([len(x) for x in el_dict.values()]):
+        if sum([len(x) for x in el_dict.values()]) != N:
             raise ValueError("Inconsistent number of atoms")
-        self._el_dict = OrderedDict(el_dict)
+        self._el_dict = OrderedDict(el_dict)  # type:ignore[assignment]
         if self.clean:
             os.system("rm " + filename)
         return self._el_dict
@@ -175,7 +174,7 @@ class AmorphousMaker(object):
         """
         species = []
         coords = []
-        for el in el_dict.keys():
+        for el in el_dict:
             for atom in el_dict[el]:
                 species.append(el)
                 coords.append(atom)
@@ -240,10 +239,9 @@ def get_random_packed(
     :param mpr: custom MPRester object if additional specifications needed (such as API or endpoint)
     :return:
     """
-
-    if type(composition) == str:
+    if isinstance(composition, str):
         composition = Composition(composition)
-    if type(add_specie) == str:
+    if isinstance(add_specie, str):
         add_specie = Composition(add_specie)
 
     if vol_per_atom is None:

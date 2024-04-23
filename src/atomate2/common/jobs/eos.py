@@ -320,9 +320,9 @@ class PostProcessEosPressure(EOSPostProcessor):
 
             self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"][
-                    "exception"
-                ] = "Optimal EOS parameters not found."
+                self.results[jobtype]["EOS"]["exception"] = (
+                    "Optimal EOS parameters not found."
+                )
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
                     self.results[jobtype]["EOS"][key] = eos_params[i]
@@ -396,7 +396,7 @@ def _apply_strain_to_structure(structure: Structure, deformations: list) -> list
 
 
 class MPMorphPVPostProcess(PostProcessEosPressure):
-    """Modified  p(V) fit to accomodate MPMorph."""
+    """Modified  p(V) fit to accommodate MPMorph."""
 
     def eval(self) -> None:
         """Fit the input data to the Birch-Murnaghan pressure EOS."""
@@ -407,9 +407,9 @@ class MPMorphPVPostProcess(PostProcessEosPressure):
             )
             self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"][
-                    "exception"
-                ] = "Optimal EOS parameters not found."
+                self.results[jobtype]["EOS"]["exception"] = (
+                    "Optimal EOS parameters not found."
+                )
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
                     self.results[jobtype]["EOS"][key] = eos_params[i]
@@ -420,7 +420,8 @@ class MPMorphPVPostProcess(PostProcessEosPressure):
 
 
 class MPMorphEVPostProcess(PostProcessEosEnergy):
-    """Modified  E(V) fit to accomodate MPMorph."""
+    """Modified  E(V) fit to accommodate MPMorph."""
+
     eos_models: tuple[str, ...] = (
         "vinet",
         "birch_murnaghan",
@@ -429,7 +430,6 @@ class MPMorphEVPostProcess(PostProcessEosEnergy):
         "murnaghan",
     )
 
-    
     def eval(self) -> None:
         """Fit the input data to the Birch-Murnaghan pressure EOS."""
         for jobtype in self._use_job_types:
@@ -445,7 +445,7 @@ class MPMorphEVPostProcess(PostProcessEosEnergy):
                     }
                 except EOSError as exc:
                     self.results[jobtype]["EOS"][eos_name] = {"exception": str(exc)}
-        
+
         for eos_func in self.eos_models:
             if v0 := self.results[jobtype]["EOS"][eos_func].get("v0"):
                 self.results["V0"] = v0

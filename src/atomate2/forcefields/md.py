@@ -387,8 +387,8 @@ class NequipMDMaker(ForceFieldMDMaker):
 class LJMDMaker(ForceFieldMDMaker):
     """Perform an MD run with a Lennard-Jones potential"""
 
-    name: str = f"Lennard-Jones MD"
-    force_field_name: str = f"Lennard-Jones"
+    name: str = "Lennard-Jones MD"
+    force_field_name: str = "Lennard-Jones"
 
     def _calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
@@ -401,8 +401,8 @@ class LJMDMaker(ForceFieldMDMaker):
 class PACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with PACE."""
 
-    name: str = f"Py-ACE MD"
-    force_field_name: str = f"Py-ACE"
+    name: str = "Py-ACE MD"
+    force_field_name: str = "Py-ACE"
 
     def _calculator(self) -> Calculator:
         import pyace

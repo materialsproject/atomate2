@@ -1,28 +1,28 @@
-""" Jobs that compose MPMorph flows. """
+"""Jobs that compose MPMorph flows."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from atomate2.common.flows.mpmorph import FastQuenchMaker, SlowQuenchMaker
 from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.sets.mpmorph import MPMorphMDSetGenerator
-
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-
-from atomate2.common.flows.mpmorph import SlowQuenchMaker, FastQuenchMaker
 from atomate2.vasp.powerups import update_user_incar_settings
+from atomate2.vasp.sets.mpmorph import MPMorphMDSetGenerator
 
 if TYPE_CHECKING:
-    from atomate2.vasp.sets.base import VaspInputGenerator
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-    from pymatgen.core import Structure
     from pathlib import Path
+
     from jobflow import Flow, Job
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 
 @dataclass
@@ -64,7 +64,7 @@ class BaseMPMorphMDMaker(MDMaker):
 class SlowQuenchVaspMaker(SlowQuenchMaker):
     """Slow quench flow for quenching high temperature structures to low temperature using VASP MDMaker.
 
-    Quench's a provided structure with a molecular dyanmics run from a desired high temperature to
+    Quench's a provided structure with a molecular dynamics run from a desired high temperature to
     a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
     and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
     Adapted from MPMorph Workflow.
@@ -81,7 +81,7 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
         Ending temperature for quench; default 500K
     quench_temperature_step : int = 500
         Temperature step for quench; default 500K drop
-    quench_nsteps : int = 1000
+    quench_n_steps : int = 1000
         Number of steps for quench; default 1000 steps
     """
 
@@ -104,7 +104,10 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
             },
         )
         return self.md_maker.make(
-            structure=structure, prev_dir=prev_dir, temperature=temp, nsteps=n_steps
+            structure=structure,
+            prev_dir=prev_dir,
+            temperature=temp,
+            nsteps=self.quench_n_steps,
         )
 
 

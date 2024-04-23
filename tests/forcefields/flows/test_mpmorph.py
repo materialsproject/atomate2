@@ -1,31 +1,21 @@
 """Test MPMorph forcefield flows."""
 
 import pytest
-import re
-
-from jobflow import Flow, Maker
-
-from pymatgen.analysis.structure_matcher import StructureMatcher
 from jobflow import run_locally
+
 from atomate2.common.flows.mpmorph import SlowQuenchMaker
 from atomate2.forcefields.flows.mpmorph import (
-    SlowQuenchMLFFMDMaker,
-    MPMorphLJMDMaker,
     MPMorphCHGNetMDMaker,
-    MPMorphMACEMDMaker,
-    MPMorphSlowQuenchLJMDMaker,
-    MPMorphSlowQuenchCHGNetMDMaker,
-    MPMorphSlowQuenchMACEMDMaker,
-    MPMorphFastQuenchLJMDMaker,
     MPMorphFastQuenchCHGNetMDMaker,
+    MPMorphFastQuenchLJMDMaker,
     MPMorphFastQuenchMACEMDMaker,
+    MPMorphLJMDMaker,
+    MPMorphMACEMDMaker,
+    MPMorphSlowQuenchCHGNetMDMaker,
+    MPMorphSlowQuenchLJMDMaker,
+    MPMorphSlowQuenchMACEMDMaker,
 )
-from atomate2.forcefields.md import (
-    ForceFieldMDMaker,
-    LJMDMaker,
-    MACEMDMaker,
-    CHGNetMDMaker,
-)
+from atomate2.forcefields.md import CHGNetMDMaker, LJMDMaker, MACEMDMaker
 
 _velocity_seed = 1234
 
@@ -84,23 +74,29 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
             md_maker = name_to_md_maker[mlff_name]
             break
 
-    quench_kwargs = {
-        "quench_n_steps": n_steps_quench,
-        "md_maker": md_maker(
-            name=f"{mlff_name} Quench MD Maker", mb_velocity_seed=_velocity_seed
-        )
-    } if "Slow Quench" in ff_name else {}
+    quench_kwargs = (
+        {
+            "quench_n_steps": n_steps_quench,
+            "md_maker": md_maker(
+                name=f"{mlff_name} Quench MD Maker", mb_velocity_seed=_velocity_seed
+            ),
+        }
+        if "Slow Quench" in ff_name
+        else {}
+    )
 
     flow = name_to_maker[ff_name](
         temperature=temp,
         steps_convergence=n_steps_convergence,
         steps_total_production=n_steps_production,
-        md_maker=md_maker(name=f"{mlff_name} MD Maker", mb_velocity_seed=_velocity_seed),
+        md_maker=md_maker(
+            name=f"{mlff_name} MD Maker", mb_velocity_seed=_velocity_seed
+        ),
         production_md_maker=md_maker(
             name=f"{mlff_name} Production MD Maker",
             mb_velocity_seed=_velocity_seed,
         ),
-        quench_maker_kwargs = quench_kwargs,
+        quench_maker_kwargs=quench_kwargs,
     ).make(structure)
 
     # Flow.update_maker_kwargs()
