@@ -88,9 +88,9 @@ class EquilibriumVolumeMaker(Maker):
 
         else:
             self.postprocessor.fit(working_outputs)
-            print("____EOS FIT PARAMS_____")
-            print(self.postprocessor.results)
-            print("_______________________")
+            # print("____EOS FIT PARAMS_____") #TODO: Remove after testings is complete
+            # print(self.postprocessor.results)
+            # print("_______________________")
             working_outputs = dict(self.postprocessor.results)
             working_outputs["relax"].pop(
                 "pressure", None
@@ -371,7 +371,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             self.quench_end_temperature,
             -self.quench_temperature_step,
         ):
-
+            print(temp, self.quench_n_steps)
             prev_dir = (
                 None
                 if temp == self.quench_start_temperature
@@ -379,7 +379,9 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             )
 
             md_job = self.call_md_maker(
-                structure, prev_dir, temp=temp, n_steps=self.quench_n_steps
+                structure=structure,
+                temp=temp,
+                prev_dir=prev_dir,
             )
             """ # Logic of call_md_maker is to substitute the following code:
             if isinstance(self.md_maker, MDMaker):
@@ -417,7 +419,12 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             name=self.name,
         )
 
-    def call_md_maker(self, structure, prev_dir, temp, n_steps):
+    def call_md_maker(
+        self,
+        structure: Structure,
+        temp: float,
+        prev_dir: str | Path | None = None,
+    ) -> Flow | Job:
         if not (
             isinstance(self.md_maker, MDMaker)
             or isinstance(self.md_maker, ForceFieldMDMaker)

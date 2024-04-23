@@ -144,15 +144,14 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         self,
         structure: Structure,
         temp: float,
-        n_steps: int,
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
-        """Call the MD maker to create the MD jobs for VASP Only."""
+        """Call the MD maker to create the MD jobs for MLFF Only."""
         self.md_maker = self.md_maker.update_kwargs(
             update={
-                "name": "Slow quenchMLFF MD Maker",
+                "name": f"Slow quench MLFF MD Maker {temp}K",
                 "temperature": temp,
-                "n_steps": n_steps,
+                "n_steps": self.quench_n_steps,
             }
         )
         return self.md_maker.make(structure=structure, prev_dir=prev_dir)

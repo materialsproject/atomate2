@@ -20,6 +20,9 @@ from atomate2.vasp.powerups import update_user_incar_settings
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
     from atomate2.vasp.jobs.base import BaseVaspMaker
+    from pymatgen.core import Structure
+    from pathlib import Path
+    from jobflow import Flow, Job
 
 
 @dataclass
@@ -84,23 +87,24 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
 
     name: str = "vasp slow quench"
     md_maker: BaseVaspMaker = field(default_factory=BaseMPMorphMDMaker)
-    quench_start_temperature: int = 3000
-    quench_end_temperature: int = 500
-    quench_temperature_step: int = 500
-    quench_nsteps: int = 1000
 
-    def call_md_maker(self, structure, prev_dir, temp, nsteps):
+    def call_md_maker(
+        self,
+        structure: Structure,
+        temp: float,
+        prev_dir: str | Path | None = None,
+    ) -> Flow | Job:
         """Call the MD maker to create the MD jobs for VASP Only."""
         self.md_maker = update_user_incar_settings(
             flow=self.md_maker,
             incar_updates={
                 "TEBEG": temp,
                 "TEEND": temp,  # Equilibrium volume search is only at single temperature (temperature sweep not allowed)
-                "NSW": nsteps,
+                "NSW": self.quench_n_steps,
             },
         )
         return self.md_maker.make(
-            structure=structure, prev_dir=prev_dir, temperature=temp, nsteps=nsteps
+            structure=structure, prev_dir=prev_dir, temperature=temp, nsteps=n_steps
         )
 
 
