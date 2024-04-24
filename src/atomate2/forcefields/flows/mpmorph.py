@@ -71,7 +71,14 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         SlowQuenchMaker - MLFFMDMaker that quenchs structure from high temperature to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
     quench_maker_kwargs : dict or None (default)
-        If a dict, options to pass to `quench_maker`.
+        If a dict, options to pass to `quench_maker`. Check atomate2.common.flows.mpmorph for SlowQuenchMaker docstring
+        Example for MLFFs: quench_maker_kwargs = {
+            "md_maker": LJMDMaker(name="LJ MD Maker"),
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
     """
 
     name: str = "MP Morph MLFF MD Maker"
@@ -259,6 +266,15 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(default_factory=SlowQuenchMLFFMDMaker)
+    quench_maker_kwargs: dict[str, Any] = field(
+        default_factory=lambda: {
+            "md_maker": LJMDMaker(name="LJ MD Maker"),
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
+    )
 
 
 @dataclass
@@ -381,6 +397,15 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(
         default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=CHGNetMDMaker())
+    )
+    quench_maker_kwargs: dict[str, Any] = field(
+        default_factory=lambda: {
+            "md_maker": CHGNetMDMaker(name="CHGNet MD Maker"),
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
     )
 
 
@@ -507,6 +532,15 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     quench_maker: SlowQuenchMLFFMDMaker = field(
         default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=M3GNetMDMaker())
     )
+    quench_maker_kwargs: dict[str, Any] = field(
+        default_factory=lambda: {
+            "md_maker": M3GNetMDMaker(name="M3GNet MD Maker"),
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
+    )
 
 
 @dataclass
@@ -631,6 +665,15 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(
         default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=MACEMDMaker())
+    )
+    quench_maker_kwargs: dict[str, Any] = field(
+        default_factory=lambda: {
+            "md_maker": MACEMDMaker(name="MACE MD Maker"),
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
     )
 
 

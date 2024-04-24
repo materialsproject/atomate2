@@ -30,6 +30,7 @@ from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Any
 
     from jobflow import Flow
     from pymatgen.core import Structure
@@ -69,6 +70,14 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MDMaker that quenchs structure from high temperature to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
+    quench_maker_kwargs : dict or None (default)
+        If a dict, options to pass to `quench_maker`. Check atomate2.common.flows.mpmorph for SlowQuenchMaker docstring
+        Example: quench_maker_kwargs = {
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
     """
 
     name: str = "MP Morph VASP Skeleton MD Maker"
@@ -83,6 +92,7 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
 
     quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
+    quench_maker_kwargs: dict[str, Any] | None = None
 
     def _post_init_update(self) -> None:
         """Ensure that VASP input sets correctly set temperature."""
@@ -130,6 +140,12 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
                 replace=MultiMDMaker(
                     md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
                 )
+            )
+
+        self.quench_maker_kwargs = self.quench_maker_kwargs or {}
+        if len(self.quench_maker_kwargs) > 0:
+            self.quench_maker = self.quench_maker.update_kwargs(
+                update=self.quench_maker_kwargs, class_filter=type(self.quench_maker)
             )
 
 
@@ -253,13 +269,14 @@ class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
 
     md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
-    quench_maker: SlowQuenchVaspMaker = field(
-        default_factory=lambda: SlowQuenchVaspMaker(
-            quench_n_steps=1000,
-            quench_temperature_step=500,
-            quench_end_temperature=500,
-            quench_start_temperature=3000,
-        )
+    quench_maker: SlowQuenchVaspMaker = field(default_factory=SlowQuenchVaspMaker)
+    quench_maker_kwargs: dict[str, Any] = field(
+        default_factory=lambda: {
+            "quench_n_steps": 1000,
+            "quench_temperature_step": 500,
+            "quench_end_temperature": 500,
+            "quench_start_temperature": 3000,
+        }
     )
 
 
