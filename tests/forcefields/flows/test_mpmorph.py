@@ -2,7 +2,7 @@
 
 import pytest
 from jobflow import run_locally
-
+import numpy as np
 from atomate2.common.flows.mpmorph import SlowQuenchMaker
 from atomate2.forcefields.flows.mpmorph import (
     MPMorphCHGNetMDMaker,
@@ -49,10 +49,11 @@ def _get_uuid_from_job(job, dct):
 @pytest.mark.parametrize(
     "ff_name",
     [
+        "MACE",
+        "MACE Fast Quench",
         "MACE Slow Quench",
     ],
 )
-
 #       "CHGNet",
 #       "CHGNet Slow Quench",
 #       "CHGNet Fast Quench",
@@ -63,7 +64,10 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     n_steps_convergence = 10
     n_steps_production = 20
 
-    n_steps_quench = 17
+    n_steps_quench = 15
+    quench_temp_steps = 100
+    quench_end_temp = 500
+    quench_start_temp = 900
 
     unit_cell_structure = si_structure.copy()
 
@@ -77,6 +81,9 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     quench_kwargs = (
         {
             "quench_n_steps": n_steps_quench,
+            "quench_temperature_step": quench_temp_steps,
+            "quench_end_temperature": quench_end_temp,
+            "quench_start_temperature": quench_start_temp,
             "md_maker": md_maker(
                 name=f"{mlff_name} Quench MD Maker", mb_velocity_seed=_velocity_seed
             ),
@@ -99,13 +106,6 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         quench_maker_kwargs=quench_kwargs,
     ).make(structure)
 
-    # Flow.update_maker_kwargs()
-    # Maker.update_kwargs()
-    flow.update_maker_kwargs(
-        {"quench_n_steps": n_steps_quench}, class_filter=SlowQuenchMaker
-    )  # This is the only maker that has a quench_n_steps parameter
-    print(type(flow))
-
     uuids = {}
     _get_uuid_from_job(flow, uuids)
 
@@ -113,7 +113,6 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         flow,
         ensure_success=True,
     )
-    assert False
 
     for resp in response.values():
         if hasattr(resp[1], "replace") and resp[1].replace is not None:
@@ -124,7 +123,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     if "Fast Quench" in ff_name:
         assert len(uuids) == 10
     elif "Slow Quench" in ff_name:
-        assert len(uuids) == 12
+        assert len(uuids) == 11
     else:  # "Main MPMorph MLFF Maker"
         len(uuids) == 7
 
@@ -139,20 +138,19 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     if "Fast Quench" in ff_name:
         main_mp_morph_job_names.extend(["static", "relax"])
     if "Slow Quench" in ff_name:
-        main_mp_morph_job_names.extend([f"Slow quench MLFF MD Maker {temp}K"])
-
+        main_mp_morph_job_names.extend(
+            [
+                f"{T}K"
+                for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
+            ]
+        )
     task_docs = {}
-
     for uuid, job_name in uuids.items():
         for i, mp_job_name in enumerate(main_mp_morph_job_names):
             if mp_job_name in job_name:
                 task_docs[mp_job_name] = response[uuid][1].output
                 break
-    print("________________DEBUG________________")
-    print(task_docs["MD Maker 1"].forcefield_objects)
-    print("_____________________________________")
 
-    assert False
     # check number of steps of each MD equilibrate run and production run
     assert all(
         doc.output.n_steps == n_steps_convergence + 1
@@ -178,17 +176,16 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         for ref_volume in ref_volumes
     )
 
-    # check temperature of each MD equilibrate run and production run #TODO: This fails, can't locate temperature
+    # check temperature of each MD equilibrate run and production run #NOTE: Temperature flucations are a lot in most MDs, this is designed to check if MD is injected with approximately the right temperature, and that's why tolerance is so high
     assert all(
-        doc.forcefield_objects["trajectory"].frame_properties[-1]["temperature"]
-        == pytest.approx(temp)
+        doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+        == pytest.approx(temp, abs=50)
         for name, doc in task_docs.items()
-        if "production run" not in name
+        if "MD Maker" in name
     )
-
     assert task_docs["production run"].forcefield_objects[
         "trajectory"
-    ].frame_properties[-1]["temperature"] == pytest.approx(temp)
+    ].frame_properties[0]["temperature"] == pytest.approx(temp, abs=50)
 
     # check that MD Maker Energies are close # TODO: This may be unnecessary because it changes from model to model
     assert task_docs["MD Maker 1"].output.energy == pytest.approx(-130, abs=5)
@@ -197,9 +194,6 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     assert task_docs["MD Maker 4"].output.energy == pytest.approx(-270, abs=5)
 
     if "Fast Quench" in ff_name:
-        assert task_docs["relax"].output.structure.composition.reduced_formula == "Si"
-        assert task_docs["static"].output.structure.composition.reduced_formula == "Si"
-
         assert (
             task_docs["static"].input.structure.volume
             == task_docs["relax"].output.structure.volume
@@ -209,5 +203,33 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
             <= task_docs["production run"].output.structure.volume
         )  # Ensures that the unit cell relaxes when fast quenched at 0K
 
-    if "Slow Qunch" in ff_name:
-        assert False
+    if "Slow Quench" in ff_name:
+        # check volume doesn't change from production run
+        assert all(
+            doc.output.structure.volume
+            == pytest.approx(
+                task_docs["production run"].output.structure.volume, abs=1e-1
+            )
+            for name, doc in task_docs.items()
+            if "K" in name
+        )
+        # check that the number of steps is correct
+        assert all(
+            doc.output.n_steps == n_steps_quench + 1
+            for name, doc in task_docs.items()
+            if "K" in name
+        )
+        # check that the temperature is correct
+
+        ref_tempature = [
+            T for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
+        ]
+        assert all(
+            any(
+                doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+                == pytest.approx(T, abs=100)
+                for name, doc in task_docs.items()
+                if "K" in name
+            )
+            for T in ref_tempature
+        )

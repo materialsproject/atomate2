@@ -379,7 +379,9 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
                     prev_dir=prev_dir,
                 )
 
-            elif self.descent_method == "linear with hold":  # TODO: Work in Progress
+            elif (
+                self.descent_method == "linear with hold"
+            ):  # TODO: Work in Progress; needs testing
                 md_job_linear = self.call_md_maker(
                     structure=structure,
                     temp=[temp, temp - self.quench_temperature_step],
@@ -391,8 +393,6 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
                     temp=temp - self.quench_temperature_step,
                     prev_dir=md_job_linear.output.dir_name,
                 )
-                if temp == self.quench_end_temperature:
-                    break  # does this break out the loop but continues to return the flow?
 
                 md_jobs.append(md_job_linear)
 
