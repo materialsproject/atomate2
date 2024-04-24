@@ -154,7 +154,7 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
     def call_md_maker(
         self,
         structure: Structure,
-        temp: float,
+        temp: float | tuple[float, float],
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
         """Call the MD maker to create the MD jobs for MLFF Only."""

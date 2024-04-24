@@ -329,6 +329,8 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
         Temperature step for quench; default 500K drop
     quench_n_steps : int = 1000
         Number of steps for quench; default 1000 steps
+    descent_method : str = "stepwise"
+        Descent method for quench; default "stepwise". Others available: "linear with hold"
     """
 
     name: str = "slow quench"
@@ -337,10 +339,13 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
     quench_end_temperature: int = 500
     quench_temperature_step: int = 500
     quench_n_steps: int = 1000
+    descent_method: str = "stepwise"
 
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> Flow:  # TODO : main objective: modified to work with other MD codes; Only works for VASP and MLFF_MD now.
+    ) -> (
+        Flow
+    ):  # TODO : main objective: modified to work with other MD codes; Only works for VASP and MLFF_MD now.
         """
         Create a slow quench flow with md maker.
 
@@ -362,43 +367,34 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             self.quench_end_temperature,
             -self.quench_temperature_step,
         ):
-            print(temp, self.quench_n_steps)
             prev_dir = (
                 None
                 if temp == self.quench_start_temperature
                 else md_jobs[-1].output.dir_name
             )
-
-            md_job = self.call_md_maker(
-                structure=structure,
-                temp=temp,
-                prev_dir=prev_dir,
-            )
-            """ # Logic of call_md_maker is to substitute the following code:
-            if isinstance(self.md_maker, MDMaker):
-                md_job = MDMaker(
-                    input_set_generator=MDSetGenerator(
-                        start_temp=temp,
-                        end_temp=temp,
-                        n_steps=self.quench_tempature_setup["n_steps"],
-                    )
-                ).make(structure, prev_dir)
-
-            elif isinstance(self.md_maker, ForceFieldMDMaker):
-                self.md_maker = self.md_maker.update_kwargs(
-                    update={
-                        "temperature": temp,
-                        "n_steps": self.quench_tempature_setup["n_steps"],
-                    }
+            if self.descent_method == "stepwise":
+                md_job = self.call_md_maker(
+                    structure=structure,
+                    temp=temp,
+                    prev_dir=prev_dir,
                 )
-                md_job = self.md_maker.make(
-                    structure,
-                    prev_dir,
+
+            elif self.descent_method == "linear with hold":  # TODO: Work in Progress
+                md_job_linear = self.call_md_maker(
+                    structure=structure,
+                    temp=[temp, temp - self.quench_temperature_step],
+                    prev_dir=prev_dir,
                 )
-            else:
-                raise ValueError(
-                    "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
-                )"""
+
+                md_job = self.call_md_maker(
+                    structure=md_job_linear.output.structure,
+                    temp=temp - self.quench_temperature_step,
+                    prev_dir=md_job_linear.output.dir_name,
+                )
+                if temp == self.quench_end_temperature:
+                    break  # does this break out the loop but continues to return the flow?
+
+                md_jobs.append(md_job_linear)
 
             md_jobs.append(md_job)
 

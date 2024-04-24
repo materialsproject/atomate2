@@ -91,15 +91,17 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
     def call_md_maker(
         self,
         structure: Structure,
-        temp: float,
+        temp: float | tuple[float, float],
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
         """Call the MD maker to create the MD jobs for VASP Only."""
+        begining_temp, ending_temp = temp if isinstance(temp, tuple) else (temp, temp)
+
         self.md_maker = update_user_incar_settings(
             flow=self.md_maker,
             incar_updates={
-                "TEBEG": temp,
-                "TEEND": temp,  # Equilibrium volume search is only at single temperature (temperature sweep not allowed)
+                "TEBEG": begining_temp,
+                "TEEND": ending_temp,
                 "NSW": self.quench_n_steps,
             },
         )
