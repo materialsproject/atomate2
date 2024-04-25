@@ -63,7 +63,7 @@ class ElasticBuilder(Builder):
     ) -> None:
         self.tasks = tasks
         self.elasticity = elasticity
-        self.query = query if query else {}
+        self.query = query or {}
         self.kwargs = kwargs
         self.symprec = symprec
         self.fitting_method = fitting_method
