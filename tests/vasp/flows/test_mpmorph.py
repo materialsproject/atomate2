@@ -157,7 +157,7 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
 
     # For close separations, positive energy is reasonable and expected
     _vasp_handlers = [
-        handler for handler in _DEFAULT_HANDLERS if "PositiveEnergy" not in str(handler)
+        handler for handler in DEFAULT_HANDLERS if "PositiveEnergy" not in str(handler)
     ]
 
     aimd_equil_maker = MDMaker(
