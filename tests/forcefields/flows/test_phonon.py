@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+
+import torch
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -13,13 +17,20 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-def test_phonon_wf_force_field(clean_dir, si_structure: Structure):
+def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Path):
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+    torch.set_default_dtype(torch.float32)
+
     flow = PhononMaker(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
-        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        generate_frequencies_eigenvectors_kwargs={
+            "tstep": 100,
+            "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
+            "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
+        },
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -78,3 +89,7 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure):
         [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
         atol=1000,
     )
+
+    # check phonon plots exist
+    assert os.path.isfile(filename_bs)
+    assert os.path.isfile(filename_dos)
