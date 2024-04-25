@@ -135,7 +135,7 @@ class Cp2kInputSet(InputSet):
             cp2k_input = Cp2kInput.from_file(directory / "cp2k.inp")
         else:
             raise FileNotFoundError
-        optional_files = optional_files if optional_files else {}
+        optional_files = optional_files or {}
         optional = {}
         for filename, obj in optional_files.items():
             optional[filename] = {
@@ -237,7 +237,7 @@ class Cp2kInputGenerator(InputGenerator):
             prev_input,
             input_updates,
         )
-        optional_files = optional_files if optional_files else {}
+        optional_files = optional_files or {}
         optional_files["basis"] = {
             "filename": "BASIS",
             "object": self._get_basis_file(cp2k_input=cp2k_input),
@@ -302,7 +302,7 @@ class Cp2kInputGenerator(InputGenerator):
     ) -> tuple[Structure, Cp2kInput, Cp2kOutput]:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
-            raise ValueError("Either structure or prev_dir must be set.")
+            raise ValueError("Either structure or prev_dir must be set")
 
         prev_input = {}
         prev_structure = None

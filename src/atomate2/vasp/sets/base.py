@@ -554,7 +554,7 @@ class VaspInputGenerator(InputGenerator):
     ) -> tuple:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
-            raise ValueError("Either structure or prev_dir must be set.")
+            raise ValueError("Either structure or prev_dir must be set")
 
         prev_incar = {}
         prev_structure = None
@@ -569,13 +569,13 @@ class VaspInputGenerator(InputGenerator):
 
             # CONTCAR is already renamed POSCAR
             contcars = list(glob.glob(str(path_prev_dir / "POSCAR*")))
-            contcarfile_fullpath = str(path_prev_dir / "POSCAR")
-            contcarfile = (
-                contcarfile_fullpath
-                if contcarfile_fullpath in contcars
-                else sorted(contcars)[-1]
+            contcar_file_fullpath = str(path_prev_dir / "POSCAR")
+            contcar_file = (
+                contcar_file_fullpath
+                if contcar_file_fullpath in contcars
+                else max(contcars)
             )
-            contcar = Poscar.from_file(contcarfile)
+            contcar = Poscar.from_file(contcar_file)
 
             if vasprun.efermi is None:
                 # VASP doesn't output efermi in vasprun if IBRION = 1

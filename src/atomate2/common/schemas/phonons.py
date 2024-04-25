@@ -284,7 +284,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         if cell.magnetic_moments is not None and primitive_matrix == "auto":
             if np.any(cell.magnetic_moments != 0.0):
                 raise ValueError(
-                    "For materials with magnetic moments specified "
+                    "For materials with magnetic moments, "
                     "use_symmetrized_structure must be 'primitive'"
                 )
             cell.magnetic_moments = None
