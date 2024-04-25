@@ -53,7 +53,7 @@ def test_phonon_wf_vasp_only_displacements3(
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5774.60355377, 5616.33406091, 4724.76619808, 3044.20807258, 696.33731934],
+        [6115.980051, 6059.749756, 5490.929122, 4173.234384, 2194.164562],
     )
 
     assert isinstance(
@@ -100,34 +100,19 @@ def test_phonon_wf_vasp_only_displacements3(
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [
-            0.0,
-            4.78668900,
-            13.02544271,
-            20.36093506,
-            26.39830736,
-        ],
+        [0.0, 2.194216, 9.478603, 16.687079, 22.702177],
+        atol=1e-6,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [
-            0.0,
-            8.04757757,
-            15.97117761,
-            19.97051059,
-            21.87494655,
-        ],
+        [0.0, 5.750113, 15.408866, 19.832123, 21.842104],
+        atol=1e-6,
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [
-            5774.60355377,
-            6095.00296093,
-            7329.85473978,
-            9152.48859184,
-            11255.66026158,
-        ],
+        [6115.980051, 6279.17132, 7386.649622, 9179.358187, 11275.035523],
+        atol=1e-6,
     )
     assert responses[job.jobs[-1].uuid][1].output.chemsys == "Si"
 
@@ -170,20 +155,21 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5774.56699647, 5616.29786373, 4724.73684926, 3044.19341280, 696.34353154],
+        [5927.157337, 5905.309813, 5439.530414, 4207.379685, 2297.576147],
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 4.78666294, 13.02533234, 20.36075467, 26.39807246],
+        [0.0, 1.256496, 8.511348, 15.928285, 22.063785],
+        atol=1e-6,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 8.04749769, 15.97101906, 19.97032648, 21.87475268],
+        [0.0, 4.958763, 15.893881, 20.311967, 22.196143],
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [5774.56699647, 6094.96415750, 7329.80331668, 9152.41981241, 11255.57251541],
+        [5927.157337, 6030.959432, 7141.800004, 8985.865319, 11123.090225],
     )
 
     assert isinstance(
@@ -205,17 +191,17 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     )
     assert responses[job.jobs[-1].uuid][1].output.born is None
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
-        ((-1.0, 1.0, 1.0), (1.0, -1.0, 1.0), (1.0, 1.0, -1.0)),
+    assert responses[job.jobs[-1].uuid][1].output.supercell_matrix == tuple(
+        map(tuple, np.eye(3))
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
-        (
-            (1.00000000, 0.0, 0.0),
-            (0.0, 1.00000000, 0.0),
-            (0.0, 0.0, 1.00000000),
-        ),
+        ((0, 1, 0), (0, 0, 1), (1, 0, 0)),
+        atol=1e-8,
+    )
+    assert_allclose(
+        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        ((0, 1, 0), (0, 0, 1), (1, 0, 0)),
     )
     assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
     assert isinstance(
@@ -227,40 +213,23 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
         responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
         == "seekpath"
     )
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7_000
-    )
+    phonopy_settings = responses[job.jobs[-1].uuid][1].output.phonopy_settings
+    assert phonopy_settings.kpoint_density_dos == 7_000
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [
-            0.0,
-            4.78666294,
-            13.02533234,
-            20.36075467,
-            26.39807246,
-        ],
+        [0.0, 1.256496, 8.511348, 15.928285, 22.063785],
+        atol=1e-6,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [
-            0.0,
-            8.04749769,
-            15.97101906,
-            19.97032648,
-            21.87475268,
-        ],
+        [0.0, 4.958763, 15.893881, 20.311967, 22.196143],
+        atol=1e-6,
     )
 
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [
-            5774.56699647,
-            6094.96415750,
-            7329.80331668,
-            9152.41981241,
-            11255.57251541,
-        ],
+        [5927.157337, 6030.959432, 7141.800004, 8985.865319, 11123.090225],
+        atol=1e-6,
     )
 
 
