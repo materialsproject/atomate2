@@ -7,7 +7,7 @@ from pymatgen.io.vasp import Kpoints
 
 from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker, MPMorphMDMaker
 from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.run import _DEFAULT_HANDLERS
+from atomate2.vasp.run import DEFAULT_HANDLERS
 from atomate2.vasp.sets.core import MDSetGenerator
 
 
