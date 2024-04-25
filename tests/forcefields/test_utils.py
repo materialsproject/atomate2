@@ -1,5 +1,4 @@
 import os
-from typing import TYPE_CHECKING
 
 import pytest
 from ase.build import bulk
@@ -7,7 +6,7 @@ from ase.calculators.lj import LennardJones
 from ase.optimize import BFGS
 from ase.spacegroup.symmetrize import check_symmetry
 from numpy.testing import assert_allclose
-from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.core import Structure
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.utils import (
@@ -17,16 +16,14 @@ from atomate2.forcefields.utils import (
     ase_calculator,
 )
 
-if TYPE_CHECKING:
-    from pymatgen.core import Structure
-
 
 def test_safe_import():
     assert FrechetCellFilter is None or FrechetCellFilter.__module__ == "ase.filters"
 
 
-def test_trajectory_observer(si_structure, test_dir, tmp_dir):
-    atoms = AseAtomsAdaptor.get_atoms(structure=si_structure, calculator=LennardJones())
+def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
+    atoms = si_structure.to_ase_atoms()
+    atoms.set_calculator(LennardJones())
 
     traj = TrajectoryObserver(atoms)
 

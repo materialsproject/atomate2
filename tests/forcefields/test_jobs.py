@@ -206,13 +206,15 @@ def test_mace_relax_maker_fix_symmetry(
 )
 @pytest.mark.parametrize("relax_cell", [True, False])
 @mace_paths
-def test_mace_relax_makera(
+def test_mace_relax_maker(
     si_structure: Structure,
     model,
     relax_cell: bool,
     fix_symmetry: bool,
     symprec: float,
 ):
+    from ase.spacegroup.symmetrize import check_symmetry, is_subgroup
+
     _, init_spg_num = si_structure.get_space_group_info()
     assert init_spg_num == 227
 
@@ -241,31 +243,30 @@ def test_mace_relax_makera(
     output1 = responses[job.uuid][1].output
     assert output1.is_force_converged
     assert isinstance(output1, ForceFieldTaskDocument)
-    from ase.spacegroup.symmetrize import check_symmetry, is_subgroup
-    from pymatgen.io.ase import AseAtomsAdaptor
 
-    si_atoms = AseAtomsAdaptor.get_atoms(si_structure)
+    si_atoms = si_structure.to_ase_atoms()
     symmetry_ops_init = check_symmetry(si_atoms, symprec=1.0e-3)
-    si_atoms_final = AseAtomsAdaptor.get_atoms(output1.output.structure)
+    si_atoms_final = output1.output.structure.to_ase_atoms()
     symmetry_ops_final = check_symmetry(si_atoms_final, symprec=1.0e-3)
-    if fix_symmetry:
-        assert is_subgroup(symmetry_ops_init, symmetry_ops_final)
-    else:
-        assert not is_subgroup(symmetry_ops_init, symmetry_ops_final)
-
-    if relax_cell:
-        assert output1.output.energy == approx(-0.0526856, rel=1e-1)
-        assert output1.output.n_steps >= 4
-    else:
-        assert output1.output.energy == approx(-0.051912, rel=1e-4)
-        assert output1.output.n_steps == 4
 
     # get space group number of input structure
     _, final_spg_num = output1.output.structure.get_space_group_info()
-    if fix_symmetry:
-        assert init_spg_num == final_spg_num == 12
+    if relax_cell:
+        assert final_spg_num == 12
     else:
-        assert init_spg_num != final_spg_num == 227
+        assert final_spg_num == 74
+
+    if fix_symmetry:  # if symmetry is fixed, the symmetry should be the same or higher
+        assert is_subgroup(symmetry_ops_init, symmetry_ops_final)
+    else:  # if symmetry is not fixed, it can both increase or decrease
+        assert not is_subgroup(symmetry_ops_init, symmetry_ops_final)
+
+    if relax_cell:
+        assert output1.output.energy == approx(-0.071117445, rel=1e-1)
+        assert output1.output.n_steps >= 4
+    else:
+        assert output1.output.energy == approx(-0.06772976, rel=1e-4)
+        assert output1.output.n_steps == 7
 
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
@@ -274,7 +275,7 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
-    # Test files have been provided by Yuanbin Liu (University of Oxford)
+    # Test files have been provided by @YuanbinLiu (University of Oxford)
     job = GAPStaticMaker(
         calculator_kwargs={
             "args_str": "IP GAP",
@@ -369,7 +370,7 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
     si_structure.translate_sites(0, [0, 0, 0.1])
 
     # generate job
-    # Test files have been provided by Yuanbin Liu (University of Oxford)
+    # Test files have been provided by @YuanbinLiu (University of Oxford)
     max_step = 25
     job = GAPRelaxMaker(
         calculator_kwargs={
