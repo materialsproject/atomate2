@@ -62,18 +62,18 @@ class QCInputSet(InputSet):
         overwrite
             Whether to overwrite an input file if it already exists.
         """
-        directory = Path(directory)
         os.makedirs(directory, exist_ok=True)
+        directory = Path(directory)
 
         inputs = {"Input_Dict": self.qcinput}
         inputs.update(self.optional_files)
 
-        for k, v in inputs.items():
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / k, "wt") as f:
-                    f.write(str(v))
-            elif not overwrite and (directory / k).exists():
-                raise FileExistsError(f"{directory / k} already exists.")
+        for key, val in inputs.items():
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / key, "wt") as file:
+                    file.write(str(val))
+            elif not overwrite and (directory / key).exists():
+                raise FileExistsError(f"{directory / key} already exists.")
 
     @staticmethod
     def from_directory(

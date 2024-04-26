@@ -583,7 +583,7 @@ def auto_fileclient(method: Callable | None = None) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def gen_fileclient(*args, **kwargs) -> Any:
+        def gen_file_client(*args, **kwargs) -> Any:
             file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
@@ -592,7 +592,7 @@ def auto_fileclient(method: Callable | None = None) -> Callable:
             else:
                 return func(*args, **kwargs)
 
-        return gen_fileclient
+        return gen_file_client
 
     # See if we're being called as @auto_fileclient or @auto_fileclient().
     if method is None:
