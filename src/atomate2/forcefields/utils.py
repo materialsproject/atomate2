@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from ase.calculators.calculator import PropertyNotImplementedError
 from ase.calculators.singlepoint import SinglePointCalculator
+from ase.constraints import FixSymmetry
 from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
@@ -55,7 +56,6 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
     from ase.filters import Filter
     from ase.optimize.optimize import Optimizer
-
 
 OPTIMIZERS = {
     "FIRE": FIRE,
@@ -290,6 +290,8 @@ class Relaxer:
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
+        fix_symmetry: bool = False,
+        symprec: float = 1e-2,
     ) -> None:
         """
         Initialize the Relaxer.
@@ -299,6 +301,8 @@ class Relaxer:
         calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
         relax_cell (bool): if True, cell parameters will be optimized.
+        fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
+        symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
         """
         self.calculator = calculator
 
@@ -312,6 +316,8 @@ class Relaxer:
         self.opt_class: Optimizer = optimizer_obj
         self.relax_cell = relax_cell
         self.ase_adaptor = AseAtomsAdaptor()
+        self.fix_symmetry = fix_symmetry
+        self.symprec = symprec
 
     def relax(
         self,
@@ -350,6 +356,8 @@ class Relaxer:
         """
         if isinstance(atoms, (Structure, Molecule)):
             atoms = self.ase_adaptor.get_atoms(atoms)
+        if self.fix_symmetry:
+            atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
         atoms.set_calculator(self.calculator)
         stream = sys.stdout if verbose else io.StringIO()
         with contextlib.redirect_stdout(stream):
