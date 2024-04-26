@@ -175,14 +175,15 @@ To install the packages run:
 pip install atomate2
 ```
 
-If you would like to use more specialized capabilities of atomate2 such as thethe phonon workflows, you would need to run
+If you would like to use more specialized capabilities of `atomate2` such as the phonon, Lobster or force field workflows, you would need to run one of
 
 ```bash
 pip install atomate2[phonons]
+pip install atomate2[lobster]
+pip install atomate2[forcefields]
 ```
 
-More detailed instructions can be found 
-[here](../dev/dev_install.md)
+See [`pyproject.toml`](https://github.com/materialsproject/atomate2/blob/main/pyproject.toml) for all available optional dependency sets. More detailed instructions can be found under [dev installation](../dev/dev_install.md).
 
 ## Configure calculation output database
 
