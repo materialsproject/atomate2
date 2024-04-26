@@ -20,10 +20,10 @@ from typing import TYPE_CHECKING
 import numpy as np
 from ase.calculators.calculator import PropertyNotImplementedError
 from ase.calculators.singlepoint import SinglePointCalculator
+from ase.constraints import FixSymmetry
 from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
-from ase.spacegroup.symmetrize import FixSymmetry
 from monty.json import MontyDecoder
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
