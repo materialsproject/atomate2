@@ -9,15 +9,7 @@ from pathlib import Path
 from jobflow import Maker, job
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
-from pymatgen.io.lobster import (
-    Bandoverlaps,
-    Charge,
-    Grosspop,
-    Icohplist,
-    Lobsterin,
-    MadelungEnergies,
-    SitePotential,
-)
+from pymatgen.io.lobster import Bandoverlaps, Icohplist, Lobsterin
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
@@ -69,11 +61,7 @@ class LobsterMaker(Maker):
         data=[
             CompleteCohp,
             LobsterCompleteDos,
-            Charge,
             Bandoverlaps,
-            SitePotential,
-            Grosspop,
-            MadelungEnergies,
             Icohplist,
         ],
     )
