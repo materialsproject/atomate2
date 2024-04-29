@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.sets.gw import ScreeningSetGenerator, SigmaSetGenerator, BSENonSCFSetGenerator
+from atomate2.abinit.sets.gw import ScreeningSetGenerator, SigmaSetGenerator, BSEmdfSetGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -45,10 +45,10 @@ class SigmaMaker(BaseAbinitMaker):
     # CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
 
 @dataclass
-class BSENonSCFMaker(BaseAbinitMaker):
+class BSEMaker(BaseAbinitMaker):
     """Maker to create non SCF calculations."""
 
     calc_type: str = "bse_nscf"
-    name: str = "Sigma calculation"
+    name: str = "BSE calculation"
 
-    input_set_generator: BSENonSCFSetGenerator = field(default_factory=BSENonSCFSetGenerator)
+    input_set_generator: BSEmdfSetGenerator = field(default_factory=BSEmdfSetGenerator)
