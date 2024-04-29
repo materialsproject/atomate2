@@ -92,7 +92,7 @@ strict = [
     "mace-torch>=0.3.3",
     "matgl==1.0.0",
     "monty==2024.3.31",
-    "mp-api==0.40.2",
+    "mp-api==0.41.2",
     "numpy",
     "phonopy==2.22.1",
     "pydantic-settings==2.2.1",
