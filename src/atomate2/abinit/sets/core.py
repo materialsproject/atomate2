@@ -77,7 +77,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
     factory: Callable = nscf_from_gsinput
     pseudos: str | list[str] | PseudoTable | None = None
     restart_from_deps: tuple = (f"{NSCF}:WFK",)
-    prev_outputs_deps: tuple = (f"{SCF}:DEN",)
+    prev_outputs_deps: tuple = (f"{SCF}:DEN", f"{SCF}:WFK",)
     nbands_factor: float = 1.2
     factory_kwargs: dict = field(default_factory=dict)
 

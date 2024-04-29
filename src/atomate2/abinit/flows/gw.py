@@ -9,8 +9,9 @@ from pymatgen.core.structure import Structure
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import NonSCFMaker, StaticMaker, ConvergenceMaker
-from atomate2.abinit.jobs.gw import ScreeningMaker, SigmaMaker
-from atomate2.abinit.powerups import update_user_abinit_settings
+from atomate2.abinit.jobs.gw import ScreeningMaker, SigmaMaker, BSENonSCFMaker, BSEMaker
+from atomate2.abinit.powerups import update_user_abinit_settings, update_factory_kwargs, update_user_kpoints_settings 
+from pymatgen.io.abinit.abiobjects import KSampling
 
 
 @dataclass
@@ -180,3 +181,69 @@ class G0W0ConvergenceMaker(Maker):
         gw = convergence.make(structure, prev_outputs=static.output.dir_name)
         return Flow([static, gw], gw.output, name=self.name)
 
+@dataclass
+class BSEmdfMaker(Maker):
+
+    bs_nband: int  
+    mdf_epsinf: float   
+    name: str = "BSE mdf calculation"
+    scf_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
+    nscf_maker: BaseAbinitMaker = field(default_factory=NonSCFMaker)
+    bse_maker: BaseAbinitMaker = field(default_factory=BSEMaker)
+    bs_loband: int = 1 
+    mbpt_sciss: float = 0.0
+    kppa: int = 100
+    shiftk: tuple = (0.0, 0.0, 0.0)
+ 
+    def make(
+        self,
+        structure: Structure,
+        restart_from: Optional[Union[str, Path]] = None
+    ):
+		 
+        scf_job = self.scf_maker.make(
+            structure, 
+            restart_from=restart_from
+        )
+        m_scf_job = update_user_kpoints_settings(
+            flow=scf_job, 
+            kpoints_updates=KSampling.automatic_density(
+            structure=structure, 
+            kppa=self.kppa,
+            shifts=self.shiftk)
+        )
+        nscf_job = self.nscf_maker.make(
+            prev_outputs=[scf_job.output.dir_name], 
+            mode="uniform",
+        )
+        njob=update_user_abinit_settings(
+            flow=nscf_job,
+            abinit_updates={
+              'rfelfd':   1,
+              'rfdir': (1, 1, 1),         
+              'nqpt':  1,
+              'qpt':   (0.0, 0.0, 0.0),
+              'kptopt':   2,         
+              'iscf':  -2,
+              'tolwfr': 1e-22}
+        ) 
+        m_nscf_job = update_user_kpoints_settings(
+            flow=njob, 
+            kpoints_updates=KSampling.automatic_density(
+            structure=structure, 
+            kppa=self.kppa,
+            shifts=self.shiftk, 
+            chksymbreak=0)
+        )
+        bse_job = self.bse_maker.make(
+            prev_outputs=[nscf_job.output.dir_name, 
+            "/home/ucl/modl/tbiswas/scratch/abinit_run/sigma"],
+        )
+        m_bse_job=update_factory_kwargs(
+            flow=bse_job, factory_updates={
+            'bs_loband': self.bs_loband, 
+            'bs_nband': self.bs_nband, 
+            'mdf_epsinf': self.mdf_epsinf, 
+            'mbpt_sciss': self.mbpt_sciss}
+        )
+        return Flow([m_scf_job, m_nscf_job, m_bse_job], output=m_bse_job.output, name=self.name)

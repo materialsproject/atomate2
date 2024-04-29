@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Callable
 
 from abipy.abio.factories import scr_from_nscfinput, sigma_from_inputs, scf_input, nscf_from_gsinput
-from atomate2.abinit.sets.bse import bse_with_mdf_from_inputs 
+from atomate2.abinit.sets.factories import bse_with_mdf_from_inputs 
 from abipy.abio.input_tags import SCF, NSCF, SCREENING, SIGMA
 
 from atomate2.abinit.files import load_abinit_input
@@ -140,7 +140,7 @@ class SigmaSetGenerator(AbinitInputGenerator):
         )
 
 @dataclass
-class BSENonSCFSetGenerator(NonSCFSetGenerator):
+class BSENonSCFSetGenerator(AbinitInputGenerator):
     """Class to generate Abinit non-SCF input sets."""
 
     calc_type: str = "nscf_bse"
@@ -163,7 +163,6 @@ class BSENonSCFSetGenerator(NonSCFSetGenerator):
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None,
         nscf_ngkpt: tuple | None = None,
         nscf_shiftk: tuple | None = None,
     ) -> AbinitInput:
@@ -205,30 +204,30 @@ class BSEmdfSetGenerator(AbinitInputGenerator):
     pseudos: str | list[str] | PseudoTable | None = None
     prev_outputs_deps: tuple = (f"{NSCF}:WFK",)
     factory_kwargs: dict = field(default_factory=dict)
-
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"nscf_input": (NSCF,), "sigma_input": (SIGMA,)}
     )
     def get_abinit_input(
         self,
-        bs_loband: int | None = 1, 
-        bs_nband: int | None = None, 
-        mdf_epsinf: float | None = None, 
-        mbpt_sciss: float | None = None, 
+        structure: Structure | None = None,
+        pseudos: PseudoTable | None = None,
         prev_outputs: list[str] | None = None,
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
+        kpoints_settings: dict | KSampling | None = None,
     ) -> AbinitInput:
 
-        factory_kwargs = dict(factory_kwargs) if factory_kwargs else {}
-        factory_kwargs["bs_loband"] = bs_loband 
-        factory_kwargs["bs_nband"] = bs_nband if bs_nband is not None else load_abinit_input(prev_outputs[0])["nband"]
-        factory_kwargs["mdf_epsinf"] = mdf_epsinf 
-        factory_kwargs["mbpt_sciss"] = mbpt_sciss 
+        #factory_kwargs = dict(factory_kwargs) if factory_kwargs else {}
+        #factory_kwargs["bs_loband"] = bs_loband 
+        #factory_kwargs["bs_nband"] = bs_nband if bs_nband is not None else load_abinit_input(prev_outputs[0])["nband"]
+        #factory_kwargs["mdf_epsinf"] = mdf_epsinf 
+        #factory_kwargs["mbpt_sciss"] = mbpt_sciss 
         
         return super().get_abinit_input(
+            structure=structure,
+            pseudos=pseudos,
             prev_outputs=prev_outputs,
-            abinit_settings=abinit_settings,
             factory_kwargs=factory_kwargs,
+            kpoints_settings=kpoints_settings,
         )
 
