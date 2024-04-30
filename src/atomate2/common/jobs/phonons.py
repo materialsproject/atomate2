@@ -73,42 +73,31 @@ def get_supercell_size(
     **kwargs:
         Additional parameters that can be set.
     """
-    kwargs.setdefault("min_atoms", None)
     kwargs.setdefault("force_diagonal", False)
+    common_kwds = dict(
+        min_length=min_length,
+        min_atoms=kwargs.get("min_atoms"),
+        force_diagonal=kwargs["force_diagonal"],
+    )
 
     if not prefer_90_degrees:
-        kwargs.setdefault("max_atoms", None)
         transformation = CubicSupercellTransformation(
-            min_length=min_length,
-            min_atoms=kwargs["min_atoms"],
-            max_atoms=kwargs["max_atoms"],
-            force_diagonal=kwargs["force_diagonal"],
-            force_90_degrees=False,
+            **common_kwds, max_atoms=kwargs.get("max_atoms"), force_90_degrees=False
         )
         transformation.apply_transformation(structure=structure)
     else:
-        max_atoms = kwargs.get("max_atoms", 1000)
-        kwargs.setdefault("angle_tolerance", 1e-2)
         try:
             transformation = CubicSupercellTransformation(
-                min_length=min_length,
-                min_atoms=kwargs["min_atoms"],
-                max_atoms=max_atoms,
-                force_diagonal=kwargs["force_diagonal"],
+                **common_kwds,
+                max_atoms=kwargs.get("max_atoms", 1000),
                 force_90_degrees=True,
-                angle_tolerance=kwargs["angle_tolerance"],
+                angle_tolerance=kwargs.get("angle_tolerance", 1e-2),
             )
             transformation.apply_transformation(structure=structure)
 
         except AttributeError:
-            kwargs.setdefault("max_atoms", None)
-
             transformation = CubicSupercellTransformation(
-                min_length=min_length,
-                min_atoms=kwargs["min_atoms"],
-                max_atoms=kwargs["max_atoms"],
-                force_diagonal=kwargs["force_diagonal"],
-                force_90_degrees=False,
+                **common_kwds, max_atoms=kwargs.get("max_atoms"), force_90_degrees=False
             )
             transformation.apply_transformation(structure=structure)
 
@@ -171,7 +160,7 @@ def generate_phonon_displacements(
     if cell.magnetic_moments is not None and primitive_matrix == "auto":
         if np.any(cell.magnetic_moments != 0.0):
             raise ValueError(
-                "For materials with magnetic moments specified "
+                "For materials with magnetic moments, "
                 "use_symmetrized_structure must be 'primitive'"
             )
         cell.magnetic_moments = None

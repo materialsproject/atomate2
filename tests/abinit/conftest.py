@@ -13,10 +13,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger("atomate2")
 
 _REF_PATHS = {}
-_ABINIT_FILES = (
-    "run.abi",
-    "abinit_input.json",
-)
+_ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
 
 
@@ -88,9 +85,7 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
     _FAKE_RUN_ABINIT_KWARGS.clear()
 
 
-def fake_run_abinit(
-    ref_path: str | Path,
-):
+def fake_run_abinit(ref_path: str | Path):
     """
     Emulate running ABINIT.
 
@@ -169,9 +164,9 @@ def copy_abinit_outputs(ref_path: str | Path):
         if output_file.is_file():
             shutil.copy(output_file, ".")
             decompress_file(output_file.name)
-    for datadir in ["indata", "outdata", "tmpdata"]:
-        refdatadir = output_path / datadir
-        for file in refdatadir.iterdir():
+    for data_dir in ("indata", "outdata", "tmpdata"):
+        ref_data_dir = output_path / data_dir
+        for file in ref_data_dir.iterdir():
             if file.is_file():
-                shutil.copy(file, datadir)
-                decompress_file(str(Path(datadir, file.name)))
+                shutil.copy(file, data_dir)
+                decompress_file(str(Path(data_dir, file.name)))
