@@ -306,6 +306,7 @@ def run_phonon_displacements(
         phonon_job.update_maker_kwargs(
             {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
         )
+        phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_reg_fworker
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
@@ -318,6 +319,7 @@ def run_phonon_displacements(
                 phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
             else:
                 phonon_job = phonon_maker.make(displacement)
+            phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_fworker
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data

@@ -17,7 +17,7 @@ from atomate2.vasp.flows.core import DoubleRelaxMaker
 # Atomate2 packages
 from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.core import StaticSetGenerator, TightRelaxSetGenerator
 
 if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -71,52 +71,101 @@ class HiphiveMaker(BaseHiphiveMaker):
     """
 
     name: str = "Lattice-Dynamics-VASP"
-    static_energy_maker: BaseVaspMaker | None = field(
-        default_factory=lambda: StaticMaker(
-            input_set_generator=StaticSetGenerator(auto_ispin=True)
-        )
-    )
+    # static_energy_maker: BaseVaspMaker | None = field(
+    #     default_factory=lambda: StaticMaker(
+    #         input_set_generator=StaticSetGenerator(auto_ispin=True)
+    #     )
+    # )
     bulk_relax_maker: DoubleRelaxMaker = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+        # default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker(
+        #     input_set_generator=TightRelaxSetGenerator(
+        #         user_incar_settings={
+        #             "ADDGRID": True,
+        #             "ALGO": "Normal",
+        #             "EDIFF": 1e-07,
+        #             "SIGMA": 0.01, # changed from 0.1
+        #             # "EDIFFG": -1.000000e-08
+        #         }
+        #     )
+        # ))
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker(
+            input_set_generator=TightRelaxSetGenerator(
+                user_incar_settings={
+                    "PREC": "Accurate",
+                    "GGA": "PS",
+                    "IBRION": 2,
+                    "NSW": 20,
+                    "NELMIN": 5,
+                    "ISIF": 3,
+                    "ENCUT": 648.744200,
+                    "EDIFF": 1.000000e-06,
+                    # "EDIFFG": -1.000000e-08,
+                    "ISMEAR": 0,
+                    "SIGMA": 1.000000e-02,
+                    "IALGO": 38,
+                    "LREAL": ".FALSE.",
+                    "ADDGRID": ".TRUE.",
+                    "LWAVE": ".FALSE.",
+                    "LCHARG": ".FALSE.",
+                    "NPAR": 4
+                }
+            )
+        ))
     )
     phonon_displacement_maker: BaseVaspMaker | None = field(
+        # default_factory=lambda:PhononDisplacementMaker(
+        #     input_set_generator = StaticSetGenerator(
+        #     user_kpoints_settings={"reciprocal_density": 500},
+        #     user_incar_settings={
+        #         "ADDGRID": True,
+        #         "ALGO": "Normal",
+        #         "EDIFF": 1e-07, # changed from 1e-6
+        #         # "EDIFFG": -1.000000e-08,
+        #         # "ENCUT": 600,
+        #         "GGA": "PS",
+        #         "IBRION": -1,
+        #         "ISIF": 3,
+        #         "ISMEAR": 0,
+        #         "ISPIN": 2,
+        #         "LAECHG": False,
+        #         "LASPH": True,
+        #         "LCHARG": False,
+        #         "LORBIT": 11,
+        #         "LREAL": "Auto",
+        #         "LVHAR": False,
+        #         "LVTOT": False,
+        #         "LWAVE": False,
+        #         # "MAGMOM": 250*0.6,
+        #         "NCORE": 6,
+        #         "NELM": 100,
+        #         "NSW": 0,
+        #         "PREC": "Accurate",
+        #         "SIGMA": 0.01, # changed from 0.1
+        #     },
+        #     # auto_ispin=True,
+        # )
+        # )
         default_factory=lambda:PhononDisplacementMaker(
             input_set_generator = StaticSetGenerator(
             user_kpoints_settings={"reciprocal_density": 500},
             user_incar_settings={
-                # "IBRION": 2,
-                # "ISIF": 3,
-                # "ENCUT": 600, # Changed this from 600
-                # "EDIFF": 1e-7,
-                # "LAECHG": False,
-                # "ALGO": "Normal",
-                # "NSW": 0,
-                # "LCHARG": False,
-                # "LREAL": True
-
-                "ADDGRID": True,
-                "ALGO": "Normal",
-                "EDIFF": 1e-06,
-                "ENCUT": 600,
+                "PREC": "Accurate",
+                "SIGMA": 0.01, # changed from 0.1
+                "PREC": "Accurate",
                 "GGA": "PS",
                 "IBRION": -1,
-                "ISIF": 3,
+                "NELMIN": 5,
+                "ENCUT": 648.744200,
+                "EDIFF": 1.000000e-06,
                 "ISMEAR": 0,
-                "ISPIN": 2,
-                "LAECHG": False,
-                "LASPH": True,
-                "LCHARG": False,
-                "LORBIT": 11,
-                "LREAL": "Auto",
-                "LVHAR": False,
-                "LVTOT": False,
-                "LWAVE": False,
-                # "MAGMOM": 250*0.6,
-                "NCORE": 6,
-                "NELM": 100,
-                "NSW": 0,
-                "PREC": "Accurate",
-                "SIGMA": 0.1,
+                "SIGMA": 1.000000e-02,
+                "IALGO": 38,
+                "LREAL": ".FALSE.",
+                "ADDGRID": ".TRUE.",
+                "LWAVE": ".FALSE.",
+                "LCHARG": ".FALSE.",
+                "NPAR": 4,
+
             },
             # auto_ispin=True,
         )
