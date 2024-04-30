@@ -408,16 +408,17 @@ class CondensedBondingAnalysis(BaseModel):
                         fp.write(f"{line}\n")
 
             # Read in strongest icohp values
-            sb_icohp, sb_icobi, sb_icoop = _identify_strongest_bonds(
+            sb = _identify_strongest_bonds(
                 analyse=analyse,
                 icobilist_path=icobilist_path,
                 icohplist_path=icohplist_path,
                 icooplist_path=icooplist_path,
             )
+
         except ValueError:
-            return None, None, None, None, None
+            return None, None, None
         else:
-            return condensed_bonding_analysis, describe, sb_icobi, sb_icohp, sb_icoop
+            return condensed_bonding_analysis, describe, sb
 
 
 class DosComparisons(BaseModel):
@@ -614,9 +615,17 @@ class StrongestBonds(BaseModel):
         description="Denotes whether the information "
         "is for cation-anion pairs or all bonds",
     )
-    strongest_bonds: Optional[dict] = Field(
+    strongest_bonds_icoop: Optional[dict] = Field(
         None,
-        description="Dict with infos on bond strength and bond length,.",
+        description="Dict with infos on bond strength and bond length based on ICOOP.",
+    )
+    strongest_bonds_icohp: Optional[dict] = Field(
+        None,
+        description="Dict with infos on bond strength and bond length based on ICOHP.",
+    )
+    strongest_bonds_icobi: Optional[dict] = Field(
+        None,
+        description="Dict with infos on bond strength and bond length based on ICOBI.",
     )
 
 
@@ -653,14 +662,9 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
     calc_quality_text: Optional[str] = Field(
         None, description="Stores calculation quality analysis summary text"
     )
-    strongest_bonds_icohp: Optional[StrongestBonds] = Field(
-        None, description="Describes the strongest cation-anion ICOHP bonds"
-    )
-    strongest_bonds_icoop: Optional[StrongestBonds] = Field(
-        None, description="Describes the strongest cation-anion ICOOP bonds"
-    )
-    strongest_bonds_icobi: Optional[StrongestBonds] = Field(
-        None, description="Describes the strongest cation-anion ICOBI bonds"
+    strongest_bonds: Optional[StrongestBonds] = Field(
+        None,
+        description="Describes the strongest cation-anion ICOOP, ICOBI and ICOHP bonds",
     )
     lobsterpy_data_cation_anion: Optional[CondensedBondingAnalysis] = Field(
         None, description="Model describing the LobsterPy data"
@@ -669,14 +673,9 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         None,
         description="Stores LobsterPy automatic analysis summary text",
     )
-    strongest_bonds_icohp_cation_anion: Optional[StrongestBonds] = Field(
-        None, description="Describes the strongest cation-anion ICOHP bonds"
-    )
-    strongest_bonds_icoop_cation_anion: Optional[StrongestBonds] = Field(
-        None, description="Describes the strongest cation-anion ICOOP bonds"
-    )
-    strongest_bonds_icobi_cation_anion: Optional[StrongestBonds] = Field(
-        None, description="Describes the strongest cation-anion ICOBI bonds"
+    strongest_bonds_cation_anion: Optional[StrongestBonds] = Field(
+        None,
+        description="Describes the strongest cation-anion ICOOP, ICOBI and ICOHP bonds",
     )
     dos: Optional[LobsterCompleteDos] = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
@@ -818,21 +817,16 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             icobi_list = Icohplist(filename=icobilist_path, are_cobis=True)
 
         # Do automatic bonding analysis with LobsterPy
-        condensed_bonding_analysis = None
-        sb_icobi = sb_icohp = sb_icoop = describe = None
         struct = Structure.from_file(structure_path)
 
         # will perform two condensed bonding analysis computations
         condensed_bonding_analysis = None
         condensed_bonding_analysis_ionic = None
-        sb_icobi = None
-        sb_icohp = None
-        sb_icoop = None
-        sb_icobi_ionic = None
-        sb_icohp_ionic = None
-        sb_icoop_ionic = None
+        sb_all = None
+        sb_ionic = None
         calc_quality_summary = None
         calc_quality_text = None
+        describe = None
         describe_ionic = None
         if analyze_outputs:
             if (
@@ -843,9 +837,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                 (
                     condensed_bonding_analysis,
                     describe,
-                    sb_icobi,
-                    sb_icohp,
-                    sb_icoop,
+                    sb_all,
                 ) = CondensedBondingAnalysis.from_directory(
                     dir_name,
                     save_cohp_plots=save_cohp_plots,
@@ -856,9 +848,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                 (
                     condensed_bonding_analysis_ionic,
                     describe_ionic,
-                    sb_icobi_ionic,
-                    sb_icohp_ionic,
-                    sb_icoop_ionic,
+                    sb_ionic,
                 ) = CondensedBondingAnalysis.from_directory(
                     dir_name,
                     save_cohp_plots=save_cohp_plots,
@@ -959,16 +949,12 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             # include additional fields for cation-anion
             lobsterpy_data=condensed_bonding_analysis,
             lobsterpy_text=" ".join(describe.text) if describe is not None else None,
-            strongest_bonds_icohp=sb_icohp,
-            strongest_bonds_icoop=sb_icoop,
-            strongest_bonds_icobi=sb_icobi,
+            strongest_bonds=sb_all,
             lobsterpy_data_cation_anion=condensed_bonding_analysis_ionic,
             lobsterpy_text_cation_anion=" ".join(describe_ionic.text)
             if describe_ionic is not None
             else None,
-            strongest_bonds_icohp_cation_anion=sb_icohp_ionic,
-            strongest_bonds_icoop_cation_anion=sb_icoop_ionic,
-            strongest_bonds_icobi_cation_anion=sb_icobi_ionic,
+            strongest_bonds_cation_anion=sb_ionic,
             calc_quality_summary=calc_quality_summary,
             calc_quality_text=" ".join(calc_quality_text)
             if calc_quality_text is not None
@@ -1007,9 +993,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                             "lobsterpy_text": [
                                 "".join(doc.lobsterpy_text_cation_anion)
                             ],
-                            "sb_icobi": doc.strongest_bonds_icobi_cation_anion,
-                            "sb_icohp": doc.strongest_bonds_icohp_cation_anion,
-                            "sb_icoop": doc.strongest_bonds_icoop_cation_anion,
+                            "strongest_bonds": doc.strongest_bonds_cation_anion,
                         }
                     }
                 else:
@@ -1025,9 +1009,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                     f"{lobsterpy_analysis_type}_bonds": {
                         "lobsterpy_data": doc.lobsterpy_data,
                         "lobsterpy_text": ["".join(doc.lobsterpy_text)],
-                        "sb_icobi": doc.strongest_bonds_icobi,
-                        "sb_icohp": doc.strongest_bonds_icohp,
-                        "sb_icoop": doc.strongest_bonds_icoop,
+                        "strongest_bonds": doc.strongest_bonds,
                     }
                 }
                 monty_encoded_json_doc = jsanitize(
@@ -1199,7 +1181,7 @@ def _identify_strongest_bonds(
     icobilist_path: Path,
     icohplist_path: Path,
     icooplist_path: Path,
-) -> list[StrongestBonds]:
+) -> StrongestBonds:
     """
     Identify the strongest bonds and convert them into StrongestBonds objects.
 
@@ -1216,16 +1198,16 @@ def _identify_strongest_bonds(
 
     Returns
     -------
-    list[StrongestBonds]
-        List of StrongestBonds
+    StrongestBonds
     """
     data = [
-        (icohplist_path, False, False),
-        (icobilist_path, True, False),
-        (icooplist_path, False, True),
+        (icohplist_path, False, False, "icohp"),
+        (icobilist_path, True, False, "icobi"),
+        (icooplist_path, False, True, "icoop"),
     ]
     output = []
-    for file, are_cobis, are_coops in data:
+    model_data = {"which_bonds": analyse.which_bonds}
+    for file, are_cobis, are_coops, prop in data:
         if file.exists():
             icohplist = Icohplist(
                 filename=file,
@@ -1238,6 +1220,7 @@ def _identify_strongest_bonds(
                 are_cobis=are_cobis,
                 are_coops=are_coops,
             )
+            model_data[f"strongest_bonds_{prop}"] = bond_dict
             output.append(
                 StrongestBonds(
                     strongest_bonds=bond_dict,
@@ -1245,8 +1228,9 @@ def _identify_strongest_bonds(
                 )
             )
         else:
+            model_data[f"strongest_bonds_{prop}"] = {}
             output.append(None)
-    return output
+    return StrongestBonds(**model_data)
 
 
 # Don't we have this in pymatgen somewhere?
@@ -1296,11 +1280,11 @@ def _get_strong_bonds(
                 sep_lengths[idx].append(lengths[j])
 
     if are_cobis and not are_coops:
-        prop = "ICOBI"
+        prop = "icobi"
     elif not are_cobis and are_coops:
-        prop = "ICOOP"
+        prop = "icoop"
     else:
-        prop = "ICOHP"
+        prop = "icohp"
 
     bond_dict = {}
     for idx, lab in enumerate(bond_labels_unique):
@@ -1310,12 +1294,12 @@ def _get_strong_bonds(
             rel_bnd_list = rel_bnd.split("-")
             rel_bnd_list.sort()
             if label == rel_bnd_list:
-                if prop == "ICOHP":
+                if prop == "icohp":
                     index = np.argmin(sep_icohp[idx])
                     bond_dict.update(
                         {
                             rel_bnd: {
-                                prop: min(sep_icohp[idx]),
+                                "bond_strength": min(sep_icohp[idx]),
                                 "length": sep_lengths[idx][index],
                             }
                         }
@@ -1325,7 +1309,7 @@ def _get_strong_bonds(
                     bond_dict.update(
                         {
                             rel_bnd: {
-                                prop: max(sep_icohp[idx]),
+                                "bond_strength": max(sep_icohp[idx]),
                                 "length": sep_lengths[idx][index],
                             }
                         }

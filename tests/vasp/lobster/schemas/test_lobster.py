@@ -45,55 +45,57 @@ def test_lobster_task_document(lobster_test_dir):
 
     assert isinstance(doc.lobsterin, LobsterinModel)
     assert_allclose(doc.lobsterin.cohpstartenergy, -5)
-    assert isinstance(doc.strongest_bonds_icohp, StrongestBonds)
+    assert isinstance(doc.strongest_bonds, StrongestBonds)
     assert_allclose(
-        doc.strongest_bonds_icohp.strongest_bonds["As-Ga"]["ICOHP"], -4.32971
+        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["bond_strength"], -4.32971
     )
     assert_allclose(
-        doc.strongest_bonds_icobi.strongest_bonds["As-Ga"]["ICOBI"], 0.82707
+        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["bond_strength"], 0.82707
     )
     assert_allclose(
-        doc.strongest_bonds_icoop.strongest_bonds["As-Ga"]["ICOOP"], 0.31405
+        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["bond_strength"], 0.31405
     )
     assert_allclose(
-        doc.strongest_bonds_icohp.strongest_bonds["As-Ga"]["length"], 2.4899
+        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["length"], 2.4899
     )
     assert_allclose(
-        doc.strongest_bonds_icobi.strongest_bonds["As-Ga"]["length"], 2.4899
+        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["length"], 2.4899
     )
     assert_allclose(
-        doc.strongest_bonds_icoop.strongest_bonds["As-Ga"]["length"], 2.4899
+        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["length"], 2.4899
     )
-    assert doc.strongest_bonds_icoop.which_bonds == "all"
-    assert doc.strongest_bonds_icohp.which_bonds == "all"
-    assert doc.strongest_bonds_icobi.which_bonds == "all"
+    assert doc.strongest_bonds.which_bonds == "all"
     assert_allclose(
-        doc.strongest_bonds_icohp_cation_anion.strongest_bonds["As-Ga"]["ICOHP"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"][
+            "bond_strength"
+        ],
         -4.32971,
     )
     assert_allclose(
-        doc.strongest_bonds_icobi_cation_anion.strongest_bonds["As-Ga"]["ICOBI"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"][
+            "bond_strength"
+        ],
         0.82707,
     )
     assert_allclose(
-        doc.strongest_bonds_icoop_cation_anion.strongest_bonds["As-Ga"]["ICOOP"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"][
+            "bond_strength"
+        ],
         0.31405,
     )
     assert_allclose(
-        doc.strongest_bonds_icohp_cation_anion.strongest_bonds["As-Ga"]["length"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"]["length"],
         2.4899,
     )
     assert_allclose(
-        doc.strongest_bonds_icobi_cation_anion.strongest_bonds["As-Ga"]["length"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"]["length"],
         2.4899,
     )
     assert_allclose(
-        doc.strongest_bonds_icoop_cation_anion.strongest_bonds["As-Ga"]["length"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"]["length"],
         2.4899,
     )
-    assert doc.strongest_bonds_icoop_cation_anion.which_bonds == "cation-anion"
-    assert doc.strongest_bonds_icohp_cation_anion.which_bonds == "cation-anion"
-    assert doc.strongest_bonds_icobi_cation_anion.which_bonds == "cation-anion"
+    assert doc.strongest_bonds_cation_anion.which_bonds == "cation-anion"
     assert isinstance(doc.lobsterpy_data.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp)
     assert doc.lobsterpy_data.which_bonds == "all"
     assert doc.lobsterpy_data_cation_anion.which_bonds == "cation-anion"
@@ -127,10 +129,10 @@ def test_lobster_task_document(lobster_test_dir):
         add_coxxcar_to_task_document=True,
     )
     assert_allclose(
-        doc2.strongest_bonds_icohp.strongest_bonds["Ba-O"]["ICOHP"], -0.55689
+        doc2.strongest_bonds.strongest_bonds_icohp["Ba-O"]["bond_strength"], -0.55689
     )
     assert_allclose(
-        doc2.strongest_bonds_icohp.strongest_bonds["Ba-F"]["ICOHP"], -0.44806
+        doc2.strongest_bonds.strongest_bonds_icohp["Ba-F"]["bond_strength"], -0.44806
     )
     assert isinstance(doc2.charges, Charge)
     assert isinstance(doc2.madelung_energies, MadelungEnergies)
@@ -168,55 +170,57 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
 
     assert isinstance(doc.lobsterin, LobsterinModel)
     assert_allclose(doc.lobsterin.cohpstartenergy, -5)
-    assert isinstance(doc.strongest_bonds_icohp, StrongestBonds)
+    assert isinstance(doc.strongest_bonds, StrongestBonds)
     assert_allclose(
-        doc.strongest_bonds_icohp.strongest_bonds["As-Ga"]["ICOHP"], -4.32971
+        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["bond_strength"], -4.32971
     )
     assert_allclose(
-        doc.strongest_bonds_icobi.strongest_bonds["As-Ga"]["ICOBI"], 0.82707
+        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["bond_strength"], 0.82707
     )
     assert_allclose(
-        doc.strongest_bonds_icoop.strongest_bonds["As-Ga"]["ICOOP"], 0.31405
+        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["bond_strength"], 0.31405
     )
     assert_allclose(
-        doc.strongest_bonds_icohp.strongest_bonds["As-Ga"]["length"], 2.4899
+        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["length"], 2.4899
     )
     assert_allclose(
-        doc.strongest_bonds_icobi.strongest_bonds["As-Ga"]["length"], 2.4899
+        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["length"], 2.4899
     )
     assert_allclose(
-        doc.strongest_bonds_icoop.strongest_bonds["As-Ga"]["length"], 2.4899
+        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["length"], 2.4899
     )
-    assert doc.strongest_bonds_icoop.which_bonds == "all"
-    assert doc.strongest_bonds_icohp.which_bonds == "all"
-    assert doc.strongest_bonds_icobi.which_bonds == "all"
+    assert doc.strongest_bonds.which_bonds == "all"
     assert_allclose(
-        doc.strongest_bonds_icohp_cation_anion.strongest_bonds["As-Ga"]["ICOHP"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"][
+            "bond_strength"
+        ],
         -4.32971,
     )
     assert_allclose(
-        doc.strongest_bonds_icobi_cation_anion.strongest_bonds["As-Ga"]["ICOBI"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"][
+            "bond_strength"
+        ],
         0.82707,
     )
     assert_allclose(
-        doc.strongest_bonds_icoop_cation_anion.strongest_bonds["As-Ga"]["ICOOP"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"][
+            "bond_strength"
+        ],
         0.31405,
     )
     assert_allclose(
-        doc.strongest_bonds_icohp_cation_anion.strongest_bonds["As-Ga"]["length"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"]["length"],
         2.4899,
     )
     assert_allclose(
-        doc.strongest_bonds_icobi_cation_anion.strongest_bonds["As-Ga"]["length"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"]["length"],
         2.4899,
     )
     assert_allclose(
-        doc.strongest_bonds_icoop_cation_anion.strongest_bonds["As-Ga"]["length"],
+        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"]["length"],
         2.4899,
     )
-    assert doc.strongest_bonds_icoop_cation_anion.which_bonds == "cation-anion"
-    assert doc.strongest_bonds_icohp_cation_anion.which_bonds == "cation-anion"
-    assert doc.strongest_bonds_icobi_cation_anion.which_bonds == "cation-anion"
+    assert doc.strongest_bonds_cation_anion.which_bonds == "cation-anion"
     assert isinstance(doc.lobsterpy_data.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp)
     assert doc.lobsterpy_data.which_bonds == "all"
     assert doc.lobsterpy_data_cation_anion.which_bonds == "cation-anion"
@@ -333,14 +337,10 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
         "lobsterpy_text",
         "calc_quality_summary",
         "calc_quality_text",
-        "strongest_bonds_icohp",
-        "strongest_bonds_icoop",
-        "strongest_bonds_icobi",
+        "strongest_bonds",
         "lobsterpy_data_cation_anion",
         "lobsterpy_text_cation_anion",
-        "strongest_bonds_icohp_cation_anion",
-        "strongest_bonds_icoop_cation_anion",
-        "strongest_bonds_icobi_cation_anion",
+        "strongest_bonds_cation_anion",
         "dos",
         "lso_dos",
         "madelung_energies",
