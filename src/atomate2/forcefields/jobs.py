@@ -81,6 +81,11 @@ class ForceFieldRelaxMaker(Maker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -96,6 +101,8 @@ class ForceFieldRelaxMaker(Maker):
     name: str = "Force field relax"
     force_field_name: str = f"{MLFF.Forcefield}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -126,7 +133,11 @@ class ForceFieldRelaxMaker(Maker):
 
         with revert_default_dtype():
             relaxer = Relaxer(
-                self._calculator(), relax_cell=self.relax_cell, **self.optimizer_kwargs
+                self._calculator(),
+                relax_cell=self.relax_cell,
+                fix_symmetry=self.fix_symmetry,
+                symprec=self.symprec,
+                **self.optimizer_kwargs,
             )
             result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
@@ -137,6 +148,8 @@ class ForceFieldRelaxMaker(Maker):
             self.steps,
             self.relax_kwargs,
             self.optimizer_kwargs,
+            self.fix_symmetry,
+            self.symprec,
             **self.task_document_kwargs,
         )
 
@@ -185,6 +198,11 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -198,6 +216,8 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.CHGNet} relax"
     force_field_name: str = f"{MLFF.CHGNet}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -241,6 +261,11 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -254,6 +279,8 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.M3GNet} relax"
     force_field_name: str = f"{MLFF.M3GNet}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -276,6 +303,11 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -289,6 +321,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.Nequip} relax"
     force_field_name: str = f"{MLFF.Nequip}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -351,6 +385,11 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -372,6 +411,8 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.MACE} relax"
     force_field_name: str = f"{MLFF.MACE}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -419,6 +460,11 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
@@ -432,6 +478,8 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     name: str = f"{MLFF.GAP} relax"
     force_field_name: str = f"{MLFF.GAP}"
     relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
