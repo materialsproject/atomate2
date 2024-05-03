@@ -51,11 +51,12 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
-    "torch<=2.2.1", # incompatibility with dgl if newer versions are used
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.0.0",
     "quippy-ase>=0.9.14",
+    "torch-runstats>=0.2.0", # transitive dependency for NequIP
+    "torch<=2.2.1",          # incompatibility with dgl if newer versions are used
 ]
 docs = [
     "FireWorks==2.0.3",
@@ -70,13 +71,17 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2", "pytest-mock==3.14.0"]
+tests = [
+    "FireWorks==2.0.3",
+    "pytest-cov==5.0.0",
+    "pytest-mock==3.14.0",
+    "pytest==8.0.2",
+]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
-    "torch==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",
@@ -99,6 +104,8 @@ strict = [
     "python-ulid==2.4.0.post0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
+    "torch-runstats>=0.2.0",                # transitive dependency for NequIP
+    "torch==2.2.1",                         # incompatibility with dgl if newer versions are used
     "typing-extensions==4.11.0",
 ]
 

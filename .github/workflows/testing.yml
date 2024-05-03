@@ -14,12 +14,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
-          cache: pip
-          cache-dependency-path: pyproject.toml
 
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3
 
   test:
     services:
@@ -40,24 +36,20 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-
       - name: Install dependencies
-        # ERROR: Cannot install atomate2 and atomate2[strict,tests]==0.0.1 because these package versions have conflicting dependencies.
-        # The conflict is caused by:
-        #   atomate2[strict,tests] 0.0.1 depends on pymatgen>=2023.10.4
-        #   atomate2[strict,tests] 0.0.1 depends on pymatgen==2023.10.4; extra == "strict"
-        # ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
-        #   chgnet 0.2.1 depends on pymatgen>=2023.5.31
-        #   emmet-core 0.70.0 depends on pymatgen>=2023.10.11
         run: |
-          python -m pip install --upgrade pip
+          pip install uv
+          uv pip install llvmlite==0.42.0 --system # TODO remove, llvmlite==0.35.0 install fails with FileNotFoundError: [Errno 2] No such file or directory: 'llvm-config'
+          uv pip install .[strict,tests,abinit] --system --prerelease=allow
+          # latest ase needed to get FrechetCellFilter used by ML force fields
+          # TODO remove next line installing ase from main branch when FrechetCellFilter is released
+          uv pip install --upgrade 'git+https://gitlab.com/ase/ase' --system
+          uv pip install torch-runstats --system
+          uv pip install --no-deps nequip --system
+
+          # Install pseudos for abinit tests
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          # ase needed to get FrechetCellFilter used by ML force fields
-          pip install git+https://gitlab.com/ase/ase
-          pip install .[strict,tests,abinit]
-          pip install torch-runstats
-          pip install --no-deps nequip
 
       - name: Test
         env:
@@ -84,10 +76,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          pip install uv
+          uv pip install .[strict,docs] --system
           # ase needed to get FrechetCellFilter used by ML force fields
-          pip install git+https://gitlab.com/ase/ase
-          pip install .[strict,docs]
+          uv pip install --upgrade 'git+https://gitlab.com/ase/ase' --system
 
       - name: Build
         run: sphinx-build docs docs_build
