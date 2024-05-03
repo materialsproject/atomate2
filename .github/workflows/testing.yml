@@ -48,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          LLVM_CONFIG=/home/runner/work/atomate2/atomate2/llvm-config uv pip install .[strict,tests,abinit] --system --prerelease=allow
+          LLVM_CONFIG=/home/runner/work/atomate2/atomate2/llvm/bin/llvm-config uv pip install .[strict,tests,abinit] --system --prerelease=allow
           # latest ase needed to get FrechetCellFilter used by ML force fields
           # TODO remove next line installing ase from main branch when FrechetCellFilter is released
           uv pip install --upgrade 'git+https://gitlab.com/ase/ase' --system
