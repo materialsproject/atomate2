@@ -38,7 +38,7 @@ jobs:
 
       - name: Install LLVM
         run: |
-          sudo apt-get install -y llvm
+          sudo apt-get install -y llvm-10
 
       - name: Install dependencies
         run: |
