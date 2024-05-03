@@ -59,11 +59,11 @@ class MultiMDMaker(Maker):
         """
         md_job = None
         md_jobs = []
-        for idx, maker in enumerate(self.md_makers, 1):
-            if md_job is None:
-                md_structure = structure
-                md_prev_dir = prev_dir
-            else:
+        md_structure = structure
+        md_prev_dir = prev_dir
+
+        for idx, maker in enumerate(self.md_makers, start=1):
+            if md_job is not None:
                 md_structure = md_job.output.structure
                 md_prev_dir = md_job.output.dir_name
             md_job = maker.make(md_structure, prev_dir=md_prev_dir)

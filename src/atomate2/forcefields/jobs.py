@@ -173,6 +173,8 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         The job name.
     force_field_name : str
         The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -209,6 +211,8 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -236,6 +240,8 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     ----------
     name : str
         The job name.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -272,6 +278,8 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -314,6 +322,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -340,6 +350,8 @@ class NequipStaticMaker(ForceFieldStaticMaker):
         The job name.
     force_field_name : str
         The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -360,6 +372,8 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
         The job name.
     force_field_name : str
         The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -396,16 +410,14 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
+        key configures which checkpoint to load with mace.calculators.MACECalculator().
+        Can be a URL starting with https://. If not set, loads the universal MACE-MP
+        trained for Matbench Discovery on the MPtrj dataset available at
+        https://figshare.com/articles/dataset/22715158.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    model: str | Path | None
-        Checkpoint to load with :obj:`mace.calculators.MACECalculator()'`. Can be a URL
-        starting with https://. If None, loads the universal MACE trained for Matbench
-        Discovery on the MPtrj dataset available at
-        https://figshare.com/articles/dataset/22715158.
-    model_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model) for
-            :obj:`mace.calculators.MACECalculator()'`.
     """
 
     name: str = f"{MLFF.MACE} relax"
@@ -430,16 +442,14 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         The job name.
     force_field_name : str
         The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
+        key configures which checkpoint to load with mace.calculators.MACECalculator().
+        Can be a URL starting with https://. If not set, loads the universal MACE-MP
+        trained for Matbench Discovery on the MPtrj dataset available at
+        https://figshare.com/articles/dataset/22715158.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    model: str | Path | None
-        Checkpoint to load with :obj:`mace.calculators.MACECalculator()'`. Can be a URL
-        starting with https://. If None, loads the universal MACE trained for Matbench
-        Discovery on the MPtrj dataset available at
-        https://figshare.com/articles/dataset/22715158.
-    model_kwargs: dict[str, Any]
-        Further keywords (e.g. device, default_dtype, model) for
-            :obj:`mace.calculators.MACECalculator()'`.
     """
 
     name: str = f"{MLFF.MACE} static"
@@ -471,6 +481,8 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`Relaxer.relax`.
     optimizer_kwargs : dict
         Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
@@ -503,6 +515,8 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         The job name.
     force_field_name : str
         The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
