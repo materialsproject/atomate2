@@ -38,11 +38,12 @@ jobs:
 
       - name: Install LLVM
         run: |
-          sudo apt-get install -y llvm-10
+          sudo apt-get install -y llvm
 
       - name: Install dependencies
         run: |
           pip install uv
+          uv pip install llvmlite==0.42.0 --system # needed for compatibility with llvm 14, current latest
           uv pip install .[strict,tests,abinit] --system --prerelease=allow
           # latest ase needed to get FrechetCellFilter used by ML force fields
           # TODO remove next line installing ase from main branch when FrechetCellFilter is released
