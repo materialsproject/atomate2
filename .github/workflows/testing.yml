@@ -36,6 +36,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install LLVM
+        run: |
+          sudo apt-get install -y llvm
+
       - name: Install dependencies
         run: |
           pip install uv
