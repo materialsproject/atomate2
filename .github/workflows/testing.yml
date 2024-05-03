@@ -39,7 +39,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          uv pip install llvmlite==0.42.0 --system # TODO remove, llvmlite==0.35.0 install fails with FileNotFoundError: [Errno 2] No such file or directory: 'llvm-config'
           uv pip install .[strict,tests,abinit] --system --prerelease=allow
           # latest ase needed to get FrechetCellFilter used by ML force fields
           # TODO remove next line installing ase from main branch when FrechetCellFilter is released
