@@ -15,7 +15,11 @@ jobs:
 
       - uses: actions/setup-python@v5
 
-      - uses: pre-commit/action@v3
+      - name: Install dependencies
+        run: pip install pre-commit
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure
 
   test:
     services:
