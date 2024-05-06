@@ -96,7 +96,7 @@ strict = [
     "numpy",
     "phonopy==2.22.1",
     "pydantic-settings==2.2.1",
-    "pydantic==2.7.0",
+    "pydantic==2.7.1",
     "pymatgen-analysis-defects==2024.2.24",
     "pymatgen==2024.3.1",
     "python-ulid==2.4.0.post0",
