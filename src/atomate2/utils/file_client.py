@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import errno
+import os
 import shutil
 import stat
 import warnings
@@ -258,6 +260,30 @@ class FileClient:
             raise ValueError(
                 "Copying between two different remote hosts is not supported."
             )
+
+    def link(
+        self,
+        src_filename: str | Path,
+        dest_filename: str | Path,
+    ) -> None:
+        """
+        Link a file from source to destination.
+
+        Parameters
+        ----------
+        src_filename : str or Path
+            Full path to source file.
+        dest_filename : str or Path
+            Full path to destination file.
+        """
+        try:
+            os.symlink(src_filename, dest_filename)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                os.remove(dest_filename)
+                os.symlink(src_filename, dest_filename)
+            else:
+                raise
 
     def remove(self, path: str | Path, host: str | None = None) -> None:
         """
@@ -557,7 +583,7 @@ def auto_fileclient(method: Callable | None = None) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def gen_fileclient(*args, **kwargs) -> Any:
+        def gen_file_client(*args, **kwargs) -> Any:
             file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
@@ -566,7 +592,7 @@ def auto_fileclient(method: Callable | None = None) -> Callable:
             else:
                 return func(*args, **kwargs)
 
-        return gen_fileclient
+        return gen_file_client
 
     # See if we're being called as @auto_fileclient or @auto_fileclient().
     if method is None:

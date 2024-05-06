@@ -51,9 +51,11 @@ jobs:
         #   emmet-core 0.70.0 depends on pymatgen>=2023.10.11
         run: |
           python -m pip install --upgrade pip
+          mkdir -p ~/.abinit/pseudos
+          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           # ase needed to get FrechetCellFilter used by ML force fields
           pip install git+https://gitlab.com/ase/ase
-          pip install .[strict,tests]
+          pip install .[strict,tests,abinit]
           pip install torch-runstats
           pip install --no-deps nequip
 
