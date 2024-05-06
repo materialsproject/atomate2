@@ -8,17 +8,19 @@ from openff.toolkit.topology import Topology
 from openff.toolkit.topology.molecule import Molecule
 from openff.units import Quantity
 from pymatgen.analysis.graphs import MoleculeGraph
-
-from atomate2.classical_md.utils import (
+from pymatgen.io.openff import (
     add_conformer,
     assign_partial_charges,
-    create_mol_spec,
     create_openff_mol,
     get_atom_map,
-    increment_name,
     infer_openff_mol,
+    mol_graph_to_openff_mol,
+)
+
+from atomate2.classical_md.utils import (
+    create_mol_spec,
+    increment_name,
     merge_specs_by_name_and_smile,
-    molgraph_to_openff_mol,
 )
 
 
@@ -40,7 +42,7 @@ def test_molgraph_to_openff_pf6(mol_files):
 
     pf6_openff_1 = tk.Molecule.from_smiles("F[P-](F)(F)(F)(F)F")
 
-    pf6_openff_2 = molgraph_to_openff_mol(pf6_molgraph)
+    pf6_openff_2 = mol_graph_to_openff_mol(pf6_molgraph)
     assert pf6_openff_1 == pf6_openff_2
 
 
@@ -50,7 +52,7 @@ def test_molgraph_to_openff_cco(mol_files):
     cco_pmg = pymatgen.core.Molecule.from_file(mol_files["CCO_xyz"])
     cco_molgraph = MoleculeGraph.with_local_env_strategy(cco_pmg, OpenBabelNN())
 
-    cco_openff_1 = molgraph_to_openff_mol(cco_molgraph)
+    cco_openff_1 = mol_graph_to_openff_mol(cco_molgraph)
 
     cco_openff_2 = tk.Molecule.from_smiles("CCO")
     cco_openff_2.assign_partial_charges("mmff94")
