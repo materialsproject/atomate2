@@ -1,5 +1,6 @@
+import numpy as np
 import pytest
-from pymatgen.core import Lattice, Species, Structure
+from pymatgen.core import Species, Structure
 
 from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
@@ -10,7 +11,7 @@ def struct_no_magmoms() -> Structure:
     """Dummy FeO structure with expected +U corrections but no magnetic moments
     defined."""
     return Structure(
-        lattice=Lattice.cubic(3),
+        lattice=3 * np.eye(3),
         species=("Fe", "O"),
         coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
@@ -23,7 +24,7 @@ def struct_with_spin() -> Structure:
     oxi = Species("O2-", spin=0.63)
 
     return Structure(
-        lattice=Lattice.cubic(3),
+        lattice=3 * np.eye(3),
         species=(iron, oxi),
         coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )
@@ -41,7 +42,7 @@ def struct_with_magmoms(struct_no_magmoms) -> Structure:
 def struct_no_u_params() -> Structure:
     """Dummy SiO structure with no anticipated +U corrections"""
     return Structure(
-        lattice=Lattice.cubic(3),
+        lattice=3 * np.eye(3),
         species=("Si", "O"),
         coords=((0, 0, 0), (0.5, 0.5, 0.5)),
     )

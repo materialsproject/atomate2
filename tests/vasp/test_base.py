@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import numpy as np
 import pytest
 from custodian.vasp.handlers import ErrorHandler
-from pymatgen.core import Lattice, Structure
+from pymatgen.core import Structure
 
 from atomate2.vasp.run import DEFAULT_HANDLERS
 from atomate2.vasp.sets.base import get_magmoms
@@ -15,7 +16,7 @@ def test_get_magmoms(
 ) -> None:
     # structure with Co that will be assigned magmoms
     struct = Structure(
-        lattice=Lattice.cubic(3),
+        lattice=3 * np.eye(3),
         species=["Co", "Fe"],
         coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
     )
@@ -44,7 +45,7 @@ def test_get_magmoms_with_specie() -> None:
     # the code that checks for `Specie.spin`.
     # @jmmshn
     struct = Structure(
-        lattice=Lattice.cubic(3),
+        lattice=3 * np.eye(3),
         species=["Co2+", "Fe3+"],
         coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
     )

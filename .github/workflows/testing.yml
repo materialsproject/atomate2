@@ -45,6 +45,7 @@ jobs:
         with:
           version: "10.0"
 
+      # TODO figure out where the llvm-config bin is really located
       - name: Install dependencies
         run: |
           pip install uv
