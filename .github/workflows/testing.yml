@@ -55,10 +55,10 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           # ase needed to get FrechetCellFilter used by ML force fields
-          pip install git+https://gitlab.com/ase/ase
-          pip install .[strict,tests,abinit]
-          pip install torch-runstats
-          pip install --no-deps nequip
+          pip install --no-cache-dir git+https://gitlab.com/ase/ase
+          pip install --no-cache-dir .[strict,tests,abinit]
+          pip install --no-cache-dir torch-runstats
+          pip install --no-cache-dir --no-deps nequip
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
