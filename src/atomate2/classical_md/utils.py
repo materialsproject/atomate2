@@ -137,17 +137,20 @@ def calculate_elyte_composition(
     solvents: dict[str, float],
     salts: dict[str, float],
     solvent_densities: dict = None,
+    solvent_ratio_dimension: str = "mass",
 ) -> dict[str, float]:
     """Calculate the normalized mass ratios of an electrolyte solution.
 
     Parameters
     ----------
     solvents : dict
-        Dictionary of solvent SMILES strings and their relative volume fraction.
+        Dictionary of solvent SMILES strings and their relative unit fraction.
     salts : dict
         Dictionary of salt SMILES strings and their molarities.
     solvent_densities : dict
         Dictionary of solvent SMILES strings and their densities (g/ml).
+    solvent_ratio_dimension: optional, str
+        Whether the solvents are included with a ratio of "mass" or "volume"
 
     Returns
     -------
@@ -155,19 +158,24 @@ def calculate_elyte_composition(
         A dictionary containing the normalized mass ratios of molecules in
         the electrolyte solution.
     """
-    # Set default value for solvent_densities if not provided
-    solvent_densities = solvent_densities or {}
-
     # Check if all solvents have corresponding densities
+    solvent_densities = solvent_densities or {}
     if set(solvents.keys()) > set(solvent_densities.keys()):
         raise ValueError("solvent_densities must contain densities for all solvents.")
+
+    # convert masses to volumes so we can normalize volume
+    if solvent_ratio_dimension == "mass":
+        solvents = {
+            smile: mass / solvent_densities[smile] for smile, mass in solvents.items()
+        }
+
     # normalize volume ratios
     total_vol = sum(solvents.values())
-    solvents = {smile: vol / total_vol for smile, vol in solvents.items()}
+    solvent_volumes = {smile: vol / total_vol for smile, vol in solvents.items()}
 
     # Convert volume ratios to mass ratios using solvent densities
     mass_ratio = {
-        smile: vol * solvent_densities[smile] for smile, vol in solvents.items()
+        smile: vol * solvent_densities[smile] for smile, vol in solvent_volumes.items()
     }
 
     # Calculate the molecular weights of the solvent

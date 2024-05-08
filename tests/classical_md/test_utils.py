@@ -245,7 +245,9 @@ def test_calculate_elyte_composition():
     salts = {"[Li+]": 1.0, "F[P-](F)(F)(F)(F)F": 1.0}
     solvent_densities = {"O": 1.0, "CCO": 0.8}
 
-    comp_dict = calculate_elyte_composition(vol_ratio, salts, solvent_densities)
+    comp_dict = calculate_elyte_composition(
+        vol_ratio, salts, solvent_densities, "volume"
+    )
     counts = counts_from_masses(comp_dict, 100)
     assert sum(counts.values()) == 100
 
