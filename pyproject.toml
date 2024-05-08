@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.3.1",
+    "pymatgen>=2024.4.13",
 ]
 
 [project.optional-dependencies]
@@ -57,6 +57,7 @@ forcefields = [
     "matgl>=1.0.0",
     "quippy-ase>=0.9.14",
 ]
+classical_md = ["openmm-mdanalysis-reporter>=0.1.0"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
@@ -82,7 +83,7 @@ strict = [
     "click==8.1.7",
     "custodian==2024.3.12",
     "dscribe==2.1.0",
-    "emmet-core==0.82.2",
+    "emmet-core==0.83.0",
     "ijson==3.2.3",
     "jobflow==0.1.17",
     "lobsterpy==0.3.8",
@@ -95,7 +96,7 @@ strict = [
     "pydantic-settings==2.2.1",
     "pydantic==2.7.1",
     "pymatgen-analysis-defects==2024.4.23",
-    "pymatgen==2024.3.1",
+    "pymatgen==2024.4.13",
     "python-ulid==2.5.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
