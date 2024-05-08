@@ -57,6 +57,7 @@ forcefields = [
     "matgl>=1.0.0",
     "quippy-ase>=0.9.14",
 ]
+classical_md = ["openmm-mdanalysis-reporter>=0.1.0"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
