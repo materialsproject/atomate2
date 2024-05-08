@@ -91,7 +91,7 @@ jobs:
         run: |
           micromamba create -n atomate2 python=${{ matrix.python-version }} --yes
           micromamba install -n atomate2 -c conda-forge --file .github/classical_md_requirements.txt --yes
-          micromamba run -n atomate2 pip install .[strict,tests]
+          micromamba run -n atomate2 pip install .[strict,tests,classical_md]
 
       - name: Test
         run: micromamba run -n atomate2 pytest tests/classical_md/ --cov=atomate2 --cov-report=xml
