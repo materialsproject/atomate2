@@ -359,8 +359,7 @@ class Relaxer:
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
         atoms.set_calculator(self.calculator)
-        stream = sys.stdout if verbose else io.StringIO()
-        with contextlib.redirect_stdout(stream):
+        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
                 atoms = cell_filter(atoms)
