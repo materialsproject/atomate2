@@ -439,8 +439,8 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
     elif isinstance(calculator_meta, dict):
-        _calculator = MontyDecoder().decode(json.dumps(calculator_meta))
-        calculator = _calculator(**kwargs)
+        calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))
+        calculator = calc_cls(**kwargs)
 
     return calculator
 

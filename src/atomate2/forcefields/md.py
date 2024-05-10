@@ -286,7 +286,7 @@ class ForceFieldMDMaker(Maker):
                 ZeroRotation(atoms)
 
         with revert_default_dtype():
-            atoms.calc = self._calculator()
+            atoms.calc = self.calculator
 
             md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
@@ -327,7 +327,8 @@ class ForceFieldMDMaker(Maker):
             **self.task_document_kwargs,
         )
 
-    def _calculator(self) -> Calculator:
+    @property
+    def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(self.force_field_name, **self.calculator_kwargs)
 
