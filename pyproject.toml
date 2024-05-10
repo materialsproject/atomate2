@@ -51,11 +51,11 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
-    "torch<=2.2.1", # incompatibility with dgl if newer versions are used
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=1.0.0",
+    "matgl>=1.1.1",
     "quippy-ase>=0.9.14",
+    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
 anharmonicphonons = [
 	"phono3py",
@@ -73,13 +73,17 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2", "pytest-mock==3.14.0"]
+tests = [
+    "FireWorks==2.0.3",
+    "pytest-cov==5.0.0",
+    "pytest-mock==3.14.0",
+    "pytest==8.0.2",
+]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
-    "torch==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",
@@ -90,7 +94,7 @@ strict = [
     "jobflow==0.1.17",
     "lobsterpy==0.3.8",
     "mace-torch>=0.3.3",
-    "matgl==1.0.0",
+    "matgl==1.1.1",
     "monty==2024.3.31",
     "mp-api==0.41.2",
     "numpy",
@@ -102,6 +106,7 @@ strict = [
     "python-ulid==2.5.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
+    "torch==2.2.1",
     "typing-extensions==4.11.0",
     "python-ulid==2.2.0",
     "phono3py==2.5.1"
@@ -196,6 +201,9 @@ lint.ignore = [
 lint.pydocstyle.convention = "numpy"
 lint.isort.known-first-party = ["atomate2"]
 lint.isort.split-on-trailing-comma = false
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
