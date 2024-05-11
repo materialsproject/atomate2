@@ -57,7 +57,7 @@ jobs:
           pip install git+https://gitlab.com/ase/ase
           pip install .[strict,tests,abinit]
           pip install torch-runstats
-          pip install --no-deps nequip
+          pip install --no-deps nequip==0.5.6
 
       - name: Test
         env:
