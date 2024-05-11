@@ -102,10 +102,6 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
-@pytest.mark.skip(
-    "skipped on 2024-05-06 by @janosh due to failing with "
-    "ValueError: Bad serialized model or bad model name"
-)
 def test_m3gnet_static_maker(si_structure):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
@@ -124,10 +120,6 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.forcefield_version == get_imported_version("matgl")
 
 
-@pytest.mark.skip(
-    "skipped on 2024-05-06 by @janosh due to failing with "
-    "ValueError: Bad serialized model or bad model name"
-)
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])

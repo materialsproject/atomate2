@@ -3,13 +3,11 @@ import torch
 from jobflow import run_locally
 from monty.serialization import loadfn
 
-from atomate2.forcefields.flows.eos import CHGNetEosMaker, MACEEosMaker
+from atomate2.forcefields.flows.eos import CHGNetEosMaker, M3GNetEosMaker, MACEEosMaker
 
 _mlff_to_maker = {
     "CHGNet": CHGNetEosMaker,
-    # M3GNet skipped on 2024-05-06 by @janosh due to failing with
-    # ValueError: Bad serialized model or bad model name
-    # "M3GNet": M3GNetEosMaker,
+    "M3GNet": M3GNetEosMaker,
     "MACE": MACEEosMaker,
 }
 
