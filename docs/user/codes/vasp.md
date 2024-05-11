@@ -375,7 +375,6 @@ In between, the different computations you will switch from MPI to OpenMP parall
 
 For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:
 
-
 ```bash
 #!/bin/bash
 #SBATCH -J vasplobsterjob
@@ -399,11 +398,11 @@ python xyz.py
 ```
 
 The `LOBSTER_CMD` now needs an additional export of the number of threads. 
+
 ```yaml
 VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
 ```
-
 
 
 (modifying_input_sets)=
