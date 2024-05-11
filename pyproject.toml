@@ -164,8 +164,10 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-lint.select = ["ALL"]
-lint.ignore = [
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
     "ANN002",
     "ANN003",
     "ANN101",  # missing self type annotation
@@ -198,9 +200,9 @@ lint.ignore = [
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
 ]
-lint.pydocstyle.convention = "numpy"
-lint.isort.known-first-party = ["atomate2"]
-lint.isort.split-on-trailing-comma = false
+pydocstyle.convention = "numpy"
+isort.known-first-party = ["atomate2"]
+isort.split-on-trailing-comma = false
 
 [tool.ruff.format]
 docstring-code-format = true
