@@ -62,7 +62,7 @@ def copy_cp2k_outputs(
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
     directory_listing = file_client.listdir(src_dir, host=src_host)
     restart_file = None
-    additional_cp2k_files = additional_cp2k_files if additional_cp2k_files else []
+    additional_cp2k_files = additional_cp2k_files or []
 
     # find required files
     o = Cp2kOutput(src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False)
