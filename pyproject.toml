@@ -43,7 +43,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.8"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
     "pymatgen-analysis-defects>=2024.5.11",
