@@ -99,8 +99,7 @@ class EOSPostProcessor(MSONable):
 
     @job
     def make(self, eos_flow_output: dict[str, Any]) -> Job:
-        """
-        Run the fit as a jobflow job.
+        """Run the fit as a jobflow job.
 
         Parameters
         ----------
@@ -253,8 +252,7 @@ class PostProcessEosPressure(EOSPostProcessor):
         )
 
     def _initial_fit(self) -> dict:
-        """
-        Generate initial polynomial fit for p(V) curve.
+        """Generate initial polynomial fit for p(V) curve.
 
         p(V) / V = a + b V + c V**2
         """

@@ -33,8 +33,7 @@ class RelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -69,8 +68,7 @@ class TightRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a tight relaxation job.
+        """Get updates to the INCAR for a tight relaxation job.
 
         Parameters
         ----------
@@ -131,8 +129,7 @@ class StaticSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a static VASP job.
+        """Get updates to the INCAR for a static VASP job.
 
         Parameters
         ----------
@@ -217,8 +214,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for a non-self consistent VASP job.
+        """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 
@@ -259,8 +255,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a non-self-consistent field VASP job.
+        """Get updates to the INCAR for a non-self-consistent field VASP job.
 
         Parameters
         ----------
@@ -339,8 +334,7 @@ class HSERelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a VASP HSE06 relaxation job.
+        """Get updates to the INCAR for a VASP HSE06 relaxation job.
 
         Parameters
         ----------
@@ -392,8 +386,7 @@ class HSETightRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a HSE tight relaxation job.
+        """Get updates to the INCAR for an HSE tight relaxation job.
 
         Parameters
         ----------
@@ -451,8 +444,7 @@ class HSEStaticSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a VASP HSE06 static job.
+        """Get updates to the INCAR for a VASP HSE06 static job.
 
         Parameters
         ----------
@@ -567,8 +559,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for a VASP HSE06 band structure job.
+        """Get updates to the kpoints configuration for a VASP HSE06 band structure job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 
@@ -620,8 +611,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a VASP HSE06 band structure job.
+        """Get updates to the INCAR for a VASP HSE06 band structure job.
 
         Parameters
         ----------
@@ -723,8 +713,7 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a static VASP job.
+        """Get updates to the INCAR for a static VASP job.
 
         Parameters
         ----------
@@ -772,8 +761,7 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for a non-self consistent VASP job.
+        """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 
@@ -834,8 +822,7 @@ class MDSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a molecular dynamics job.
+        """Get updates to the INCAR for a molecular dynamics job.
 
         Parameters
         ----------

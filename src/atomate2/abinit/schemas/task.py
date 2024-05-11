@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, Union
 
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
@@ -13,6 +13,7 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from typing_extensions import Self
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
@@ -20,7 +21,6 @@ from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri, strip_hostname
 
-_T = TypeVar("_T", bound="AbinitTaskDoc")
 logger = logging.getLogger(__name__)
 
 
@@ -42,7 +42,7 @@ class InputDoc(BaseModel):
     )
 
     @classmethod
-    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> InputDoc:
+    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> Self:
         """Create a summary from an abinit CalculationDocument.
 
         Parameters
@@ -111,7 +111,7 @@ class OutputDoc(BaseModel):
     )
 
     @classmethod
-    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
+    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> Self:
         """Create a summary from an abinit CalculationDocument.
 
         Parameters
@@ -237,11 +237,11 @@ class AbinitTaskDoc(StructureMetadata):
 
     @classmethod
     def from_directory(
-        cls: type[_T],
+        cls,
         dir_name: Path | str,
         additional_fields: dict[str, Any] = None,
         **abinit_calculation_kwargs,
-    ) -> AbinitTaskDoc:
+    ) -> Self:
         """Create a task document from a directory containing Abinit files.
 
         Parameters

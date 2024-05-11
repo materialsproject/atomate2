@@ -50,8 +50,7 @@ class BandStructureMaker(Maker):
         structure: Structure,
         restart_from: str | Path | None = None,
     ) -> Flow:
-        """
-        Create a band structure flow.
+        """Create a band structure flow.
 
         Parameters
         ----------
@@ -109,8 +108,7 @@ class RelaxFlowMaker(Maker):
         structure: Structure | None = None,
         restart_from: str | Path | None = None,
     ) -> Flow:
-        """
-        Create a relaxation flow.
+        """Create a relaxation flow.
 
         Parameters
         ----------

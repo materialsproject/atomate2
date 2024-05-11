@@ -27,6 +27,7 @@ from pymatgen.io.lobster import (
     MadelungEnergies,
     SitePotential,
 )
+from typing_extensions import Self
 
 from atomate2 import __version__
 from atomate2.utils.datetime import datetime_str
@@ -39,6 +40,7 @@ except ImportError:
     ijson = None
     Analysis = None
     Description = None
+
 
 logger = logging.getLogger(__name__)
 
@@ -302,8 +304,7 @@ class CondensedBondingAnalysis(BaseModel):
         plot_kwargs: dict = None,
         which_bonds: str = "all",
     ) -> tuple:
-        """
-        Create a task document from a directory containing LOBSTER files.
+        """Create a task document from a directory containing LOBSTER files.
 
         Parameters
         ----------
@@ -545,9 +546,8 @@ class CalcQualitySummary(BaseModel):
         cls,
         dir_name: Union[Path, str],
         calc_quality_kwargs: dict = None,
-    ) -> "CalcQualitySummary":
-        """
-        Create a LOBSTER calculation quality summary from directory with LOBSTER files.
+    ) -> Self:
+        """Make a LOBSTER calculation quality summary from directory with LOBSTER files.
 
         Parameters
         ----------
@@ -745,9 +745,8 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         save_cohp_plots: bool = True,
         save_cba_jsons: bool = True,
         save_computational_data_jsons: bool = False,
-    ) -> "LobsterTaskDocument":
-        """
-        Create a task document from a directory containing LOBSTER files.
+    ) -> Self:
+        """Create a task document from a directory containing LOBSTER files.
 
         Parameters
         ----------

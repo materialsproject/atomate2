@@ -3,7 +3,7 @@
 import logging
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -13,6 +13,7 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
+from typing_extensions import Self
 
 from atomate2 import SETTINGS, __version__
 from atomate2.common.utils import (
@@ -30,7 +31,6 @@ from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
-_T = TypeVar("_T", bound="TaskDocument")
 _VOLUMETRIC_FILES = ("v_hartree", "ELECTRON_DENSITY", "SPIN_DENSITY")
 
 
@@ -46,9 +46,8 @@ class AnalysisSummary(BaseModel):
     errors: list[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_cp2k_calc_docs(cls, calc_docs: list[Calculation]) -> "AnalysisSummary":
-        """
-        Create analysis summary from CP2K calculation documents.
+    def from_cp2k_calc_docs(cls, calc_docs: list[Calculation]) -> Self:
+        """Create analysis summary from CP2K calculation documents.
 
         Parameters
         ----------
@@ -119,7 +118,7 @@ class AtomicKindSummary(BaseModel):
     )
 
     @classmethod
-    def from_atomic_kind_info(cls, atomic_kind_info: dict) -> "AtomicKindSummary":
+    def from_atomic_kind_info(cls, atomic_kind_info: dict) -> Self:
         """Initialize from the atomic_kind_info dictionary."""
         d: dict[str, dict[str, Any]] = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
@@ -150,9 +149,8 @@ class InputSummary(BaseModel):
     )
 
     @classmethod
-    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
-        """
-        Create calculation input summary from a calculation document.
+    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
+        """Create calculation input summary from a calculation document.
 
         Parameters
         ----------
@@ -200,9 +198,8 @@ class OutputSummary(BaseModel):
     )
 
     @classmethod
-    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
-        """
-        Create a summary of CP2K calculation outputs from a CP2K calculation document.
+    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
+        """Make a summary of CP2K calculation outputs from a CP2K calculation document.
 
         Parameters
         ----------
@@ -306,15 +303,14 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
 
     @classmethod
     def from_directory(
-        cls: type[_T],
+        cls,
         dir_name: Union[Path, str],
         volumetric_files: tuple[str, ...] = _VOLUMETRIC_FILES,
         store_additional_json: bool = SETTINGS.CP2K_STORE_ADDITIONAL_JSON,
         additional_fields: dict[str, Any] = None,
         **cp2k_calculation_kwargs,
-    ) -> "TaskDocument":
-        """
-        Create a task document from a directory containing CP2K files.
+    ) -> Self:
+        """Create a task document from a directory containing CP2K files.
 
         Parameters
         ----------
@@ -422,8 +418,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
     def get_entry(
         calc_docs: list[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
-        """
-        Get a computed entry from a list of CP2K calculation documents.
+        """Get a computed entry from a list of CP2K calculation documents.
 
         Parameters
         ----------

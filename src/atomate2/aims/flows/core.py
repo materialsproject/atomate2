@@ -14,6 +14,7 @@ from atomate2.aims.jobs.core import RelaxMaker
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
+    from typing_extensions import Self
 
     from atomate2.aims.jobs.base import BaseAimsMaker
 
@@ -68,7 +69,7 @@ class DoubleRelaxMaker(Maker):
         cls,
         parameters: dict[str, Any],
         species_defaults: list[str] | tuple[str, str] = ("light", "tight"),
-    ) -> DoubleRelaxMaker:
+    ) -> Self:
         """Create the maker from an ASE parameter set.
 
         Creates a DoubleRelaxFlow for the same parameters with two different

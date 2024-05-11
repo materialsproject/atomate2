@@ -303,8 +303,7 @@ class NonSCFMaker(BaseCp2kMaker):
         prev_dir: str | Path | None,
         mode: str = "uniform",
     ) -> None:
-        """
-        Run a non-scf CP2K job.
+        """Run a non-scf CP2K job.
 
         Parameters
         ----------
@@ -378,8 +377,7 @@ class TransmuterMaker(BaseCp2kMaker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> None:
-        """
-        Run a transmuter Cp2k job.
+        """Run a transmuter Cp2k job.
 
         Parameters
         ----------

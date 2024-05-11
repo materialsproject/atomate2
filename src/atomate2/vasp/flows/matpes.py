@@ -70,8 +70,7 @@ class MatPesStaticFlowMaker(Maker):
     )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a flow with MatPES statics.
+        """Create a flow with MatPES statics.
 
         By default, a PBE static is followed by an r2SCAN static and optionally a PBE+U
         static if the structure contains elements with +U corrections. The PBE static is

@@ -45,8 +45,7 @@ class StaticSetGenerator(AbinitInputGenerator):
         kpoints_settings: dict | KSampling | None = None,
         input_index: int | None = None,
     ) -> AbinitInput:
-        """
-        Generate the AbinitInput for the input set.
+        """Generate the AbinitInput for the input set.
 
         Removes some standard variables related to relaxation.
         """
@@ -207,8 +206,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
         kpoints_settings: dict | KSampling | None = None,
         input_index: int | None = None,
     ) -> AbinitInput:
-        """
-        Generate the AbinitInput for the input set.
+        """Generate the AbinitInput for the input set.
 
         Sets tolmxf and determines the index of the MultiDataset.
         """
