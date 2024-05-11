@@ -1,7 +1,7 @@
 """Schemas for elastic tensor fitting and related properties."""
 
 from copy import deepcopy
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -17,11 +17,9 @@ from pymatgen.analysis.elasticity import (
 from pymatgen.core import Structure
 from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from typing_extensions import Self
 
 from atomate2 import SETTINGS
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 
 class DerivedProperties(BaseModel):

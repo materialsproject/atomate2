@@ -548,7 +548,7 @@ class CalcQualitySummary(BaseModel):
         cls,
         dir_name: Union[Path, str],
         calc_quality_kwargs: dict = None,
-    ) -> "CalcQualitySummary":
+    ) -> Self:
         """
         Create a LOBSTER calculation quality summary from directory with LOBSTER files.
 

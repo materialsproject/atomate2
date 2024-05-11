@@ -15,8 +15,6 @@ from pymatgen.io.qchem.utils import lower_and_check_unique
 if TYPE_CHECKING:
     from pymatgen.core.structure import Molecule
 
-# from pymatgen.io.qchem.sets import QChemDictSet
-
 __author__ = "Alex Ganose, Ryan Kingsbury, Rishabh D Guha"
 __copyright__ = "Copyright 2018-2022, The Materials Project"
 __version__ = "0.1"

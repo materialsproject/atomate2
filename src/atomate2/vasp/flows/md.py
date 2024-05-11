@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core import Structure
+    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -117,7 +118,7 @@ class MultiMDMaker(Maker):
         start_temp: float,
         end_temp: float | None = None,
         **kwargs,
-    ) -> MultiMDMaker:
+    ) -> Self:
         """
         Create an instance of the Maker based on the standard parameters.
 

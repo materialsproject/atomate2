@@ -6,7 +6,7 @@ import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -15,12 +15,10 @@ from emmet.core.tasks import get_uri
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
+from typing_extensions import Self
 
 from atomate2.aims.schemas.calculation import AimsObject, Calculation, TaskState
 from atomate2.aims.utils import datetime_str
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
 logger = logging.getLogger(__name__)

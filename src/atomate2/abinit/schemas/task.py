@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Any, Optional, Union
 
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
@@ -13,15 +13,13 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from typing_extensions import Self
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
 from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri, strip_hostname
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

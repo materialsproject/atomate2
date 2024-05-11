@@ -17,10 +17,10 @@ from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.common import VolumetricData
+from typing_extensions import Self
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D, Vector3D
-    from typing_extensions import Self
 
 STORE_VOLUMETRIC_DATA = ("total_density",)
 

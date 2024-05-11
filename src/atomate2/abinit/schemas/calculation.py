@@ -6,7 +6,7 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Optional, Union
 
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
@@ -15,11 +15,9 @@ from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from typing_extensions import Self
 
 from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, get_event_report
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

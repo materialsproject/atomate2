@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 from shutil import which
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Any, Optional, Union
 
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, field_validator
@@ -18,6 +18,7 @@ from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.common import VolumetricData
 from pymatgen.io.cp2k.inputs import BasisFile, DataFile, PotentialFile
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
+from typing_extensions import Self
 
 from atomate2 import SETTINGS
 from atomate2.cp2k.schemas.calc_types import (
@@ -28,9 +29,6 @@ from atomate2.cp2k.schemas.calc_types import (
     run_type,
     task_type,
 )
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

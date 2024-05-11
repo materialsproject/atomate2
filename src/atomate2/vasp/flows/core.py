@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 
     from jobflow import Job
     from pymatgen.core.structure import Structure
+    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -78,7 +79,7 @@ class DoubleRelaxMaker(Maker):
         return Flow(jobs, output=relax2.output, name=self.name)
 
     @classmethod
-    def from_relax_maker(cls, relax_maker: BaseVaspMaker) -> DoubleRelaxMaker:
+    def from_relax_maker(cls, relax_maker: BaseVaspMaker) -> Self:
         """
         Instantiate the DoubleRelaxMaker with two relax makers of the same type.
 
