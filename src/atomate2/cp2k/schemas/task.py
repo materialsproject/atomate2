@@ -3,7 +3,7 @@
 import logging
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -30,7 +30,6 @@ from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
-_T = TypeVar("_T", bound="TaskDocument")
 _VOLUMETRIC_FILES = ("v_hartree", "ELECTRON_DENSITY", "SPIN_DENSITY")
 
 
@@ -306,7 +305,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
 
     @classmethod
     def from_directory(
-        cls: type[_T],
+        cls,
         dir_name: Union[Path, str],
         volumetric_files: tuple[str, ...] = _VOLUMETRIC_FILES,
         store_additional_json: bool = SETTINGS.CP2K_STORE_ADDITIONAL_JSON,

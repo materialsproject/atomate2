@@ -20,6 +20,7 @@ from pymatgen.io.common import VolumetricData
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D, Vector3D
+    from typing_extensions import Self
 
 STORE_VOLUMETRIC_DATA = ("total_density",)
 
@@ -133,7 +134,7 @@ class CalculationOutput(BaseModel):
         cls,
         output: AimsOutput,  # Must use auto_load kwarg when passed
         # store_trajectory: bool = False,
-    ) -> CalculationOutput:
+    ) -> Self:
         """
         Create an FHI-aims output document from FHI-aims outputs.
 
@@ -240,7 +241,7 @@ class Calculation(BaseModel):
         store_trajectory: bool = False,
         # store_scf: bool = False,
         store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
-    ) -> tuple[Calculation, dict[AimsObject, dict]]:
+    ) -> tuple[Self, dict[AimsObject, dict]]:
         """
         Create an FHI-aims calculation document from a directory and file paths.
 
@@ -319,20 +320,17 @@ class Calculation(BaseModel):
             traj = _parse_trajectory(aims_output=aims_output)
             aims_objects[AimsObject.TRAJECTORY] = traj  # type: ignore  # noqa: PGH003
 
-        return (
-            cls(
-                dir_name=str(dir_name),
-                task_name=task_name,
-                aims_version=aims_output.aims_version,
-                has_aims_completed=has_aims_completed,
-                completed_at=completed_at,
-                output=output_doc,
-                output_file_paths={
-                    k.name.lower(): v for k, v in output_file_paths.items()
-                },
-            ),
-            aims_objects,
+        instance = cls(
+            dir_name=str(dir_name),
+            task_name=task_name,
+            aims_version=aims_output.aims_version,
+            has_aims_completed=has_aims_completed,
+            completed_at=completed_at,
+            output=output_doc,
+            output_file_paths={k.name.lower(): v for k, v in output_file_paths.items()},
         )
+
+        return instance, aims_objects
 
 
 def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]:

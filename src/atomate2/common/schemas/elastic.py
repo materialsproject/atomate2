@@ -1,7 +1,7 @@
 """Schemas for elastic tensor fitting and related properties."""
 
 from copy import deepcopy
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -19,6 +19,9 @@ from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class DerivedProperties(BaseModel):
@@ -155,7 +158,7 @@ class ElasticDocument(StructureMetadata):
         equilibrium_stress: Optional[Matrix3D] = None,
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
-    ) -> "ElasticDocument":
+    ) -> Self:
         """
         Create an elastic document from strains and stresses.
 

@@ -3,7 +3,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
@@ -21,9 +21,10 @@ try:
 except ImportError:
     cclib = None
 
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
-_T = TypeVar("_T", bound="TaskDocument")
 
 
 class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
@@ -67,14 +68,14 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     @classmethod
     @requires(cclib, "The cclib TaskDocument requires cclib to be installed.")
     def from_logfile(
-        cls: type[_T],
+        cls,
         dir_name: Union[str, Path],
         logfile_extensions: Union[str, list[str]],
         store_trajectory: bool = False,
         additional_fields: Optional[dict[str, Any]] = None,
         analysis: Optional[Union[str, list[str]]] = None,
         proatom_dir: Optional[Union[Path, str]] = None,
-    ) -> "TaskDocument":
+    ) -> Self:
         """
         Create a TaskDocument from a log file.
 

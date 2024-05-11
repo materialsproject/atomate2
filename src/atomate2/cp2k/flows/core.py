@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
+    from typing_extensions import Self
 
     from atomate2.cp2k.jobs.base import BaseCp2kMaker
 
@@ -73,7 +74,7 @@ class DoubleRelaxMaker(Maker):
         return Flow([relax1, relax2], relax2.output, name=self.name)
 
     @classmethod
-    def from_relax_maker(cls, relax_maker: BaseCp2kMaker) -> DoubleRelaxMaker:
+    def from_relax_maker(cls, relax_maker: BaseCp2kMaker) -> Self:
         """
         Instantiate the DoubleRelaxMaker with two relax makers of the same type.
 

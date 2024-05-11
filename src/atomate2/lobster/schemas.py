@@ -5,7 +5,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -39,6 +39,9 @@ except ImportError:
     ijson = None
     Analysis = None
     Description = None
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -745,7 +748,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         save_cohp_plots: bool = True,
         save_cba_jsons: bool = True,
         save_computational_data_jsons: bool = False,
-    ) -> "LobsterTaskDocument":
+    ) -> Self:
         """
         Create a task document from a directory containing LOBSTER files.
 

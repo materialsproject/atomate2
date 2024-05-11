@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 from shutil import which
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field, field_validator
@@ -28,6 +28,9 @@ from atomate2.cp2k.schemas.calc_types import (
     run_type,
     task_type,
 )
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +103,7 @@ class CalculationInput(BaseModel):
         return dft
 
     @classmethod
-    def from_cp2k_output(cls, output: Cp2kOutput) -> "CalculationInput":
+    def from_cp2k_output(cls, output: Cp2kOutput) -> Self:
         """Initialize from Cp2kOutput object."""
         return cls(
             structure=output.initial_structure,
@@ -117,7 +120,7 @@ class RunStatistics(BaseModel):
     total_time: float = Field(0, description="The total CPU time for this calculation")
 
     @classmethod
-    def from_cp2k_output(cls, output: Cp2kOutput) -> "RunStatistics":
+    def from_cp2k_output(cls, output: Cp2kOutput) -> Self:
         """
         Create a run statistics document from an CP2K Output object.
 
@@ -186,7 +189,7 @@ class CalculationOutput(BaseModel):
         v_hartree: Optional[VolumetricData] = None,
         store_trajectory: bool = False,
         store_scf: bool = False,
-    ) -> "CalculationOutput":
+    ) -> Self:
         """
         Create a CP2K output document from CP2K outputs.
 
@@ -302,7 +305,7 @@ class Calculation(BaseModel):
         store_volumetric_data: Optional[
             tuple[str]
         ] = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA,
-    ) -> tuple["Calculation", dict[Cp2kObject, dict]]:
+    ) -> tuple[Self, dict[Cp2kObject, dict]]:
         """
         Create a CP2K calculation document from a directory and file paths.
 

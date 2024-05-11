@@ -3,7 +3,7 @@
 import logging
 from collections.abc import Sequence
 from itertools import starmap
-from typing import Any, Callable, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
 import numpy as np
 from emmet.core.tasks import TaskDoc
@@ -12,6 +12,9 @@ from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.thermo import DefectEntry, FormationEnergyDiagram
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +83,7 @@ class FormationEnergyDiagramDocument(BaseModel):
         cls,
         fed: FormationEnergyDiagram,
         **kwargs,
-    ) -> "FormationEnergyDiagramDocument":
+    ) -> Self:
         """Create a document from a `FormationEnergyDiagram` object.
 
         Args:
@@ -204,7 +207,7 @@ class CCDDocument(BaseModel):
         static_uuids2: list[str],
         relaxed_uuid1: str,
         relaxed_uuid2: str,
-    ) -> "CCDDocument":
+    ) -> Self:
         """Create a CCDDocument from a lists of structures and energies.
 
         The directories and the UUIDs of the static calculations are also provided as
@@ -270,7 +273,7 @@ class CCDDocument(BaseModel):
         entries2: list[ComputedStructureEntry],
         relaxed_uuid1: Optional[str] = None,
         relaxed_uuid2: Optional[str] = None,
-    ) -> "CCDDocument":
+    ) -> Self:
         """
         Create a CCDTaskDocument from a list of distorted calculations.
 

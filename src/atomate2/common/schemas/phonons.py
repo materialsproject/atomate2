@@ -3,7 +3,7 @@
 import copy
 import logging
 from pathlib import Path
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
@@ -29,6 +29,9 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
 from atomate2.aims.utils.units import omegaToTHz
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -237,7 +240,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
-    ) -> "PhononBSDOSDoc":
+    ) -> Self:
         """
         Generate collection of phonon data.
 

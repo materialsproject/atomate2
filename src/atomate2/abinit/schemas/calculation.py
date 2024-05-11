@@ -8,9 +8,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
-if TYPE_CHECKING:
-    pass
-
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
@@ -20,6 +17,9 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 
 from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, get_event_report
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ class CalculationOutput(BaseModel):
     def from_abinit_gsr(
         cls,
         output: GsrFile,  # Must use auto_load kwarg when passed
-    ) -> CalculationOutput:
+    ) -> Self:
         """
         Create an Abinit output document from Abinit outputs.
 
@@ -211,7 +211,7 @@ class Calculation(BaseModel):
         abinit_gsr_file: Path | str = "out_GSR.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
-    ) -> tuple[Calculation, dict[AbinitObject, dict]]:
+    ) -> tuple[Self, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
 
@@ -263,15 +263,14 @@ class Calculation(BaseModel):
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 
-        return (
-            cls(
-                dir_name=str(dir_name),
-                task_name=task_name,
-                abinit_version=abinit_gsr.abinit_version,
-                has_abinit_completed=has_abinit_completed,
-                completed_at=completed_at,
-                output=output_doc,
-                event_report=report,
-            ),
-            None,  # abinit_objects,
+        instance = cls(
+            dir_name=str(dir_name),
+            task_name=task_name,
+            abinit_version=abinit_gsr.abinit_version,
+            has_abinit_completed=has_abinit_completed,
+            completed_at=completed_at,
+            output=output_doc,
+            event_report=report,
         )
+
+        return instance, None  # abinit_objects,
