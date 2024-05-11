@@ -40,15 +40,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-
       - name: Install dependencies
-        # ERROR: Cannot install atomate2 and atomate2[strict,tests]==0.0.1 because these package versions have conflicting dependencies.
-        # The conflict is caused by:
-        #   atomate2[strict,tests] 0.0.1 depends on pymatgen>=2023.10.4
-        #   atomate2[strict,tests] 0.0.1 depends on pymatgen==2023.10.4; extra == "strict"
-        # ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
-        #   chgnet 0.2.1 depends on pymatgen>=2023.5.31
-        #   emmet-core 0.70.0 depends on pymatgen>=2023.10.11
         run: |
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos

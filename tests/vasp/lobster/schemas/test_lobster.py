@@ -1,5 +1,6 @@
 import os
 
+import pytest
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
@@ -46,55 +47,25 @@ def test_lobster_task_document(lobster_test_dir):
     assert isinstance(doc.lobsterin, LobsterinModel)
     assert_allclose(doc.lobsterin.cohpstartenergy, -5)
     assert isinstance(doc.strongest_bonds, StrongestBonds)
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["bond_strength"], -4.32971
+    assert doc.strongest_bonds.strongest_bonds_icohp["As-Ga"] == pytest.approx(
+        {"bond_strength": -4.32971, "length": 2.4899}
     )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["bond_strength"], 0.82707
+    assert doc.strongest_bonds.strongest_bonds_icobi["As-Ga"] == pytest.approx(
+        {"bond_strength": 0.82707, "length": 2.4899}
     )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["bond_strength"], 0.31405
-    )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["length"], 2.4899
-    )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["length"], 2.4899
-    )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["length"], 2.4899
+    assert doc.strongest_bonds.strongest_bonds_icoop["As-Ga"] == pytest.approx(
+        {"bond_strength": 0.31405, "length": 2.4899}
     )
     assert doc.strongest_bonds.which_bonds == "all"
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"][
-            "bond_strength"
-        ],
-        -4.32971,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"][
-            "bond_strength"
-        ],
-        0.82707,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"][
-            "bond_strength"
-        ],
-        0.31405,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"]["length"],
-        2.4899,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"]["length"],
-        2.4899,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"]["length"],
-        2.4899,
-    )
+    assert doc.strongest_bonds_cation_anion.strongest_bonds_icohp[
+        "As-Ga"
+    ] == pytest.approx({"bond_strength": -4.32971, "length": 2.4899})
+    assert doc.strongest_bonds_cation_anion.strongest_bonds_icobi[
+        "As-Ga"
+    ] == pytest.approx({"bond_strength": 0.82707, "length": 2.4899})
+    assert doc.strongest_bonds_cation_anion.strongest_bonds_icoop[
+        "As-Ga"
+    ] == pytest.approx({"bond_strength": 0.31405, "length": 2.4899})
     assert doc.strongest_bonds_cation_anion.which_bonds == "cation-anion"
     assert isinstance(doc.lobsterpy_data.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp)
     assert doc.lobsterpy_data.which_bonds == "all"
@@ -106,17 +77,13 @@ def test_lobster_task_document(lobster_test_dir):
     assert isinstance(doc.lobsterpy_text, str)
     assert isinstance(doc.lobsterpy_text_cation_anion, str)
 
-    assert isinstance(doc.cohp_data, CompleteCohp)
-    assert isinstance(doc.cobi_data, CompleteCohp)
-    assert isinstance(doc.coop_data, CompleteCohp)
+    assert {*map(type, (doc.cohp_data, doc.cobi_data, doc.coop_data))} == {CompleteCohp}
     assert isinstance(doc.dos, LobsterCompleteDos)
     assert isinstance(doc.charges, Charge)
     assert isinstance(doc.madelung_energies, MadelungEnergies)
     assert isinstance(doc.site_potentials, SitePotential)
     assert isinstance(doc.band_overlaps, Bandoverlaps)
-    assert isinstance(doc.icohp_list, Icohplist)
-    assert isinstance(doc.icobi_list, Icohplist)
-    assert isinstance(doc.icoop_list, Icohplist)
+    assert {*map(type, (doc.icohp_list, doc.icobi_list, doc.icoop_list))} == {Icohplist}
     assert isinstance(doc.gross_populations, Grosspop)
     assert doc.chemsys == "As-Ga"
 
@@ -128,19 +95,19 @@ def test_lobster_task_document(lobster_test_dir):
         save_computational_data_jsons=False,
         add_coxxcar_to_task_document=True,
     )
-    assert_allclose(
-        doc2.strongest_bonds.strongest_bonds_icohp["Ba-O"]["bond_strength"], -0.55689
-    )
-    assert_allclose(
-        doc2.strongest_bonds.strongest_bonds_icohp["Ba-F"]["bond_strength"], -0.44806
-    )
+    assert doc2.strongest_bonds.strongest_bonds_icohp["Ba-O"] == pytest.approx(
+        {"bond_strength": -0.55689, "length": 2.57441}
+    ), doc2.strongest_bonds.strongest_bonds_icohp["Ba-O"]
+    assert doc2.strongest_bonds.strongest_bonds_icohp["Ba-F"] == pytest.approx(
+        {"bond_strength": -0.44806, "length": 2.62797}
+    ), doc2.strongest_bonds.strongest_bonds_icohp["Ba-F"]
     assert isinstance(doc2.charges, Charge)
     assert isinstance(doc2.madelung_energies, MadelungEnergies)
     assert isinstance(doc2.site_potentials, SitePotential)
     assert isinstance(doc2.band_overlaps, Bandoverlaps)
-    assert isinstance(doc2.icohp_list, Icohplist)
-    assert isinstance(doc2.icobi_list, Icohplist)
-    assert isinstance(doc2.icoop_list, Icohplist)
+    assert {*map(type, (doc2.icohp_list, doc2.icobi_list, doc2.icoop_list))} == {
+        Icohplist
+    }
     assert isinstance(doc2.gross_populations, Grosspop)
 
 
