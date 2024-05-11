@@ -266,8 +266,7 @@ class CCDDocument(BaseModel):
         relaxed_uuid1: Optional[str] = None,
         relaxed_uuid2: Optional[str] = None,
     ) -> Self:
-        """
-        Create a CCDTaskDocument from a list of distorted calculations.
+        """Create a CCDTaskDocument from a list of distorted calculations.
 
         Parameters
         ----------
@@ -279,7 +278,6 @@ class CCDDocument(BaseModel):
             UUID of relaxed calculation in charge state (q1).
         relaxed_uuid1
             UUID of relaxed calculation in charge state (q2).
-
         """
 
         def find_entry(

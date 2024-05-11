@@ -304,8 +304,7 @@ class CondensedBondingAnalysis(BaseModel):
         plot_kwargs: dict = None,
         which_bonds: str = "all",
     ) -> tuple:
-        """
-        Create a task document from a directory containing LOBSTER files.
+        """Create a task document from a directory containing LOBSTER files.
 
         Parameters
         ----------
@@ -548,8 +547,7 @@ class CalcQualitySummary(BaseModel):
         dir_name: Union[Path, str],
         calc_quality_kwargs: dict = None,
     ) -> Self:
-        """
-        Create a LOBSTER calculation quality summary from directory with LOBSTER files.
+        """Make a LOBSTER calculation quality summary from directory with LOBSTER files.
 
         Parameters
         ----------
@@ -748,8 +746,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         save_cba_jsons: bool = True,
         save_computational_data_jsons: bool = False,
     ) -> Self:
-        """
-        Create a task document from a directory containing LOBSTER files.
+        """Create a task document from a directory containing LOBSTER files.
 
         Parameters
         ----------

@@ -41,8 +41,7 @@ class MultiMDMaker(Maker):
         prev_dir: str | Path | None = None,
         prev_traj_ids: list[str] | None = None,
     ) -> Flow:
-        """
-        Create a flow with several chained MD runs.
+        """Create a flow with several chained MD runs.
 
         Parameters
         ----------
@@ -84,8 +83,7 @@ class MultiMDMaker(Maker):
         return Flow(md_jobs, output_job.output, name=self.name)
 
     def restart_from_uuid(self, md_ref: str | OutputReference) -> Flow:
-        """
-        Create a flow from the output reference of another MultiMDMaker.
+        """Create a flow from the output reference of another MultiMDMaker.
 
         The last output will be used as the starting point and the reference to
         all the previous steps will be included in the final document.
@@ -119,8 +117,7 @@ class MultiMDMaker(Maker):
         end_temp: float | None = None,
         **kwargs,
     ) -> Self:
-        """
-        Create an instance of the Maker based on the standard parameters.
+        """Create an instance of the Maker based on the standard parameters.
 
         Set values in the Flow maker, the Job Maker and the VaspInputGenerator,
         using them to create the final instance of the Maker.

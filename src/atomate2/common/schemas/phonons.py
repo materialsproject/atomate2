@@ -239,8 +239,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         born: Matrix3D = None,
         **kwargs,
     ) -> Self:
-        """
-        Generate collection of phonon data.
+        """Generate collection of phonon data.
 
         Parameters
         ----------
@@ -519,8 +518,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
     def get_kpath(
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ) -> tuple:
-        """
-        Get high-symmetry points in k-space in phonopy format.
+        """Get high-symmetry points in k-space in phonopy format.
 
         Parameters
         ----------

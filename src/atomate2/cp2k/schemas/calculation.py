@@ -119,8 +119,7 @@ class RunStatistics(BaseModel):
 
     @classmethod
     def from_cp2k_output(cls, output: Cp2kOutput) -> Self:
-        """
-        Create a run statistics document from an CP2K Output object.
+        """Create a run statistics document from an CP2K Output object.
 
         Parameters
         ----------
@@ -188,8 +187,7 @@ class CalculationOutput(BaseModel):
         store_trajectory: bool = False,
         store_scf: bool = False,
     ) -> Self:
-        """
-        Create a CP2K output document from CP2K outputs.
+        """Create a CP2K output document from CP2K outputs.
 
         Parameters
         ----------
@@ -304,8 +302,7 @@ class Calculation(BaseModel):
             tuple[str]
         ] = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA,
     ) -> tuple[Self, dict[Cp2kObject, dict]]:
-        """
-        Create a CP2K calculation document from a directory and file paths.
+        """Create a CP2K calculation document from a directory and file paths.
 
         Parameters
         ----------

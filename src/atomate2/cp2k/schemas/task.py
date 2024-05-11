@@ -47,8 +47,7 @@ class AnalysisSummary(BaseModel):
 
     @classmethod
     def from_cp2k_calc_docs(cls, calc_docs: list[Calculation]) -> Self:
-        """
-        Create analysis summary from CP2K calculation documents.
+        """Create analysis summary from CP2K calculation documents.
 
         Parameters
         ----------
@@ -151,8 +150,7 @@ class InputSummary(BaseModel):
 
     @classmethod
     def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
-        """
-        Create calculation input summary from a calculation document.
+        """Create calculation input summary from a calculation document.
 
         Parameters
         ----------
@@ -201,8 +199,7 @@ class OutputSummary(BaseModel):
 
     @classmethod
     def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
-        """
-        Create a summary of CP2K calculation outputs from a CP2K calculation document.
+        """Make a summary of CP2K calculation outputs from a CP2K calculation document.
 
         Parameters
         ----------
@@ -313,8 +310,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         additional_fields: dict[str, Any] = None,
         **cp2k_calculation_kwargs,
     ) -> Self:
-        """
-        Create a task document from a directory containing CP2K files.
+        """Create a task document from a directory containing CP2K files.
 
         Parameters
         ----------
@@ -422,8 +418,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
     def get_entry(
         calc_docs: list[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
-        """
-        Get a computed entry from a list of CP2K calculation documents.
+        """Get a computed entry from a list of CP2K calculation documents.
 
         Parameters
         ----------

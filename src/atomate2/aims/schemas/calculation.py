@@ -135,8 +135,7 @@ class CalculationOutput(BaseModel):
         output: AimsOutput,  # Must use auto_load kwarg when passed
         # store_trajectory: bool = False,
     ) -> Self:
-        """
-        Create an FHI-aims output document from FHI-aims outputs.
+        """Create an FHI-aims output document from FHI-aims outputs.
 
         Parameters
         ----------
@@ -242,8 +241,7 @@ class Calculation(BaseModel):
         # store_scf: bool = False,
         store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Self, dict[AimsObject, dict]]:
-        """
-        Create an FHI-aims calculation document from a directory and file paths.
+        """Create an FHI-aims calculation document from a directory and file paths.
 
         Parameters
         ----------

@@ -168,8 +168,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,
     ) -> Self:
-        """
-        Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
+        """Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
 
         Parameters
         ----------

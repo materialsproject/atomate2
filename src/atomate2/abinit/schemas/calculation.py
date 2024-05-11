@@ -109,8 +109,7 @@ class CalculationOutput(BaseModel):
         cls,
         output: GsrFile,  # Must use auto_load kwarg when passed
     ) -> Self:
-        """
-        Create an Abinit output document from Abinit outputs.
+        """Create an Abinit output document from Abinit outputs.
 
         Parameters
         ----------
@@ -210,8 +209,7 @@ class Calculation(BaseModel):
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
     ) -> tuple[Self, dict[AbinitObject, dict]]:
-        """
-        Create an Abinit calculation document from a directory and file paths.
+        """Create an Abinit calculation document from a directory and file paths.
 
         Parameters
         ----------

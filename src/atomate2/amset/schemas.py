@@ -148,8 +148,7 @@ class AmsetTaskDocument(StructureMetadata):
         additional_fields: dict[str, Any] = None,
         include_mesh: bool = False,
     ) -> Self:
-        """
-        Create a task document from a directory containing VASP files.
+        """Create a task document from a directory containing VASP files.
 
         Parameters
         ----------

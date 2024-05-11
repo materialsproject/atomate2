@@ -91,8 +91,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run a transmuter VASP job.
+        """Run a transmuter VASP job.
 
         Parameters
         ----------

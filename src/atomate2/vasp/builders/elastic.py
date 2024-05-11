@@ -79,8 +79,7 @@ class ElasticBuilder(Builder):
         self.elasticity.ensure_index("last_updated")
 
     def get_items(self) -> Generator:
-        """
-        Get all items to process into elastic documents.
+        """Get all items to process into elastic documents.
 
         Yields
         ------

@@ -157,8 +157,7 @@ class ElasticDocument(StructureMetadata):
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
     ) -> Self:
-        """
-        Create an elastic document from strains and stresses.
+        """Create an elastic document from strains and stresses.
 
         Parameters
         ----------

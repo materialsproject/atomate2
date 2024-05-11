@@ -75,8 +75,7 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
         analysis: Optional[Union[str, list[str]]] = None,
         proatom_dir: Optional[Union[Path, str]] = None,
     ) -> Self:
-        """
-        Create a TaskDocument from a log file.
+        """Create a TaskDocument from a log file.
 
         For a full description of each field, see https://cclib.github.io/data.html.
 

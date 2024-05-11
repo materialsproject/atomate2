@@ -50,8 +50,7 @@ class QCInputSet(InputSet):
         directory: str | Path,
         overwrite: bool = True,
     ) -> None:
-        """
-        Write QChem input file to directory.
+        """Write QChem input file to directory.
 
         Parameters
         ----------
@@ -77,8 +76,7 @@ class QCInputSet(InputSet):
     def from_directory(
         directory: str | Path, optional_files: dict = None
     ) -> QCInputSet:
-        """
-        Load a set of QChem inputs from a directory.
+        """Load a set of QChem inputs from a directory.
 
         Parameters
         ----------
@@ -341,8 +339,7 @@ class QCInputGenerator(InputGenerator):
             )
 
     def get_input_set(self, molecule: Molecule = None) -> QCInputSet:
-        """
-        Return a QChem InputSet for a molecule.
+        """Get a QChem InputSet for a molecule.
 
         Parameters
         ----------

@@ -38,8 +38,7 @@ class FiniteDifferenceDocument(BaseModel):
         ref_dir: Optional[Union[str, Path]] = None,
         distorted_dirs: Optional[list[str]] = None,
     ) -> Self:
-        """
-        Read the FiniteDiff file.
+        """Read the FiniteDiff file.
 
         Parameters
         ----------
