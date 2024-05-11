@@ -29,7 +29,10 @@ name_to_maker = {
 }
 
 
-@pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"])
+@pytest.mark.parametrize(
+    "ff_name",
+    ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"],
+)
 def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
     n_steps = 5
 
