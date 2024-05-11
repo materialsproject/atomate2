@@ -1,4 +1,5 @@
 (running_workflows)=
+
 # Running Workflows
 
 ## Introduction
@@ -6,7 +7,7 @@
 Once you have a working installation of atomate2, you'll want to jump in and start
 running workflows. Atomate2 includes many workflows with reasonable settings that can
 get you started. This tutorial will quickly guide you through customizing and running a
-workflow to calculate the bandstructure of MgO.
+workflow to calculate the band structure of MgO.
 
 ### Objectives
 
@@ -15,7 +16,7 @@ workflow to calculate the bandstructure of MgO.
 
 ### Prerequisites
 
-In order for you to complete this tutorial you need
+For you to complete this tutorial you need
 
 * A working installation of atomate2.
 
@@ -44,9 +45,9 @@ jobs. You'll keep all of the files for this tutorial there.
 
 Workflows in atomate2 are composed of two objects:
 
-- Jobs: A single unit of computation. Roughly speaking, each `job` corresponds to one
+* Jobs: A single unit of computation. Roughly speaking, each `job` corresponds to one
   VASP calculation.
-- Flows: A collection of `jobs` connected together. The band structure workflow we are
+* Flows: A collection of `jobs` connected together. The band structure workflow we are
   running is an example of a `flow`. `Flows` can be nested, for example, you could
   have multiple band structure `flows` in a single workflow.
 
@@ -59,7 +60,7 @@ workflow.
 
 Create a Python script named `mgo_bandstructure.py` with the following contents:
 
-```python
+```py
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -79,6 +80,7 @@ run_locally(bandstructure_flow, create_folders=True)
 ```
 
 (running_the_workflow)=
+
 ### Running the workflow
 
 Similar, to the installation tutorial, now create a job script to execute the workflow.
@@ -114,7 +116,7 @@ results will be in your database.
 Finally, we'll plot the results that we calculated. Simply run the following Python
 code, either as a script or on the Python prompt.
 
-```python
+```py
 from jobflow import SETTINGS
 from pymatgen.electronic_structure.plotter import DosPlotter, BSPlotter
 from pymatgen.electronic_structure.dos import CompleteDos
@@ -134,7 +136,7 @@ dos = CompleteDos.from_dict(result["output"]["vasp_objects"]["dos"])
 # plot the DOS
 dos_plotter = DosPlotter()
 dos_plotter.add_dos_dict(dos.get_element_dos())
-dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10), img_format="pdf")
+dos_plotter.save_plot("MgO-dos.pdf", xlim=(-10, 10))
 
 # get the line mode bandstructure from the database
 result = store.query_one(
@@ -148,25 +150,25 @@ bandstructure = BandStructureSymmLine.from_dict(
 
 # plot the line mode band structure
 bs_plotter = BSPlotter(bandstructure)
-bs_plotter.save_plot("MgO-bandstructure.pdf", img_format="pdf")
+bs_plotter.save_plot("MgO-bandstructure.pdf")
 ```
 
 If you open the saved figures, you should see a plot of your DOS and bandstructure!
 
 ![MgO density of states](../_static/MgO-dos.png)
 
-![MgO band structure](../_static/MgO-bandstructure.png)
+![MgO bandstructure](../_static/MgO-bandstructure.png)
 
 ## Conclusion
 
-In this tutorial you learned how to run a band structure workflow and plot the outputs.
+In this tutorial, you learned how to run a band structure workflow and plot the outputs.
 
 To see what workflows can be run, see the [](vasp_workflows). They
-can be set up and  run in the same way as in this tutorial.
+can be set up and run in the same way as in this tutorial.
 
 At this point, you might:
 
-- Learn how to chain workflows together: [](connecting_vasp_jobs).
-- Learn how to customise VASP input settings: [](modifying_input_sets).
-- Configure atomate2 with FireWorks to manage and execute many workflows at once:
-  [](atomate2_FireWorks).
+* Learn how to chain workflows together: [](connecting_vasp_jobs).
+* Learn how to customise VASP input settings: [](modifying_input_sets).
+* Configure atomate2 with FireWorks to manage and execute many workflows at once:
+  [](atomate2_fireWorks).

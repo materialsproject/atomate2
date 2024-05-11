@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import re
 from importlib import import_module
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def get_transformations(
@@ -110,10 +112,14 @@ def parse_transformations(
 
 
 def parse_additional_json(dir_name: Path) -> dict[str, Any]:
-    """Parse additional json files in the directory."""
+    """Parse additional JSON files in the directory."""
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
         key = filename.name.split(".")[0]
-        if key not in ("custodian", "transformations"):
+        # ignore FW.json(.gz) so jobflow doesn't try to parse prev_dir
+        # OutputReferences was causing atomate2 MP workflows to fail with ValueError:
+        # Could not resolve reference 7f5a7f14-464c-4a5b-85f9-8d11b595be3b not in store
+        # or cache contact @janosh in case of questions
+        if key not in ("custodian", "transformations", "FW"):
             additional_json[key] = loadfn(filename, cls=None)
     return additional_json

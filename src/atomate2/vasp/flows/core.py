@@ -4,13 +4,11 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from emmet.core.vasp.calculation import VaspObject
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import (
     HSEBSMaker,
     HSEStaticMaker,
@@ -20,18 +18,14 @@ from atomate2.vasp.jobs.core import (
 )
 from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 
-__all__ = [
-    "DoubleRelaxMaker",
-    "BandStructureMaker",
-    "UniformBandStructureMaker",
-    "LineModeBandStructureMaker",
-    "HSEBandStructureMaker",
-    "HSEUniformBandStructureMaker",
-    "HSELineModeBandStructureMaker",
-    "RelaxBandStructureMaker",
-    "OpticsMaker",
-    "HSEOpticsMaker",
-]
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from jobflow import Job
+    from pymatgen.core.structure import Structure
+    from typing_extensions import Self
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
@@ -50,18 +44,17 @@ class DoubleRelaxMaker(Maker):
     """
 
     name: str = "double relax"
-    relax_maker1: BaseVaspMaker = field(default_factory=RelaxMaker)
+    relax_maker1: BaseVaspMaker | None = field(default_factory=RelaxMaker)
     relax_maker2: BaseVaspMaker = field(default_factory=RelaxMaker)
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Create a flow with two chained relaxations.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Create a flow with two chained relaxations.
 
         Parameters
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -69,18 +62,23 @@ class DoubleRelaxMaker(Maker):
         Flow
             A flow containing two relaxations.
         """
-        relax1 = self.relax_maker1.make(structure, prev_vasp_dir=prev_vasp_dir)
-        relax1.name += " 1"
+        jobs: list[Job] = []
+        if self.relax_maker1:
+            # Run a pre-relaxation
+            relax1 = self.relax_maker1.make(structure, prev_dir=prev_dir)
+            relax1.name += " 1"
+            jobs += [relax1]
+            structure = relax1.output.structure
+            prev_dir = relax1.output.dir_name
 
-        relax2 = self.relax_maker2.make(
-            relax1.output.structure, prev_vasp_dir=relax1.output.dir_name
-        )
+        relax2 = self.relax_maker2.make(structure, prev_dir=prev_dir)
         relax2.name += " 2"
+        jobs += [relax2]
 
-        return Flow([relax1, relax2], relax2.output, name=self.name)
+        return Flow(jobs, output=relax2.output, name=self.name)
 
     @classmethod
-    def from_relax_maker(cls, relax_maker: BaseVaspMaker):
+    def from_relax_maker(cls, relax_maker: BaseVaspMaker) -> Self:
         """
         Instantiate the DoubleRelaxMaker with two relax makers of the same type.
 
@@ -119,15 +117,14 @@ class BandStructureMaker(Maker):
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Create a band structure flow.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Create a band structure flow.
 
         Parameters
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -135,14 +132,15 @@ class BandStructureMaker(Maker):
         Flow
             A band structure flow.
         """
-        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
         jobs = [static_job]
 
         outputs = {}
-        if self.bandstructure_type in ("both", "uniform"):
+        bandstructure_type = self.bandstructure_type
+        if bandstructure_type in ("both", "uniform"):
             uniform_job = self.bs_maker.make(
                 static_job.output.structure,
-                prev_vasp_dir=static_job.output.dir_name,
+                prev_dir=static_job.output.dir_name,
                 mode="uniform",
             )
             uniform_job.name += " uniform"
@@ -153,10 +151,10 @@ class BandStructureMaker(Maker):
             }
             outputs.update(output)
 
-        if self.bandstructure_type in ("both", "line"):
+        if bandstructure_type in ("both", "line"):
             line_job = self.bs_maker.make(
                 static_job.output.structure,
-                prev_vasp_dir=static_job.output.dir_name,
+                prev_dir=static_job.output.dir_name,
                 mode="line",
             )
             line_job.name += " line"
@@ -167,10 +165,8 @@ class BandStructureMaker(Maker):
             }
             outputs.update(output)
 
-        if self.bandstructure_type not in ("both", "line", "uniform"):
-            raise ValueError(
-                f"Unrecognised bandstructure type {self.bandstructure_type}"
-            )
+        if bandstructure_type not in ("both", "line", "uniform"):
+            raise ValueError(f"Unrecognised {bandstructure_type=}")
 
         return Flow(jobs, outputs, name=self.name)
 
@@ -197,15 +193,14 @@ class UniformBandStructureMaker(Maker):
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Create a uniform band structure flow.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Create a uniform band structure flow.
 
         Parameters
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -213,10 +208,10 @@ class UniformBandStructureMaker(Maker):
         Flow
             A uniform band structure flow.
         """
-        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
         uniform_job = self.bs_maker.make(
             static_job.output.structure,
-            prev_vasp_dir=static_job.output.dir_name,
+            prev_dir=static_job.output.dir_name,
             mode="uniform",
         )
         uniform_job.name += " uniform"
@@ -246,15 +241,14 @@ class LineModeBandStructureMaker(Maker):
     static_maker: BaseVaspMaker = field(default_factory=StaticMaker)
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Create a line mode band structure flow.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Create a line mode band structure flow.
 
         Parameters
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -262,10 +256,10 @@ class LineModeBandStructureMaker(Maker):
         Flow
             A line mode band structure flow.
         """
-        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
         line_job = self.bs_maker.make(
             static_job.output.structure,
-            prev_vasp_dir=static_job.output.dir_name,
+            prev_dir=static_job.output.dir_name,
             mode="line",
         )
         line_job.name += " line"
@@ -278,7 +272,7 @@ class HSEBandStructureMaker(BandStructureMaker):
     """
     Maker to generate VASP HSE band structures.
 
-    This is a HSE06 static calculation followed by one HSE06 uniform calculation and
+    This is an HSE06 static calculation followed by one HSE06 uniform calculation and
     one HSE06 line mode calculation.
 
     Parameters
@@ -304,7 +298,7 @@ class HSEUniformBandStructureMaker(UniformBandStructureMaker):
     """
     Maker to generate VASP HSE uniform band structures.
 
-    This is a HSE06 static calculation followed by a HSE06 uniform calculation.
+    This is an HSE06 static calculation followed by an HSE06 uniform calculation.
 
     Parameters
     ----------
@@ -326,7 +320,7 @@ class HSELineModeBandStructureMaker(LineModeBandStructureMaker):
     """
     Maker to generate VASP HSE line mode band structures.
 
-    This is a HSE06 static calculation followed by a HSE06 line mode calculation.
+    This is an HSE06 static calculation followed by an HSE06 line mode calculation.
 
     Parameters
     ----------
@@ -346,7 +340,7 @@ class HSELineModeBandStructureMaker(LineModeBandStructureMaker):
 @dataclass
 class RelaxBandStructureMaker(Maker):
     """
-    Make to create a flow with a relaxation and then band structure calculations.
+    Maker to create a flow with a relaxation and then band structure calculations.
 
     By default, this workflow generates relaxations using the :obj:`.DoubleRelaxMaker`.
 
@@ -364,15 +358,14 @@ class RelaxBandStructureMaker(Maker):
     relax_maker: BaseVaspMaker = field(default_factory=DoubleRelaxMaker)
     band_structure_maker: BaseVaspMaker = field(default_factory=BandStructureMaker)
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Run a relaxation and then calculate the uniform and line mode band structures.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Run a relaxation, then calculate the uniform and line mode band structures.
 
         Parameters
         ----------
         structure: .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -380,9 +373,9 @@ class RelaxBandStructureMaker(Maker):
         Flow
             A relax and band structure flow.
         """
-        relax_job = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        relax_job = self.relax_maker.make(structure, prev_dir=prev_dir)
         bs_flow = self.band_structure_maker.make(
-            relax_job.output.structure, prev_vasp_dir=relax_job.output.dir_name
+            relax_job.output.structure, prev_dir=relax_job.output.dir_name
         )
 
         return Flow([relax_job, bs_flow], bs_flow.output, name=self.name)
@@ -422,15 +415,14 @@ class OpticsMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Run a static and then a non-scf optics calculation.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Run a static and then a non-scf optics calculation.
 
         Parameters
         ----------
         structure: .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -438,9 +430,9 @@ class OpticsMaker(Maker):
         Flow
             A static and nscf with optics flow.
         """
-        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
         nscf_job = self.band_structure_maker.make(
-            static_job.output.structure, prev_vasp_dir=static_job.output.dir_name
+            static_job.output.structure, prev_dir=static_job.output.dir_name
         )
         return Flow([static_job, nscf_job], nscf_job.output, name=self.name)
 
@@ -479,15 +471,14 @@ class HSEOpticsMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Run a static and then a non-scf optics calculation.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Run a static and then a non-scf optics calculation.
 
         Parameters
         ----------
         structure: .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -495,8 +486,8 @@ class HSEOpticsMaker(Maker):
         Flow
             A static and nscf with optics flow.
         """
-        static_job = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
         bs_job = self.band_structure_maker.make(
-            static_job.output.structure, prev_vasp_dir=static_job.output.dir_name
+            static_job.output.structure, prev_dir=static_job.output.dir_name
         )
         return Flow([static_job, bs_job], bs_job.output, name=self.name)

@@ -6,70 +6,105 @@ build-backend = "setuptools.build_meta"
 name = "atomate2"
 description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
-keywords = ["high-throughput", "automated", "workflow", "dft", "vasp"]
+keywords = ["automated", "dft", "high-throughput", "vasp", "workflow"]
 license = { text = "modified BSD" }
 authors = [{ name = "Alex Ganose", email = "alexganose@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "Intended Audience :: System Administrators",
-    "Intended Audience :: Information Technology",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.9",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
-    "pymatgen>=2023.1.9",
-    "custodian>=2023.3.10",
-    "pydantic",
-    "monty",
-    "jobflow>=0.1.11",
     "PyYAML",
-    "numpy",
     "click",
-    "emmet-core>=0.51.0",
+    "custodian>=2024.4.18",
+    "emmet-core==0.82.2",
+    "jobflow>=0.1.11",
+    "monty>=2024.2.2",
+    "numpy",
+    "pydantic-settings>=2.0.3",
+    "pydantic>=2.0.1",
+    "pymatgen>=2024.4.13",
 ]
 
 [project.optional-dependencies]
+abinit = ["abipy>=0.9.3"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
-mp = ["mp-api>=0.27.5"]
+mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["lobsterpy"]
-defects = ["pymatgen-analysis-defects>=2022.11.30", "dscribe>=1.2.0"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
+defects = [
+    "dscribe>=1.2.0",
+    "pymatgen-analysis-defects>=2024.5.11",
+    "python-ulid",
+]
+forcefields = [
+    "ase>=3.22.1",
+    "chgnet>=0.2.2",
+    "mace-torch>=0.3.3",
+    "matgl>=1.1.1",
+    "quippy-ase>=0.9.14",
+    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
+]
 docs = [
-    "numpydoc==1.5.0",
-    "ipython==8.11.0",
     "FireWorks==2.0.3",
-    "autodoc_pydantic==1.8.0",
-    "jupyter-book==0.14.0",
+    "autodoc_pydantic==2.1.0",
+    "furo==2024.1.29",
+    "ipython==8.23.0",
     "jsonschema[format]",
+    "myst_parser==2.0.0",
+    "numpydoc==1.7.0",
+    "sphinx-copybutton==0.5.2",
+    "sphinx==7.2.6",
+    "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["pytest==7.2.2", "pytest-cov==4.0.0", "FireWorks==2.0.3"]
+tests = [
+    "FireWorks==2.0.3",
+    "pytest-cov==5.0.0",
+    "pytest-mock==3.14.0",
+    "pytest==8.0.2",
+]
 strict = [
-    "pydantic==1.10.6",
-    "pymatgen==2023.3.10",
-    "custodian==2023.3.10",
-    "monty==2022.9.9",
-    "jobflow==0.1.11",
-    "click==8.1.3",
-    "PyYAML==6.0",
-    "cclib==1.7.2",
-    "phonopy==2.17.2",
-    "seekpath==2.0.1",
+    "PyYAML==6.0.1",
+    # must use >= for ase to not uninstall main branch install in CI
+    # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
+    "ase>=3.22.1",
+    "cclib==1.8.1",
+    "chgnet==0.3.5",
+    "click==8.1.7",
+    "custodian==2024.4.18",
+    "dscribe==2.1.0",
+    "emmet-core==0.82.2",
+    "ijson==3.2.3",
+    "jobflow==0.1.17",
+    "lobsterpy==0.4.0",
+    "mace-torch>=0.3.3",
+    "matgl==1.1.1",
+    "monty==2024.3.31",
+    "mp-api==0.41.2",
     "numpy",
-    "mp-api==0.30.10",
-    "dscribe==1.2.2",
-    "pymatgen-analysis-defects==2023.3.3",
-    "lobsterpy==0.2.8",
-    "emmet-core==0.51.0"
+    "phonopy==2.22.1",
+    "pydantic-settings==2.2.1",
+    "pydantic==2.7.1",
+    "pymatgen-analysis-defects==2024.5.11",
+    "pymatgen==2024.5.1",
+    "python-ulid==2.5.0",
+    "quippy-ase==0.9.14",
+    "seekpath==2.1.0",
+    "torch==2.2.1",
+    "typing-extensions==4.11.0",
 ]
 
 [project.scripts]
@@ -85,32 +120,23 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
 "atomate2.cp2k.sets" = ["*.yaml"]
-"atomate2.vasp.schemas.calc_types" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"
 default-tag = "0.0.1"
 
-[tool.flake8]
-max-line-length = 88
-max-doc-length = 88
-select = "C, E, F, W, B"
-extend-ignore = "E203, W503, E501, F401, RST21"
-min-python-version = "3.8.0"
-docstring-convention = "numpy"
-rst-roles = "class, func, ref, obj"
-
 [tool.mypy]
 ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
+addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
-    "ignore:.*magmom.*:UserWarning",
-    "ignore:.*is not gzipped.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
+    "ignore:.*is not gzipped.*:UserWarning",
+    "ignore:.*magmom.*:UserWarning",
     "ignore::DeprecationWarning",
 ]
 
@@ -126,33 +152,63 @@ source = ["src/"]
 skip_covered = true
 show_missing = true
 exclude_lines = [
+    '^\s*@overload( |$)',
     '^\s*assert False(,|$)',
     'if typing.TYPE_CHECKING:',
-    '^\s*@overload( |$)',
 ]
 
 [tool.ruff]
-target-version = "py38"
-select = [
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "D",   # pydocstyle
-    "E",   # pycodestyle
-    "F",   # pyflakes
-    "I",   # isort
-    "PLE", # pylint error
-    "PLW", # pylint warning
-    "Q",   # flake8-quotes
-    "RUF", # Ruff-specific rules
-    "SIM", # flake8-simplify
-    "TID", # tidy imports
-    "UP",  # pyupgrade
-    "W",   # pycodestyle
-    "YTT", # flake8-2020
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN002",
+    "ANN003",
+    "ANN101",  # missing self type annotation
+    "ANN102",
+    "ANN401",
+    "ARG002",  # unused method argument
+    "BLE001",
+    "C408",    # Unnecessary (dict/list/tuple) call - remove call
+    "C901",    # function too complex
+    "COM812",  # trailing comma missing
+    "DTZ",     # datetime-tz-now
+    "EM",      # exception message must not use f-string literal
+    "ERA001",  # found commented out code
+    "FBT001",
+    "FBT002",
+    "FIX002",
+    "G004",    # logging uses fstring
+    "ISC001",
+    "PD011",   # pandas-use-of-dot-values
+    "PERF203", # try-except-in-loop
+    "PLR",     # pylint-refactor
+    "PT004",   # pytest-missing-fixture-name-underscore
+    "PT006",   # pytest-parametrize-names-wrong-type
+    "PT013",   # pytest-incorrect-pytest-import
+    "PTH",     # prefer Pathlib to os.path
+    "RUF013",  # implicit-optional
+    "S324",    # use of insecure hash function
+    "S507",    # paramiko auto trust
+    "SLF",     # private member accessed outside class
+    "TD",      # TODOs
+    "TRY003",  # long message outside exception class
 ]
 pydocstyle.convention = "numpy"
 isort.known-first-party = ["atomate2"]
+isort.split-on-trailing-comma = false
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = ["D"]
+"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
+# flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
+#     at runtime and so can't be used by pydantic models
+# flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
+"**/schemas/*" = ["FA", "TCH", "UP007"]
+"**/schemas.py" = ["FA", "TCH", "UP007"]
+"**/settings.py" = ["FA", "TCH", "UP007"]
+"docs/*" = ["INP001"]

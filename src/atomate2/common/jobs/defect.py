@@ -3,34 +3,33 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
-from typing import Callable, Iterable
+from typing import TYPE_CHECKING, Callable
 
 import numpy as np
-from emmet.core.tasks import TaskDoc
 from jobflow import Flow, Response, job
-from numpy.typing import NDArray
 from pydantic import BaseModel
-from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.supercells import (
     get_matched_structure_mapping,
     get_sc_fromstruct,
 )
+from pymatgen.analysis.defects.thermo import DefectEntry
 from pymatgen.core import Lattice, Structure
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 from atomate2.common.schemas.defects import CCDDocument
-from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
+from atomate2.utils.path import strip_hostname
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from pathlib import Path
+
+    from emmet.core.tasks import TaskDoc
+    from numpy.typing import NDArray
+    from pymatgen.analysis.defects.core import Defect
+
+    from atomate2.vasp.jobs.core import RelaxMaker, StaticMaker
 
 logger = logging.getLogger(__name__)
-
-__all__ = [
-    "get_charged_structures",
-    "spawn_energy_curve_calcs",
-    "get_ccd_documents",
-    "get_supercell_from_prv_calc",
-    "bulk_supercell_calculation",
-    "spawn_defect_q_jobs",
-]
 
 
 class CCDInput(BaseModel):
@@ -43,7 +42,7 @@ class CCDInput(BaseModel):
 
 
 @job
-def get_charged_structures(structure: Structure, charges: Iterable):
+def get_charged_structures(structure: Structure, charges: Iterable) -> list[Structure]:
     """Add charges to a structure.
 
     This needs to be a job so the results of other jobs can be passed in.
@@ -61,8 +60,8 @@ def get_charged_structures(structure: Structure, charges: Iterable):
         A dictionary with the two structures with the charge states added.
     """
     structs_out = [structure.copy() for _ in charges]
-    for i, q in enumerate(charges):
-        structs_out[i].set_charge(q)
+    for idx, q in enumerate(charges):
+        structs_out[idx].set_charge(q)
     return structs_out
 
 
@@ -72,10 +71,10 @@ def spawn_energy_curve_calcs(
     distorted_structure: Structure,
     distortions: Iterable[float],
     static_maker: StaticMaker,
-    prev_vasp_dir: str | Path | None = None,
+    prev_dir: str | Path | None = None,
     add_name: str = "",
     add_info: dict | None = None,
-):
+) -> Response:
     """Compute the total energy curve from a reference to distorted structure.
 
     Parameters
@@ -109,15 +108,15 @@ def spawn_energy_curve_calcs(
         distorted_structure, nimages=s_distortions
     )
     # add all the distorted structures
-    for i, d_struct in enumerate(distorted_structures):
-        static_job = static_maker.make(d_struct, prev_vasp_dir=prev_vasp_dir)
-        suffix = f" {i}" if add_name == "" else f" {add_name} {i}"
+    for idx, d_struct in enumerate(distorted_structures):
+        static_job = static_maker.make(d_struct, prev_dir=prev_dir)
+        suffix = f" {idx}" if add_name == "" else f" {add_name} {idx}"
 
         # write some provenances data in info.json file
         info = {
             "relaxed_structure": relaxed_structure,
             "distorted_structure": distorted_structure,
-            "distortion": s_distortions[i],
+            "distortion": s_distortions[idx],
         }
         if add_info is not None:
             info.update(add_info)
@@ -147,7 +146,7 @@ def get_ccd_documents(
     inputs1: Iterable[CCDInput],
     inputs2: Iterable[CCDInput],
     undistorted_index: int,
-):
+) -> Response:
     """
     Get the configuration coordinate diagram from the task documents.
 
@@ -187,9 +186,9 @@ def get_ccd_documents(
 @job
 def get_supercell_from_prv_calc(
     uc_structure: Structure,
-    prv_calc_dir: str | Path | None = None,
+    prv_calc_dir: str | Path,
+    sc_entry_and_locpot_from_prv: Callable,
     sc_mat_ref: NDArray | None = None,
-    structure_from_prv: Callable | None = None,
 ) -> dict:
     """Get the supercell from the previous calculation.
 
@@ -203,22 +202,25 @@ def get_supercell_from_prv_calc(
         The directory of the previous calculation.
     sc_mat : NDArray
         The supercell matrix. If not None, use this to validate the extracted supercell.
-    structure_from_prv : Callable
-        Function to get the supercell structure from the previous calculation.
+    sc_entry_and_locpot_from_prv : Callable
+        Function to get the supercell ComputedStructureEntry and Locpot from the
+        previous calculation.
 
     Returns
     -------
     Response:
         Output containing the supercell transformation and the dir_name
     """
-    sc_structure = structure_from_prv(prv_calc_dir)
-    (sc_mat_prv, _) = get_matched_structure_mapping(
+    prv_calc_dir = strip_hostname(prv_calc_dir)
+    sc_entry, plnr_locpot = sc_entry_and_locpot_from_prv(prv_calc_dir)
+    sc_structure = sc_entry.structure
+    sc_mat_prv, _ = get_matched_structure_mapping(
         uc_struct=uc_structure, sc_struct=sc_structure
     )
 
     if sc_mat_ref is not None:
-        latt_ref = Lattice(sc_mat_ref)
-        latt_prv = Lattice(sc_mat_prv)
+        latt_ref = (uc_structure * sc_mat_ref).lattice
+        latt_prv = (uc_structure * sc_mat_prv).lattice
         if not (
             np.allclose(sorted(latt_ref.abc), sorted(latt_prv.abc))
             and np.allclose(sorted(latt_ref.angles), sorted(latt_prv.angles))
@@ -227,7 +229,15 @@ def get_supercell_from_prv_calc(
                 "The supercell matrix extracted from the previous calculation "
                 "does not match the the desired supercell shape."
             )
-    return {"sc_mat": sc_mat_prv, "lattice": Lattice(sc_structure.lattice.matrix)}
+    return {
+        "sc_entry": sc_entry,
+        "sc_struct": sc_structure,
+        "sc_mat": sc_mat_prv,
+        "dir_name": prv_calc_dir,
+        "lattice": Lattice(sc_structure.lattice.matrix),
+        "uuid": None,
+        "locpot_plnr": plnr_locpot,
+    }
 
 
 @job(name="bulk supercell")
@@ -235,6 +245,7 @@ def bulk_supercell_calculation(
     uc_structure: Structure,
     relax_maker: RelaxMaker,
     sc_mat: NDArray | None = None,
+    get_planar_locpot: Callable | None = None,
 ) -> Response:
     """Bulk Supercell calculation.
 
@@ -248,12 +259,19 @@ def bulk_supercell_calculation(
         The relax maker to use.
     sc_mat : NDArray | None
         The supercell matrix used to construct the simulation cell.
+    get_plnr_locpot : Callable | None
+        A function to get the Locpot from the output of the task document.
 
     Returns
     -------
     Response:
         Output a dictionary containing the bulk supercell calculation summary.
     """
+    if get_planar_locpot is None:
+
+        def get_planar_locpot(task_doc: TaskDoc) -> NDArray:
+            return task_doc.calcs_reversed[0].output.locpot
+
     logger.info("Running bulk supercell calculation. Running...")
     sc_mat = get_sc_fromstruct(uc_structure) if sc_mat is None else sc_mat
     sc_mat = np.array(sc_mat)
@@ -272,6 +290,7 @@ def bulk_supercell_calculation(
         "sc_mat": sc_mat.tolist(),
         "dir_name": relax_output.dir_name,
         "uuid": relax_job.uuid,
+        "locpot_plnr": get_planar_locpot(relax_output),
     }
     flow = Flow([relax_job], output=summary_d)
     return Response(replace=flow)
@@ -285,6 +304,9 @@ def spawn_defect_q_jobs(
     sc_mat: NDArray | None = None,
     defect_index: int | str = "",
     add_info: dict | None = None,
+    validate_charge: bool = True,
+    relax_radius: float | str | None = None,
+    perturb: float | None = None,
 ) -> Response:
     """Perform charge defect supercell calculations.
 
@@ -309,6 +331,18 @@ def spawn_defect_q_jobs(
         The lattice of the relaxed supercell. If provided, the lattice parameters
         of the supercell will be set to value specified.  Otherwise, the lattice it will
         only by set by `defect.structure` and `sc_mat`.
+    validate_charge:
+        Whether to validate the charge states of the defect after the atomic relaxation.
+        Assuming the final output of the relaxation is a TaskDoc, we should make sure
+        that the charge state is set properly and matches the expected charge state from
+        the input defect object.
+    relax_radius:
+        The radius to include around the defect site for the relaxation.
+        If "auto", the radius will be set to the maximum that will fit inside a periodic
+        cell. If None, all atoms will be relaxed.
+    perturb:
+        The amount to perturb the sites in the supercell. Only perturb the sites with
+        selective dynamics set to True. So this setting only works with `relax_radius`.
 
     Returns
     -------
@@ -318,7 +352,9 @@ def spawn_defect_q_jobs(
     """
     defect_q_jobs = []
     all_chg_outputs = {}
-    sc_def_struct = defect.get_supercell_structure(sc_mat=sc_mat)
+    sc_def_struct = defect.get_supercell_structure(
+        sc_mat=sc_mat, relax_radius=relax_radius, perturb=perturb
+    )
     sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
@@ -352,14 +388,78 @@ def spawn_defect_q_jobs(
         defect_q_jobs.append(charged_relax)
         charged_output: TaskDoc = charged_relax.output
         all_chg_outputs[qq] = {
+            "defect": defect,
             "structure": charged_output.structure,
             "entry": charged_output.entry,
             "dir_name": charged_output.dir_name,
             "uuid": charged_relax.uuid,
+            "locpot_plnr": charged_output.calcs_reversed[0].output.locpot,
         }
-        # TODO: check that the charge state was set correctly
+        # check that the charge state was set correctly
+        if validate_charge:
+            validation_job = check_charge_state(qq, charged_output.structure)
+            defect_q_jobs.append(validation_job)
     replace_flow = Flow(defect_q_jobs, output=all_chg_outputs)
     return Response(replace=replace_flow)
 
 
-# TODO: add charge state validation job
+@job
+def check_charge_state(charge_state: int, task_structure: Structure) -> Response:
+    """Check that the charge state of a defect calculation is correct.
+
+    Parameters
+    ----------
+    chargestate : int
+        The charge state to check.
+    task_doc : TaskDoc
+        The task document to check.
+
+    Returns
+    -------
+    True if the charge state is correct, otherwise raises a ValueError.
+    """
+    if int(charge_state) != int(task_structure.charge):
+        raise ValueError(
+            f"The charge of the output structure is {task_structure.charge}, "
+            f"but expected charge state from the Defect object is {charge_state}."
+        )
+    return True
+
+
+@job
+def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dict]:
+    """Get a defect entry from a defect calculation and a bulk calculation."""
+    bulk_struct_entry = bulk_summary["sc_entry"]
+    # bulk_struct_entry = ComputedStructureEntry(
+    #     structure=bulk_summary["sc_struct"],
+    #     energy=bulk_sc_entry.energy,
+    # )
+    bulk_dir_name = bulk_summary["dir_name"]
+    bulk_locpot = bulk_summary["locpot_plnr"]
+    defect_ent_res = []
+    for qq, qq_summary in charge_state_summary.items():
+        defect_c_entry = qq_summary["entry"]
+        defect_struct_entry = ComputedStructureEntry(
+            structure=qq_summary["structure"],
+            energy=defect_c_entry.energy,
+        )
+        defect_dir_name = qq_summary["dir_name"]
+        defect_locpot = qq_summary["locpot_plnr"]
+        defect_entry = DefectEntry(
+            defect=qq_summary["defect"],
+            charge_state=qq,
+            sc_entry=defect_struct_entry,
+            bulk_entry=bulk_struct_entry,
+        )
+        defect_ent_res.append(
+            {
+                "defect_entry": defect_entry,
+                "defect_dir_name": defect_dir_name,
+                "defect_locpot": defect_locpot,
+                "bulk_dir_name": bulk_dir_name,
+                "bulk_locpot": bulk_locpot,
+                "bulk_uuid": bulk_summary.get("uuid"),
+                "defect_uuid": qq_summary.get("uuid", None),
+            }
+        )
+    return defect_ent_res

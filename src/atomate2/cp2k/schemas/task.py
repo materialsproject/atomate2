@@ -1,20 +1,21 @@
 """Core definition of a CP2K task document."""
+
 import logging
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
-from emmet.core.structure import StructureMetadata
+from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
+from typing_extensions import Self
 
 from atomate2 import SETTINGS, __version__
-from atomate2.common.schemas.molecule import MoleculeMetadata
 from atomate2.common.utils import (
     parse_additional_json,
     parse_custodian,
@@ -29,16 +30,7 @@ from atomate2.cp2k.schemas.calculation import (
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri
 
-__all__ = [
-    "AnalysisSummary",
-    "AtomicKindSummary",
-    "InputSummary",
-    "OutputSummary",
-    "TaskDocument",
-]
-
 logger = logging.getLogger(__name__)
-_T = TypeVar("_T", bound="TaskDocument")
 _VOLUMETRIC_FILES = ("v_hartree", "ELECTRON_DENSITY", "SPIN_DENSITY")
 
 
@@ -50,13 +42,12 @@ class AnalysisSummary(BaseModel):
         None, description="Percentage change in volume"
     )
     max_force: float = Field(None, description="Maximum force on the atoms")
-    warnings: List[str] = Field(None, description="Warnings from the VASP drone")
-    errors: List[str] = Field(None, description="Errors from the VASP drone")
+    warnings: list[str] = Field(None, description="Warnings from the VASP drone")
+    errors: list[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_cp2k_calc_docs(cls, calc_docs: List[Calculation]) -> "AnalysisSummary":
-        """
-        Create analysis summary from CP2K calculation documents.
+    def from_cp2k_calc_docs(cls, calc_docs: list[Calculation]) -> Self:
+        """Create analysis summary from CP2K calculation documents.
 
         Parameters
         ----------
@@ -113,7 +104,7 @@ class AtomicKind(BaseModel):
     potential: str = Field(
         None, description="Name of pseudopotential for this atom kind"
     )
-    auxiliary_basis: str = Field(
+    auxiliary_basis: Optional[str] = Field(
         None, description="Auxiliary basis for this (if any) for this atom kind"
     )
     ghost: bool = Field(None, description="Whether this atom kind is a ghost")
@@ -122,14 +113,14 @@ class AtomicKind(BaseModel):
 class AtomicKindSummary(BaseModel):
     """A summary of pseudo-potential type and functional."""
 
-    atomic_kinds: Dict[str, AtomicKind] = Field(
-        None, description="Dictionary mapping atomic kind labels to their info"
+    atomic_kinds: dict[str, AtomicKind] = Field(
+        None, description="dictionary mapping atomic kind labels to their info"
     )
 
     @classmethod
-    def from_atomic_kind_info(cls, atomic_kind_info: dict):
+    def from_atomic_kind_info(cls, atomic_kind_info: dict) -> Self:
         """Initialize from the atomic_kind_info dictionary."""
-        d: Dict[str, Dict[str, Any]] = {"atomic_kinds": {}}
+        d: dict[str, dict[str, Any]] = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
             d["atomic_kinds"][kind] = {
                 "element": info["element"],
@@ -158,9 +149,8 @@ class InputSummary(BaseModel):
     )
 
     @classmethod
-    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
-        """
-        Create calculation input summary from a calculation document.
+    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
+        """Create calculation input summary from a calculation document.
 
         Parameters
         ----------
@@ -195,20 +185,21 @@ class OutputSummary(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
-    bandgap: float = Field(None, description="The DFT bandgap for the last calculation")
-    cbm: float = Field(None, description="CBM for this calculation")
-    vbm: float = Field(None, description="VBM for this calculation")
-    forces: List[Vector3D] = Field(
+    bandgap: Optional[float] = Field(
+        None, description="The DFT bandgap for the last calculation"
+    )
+    cbm: Optional[float] = Field(None, description="CBM for this calculation")
+    vbm: Optional[float] = Field(None, description="VBM for this calculation")
+    forces: list[Vector3D] = Field(
         None, description="Forces on atoms from the last calculation"
     )
-    stress: Matrix3D = Field(
+    stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
 
     @classmethod
-    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
-        """
-        Create a summary of CP2K calculation outputs from a CP2K calculation document.
+    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
+        """Make a summary of CP2K calculation outputs from a CP2K calculation document.
 
         Parameters
         ----------
@@ -221,8 +212,8 @@ class OutputSummary(BaseModel):
             The calculation output summary.
         """
         if calc_doc.output.ionic_steps:
-            forces = calc_doc.output.ionic_steps[-1].get("forces", None)
-            stress = calc_doc.output.ionic_steps[-1].get("stress", None)
+            forces = calc_doc.output.ionic_steps[-1].get("forces")
+            stress = calc_doc.output.ionic_steps[-1].get("stress")
         else:
             forces = None
             stress = None
@@ -241,51 +232,59 @@ class OutputSummary(BaseModel):
 class TaskDocument(StructureMetadata, MoleculeMetadata):
     """Definition of CP2K task document."""
 
-    dir_name: str = Field(None, description="The directory for this CP2K task")
+    dir_name: Optional[str] = Field(
+        None, description="The directory for this CP2K task"
+    )
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    completed_at: str = Field(
+    completed_at: Optional[str] = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: InputSummary = Field(None, description="The input to the first calculation")
-    output: OutputSummary = Field(
+    input: Optional[InputSummary] = Field(
+        None, description="The input to the first calculation"
+    )
+    output: Optional[OutputSummary] = Field(
         None, description="The output of the final calculation"
     )
     structure: Union[Structure, Molecule] = Field(
         None, description="Final output structure from the task"
     )
-    state: Status = Field(None, description="State of this task")
-    included_objects: List[Cp2kObject] = Field(
-        None, description="List of CP2K objects included with this task document"
+    state: Optional[Status] = Field(None, description="State of this task")
+    included_objects: Optional[list[Cp2kObject]] = Field(
+        None, description="list of CP2K objects included with this task document"
     )
-    cp2k_objects: Dict[Cp2kObject, Any] = Field(
+    cp2k_objects: Optional[dict[Cp2kObject, Any]] = Field(
         None, description="CP2K objects associated with this task"
     )
-    entry: ComputedEntry = Field(
+    entry: Optional[ComputedEntry] = Field(
         None, description="The ComputedEntry from the task doc"
     )
-    analysis: AnalysisSummary = Field(
+    analysis: Optional[AnalysisSummary] = Field(
         None, description="Summary of structural relaxation and forces"
     )
-    run_stats: Dict[str, RunStatistics] = Field(
+    run_stats: Optional[dict[str, RunStatistics]] = Field(
         None,
         description="Summary of runtime statistics for each calculation in this task",
     )
-    orig_inputs: Dict[str, Cp2kInput] = Field(
+    orig_inputs: Optional[dict[str, Cp2kInput]] = Field(
         None, description="Summary of the original CP2K inputs written by custodian"
     )
-    task_label: str = Field(None, description="A description of the task")
-    tags: List[str] = Field(None, description="Metadata tags for this task document")
-    author: str = Field(None, description="Author extracted from transformations")
-    icsd_id: str = Field(
+    task_label: Optional[str] = Field(None, description="A description of the task")
+    tags: Optional[list[str]] = Field(
+        None, description="Metadata tags for this task document"
+    )
+    author: Optional[str] = Field(
+        None, description="Author extracted from transformations"
+    )
+    icsd_id: Optional[str] = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: List[Calculation] = Field(
+    calcs_reversed: Optional[list[Calculation]] = Field(
         None, description="The inputs and outputs for all CP2K runs in this task."
     )
-    transformations: Dict[str, Any] = Field(
+    transformations: Optional[dict[str, Any]] = Field(
         None,
         description="Information on the structural transformations, parsed from a "
         "transformations.json file",
@@ -295,37 +294,34 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         description="Information on the custodian settings used to run this "
         "calculation, parsed from a custodian.json file",
     )
-    additional_json: Dict[str, Any] = Field(
+    additional_json: Optional[dict[str, Any]] = Field(
         None, description="Additional json loaded from the calculation directory"
     )
-    _schema: str = Field(
-        __version__,
-        description="Version of atomate2 used to create the document",
-        alias="schema",
+    schema: str = Field(
+        __version__, description="Version of atomate2 used to create the document"
     )
 
     @classmethod
     def from_directory(
-        cls: Type[_T],
+        cls,
         dir_name: Union[Path, str],
-        volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
+        volumetric_files: tuple[str, ...] = _VOLUMETRIC_FILES,
         store_additional_json: bool = SETTINGS.CP2K_STORE_ADDITIONAL_JSON,
-        additional_fields: Dict[str, Any] = None,
+        additional_fields: dict[str, Any] = None,
         **cp2k_calculation_kwargs,
-    ) -> _T:
-        """
-        Create a task document from a directory containing CP2K files.
+    ) -> Self:
+        """Create a task document from a directory containing CP2K files.
 
         Parameters
         ----------
         dir_name
             The path to the folder containing the calculation outputs.
         store_additional_json
-            Whether to store additional json files found in the calculation directory.
+            Whether to store additional JSON files found in the calculation directory.
         volumetric_files
             Volumetric files to search for.
         additional_fields
-            Dictionary of additional fields to add to output document.
+            dictionary of additional fields to add to output document.
         **cp2k_calculation_kwargs
             Additional parsing options that will be passed to the
             :obj:`.Calculation.from_cp2k_files` function.
@@ -337,7 +333,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
         task_files = _find_cp2k_files(dir_name, volumetric_files=volumetric_files)
 
@@ -373,29 +369,28 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         cp2k_objects = all_cp2k_objects[-1]
         included_objects = None
         if cp2k_objects:
-            included_objects = list(cp2k_objects.keys())
+            included_objects = list(cp2k_objects)
 
-        if isinstance(calcs_reversed[-1].output.structure, Structure):
+        if isinstance(calcs_reversed[0].output.structure, Structure):
             attr = "from_structure"
             dat = {
-                "structure": calcs_reversed[-1].output.structure,
-                "meta_structure": calcs_reversed[-1].output.structure,
+                "structure": calcs_reversed[0].output.structure,
+                "meta_structure": calcs_reversed[0].output.structure,
                 "include_structure": True,
             }
-        elif isinstance(calcs_reversed[-1].output.structure, Molecule):
+        elif isinstance(calcs_reversed[0].output.structure, Molecule):
             attr = "from_molecule"
             dat = {
-                "structure": calcs_reversed[-1].output.structure,
-                "meta_structure": calcs_reversed[-1].output.structure,
-                "molecule": calcs_reversed[-1].output.structure,
+                "structure": calcs_reversed[0].output.structure,
+                "meta_structure": calcs_reversed[0].output.structure,
+                "molecule": calcs_reversed[0].output.structure,
                 "include_molecule": True,
             }
 
         doc = getattr(cls, attr)(**dat)
-        ddict = doc.dict()
         data = {
-            "structure": calcs_reversed[-1].output.structure,
-            "meta_structure": calcs_reversed[-1].output.structure,
+            "structure": calcs_reversed[0].output.structure,
+            "meta_structure": calcs_reversed[0].output.structure,
             "dir_name": dir_name,
             "calcs_reversed": calcs_reversed,
             "analysis": analysis,
@@ -406,26 +401,24 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
             "icsd_id": icsd_id,
             "tags": tags,
             "author": author,
-            "completed_at": calcs_reversed[-1].completed_at,
+            "completed_at": calcs_reversed[0].completed_at,
             "input": InputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
-            "output": OutputSummary.from_cp2k_calc_doc(calcs_reversed[-1]),
+            "output": OutputSummary.from_cp2k_calc_doc(calcs_reversed[0]),
             "state": _get_state(calcs_reversed, analysis),
             "entry": cls.get_entry(calcs_reversed),
             "run_stats": _get_run_stats(calcs_reversed),
             "cp2k_objects": cp2k_objects,
             "included_objects": included_objects,
         }
-        doc = cls(**ddict)
+        doc = cls(**doc.dict())
         doc = doc.copy(update=data)
-        doc = doc.copy(update=additional_fields)
-        return doc
+        return doc.copy(update=additional_fields)
 
     @staticmethod
     def get_entry(
-        calc_docs: List[Calculation], job_id: Optional[str] = None
+        calc_docs: list[Calculation], job_id: Optional[str] = None
     ) -> ComputedEntry:
-        """
-        Get a computed entry from a list of CP2K calculation documents.
+        """Get a computed entry from a list of CP2K calculation documents.
 
         Parameters
         ----------
@@ -457,8 +450,8 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
 
 def _find_cp2k_files(
     path: Union[str, Path],
-    volumetric_files: Tuple[str, ...] = _VOLUMETRIC_FILES,
-) -> Dict[str, Any]:
+    volumetric_files: tuple[str, ...] = _VOLUMETRIC_FILES,
+) -> dict[str, Any]:
     """
     Find CP2K files in a directory.
 
@@ -489,8 +482,8 @@ def _find_cp2k_files(
     path = Path(path)
     task_files = OrderedDict()
 
-    def _get_task_files(files, suffix=""):
-        cp2k_files = {}
+    def _get_task_files(files: list[Path], suffix: str = "") -> dict[str, Any]:
+        cp2k_files: dict[str, Any] = {}
         vol_files = []
         for file in files:
             if file.match(f"*cp2k.out{suffix}*"):
@@ -528,7 +521,7 @@ def _find_cp2k_files(
     return task_files
 
 
-def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
+def _parse_orig_inputs(dir_name: Path) -> dict[str, Cp2kInput]:
     """
     Parse original input files.
 
@@ -542,7 +535,7 @@ def _parse_orig_inputs(dir_name: Path) -> Dict[str, Cp2kInput]:
 
     Returns
     -------
-    Dict[str, Cp2kInput]
+    dict[str, Cp2kInput]
         The original data.
     """
     orig_inputs = {}
@@ -579,17 +572,15 @@ def _get_max_force(calc_doc: Calculation) -> Optional[float]:
     return None
 
 
-def _get_state(calc_docs: List[Calculation], analysis: AnalysisSummary) -> Status:
+def _get_state(calc_docs: list[Calculation], analysis: AnalysisSummary) -> Status:
     """Get state from calculation documents and relaxation analysis."""
-    all_calcs_completed = all(
-        [c.has_cp2k_completed == Status.SUCCESS for c in calc_docs]
-    )
+    all_calcs_completed = all(c.has_cp2k_completed == Status.SUCCESS for c in calc_docs)
     if len(analysis.errors) == 0 and all_calcs_completed:
-        return Status.SUCCESS  # type: ignore
-    return Status.FAILED  # type: ignore
+        return Status.SUCCESS  # type: ignore[return-value]
+    return Status.FAILED  # type: ignore[return-value]
 
 
-def _get_run_stats(calc_docs: List[Calculation]) -> Dict[str, RunStatistics]:
+def _get_run_stats(calc_docs: list[Calculation]) -> dict[str, RunStatistics]:
     """Get summary of runtime statistics for each calculation in this task."""
     run_stats = {}
     total = {

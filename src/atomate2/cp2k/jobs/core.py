@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from custodian.cp2k.handlers import (
     AbortHandler,
@@ -15,11 +15,9 @@ from custodian.cp2k.handlers import (
 )
 from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
-from pymatgen.core.structure import Structure
 
 from atomate2.common.utils import get_transformations
 from atomate2.cp2k.jobs.base import BaseCp2kMaker, cp2k_job
-from atomate2.cp2k.sets.base import Cp2kInputGenerator
 from atomate2.cp2k.sets.core import (
     CellOptSetGenerator,
     HybridCellOptSetGenerator,
@@ -31,19 +29,15 @@ from atomate2.cp2k.sets.core import (
     StaticSetGenerator,
 )
 
-logger = logging.getLogger(__name__)
+if TYPE_CHECKING:
+    from pathlib import Path
 
-__all__ = [
-    "StaticMaker",
-    "RelaxMaker",
-    "CellOptMaker",
-    "HybridStaticMaker",
-    "HybridRelaxMaker",
-    "HybridCellOptMaker",
-    "NonSCFMaker",
-    "TransmuterMaker",
-    "MDMaker",
-]
+    from pymatgen.core.structure import Structure
+
+    from atomate2.cp2k.sets.base import Cp2kInputGenerator
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -306,17 +300,16 @@ class NonSCFMaker(BaseCp2kMaker):
     def make(
         self,
         structure: Structure,
-        prev_cp2k_dir: str | Path | None,
+        prev_dir: str | Path | None,
         mode: str = "uniform",
-    ):
-        """
-        Run a non-scf CP2K job.
+    ) -> None:
+        """Run a non-scf CP2K job.
 
         Parameters
         ----------
         structure : .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous CP2K calculation directory to copy output files from.
         mode : str
             Type of band structure calculation. Options are:
@@ -325,18 +318,13 @@ class NonSCFMaker(BaseCp2kMaker):
         """
         self.input_set_generator.mode = mode
 
-        if "parse_dos" not in self.task_document_kwargs:
-            # parse DOS only for uniform band structure
-            self.task_document_kwargs["parse_dos"] = mode == "uniform"
-
-        if "parse_bandstructure" not in self.task_document_kwargs:
-            self.task_document_kwargs["parse_bandstructure"] = mode
-
+        # parse DOS only for uniform band structure
+        self.task_document_kwargs.setdefault("parse_dos", mode == "uniform")
+        self.task_document_kwargs.setdefault("parse_bandstructure", mode)
         # copy previous inputs
-        if "additional_cp2k_files" not in self.copy_cp2k_kwargs:
-            self.copy_cp2k_kwargs["additional_cp2k_files"] = ("wfn",)
+        self.copy_cp2k_kwargs.setdefault("additional_cp2k_files", ("wfn",))
 
-        return super().make.original(self, structure, prev_cp2k_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @dataclass
@@ -387,16 +375,15 @@ class TransmuterMaker(BaseCp2kMaker):
     def make(
         self,
         structure: Structure,
-        prev_cp2k_dir: str | Path | None = None,
-    ):
-        """
-        Run a transmuter Cp2k job.
+        prev_dir: str | Path | None = None,
+    ) -> None:
+        """Run a transmuter Cp2k job.
 
         Parameters
         ----------
         structure : Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous Cp2k calculation directory to copy output files from.
         """
         transformations = get_transformations(
@@ -406,12 +393,11 @@ class TransmuterMaker(BaseCp2kMaker):
         transmuter = StandardTransmuter([ts], transformations)
         structure = transmuter.transformed_structures[-1].final_structure
 
-        # to avoid mongoDB errors, ":" is automatically converted to "."
-        if "transformations:json" not in self.write_additional_data:
-            tjson = transmuter.transformed_structures[-1]
-            self.write_additional_data["transformations:json"] = tjson
+        # to avoid MongoDB errors, ":" is automatically converted to "."
+        tjson = transmuter.transformed_structures[-1]
+        self.write_additional_data.setdefault("transformations:json", tjson)
 
-        return super().make.original(self, structure, prev_cp2k_dir)
+        return super().make.original(self, structure, prev_dir)
 
 
 @dataclass

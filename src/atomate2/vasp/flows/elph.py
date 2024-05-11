@@ -4,17 +4,15 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OnMissing
-from pymatgen.core import Structure
 
 from atomate2.vasp.flows.core import (
     DoubleRelaxMaker,
     HSEUniformBandStructureMaker,
     UniformBandStructureMaker,
 )
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import (
     HSEBSMaker,
     HSEStaticMaker,
@@ -36,7 +34,12 @@ from atomate2.vasp.sets.core import (
     StaticSetGenerator,
 )
 
-__all__ = ["ElectronPhononMaker"]
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
@@ -120,15 +123,14 @@ class ElectronPhononMaker(Maker):
         )
     )
 
-    def make(self, structure: Structure, prev_vasp_dir: str | Path | None = None):
-        """
-        Create a electron-phonon coupling workflow.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Create a electron-phonon coupling workflow.
 
         Parameters
         ----------
         structure: .Structure
             A pymatgen structure object.
-        prev_vasp_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous VASP calculation directory to copy output files from.
 
         Returns
@@ -140,27 +142,25 @@ class ElectronPhononMaker(Maker):
 
         if self.relax_maker is not None:
             # optionally relax the structure
-            relax = self.relax_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+            relax = self.relax_maker.make(structure, prev_dir=prev_dir)
             jobs.append(relax)
             structure = relax.output.structure
-            prev_vasp_dir = relax.output.dir_name
+            prev_dir = relax.output.dir_name
 
-        static = self.static_maker.make(structure, prev_vasp_dir=prev_vasp_dir)
+        static = self.static_maker.make(structure, prev_dir=prev_dir)
 
         # update temperatures and supercell size for elph maker but make sure to not
         # overwrite original maker
         elph_maker = deepcopy(self.elph_displacement_maker)
         elph_maker.temperatures = self.temperatures
         elph_maker.min_supercell_length = self.min_supercell_length
-        elph = elph_maker.make(
-            static.output.structure, prev_vasp_dir=static.output.dir_name
-        )
+        elph = elph_maker.make(static.output.structure, prev_dir=static.output.dir_name)
 
         # use static as prev_dir so we don't inherit elph settings; using a prev
         # directory is useful as we can turn off magnetism if necessary which gives a
         # reasonable speedup
         supercell_dos = self.uniform_maker.make(
-            elph.output.structure, prev_vasp_dir=static.output.dir_name
+            elph.output.structure, prev_dir=static.output.dir_name
         )
         supercell_dos.append_name(" bulk supercell")
 
@@ -168,7 +168,7 @@ class ElectronPhononMaker(Maker):
             elph.output.calcs_reversed[0].output.elph_displaced_structures.temperatures,
             elph.output.calcs_reversed[0].output.elph_displaced_structures.structures,
             self.uniform_maker,
-            prev_vasp_dir=static.output.dir_name,
+            prev_dir=static.output.dir_name,
             original_structure=static.output.structure,
             supercell_structure=elph.output.structure,
         )

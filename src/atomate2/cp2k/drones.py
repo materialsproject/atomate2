@@ -12,8 +12,6 @@ from atomate2.cp2k.schemas.task import TaskDocument
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["Cp2kDrone"]
-
 
 class Cp2kDrone(AbstractDrone):
     """
@@ -25,7 +23,7 @@ class Cp2kDrone(AbstractDrone):
         Additional keyword args passed to :obj:`.TaskDocument.from_directory`.
     """
 
-    def __init__(self, **task_document_kwargs):
+    def __init__(self, **task_document_kwargs) -> None:
         self.task_document_kwargs = task_document_kwargs
 
     def assimilate(self, path: str | Path | None = None) -> TaskDocument:
@@ -42,21 +40,21 @@ class Cp2kDrone(AbstractDrone):
         TaskDocument
             A CP2K task document.
         """
-        if path is None:
-            path = Path.cwd()
+        path = path or Path.cwd()
 
         try:
             doc = TaskDocument.from_directory(path, **self.task_document_kwargs)
         except Exception:
             import traceback
 
-            logger.error(f"Error in {Path(path).absolute()}\n{traceback.format_exc()}")
+            logger.exception(
+                f"Error in {Path(path).absolute()}\n{traceback.format_exc()}"
+            )
             raise
         return doc
 
     def get_valid_paths(self, path: tuple[str, list[str], list[str]]) -> list[str]:
-        """
-        Get valid paths to assimilate.
+        """Get valid paths to assimilate.
 
         There are some restrictions on the valid directory structures:
 
@@ -82,7 +80,7 @@ class Cp2kDrone(AbstractDrone):
         if set(task_names).intersection(subdirs):
             return [parent]
         if (
-            not any([parent.endswith(os.sep + r) for r in task_names])
+            not any(parent.endswith(os.sep + r) for r in task_names)
             and len(list(Path(parent).glob("cp2k.out*"))) > 0
         ):
             return [parent]

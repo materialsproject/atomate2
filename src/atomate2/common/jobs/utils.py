@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from jobflow import Response, job
-from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 
-__all__ = [
-    "structure_to_primitive",
-    "structure_to_conventional",
-    "retrieve_structure_from_materials_project",
-]
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 
 @job
@@ -32,7 +30,6 @@ def structure_to_primitive(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_primitive_standard_structure()
@@ -43,7 +40,7 @@ def structure_to_conventional(
     structure: Structure, symprec: float = SETTINGS.SYMPREC
 ) -> Structure:
     """
-    Job hat creates a standard conventional structure.
+    Job that creates a standard conventional structure.
 
     Parameters
     ----------
@@ -55,7 +52,6 @@ def structure_to_conventional(
     Returns
     -------
     .Structure
-
     """
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     return sga.get_conventional_standard_structure()
@@ -116,12 +112,12 @@ def retrieve_structure_from_materials_project(
 
     with MPRester() as mpr:
         if use_task_id:
-            doc = mpr.tasks.get_data_by_id(material_id_or_task_id, fields=["structure"])
+            doc = mpr.tasks.search(material_id_or_task_id, fields=["structure"])[0]
             task_id = material_id_or_task_id
         else:
-            doc = mpr.materials.get_data_by_id(
+            doc = mpr.materials.search(
                 material_id_or_task_id, fields=["structure", "origins"]
-            )
+            )[0]
             origins = {prop.name: prop for prop in doc.origins}
             task_id = str(origins["structure"].task_id)
 
