@@ -13,6 +13,7 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
+from typing_extensions import Self
 
 from atomate2 import SETTINGS, __version__
 from atomate2.common.utils import (
@@ -45,7 +46,7 @@ class AnalysisSummary(BaseModel):
     errors: list[str] = Field(None, description="Errors from the VASP drone")
 
     @classmethod
-    def from_cp2k_calc_docs(cls, calc_docs: list[Calculation]) -> "AnalysisSummary":
+    def from_cp2k_calc_docs(cls, calc_docs: list[Calculation]) -> Self:
         """
         Create analysis summary from CP2K calculation documents.
 
@@ -118,7 +119,7 @@ class AtomicKindSummary(BaseModel):
     )
 
     @classmethod
-    def from_atomic_kind_info(cls, atomic_kind_info: dict) -> "AtomicKindSummary":
+    def from_atomic_kind_info(cls, atomic_kind_info: dict) -> Self:
         """Initialize from the atomic_kind_info dictionary."""
         d: dict[str, dict[str, Any]] = {"atomic_kinds": {}}
         for kind, info in atomic_kind_info.items():
@@ -149,7 +150,7 @@ class InputSummary(BaseModel):
     )
 
     @classmethod
-    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> "InputSummary":
+    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
         """
         Create calculation input summary from a calculation document.
 
@@ -199,7 +200,7 @@ class OutputSummary(BaseModel):
     )
 
     @classmethod
-    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> "OutputSummary":
+    def from_cp2k_calc_doc(cls, calc_doc: Calculation) -> Self:
         """
         Create a summary of CP2K calculation outputs from a CP2K calculation document.
 
@@ -311,7 +312,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         store_additional_json: bool = SETTINGS.CP2K_STORE_ADDITIONAL_JSON,
         additional_fields: dict[str, Any] = None,
         **cp2k_calculation_kwargs,
-    ) -> "TaskDocument":
+    ) -> Self:
         """
         Create a task document from a directory containing CP2K files.
 

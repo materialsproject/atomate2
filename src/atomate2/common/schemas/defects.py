@@ -240,16 +240,10 @@ class CCDDocument(BaseModel):
         """
 
         def get_cs_entry(
-            struct: Structure,
-            energy: float,
-            dir_name: str,
-            uuid: str,
+            struct: Structure, energy: float, dir_name: str, uuid: str
         ) -> ComputedStructureEntry:
-            return ComputedStructureEntry(
-                structure=struct,
-                energy=energy,
-                data={"dir_name": dir_name, "uuid": uuid},
-            )
+            data = {"dir_name": dir_name, "uuid": uuid}
+            return ComputedStructureEntry(structure=struct, energy=energy, data=data)
 
         entries1 = list(
             starmap(
