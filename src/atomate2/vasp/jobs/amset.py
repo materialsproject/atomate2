@@ -118,7 +118,7 @@ class StaticDeformationMaker(BaseVaspMaker):
 @dataclass
 class HSEStaticDeformationMaker(BaseVaspMaker):
     """
-    Maker to perform a HSE06 static calculations on structural deformations.
+    Maker to perform an HSE06 static calculations on structural deformations.
 
     The main difference to a normal HSE06 static calculation is that this will write an
     explicit KPOINTS file, rather than using KSPACING. This is because all deformations

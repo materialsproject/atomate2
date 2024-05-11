@@ -89,8 +89,7 @@ class DeformationPotentialMaker(Maker):
         prev_dir: str | Path | None = None,
         ibands: tuple[list[int], list[int]] = None,
     ) -> Flow:
-        """
-        Make flow to calculate acoustic deformation potentials.
+        """Make flow to calculate acoustic deformation potentials.
 
         Parameters
         ----------
@@ -154,7 +153,7 @@ class VaspAmsetMaker(Maker):
     temperatures : tuple of float
         Temperatures at which to calculate transport properties.
     use_hse_gap : bool
-        Whether to perform a HSE06 calculation to calculate the band gap for use in
+        Whether to perform an HSE06 calculation to calculate the band gap for use in
         AMSET. This can impact the results for small band gap materials.
     relax_maker : .BaseVaspMaker
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
@@ -205,8 +204,7 @@ class VaspAmsetMaker(Maker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Flow:
-        """
-        Make flow to calculate electronic transport properties using AMSET and VASP.
+        """Make flow to calculate electronic transport properties using AMSET and VASP.
 
         Parameters
         ----------
@@ -387,8 +385,7 @@ class HSEVaspAmsetMaker(Maker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Flow:
-        """
-        Make flow to calculate electronic transport properties using AMSET and VASP.
+        """Make flow to calculate electronic transport properties using AMSET and VASP.
 
         Parameters
         ----------

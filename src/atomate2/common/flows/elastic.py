@@ -87,8 +87,7 @@ class BaseElasticMaker(Maker, ABC):
         equilibrium_stress: Matrix3D = None,
         conventional: bool = False,
     ) -> Flow:
-        """
-        Make flow to calculate the elastic constant.
+        """Make flow to calculate the elastic constant.
 
         Parameters
         ----------

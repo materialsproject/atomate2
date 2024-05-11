@@ -243,8 +243,7 @@ class Atomate2Settings(BaseSettings):
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:
-        """
-        Load settings from file or environment variables.
+        """Load settings from file or environment variables.
 
         Loads settings from a root file if available and uses that as defaults in
         place of built-in defaults.
