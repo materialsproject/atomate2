@@ -397,7 +397,7 @@ cd my_folder
 python xyz.py
 ```
 
-The `LOBSTER_CMD` now needs an additional export of the number of threads. 
+The `LOBSTER_CMD` now needs an additional export of the number of threads.
 
 ```yaml
 VASP_CMD: <<VASP_CMD>>
