@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
@@ -234,7 +235,6 @@ class AbinitTaskDoc(StructureMetadata):
     additional_json: Optional[dict[str, Any]] = Field(
         None, description="Additional json loaded from the calculation directory"
     )
-
     @classmethod
     def from_directory(
         cls: type[_T],
@@ -364,7 +364,10 @@ def _find_abinit_files(
                 abinit_files["abinit_log_file"] = Path(file).relative_to(path)
             elif file.match(f"*{MPIABORTFILE}{suffix}*"):
                 abinit_files["abinit_abort_file"] = Path(file).relative_to(path)
-
+            if file.match(f"*outdata/out_SCR{suffix}*"):
+                abinit_files["abinit_scr_file"] = Path(file).relative_to(path)
+            if file.match(f"*outdata/out_SIGRES{suffix}*"):
+                abinit_files["abinit_sig_file"] = Path(file).relative_to(path)
         return abinit_files
 
     for task_name in task_names:
@@ -388,3 +391,73 @@ def _find_abinit_files(
             task_files["standard"] = standard_files
 
     return task_files
+
+class ConvergenceSummary(BaseModel):
+    """Summary of the outputs for an Abinit convergence calculation."""
+
+    structure: Structure = Field(None, description="The output structure object")
+    converged: bool = Field(None, description="Is convergence achieved?")
+
+    convergence_criterion_name: str = Field(
+        None, description="The output name of the convergence criterion"
+    )
+    convergence_field_name: str = Field(
+        None, description="The name of the input setting to study convergence against"
+    )
+    convergence_criterion_value: float = Field(
+        None, description="The output value of the convergence criterion"
+    )
+    convergence_field_value: Any = Field(
+        None,
+        description="The last value of the input setting to study convergence against",
+    )
+    asked_epsilon: float = Field(
+        None,
+        description="The difference in the values for the convergence criteria that was asked for",
+    )
+    actual_epsilon: float = Field(
+        None, description="The actual difference in the convergence criteria values"
+    )
+
+    @classmethod
+    def from_abinit_calc_doc(cls, calc_doc: Calculation) -> "ConvergenceSummary":
+        """
+        Create a summary of Abinit calculation outputs from an Abinit calculation document.
+
+        Parameters
+        ----------
+        calc_doc
+            An Abinit calculation document.
+
+        Returns
+        -------
+        :ConvergenceSummary
+            The summary for convergence runs.
+        """
+
+        from atomate2.abinit.jobs.core import CONVERGENCE_FILE_NAME
+
+        job_dir = calc_doc.dir_name.split(":")[-1]
+
+        convergence_file = Path(job_dir) / CONVERGENCE_FILE_NAME
+        if not convergence_file.exists():
+            raise ValueError(
+                f"Did not find the convergence json file {CONVERGENCE_FILE_NAME} in {calc_doc.dir_name}"
+            )
+
+        with open(convergence_file) as f:
+            convergence_data = json.load(f)
+
+        return cls(
+            structure=calc_doc.output.structure,
+            converged=convergence_data["converged"],
+            convergence_criterion_name=convergence_data["criterion_name"],
+            convergence_field_name=convergence_data["convergence_field_name"],
+            convergence_criterion_value=convergence_data["criterion_values"][-1],
+            convergence_field_value=convergence_data["convergence_field_values"][-1],
+            asked_epsilon=convergence_data["asked_epsilon"],
+            actual_epsilon=abs(
+                convergence_data["criterion_values"][-2]
+                - convergence_data["criterion_values"][-1]
+            ),
+        )
