@@ -27,7 +27,7 @@ requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
-    "custodian>=2024.2.15",
+    "custodian>=2024.4.18",
     "emmet-core>=0.78.0rc4",
     "jobflow>=0.1.11",
     "monty>=2024.2.2",
@@ -87,7 +87,7 @@ strict = [
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",
-    "custodian==2024.3.12",
+    "custodian==2024.4.18",
     "dscribe==2.1.0",
     "emmet-core==0.82.2",
     "ijson==3.2.3",
