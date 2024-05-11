@@ -37,8 +37,7 @@ class CHGNetVaspRelaxMaker(Maker):
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure) -> Flow:
-        """
-        Create a flow with a CHGNet (pre)relaxation followed by a VASP relaxation.
+        """Create a flow with a CHGNet (pre)relaxation followed by a VASP relaxation.
 
         Parameters
         ----------
@@ -78,8 +77,7 @@ class M3GNetVaspRelaxMaker(Maker):
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure) -> Flow:
-        """
-        Create a flow with a M3GNet (pre)relaxation followed by a VASP relaxation.
+        """Create a flow with a M3GNet (pre)relaxation followed by a VASP relaxation.
 
         Parameters
         ----------

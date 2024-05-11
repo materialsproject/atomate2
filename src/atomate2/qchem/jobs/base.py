@@ -99,8 +99,7 @@ class BaseQCMaker(Maker):
     def make(
         self, molecule: Molecule, prev_qchem_dir: str | Path | None = None
     ) -> Response:
-        """
-        Run a QChem calculation.
+        """Run a QChem calculation.
 
         Parameters
         ----------

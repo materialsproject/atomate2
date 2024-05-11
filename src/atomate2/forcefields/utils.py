@@ -115,8 +115,7 @@ class TrajectoryObserver:
     """
 
     def __init__(self, atoms: Atoms, store_md_outputs: bool = False) -> None:
-        """
-        Initialize the Observer.
+        """Initialize the Observer.
 
         Parameters
         ----------
@@ -293,8 +292,7 @@ class Relaxer:
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
     ) -> None:
-        """
-        Initialize the Relaxer.
+        """Initialize the Relaxer.
 
         Parameters
         ----------

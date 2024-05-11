@@ -78,8 +78,7 @@ class FileClient:
         self.connections[host] = {"ssh": ssh, "sftp": ssh.open_sftp()}
 
     def get_ssh(self, host: str) -> SSHClient:
-        """
-        Get an SSH connection to a host.
+        """Get an SSH connection to a host.
 
         Parameters
         ----------
@@ -99,8 +98,7 @@ class FileClient:
         return self.connections[host]["ssh"]
 
     def get_sftp(self, host: str) -> SFTPClient:
-        """
-        Get an SFTP connection to a host.
+        """Get an SFTP connection to a host.
 
         Parameters
         ----------
@@ -145,8 +143,7 @@ class FileClient:
         return True
 
     def is_file(self, path: str | Path, host: str | None = None) -> bool:
-        """
-        Whether a path is a file.
+        """Whether a path is a file.
 
         Parameters
         ----------
@@ -169,8 +166,7 @@ class FileClient:
             return False
 
     def is_dir(self, path: str | Path, host: str | None = None) -> bool:
-        """
-        Whether a path is a directory.
+        """Whether a path is a directory.
 
         Parameters
         ----------
@@ -193,8 +189,7 @@ class FileClient:
             return False
 
     def listdir(self, path: str | Path, host: str | None = None) -> list[Path]:
-        """
-        Get the directory listing.
+        """Get the directory listing.
 
         Parameters
         ----------
@@ -328,8 +323,7 @@ class FileClient:
             self.get_sftp(host).rename(old_path, new_path)
 
     def abspath(self, path: str | Path, host: str | None = None) -> Path:
-        """
-        Get the absolute path.
+        """Get the absolute path.
 
         Parameters
         ----------

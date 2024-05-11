@@ -63,8 +63,7 @@ class ConfigurationCoordinateMaker(Maker):
         charge_state1: int,
         charge_state2: int,
     ) -> Flow:
-        """
-        Make a job for the calculation of the configuration coordinate diagram.
+        """Make a job for the calculation of the configuration coordinate diagram.
 
         Parameters
         ----------

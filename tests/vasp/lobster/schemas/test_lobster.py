@@ -1,7 +1,6 @@
 import os
 
 import pytest
-from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
@@ -42,10 +41,10 @@ def test_lobster_task_document(lobster_test_dir):
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
-    assert_allclose(doc.lobsterout.charge_spilling[0], 0.00989999, atol=1e-7)
+    assert doc.lobsterout.charge_spilling[0] == pytest.approx(0.00989999, abs=1e-7)
 
     assert isinstance(doc.lobsterin, LobsterinModel)
-    assert_allclose(doc.lobsterin.cohpstartenergy, -5)
+    assert doc.lobsterin.cohpstartenergy == -5
     assert isinstance(doc.strongest_bonds, StrongestBonds)
     assert doc.strongest_bonds.strongest_bonds_icohp["As-Ga"] == pytest.approx(
         {"bond_strength": -4.32971, "length": 2.4899}
@@ -133,60 +132,30 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     )
     assert isinstance(doc.structure, Structure)
     assert isinstance(doc.lobsterout, LobsteroutModel)
-    assert_allclose(doc.lobsterout.charge_spilling[0], 0.009899999999999999)
+    assert doc.lobsterout.charge_spilling[0] == pytest.approx(0.00989999, abs=1e-7)
 
     assert isinstance(doc.lobsterin, LobsterinModel)
-    assert_allclose(doc.lobsterin.cohpstartenergy, -5)
+    assert doc.lobsterin.cohpstartenergy == -5
     assert isinstance(doc.strongest_bonds, StrongestBonds)
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["bond_strength"], -4.32971
+    assert doc.strongest_bonds.strongest_bonds_icohp["As-Ga"] == pytest.approx(
+        {"bond_strength": -4.32971, "length": 2.4899}
     )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["bond_strength"], 0.82707
+    assert doc.strongest_bonds.strongest_bonds_icobi["As-Ga"] == pytest.approx(
+        {"bond_strength": 0.82707, "length": 2.4899}
     )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["bond_strength"], 0.31405
-    )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icohp["As-Ga"]["length"], 2.4899
-    )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icobi["As-Ga"]["length"], 2.4899
-    )
-    assert_allclose(
-        doc.strongest_bonds.strongest_bonds_icoop["As-Ga"]["length"], 2.4899
+    assert doc.strongest_bonds.strongest_bonds_icoop["As-Ga"] == pytest.approx(
+        {"bond_strength": 0.31405, "length": 2.4899}
     )
     assert doc.strongest_bonds.which_bonds == "all"
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"][
-            "bond_strength"
-        ],
-        -4.32971,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"][
-            "bond_strength"
-        ],
-        0.82707,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"][
-            "bond_strength"
-        ],
-        0.31405,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icohp["As-Ga"]["length"],
-        2.4899,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icobi["As-Ga"]["length"],
-        2.4899,
-    )
-    assert_allclose(
-        doc.strongest_bonds_cation_anion.strongest_bonds_icoop["As-Ga"]["length"],
-        2.4899,
-    )
+    assert doc.strongest_bonds_cation_anion.strongest_bonds_icohp[
+        "As-Ga"
+    ] == pytest.approx({"bond_strength": -4.32971, "length": 2.4899})
+    assert doc.strongest_bonds_cation_anion.strongest_bonds_icobi[
+        "As-Ga"
+    ] == pytest.approx({"bond_strength": 0.82707, "length": 2.4899})
+    assert doc.strongest_bonds_cation_anion.strongest_bonds_icoop[
+        "As-Ga"
+    ] == pytest.approx({"bond_strength": 0.31405, "length": 2.4899})
     assert doc.strongest_bonds_cation_anion.which_bonds == "cation-anion"
     assert isinstance(doc.lobsterpy_data.cohp_plot_data.data["Ga1: 4 x As-Ga"], Cohp)
     assert doc.lobsterpy_data.which_bonds == "all"
@@ -196,17 +165,13 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     assert isinstance(doc.lobsterpy_text, str)
     assert isinstance(doc.lobsterpy_text_cation_anion, str)
 
-    assert isinstance(doc.cohp_data, CompleteCohp)
-    assert isinstance(doc.cobi_data, CompleteCohp)
-    assert isinstance(doc.coop_data, CompleteCohp)
+    assert {*map(type, (doc.cohp_data, doc.cobi_data, doc.coop_data))} == {CompleteCohp}
     assert isinstance(doc.dos, LobsterCompleteDos)
     assert isinstance(doc.charges, Charge)
     assert isinstance(doc.madelung_energies, MadelungEnergies)
     assert isinstance(doc.site_potentials, SitePotential)
     assert isinstance(doc.band_overlaps, Bandoverlaps)
-    assert isinstance(doc.icohp_list, Icohplist)
-    assert isinstance(doc.icobi_list, Icohplist)
-    assert isinstance(doc.icoop_list, Icohplist)
+    assert {*map(type, (doc.icohp_list, doc.icobi_list, doc.icoop_list))} == {Icohplist}
     assert isinstance(doc.gross_populations, Grosspop)
 
     assert doc.chemsys == "As-Ga"
@@ -284,7 +249,7 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
     # delete the cba json after the test
     os.remove(lobster_test_dir / "lobsteroutputs/mp-2534/cba.json.gz")
 
-    # Generate computational data json from lobstertaskdoc
+    # Generate computational JSON data from LobsterTaskDocument
     _ = LobsterTaskDocument.from_directory(
         dir_name=lobster_test_dir / "lobsteroutputs/mp-754354",
         save_cohp_plots=False,
@@ -323,27 +288,27 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
     ]
 
     # Read the data from saved computational data json as pymatgen objects
-    for taskdoc_key in expected_computational_data_keys_json:
+    for task_doc_key in expected_computational_data_keys_json:
         json_data = read_saved_json(
             filename=lobster_test_dir
             / "lobsteroutputs/mp-754354/computational_data.json.gz",
             pymatgen_objs=True,
-            query=taskdoc_key,
+            query=task_doc_key,
         )
-        if "dos" in taskdoc_key and json_data[taskdoc_key]:
-            assert isinstance(json_data[taskdoc_key], LobsterCompleteDos)
+        if "dos" in task_doc_key and json_data[task_doc_key]:
+            assert isinstance(json_data[task_doc_key], LobsterCompleteDos)
 
-        if "lobsterpy_data" in taskdoc_key and json_data[taskdoc_key]:
-            assert isinstance(json_data[taskdoc_key], CondensedBondingAnalysis)
-            for cohp_data in json_data[taskdoc_key].cohp_plot_data.data.values():
+        if "lobsterpy_data" in task_doc_key and json_data[task_doc_key]:
+            assert isinstance(json_data[task_doc_key], CondensedBondingAnalysis)
+            for cohp_data in json_data[task_doc_key].cohp_plot_data.data.values():
                 assert isinstance(cohp_data, Cohp)
 
         if (
-            taskdoc_key == "cohp_data"
-            or taskdoc_key == "cobi_data"
-            or taskdoc_key == "coop_data"
-        ) and json_data[taskdoc_key]:
-            assert isinstance(json_data[taskdoc_key], CompleteCohp)
+            task_doc_key == "cohp_data"
+            or task_doc_key == "cobi_data"
+            or task_doc_key == "coop_data"
+        ) and json_data[task_doc_key]:
+            assert isinstance(json_data[task_doc_key], CompleteCohp)
 
     # delete the computational data json after the test
     os.remove(lobster_test_dir / "lobsteroutputs/mp-754354/computational_data.json.gz")

@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 
     from jobflow import Job
     from pymatgen.core.structure import Structure
+    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -47,8 +48,7 @@ class DoubleRelaxMaker(Maker):
     relax_maker2: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a flow with two chained relaxations.
+        """Create a flow with two chained relaxations.
 
         Parameters
         ----------
@@ -78,7 +78,7 @@ class DoubleRelaxMaker(Maker):
         return Flow(jobs, output=relax2.output, name=self.name)
 
     @classmethod
-    def from_relax_maker(cls, relax_maker: BaseVaspMaker) -> DoubleRelaxMaker:
+    def from_relax_maker(cls, relax_maker: BaseVaspMaker) -> Self:
         """
         Instantiate the DoubleRelaxMaker with two relax makers of the same type.
 
@@ -118,8 +118,7 @@ class BandStructureMaker(Maker):
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a band structure flow.
+        """Create a band structure flow.
 
         Parameters
         ----------
@@ -195,8 +194,7 @@ class UniformBandStructureMaker(Maker):
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a uniform band structure flow.
+        """Create a uniform band structure flow.
 
         Parameters
         ----------
@@ -244,8 +242,7 @@ class LineModeBandStructureMaker(Maker):
     bs_maker: BaseVaspMaker = field(default_factory=NonSCFMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a line mode band structure flow.
+        """Create a line mode band structure flow.
 
         Parameters
         ----------
@@ -275,7 +272,7 @@ class HSEBandStructureMaker(BandStructureMaker):
     """
     Maker to generate VASP HSE band structures.
 
-    This is a HSE06 static calculation followed by one HSE06 uniform calculation and
+    This is an HSE06 static calculation followed by one HSE06 uniform calculation and
     one HSE06 line mode calculation.
 
     Parameters
@@ -301,7 +298,7 @@ class HSEUniformBandStructureMaker(UniformBandStructureMaker):
     """
     Maker to generate VASP HSE uniform band structures.
 
-    This is a HSE06 static calculation followed by a HSE06 uniform calculation.
+    This is an HSE06 static calculation followed by an HSE06 uniform calculation.
 
     Parameters
     ----------
@@ -323,7 +320,7 @@ class HSELineModeBandStructureMaker(LineModeBandStructureMaker):
     """
     Maker to generate VASP HSE line mode band structures.
 
-    This is a HSE06 static calculation followed by a HSE06 line mode calculation.
+    This is an HSE06 static calculation followed by an HSE06 line mode calculation.
 
     Parameters
     ----------
@@ -362,8 +359,7 @@ class RelaxBandStructureMaker(Maker):
     band_structure_maker: BaseVaspMaker = field(default_factory=BandStructureMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Run a relaxation and then calculate the uniform and line mode band structures.
+        """Run a relaxation, then calculate the uniform and line mode band structures.
 
         Parameters
         ----------
@@ -420,8 +416,7 @@ class OpticsMaker(Maker):
     )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Run a static and then a non-scf optics calculation.
+        """Run a static and then a non-scf optics calculation.
 
         Parameters
         ----------
@@ -477,8 +472,7 @@ class HSEOpticsMaker(Maker):
     )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Run a static and then a non-scf optics calculation.
+        """Run a static and then a non-scf optics calculation.
 
         Parameters
         ----------
