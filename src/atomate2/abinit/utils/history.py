@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Any
 
 from monty.json import MontyDecoder, MSONable, jsanitize
 
+from atomate2.abinit.utils.common import OUTDIR_NAME
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -17,8 +19,7 @@ if TYPE_CHECKING:
     from abipy.flowtk.events import AbinitEvent
     from abipy.flowtk.utils import Directory
     from jobflow import Flow, Job
-
-from atomate2.abinit.utils.common import OUTDIR_NAME
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ class JobHistory(collections.deque, MSONable):
         }
 
     @classmethod
-    def from_dict(cls, d: dict) -> JobHistory:
+    def from_dict(cls, d: dict) -> Self:
         """Create instance of the history from its dictionary representation."""
         dec = MontyDecoder()
         return cls([dec.process_decoded(i) for i in d["items"]])
@@ -232,7 +233,7 @@ class JobEvent(MSONable):
         return d
 
     @classmethod
-    def from_dict(cls, d: dict) -> JobEvent:
+    def from_dict(cls, d: dict) -> Self:
         """Create instance of the job event from its dictionary representation."""
         dec = MontyDecoder()
         details = dec.process_decoded(d["details"]) if "details" in d else None

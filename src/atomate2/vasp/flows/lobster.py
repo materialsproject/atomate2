@@ -121,8 +121,7 @@ class VaspLobsterMaker(Maker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Flow:
-        """
-        Make flow to calculate bonding properties.
+        """Make flow to calculate bonding properties.
 
         Parameters
         ----------

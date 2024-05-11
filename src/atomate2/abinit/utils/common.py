@@ -6,16 +6,6 @@ import logging
 import os
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from abipy.abio.inputs import AbinitInput
-    from abipy.core.structure import Structure
-    from abipy.flowtk.events import EventReport
-    from jobflow import Flow, Job
-
-    from atomate2.abinit.utils.history import JobHistory
-
 from abipy.abio.outputs import AbinitOutputFile
 from abipy.dfpt.ddb import DdbFile
 from abipy.electrons.gsr import GsrFile
@@ -23,6 +13,17 @@ from abipy.flowtk import events
 from abipy.flowtk.utils import Directory, File
 from monty.json import MSONable
 from monty.serialization import MontyDecoder
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from abipy.abio.inputs import AbinitInput
+    from abipy.core.structure import Structure
+    from abipy.flowtk.events import EventReport
+    from jobflow import Flow, Job
+    from typing_extensions import Self
+
+    from atomate2.abinit.utils.history import JobHistory
 
 TMPDIR_NAME = "tmpdata"
 OUTDIR_NAME = "outdata"
@@ -163,7 +164,7 @@ class AbinitRuntimeError(AbiAtomateError):
         return self.to_dict()
 
     @classmethod
-    def from_dict(cls, d: dict) -> AbinitRuntimeError:
+    def from_dict(cls, d: dict) -> Self:
         """Create instance of the error from its dictionary representation."""
         dec = MontyDecoder()
         warnings = (
@@ -245,7 +246,7 @@ class UnconvergedError(AbinitRuntimeError):
         return d
 
     @classmethod
-    def from_dict(cls, d: dict) -> UnconvergedError:
+    def from_dict(cls, d: dict) -> Self:
         """Create instance of the error from its dictionary representation."""
         dec = MontyDecoder()
         warnings = (
@@ -319,7 +320,7 @@ class RestartInfo(MSONable):
         }
 
     @classmethod
-    def from_dict(cls, d: dict) -> RestartInfo:
+    def from_dict(cls, d: dict) -> Self:
         """Create instance of the error from its dictionary representation."""
         return cls(
             previous_dir=d["previous_dir"],
