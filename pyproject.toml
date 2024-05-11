@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=0.78.0rc4",
+    "emmet-core==0.82.2",
     "jobflow>=0.1.11",
     "monty>=2024.2.2",
     "numpy",
@@ -136,7 +136,7 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
-addopts = "-p no:warnings --import-mode=importlib"
+addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
