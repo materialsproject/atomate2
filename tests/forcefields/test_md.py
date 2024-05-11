@@ -29,7 +29,10 @@ name_to_maker = {
 }
 
 
-@pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"])
+@pytest.mark.parametrize(
+    "ff_name",
+    ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"],
+)
 def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
     n_steps = 5
 
@@ -160,7 +163,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     # This test serves two purposes:
     # 1. Test the NVE calculator
     # 2. Test specifying the `dynamics` kwarg of the `MDMaker` as a str
-    #    vs. as an ase.md.md.MolecularDyanmics object
+    #    vs. as an ase.md.md.MolecularDynamics object
 
     output = {}
     for k in ["from_str", "from_dyn"]:

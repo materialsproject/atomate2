@@ -6,6 +6,8 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+  repository_dispatch:
+    types: [pymatgen-ci-trigger]
 
 jobs:
   lint:
@@ -45,6 +47,20 @@ jobs:
         with:
           version: "10.0"
 
+      - name: Install enumlib
+        run: |
+          cd ..
+          git clone --recursive https://github.com/msg-byu/enumlib.git
+          cd enumlib/symlib/src
+          export F90=gfortran
+          make
+          cd ../../src
+          make enum.x
+          sudo mv enum.x /usr/local/bin/
+          cd ..
+          sudo cp aux_src/makeStr.py /usr/local/bin/
+        continue-on-error: true # This is not critical to succeed.
+
       # TODO figure out where the llvm-config bin is really located
       - name: Install dependencies
         run: |
@@ -54,11 +70,15 @@ jobs:
           # TODO remove next line installing ase from main branch when FrechetCellFilter is released
           uv pip install --upgrade 'git+https://gitlab.com/ase/ase' --system
           uv pip install torch-runstats --system
-          uv pip install --no-deps nequip --system
+          uv pip install --no-deps nequip==0.5.6 --system
 
           # Install pseudos for abinit tests
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
+
+      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+        run: pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test
         env:

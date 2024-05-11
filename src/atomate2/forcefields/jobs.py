@@ -70,8 +70,7 @@ class ForceFieldRelaxMaker(Maker):
 
     Should be subclassed to use a specific force field. By default,
     the code attempts to use the `self.force_field_name` attr to look
-    up a predefined forcefield. To overwrite this behavior,
-    redefine `self._calculator`.
+    up a predefined forcefield. To overwrite this behavior, redefine `self.calculator`.
 
     Parameters
     ----------
@@ -133,7 +132,7 @@ class ForceFieldRelaxMaker(Maker):
 
         with revert_default_dtype():
             relaxer = Relaxer(
-                self._calculator(),
+                self.calculator,
                 relax_cell=self.relax_cell,
                 fix_symmetry=self.fix_symmetry,
                 symprec=self.symprec,
@@ -153,7 +152,8 @@ class ForceFieldRelaxMaker(Maker):
             **self.task_document_kwargs,
         )
 
-    def _calculator(self) -> Calculator:
+    @property
+    def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(self.force_field_name, **self.calculator_kwargs)
 

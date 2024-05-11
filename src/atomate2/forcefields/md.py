@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import contextlib
-import io
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -271,8 +269,8 @@ class ForceFieldMDMaker(Maker):
         if md_func is NPT:
             # Note that until md_func is instantiated, isinstance(md_func,NPT) is False
             # ASE NPT implementation requires upper triangular cell
-            u, _ = schur(atoms.get_cell(complete=True), output="complex")
-            atoms.set_cell(u.real, scale_atoms=True)
+            schur_decomp, _ = schur(atoms.get_cell(complete=True), output="complex")
+            atoms.set_cell(schur_decomp.real, scale_atoms=True)
 
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
@@ -288,32 +286,29 @@ class ForceFieldMDMaker(Maker):
                 ZeroRotation(atoms)
 
         with revert_default_dtype():
-            atoms.calc = self._calculator()
+            atoms.calc = self.calculator
 
-            with contextlib.redirect_stdout(io.StringIO()):
-                md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
+            md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
-                md_runner = md_func(
-                    atoms=atoms,
-                    timestep=self.time_step * units.fs,
-                    **self.ase_md_kwargs,
-                )
+            md_runner = md_func(
+                atoms=atoms, timestep=self.time_step * units.fs, **self.ase_md_kwargs
+            )
 
-                md_runner.attach(md_observer, interval=self.traj_interval)
+            md_runner.attach(md_observer, interval=self.traj_interval)
 
-                def _callback(dyn: MolecularDynamics = md_runner) -> None:
-                    if self.ensemble == "nve":
-                        return
-                    dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
-                    if self.ensemble == "nvt":
-                        return
-                    dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
+            def _callback(dyn: MolecularDynamics = md_runner) -> None:
+                if self.ensemble == "nve":
+                    return
+                dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
+                if self.ensemble == "nvt":
+                    return
+                dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
 
-                md_runner.attach(_callback, interval=1)
-                md_runner.run(steps=self.n_steps)
+            md_runner.attach(_callback, interval=1)
+            md_runner.run(steps=self.n_steps)
 
-                if self.traj_file is not None:
-                    md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
+            if self.traj_file is not None:
+                md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
 
             structure = AseAtomsAdaptor.get_structure(atoms)
 
@@ -332,7 +327,8 @@ class ForceFieldMDMaker(Maker):
             **self.task_document_kwargs,
         )
 
-    def _calculator(self) -> Calculator:
+    @property
+    def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(self.force_field_name, **self.calculator_kwargs)
 
