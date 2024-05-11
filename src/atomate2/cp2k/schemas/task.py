@@ -1,4 +1,5 @@
 """Core definition of a CP2K task document."""
+
 import logging
 from collections import OrderedDict
 from pathlib import Path
@@ -244,7 +245,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
     completed_at: Optional[str] = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: Optional[InputSummary] = Field(  # noqa: A003
+    input: Optional[InputSummary] = Field(
         None, description="The input to the first calculation"
     )
     output: Optional[OutputSummary] = Field(

@@ -1,14 +1,37 @@
 """Schema definitions for force field tasks."""
 
-from typing import Optional
+from typing import Any, Optional
 
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
+from emmet.core.utils import ValueEnum
+from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
-from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.core.trajectory import Trajectory
+
+from atomate2.forcefields import MLFF
+
+
+class ForcefieldResult(dict):
+    """Schema to store outputs in ForceFieldTaskDocument."""
+
+    def __init__(self, **kwargs: Any) -> None:
+        kwargs = {
+            "final_structure": None,
+            "trajectory": None,
+            "is_force_converged": None,
+            **kwargs,
+        }
+        super().__init__(**kwargs)
+
+
+class ForcefieldObject(ValueEnum):
+    """Types of forcefield data objects."""
+
+    TRAJECTORY = "trajectory"
 
 
 class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
@@ -19,7 +42,9 @@ class IonicStep(BaseModel, extra="allow"):  # type: ignore[call-arg]
         None, description="The forces on each atom."
     )
     stress: Optional[Matrix3D] = Field(None, description="The stress on the lattice.")
-    structure: Structure = Field(None, description="The structure at this step.")
+    structure: Optional[Structure] = Field(
+        None, description="The structure at this step."
+    )
 
 
 class InputDoc(BaseModel):
@@ -29,6 +54,16 @@ class InputDoc(BaseModel):
     relax_cell: bool = Field(
         None,
         description="Whether cell lattice was allowed to change during relaxation.",
+    )
+    fix_symmetry: bool = Field(
+        None,
+        description=(
+            "Whether to fix the symmetry of the structure during relaxation. "
+            "Refines the symmetry of the initial structure."
+        ),
+    )
+    symprec: float = Field(
+        None, description="Tolerance for symmetry finding in case of fix_symmetry."
     )
     steps: int = Field(
         None, description="Maximum number of steps allowed during relaxation."
@@ -80,7 +115,7 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Final output structure from the task"
     )
 
-    input: InputDoc = Field(  # noqa: A003
+    input: InputDoc = Field(
         None, description="The inputted information used to run this job."
     )
 
@@ -102,6 +137,21 @@ class ForceFieldTaskDocument(StructureMetadata):
         None, description="Directory where the force field calculations are performed."
     )
 
+    included_objects: Optional[list[ForcefieldObject]] = Field(
+        None, description="list of forcefield objects included with this task document"
+    )
+    forcefield_objects: Optional[dict[ForcefieldObject, Any]] = Field(
+        None, description="Forcefield objects associated with this task"
+    )
+
+    is_force_converged: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the calculation is converged with respect "
+            "to interatomic forces."
+        ),
+    )
+
     @classmethod
     def from_ase_compatible_result(
         cls,
@@ -111,7 +161,11 @@ class ForceFieldTaskDocument(StructureMetadata):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
+        fix_symmetry: bool = False,
+        symprec: float = 1e-2,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
+        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
+        **task_document_kwargs,
     ) -> "ForceFieldTaskDocument":
         """
         Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
@@ -124,6 +178,10 @@ class ForceFieldTaskDocument(StructureMetadata):
             The outputted results from the task.
         relax_cell : bool
             Whether the cell shape/volume was allowed to change during the task.
+        fix_symmetry : bool
+            Whether to fix the symmetry of the structure during relaxation.
+        symprec : float
+            Tolerance for symmetry finding in case of fix_symmetry.
         steps : int
             Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
@@ -132,29 +190,33 @@ class ForceFieldTaskDocument(StructureMetadata):
             Keyword arguments that will get passed to :obj:`Relaxer()`.
         ionic_step_data : tuple
             Which data to save from each ionic step.
+        store_trajectory:
+            whether to set the StoreTrajectoryOption
+        task_document_kwargs : dict
+            Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
         """
-        trajectory = result["trajectory"].__dict__
+        trajectory = result["trajectory"]
 
-        # NOTE: units for stresses were converted from eV/Angstrom³ to kBar
-        # (* -1 from standard output)
+        n_steps = len(trajectory)
+
+        # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
         # and to 3x3 matrix to comply with MP convention
-        for i in range(len(trajectory["stresses"])):
-            trajectory["stresses"][i] = voigt_6_to_full_3x3_stress(
-                trajectory["stresses"][i] * -10 / GPa
-            )
+        for idx in range(n_steps):
+            if trajectory.frame_properties[idx].get("stress") is not None:
+                trajectory.frame_properties[idx]["stress"] = voigt_6_to_full_3x3_stress(
+                    [
+                        val * -10 / GPa
+                        for val in trajectory.frame_properties[idx]["stress"]
+                    ]
+                )
 
-        species = AseAtomsAdaptor.get_structure(trajectory["atoms"]).species
-
-        input_structure = Structure(
-            lattice=trajectory["cells"][0],
-            coords=trajectory["atom_positions"][0],
-            species=species,
-            coords_are_cartesian=True,
-        )
+        input_structure = trajectory[0]
 
         input_doc = InputDoc(
             structure=input_structure,
             relax_cell=relax_cell,
+            fix_symmetry=fix_symmetry,
+            symprec=symprec,
             steps=steps,
             relax_kwargs=relax_kwargs,
             optimizer_kwargs=optimizer_kwargs,
@@ -164,69 +226,55 @@ class ForceFieldTaskDocument(StructureMetadata):
         # number of steps for static calculations.
         if steps <= 1:
             steps = 1
-            for key in trajectory:
-                trajectory[key] = [trajectory[key][0]]
+            n_steps = 1
+            trajectory = Trajectory.from_structures(
+                structures=[trajectory[0]],
+                frame_properties=[trajectory.frame_properties[0]],
+                constant_lattice=False,
+            )
             output_structure = input_structure
         else:
             output_structure = result["final_structure"]
 
-        final_energy = trajectory["energies"][-1]
-        final_energy_per_atom = trajectory["energies"][-1] / input_structure.num_sites
-        final_forces = trajectory["forces"][-1].tolist()
-        final_stress = trajectory["stresses"][-1].tolist()
-
-        n_steps = len(trajectory["energies"])
+        final_energy = trajectory.frame_properties[-1]["energy"]
+        final_energy_per_atom = final_energy / input_structure.num_sites
+        final_forces = trajectory.frame_properties[-1]["forces"]
+        final_stress = trajectory.frame_properties[-1]["stress"]
 
         ionic_steps = []
         for idx in range(n_steps):
-            energy = (
-                trajectory["energies"][idx] if "energy" in ionic_step_data else None
-            )
-            forces = (
-                trajectory["forces"][idx].tolist()
-                if "forces" in ionic_step_data
+            _ionic_step_data = {
+                key: trajectory.frame_properties[idx][key]
+                if key in ionic_step_data
                 else None
-            )
-            stress = (
-                trajectory["stresses"][idx].tolist()
-                if "stress" in ionic_step_data
-                else None
-            )
+                for key in ("energy", "forces", "stress")
+            }
 
-            if "structure" in ionic_step_data:
-                cur_structure = Structure(
-                    lattice=trajectory["cells"][idx],
-                    coords=trajectory["atom_positions"][idx],
-                    species=species,
-                    coords_are_cartesian=True,
-                )
-            else:
-                cur_structure = None
+            cur_structure = trajectory[idx] if "structure" in ionic_step_data else None
 
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
-            if "magmoms" in trajectory:
-                ionic_step = IonicStep(
-                    energy=energy,
-                    forces=forces,
-                    magmoms=(
-                        trajectory["magmoms"][idx].tolist()
+            if "magmoms" in trajectory.frame_properties[idx]:
+                _ionic_step_data.update(
+                    {
+                        "magmoms": trajectory.frame_properties[idx]["magmoms"]
                         if "magmoms" in ionic_step_data
                         else None
-                    ),
-                    stress=stress,
-                    structure=cur_structure,
+                    }
                 )
 
-            # otherwise do not include "magmoms" in :obj:`ionic_step`
-            elif "magmoms" not in trajectory:
-                ionic_step = IonicStep(
-                    energy=energy,
-                    forces=forces,
-                    stress=stress,
-                    structure=cur_structure,
-                )
+            ionic_step = IonicStep(
+                structure=cur_structure,
+                **_ionic_step_data,
+            )
 
             ionic_steps.append(ionic_step)
+
+        forcefield_objects: dict[ForcefieldObject, Any] = {}
+        if store_trajectory != StoreTrajectoryOption.NO:
+            # For VASP calculations, the PARTIAL trajectory option removes
+            # electronic step info. There is no equivalent for forcefields,
+            # so we just save the same info for FULL and PARTIAL options.
+            forcefield_objects[ForcefieldObject.TRAJECTORY] = trajectory  # type: ignore[index]
 
         output_doc = OutputDoc(
             structure=output_structure,
@@ -238,14 +286,22 @@ class ForceFieldTaskDocument(StructureMetadata):
             n_steps=n_steps,
         )
 
-        if forcefield_name == "M3GNet":
-            import matgl
+        # map force field name to its package name
+        pkg_names = {
+            str(k): v
+            for k, v in {
+                MLFF.M3GNet: "matgl",
+                MLFF.CHGNet: "chgnet",
+                MLFF.MACE: "mace-torch",
+                MLFF.GAP: "quippy-ase",
+                MLFF.Nequip: "nequip",
+            }.items()
+        }
+        pkg_name = pkg_names.get(forcefield_name)
+        if pkg_name:
+            import importlib.metadata
 
-            version = matgl.__version__
-        elif forcefield_name == "CHGNet":
-            import chgnet
-
-            version = chgnet.__version__
+            version = importlib.metadata.version(pkg_name)
         else:
             version = "Unknown"
         return cls.from_structure(
@@ -255,4 +311,8 @@ class ForceFieldTaskDocument(StructureMetadata):
             output=output_doc,
             forcefield_name=forcefield_name,
             forcefield_version=version,
+            included_objects=list(forcefield_objects.keys()),
+            forcefield_objects=forcefield_objects,
+            is_force_converged=result.get("is_force_converged"),
+            **task_document_kwargs,
         )

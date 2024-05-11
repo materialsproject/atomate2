@@ -48,12 +48,11 @@ def test_cclib_taskdoc(test_dir):
 
     # Now we will try two possible extensions, but we will make sure that
     # it fails because the newest log file (.txt) is not valid
-    with open(p / "test.txt", "w") as f:
-        f.write("I am a dummy log file")
-    with pytest.raises(Exception) as e:
+    with open(p / "test.txt", "w") as file:
+        file.write("I am a dummy log file")
+    with pytest.raises(ValueError, match="Could not parse"):
         doc = TaskDocument.from_logfile(p, [".log", ".txt"]).dict()
     os.remove(p / "test.txt")
-    assert "Could not parse" in str(e.value)
 
     # Test a population analysis
     doc = TaskDocument.from_logfile(p, "psi_test.out", analysis="MBO").dict()
@@ -73,9 +72,10 @@ def test_cclib_taskdoc(test_dir):
     # Let's try a volumetric analysis
     # We'll gunzip the .cube.gz file because cclib can't read cube.gz files yet.
     # Can remove the gzip part when https://github.com/cclib/cclib/issues/108 is closed.
-    with gzip.open(p / "psi_test.cube.gz", "r") as f_in, open(
-        p / "psi_test.cube", "wb"
-    ) as f_out:
+    with (
+        gzip.open(p / "psi_test.cube.gz", "r") as f_in,
+        open(p / "psi_test.cube", "wb") as f_out,
+    ):
         shutil.copyfileobj(f_in, f_out)
     doc = TaskDocument.from_logfile(p, "psi_test.out", analysis=["Bader"]).dict()
     os.remove(p / "psi_test.cube")

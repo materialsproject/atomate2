@@ -13,7 +13,7 @@ FireWorks workflow using the {obj}`~jobflow.managers.fireworks.flow_to_workflow`
 The workflow can then be submitted to the launchpad in the usual way. For example, to
 submit an MgO band structure workflow using FireWorks:
 
-```python
+```py
 from fireworks import LaunchPad
 from atomate2.vasp.flows.core import RelaxBandStructureMaker
 from atomate2.vasp.powerups import add_metadata_to_flow
@@ -46,7 +46,7 @@ lpad = LaunchPad.auto_load()
 lpad.add_wf(wf)
 ```
 
-Additional details about interfacing Jobflow-based packages with FireWorks can be found in the [Running Jobflow with FireWorks](fw_guide) guide.
+Additional details about interfacing Jobflow-based packages with FireWorks can be found in the [Running Jobflow with FireWorks][fw_guide] guide.
 
 [fireworks]: https://materialsproject.github.io/fireworks/
 [fireworks_instructions]: https://materialsproject.github.io/jobflow/install_fireworks.html

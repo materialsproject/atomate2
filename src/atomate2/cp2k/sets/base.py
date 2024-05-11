@@ -5,13 +5,13 @@ from __future__ import annotations
 import os
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.cp2k.inputs import (
@@ -29,8 +29,8 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
 
-_BASE_CP2K_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseCp2kSet.yaml"))
-_BASE_GAPW_SET = loadfn(resource_filename("atomate2.cp2k.sets", "BaseAllSet.yaml"))
+_BASE_CP2K_SET = loadfn(get_mod_path("atomate2.cp2k.sets") / "BaseCp2kSet.yaml")
+_BASE_GAPW_SET = loadfn(get_mod_path("atomate2.cp2k.sets") / "BaseAllSet.yaml")
 
 
 class Cp2kInputSet(InputSet):
@@ -106,14 +106,14 @@ class Cp2kInputSet(InputSet):
         }
         inputs.update(self.optional_files)
 
-        for k, v in inputs.items():
-            fn = v.get("filename")
-            obj = v.get("object")
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / fn, "wt") as f:
-                    f.write(str(obj))
-            elif not overwrite and (directory / fn).exists():
-                raise FileExistsError(f"{directory / fn} already exists.")
+        for key, val in inputs.items():
+            filename = val.get("filename")
+            obj = val.get("object")
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / filename, "wt") as file:
+                    file.write(str(obj))
+            elif not overwrite and (directory / filename).exists():
+                raise FileExistsError(f"{directory / filename} already exists.")
 
     @staticmethod
     def from_directory(
@@ -135,7 +135,7 @@ class Cp2kInputSet(InputSet):
             cp2k_input = Cp2kInput.from_file(directory / "cp2k.inp")
         else:
             raise FileNotFoundError
-        optional_files = optional_files if optional_files else {}
+        optional_files = optional_files or {}
         optional = {}
         for filename, obj in optional_files.items():
             optional[filename] = {
@@ -216,7 +216,7 @@ class Cp2kInputGenerator(InputGenerator):
         Cp2kInput
             A Cp2k input set.
         """
-        structure, prev_input, cp2k_output = self._get_previous(structure, prev_dir)
+        structure, prev_input, _cp2k_output = self._get_previous(structure, prev_dir)
 
         input_updates = self.get_input_updates(
             structure,
@@ -237,7 +237,7 @@ class Cp2kInputGenerator(InputGenerator):
             prev_input,
             input_updates,
         )
-        optional_files = optional_files if optional_files else {}
+        optional_files = optional_files or {}
         optional_files["basis"] = {
             "filename": "BASIS",
             "object": self._get_basis_file(cp2k_input=cp2k_input),
@@ -302,7 +302,7 @@ class Cp2kInputGenerator(InputGenerator):
     ) -> tuple[Structure, Cp2kInput, Cp2kOutput]:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
-            raise ValueError("Either structure or prev_dir must be set.")
+            raise ValueError("Either structure or prev_dir must be set")
 
         prev_input = {}
         prev_structure = None

@@ -13,7 +13,9 @@ def test_ccd_document(vasp_test_dir):
 
     def is_strict_minimum(min_index, arr):
         min_val = arr[min_index]
-        return all(not (i != min_index and val < min_val) for i, val in enumerate(arr))
+        return all(
+            not (idx != min_index and val < min_val) for idx, val in enumerate(arr)
+        )
 
     static_tasks1: list[TaskDoc] = []
     static_tasks2: list[TaskDoc] = []

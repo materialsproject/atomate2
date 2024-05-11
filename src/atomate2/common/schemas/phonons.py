@@ -2,6 +2,7 @@
 
 import copy
 import logging
+from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
@@ -27,7 +28,35 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
+from atomate2.aims.utils.units import omegaToTHz
+
 logger = logging.getLogger(__name__)
+
+
+def get_factor(code: str) -> float:
+    """
+    Get the frequency conversion factor to THz for each code.
+
+    Parameters
+    ----------
+    code: str
+        The code to get the conversion factor for
+
+    Returns
+    -------
+    float
+        The correct conversion factor
+
+    Raises
+    ------
+    ValueError
+        If code is not defined
+    """
+    if code in ["forcefields", "vasp"]:
+        return VaspToTHz
+    if code == "aims":
+        return omegaToTHz  # Based on CODATA 2002
+    raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
 
 
 class PhononComputationalSettings(BaseModel):
@@ -97,6 +126,9 @@ class PhononJobDirs(BaseModel):
     )
     optimization_run_job_dir: Optional[str] = Field(
         None, description="Directory where optimization run was performed."
+    )
+    taskdoc_run_job_dir: Optional[str] = Field(
+        None, description="Directory where task doc was generated."
     )
 
 
@@ -227,7 +259,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         code: str
             which code was used for computation
         displacement_data:
-            output of the VASP displacement runs
+            output of the displacement data
         total_dft_energy: float
             total energy in eV per cell
         epsilon_static: Matrix3D
@@ -237,21 +269,26 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         **kwargs:
             additional arguments
         """
-        if code == "vasp":
-            factor = VaspToTHz
+        factor = get_factor(code)
         # This opens the opportunity to add support for other codes
         # that are supported by phonopy
 
         cell = get_phonopy_structure(structure)
 
-        if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-            primitive_matrix: Union[list[list[float]], str] = [
-                [1.0, 0.0, 0.0],
-                [0.0, 1.0, 0.0],
-                [0.0, 0.0, 1.0],
-            ]
+        if use_symmetrized_structure == "primitive":
+            primitive_matrix: Union[np.ndarray, str] = np.eye(3)
         else:
             primitive_matrix = "auto"
+
+        # TARP: THIS IS BAD! Including for discussions sake
+        if cell.magnetic_moments is not None and primitive_matrix == "auto":
+            if np.any(cell.magnetic_moments != 0.0):
+                raise ValueError(
+                    "For materials with magnetic moments, "
+                    "use_symmetrized_structure must be 'primitive'"
+                )
+            cell.magnetic_moments = None
+
         phonon = Phonopy(
             cell,
             supercell_matrix,
@@ -262,6 +299,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
+
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(
@@ -291,7 +329,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
-        # with phonon.load("phonopy.yaml") the phonopy API can be used
+        # with phonopy.load("phonopy.yaml") the phonopy API can be used
         phonon.save("phonopy.yaml")
 
         # get phonon band structure
@@ -321,9 +359,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
         )
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
-
         new_plotter.save_plot(
-            "phonon_band_structure.eps", units=kwargs.get("units", "THz")
+            filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+            units=kwargs.get("units", "THz"),
         )
 
         # will determine if imaginary modes are present in the structure
@@ -351,7 +389,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         new_plotter_dos = PhononDosPlotter()
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
-            filename="phonon_dos.eps", units=kwargs.get("units", "THz")
+            filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+            units=kwargs.get("units", "THz"),
         )
 
         # compute vibrational part of free energies per formula unit
@@ -446,7 +485,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             epsilon_static=epsilon.tolist() if epsilon is not None else None,
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
-            code="vasp",
+            code=code,
             thermal_displacement_data={
                 "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
                 "thermal_displacement_matrix_cif": tdisp_mat_cif,
@@ -460,6 +499,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 "static_run_job_dir": kwargs["static_run_job_dir"],
                 "born_run_job_dir": kwargs["born_run_job_dir"],
                 "optimization_run_job_dir": kwargs["optimization_run_job_dir"],
+                "taskdoc_run_job_dir": str(Path.cwd()),
             },
             uuids={
                 "displacements_uuids": displacement_data["uuids"],

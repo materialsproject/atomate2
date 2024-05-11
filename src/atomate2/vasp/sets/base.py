@@ -7,6 +7,7 @@ import os
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -14,7 +15,6 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from monty.io import zopen
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 from pymatgen.electronic_structure.core import Magmom
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.vasp import Incar, Kpoints, Outcar, Poscar, Potcar, Vasprun
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-_BASE_VASP_SET = loadfn(resource_filename("atomate2.vasp.sets", "BaseVaspSet.yaml"))
+_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
 
 class VaspInputSet(InputSet):
@@ -94,11 +94,7 @@ class VaspInputSet(InputSet):
         if make_dir:
             os.makedirs(directory, exist_ok=True)
 
-        inputs = {
-            "INCAR": self.incar,
-            "KPOINTS": self.kpoints,
-            "POSCAR": self.poscar,
-        }
+        inputs = {"INCAR": self.incar, "KPOINTS": self.kpoints, "POSCAR": self.poscar}
         inputs.update(self.optional_files)
 
         if isinstance(self.potcar, Potcar):
@@ -106,16 +102,16 @@ class VaspInputSet(InputSet):
         else:
             inputs["POTCAR.spec"] = "\n".join(self.potcar)
 
-        for k, v in inputs.items():
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / k, "wt") as f:
-                    if isinstance(v, Poscar):
+        for key, val in inputs.items():
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / key, mode="wt") as file:
+                    if isinstance(val, Poscar):
                         # write POSCAR with more significant figures
-                        f.write(v.get_string(significant_figures=16))
+                        file.write(val.get_str(significant_figures=16))
                     else:
-                        f.write(v.__str__())
-            elif not overwrite and (directory / k).exists():
-                raise FileExistsError(f"{directory / k} already exists.")
+                        file.write(str(val))
+            elif not overwrite and (directory / key).exists():
+                raise FileExistsError(f"{directory / key} already exists.")
 
     @staticmethod
     def from_directory(
@@ -171,23 +167,30 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
+        ismear = self.incar.get("ISMEAR", 1)
+        sigma = self.incar.get("SIGMA", 0.2)
         if (
-            all(k.is_metal for k in self.poscar.structure.composition)
+            all(elem.is_metal for elem in self.poscar.structure.composition)
             and self.incar.get("NSW", 0) > 0
-            and self.incar.get("ISMEAR", 1) < 1
+            and (ismear < 0 or (ismear == 0 and sigma > 0.05))
         ):
+            ismear_docs = "https://www.vasp.at/wiki/index.php/ISMEAR"
+            msg = ""
+            if ismear < 0:
+                msg = f"Relaxation of likely metal with ISMEAR < 0 ({ismear})."
+            elif ismear == 0 and sigma > 0.05:
+                msg = f"ISMEAR = 0 with a small SIGMA ({sigma}) detected."
             warnings.warn(
-                "Relaxation of likely metal with ISMEAR < 1 detected. Please see VASP "
-                "recommendations on ISMEAR for metals.",
+                f"{msg} See VASP recommendations on ISMEAR for metals ({ismear_docs}).",
                 BadInputSetWarning,
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in [
+        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in (
             "Normal",
             "All",
             "Damped",
-        ]:
+        ):
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -236,8 +239,9 @@ class VaspInputGenerator(InputGenerator):
         so these keys can be defined in one of two ways, e.g. either
         {"LDAUU":{"O":{"Fe":5}}} to set LDAUU for Fe to 5 in an oxide, or
         {"LDAUU":{"Fe":5}} to set LDAUU to 5 regardless of the input structure.
-        To set magmoms, pass a dict mapping element symbols to magnetic moments, e.g.
-        {"MAGMOM": {"Co": 1}}.
+        To set magmoms, pass a dict mapping the strings of species to magnetic
+        moments, e.g. {"MAGMOM": {"Co": 1}} or {"MAGMOM": {"Fe2+,spin=4": 3.7}} in the
+        case of a site with Species("Fe2+", spin=4).
         If None is given, that key is unset. For example, {"ENCUT": None} will remove
         ENCUT from the incar settings.
     user_kpoints_settings
@@ -269,7 +273,7 @@ class VaspInputGenerator(InputGenerator):
     auto_kspacing
         If true, automatically use the VASP recommended KSPACING based on bandgap,
         i.e. higher kpoint spacing for insulators than metals. Can be boolean or float.
-        If float, then the value will interpreted as the bandgap in eV to use for the
+        If a float, the value will be interpreted as the bandgap in eV to use for the
         KSPACING calculation.
     constrain_total_magmom
         Whether to constrain the total magmom (NUPDOWN in INCAR) to be the sum of the
@@ -547,7 +551,7 @@ class VaspInputGenerator(InputGenerator):
     ) -> tuple:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
-            raise ValueError("Either structure or prev_dir must be set.")
+            raise ValueError("Either structure or prev_dir must be set")
 
         prev_incar = {}
         prev_structure = None
@@ -562,13 +566,13 @@ class VaspInputGenerator(InputGenerator):
 
             # CONTCAR is already renamed POSCAR
             contcars = list(glob.glob(str(path_prev_dir / "POSCAR*")))
-            contcarfile_fullpath = str(path_prev_dir / "POSCAR")
-            contcarfile = (
-                contcarfile_fullpath
-                if contcarfile_fullpath in contcars
-                else sorted(contcars)[-1]
+            contcar_file_fullpath = str(path_prev_dir / "POSCAR")
+            contcar_file = (
+                contcar_file_fullpath
+                if contcar_file_fullpath in contcars
+                else max(contcars)
             )
-            contcar = Poscar.from_file(contcarfile)
+            contcar = Poscar.from_file(contcar_file)
 
             if vasprun.efermi is None:
                 # VASP doesn't output efermi in vasprun if IBRION = 1
@@ -651,19 +655,21 @@ class VaspInputGenerator(InputGenerator):
 
         # generate incar
         incar = Incar()
-        for k, v in incar_settings.items():
-            if k == "MAGMOM":
-                incar[k] = _get_magmoms(
+        for key, val in incar_settings.items():
+            if key == "MAGMOM":
+                incar[key] = get_magmoms(
                     structure,
-                    magmoms=self.user_incar_settings.get("MAGMOMS", {}),
+                    magmoms=self.user_incar_settings.get("MAGMOM", {}),
                     config_magmoms=config_magmoms,
                 )
-            elif k in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get("LDAU", False):
-                incar[k] = _get_u_param(k, v, structure)
-            elif k.startswith("EDIFF") and k != "EDIFFG":
-                incar["EDIFF"] = _get_ediff(k, v, structure, incar_settings)
+            elif key in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get(
+                "LDAU", False
+            ):
+                incar[key] = _get_u_param(key, val, structure)
+            elif key.startswith("EDIFF") and key != "EDIFFG":
+                incar["EDIFF"] = _get_ediff(key, val, structure, incar_settings)
             else:
-                incar[k] = v
+                incar[key] = val
         _set_u_params(incar, incar_settings, structure)
 
         # apply previous incar settings, be careful not to override user_incar_settings
@@ -726,7 +732,9 @@ class VaspInputGenerator(InputGenerator):
 
         # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
         # overwritten settings are changed back to the intended values.
-        _apply_incar_updates(incar, self.user_incar_settings)
+        # skip dictionary parameters to avoid dictionaries appearing in the INCAR
+        skip = ["LDAUU", "LDAUJ", "LDAUL", "MAGMOM"]
+        _apply_incar_updates(incar, self.user_incar_settings, skip=skip)
 
         return incar
 
@@ -897,7 +905,7 @@ class VaspInputGenerator(InputGenerator):
         )
 
 
-def _get_magmoms(
+def get_magmoms(
     structure: Structure,
     magmoms: dict[str, float] = None,
     config_magmoms: dict[str, float] = None,

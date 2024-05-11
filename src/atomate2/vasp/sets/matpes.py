@@ -7,10 +7,10 @@ In case of questions, contact @janosh or @shyuep.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from importlib.resources import files as get_mod_path
 from typing import TYPE_CHECKING
 
 from monty.serialization import loadfn
-from pkg_resources import resource_filename
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -21,10 +21,10 @@ if TYPE_CHECKING:
 
 # POTCAR section comes from PARENT but atomate2 does not support inheritance yet
 _BASE_MATPES_PBE_STATIC_SET_NO_POTCAR = loadfn(
-    resource_filename("pymatgen.io.vasp", "MatPESStaticSet.yaml")
+    get_mod_path("pymatgen.io.vasp") / "MatPESStaticSet.yaml"
 )
 _POTCAR_BASE_FILE = f"{_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR['PARENT']}.yaml"
-_POTCAR_SET = loadfn(resource_filename("pymatgen.io.vasp", _POTCAR_BASE_FILE))
+_POTCAR_SET = loadfn(get_mod_path("pymatgen.io.vasp") / _POTCAR_BASE_FILE)
 _BASE_MATPES_PBE_STATIC_SET = {**_POTCAR_SET, **_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR}
 
 
@@ -70,7 +70,7 @@ class MatPesGGAStaticSetGenerator(VaspInputGenerator):
 
 @dataclass
 class MatPesMetaGGAStaticSetGenerator(MatPesGGAStaticSetGenerator):
-    """Class to generate MP-compatible VASP GGA static input sets."""
+    """Class to generate MP-compatible VASP meta-GGA static input sets."""
 
     def get_incar_updates(
         self,

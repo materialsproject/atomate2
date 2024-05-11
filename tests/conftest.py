@@ -97,6 +97,16 @@ def si_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "Si.cif")
 
 
+@pytest.fixture()
+def sr_ti_o3_structure(test_dir):
+    return Structure.from_file(test_dir / "structures" / "SrTiO3.cif")
+
+
+@pytest.fixture()
+def ba_ti_o3_structure(test_dir):
+    return Structure.from_file(test_dir / "structures" / "BaTiO3.cif")
+
+
 @pytest.fixture(autouse=True)
 def mock_jobflow_settings(memory_jobstore):
     """Mock the jobflow settings to use our specific jobstore (with data store)."""
@@ -145,3 +155,13 @@ def symmetry_structure(test_dir, request):
     See https://github.com/hackingmaterials/amset/blob/main/tests/conftest.py
     """
     return loadfn(test_dir / "symmetry_structures" / f"{request.param}.json.gz")
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--abinit-integration",
+        action="store_true",
+        default=False,
+        help="Run abinit integration tests. "
+        "This basically runs the same tests but without the mocking.",
+    )
