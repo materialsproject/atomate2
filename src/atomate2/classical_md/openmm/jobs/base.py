@@ -118,6 +118,7 @@ class BaseOpenMMMaker(Maker):
         interchange: Interchange | bytes,
         prev_task: OpenMMTaskDocument | None = None,
         output_dir: str | Path | None = None,
+        tags: list[str] | None = None,
     ) -> Response:
         """Run an OpenMM calculation.
 
@@ -167,7 +168,9 @@ class BaseOpenMMMaker(Maker):
 
         del sim
 
-        task_doc = self._create_task_doc(interchange, elapsed_time, dir_name, prev_task)
+        task_doc = self._create_task_doc(
+            interchange, elapsed_time, dir_name, prev_task, tags
+        )
 
         # write out task_doc json to output dir
         with open(dir_name / "taskdoc.json", "w") as file:
@@ -401,6 +404,7 @@ class BaseOpenMMMaker(Maker):
         elapsed_time: float | None = None,
         dir_name: Path | None = None,
         prev_task: OpenMMTaskDocument | None = None,
+        tags: list[str] | None = None,
     ) -> OpenMMTaskDocument:
         """Create a task document for the OpenMM job.
 
@@ -451,7 +455,7 @@ class BaseOpenMMMaker(Maker):
         interchange_bytes = interchange_json.encode("utf-8")
 
         return OpenMMTaskDocument(
-            tags=None,  # TODO: where do tags come from?
+            tags=tags,
             dir_name=str(dir_name),
             state="successful",
             calcs_reversed=[calc] + (prev_task.calcs_reversed or []),

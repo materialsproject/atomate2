@@ -124,6 +124,7 @@ class AnnealMaker(Maker):
         interchange: Interchange | bytes,
         prev_task: ClassicalMDTaskDocument | None = None,
         output_dir: str | Path | None = None,
+        tags: list[str] | None = None,
     ) -> Flow:
         """Anneal the simulation at the specified temperature.
 
@@ -161,6 +162,7 @@ class AnnealMaker(Maker):
             interchange=nvt_job.output.interchange,
             prev_task=nvt_job.output,
             output_dir=output_dir,
+            tags=tags,
         )
 
         return Flow(
@@ -202,6 +204,7 @@ class ProductionMaker(Maker):
         interchange: Interchange | bytes,
         prev_task: ClassicalMDTaskDocument | None = None,
         output_dir: str | Path | None = None,
+        tags: list[str] | None = None,
     ) -> Flow:
         """Run the production simulation using the provided Interchange object.
 
@@ -243,6 +246,7 @@ class ProductionMaker(Maker):
             interchange=anneal_flow.output.interchange,
             prev_task=anneal_flow.output,
             output_dir=output_dir,
+            tags=tags,
         )
 
         return Flow(

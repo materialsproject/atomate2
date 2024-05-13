@@ -94,13 +94,16 @@ def test_production_maker(interchange, tmp_path, run_job):
     )
 
     # Run the ProductionMaker flow
-    production_flow = production_maker.make(interchange, output_dir=tmp_path)
+    production_flow = production_maker.make(
+        interchange, output_dir=tmp_path, tags=["test"]
+    )
     task_doc = run_job(production_flow)
 
     # Check the output task document
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 6
+    assert task_doc.tags == ["test"]
 
     # Check the individual jobs in the flow
     energy_job = production_flow.jobs[0]

@@ -125,6 +125,7 @@ def generate_interchange(
     )
 
     pack_box_kwargs = pack_box_kwargs or {}
+    pack_box_kwargs["box_shape"] = pack_box_kwargs.get("box_shape", [1, 1, 1])
     topology = pack_box(
         molecules=[tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs],
         number_of_copies=[spec.count for spec in mol_specs],
