@@ -63,7 +63,7 @@ anharmonicphonons = [
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
-    "furo==2024.1.29",
+    "furo==2024.5.6",
     "ipython==8.23.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
