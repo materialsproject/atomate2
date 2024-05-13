@@ -92,7 +92,7 @@ strict = [
     "emmet-core==0.82.2",
     "ijson==3.2.3",
     "jobflow==0.1.17",
-    "lobsterpy==0.4.0",
+    "lobsterpy==0.4.4",
     "mace-torch>=0.3.3",
     "matgl==1.1.1",
     "monty==2024.3.31",
