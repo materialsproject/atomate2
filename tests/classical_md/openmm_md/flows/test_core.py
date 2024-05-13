@@ -91,12 +91,11 @@ def test_production_maker(interchange, tmp_path, run_job):
             anneal_temp=400, final_temp=300, n_steps=5
         ),
         nvt_maker=NVTMaker(n_steps=5),
+        tags=["test"],
     )
 
     # Run the ProductionMaker flow
-    production_flow = production_maker.make(
-        interchange, output_dir=tmp_path, tags=["test"]
-    )
+    production_flow = production_maker.make(interchange, output_dir=tmp_path)
     task_doc = run_job(production_flow)
 
     # Check the output task document
