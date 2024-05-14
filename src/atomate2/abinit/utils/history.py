@@ -225,12 +225,12 @@ class JobEvent(MSONable):
 
     def as_dict(self) -> dict:
         """Create dictionary representation of the job event."""
-        d = {"event_type": self.event_type}
+        dct = {"event_type": self.event_type}
         if self.details:
-            d["details"] = jsanitize(self.details, strict=True)
-        d["@module"] = type(self).__module__
-        d["@class"] = type(self).__name__
-        return d
+            dct["details"] = jsanitize(self.details, strict=True)
+        dct["@module"] = type(self).__module__
+        dct["@class"] = type(self).__name__
+        return dct
 
     @classmethod
     def from_dict(cls, d: dict) -> Self:
