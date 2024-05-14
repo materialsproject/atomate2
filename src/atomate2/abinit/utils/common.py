@@ -143,21 +143,21 @@ class AbinitRuntimeError(AbiAtomateError):
 
     def to_dict(self) -> dict:
         """Create dictionary representation of the error."""
-        d = {"num_errors": self.num_errors, "num_warnings": self.num_warnings}
+        dct = {"num_errors": self.num_errors, "num_warnings": self.num_warnings}
         if self.errors:
             errors = [error.as_dict() for error in self.errors]
-            d["errors"] = errors
+            dct["errors"] = errors
         if self.warnings:
             warnings = [warning.as_dict() for warning in self.warnings]
-            d["warnings"] = warnings
+            dct["warnings"] = warnings
         if self.msg:
-            d["error_message"] = self.msg
+            dct["error_message"] = self.msg
 
-        d["error_code"] = self.ERROR_CODE
-        d["@module"] = type(self).__module__
-        d["@class"] = type(self).__name__
+        dct["error_code"] = self.ERROR_CODE
+        dct["@module"] = type(self).__module__
+        dct["@class"] = type(self).__name__
 
-        return d
+        return dct
 
     def as_dict(self) -> dict:
         """Create dictionary representation of the error."""
@@ -237,13 +237,13 @@ class UnconvergedError(AbinitRuntimeError):
 
     def to_dict(self) -> dict:
         """Create dictionary representation of the error."""
-        d = super().to_dict()
-        d["abinit_input"] = self.abinit_input.as_dict() if self.abinit_input else None
-        d["restart_info"] = self.restart_info.as_dict() if self.restart_info else None
-        d["history"] = self.history.as_dict() if self.history else None
-        d["@module"] = type(self).__module__
-        d["@class"] = type(self).__name__
-        return d
+        dct = super().to_dict()
+        dct["abinit_input"] = self.abinit_input.as_dict() if self.abinit_input else None
+        dct["restart_info"] = self.restart_info.as_dict() if self.restart_info else None
+        dct["history"] = self.history.as_dict() if self.history else None
+        dct["@module"] = type(self).__module__
+        dct["@class"] = type(self).__name__
+        return dct
 
     @classmethod
     def from_dict(cls, d: dict) -> Self:
