@@ -166,10 +166,10 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     #    vs. as an ase.md.md.MolecularDynamics object
 
     output = {}
-    for attr in ("from_str", "from_dyn"):
-        if attr == "from_str":
+    for key in ("from_str", "from_dyn"):
+        if key == "from_str":
             dyn = "velocityverlet"
-        elif attr == "from_dyn":
+        elif key == "from_dyn":
             dyn = VelocityVerlet
 
         job = CHGNetMDMaker(
@@ -180,7 +180,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         ).make(si_structure)
 
         response = run_locally(job, ensure_success=True)
-        output[attr] = response[next(iter(response))][1].output
+        output[key] = response[next(iter(response))][1].output
 
     # check that energy and volume are constants
     assert output["from_str"].output.energy == pytest.approx(-10.6, abs=0.1)
@@ -196,8 +196,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     # as str or as MolecularDynamics object
     for attr in ("energy", "forces", "stress", "structure"):
         vals = {
-            attr: getattr(output[attr].output, attr)
-            for attr in ("from_str", "from_dyn")
+            key: getattr(output[key].output, attr) for key in ("from_str", "from_dyn")
         }
         if isinstance(vals["from_str"], float):
             assert vals["from_str"] == pytest.approx(vals["from_dyn"])
