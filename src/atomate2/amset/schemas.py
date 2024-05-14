@@ -191,8 +191,8 @@ class AmsetTaskDocument(StructureMetadata):
             }
             if include_mesh:
                 # remove duplicated data
-                for k in ("doping", "temperatures", "fermi_levels", "structure"):
-                    mesh.pop(k)
+                for key in ("doping", "temperatures", "fermi_levels", "structure"):
+                    mesh.pop(key)
 
                 mesh_kwargs["mesh"] = cast_dict_list(mesh)
 
