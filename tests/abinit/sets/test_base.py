@@ -87,11 +87,11 @@ def test_abinit_input_set_write_input(abinit_test_dir):
         assert os.path.isdir("testdir/tmpdata")
         assert "run.abi" in dirlist
         assert "abinit_input.json" in dirlist
-        with open("testdir/run.abi") as f:
-            abistr = f.read()
+        with open("testdir/run.abi") as file:
+            abistr = file.read()
             assert "ecut" in abistr
-        with open("testdir/abinit_input.json") as f:
-            abijsonstr = f.read()
+        with open("testdir/abinit_input.json") as file:
+            abijsonstr = file.read()
             assert "@module" in abijsonstr
         with pytest.raises(FileExistsError):
             ais.write_input("testdir", overwrite=False)
@@ -132,8 +132,8 @@ def test_abinit_input_set_write_input(abinit_test_dir):
         assert os.path.exists(in_den)
         assert os.path.isfile(in_den)
         assert not os.path.islink(in_den)
-        with open("testdir/run.abi") as f:
-            abistr = f.read()
+        with open("testdir/run.abi") as file:
+            abistr = file.read()
             assert "irdden 1" in abistr
         del ais.abinit_input["irdden"]
 

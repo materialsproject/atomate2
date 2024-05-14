@@ -332,8 +332,8 @@ class ConvergenceSummary(BaseModel):
                 " in {calc_doc.dir_name}"
             )
 
-        with open(convergence_file) as f:
-            convergence_data = json.load(f)
+        with open(convergence_file) as file:
+            convergence_data = json.load(file)
 
         return cls(
             structure=calc_doc.output.structure,

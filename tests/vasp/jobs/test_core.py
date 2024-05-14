@@ -16,7 +16,7 @@ from atomate2.vasp.jobs.core import (
 
 
 def test_static_maker(mock_vasp, clean_dir, si_structure):
-    jstore = jobflow.SETTINGS.JOB_STORE
+    job_store = jobflow.SETTINGS.JOB_STORE
 
     # mapping from job name to directory containing test files
     ref_paths = {"static": "Si_band_structure/static"}
@@ -42,10 +42,9 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     assert isinstance(output1, TaskDoc)
     assert output1.output.energy == approx(-10.85037078)
 
-    with jstore.additional_stores["data"] as s:
-        doc = s.query_one({"job_uuid": job.uuid})
-        dd = doc["data"]
-        assert dd["@class"] == "Chgcar"
+    with job_store.additional_stores["data"] as store:
+        doc = store.query_one({"job_uuid": job.uuid})
+    assert doc["data"]["@class"] == "Chgcar"
 
 
 def test_relax_maker(mock_vasp, clean_dir, si_structure):

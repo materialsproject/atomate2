@@ -87,9 +87,9 @@ class CalculationInput(BaseModel):
     @classmethod
     def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
-        for k in atomic_kind_info:
-            if "total_pseudopotential_energy" in atomic_kind_info[k]:
-                del atomic_kind_info[k]["total_pseudopotential_energy"]
+        for key in atomic_kind_info:
+            if "total_pseudopotential_energy" in atomic_kind_info[key]:
+                del atomic_kind_info[key]["total_pseudopotential_energy"]
         return atomic_kind_info
 
     @field_validator("dft", mode="before")
