@@ -3,7 +3,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -22,6 +22,9 @@ try:
 except ImportError:
     amset = None
 
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -144,9 +147,8 @@ class AmsetTaskDocument(StructureMetadata):
         dir_name: Union[Path, str],
         additional_fields: dict[str, Any] = None,
         include_mesh: bool = False,
-    ) -> "AmsetTaskDocument":
-        """
-        Create a task document from a directory containing VASP files.
+    ) -> Self:
+        """Create a task document from a directory containing VASP files.
 
         Parameters
         ----------
@@ -189,8 +191,8 @@ class AmsetTaskDocument(StructureMetadata):
             }
             if include_mesh:
                 # remove duplicated data
-                for k in ("doping", "temperatures", "fermi_levels", "structure"):
-                    mesh.pop(k)
+                for key in ("doping", "temperatures", "fermi_levels", "structure"):
+                    mesh.pop(key)
 
                 mesh_kwargs["mesh"] = cast_dict_list(mesh)
 

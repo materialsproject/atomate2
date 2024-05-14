@@ -45,8 +45,7 @@ class EosSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -100,8 +99,7 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -140,8 +138,7 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for a non-self consistent VASP job.
+        """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 
@@ -183,8 +180,7 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -238,8 +234,7 @@ class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -293,8 +288,7 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for a relaxation job.
+        """Get updates to the INCAR for a relaxation job.
 
         Parameters
         ----------
@@ -347,8 +341,7 @@ class MPMetaGGAEosStaticSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
@@ -410,8 +403,7 @@ class MPMetaGGAEosRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
@@ -475,8 +467,7 @@ class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
