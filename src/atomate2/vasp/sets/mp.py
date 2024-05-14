@@ -55,8 +55,7 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
@@ -104,8 +103,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
@@ -163,8 +161,7 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
