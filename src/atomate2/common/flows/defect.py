@@ -291,7 +291,6 @@ class FormationEnergyMaker(Maker, ABC):
         If True, skip the bulk supercell calculation and only perform the defect
         supercell calculations. This is useful for large-scale defect databases.
 
-
     name: str
         The name of the flow created by this maker.
 
@@ -432,7 +431,9 @@ class FormationEnergyMaker(Maker, ABC):
         else:
             if bulk_supercell_dir is not None:
                 raise ValueError(
-                    "bulk_supercell_dir should be None when uc_bulk is True"
+                    "bulk_supercell_dir should be None when uc_bulk is True."
+                    "We will be using a uc bulk calculation, so no bulk supercell "
+                    "is needed."
                 )
             sc_mat = supercell_matrix
             lattice = None
@@ -453,7 +454,20 @@ class FormationEnergyMaker(Maker, ABC):
             perturb=self.perturb,
             validate_charge=self.validate_charge,
         )
-        jobs.append(spawn_output)
+
+        if self.uc_bulk:
+            # run the function here so we can get the charge state
+            # calculations ASAP
+            response = spawn_output.function(
+                *spawn_output.function_args, **spawn_output.function_kwargs
+            )
+            jobs.append(response.replace)
+            output_ = response.output
+        else:
+            # execute this as job so you can string a single bulk sc with multiple
+            # defect scs
+            jobs.append(spawn_output)
+            output_ = spawn_output.output
 
         if self.collect_defect_entry_data:
             collection_job = get_defect_entry(
@@ -464,7 +478,7 @@ class FormationEnergyMaker(Maker, ABC):
 
         return Flow(
             jobs=jobs,
-            output=spawn_output.output,
+            output=output_,
             name=self.name,
         )
 
