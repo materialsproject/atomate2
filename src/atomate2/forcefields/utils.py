@@ -55,6 +55,7 @@ if TYPE_CHECKING:
     from ase import Atoms
     from ase.calculators.calculator import Calculator
     from ase.filters import Filter
+    from ase.io.trajectory import TrajectoryReader
     from ase.optimize.optimize import Optimizer
 
 OPTIMIZERS = {
@@ -196,7 +197,9 @@ class TrajectoryObserver:
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
 
-    def to_ase_trajectory(self, filename: str | None = "atoms.traj") -> AseTrajectory:
+    def to_ase_trajectory(
+        self, filename: str | None = "atoms.traj"
+    ) -> TrajectoryReader:
         """
         Convert to an ASE .Trajectory.
 
@@ -223,8 +226,8 @@ class TrajectoryObserver:
                 kwargs["magmom"] = self.magmoms[idx]
 
             atoms.calc = SinglePointCalculator(atoms=atoms, **kwargs)
-            with AseTrajectory(filename, "a" if idx > 0 else "w", atoms=atoms) as f:
-                f.write()
+            with AseTrajectory(filename, "a" if idx > 0 else "w", atoms=atoms) as file:
+                file.write()
 
         return AseTrajectory(filename, "r")
 
