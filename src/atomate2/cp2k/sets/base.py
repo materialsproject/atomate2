@@ -41,8 +41,7 @@ class Cp2kInputSet(InputSet):
         cp2k_input: Cp2kInput,
         optional_files: dict | None = None,
     ) -> None:
-        """
-        Initialize the set.
+        """Initialize the set.
 
         Parameters
         ----------
@@ -72,9 +71,7 @@ class Cp2kInputSet(InputSet):
                     structure definition to an external file in order to keep the main
                     input file neat. This use case requires "@include" parameters (see
                     pymatgen.io.cp2k or the cp2k manual)
-                (3) Other custom data files like vdw kernel tables, truncated coulomb
-                    tables, classical MD potential parameters.
-
+                (3) Other custom data files like vdw kernel tables, truncated coulomb.
         """
         self.cp2k_input = cp2k_input
         self.optional_files = optional_files or {}
@@ -85,8 +82,7 @@ class Cp2kInputSet(InputSet):
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
-        """
-        Write Cp2k input file to a directory.
+        """Write Cp2k input file to a directory.
 
         Parameters
         ----------
@@ -119,8 +115,7 @@ class Cp2kInputSet(InputSet):
     def from_directory(
         directory: str | Path, optional_files: dict = None
     ) -> Cp2kInputSet:
-        """
-        Load a set of CP2K inputs from a directory.
+        """Load a set of CP2K inputs from a directory.
 
         Parameters
         ----------
@@ -135,7 +130,7 @@ class Cp2kInputSet(InputSet):
             cp2k_input = Cp2kInput.from_file(directory / "cp2k.inp")
         else:
             raise FileNotFoundError
-        optional_files = optional_files if optional_files else {}
+        optional_files = optional_files or {}
         optional = {}
         for filename, obj in optional_files.items():
             optional[filename] = {
@@ -148,14 +143,7 @@ class Cp2kInputSet(InputSet):
     # TODO Validation
     @property
     def is_valid(self) -> bool:
-        """
-        Whether the input set is valid.
-
-        Returns
-        -------
-        bool
-            Whether the input set is valid.
-        """
+        """Whether the input set is valid."""
         return True
 
 
@@ -196,8 +184,7 @@ class Cp2kInputGenerator(InputGenerator):
         prev_dir: str | Path = None,
         optional_files: dict | None = None,
     ) -> Cp2kInputSet:
-        """
-        Get a CP2K input set.
+        """Get a CP2K input set.
 
         Note, if both ``structure`` and ``prev_dir`` are set, then the structure
         specified will be preferred over the final structure from the last CP2K run.
@@ -237,7 +224,7 @@ class Cp2kInputGenerator(InputGenerator):
             prev_input,
             input_updates,
         )
-        optional_files = optional_files if optional_files else {}
+        optional_files = optional_files or {}
         optional_files["basis"] = {
             "filename": "BASIS",
             "object": self._get_basis_file(cp2k_input=cp2k_input),
@@ -250,8 +237,7 @@ class Cp2kInputGenerator(InputGenerator):
         return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional_files)
 
     def get_input_updates(self, structure: Structure, prev_input: Cp2kInput) -> dict:
-        """
-        Get updates to the cp2k input for this calculation type.
+        """Get updates to the cp2k input for this calculation type.
 
         Parameters
         ----------
@@ -274,8 +260,7 @@ class Cp2kInputGenerator(InputGenerator):
     def get_kpoints_updates(
         self, structure: Structure, prev_input: Cp2kInput = None
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for this calculation type.
+        """Get updates to the kpoints configuration for this calculation type.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 
@@ -302,7 +287,7 @@ class Cp2kInputGenerator(InputGenerator):
     ) -> tuple[Structure, Cp2kInput, Cp2kOutput]:
         """Load previous calculation outputs and decide which structure to use."""
         if structure is None and prev_dir is None:
-            raise ValueError("Either structure or prev_dir must be set.")
+            raise ValueError("Either structure or prev_dir must be set")
 
         prev_input = {}
         prev_structure = None
@@ -360,8 +345,7 @@ class Cp2kInputGenerator(InputGenerator):
         return cp2k_input
 
     def _get_basis_file(self, cp2k_input: Cp2kInput) -> BasisFile:
-        """
-        Get the basis sets for the input object and convert them to a basis file object.
+        """Get input object's basis sets and convert them to a basis file object.
 
         Allows calculation to execute if the basis sets are not available on the
         execution resource.
@@ -377,8 +361,7 @@ class Cp2kInputGenerator(InputGenerator):
         return BasisFile(objects=basis_sets)
 
     def _get_potential_file(self, cp2k_input: Cp2kInput) -> PotentialFile:
-        """
-        Get the potentials and convert them to a potential file object.
+        """Get the potentials and convert them to a potential file object.
 
         Allows calculation to execute if the potentials are not available on the
         execution resource.
