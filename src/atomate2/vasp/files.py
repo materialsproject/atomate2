@@ -39,7 +39,7 @@ def copy_vasp_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
-    the suffix will be removed. Additional vasp files will be also be  copied with the
+    the suffix will be removed. Additional vasp files will be also be copied with the
     same suffix applied. Lastly, this function will gunzip any gzipped files.
 
     Parameters
