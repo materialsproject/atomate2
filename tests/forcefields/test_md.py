@@ -29,7 +29,10 @@ name_to_maker = {
 }
 
 
-@pytest.mark.parametrize("ff_name", ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"])
+@pytest.mark.parametrize(
+    "ff_name",
+    ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"],
+)
 def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
     n_steps = 5
 
@@ -163,10 +166,10 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     #    vs. as an ase.md.md.MolecularDynamics object
 
     output = {}
-    for k in ["from_str", "from_dyn"]:
-        if k == "from_str":
+    for key in ("from_str", "from_dyn"):
+        if key == "from_str":
             dyn = "velocityverlet"
-        elif k == "from_dyn":
+        elif key == "from_dyn":
             dyn = VelocityVerlet
 
         job = CHGNetMDMaker(
@@ -177,7 +180,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         ).make(si_structure)
 
         response = run_locally(job, ensure_success=True)
-        output[k] = response[next(iter(response))][1].output
+        output[key] = response[next(iter(response))][1].output
 
     # check that energy and volume are constants
     assert output["from_str"].output.energy == pytest.approx(-10.6, abs=0.1)
@@ -192,7 +195,9 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     # ensure that output is consistent if molecular dynamics object is specified
     # as str or as MolecularDynamics object
     for attr in ("energy", "forces", "stress", "structure"):
-        vals = {k: getattr(output[k].output, attr) for k in ("from_str", "from_dyn")}
+        vals = {
+            key: getattr(output[key].output, attr) for key in ("from_str", "from_dyn")
+        }
         if isinstance(vals["from_str"], float):
             assert vals["from_str"] == pytest.approx(vals["from_dyn"])
         elif isinstance(vals["from_str"], Structure):
