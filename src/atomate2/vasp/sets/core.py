@@ -15,7 +15,7 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 if TYPE_CHECKING:
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
+    from pymatgen.io.vasp import Kpoints
 
 
 logger = logging.getLogger(__name__)
@@ -25,28 +25,9 @@ logger = logging.getLogger(__name__)
 class RelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP relaxation input sets."""
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -60,28 +41,9 @@ class RelaxSetGenerator(VaspInputGenerator):
 class TightRelaxSetGenerator(VaspInputGenerator):
     """Class to generate tight VASP relaxation input sets."""
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a tight relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -121,28 +83,9 @@ class StaticSetGenerator(VaspInputGenerator):
     lepsilon: bool = False
     lcalcpol: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a static VASP job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -206,30 +149,11 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.mode not in supported_modes:
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
-    def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = 0.0,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def kpoints_updates(self) -> dict | Kpoints:
         """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -247,28 +171,9 @@ class NonSCFSetGenerator(VaspInputGenerator):
             "reciprocal_density_metal": self.reciprocal_density_metal,
         }
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a non-self-consistent field VASP job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -285,14 +190,14 @@ class NonSCFSetGenerator(VaspInputGenerator):
             "KSPACING": None,
         }
 
-        if vasprun is not None:
+        if self.prev_vasprun is not None:
             # set NBANDS
-            n_bands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
-            updates["NBANDS"] = n_bands
+            n_bands = self.prev_vasprun.parameters.get("NBANDS", None) or self.estimate_nbands()
+            updates["NBANDS"] = int(np.ceil(n_bands * self.nbands_factor))
 
         if self.mode == "uniform":
             # automatic setting of NEDOS using the energy range and the energy step
-            n_edos = _get_nedos(vasprun, self.dedos)
+            n_edos = self._get_nedos(self.dedos)
 
             # use tetrahedron method for DOS and optics calculations
             updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": n_edos})
@@ -301,7 +206,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
             # if line mode or explicit k-points (boltztrap) can't use ISMEAR=-5
             # use small sigma to avoid partial occupancies for small band gap materials
             # use a larger sigma if the material is a metal
-            sigma = 0.2 if bandgap == 0 else 0.01
+            sigma = 0.2 if self.bandgap == 0 else 0.01
             updates.update({"ISMEAR": 0, "SIGMA": sigma})
 
         if self.optics:
@@ -315,7 +220,6 @@ class NonSCFSetGenerator(VaspInputGenerator):
 
         return updates
 
-
 @dataclass
 class HSERelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP HSE06 relaxation input sets.
@@ -326,28 +230,9 @@ class HSERelaxSetGenerator(VaspInputGenerator):
         details.
     """
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a VASP HSE06 relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -378,28 +263,9 @@ class HSETightRelaxSetGenerator(VaspInputGenerator):
         details.
     """
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for an HSE tight relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -436,30 +302,11 @@ class HSEStaticSetGenerator(VaspInputGenerator):
         details.
     """
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a VASP HSE06 static job.
 
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
-
-        Returns
+                Returns
         -------
         dict
             A dictionary of updates to apply.
@@ -551,30 +398,11 @@ class HSEBSSetGenerator(VaspInputGenerator):
         if self.mode not in supported_modes:
             raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
 
-    def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = 0.0,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def kpoints_updates(self) -> dict | Kpoints:
         """Get updates to the kpoints configuration for a VASP HSE06 band structure job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -593,8 +421,8 @@ class HSEBSSetGenerator(VaspInputGenerator):
             )
 
         added_kpoints = deepcopy(self.added_kpoints)
-        if vasprun is not None and self.mode == "gap":
-            bs = vasprun.get_band_structure()
+        if self.prev_vasprun is not None and self.mode == "gap":
+            bs = self.prev_vasprun.get_band_structure()
             if not bs.is_metal():
                 added_kpoints.append(bs.get_vbm()["kpoint"].frac_coords)
                 added_kpoints.append(bs.get_cbm()["kpoint"].frac_coords)
@@ -603,28 +431,9 @@ class HSEBSSetGenerator(VaspInputGenerator):
 
         return kpoints
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a VASP HSE06 band structure job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -648,7 +457,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
 
         if self.mode == "uniform" and len(self.added_kpoints) == 0:
             # automatic setting of nedos using the energy range and the energy step
-            nedos = _get_nedos(vasprun, self.dedos)
+            nedos = self._get_nedos(self.dedos)
 
             # use tetrahedron method for DOS and optics calculations
             updates.update({"ISMEAR": -5, "NEDOS": nedos})
@@ -658,10 +467,10 @@ class HSEBSSetGenerator(VaspInputGenerator):
             # use small sigma to avoid partial occupancies for small band gap materials
             updates.update({"ISMEAR": 0, "SIGMA": 0.01})
 
-        if vasprun is not None:
+        if self.prev_vasprun is not None:
             # set nbands
-            nbands = int(np.ceil(vasprun.parameters["NBANDS"] * self.nbands_factor))
-            updates["NBANDS"] = nbands
+            n_bands = self.prev_vasprun.parameters["NBANDS"] or self.estimate_nbands()
+            updates["NBANDS"] = int(np.ceil(n_bands * self.nbands_factor))
 
         if self.optics:
             # LREAL not supported with LOPTICS
@@ -705,28 +514,9 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
     reciprocal_density: float = 64
     auto_ispin: bool = True
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a static VASP job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -753,30 +543,11 @@ class ElectronPhononSetGenerator(VaspInputGenerator):
             "PHON_LMC": True,
         }
 
-    def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = 0.0,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def kpoints_updates(self) -> dict | Kpoints:
         """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -813,36 +584,17 @@ class MDSetGenerator(VaspInputGenerator):
     nsteps: int = 1000
     time_step: float = 2
     auto_ispin: bool = True
-
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a molecular dynamics job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
         dict
             A dictionary of updates to apply.
         """
-        updates = self._get_ensemble_defaults(structure, self.ensemble)
+        updates = self._get_ensemble_defaults(self.structure, self.ensemble)
 
         # Based on pymatgen.io.vasp.sets.MPMDSet.
         updates.update(
@@ -863,7 +615,7 @@ class MDSetGenerator(VaspInputGenerator):
             }
         )
 
-        if Element("H") in structure.species and updates["POTIM"] > 0.5:
+        if Element("H") in self.structure.species and updates["POTIM"] > 0.5:
             logger.warning(
                 f"Molecular dynamics time step is {updates['POTIM']}, which is "
                 "typically too large for a structure containing H. Consider set it "
@@ -893,13 +645,3 @@ class MDSetGenerator(VaspInputGenerator):
         except KeyError as err:
             supported = tuple(defaults)
             raise ValueError(f"Expect {ensemble=} to be one of {supported}") from err
-
-
-def _get_nedos(vasprun: Vasprun | None, dedos: float) -> int:
-    """Automatic setting of nedos using the energy range and the energy step."""
-    if vasprun is None:
-        return 2000
-
-    emax = max(eigs.max() for eigs in vasprun.eigenvalues.values())
-    emin = min(eigs.min() for eigs in vasprun.eigenvalues.values())
-    return int((emax - emin) / dedos)
