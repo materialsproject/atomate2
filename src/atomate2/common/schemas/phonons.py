@@ -164,7 +164,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     internal_energies: Optional[list[float]] = Field(
         None,
-        description="internal energies in  J/mol per "
+        description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
     entropies: Optional[list[float]] = Field(
