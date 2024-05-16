@@ -70,8 +70,7 @@ class LobsterMaker(Maker):
         wavefunction_dir: str | Path = None,
         basis_dict: dict | None = None,
     ) -> LobsterTaskDocument:
-        """
-        Run a LOBSTER calculation.
+        """Run a LOBSTER calculation.
 
         Parameters
         ----------

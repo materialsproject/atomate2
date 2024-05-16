@@ -90,8 +90,8 @@ Lawrence Berkeley National Laboratory
 [0000-0003-3439-4856]: https://orcid.org/0000-0003-3439-4856
 
 **Matthew McDermott** [![gh]][mattmcdermott] [![orc]][0000-0002-4071-3000] \
-PhD student \
-University of California, Berkeley
+Postdoctoral Researcher \
+Lawrence Berkeley National Laboratory
 
 [mattmcdermott]: https://github.com/mattmcdermott
 [0000-0002-4071-3000]: https://orcid.org/0000-0002-4071-3000

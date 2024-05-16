@@ -11,6 +11,7 @@ from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.core.trajectory import Trajectory
+from typing_extensions import Self
 
 from atomate2.forcefields import MLFF
 
@@ -166,9 +167,8 @@ class ForceFieldTaskDocument(StructureMetadata):
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,
-    ) -> "ForceFieldTaskDocument":
-        """
-        Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
+    ) -> Self:
+        """Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
 
         Parameters
         ----------

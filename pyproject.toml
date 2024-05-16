@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=0.78.0rc4",
+    "emmet-core==0.82.2",
     "jobflow>=0.1.11",
     "monty>=2024.2.2",
     "numpy",
@@ -43,7 +43,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.8"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
     "pymatgen-analysis-defects>=2024.5.11",
@@ -60,7 +60,7 @@ forcefields = [
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
-    "furo==2024.1.29",
+    "furo==2024.5.6",
     "ipython==8.23.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
@@ -89,13 +89,13 @@ strict = [
     "emmet-core==0.82.2",
     "ijson==3.2.3",
     "jobflow==0.1.17",
-    "lobsterpy==0.4.0",
+    "lobsterpy==0.4.4",
     "mace-torch>=0.3.3",
     "matgl==1.1.1",
     "monty==2024.3.31",
     "mp-api==0.41.2",
     "numpy",
-    "phonopy==2.22.1",
+    "phonopy==2.23.1",
     "pydantic-settings==2.2.1",
     "pydantic==2.7.1",
     "pymatgen-analysis-defects==2024.5.11",
@@ -131,7 +131,7 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
-addopts = "-p no:warnings --import-mode=importlib"
+addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",

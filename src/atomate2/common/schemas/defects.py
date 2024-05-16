@@ -12,6 +12,7 @@ from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.thermo import DefectEntry, FormationEnergyDiagram
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
+from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ class FormationEnergyDiagramDocument(BaseModel):
         cls,
         fed: FormationEnergyDiagram,
         **kwargs,
-    ) -> "FormationEnergyDiagramDocument":
+    ) -> Self:
         """Create a document from a `FormationEnergyDiagram` object.
 
         Args:
@@ -204,7 +205,7 @@ class CCDDocument(BaseModel):
         static_uuids2: list[str],
         relaxed_uuid1: str,
         relaxed_uuid2: str,
-    ) -> "CCDDocument":
+    ) -> Self:
         """Create a CCDDocument from a lists of structures and energies.
 
         The directories and the UUIDs of the static calculations are also provided as
@@ -239,16 +240,10 @@ class CCDDocument(BaseModel):
         """
 
         def get_cs_entry(
-            struct: Structure,
-            energy: float,
-            dir_name: str,
-            uuid: str,
+            struct: Structure, energy: float, dir_name: str, uuid: str
         ) -> ComputedStructureEntry:
-            return ComputedStructureEntry(
-                structure=struct,
-                energy=energy,
-                data={"dir_name": dir_name, "uuid": uuid},
-            )
+            data = {"dir_name": dir_name, "uuid": uuid}
+            return ComputedStructureEntry(structure=struct, energy=energy, data=data)
 
         entries1 = list(
             starmap(
@@ -270,9 +265,8 @@ class CCDDocument(BaseModel):
         entries2: list[ComputedStructureEntry],
         relaxed_uuid1: Optional[str] = None,
         relaxed_uuid2: Optional[str] = None,
-    ) -> "CCDDocument":
-        """
-        Create a CCDTaskDocument from a list of distorted calculations.
+    ) -> Self:
+        """Create a CCDTaskDocument from a list of distorted calculations.
 
         Parameters
         ----------
@@ -284,7 +278,6 @@ class CCDDocument(BaseModel):
             UUID of relaxed calculation in charge state (q1).
         relaxed_uuid1
             UUID of relaxed calculation in charge state (q2).
-
         """
 
         def find_entry(

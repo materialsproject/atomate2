@@ -27,6 +27,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
+from typing_extensions import Self
 
 from atomate2.aims.utils.units import omegaToTHz
 
@@ -163,7 +164,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     internal_energies: Optional[list[float]] = Field(
         None,
-        description="internal energies in  J/mol per "
+        description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
     entropies: Optional[list[float]] = Field(
@@ -237,9 +238,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
-    ) -> "PhononBSDOSDoc":
-        """
-        Generate collection of phonon data.
+    ) -> Self:
+        """Generate collection of phonon data.
 
         Parameters
         ----------
@@ -518,8 +518,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
     def get_kpath(
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ) -> tuple:
-        """
-        Get high-symmetry points in k-space in phonopy format.
+        """Get high-symmetry points in k-space in phonopy format.
 
         Parameters
         ----------

@@ -102,8 +102,8 @@ class ConvergenceMaker(Maker):
         if prev_dir is not None:
             split_prev_dir = str(prev_dir).split(":")[-1]
             convergence_file = Path(split_prev_dir) / CONVERGENCE_FILE_NAME
-            with open(convergence_file, "w") as f:
-                json.dump(convergence_data, f)
+            with open(convergence_file, "w") as file:
+                json.dump(convergence_data, file)
 
         if idx < len(self.convergence_steps) and not converged:
             # finding next jobs
