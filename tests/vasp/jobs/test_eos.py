@@ -51,9 +51,7 @@ def test_mp_gga_eos_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 def test_mp_gga_eos_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # map from job name to directory containing reference output files
-    ref_paths = {
-        "EOS MP GGA static": "Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0",
-    }
+    ref_paths = {"EOS MP GGA static": "Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0"}
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
