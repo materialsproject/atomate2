@@ -459,7 +459,7 @@ def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dic
                 "bulk_dir_name": bulk_dir_name,
                 "bulk_locpot": bulk_locpot,
                 "bulk_uuid": bulk_summary.get("uuid"),
-                "defect_uuid": qq_summary.get("uuid", None),
+                "defect_uuid": qq_summary.get("uuid"),
             }
         )
     return defect_ent_res

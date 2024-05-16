@@ -36,9 +36,9 @@ class VaspInputGenerator(DictSet):
     determined is as follows:
 
     1. If the site itself has a magmom setting (i.e. site.properties["magmom"] = float),
-        that is used. This can be set with structure.add_site_property().
+       that is used. This can be set with structure.add_site_property().
     2. If the species of the site has a spin setting, that is used. This can be set
-        with structure.add_spin_by_element().
+       with structure.add_spin_by_element().
     3. If the species itself has a particular setting in the config file, that
        is used, e.g. Mn3+ may have a different magmom than Mn4+.
     4. Lastly, the element symbol itself is checked in the config file. If
@@ -66,7 +66,7 @@ class VaspInputGenerator(DictSet):
             unset. For example, {"ENCUT": None} will remove ENCUT from the
             incar settings. Finally, KSPACING is a special setting and can be set to
             "auto" in which the KSPACING is set automatically based on the band gap.
-        user_kpoints_settings (dict or Kpoints): Allow user to override kpoints setting
+        user_kpoints_settings (dict | Kpoints): Allow user to override kpoints setting
             by supplying a dict. e.g. {"reciprocal_density": 1000}. User can also
             supply Kpoints object.
         user_potcar_settings (dict): Allow user to override POTCARs. e.g. {"Gd":
@@ -84,7 +84,7 @@ class VaspInputGenerator(DictSet):
             to use the Automatic Density kpoint scheme, which will use the Gamma
             centered generation scheme for hexagonal cells, and
             Monkhorst-Pack otherwise.
-        reduce_structure (None/str): Before generating the input files, generate the
+        reduce_structure (None | str): Before generating the input files, generate the
             reduced structure. Default (None), does not alter the structure. Valid
             values: None, "niggli", "LLL".
         vdw: Adds default parameters for van-der-Waals functionals supported by VASP to
@@ -128,9 +128,9 @@ class VaspInputGenerator(DictSet):
             system is considered metallic. Defaults to 1e-4 (eV).
         bandgap (float): Used for determining KSPACING if KSPACING == "auto" or
             ISMEAR if auto_ismear == True. Set automatically when using from_prev_calc.
-        prev_incar (str or dict): Previous INCAR used for setting parent INCAR when
+        prev_incar (str | dict): Previous INCAR used for setting parent INCAR when
             inherit_incar == True. Set automatically when using from_prev_calc.
-        prev_kpoints (str or Kpoints): Previous Kpoints. Set automatically when using
+        prev_kpoints (str | Kpoints): Previous Kpoints. Set automatically when using
             from_prev_calc.
     """
 

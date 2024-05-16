@@ -193,8 +193,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.prev_vasprun is not None:
             # set NBANDS
             n_bands = (
-                self.prev_vasprun.parameters.get("NBANDS", None)
-                or self.estimate_nbands()
+                self.prev_vasprun.parameters.get("NBANDS") or self.estimate_nbands()
             )
             updates["NBANDS"] = int(np.ceil(n_bands * self.nbands_factor))
 
