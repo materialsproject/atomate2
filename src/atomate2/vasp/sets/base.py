@@ -9,12 +9,13 @@ from typing import TYPE_CHECKING, Literal
 
 from monty.serialization import loadfn
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar, VaspInput
-from pymatgen.io.vasp.sets import DictSet, UserPotcarFunctional
+from pymatgen.io.vasp.sets import DictSet
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+    from pymatgen.io.vasp.sets import UserPotcarFunctional
 
 _BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
