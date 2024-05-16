@@ -7,28 +7,24 @@ from importlib.resources import files as get_mod_path
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from monty.io import zopen
 from monty.serialization import loadfn
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar, VaspInput
-from pymatgen.io.vasp.sets import (
-    DictSet,
-    UserPotcarFunctional,
-)
+from pymatgen.io.vasp.sets import DictSet, UserPotcarFunctional
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     from pymatgen.core import Structure
 
 _BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
+
 @dataclass
 class VaspInputGenerator(DictSet):
     """
-    Concrete implementation of VaspInputSet that is initialized from a dict
-    settings. This allows arbitrary settings to be input. In general,
+    atomate2 subclass of DictSet to generate VASP input sets.
+
+    This allows arbitrary settings to be input. In general,
     this is rarely used directly unless there is a source of settings in yaml
     format (e.g., from a REST interface). It is typically used by other
     VaspInputSets for initialization.
@@ -85,7 +81,8 @@ class VaspInputGenerator(DictSet):
             "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91", "LDA_US", "PW91_US".
         force_gamma (bool): Force gamma centered kpoint generation. Default (False) is
             to use the Automatic Density kpoint scheme, which will use the Gamma
-            centered generation scheme for hexagonal cells, and Monkhorst-Pack otherwise.
+            centered generation scheme for hexagonal cells, and
+            Monkhorst-Pack otherwise.
         reduce_structure (None/str): Before generating the input files, generate the
             reduced structure. Default (None), does not alter the structure. Valid
             values: None, "niggli", "LLL".
@@ -123,8 +120,8 @@ class VaspInputGenerator(DictSet):
             If True, automatically use the VASP recommended LREAL based on cell size.
         auto_metal_kpoints
             If true and the system is metallic, try and use ``reciprocal_density_metal``
-            instead of ``reciprocal_density`` for metallic systems. Note, this only works
-            if the bandgap is not None.
+            instead of ``reciprocal_density`` for metallic systems.
+            Note, this only works if the bandgap is not None.
         bandgap_tol (float): Tolerance for determining if a system is metallic when
             KSPACING is set to "auto". If the bandgap is less than this value, the
             system is considered metallic. Defaults to 1e-4 (eV).
@@ -137,7 +134,7 @@ class VaspInputGenerator(DictSet):
     """
 
     structure: Structure | None = None
-    config_dict: dict = field(default_factory= lambda : _BASE_VASP_SET)
+    config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
     files_to_transfer: dict = field(default_factory=dict)
     user_incar_settings: dict = field(default_factory=dict)
     user_kpoints_settings: dict = field(default_factory=dict)
@@ -158,16 +155,14 @@ class VaspInputGenerator(DictSet):
     auto_ispin: bool = False
     auto_lreal: bool = False
     auto_metal_kpoints: bool = True
-    auto_kspacing : bool = False
+    auto_kspacing: bool = False
     bandgap_tol: float = SETTINGS.BANDGAP_TOL
     bandgap: float | None = None
     prev_incar: str | dict | None = None
     prev_kpoints: str | Kpoints | None = None
 
     @staticmethod
-    def from_directory(
-        directory: str | Path, optional_files: dict = None
-    ) -> VaspInput:
+    def from_directory(directory: str | Path, optional_files: dict = None) -> VaspInput:
         """Load a set of VASP inputs from a directory.
 
         Note that only the standard INCAR, POSCAR, POTCAR and KPOINTS files are read
@@ -198,13 +193,13 @@ class VaspInputGenerator(DictSet):
                 optional_inputs[name] = obj.from_file(directory / name)
 
         return VaspInput(
-            incar = inputs["INCAR"],
-            kpoints = inputs["KPOINTS"],
-            poscar = inputs["POSCAR"],
-            potcar = inputs["POTCAR"],
-            optional_files = optional_inputs
+            incar=inputs["INCAR"],
+            kpoints=inputs["KPOINTS"],
+            poscar=inputs["POSCAR"],
+            potcar=inputs["POTCAR"],
+            optional_files=optional_inputs,
         )
-    
+
     def _get_nedos(self, dedos: float) -> int:
         """Automatic setting of nedos using the energy range and the energy step."""
         if self.prev_vasprun is None:

@@ -52,7 +52,7 @@ def test_mp_sets(set_generator: VaspInputGenerator) -> None:
     )
     assert mp_set.inherit_incar is False
     assert mp_set.auto_ismear is False
-    assert mp_set.auto_kspacing is (True if "Meta" in set_generator.__name__ else False)
+    assert mp_set.auto_kspacing is ("Meta" in set_generator.__name__)
     assert mp_set.force_gamma is True
     assert mp_set.auto_lreal is False
     assert mp_set.auto_metal_kpoints is True

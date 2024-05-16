@@ -192,7 +192,10 @@ class NonSCFSetGenerator(VaspInputGenerator):
 
         if self.prev_vasprun is not None:
             # set NBANDS
-            n_bands = self.prev_vasprun.parameters.get("NBANDS", None) or self.estimate_nbands()
+            n_bands = (
+                self.prev_vasprun.parameters.get("NBANDS", None)
+                or self.estimate_nbands()
+            )
             updates["NBANDS"] = int(np.ceil(n_bands * self.nbands_factor))
 
         if self.mode == "uniform":
@@ -219,6 +222,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         updates["MAGMOM"] = None
 
         return updates
+
 
 @dataclass
 class HSERelaxSetGenerator(VaspInputGenerator):
@@ -306,7 +310,7 @@ class HSEStaticSetGenerator(VaspInputGenerator):
     def incar_updates(self) -> dict:
         """Get updates to the INCAR for a VASP HSE06 static job.
 
-                Returns
+        Returns
         -------
         dict
             A dictionary of updates to apply.
@@ -584,7 +588,7 @@ class MDSetGenerator(VaspInputGenerator):
     nsteps: int = 1000
     time_step: float = 2
     auto_ispin: bool = True
-    
+
     @property
     def incar_updates(self) -> dict:
         """Get updates to the INCAR for a molecular dynamics job.

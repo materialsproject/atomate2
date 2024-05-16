@@ -8,13 +8,15 @@ MP GGA compatible, and MP meta-GGA compatible
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet
 from typing import TYPE_CHECKING
+
+from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.io.vasp import Kpoints
+
 
 @dataclass
 class EosSetGenerator(VaspInputGenerator):
@@ -295,7 +297,7 @@ class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    @property    
+    @property
     def incar_updates(self) -> dict:
         """Get updates to the INCAR for this calculation type.
 

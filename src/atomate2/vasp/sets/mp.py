@@ -9,15 +9,17 @@ In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+
 from pymatgen.io.vasp import Kpoints
 from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet
 
 from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
+
 @dataclass
 class MPGGARelaxSetGenerator(RelaxSetGenerator):
     """Class to generate MP-compatible VASP GGA relaxation input sets.
-    
+
     reciprocal_density (int): For static calculations, we usually set the
         reciprocal density by volume. This is a convenience arg to change
         that, rather than using user_kpoints_settings. Defaults to 100,
@@ -33,6 +35,7 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
     auto_kspacing: bool = False
     inherit_incar: bool | None = False
     bandgap_tol: float = None
+
 
 @dataclass
 class MPGGAStaticSetGenerator(StaticSetGenerator):
@@ -80,24 +83,32 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
     @property
     def kpoints_updates(self) -> dict | Kpoints:
         """Updates to the kpoints configuration for this calculation type.
-        
+
         This function is adapted from pymatgen.io.vasp.sets.MPStaticSet.
         Thanks to @Andrew-S-Rosen for finding this discrepancy in issue 844:
         https://github.com/materialsproject/atomate2/issues/844
         """
         factor = 1.0
-        if self.bandgap is not None and self.small_gap_multiply and self.bandgap <= self.small_gap_multiply[0]:
+        if (
+            self.bandgap is not None
+            and self.small_gap_multiply
+            and self.bandgap <= self.small_gap_multiply[0]
+        ):
             factor = self.small_gap_multiply[1]
 
         # prefer to use k-point scheme from previous run
-        if self.prev_kpoints and self.prev_kpoints.style == Kpoints.supported_modes.Monkhorst:  # type: ignore
+        if (
+            self.prev_kpoints
+            and isinstance(self.prev_kpoints, Kpoints)
+            and self.prev_kpoints.style == Kpoints.supported_modes.Monkhorst
+        ):
             kpoints = Kpoints.automatic_density_by_vol(
-                self.structure,  # type: ignore
+                self.structure,
                 int(self.reciprocal_density * factor),
                 self.force_gamma,
             )
-            k_div = [kp + 1 if kp % 2 == 1 else kp for kp in kpoints.kpts[0]]  # type: ignore
-            return Kpoints.monkhorst_automatic(k_div)  # type: ignore
+            k_div = [kp + 1 if kp % 2 == 1 else kp for kp in kpoints.kpts[0]]
+            return Kpoints.monkhorst_automatic(k_div)
 
         return {"reciprocal_density": self.reciprocal_density * factor}
 
@@ -116,7 +127,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
     def incar_updates(self) -> dict:
         """Get updates to the INCAR for this calculation type.
 
-                Returns
+        Returns
         -------
         dict
             A dictionary of updates to apply.

@@ -15,6 +15,7 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 _matpes_config_no_magmom = MatPESStaticSet.CONFIG
 _matpes_config_no_magmom["INCAR"].pop("MAGMOM")
 
+
 @dataclass
 class MatPesGGAStaticSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
@@ -22,6 +23,7 @@ class MatPesGGAStaticSetGenerator(VaspInputGenerator):
     config_dict: dict = field(default_factory=lambda: _matpes_config_no_magmom)
     auto_ismear: bool = False
     auto_kspacing: bool = False
+
 
 @dataclass
 class MatPesMetaGGAStaticSetGenerator(MatPesGGAStaticSetGenerator):

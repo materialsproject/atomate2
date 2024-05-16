@@ -188,8 +188,8 @@ def test_set_kspacing_and_auto_ismear(
     static_set = MPMetaGGARelaxSetGenerator(
         auto_ismear=True,
         auto_kspacing=True,
-        structure = struct_no_magmoms,    
-        bandgap = bandgap    
+        structure=struct_no_magmoms,
+        bandgap=bandgap,
     )
 
     incar = static_set.incar
