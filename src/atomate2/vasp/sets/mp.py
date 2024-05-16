@@ -30,9 +30,9 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
-    auto_kspacing: bool = True
+    auto_kspacing: bool = False
     inherit_incar: bool | None = False
-
+    bandgap_tol: float = None
 
 @dataclass
 class MPGGAStaticSetGenerator(StaticSetGenerator):
@@ -40,7 +40,8 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
 
     config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
-    auto_kspacing: bool = True
+    auto_kspacing: bool = False
+    bandgap_tol: float = None
     inherit_incar: bool | None = False
     reciprocal_density: int = 100
     small_gap_multiply: tuple[float, float] | None = None

@@ -137,7 +137,7 @@ class VaspInputGenerator(DictSet):
     """
 
     structure: Structure | None = None
-    config_dict: dict = field(default_factory=_BASE_VASP_SET)
+    config_dict: dict = field(default_factory= lambda : _BASE_VASP_SET)
     files_to_transfer: dict = field(default_factory=dict)
     user_incar_settings: dict = field(default_factory=dict)
     user_kpoints_settings: dict = field(default_factory=dict)
@@ -145,7 +145,7 @@ class VaspInputGenerator(DictSet):
     constrain_total_magmom: bool = False
     sort_structure: bool = True
     user_potcar_functional: UserPotcarFunctional = None
-    force_gamma: bool = False
+    force_gamma: bool = True
     reduce_structure: Literal["niggli", "LLL"] | None = None
     vdw: str | None = None
     use_structure_charge: bool = False
@@ -154,15 +154,15 @@ class VaspInputGenerator(DictSet):
     international_monoclinic: bool = True
     validate_magmom: bool = True
     inherit_incar: bool | list[str] = SETTINGS.VASP_INHERIT_INCAR
-    auto_ismear: bool = False
+    auto_ismear: bool = True
     auto_ispin: bool = False
     auto_lreal: bool = False
-    auto_metal_kpoints: bool = False
+    auto_metal_kpoints: bool = True
+    auto_kspacing : bool = False
     bandgap_tol: float = SETTINGS.BANDGAP_TOL
     bandgap: float | None = None
     prev_incar: str | dict | None = None
     prev_kpoints: str | Kpoints | None = None
-
 
     @staticmethod
     def from_directory(

@@ -29,7 +29,7 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
         "force_gamma",
         "inherit_incar",
         "sort_structure",
-        "symprec",
+        "sym_prec",
         "use_structure_charge",
         "user_incar_settings",
         "user_kpoints_settings",
@@ -46,6 +46,6 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
     assert matpes_set.auto_lreal is False
     assert matpes_set.auto_metal_kpoints is True
     assert matpes_set.sort_structure is True
-    assert matpes_set.symprec == 0.1
+    assert matpes_set.sym_prec == 0.1
     assert matpes_set.use_structure_charge is False
     assert matpes_set.vdw is None

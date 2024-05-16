@@ -103,14 +103,14 @@ def mock_vasp(
         kwargs["potcar_spec"] = True
         return get_input_set_orig(self, *args, **kwargs)
 
-    def mock_get_nelect(*_, **__):
+    def mock_nelect(*_, **__):
         return 12
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputGenerator, "get_input_set", mock_get_input_set)
-    monkeypatch.setattr(VaspInputGenerator, "get_nelect", mock_get_nelect)
+    monkeypatch.setattr(VaspInputGenerator, "nelect", mock_nelect)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
         _REF_PATHS.update(ref_paths)

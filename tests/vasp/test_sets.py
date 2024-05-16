@@ -81,7 +81,7 @@ def test_user_incar_settings():
     }
 
     static_set_generator = StaticSetGenerator(user_incar_settings=uis)
-    incar = static_set_generator.get_input_set(structure, potcar_spec=True).incar
+    incar = static_set_generator.get_input_set(structure, potcar_spec=True)["INCAR"]
 
     for key in uis:
         if isinstance(incar[key], str):
@@ -120,7 +120,7 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
     structure = request.getfixturevalue(structure)
 
     input_gen = StaticSetGenerator(user_incar_settings=user_incar_settings)
-    incar = input_gen.get_input_set(structure, potcar_spec=True).incar
+    incar = input_gen.get_input_set(structure, potcar_spec=True)["INCAR"]
     incar_magmom = incar["MAGMOM"]
 
     has_struct_magmom = structure.site_properties.get("magmom")
@@ -145,7 +145,7 @@ def test_incar_magmoms_precedence(structure, user_incar_settings, request) -> No
 def test_set_u_params(structure, request) -> None:
     structure = request.getfixturevalue(structure)
     input_gen = StaticSetGenerator()
-    incar = input_gen.get_input_set(structure, potcar_spec=True).incar
+    incar = input_gen.get_input_set(structure, potcar_spec=True)["INCAR"]
 
     has_nonzero_u = (
         any(
@@ -185,15 +185,14 @@ def test_set_u_params(structure, request) -> None:
 def test_set_kspacing_and_auto_ismear(
     struct_no_magmoms, bandgap, expected_params, monkeypatch
 ):
-    static_set = MPMetaGGARelaxSetGenerator(auto_ismear=True, auto_kspacing=True)
-
-    incar = static_set._get_incar(
-        structure=struct_no_magmoms,
-        kpoints=None,
-        previous_incar=None,
-        incar_updates={},
-        bandgap=bandgap,
+    static_set = MPMetaGGARelaxSetGenerator(
+        auto_ismear=True,
+        auto_kspacing=True,
+        structure = struct_no_magmoms,    
+        bandgap = bandgap    
     )
+
+    incar = static_set.incar
 
     actual = {key: incar[key] for key in expected_params}
     assert actual == pytest.approx(expected_params)
