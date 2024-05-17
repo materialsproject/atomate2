@@ -103,14 +103,11 @@ def get_basis_infos(
     """
     # this logic enables handling of a flow or a simple maker
     try:
-        potcar_symbols = vasp_maker.static_maker.input_set_generator._get_potcar(
-            structure=structure, potcar_spec=True
-        )
-
+        vis = vasp_maker.static_maker.input_set_generator
     except AttributeError:
-        potcar_symbols = vasp_maker.input_set_generator._get_potcar(
-            structure=structure, potcar_spec=True
-        )
+        vis = vasp_maker.input_set_generator
+    vis.structure = structure
+    potcar_symbols = vis.potcar_symbols
 
     # get data from LobsterInput
     list_basis_dict = Lobsterin.get_all_possible_basis_functions(
