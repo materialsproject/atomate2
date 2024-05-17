@@ -26,7 +26,6 @@ from atomate2.common.jobs.anharmonicity import (
     displace_structure,
     get_anharmonic_force,
     calc_sigma_A_oneshot,
-    get_masses
 )
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
 
@@ -136,9 +135,9 @@ class BaseAnharmonicityMaker(Maker):
             structure = structure,
             supercell_matrix = supercell_matrix,
             phonon_maker = self.phonon_displacement_maker,
-            socket = self.socket,
-            prev_dir_argname = self.prev_calc_dir_argname,
             prev_dir = prev_dir,
+            prev_dir_argname = self.prev_calc_dir_argname,
+            socket = self.socket,
         )
         jobs.append(displacement_calcs)
 
@@ -161,7 +160,7 @@ class BaseAnharmonicityMaker(Maker):
 
         jobs.append(phonon_collect)
         phononBSDOS = phonon_collect.output
-        self.fc = phononBSDOS.force_constants.force_constants
+        self.fc = phononBSDOS.force_constants
 
         # # Get force constants (I think this is redundant due to PhononBSDOSDoc)
         # force_consts = get_force_constants(
@@ -182,7 +181,7 @@ class BaseAnharmonicityMaker(Maker):
         qpoints, connections = get_band_qpoints_and_path_connections(
             kpath_concrete,     
             npoints = npoints_band
-        )
+)
 
         # Build Dynamical Matrix and get it
         dyn_mat = build_dyn_mat(
@@ -208,20 +207,57 @@ class BaseAnharmonicityMaker(Maker):
         self.eigenfreq, self.eigenmodes = eig_calc.output
 
         # Generate the displaced supercell 
-        # TODO: Check if this is really needed or if Phonopy already found F^(2)
         displace_supercell = displace_structure(
-            phonon = self.phonon,
+            supercell = supercell_matrix,
+            masses = [site.species.weight for site in phononBSDOS.structure],
             eig_vec = self.eigenmodes,
-            eig_val = self.eigenmodes,
+            eig_val = self.eigenfreq,
             temp = temperature
         )
         jobs.append(displace_supercell)
         self.displaced_supercell = displace_supercell.output
 
+        # Generate displaced supercell as pymatgen structure
+        lattice = structure.lattice
+        species = structure.species
+        displaced_structure = Structure(lattice, species, self.displaced_supercell)
+
+        # Get harmonic forces using displaced structure
+        displacements_harmonic = generate_phonon_displacements(
+            displaced_structure,
+            self.displaced_supercell,
+            0,
+            self.sym_reduce,
+            self.symprec,
+            self.use_symmetrized_structure,
+            self.kpath_scheme,
+            self.code
+        )
+        jobs.append(displacements_harmonic)
+        harmonic_disp_calcs = run_phonon_displacements(
+            displacements_harmonic.output,
+            displaced_structure,
+            self.displaced_supercell,
+            self.phonon_displacement_maker,
+            prev_dir,
+            self.prev_calc_dir_argname,
+            self.socket
+        )
+        jobs.append(harmonic_disp_calcs)
+        harmonic_force = harmonic_disp_calcs.output["forces"]
+
+        """
+        # TODO: Implement this function. Take guidance from run_phonon_displacements()
+        # I want the function to also return the displacements
+        # Run it using the displaced structure from displace_structure() above
+        calculated_displacements = run_anharmonic_displacements()
+        """
+
         # Calculate the anharmonic contribution to the forces
         get_force_anharmonic = get_anharmonic_force(
-            phonon = self.phonon,
-            DFT_forces = self.DFT_forces
+            phononBSDOS.force_constants,
+            harmonic_force,
+            DFT_forces = self.DFT_forces,
         )
         jobs.append(get_force_anharmonic)
         self.anharmonic_forces = get_force_anharmonic.output
