@@ -12,6 +12,7 @@ from pymatgen.io.vasp.sets import MatPESStaticSet
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
+
 @dataclass
 class MatPesGGAStaticSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""

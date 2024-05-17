@@ -18,10 +18,11 @@ if TYPE_CHECKING:
 
 _BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
+
 @dataclass
 class VaspInputGenerator(VaspInputSet):
     """Base atomate2 implementation of a VASP input set.
-    
+
     Base class representing a set of VASP input parameters with a structure
     supplied as init parameters and initialized from a dict of settings.
     This allows arbitrary settings to be input. In general,
@@ -80,9 +81,10 @@ class VaspInputGenerator(VaspInputSet):
         user_potcar_functional (str): Functional to use. Default (None) is to use the
             functional in the config dictionary. Valid values: "PBE", "PBE_52",
             "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91", "LDA_US", "PW91_US".
-        force_gamma (bool): Force gamma centered kpoint generation. Default (False) is
-            to use the Automatic Density kpoint scheme, which will use the Gamma
-            centered generation scheme for hexagonal cells, and Monkhorst-Pack otherwise.
+        force_gamma (bool): Force gamma centered kpoint generation.
+            Default (False) is to use the Automatic Density kpoint scheme, which
+            will use the Gamma centered generation scheme for hexagonal cells,
+            and Monkhorst-Pack otherwise.
         reduce_structure (None/str): Before generating the input files, generate the
             reduced structure. Default (None), does not alter the structure. Valid
             values: None, "niggli", "LLL".
@@ -122,8 +124,8 @@ class VaspInputGenerator(VaspInputSet):
             If True, automatically use the VASP recommended LREAL based on cell size.
         auto_metal_kpoints
             If true and the system is metallic, try and use ``reciprocal_density_metal``
-            instead of ``reciprocal_density`` for metallic systems. Note, this only works
-            if the bandgap is not None.
+            instead of ``reciprocal_density`` for metallic systems.
+            Note, this only works if the bandgap is not None.
         bandgap_tol (float): Tolerance for determining if a system is metallic when
             KSPACING is set to "auto". If the bandgap is less than this value, the
             system is considered metallic. Defaults to 1e-4 (eV).

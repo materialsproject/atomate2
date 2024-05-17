@@ -79,10 +79,8 @@ def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
     config = maker.input_set_generator.config_dict
     assert {*config} == {"INCAR", "POTCAR", "PARENT", "POTCAR_FUNCTIONAL"}
     assert all(
-        v == expected_incar[k] for k, v in config["INCAR"].items()
-        if k != "MAGMOM"
+        v == expected_incar[k] for k, v in config["INCAR"].items() if k != "MAGMOM"
     )
-        
 
 
 def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
