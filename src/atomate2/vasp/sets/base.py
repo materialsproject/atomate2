@@ -4,27 +4,26 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
-from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 from monty.serialization import loadfn
-from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar, VaspInput
-from pymatgen.io.vasp.sets import DictSet
+from pymatgen.io.vasp.sets import VaspInputSet
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+    from pymatgen.io.vasp import Kpoints
     from pymatgen.io.vasp.sets import UserPotcarFunctional
 
 _BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
-
 @dataclass
-class VaspInputGenerator(DictSet):
-    """
-    atomate2 subclass of DictSet to generate VASP input sets.
-
+class VaspInputGenerator(VaspInputSet):
+    """Base atomate2 implementation of a VASP input set.
+    
+    Base class representing a set of VASP input parameters with a structure
+    supplied as init parameters and initialized from a dict of settings.
     This allows arbitrary settings to be input. In general,
     this is rarely used directly unless there is a source of settings in yaml
     format (e.g., from a REST interface). It is typically used by other
@@ -35,13 +34,14 @@ class VaspInputGenerator(DictSet):
     structure and the configuration settings. The order in which the magmom is
     determined is as follows:
 
-    1. If the site itself has a magmom setting (i.e. site.properties["magmom"] = float),
-       that is used. This can be set with structure.add_site_property().
-    2. If the species of the site has a spin setting, that is used. This can be set
-       with structure.add_spin_by_element().
-    3. If the species itself has a particular setting in the config file, that
+    1. If the site is specified in user_incar_settings, use that setting.
+    2. If the site itself has a magmom setting (i.e. site.properties["magmom"] = float),
+        that is used. This can be set with structure.add_site_property().
+    3. If the species of the site has a spin setting, that is used. This can be set
+        with structure.add_spin_by_element().
+    4. If the species itself has a particular setting in the config file, that
        is used, e.g. Mn3+ may have a different magmom than Mn4+.
-    4. Lastly, the element symbol itself is checked in the config file. If
+    5. Lastly, the element symbol itself is checked in the config file. If
        there are no settings, a default value of 0.6 is used.
 
     Args:
@@ -82,9 +82,8 @@ class VaspInputGenerator(DictSet):
             "PBE_54", "LDA", "LDA_52", "LDA_54", "PW91", "LDA_US", "PW91_US".
         force_gamma (bool): Force gamma centered kpoint generation. Default (False) is
             to use the Automatic Density kpoint scheme, which will use the Gamma
-            centered generation scheme for hexagonal cells, and
-            Monkhorst-Pack otherwise.
-        reduce_structure (None | str): Before generating the input files, generate the
+            centered generation scheme for hexagonal cells, and Monkhorst-Pack otherwise.
+        reduce_structure (None/str): Before generating the input files, generate the
             reduced structure. Default (None), does not alter the structure. Valid
             values: None, "niggli", "LLL".
         vdw: Adds default parameters for van-der-Waals functionals supported by VASP to
@@ -106,6 +105,8 @@ class VaspInputGenerator(DictSet):
             calculation. This might be useful to port Custodian fixes to child jobs but
             can also be dangerous e.g. when switching from GGA to meta-GGA or relax to
             static jobs. Defaults to True.
+        auto_kspacing (bool): If true, determines the value of KSPACING from the bandgap
+            of a previous calculation.
         auto_ismear (bool): If true, the values for ISMEAR and SIGMA will be set
             automatically depending on the bandgap of the system. If the bandgap is not
             known (e.g., there is no previous VASP directory) then ISMEAR=0 and
@@ -121,8 +122,8 @@ class VaspInputGenerator(DictSet):
             If True, automatically use the VASP recommended LREAL based on cell size.
         auto_metal_kpoints
             If true and the system is metallic, try and use ``reciprocal_density_metal``
-            instead of ``reciprocal_density`` for metallic systems.
-            Note, this only works if the bandgap is not None.
+            instead of ``reciprocal_density`` for metallic systems. Note, this only works
+            if the bandgap is not None.
         bandgap_tol (float): Tolerance for determining if a system is metallic when
             KSPACING is set to "auto". If the bandgap is less than this value, the
             system is considered metallic. Defaults to 1e-4 (eV).
@@ -161,51 +162,3 @@ class VaspInputGenerator(DictSet):
     bandgap: float | None = None
     prev_incar: str | dict | None = None
     prev_kpoints: str | Kpoints | None = None
-
-    @staticmethod
-    def from_directory(directory: str | Path, optional_files: dict = None) -> VaspInput:
-        """Load a set of VASP inputs from a directory.
-
-        Note that only the standard INCAR, POSCAR, POTCAR and KPOINTS files are read
-        unless optional_filenames is specified.
-
-        Parameters
-        ----------
-        directory
-            Directory to read VASP inputs from.
-        optional_files
-            Optional files to read in as well as a dict of {filename: Object class}.
-            Object class must have a static/class method from_file.
-        """
-        directory = Path(directory)
-        objs = {"INCAR": Incar, "KPOINTS": Kpoints, "POSCAR": Poscar, "POTCAR": Potcar}
-
-        inputs = {}
-        for name, obj in objs.items():
-            if (directory / name).exists():
-                inputs[name.lower()] = obj.from_file(directory / name)
-            else:
-                # handle the case where there is no KPOINTS file
-                inputs[name.lower()] = None
-
-        optional_inputs = {}
-        if optional_files is not None:
-            for name, obj in optional_files.items():
-                optional_inputs[name] = obj.from_file(directory / name)
-
-        return VaspInput(
-            incar=inputs["INCAR"],
-            kpoints=inputs["KPOINTS"],
-            poscar=inputs["POSCAR"],
-            potcar=inputs["POTCAR"],
-            optional_files=optional_inputs,
-        )
-
-    def _get_nedos(self, dedos: float) -> int:
-        """Automatic setting of nedos using the energy range and the energy step."""
-        if self.prev_vasprun is None:
-            return 2000
-
-        emax = max(eigs.max() for eigs in self.prev_vasprun.eigenvalues.values())
-        emin = min(eigs.min() for eigs in self.prev_vasprun.eigenvalues.values())
-        return int((emax - emin) / dedos)

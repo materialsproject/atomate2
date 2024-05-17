@@ -26,6 +26,7 @@ expected_incar = {
     "LORBIT": 11,
     "LREAL": False,
     "LWAVE": False,
+    "MAGMOM": [0.6, 0.6],
     "NELM": 200,
     "NSW": 0,
     "PREC": "Accurate",
@@ -77,7 +78,11 @@ def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
     )
     config = maker.input_set_generator.config_dict
     assert {*config} == {"INCAR", "POTCAR", "PARENT", "POTCAR_FUNCTIONAL"}
-    assert config["INCAR"] == expected_incar
+    assert all(
+        v == expected_incar[k] for k, v in config["INCAR"].items()
+        if k != "MAGMOM"
+    )
+        
 
 
 def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):

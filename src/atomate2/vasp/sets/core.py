@@ -20,7 +20,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class RelaxSetGenerator(VaspInputGenerator):
     """Class to generate VASP relaxation input sets."""
@@ -35,8 +34,7 @@ class RelaxSetGenerator(VaspInputGenerator):
             A dictionary of updates to apply.
         """
         return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2}
-
-
+    
 @dataclass
 class TightRelaxSetGenerator(VaspInputGenerator):
     """Class to generate tight VASP relaxation input sets."""
