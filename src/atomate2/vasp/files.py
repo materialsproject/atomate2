@@ -192,7 +192,7 @@ def write_vasp_input_set(
     )
 
     if apply_incar_updates:
-        vis["INCAR"].update(SETTINGS.VASP_INCAR_UPDATES)
+        vis.incar.update(SETTINGS.VASP_INCAR_UPDATES)
 
     if clean_prev:
         # remove previous inputs (prevents old KPOINTS file from overriding KSPACING)
