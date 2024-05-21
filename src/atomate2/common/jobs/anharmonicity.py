@@ -10,7 +10,7 @@ from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from phonopy.harmonic.dynamical_matrix import DynamicalMatrix
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-from pymatgen.core import Structure
+from pymatgen.core import Structure, Lattice
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
@@ -24,11 +24,11 @@ from scipy.constants import physical_constants
 
 # TODO: NEED TO CHANGE
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
+import numpy as np
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import numpy as np
     from emmet.core.math import Vector3D, Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -102,7 +102,7 @@ def make_phonon(
                     symprec = symprec,
                     is_symmetry = sym_reduce)
     if force_constants is not None:
-        phonon.force_constants = np.array(force_constants)
+        phonon.force_constants = force_constants.force_constants
     return phonon
 
 @job 
@@ -119,6 +119,7 @@ def build_dyn_mat(
     kpath_concrete: list
 ) -> np.ndarray:
     """
+    # TODO: Change docstring
     Builds and returns the dynamical matrix through Phonopy
 
     Parameters
@@ -165,7 +166,13 @@ def build_dyn_mat(
     # To get dynamical matrix
     phonon.run_qpoints(q_vectors)
     dyn_mat = phonon.dynamical_matrix.dynamical_matrix
-    return dyn_mat
+
+    eig_freq, eig_mode = np.linalg.eigh(dyn_mat)
+    eig_freq = np.sqrt(eig_freq)
+    print(eig_freq)
+    print(eig_mode)
+    return (eig_freq, eig_mode)
+
 
 @job
 def get_emode_efreq(
@@ -181,17 +188,12 @@ def get_emode_efreq(
     """
     eig_freq, eig_mode = np.linalg.eigh(dynamical_matrix)
     eig_freq = np.sqrt(eig_freq)
-    return eig_freq, eig_mode
+    return (eig_freq, eig_mode)
 
 @job
 def displace_structure(
     structure: Structure,
     supercell: np.ndarray,
-    code: str,
-    symprec: float,
-    sym_reduce: bool,
-    use_symmetrized_structure: str | None,
-    kpath_scheme: str,
     force_constants: ForceConstants = None,
     temp: float = 300,
 ) -> np.ndarray:
@@ -220,34 +222,45 @@ def displace_structure(
     temp: float
         Temperature (in K) to displace structure at
     """
-    phonon = make_phonon(structure, supercell, code, symprec, sym_reduce, use_symmetrized_structure, kpath_scheme, force_constants)
-    supercell_structure = get_pmg_structure(phonon.supercell)
-    # Make phonon where supercell and unit cell are both the correct supercell for the structure
-    phonon = make_phonon(supercell_structure, np.eye(3), code, symprec, False, "primitive", "", force_constants)
-    hz_to_THz_factor = 10**(-12)
+    supercell_structure = structure.make_supercell(scaling_matrix=supercell, in_place=False)
     
-    # Boltzmann constant in THz/K
-    k_b = physical_constants["Boltzmann constant in Hz/K"][0] * hz_to_THz_factor
-
     positions = supercell_structure.cart_coords
     disp = np.zeros(positions.shape)
+    
+    force_constants_2D = np.array(force_constants.force_constants).swapaxes(1, 2).reshape(2 * (len(supercell_structure) * 3,))
+    masses = np.array([site.species.weight for site in supercell_structure.sites])
+    rminv = (masses**-0.5).repeat(3)
+    dynamical_matrix = force_constants_2D * rminv[:, None] * rminv[None, :]
 
-    phonon.run_qpoints([[0,0,0]])
     eig_val, eig_vec = np.linalg.eigh(
-        phonon.dynamical_matrix.dynamical_matrix
+        dynamical_matrix
     )
-    freqs = phonon.get_frequencies([0,0,0])
-    eig_val = np.sqrt(eig_val)
-    inv_sqrt_mass = np.array([site.species.weight for site in supercell_structure.sites])**(-0.5)
-    for s in range(3, len(eig_val)):
-        zeta = (-1) ** s
-        mean_amp = np.sqrt(2 * k_b * temp) / freqs[s] * zeta
-        disp += eig_vec[s, :].reshape((-1, 3)).real * mean_amp
+    eig_val = np.sqrt(eig_val[3:])
+    X_acs = eig_vec[:, 3:].reshape((-1, 3, len(eig_val)))
+
+    # gauge eigenvectors: largest value always positive
+    for ii in range(X_acs.shape[-1]):
+        vec = X_acs[:, :, ii]
+        max_arg = np.argmax(abs(vec))
+        X_acs[:, :, ii] *= np.sign(vec.flat[max_arg])
+
+    inv_sqrt_mass = masses**(-0.5)
+    zetas = (-1) ** np.arange(len(eig_val))
+    A_s = np.sqrt(temp) / eig_val * zetas
+    disp = (A_s * X_acs).sum(axis=2) * inv_sqrt_mass[:, None]
+
+    print("\n\n\n", disp, "\n\n")
 
     # Normalize displacements by square root of masses
     for ii in range(disp.shape[0]):
         positions[ii, :] += disp[ii, :] * inv_sqrt_mass[ii]
-    return positions
+
+    return Structure(
+        lattice=supercell_structure.lattice, 
+        species=supercell_structure.species, 
+        coords=positions,
+        coords_are_cartesian=True,
+    )
 
 # Idea: Run run_phonon_displacements (phonon version) with structure = get_pmg_structure(displaced supercell),
 # supercell_matrix = displaced supercell, and displacements = 0
@@ -256,7 +269,7 @@ def run_phonon_displacements_anharm(
     displacements: list[Structure],
     structure: Structure,
     supercell_matrix: Matrix3D,
-    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
+    force_eval_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
     prev_dir: str | Path = None,
     prev_dir_argname: str = None,
     socket: bool = False,
@@ -275,7 +288,7 @@ def run_phonon_displacements_anharm(
         Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
         supercell matrix for meta data
-    phonon_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
+    force_eval_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
         A maker to use to generate dispacement calculations
     prev_dir: str or Path
         The previous working directory
@@ -284,26 +297,25 @@ def run_phonon_displacements_anharm(
     socket: bool
         If True use the socket-io interface to increase performance
     """
-    phonon_jobs = []
+    force_eval_jobs = []
     outputs: dict[str, list] = {
         "displacement_number": [],
         "forces": [],
         "uuids": [],
         "dirs": [],
     }
-    phonon_job_kwargs = {}
+    force_eval_job_kwargs = {}
     if prev_dir is not None and prev_dir_argname is not None:
-        phonon_job_kwargs[prev_dir_argname] = prev_dir
+        force_eval_job_kwargs[prev_dir_argname] = prev_dir
 
 
 @job
-def get_anharmonic_force(
-    original_structure: Structure,
-    displaced_positions: np.ndarray,
+def get_sigma_a(
     force_constants: ForceConstants,
-    displacements: list[list[Vector3D]],
-    DFT_forces: list[list[Vector3D]],
-) -> np.ndarray:
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    displaced_structures: list,
+) -> float:
     """
     # TODO: Fix docstring
     Uses DFT calculated forces ( F^DFT ) and harmonic approximation forces ( F^(2) )
@@ -330,33 +342,134 @@ def get_anharmonic_force(
     DFT_forces: list[np.ndarray]
         Matrix of DFT_forces
     """
-    # Generate the displaced structure in Pymatgen format
-    lattice = original_structure.lattice
-    species = original_structure.species
-    displaced_structure = Structure(lattice, species, displaced_positions)
+    print(displaced_structures)
+    supercell_structure = structure.make_supercell(
+        scaling_matrix = supercell_matrix,
+        in_place = False
+    )
+    force_constants_2D = np.swapaxes(
+        force_constants.force_constants,
+        1,
+        2,
+    ).reshape(2 * (len(supercell_structure) * 3,))
+    displacements = [np.array(disp_data) for disp_data in displaced_structures["displacements"]]
+    harmonic_forces = [(-force_constants_2D @ displacement.flatten()).reshape((-1, 3)) for displacement in displacements]
 
+    # anharmonic_force = [DFT_force_np - harmonic_force for DFT_force_np, harmonic_force in zip(DFT_forces_np, harmonic_forces)]
+    dft_forces = [np.array(disp_data) for disp_data in displaced_structures["forces"]]
+    anharmonic_forces = [
+        dft_force - harmonic_force for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)  
+    ]
 
-    fc = np.array(force_constants)
-    DFT_forces_np = [np.array(DFT_force) for DFT_force in DFT_forces]
-    harmonic_forces = [-fc @ np.array(disp) for disp in displacements]
-    anharmonic_force = [DFT_force_np - harmonic_force for DFT_force_np, harmonic_force in zip(DFT_forces_np, harmonic_forces)]
-    return anharmonic_force
+    return np.std(anharmonic_forces) / np.std(dft_forces)
 
-@job
-def calc_sigma_A_oneshot(
-    anharmonic_force: np.ndarray,
-    DFT_forces: list[np.ndarray]
-) -> float:
+@job(data=["forces", "displaced_structures"])
+def run_displacements(
+    displacements: list[Structure],
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    force_eval_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
+    prev_dir: str | Path = None,
+    prev_dir_argname: str = None,
+    socket: bool = False,
+) -> Flow:
     """
-    Calculates the one-shot approximation of sigma_A as the RMSE of the harmonic model 
-    divided by the standard deviation of the force distribution.
+    Run phonon displacements.
+
+    Note, this job will replace itself with N displacement calculations,
+    or a single socket calculation for all displacements.
 
     Parameters
     ----------
-    anharmonic_force: np.ndarray
-        Matrix of anharmonic forces
-    DFT_forces: list[np.ndarray]
-        Matrix of DFT forces
+    displacements: Sequence
+        All displacements to calculate
+    structure: Structure object
+        Fully optimized structure used for phonon computations.
+    supercell_matrix: Matrix3D
+        supercell matrix for meta data
+    force_eval_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
+        A maker to use to generate dispacement calculations
+    prev_dir: str or Path
+        The previous working directory
+    prev_dir_argname: str
+        argument name for the prev_dir variable
+    socket: bool
+        If True use the socket-io interface to increase performance
     """
-    DFT_forces_np = np.array(DFT_forces)
-    return np.std(np.ndarray.flatten(anharmonic_force))/np.std(np.ndarray.flatten(DFT_forces_np))
+    force_eval_jobs = []
+    outputs: dict[str, list] = {
+        "displacements": [],
+        "forces": [],
+        "uuids": [],
+        "dirs": [],
+    }
+    force_eval_job_kwargs = {}
+    if prev_dir is not None and prev_dir_argname is not None:
+        force_eval_job_kwargs[prev_dir_argname] = prev_dir
+
+    reference_structure = structure.make_supercell(
+        scaling_matrix = supercell_matrix,
+        in_place = False
+    )
+    if socket:
+        force_eval_job = force_eval_maker.make(displacements, **force_eval_job_kwargs)
+        info = {
+            "original_structure": structure,
+            "supercell_matrix": supercell_matrix,
+            "displaced_structures": displacements,
+        }
+        force_eval_job.update_maker_kwargs(
+            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
+        )
+        force_eval_jobs.append(force_eval_job)
+        outputs["displacements"] = [displacement.cart_coords - reference_structure.cart_coords for displacement in displacements]
+        outputs["uuids"] = [force_eval_job.output.uuid] * len(displacements)
+        outputs["dirs"] = [force_eval_job.output.dir_name] * len(displacements)
+        outputs["forces"] = force_eval_job.output.output.all_forces
+    else:
+        for idx, displacement in enumerate(displacements):
+            if prev_dir is not None:
+                force_eval_job = force_eval_maker.make(displacement, prev_dir=prev_dir)
+            else:
+                force_eval_job = force_eval_maker.make(displacement)
+            force_eval_job.append_name(f" {idx + 1}/{len(displacements)}")
+
+            # we will add some meta data
+            info = {
+                "original_structure": structure,
+                "supercell_matrix": supercell_matrix,
+                "displaced_structure": displacement,
+            }
+            with contextlib.suppress(Exception):
+                force_eval_job.update_maker_kwargs(
+                    {"_set": {"write_additional_data->phonon_info:json": info}},
+                    dict_mod=True,
+                )
+            force_eval_jobs.append(force_eval_job)
+            outputs["displacements"].append(displacement.cart_coords - reference_structure.cart_coords)
+            outputs["uuids"].append(force_eval_job.output.uuid)
+            outputs["dirs"].append(force_eval_job.output.dir_name)
+            outputs["forces"].append(force_eval_job.output.output.forces)
+
+    displacement_flow = Flow(force_eval_jobs, outputs)
+    return Response(replace=displacement_flow)
+
+# @job
+# def calc_sigma_A_oneshot(
+#     anharmonic_force: np.ndarray,
+#     DFT_forces: list[np.ndarray]
+# ) -> float:
+#     """
+#     Calculates the one-shot approximation of sigma_A as the RMSE of the harmonic model 
+#     divided by the standard deviation of the force distribution.
+
+#     Parameters
+#     ----------
+#     anharmonic_force: np.ndarray
+#         Matrix of anharmonic forces
+#     DFT_forces: list[np.ndarray]
+#         Matrix of DFT forces
+#     """
+#     anharmonic_force = np.array(anharmonic_force)
+#     DFT_forces_np = np.array(DFT_forces)
+#     return np.std(np.ndarray.flatten(anharmonic_force))/np.std(np.ndarray.flatten(DFT_forces_np))
