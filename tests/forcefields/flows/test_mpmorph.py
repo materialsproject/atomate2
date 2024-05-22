@@ -125,7 +125,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     elif "Slow Quench" in ff_name:
         assert len(uuids) == 11
     else:  # "Main MPMorph MLFF Maker"
-        len(uuids) == 7
+        assert len(uuids) == 7
 
     main_mp_morph_job_names = [
         "MD Maker 1",

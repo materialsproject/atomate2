@@ -13,6 +13,14 @@ from atomate2.vasp.sets.core import MDSetGenerator
 from atomate2.vasp.flows.mpmorph import MPMorphVaspMDMaker
 
 
+def _get_uuid_from_job(job, dct):
+    if hasattr(job, "jobs"):
+        for j in job.jobs:
+            _get_uuid_from_job(j, dct)
+    else:
+        dct[job.uuid] = job.name
+
+
 def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     ref_paths = {
         "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/Si_0.8",
@@ -371,22 +379,86 @@ def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
         steps_total_production=steps_production,
     ).make(structure=intial_structure)
 
+    uuids = {}
+    _get_uuid_from_job(flow, uuids)
+
     responses = run_locally(
         flow,
         create_folders=True,
         ensure_success=True,
     )
 
-    uuids = [uuid for uuid in responses]
+    # uuids = [uuid for uuid in responses]  # Old way of extracting uuid; check mpmorph for forcefields tests for new way
+    for resp in responses.values():
+        if hasattr(resp[1], "replace") and resp[1].replace is not None:
+            for job in resp[1].replace:
+                uuids[job.uuid] = job.name
+
+    main_mp_morph_job_names = [
+        "MD Maker 1",
+        "MD Maker 2",
+        "MD Maker 3",
+        "MD Maker 4",
+        "production run",
+    ]
+
+    task_docs = {}
+    for uuid, job_name in uuids.items():
+        for i, mp_job_name in enumerate(main_mp_morph_job_names):
+            if mp_job_name in job_name:
+                task_docs[mp_job_name] = responses[uuid][1].output
+                break
 
     ref_md_energies = {
         "energy": [-13.44200043, -35.97470303, -32.48531985],
         "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
     }
-    print("-----STARTING MPMORPH PRINT-----")
-    print(uuids)
-    print(ref_md_energies)
-    print("-----ENDING MPMORPH PRINT-----")
+    # Asserts right number of jobs spawned
+    assert len(uuids) == 6
+
+    # check number of steps of each MD equilibrate run and production run
+    assert all(
+        doc.input.parameters["NSW"] == steps_convergence
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["NSW"] == steps_production
+
+    # check initial structure is scaled correctly
+    assert all(
+        any(
+            doc.output.structure.volume == pytest.approx(ref_volume, abs=1e-2)
+            for name, doc in task_docs.items()
+            if "MD Maker" in name
+        )
+        for ref_volume in ref_md_energies["volume"]
+    )
+
+    # check temperature of each MD equilibrate run and production run
+    assert all(
+        doc.input.parameters["TEBEG"] == temperature
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["TEBEG"] == temperature
+
+    assert all(
+        doc.input.parameters["TEEND"] == end_temp
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["TEEND"] == end_temp
+
+    # check that MD Maker Energies are close
+
+    assert all(
+        any(
+            doc.output.energy == pytest.approx(ref_volume, abs=1e-2)
+            for name, doc in task_docs.items()
+            if "MD Maker" in name
+        )
+        for ref_volume in ref_md_energies["energy"]
+    )
     assert False
 
 
