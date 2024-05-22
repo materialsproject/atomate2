@@ -151,7 +151,7 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
 
 @dataclass
 class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
-    """Skeleton VASP MPMorph flow for volume equilibration and single production run via molecular dynamics
+    """VASP MPMorph flow for volume equilibration and single production run via molecular dynamics
 
     Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
     for the volume and finally a production run at a given temperature.
@@ -171,7 +171,7 @@ class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     steps_single_production_run: int | None = None
-        This maker only generates a single production run; check skeleton or MPMorphVASPMultiMDMaker for multiple production runs
+        This maker only generates a single production run; check base or MPMorphVASPMultiMDMaker for multiple production runs
     steps_total_production: int = 10000
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : BaseMPMorphMDMaker
@@ -226,7 +226,9 @@ class MPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
     steps_total_production: int = 10000
 
     md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
-    production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
+    production_md_maker: MDMaker = field(
+        default_factory=BaseMPMorphMDMaker
+    )  # TODO: change this into production_md_maker: MultiMDMaker = field(default_factory=lambda: MultiMDMaker(md_makers=[BaseMPMorphMDMaker for _ in range(steps_total_production/steps_single_production_run)]))
 
 
 @dataclass

@@ -398,7 +398,7 @@ class LJMDMaker(ForceFieldMDMaker):
 
 
 @dataclass
-class PACEMDMaker(ForceFieldMDMaker):
+class PyACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with PACE."""
 
     name: str = "Py-ACE MD"
