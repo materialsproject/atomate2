@@ -108,12 +108,7 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
         self.md_maker = self.md_maker.update_kwargs(
             update={"name": f"Vasp Slow Quench MD Maker {temp}K"}
         )
-        return self.md_maker.make(
-            structure=structure,
-            prev_dir=prev_dir,
-            temperature=temp,
-            nsteps=self.quench_n_steps,
-        )
+        return self.md_maker.make(structure=structure, prev_dir=prev_dir)
 
 
 @dataclass
