@@ -2,8 +2,7 @@
 
 import pytest
 from jobflow import run_locally
-import numpy as np
-from atomate2.common.flows.mpmorph import SlowQuenchMaker
+
 from atomate2.forcefields.flows.mpmorph import (
     MPMorphCHGNetMDMaker,
     MPMorphFastQuenchCHGNetMDMaker,

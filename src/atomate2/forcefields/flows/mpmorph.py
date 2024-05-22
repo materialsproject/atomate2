@@ -1,4 +1,10 @@
-"""Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
+"""Define MPMorph flows for interatomic forcefields.
+
+For information about the current flows, contact:
+- Bryant Li (@BryantLi-BLI)
+- Aaron Kaplan (@esoteric-ephemera)
+- Max Gallant (@mcgalcode)
+"""
 
 from __future__ import annotations
 
@@ -43,11 +49,16 @@ if TYPE_CHECKING:
 @dataclass
 class MPMorphMLFFMDMaker(MPMorphMDMaker):
     """
-    ML ForceField MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
+    Define a ML ForceField MPMorph flow.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    (optional) for the volume followed by a production run(s) at a given temperature
-    and finally quench (optional) from high temperature to low temperature
+    This flow uses NVT molecular dynamics to:
+    (1 - optional) Determine the equilibrium volume of an amorphous
+        structure via EOS fit.
+    (2 - optional) Quench the equilibrium volume structure from a higher
+        temperature down to a lower desired "production" temperature.
+    (3) Run a production, longer-time MD run in NVT.
+        The production run can be broken up into smaller steps to
+        ensure the simulation does not hit wall time limits.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -55,8 +66,9 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : ForceFieldMDMaker
@@ -64,14 +76,19 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     steps_total_production: int = 10000
         Total number of steps for the production run(s); default 10000 steps
     convergence_md_maker : EquilibrateVolumeMaker
-        MDMaker to generate the equilibrium volumer searcher; inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
+        MDMaker to generate the equilibrium volumer searcher;
+        inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
     production_md_maker : ForceFieldMDMaker
-        MDMaker to generate the production run(s); inherits from ForceFieldMDMaker (MLFF)
+        MDMaker to generate the production run(s);
+        inherits from ForceFieldMDMaker (MLFF)
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-        SlowQuenchMaker - MLFFMDMaker that quenchs structure from high temperature to low temperature
-        FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
+        SlowQuenchMaker - MLFFMDMaker that quenchs structure from
+        high to low temperature
+        FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
+        structure to 0K
     quench_maker_kwargs : dict or None (default)
-        If a dict, options to pass to `quench_maker`. Check atomate2.common.flows.mpmorph for SlowQuenchMaker docstring
+        If a dict, options to pass to `quench_maker`.
+        Check atomate2.common.flows.mpmorph for SlowQuenchMaker docstring
         Example for MLFFs: quench_maker_kwargs = {
             "md_maker": LJMDMaker(name="LJ MD Maker"),
             "quench_n_steps": 1000,
@@ -82,7 +99,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     """
 
     name: str = "MP Morph MLFF MD Maker"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -125,12 +142,13 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
 
 @dataclass
 class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
-    """Slow quench flow for quenching high temperature structures to low temperature using ForceFieldMDMaker.
+    """Slow quench from high to low temperature using ForceFieldMDMaker.
 
-    Quenches a provided structure with a molecular dynamics run from a desired high temperature to
-    a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
-    and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
-    Adapted from MPMorph Workflow.
+    Quenches a provided structure with a molecular dynamics run
+    from a desired high temperature to a desired low temperature.
+    Flow creates a series of MD runs that holds at a certain temperature
+    and initiates the following MD run at a lower temperature (step-wise
+    temperature MD runs).
 
     Parameters
     ----------
@@ -138,11 +156,11 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         Name of the flows produced by this maker.
     md_maker :  ForceFieldMDMaker
         MDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    quench_start_temperature : int = 3000
+    quench_start_temperature : float = 3000
         Starting temperature for quench; default 3000K
-    quench_end_temperature : int = 500
+    quench_end_temperature : float = 500
         Ending temperature for quench; default 500K
-    quench_temperature_step : int = 500
+    quench_temperature_step : float = 500
         Temperature step for quench; default 500K drop
     quench_n_steps : int = 1000
         Number of steps for quench; default 1000 steps
@@ -170,10 +188,10 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
 
 @dataclass
 class FastQuenchMLFFMDMaker(FastQuenchMaker):
-    """Fast quench flow for quenching high temperature structures to 0K with MLFF.
+    """Fast quench from high temperature to 0K structures with forcefields.
 
-    Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
-    Adapted from MPMorph Workflow.
+    Quenches a provided structure with a single (or double)
+    relaxation and a static calculation at 0K.
 
     Parameters
     ----------
@@ -196,10 +214,11 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
 
 @dataclass
 class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
-    """Lennard Jones ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
+    """Lennard-Jones MPMorph flow for volume equilibration and production.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at
+    a given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -207,8 +226,9 @@ class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run
+        in Kelvin, default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     steps_total_production: int = 10000
@@ -220,7 +240,7 @@ class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph LJ MD Maker"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -232,11 +252,11 @@ class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
-    """Lennard Jones ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
+    """Lennard Jones ForceField MPMorph flow plus slow quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temperature to low temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and a production run at a given temperature.
+    Then proceed with a slow quench from high temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -244,8 +264,9 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : LJMDMaker
@@ -257,7 +278,7 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph LJ MD Maker Slow Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -279,10 +300,11 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
-    """Lennard Jones ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
+    """Lennard Jones ForceField MPMorph flow plus fast quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at
+    a given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -290,8 +312,9 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : LJMDMaker
@@ -303,7 +326,7 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph LJ MD Maker Fast Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -322,10 +345,11 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
-    """CHGNet ML ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
+    """CHGNet ML ForceField MPMorph flow for volume equilibration and production.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at a
+    given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -333,8 +357,9 @@ class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     steps_total_production: int = 10000
@@ -346,7 +371,7 @@ class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph CHGNet MD Maker"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -360,11 +385,11 @@ class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
-    """CHGNet ML ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
+    """CHGNet ML ForceField MPMorph flow plus slow quench..
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temperature to low temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and a production run at a given temperature.
+    Then proceed with a slow quench from high temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -372,8 +397,9 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : CHGNetMDMaker
@@ -385,7 +411,7 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph CHGNet MD Maker Slow Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -411,10 +437,11 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
-    """CHGNet ML ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
+    """CHGNet ML ForceField MPMorph flow plus fast quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at
+    a given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -422,8 +449,9 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : CHGNetMDMaker
@@ -435,7 +463,7 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph CHGNet MD Maker Fast Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -456,10 +484,11 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
-    """M3GNet ML ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
+    """M3GNet ML ForceField MPMorph flow for volume equilibration and production.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at a
+    given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -467,8 +496,9 @@ class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     steps_total_production: int = 10000
@@ -480,7 +510,7 @@ class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph M3GNet MD Maker"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -494,11 +524,11 @@ class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
-    """M3GNet ML ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
+    """M3GNet ML ForceField MPMorph flow plus slow quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temperature to low temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and a production run at a given temperature.
+    Then proceed with a slow quench from high temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -506,8 +536,9 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : M3GNetMDMaker
@@ -519,7 +550,7 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph M3GNet MD Maker Slow Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -545,10 +576,11 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
-    """M3GNet ML ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
+    """M3GNet ML ForceField MPMorph flow plus fast quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at a
+    given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -556,8 +588,9 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : M3GNetMDMaker
@@ -569,7 +602,7 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph M3GNet MD Maker Fast Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -590,10 +623,11 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
-    """MACE ML ForceField MPMorph flow for volume equilibration and production runs via molecular dynamics only.
+    """MACE ML ForceField MPMorph flow for volume equilibration and production runs.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at a
+    given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -601,8 +635,9 @@ class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     steps_total_production: int = 10000
@@ -614,7 +649,7 @@ class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph MACE MD Maker"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -628,11 +663,11 @@ class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
-    """MACE ML ForceField MPMorph flow for volume equilibration, production run, and slow quench via molecular dynamics.
+    """MACE ML ForceField MPMorph flow plus slow quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and a production run at a given temperature. Then proceed with a slow quench from high
-    temperature to low temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and a production run at a given temperature.
+    Then proceed with a slow quench from high temperature to low temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -640,8 +675,9 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : MACEMDMaker
@@ -653,7 +689,7 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph MACE MD Maker Slow Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
@@ -679,10 +715,11 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
 
 @dataclass
 class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
-    """MACE ML ForceField MPMorph flow for volume equilibration, production runs, and fast quench via molecular dynamics with relaxation and statics.
+    """MACE ML ForceField MPMorph flow plus fast quench.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    for the volume and finally a production run at a given temperature.
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run
+    at a given temperature.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -690,8 +727,9 @@ class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : int = 300
-        Temperature of the equilibrium volume search and production run in Kelvin, default 300K
+    temperature : float = 300
+        Temperature of the equilibrium volume search and production run in Kelvin,
+        default 300K
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
     md_maker : MACEMDMaker
@@ -703,7 +741,7 @@ class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph MACE MD Maker Fast Quench"
-    temperature: int = 300
+    temperature: float = 300
     steps_convergence: int = 5000
     steps_total_production: int = 10000
 
