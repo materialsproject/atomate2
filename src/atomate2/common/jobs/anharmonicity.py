@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from jobflow import Flow, Response, job
 from pymatgen.core import Structure
+from pymatgen.core.units import kb
 
 # TODO: NEED TO CHANGE
 
@@ -69,8 +70,7 @@ def displace_structure(
 
     inv_sqrt_mass = masses ** (-0.5)
     zetas = (-1) ** np.arange(len(eig_val))
-    temp_ev = temp * 1.3806488e-23 / 1.602176565e-19
-    a_s = np.sqrt(temp_ev) / eig_val * zetas
+    a_s = np.sqrt(temp * kb) / eig_val * zetas
     disp = (a_s * x_acs).sum(axis=2) * inv_sqrt_mass[:, None]
 
     return Structure(
