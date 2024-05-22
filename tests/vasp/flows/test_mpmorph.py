@@ -10,6 +10,8 @@ from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.run import DEFAULT_HANDLERS
 from atomate2.vasp.sets.core import MDSetGenerator
 
+from atomate2.vasp.flows.mpmorph import MPMorphVaspMDMaker
+
 
 def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     ref_paths = {
@@ -41,6 +43,7 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
         "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
         "LDAUPRINT": 0,
+        "SIGMA": 0.05,
     }
 
     aimd_equil_maker = MDMaker(
@@ -153,6 +156,7 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
         "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
         "LDAUPRINT": 0,
+        "SIGMA": 0.05,
     }
 
     # For close separations, positive energy is reasonable and expected
@@ -265,6 +269,7 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
         "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
         "LDAUPRINT": 0,
+        "SIGMA": 0.05,
     }
 
     aimd_equil_maker = MDMaker(
@@ -342,7 +347,47 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
-    pass
+    ref_paths = {
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/Si_0.8",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/Si_1.0",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/Si_1.2",
+        "MP Morph VASP MD Maker production run": "Si_mp_morph/Si_prod",
+    }
+
+    mock_vasp(ref_paths)
+
+    intial_structure = Structure.from_file(
+        f"{vasp_test_dir}/Si_mp_morph/Si_1.0/inputs/POSCAR.gz"
+    )
+    temperature: int = 300
+    end_temp: int = 300
+    steps_convergence: int = 20
+    steps_production: int = 50
+
+    flow = MPMorphVaspMDMaker(
+        temperature=temperature,
+        end_temp=end_temp,
+        steps_convergence=steps_convergence,
+        steps_total_production=steps_production,
+    ).make(structure=intial_structure)
+
+    responses = run_locally(
+        flow,
+        create_folders=True,
+        ensure_success=True,
+    )
+
+    uuids = [uuid for uuid in responses]
+
+    ref_md_energies = {
+        "energy": [-13.44200043, -35.97470303, -32.48531985],
+        "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
+    }
+    print("-----STARTING MPMORPH PRINT-----")
+    print(uuids)
+    print(ref_md_energies)
+    print("-----ENDING MPMORPH PRINT-----")
+    assert False
 
 
 def test_mpmoprh_vasp_slow_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
