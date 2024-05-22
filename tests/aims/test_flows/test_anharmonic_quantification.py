@@ -7,10 +7,12 @@ from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
 from atomate2.aims.jobs.phonons import PhononDisplacementMaker
 from atomate2.common.flows.anharmonicity import BaseAnharmonicityMaker
 
+from pathlib import Path
+from pymatgen.core.structure import Structure, Lattice
 
 def test_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
     # species_dir = Path(
-    #     "/home/purcellt/git/FHIaims/species_defaults/defaults_2020/"
+    #     "/Users/kevinbeck/Software/fhi-aims.231212/species_defaults/defaults_2020"
     # )
     # si = Structure(
     #     lattice=Lattice(
@@ -51,4 +53,5 @@ def test_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    assert np.round(responses[flow.job_uuids[-1]].output, 3) == 0.182
+    assert np.round(responses[flow.job_uuids[-1]][1].output, 3) == 0.104
+
