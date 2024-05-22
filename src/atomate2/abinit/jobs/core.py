@@ -123,8 +123,7 @@ class NonSCFMaker(BaseAbinitMaker):
         history: JobHistory | None = None,
         mode: str = "uniform",
     ) -> Job:
-        """
-        Run a non-scf ABINIT job.
+        """Run a non-scf ABINIT job.
 
         Parameters
         ----------

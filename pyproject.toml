@@ -27,14 +27,14 @@ requires-python = ">=3.9"
 dependencies = [
     "PyYAML",
     "click",
-    "custodian>=2024.2.15",
-    "emmet-core>=0.78.0rc4",
+    "custodian>=2024.4.18",
+    "emmet-core==0.82.2",
     "jobflow>=0.1.11",
     "monty>=2024.2.2",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.3.1",
+    "pymatgen>=2024.4.13",
 ]
 
 [project.optional-dependencies]
@@ -43,24 +43,24 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.3.7"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
-    "pymatgen-analysis-defects>=2022.11.30",
+    "pymatgen-analysis-defects>=2024.5.11",
     "python-ulid",
 ]
 forcefields = [
     "ase>=3.22.1",
-    "torch<=2.2.1", # incompatibility with dgl if newer versions are used
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=1.0.0",
+    "matgl>=1.1.1",
     "quippy-ase>=0.9.14",
+    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
-    "furo==2024.1.29",
+    "furo==2024.5.6",
     "ipython==8.23.0",
     "jsonschema[format]",
     "myst_parser==2.0.0",
@@ -70,35 +70,40 @@ docs = [
     "sphinx_design==0.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
-tests = ["FireWorks==2.0.3", "pytest-cov==5.0.0", "pytest==8.0.2", "pytest-mock==3.14.0"]
+tests = [
+    "FireWorks==2.0.3",
+    "pytest-cov==5.0.0",
+    "pytest-mock==3.14.0",
+    "pytest==8.0.2",
+]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
-    "torch==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.5",
     "click==8.1.7",
-    "custodian==2024.3.12",
+    "custodian==2024.4.18",
     "dscribe==2.1.0",
-    "emmet-core==0.78.0rc4",
+    "emmet-core==0.82.2",
     "ijson==3.2.3",
     "jobflow==0.1.17",
-    "lobsterpy==0.3.8",
+    "lobsterpy==0.4.4",
     "mace-torch>=0.3.3",
-    "matgl==1.0.0",
+    "matgl==1.1.1",
     "monty==2024.3.31",
-    "mp-api==0.40.2",
+    "mp-api==0.41.2",
     "numpy",
-    "phonopy==2.22.1",
+    "phonopy==2.23.1",
     "pydantic-settings==2.2.1",
-    "pydantic==2.7.0",
-    "pymatgen-analysis-defects==2024.2.24",
-    "pymatgen==2024.3.1",
-    "python-ulid==2.4.0.post0",
+    "pydantic==2.7.1",
+    "pymatgen-analysis-defects==2024.5.11",
+    "pymatgen==2024.5.1",
+    "python-ulid==2.5.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
+    "torch==2.2.1",
     "typing-extensions==4.11.0",
 ]
 
@@ -126,7 +131,7 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
-addopts = "-p no:warnings --import-mode=importlib"
+addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
@@ -154,8 +159,10 @@ exclude_lines = [
 
 [tool.ruff]
 target-version = "py39"
-lint.select = ["ALL"]
-lint.ignore = [
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
     "ANN002",
     "ANN003",
     "ANN101",  # missing self type annotation
@@ -188,9 +195,12 @@ lint.ignore = [
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
 ]
-lint.pydocstyle.convention = "numpy"
-lint.isort.known-first-party = ["atomate2"]
-lint.isort.split-on-trailing-comma = false
+pydocstyle.convention = "numpy"
+isort.known-first-party = ["atomate2"]
+isort.split-on-trailing-comma = false
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]

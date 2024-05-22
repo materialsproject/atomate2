@@ -541,8 +541,7 @@ class AbinitInputGenerator(InputGenerator):
         kpoints_settings: dict | KSampling | None = None,
         input_index: int | None = None,
     ) -> AbinitInput:
-        """
-        Generate the AbinitInput for the input set.
+        """Generate the AbinitInput for the input set.
 
         Uses the defined factory function and additional parameters from user
         and subclasses.
