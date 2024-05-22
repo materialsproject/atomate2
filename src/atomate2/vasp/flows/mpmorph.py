@@ -266,7 +266,7 @@ class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
     temperature: int = 300
     end_temp: int = 300
     steps_convergence: int | None = None
-    steps_single_production_run: int | None = 5000
+    steps_single_production_run: int | None = None
     steps_total_production: int = 10000
 
     md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
@@ -317,7 +317,7 @@ class MPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
     temperature: int = 300
     end_temp: int = 300
     steps_convergence: int | None = None
-    steps_single_production_run: int | None = 5000
+    steps_single_production_run: int | None = None
     steps_total_production: int = 10000
 
     md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
