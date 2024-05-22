@@ -381,7 +381,7 @@ class NequipMDMaker(ForceFieldMDMaker):
 
 @dataclass
 class LJMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with a Lennard-Jones potential"""
+    """Perform an MD run with a Lennard-Jones potential."""
 
     name: str = "Lennard-Jones MD"
     force_field_name: str = "Lennard-Jones"

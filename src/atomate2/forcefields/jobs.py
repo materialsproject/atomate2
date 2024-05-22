@@ -534,6 +534,8 @@ class GAPStaticMaker(ForceFieldStaticMaker):
 
 @dataclass
 class PyACERelaxMaker(ForceFieldRelaxMaker):
+    """Base Maker to calculate forces and stresses using a PyACE potential."""
+
     name: str = "py-ace relax"
     force_field_name: str = "Py-ACE"
     relax_cell: bool = True
@@ -550,6 +552,8 @@ class PyACERelaxMaker(ForceFieldRelaxMaker):
 
 @dataclass
 class LJRelaxMaker(ForceFieldRelaxMaker):
+    """Base Maker to calculate forces and stresses using a Lennard-Jones potential."""
+
     name: str = "LJ relax"
 
     def _calculator(self) -> Calculator:
@@ -560,6 +564,8 @@ class LJRelaxMaker(ForceFieldRelaxMaker):
 
 @dataclass
 class LJStaticMaker(ForceFieldStaticMaker):
+    """Base Maker to calculate forces and stresses using a Lennard-Jones potential."""
+
     name: str = "LJ static"
 
     def _calculator(self) -> Calculator:

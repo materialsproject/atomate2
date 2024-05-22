@@ -362,7 +362,7 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
 
 def _apply_strain_to_structure(structure: Structure, deformations: list) -> list:
     """
-    Apply strain(s) to input structure and return transformation(s) as list. Modified to not be a job
+    Apply strain(s) to input structure and return transformation(s) as list.
 
     Parameters
     ----------

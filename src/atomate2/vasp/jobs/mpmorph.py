@@ -62,22 +62,24 @@ class BaseMPMorphMDMaker(MDMaker):
 
 @dataclass
 class SlowQuenchVaspMaker(SlowQuenchMaker):
-    """Slow quench flow for quenching high temperature structures to low temperature using VASP MDMaker.
+    """Slow quench from high to low temperature structures using VASP MDMaker.
 
-    Quench's a provided structure with a molecular dynamics run from a desired high temperature to
-    a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
-    and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
-    Adapted from MPMorph Workflow.
+    Quenches a provided structure with a molecular dynamics run from a
+    desired high temperature to a desired low temperature.
+    Flow creates a series of MD runs that holds at a certain temperature
+    and initiates the following MD run at a lower temperature (step-wise
+    temperature MD runs).
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
     md_maker :  BaseMPMorphMDMaker
-        MDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD; inherits  from MDMaker (VASP)
-    quench_start_temperature : int = 3000
+        MDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD;
+        inherits  from MDMaker (VASP)
+    quench_start_temperature : float = 3000
         Starting temperature for quench; default 3000K
-    quench_end_temperature : int = 500
+    quench_end_temperature : float = 500
         Ending temperature for quench; default 500K
     quench_temperature_step : int = 500
         Temperature step for quench; default 500K drop
@@ -113,11 +115,12 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
 
 @dataclass
 class FastQuenchVaspMaker(FastQuenchMaker):
-    """Fast quench flow for quenching high temperature structures to 0K with MLFF.
+    """Fast quench from high temperature to 0K structures with VASP.
 
-    Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
-    Adapted from MPMorph Workflow. NOTE: Same as MPMetaGGADoubleRelaxMaker. This is built for consistency
-    with MPMorph flows.
+    Quenches a provided structure with a single (or double) relaxation
+    and a static calculation at 0K.
+    NOTE: Same as MPMetaGGADoubleRelaxMaker.
+    This is built for consistency with MPMorph flows.
 
     Parameters
     ----------

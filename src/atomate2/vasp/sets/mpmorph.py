@@ -80,10 +80,11 @@ class MPMorphMDSetGenerator(MDSetGenerator):
         updates.update(
             {
                 "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
-                "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
+                # Perform calculation in real space for AIMD due to large unit cell size
+                "LREAL": "Auto",
                 "LAECHG": False,  # Don't need AECCAR for AIMD
                 "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
-                "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
+                "GGA": "PS",
                 "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
                 "LDAUPRINT": 0,
             }

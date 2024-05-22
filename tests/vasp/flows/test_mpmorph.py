@@ -6,11 +6,10 @@ from pymatgen.core import Structure
 from pymatgen.io.vasp import Kpoints
 
 from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker, MPMorphMDMaker
+from atomate2.vasp.flows.mpmorph import MPMorphVaspMDMaker
 from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.run import DEFAULT_HANDLERS
 from atomate2.vasp.sets.core import MDSetGenerator
-
-from atomate2.vasp.flows.mpmorph import MPMorphVaspMDMaker
 
 
 def _get_uuid_from_job(job, dct):

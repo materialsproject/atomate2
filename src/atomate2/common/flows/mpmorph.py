@@ -1,13 +1,23 @@
-"""Flows adapted from MPMorph *link to origin github repo*"""  # TODO: Add link to origin github repo
+"""Define code agnostic MPMorph flows.
+
+This file generalizes the MPMorph workflows of
+https://github.com/materialsproject/mpmorph
+originally written in atomate for VASP only to a more general
+code agnostic form.
+
+For information about the current flows, contact:
+- Bryant Li (@BryantLi-BLI)
+- Aaron Kaplan (@esoteric-ephemera)
+- Max Gallant (@mcgalcode)
+"""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 from jobflow import Flow, Maker, Response, job
-from pymatgen.core import Composition
 
 # from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import MPMorphPVPostProcess, _apply_strain_to_structure
@@ -19,7 +29,7 @@ if TYPE_CHECKING:
     from typing import Any
 
     from jobflow import Job
-    from pymatgen.core import Structure
+    from pymatgen.core import Composition, Structure
 
     from atomate2.common.jobs.eos import EOSPostProcessor
 
@@ -104,11 +114,16 @@ class EquilibriumVolumeMaker(Maker):
                 )
                 >= self.max_attempts
             ):
+                # If the equilibrium volume is within the range of fitted volumes,
+                # or if the maximum number of attempts has been performed, stop
+                # and return structure at estimated equilibrium volume
                 final_structure = structure.copy()
                 final_structure.scale_lattice(working_outputs["V0"])
                 return final_structure
 
-            elif working_outputs.get("V0") > working_outputs.get("Vmax"):
+            # Else, if the extrapolated equilibrium volume is outside the range of
+            # fitted volumes, scale appropriately
+            if working_outputs.get("V0") > working_outputs.get("Vmax"):
                 v_ref = working_outputs["Vmax"]
 
             elif working_outputs.get("V0") < working_outputs.get("Vmax"):
@@ -150,12 +165,16 @@ class EquilibriumVolumeMaker(Maker):
 
 @dataclass
 class MPMorphMDMaker(Maker):
-    """Base MPMorph flow for volume equilibration, quench, and production runs via molecular dynamics
+    """Base MPMorph flow for amorphous solid equilibration.
 
-    Calculates the equilibrium volume of a structure at a given temperature. A convergence fitting
-    (optional) for the volume followed by quench (optional) from high temperature to low temperature
-    and finally a production run(s) at a given temperature. Production run is broken up into multiple
-    smaller steps to ensure simulation does not hit wall time limits.
+    This flow uses NVT molecular dynamics to:
+    (1 - optional) Determine the equilibrium volume of an amorphous
+        structure via EOS fit.
+    (2 - optional) Quench the equilibrium volume structure from a higher
+        temperature down to a lower desired "production" temperature.
+    (3) Run a production, longer-time MD run in NVT.
+        The production run can be broken up into smaller steps to
+        ensure the simulation does not hit wall time limits.
 
     Check atomate2.vasp.flows.mpmorph for MPMorphVaspMDMaker
 
@@ -166,7 +185,7 @@ class MPMorphMDMaker(Maker):
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-        SlowQuenchMaker - MDMaker that quenchs structure from high temperature to low temperature
+        SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
     production_md_maker : Maker
         MDMaker to generate the production run(s)
@@ -184,14 +203,15 @@ class MPMorphMDMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Create a flow with MPMorph molecular dynamics (and relax+static).
 
-        By default, production run is broken up into multiple smaller steps. Converegence and
-        quench are optional and may be used to equilibrate the unit cell volume (useful for
-        high temperature production runs of structures extracted from Materials Project) and
-        to quench the structure from high to low temperature (e.g. amorphous structures).
+        By default, production run is broken up into multiple smaller steps.
+        Converegence and quench are optional and may be used to equilibrate
+        the wt cell volume (useful for high temperature production runs of
+        structures extracted from Materials Project) and to quench the
+        structure from high to low temperature (e.g. amorphous structures).
 
         Parameters
         ----------
@@ -237,15 +257,15 @@ class MPMorphMDMaker(Maker):
         )
 
     def _post_init_update(self) -> None:
-        pass
+        """Update Maker prior to creating flow."""
 
 
 @dataclass
 class FastQuenchMaker(Maker):
-    """Fast quench flow for quenching high temperature structures to 0K
+    """Fast quench flow from high temperature to 0K structures.
 
-    Quench's a provided structure with a single (or double) relaxation and a static calculation at 0K.
-    Adapted from MPMorph Workflow
+    Quenches a provided structure with a single (or double)
+    relaxation and a static calculation at 0K.
 
     Parameters
     ----------
@@ -308,44 +328,45 @@ class FastQuenchMaker(Maker):
 
 @dataclass
 class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
-    """Slow quench flow for quenching high temperature structures to low temperature
+    """Slow quench from high to low temperature structures.
 
-    Quench's a provided structure with a molecular dynamics run from a desired high temperature to
-    a desired low temperature. Flow creates a series of MD runs that holds at a certain temperature
-    and initiates the following MD run at a lower temperature (step-wise temperature MD runs).
-    Adapted from MPMorph Workflow.
+    Quenches a provided structure with a molecular dynamics
+    run from a desired high temperature to a desired low temperature.
+    Flow creates a series of MD runs that holds at a certain temperature
+    and initiates the following MD run at a lower temperature (step-wise
+    temperature MD runs).
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
     md_maker :  Maker | None = None
-        Can only be an MDMaker or ForceFieldMDMaker. Defaults to None. If None, will not work. #WORK IN PROGRESS.
-    quench_start_temperature : int = 3000
+        Can only be an MDMaker or ForceFieldMDMaker.
+        Defaults to None. If None, will not work. #WORK IN PROGRESS.
+    quench_start_temperature : float = 3000
         Starting temperature for quench; default 3000K
-    quench_end_temperature : int = 500
+    quench_end_temperature : float = 500
         Ending temperature for quench; default 500K
-    quench_temperature_step : int = 500
+    quench_temperature_step : float = 500
         Temperature step for quench; default 500K drop
     quench_n_steps : int = 1000
         Number of steps for quench; default 1000 steps
     descent_method : str = "stepwise"
-        Descent method for quench; default "stepwise". Others available: "linear with hold"
+        Descent method for quench; default "stepwise".
+        Others available: "linear with hold"
     """
 
     name: str = "slow quench"
     md_maker: Maker | None = None
-    quench_start_temperature: int = 3000
-    quench_end_temperature: int = 500
-    quench_temperature_step: int = 500
+    quench_start_temperature: float = 3000
+    quench_end_temperature: float = 500
+    quench_temperature_step: float = 500
     quench_n_steps: int = 1000
-    descent_method: str = "stepwise"
+    descent_method: Literal["stepwise", "linear with hold"] = "stepwise"
 
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> (
-        Flow
-    ):  # TODO : main objective: modified to work with other MD codes; Only works for VASP and MLFF_MD now.
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        # TODO : main objective: modified to work with other MD codes.
+        # Only works for VASP and MLFF_MD now.
         """
         Create a slow quench flow with md maker.
 
@@ -384,7 +405,7 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
             ):  # TODO: Work in Progress; needs testing
                 md_job_linear = self.call_md_maker(
                     structure=structure,
-                    temp=[temp, temp - self.quench_temperature_step],
+                    temp=[temp, temp - self.quench_temperature_step],  # type: ignore[arg-type]
                     prev_dir=prev_dir,
                 )
 
@@ -412,27 +433,32 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
         temp: float,
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
-        if not (
-            isinstance(self.md_maker, MDMaker)
-            or isinstance(self.md_maker, ForceFieldMDMaker)
-        ):
-            raise ValueError(
-                "***WORK IN PROGRESS*** md_maker must be an MDMaker or ForceFieldMDMaker."
+        """Call MD maker for slow quench.
+
+        TODO write docstr
+        """
+        if not isinstance(self.md_maker, (MDMaker, ForceFieldMDMaker)):
+            raise TypeError(
+                "***WORK IN PROGRESS*** md_maker must be "
+                "an MDMaker or ForceFieldMDMaker."
             )
         return self.md_maker.make(structure, prev_dir)
 
 
 @dataclass
 class AmorphousLimitMaker(Maker):
-    """Flow to create an amorphous structure from a desired stiochiometry, then perform
-    MPMorph molecular dynamics runs on top of it.
+    """Create an amorphous structure and equilibrate with MPMorph.
+
+    Creates an amorphous structure from a desired stiochiometry,
+    then performs the MPMorph molecular dynamics runs on top of it.
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
     mpmorph_maker :  MPMorphMDMaker
-        MDMaker to generate the molecular dynamics jobs specifically for MPMorph workflow
+        MDMaker to generate the molecular dynamics jobs specifically
+        for MPMorph workflow
     """
 
     name: str = "Amorphous Limit Maker"
@@ -441,12 +467,11 @@ class AmorphousLimitMaker(Maker):
     def make(
         self,
         structure: Structure | None = None,
-        composition: Union[str, Composition] = None,
+        composition: str | Composition | None = None,
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """
-        Create a flow to generate an amorphous structure from a desired stiochiometry,
-        then perform MPMorph molecular dynamics workflow runs on top of it.
+        Run the amorphous structure maker and equilibration.
 
         Parameters
         ----------
@@ -460,8 +485,9 @@ class AmorphousLimitMaker(Maker):
         Returns
         -------
         Flow
-            A flow containing series of rescaled volume molecular dynamics runs, EOS fitted,
-            then production run at the equilibirum volume.
+            A flow containing series of rescaled volume molecular
+            dynamics runs, EOS fitted, then production run at the
+            equilibirum volume.
         """
         if structure is None:
             if composition is None:
