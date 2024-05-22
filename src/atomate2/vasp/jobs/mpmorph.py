@@ -140,12 +140,12 @@ class FastQuenchVaspMaker(FastQuenchMaker):
     name: str = "Vasp fast quench"
     relax_maker: MPPreRelaxMaker = field(default_factory=MPPreRelaxMaker)
     relax_maker2: MPMetaGGARelaxMaker = field(
-        default_factory=MPMetaGGARelaxMaker(
+        default_factory=lambda: MPMetaGGARelaxMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
         )
     )
     static_maker: MPMetaGGAStaticMaker = field(
-        default_factory=MPMetaGGAStaticMaker(
+        default_factory=lambda: MPMetaGGAStaticMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
         )
     )

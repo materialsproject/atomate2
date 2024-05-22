@@ -459,7 +459,6 @@ def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
         )
         for ref_volume in ref_md_energies["energy"]
     )
-    assert False
 
 
 def test_mpmoprh_vasp_slow_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
