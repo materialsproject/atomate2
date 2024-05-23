@@ -8,8 +8,10 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import Flow, Response, job
+from phonopy import Phonopy
 from pymatgen.core import Structure
 from pymatgen.core.units import kb
+from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 # TODO: NEED TO CHANGE
 
@@ -17,12 +19,34 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.common.schemas.phonons import ForceConstants
+    from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 logger = logging.getLogger(__name__)
+
+
+@job
+def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
+    """Get the phonon supercell of a structure.
+
+    Parameters
+    ----------
+    phonon_doc: PhononBSDOSDoc
+        The output of a phonopy workflow
+
+    Returns
+    -------
+    Structure
+        The phonopy structure
+    """
+    cell = get_phonopy_structure(phonon_doc.structure)
+    phonon = Phonopy(
+        cell,
+        phonon_doc.supercell_matrix,
+    )
+    return get_pmg_structure(phonon.supercell)
 
 
 @job

@@ -9,12 +9,11 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from phonopy import Phonopy
 from pymatgen.core.structure import Structure
-from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 from atomate2.common.jobs.anharmonicity import (
     displace_structure,
+    get_phonon_supercell,
     get_sigma_a,
     run_displacements,
 )
@@ -107,12 +106,10 @@ class BaseAnharmonicityMaker(Maker):
         )
         jobs = [phonon_flow]
 
-        cell = get_phonopy_structure(structure)
-        phonon = Phonopy(
-            cell,
-            supercell_matrix,
-        )
-        phonon_supercell = get_pmg_structure(phonon.supercell)
+        phonon_supercell_job = get_phonon_supercell(phonon_flow.output)
+        jobs.append(phonon_supercell_job)
+
+        phonon_supercell = phonon_supercell_job.output
 
         displace_supercell = displace_structure(
             phonon_supercell=phonon_supercell,
