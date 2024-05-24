@@ -1,12 +1,1 @@
-{
-  "xc": "pbe",
-  "relativistic": "atomic_zora scalar",
-  "relax_geometry": "trm 1.000000e-03",
-  "relax_unit_cell": "full",
-  "k_grid": [
-    2,
-    2,
-    2
-  ],
-  "species_dir": "/home/tpurcell/git/fhi-aims-workflows/tests/species_dir"
-}
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "relax_geometry": "trm 1.000000e-03", "relax_unit_cell": "full", "k_grid": [2, 2, 2], "species_dir": "/home/purcellt/git/atomate2/tests/aims/species_dir/light", "rlsy_symmetry": "all", "sc_accuracy_rho": 1e-06, "sc_accuracy_forces": 0.0001}
