@@ -5,6 +5,7 @@ For details see: doi.org/10.1103/PhysRevMaterials.4.083809
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -26,11 +27,11 @@ if TYPE_CHECKING:
 
     from atomate2.common.flows.phonons import BasePhononMaker
 
-SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
+SUPPORTED_CODES = ["aims"]
 
 
 @dataclass
-class BaseAnharmonicityMaker(Maker):
+class BaseAnharmonicityMaker(Maker, ABC):
     """
     Maker to calculate the anharmonicity score of a material.
 
@@ -142,11 +143,9 @@ class BaseAnharmonicityMaker(Maker):
 
         return Flow(jobs, calc_sigma_a_os.output)
 
-    # Note: Came from aims/flows/phonons.py
-    # (Might be different for different DFT codes, but this might work as a
-    # first-pass solution)
     @property
-    def prev_calc_dir_argname(self) -> str:
+    @abstractmethod
+    def prev_calc_dir_argname(self) -> str | None:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
@@ -155,4 +154,3 @@ class BaseAnharmonicityMaker(Maker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return "prev_dir"
