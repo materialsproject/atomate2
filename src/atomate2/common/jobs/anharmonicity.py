@@ -13,6 +13,8 @@ from pymatgen.core import Structure
 from pymatgen.core.units import kb
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
+from atomate2.aims.schemas.calculation import Calculation
+
 # TODO: NEED TO CHANGE
 
 if TYPE_CHECKING:
@@ -127,9 +129,17 @@ def get_sigma_a(
         1,
         2,
     ).reshape(2 * (len(phonon_supercell) * 3,))
-    displacements = [
-        np.array(disp_data) for disp_data in displaced_structures["displacements"]
-    ]
+    if isinstance(displaced_structures["coords"][0], Calculation):
+        displacements = [
+            disp_data.output.structure.cart_coords - phonon_supercell.cart_coords
+            for disp_data in displaced_structures["coords"]
+        ]
+    else:
+        displacements = [
+            np.array(disp_data) - phonon_supercell.cart_coords
+            for disp_data in displaced_structures["coords"]
+        ]
+
     harmonic_forces = [
         (-force_constants_2d @ displacement.flatten()).reshape((-1, 3))
         for displacement in displacements
@@ -176,7 +186,7 @@ def run_displacements(
     """
     force_eval_jobs = []
     outputs: dict[str, list] = {
-        "displacements": [],
+        "coords": [],
         "forces": [],
         "uuids": [],
         "dirs": [],
@@ -192,13 +202,11 @@ def run_displacements(
             "displaced_structures": displacements,
         }
         force_eval_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
+            {"_set": {"write_additional_data->anharmonicity_info:json": info}},
+            dict_mod=True,
         )
         force_eval_jobs.append(force_eval_job)
-        outputs["displacements"] = [
-            displacement.cart_coords - phonon_supercell.cart_coords
-            for displacement in displacements
-        ]
+        outputs["coords"] = force_eval_job.output.calcs_reversed
         outputs["uuids"] = [force_eval_job.output.uuid] * len(displacements)
         outputs["dirs"] = [force_eval_job.output.dir_name] * len(displacements)
         outputs["forces"] = force_eval_job.output.output.all_forces
@@ -208,7 +216,9 @@ def run_displacements(
                 force_eval_job = force_eval_maker.make(displacement, prev_dir=prev_dir)
             else:
                 force_eval_job = force_eval_maker.make(displacement)
-            force_eval_job.append_name(f" {idx + 1}/{len(displacements)}")
+            force_eval_job.append_name(
+                f" anharmonicity quant. {idx + 1}/{len(displacements)}"
+            )
 
             # we will add some meta data
             info = {
@@ -217,14 +227,12 @@ def run_displacements(
             }
             with contextlib.suppress(Exception):
                 force_eval_job.update_maker_kwargs(
-                    {"_set": {"write_additional_data->phonon_info:json": info}},
+                    {"_set": {"write_additional_data->anharmonicity_info:json": info}},
                     dict_mod=True,
                 )
 
             force_eval_jobs.append(force_eval_job)
-            outputs["displacements"].append(
-                displacement.cart_coords - phonon_supercell.cart_coords
-            )
+            outputs["coords"].append(force_eval_job.output.structure.cart_coords)
             outputs["uuids"].append(force_eval_job.output.uuid)
             outputs["dirs"].append(force_eval_job.output.dir_name)
             outputs["forces"].append(force_eval_job.output.output.forces)

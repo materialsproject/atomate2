@@ -119,10 +119,12 @@ class BaseAnharmonicityMaker(Maker):
         jobs.append(displace_supercell)
         self.displaced_supercell = displace_supercell.output
 
+        force_eval_maker = self.phonon_maker.phonon_displacement_maker
+        force_eval_maker.name = f"{force_eval_maker.name}"
         displacement_calcs = run_displacements(
             displacements=[displace_supercell.output],
             phonon_supercell=phonon_supercell,
-            force_eval_maker=self.phonon_maker.phonon_displacement_maker,
+            force_eval_maker=force_eval_maker,
             socket=self.phonon_maker.socket,
             prev_dir_argname=self.prev_calc_dir_argname,
             prev_dir=prev_dir,

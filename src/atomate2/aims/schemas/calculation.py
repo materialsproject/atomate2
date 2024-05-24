@@ -94,7 +94,7 @@ class CalculationOutput(BaseModel):
         None, description="The final structure from the calculation"
     )
 
-    efermi: float = Field(
+    efermi: Optional[float] = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
