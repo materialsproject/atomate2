@@ -8,6 +8,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from warnings import warn
 
 from jobflow import Flow, Maker
 from pymatgen.core.structure import Structure
@@ -26,6 +27,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
+    from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 SUPPORTED_CODES = ["aims"]
 
@@ -105,20 +107,48 @@ class BaseAnharmonicityMaker(Maker, ABC):
             total_dft_energy_per_formula_unit,
             supercell_matrix,
         )
-        jobs = [phonon_flow]
 
-        phonon_supercell_job = get_phonon_supercell(phonon_flow.output)
+        phonon_doc = phonon_flow.output
+        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature)
+        jobs = [phonon_flow, anharmon_flow]
+
+        return Flow(jobs, anharmon_flow.output)
+
+    def make_from_phonon_doc(
+        self,
+        phonon_doc: PhononBSDOSDoc,
+        prev_dir: str | Path | None = None,
+        temperature: float = 300,
+    ) -> Flow:
+        """Create an anharmonicity workflow from a phonon calculation.
+
+        Parameters
+        ----------
+        phonon_doc: PhononBSDOSDoc
+            The document to get the anharmonicity for
+        prev_dir : str or Path or None
+            A previous calculation directory to use for copying outputs.
+        temperature: float
+            The temperature for the anharmonicity calculation
+        """
+        if phonon_doc.has_imaginary_modes:
+            warn(
+                "The phonon model has imaginary modes, sampling maybe incorrect.",
+                stacklevel=1,
+            )
+
+        jobs = []
+        phonon_supercell_job = get_phonon_supercell(phonon_doc)
         jobs.append(phonon_supercell_job)
 
         phonon_supercell = phonon_supercell_job.output
 
         displace_supercell = displace_structure(
             phonon_supercell=phonon_supercell,
-            force_constants=phonon_flow.output.force_constants,
+            force_constants=phonon_doc.force_constants,
             temp=temperature,
         )
         jobs.append(displace_supercell)
-        self.displaced_supercell = displace_supercell.output
 
         force_eval_maker = self.phonon_maker.phonon_displacement_maker
         force_eval_maker.name = f"{force_eval_maker.name}"
@@ -134,13 +164,12 @@ class BaseAnharmonicityMaker(Maker, ABC):
 
         # Calculate oneshot approximation of sigma_A
         calc_sigma_a_os = get_sigma_a(
-            phonon_flow.output.force_constants,
+            phonon_doc.force_constants,
             phonon_supercell,
             displacement_calcs.output,
         )
         jobs.append(calc_sigma_a_os)
         self.sigma_A_oneshot = calc_sigma_a_os.output
-
         return Flow(jobs, calc_sigma_a_os.output)
 
     @property

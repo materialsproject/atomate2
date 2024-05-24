@@ -1,6 +1,7 @@
 import os
 
 import numpy as np
+import pytest
 from jobflow import run_locally
 from pymatgen.io.aims.sets.core import SocketIOSetGenerator, StaticSetGenerator
 
@@ -71,7 +72,7 @@ def test_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
     assert np.round(responses[flow.job_uuids[-1]][1].output, 3) == 0.104
 
 
-# @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
+@pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
 def test_anharmonic_quantification_socket(si, tmp_path, species_dir):
     # mapping from job name to directory containing test files
     parameters = {
