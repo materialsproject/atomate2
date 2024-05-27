@@ -77,6 +77,12 @@ class HiphiveMaker(BaseHiphiveMaker):
     phonon_displacement_maker: ForceFieldStaticMaker = field(
         default_factory=CHGNetStaticMaker
     )
+    # ff_displacement_maker: ForceFieldStaticMaker = field(
+    #     default_factory=CHGNetStaticMaker
+    # )
+    # phonon_displacement_maker: ForceFieldStaticMaker = field(
+    #     default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 2})
+    # )
 
     @property
     def prev_calc_dir_argname(self) -> None:

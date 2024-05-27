@@ -19,6 +19,8 @@ from pymatgen.transformations.advanced_transformations import (
 )
 
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
+from atomate2.forcefields.jobs import ForceFieldStaticMaker
+from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -26,8 +28,6 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 logger = logging.getLogger(__name__)
@@ -306,7 +306,12 @@ def run_phonon_displacements(
         phonon_job.update_maker_kwargs(
             {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
         )
-        phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_reg_fworker
+
+        if isinstance(phonon_maker, BaseVaspMaker):
+            phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_reg_fworker
+        elif isinstance(phonon_maker, ForceFieldStaticMaker):
+            phonon_job.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
+
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
@@ -319,7 +324,10 @@ def run_phonon_displacements(
                 phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
             else:
                 phonon_job = phonon_maker.make(displacement)
-            phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_fworker
+            if isinstance(phonon_maker, BaseVaspMaker):
+                phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_reg_fworker
+            elif isinstance(phonon_maker, ForceFieldStaticMaker):
+                phonon_job.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data
