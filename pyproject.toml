@@ -95,7 +95,7 @@ strict = [
     "lobsterpy==0.4.4",
     "mace-torch>=0.3.3",
     "matgl==1.1.1",
-    "monty==2024.3.31",
+    "monty==2024.5.24",
     "mp-api==0.41.2",
     "numpy",
     "phonopy==2.23.1",
