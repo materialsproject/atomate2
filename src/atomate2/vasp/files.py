@@ -246,6 +246,7 @@ def copy_hiphive_outputs(
     for file in [
         "cluster_space.cs",
         "force_constants.fcs",
+        "force_constants_potential.fcp",
         "parameters.txt",
         "fitting_data.json",
         "phonopy_params.yaml",
