@@ -66,6 +66,7 @@ class QCInputSet(InputSet):
         inputs.update(self.optional_files)
 
         for key, val in inputs.items():
+            key = 'mol.qin' if key == 'Input_Dict' else f'{key}.qin'
             if val is not None and (overwrite or not (directory / key).exists()):
                 with zopen(directory / key, "wt") as file:
                     file.write(str(val))

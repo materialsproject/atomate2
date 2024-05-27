@@ -118,6 +118,7 @@ class BaseQCMaker(Maker):
         # write qchem input files
         # self.input_set_generator.get_input_set(molecule).write_inputs()
         self.input_set_generator.get_input_set(molecule)
+        self.input_set_generator.get_input_set(molecule).write_input(directory = Path.cwd())
 
         # write any additional data
         for filename, data in self.write_additional_data.items():

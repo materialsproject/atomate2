@@ -217,7 +217,7 @@ class Atomate2Settings(BaseSettings):
     # QChem specific settings
 
     QCHEM_CMD: str = Field(
-        "qchem_std", description="Command to run standard version of qchem."
+        "qchem", description="Command to run standard version of qchem."
     )
 
     QCHEM_CUSTODIAN_MAX_ERRORS: int = Field(

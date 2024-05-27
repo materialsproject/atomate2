@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from emmet.core.qchem.calculation import Calculation
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, Response, job
 
 from atomate2.qchem.jobs.core import (  
     SinglePointMaker,
@@ -118,7 +118,7 @@ class FrequencyOptMaker(Maker):
         Maker to use to generate the freq maker
     """
 
-    name: str = "frequency flattening opt"
+    name: str = "opt frequency"
     opt_maker: BaseQCMaker = field(default_factory=OptMaker)
     freq_maker: BaseQCMaker = field(default_factory= FreqMaker)
 
@@ -139,18 +139,22 @@ class FrequencyOptMaker(Maker):
             A flow containing with optimization and frequency calculation.
         """
         jobs: list[Job] = []
-        opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
-        opt.name += " 1"
+        opt = self.opt_maker.make(molecule, prev_qchem_dir=prev_dir)
+        #opt.name += " 1"
+        opt.name = 'Geometry Optimization'
         jobs += [opt]
-        molecule = opt.output.optimized_molecule
-        prev_dir = opt.output.dir_name
+        opt_taskdoc = opt.output
+        molecule =  opt_taskdoc.output.optimized_molecule
+        #prev_dir = opt_taskdoc.dir_name
 
 
-        freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
-        freq.name += " 1"
+        freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
+        #freq.name += " 1"
+        freq.name = 'Frequency Analysis'
         jobs += [freq]
-        modes = freq.output.calcs_reversed[0].output.frequency_modes
-        frequencies = freq.output.calcs_reversed[0].output.frequencies
+        freq_taskdoc = freq.output
+        modes = freq_taskdoc.output.calcs_reversed[0].output.frequency_modes
+        frequencies = freq_taskdoc.output.calcs_reversed[0].output.frequencies
 
         return Flow(jobs, output={'opt': opt.output, 'freq':freq.output},name=self.name)
 
@@ -173,9 +177,10 @@ class FrequencyOptFlatteningMaker(Maker):
     opt_maker: BaseQCMaker = field(default_factory=OptMaker)
     freq_maker: BaseQCMaker = field(default_factory= FreqMaker)
     scale: float = 1.0
-    max_ffopt_runs: int = 10
-
-    def make(self, molecule: Molecule, prev_dir: str | Path | None = None) -> Flow:
+    max_ffopt_runs: int = 5
+    
+    @job
+    def make(self, molecule: Molecule, mode: list , lowest_freq: float | 1.0, ffopt_runs: int | 0, prev_dir: str | Path | None = None) -> Flow:
         """
         Create a flow with optimization followed by frequency calculation with perturbation along the negative frequency mode
 
@@ -192,39 +197,36 @@ class FrequencyOptFlatteningMaker(Maker):
             A flow containing with optimization and frequency calculation.
         """
         jobs: list[Job] = []
-        opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
-        opt.name += " 1"
-        jobs += [opt]
-        molecule = opt.output.optimized_molecule
-        prev_dir = opt.output.dir_name
-
-
-        freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
-        freq.name += " 1"
-        jobs += [freq]
-        modes = freq.output.calcs_reversed[0].output.frequency_modes
-        frequencies = freq.output.calcs_reversed[0].output.frequencies
-        ffopt_runs = 1
-        
-        while frequencies[0] < 0 and ffopt_runs < self.max_ffopt_runs:
-            mode = modes[0]
+        opt_taskdoc = None
+        freq_taskdoc = None
+        if (lowest_freq < 0) and (ffopt_runs < self.max_ffopt_runs):
             molecule_copy = deepcopy(molecule)
-            for ii in range(molecule):
+            for ii in range(len(molecule)):
                 vec = np.array(mode[ii])
-                molecule_copy.translate_sites(indices=[ii], vector=vec * self.get("scale", 1.0))
+                molecule_copy.translate_sites(indices=[ii], vector=vec * self.scale)
             molecule = molecule_copy
             
-            ffopt_runs += 1
-            opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
-            opt.name += f" {ffopt_runs}"
+            opt = self.opt_maker.make(molecule, prev_qchem_dir=prev_dir)
+            opt.name = 'Geometry Optimization'
             jobs += [opt]
-            molecule = opt.output.optimized_molecule
-            prev_dir = opt.output.dir_name
-
-            freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
-            freq.name += f" {ffopt_runs}"
-            jobs += [freq]
-            modes = freq.output.calcs_reversed[0].output.frequency_modes
-            frequencies = freq.output.calcs_reversed[0].output.frequencies
+            opt_taskdoc = opt.output
+            molecule = opt_taskdoc.output.optimized_molecule
             
-        return Flow(jobs, output={'opt_latest': opt.output, 'freq_latest':freq.output},name=self.name)
+
+            freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
+            freq.name = 'Frequency Analysis'
+            jobs += [freq]
+            freq_taskdoc = freq.output
+            modes = freq_taskdoc.output.calcs_reversed[0].output.frequency_modes
+            frequencies = freq_taskdoc.output.calcs_reversed[0].output.frequencies
+            ffopt_runs = ffopt_runs + 1
+                 
+            recursive = self.make(molecule,
+                                  mode = modes[0],
+                                  lowest_freq = frequencies[0],
+                                  ffopt_runs = ffopt_runs, 
+                                  prev_dir=prev_dir)
+            new_flow = Flow([*jobs, recursive], output = recursive.output)
+            return Response(replace = new_flow, output = recursive.output)
+        else:
+            return Response(output = molecule, stop_children = True)
