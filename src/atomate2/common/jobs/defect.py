@@ -329,7 +329,7 @@ def spawn_defect_q_jobs(
         By default only the defect object and charge state are stored.
     relaxed_sc_lattice:
         The lattice of the relaxed supercell. If provided, the lattice parameters
-        of the supercell will be set to value specified.  Otherwise, the lattice it will
+        of the supercell will be set to value specified. Otherwise, the lattice it will
         only by set by `defect.structure` and `sc_mat`.
     validate_charge:
         Whether to validate the charge states of the defect after the atomic relaxation.
