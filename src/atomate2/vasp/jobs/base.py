@@ -192,8 +192,7 @@ class BaseVaspMaker(Maker):
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
-        """
-        Run a VASP calculation.
+        """Run a VASP calculation.
 
         Parameters
         ----------

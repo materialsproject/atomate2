@@ -174,8 +174,7 @@ class NonSCFMaker(BaseVaspMaker):
         prev_dir: str | Path | None,
         mode: str = "uniform",
     ) -> Response:
-        """
-        Run a non-scf VASP job.
+        """Run a non-scf VASP job.
 
         Parameters
         ----------
@@ -348,8 +347,7 @@ class HSEBSMaker(BaseVaspMaker):
         prev_dir: str | Path | None = None,
         mode: Literal["line", "uniform", "gap"] = "uniform",
     ) -> Response:
-        """
-        Run a HSE06 band structure VASP job.
+        """Run an HSE06 band structure VASP job.
 
         Parameters
         ----------
@@ -479,8 +477,7 @@ class TransmuterMaker(BaseVaspMaker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run a transmuter VASP job.
+        """Run a transmuter VASP job.
 
         Parameters
         ----------

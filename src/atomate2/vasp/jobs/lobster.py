@@ -120,14 +120,14 @@ def get_basis_infos(
         address_basis_file_min=address_min_basis,
     )
 
-    nband_list = []
+    n_band_list: list[int] = []
     for dict_for_basis in list_basis_dict:
         basis = [f"{key} {value}" for key, value in dict_for_basis.items()]
         lobsterin = Lobsterin(settingsdict={"basisfunctions": basis})
-        nbands = lobsterin._get_nbands(structure=structure)
-        nband_list.append(nbands)
+        n_bands = lobsterin._get_nbands(structure=structure)
+        n_band_list.append(n_bands)
 
-    return {"nbands": max(nband_list), "basis_dict": list_basis_dict}
+    return {"nbands": max(n_band_list), "basis_dict": list_basis_dict}
 
 
 @job
@@ -143,7 +143,7 @@ def update_user_incar_settings_maker(
     Parameters
     ----------
     vasp_maker : .BaseVaspMaker
-        A maker for the static run with all parammeters
+        A maker for the static run with all parameters
         relevant for Lobster.
     nbands : int
         integer indicating the correct number of bands
