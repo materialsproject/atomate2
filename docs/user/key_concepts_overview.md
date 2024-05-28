@@ -15,7 +15,7 @@ To streamline the management of such processes, tools like [jobflow](https://git
 A `Job` is a single computing job, and potentially can take any python function form, given that their inputs and outputs (return values) can be serialized in a JSON format. Jobs are defined using the `@job` decorator.
 
 A `Flow` is a sequential collection of job or other flow objects. The connectivity and also execution order and dependencies of the different jobs and flow is decided automatically from the job inputs. The output from one job (`job.output`) can be used as the input for the next one. This will therefore establish a connectivity between these two jobs.
-The connectivity between several jobs and flows can be arbitrary, depending on the purpose of the workflow. Flows are usually annotated with the `@dataclass` decorator.
+The connectivity between several jobs and flows can be arbitrary, depending on the purpose of the workflow.
 
 The diagram below illustrates a very general example of a flow (Total flow) comprised of several other flows. Each flow integrates several individual jobs or tasks, connected by the respective `job.output`.
 
