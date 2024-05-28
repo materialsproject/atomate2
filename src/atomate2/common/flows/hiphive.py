@@ -284,6 +284,8 @@ class BaseHiphiveMaker(Maker, ABC):
                 phonon_displacement_maker=self.phonon_displacement_maker,
                 ff_displacement_maker=self.ff_displacement_maker,
                 supercell_matrix_kwargs=self.supercell_matrix_kwargs,
+                bulk_modulus=bulk_modulus,
+                mpid=mpid
         )
         jobs.append(static_calcs)
 
@@ -438,123 +440,124 @@ class BaseHiphiveMaker(Maker, ABC):
         # # # #     }
         # # # # )
 
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/hiphive_1479_displ_sampling"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-59-31-454856-98976" # fix 3
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-05-05-27-911205-37950" # fix 5
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-19-33-51-707117-99373"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-22-08-52-739207-65556"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-03-39-27-546384-72231"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-05-08-16-334659-40420"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-30-11-696345-68541"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-02-18-45-24-612532-70205"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-03-15-43-37-821524-48496"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/hiphive_1479_displ_sampling"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-59-31-454856-98976" # fix 3
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-05-05-27-911205-37950" # fix 5
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-19-33-51-707117-99373"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-22-08-52-739207-65556"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-03-39-27-546384-72231"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-05-08-16-334659-40420"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-30-11-696345-68541"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-02-18-45-24-612532-70205"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-03-15-43-37-821524-48496"
         # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ/1ConfigsPerDisp/10_5_3,6/job_2024-05-18-07-29-03-325724-14004"
-        # # 4. Perform phonon renormalization to obtain temperature-dependent
-        # # force constants using hiPhive
-        # outputs_renorm = []
-        # if renormalize:
-        #     for temperature in renormalize_temperature:
-        #         nconfig = renormalize_nconfig * (1 + temperature // 100)
-        #         renormalization = run_hiphive_renormalization(
-        #             temperature=temperature,
-        #             renorm_method=renormalize_method,
-        #             nconfig=nconfig,
-        #             renorm_TE_iter=renormalize_thermal_expansion_iter,
-        #             bulk_modulus=bulk_modulus,
-        #             # prev_dir_hiphive=fit_force_constant.output["current_dir"],
-        #             prev_dir_hiphive=prev_dir_hiphive,
-        #             loop=loops,
-        #         )
-        #         renormalization.name += f" {temperature} {loops}"
-        #         renormalization.update_config({"manager_config": {"_fworker": "cpu_reg_fworker"}})
-        #         jobs.append(renormalization)
-        #         outputs_renorm.append(renormalization.output)
-        #         outputs.append(renormalization.output)
-        #         renormalization.metadata.update(
-        #             {
-        #                 "tag": [
-        #                     f"mp_id={mpid}",
-        #                     f"bulk_modulus={bulk_modulus}",
-        #                     f"run_renormalization_{loops}",
-        #                     f"nConfigsPerStd={n_structures}",
-        #                     f"fixedDispls={fixed_displs}",
-        #                     f"dispCut={disp_cut}",
-        #                     f"supercell_matrix={supercell_matrix}",
-        #                     f"loop={loops}",
-        #                 ]
-        #             }
-        #         )
+        # 4. Perform phonon renormalization to obtain temperature-dependent
+        # force constants using hiPhive
+        outputs_renorm = []
+        if renormalize:
+            for temperature in renormalize_temperature:
+                nconfig = renormalize_nconfig * (1 + temperature // 100)
+                renormalization = run_hiphive_renormalization(
+                    temperature=temperature,
+                    renorm_method=renormalize_method,
+                    nconfig=nconfig,
+                    renorm_TE_iter=renormalize_thermal_expansion_iter,
+                    bulk_modulus=bulk_modulus,
+                    prev_dir_hiphive=fit_force_constant.output["current_dir"],
+                    # prev_dir_hiphive=prev_dir_hiphive,
+                    loop=loops,
+                )
+                renormalization.name += f" {temperature} {loops}"
+                renormalization.update_config({"manager_config": {"_fworker": "cpu_reg_fworker"}})
+                jobs.append(renormalization)
+                outputs_renorm.append(renormalization.output)
+                outputs.append(renormalization.output)
+                renormalization.metadata.update(
+                    {
+                        "tag": [
+                            f"mp_id={mpid}",
+                            f"bulk_modulus={bulk_modulus}",
+                            f"run_renormalization_{loops}",
+                            f"nConfigsPerStd={n_structures}",
+                            f"fixedDispls={fixed_displs}",
+                            f"dispCut={disp_cut}",
+                            f"supercell_matrix={supercell_matrix}",
+                            f"loop={loops}",
+                        ]
+                    }
+                )
 
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-06-04-29-02-534935-41708"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-16-14-51-625183-73398"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-18-38-06-547834-98127"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-19-14-17-420858-98262"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-24-38-567687-98068"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-59-31-454856-98976"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-22-03-35-538120-20851"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-05-05-27-911205-37950"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-14-52-07-269546-30380"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-16-51-44-504507-24744"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-18-24-57-922525-28171"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-15-01-03-47-788448-49252"
-        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-01-23-02-39-742808-59642"
-        # # 5. Extract Phonon Band structure & DOS from FC
-        # # for 0K
-        # fc_pdos_pb_to_db = run_fc_to_pdos(
-        #         renormalized=renormalize,
-        #         mesh_density=mesh_density,
-        #         prev_dir_json_saver=fit_force_constant.output["current_dir"],
-        #         # prev_dir_json_saver=prev_dir_hiphive,
-        #         loop=loops,
-        #     )
-        # fc_pdos_pb_to_db.name += f" {loops} 0K"
-        # jobs.append(fc_pdos_pb_to_db)
-        # outputs.append(fc_pdos_pb_to_db.output)
-        # fc_pdos_pb_to_db.metadata.update(
-        #     {
-        #         "tag": [
-        #             f"mp_id={mpid}",
-        #             f"cutoffs={cutoffs}",
-        #             f"bulk_modulus={bulk_modulus}",
-        #             f"temperature=0K"
-        #             f"fc_pdos_pb_to_db_{loops}",
-        #             f"nConfigsPerStd={n_structures}",
-        #             f"fixedDispls={fixed_displs}",
-        #             f"dispCut={disp_cut}",
-        #             f"supercell_matrix={supercell_matrix}",
-        #             f"loop={loops}",
-        #         ]
-        #     }
-        # )
-        # # for finite temperatures
-        # if renormalize:
-        #     for i, temperature in enumerate(renormalize_temperature):
-        #         fc_pdos_pb_to_db = run_fc_to_pdos(
-        #             renormalized=renormalize,
-        #             mesh_density=mesh_density,
-        #             prev_dir_json_saver=outputs_renorm[i][0],
-        #             loop=loops,
-        #         )
-        #         fc_pdos_pb_to_db.name += f" {loops} {temperature}K"
-        #         jobs.append(fc_pdos_pb_to_db)
-        #         outputs.append(fc_pdos_pb_to_db.output)
-        #         fc_pdos_pb_to_db.metadata.update(
-        #             {
-        #                 "tag": [
-        #                     f"mp_id={mpid}",
-        #                     f"bulk_modulus={bulk_modulus}",
-        #                     f"temperature={temperature}K"
-        #                     f"fc_pdos_pb_to_db_{loops}",
-        #                     f"nConfigsPerStd={n_structures}",
-        #                     f"fixedDispls={fixed_displs}",
-        #                     f"dispCut={disp_cut}",
-        #                     f"supercell_matrix={supercell_matrix}",
-        #                     f"loop={loops}",
-        #                 ]
-        #             }
-        #         )
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-06-04-29-02-534935-41708"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-16-14-51-625183-73398"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-18-38-06-547834-98127"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-19-14-17-420858-98262"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-24-38-567687-98068"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-59-31-454856-98976"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-22-03-35-538120-20851"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-05-05-27-911205-37950"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-14-52-07-269546-30380"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-16-51-44-504507-24744"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-18-24-57-922525-28171"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-15-01-03-47-788448-49252"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-01-23-02-39-742808-59642"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-28-19-03-30-410287-51438"
+        # 5. Extract Phonon Band structure & DOS from FC
+        # for 0K
+        fc_pdos_pb_to_db = run_fc_to_pdos(
+                renormalized=renormalize,
+                mesh_density=mesh_density,
+                prev_dir_json_saver=fit_force_constant.output["current_dir"],
+                # prev_dir_json_saver=prev_dir_hiphive,
+                loop=loops,
+            )
+        fc_pdos_pb_to_db.name += f" {loops} 0K"
+        jobs.append(fc_pdos_pb_to_db)
+        outputs.append(fc_pdos_pb_to_db.output)
+        fc_pdos_pb_to_db.metadata.update(
+            {
+                "tag": [
+                    f"mp_id={mpid}",
+                    f"cutoffs={cutoffs}",
+                    f"bulk_modulus={bulk_modulus}",
+                    f"temperature=0K"
+                    f"fc_pdos_pb_to_db_{loops}",
+                    f"nConfigsPerStd={n_structures}",
+                    f"fixedDispls={fixed_displs}",
+                    f"dispCut={disp_cut}",
+                    f"supercell_matrix={supercell_matrix}",
+                    f"loop={loops}",
+                ]
+            }
+        )
+        # for finite temperatures
+        if renormalize:
+            for i, temperature in enumerate(renormalize_temperature):
+                fc_pdos_pb_to_db = run_fc_to_pdos(
+                    renormalized=renormalize,
+                    mesh_density=mesh_density,
+                    prev_dir_json_saver=outputs_renorm[i][0],
+                    loop=loops,
+                )
+                fc_pdos_pb_to_db.name += f" {loops} {temperature}K"
+                jobs.append(fc_pdos_pb_to_db)
+                outputs.append(fc_pdos_pb_to_db.output)
+                fc_pdos_pb_to_db.metadata.update(
+                    {
+                        "tag": [
+                            f"mp_id={mpid}",
+                            f"bulk_modulus={bulk_modulus}",
+                            f"temperature={temperature}K"
+                            f"fc_pdos_pb_to_db_{loops}",
+                            f"nConfigsPerStd={n_structures}",
+                            f"fixedDispls={fixed_displs}",
+                            f"dispCut={disp_cut}",
+                            f"supercell_matrix={supercell_matrix}",
+                            f"loop={loops}",
+                        ]
+                    }
+                )
 
 
         # # 6. Lattice thermal conductivity calculation using Sheng BTE

@@ -10,6 +10,7 @@ import math
 import os
 import shlex
 import subprocess
+import warnings
 from copy import copy
 from itertools import product
 from os.path import expandvars
@@ -20,6 +21,9 @@ import phonopy as phpy
 import psutil
 import scipy as sp
 from ase.cell import Cell
+from ase.io.trajectory import Trajectory
+from chgnet.model.dynamics import MolecularDynamics
+from chgnet.model.model import CHGNet
 
 # Hiphive packages
 from hiphive import (
@@ -48,12 +52,14 @@ from joblib import Parallel, delayed
 
 # Pymatgen packages
 from monty.serialization import dumpfn, loadfn
+from mp_api.client import MPRester
 from phono3py.phonon3.gruneisen import Gruneisen
 
 # Phonopy & Phono3py
 from phonopy import Phonopy
 from phonopy.interface.hiphive_interface import phonopy_atoms_to_ase
 from phonopy.structure.atoms import PhonopyAtoms
+from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import (
     get_phonon_band_structure_from_fc,
@@ -66,13 +72,14 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import SupercellTransformation
 
 from atomate2.common.jobs.phonons import get_supercell_size, run_phonon_displacements
+from atomate2.forcefields.jobs import CHGNetStaticMaker, ForceFieldStaticMaker
 from atomate2.settings import Atomate2Settings
 from atomate2.utils.log import initialize_logger
 from atomate2.vasp.files import copy_hiphive_outputs
-from atomate2.forcefields.jobs import (
-    CHGNetStaticMaker,
-    ForceFieldStaticMaker,
-)
+
+warnings.filterwarnings("ignore", module="pymatgen")
+warnings.filterwarnings("ignore", module="ase")
+
 if TYPE_CHECKING:
     from ase.atoms import Atoms
     from pymatgen.core.structure import Structure
@@ -124,7 +131,9 @@ def hiphive_static_calcs(
                 prev_dir: str | None = None,
                 phonon_displacement_maker: BaseVaspMaker | None = None,
                 ff_displacement_maker: ForceFieldStaticMaker | None = None,
-                supercell_matrix_kwargs: dict[str, Any] | None = None
+                supercell_matrix_kwargs: dict[str, Any] | None = None,
+                bulk_modulus: float | None = None,
+                mpid: str | None = None
         ) -> Response:
     """Run the static calculations for hiPhive fitting."""
     jobs = []
@@ -148,79 +157,70 @@ def hiphive_static_calcs(
         jobs.append(supercell_job)
         supercell_matrix = supercell_job.output
         outputs["supercell_matrix"] = supercell_job.output
-    
-    # displacements_md = force_field_md(
-    #     supercell_structure,
-    #     bulk_mod,
-    #     temperature_md,
-    #     mpids
-    # )
-    # md = MolecularDynamics(
-    #     atoms=supercell_structure,
-    #     model=chgnet,
-    #     ensemble="nvt", #nvt
-    #     temperature=1000,  # in K
-    #     timestep=2,  # in femto-seconds
-    #     trajectory=f"md_out_nvt_1000_{mpids[0]}.traj",
-    #     logfile=f"md_out_nvt_1000_{mpids[0]}.log",
-    #     loginterval=100,
-    #     bulk_modulus=bulk_mod,
-    # )
-    # md.run(1000)  # run a 0.1 ps MD simulation
 
-    displacements = generate_hiphive_displacements(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            n_structures=n_structures,
-            # fixed_displs=fixed_displs,
-            prev_dir=prev_dir,
-            loop=loops,
-        )
-    jobs.append(displacements)
-
-    chgnet_displacement_calcs = run_phonon_displacements(
-            displacements=displacements.output,
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            phonon_maker=ff_displacement_maker,
-            prev_dir=prev_dir,
-        )
-    jobs.append(chgnet_displacement_calcs)
-    forces_array = chgnet_displacement_calcs.output["forces"]
-    structures_array = chgnet_displacement_calcs.output["structure"]
-
-    json_saver = collect_perturbed_structures(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            rattled_structures=structures_array,
-            forces=forces_array,
-            loop=loops,
-        )
-    jobs.append(json_saver)
-
-    force_analyzer = high_force_analyzer(
+    displacements_md = force_field_md(
         structure=structure,
         supercell_matrix=supercell_matrix,
-        forces_array=forces_array,
-        displacements_list=displacements.output
-        )
-    jobs.append(force_analyzer)
-
-    displacement_updater = quality_control_forces(
-        force_analyzer.output[0],
-        force_analyzer.output[1],
-        structure=structure,
-        supercell_matrix=supercell_matrix,
-        n_structures=n_structures,
-        phonon_maker=ff_displacement_maker,
-        prev_dir=prev_dir,
+        bulk_modulus=bulk_modulus,
+        mpid=mpid,
         loop=loops,
-        displacements_pymatgen_list=displacements.output,
     )
-    jobs.append(displacement_updater)
+    jobs.append(displacements_md)
+
+    # displacements = generate_hiphive_displacements(
+    #         structure=structure,
+    #         supercell_matrix=supercell_matrix,
+    #         n_structures=n_structures,
+    #         # fixed_displs=fixed_displs,
+    #         prev_dir=prev_dir,
+    #         loop=loops,
+    #     )
+    # jobs.append(displacements)
+
+    # chgnet_displacement_calcs = run_phonon_displacements(
+    #         displacements=displacements.output,
+    #         structure=structure,
+    #         supercell_matrix=supercell_matrix,
+    #         phonon_maker=ff_displacement_maker,
+    #         prev_dir=prev_dir,
+    #     )
+    # jobs.append(chgnet_displacement_calcs)
+    # forces_array = chgnet_displacement_calcs.output["forces"]
+    # structures_array = chgnet_displacement_calcs.output["structure"]
+
+    # json_saver = collect_perturbed_structures(
+    #         structure=structure,
+    #         supercell_matrix=supercell_matrix,
+    #         rattled_structures=structures_array,
+    #         forces=forces_array,
+    #         loop=loops,
+    #     )
+    # jobs.append(json_saver)
+
+    # force_analyzer = high_force_analyzer(
+    #     structure=structure,
+    #     supercell_matrix=supercell_matrix,
+    #     forces_array=forces_array,
+    #     displacements_list=displacements.output
+    #     )
+    # jobs.append(force_analyzer)
+
+    # displacements_updater = quality_control_forces(
+    #     force_analyzer.output[0],
+    #     force_analyzer.output[1],
+    #     structure=structure,
+    #     supercell_matrix=supercell_matrix,
+    #     n_structures=n_structures,
+    #     phonon_maker=ff_displacement_maker,
+    #     prev_dir=prev_dir,
+    #     loop=loops,
+    #     displacements_pymatgen_list=displacements.output,
+    # )
+    # jobs.append(displacements_updater)
 
     vasp_displacement_calcs = run_phonon_displacements(
-            displacements=displacement_updater.output,
+            # displacements=displacements_updater.output,
+            displacements=displacements_md.output,
             structure=structure,
             supercell_matrix=supercell_matrix,
             phonon_maker=phonon_displacement_maker,
@@ -257,6 +257,62 @@ def find_smallest_x(n_structures: int) -> int:
         if 5 <= expression_value <= 6:
             return math.floor(x)  # Explicitly return the floor of x
         x += 0.1
+
+@job
+def force_field_md(
+    structure: Structure,
+    supercell_matrix: list[list[int]] | None = None,
+    bulk_modulus: float | None = None,
+    mpid: str | None = None,
+    loop: int | None = None,
+) -> list[Structure]:
+
+    logger.info(f"supercell_matrix = {supercell_matrix}")
+    # supercell_matrix = [[3, 0, 0], [0, 3, 0], [0, 0, 3]]
+    supercell_structure = SupercellTransformation(
+            scaling_matrix=supercell_matrix
+            ).apply_transformation(structure)
+    logger.info(f"supercell_structure = {supercell_structure}")
+    structure_data = {
+        "structure": structure,
+        "supercell_structure": supercell_structure,
+        "supercell_matrix": supercell_matrix,
+    }
+
+    dumpfn(structure_data, f"structure_data_{loop}.json")
+
+    # structure = Structure.from_file("examples/mp-18767-LiMnO2.cif")
+    chgnet = CHGNet.load()
+
+    md = MolecularDynamics(
+        atoms=supercell_structure,
+        model=chgnet,
+        ensemble="nvt", #nvt
+        temperature=300,  # in K
+        timestep=2,  # in femto-seconds
+        trajectory=f"md_out_nvt_300_{mpid}.traj",
+        logfile=f"md_out_nvt_300_{mpid}.log",
+        loginterval=300,
+        bulk_modulus=bulk_modulus,
+    )
+    md.run(1200)  # run a 0.12 ps MD simulation
+
+    traj = Trajectory(f'md_out_nvt_300_{mpid}.traj')
+    rattled_structures = []
+    forces = []
+    for atoms in traj:
+        # Analyze atoms
+        logger.info(atoms)
+        structure = AseAtomsAdaptor.get_structure(atoms)
+        force = atoms.get_forces()
+        forces.append(force)
+        # print(force)
+        rattled_structures.append(structure)
+
+    dumpfn(rattled_structures, f"perturbed_structures_nvt_300_{mpid}.json")
+    dumpfn(forces, f"perturbed_forces_nvt_300_{mpid}.json")
+
+    return rattled_structures
 
 @job
 def generate_hiphive_displacements(
