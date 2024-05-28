@@ -292,10 +292,10 @@ def force_field_md(
         timestep=2,  # in femto-seconds
         trajectory=f"md_out_nvt_300_{mpid}.traj",
         logfile=f"md_out_nvt_300_{mpid}.log",
-        loginterval=300,
+        loginterval=100,
         bulk_modulus=bulk_modulus,
     )
-    md.run(1200)  # run a 0.12 ps MD simulation
+    md.run(400)  # run a 0.12 ps MD simulation
 
     traj = Trajectory(f'md_out_nvt_300_{mpid}.traj')
     rattled_structures = []
