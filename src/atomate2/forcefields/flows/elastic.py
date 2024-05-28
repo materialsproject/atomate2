@@ -45,6 +45,11 @@ class ElasticMaker(BaseElasticMaker):
     bulk_relax_maker : .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
+    max_failed_deformations: int or float
+        Maximum number of deformations allowed to fail to proceed with the fitting
+        of the elastic tensor. If an int the absolute number of deformations. If
+        a float between 0 an 1 the maximum fraction of deformations. If None any
+        number of deformations allowed.
     elastic_relax_maker : .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
     generate_elastic_deformations_kwargs : dict
