@@ -134,15 +134,17 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         assert os.path.isfile(traj_file)
 
 
-def test_ext_load():
-    force_field_to_callable = {
+@pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
+def test_ext_load(force_field: str):
+    decode_dict = {
         "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
         "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
-    }
-    for force_field in ("CHGNet", "MACE"):
-        calc_from_decode = ase_calculator(force_field_to_callable[force_field])
-        calc_from_preset = ase_calculator(f"{MLFF(force_field)}")
-        assert isinstance(calc_from_decode, type(calc_from_preset))
+    }[force_field]
+    calc_from_decode = ase_calculator(decode_dict)
+    calc_from_preset = ase_calculator(str(MLFF(force_field)))
+    assert type(calc_from_decode) == type(calc_from_preset)
+    assert calc_from_decode.name == calc_from_preset.name
+    assert calc_from_decode.parameters == calc_from_preset.parameters == {}
 
 
 @pytest.mark.parametrize(("fix_symmetry"), [True, False])

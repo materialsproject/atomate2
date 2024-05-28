@@ -6,6 +6,7 @@ from typing import Optional, Union
 
 from pydantic import BaseModel, Field
 from pymatgen.io.vasp.outputs import WSWQ
+from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +37,8 @@ class FiniteDifferenceDocument(BaseModel):
         directory: Union[str, Path],
         ref_dir: Optional[Union[str, Path]] = None,
         distorted_dirs: Optional[list[str]] = None,
-    ) -> "FiniteDifferenceDocument":
-        """
-        Read the FiniteDiff file.
+    ) -> Self:
+        """Read the FiniteDiff file.
 
         Parameters
         ----------

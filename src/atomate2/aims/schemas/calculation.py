@@ -17,6 +17,7 @@ from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.common import VolumetricData
+from typing_extensions import Self
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D, Vector3D
@@ -94,7 +95,7 @@ class CalculationOutput(BaseModel):
         None, description="The final structure from the calculation"
     )
 
-    efermi: float = Field(
+    efermi: Optional[float] = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
@@ -133,9 +134,8 @@ class CalculationOutput(BaseModel):
         cls,
         output: AimsOutput,  # Must use auto_load kwarg when passed
         # store_trajectory: bool = False,
-    ) -> CalculationOutput:
-        """
-        Create an FHI-aims output document from FHI-aims outputs.
+    ) -> Self:
+        """Create an FHI-aims output document from FHI-aims outputs.
 
         Parameters
         ----------
@@ -151,16 +151,14 @@ class CalculationOutput(BaseModel):
         structure = output.final_structure
 
         electronic_output = {
-            "efermi": output.fermi_energy,
+            "efermi": getattr(output, "fermi_energy", None),
             "vbm": output.vbm,
             "cbm": output.cbm,
             "bandgap": output.band_gap,
             "direct_bandgap": output.direct_band_gap,
         }
 
-        forces = None
-        if output.forces is not None:
-            forces = output.forces
+        forces = getattr(output, "forces", None)
 
         stress = None
         if output.stress is not None:
@@ -240,9 +238,8 @@ class Calculation(BaseModel):
         store_trajectory: bool = False,
         # store_scf: bool = False,
         store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
-    ) -> tuple[Calculation, dict[AimsObject, dict]]:
-        """
-        Create an FHI-aims calculation document from a directory and file paths.
+    ) -> tuple[Self, dict[AimsObject, dict]]:
+        """Create an FHI-aims calculation document from a directory and file paths.
 
         Parameters
         ----------
@@ -319,20 +316,17 @@ class Calculation(BaseModel):
             traj = _parse_trajectory(aims_output=aims_output)
             aims_objects[AimsObject.TRAJECTORY] = traj  # type: ignore  # noqa: PGH003
 
-        return (
-            cls(
-                dir_name=str(dir_name),
-                task_name=task_name,
-                aims_version=aims_output.aims_version,
-                has_aims_completed=has_aims_completed,
-                completed_at=completed_at,
-                output=output_doc,
-                output_file_paths={
-                    k.name.lower(): v for k, v in output_file_paths.items()
-                },
-            ),
-            aims_objects,
+        instance = cls(
+            dir_name=str(dir_name),
+            task_name=task_name,
+            aims_version=aims_output.aims_version,
+            has_aims_completed=has_aims_completed,
+            completed_at=completed_at,
+            output=output_doc,
+            output_file_paths={k.name.lower(): v for k, v in output_file_paths.items()},
         )
+
+        return instance, aims_objects
 
 
 def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]:

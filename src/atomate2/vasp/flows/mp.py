@@ -164,8 +164,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
     )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
+        """Make a 2-step flow with a cheap pre-relaxation, then a high-quality one.
 
         An optional static calculation can be performed before the relaxation.
 

@@ -33,7 +33,6 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Structure
 
-
 _BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
 
@@ -78,8 +77,7 @@ class VaspInputSet(InputSet):
         overwrite: bool = True,
         potcar_spec: bool = False,
     ) -> None:
-        """
-        Write VASP input files to a directory.
+        """Write VASP input files to a directory.
 
         Parameters
         ----------
@@ -117,8 +115,7 @@ class VaspInputSet(InputSet):
     def from_directory(
         directory: str | Path, optional_files: dict = None
     ) -> VaspInputSet:
-        """
-        Load a set of VASP inputs from a directory.
+        """Load a set of VASP inputs from a directory.
 
         Note that only the standard INCAR, POSCAR, POTCAR and KPOINTS files are read
         unless optional_filenames is specified.
@@ -151,14 +148,7 @@ class VaspInputSet(InputSet):
 
     @property
     def is_valid(self) -> bool:
-        """
-        Whether the input set is valid.
-
-        Returns
-        -------
-        bool
-            Whether the input set is valid.
-        """
+        """Whether the input set is valid."""
         if self.incar.get("KSPACING", 0) > 0.5 and self.incar.get("ISMEAR", 0) == -5:
             warnings.warn(
                 "Large KSPACING value detected with ISMEAR=-5. Ensure that VASP "
@@ -186,11 +176,8 @@ class VaspInputSet(InputSet):
                 stacklevel=1,
             )
 
-        if self.incar.get("LHFCALC") and self.incar.get("ALGO", "Normal") not in (
-            "Normal",
-            "All",
-            "Damped",
-        ):
+        algo = self.incar.get("ALGO", "Normal")
+        if self.incar.get("LHFCALC") and algo not in ("Normal", "All", "Damped"):
             warnings.warn(
                 "Hybrid functionals only support Algo = All, Damped, or Normal.",
                 BadInputSetWarning,
@@ -203,11 +190,8 @@ class VaspInputSet(InputSet):
             or self.incar.get("LDAU")
             or self.incar.get("LUSE_VDW")
         ):
-            warnings.warn(
-                "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT",
-                BadInputSetWarning,
-                stacklevel=1,
-            )
+            msg = "LASPH = True should be set for +U, meta-GGAs, hybrids, and vdW-DFT"
+            warnings.warn(msg, BadInputSetWarning, stacklevel=1)
 
         return True
 
@@ -282,7 +266,7 @@ class VaspInputGenerator(InputGenerator):
         Ensure that missing magmom values are filled in with the default value of 1.0.
     use_structure_charge
         If set to True, then the overall charge of the structure (``structure.charge``)
-        is  used to set NELECT.
+        is used to set NELECT.
     sort_structure
         Whether to sort the structure (using the default sort order of
         electronegativity) before generating input files. Defaults to True, the behavior
@@ -395,8 +379,7 @@ class VaspInputGenerator(InputGenerator):
         prev_dir: str | Path = None,
         potcar_spec: bool = False,
     ) -> VaspInputSet:
-        """
-        Get a VASP input set.
+        """Get a VASP input set.
 
         Note, if both ``structure`` and ``prev_dir`` are set, then the structure
         specified will be preferred over the final structure from the last VASP run.
@@ -467,8 +450,7 @@ class VaspInputGenerator(InputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the INCAR for this calculation type.
+        """Get updates to the INCAR for this calculation type.
 
         Parameters
         ----------
@@ -498,8 +480,7 @@ class VaspInputGenerator(InputGenerator):
         vasprun: Vasprun = None,
         outcar: Outcar = None,
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for this calculation type.
+        """Get updates to the kpoints configuration for this calculation type.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 
@@ -524,8 +505,7 @@ class VaspInputGenerator(InputGenerator):
         return {}
 
     def get_nelect(self, structure: Structure) -> float:
-        """
-        Get the default number of electrons for a given structure.
+        """Get the default number of electrons for a given structure.
 
         Parameters
         ----------
