@@ -351,6 +351,7 @@ class BaseHiphiveMaker(Maker, ABC):
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_fixed_displ_fixed_force_distribution/prefinal_chgnet"
         prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-20-13-18-146041-72144"
         prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1479_fixed_displ_fixed_force_distribution/launcher_2024-05-23-18-22-12-087175"
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-28-22-29-33-614395-68155"
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Downloads/supporting_data/runtime_costs/GaP/3_pre_fc"
         # 3. Hiphive Fitting of FCPs upto 4th order
         if n_structures >= 10:
