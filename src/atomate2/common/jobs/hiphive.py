@@ -290,14 +290,14 @@ def force_field_md(
         ensemble="nvt", #nvt
         temperature=10,  # in K
         timestep=2,  # in femto-seconds
-        trajectory=f"md_out_nvt_300_{mpid}.traj",
-        logfile=f"md_out_nvt_300_{mpid}.log",
-        loginterval=300,
+        trajectory=f"md_out_nvt_10_{mpid}.traj",
+        logfile=f"md_out_nvt_10_{mpid}.log",
+        loginterval=600,
         bulk_modulus=bulk_modulus,
     )
-    md.run(1200)  # run a 0.12 ps MD simulation
+    md.run(2400)  # run a 0.24 ps MD simulation
 
-    traj = Trajectory(f'md_out_nvt_300_{mpid}.traj')
+    traj = Trajectory(f'md_out_nvt_10_{mpid}.traj')
     rattled_structures = []
     forces = []
     for atoms in traj:
@@ -309,8 +309,8 @@ def force_field_md(
         # print(force)
         rattled_structures.append(structure)
 
-    dumpfn(rattled_structures, f"perturbed_structures_nvt_300_{mpid}.json")
-    dumpfn(forces, f"perturbed_forces_nvt_300_{mpid}.json")
+    dumpfn(rattled_structures, f"perturbed_structures_nvt_10_{mpid}.json")
+    dumpfn(forces, f"perturbed_forces_nvt_10_{mpid}.json")
 
     return rattled_structures
 
