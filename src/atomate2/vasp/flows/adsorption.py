@@ -131,6 +131,8 @@ class AdsorptionMaker(Maker):
             mol_optimize_job.append_name("molecule relaxation job")
             jobs += [mol_optimize_job]
 
+            optimized_molecule = mol_optimize_job.output.structure
+
             # prev_dir = mol_optimize_job.output.dir_name
 
             joblog["job1: molecule relaxation job"]["output"] = (
@@ -140,7 +142,8 @@ class AdsorptionMaker(Maker):
         # else:
         # prev_dir = prev_dir_mol
 
-        mol_static_job = self.mol_static_maker.make(molecule_structure, prev_dir=None)
+        # mol_static_job = self.mol_static_maker.make(molecule_structure, prev_dir=None) # old
+        mol_static_job = self.mol_static_maker.make(mol_optimize_job.output.structure, prev_dir=None) # updated
         mol_static_job.append_name("molecule static job")
         jobs += [mol_static_job]
 
@@ -175,7 +178,7 @@ class AdsorptionMaker(Maker):
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
-            molecule_structure=molecule,
+            molecule_structure=optimized_molecule,
             min_slab_size=min_slab_size,
             surface_idx=surface_idx,
             min_vacuum_size=min_vacuum,
@@ -231,7 +234,7 @@ class AdsorptionMaker(Maker):
             adsorption_calc.output
         ).as_dict()
 
-        with open("joblog.json", "w") as f:
-            json.dump(joblog, f, indent=4)
+        # with open("joblog.json", "w") as f:
+        #     json.dump(joblog, f, indent=4)
 
         return Flow(jobs, output=adsorption_calc.output, name=self.name)
