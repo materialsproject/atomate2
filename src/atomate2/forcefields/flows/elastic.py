@@ -74,6 +74,7 @@ class ElasticMaker(BaseElasticMaker):
             relax_cell=False, relax_kwargs={"fmax": 0.00001}
         )
     )  # constant volume relaxation
+    max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
