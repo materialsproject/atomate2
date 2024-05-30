@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from jobflow import CURRENT_JOB
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
-from pymatgen.util.coord import pbc_diff
+from pymatgen.util.coord import find_in_coord_list_pbc
 from pytest import MonkeyPatch
 
 import atomate2.vasp.jobs.base
@@ -244,10 +244,15 @@ def check_poscar(ref_path: Path):
 
     user_frac_coords = user_poscar.structure.frac_coords
     ref_frac_coords = ref_poscar.structure.frac_coords
+    
+    coord_match = [
+        len(find_in_coord_list_pbc(ref_frac_coords,coord, atol = 1e-3)) > 0 
+        for coord in user_frac_coords
+    ]
     if (
         user_poscar.natoms != ref_poscar.natoms
         or user_poscar.site_symbols != ref_poscar.site_symbols
-        or np.any(np.abs(pbc_diff(user_frac_coords, ref_frac_coords)) > 1e-3)
+        or not all(coord_match)
     ):
         ref_poscar_path = ref_path / "inputs" / "POSCAR"
         user_poscar_path = Path("POSCAR").absolute()
