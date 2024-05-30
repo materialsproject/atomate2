@@ -5,7 +5,6 @@ import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
-import numpy as np
 import pytest
 from jobflow import CURRENT_JOB
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
@@ -244,9 +243,12 @@ def check_poscar(ref_path: Path):
 
     user_frac_coords = user_poscar.structure.frac_coords
     ref_frac_coords = ref_poscar.structure.frac_coords
-    
+
+    # In some cases, the ordering of sites can change when copying input files.
+    # To account for this, we check that the sites are the same, within a tolerance,
+    # while accounting for PBC.
     coord_match = [
-        len(find_in_coord_list_pbc(ref_frac_coords,coord, atol = 1e-3)) > 0 
+        len(find_in_coord_list_pbc(ref_frac_coords, coord, atol=1e-3)) > 0
         for coord in user_frac_coords
     ]
     if (
