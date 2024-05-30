@@ -10,7 +10,11 @@ from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.run import DEFAULT_HANDLERS
 from atomate2.vasp.sets.core import MDSetGenerator
 
-from atomate2.vasp.flows.mpmorph import MPMorphVaspMDMaker
+from atomate2.vasp.flows.mpmorph import (
+    MPMorphVaspMDMaker,
+    MPMorphVaspMDSlowQuenchMaker,
+    MPMorphVaspMDFastQuenchMaker,
+)
 
 
 def _get_uuid_from_job(job, dct):
@@ -462,8 +466,378 @@ def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mpmoprh_vasp_slow_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
-    pass
+    ref_paths = {
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
+        "MP Morph VASP MD Maker Slow Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "Vasp Slow Quench MD Maker 900K": "Si_mp_morph/BaseVaspMPMorph/Si_900K",
+        "Vasp Slow Quench MD Maker 800K": "Si_mp_morph/BaseVaspMPMorph/Si_800K",
+        "Vasp Slow Quench MD Maker 700K": "Si_mp_morph/BaseVaspMPMorph/Si_700K",
+        "Vasp Slow Quench MD Maker 600K": "Si_mp_morph/BaseVaspMPMorph/Si_600K",
+    }
+
+    mock_vasp(ref_paths)
+
+    intial_structure = Structure.from_file(
+        f"{vasp_test_dir}/Si_mp_morph/BaseVaspMPMorph/Si_1.0/inputs/POSCAR"
+    )
+    temperature: int = 300
+    end_temp: int = 300
+    steps_convergence: int = 10
+    steps_production: int = 20
+
+    n_steps_quench = 15
+    quench_temp_steps = 100
+    quench_end_temp = 500
+    quench_start_temp = 900
+
+    flow = MPMorphVaspMDSlowQuenchMaker(
+        temperature=temperature,
+        end_temp=end_temp,
+        steps_convergence=steps_convergence,
+        steps_total_production=steps_production,
+        quench_maker_kwargs={
+            "quench_n_steps": n_steps_quench,
+            "quench_temperature_step": quench_temp_steps,
+            "quench_end_temperature": quench_end_temp,
+            "quench_start_temperature": quench_start_temp,
+        },
+    ).make(structure=intial_structure)
+
+    uuids = {}
+    _get_uuid_from_job(flow, uuids)
+
+    responses = run_locally(
+        flow,
+        create_folders=True,
+        ensure_success=True,
+    )
+
+    # uuids = [uuid for uuid in responses]  # Old way of extracting uuid; check mpmorph for forcefields tests for new way
+    for resp in responses.values():
+        if hasattr(resp[1], "replace") and resp[1].replace is not None:
+            for job in resp[1].replace:
+                uuids[job.uuid] = job.name
+
+    main_mp_morph_job_names = [
+        "MD Maker 1",
+        "MD Maker 2",
+        "MD Maker 3",
+        "MD Maker 4",
+        "production run",
+    ]
+    main_mp_morph_job_names.extend(
+        [f"{T}K" for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)]
+    )
+
+    task_docs = {}
+    for uuid, job_name in uuids.items():
+        for i, mp_job_name in enumerate(main_mp_morph_job_names):
+            if mp_job_name in job_name:
+                task_docs[mp_job_name] = responses[uuid][1].output
+                break
+
+    ref_md_energies = {
+        "energy": [-13.44200043, -35.97470303, -32.48531985],
+        "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
+    }
+    # Asserts right number of jobs spawned
+    assert len(uuids) == 10
+
+    # check number of steps of each MD equilibrate run and production run
+    assert all(
+        doc.input.parameters["NSW"] == steps_convergence
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["NSW"] == steps_production
+
+    # check initial structure is scaled correctly
+    assert all(
+        any(
+            doc.output.structure.volume == pytest.approx(ref_volume, abs=1e-2)
+            for name, doc in task_docs.items()
+            if "MD Maker" in name
+        )
+        for ref_volume in ref_md_energies["volume"]
+    )
+
+    # check temperature of each MD equilibrate run and production run
+    assert all(
+        doc.input.parameters["TEBEG"] == temperature
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["TEBEG"] == temperature
+
+    assert all(
+        doc.input.parameters["TEEND"] == end_temp
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["TEEND"] == end_temp
+
+    # check that MD Maker Energies are close
+
+    assert all(
+        any(
+            doc.output.energy == pytest.approx(ref_volume, abs=1e-2)
+            for name, doc in task_docs.items()
+            if "MD Maker" in name
+        )
+        for ref_volume in ref_md_energies["energy"]
+    )
+
+    # Slow Quench Specific Tests
+    # check volume doesn't change from production run
+    assert all(
+        doc.output.structure.volume
+        == pytest.approx(task_docs["production run"].output.structure.volume, abs=1e-1)
+        for name, doc in task_docs.items()
+        if "K" in name
+    )
+    # check that the number of steps is correct
+    assert all(
+        doc.output.n_steps == n_steps_quench + 1
+        for name, doc in task_docs.items()
+        if "K" in name
+    )
+    # check that the temperature is correct
+
+    ref_tempature = [
+        T for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
+    ]
+    assert all(
+        any(
+            doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+            == pytest.approx(T, abs=100)
+            for name, doc in task_docs.items()
+            if "K" in name
+        )
+        for T in ref_tempature
+    )
 
 
 def test_mpmorph_vasp_fast_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
     pass
+
+
+name_to_maker = {
+    "MPMorph Vasp": MPMorphVaspMDMaker,
+    "MPMorph Vasp Slow Quench": MPMorphVaspMDSlowQuenchMaker,
+    "MPMorph Vasp Fast Quench": MPMorphVaspMDFastQuenchMaker,
+}
+
+
+@pytest.mark.parametrize(
+    "maker_name",
+    [
+        "MPMorph Vasp Fast Quench",
+    ],
+)
+
+#    [
+#        "MPMorph Vasp",
+#        "MPMorph Vasp Slow Quench",
+#        "MPMorph Vasp Fast Quench",
+#    ],
+
+
+def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
+    ref_paths = {
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
+        "MP Morph VASP MD Maker production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "MP Morph VASP MD Maker Slow Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "MP Morph VASP MD Maker Fast Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "Vasp Slow Quench MD Maker 900K": "Si_mp_morph/BaseVaspMPMorph/Si_900K",
+        "Vasp Slow Quench MD Maker 800K": "Si_mp_morph/BaseVaspMPMorph/Si_800K",
+        "Vasp Slow Quench MD Maker 700K": "Si_mp_morph/BaseVaspMPMorph/Si_700K",
+        "Vasp Slow Quench MD Maker 600K": "Si_mp_morph/BaseVaspMPMorph/Si_600K",
+        "MP pre-relax": "Si_mp_morph/BaseVaspMPMorph/pre_relax",
+        "MP relax": "Si_mp_morph/BaseVaspMPMorph/relax",
+        "MP static": "Si_mp_morph/BaseVaspMPMorph/static",
+    }
+
+    mock_vasp(ref_paths)
+
+    intial_structure = Structure.from_file(
+        f"{vasp_test_dir}/Si_mp_morph/BaseVaspMPMorph/Si_1.0/inputs/POSCAR"
+    )
+    temperature: int = 300
+    end_temp: int = 300
+    steps_convergence: int = 10
+    steps_production: int = 20
+
+    n_steps_quench = 15
+    quench_temp_steps = 100
+    quench_end_temp = 500
+    quench_start_temp = 900
+
+    quench_kwargs = (
+        {
+            "quench_n_steps": n_steps_quench,
+            "quench_temperature_step": quench_temp_steps,
+            "quench_end_temperature": quench_end_temp,
+            "quench_start_temperature": quench_start_temp,
+        }
+        if "Slow Quench" in maker_name
+        else {}
+    )
+
+    flow = name_to_maker[maker_name](
+        temperature=temperature,
+        end_temp=end_temp,
+        steps_convergence=steps_convergence,
+        steps_total_production=steps_production,
+        quench_maker_kwargs=quench_kwargs,
+    ).make(intial_structure)
+
+    uuids = {}
+    _get_uuid_from_job(flow, uuids)
+
+    responses = run_locally(
+        flow,
+        create_folders=True,
+        ensure_success=True,
+    )
+
+    # uuids = [uuid for uuid in responses]  # Old way of extracting uuid; check mpmorph for forcefields tests for new way
+    for resp in responses.values():
+        if hasattr(resp[1], "replace") and resp[1].replace is not None:
+            for job in resp[1].replace:
+                uuids[job.uuid] = job.name
+
+    main_mp_morph_job_names = [
+        "MD Maker 1",
+        "MD Maker 2",
+        "MD Maker 3",
+        "production run",
+    ]
+
+    if "Fast Quench" in maker_name:
+        main_mp_morph_job_names.extend(["static", "relax", "pre relax"])
+    if "Slow Quench" in maker_name:
+        main_mp_morph_job_names.extend(
+            [
+                f"{T}K"
+                for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
+            ]
+        )
+
+    task_docs = {}
+    for uuid, job_name in uuids.items():
+        for i, mp_job_name in enumerate(main_mp_morph_job_names):
+            if mp_job_name in job_name:
+                task_docs[mp_job_name] = responses[uuid][1].output
+                break
+
+    ref_md_energies = {
+        "energy": [-3.94691047, -35.4165625, -32.22834385],
+        "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
+    }
+    # {'relax': {'energy': [-3.94691047, -35.4165625, -32.22834385], 'volume': [82.59487098351644, 161.31810738968053, 278.7576895693679], 'stress': [[[2185.20754271, 14.7942104, -173.29812155], [14.79421028, 1858.54624946, -59.64495575], [-173.29812137, -59.6449556, 2235.95070619]], [[75.30708537, 4.53754572, 3.44841349], [4.53754593, 84.08176735, 10.03111753], [3.44841324, 10.0311175, 79.10113438]], [[-60.58223908, 3.5205009, 3.39618931], [3.52050088, -72.2768531, 5.48028975], [3.39618927, 5.48028975, -75.51532848]]], 'pressure': [2093.234832786666, 79.49666236666667, -69.45814021999999], 'EOS': {'b0': 414.25333692452443, 'b1': 4.409001107817127, 'v0': 185.6675735698139}}, 'V0': 185.6675735698139, 'Vmax': 278.7576895693679, 'Vmin': 82.59487098351644}
+
+    # Asserts right number of jobs spawned
+    # check number of jobs spawned
+    if "Fast Quench" in maker_name:
+        assert len(uuids) == 9
+    elif "Slow Quench" in maker_name:
+        assert len(uuids) == 10
+    else:  # "Main MPMorph MLFF Maker"
+        assert len(uuids) == 6
+
+    # check number of steps of each MD equilibrate run and production run
+    assert all(
+        doc.input.parameters["NSW"] == steps_convergence
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["NSW"] == steps_production
+
+    # check initial structure is scaled correctly
+    assert all(
+        any(
+            doc.output.structure.volume == pytest.approx(ref_volume, abs=1e-2)
+            for name, doc in task_docs.items()
+            if "MD Maker" in name
+        )
+        for ref_volume in ref_md_energies["volume"]
+    )
+
+    # check temperature of each MD equilibrate run and production run
+    assert all(
+        doc.input.parameters["TEBEG"] == temperature
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["TEBEG"] == temperature
+
+    assert all(
+        doc.input.parameters["TEEND"] == end_temp
+        for name, doc in task_docs.items()
+        if "MD Maker" in name
+    )
+    assert task_docs["production run"].input.parameters["TEEND"] == end_temp
+
+    # check that MD Maker Energies are close
+
+    assert all(
+        any(
+            doc.output.energy == pytest.approx(ref_volume, abs=1e-2)
+            for name, doc in task_docs.items()
+            if "MD Maker" in name
+        )
+        for ref_volume in ref_md_energies["energy"]
+    )
+
+    if "Fast Quench" in maker_name:
+        assert (
+            task_docs["static"].input.structure.volume
+            == task_docs["relax"].output.structure.volume
+        )
+        assert (
+            task_docs["relax"].output.structure.volume
+            <= task_docs["production run"].output.structure.volume
+        )  # Ensures that the unit cell relaxes when fast quenched at 0K
+
+    if "Slow Quench" in maker_name:
+        # check volume doesn't change from production run
+        assert all(
+            doc.output.structure.volume
+            == pytest.approx(
+                task_docs["production run"].output.structure.volume, abs=1e-1
+            )
+            for name, doc in task_docs.items()
+            if "K" in name
+        )
+        # check that the number of steps is correct
+        assert all(
+            doc.input.parameters["NSW"] == n_steps_quench
+            for name, doc in task_docs.items()
+            if "K" in name
+        )
+        # check that the temperature is correct
+
+        ref_tempature = [
+            T for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
+        ]
+
+        assert all(
+            any(
+                doc.input.parameters["TEBEG"] == pytest.approx(T)
+                for name, doc in task_docs.items()
+                if "K" in name
+            )
+            for T in ref_tempature
+        )
+        assert all(
+            any(
+                doc.input.parameters["TEEND"] == pytest.approx(T)
+                for name, doc in task_docs.items()
+                if "K" in name
+            )
+            for T in ref_tempature
+        )
