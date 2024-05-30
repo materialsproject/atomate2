@@ -61,15 +61,16 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
+          pip install git+https://github.com/materialsproject/pymatgen
           # ase needed to get FrechetCellFilter used by ML force fields
           pip install git+https://gitlab.com/ase/ase
           pip install .[strict,tests,abinit]
           pip install torch-runstats
           pip install --no-deps nequip==0.5.6
 
-      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
-        #if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
-        run: pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+      #- name: Install pymatgen from master if triggered by pymatgen repo dispatch
+      #  if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+      #  run: pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test
         env:
