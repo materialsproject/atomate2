@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.4.13",
+    "pymatgen>=2024.5.31",
 ]
 
 [project.optional-dependencies]
