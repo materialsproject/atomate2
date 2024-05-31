@@ -28,12 +28,15 @@ _VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
 _REF_PATHS: dict[str, str | Path] = {}
 _FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 
-def zpath(path : str | Path) -> Path:
+
+def zpath(path: str | Path) -> Path:
     return Path(monty_zpath(path))
+
 
 @pytest.fixture(scope="session")
 def vasp_test_dir(test_dir):
     return test_dir / "vasp"
+
 
 @pytest.fixture(scope="session")
 def lobster_test_dir(test_dir):
@@ -204,7 +207,9 @@ def check_incar(
 
 def check_kpoints(ref_path: Path):
     user_kpoints_exists = (user_kpt_path := zpath("KPOINTS")).exists()
-    ref_kpoints_exists = (ref_kpt_path := zpath(ref_path / "inputs" / "KPOINTS")).exists()
+    ref_kpoints_exists = (
+        ref_kpt_path := zpath(ref_path / "inputs" / "KPOINTS")
+    ).exists()
 
     if user_kpoints_exists and not ref_kpoints_exists:
         raise ValueError(
@@ -242,7 +247,7 @@ def check_kpoints(ref_path: Path):
 def check_poscar(ref_path: Path):
     user_poscar_path = zpath("POSCAR")
     ref_poscar_path = zpath(ref_path / "inputs" / "POSCAR")
-    
+
     user_poscar = Poscar.from_file(user_poscar_path)
     ref_poscar = Poscar.from_file(ref_poscar_path)
 
@@ -268,21 +273,21 @@ def check_poscar(ref_path: Path):
 
 
 def check_potcar(ref_path: Path):
-
     potcars = {"reference": None, "user": None}
     paths = {"reference": ref_path / "inputs", "user": Path(".")}
     for mode, path in paths.items():
         if (potcar_path := zpath(path / "POTCAR")).exists():
             potcars[mode] = Potcar.from_file(potcar_path).symbols
         elif (potcar_path := zpath(path / "POTCAR.spec")).exists():
-            with zopen(potcar_path,"rt") as f:
+            with zopen(potcar_path, "rt") as f:
                 potcars[mode] = f.read().strip().split("\n")
         else:
             raise FileNotFoundError(f"no {mode} POTCAR or POTCAR.spec file found")
 
     if potcars["reference"] != potcars["user"]:
         raise ValueError(
-            f"POTCAR files are inconsistent: {potcars['reference']} != {potcars['user']}"
+            "POTCAR files are inconsistent: "
+            f"{potcars['reference']} != {potcars['user']}"
         )
 
 
