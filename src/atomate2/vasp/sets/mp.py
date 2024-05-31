@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from pymatgen.io.vasp import Kpoints
-from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet
+from pymatgen.io.vasp.sets import MPRelaxSet, MPStaticSet, MPScanRelaxSet, MPScanStaticSet
 
 from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
@@ -41,83 +41,18 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
 class MPGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
-    config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
+    config_dict: dict = field(default_factory=lambda: MPStaticSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     bandgap_tol: float = None
     inherit_incar: bool | None = False
-    reciprocal_density: int = 100
     small_gap_multiply: tuple[float, float] | None = None
-
-    @property
-    def incar_updates(self) -> dict:
-        """Get updates to the INCAR for this calculation type.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-        return {
-            "ALGO": "FAST",
-            "NSW": 0,
-            "LCHARG": True,
-            "LWAVE": False,
-            "LREAL": False,
-            "ISMEAR": -5,
-        }
-
-    @property
-    def kpoints_updates(self) -> dict | Kpoints:
-        """Updates to the kpoints configuration for this calculation type.
-
-        This function is adapted from pymatgen.io.vasp.sets.MPStaticSet.
-        Thanks to @Andrew-S-Rosen for finding this discrepancy in issue 844:
-        https://github.com/materialsproject/atomate2/issues/844
-        """
-        factor = 1.0
-        if (
-            self.bandgap is not None
-            and self.small_gap_multiply
-            and self.bandgap <= self.small_gap_multiply[0]
-        ):
-            factor = self.small_gap_multiply[1]
-
-        # prefer to use k-point scheme from previous run
-        if (
-            self.prev_kpoints
-            and isinstance(self.prev_kpoints, Kpoints)
-            and self.prev_kpoints.style == Kpoints.supported_modes.Monkhorst
-        ):
-            kpoints = Kpoints.automatic_density_by_vol(
-                self.structure,
-                int(self.reciprocal_density * factor),
-                self.force_gamma,
-            )
-            k_div = [kp + 1 if kp % 2 == 1 else kp for kp in kpoints.kpts[0]]
-            return Kpoints.monkhorst_automatic(k_div)
-
-        return {"reciprocal_density": self.reciprocal_density * factor}
-
 
 @dataclass
 class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
-    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
+    config_dict: dict = field(default_factory=lambda: MPScanStaticSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = True
     bandgap_tol: float = 1e-4
@@ -139,6 +74,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
             "LCHARG": True,
             "LWAVE": False,
             "LREAL": False,
+            "LELF": False, # prevents KPAR > 1
             "ISMEAR": -5,
         }
 
@@ -172,4 +108,4 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
             A dictionary of updates to apply.
         """
         # unset GGA, shouldn't be set anyway but doesn't hurt to be sure
-        return {"LCHARG": True, "LWAVE": True, "GGA": None}
+        return {"LCHARG": True, "LWAVE": True, "GGA": None, "LELF": False}
