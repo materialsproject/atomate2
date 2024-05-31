@@ -178,9 +178,10 @@ class FrequencyOptFlatteningMaker(Maker):
     freq_maker: BaseQCMaker = field(default_factory= FreqMaker)
     scale: float = 1.0
     max_ffopt_runs: int = 5
-    
+
+
     @job
-    def make(self, molecule: Molecule, mode: list , lowest_freq: float | 1.0, ffopt_runs: int | 0, prev_dir: str | Path | None = None) -> Flow:
+    def make(self, molecule: Molecule, mode: list | None = None , lowest_freq: float = - 1.0, ffopt_runs: int = 0, overwrite_inputs : dict | None = None  ,prev_dir: str | Path | None = None) -> Flow:
         """
         Create a flow with optimization followed by frequency calculation with perturbation along the negative frequency mode
 
@@ -196,6 +197,15 @@ class FrequencyOptFlatteningMaker(Maker):
         Flow
             A flow containing with optimization and frequency calculation.
         """
+        if mode is None:
+            mode = []
+            for _ in range(len(molecule)):
+                mode.append([0.0,0.0,0.0])
+
+        if overwrite_inputs is not None:
+            self.opt_maker.input_set_generator.overwrite_inputs = overwrite_inputs
+            self.freq_maker.input_set_generator.overwrite_inputs = overwrite_inputs
+
         jobs: list[Job] = []
         opt_taskdoc = None
         freq_taskdoc = None
@@ -217,8 +227,8 @@ class FrequencyOptFlatteningMaker(Maker):
             freq.name = 'Frequency Analysis'
             jobs += [freq]
             freq_taskdoc = freq.output
-            modes = freq_taskdoc.output.calcs_reversed[0].output.frequency_modes
-            frequencies = freq_taskdoc.output.calcs_reversed[0].output.frequencies
+            modes = freq_taskdoc.output.frequency_modes
+            frequencies = freq_taskdoc.output.frequencies
             ffopt_runs = ffopt_runs + 1
                  
             recursive = self.make(molecule,
@@ -229,4 +239,6 @@ class FrequencyOptFlatteningMaker(Maker):
             new_flow = Flow([*jobs, recursive], output = recursive.output)
             return Response(replace = new_flow, output = recursive.output)
         else:
-            return Response(output = molecule, stop_children = True)
+            freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
+            freq.name = 'Frequency Analysis'
+            return Response(replace = [freq], output = freq.output)
