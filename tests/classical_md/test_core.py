@@ -60,3 +60,18 @@ def test_generate_interchange_salt(mol_specs_salt, run_job):
     assert task_doc.molecule_specs[1].count == 10
     assert task_doc.molecule_specs[2].name == "water"
     assert task_doc.molecule_specs[2].count == 20
+
+
+def test_generate_interchange_foyer(mol_specs_salt, run_job, mol_specs_small):
+    from atomate2.classical_md.utils import create_mol_spec
+
+    mass_density = 1
+    force_field = "oplsaa"
+    mol_specs = [create_mol_spec("CCO", 10, name="ethanol")]
+
+    job = generate_interchange(mol_specs, mass_density, force_field)
+    task_doc = run_job(job)
+
+    assert len(task_doc.molecule_specs) == 1
+    assert task_doc.molecule_specs[0].name == "ethanol"
+    assert task_doc.molecule_specs[0].count == 10

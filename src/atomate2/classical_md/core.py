@@ -8,6 +8,7 @@ from typing import Callable
 import openff.toolkit as tk
 from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
 from emmet.core.vasp.task_valid import TaskState
+from foyer import Forcefield as FoyerForceField
 from jobflow import Response, job
 from openff.interchange import Interchange
 from openff.interchange.components._packmol import pack_box
@@ -87,7 +88,9 @@ def generate_interchange(
     force_field : str, optional
         The name of the force field to use for creating the
         Interchange object. This is passed directly to openff.toolkit.ForceField.
-        Default is "openff_unconstrained-2.1.1.offxml".
+        Default is "openff_unconstrained-2.1.1.offxml". Can be set to "oplsaa"
+        to use the subset of OPLS supported by Foyer, be warned this is very
+        limited.
     pack_box_kwargs : Dict, optional
         Additional keyword arguments to pass to the
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
@@ -137,9 +140,14 @@ def generate_interchange(
     # TODO: ForceField doesn't currently support iterables, fix this
     # force_field: str | Path | List[str | Path] = "openff_unconstrained-2.1.1.offxml",
 
-    # valid FFs: https://github.com/openforcefield/openff-forcefields
+    if force_field == "oplsaa":
+        ff_object = FoyerForceField(name=force_field)
+    else:
+        # valid FFs: https://github.com/openforcefield/openff-forcefields
+        ff_object = ForceField(force_field)
+
     interchange = Interchange.from_smirnoff(
-        force_field=ForceField(force_field),
+        force_field=ff_object,
         topology=topology,
         charge_from_molecules=[
             tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs
