@@ -52,7 +52,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
         "MP meta-GGA relax 2": "Si_mp_meta_gga_relax/r2scan_relax",
         "MP meta-GGA static": "Si_mp_meta_gga_relax/r2scan_final_static",
     }
-    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
+    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR.gz")
 
     mock_vasp(ref_paths)
 
@@ -82,7 +82,7 @@ def test_mp_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
         "MP GGA relax 2": "Si_mp_gga_relax/GGA_Relax_2",
         "MP GGA static": "Si_mp_gga_relax/GGA_Static",
     }
-    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
+    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR.gz")
 
     mock_vasp(ref_paths)
 
@@ -105,7 +105,7 @@ def test_mp_gga_double_relax(mock_vasp, clean_dir, vasp_test_dir):
         "MP GGA relax 1": pre_relax_dir,
         "MP GGA relax 2": "Si_mp_gga_relax/GGA_Relax_2",
     }
-    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
+    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR.gz")
 
     mock_vasp(ref_paths)
 
