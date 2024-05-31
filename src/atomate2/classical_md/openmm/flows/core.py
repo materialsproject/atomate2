@@ -158,6 +158,9 @@ class AnnealMaker(Maker):
             output_dir=output_dir,
         )
 
+        job_tags = (self.lower_temp_job.tags or []) + (self.tags or []) or None
+        self.lower_temp_job.tags = job_tags
+
         lower_temp_job = self.lower_temp_maker.make(
             interchange=nvt_job.output.interchange,
             prev_task=nvt_job.output,
@@ -241,10 +244,7 @@ class ProductionMaker(Maker):
             output_dir=output_dir,
         )
 
-        if self.nvt_maker.tags is None:
-            self.nvt_maker.tags = self.tags
-        elif self.tags:
-            self.nvt_maker.tags += self.tags
+        self.nvt_maker.tags = (self.nvt_maker.tags or []) + (self.tags or []) or None
 
         nvt_job = self.nvt_maker.make(
             interchange=anneal_flow.output.interchange,
