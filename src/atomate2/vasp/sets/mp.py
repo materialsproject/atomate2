@@ -10,8 +10,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from pymatgen.io.vasp import Kpoints
-from pymatgen.io.vasp.sets import MPRelaxSet, MPStaticSet, MPScanRelaxSet, MPScanStaticSet
+from pymatgen.io.vasp.sets import (
+    MPRelaxSet,
+    MPScanRelaxSet,
+    MPScanStaticSet,
+    MPStaticSet,
+)
 
 from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
@@ -48,6 +52,7 @@ class MPGGAStaticSetGenerator(StaticSetGenerator):
     inherit_incar: bool | None = False
     small_gap_multiply: tuple[float, float] | None = None
 
+
 @dataclass
 class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
     """Class to generate MP-compatible VASP GGA static input sets."""
@@ -74,7 +79,7 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
             "LCHARG": True,
             "LWAVE": False,
             "LREAL": False,
-            "LELF": False, # prevents KPAR > 1
+            "LELF": False,  # prevents KPAR > 1
             "ISMEAR": -5,
         }
 
