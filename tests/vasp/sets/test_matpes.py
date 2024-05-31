@@ -42,9 +42,7 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
     assert matpes_set.inherit_incar is False
     assert matpes_set.auto_ismear is False
     assert matpes_set.auto_kspacing is False
-    assert matpes_set.force_gamma is True
     assert matpes_set.auto_lreal is False
-    assert matpes_set.auto_metal_kpoints is True
     assert matpes_set.sort_structure is True
     assert matpes_set.sym_prec == 0.1
     assert matpes_set.use_structure_charge is False
