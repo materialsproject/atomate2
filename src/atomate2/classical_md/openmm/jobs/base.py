@@ -62,6 +62,8 @@ class BaseOpenMMMaker(Maker):
     ----------
     name : str
         The name of the OpenMM job.
+    tags : Optional[List[str]]
+        Tags for the OpenMM job.
     n_steps : Optional[int]
         The number of simulation steps to run.
     step_size : Optional[float]
