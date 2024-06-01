@@ -83,7 +83,7 @@ generate_interchange(mols_specs, 1.3)
 ```
 
 In a more complex simulation we might want to scale the ion charges
-and include custom partial charges. An example with the Gen2
+and include custom partial charges. An example with a EC:EMC:LiPF6
 electrolyte is shown below. This yields the `elyte_interchange_job`
 object, which we can pass to the next stage of the simulation.
 
@@ -135,16 +135,17 @@ link it to our `elyte_interchange_job`, and then run both locally.
 
 In jobflow, jobs and flows are created by
 [Makers](https://materialsproject.github.io/jobflow/tutorials/6-makers.html),
-which can then be linked into more complex flows. The production maker links
-together makers for energy minimization, pressure equilibration, annealing, and
-a nvt simulation. The anneal maker itself creates a flow that links together nvt
-and tempchange makers (it uses the `from_temps_and_steps` method to save us from
-creating three more jobs manually). When linked up the `generate_interchange`
-job this yields a production ready molecular dynamics workflow.
+which can then be linked into more complex flows. Here, `OpenMMFlowMaker` links
+together makers for energy minimization, pressure equilibration, annealing,
+and a nvt simulation. The annealing step is a subflow that saves us from manually
+instantiating three separate jobs.
+
+Finally, we create our production flow and link to the `generate_interchange` job,
+yielding a production ready molecular dynamics workflow.
 
 
 ```python
-from atomate2.classical_md.openmm.flows.core import AnnealMaker, ProductionMaker
+from atomate2.classical_md.openmm.flows.core import OpenMMFlowMaker
 from atomate2.classical_md.openmm.jobs.core import (
     EnergyMinimizationMaker,
     NPTMaker,
@@ -153,12 +154,14 @@ from atomate2.classical_md.openmm.jobs.core import (
 from jobflow import Flow, run_locally
 
 
-production_maker = ProductionMaker(
+production_maker = OpenMMFlowMaker(
     name="production_flow",
-    energy_maker=EnergyMinimizationMaker(traj_interval=10, state_interval=10),
-    npt_maker=NPTMaker(n_steps=100),
-    anneal_maker=AnnealMaker.from_temps_and_steps(n_steps=150),
-    nvt_maker=NVTMaker(n_steps=100),
+    makers=[
+        EnergyMinimizationMaker(traj_interval=10, state_interval=10),
+        NPTMaker(n_steps=100),
+        OpenMMFlowMaker.anneal_flow(n_steps=150),
+        NVTMaker(n_steps=100),
+    ],
 )
 
 production_flow = production_maker.make(
@@ -170,8 +173,8 @@ production_flow = production_maker.make(
 run_locally(Flow([elyte_interchange_job, production_flow]))
 ```
 
-
-When the above code is executed, you should expect to see something like this:
+When the above code is executed, you should expect to see this within the
+`tutorial_system` directory:
 
 ```
 /tutorial_system
@@ -190,11 +193,14 @@ When the above code is executed, you should expect to see something like this:
 ├── trajectory6.dcd
 ```
 
-We see that each job saved a separate state and trajectory file. There are 6
-because the `AnnealMaker` creates 3 sub-jobs and the `EnergyMinimizationMaker`
-does not report anything. We also see a `taskdoc.json` file, which contains the
-metadata for the entire workflow. This is needed when we later want to do
-downstream analysis in `emmet`.
+Each job saved a separate state and trajectory file. There are 6 because
+the anneal flow creates 3 sub-jobs and the `EnergyMinimizationMaker`
+does not report anything. The `taskdoc.json` file contains the metadata
+for the entire workflow. This will be we later for analysis in `emmet`.
+
+Awesome! At this point, we've run a workflow and could start analyzing
+our data. However, there are many other options available, like
+configuring
 
 ## More Options
 
@@ -208,20 +214,22 @@ from the `BaseOpenMMMaker` class. `BaseOpenMMMaker` is highly configurable, you
 can change the timestep, temperature, reporting frequencies, output types, and
 a range of other properties. See the docstring for the full list of options.
 
-Note that when instantiating the `ProductionMaker` above, we only set the
+Note that when instantiating the `OpenMMFlowMaker` above, we only set the
 `traj_interval` and `state_interval` once, inside `EnergyMinimizationMaker`.
 This is a key feature: all makers will inherit attributes from the previous
 maker if they are not explicitly reset. This allows you to set the timestep
-once and have it apply to all stages of the simulation. More explicitly,
-the value inheritance is as follows: 1) any explicitly set value, 2)
-the value from the previous maker, 3) the default value, shown below.
+once and have it apply to all stages of the simulation. The value inheritance
+is as follows: 1) any explicitly set value, 2) the value from the previous
+maker, 3) the default value (as shown below).
 
 
 ```python
 from atomate2.classical_md.openmm.jobs.base import OPENMM_MAKER_DEFAULTS
 
 print(OPENMM_MAKER_DEFAULTS)
+```
 
+```
 {
     "step_size": 0.001,
     "temperature": 298,
@@ -246,14 +254,15 @@ the simulation in our database more easily. Finally, we want to run
 for much longer, more appropriate for a real production workflow.
 
 ```python
-production_maker = ProductionMaker(
+production_maker = OpenMMFlowMaker(
     name="production_flow",
-    energy_maker=EnergyMinimizationMaker(traj_interval=0),
-    npt_maker=NPTMaker(n_steps=1000000),
-    anneal_maker=AnnealMaker.from_temps_and_steps(n_steps=1500000),
-    nvt_maker=NVTMaker(
-        n_steps=5000000, traj_interval=10000, embed_traj=True, tags=["production"]
-    ),
+    tags=["production"],
+    makers=[
+        EnergyMinimizationMaker(traj_interval=0),
+        NPTMaker(n_steps=1000000),
+        OpenMMFlowMaker.anneal_flow(n_steps=1500000),
+        NVTMaker(n_steps=5000000, traj_interval=10000, embed_traj=True),
+    ],
 )
 
 production_flow = production_maker.make(
@@ -375,15 +384,17 @@ is that you need to specify the `platform_properties` argument in the
 
 
 ```python
-production_maker = ProductionMaker(
+production_maker = OpenMMFlowMaker(
     name="test_production",
-    energy_maker=EnergyMinimizationMaker(
-        platform_name="CUDA",
-        platform_properties={"DeviceIndex": "0"},
-    ),
-    npt_maker=NPTMaker(n_steps=100),
-    anneal_maker=AnnealMaker.from_temps_and_steps(n_steps=150),
-    nvt_maker=NVTMaker(n_steps=1000),
+    makers=[
+        EnergyMinimizationMaker(
+            platform_name="CUDA",
+            platform_properties={"DeviceIndex": "0"},
+        ),
+        NPTMaker(),
+        OpenMMFlowMaker.anneal_flow(),
+        NVTMaker(),
+    ],
 )
 ```
 
