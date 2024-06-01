@@ -430,15 +430,17 @@ for i in range(4):
 
     setup = generate_interchange(mol_specs, 1.0)
 
-    production_maker = ProductionMaker(
+    production_maker = OpenMMFlowMaker(
         name="test_production",
-        energy_maker=EnergyMinimizationMaker(
-            platform_name="CUDA",
-            platform_properties={"DeviceIndex": str(device_index)},
-        ),
-        npt_maker=NPTMaker(n_steps=200000),
-        anneal_maker=AnnealMaker.from_temps_and_steps(n_steps=1500000),
-        nvt_maker=NVTMaker(n_steps=5000000, embed_traj=True),
+        makers=[
+            EnergyMinimizationMaker(
+                platform_name="CUDA",
+                platform_properties={"DeviceIndex": str(device_index)},
+            ),
+            NPTMaker(),
+            OpenMMFlowMaker.anneal_flow(),
+            NVTMaker(),
+        ],
     )
 
     production_flow = production_maker.make(
