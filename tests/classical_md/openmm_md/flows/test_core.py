@@ -6,7 +6,7 @@ from jobflow import Flow
 from MDAnalysis import Universe
 from openff.interchange import Interchange
 
-from atomate2.classical_md.openmm.flows.core import AnnealMaker, ProductionMaker
+from atomate2.classical_md.openmm.flows.core import OpenMMFlowMaker
 from atomate2.classical_md.openmm.jobs import (
     EnergyMinimizationMaker,
     NPTMaker,
@@ -16,7 +16,7 @@ from atomate2.classical_md.openmm.jobs import (
 
 def test_anneal_maker(interchange, tmp_path, run_job):
     # Create an instance of AnnealMaker with custom parameters
-    anneal_maker = AnnealMaker.from_temps_and_steps(
+    anneal_maker = OpenMMFlowMaker.anneal_flow(
         name="test_anneal",
         anneal_temp=500,
         final_temp=300,
@@ -58,7 +58,7 @@ def test_anneal_maker(interchange, tmp_path, run_job):
 @pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
 def test_hdf5_writing(interchange, tmp_path, run_job):
     # Create an instance of AnnealMaker with custom parameters
-    anneal_maker = AnnealMaker.from_temps_and_steps(
+    anneal_maker = OpenMMFlowMaker.anneal_flow(
         name="test_anneal",
         n_steps=3,
         temp_steps=1,
@@ -83,15 +83,15 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
 
 def test_production_maker(interchange, tmp_path, run_job):
     # Create an instance of ProductionMaker with custom parameters
-    production_maker = ProductionMaker(
+    production_maker = OpenMMFlowMaker(
         name="test_production",
-        energy_maker=EnergyMinimizationMaker(max_iterations=1),
-        npt_maker=NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
-        anneal_maker=AnnealMaker.from_temps_and_steps(
-            anneal_temp=400, final_temp=300, n_steps=5
-        ),
-        nvt_maker=NVTMaker(n_steps=5),
         tags=["test"],
+        makers=[
+            EnergyMinimizationMaker(max_iterations=1),
+            NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
+            OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
+            NVTMaker(n_steps=5),
+        ],
     )
 
     # Run the ProductionMaker flow
