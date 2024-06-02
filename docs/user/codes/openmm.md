@@ -462,7 +462,7 @@ run_locally(flows[rank], ensure_success=True)
 # Analysis with Emmet
 
 For now, you'll need to make sure you have a particular emmet branch installed.
-Later the builders will be integrated into `main`
+Later the builders will be integrated into `main`.
 
 ```bash
 pip install git+https://github.com/orionarcher/emmet.git@md_builders
@@ -470,12 +470,20 @@ pip install git+https://github.com/orionarcher/emmet.git@md_builders
 
 ### Analyzing Local Data
 
+<details>
+<summary>Learn to analyze your data without a database</summary>
+
+Emmet will give us a solid head start on analyzing our data even without touching
+a database. Below, we use emmet to create a [MDAnalysis Universe](https://docs.mdanalysis.org/stable/documentation_pages/core/universe.html#module-MDAnalysis.core.universe)
+and a [SolvationAnalysis Solute](https://solvation-analysis.readthedocs.io/en/latest/api/solute.html).
+From here, we can do all sorts of very cool analysis, but that's beyond the
+scope of this tutorial. Consult the tutorials in SolvationAnalysis and MDAnalysis
+for more information.
+
 ```python
 from atomate2.classical_md.core import ClassicalMDTaskDocument
 from emmet.builders.classical_md.utils import create_universe, create_solute
 from openff.interchange import Interchange
-
-from emmet.core.classical_md.solvation import SolvationDoc
 
 ec_emc_taskdoc = ClassicalMDTaskDocument.parse_file("tutorial_system/taskdoc.json")
 interchange = Interchange.parse_raw(ec_emc_taskdoc.interchange)
@@ -489,11 +497,19 @@ u = create_universe(
 )
 
 solute = create_solute(u, solute_name="Li", networking_solvents=["PF6"])
-
-SolvationDoc.from_solute(solute)
 ```
+</details>
 
 ### Setting up builders
+
+<details>
+<summary>Connect with your databases</summary>
+
+If you followed the instructions above to set up a database, you can
+use the `ElectrolyteBuilder` to perform the same analysis as above.
+
+First, we'll need to create the stores where are data is located,
+these should match the stores you used when running your flow.
 
 ```python
 from maggma.stores import MongoStore, S3Store
@@ -504,7 +520,6 @@ mongo_info = {
     "database": "DATABASE",
     "host": "mongodb05.nersc.gov",
 }
-
 s3_info = {
     "bucket": "BUCKET",
     "s3_profile": "PROFILE",
@@ -512,10 +527,6 @@ s3_info = {
 }
 
 md_docs = MongoStore(**mongo_info, collection_name="atomate2_docs")
-solvation_docs = MongoStore(**mongo_info, collection_name="solvation_docs")
-calculation_docs = MongoStore(**mongo_info, collection_name="calculation_docs")
-
-
 md_blob_index = MongoStore(
     **mongo_info,
     collection_name="atomate2_blobs_index",
@@ -526,45 +537,32 @@ md_blob_store = S3Store(
     index=md_blob_index,
     key="blob_uuid",
 )
-
-from emmet.builders.classical_md.openmm.core import ElectrolyteBuilder
-
-builder = ElectrolyteBuilder(md_docs, md_blob_store, solvation_docs, calculation_docs)
 ```
 
-### Analyzing systems individually
+Now we create our Emmet builder and connect to it. We
+will include a query that will only select jobs with
+the tag "tutorial_production_flow" that we used earlier.
 
 ```python
-# a query that will grab
-tutorial_query = {"tags": "tutorial_production_flow"}
+from emmet.builders.classical_md.openmm.core import ElectrolyteBuilder
 
-universes = {}
-for name, uuid in jobs.items():
-    u = builder.instantiate_universe(uuid, "./trajectories", overwrite_local_traj=False)
-    universes[name] = u
-
-from emmet.builders.classical_md.utils import create_solute
-
-solutes = {}
-for name, u in universes.items():
-    solute = create_solute(
-        u,
-        solute_name="Li",
-        networking_solvents=["PF6"],
-        fallback_radius=3,
-    )
-    solute.run()
-    solutes[name] = solute
+builder = ElectrolyteBuilder(
+    md_docs, md_blob_store, query={"output.tags": "tutorial_production_flow"}
+)
+builder.connect()
 ```
+
+<details>
+<summary>Here are some more convenient queries.</summary>
 
 Here are some more convenient queries we could use!
 ```python
-# date based queries
+# query jobs from a specific day
 april_16 = {"completed_at": {"$regex": "^2024-04-16"}}
 may = {"completed_at": {"$regex": "^2024-05"}}
 
 
-# job uuid queries
+# query a particular set of jobs
 job_uuids = [
     "3d7b4db4-85e5-48a5-9585-07b37910720f",
     "4202b18f-f156-4705-8ca6-ac2a08093174",
@@ -572,12 +570,70 @@ job_uuids = [
 ]
 my_specific_jobs = {"uuid": {"$in": job_uuids}}
 ```
+</details>
 
-### Automated analysis with Builders
+</details>
+
+### Analyzing systems individually
+
+<details>
+
+<summary>Download and explore systems one-by-one</summary>
+
+To analyze a specific system, you'll need the uuid of the taskdoc you want to
+analyze. We can find the uuids of all the taskdocs in our builder by
+retrieving the items and extracting the uuids.
 
 ```python
+items = builder.get_items()
+uuids = [item["uuid"] for item in items]
+```
+
+This, however, can quickly get confusing once you have many jobs.
+At this point, I would highly recommend starting to use an application that
+makes it easier to view and navigate MongoDB databases. I recommend
+[Studio3T](https://robomongo.org/) or [DataGrip](https://www.jetbrains.com/datagrip/).
+
+Now we again use our builder to create a `Universe` and `Solute`. This time
+`instatiate_universe` downloads the trajectory, saves it locally, and uses
+it to create a `Universe`.
+
+```python
+# a query that will grab
+tutorial_query = {"tags": "tutorial_production_flow"}
+
+u = builder.instantiate_universe(uuid, "directory/to/store/trajectory")
+
+solute = create_solute(
+    u,
+    solute_name="Li",
+    networking_solvents=["PF6"],
+    fallback_radius=3,
+)
+```
+</details>
+
+### Automated analysis with builders
+
+<details>
+<summary>Do it all for all the systems!</summary>
+
+Finally, we'll put the H in high-throughput molecular dynamics. Below,
+we create Stores to hold our `SolvationDocs` and `CalculationDocs` and
+execute the builder on all of our jobs!
+
+Later, there will also be `TransportDocs`, `EquilibrationDocs` and more.
+Aggregating most of what you might want to know about an MD simulation.
+
+```python
+solvation_docs = MongoStore(**mongo_info, collection_name="solvation_docs")
+calculation_docs = MongoStore(**mongo_info, collection_name="calculation_docs")
+builder = ElectrolyteBuilder(md_docs, md_blob_store, solvation_docs, calculation_docs)
+
 builder.connect()
 items = builder.get_items()
 processed_docs = builder.process_items(items)
 builder.update_targets(processed_docs)
 ```
+
+</details>
