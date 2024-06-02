@@ -1,4 +1,4 @@
-## Installing Atomate2 from source with OpenMM
+# Installing Atomate2 from source with OpenMM
 
 ```bash
 # setting up our conda environment
@@ -33,7 +33,7 @@ you intend to run on GPU, make sure that the tests are passing for CUDA.
 >>> python -m openmm.testInstallation
 ```
 
-## Understanding Atomate2 OpenMM
+# Understanding Atomate2 OpenMM
 
 Atomate2 is really just a collection of jobflow workflows relevant to
 materials science. In all the workflows, we pass our system of interest
@@ -49,7 +49,7 @@ which catalogs the necessary system properties and interfaces with a
 variety of MD engines. This is the object that we pass between stages of
 a classical MD simulation and it is the starting point of our workflow.
 
-### Pouring a Glass of Wine
+### Setting up the system
 
 The first job we need to create generates the `Interchange` object.
 To specify the system of interest, we use give it the SMILES strings,
@@ -128,7 +128,7 @@ mol_specs_dicts = [
 elyte_interchange_job = generate_interchange(mol_specs_dicts, 1.3)
 ```
 
-### The basic simulation
+### Running a basic simulation
 
 To run a production simulation, we will create a production flow,
 link it to our `elyte_interchange_job`, and then run both locally.
@@ -142,7 +142,6 @@ instantiating three separate jobs.
 
 Finally, we create our production flow and link to the `generate_interchange` job,
 yielding a production ready molecular dynamics workflow.
-
 
 ```python
 from atomate2.classical_md.openmm.flows.core import OpenMMFlowMaker
@@ -173,6 +172,10 @@ production_flow = production_maker.make(
 run_locally(Flow([elyte_interchange_job, production_flow]))
 ```
 
+Above, we are running a very short simulation (350 steps total) and reporting out
+the trajectory and state information very frequently. For a more realistic
+simulation, see the "Configuring the Simulation" section below.
+
 When the above code is executed, you should expect to see this within the
 `tutorial_system` directory:
 
@@ -196,18 +199,21 @@ When the above code is executed, you should expect to see this within the
 Each job saved a separate state and trajectory file. There are 6 because
 the anneal flow creates 3 sub-jobs and the `EnergyMinimizationMaker`
 does not report anything. The `taskdoc.json` file contains the metadata
-for the entire workflow. This will be we later for analysis in `emmet`.
+for the entire workflow.
 
 Awesome! At this point, we've run a workflow and could start analyzing
-our data. However, there are many other options available, like
-configuring
+our data. Before we get there though, let's go through some of the
+other simulation options available.
 
-## More Options
+# Digging Deeper
 
 Atomate2 OpenMM supports running a variety of workflows with different
 configurations. Below we dig in to some of the more advanced options.
 
+
 ### Configuring the Simulation
+<details>
+<summary>Learn more about the configuration of OpenMM simulations</summary>
 
 All OpenMM jobs, i.e. anything in `atomate2.classical_md.openmm.jobs`, inherits
 from the `BaseOpenMMMaker` class. `BaseOpenMMMaker` is highly configurable, you
@@ -256,7 +262,7 @@ for much longer, more appropriate for a real production workflow.
 ```python
 production_maker = OpenMMFlowMaker(
     name="production_flow",
-    tags=["production"],
+    tags=["tutorial_production_flow"],
     makers=[
         EnergyMinimizationMaker(traj_interval=0),
         NPTMaker(n_steps=1000000),
@@ -274,9 +280,12 @@ production_flow = production_maker.make(
 run_locally(Flow([elyte_interchange_job, production_flow]))
 ```
 
-
+</details>
 
 ### Running with Databases
+
+<details>
+<summary>Learn to upload your MD data to databases</summary>
 
 Before trying this, you should have a basic understanding of JobFlow
 and [Stores](https://materialsproject.github.io/jobflow/stores.html).
@@ -327,56 +336,51 @@ property to `True` in any makers where you want to save the trajectory to
 the database. Otherwise, the trajectory will only be saved locally.
 
 Rather than use `jobflow.yaml`, you could also create the stores in
-Python and pass the stores to the `run_locally` function. This is shown
-below for completeness but the prior method is usually recommended.
+Python and pass the stores to the `run_locally` function. This is a bit
+more code, so usually the prior method is preferred.
 
-<details>
-    <summary>Configuring a JobStore in Python</summary>
 
-    ```python
-    from jobflow import run_locally, JobStore
-    from maggma.stores import MongoStore, S3Store, MemoryStore
+```python
+from jobflow import run_locally, JobStore
+from maggma.stores import MongoStore, S3Store
 
-    md_doc_store = MongoStore(
-        username="USERNAME",
-        password="PASSWORD",
-        database="DATABASE",
-        collection_name="atomate2_docs",  # suggested
-        host="mongodb05.nersc.gov",
-        port=27017,
-    )
+mongo_info = {
+    "username": "USERNAME",
+    "password": "PASSWORD",
+    "database": "DATABASE",
+    "host": "mongodb05.nersc.gov",
+}
 
-    md_blob_index = MongoStore(
-        username="USERNAME",
-        password="PASSWORD",
-        database="DATABASE",
-        collection_name="atomate2_blobs_index",  # suggested
-        host="mongodb05.nersc.gov",
-        port=27017,
-        key="blob_uuid",
-    )
+md_doc_store = MongoStore(**mongo_info, collection_name="atomate2_docs")
 
-    md_blob_store = S3Store(
-        index=md_blob_index,
-        bucket="BUCKET",
-        s3_profile="PROFILE",
-        endpoint_url="https://next-gen-minio.materialsproject.org",
-        key="blob_uuid",
-    )
+md_blob_index = MongoStore(
+    **mongo_info,
+    collection_name="atomate2_blobs_index",
+    key="blob_uuid",
+)
 
-    wf = []  # set up whatever workflow you'd like to run
+md_blob_store = S3Store(
+    index=md_blob_index,
+    bucket="BUCKET",
+    s3_profile="PROFILE",
+    endpoint_url="https://next-gen-minio.materialsproject.org",
+    key="blob_uuid",
+)
 
-    # run the flow with our custom store
-    run_locally(
-        wf,
-        store=JobStore(md_doc_store, additional_stores={"data": md_blob_store}),
-        ensure_success=True,
-    )
-    ```
+# run our previous flow with the new stores
+run_locally(
+    Flow([elyte_interchange_job, production_flow]),
+    store=JobStore(md_doc_store, additional_stores={"data": md_blob_store}),
+    ensure_success=True,
+)
+```
 </details>
 
+### Running on GPUs
 
-### Running on GPU(s)
+<details>
+<summary>Learn to accelerate MD simulations with GPUs</summary>
+
 
 Running on a GPU is nearly as simple as running on a CPU. The only difference
 is that you need to specify the `platform_properties` argument in the
@@ -452,4 +456,128 @@ for i in range(4):
 
 # this script will run four times, each with a different rank, thus distributing the work across the four GPUs.
 run_locally(flows[rank], ensure_success=True)
+```
+</details>
+
+# Analysis with Emmet
+
+For now, you'll need to make sure you have a particular emmet branch installed.
+Later the builders will be integrated into `main`
+
+```bash
+pip install git+https://github.com/orionarcher/emmet.git@md_builders
+```
+
+### Analyzing Local Data
+
+```python
+from atomate2.classical_md.core import ClassicalMDTaskDocument
+from emmet.builders.classical_md.utils import create_universe, create_solute
+from openff.interchange import Interchange
+
+from emmet.core.classical_md.solvation import SolvationDoc
+
+ec_emc_taskdoc = ClassicalMDTaskDocument.parse_file("tutorial_system/taskdoc.json")
+interchange = Interchange.parse_raw(ec_emc_taskdoc.interchange)
+mol_specs = ec_emc_taskdoc.molecule_specs
+
+u = create_universe(
+    interchange,
+    mol_specs,
+    str("tutorial_system/trajectory5.dcd"),
+    traj_format="DCD",
+)
+
+solute = create_solute(u, solute_name="Li", networking_solvents=["PF6"])
+
+SolvationDoc.from_solute(solute)
+```
+
+### Setting up builders
+
+```python
+from maggma.stores import MongoStore, S3Store
+
+mongo_info = {
+    "username": "USERNAME",
+    "password": "PASSWORD",
+    "database": "DATABASE",
+    "host": "mongodb05.nersc.gov",
+}
+
+s3_info = {
+    "bucket": "BUCKET",
+    "s3_profile": "PROFILE",
+    "endpoint_url": "https://next-gen-minio.materialsproject.org",
+}
+
+md_docs = MongoStore(**mongo_info, collection_name="atomate2_docs")
+solvation_docs = MongoStore(**mongo_info, collection_name="solvation_docs")
+calculation_docs = MongoStore(**mongo_info, collection_name="calculation_docs")
+
+
+md_blob_index = MongoStore(
+    **mongo_info,
+    collection_name="atomate2_blobs_index",
+    key="blob_uuid",
+)
+md_blob_store = S3Store(
+    **s3_info,
+    index=md_blob_index,
+    key="blob_uuid",
+)
+
+from emmet.builders.classical_md.openmm.core import ElectrolyteBuilder
+
+builder = ElectrolyteBuilder(md_docs, md_blob_store, solvation_docs, calculation_docs)
+```
+
+### Analyzing systems individually
+
+```python
+# a query that will grab
+tutorial_query = {"tags": "tutorial_production_flow"}
+
+universes = {}
+for name, uuid in jobs.items():
+    u = builder.instantiate_universe(uuid, "./trajectories", overwrite_local_traj=False)
+    universes[name] = u
+
+from emmet.builders.classical_md.utils import create_solute
+
+solutes = {}
+for name, u in universes.items():
+    solute = create_solute(
+        u,
+        solute_name="Li",
+        networking_solvents=["PF6"],
+        fallback_radius=3,
+    )
+    solute.run()
+    solutes[name] = solute
+```
+
+Here are some more convenient queries we could use!
+```python
+# date based queries
+april_16 = {"completed_at": {"$regex": "^2024-04-16"}}
+may = {"completed_at": {"$regex": "^2024-05"}}
+
+
+# job uuid queries
+job_uuids = [
+    "3d7b4db4-85e5-48a5-9585-07b37910720f",
+    "4202b18f-f156-4705-8ca6-ac2a08093174",
+    "187d9466-c359-4013-9e25-8b4ece6e3ecf",
+]
+my_specific_jobs = {"uuid": {"$in": job_uuids}}
+```
+
+### Automated analysis with Builders
+
+```python
+builder.connect()
+items = builder.get_items()
+processed_docs = builder.process_items(items)
+builder.update_targets(processed_docs)
 ```
