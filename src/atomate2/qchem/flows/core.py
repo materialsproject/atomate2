@@ -1,10 +1,5 @@
 """Define core QChem flows."""
 
-# TODO:
-# insert makers for flows
-# reference: https://github.com/hrushikesh-s/atomate2/tree/hiphive/src/atomate2/vasp/flows
-# Try Double Relax
-
 from __future__ import annotations
 
 from copy import deepcopy
@@ -127,21 +122,14 @@ class FrequencyOptMaker(Maker):
         # opt.name += " 1"
         opt.name = "Geometry Optimization"
         jobs += [opt]
-        # Remove these previously unused vars?
-        # prev_dir = opt_taskdoc.dir_name
 
         freq = self.freq_maker.make(
             molecule=opt.output.output.optimized_molecule,
-            prev_dir=prev_dir,  # should prev_dir = opt.output.dir_name?
+            prev_dir=opt.output.dir_name,
         )
         # freq.name += " 1"
         freq.name = "Frequency Analysis"
         jobs += [freq]
-
-        # Remove these previously unused vars?
-        # freq_taskdoc = freq.output
-        # modes = freq_taskdoc.output.calcs_reversed[0].output.frequency_modes
-        # frequencies = freq_taskdoc.output.calcs_reversed[0].output.frequencies
 
         return Flow(
             jobs, output={"opt": opt.output, "freq": freq.output}, name=self.name
@@ -216,7 +204,6 @@ class FrequencyOptFlatteningMaker(Maker):
             freq.name = "Frequency Analysis"
             jobs += [freq]
 
-            # Are frequency_modes and frequencies sorted?
             recursive = self.make(
                 molecule,
                 mode=freq.output.output.frequency_modes[0],

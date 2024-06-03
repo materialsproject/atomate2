@@ -68,7 +68,7 @@ class QCInputSet(InputSet):
         for key, val in inputs.items():
             inp_key = "mol.qin" if key == "Input_Dict" else f"{key}.qin"
             if val is not None and (overwrite or not (directory / inp_key).exists()):
-                # should this be open? can QChem inputs be gzipped?
+                # should this be open instead of zopen? can QChem inputs be gzipped?
                 with zopen(directory / inp_key, "wt") as file:
                     file.write(str(val))
             elif not overwrite and (directory / inp_key).exists():
