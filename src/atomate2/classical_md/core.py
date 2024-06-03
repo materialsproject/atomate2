@@ -8,7 +8,6 @@ from typing import Callable
 import openff.toolkit as tk
 from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
 from emmet.core.vasp.task_valid import TaskState
-from foyer import Forcefield as FoyerForceField
 from jobflow import Response, job
 from openff.interchange import Interchange
 from openff.interchange.components._packmol import pack_box
@@ -141,7 +140,15 @@ def generate_interchange(
     # force_field: str | Path | List[str | Path] = "openff_unconstrained-2.1.1.offxml",
 
     if force_field == "oplsaa":
-        ff_object = FoyerForceField(name=force_field)
+        try:
+            from foyer import Forcefield as FoyerForceField
+
+            ff_object = FoyerForceField(name=force_field)
+        except ImportError as err:
+            raise ImportError(
+                "Use of the 'oplsaa' force field requires the 'foyer' package to "
+                "be installed."
+            ) from err
     else:
         # valid FFs: https://github.com/openforcefield/openff-forcefields
         ff_object = ForceField(force_field)

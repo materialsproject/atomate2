@@ -1,3 +1,4 @@
+import pytest
 from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
 from openff.interchange import Interchange
 
@@ -62,7 +63,12 @@ def test_generate_interchange_salt(mol_specs_salt, run_job):
     assert task_doc.molecule_specs[2].count == 20
 
 
+# only run if import
+
+
 def test_generate_interchange_foyer(mol_specs_salt, run_job, mol_specs_small):
+    pytest.importorskip("foyer")
+
     from atomate2.classical_md.utils import create_mol_spec
 
     mass_density = 1
