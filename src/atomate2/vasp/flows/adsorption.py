@@ -178,7 +178,7 @@ class AdsorptionMaker(Maker):
 
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
-            molecule_structure=optimized_molecule,
+            molecule_structure=molecule,
             min_slab_size=min_slab_size,
             surface_idx=surface_idx,
             min_vacuum_size=min_vacuum,
