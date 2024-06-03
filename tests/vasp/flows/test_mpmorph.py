@@ -634,17 +634,11 @@ name_to_maker = {
 @pytest.mark.parametrize(
     "maker_name",
     [
+        "MPMorph Vasp",
+        "MPMorph Vasp Slow Quench",
         "MPMorph Vasp Fast Quench",
     ],
 )
-
-#    [
-#        "MPMorph Vasp",
-#        "MPMorph Vasp Slow Quench",
-#        "MPMorph Vasp Fast Quench",
-#    ],
-
-
 def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
     ref_paths = {
         "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
