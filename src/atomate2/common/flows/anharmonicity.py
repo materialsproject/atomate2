@@ -18,6 +18,7 @@ from atomate2.common.jobs.anharmonicity import (
     get_phonon_supercell,
     get_sigma_a,
     run_displacements,
+    store_results
 )
 
 if TYPE_CHECKING:
@@ -110,9 +111,14 @@ class BaseAnharmonicityMaker(Maker, ABC):
 
         phonon_doc = phonon_flow.output
         anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature)
-        jobs = [phonon_flow, anharmon_flow]
 
-        return Flow(jobs, anharmon_flow.output)
+        results = store_results(
+            sigma_A=anharmon_flow.output,
+            phonon_doc=phonon_flow.output
+        )
+        
+        jobs = [phonon_flow, anharmon_flow, results]
+        return Flow(jobs, results.output)
 
     def make_from_phonon_doc(
         self,

@@ -15,7 +15,7 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 from atomate2.aims.schemas.calculation import Calculation
 
-# TODO: NEED TO CHANGE
+from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
+    
 
 
 logger = logging.getLogger(__name__)
@@ -239,3 +240,23 @@ def run_displacements(
 
     displacement_flow = Flow(force_eval_jobs, outputs)
     return Response(replace=displacement_flow)
+
+@job
+def store_results(
+    sigma_A: float,
+    phonon_doc: PhononBSDOSDoc,
+) -> AnharmonicityDoc:
+    """
+    Stores the results in a schema object
+
+    Parameters
+    ----------
+    sigma_A: float
+        Sigma^A value to be stored
+    phonon_doc: PhononBSDOSDoc
+        Info from phonon workflow to be stored
+    """
+    return AnharmonicityDoc.store_data(
+        sigma_A=sigma_A,
+        phonon_doc=phonon_doc
+    )
