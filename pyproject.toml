@@ -88,7 +88,7 @@ strict = [
     "chgnet==0.3.5",
     "click==8.1.7",
     "custodian==2024.4.18",
-    "dscribe==2.1.0",
+    "dscribe==2.1.1",
     "emmet-core==0.82.2",
     "ijson==3.2.3",
     "jobflow==0.1.17",
