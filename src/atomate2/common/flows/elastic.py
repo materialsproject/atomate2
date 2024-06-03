@@ -61,6 +61,11 @@ class BaseElasticMaker(Maker, ABC):
         bulk relaxation.
     elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
+    max_failed_deformations: int or float
+        Maximum number of deformations allowed to fail to proceed with the fitting
+        of the elastic tensor. If an int the absolute number of deformations. If
+        a float between 0 an 1 the maximum fraction of deformations. If None any
+        number of deformations allowed.
     generate_elastic_deformations_kwargs : dict
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
     fit_elastic_tensor_kwargs : dict
@@ -77,6 +82,7 @@ class BaseElasticMaker(Maker, ABC):
     elastic_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker = (
         None  # constant volume optimization
     )
+    max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
@@ -142,6 +148,7 @@ class BaseElasticMaker(Maker, ABC):
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
             stress_sign_factor=self.stress_sign_correction,
+            max_failed_deformations=self.max_failed_deformations,
             **self.fit_elastic_tensor_kwargs,
             **self.task_document_kwargs,
         )
