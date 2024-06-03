@@ -66,12 +66,13 @@ class QCInputSet(InputSet):
         inputs.update(self.optional_files)
 
         for key, val in inputs.items():
-            key = 'mol.qin' if key == 'Input_Dict' else f'{key}.qin'
-            if val is not None and (overwrite or not (directory / key).exists()):
-                with zopen(directory / key, "wt") as file:
+            inp_key = "mol.qin" if key == "Input_Dict" else f"{key}.qin"
+            if val is not None and (overwrite or not (directory / inp_key).exists()):
+                # should this be open? can QChem inputs be gzipped?
+                with zopen(directory / inp_key, "wt") as file:
                     file.write(str(val))
-            elif not overwrite and (directory / key).exists():
-                raise FileExistsError(f"{directory / key} already exists.")
+            elif not overwrite and (directory / inp_key).exists():
+                raise FileExistsError(f"{directory / inp_key} already exists.")
 
     @staticmethod
     def from_directory(

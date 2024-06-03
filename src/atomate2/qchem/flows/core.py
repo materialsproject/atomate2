@@ -1,8 +1,9 @@
+"""Define core Q-Chem flows."""
+
+# TODO:
 # insert makers for flows
 # reference: https://github.com/hrushikesh-s/atomate2/tree/hiphive/src/atomate2/vasp/flows
 # Try Double Relax
-
-"""Core Qchem flows."""
 
 from __future__ import annotations
 
@@ -10,33 +11,20 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from emmet.core.qchem.calculation import Calculation
 from jobflow import Flow, Maker, Response, job
 
-from atomate2.qchem.jobs.core import (  
-    SinglePointMaker,
-    OptMaker,
-    ForceMaker,
-    TransitionStateMaker,
-    FreqMaker,
-)
-from atomate2.qchem.sets.core import (
-    SinglePointSetGenerator,
-    OptSetGenerator,
-    ForceSetGenerator,
-    TransitionStateSetGenerator,
-    FreqSetGenerator,
-)
+from atomate2.qchem.jobs.core import FreqMaker, OptMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from jobflow import Job
-    from pymatgen.core.structure import Molecule 
+    from pymatgen.core.structure import Molecule
 
     from atomate2.qchem.jobs.base import BaseQCMaker
 
 import numpy as np
+
 
 @dataclass
 class DoubleOptMaker(Maker):
@@ -98,16 +86,14 @@ class DoubleOptMaker(Maker):
         opt_maker : .BaseQCMaker
             Maker to use to generate the first and second geometric optimizations.
         """
-        return cls(
-            relax_maker1=deepcopy(opt_maker), relax_maker2=deepcopy(opt_maker)
-        )
-
+        return cls(relax_maker1=deepcopy(opt_maker), relax_maker2=deepcopy(opt_maker))
 
 
 @dataclass
 class FrequencyOptMaker(Maker):
     """
     Maker to perform a frequency calculation after an optimization.
+
     Parameters
     ----------
     name : str
@@ -120,7 +106,7 @@ class FrequencyOptMaker(Maker):
 
     name: str = "opt frequency"
     opt_maker: BaseQCMaker = field(default_factory=OptMaker)
-    freq_maker: BaseQCMaker = field(default_factory= FreqMaker)
+    freq_maker: BaseQCMaker = field(default_factory=FreqMaker)
 
     def make(self, molecule: Molecule, prev_dir: str | Path | None = None) -> Flow:
         """
@@ -130,7 +116,7 @@ class FrequencyOptMaker(Maker):
         ----------
         molecule : .Molecule
             A pymatgen Molecule object.
-        prev_dir : str or Path or None
+        prev_qchem_dir : str or Path or None
             A previous QChem calculation directory to copy output files from.
 
         Returns
@@ -140,29 +126,35 @@ class FrequencyOptMaker(Maker):
         """
         jobs: list[Job] = []
         opt = self.opt_maker.make(molecule, prev_qchem_dir=prev_dir)
-        #opt.name += " 1"
-        opt.name = 'Geometry Optimization'
+        # opt.name += " 1"
+        opt.name = "Geometry Optimization"
         jobs += [opt]
-        opt_taskdoc = opt.output
-        molecule =  opt_taskdoc.output.optimized_molecule
-        #prev_dir = opt_taskdoc.dir_name
+        # Remove these previously unused vars?
+        # prev_dir = opt_taskdoc.dir_name
 
-
-        freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
-        #freq.name += " 1"
-        freq.name = 'Frequency Analysis'
+        freq = self.freq_maker.make(
+            molecule=opt.output.output.optimized_molecule,
+            prev_qchem_dir=prev_dir,  # should prev_qchem_dir = opt.output.dir_name?
+        )
+        # freq.name += " 1"
+        freq.name = "Frequency Analysis"
         jobs += [freq]
-        freq_taskdoc = freq.output
-        modes = freq_taskdoc.output.calcs_reversed[0].output.frequency_modes
-        frequencies = freq_taskdoc.output.calcs_reversed[0].output.frequencies
 
-        return Flow(jobs, output={'opt': opt.output, 'freq':freq.output},name=self.name)
+        # Remove these previously unused vars?
+        # freq_taskdoc = freq.output
+        # modes = freq_taskdoc.output.calcs_reversed[0].output.frequency_modes
+        # frequencies = freq_taskdoc.output.calcs_reversed[0].output.frequencies
+
+        return Flow(
+            jobs, output={"opt": opt.output, "freq": freq.output}, name=self.name
+        )
 
 
 @dataclass
 class FrequencyOptFlatteningMaker(Maker):
     """
     Maker to perform a frequency calculation after an optimization.
+
     Parameters
     ----------
     name : str
@@ -175,15 +167,22 @@ class FrequencyOptFlatteningMaker(Maker):
 
     name: str = "frequency flattening opt"
     opt_maker: BaseQCMaker = field(default_factory=OptMaker)
-    freq_maker: BaseQCMaker = field(default_factory= FreqMaker)
+    freq_maker: BaseQCMaker = field(default_factory=FreqMaker)
     scale: float = 1.0
     max_ffopt_runs: int = 5
 
-
     @job
-    def make(self, molecule: Molecule, mode: list | None = None , lowest_freq: float = - 1.0, ffopt_runs: int = 0, overwrite_inputs : dict | None = None  ,prev_dir: str | Path | None = None) -> Flow:
+    def make(
+        self,
+        molecule: Molecule,
+        mode: list | None = None,
+        lowest_freq: float = -1.0,
+        ffopt_runs: int = 0,
+        overwrite_inputs: dict | None = None,
+        prev_dir: str | Path | None = None,
+    ) -> Flow:
         """
-        Create a flow with optimization followed by frequency calculation with perturbation along the negative frequency mode
+        Optimize geometry and perturb negative frequency modes.
 
         Parameters
         ----------
@@ -197,10 +196,7 @@ class FrequencyOptFlatteningMaker(Maker):
         Flow
             A flow containing with optimization and frequency calculation.
         """
-        if mode is None:
-            mode = []
-            for _ in range(len(molecule)):
-                mode.append([0.0,0.0,0.0])
+        mode = mode or [[0.0, 0.0, 0.0] for _ in range(len(molecule))]
 
         if overwrite_inputs is not None:
             self.opt_maker.input_set_generator.overwrite_inputs = overwrite_inputs
@@ -215,30 +211,31 @@ class FrequencyOptFlatteningMaker(Maker):
                 vec = np.array(mode[ii])
                 molecule_copy.translate_sites(indices=[ii], vector=vec * self.scale)
             molecule = molecule_copy
-            
+
             opt = self.opt_maker.make(molecule, prev_qchem_dir=prev_dir)
-            opt.name = 'Geometry Optimization'
+            opt.name = "Geometry Optimization"
             jobs += [opt]
             opt_taskdoc = opt.output
             molecule = opt_taskdoc.output.optimized_molecule
-            
 
             freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
-            freq.name = 'Frequency Analysis'
+            freq.name = "Frequency Analysis"
             jobs += [freq]
             freq_taskdoc = freq.output
             modes = freq_taskdoc.output.frequency_modes
             frequencies = freq_taskdoc.output.frequencies
             ffopt_runs = ffopt_runs + 1
-                 
-            recursive = self.make(molecule,
-                                  mode = modes[0],
-                                  lowest_freq = frequencies[0],
-                                  ffopt_runs = ffopt_runs, 
-                                  prev_dir=prev_dir)
-            new_flow = Flow([*jobs, recursive], output = recursive.output)
-            return Response(replace = new_flow, output = recursive.output)
-        else:
-            freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
-            freq.name = 'Frequency Analysis'
-            return Response(replace = [freq], output = freq.output)
+
+            recursive = self.make(
+                molecule,
+                mode=modes[0],
+                lowest_freq=frequencies[0],
+                ffopt_runs=ffopt_runs,
+                prev_dir=prev_dir,
+            )
+            new_flow = Flow([*jobs, recursive], output=recursive.output)
+            return Response(replace=new_flow, output=recursive.output)
+
+        freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
+        freq.name = "Frequency Analysis"
+        return Response(replace=[freq], output=freq.output)

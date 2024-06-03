@@ -95,7 +95,6 @@ def run_qchem(
         scratch_dir=scratch_dir,
         **custodian_kwargs,
     )
-    print(handlers)
     logger.info("Running QChem using custodian.")
     c.run()
 
