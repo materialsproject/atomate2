@@ -107,7 +107,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "torch==2.2.1",
-    "typing-extensions==4.12.0",
+    "typing-extensions==4.12.1",
     "python-ulid==2.2.0",
     "phono3py==2.5.1"
 ]
