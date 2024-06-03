@@ -1,4 +1,4 @@
-"""Define core Q-Chem flows."""
+"""Define core QChem flows."""
 
 # TODO:
 # insert makers for flows
@@ -22,8 +22,6 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Molecule
 
     from atomate2.qchem.jobs.base import BaseQCMaker
-
-import numpy as np
 
 
 @dataclass
@@ -203,34 +201,27 @@ class FrequencyOptFlatteningMaker(Maker):
             self.freq_maker.input_set_generator.overwrite_inputs = overwrite_inputs
 
         jobs: list[Job] = []
-        opt_taskdoc = None
-        freq_taskdoc = None
         if (lowest_freq < 0) and (ffopt_runs < self.max_ffopt_runs):
-            molecule_copy = deepcopy(molecule)
-            for ii in range(len(molecule)):
-                vec = np.array(mode[ii])
-                molecule_copy.translate_sites(indices=[ii], vector=vec * self.scale)
-            molecule = molecule_copy
+            for idx in range(len(molecule)):
+                molecule.translate_sites(
+                    indices=[idx], vector=[self.scale * v for v in mode[idx]]
+                )
 
             opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
             opt.name = "Geometry Optimization"
             jobs += [opt]
-            opt_taskdoc = opt.output
-            molecule = opt_taskdoc.output.optimized_molecule
+            molecule = opt.output.output.optimized_molecule
 
             freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
             freq.name = "Frequency Analysis"
             jobs += [freq]
-            freq_taskdoc = freq.output
-            modes = freq_taskdoc.output.frequency_modes
-            frequencies = freq_taskdoc.output.frequencies
-            ffopt_runs = ffopt_runs + 1
 
+            # Are frequency_modes and frequencies sorted?
             recursive = self.make(
                 molecule,
-                mode=modes[0],
-                lowest_freq=frequencies[0],
-                ffopt_runs=ffopt_runs,
+                mode=freq.output.output.frequency_modes[0],
+                lowest_freq=freq.output.output.frequencies[0],
+                ffopt_runs=ffopt_runs + 1,
                 prev_dir=prev_dir,
             )
             new_flow = Flow([*jobs, recursive], output=recursive.output)
