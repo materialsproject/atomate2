@@ -85,7 +85,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         A maker to perform a atomic-position-only relaxation on the defect charge
         states. Since these calculations are expensive and the settings might get
         messy, it is recommended for each implementation of this maker to check
-        some of the most important settings in the `relax_maker`.  Please see
+        some of the most important settings in the `relax_maker`. Please see
         `FormationEnergyMaker.validate_maker` for more details.
 
     bulk_relax_maker: Maker
@@ -129,7 +129,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
 
         .. note::
         Once we remove the requirement for explicit bulk supercell calculations,
-        this setting will be removed.  It is only needed because the bulk supercell
+        this setting will be removed. It is only needed because the bulk supercell
         locpot is currently needed for the finite-size correction calculation.
 
         Output format for the DefectEntry data:

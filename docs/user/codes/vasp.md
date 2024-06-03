@@ -367,7 +367,7 @@ for number, (key, cohp) in enumerate(
     plotter.add_cohp(key, cohp)
     plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
-# Running the LOBSTER workflow without database and with one job script only
+#### Running the LOBSTER workflow without database and with one job script only
 
 It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
 In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
