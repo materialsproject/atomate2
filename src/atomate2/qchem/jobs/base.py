@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
@@ -19,6 +20,7 @@ from atomate2.qchem.sets.base import QCInputGenerator
 if TYPE_CHECKING:
     from pymatgen.core.structure import Molecule
 
+logger = logging.getLogger(__name__)
 
 def qchem_job(method: Callable) -> job:
     """
@@ -97,7 +99,10 @@ class BaseQCMaker(Maker):
 
     @qchem_job
     def make(
-        self, molecule: Molecule, prev_qchem_dir: str | Path | None = None
+        self,
+        molecule: Molecule,
+        prev_dir: str | Path | None = None,
+        prev_qchem_dir: str | Path | None = None
     ) -> Response:
         """Run a QChem calculation.
 
@@ -105,13 +110,25 @@ class BaseQCMaker(Maker):
         ----------
         molecule : Molecule
             A pymatgen molecule object.
-        prev_qchem_dir : str or Path or None
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from.
+        prev_qchem_dir (deprecated): str or Path or None
             A previous QChem calculation directory to copy output files from.
         """
         # copy previous inputs
-        from_prev = prev_qchem_dir is not None
         if prev_qchem_dir is not None:
-            copy_qchem_outputs(prev_qchem_dir, **self.copy_qchem_kwargs)
+            logger.warning(
+                "`prev_qchem_dir` will be deprecated in a future release. Please use `prev_dir` instead."
+            )
+            if prev_dir is not None:
+                logger.warning(
+                    "You set both `prev_dir` and `prev_qchem_dir`, only `prev_dir` will be used."
+                )
+            else:
+                prev_dir = prev_qchem_dir
+
+        if from_prev := (prev_dir is not None):
+            copy_qchem_outputs(prev_dir, **self.copy_qchem_kwargs)
 
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 

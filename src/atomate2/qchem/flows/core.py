@@ -116,7 +116,7 @@ class FrequencyOptMaker(Maker):
         ----------
         molecule : .Molecule
             A pymatgen Molecule object.
-        prev_qchem_dir : str or Path or None
+        prev_dir : str or Path or None
             A previous QChem calculation directory to copy output files from.
 
         Returns
@@ -125,7 +125,7 @@ class FrequencyOptMaker(Maker):
             A flow containing with optimization and frequency calculation.
         """
         jobs: list[Job] = []
-        opt = self.opt_maker.make(molecule, prev_qchem_dir=prev_dir)
+        opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
         # opt.name += " 1"
         opt.name = "Geometry Optimization"
         jobs += [opt]
@@ -134,7 +134,7 @@ class FrequencyOptMaker(Maker):
 
         freq = self.freq_maker.make(
             molecule=opt.output.output.optimized_molecule,
-            prev_qchem_dir=prev_dir,  # should prev_qchem_dir = opt.output.dir_name?
+            prev_dir=prev_dir,  # should prev_dir = opt.output.dir_name?
         )
         # freq.name += " 1"
         freq.name = "Frequency Analysis"
@@ -212,13 +212,13 @@ class FrequencyOptFlatteningMaker(Maker):
                 molecule_copy.translate_sites(indices=[ii], vector=vec * self.scale)
             molecule = molecule_copy
 
-            opt = self.opt_maker.make(molecule, prev_qchem_dir=prev_dir)
+            opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
             opt.name = "Geometry Optimization"
             jobs += [opt]
             opt_taskdoc = opt.output
             molecule = opt_taskdoc.output.optimized_molecule
 
-            freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
+            freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
             freq.name = "Frequency Analysis"
             jobs += [freq]
             freq_taskdoc = freq.output
@@ -236,6 +236,6 @@ class FrequencyOptFlatteningMaker(Maker):
             new_flow = Flow([*jobs, recursive], output=recursive.output)
             return Response(replace=new_flow, output=recursive.output)
 
-        freq = self.freq_maker.make(molecule, prev_qchem_dir=prev_dir)
+        freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
         freq.name = "Frequency Analysis"
         return Response(replace=[freq], output=freq.output)
