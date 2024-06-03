@@ -93,9 +93,9 @@ class QCInputSet(InputSet):
 
         inputs = {}
         for name, obj in objs.items():
-            if (directory / name).exists():
-                inputs[name.lower()] = obj.from_file(directory / name)
-
+            file_path = directory / ("mol.qin" if name == "Input_Dict" else name)
+            if file_path.exists():
+                inputs[name.lower()] = obj.from_file(file_path)
         optional_inputs = {}
         if optional_files is not None:
             for name, obj in optional_files.items():
