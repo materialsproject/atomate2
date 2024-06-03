@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 import logging
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Molecule
 
 logger = logging.getLogger(__name__)
+
 
 def qchem_job(method: Callable) -> job:
     """
@@ -102,7 +103,7 @@ class BaseQCMaker(Maker):
         self,
         molecule: Molecule,
         prev_dir: str | Path | None = None,
-        prev_qchem_dir: str | Path | None = None
+        prev_qchem_dir: str | Path | None = None,
     ) -> Response:
         """Run a QChem calculation.
 
@@ -118,11 +119,13 @@ class BaseQCMaker(Maker):
         # copy previous inputs
         if prev_qchem_dir is not None:
             logger.warning(
-                "`prev_qchem_dir` will be deprecated in a future release. Please use `prev_dir` instead."
+                "`prev_qchem_dir` will be deprecated in a future release. "
+                "Please use `prev_dir` instead."
             )
             if prev_dir is not None:
                 logger.warning(
-                    "You set both `prev_dir` and `prev_qchem_dir`, only `prev_dir` will be used."
+                    "You set both `prev_dir` and `prev_qchem_dir`, "
+                    "only `prev_dir` will be used."
                 )
             else:
                 prev_dir = prev_qchem_dir
