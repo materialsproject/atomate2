@@ -439,6 +439,11 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
+        elif calculator_name == MLFF.Pyace:
+            import pyace
+
+            calculator = pyace.PyACECalculator(**kwargs)
+
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))
         calculator = calc_cls(**kwargs)
