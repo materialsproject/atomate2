@@ -763,9 +763,9 @@ class VaspInputGenerator(InputGenerator):
         if kconfig.get("gamma_only"):
             return Kpoints(
                 comment="Gamma only",
-                num_kpts=1,
-                kpts=[[0, 0, 0]],
-                kpts_weights=[1.0],
+                style="Gamma",
+                num_kpts=0,
+                kpts=[(1, 1, 1)],
             )
 
         base_kpoints = None
