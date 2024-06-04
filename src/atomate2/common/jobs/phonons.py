@@ -101,7 +101,8 @@ def get_supercell_size(
             )
             transformation.apply_transformation(structure=structure)
 
-    return transformation.transformation_matrix.tolist()
+    # matrix from pymatgen has to be transposed
+    return transformation.transformation_matrix.transpose().tolist()
 
 
 @job(data=[Structure])
