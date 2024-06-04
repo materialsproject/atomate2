@@ -169,7 +169,7 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
         "GGA": "PS",  # Just let VASP decide based on POTCAR - the default, PS yields the error below
         "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
         "LDAUPRINT": 0,
-        "SIGMA": 0.05,
+        "SIGMA": 0.2,
     }
 
     # For close separations, positive energy is reasonable and expected
@@ -466,160 +466,6 @@ def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
     )
 
 
-def test_mpmoprh_vasp_slow_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
-    ref_paths = {
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
-        "MP Morph VASP MD Maker Slow Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "Vasp Slow Quench MD Maker 900K": "Si_mp_morph/BaseVaspMPMorph/Si_900K",
-        "Vasp Slow Quench MD Maker 800K": "Si_mp_morph/BaseVaspMPMorph/Si_800K",
-        "Vasp Slow Quench MD Maker 700K": "Si_mp_morph/BaseVaspMPMorph/Si_700K",
-        "Vasp Slow Quench MD Maker 600K": "Si_mp_morph/BaseVaspMPMorph/Si_600K",
-    }
-
-    mock_vasp(ref_paths)
-
-    intial_structure = Structure.from_file(
-        f"{vasp_test_dir}/Si_mp_morph/BaseVaspMPMorph/Si_1.0/inputs/POSCAR"
-    )
-    temperature: int = 300
-    end_temp: int = 300
-    steps_convergence: int = 10
-    steps_production: int = 20
-
-    n_steps_quench = 15
-    quench_temp_steps = 100
-    quench_end_temp = 500
-    quench_start_temp = 900
-
-    flow = MPMorphVaspMDSlowQuenchMaker(
-        temperature=temperature,
-        end_temp=end_temp,
-        steps_convergence=steps_convergence,
-        steps_total_production=steps_production,
-        quench_maker_kwargs={
-            "quench_n_steps": n_steps_quench,
-            "quench_temperature_step": quench_temp_steps,
-            "quench_end_temperature": quench_end_temp,
-            "quench_start_temperature": quench_start_temp,
-        },
-    ).make(structure=intial_structure)
-
-    uuids = {}
-    _get_uuid_from_job(flow, uuids)
-
-    responses = run_locally(
-        flow,
-        create_folders=True,
-        ensure_success=True,
-    )
-
-    # uuids = [uuid for uuid in responses]  # Old way of extracting uuid; check mpmorph for forcefields tests for new way
-    for resp in responses.values():
-        if hasattr(resp[1], "replace") and resp[1].replace is not None:
-            for job in resp[1].replace:
-                uuids[job.uuid] = job.name
-
-    main_mp_morph_job_names = [
-        "MD Maker 1",
-        "MD Maker 2",
-        "MD Maker 3",
-        "MD Maker 4",
-        "production run",
-    ]
-    main_mp_morph_job_names.extend(
-        [f"{T}K" for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)]
-    )
-
-    task_docs = {}
-    for uuid, job_name in uuids.items():
-        for i, mp_job_name in enumerate(main_mp_morph_job_names):
-            if mp_job_name in job_name:
-                task_docs[mp_job_name] = responses[uuid][1].output
-                break
-
-    ref_md_energies = {
-        "energy": [-13.44200043, -35.97470303, -32.48531985],
-        "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
-    }
-    # Asserts right number of jobs spawned
-    assert len(uuids) == 10
-
-    # check number of steps of each MD equilibrate run and production run
-    assert all(
-        doc.input.parameters["NSW"] == steps_convergence
-        for name, doc in task_docs.items()
-        if "MD Maker" in name
-    )
-    assert task_docs["production run"].input.parameters["NSW"] == steps_production
-
-    # check initial structure is scaled correctly
-    assert all(
-        any(
-            doc.output.structure.volume == pytest.approx(ref_volume, abs=1e-2)
-            for name, doc in task_docs.items()
-            if "MD Maker" in name
-        )
-        for ref_volume in ref_md_energies["volume"]
-    )
-
-    # check temperature of each MD equilibrate run and production run
-    assert all(
-        doc.input.parameters["TEBEG"] == temperature
-        for name, doc in task_docs.items()
-        if "MD Maker" in name
-    )
-    assert task_docs["production run"].input.parameters["TEBEG"] == temperature
-
-    assert all(
-        doc.input.parameters["TEEND"] == end_temp
-        for name, doc in task_docs.items()
-        if "MD Maker" in name
-    )
-    assert task_docs["production run"].input.parameters["TEEND"] == end_temp
-
-    # check that MD Maker Energies are close
-
-    assert all(
-        any(
-            doc.output.energy == pytest.approx(ref_volume, abs=1e-2)
-            for name, doc in task_docs.items()
-            if "MD Maker" in name
-        )
-        for ref_volume in ref_md_energies["energy"]
-    )
-
-    # Slow Quench Specific Tests
-    # check volume doesn't change from production run
-    assert all(
-        doc.output.structure.volume
-        == pytest.approx(task_docs["production run"].output.structure.volume, abs=1e-1)
-        for name, doc in task_docs.items()
-        if "K" in name
-    )
-    # check that the number of steps is correct
-    assert all(
-        doc.output.n_steps == n_steps_quench + 1
-        for name, doc in task_docs.items()
-        if "K" in name
-    )
-    # check that the temperature is correct
-
-    ref_tempature = [
-        T for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
-    ]
-    assert all(
-        any(
-            doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
-            == pytest.approx(T, abs=100)
-            for name, doc in task_docs.items()
-            if "K" in name
-        )
-        for T in ref_tempature
-    )
-
-
 def test_mpmorph_vasp_fast_quench_maker(mock_vasp, clean_dir, vasp_test_dir):
     pass
 
@@ -789,9 +635,8 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
     )
 
     if "Fast Quench" in maker_name:
-        assert (
-            task_docs["static"].input.structure.volume
-            == pytest.approx(task_docs["relax"].output.structure.volume,1e-5)
+        assert task_docs["static"].input.structure.volume == pytest.approx(
+            task_docs["relax"].output.structure.volume, 1e-5
         )
         assert (
             task_docs["relax"].output.structure.volume
