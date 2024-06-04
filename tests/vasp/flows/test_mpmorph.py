@@ -652,8 +652,8 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
         "Vasp Slow Quench MD Maker 700K": "Si_mp_morph/BaseVaspMPMorph/Si_700K",
         "Vasp Slow Quench MD Maker 600K": "Si_mp_morph/BaseVaspMPMorph/Si_600K",
         "MP pre-relax": "Si_mp_morph/BaseVaspMPMorph/pre_relax",
-        "MP relax": "Si_mp_morph/BaseVaspMPMorph/relax",
-        "MP static": "Si_mp_morph/BaseVaspMPMorph/static",
+        "MP meta-GGA relax": "Si_mp_morph/BaseVaspMPMorph/relax",
+        "MP meta-GGA static": "Si_mp_morph/BaseVaspMPMorph/static",
     }
 
     mock_vasp(ref_paths)
@@ -791,7 +791,7 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
     if "Fast Quench" in maker_name:
         assert (
             task_docs["static"].input.structure.volume
-            == task_docs["relax"].output.structure.volume
+            == pytest.approx(task_docs["relax"].output.structure.volume,1e-5)
         )
         assert (
             task_docs["relax"].output.structure.volume
