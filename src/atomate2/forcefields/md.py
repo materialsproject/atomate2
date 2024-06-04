@@ -397,10 +397,5 @@ class LJMDMaker(ForceFieldMDMaker):
 class PyACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with PACE."""
 
-    name: str = "Py-ACE MD"
-    force_field_name: str = "Py-ACE"
-
-    def _calculator(self) -> Calculator:
-        import pyace
-
-        return pyace.PyACECalculator(**self.calculator_kwargs)
+    name: str = f"{MLFF.Pyace} MD"
+    force_field_name: str = f"{MLFF.Pyace}"
