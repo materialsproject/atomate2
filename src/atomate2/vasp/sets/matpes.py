@@ -41,4 +41,4 @@ class MatPesMetaGGAStaticSetGenerator(MatPESStaticSet):
         dict
             A dictionary of updates to apply.
         """
-        return {"METAGGA": "R2SCAN", "ALGO": "ALL", "GGA": None}  # unset GGA
+        return {"GGA": None}  # unset GGA
