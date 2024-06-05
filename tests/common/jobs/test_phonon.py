@@ -1,6 +1,7 @@
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
+
 from atomate2.common.jobs.phonons import get_supercell_size
 
 
