@@ -10,6 +10,7 @@ from jobflow import CURRENT_JOB
 from monty.io import zopen
 from monty.os.path import zpath as monty_zpath
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
+from pymatgen.io.vasp.sets import VaspInputSet
 from pymatgen.util.coord import find_in_coord_list_pbc
 from pytest import MonkeyPatch
 
@@ -17,7 +18,6 @@ import atomate2.vasp.jobs.base
 import atomate2.vasp.jobs.defect
 import atomate2.vasp.run
 from atomate2.vasp.sets.base import VaspInputGenerator
-from pymatgen.io.vasp.sets import VaspInputSet
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence

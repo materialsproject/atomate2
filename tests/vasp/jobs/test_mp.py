@@ -109,9 +109,7 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        key: {"incar_settings": ["LWAVE"]} for key in ref_paths
-    }
+    fake_run_vasp_kwargs = {key: {"incar_settings": ["LWAVE"]} for key in ref_paths}
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 

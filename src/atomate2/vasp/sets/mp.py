@@ -12,10 +12,11 @@ from dataclasses import dataclass
 
 from pymatgen.io.vasp.sets import (
     MPRelaxSet,
-    MPStaticSet,
     MPScanRelaxSet,
     MPScanStaticSet,
+    MPStaticSet,
 )
+
 
 @dataclass
 class MPGGARelaxSetGenerator(MPRelaxSet):
@@ -35,8 +36,9 @@ class MPGGARelaxSetGenerator(MPRelaxSet):
     auto_kspacing: bool = False
     inherit_incar: bool | None = False
     bandgap_tol: float = None
-    force_gamma : bool = True
-    auto_metal_kpoints : bool = True
+    force_gamma: bool = True
+    auto_metal_kpoints: bool = True
+
 
 @dataclass
 class MPGGAStaticSetGenerator(MPStaticSet):
@@ -46,8 +48,8 @@ class MPGGAStaticSetGenerator(MPStaticSet):
     auto_kspacing: bool = False
     bandgap_tol: float = None
     inherit_incar: bool | None = False
-    force_gamma : bool = True
-    auto_metal_kpoints : bool = True
+    force_gamma: bool = True
+    auto_metal_kpoints: bool = True
 
 
 @dataclass
@@ -69,14 +71,16 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
             A dictionary of updates to apply.
         """
         updates = super().incar_updates
-        updates.update({
-            "ALGO": "FAST",
-            "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
-            "LCHARG": True,
-            "LWAVE": False,
-            "LVHAR": None, # this is not needed
-            "LELF": False,  # prevents KPAR > 1
-        })
+        updates.update(
+            {
+                "ALGO": "FAST",
+                "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
+                "LCHARG": True,
+                "LWAVE": False,
+                "LVHAR": None,  # this is not needed
+                "LELF": False,  # prevents KPAR > 1
+            }
+        )
         return updates
 
 
