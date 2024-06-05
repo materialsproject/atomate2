@@ -40,7 +40,6 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
 
-
     assert_allclose(
         ph_bs_dos_doc.free_energies,
         [5058.4521752, 4907.4957516, 3966.5493299, 2157.8178928, -357.5054580],
