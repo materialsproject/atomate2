@@ -17,6 +17,7 @@ import atomate2.vasp.jobs.base
 import atomate2.vasp.jobs.defect
 import atomate2.vasp.run
 from atomate2.vasp.sets.base import VaspInputGenerator
+from pymatgen.io.vasp.sets import VaspInputSet
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence
@@ -114,8 +115,8 @@ def mock_vasp(
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(VaspInputGenerator, "get_input_set", mock_get_input_set)
-    monkeypatch.setattr(VaspInputGenerator, "nelect", mock_nelect)
+    monkeypatch.setattr(VaspInputSet, "get_input_set", mock_get_input_set)
+    monkeypatch.setattr(VaspInputSet, "nelect", mock_nelect)
 
     def _run(ref_paths, fake_run_vasp_kwargs=None):
         _REF_PATHS.update(ref_paths)

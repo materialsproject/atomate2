@@ -8,20 +8,17 @@ In case of questions, consult @Andrew-S-Rosen, @esoteric-ephemera or @janosh.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from pymatgen.io.vasp.sets import (
     MPRelaxSet,
+    MPStaticSet,
     MPScanRelaxSet,
     MPScanStaticSet,
-    MPStaticSet,
 )
 
-from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
-
-
 @dataclass
-class MPGGARelaxSetGenerator(RelaxSetGenerator):
+class MPGGARelaxSetGenerator(MPRelaxSet):
     """Class to generate MP-compatible VASP GGA relaxation input sets.
 
     reciprocal_density (int): For static calculations, we usually set the
@@ -34,30 +31,29 @@ class MPGGARelaxSetGenerator(RelaxSetGenerator):
     **kwargs: kwargs supported by RelaxSetGenerator.
     """
 
-    config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool | None = False
     bandgap_tol: float = None
-
+    force_gamma : bool = True
+    auto_metal_kpoints : bool = True
 
 @dataclass
-class MPGGAStaticSetGenerator(StaticSetGenerator):
+class MPGGAStaticSetGenerator(MPStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
-    config_dict: dict = field(default_factory=lambda: MPStaticSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     bandgap_tol: float = None
     inherit_incar: bool | None = False
-    small_gap_multiply: tuple[float, float] | None = None
+    force_gamma : bool = True
+    auto_metal_kpoints : bool = True
 
 
 @dataclass
-class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
+class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
-    config_dict: dict = field(default_factory=lambda: MPScanStaticSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = True
     bandgap_tol: float = 1e-4
@@ -72,20 +68,20 @@ class MPMetaGGAStaticSetGenerator(StaticSetGenerator):
         dict
             A dictionary of updates to apply.
         """
-        return {
+        updates = super().incar_updates
+        updates.update({
             "ALGO": "FAST",
             "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
-            "NSW": 0,
             "LCHARG": True,
             "LWAVE": False,
-            "LREAL": False,
+            "LVHAR": None, # this is not needed
             "LELF": False,  # prevents KPAR > 1
-            "ISMEAR": -5,
-        }
+        })
+        return updates
 
 
 @dataclass
-class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
+class MPMetaGGARelaxSetGenerator(MPScanRelaxSet):
     """Class to generate MP-compatible VASP metaGGA relaxation input sets.
 
     Parameters
@@ -97,7 +93,6 @@ class MPMetaGGARelaxSetGenerator(RelaxSetGenerator):
         otherwise it will increase with bandgap up to a max of 0.44.
     """
 
-    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     bandgap_tol: float = 1e-4
     auto_ismear: bool = False
     auto_kspacing: bool = True

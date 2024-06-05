@@ -8,6 +8,7 @@ from atomate2.vasp.sets.matpes import (
     MatPesMetaGGAStaticSetGenerator,
 )
 
+from pymatgen.io.vasp.sets import MatPESStaticSet
 
 @pytest.mark.parametrize(
     "set_generator",
@@ -39,7 +40,8 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
         "vdw",
     }
     assert matpes_set.potcar_functional == "PBE_64"
-    assert matpes_set.inherit_incar is False
+    assert isinstance(matpes_set.inherit_incar,(list,tuple))
+    assert set(matpes_set.inherit_incar) == set(MatPESStaticSet.inherit_incar)
     assert matpes_set.auto_ismear is False
     assert matpes_set.auto_kspacing is False
     assert matpes_set.auto_lreal is False
