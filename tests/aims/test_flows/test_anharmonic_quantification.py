@@ -15,7 +15,6 @@ from atomate2.aims.jobs.phonons import (
 
 cwd = os.getcwd()
 
-# TODO: Fix this test so that it works with the AnharmonicityDoc output
 def test_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -39,22 +38,8 @@ def test_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
         "relativistic": "atomic_zora scalar",
     }
 
-    # parameters_phonon_disp = dict(compute_forces=True, **parameters)
-    # parameters_phonon_disp["rlsy_symmetry"] = None
-
-    # phonon_maker = PhononMaker(
-    #     bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters,
-    #     static_energy_maker=StaticMaker(
-    #         input_set_generator=StaticSetGenerator(user_params=parameters_phonon_disp)
-    #     ),
-    #     use_symmetrized_structure="primitive",
-    #     phonon_displacement_maker=PhononDisplacementMaker(
-    #         input_set_generator=StaticSetGenerator(
-    #             user_params=parameters_phonon_disp,
-    #         )
-    #     ),
-    # )
     parameters_phonon_disp = dict(compute_forces=True, **parameters)
+    parameters_phonon_disp["rlsy_symmetry"] = None
 
     phonon_maker = PhononMaker(
         bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters, user_kpoints_settings={"density": 5.0}),
