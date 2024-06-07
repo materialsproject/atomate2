@@ -40,7 +40,6 @@ from atomate2.common.schemas.phonons import (
 
 logger = logging.getLogger(__name__)
 
-# Is the extra="allow" needed? What are pros/cons to including it?
 class AnharmonicityDoc(StructureMetadata, extra="allow"):
     """Collection to store data from anharmonicity workflow"""
 
@@ -52,6 +51,16 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
     phonon_doc: Optional[PhononBSDOSDoc] = Field(
         None,
         description="Collection of data from phonon part of the workflow"
+    )
+
+    supercell_matrix: Matrix3D = Field("Matrix describing the supercell")
+
+    structure: Optional[Structure] = Field(
+        None, description="Structure of Materials Project."
+    )
+
+    primitive_matrix: Matrix3D = Field(
+        "matrix describing relationship to primitive cell"
     )
     
     @classmethod
@@ -74,5 +83,7 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
             structure=phonon_doc.structure,
             meta_structure=phonon_doc.structure,
             sigma_A=sigma_A,
-            phonon_doc=phonon_doc
+            phonon_doc=phonon_doc,
+            supercell_matrix=phonon_doc.supercell_matrix,
+            primitive_matrix=phonon_doc.primitive_matrix,
         )
