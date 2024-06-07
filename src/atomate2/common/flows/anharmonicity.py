@@ -62,6 +62,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
         temperature: float = 300,
+        one_shot_approx: bool = True
     ) -> Flow:
         """Make the anharmonicity calculation flow.
 
@@ -94,7 +95,10 @@ class BaseAnharmonicityMaker(Maker, ABC):
             [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         temperature: float
             The temperature for the anharmonicity calculation
-
+        one_shot_approx: bool
+            If true, finds the one shot approximation of sigma^A and if false, finds the full sigma^A.
+            The default is True.
+            
         Returns
         -------
         Flow
@@ -110,11 +114,12 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
 
         phonon_doc = phonon_flow.output
-        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature)
+        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature, one_shot_approx)
 
         results = store_results(
             sigma_A=anharmon_flow.output,
-            phonon_doc=phonon_flow.output
+            phonon_doc=phonon_flow.output,
+            one_shot=one_shot_approx,
         )
         
         jobs = [phonon_flow, anharmon_flow, results]
@@ -125,6 +130,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         phonon_doc: PhononBSDOSDoc,
         prev_dir: str | Path | None = None,
         temperature: float = 300,
+        one_shot_approx: bool = True,
     ) -> Flow:
         """Create an anharmonicity workflow from a phonon calculation.
 
@@ -136,6 +142,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
             A previous calculation directory to use for copying outputs.
         temperature: float
             The temperature for the anharmonicity calculation
+        one_shot_approx: bool
+            If true, finds the one shot approximation of sigma^A and if false, finds the full sigma^A.
+            The default is True.
         """
         if phonon_doc.has_imaginary_modes:
             warn(
@@ -153,6 +162,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             phonon_supercell=phonon_supercell,
             force_constants=phonon_doc.force_constants,
             temp=temperature,
+            one_shot=one_shot_approx,
         )
         jobs.append(displace_supercell)
 

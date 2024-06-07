@@ -62,12 +62,18 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
     primitive_matrix: Matrix3D = Field(
         "matrix describing relationship to primitive cell"
     )
+
+    one_shot: bool = Field(
+        None, 
+        description="Whether or not the one shot approximation was found"
+    )
     
     @classmethod
     def store_data(
         cls,
         sigma_A: float,
-        phonon_doc: PhononBSDOSDoc
+        phonon_doc: PhononBSDOSDoc,
+        one_shot: bool
     ) -> Self:
         """
         Generates the collection of data for the anharmonicity workflow
@@ -78,6 +84,8 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
             Float with sigma_A value to be stored
         phonon_doc: PhononBSDOSDoc
             Document with data from phonon workflow
+        one_shot: bool
+            True if one shot approximation was found, false otherwise
         """
         return cls.from_structure(
             structure=phonon_doc.structure,
@@ -86,4 +94,5 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
             phonon_doc=phonon_doc,
             supercell_matrix=phonon_doc.supercell_matrix,
             primitive_matrix=phonon_doc.primitive_matrix,
+            one_shot=one_shot,
         )

@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 import numpy as np
+from numpy.random import rand
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from pymatgen.core import Structure
@@ -51,12 +52,41 @@ def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
     )
     return get_pmg_structure(phonon.supercell)
 
+def box_muller(
+    eig_vals: np.ndarray,
+    eig_vecs: np.ndarray,
+    temp: float,
+) -> np.ndarray:
+    """Get a normally distributed random variable displacement
+    Uses the Box-Muller transform (https://en.wikipedia.org/wiki/Box–Muller_transform)
+
+    Parameters
+    ----------
+    eig_vals: np.ndarray
+        Vector of harmonic eigenvalues (with first 3 removed for translational modes)
+    eig_vecs: np.ndarray
+        Matrix of harmonic eigenvectors (with first 3 removed for translational modes)
+    temp: float
+        Temperature in K to find velocity and displacement at
+    """
+    n_eigvals = eig_vals.shape[0]
+    spread = np.sqrt(-2.0 * np.log(1.0 - rand(n_eigvals)))
+
+    # Assign amplitudes (A_s) and phases (phi_s)
+    A_s = spread * (np.sqrt(temp * kb)/eig_vals)
+    phi_s = 2.0 * np.pi * rand(n_eigvals)
+
+    # Get displacement (not normalized by sqrt(masses) yet)
+    d_ac = (A_s * np.cos(phi_s) * eig_vecs).sum(axis=2)
+
+    return d_ac
 
 @job
 def displace_structure(
     phonon_supercell: Structure,
     force_constants: ForceConstants = None,
     temp: float = 300,
+    one_shot: bool = True
 ) -> Structure:
     """Calculate the displaced structure.
 
@@ -71,6 +101,9 @@ def displace_structure(
         Force constants calculated from phonopy
     temp: float
         Temperature (in K) to displace structure at
+    one_shot: bool
+        If false, uses a normally distributed random number for zeta.
+        The default is true.
     """
     coords = phonon_supercell.cart_coords
     disp = np.zeros(coords.shape)
@@ -96,10 +129,13 @@ def displace_structure(
         x_acs[:, :, ii] *= np.sign(vec.flat[max_arg])
 
     inv_sqrt_mass = masses ** (-0.5)
-    zetas = (-1) ** np.arange(len(eig_val))
-    a_s = np.sqrt(temp * kb) / eig_val * zetas
-    disp = (a_s * x_acs).sum(axis=2) * inv_sqrt_mass[:, None]
-
+    if one_shot:
+        zetas = (-1) ** np.arange(len(eig_val))
+        a_s = np.sqrt(temp * kb) / eig_val * zetas
+        disp = (a_s * x_acs).sum(axis=2) * inv_sqrt_mass[:, None]
+    elif not one_shot:
+        disp = box_muller(eig_val, x_acs, temp) * inv_sqrt_mass[:, None]
+    
     return Structure(
         lattice=phonon_supercell.lattice,
         species=phonon_supercell.species,
@@ -245,6 +281,7 @@ def run_displacements(
 def store_results(
     sigma_A: float,
     phonon_doc: PhononBSDOSDoc,
+    one_shot: bool
 ) -> AnharmonicityDoc:
     """
     Stores the results in a schema object
@@ -255,8 +292,12 @@ def store_results(
         Sigma^A value to be stored
     phonon_doc: PhononBSDOSDoc
         Info from phonon workflow to be stored
+    one_shot: bool
+        If false, uses a normally distributed random number for zeta.
+        The default is true.
     """
     return AnharmonicityDoc.store_data(
         sigma_A=sigma_A,
-        phonon_doc=phonon_doc
+        phonon_doc=phonon_doc,
+        one_shot=one_shot,
     )
