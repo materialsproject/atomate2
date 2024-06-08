@@ -1,6 +1,7 @@
 import pytest
 from pymatgen.core import Lattice, Species, Structure
 
+from atomate2.vasp.sets.base import get_mp2024_kspacing
 from atomate2.vasp.sets.core import StaticSetGenerator
 from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
 
@@ -197,3 +198,20 @@ def test_set_kspacing_and_auto_ismear(
 
     actual = {key: incar[key] for key in expected_params}
     assert actual == pytest.approx(expected_params)
+
+
+@pytest.mark.parametrize(
+    "bandgap, expected_kspacing",
+    [
+        (0, 0.2000389),
+        (0.1, 0.20005515),
+        (1, 0.20295038),
+        (2, 0.28562548),
+        (5, 0.44998508306),
+        (10, 0.4499999969055),
+    ],
+)
+def test_get_mp2024_kspacing(bandgap, expected_kspacing):
+    actual_kspacing = get_mp2024_kspacing(bandgap)
+    assert_msg = f"{bandgap=} {expected_kspacing=:.6} != {actual_kspacing=:.6}"
+    assert actual_kspacing == pytest.approx(expected_kspacing), assert_msg
