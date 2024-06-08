@@ -10,9 +10,10 @@ from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
 from itertools import groupby
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
+from monty.dev import deprecated
 from monty.io import zopen
 from monty.serialization import loadfn
 from pymatgen.electronic_structure.core import Magmom
@@ -1083,6 +1084,22 @@ def _get_recommended_lreal(structure: Structure) -> str | bool:
     return "Auto" if structure.num_sites > 16 else False
 
 
+def get_mp2024_kspacing(bandgap: float) -> float:
+    """Get KSPACING based on a band gap as proposed by Aaron Kaplan on 2024-05-10.
+
+    See https://github.com/materialsproject/foundation/pull/26 and sec. 3 in
+    https://drive.google.com/file/d/1fUUx0wrrtMRcSss5yv3NiQuC7J5IiEKL
+    """
+    dk_min, dk_max = 0.2, 0.45  # see table 3
+    a, b, c = 0.9, 2.35, 8
+    delta = a * (bandgap - b)
+
+    return 0.5 * (
+        dk_min + dk_max + (dk_max - dk_min) * delta / (1 + delta**c) ** (1 / c)
+    )
+
+
+@deprecated(replacement=get_mp2024_kspacing)
 def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
     """Get KSPACING based on a band gap."""
     if bandgap <= tol:  # metallic
@@ -1101,6 +1118,7 @@ def _set_kspacing(
     user_incar_settings: dict,
     bandgap: float | None,
     kpoints: Kpoints | None,
+    kspacing_func: Callable[[float], float] = _get_kspacing,
 ) -> Incar:
     """
     Set KSPACING in an INCAR.
@@ -1130,7 +1148,7 @@ def _set_kspacing(
         # will always default to 0.22 in first run as one
         # cannot be sure if one treats a metal or
         # semiconductor/insulator
-        incar["KSPACING"] = _get_kspacing(bandgap)
+        incar["KSPACING"] = kspacing_func(bandgap)
         # This should default to ISMEAR=0 if band gap is not known (first computation)
         # if not from_prev:
         #     # be careful to not override user_incar_settings
