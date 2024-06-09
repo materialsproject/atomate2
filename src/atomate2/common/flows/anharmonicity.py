@@ -62,7 +62,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
         temperature: float = 300,
-        one_shot_approx: bool = True
+        one_shot_approx: bool = True,
+        seed: int | None = None
     ) -> Flow:
         """Make the anharmonicity calculation flow.
 
@@ -98,7 +99,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
         one_shot_approx: bool
             If true, finds the one shot approximation of sigma^A and if false, finds the full sigma^A.
             The default is True.
-            
+        seed: int | None
+            Seed to use for the random number generator (only used if one_shot_approx == False)
+
         Returns
         -------
         Flow
@@ -114,7 +117,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
 
         phonon_doc = phonon_flow.output
-        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature, one_shot_approx)
+        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature, one_shot_approx, seed)
 
         results = store_results(
             sigma_A=anharmon_flow.output,
@@ -131,6 +134,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         prev_dir: str | Path | None = None,
         temperature: float = 300,
         one_shot_approx: bool = True,
+        seed: int | None = None,
     ) -> Flow:
         """Create an anharmonicity workflow from a phonon calculation.
 
@@ -145,6 +149,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         one_shot_approx: bool
             If true, finds the one shot approximation of sigma^A and if false, finds the full sigma^A.
             The default is True.
+        seed: int | None
+            Seed to use for the random number generator (only used if one_shot_approx == False)
         """
         if phonon_doc.has_imaginary_modes:
             warn(
@@ -163,6 +169,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             force_constants=phonon_doc.force_constants,
             temp=temperature,
             one_shot=one_shot_approx,
+            seed_=seed,
         )
         jobs.append(displace_supercell)
 

@@ -7,7 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 import numpy as np
-from numpy.random import rand
+from numpy.random import rand, seed
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from pymatgen.core import Structure
@@ -56,6 +56,7 @@ def box_muller(
     eig_vals: np.ndarray,
     eig_vecs: np.ndarray,
     temp: float,
+    seed_: int | None = None,
 ) -> np.ndarray:
     """Get a normally distributed random variable displacement
     Uses the Box-Muller transform (https://en.wikipedia.org/wiki/Box–Muller_transform)
@@ -68,7 +69,11 @@ def box_muller(
         Matrix of harmonic eigenvectors (with first 3 removed for translational modes)
     temp: float
         Temperature in K to find velocity and displacement at
+    seed: int | None
+        Seed to use for the random number generator (only used if one_shot_approx == False)
     """
+    seed(seed_)
+
     n_eigvals = eig_vals.shape[0]
     spread = np.sqrt(-2.0 * np.log(1.0 - rand(n_eigvals)))
 
@@ -86,7 +91,8 @@ def displace_structure(
     phonon_supercell: Structure,
     force_constants: ForceConstants = None,
     temp: float = 300,
-    one_shot: bool = True
+    one_shot: bool = True,
+    seed_: int | None = None,
 ) -> Structure:
     """Calculate the displaced structure.
 
@@ -104,6 +110,8 @@ def displace_structure(
     one_shot: bool
         If false, uses a normally distributed random number for zeta.
         The default is true.
+    seed: int | None
+        Seed to use for the random number generator (only used if one_shot_approx == False)
     """
     coords = phonon_supercell.cart_coords
     disp = np.zeros(coords.shape)
@@ -134,7 +142,7 @@ def displace_structure(
         a_s = np.sqrt(temp * kb) / eig_val * zetas
         disp = (a_s * x_acs).sum(axis=2) * inv_sqrt_mass[:, None]
     elif not one_shot:
-        disp = box_muller(eig_val, x_acs, temp) * inv_sqrt_mass[:, None]
+        disp = box_muller(eig_val, x_acs, temp, seed_) * inv_sqrt_mass[:, None]
     
     return Structure(
         lattice=phonon_supercell.lattice,
