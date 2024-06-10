@@ -1,9 +1,9 @@
-
 from emmet.core.qc_tasks import TaskDoc
 from jobflow import run_locally
 from pytest import approx
 
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
+
 
 def test_single_point_maker(mock_qchem, clean_dir, h2o_molecule):
     # mapping from job name to directory containing test files

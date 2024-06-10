@@ -97,7 +97,7 @@ class BaseQCMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
     stop_children_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
-    task_type : str | None = None
+    task_type: str | None = None
 
     @qchem_job
     def make(

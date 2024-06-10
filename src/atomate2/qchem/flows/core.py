@@ -188,9 +188,8 @@ class FrequencyOptFlatteningMaker(Maker):
 
         new_flow = None
         new_output = None
-        
+
         if (lowest_freq < 0) and (ffopt_runs < self.max_ffopt_runs):
-            
             jobs: list[Job] = []
 
             for idx in range(len(molecule)):
@@ -216,7 +215,7 @@ class FrequencyOptFlatteningMaker(Maker):
             )
             new_flow = Flow([*jobs, recursive], output=recursive.output)
             new_output = recursive.output
-        
+
         elif ffopt_runs == 0:
             freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
             freq.name = f"Frequency Analysis {ffopt_runs + 1}"
