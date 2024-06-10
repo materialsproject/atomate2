@@ -97,6 +97,7 @@ class BaseQCMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
     stop_children_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
+    task_type : str | None = None
 
     @qchem_job
     def make(
@@ -152,7 +153,7 @@ class BaseQCMaker(Maker):
         # parse qchem outputs
         task_doc = TaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         # task_doc.task_label = self.name
-        task_doc.task_type = self.name
+        task_doc.task_type = self.name if self.task_type is None else self.task_type
 
         # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)

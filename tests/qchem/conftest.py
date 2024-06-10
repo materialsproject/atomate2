@@ -181,6 +181,9 @@ def check_qin(
         user_qin_path = script_directory / "opt.qin.gz"
     elif job_name == "water_frequency":
         user_qin_path = script_directory / "freq.qin.gz"
+    else:
+        user_qin_path = Path("mol.qin")
+
     user_qin = QCInput.from_file(user_qin_path)
 
     keys_to_check = (

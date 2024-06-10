@@ -119,7 +119,6 @@ class FrequencyOptMaker(Maker):
         """
         jobs: list[Job] = []
         opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
-        # opt.name += " 1"
         opt.name = "Geometry Optimization"
         jobs += [opt]
 
@@ -127,7 +126,6 @@ class FrequencyOptMaker(Maker):
             molecule=opt.output.output.optimized_molecule,
             prev_dir=opt.output.dir_name,
         )
-        # freq.name += " 1"
         freq.name = "Frequency Analysis"
         jobs += [freq]
 
@@ -188,8 +186,13 @@ class FrequencyOptFlatteningMaker(Maker):
             self.opt_maker.input_set_generator.overwrite_inputs = overwrite_inputs
             self.freq_maker.input_set_generator.overwrite_inputs = overwrite_inputs
 
-        jobs: list[Job] = []
+        new_flow = None
+        new_output = None
+        
         if (lowest_freq < 0) and (ffopt_runs < self.max_ffopt_runs):
+            
+            jobs: list[Job] = []
+
             for idx in range(len(molecule)):
                 molecule.translate_sites(
                     indices=[idx], vector=[self.scale * v for v in mode[idx]]
@@ -201,7 +204,7 @@ class FrequencyOptFlatteningMaker(Maker):
             molecule = opt.output.output.optimized_molecule
 
             freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
-            freq.name = "Frequency Analysis"
+            freq.name = f"Frequency Analysis {ffopt_runs + 1}"
             jobs += [freq]
 
             recursive = self.make(
@@ -212,8 +215,12 @@ class FrequencyOptFlatteningMaker(Maker):
                 prev_dir=prev_dir,
             )
             new_flow = Flow([*jobs, recursive], output=recursive.output)
-            return Response(replace=new_flow, output=recursive.output)
+            new_output = recursive.output
+        
+        elif ffopt_runs == 0:
+            freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
+            freq.name = f"Frequency Analysis {ffopt_runs + 1}"
+            new_flow = [freq]
+            new_output = freq.output
 
-        freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
-        freq.name = "Frequency Analysis"
-        return Response(replace=[freq], output=freq.output)
+        return Response(replace=new_flow, output=new_output)

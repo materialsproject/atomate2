@@ -1,13 +1,9 @@
-from pathlib import Path
 
 from emmet.core.qc_tasks import TaskDoc
 from jobflow import run_locally
-from pymatgen.core.structure import Molecule
 from pytest import approx
 
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
-
-current_directory = Path(__file__).resolve().parent
 
 def test_single_point_maker(mock_qchem, clean_dir, h2o_molecule):
     # mapping from job name to directory containing test files
