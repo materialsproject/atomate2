@@ -90,7 +90,7 @@ strict = [
     "custodian==2024.4.18",
     "dscribe==2.1.1",
     "emmet-core==0.82.2",
-    "ijson==3.2.3",
+    "ijson==3.3.0",
     "jobflow==0.1.17",
     "lobsterpy==0.4.4",
     "mace-torch>=0.3.3",
