@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any, Callable, Final, Literal
 
 import pytest
 from jobflow import CURRENT_JOB
+from pymatgen.core import Molecule
 from pymatgen.io.qchem.inputs import QCInput
 from pytest import MonkeyPatch
 
@@ -25,6 +26,17 @@ _QFILES: Final = "mol.qin.gz"
 _REF_PATHS: dict[str, str | Path] = {}
 _FAKE_RUN_QCHEM_KWARGS: dict[str, dict] = {}
 
+
+@pytest.fixture
+def h2o_molecule():
+    return Molecule(
+        coords = [
+            [0.0000, 0.0000, 0.12124],
+            [-0.78304, -0.00000, -0.48495],
+            [0.78304, -0.00000, -0.48495]
+        ],
+        species=["O","H","H"]
+    )
 
 @pytest.fixture(scope="session")
 def qchem_test_dir(test_dir):
