@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -131,8 +130,7 @@ class AdsorptionMaker(Maker):
             mol_optimize_job.append_name("molecule relaxation job")
             jobs += [mol_optimize_job]
 
-            optimized_molecule = mol_optimize_job.output.structure
-
+            # optimized_molecule = mol_optimize_job.output.structure
             # prev_dir = mol_optimize_job.output.dir_name
 
             joblog["job1: molecule relaxation job"]["output"] = (
@@ -142,8 +140,9 @@ class AdsorptionMaker(Maker):
         # else:
         # prev_dir = prev_dir_mol
 
-        # mol_static_job = self.mol_static_maker.make(molecule_structure, prev_dir=None) # old
-        mol_static_job = self.mol_static_maker.make(mol_optimize_job.output.structure, prev_dir=None) # updated
+        mol_static_job = self.mol_static_maker.make(
+            mol_optimize_job.output.structure, prev_dir=None
+        )  # updated
         mol_static_job.append_name("molecule static job")
         jobs += [mol_static_job]
 

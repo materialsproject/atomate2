@@ -1,6 +1,6 @@
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Structure
+from pymatgen.core import Molecule, Structure
 
 from atomate2.vasp.flows.adsorption import AdsorptionMaker
 
@@ -40,11 +40,21 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    molcule = Structure.from_file(test_dir / "vasp/Au_adsorption/mol/POSCAR")
-    bulk_structure = Structure.from_file(test_dir / "vasp/Au_adsorption/bulk/POSCAR")
+    molcule_str = Structure.from_file(
+        test_dir / "vasp/Au_adsorption/mol_relax/inputs/POSCAR"
+    )
+
+    molecule_indices = [i for i, site in enumerate(molcule_str)]
+    molecule_coords = [molcule_str[i].coords for i in molecule_indices]
+    molecule_species = [molcule_str[i].species_string for i in molecule_indices]
+
+    molecule = Molecule(molecule_species, molecule_coords)
+    bulk_structure = Structure.from_file(
+        test_dir / "vasp/Au_adsorption/bulk_relax/inputs/POSCAR"
+    )
 
     flow = AdsorptionMaker().make(
-        molecule=molcule, structure=bulk_structure, min_lw=5.0, min_slab_size=4.0
+        molecule=molecule, structure=bulk_structure, min_lw=5.0, min_slab_size=4.0
     )
 
     # Run the flow or job and ensure that it finished running successfully
