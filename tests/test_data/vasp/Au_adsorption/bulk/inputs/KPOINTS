@@ -1,4 +1,0 @@
-bulk automatic
-0              ! number of k-points = 0 ->automatic generation scheme
-Gamma           ! fully automatic
-10 10 10          ! length (l)
