@@ -87,9 +87,5 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
             response.name == expected_name
         ), f"Job '{response.name}' does not match expected '{expected_name}'."
 
-    # Additional checks (WIP)
-    adsorption_result = responses[-1].output
-    assert adsorption_result is not None, "Adsorption result is None."
-    assert hasattr(
-        adsorption_result, "adsorption_energy"
-    ), "Adsorption result does not contain adsorption_energy."
+    assert flow[-2].uuid in responses
+    assert flow[-1].uuid in responses

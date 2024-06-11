@@ -154,10 +154,6 @@ def generate_adslabs(
     )
     slab = slab_generator.get_slab()
 
-    # ads_slabs = AdsorbateSiteFinder(slab).generate_adsorption_structures(
-    #     molecule_structure, translate=True, min_lw=min_lw
-    # )
-
     return AdsorbateSiteFinder(slab).generate_adsorption_structures(
         molecule_structure, translate=True, min_lw=min_lw
     )
@@ -209,9 +205,6 @@ def run_adslabs_job(
 
 @job
 def adsorption_calculations(
-    # bulk_structure: Structure,
-    # molecule_structure: Structure,
-    # surface_idx: tuple,
     adslab_structures: list[Structure],
     adslabs_data: dict[str, list],
     molecule_dft_energy: float,
@@ -243,12 +236,6 @@ def adsorption_calculations(
         The list of (adsorption configurations, configuration number,
         adsorption energy, directories) sorted by adsorption energy.
     """  # noqa: D205
-    # bulk_composition = bulk_structure.composition
-    # bulk_reduced_formula = bulk_composition.reduced_formula
-    # molecule_composition = molecule_structure.composition
-    # molecule_reduced_formula = molecule_composition.reduced_formula
-    # flow_name = f"{bulk_reduced_formula}_{molecule_reduced_formula}_{surface_idx}"
-
     outputs: dict[str, list] = {
         "adsorption_configuration": [],
         "configuration_number": [],
