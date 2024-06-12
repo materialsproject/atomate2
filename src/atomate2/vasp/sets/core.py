@@ -689,7 +689,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
 @dataclass
 class MVLGWSetGenerator(VaspInputGenerator):
     """
-    Class to generate Materials Virtual Lab GW input sets.
+    Class to generate Materials Virtual Lab input sets for static, diag and GW calculations.
 
     Parameters
     ----------
