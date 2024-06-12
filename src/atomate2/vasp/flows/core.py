@@ -13,6 +13,8 @@ from atomate2.vasp.jobs.core import (
     HSEBSMaker,
     HSEStaticMaker,
     MVLGWMaker,
+    MVLNonSCFMaker,
+    MVLStaticMaker,
     NonSCFMaker,
     RelaxMaker,
     StaticMaker,
@@ -187,6 +189,8 @@ class MVLGWBandStructureMaker(Maker):
     """
 
     name: str = "band structure"
+    static_maker: BaseVaspMaker = field(default_factory=MVLStaticMaker)
+    nscf_maker: BaseVaspMaker = field(default_factory=MVLNonSCFMaker)
     gw_maker: BaseVaspMaker = field(default_factory=MVLGWMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
@@ -205,24 +209,19 @@ class MVLGWBandStructureMaker(Maker):
         Flow
             A band structure flow.
         """
-        static_job = self.gw_maker.make(structure, prev_dir=prev_dir, mode="Static")
-        diag_job = self.gw_maker.make(
-            static_job.output.structure,
-            prev_dir=static_job.output.dir_name,
-            mode="DIAG",
+        static_job = self.static_maker.make(structure, prev_dir=prev_dir)
+        nscf_job = self.nscf_maker.make(
+            static_job.output.structure, prev_dir=static_job.output.dir_name
         )
-        qs_job = self.gw_maker.make(
-            diag_job.output.structure,
-            prev_dir=diag_job.output.dir_name,
-            mode="GW",
+        gw_job = self.gw_maker.make(
+            nscf_job.output.structure, prev_dir=nscf_job.output.dir_name
         )
-
-        jobs = [static_job, diag_job, qs_job]
+        jobs = [static_job, nscf_job, gw_job]
 
         outputs = {
             "static": static_job.output,
-            "diag": diag_job.output,
-            "qs": qs_job.output,
+            "nscf": nscf_job.output,
+            "gw": gw_job.output,
         }
 
         return Flow(jobs, outputs, name=self.name)
