@@ -68,7 +68,7 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
         description="Whether or not the one shot approximation was found"
     )
 
-    atom_resolved_sigma_A: dict[str, float] = Field(
+    atom_resolved_sigma_A: dict[str, float] | None = Field(
         None,
         description="Sigma A values for each atom type"
     )

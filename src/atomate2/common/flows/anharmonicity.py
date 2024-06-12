@@ -129,7 +129,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
 
         results = store_results(
             sigma_A=anharmon_flow.output['full sigma^A'],
-            sigma_A_by_atom=anharmon_flow.output['atom-resolved'],
+            sigma_A_by_atom=anharmon_flow.output['atom-resolved'] if atom_resolved==True else None,
             phonon_doc=phonon_flow.output,
             one_shot=one_shot_approx,
         )
