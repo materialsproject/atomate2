@@ -18,7 +18,9 @@ from atomate2.common.jobs.anharmonicity import (
     get_phonon_supercell,
     get_sigma_a,
     run_displacements,
-    store_results
+    store_results,
+    get_sigma_per_atom,
+    get_forces,
 )
 
 if TYPE_CHECKING:
@@ -48,10 +50,13 @@ class BaseAnharmonicityMaker(Maker, ABC):
         Name of the flows produced by this maker.
     phonon_maker: BasePhononMaker
         The maker to generate the phonon model
+    sigma_A_atom: float
+        Atom-resolved sigma^A
     """
 
     name: str = "anharmonicity"
     phonon_maker: BasePhononMaker = None
+    sigma_A_atom: float = None
 
     def make(
         self,
@@ -63,7 +68,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         supercell_matrix: Matrix3D | None = None,
         temperature: float = 300,
         one_shot_approx: bool = True,
-        seed: int | None = None
+        seed: int | None = None,
+        atom_resolved: bool = False,
     ) -> Flow:
         """Make the anharmonicity calculation flow.
 
@@ -101,6 +107,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
             The default is True.
         seed: int | None
             Seed to use for the random number generator (only used if one_shot_approx == False)
+        atom_resolved: bool
+            If true, calculate the atom-resolved sigma^A. This is false by default.
 
         Returns
         -------
@@ -117,10 +125,11 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
 
         phonon_doc = phonon_flow.output
-        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature, one_shot_approx, seed)
+        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature, one_shot_approx, seed, atom_resolved)
 
         results = store_results(
-            sigma_A=anharmon_flow.output,
+            sigma_A=anharmon_flow.output['full sigma^A'],
+            sigma_A_by_atom=anharmon_flow.output['atom-resolved'],
             phonon_doc=phonon_flow.output,
             one_shot=one_shot_approx,
         )
@@ -135,6 +144,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         temperature: float = 300,
         one_shot_approx: bool = True,
         seed: int | None = None,
+        atom_resolved: bool = False,
     ) -> Flow:
         """Create an anharmonicity workflow from a phonon calculation.
 
@@ -151,6 +161,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
             The default is True.
         seed: int | None
             Seed to use for the random number generator (only used if one_shot_approx == False)
+        atom_resolved: bool
+            If true, calculate the atom-resolved sigma^A. This is false by default.
         """
         if phonon_doc.has_imaginary_modes:
             warn(
@@ -185,15 +197,36 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
         jobs.append(displacement_calcs)
 
-        # Calculate oneshot approximation of sigma_A
-        calc_sigma_a_os = get_sigma_a(
+        # Get DFT and harmonic forces
+        force_calcs = get_forces(
             phonon_doc.force_constants,
             phonon_supercell,
             displacement_calcs.output,
         )
+        jobs.append(force_calcs)
+
+        sigma_a_vals = {}
+
+        # Calculate atom-resolved sigma^A
+        if atom_resolved:
+            calc_sigma_by_atom = get_sigma_per_atom(
+                structure=phonon_supercell,
+                forces_dft=force_calcs.output[0],
+                forces_harmonic=force_calcs.output[1],
+            )
+            jobs.append(calc_sigma_by_atom)
+            sigma_a_vals['atom-resolved'] = calc_sigma_by_atom.output
+            self.sigma_A_atom = calc_sigma_by_atom.output
+
+        # Calculate oneshot approximation of sigma^A
+        calc_sigma_a_os = get_sigma_a(
+            dft_forces=force_calcs.output[0],
+            harmonic_forces=force_calcs.output[1],
+        )
         jobs.append(calc_sigma_a_os)
-        self.sigma_A_oneshot = calc_sigma_a_os.output
-        return Flow(jobs, calc_sigma_a_os.output)
+        sigma_a_vals['full sigma^A'] = calc_sigma_a_os.output
+        
+        return Flow(jobs, sigma_a_vals)
 
     @property
     @abstractmethod

@@ -67,11 +67,17 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
         None, 
         description="Whether or not the one shot approximation was found"
     )
+
+    atom_resolved_sigma_A: dict[str, float] = Field(
+        None,
+        description="Sigma A values for each atom type"
+    )
     
     @classmethod
     def store_data(
         cls,
         sigma_A: float,
+        sigma_A_by_atom: dict[str, float],
         phonon_doc: PhononBSDOSDoc,
         one_shot: bool
     ) -> Self:
@@ -82,6 +88,8 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
         ----------
         sigma_A: float
             Float with sigma_A value to be stored
+        sigma_A_by_atom: dict[str, float]
+            Dictionary with keys as atom symbols and values as sigma^A values resolved to an atom
         phonon_doc: PhononBSDOSDoc
             Document with data from phonon workflow
         one_shot: bool
@@ -91,6 +99,7 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
             structure=phonon_doc.structure,
             meta_structure=phonon_doc.structure,
             sigma_A=sigma_A,
+            atom_resolved_sigma_A=sigma_A_by_atom,
             phonon_doc=phonon_doc,
             supercell_matrix=phonon_doc.supercell_matrix,
             primitive_matrix=phonon_doc.primitive_matrix,

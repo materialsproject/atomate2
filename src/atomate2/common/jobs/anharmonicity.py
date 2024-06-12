@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 import numpy as np
 from numpy.random import rand, seed
@@ -51,6 +51,59 @@ def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
         phonon_doc.supercell_matrix,
     )
     return get_pmg_structure(phonon.supercell)
+
+@job
+def get_sigma_per_atom(
+    structure: Structure,
+    forces_dft: np.ndarray,
+    forces_harmonic: np.ndarray,
+) -> Dict[str, float]:
+    """Computes the atom-resolved sigma^A measure
+    
+    Parameters
+    ----------
+    structure: Structure
+        The structure to use for the calculation
+    forces_dft: np.ndarray
+        DFT calculated forces
+    forces_harmonic: np.ndarray
+        Harmonic approximation of the forces
+    """
+    # Ensure that DFT and harmonic forces are in np format
+    forces_dft = np.array(forces_dft)
+    forces_harmonic = np.array(forces_harmonic)
+
+    # Check shapes of forces
+    if len(np.shape(forces_dft)) == 2:
+        forces_dft = np.expand_dims(forces_dft, axis=0)
+        forces_harmonic = np.expand_dims(forces_harmonic, axis=0)
+
+    atom_numbers = np.array([site.specie.number for site in structure.sites])
+    if np.shape(forces_dft)[1] == 3 * structure.num_sites:
+        atom_numbers = atom_numbers.repeat(3)
+    
+    symbols = np.array([site.specie.name for site in structure.sites])
+    unique_atoms, counts = np.unique(atom_numbers, return_counts=True)
+
+    sigma_atom = []
+    f_norms = []
+    unique_symbols = []
+    for u in unique_atoms:
+        # Find atoms of type u in the structure
+        mask = atom_numbers == u
+        # Add symbol for atom u to list of examined atoms
+        unique_symbols.append(symbols[mask][0])
+        # Take forces belonging to this atom
+        f_dft = forces_dft[:, mask]
+        f_ha = forces_harmonic[:, mask]
+        # Calculate sigma^A for this atom
+        sigma_atom.append(
+            np.std((f_dft - f_ha)) / np.std(f_dft)
+        )
+        f_norms.append(float(np.std(f_dft)))
+
+    sigma_dict = {unique_symbols[i]: sigma_atom[i] for i in range(len(sigma_atom))}
+    return sigma_dict
 
 def box_muller(
     eig_vals: np.ndarray,
@@ -153,12 +206,12 @@ def displace_structure(
 
 
 @job
-def get_sigma_a(
+def get_forces(
     force_constants: ForceConstants,
     phonon_supercell: Structure,
     displaced_structures: dict[str, list],
-) -> float:
-    """Calculate sigma^A.
+) -> list[np.ndarray, np.ndarray]:
+    """Calculates the DFT forces and harmonic forces
 
     Parameters
     ----------
@@ -197,8 +250,29 @@ def get_sigma_a(
         for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)
     ]
 
-    return np.std(anharmonic_forces) / np.std(dft_forces)
+    return [dft_forces, harmonic_forces]
 
+@job
+def get_sigma_a(
+    dft_forces: np.ndarray,
+    harmonic_forces: np.ndarray,
+) -> float:
+    """Calculates full sigma^A
+    
+    Parameters
+    ----------
+    dft_forces: np.ndarray
+        DFT calculated forces
+    harmonic_forces: np.ndarray
+        Forces calculated via harmonic approximation
+    """
+    dft_forces = np.array(dft_forces)
+    harmonic_forces = np.array(harmonic_forces)
+    anharmonic_forces = [
+        dft_force - harmonic_force
+        for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)
+    ]
+    return np.std(anharmonic_forces) / np.std(dft_forces)
 
 @job(data=["forces", "displaced_structures"])
 def run_displacements(
@@ -288,8 +362,9 @@ def run_displacements(
 @job
 def store_results(
     sigma_A: float,
+    sigma_A_by_atom: dict[str, float],
     phonon_doc: PhononBSDOSDoc,
-    one_shot: bool
+    one_shot: bool,
 ) -> AnharmonicityDoc:
     """
     Stores the results in a schema object
@@ -298,14 +373,16 @@ def store_results(
     ----------
     sigma_A: float
         Sigma^A value to be stored
+    sigma_A_by_atom: dict[str, float]
+        Dictionary with keys as atom symbols and values as sigma^A values resolved to an atom
     phonon_doc: PhononBSDOSDoc
         Info from phonon workflow to be stored
     one_shot: bool
-        If false, uses a normally distributed random number for zeta.
-        The default is true.
+        Whether the one-shot approximation was used (true) or not (false)
     """
     return AnharmonicityDoc.store_data(
         sigma_A=sigma_A,
+        sigma_A_by_atom=sigma_A_by_atom,
         phonon_doc=phonon_doc,
         one_shot=one_shot,
     )
