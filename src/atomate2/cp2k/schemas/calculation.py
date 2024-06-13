@@ -18,6 +18,7 @@ from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.common import VolumetricData
 from pymatgen.io.cp2k.inputs import BasisFile, DataFile, PotentialFile
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
+from typing_extensions import Self
 
 from atomate2 import SETTINGS
 from atomate2.cp2k.schemas.calc_types import (
@@ -86,9 +87,9 @@ class CalculationInput(BaseModel):
     @classmethod
     def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
-        for k in atomic_kind_info:
-            if "total_pseudopotential_energy" in atomic_kind_info[k]:
-                del atomic_kind_info[k]["total_pseudopotential_energy"]
+        for key in atomic_kind_info:
+            if "total_pseudopotential_energy" in atomic_kind_info[key]:
+                del atomic_kind_info[key]["total_pseudopotential_energy"]
         return atomic_kind_info
 
     @field_validator("dft", mode="before")
@@ -100,7 +101,7 @@ class CalculationInput(BaseModel):
         return dft
 
     @classmethod
-    def from_cp2k_output(cls, output: Cp2kOutput) -> "CalculationInput":
+    def from_cp2k_output(cls, output: Cp2kOutput) -> Self:
         """Initialize from Cp2kOutput object."""
         return cls(
             structure=output.initial_structure,
@@ -117,9 +118,8 @@ class RunStatistics(BaseModel):
     total_time: float = Field(0, description="The total CPU time for this calculation")
 
     @classmethod
-    def from_cp2k_output(cls, output: Cp2kOutput) -> "RunStatistics":
-        """
-        Create a run statistics document from an CP2K Output object.
+    def from_cp2k_output(cls, output: Cp2kOutput) -> Self:
+        """Create a run statistics document from an CP2K Output object.
 
         Parameters
         ----------
@@ -186,9 +186,8 @@ class CalculationOutput(BaseModel):
         v_hartree: Optional[VolumetricData] = None,
         store_trajectory: bool = False,
         store_scf: bool = False,
-    ) -> "CalculationOutput":
-        """
-        Create a CP2K output document from CP2K outputs.
+    ) -> Self:
+        """Create a CP2K output document from CP2K outputs.
 
         Parameters
         ----------
@@ -302,9 +301,8 @@ class Calculation(BaseModel):
         store_volumetric_data: Optional[
             tuple[str]
         ] = SETTINGS.CP2K_STORE_VOLUMETRIC_DATA,
-    ) -> tuple["Calculation", dict[Cp2kObject, dict]]:
-        """
-        Create a CP2K calculation document from a directory and file paths.
+    ) -> tuple[Self, dict[Cp2kObject, dict]]:
+        """Create a CP2K calculation document from a directory and file paths.
 
         Parameters
         ----------

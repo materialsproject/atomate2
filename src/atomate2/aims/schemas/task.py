@@ -6,7 +6,7 @@ import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -15,11 +15,11 @@ from emmet.core.tasks import get_uri
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
+from typing_extensions import Self
 
 from atomate2.aims.schemas.calculation import AimsObject, Calculation, TaskState
 from atomate2.aims.utils import datetime_str
 
-_T = TypeVar("_T", bound="AimsTaskDoc")
 _VOLUMETRIC_FILES = ("total_density", "spin_density", "eigenstate_density")
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class AnalysisDoc(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_docs(cls, calc_docs: list[Calculation]) -> AnalysisDoc:
+    def from_aims_calc_docs(cls, calc_docs: list[Calculation]) -> Self:
         """Create analysis summary from FHI-aims calculation documents.
 
         Parameters
@@ -107,9 +107,7 @@ class SpeciesSummary(BaseModel):
     )
 
     @classmethod
-    def from_species_info(
-        cls, species_info: dict[str, dict[str, Any]]
-    ) -> SpeciesSummary:
+    def from_species_info(cls, species_info: dict[str, dict[str, Any]]) -> Self:
         """Initialize from the atomic_kind_info dictionary.
 
         Parameters
@@ -154,7 +152,7 @@ class InputDoc(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> InputDoc:
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> Self:
         """Create calculation input summary from a calculation document.
 
         Parameters
@@ -231,7 +229,7 @@ class OutputDoc(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> Self:
         """Create a summary from an aims CalculationDocument.
 
         Parameters
@@ -310,7 +308,7 @@ class ConvergenceSummary(BaseModel):
     )
 
     @classmethod
-    def from_aims_calc_doc(cls, calc_doc: Calculation) -> ConvergenceSummary:
+    def from_aims_calc_doc(cls, calc_doc: Calculation) -> Self:
         """Create a summary from an FHI-aims calculation document.
 
         Parameters
@@ -334,8 +332,8 @@ class ConvergenceSummary(BaseModel):
                 " in {calc_doc.dir_name}"
             )
 
-        with open(convergence_file) as f:
-            convergence_data = json.load(f)
+        with open(convergence_file) as file:
+            convergence_data = json.load(file)
 
         return cls(
             structure=calc_doc.output.structure,
@@ -354,7 +352,7 @@ class ConvergenceSummary(BaseModel):
     @classmethod
     def from_data(
         cls, structure: Structure | Molecule, convergence_data: dict[str, Any]
-    ) -> ConvergenceSummary:
+    ) -> Self:
         """Create a summary from the convergence data dictionary.
 
         Parameters
@@ -489,12 +487,12 @@ class AimsTaskDoc(StructureMetadata, MoleculeMetadata):
 
     @classmethod
     def from_directory(
-        cls: type[_T],
+        cls,
         dir_name: Path | str,
         volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
         additional_fields: dict[str, Any] = None,
         **aims_calculation_kwargs,
-    ) -> AimsTaskDoc:
+    ) -> Self:
         """Create a task document from a directory containing FHi-aims files.
 
         Parameters
