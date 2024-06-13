@@ -471,10 +471,10 @@ class MVLNonSCFMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = """
-    Materials Virtual Lab (MVL) non-self-consistent calculation
-    compatible with MVL GW jobs
-    """
+    name: str = (
+        "Materials Virtual Lab (MVL) non-self-consistent calculation "
+        "compatible with MVL GW jobs"
+    )
     input_set_generator: VaspInputGenerator = field(default_factory=MVLGWSetGenerator)
 
     @vasp_job
