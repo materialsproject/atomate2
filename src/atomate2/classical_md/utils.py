@@ -231,6 +231,50 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
     }
 
 
+def counts_from_box_size(
+    species: dict[str, float], side_length: float, density: float = 0.8
+) -> dict[str, float]:
+    """Calculate the number of molecules needed to fill a box.
+
+    Parameters
+    ----------
+    species : dict of str, float
+        Dictionary of species SMILES strings and their relative mass fractions.
+    side_length : int
+        Side length of the cubic simulation box in nm.
+    density : int, optional
+        Density of the system in g/cm^3. Default is 1 g/cm^3.
+
+    Returns
+    -------
+    dict of str, float
+        Number of each species needed to fill the box with the given density.
+    """
+    masses = {el.Z: el.atomic_mass for el in Element}
+
+    na = 6.02214076e23
+    volume = (side_length * 1e-7) ** 3  # Convert from nm3 to cm^3
+    total_mass = volume * density  # grams
+
+    # Calculate molecular weights
+    mws = []
+    for smile in species:
+        mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
+        mws.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
+    mean_mw = np.mean(mws)
+    n_mol = (total_mass / mean_mw) * na
+
+    # Calculate the number of moles needed for each species
+    mol_ratio = np.array(list(species.values())) / np.array(mws)
+    mol_ratio /= sum(mol_ratio)
+
+    # Convert moles to number of molecules
+    return {
+        smile: int(np.round(ratio * n_mol))
+        for smile, ratio in zip(species.keys(), mol_ratio)
+    }
+
+
 def create_mol_dicts(
     counts: dict[str, float],
     ion_charge_scaling: float,

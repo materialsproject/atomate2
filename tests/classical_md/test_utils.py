@@ -18,6 +18,8 @@ from pymatgen.io.openff import (
 )
 
 from atomate2.classical_md.utils import (
+    counts_from_box_size,
+    counts_from_masses,
     create_mol_spec,
     increment_name,
     merge_specs_by_name_and_smile,
@@ -261,3 +263,14 @@ def test_calculate_elyte_composition():
     }
     counts2 = counts_from_masses(mol_ratio, 1000)
     assert np.allclose(sum(counts2.values()), 1000, atol=5)
+
+
+def test_counts_calculators():
+    mass_fractions = {"O": 0.5, "CCO": 0.5}
+
+    counts_size = counts_from_box_size(mass_fractions, 3)
+    counts_number = counts_from_masses(mass_fractions, 406)
+
+    assert 200 < sum(counts_size.values()) < 500
+
+    assert counts_size == counts_number
