@@ -15,6 +15,7 @@ from atomate2.aims.jobs.phonons import (
 
 cwd = os.getcwd()
 
+
 def test_anharmonic_quantification_oneshot(si, tmp_path, mock_aims, species_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -42,18 +43,19 @@ def test_anharmonic_quantification_oneshot(si, tmp_path, mock_aims, species_dir)
     parameters_phonon_disp["rlsy_symmetry"] = None
 
     phonon_maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters, user_kpoints_settings={"density": 5.0}),
+        bulk_relax_maker=RelaxMaker.full_relaxation(
+            user_params=parameters, user_kpoints_settings={"density": 5.0}
+        ),
         static_energy_maker=StaticMaker(
             input_set_generator=StaticSetGenerator(
-                user_params=parameters,
-                user_kpoints_settings={"density": 5.0}
+                user_params=parameters, user_kpoints_settings={"density": 5.0}
             )
         ),
         use_symmetrized_structure="primitive",
         phonon_displacement_maker=PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(
                 user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0}
+                user_kpoints_settings={"density": 5.0},
             )
         ),
     )
@@ -72,7 +74,8 @@ def test_anharmonic_quantification_oneshot(si, tmp_path, mock_aims, species_dir)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
-    assert np.round(dct['one-shot'], 3) == 0.104
+    assert np.round(dct["one-shot"], 3) == 0.104
+
 
 def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
     ref_paths = {
@@ -100,18 +103,19 @@ def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
     parameters_phonon_disp["rlsy_symmetry"] = None
 
     phonon_maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters, user_kpoints_settings={"density": 5.0}),
+        bulk_relax_maker=RelaxMaker.full_relaxation(
+            user_params=parameters, user_kpoints_settings={"density": 5.0}
+        ),
         static_energy_maker=StaticMaker(
             input_set_generator=StaticSetGenerator(
-                user_params=parameters,
-                user_kpoints_settings={"density": 5.0}
+                user_params=parameters, user_kpoints_settings={"density": 5.0}
             )
         ),
         use_symmetrized_structure="primitive",
         phonon_displacement_maker=PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(
                 user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0}
+                user_kpoints_settings={"density": 5.0},
             )
         ),
     )
@@ -124,7 +128,7 @@ def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
         si,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
         one_shot_approx=False,
-        seed=1234
+        seed=1234,
     )
 
     # run the flow or job and ensure that it finished running successfully
@@ -132,7 +136,8 @@ def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
-    assert np.round(dct['full'], 3) == 0.120
+    assert np.round(dct["full"], 3) == 0.120
+
 
 def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
     # mapping from job name to directory containing test files
@@ -163,18 +168,19 @@ def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, specie
     parameters_phonon_disp["rlsy_symmetry"] = None
 
     phonon_maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters, user_kpoints_settings={"density": 5.0}),
+        bulk_relax_maker=RelaxMaker.full_relaxation(
+            user_params=parameters, user_kpoints_settings={"density": 5.0}
+        ),
         static_energy_maker=StaticMaker(
             input_set_generator=StaticSetGenerator(
-                user_params=parameters,
-                user_kpoints_settings={"density": 5.0}
+                user_params=parameters, user_kpoints_settings={"density": 5.0}
             )
         ),
         use_symmetrized_structure="primitive",
         phonon_displacement_maker=PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(
                 user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0}
+                user_kpoints_settings={"density": 5.0},
             )
         ),
     )
@@ -196,14 +202,19 @@ def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, specie
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    mode_resolved_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict['mode-resolved']
+    mode_resolved_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict[
+        "mode-resolved"
+    ]
     mode_resolved_vals_rounded = np.round(mode_resolved_vals, 3)
     sigmas = mode_resolved_vals_rounded[:, 1]
-    assert [3.7470, 5.5000*(10**(-2))] in mode_resolved_vals_rounded
+    assert [3.7470, 5.5000 * (10 ** (-2))] in mode_resolved_vals_rounded
     assert np.round(sigmas.mean(), 3) == 0.186
     assert np.round(sigmas.std(), 3) == 0.213
 
-def test_atom_resolved_anharmonic_quantification(nacl, tmp_path, mock_aims, species_dir):
+
+def test_atom_resolved_anharmonic_quantification(
+    nacl, tmp_path, mock_aims, species_dir
+):
     # mapping from job name to directory containing test files
     ref_paths = {
         "Relaxation calculation": "phonon-relax-nacl",
@@ -231,18 +242,19 @@ def test_atom_resolved_anharmonic_quantification(nacl, tmp_path, mock_aims, spec
     parameters_phonon_disp["rlsy_symmetry"] = None
 
     phonon_maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters, user_kpoints_settings={"density": 5.0}),
+        bulk_relax_maker=RelaxMaker.full_relaxation(
+            user_params=parameters, user_kpoints_settings={"density": 5.0}
+        ),
         static_energy_maker=StaticMaker(
             input_set_generator=StaticSetGenerator(
-                user_params=parameters,
-                user_kpoints_settings={"density": 5.0}
+                user_params=parameters, user_kpoints_settings={"density": 5.0}
             )
         ),
         use_symmetrized_structure="primitive",
         phonon_displacement_maker=PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(
                 user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0}
+                user_kpoints_settings={"density": 5.0},
             )
         ),
     )
@@ -254,17 +266,20 @@ def test_atom_resolved_anharmonic_quantification(nacl, tmp_path, mock_aims, spec
     flow = maker.make(
         nacl,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-        atom_resolved=True
+        atom_resolved=True,
     )
 
     # run the flow or job and ensure that it finished running successfully
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    nacl_sigma_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict['atom-resolved']
+    nacl_sigma_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict[
+        "atom-resolved"
+    ]
     nacl_sigma_rounded = [(arr[0], np.round(arr[1], 3)) for arr in nacl_sigma_vals]
     assert ("Na", 0.076) in nacl_sigma_rounded
     assert ("Cl", 0.072) in nacl_sigma_rounded
+
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
 def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
@@ -311,4 +326,4 @@ def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
-    assert np.round(dct['one-shot'], 3) == 0.125
+    assert np.round(dct["one-shot"], 3) == 0.125

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -14,7 +14,6 @@ from pymatgen.core.units import kb
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 from atomate2.aims.schemas.calculation import Calculation
-
 from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
 
 if TYPE_CHECKING:
@@ -26,17 +25,17 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
-
 logger = logging.getLogger(__name__)
 
 # Constants
-EV = 1.60217733e-19 # [J]
+EV = 1.60217733e-19  # [J]
 AA = 1e-10  # [m]
-AMU = 1.66053904e-27    # [kg]
+AMU = 1.66053904e-27  # [kg]
 THZ = 1e12  # [1/s]
 PI = np.pi
 
 OMEGA_TO_THZ = (EV / AA**2 / AMU) ** 0.5 / THZ / 2 / PI  # 15.633302 THz
+
 
 @job
 def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
@@ -59,14 +58,15 @@ def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
     )
     return get_pmg_structure(phonon.supercell)
 
+
 @job
 def get_sigma_per_atom(
     structure: Structure,
     forces_dft: np.ndarray,
     forces_harmonic: np.ndarray,
 ) -> list[tuple[str, float]]:
-    """Computes the atom-resolved sigma^A measure
-    
+    """Compute the atom-resolved sigma^A measure.
+
     Parameters
     ----------
     structure: Structure
@@ -104,21 +104,21 @@ def get_sigma_per_atom(
         f_dft = forces_dft[:, mask]
         f_ha = forces_harmonic[:, mask]
         # Calculate sigma^A for this atom
-        sigma_atom.append(
-            np.std((f_dft - f_ha)) / np.std(f_dft)
-        )
+        sigma_atom.append(np.std(f_dft - f_ha) / np.std(f_dft))
         f_norms.append(float(np.std(f_dft)))
 
-    sigma_vals = [(unique_symbols[i], sigma_atom[i]) for i in range(len(sigma_atom))]
-    return sigma_vals
+    return [(unique_symbols[i], sigma_atom[i]) for i in range(len(sigma_atom))]
+
 
 def box_muller(
     eig_vals: np.ndarray,
     eig_vecs: np.ndarray,
     temp: float,
+    rng: np.random.Generator,
 ) -> np.ndarray:
-    """Get a normally distributed random variable displacement
-    Uses the Box-Muller transform (https://en.wikipedia.org/wiki/Box–Muller_transform)
+    """Get a normally distributed random variable displacement.
+
+    Uses the Box-Muller transform (https://en.wikipedia.org/wiki/Box-Muller_transform)
 
     Parameters
     ----------
@@ -128,18 +128,19 @@ def box_muller(
         Matrix of harmonic eigenvectors (with first 3 removed for translational modes)
     temp: float
         Temperature in K to find velocity and displacement at
+    rng: np.random.Generator
+        Seeded random number generator
     """
     n_eigvals = eig_vals.shape[0]
-    spread = np.sqrt(-2.0 * np.log(1.0 - np.random.rand(n_eigvals)))
+    spread = np.sqrt(-2.0 * np.log(1.0 - rng.random(size=n_eigvals)))
 
     # Assign amplitudes (A_s) and phases (phi_s)
-    a_s = spread * (np.sqrt(temp * kb)/eig_vals)
-    phi_s = 2.0 * np.pi * np.random.rand(n_eigvals)
+    a_s = spread * (np.sqrt(temp * kb) / eig_vals)
+    phi_s = 2.0 * np.pi * rng.random(size=n_eigvals)
 
     # Get displacement (not normalized by sqrt(masses) yet)
-    d_ac = (a_s * np.cos(phi_s) * eig_vecs).sum(axis=2)
+    return (a_s * np.cos(phi_s) * eig_vecs).sum(axis=2)
 
-    return d_ac
 
 @job
 def displace_structure(
@@ -149,7 +150,7 @@ def displace_structure(
     one_shot: bool = True,
     seed: int | None = None,
     mode_resolved: bool = False,
-    n_samples: int = 1
+    n_samples: int = 1,
 ) -> list[Structure]:
     """Calculate the displaced structure.
 
@@ -168,7 +169,8 @@ def displace_structure(
         If false, uses a normally distributed random number for zeta.
         The default is true.
     seed: int | None
-        Seed to use for the random number generator (only used if one_shot_approx == False)
+        Seed to use for the random number generator
+        (only used if one_shot_approx == False)
     mode_resolved: bool
         If true, calculate the mode-resolved sigma^A. This is false by default.
     n_samples: int
@@ -176,12 +178,14 @@ def displace_structure(
         An error is raised if n_samples == 1 and mode_resolved == True
     """
     if n_samples != 1 and one_shot:
-        raise ValueError(f"One-shot can't be used unless n_sample == 1 not {n_samples}.")
+        raise ValueError(
+            f"One-shot can't be used unless n_sample == 1 not {n_samples}."
+        )
     if n_samples < 1:
         raise ValueError(f"n_sample must be >= 1, not {n_samples}.")
     if n_samples == 1 and mode_resolved:
         raise ValueError("n_sample must be > 1 when mode_resolved == True.")
-    np.random.seed(seed)
+    rng = np.random.default_rng(seed)
 
     coords = phonon_supercell.cart_coords
     disp = np.zeros(coords.shape)
@@ -222,7 +226,7 @@ def displace_structure(
 
     samples = []
     for _ in range(n_samples):
-        disp = box_muller(eig_val, x_acs, temp) * inv_sqrt_mass[:, None]
+        disp = box_muller(eig_val, x_acs, temp, rng) * inv_sqrt_mass[:, None]
         samples.append(
             Structure(
                 lattice=phonon_supercell.lattice,
@@ -233,11 +237,13 @@ def displace_structure(
         )
     return samples
 
+
 def build_dynmat(
     force_constants: ForceConstants,
     structure: Structure,
 ) -> np.ndarray:
-    """Helper function to build the dynamical matrix
+    """Build the dynamical matrix.
+
     Parameters
     ----------
     force_constants: ForceConstants
@@ -252,8 +258,8 @@ def build_dynmat(
     )
     masses = np.array([site.species.weight for site in structure.sites])
     rminv = (masses**-0.5).repeat(3)
-    dynamical_matrix = force_constants_2d * rminv[:, None] * rminv[None, :]
-    return dynamical_matrix
+    return force_constants_2d * rminv[:, None] * rminv[None, :]
+
 
 @job
 def get_sigma_a_per_mode(
@@ -262,8 +268,8 @@ def get_sigma_a_per_mode(
     dft_forces: np.ndarray,
     harmonic_forces: np.ndarray,
 ) -> list[tuple[float, float]]:
-    """Projects the forces onto the normal mode and then calculates sigma^A for each mode
-    
+    """Calculate sigma^A for each mode.
+
     Parameters
     ----------
     force_constants: ForceConstants
@@ -285,23 +291,25 @@ def get_sigma_a_per_mode(
     masses = np.array([site.species.weight for site in structure.sites])
     m = masses ** (-0.5)
     # Project the forces
-    dft_forces = m.reshape(
-            (len(structure), 1)
-    ) * dft_forces
+    dft_forces = m.reshape((len(structure), 1)) * dft_forces
     dft_proj = np.array([p @ (f.flatten()) for f in np.array(dft_forces)])[:, 3:]
-    harmonic_forces = m.reshape(
-            (len(structure), 1)
-    ) * harmonic_forces
-    harmonic_proj = np.array([p @ (f.flatten()) for f in np.array(harmonic_forces)])[:, 3:]
+    harmonic_forces = m.reshape((len(structure), 1)) * harmonic_forces
+    harmonic_proj = np.array([p @ (f.flatten()) for f in np.array(harmonic_forces)])[
+        :, 3:
+    ]
     # Calculate sigma^A for each mode
     mode_sigma_vals = []
     for mode in np.unique(eig_val):
-        dft_vals = np.array([
-            dft_proj[:, idx] for idx in range(len(eig_val)) if eig_val[idx] == mode
-        ]).flatten()
-        harmonic_vals = np.array([
-            harmonic_proj[:, idx] for idx in range(len(eig_val)) if eig_val[idx] == mode
-        ]).flatten()
+        dft_vals = np.array(
+            [dft_proj[:, idx] for idx in range(len(eig_val)) if eig_val[idx] == mode]
+        ).flatten()
+        harmonic_vals = np.array(
+            [
+                harmonic_proj[:, idx]
+                for idx in range(len(eig_val))
+                if eig_val[idx] == mode
+            ]
+        ).flatten()
         anharmonic_vals = [
             dft_force - harmonic_force
             for dft_force, harmonic_force in zip(dft_vals, harmonic_vals)
@@ -311,13 +319,14 @@ def get_sigma_a_per_mode(
 
     return mode_sigma_vals
 
+
 @job
 def get_forces(
     force_constants: ForceConstants,
     phonon_supercell: Structure,
     displaced_structures: dict[str, list],
-) -> list[np.ndarray, np.ndarray]:
-    """Calculates the DFT forces and harmonic forces
+) -> list[np.ndarray]:
+    """Calculate the DFT forces and harmonic forces.
 
     Parameters
     ----------
@@ -353,13 +362,14 @@ def get_forces(
 
     return [dft_forces, harmonic_forces]
 
+
 @job
 def get_sigma_a(
     dft_forces: np.ndarray,
     harmonic_forces: np.ndarray,
 ) -> float:
-    """Calculates full sigma^A
-    
+    """Calculate the full sigma^A.
+
     Parameters
     ----------
     dft_forces: np.ndarray
@@ -374,6 +384,7 @@ def get_sigma_a(
         for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)
     ]
     return np.std(anharmonic_forces) / np.std(dft_forces)
+
 
 @job(data=["forces", "displaced_structures"])
 def run_displacements(
@@ -460,14 +471,15 @@ def run_displacements(
     displacement_flow = Flow(force_eval_jobs, outputs)
     return Response(replace=displacement_flow)
 
+
 @job
 def store_results(
-    sigma_dict: dict[str, Union[list, float]],
+    sigma_dict: dict[str, list | float],
     phonon_doc: PhononBSDOSDoc,
     one_shot: bool,
 ) -> AnharmonicityDoc:
     """
-    Stores the results in a schema object
+    Store the results in a schema object.
 
     Parameters
     ----------

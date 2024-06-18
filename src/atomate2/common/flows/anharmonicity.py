@@ -11,23 +11,23 @@ from typing import TYPE_CHECKING
 from warnings import warn
 
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
 from atomate2.common.jobs.anharmonicity import (
     displace_structure,
+    get_forces,
     get_phonon_supercell,
     get_sigma_a,
+    get_sigma_a_per_mode,
+    get_sigma_per_atom,
     run_displacements,
     store_results,
-    get_sigma_per_atom,
-    get_forces,
-    get_sigma_a_per_mode
 )
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
     from atomate2.common.schemas.phonons import PhononBSDOSDoc
@@ -105,7 +105,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
             If true, finds the one shot approximation of sigma^A and if false, finds
             the full sigma^A. The default is True.
         seed: int | None
-            Seed to use for the random number generator (only used if one_shot_approx == False)
+            Seed to use for the random number generator
+            (only used if one_shot_approx == False)
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
@@ -137,7 +138,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
             seed,
             atom_resolved,
             mode_resolved,
-            n_samples)
+            n_samples,
+        )
 
         results = store_results(
             sigma_dict=anharmon_flow.output,
@@ -148,7 +150,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         jobs = [phonon_flow, anharmon_flow, results]
         return Flow(jobs, results.output)
 
-    def make_from_phonon_doc(   # pylint: disable=E1101
+    def make_from_phonon_doc(
         self,
         phonon_doc: PhononBSDOSDoc,
         prev_dir: str | Path | None = None,
@@ -173,7 +175,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
             If true, finds the one shot approximation of sigma^A and if false,
             finds the full sigma^A. The default is True.
         seed: int | None
-            Seed to use for the random number generator (only used if one_shot_approx == False)
+            Seed to use for the random number generator
+            (only used if one_shot_approx == False)
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
         n_samples: int
@@ -232,7 +235,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
                 forces_harmonic=force_calcs.output[1],
             )
             jobs.append(calc_sigma_by_atom)
-            sigma_a_vals['atom-resolved'] = calc_sigma_by_atom.output
+            sigma_a_vals["atom-resolved"] = calc_sigma_by_atom.output
 
         # Calculate mode-resolved sigma^A
         if mode_resolved:
@@ -243,7 +246,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
                 harmonic_forces=force_calcs.output[1],
             )
             jobs.append(calc_sigma_by_mode)
-            sigma_a_vals['mode-resolved'] = calc_sigma_by_mode.output
+            sigma_a_vals["mode-resolved"] = calc_sigma_by_mode.output
 
         # Calculate oneshot approximation of sigma^A
         calc_sigma_a_os = get_sigma_a(
@@ -252,9 +255,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
         jobs.append(calc_sigma_a_os)
         if one_shot_approx:
-            sigma_a_vals['one-shot'] = calc_sigma_a_os.output
+            sigma_a_vals["one-shot"] = calc_sigma_a_os.output
         else:
-            sigma_a_vals['full'] = calc_sigma_a_os.output
+            sigma_a_vals["full"] = calc_sigma_a_os.output
 
         return Flow(jobs, sigma_a_vals)
 

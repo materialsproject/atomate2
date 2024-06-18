@@ -1,11 +1,13 @@
+import json
+
 import numpy as np
 import pytest
-import json
-from jobflow import run_locally
-from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
-from atomate2.common.schemas.phonons import PhononComputationalSettings
 from monty.json import MontyEncoder
 from pydantic import ValidationError
+
+from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
+from atomate2.common.schemas.phonons import PhononComputationalSettings
+
 
 def test_anharmonicity_doc():
     kwargs = dict(
@@ -36,5 +38,3 @@ def test_anharmonicity_doc():
     # Test extra="allow" option
     doc = AnharmonicityDoc(**kwargs | {"extra_field": "test"})
     assert doc.extra_field == "test"
-
-    

@@ -1,22 +1,23 @@
-"""Schemas for anharmonicity quantification"""
+"""Schemas for anharmonicity quantification."""
 
 import logging
-from typing import Optional, Union, Self
+from typing import Optional, Self, Union
 
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
 from pydantic import Field
 from pymatgen.core.structure import Structure
+
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
-class AnharmonicityDoc(StructureMetadata, extra="allow"):
-    """Collection to store data from anharmonicity workflow"""
+
+class AnharmonicityDoc(StructureMetadata):
+    """Collection to store data from anharmonicity workflow."""
 
     phonon_doc: Optional[PhononBSDOSDoc] = Field(
-        None,
-        description="Collection of data from phonon part of the workflow"
+        None, description="Collection of data from phonon part of the workflow"
     )
 
     supercell_matrix: Matrix3D = Field("Matrix describing the supercell")
@@ -30,13 +31,11 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
     )
 
     one_shot: Optional[bool] = Field(
-        None,
-        description="Whether or not the one shot approximation was found"
+        None, description="Whether or not the one shot approximation was found"
     )
 
     sigma_dict: Optional[dict[str, Union[list, float]]] = Field(
-        None,
-        description="Dictionary with all computed sigma^A forms"
+        None, description="Dictionary with all computed sigma^A forms"
     )
 
     @classmethod
@@ -44,10 +43,10 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
         cls,
         sigma_dict: dict[str, Union[list, float]],
         phonon_doc: PhononBSDOSDoc,
-        one_shot: bool
+        one_shot: bool,
     ) -> Self:
         """
-        Generates the collection of data for the anharmonicity workflow
+        Generate the collection of data for the anharmonicity workflow.
 
         Parameters
         ----------
