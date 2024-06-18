@@ -63,21 +63,29 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
         "matrix describing relationship to primitive cell"
     )
 
-    one_shot: bool = Field(
+    one_shot: Optional[bool] = Field(
         None, 
         description="Whether or not the one shot approximation was found"
     )
 
-    atom_resolved_sigma_A: dict[str, float] | None = Field(
+    atom_resolved_sigma_A: list[tuple[str, float]] | None = Field(
         None,
-        description="Sigma A values for each atom type"
+        description="Sigma A values for each mode. Each outer list represents a different atom type. In each"
+        "tuple, the string is the atomic symbol and the second is sigma^A resolved to that atom."
+    )
+
+    mode_resolved_sigma_A: list[tuple[float, float]] | None = Field(
+        None,
+        description="Sigma A values for each mode. Each outer list represents a different mode. In each"
+        "tuple, the first float is the mode frequency (THz) and the second is sigma^A resolved to that mode."
     )
     
     @classmethod
     def store_data(
         cls,
         sigma_A: float,
-        sigma_A_by_atom: dict[str, float],
+        sigma_A_by_atom: list[tuple[str, float]] | None,
+        sigma_A_by_mode: list[tuple[float, float]] | None,
         phonon_doc: PhononBSDOSDoc,
         one_shot: bool
     ) -> Self:
@@ -88,8 +96,12 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
         ----------
         sigma_A: float
             Float with sigma_A value to be stored
-        sigma_A_by_atom: dict[str, float]
-            Dictionary with keys as atom symbols and values as sigma^A values resolved to an atom
+        sigma_A_by_atom: list[tuple[str, float]] | None
+            List of atom-resolved sigma^A values. In each tuple, the string is the atom and 
+            the float is sigma^A resolved to that atom.
+        sigma_A_by_mode: list[tuple[float, float]] | None
+            List of mode-resolved sigma^A values. In each tuple, the first float is the mode
+            frequency (THz) and the second is sigma^A resolved to that mode.
         phonon_doc: PhononBSDOSDoc
             Document with data from phonon workflow
         one_shot: bool
@@ -100,6 +112,7 @@ class AnharmonicityDoc(StructureMetadata, extra="allow"):
             meta_structure=phonon_doc.structure,
             sigma_A=sigma_A,
             atom_resolved_sigma_A=sigma_A_by_atom,
+            mode_resolved_sigma_A=sigma_A_by_mode,
             phonon_doc=phonon_doc,
             supercell_matrix=phonon_doc.supercell_matrix,
             primitive_matrix=phonon_doc.primitive_matrix,

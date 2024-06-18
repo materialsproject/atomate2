@@ -7,7 +7,6 @@ import logging
 from typing import TYPE_CHECKING, Dict
 
 import numpy as np
-from numpy.random import rand, seed
 from jobflow import Flow, Response, job
 from phonopy import Phonopy
 from pymatgen.core import Structure
@@ -30,6 +29,14 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# Constants
+EV = 1.60217733e-19 # [J]
+AA = 1e-10  # [m]
+AMU = 1.66053904e-27    # [kg]
+THZ = 1e12  # [1/s]
+PI = np.pi
+
+OMEGA_TO_THZ = (EV / AA**2 / AMU) ** 0.5 / THZ / 2 / PI  # 15.633302 THz
 
 @job
 def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
@@ -57,7 +64,7 @@ def get_sigma_per_atom(
     structure: Structure,
     forces_dft: np.ndarray,
     forces_harmonic: np.ndarray,
-) -> Dict[str, float]:
+) -> list[tuple[str, float]]:
     """Computes the atom-resolved sigma^A measure
     
     Parameters
@@ -102,14 +109,13 @@ def get_sigma_per_atom(
         )
         f_norms.append(float(np.std(f_dft)))
 
-    sigma_dict = {unique_symbols[i]: sigma_atom[i] for i in range(len(sigma_atom))}
-    return sigma_dict
+    sigma_vals = [(unique_symbols[i], sigma_atom[i]) for i in range(len(sigma_atom))]
+    return sigma_vals
 
 def box_muller(
     eig_vals: np.ndarray,
     eig_vecs: np.ndarray,
     temp: float,
-    seed_: int | None = None,
 ) -> np.ndarray:
     """Get a normally distributed random variable displacement
     Uses the Box-Muller transform (https://en.wikipedia.org/wiki/Box–Muller_transform)
@@ -122,17 +128,13 @@ def box_muller(
         Matrix of harmonic eigenvectors (with first 3 removed for translational modes)
     temp: float
         Temperature in K to find velocity and displacement at
-    seed: int | None
-        Seed to use for the random number generator (only used if one_shot_approx == False)
     """
-    seed(seed_)
-
     n_eigvals = eig_vals.shape[0]
-    spread = np.sqrt(-2.0 * np.log(1.0 - rand(n_eigvals)))
+    spread = np.sqrt(-2.0 * np.log(1.0 - np.random.rand(n_eigvals)))
 
     # Assign amplitudes (A_s) and phases (phi_s)
     A_s = spread * (np.sqrt(temp * kb)/eig_vals)
-    phi_s = 2.0 * np.pi * rand(n_eigvals)
+    phi_s = 2.0 * np.pi * np.random.rand(n_eigvals)
 
     # Get displacement (not normalized by sqrt(masses) yet)
     d_ac = (A_s * np.cos(phi_s) * eig_vecs).sum(axis=2)
@@ -146,7 +148,9 @@ def displace_structure(
     temp: float = 300,
     one_shot: bool = True,
     seed_: int | None = None,
-) -> Structure:
+    mode_resolved: bool = False,
+    n_samples: int = 1
+) -> list[Structure]:
     """Calculate the displaced structure.
 
     Procedure defined in doi.org/10.1103/PhysRevB.94.075125.
@@ -165,7 +169,20 @@ def displace_structure(
         The default is true.
     seed: int | None
         Seed to use for the random number generator (only used if one_shot_approx == False)
+    mode_resolved: bool
+        If true, calculate the mode-resolved sigma^A. This is false by default.
+    n_samples: int
+        Number of samples to generate (must be >= 1).
+        An error is raised if n_samples == 1 and mode_resolved == True
     """
+    if n_samples != 1 and one_shot:
+        raise ValueError(f"One-shot can't be used unless n_sample == 1 not {n_samples}.")
+    if n_samples < 1:
+        raise ValueError(f"n_sample must be >= 1, not {n_samples}.")
+    if n_samples == 1 and mode_resolved:
+        raise ValueError("n_sample must be > 1 when mode_resolved == True.")
+    np.random.seed(seed_)
+    
     coords = phonon_supercell.cart_coords
     disp = np.zeros(coords.shape)
 
@@ -194,16 +211,105 @@ def displace_structure(
         zetas = (-1) ** np.arange(len(eig_val))
         a_s = np.sqrt(temp * kb) / eig_val * zetas
         disp = (a_s * x_acs).sum(axis=2) * inv_sqrt_mass[:, None]
-    elif not one_shot:
-        disp = box_muller(eig_val, x_acs, temp, seed_) * inv_sqrt_mass[:, None]
+        return [
+            Structure(
+                lattice=phonon_supercell.lattice,
+                species=phonon_supercell.species,
+                coords=coords + disp,
+                coords_are_cartesian=True,
+            )
+        ]
     
-    return Structure(
-        lattice=phonon_supercell.lattice,
-        species=phonon_supercell.species,
-        coords=coords + disp,
-        coords_are_cartesian=True,
-    )
+    samples = []
+    for _ in range(n_samples):
+        disp = box_muller(eig_val, x_acs, temp) * inv_sqrt_mass[:, None]
+        samples.append(
+            Structure(
+                lattice=phonon_supercell.lattice,
+                species=phonon_supercell.species,
+                coords=coords + disp,
+                coords_are_cartesian=True,
+            )
+        )
+    return samples
 
+def build_dynmat(
+    force_constants: ForceConstants,
+    structure: Structure,
+) -> np.ndarray:
+    """Helper function to build the dynamical matrix
+    Parameters
+    ----------
+    force_constants: ForceConstants
+        Force constants calculated by Phonopy
+    structure: Structure
+        Structure as a Pymatgen Structure object
+    """
+    force_constants_2d = (
+        np.array(force_constants.force_constants)
+        .swapaxes(1, 2)
+        .reshape(2 * (len(structure) * 3,))
+    )
+    masses = np.array([site.species.weight for site in structure.sites])
+    rminv = (masses**-0.5).repeat(3)
+    dynamical_matrix = force_constants_2d * rminv[:, None] * rminv[None, :]
+    return dynamical_matrix
+
+@job
+def get_sigma_a_per_mode(
+    force_constants: ForceConstants,
+    structure: Structure,
+    dft_forces: np.ndarray,
+    harmonic_forces: np.ndarray,
+) -> list[tuple[float, float]]:
+    """Projects the forces onto the normal mode and then calculates sigma^A for each mode
+    
+    Parameters
+    ----------
+    force_constants: ForceConstants
+        Force constants calculated by Phonopy
+    structure: Structure
+        Structure as a Pymatgen Structure object
+    dft_forces: np.ndarray
+        Array of DFT forces
+    harmonic_forces: np.ndarray
+        Array of harmonically approximated forces
+    """
+    # Projecting the forces
+    dynamical_matrix = build_dynmat(force_constants, structure)
+    eig_val, eig_vec = np.linalg.eigh(dynamical_matrix)
+    eig_val = np.sqrt(np.abs(eig_val)) * OMEGA_TO_THZ
+    eig_val = eig_val[3:]
+    # Projection matrix P
+    P = eig_vec.T
+    masses = np.array([site.species.weight for site in structure.sites])
+    M = masses ** (-0.5)    
+    # Project the forces
+    dft_forces = M.reshape(
+            (len(structure), 1)
+    ) * dft_forces
+    dft_proj = np.array([P @ (f.flatten()) for f in np.array(dft_forces)])[:, 3:]
+    harmonic_forces = M.reshape(
+            (len(structure), 1)
+    ) * harmonic_forces
+    harmonic_proj = np.array([P @ (f.flatten()) for f in np.array(harmonic_forces)])[:, 3:]
+    # Calculate Sigma^A for each mode
+    mode_sigma_vals = []
+    for mode in np.unique(eig_val):
+        dft_vals = np.array([
+            dft_proj[:, idx] for idx in range(len(eig_val)) if eig_val[idx] == mode
+        ]).flatten()
+        harmonic_vals = np.array([
+            harmonic_proj[:, idx] for idx in range(len(eig_val)) if eig_val[idx] == mode
+        ]).flatten()
+        anharmonic_vals = [
+            dft_force - harmonic_force
+            for dft_force, harmonic_force in zip(dft_vals, harmonic_vals)
+        ]
+        sigma_A = np.std(anharmonic_vals) / np.std(dft_vals)
+        mode_sigma_vals.append((mode, sigma_A))
+        
+    return mode_sigma_vals
 
 @job
 def get_forces(
@@ -244,11 +350,6 @@ def get_forces(
     ]
 
     dft_forces = [np.array(disp_data) for disp_data in displaced_structures["forces"]]
-
-    anharmonic_forces = [
-        dft_force - harmonic_force
-        for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)
-    ]
 
     return [dft_forces, harmonic_forces]
 
@@ -362,7 +463,8 @@ def run_displacements(
 @job
 def store_results(
     sigma_A: float,
-    sigma_A_by_atom: dict[str, float],
+    sigma_A_by_atom: list[tuple[str, float]] | None,
+    sigma_A_by_mode: list[tuple[float, float]] | None,
     phonon_doc: PhononBSDOSDoc,
     one_shot: bool,
 ) -> AnharmonicityDoc:
@@ -373,8 +475,11 @@ def store_results(
     ----------
     sigma_A: float
         Sigma^A value to be stored
-    sigma_A_by_atom: dict[str, float]
-        Dictionary with keys as atom symbols and values as sigma^A values resolved to an atom
+    sigma_A_by_atom: list[tuple[str, float]] | None
+        List of atom-resolved sigma^A values. In each tuple, the string is the atom and 
+        the float is sigma^A resolved to that atom.
+    sigma_A_by_mode: list[tuple[float, float]] | None
+        List of mode-resolved sigma^A values. In each tuple, the first float is the mode
     phonon_doc: PhononBSDOSDoc
         Info from phonon workflow to be stored
     one_shot: bool
@@ -383,6 +488,7 @@ def store_results(
     return AnharmonicityDoc.store_data(
         sigma_A=sigma_A,
         sigma_A_by_atom=sigma_A_by_atom,
+        sigma_A_by_mode=sigma_A_by_mode,
         phonon_doc=phonon_doc,
         one_shot=one_shot,
     )

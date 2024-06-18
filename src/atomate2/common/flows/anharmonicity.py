@@ -21,6 +21,7 @@ from atomate2.common.jobs.anharmonicity import (
     store_results,
     get_sigma_per_atom,
     get_forces,
+    get_sigma_a_per_mode
 )
 
 if TYPE_CHECKING:
@@ -50,13 +51,10 @@ class BaseAnharmonicityMaker(Maker, ABC):
         Name of the flows produced by this maker.
     phonon_maker: BasePhononMaker
         The maker to generate the phonon model
-    sigma_A_atom: float
-        Atom-resolved sigma^A
     """
 
     name: str = "anharmonicity"
     phonon_maker: BasePhononMaker = None
-    sigma_A_atom: float = None
 
     def make(
         self,
@@ -70,6 +68,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         one_shot_approx: bool = True,
         seed: int | None = None,
         atom_resolved: bool = False,
+        mode_resolved: bool = False,
+        n_samples: int = 1,
     ) -> Flow:
         """Make the anharmonicity calculation flow.
 
@@ -109,6 +109,11 @@ class BaseAnharmonicityMaker(Maker, ABC):
             Seed to use for the random number generator (only used if one_shot_approx == False)
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
+        mode_resolved: bool
+            If true, calculate the mode-resolved sigma^A. This is false by default.
+        n_samples: int
+            Number of times displaced structures are sampled.
+            Must be >= 1 and cannot be used when one_shot_approx == True.
 
         Returns
         -------
@@ -125,11 +130,20 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
 
         phonon_doc = phonon_flow.output
-        anharmon_flow = self.make_from_phonon_doc(phonon_doc, prev_dir, temperature, one_shot_approx, seed, atom_resolved)
+        anharmon_flow = self.make_from_phonon_doc(
+            phonon_doc,
+            prev_dir,
+            temperature,
+            one_shot_approx,
+            seed,
+            atom_resolved,
+            mode_resolved,
+            n_samples)
 
         results = store_results(
             sigma_A=anharmon_flow.output['full sigma^A'],
-            sigma_A_by_atom=anharmon_flow.output['atom-resolved'] if atom_resolved==True else None,
+            sigma_A_by_atom=anharmon_flow.output['atom-resolved'] if atom_resolved else None,
+            sigma_A_by_mode=anharmon_flow.output['mode-resolved'] if mode_resolved else None,
             phonon_doc=phonon_flow.output,
             one_shot=one_shot_approx,
         )
@@ -145,6 +159,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         one_shot_approx: bool = True,
         seed: int | None = None,
         atom_resolved: bool = False,
+        mode_resolved: bool = False,
+        n_samples: int = 1,
     ) -> Flow:
         """Create an anharmonicity workflow from a phonon calculation.
 
@@ -163,6 +179,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
             Seed to use for the random number generator (only used if one_shot_approx == False)
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
+        n_samples: int
+            Number of times displaced structures are sampled.
+            Must be >= 1 and cannot be used when one_shot_approx == True.
         """
         if phonon_doc.has_imaginary_modes:
             warn(
@@ -182,13 +201,14 @@ class BaseAnharmonicityMaker(Maker, ABC):
             temp=temperature,
             one_shot=one_shot_approx,
             seed_=seed,
+            n_samples=n_samples,
         )
         jobs.append(displace_supercell)
 
         force_eval_maker = self.phonon_maker.phonon_displacement_maker
         force_eval_maker.name = f"{force_eval_maker.name}"
         displacement_calcs = run_displacements(
-            displacements=[displace_supercell.output],
+            displacements=displace_supercell.output,        
             phonon_supercell=phonon_supercell,
             force_eval_maker=force_eval_maker,
             socket=self.phonon_maker.socket,
@@ -216,7 +236,17 @@ class BaseAnharmonicityMaker(Maker, ABC):
             )
             jobs.append(calc_sigma_by_atom)
             sigma_a_vals['atom-resolved'] = calc_sigma_by_atom.output
-            self.sigma_A_atom = calc_sigma_by_atom.output
+
+        # Calculate mode-resolved sigma^A
+        if mode_resolved:
+            calc_sigma_by_mode = get_sigma_a_per_mode(
+                force_constants=phonon_doc.force_constants,
+                structure=phonon_supercell,
+                dft_forces=force_calcs.output[0],
+                harmonic_forces=force_calcs.output[1],
+            )
+            jobs.append(calc_sigma_by_mode)
+            sigma_a_vals['mode-resolved'] = calc_sigma_by_mode.output
 
         # Calculate oneshot approximation of sigma^A
         calc_sigma_a_os = get_sigma_a(
