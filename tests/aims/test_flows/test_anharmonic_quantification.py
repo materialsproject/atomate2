@@ -71,7 +71,8 @@ def test_anharmonic_quantification_oneshot(si, tmp_path, mock_aims, species_dir)
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    assert np.round(responses[flow.job_uuids[-1]][1].output.sigma_A, 3) == 0.104
+    dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
+    assert np.round(dct['one-shot'], 3) == 0.104
 
 def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
     ref_paths = {
@@ -130,7 +131,8 @@ def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    assert np.round(responses[flow.job_uuids[-1]][1].output.sigma_A, 3) == 0.120
+    dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
+    assert np.round(dct['full'], 3) == 0.120
 
 def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
     # mapping from job name to directory containing test files
@@ -194,7 +196,7 @@ def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, specie
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    mode_resolved_vals = responses[flow.job_uuids[-1]][1].output.mode_resolved_sigma_A
+    mode_resolved_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict['mode-resolved']
     mode_resolved_vals_rounded = np.round(mode_resolved_vals, 3)
     sigmas = mode_resolved_vals_rounded[:, 1]
     assert [3.7470, 5.5000*(10**(-2))] in mode_resolved_vals_rounded
@@ -259,7 +261,7 @@ def test_atom_resolved_anharmonic_quantification(nacl, tmp_path, mock_aims, spec
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    nacl_sigma_vals = responses[flow.job_uuids[-1]][1].output.atom_resolved_sigma_A
+    nacl_sigma_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict['atom-resolved']
     nacl_sigma_rounded = [(arr[0], np.round(arr[1], 3)) for arr in nacl_sigma_vals]
     assert ("Na", 0.076) in nacl_sigma_rounded
     assert ("Cl", 0.072) in nacl_sigma_rounded
@@ -308,4 +310,5 @@ def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
     os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
-    assert np.round(responses[flow.job_uuids[-1]][1].output.sigma_A, 3) == 0.125
+    dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
+    assert np.round(dct['one-shot'], 3) == 0.125
