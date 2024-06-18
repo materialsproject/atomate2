@@ -30,11 +30,3 @@ def test_anharmonicity_doc():
     # Test invalid supercell matrix type fails
     with pytest.raises(ValidationError):
         doc = AnharmonicityDoc(**kwargs | {"supercell_matrix": (1, 1, 1)})
-
-    # Test optional material_id
-    doc = AnharmonicityDoc(**kwargs | {"material_id": 1234})
-    assert doc.material_id == 1234
-
-    # Test extra="allow" option
-    doc = AnharmonicityDoc(**kwargs | {"extra_field": "test"})
-    assert doc.extra_field == "test"

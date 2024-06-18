@@ -1,7 +1,7 @@
 """Schemas for anharmonicity quantification."""
 
 import logging
-from typing import Optional, Self, Union
+from typing import Optional, Self
 
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
@@ -34,14 +34,14 @@ class AnharmonicityDoc(StructureMetadata):
         None, description="Whether or not the one shot approximation was found"
     )
 
-    sigma_dict: Optional[dict[str, Union[list, float]]] = Field(
+    sigma_dict: Optional[dict[str, list | float]] = Field(
         None, description="Dictionary with all computed sigma^A forms"
     )
 
     @classmethod
     def store_data(
         cls,
-        sigma_dict: dict[str, Union[list, float]],
+        sigma_dict: dict[str, list | float],
         phonon_doc: PhononBSDOSDoc,
         one_shot: bool,
     ) -> Self:
@@ -50,7 +50,7 @@ class AnharmonicityDoc(StructureMetadata):
 
         Parameters
         ----------
-        sigma_dict: dict[str, Union[list, float]]
+        sigma_dict: dict[str, list | float]
             Dictionary of computed sigma^A values.
             Possible contents are full, one-shot, atom-resolved, and
             mode-resolved.
