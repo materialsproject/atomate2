@@ -41,7 +41,11 @@ def test_eos(mock_aims, tmp_path, species_dir):
 
     # generate flow
     eos_relax_maker = RelaxMaker.fixed_cell_relaxation(
-        user_params={"species_dir": "light", "k_grid": [2, 2, 2]}
+        user_params={
+            "species_dir": (species_dir / "light").as_posix(),
+            # "species_dir": "light",
+            "k_grid": [2, 2, 2],
+        }
     )
 
     flow = AimsEosMaker(
@@ -73,7 +77,16 @@ def test_eos_from_parameters(mock_aims, tmp_path, si, species_dir):
 
     # generate flow
     flow = AimsEosMaker.from_parameters(
-        parameters={"species_dir": "light", "k_grid": [2, 2, 2]}, number_of_frames=4
+        parameters={
+            # TODO: to be changed after pymatgen PR is merged
+            "species_dir": {
+                "initial": species_dir,
+                "eos": (species_dir / "light").as_posix(),
+            },
+            # "species_dir": "light",
+            "k_grid": [2, 2, 2],
+        },
+        number_of_frames=4,
     ).make(si)
 
     # Run the flow or job and ensure that it finished running successfully
