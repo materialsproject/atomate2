@@ -166,6 +166,8 @@ class CommonEosMaker(Maker):
                 flow_output[key]["energy"] += [output.energy]
                 flow_output[key]["volume"] += [output.structure.volume]
                 flow_output[key]["stress"] += [output.stress]
+                # TODO: make this potentially optional?
+                flow_output[key]["structure"] += [output.structure]
 
         if self.postprocessor is not None:
             min_points = self.postprocessor.min_data_points
