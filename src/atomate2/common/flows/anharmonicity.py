@@ -28,7 +28,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from emmet.core.math import Matrix3D
-    from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
     from atomate2.common.schemas.phonons import PhononBSDOSDoc
@@ -103,8 +102,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         temperature: float
             The temperature for the anharmonicity calculation
         one_shot_approx: bool
-            If true, finds the one shot approximation of sigma^A and if false, finds the full sigma^A.
-            The default is True.
+            If true, finds the one shot approximation of sigma^A and if false, finds
+            the full sigma^A. The default is True.
         seed: int | None
             Seed to use for the random number generator (only used if one_shot_approx == False)
         atom_resolved: bool
@@ -141,17 +140,15 @@ class BaseAnharmonicityMaker(Maker, ABC):
             n_samples)
 
         results = store_results(
-            sigma_A=anharmon_flow.output['full sigma^A'],
-            sigma_A_by_atom=anharmon_flow.output['atom-resolved'] if atom_resolved else None,
-            sigma_A_by_mode=anharmon_flow.output['mode-resolved'] if mode_resolved else None,
+            sigma_dict=anharmon_flow.output,
             phonon_doc=phonon_flow.output,
             one_shot=one_shot_approx,
         )
-        
+
         jobs = [phonon_flow, anharmon_flow, results]
         return Flow(jobs, results.output)
 
-    def make_from_phonon_doc(
+    def make_from_phonon_doc(   # pylint: disable=E1101
         self,
         phonon_doc: PhononBSDOSDoc,
         prev_dir: str | Path | None = None,
@@ -173,8 +170,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         temperature: float
             The temperature for the anharmonicity calculation
         one_shot_approx: bool
-            If true, finds the one shot approximation of sigma^A and if false, finds the full sigma^A.
-            The default is True.
+            If true, finds the one shot approximation of sigma^A and if false,
+            finds the full sigma^A. The default is True.
         seed: int | None
             Seed to use for the random number generator (only used if one_shot_approx == False)
         atom_resolved: bool
@@ -200,7 +197,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             force_constants=phonon_doc.force_constants,
             temp=temperature,
             one_shot=one_shot_approx,
-            seed_=seed,
+            seed=seed,
             n_samples=n_samples,
         )
         jobs.append(displace_supercell)
@@ -208,7 +205,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         force_eval_maker = self.phonon_maker.phonon_displacement_maker
         force_eval_maker.name = f"{force_eval_maker.name}"
         displacement_calcs = run_displacements(
-            displacements=displace_supercell.output,        
+            displacements=displace_supercell.output,
             phonon_supercell=phonon_supercell,
             force_eval_maker=force_eval_maker,
             socket=self.phonon_maker.socket,
@@ -254,8 +251,11 @@ class BaseAnharmonicityMaker(Maker, ABC):
             harmonic_forces=force_calcs.output[1],
         )
         jobs.append(calc_sigma_a_os)
-        sigma_a_vals['full sigma^A'] = calc_sigma_a_os.output
-        
+        if one_shot_approx:
+            sigma_a_vals['one-shot'] = calc_sigma_a_os.output
+        else:
+            sigma_a_vals['full'] = calc_sigma_a_os.output
+
         return Flow(jobs, sigma_a_vals)
 
     @property
