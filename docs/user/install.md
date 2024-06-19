@@ -329,7 +329,7 @@ and then return to this tutorial.
 
 You can get an API key from the [Materials Project] by logging in and going to your
 [Dashboard](materials project). Add this also to
-your `~/.config/.pmgrc.yaml` so that it looks like the following
+your `~/.pmgrc.yaml` so that it looks like the following
 
 ```yaml
 PMG_VASP_PSP_DIR: <<INSTALL_DIR>>/pps
