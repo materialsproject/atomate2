@@ -89,7 +89,7 @@ def get_supercell_size(
         try:
             transformation = CubicSupercellTransformation(
                 **common_kwds,
-                max_atoms=kwargs.get("max_atoms", 1000),
+                max_atoms=kwargs.get("max_atoms", 1200),
                 force_90_degrees=True,
                 angle_tolerance=kwargs.get("angle_tolerance", 1e-2),
             )
@@ -101,7 +101,8 @@ def get_supercell_size(
             )
             transformation.apply_transformation(structure=structure)
 
-    return transformation.transformation_matrix.tolist()
+    # matrix from pymatgen has to be transposed
+    return transformation.transformation_matrix.transpose().tolist()
 
 
 @job(data=[Structure])

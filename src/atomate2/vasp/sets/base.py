@@ -266,7 +266,7 @@ class VaspInputGenerator(InputGenerator):
         Ensure that missing magmom values are filled in with the default value of 1.0.
     use_structure_charge
         If set to True, then the overall charge of the structure (``structure.charge``)
-        is  used to set NELECT.
+        is used to set NELECT.
     sort_structure
         Whether to sort the structure (using the default sort order of
         electronegativity) before generating input files. Defaults to True, the behavior
