@@ -79,13 +79,15 @@ def analyze_free_energy(eos_outputs, phonon_outputs
         free_energies[temp]=[]
         for output in phonon_outputs:
             # convert all units to eV, normalize per formula unit
-            free_energy_eV=output.free_energies[itemp]*1.036*(10**(-5))
-            free_energies[temp].append(output.total_dft_energy_per_formula_unit+free_energy_eV)
-            volume.append(output.volume_per_formula_unit)
+            # check if imaginary modes
+            if not output.has_imaginary_modes:
+                free_energy_eV=output.free_energies[itemp]*1.036*(10**(-5))
+                free_energies[temp].append(output.total_dft_energy+free_energy_eV)
+                volume.append(output.volume_per_formula_unit)
 
         # add fit here
 
-
+    print(len(volume))
 
     return free_energies
 
