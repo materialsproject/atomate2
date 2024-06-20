@@ -74,15 +74,19 @@ def analyze_free_energy(eos_outputs, phonon_outputs
     # tolerance has to be tested
     free_energies={}
 
-    for itemp, temp in enumerate(phonon_outputs[0].output.temperature_range):
+    for itemp, temp in enumerate(phonon_outputs[0].temperatures):
+        volume = []
         free_energies[temp]=[]
-        for energy, output in zip(eos_outputs["relax"]["energies"],phonon_outputs):
-            # convert all units to eV
-            # correct this - currently wrong
-            # how are energies normalized? per molecule?
-            free_energies[temp].append(energy+output["free_energy"][itemp])
+        for output in phonon_outputs:
+            # convert all units to eV, normalize per formula unit
+            free_energy_eV=output.free_energies[itemp]*1.036*(10**(-5))
+            free_energies[temp].append(output.total_dft_energy_per_formula_unit+free_energy_eV)
+            volume.append(output.volume_per_formula_unit)
 
-    print(free_energies)
+        # add fit here
+
+
+
     return free_energies
 
 

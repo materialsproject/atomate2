@@ -182,6 +182,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
 
+    volume_per_formula_unit: Optional[float] = Field("volume per formula unit in Angstrom**3")
+
     has_imaginary_modes: Optional[bool] = Field(
         None, description="if true, structure has imaginary modes"
     )
@@ -466,6 +468,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             total_dft_energy / formula_units if total_dft_energy is not None else None
         )
 
+        volume_per_formula_unit = (
+            structure.volume / formula_units
+        )
+
+
         return cls.from_structure(
             structure=structure,
             meta_structure=structure,
@@ -477,6 +484,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             entropies=entropies,
             temperatures=temperature_range.tolist(),
             total_dft_energy=total_dft_energy_per_formula_unit,
+            volume_per_formula_unit=volume_per_formula_unit,
             has_imaginary_modes=imaginary_modes,
             force_constants={"force_constants": phonon.force_constants.tolist()}
             if kwargs["store_force_constants"]
