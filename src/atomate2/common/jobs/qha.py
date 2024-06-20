@@ -34,8 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 @job
-def get_phonon_jobs(
-    number_of_frames:int, phonon_maker, output:dict
+def get_phonon_jobs(phonon_maker, output: dict
 ) -> Flow:
     """
     Job that computes total DFT energy of the cell.
@@ -50,9 +49,43 @@ def get_phonon_jobs(
     phonon_jobs=[]
     outputs=[]
     for structure in output["relax"]["structure"]:
-        print(output["relax"])
         phonon_job=phonon_maker.make(structure)
         phonon_jobs.append(phonon_job)
         outputs.append(phonon_job.output)
 
     return Response(replace=phonon_jobs, output=outputs)
+
+
+
+@job
+def analyze_free_energy(eos_outputs, phonon_outputs
+) -> Flow:
+    """
+    Job that analyzes the free energy from all phonon runs
+
+    Parameters
+    ----------
+    total_dft_energy_per_formula_unit: float
+        Total DFT energy in eV per formula unit.
+    structure: Structure object
+        Corresponding structure object.
+    """
+    # only add free energies if there are no imaginary modes
+    # tolerance has to be tested
+    free_energies={}
+
+    for itemp, temp in enumerate(phonon_outputs[0].output.temperature_range):
+        free_energies[temp]=[]
+        for energy, output in zip(eos_outputs["relax"]["energies"],phonon_outputs):
+            # convert all units to eV
+            # correct this - currently wrong
+            # how are energies normalized? per molecule?
+            free_energies[temp].append(energy+output["free_energy"][itemp])
+
+    print(free_energies)
+    return free_energies
+
+
+    # TODO: should return some output doc
+    # have to think about how it should look like
+    # need to check

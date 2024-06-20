@@ -12,7 +12,7 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.eos import PostProcessEosEnergy, apply_strain_to_structure
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.flows.phonons import BasePhononMaker
-from atomate2.common.jobs.qha import get_phonon_jobs
+from atomate2.common.jobs.qha import get_phonon_jobs, analyze_free_energy
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -87,9 +87,10 @@ class CommonQhaMaker(Maker):
 
         eos_job=self.eos.make(structure)
         # Todo: think about whether to keep the tight relax here
-        phonon_jobs=get_phonon_jobs(self.number_of_frames,self.phonon_maker, eos_job.output)
+        phonon_jobs=get_phonon_jobs(self.phonon_maker, eos_job.output)
 
         # Todo: reuse postprocessor from equation of state to make fits of free energy curves
+        # get free energy fits and perform qha
+        analysis=analyze_free_energy(eos_job.output, phonon_jobs.output)
 
-
-        return Flow([eos_job, phonon_jobs])
+        return Flow([eos_job, phonon_jobs, analysis])
