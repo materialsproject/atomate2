@@ -179,6 +179,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
             (only used if one_shot_approx == False)
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
+        mode_resolved: bool
+            If true, calculate the mode-resolved sigma^A. This is false by default.
         n_samples: int
             Number of times displaced structures are sampled.
             Must be >= 1 and cannot be used when one_shot_approx == True.

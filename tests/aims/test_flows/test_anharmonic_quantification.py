@@ -285,7 +285,6 @@ def test_atom_resolved_anharmonic_quantification(
 def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
     # mapping from job name to directory containing test files
     parameters = {
-        "k_grid": [2, 2, 2],
         "species_dir": (species_dir / "light").as_posix(),
         "rlsy_symmetry": "all",
         "sc_accuracy_rho": 1e-06,
@@ -307,6 +306,7 @@ def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
         phonon_displacement_maker=PhononDisplacementMakerSocket(
             input_set_generator=SocketIOSetGenerator(
                 user_params=parameters_phonon_disp,
+                user_kpoints_settings={"density": 5.0, "even": True},
             )
         ),
         socket=True,
@@ -326,4 +326,4 @@ def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
-    assert np.round(dct["one-shot"], 3) == 0.125
+    assert np.round(dct["one-shot"], 3) == 0.127

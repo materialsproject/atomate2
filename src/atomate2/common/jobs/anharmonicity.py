@@ -33,7 +33,6 @@ AA = 1e-10  # [m]
 AMU = 1.66053904e-27  # [kg]
 THZ = 1e12  # [1/s]
 PI = np.pi
-
 OMEGA_TO_THZ = (EV / AA**2 / AMU) ** 0.5 / THZ / 2 / PI  # 15.633302 THz
 
 
