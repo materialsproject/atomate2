@@ -98,7 +98,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             No conversion needed.
         supercell_matrix: Matrix3D | None
             Instead of min_length, also a supercell_matrix can be given, e.g.
-            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
+            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
         temperature: float
             The temperature for the anharmonicity calculation
         one_shot_approx: bool
