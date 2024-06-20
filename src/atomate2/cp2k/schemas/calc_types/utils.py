@@ -71,7 +71,7 @@ def task_type(inputs: dict) -> TaskType:
     """
     calc_type = []
     cp2k_run_type = inputs.get("cp2k_global", {}).get("Run_type", "")
-    ci = Cp2kInput.from_dict(inputs["cp2k_input"])
+    ci = inputs['cp2k_input']
 
     if cp2k_run_type.upper() in (
         "ENERGY",
