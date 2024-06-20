@@ -19,7 +19,6 @@ from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
-
 logger = logging.getLogger(__name__)
 
 
