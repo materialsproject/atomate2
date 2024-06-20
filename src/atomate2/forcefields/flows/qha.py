@@ -1,7 +1,23 @@
+from __future__ import annotations
+
 from atomate2.common.flows.qha import CommonQhaMaker
 
 
-class QhaMaker(CommonQhaMaker):
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
+
+from atomate2.common.flows.eos import CommonEosMaker
+from atomate2.forcefields.jobs import CHGNetRelaxMaker, M3GNetRelaxMaker, MACERelaxMaker
+from atomate2.forcefields.flows.phonons import PhononMaker
+if TYPE_CHECKING:
+    from pathlib import Path
+    from jobflow import Maker, Flow
+    from pymatgen.core.structure import Structure
+
+
+
+@dataclass
+class CHGNetQhaMaker(CommonQhaMaker):
     """
         Perform quasi-harmonic approximation.
 
@@ -35,12 +51,11 @@ class QhaMaker(CommonQhaMaker):
 
     name: str = "CHGNet QHA Maker"
     initial_relax_maker: Maker = field(default_factory=CHGNetRelaxMaker)
+    # TODO understand why inheritance does not work here?
     eos_relax_maker: Maker = field(default_factory=lambda: CHGNetRelaxMaker(relax_cell=False))
     static_maker: Maker = None
-
-    initial_relax_maker: Maker = None
-    eos_relax_maker: Maker = None
-    static_maker: Maker = None
-    phonon_maker: Maker = None
+    phonon_maker:  Maker = field(default_factory=PhononMaker)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
-    number_of_frames: int = 6  # postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)  # _store_transformation_information: bool = False
+    number_of_frames: int = 6
+    # postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
+    # _store_transformation_information: bool = False

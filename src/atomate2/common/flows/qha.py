@@ -12,7 +12,7 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.eos import PostProcessEosEnergy, apply_strain_to_structure
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.flows.phonons import BasePhononMaker
-
+from atomate2.common.jobs.qha import get_phonon_jobs
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -82,12 +82,14 @@ class CommonQhaMaker(Maker):
         """
         #In this way, one can easily exchange makers and enforce postprocessor None
         self.eos=CommonEosMaker(initial_relax_maker=self.initial_relax_maker, eos_relax_maker=self.eos_relax_maker,
-                                static_maker=self.static_maker, postprocessor=None, number_of_frames=self.number_of_frames)
+                                static_maker=self.static_maker, postprocessor=None,
+                                number_of_frames=self.number_of_frames)
+
         eos_job=self.eos.make(structure)
-        phonon_jobs=[]
-        for frame_idx in range(self.number_of_frames):
-            phonon_jobs.append(self.phonon_maker.make(eos_job.output["relax"][frame_idx]["structure"]))
+        # Todo: think about whether to keep the tight relax here
+        phonon_jobs=get_phonon_jobs(self.number_of_frames,self.phonon_maker, eos_job.output)
 
         # Todo: reuse postprocessor from equation of state to make fits of free energy curves
 
 
+        return Flow([eos_job, phonon_jobs])
