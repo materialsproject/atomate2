@@ -63,8 +63,9 @@ class CommonQhaMaker(Maker):
     phonon_maker: Maker = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
-    #postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
-    #_store_transformation_information: bool = False
+
+    # postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
+    # _store_transformation_information: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """Run an EOS flow.
@@ -80,17 +81,21 @@ class CommonQhaMaker(Maker):
         -------
         .Flow, a QHA flow
         """
-        #In this way, one can easily exchange makers and enforce postprocessor None
-        self.eos=CommonEosMaker(initial_relax_maker=self.initial_relax_maker, eos_relax_maker=self.eos_relax_maker,
-                                static_maker=self.static_maker, postprocessor=None,
-                                number_of_frames=self.number_of_frames)
+        # In this way, one can easily exchange makers and enforce postprocessor None
+        self.eos = CommonEosMaker(initial_relax_maker=self.initial_relax_maker, eos_relax_maker=self.eos_relax_maker,
+                                  static_maker=self.static_maker, postprocessor=None,
+                                  number_of_frames=self.number_of_frames)
 
-        eos_job=self.eos.make(structure)
+        eos_job = self.eos.make(structure)
         # Todo: think about whether to keep the tight relax here
-        phonon_jobs=get_phonon_jobs(self.phonon_maker, eos_job.output)
+        phonon_jobs = get_phonon_jobs(self.phonon_maker, eos_job.output)
 
         # Todo: reuse postprocessor from equation of state to make fits of free energy curves
         # get free energy fits and perform qha
-        analysis=analyze_free_energy(eos_job.output, phonon_jobs.output)
+        analysis = analyze_free_energy(eos_job.output, phonon_jobs.output)
+
+        # use free energy fits to compute thermal expansion, gibb's free enery etc
+
+        # postprocess_data()
 
         return Flow([eos_job, phonon_jobs, analysis])

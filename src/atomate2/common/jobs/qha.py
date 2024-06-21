@@ -17,7 +17,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
-
+from atomate2.common.jobs.eos import PostProcessEosEnergy
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
 
 if TYPE_CHECKING:
@@ -73,23 +73,29 @@ def analyze_free_energy(eos_outputs, phonon_outputs
     # only add free energies if there are no imaginary modes
     # tolerance has to be tested
     free_energies={}
-
+    fit_jobs = []
+    fit_outputs=[]
     for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         volume = []
         free_energies[temp]=[]
+        stress=[]
+
         for output in phonon_outputs:
             # convert all units to eV, normalize per formula unit
             # check if imaginary modes
             if not output.has_imaginary_modes:
                 free_energy_eV=output.free_energies[itemp]*1.036*(10**(-5))
-                free_energies[temp].append(output.total_dft_energy+free_energy_eV)
-                volume.append(output.volume_per_formula_unit)
+                free_energies[temp].append((output.total_dft_energy+free_energy_eV)*output.formula_units)
+                volume.append(output.volume_per_formula_unit*output.formula_units)
+                stress.append(output.stress)
 
-        # add fit here
+            fit_dict={"relax":{"energy": free_energies[temp],"volume":volume, "stress":stress}}
+            fitjob = PostProcessEosEnergy().make(fit_dict)
+            fit_outputs.append(fitjob.output)
+            fit_jobs.append(fitjob)
 
-    print(len(volume))
 
-    return free_energies
+    return Response(replace=fit_jobs, output=fit_outputs)
 
 
     # TODO: should return some output doc
