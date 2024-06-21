@@ -74,6 +74,12 @@ def get_sigma_per_atom(
         DFT calculated forces
     forces_harmonic: np.ndarray
         Harmonic approximation of the forces
+
+    Returns
+    -------
+    list[tuple[str, float]]
+        List of tuples in the form (atom symbol, sigma^A)
+        for all the atoms in the structure.
     """
     # Ensure that DFT and harmonic forces are in np format
     forces_dft = np.array(forces_dft)
@@ -129,6 +135,11 @@ def box_muller(
         Temperature in K to find velocity and displacement at
     rng: np.random.Generator
         Seeded random number generator
+
+    Returns
+    -------
+    np.ndarray
+        Array with iid normally distributed displacements
     """
     n_eigvals = eig_vals.shape[0]
     spread = np.sqrt(-2.0 * np.log(1.0 - rng.random(size=n_eigvals)))
@@ -175,6 +186,11 @@ def displace_structure(
     n_samples: int
         Number of samples to generate (must be >= 1).
         An error is raised if n_samples == 1 and mode_resolved == True
+
+    Returns
+    -------
+    list[Structure]
+        List of displaced Pymatgen structures
     """
     if n_samples != 1 and one_shot:
         raise ValueError(
@@ -249,6 +265,11 @@ def build_dynmat(
         Force constants calculated by Phonopy
     structure: Structure
         Structure as a Pymatgen Structure object
+
+    Returns
+    -------
+    np.ndarray
+        The dynamical matrix
     """
     force_constants_2d = (
         np.array(force_constants.force_constants)
@@ -279,6 +300,12 @@ def get_sigma_a_per_mode(
         Array of DFT forces
     harmonic_forces: np.ndarray
         Array of harmonically approximated forces
+
+    Returns
+    -------
+    list[tuple[float, float]]
+        List of tuples in the form (mode frequency in THz, Sigma^A)
+        for all the modes in the structure
     """
     # Projecting the forces
     dynamical_matrix = build_dynmat(force_constants, structure)
@@ -335,6 +362,11 @@ def get_forces(
         The supercell used for the phonon calculation
     displaced_structures: dict[str, list]
         The output of run_displacements
+
+    Returns
+    -------
+    list[np.ndarray]
+        List of forces in the form [DFT forces, harmonic forces]
     """
     force_constants_2d = np.swapaxes(
         force_constants.force_constants,
@@ -375,6 +407,11 @@ def get_sigma_a(
         DFT calculated forces
     harmonic_forces: np.ndarray
         Forces calculated via harmonic approximation
+
+    Returns
+    -------
+    float
+        The sigma^A value
     """
     dft_forces = np.array(dft_forces)
     harmonic_forces = np.array(harmonic_forces)
@@ -413,6 +450,11 @@ def run_displacements(
         argument name for the prev_dir variable
     socket: bool
         If True use the socket-io interface to increase performance
+
+    Returns
+    -------
+    Flow
+        Flow calculating DFT forces on displaced structures
     """
     force_eval_jobs = []
     outputs: dict[str, list] = {
@@ -490,6 +532,11 @@ def store_results(
         Info from phonon workflow to be stored
     one_shot: bool
         Whether the one-shot approximation was used (true) or not (false)
+
+    Returns
+    -------
+    AnharmonicityDoc
+        Document containing information on workflow results
     """
     return AnharmonicityDoc.store_data(
         sigma_dict=sigma_dict,

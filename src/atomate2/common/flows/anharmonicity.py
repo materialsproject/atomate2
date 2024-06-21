@@ -46,7 +46,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
 
     Parameters
     ----------
-    name : str
+    name: str
         Name of the flows produced by this maker.
     phonon_maker: BasePhononMaker
         The maker to generate the phonon model
@@ -74,11 +74,11 @@ class BaseAnharmonicityMaker(Maker, ABC):
 
         Parameters
         ----------
-        structure : Structure
+        structure: Structure
             A pymatgen structure object. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
-        prev_dir : str or Path or None
+        prev_dir: str or Path or None
             A previous calculation directory to use for copying outputs.
         born: list[Matrix3D]
             Instead of recomputing born charges and epsilon, these values can also be
@@ -167,7 +167,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         ----------
         phonon_doc: PhononBSDOSDoc
             The document to get the anharmonicity for
-        prev_dir : str or Path or None
+        prev_dir: str or Path or None
             A previous calculation directory to use for copying outputs.
         temperature: float
             The temperature for the anharmonicity calculation
@@ -184,6 +184,11 @@ class BaseAnharmonicityMaker(Maker, ABC):
         n_samples: int
             Number of times displaced structures are sampled.
             Must be >= 1 and cannot be used when one_shot_approx == True.
+
+        Returns
+        -------
+        Flow
+            The anharmonicity quantification workflow
         """
         if phonon_doc.has_imaginary_modes:
             warn(
