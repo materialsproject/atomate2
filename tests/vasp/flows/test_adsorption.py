@@ -17,7 +17,7 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "adsorption relaxation maker - configuration 2": "Au_adsorption/ads_relax_3_3",
         "adsorption static maker - static configuration 0": "Au_adsorption/ads_static_1_3",
         "adsorption static maker - static configuration 1": "Au_adsorption/ads_static_2_3",
-        "adsorption static maker - static configuration 2": "Au_adsorption/ads_rstatic_3_3",
+        "adsorption static maker - static configuration 2": "Au_adsorption/ads_static_3_3",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings

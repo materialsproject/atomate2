@@ -223,7 +223,4 @@ class AdsorptionMaker(Maker):
             adsorption_calc.output
         ).as_dict()
 
-        # with open("joblog.json", "w") as f:
-        #     json.dump(joblog, f, indent=4)
-
         return Flow(jobs, output=adsorption_calc.output, name=self.name)
