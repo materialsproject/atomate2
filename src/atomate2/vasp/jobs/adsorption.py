@@ -251,15 +251,24 @@ def adsorption_calculations(
         outputs["adsorption_energy"].append(ads_energy)
         outputs["dirs"].append(adslabs_data["dirs"][i])
 
-        sorted_outputs = sorted(
-            zip(
-                outputs["adsorption_configuration"],
-                outputs["configuration_number"],
-                outputs["adsorption_energy"],
-                outputs["dirs"],
-            ),
-            key=lambda x: x[2],
+    # Combine and sort
+    combined_outputs = list(
+        zip(
+            outputs["adsorption_configuration"],
+            outputs["configuration_number"],
+            outputs["adsorption_energy"],
+            outputs["dirs"],
         )
+    )
+    sorted_combined_outputs = sorted(combined_outputs, key=lambda x: x[2])
+
+    # Reconstruct sorted outputs
+    sorted_outputs = {
+        "adsorption_configuration": [item[0] for item in sorted_combined_outputs],
+        "configuration_number": [item[1] for item in sorted_combined_outputs],
+        "adsorption_energy": [item[2] for item in sorted_combined_outputs],
+        "dirs": [item[3] for item in sorted_combined_outputs],
+    }
 
     return sorted_outputs
 

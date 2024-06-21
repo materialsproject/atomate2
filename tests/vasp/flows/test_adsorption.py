@@ -20,41 +20,8 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "adsorption static maker - static configuration 2": "Au_adsorption/ads_static_3_3",
     }
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
     fake_run_vasp_kwargs = {
-        "bulk relaxation maker - bulk relaxation job": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "molecule relaxation maker - molecule relaxation job": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption relaxation maker - slab relaxation job": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "molecule static maker - molecule static job": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption static maker - slab static job": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption relaxation maker - configuration 0": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption relaxation maker - configuration 1": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption relaxation maker - configuration 2": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption static maker - static configuration 0": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption static maker - static configuration 1": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
-        "adsorption static maker - static configuration 2": {
-            "incar_settings": ["NSW", "ISIF"]
-        },
+        path: {"incar_settings": ["ISIF", "NSW"]} for path in ref_paths
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
@@ -80,12 +47,12 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     # Run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    # Check that the correct number of jobs are created
-    assert (
-        len(responses) == 16 or len(responses) == 9
-    ), "Unexpected number of jobs in the flow."
+    job_names = []
+    for job_uuid, job_responses in responses.items():
+        for response_index, response in job_responses.items():
+            if hasattr(response.output, "task_label"):
+                job_names.append(response.output.task_label)
 
-    # Verify job names and order
     expected_job_names = [
         "bulk relaxation maker - bulk relaxation job",
         "molecule relaxation maker - molecule relaxation job",
@@ -99,10 +66,18 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "adsorption static maker - static configuration 1",
         "adsorption static maker - static configuration 2",
     ]
-    for response, expected_name in zip(responses, expected_job_names):
-        assert (
-            response.name == expected_name
-        ), f"Job '{response.name}' does not match expected '{expected_name}'."
+    for actual_name in expected_job_names:
+        assert actual_name in job_names, f"Job '{actual_name}' not found."
 
-    # assert flow[-2].uuid in responses
-    # assert flow[-1].uuid in responses
+    assert (
+        flow[-1].uuid in responses
+    ), "adsorption calculation job not found in responses"
+
+    adsorption_calculation_job = responses.get(flow[-1].uuid)
+    for response_index, response in adsorption_calculation_job.items():
+        adsorption_energy = response.output.get("adsorption_energy")
+    assert adsorption_energy == [
+        -3.0084328299999967,
+        -2.9288308699999916,
+        -2.092973299999997,
+    ], "adsorption energy not found in response"
