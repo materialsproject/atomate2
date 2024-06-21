@@ -201,4 +201,6 @@ def write_vasp_input_set(
                 Path(filename).unlink()
 
     logger.info("Writing VASP input set.")
-    vis.write_input(directory, potcar_spec=potcar_spec, **kwargs)
+    # 从 kwargs 中删除 potcar_spec 参数
+    kwargs.pop('potcar_spec', None)
+    vis.write_input(directory, **kwargs)
