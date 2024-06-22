@@ -584,12 +584,12 @@ class Test{maker_name}:
 
 def save_abinit_maker(maker: Maker) -> None:
     """Save maker, the script used to create it and additional metadata."""
-    import datetime
     import inspect
     import json
     import shutil
     import subprocess
     import warnings
+    from datetime import datetime, timezone
 
     caller_frame = inspect.stack()[1]
     caller_filename_full = caller_frame.filename
@@ -632,7 +632,7 @@ def save_abinit_maker(maker: Maker) -> None:
             {
                 "author": author,
                 "author_mail": author_mail,
-                "created_on": str(datetime.datetime.now()),
+                "created_on": str(datetime.now(tz=timezone.utc)),
                 "maker": jsanitize(maker.as_dict()),
                 "script": script_str,
             },

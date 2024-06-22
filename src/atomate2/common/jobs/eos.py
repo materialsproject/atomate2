@@ -90,8 +90,7 @@ class EOSPostProcessor(MSONable):
             for job_type in self._use_job_types
         ):
             raise ValueError(
-                f"{self.__class__} requires {self.min_data_points} "
-                "frames to fit an EOS."
+                f"{type(self)} requires {self.min_data_points} frames to fit an EOS."
             )
 
         self.sort_by_quantity()
