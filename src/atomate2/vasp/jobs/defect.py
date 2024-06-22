@@ -57,7 +57,7 @@ def calculate_finite_diff(
 
     # Update the INCAR for the WSWQ calculation
     incar = Incar.from_file("INCAR")
-    incar.update({"ALGO": "None", "NSW": 0, "LWAVE": False, "LWSWQ": True})
+    incar.update(ALGO="None", NSW=0, LWAVE=False, LWSWQ=True)
     incar.write_file("INCAR")
 
     d_dir_names = [strip_hostname(d) for d in distorted_calc_dirs]
