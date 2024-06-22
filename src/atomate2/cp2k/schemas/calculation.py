@@ -2,7 +2,7 @@
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from shutil import which
 from typing import Any, Optional, Union
@@ -364,7 +364,9 @@ class Calculation(BaseModel):
 
         volumetric_files = [] if volumetric_files is None else volumetric_files
         cp2k_output = Cp2kOutput(cp2k_output_file, auto_load=True)
-        completed_at = str(datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime, tz=timezone.utc)
+        )
 
         output_file_paths = _get_output_file_paths(volumetric_files)
         cp2k_objects: dict[Cp2kObject, Any] = _get_volumetric_data(

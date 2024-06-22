@@ -165,15 +165,14 @@ select = ["ALL"]
 ignore = [
     "ANN002",
     "ANN003",
-    "ANN101",  # missing self type annotation
-    "ANN102",
+    "ANN101", # missing self type annotation
+    "ANN102", # missing cls annotation
     "ANN401",
-    "ARG002",  # unused method argument
-    "BLE001",
+    "ARG002", # unused method argument
+    # "BLE001",
     "C408",    # Unnecessary (dict/list/tuple) call - remove call
     "C901",    # function too complex
     "COM812",  # trailing comma missing
-    "DTZ",     # datetime-tz-now
     "EM",      # exception message must not use f-string literal
     "ERA001",  # found commented out code
     "FBT001",
@@ -191,7 +190,6 @@ ignore = [
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
     "S507",    # paramiko auto trust
-    "SLF",     # private member accessed outside class
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
 ]
