@@ -69,18 +69,14 @@ class AimsEosMaker(CommonEosMaker):
         kwargs
             Keyword arguments passed to `CommonEosMaker`.
         """
-        species_dir = parameters.get("species_dir", "tight")
-        initial_parameters = parameters.copy()
-        eos_parameters = parameters.copy()
-        if isinstance(species_dir, str):
-            eos_parameters["species_dir"] = species_dir
-        elif isinstance(species_dir, dict):
-            initial_parameters["species_dir"] = species_dir.get("initial", None)
-            eos_parameters["species_dir"] = species_dir.get("eos", "tight")
+        species_dir = parameters.setdefault("species_dir", "tight")
+        initial_params = parameters.copy()
+        eos_params = parameters.copy()
+        if isinstance(species_dir, dict):
+            initial_params["species_dir"] = species_dir.get("initial")
+            eos_params["species_dir"] = species_dir.get("eos", "tight")
         return cls(
-            initial_relax_maker=DoubleRelaxMaker.from_parameters(initial_parameters),
-            eos_relax_maker=RelaxMaker.fixed_cell_relaxation(
-                user_params=eos_parameters
-            ),
+            initial_relax_maker=DoubleRelaxMaker.from_parameters(initial_params),
+            eos_relax_maker=RelaxMaker.fixed_cell_relaxation(user_params=eos_params),
             **kwargs,
         )
