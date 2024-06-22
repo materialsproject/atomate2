@@ -182,7 +182,11 @@ ignore = [
     "ISC001",
     "PD011",   # pandas-use-of-dot-values
     "PERF203", # try-except-in-loop
-    "PLR",     # pylint-refactor
+    "PLR0911", # too many returns
+    "PLR0912", # too many branches
+    "PLR0913", # too many arguments
+    "PLR0915", # too many local statements
+    "PLR2004",
     "PT004",   # pytest-missing-fixture-name-underscore
     "PT006",   # pytest-parametrize-names-wrong-type
     "PT013",   # pytest-incorrect-pytest-import
@@ -202,7 +206,7 @@ docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
+"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "PLR2004", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
 # flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
