@@ -99,7 +99,7 @@ strict = [
     "pydantic-settings==2.3.1",
     "pydantic==2.7.4",
     "pymatgen-analysis-defects==2024.5.11",
-    "pymatgen==2024.5.31",
+    "pymatgen==2024.6.10",
     "python-ulid==2.6.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
