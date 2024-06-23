@@ -75,6 +75,41 @@ def create_mol_spec(
     )
 
 
+def create_mol_spec_list(
+    input_mol_specs: list[MoleculeSpec | dict],
+) -> list[MoleculeSpec]:
+    """
+    Coerce and sort a MoleculeSpecs and dicts to MoleculeSpecs.
+
+    Will sort alphabetically based on concatenated smiles and name.
+
+    Parameters
+    ----------
+    input_mol_specs : list[dict | MoleculeSpec]
+        List of dicts or MoleculeSpecs to coerce and sort.
+
+    Returns
+    -------
+    List[MoleculeSpec]
+        List of MoleculeSpecs sorted by smiles and name.
+    """
+    mol_specs = []
+
+    for spec in input_mol_specs:
+        if isinstance(spec, dict):
+            mol_specs.append(create_mol_spec(**spec))
+        elif isinstance(spec, MoleculeSpec):
+            mol_specs.append(copy.deepcopy(spec))
+        else:
+            raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
+
+    mol_specs.sort(
+        key=lambda x: tk.Molecule.from_json(x.openff_mol).to_smiles() + x.name
+    )
+
+    return mol_specs
+
+
 def merge_specs_by_name_and_smile(mol_specs: list[MoleculeSpec]) -> list[MoleculeSpec]:
     """Merge MoleculeSpecs with the same name and SMILES string.
 

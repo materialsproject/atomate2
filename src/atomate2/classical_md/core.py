@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 from typing import Callable
 
 import openff.toolkit as tk
@@ -14,7 +13,10 @@ from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
 from openff.units import unit
 
-from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smile
+from atomate2.classical_md.utils import (
+    create_mol_spec_list,
+    merge_specs_by_name_and_smile,
+)
 
 
 def openff_job(method: Callable) -> job:
@@ -113,18 +115,7 @@ def generate_interchange(
     - The function currently does not support passing a list of force fields due to
     limitations in the OpenFF Toolkit.
     """
-    mol_specs: list[MoleculeSpec] = []
-    for spec in input_mol_specs:
-        if isinstance(spec, dict):
-            mol_specs.append(create_mol_spec(**spec))
-        elif isinstance(spec, MoleculeSpec):
-            mol_specs.append(copy.deepcopy(spec))
-        else:
-            raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
-
-    mol_specs.sort(
-        key=lambda x: tk.Molecule.from_json(x.openff_mol).to_smiles() + x.name
-    )
+    mol_specs = create_mol_spec_list(input_mol_specs)
 
     pack_box_kwargs = pack_box_kwargs or {}
     topology = pack_box(
