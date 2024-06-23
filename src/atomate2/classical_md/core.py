@@ -89,9 +89,7 @@ def generate_interchange(
     force_field : str, optional
         The name of the force field to use for creating the
         Interchange object. This is passed directly to openff.toolkit.ForceField.
-        Default is "openff_unconstrained-2.1.1.offxml". Can be set to "oplsaa"
-        to use the subset of OPLS supported by Foyer, be warned this is very
-        limited.
+        Default is "openff_unconstrained-2.1.1.offxml".
     pack_box_kwargs : Dict, optional
         Additional keyword arguments to pass to the
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
@@ -130,19 +128,8 @@ def generate_interchange(
     # TODO: ForceField doesn't currently support iterables, fix this
     # force_field: str | Path | List[str | Path] = "openff_unconstrained-2.1.1.offxml",
 
-    if force_field == "oplsaa":
-        try:
-            from foyer import Forcefield as FoyerForceField
-
-            ff_object = FoyerForceField(name=force_field)
-        except ImportError as err:
-            raise ImportError(
-                "Use of the 'oplsaa' force field requires the 'foyer' package to "
-                "be installed."
-            ) from err
-    else:
-        # valid FFs: https://github.com/openforcefield/openff-forcefields
-        ff_object = ForceField(force_field)
+    # valid FFs: https://github.com/openforcefield/openff-forcefields
+    ff_object = ForceField(force_field)
 
     interchange = Interchange.from_smirnoff(
         force_field=ff_object,
