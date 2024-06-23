@@ -25,8 +25,8 @@ def run_job():
 @pytest.fixture()
 def mol_specs_small():
     return [
-        create_mol_spec("CCO", 10, name="ethanol"),
-        create_mol_spec("O", 20, name="water"),
+        create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
+        create_mol_spec("O", 20, name="water", charge_method="mmff94"),
     ]
 
 
@@ -55,9 +55,9 @@ def mol_files(classical_md_data):
 def mol_specs_salt(mol_files):
     charges = np.load(mol_files["PF6_charges"])
     return [
-        create_mol_spec("CCO", 10, name="ethanol"),
-        create_mol_spec("O", 20, name="water"),
-        create_mol_spec("[Li+]", 5, name="li"),
+        create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
+        create_mol_spec("O", 20, name="water", charge_method="mmff94"),
+        create_mol_spec("[Li+]", 5, name="li", charge_method="mmff94"),
         create_mol_spec(
             "F[P-](F)(F)(F)(F)F",
             5,
@@ -70,9 +70,9 @@ def mol_specs_salt(mol_files):
 
 @pytest.fixture(scope="package")
 def interchange():
-    o = create_mol_spec("O", 300)
-    cco = create_mol_spec("CCO", 10)
-    cco2 = create_mol_spec("CCO", 20, name="cco2")
+    o = create_mol_spec("O", 300, charge_method="mmff94")
+    cco = create_mol_spec("CCO", 10, charge_method="mmff94")
+    cco2 = create_mol_spec("CCO", 20, name="cco2", charge_method="mmff94")
     mol_specs = [o, cco, cco2]
     mol_specs.sort(
         key=lambda x: tk.Molecule.from_json(x.openff_mol).to_smiles() + x.name

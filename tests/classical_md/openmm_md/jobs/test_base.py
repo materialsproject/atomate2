@@ -152,8 +152,8 @@ def test_make(interchange, temp_dir, run_job):
 
 def test_make_from_prev(temp_dir, run_job):
     mol_specs_dicts = [
-        {"smile": "CCO", "count": 50, "name": "ethanol"},
-        {"smile": "O", "count": 300, "name": "water"},
+        {"smile": "CCO", "count": 50, "name": "ethanol", "charge_method": "mmff94"},
+        {"smile": "O", "count": 300, "name": "water", "charge_method": "mmff94"},
     ]
     inter_job = generate_interchange(mol_specs_dicts, 1)
 
