@@ -269,7 +269,7 @@ def test_counts_calculators():
     mass_fractions = {"O": 0.5, "CCO": 0.5}
 
     counts_size = counts_from_box_size(mass_fractions, 3)
-    counts_number = counts_from_masses(mass_fractions, 406)
+    counts_number = counts_from_masses(mass_fractions, 324)
 
     assert 200 < sum(counts_size.values()) < 500
 
