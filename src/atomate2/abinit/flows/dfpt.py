@@ -48,7 +48,7 @@ class DfptFlowMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    scf_maker : .BaseAbinitMaker
+    static_maker : .BaseAbinitMaker
         The maker to use for the static calculation.
     ddk_maker : .BaseAbinitMaker
         The maker to use for the DDK calculations.
@@ -108,16 +108,6 @@ class DfptFlowMaker(Maker):
             A DFPT flow
         """
         static_job = self.static_maker.make(structure, restart_from=restart_from)
-        # To avoid metallic case=occopt=3 which is not okay wrt. DFPT \
-        # and occopt 1 with spin polarization requires spinmagntarget
-        static_job = update_factory_kwargs(
-            static_job, {"smearing": "nosmearing", "spin_mode": "unpolarized"}
-        )
-        static_job = update_factory_kwargs(static_job,{"kppa": 3000})
-        static_job = update_user_abinit_settings( static_job,{  'nstep': 500,
-                                                                'toldfe': 1e-22,
-                                                                'autoparal': 1,
-                                                                'npfft': 1,})
 
         jobs = [static_job]
 
@@ -189,27 +179,40 @@ class DfptFlowMaker(Maker):
 
         return Flow(jobs, output=jobs[-1].output, name=self.name)  # TODO: fix outputs
 
-    @classmethod
-    def shg(cls) -> Flow:
-        """Chi2 SHG.
+@dataclass
+class ShgFlowMaker(DfptFlowMaker):
+    """
+    Maker to generate a DFPT flow to compute the static nonlinear optical
+            susceptibility tensor for the second-harmonic generation with abinit.
 
-        Create a DFPT flow to compute the static nonlinear optical
-            susceptibility tensor for the second-harmonic generation.
+    The classmethods allow to tailor the flow for specific configurations.
 
-        """
-        ddk_maker = DdkMaker()
-        dde_maker = DdeMaker()
-        dte_maker = DteMaker()
-        mrgddb_maker = MrgddbMaker()
-        return cls(
-            name="Chi2 SHG",
-            ddk_maker=ddk_maker,
-            dde_maker=dde_maker,
-            dte_maker=dte_maker,
-            mrgddb_maker=mrgddb_maker,
-            use_ddk_sym=False,
-            use_dde_sym=False,
-            dte_skip_permutations=False,
-            dte_phonon_pert=False,
-            dte_ixc=None,  # TODO: enforce LDA or not ?
-        )
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    """
+    
+    name: str = "DFPT Chi2 SHG"
+
+    # VT: a post-init is the only way I found to apply these changes 
+    # to the static job
+    def __post_init__(self) -> None:
+        """Process post-init configuration."""
+
+        # To avoid metallic case=occopt=3 which is not okay wrt. DFPT \
+        # and occopt 1 with spin polarization requires spinmagntarget
+        self.static_maker = update_factory_kwargs(
+                                self.static_maker, {"smearing": "nosmearing",
+                                                    "spin_mode": "unpolarized",
+                                                    "kppa": 3000,
+                                                   }
+                            )
+        self.static_maker = update_user_abinit_settings( self.static_maker,{
+                                'nstep': 500,
+                                'toldfe': 1e-22,
+                                'autoparal': 1,
+                                'npfft': 1,
+                                }
+                            )
+
