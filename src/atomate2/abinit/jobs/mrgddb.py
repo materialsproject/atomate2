@@ -21,8 +21,6 @@ from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator, MrgddbSetGenerator
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from abipy.flowtk.events import AbinitCriticalWarning
-
     from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -52,15 +50,6 @@ class MrgddbMaker(Maker):
     # input_set_generator: MrgddbInputGenerator = MrgddbSetGenerator()
     wall_time: int | None = None
 
-    # TODO: is there a critical events for this?
-    # CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("NscfConvergenceWarning",)
-    # class variables
-    # CRITICAL_EVENTS: ClassVar[Sequence[str]] = ("ScfConvergenceWarning",)
-    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
-
-    def __post_init__(self) -> None:
-        """Process post-init configuration."""
-        self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
     def calc_type(self) -> str:
@@ -113,11 +102,6 @@ class MrgddbMaker(Maker):
             # **self.task_document_kwargs,
         )
         task_doc.task_label = self.name
-        if len(task_doc.event_report.filter_types(self.critical_events)) > 0:
-            task_doc = task_doc.model_copy(update={"state": TaskState.UNCONVERGED})
-            task_doc.calcs_reversed[-1] = task_doc.calcs_reversed[-1].model_copy(
-                update={"has_abinit_completed": TaskState.UNCONVERGED}
-            )  # optional I think
 
         return self.get_response(
             task_document=task_doc,
