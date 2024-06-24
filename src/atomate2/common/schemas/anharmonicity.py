@@ -30,20 +30,23 @@ class AnharmonicityDoc(StructureMetadata):
         "matrix describing relationship to primitive cell"
     )
 
-    one_shot: Optional[bool] = Field(
-        None, description="Whether or not the one shot approximation was found"
-    )
-
     sigma_dict: Optional[dict[str, list | float]] = Field(
         None, description="Dictionary with all computed sigma^A forms"
     )
 
+    parameters_dict: Optional[dict] = Field(
+        None, description="Parameters used for anharmonicity quantification"
+    )
+
     @classmethod
-    def store_data(
+    def from_phonon_doc_sigma(
         cls,
         sigma_dict: dict[str, list | float],
         phonon_doc: PhononBSDOSDoc,
         one_shot: bool,
+        temp: float,
+        n_samples: int,
+        seed: int | None,
     ) -> Self:
         """
         Generate the collection of data for the anharmonicity workflow.
@@ -58,6 +61,18 @@ class AnharmonicityDoc(StructureMetadata):
             Document with data from phonon workflow
         one_shot: bool
             True if one shot approximation was found, false otherwise
+        temp: float
+            Temperature (in K) to displace structures at
+        n_samples: int
+            How many displaced structures to sample
+        seed: int | None
+            What random seed to use for displacing structures
+
+        Returns
+        -------
+        AnharmonicityDoc
+            Document with details about anharmonicity and phonon
+            workflow runs
         """
         return cls.from_structure(
             structure=phonon_doc.structure,
@@ -66,5 +81,10 @@ class AnharmonicityDoc(StructureMetadata):
             phonon_doc=phonon_doc,
             supercell_matrix=phonon_doc.supercell_matrix,
             primitive_matrix=phonon_doc.primitive_matrix,
-            one_shot=one_shot,
+            parameters_dict={
+                "one-shot": one_shot,
+                "temp": temp,
+                "num_samples": n_samples,
+                "seed": seed,
+            },
         )

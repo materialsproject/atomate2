@@ -30,3 +30,7 @@ def test_anharmonicity_doc():
     # Test invalid supercell matrix type fails
     with pytest.raises(ValidationError):
         doc = AnharmonicityDoc(**kwargs | {"supercell_matrix": (1, 1, 1)})
+
+    # Test that doc contains sigma and parameter dicts
+    assert "sigma_dict" in dir(doc)
+    assert "parameters_dict" in dir(doc)

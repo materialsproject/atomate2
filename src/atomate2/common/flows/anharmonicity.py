@@ -16,9 +16,7 @@ from atomate2.common.jobs.anharmonicity import (
     displace_structure,
     get_forces,
     get_phonon_supercell,
-    get_sigma_a,
-    get_sigma_a_per_mode,
-    get_sigma_per_atom,
+    get_sigmas,
     run_displacements,
     store_results,
 )
@@ -78,35 +76,38 @@ class BaseAnharmonicityMaker(Maker, ABC):
             A pymatgen structure object. Please start with a structure
             that is nearly fully optimized as the internal optimizers
             have very strict settings!
-        prev_dir: str or Path or None
+        prev_dir: Optional[str | Path]
             A previous calculation directory to use for copying outputs.
-        born: list[Matrix3D]
+            Default is None.
+        born: Optional[list[Matrix3D]]
             Instead of recomputing born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
-            within in this workflow as this could lead to errors
-        epsilon_static: Matrix3D
+            within in this workflow as this could lead to errors. The default for this
+            field is None.
+        epsilon_static: Optional[Matrix3D]
             The high-frequency dielectric constant to use instead of recomputing born
             charges and epsilon. If born, epsilon_static are provided, the born run
-            will be skipped
-        total_dft_energy_per_formula_unit: float
+            will be skipped. The default for this field is None.
+        total_dft_energy_per_formula_unit: Optional[float]
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
             skipped. This energy is the typical output dft energy of the dft workflow.
-            No conversion needed.
-        supercell_matrix: Matrix3D | None
+            No conversion needed. It is set to 0 by default.
+        supercell_matrix: Optional[Matrix3D]
             Instead of min_length, also a supercell_matrix can be given, e.g.
-            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
+            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]. By default, this matrix is
+            set to None.
         temperature: float
-            The temperature for the anharmonicity calculation
+            The temperature for the anharmonicity calculation. The default temp is 300.
         one_shot_approx: bool
             If true, finds the one shot approximation of sigma^A and if false, finds
             the full sigma^A. The default is True.
-        seed: int | None
+        seed: Optional[int]
             Seed to use for the random number generator
-            (only used if one_shot_approx == False)
+            (only used if one_shot_approx == False). Set to None by default.
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
@@ -114,6 +115,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         n_samples: int
             Number of times displaced structures are sampled.
             Must be >= 1 and cannot be used when one_shot_approx == True.
+            It is set to 1 by default.
 
         Returns
         -------
@@ -145,6 +147,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
             sigma_dict=anharmon_flow.output,
             phonon_doc=phonon_flow.output,
             one_shot=one_shot_approx,
+            temp=temperature,
+            n_samples=n_samples,
+            seed=seed,
         )
 
         jobs = [phonon_flow, anharmon_flow, results]
@@ -167,16 +172,17 @@ class BaseAnharmonicityMaker(Maker, ABC):
         ----------
         phonon_doc: PhononBSDOSDoc
             The document to get the anharmonicity for
-        prev_dir: str or Path or None
+        prev_dir: Optional[str | Path]
             A previous calculation directory to use for copying outputs.
+            Default is None.
         temperature: float
-            The temperature for the anharmonicity calculation
+            The temperature for the anharmonicity calculation. Default is 300.
         one_shot_approx: bool
             If true, finds the one shot approximation of sigma^A and if false,
             finds the full sigma^A. The default is True.
-        seed: int | None
+        seed: Optional[int]
             Seed to use for the random number generator
-            (only used if one_shot_approx == False)
+            (only used if one_shot_approx == False). Default is None.
         atom_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
@@ -184,12 +190,15 @@ class BaseAnharmonicityMaker(Maker, ABC):
         n_samples: int
             Number of times displaced structures are sampled.
             Must be >= 1 and cannot be used when one_shot_approx == True.
+            It is set to 1 by default.
 
         Returns
         -------
         Flow
             The anharmonicity quantification workflow
         """
+        # KB: Not always an error. There could be negative acoustic modes from
+        # unconverged phonon calculations.
         if phonon_doc.has_imaginary_modes:
             warn(
                 "The phonon model has imaginary modes, sampling maybe incorrect.",
@@ -213,7 +222,6 @@ class BaseAnharmonicityMaker(Maker, ABC):
         jobs.append(displace_supercell)
 
         force_eval_maker = self.phonon_maker.phonon_displacement_maker
-        force_eval_maker.name = f"{force_eval_maker.name}"
         displacement_calcs = run_displacements(
             displacements=displace_supercell.output,
             phonon_supercell=phonon_supercell,
@@ -234,37 +242,18 @@ class BaseAnharmonicityMaker(Maker, ABC):
 
         sigma_a_vals = {}
 
-        # Calculate atom-resolved sigma^A
-        if atom_resolved:
-            calc_sigma_by_atom = get_sigma_per_atom(
-                structure=phonon_supercell,
-                forces_dft=force_calcs.output[0],
-                forces_harmonic=force_calcs.output[1],
-            )
-            jobs.append(calc_sigma_by_atom)
-            sigma_a_vals["atom-resolved"] = calc_sigma_by_atom.output
-
-        # Calculate mode-resolved sigma^A
-        if mode_resolved:
-            calc_sigma_by_mode = get_sigma_a_per_mode(
-                force_constants=phonon_doc.force_constants,
-                structure=phonon_supercell,
-                dft_forces=force_calcs.output[0],
-                harmonic_forces=force_calcs.output[1],
-            )
-            jobs.append(calc_sigma_by_mode)
-            sigma_a_vals["mode-resolved"] = calc_sigma_by_mode.output
-
-        # Calculate oneshot approximation of sigma^A
-        calc_sigma_a_os = get_sigma_a(
-            dft_forces=force_calcs.output[0],
-            harmonic_forces=force_calcs.output[1],
+        # Calculate all desired sigma^A types
+        sigma_calcs = get_sigmas(
+            force_calcs.output[0],
+            force_calcs.output[1],
+            phonon_doc.force_constants,
+            phonon_supercell,
+            one_shot_approx,
+            atom_resolved,
+            mode_resolved,
         )
-        jobs.append(calc_sigma_a_os)
-        if one_shot_approx:
-            sigma_a_vals["one-shot"] = calc_sigma_a_os.output
-        else:
-            sigma_a_vals["full"] = calc_sigma_a_os.output
+        jobs.append(sigma_calcs)
+        sigma_a_vals = sigma_calcs.output
 
         return Flow(jobs, sigma_a_vals)
 

@@ -18,6 +18,7 @@ from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Any
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
@@ -58,7 +59,6 @@ def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
     return get_pmg_structure(phonon.supercell)
 
 
-@job
 def get_sigma_per_atom(
     structure: Structure,
     forces_dft: np.ndarray,
@@ -98,7 +98,6 @@ def get_sigma_per_atom(
     unique_atoms = np.unique(atom_numbers)
 
     sigma_atom = []
-    f_norms = []
     unique_symbols = []
     for u in unique_atoms:
         # Find atoms of type u in the structure
@@ -108,9 +107,9 @@ def get_sigma_per_atom(
         # Take forces belonging to this atom
         f_dft = forces_dft[:, mask]
         f_ha = forces_harmonic[:, mask]
+        f_anharm = f_dft - f_ha
         # Calculate sigma^A for this atom
-        sigma_atom.append(np.std(f_dft - f_ha) / np.std(f_dft))
-        f_norms.append(float(np.std(f_dft)))
+        sigma_atom.append(calc_sigma_a(f_anharm, f_dft))
 
     return [(unique_symbols[i], sigma_atom[i]) for i in range(len(sigma_atom))]
 
@@ -205,15 +204,8 @@ def displace_structure(
     coords = phonon_supercell.cart_coords
     disp = np.zeros(coords.shape)
 
-    force_constants_2d = (
-        np.array(force_constants.force_constants)
-        .swapaxes(1, 2)
-        .reshape(2 * (len(phonon_supercell) * 3,))
-    )
-
     masses = np.array([site.species.weight for site in phonon_supercell.sites])
-    rminv = (masses**-0.5).repeat(3)
-    dynamical_matrix = force_constants_2d * rminv[:, None] * rminv[None, :]
+    dynamical_matrix = build_dynmat(force_constants, phonon_supercell)
 
     eig_val, eig_vec = np.linalg.eigh(dynamical_matrix)
     eig_val = np.sqrt(eig_val[3:])
@@ -281,7 +273,6 @@ def build_dynmat(
     return force_constants_2d * rminv[:, None] * rminv[None, :]
 
 
-@job
 def get_sigma_a_per_mode(
     force_constants: ForceConstants,
     structure: Structure,
@@ -395,30 +386,93 @@ def get_forces(
 
 
 @job
-def get_sigma_a(
+def get_sigmas(
     dft_forces: np.ndarray,
     harmonic_forces: np.ndarray,
-) -> float:
-    """Calculate the full sigma^A.
+    force_constants: ForceConstants,
+    structure: Structure,
+    one_shot: bool,
+    atom_resolved: bool = False,
+    mode_resolved: bool = False,
+) -> dict:
+    """Get the desired sigma^A measures.
 
     Parameters
     ----------
     dft_forces: np.ndarray
-        DFT calculated forces
+        Array of DFT forces
     harmonic_forces: np.ndarray
-        Forces calculated via harmonic approximation
+        Array of forces from harmonic model
+    force_constants: ForceConstants
+        ForceConstants object containing a list of force constants
+    structure: Structure
+        The structure to calculate sigma^A on
+    one_shot: bool
+        If true, find the one-shot approximation. If false, find the
+        full sigma^A number.
+    atom_resolved: bool
+        If true, resolve sigma^A to the different atoms.
+        Default is false.
+    mode_resolved: bool
+        If true, resolve sigma^A to the different modes.
+        Default is false.
+
+    Returns
+    -------
+    dict[str, Union[float, list]]
+        Dictionary in the form {sigma^A type: float/list with sigma^A values}
+        that contains all the sigma^A values
+    """
+    dft_forces = np.array(dft_forces)
+    harmonic_forces = np.array(harmonic_forces)
+    anharmonic_forces = np.array(
+        [
+            dft_force - harmonic_force
+            for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)
+        ]
+    )
+
+    sigma_dict: dict[str, Any] = {}
+
+    if mode_resolved:
+        sigma_dict["mode-resolved"] = get_sigma_a_per_mode(
+            force_constants,
+            structure,
+            dft_forces,
+            harmonic_forces,
+        )
+    if atom_resolved:
+        sigma_dict["atom-resolved"] = get_sigma_per_atom(
+            structure,
+            dft_forces,
+            harmonic_forces,
+        )
+    if one_shot:
+        sigma_dict["one-shot"] = calc_sigma_a(anharmonic_forces, dft_forces)
+    else:
+        sigma_dict["full"] = calc_sigma_a(anharmonic_forces, dft_forces)
+
+    return sigma_dict
+
+
+def calc_sigma_a(
+    anharmonic_forces: np.ndarray,
+    dft_forces: np.ndarray,
+) -> float:
+    """Calculate sigma^A.
+
+    Parameters
+    ----------
+    anharmonic_forces: np.ndarray
+        Array of anharmonic forces (dft - harmonic)
+    dft_forces: np.ndarray
+        Array of DFT forces
 
     Returns
     -------
     float
-        The sigma^A value
+        sigma^A number
     """
-    dft_forces = np.array(dft_forces)
-    harmonic_forces = np.array(harmonic_forces)
-    anharmonic_forces = [
-        dft_force - harmonic_force
-        for dft_force, harmonic_force in zip(dft_forces, harmonic_forces)
-    ]
     return np.std(anharmonic_forces) / np.std(dft_forces)
 
 
@@ -518,6 +572,9 @@ def store_results(
     sigma_dict: dict[str, list | float],
     phonon_doc: PhononBSDOSDoc,
     one_shot: bool,
+    temp: float,
+    n_samples: int,
+    seed: int | None,
 ) -> AnharmonicityDoc:
     """
     Store the results in a schema object.
@@ -532,14 +589,23 @@ def store_results(
         Info from phonon workflow to be stored
     one_shot: bool
         Whether the one-shot approximation was used (true) or not (false)
+    temp: float
+        Temperature (in K) to displace structure at
+    n_samples: int
+        How many displaced structures to sample
+    seed: int | None
+        What random seed was used to displace structures
 
     Returns
     -------
     AnharmonicityDoc
         Document containing information on workflow results
     """
-    return AnharmonicityDoc.store_data(
+    return AnharmonicityDoc.from_phonon_doc_sigma(
         sigma_dict=sigma_dict,
         phonon_doc=phonon_doc,
         one_shot=one_shot,
+        temp=temp,
+        n_samples=n_samples,
+        seed=seed,
     )
