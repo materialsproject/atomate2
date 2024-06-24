@@ -103,7 +103,7 @@ strict = [
     "python-ulid==2.7.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "torch==2.2.1",
+    "torch==2.3.1",
     "typing-extensions==4.12.2",
 ]
 
