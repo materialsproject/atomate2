@@ -87,6 +87,23 @@ class DfptFlowMaker(Maker):
     dte_phonon_pert: bool | None = False
     dte_ixc: int | None = None
 
+    def __post_init__(self) -> None:
+        """Process post-init configuration."""
+
+        if self.dde_maker and not self.ddk_maker:
+            raise ValueError("DDK caculations are required to continue 
+                with the DDE calculations. Either provide a DDK Maker 
+                or remove the DDE one.")
+        if self.dte_maker and not self.dde_maker:
+            raise ValueError("DDE caculations are required to continue 
+                with the DTE calculations. Either provide a DDE Maker 
+                or remove the DTE one.")
+        if self.mrgddb_maker and not self.dde_maker:
+            raise ValueError("DDE caculations are required to produce
+                DDB files to be merged. Either provide a DDE Maker 
+                or remove the MrgddbMaker.")
+
+
     def make(
         self,
         structure: Structure | None = None,
@@ -165,7 +182,9 @@ class DfptFlowMaker(Maker):
         if self.mrgddb_maker:
             # merge the DDE and DTE DDB.
 
-            prev_outputs = [dde_calcs.output["dirs"], dte_calcs.output["dirs"]]
+            prev_outputs = [dde_calcs.output["dirs"]]
+            if self.dte_maker:
+                prev_outputs.append(dte_calcs.output["dirs"])
 
             mrgddb_job = self.mrgddb_maker.make(
                 prev_outputs=prev_outputs,
@@ -199,6 +218,8 @@ class ShgFlowMaker(DfptFlowMaker):
     # to the static job
     def __post_init__(self) -> None:
         """Process post-init configuration."""
+
+        super().__post_init__()
 
         # To avoid metallic case=occopt=3 which is not okay wrt. DFPT \
         # and occopt 1 with spin polarization requires spinmagntarget
