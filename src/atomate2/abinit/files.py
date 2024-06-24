@@ -153,7 +153,6 @@ def write_abinit_input_set(
 def write_mrgddb_input_set(
     input_set_generator: MrgddbInputGenerator,
     prev_outputs: str | Path | list[str] | None = None,
-    restart_from: str | Path | list[str] | None = None,
     directory: str | Path = ".",
 ) -> None:
     """Write the mrgddb input using a given generator.
@@ -164,14 +163,10 @@ def write_mrgddb_input_set(
         The input generator used to write the mrgddb inputs.
     prev_outputs
         The list of previous directories needed for the calculation.
-    restart_from
-        The previous directory of the same calculation (in case of a restart).
-        Note that this should be provided as a list of one directory.
     directory
         Directory in which to write the abinit inputs.
     """
     mrgis = input_set_generator.get_input_set(
-        restart_from=restart_from,
         prev_outputs=prev_outputs,
         workdir=directory,
     )

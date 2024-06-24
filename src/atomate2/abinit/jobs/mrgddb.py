@@ -71,7 +71,6 @@ class MrgddbMaker(Maker):
     def make(
         self,
         prev_outputs: list[str] | None = None,
-        restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
     ) -> jobflow.Flow | jobflow.Job:
         """
@@ -80,7 +79,6 @@ class MrgddbMaker(Maker):
         Parameters
         ----------
         prev_outputs : TODO: add description from sets.base
-        restart_from : TODO: add description from sets.base
         history : JobHistory
             A JobHistory object containing the history of this job.
         """
@@ -91,7 +89,7 @@ class MrgddbMaker(Maker):
         config = setup_job(
             structure=None,
             prev_outputs=prev_outputs,
-            restart_from=restart_from,
+            restart_from=None,
             history=history,
             wall_time=self.wall_time,
         )
@@ -100,7 +98,6 @@ class MrgddbMaker(Maker):
         write_mrgddb_input_set(
             input_set_generator=self.input_set_generator,
             prev_outputs=prev_outputs,
-            restart_from=restart_from,
             directory=config.workdir,
         )
 
@@ -162,7 +159,6 @@ class MrgddbMaker(Maker):
 
         new_job = self.make(
             structure=task_document.structure,
-            restart_from=task_document.dir_name,
             prev_outputs=prev_outputs,
             history=history,
         )

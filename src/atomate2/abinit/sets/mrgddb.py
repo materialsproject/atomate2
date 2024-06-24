@@ -131,13 +131,6 @@ class MrgddbInputGenerator(InputGenerator):
     ----------
     calc_type
         A short description of the calculation type
-    restart_from_deps:
-        Defines the files that needs to be linked from previous calculations in
-        case of restart. The format is a tuple where each element is a list of
-        "|" separated runelevels (as defined in the AbinitInput object) followed
-        by a colon and a list of "|" list of extensions of files that needs to
-        be linked. The runlevel defines the type of calculations from which the
-        file can be linked. An example is (f"{NSCF}:WFK",).
     prev_outputs_deps
         Defines the files that needs to be linked from previous calculations and
         are required for the execution of the current calculation.
@@ -149,44 +142,27 @@ class MrgddbInputGenerator(InputGenerator):
     """
 
     calc_type: str = "mrgddb_merge"
-    restart_from_deps: str | tuple | None = None
     prev_outputs_deps: str | tuple | None = None
 
     def get_input_set(
         self,
-        restart_from: str | tuple | list | Path | None = None,
         prev_outputs: str | tuple | list | Path | None = None,
         workdir: str | Path | None = ".",
     ) -> MrgddbInputSet:
         """Generate an MrgddbInputSet object.
 
-        Here we assume that restart_from is a directory and prev_outputs is
+        Here we assume that prev_outputs is
         a list of directories.
 
         Parameters
         ----------
-        restart_from : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of 1 directory (as a str
-            or Path) to restart from.
         prev_outputs : str or Path or list or tuple
             Directory (as a str or Path) or list/tuple of directories (as a str
             or Path) needed as dependencies for the MrgddbInputSet generated.
         """
-        restart_from = self.check_format_prev_dirs(restart_from)
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
 
         input_files = []
-        # all_irdvars = {}
-        # if restart_from is not None:
-        #     # Use the previous mrgddb input
-        #     mrgddb_input = load_mrgddb_input(restart_from[0])
-        #     # Files for restart
-        #     irdvars, files = self.resolve_deps(
-        #         restart_from, deps=self.restart_from_deps
-        #     )
-        #     all_irdvars.update(irdvars)
-        #     input_files.extend(files)
-        # else:
         if prev_outputs is not None and not self.prev_outputs_deps:
             raise RuntimeError(
                 f"Previous outputs not allowed for {self.__class__.__name__}."
@@ -332,7 +308,7 @@ class MrgddbInputGenerator(InputGenerator):
         if not self.prev_outputs_deps and prev_outputs:
             msg = (
                 f"Previous outputs not allowed for {self.__class__.__name__} "
-                "Consider if restart_from argument of get_input_set method "
+                "Consider if get_input_set method "
                 "can fit your needs instead."
             )
             raise RuntimeError(msg)
@@ -359,7 +335,6 @@ class MrgddbSetGenerator(MrgddbInputGenerator):
     """Class to generate Mrgddb input sets."""
 
     calc_type: str = "mrgddb_merge"
-    restart_from_deps: tuple = None  # (f"{MRGDDB}:DDB",) #TODO: name is MRGDDB ?
     prev_outputs_deps: tuple = (f"{DDE}:DDB", f"{DTE}:DDB")
 
     def get_mrgddb_input(
