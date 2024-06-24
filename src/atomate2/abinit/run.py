@@ -62,4 +62,3 @@ def run_abinit(
                     process.terminate()
 
         process.wait()
-    return

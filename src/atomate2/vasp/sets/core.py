@@ -97,7 +97,7 @@ class StaticSetGenerator(VaspInputGenerator):
             # LPEAD=T: numerical evaluation of overlap integral prevents LRF_COMMUTATOR
             # errors and can lead to better expt. agreement but produces slightly
             # different results
-            updates.update({"IBRION": 8, "LEPSILON": True, "LPEAD": True, "NSW": 1})
+            updates.update(IBRION=8, LEPSILON=True, LPEAD=True, NSW=1)
 
         if self.lcalcpol:
             updates["LCALCPOL"] = True
@@ -202,7 +202,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
             n_edos = self._get_nedos(self.dedos)
 
             # use tetrahedron method for DOS and optics calculations
-            updates.update({"ISMEAR": -5, "ISYM": 2, "NEDOS": n_edos})
+            updates.update(ISMEAR=-5, ISYM=2, NEDOS=n_edos)
 
         elif self.mode in ("line", "boltztrap"):
             # if line mode or explicit k-points (boltztrap) can't use ISMEAR=-5
@@ -463,12 +463,12 @@ class HSEBSSetGenerator(VaspInputGenerator):
             nedos = self._get_nedos(self.dedos)
 
             # use tetrahedron method for DOS and optics calculations
-            updates.update({"ISMEAR": -5, "NEDOS": nedos})
+            updates.update(ISMEAR=-5, NEDOS=nedos)
 
         else:
             # if line mode or explicit k-points (gap) can't use ISMEAR=-5
             # use small sigma to avoid partial occupancies for small band gap materials
-            updates.update({"ISMEAR": 0, "SIGMA": 0.01})
+            updates.update(ISMEAR=0, SIGMA=0.01)
 
         if self.prev_vasprun is not None:
             # set nbands
@@ -477,7 +477,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
 
         if self.optics:
             # LREAL not supported with LOPTICS
-            updates.update({"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5})
+            updates.update(LOPTICS=True, LREAL=False, CSHIFT=1e-5)
 
         updates["MAGMOM"] = None
 
@@ -601,27 +601,25 @@ class MDSetGenerator(VaspInputGenerator):
 
         # Based on pymatgen.io.vasp.sets.MPMDSet.
         updates.update(
-            {
-                "ENCUT": 520,
-                "TEBEG": self.start_temp,
-                "TEEND": self.end_temp,
-                "NSW": self.nsteps,
-                "POTIM": self.time_step,
-                "LCHARG": False,
-                "NELMIN": 4,
-                "MAXMIX": 20,
-                "NELM": 500,
-                "ISYM": 0,
-                "IBRION": 0,
-                "KBLOCK": 100,
-                "PREC": "Normal",
-            }
+            ENCUT=520,
+            TEBEG=self.start_temp,
+            TEEND=self.end_temp,
+            NSW=self.nsteps,
+            POTIM=self.time_step,
+            LCHARG=False,
+            NELMIN=4,
+            MAXMIX=20,
+            NELM=500,
+            ISYM=0,
+            IBRION=0,
+            KBLOCK=100,
+            PREC="Normal",
         )
 
         if Element("H") in self.structure.species and updates["POTIM"] > 0.5:
             logger.warning(
                 f"Molecular dynamics time step is {updates['POTIM']}, which is "
-                "typically too large for a structure containing H. Consider set it "
+                "typically too large for a structure containing H. Consider setting it "
                 "to a value of 0.5 or smaller."
             )
 
