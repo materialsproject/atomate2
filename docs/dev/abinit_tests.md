@@ -17,7 +17,6 @@ be added to this pseudopotential table.
 Note that information from the real pseudopotential files is used in the creation
 of the jobs and flows, hence fake pseudopotentials are not an option here.
 
-
 ### File sizes
 
 The files produced by ABINIT are generally large and would overwhelm the size of the
@@ -121,7 +120,7 @@ atm dev abinit-test-data TEST_NAME
 
 You should change `TEST_NAME` to be a name for the workflow test. Note, `TEST_NAME` should not
 contain spaces or punctuation. For example, the band structure workflow test data was
-genenerated using `atm dev vasp-test-data Si_band_structure`.
+generated using `atm dev vasp-test-data Si_band_structure`.
 
 This will automatically detect whether the Maker is a Job Maker or a Flow Maker and
 copy files in the corresponding `tests/test_data/abinit/jobs/NameOfMaker/TEST_NAME`
@@ -145,6 +144,7 @@ a unique name. For example, there cannot be two calculations called "relax".
 Instead you should ensure they are named something like "relax 1" and "relax 2".
 
 Each `REF_RUN_FOLDER` contains:
+
 - A folder called "inputs" with the run.abi and abinit_input.json, as well as with the
   indata, outdata and tmpdata directories. The indata directory potentially contains
   the reference fake input files needed for the job to be executed (e.g. a fake link to a
