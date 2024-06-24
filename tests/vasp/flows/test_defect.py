@@ -185,3 +185,49 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     prv_dir = test_dir / "vasp/GaN_Mg_defect/bulk_relax/outputs"
     flow2 = maker.make(defects[0], bulk_supercell_dir=prv_dir, defect_index=0)
     _ = run_locally(flow2, create_folders=True, ensure_success=True)
+
+
+def test_formation_energy_maker_uc(mock_vasp, clean_dir, test_dir, monkeypatch):
+    from jobflow import run_locally
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "relax Mg_Ga-0 q=-2": "GaN_Mg_defect/relax_Mg_Ga-0_q=-2",
+        "relax Mg_Ga-0 q=-1": "GaN_Mg_defect/relax_Mg_Ga-0_q=-1",
+        "relax Mg_Ga-0 q=0": "GaN_Mg_defect/relax_Mg_Ga-0_q=0",
+        "relax Mg_Ga-0 q=1": "GaN_Mg_defect/relax_Mg_Ga-0_q=1",
+    }
+
+    fake_run_vasp_kwargs = {
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]} for k in ref_paths
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    struct = Structure.from_file(test_dir / "structures" / "GaN.cif")
+    defects = list(
+        SubstitutionGenerator().get_defects(
+            structure=struct, substitution={"Ga": ["Mg"]}
+        )
+    )
+
+    maker = FormationEnergyMaker(
+        relax_radius="auto",
+        perturb=0.1,
+        collect_defect_entry_data=False,
+        validate_charge=False,
+        uc_bulk=True,
+    )
+    flow = maker.make(
+        defects[0],
+        supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]],
+        defect_index=0,
+    )
+
+    # run the flow and ensure that it finished running successfully
+    _ = run_locally(
+        flow,
+        create_folders=True,
+        ensure_success=True,
+    )
