@@ -7,7 +7,10 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.gruneisen import shrink_expand_structure
+from atomate2.common.jobs.gruneisen import (
+    compute_gruneisen_param,
+    shrink_expand_structure,
+)
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import CHGNetRelaxMaker, ForceFieldRelaxMaker
 
@@ -18,9 +21,9 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class GruneisenMaker(Maker):
+class BaseGruneisenMaker(Maker):
     """
-    Maker for generating phonon data for gruneisen parameters.
+    Maker to calculate gruneisen parameters.
 
     Calculate the harmonic phonons of a material for and compute gruneisen parameters.
     Initially, a tight structural relaxation is performed to obtain a structure without
@@ -59,6 +62,7 @@ class GruneisenMaker(Maker):
         default_factory=lambda: PhononMaker(name="Phonon run", bulk_relax_maker=None)
     )
     perc_vol: float = 0.01
+    mesh: list = field(default_factory=lambda: [20, 20, 20])
 
     def make(self, structure: Structure) -> Flow:
         """
@@ -99,9 +103,7 @@ class GruneisenMaker(Maker):
         # add relax job at constant volume for expanded structure
         jobs.append(const_vol_struct_plus)
 
-        opt_struct[
-            "plus"
-        ] = (
+        opt_struct["plus"] = (
             const_vol_struct_plus.output.structure
         )  # store opt struct of expanded volume
 
@@ -112,9 +114,7 @@ class GruneisenMaker(Maker):
         # add relax job at constant volume for shrunk structure
         jobs.append(const_vol_struct_minus)
 
-        opt_struct[
-            "minus"
-        ] = (
+        opt_struct["minus"] = (
             const_vol_struct_minus.output.structure
         )  # store opt struct of expanded volume
 
@@ -124,11 +124,17 @@ class GruneisenMaker(Maker):
             phonon_job = self.phonon_maker.make(structure=opt_struct[st])
             jobs.append(phonon_job)
             # store each phonon run task doc
-            phonon_yaml_dirs[st] = phonon_job.output.jobdirs["taskdoc_run_job_dir"]
+            phonon_yaml_dirs[st] = phonon_job.output.jobdirs.taskdoc_run_job_dir
 
-        # TODO : Add a job that uses phonopy api to compute
-        #  gruneisen parameter from dynamical matrix
+        # Todo: Add kwargs and possibly a Gruneisen schema
 
-        return Flow(
-            jobs, output=phonon_yaml_dirs
-        )  # create a flow object with outputs as your phonon run taskdoc
+        # get Gruneisen parameter from phonon runs yaml with phonopy api
+        get_gru = compute_gruneisen_param(
+            phonopy_yaml_paths_dict=phonon_yaml_dirs,
+            mesh=self.mesh,
+            structure=opt_struct["ground"],
+        )
+
+        jobs.append(get_gru)
+
+        return Flow(jobs, output=get_gru.output)
