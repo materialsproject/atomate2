@@ -16,7 +16,7 @@ from atomate2.abinit.jobs.base import setup_job
 from atomate2.abinit.run import run_mrgddb
 from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
-from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator, MrgddbSetGenerator
+from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -45,9 +45,9 @@ class MrgddbMaker(Maker):
     # would have been okay in a child class with @dataclass
     name: str = "Merge DDB"
     input_set_generator: MrgddbInputGenerator = field(
-        default_factory=MrgddbSetGenerator
+        default_factory=MrgddbInputGenerator
     )
-    # input_set_generator: MrgddbInputGenerator = MrgddbSetGenerator()
+    # input_set_generator: MrgddbInputGenerator = MrgddbInputGenerator()
     wall_time: int | None = None
 
 

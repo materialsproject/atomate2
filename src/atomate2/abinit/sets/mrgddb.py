@@ -28,7 +28,7 @@ from atomate2.abinit.utils.common import (
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-__all__ = ["MrgddbInputSet", "MrgddbInputGenerator", "MrgddbSetGenerator"]
+__all__ = ["MrgddbInputSet", "MrgddbInputGenerator"]
 
 logger = logging.getLogger(__name__)
 
@@ -135,14 +135,14 @@ class MrgddbInputGenerator(InputGenerator):
         Defines the files that needs to be linked from previous calculations and
         are required for the execution of the current calculation.
         The format is a tuple where each element is a list of  "|" separated
-        runelevels (as defined in the AbinitInput object) followed by a colon and
+        runlevels (as defined in the AbinitInput object) followed by a colon and
         a list of "|" list of extensions of files that needs to be linked.
         The runlevel defines the type of calculations from which the file can
         be linked. An example is (f"{NSCF}:WFK",).
     """
 
     calc_type: str = "mrgddb_merge"
-    prev_outputs_deps: str | tuple | None = None
+    prev_outputs_deps: tuple = (f"{DDE}:DDB", f"{DTE}:DDB")
 
     def get_input_set(
         self,
@@ -231,52 +231,13 @@ class MrgddbInputGenerator(InputGenerator):
         inp_files = []
 
         for ext in exts:
-            # TODO: how to check that we have the files we need ?
-            #  Should we raise if don't find at least one file for a given extension ?
-            if ext in ("1WF", "1DEN"):
-                # Special treatment for 1WF and 1DEN files
-                if ext == "1WF":
-                    files = prev_outdir.find_1wf_files()
-                elif ext == "1DEN":
-                    files = prev_outdir.find_1den_files()
-                else:
-                    raise RuntimeError("Should not occur.")
-                if files is not None:
-                    inp_files = [
-                        (f.path, MrgddbInputGenerator._get_in_file_name(f.path))
-                        for f in files
-                    ]
-                    irdvars = irdvars_for_ext(ext)
-                    break
-            elif ext == "DEN":
-                # Special treatment for DEN files
-                # In case of relaxations or MD, there may be several TIM?_DEN files
-                # First look for the standard out_DEN file.
-                # If not found, look for the last TIM?_DEN file.
-                out_den = prev_outdir.path_in(f"{OUTDATAFILE_PREFIX}_DEN")
-                if os.path.exists(out_den):
-                    irdvars = irdvars_for_ext("DEN")
-                    inp_files.append(
-                        (out_den, MrgddbInputGenerator._get_in_file_name(out_den))
-                    )
-                    break
-                last_timden = prev_outdir.find_last_timden_file()
-                if last_timden is not None:
-                    if last_timden.path.endswith(".nc"):
-                        in_file_name = f"{INDATAFILE_PREFIX}_DEN.nc"
-                    else:
-                        in_file_name = f"{INDATAFILE_PREFIX}_DEN"
-                    inp_files.append((last_timden.path, in_file_name))
-                    irdvars = irdvars_for_ext("DEN")
-                    break
-            else:
-                out_file = prev_outdir.has_abiext(ext)
-                irdvars = irdvars_for_ext(ext)
-                if out_file:
-                    inp_files.append(
-                        (out_file, MrgddbInputGenerator._get_in_file_name(out_file))
-                    )
-                    break
+            out_file = prev_outdir.has_abiext(ext)
+            irdvars = irdvars_for_ext(ext)
+            if out_file:
+                inp_files.append(
+                    (out_file, MrgddbInputGenerator._get_in_file_name(out_file))
+                )
+                break
         else:
             msg = f"Cannot find {' or '.join(exts)} file to restart from."
             logger.error(msg)
@@ -329,20 +290,3 @@ class MrgddbInputGenerator(InputGenerator):
 
         return generated_input
 
-
-@dataclass
-class MrgddbSetGenerator(MrgddbInputGenerator):
-    """Class to generate Mrgddb input sets."""
-
-    calc_type: str = "mrgddb_merge"
-    prev_outputs_deps: tuple = (f"{DDE}:DDB", f"{DTE}:DDB")
-
-    def get_mrgddb_input(
-        self,
-        prev_outputs: list[str] | None = None,
-        workdir: str | Path | None = ".",
-    ) -> str:
-        """Get Mrgddb input (str) to merge the DDE and DTE DDB."""
-        return super().get_mrgddb_input(
-            prev_outputs=prev_outputs,
-        )
