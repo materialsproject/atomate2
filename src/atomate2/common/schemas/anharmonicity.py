@@ -1,7 +1,7 @@
 """Schemas for anharmonicity quantification."""
 
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
@@ -30,7 +30,7 @@ class AnharmonicityDoc(StructureMetadata):
         "matrix describing relationship to primitive cell"
     )
 
-    sigma_dict: Optional[dict[str, list | float]] = Field(
+    sigma_dict: Optional[dict[str, Any]] = Field(
         None, description="Dictionary with all computed sigma^A forms"
     )
 
@@ -41,19 +41,19 @@ class AnharmonicityDoc(StructureMetadata):
     @classmethod
     def from_phonon_doc_sigma(
         cls,
-        sigma_dict: dict[str, list | float],
+        sigma_dict: dict[str, Any],
         phonon_doc: PhononBSDOSDoc,
         one_shot: bool,
         temp: float,
         n_samples: int,
-        seed: int | None,
+        seed: Optional[int],
     ) -> "AnharmonicityDoc":
         """
         Generate the collection of data for the anharmonicity workflow.
 
         Parameters
         ----------
-        sigma_dict: dict[str, list | float]
+        sigma_dict: dict[str, Any]
             Dictionary of computed sigma^A values.
             Possible contents are full, one-shot, atom-resolved, and
             mode-resolved.
@@ -65,7 +65,7 @@ class AnharmonicityDoc(StructureMetadata):
             Temperature (in K) to displace structures at
         n_samples: int
             How many displaced structures to sample
-        seed: int | None
+        seed: Optional[int]
             What random seed to use for displacing structures
 
         Returns
