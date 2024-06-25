@@ -11,9 +11,8 @@ def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
     common_kwds = dict(
-        model=model_path,
+        calculator_kwargs={"model": model_path, "default_dtype": "float64"},
         relax_kwargs={"fmax": 0.00001},
-        model_kwargs={"default_dtype": "float64"},
     )
 
     flow = ElasticMaker(

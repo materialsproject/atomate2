@@ -63,8 +63,7 @@ class ConfigurationCoordinateMaker(Maker):
         charge_state1: int,
         charge_state2: int,
     ) -> Flow:
-        """
-        Make a job for the calculation of the configuration coordinate diagram.
+        """Make a job for the calculation of the configuration coordinate diagram.
 
         Parameters
         ----------
@@ -168,7 +167,7 @@ class FormationEnergyMaker(Maker, ABC):
         A maker to perform a atomic-position-only relaxation on the defect charge
         states. Since these calculations are expensive and the settings might get
         messy, it is recommended for each implementation of this maker to check
-        some of the most important settings in the `relax_maker`.  Please see
+        some of the most important settings in the `relax_maker`. Please see
         `FormationEnergyMaker.validate_maker` for more details.
 
     bulk_relax_maker: Maker
@@ -219,7 +218,7 @@ class FormationEnergyMaker(Maker, ABC):
 
         .. note::
         Once we remove the requirement for explicit bulk supercell calculations,
-        this setting will be removed.  It is only needed because the bulk supercell
+        this setting will be removed. It is only needed because the bulk supercell
         locpot is currently needed for the finite-size correction calculation.
 
         Output format for the DefectEntry data:
@@ -281,7 +280,7 @@ class FormationEnergyMaker(Maker, ABC):
             If provided, the bulk supercell calculation will be skipped.
         supercell_matrix: NDArray | None
             The supercell transformation matrix. If None, the supercell matrix
-            will be computed automatically.  If `bulk_supercell_dir` is provided,
+            will be computed automatically. If `bulk_supercell_dir` is provided,
             this parameter will be ignored.
         defect_index : int | str
             Additional index to give unique names to the defect calculations.

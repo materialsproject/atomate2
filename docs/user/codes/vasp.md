@@ -247,7 +247,7 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-### Lobster
+### LOBSTER
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
 
@@ -367,6 +367,43 @@ for number, (key, cohp) in enumerate(
     plotter.add_cohp(key, cohp)
     plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
+#### Running the LOBSTER workflow without database and with one job script only
+
+It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
+In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
+In between, the different computations you will switch from MPI to OpenMP parallelization.
+
+For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:
+
+```bash
+#!/bin/bash
+#SBATCH -J vasplobsterjob
+#SBATCH -o ./%x.%j.out
+#SBATCH -e ./%x.%j.err
+#SBATCH -D ./
+#SBATCH --mail-type=END
+#SBATCH --mail-user=you@you.de
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#This needs to be adapted if you run with different cores
+#SBATCH --ntasks=48
+
+# ensure you load the modules to run VASP, e.g., module load vasp
+module load my_vasp_module
+# please activate the required conda environment
+conda activate my_environment
+cd my_folder
+# the following script needs to contain the workflow
+python xyz.py
+```
+
+The `LOBSTER_CMD` now needs an additional export of the number of threads.
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
+```
+
 
 (modifying_input_sets)=
 Modifying input sets
