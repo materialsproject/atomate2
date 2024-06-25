@@ -294,6 +294,10 @@ class Calculation(BaseModel):
             else:
                 update_data = output_doc_gsr.model_dump(exclude_unset=True)
                 output_doc = output_doc.model_copy(update=update_data, deep=True)
+        if not output_doc:
+            raise Exception(f"Neither {abinit_out_file} nor {abinit_gsr_file}
+                    exists. This means that there is no output, 
+                    which is not normal.")
 
         completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
 
