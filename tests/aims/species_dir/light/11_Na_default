@@ -43,7 +43,7 @@
     ion_occ      2  p   6.
 ################################################################################
 #
-#  Suggested additional basis functions. For production calculations, 
+#  Suggested additional basis functions. For production calculations,
 #  uncomment them one after another (the most important basis functions are
 #  listed first).
 #
@@ -70,4 +70,3 @@
 #     hydro 5 g 0.1
 #     hydro 4 d 3.4
 #     hydro 4 s 0.1
-
