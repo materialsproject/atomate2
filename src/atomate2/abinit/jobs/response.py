@@ -299,7 +299,7 @@ def generate_dte_perts(
 @job
 def run_ddk_rf(
     perturbations: list[dict],
-    ddk_maker: DdkMaker | None = None,
+    ddk_maker: DdkMaker = field(default_factory=DdkMaker)
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -314,8 +314,6 @@ def run_ddk_rf(
         likely the SCF performed to get the WFK.
     ddk_maker : Maker to create a job with a DDK ABINIT calculation.
     """
-    if ddk_maker is None:
-        ddk_maker = DdkMaker()
 
     ddk_jobs = []
     outputs: dict[str, list] = {"dirs": []}
@@ -342,7 +340,7 @@ def run_ddk_rf(
 @job
 def run_dde_rf(
     perturbations: list[dict],
-    dde_maker: DdeMaker | None = None,
+    dde_maker: DdeMaker = field(default_factory=DdeMaker)
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -357,8 +355,6 @@ def run_dde_rf(
         likely the SCF performed to get the WFK.
     dde_maker : Maker to create a job with a DDE ABINIT calculation.
     """
-    if dde_maker is None:
-        dde_maker = DdeMaker()
 
     dde_jobs = []
     outputs: dict[str, list] = {"dirs": []}
@@ -392,7 +388,7 @@ def run_dde_rf(
 @job
 def run_dte_rf(
     perturbations: list[dict],
-    dte_maker: DteMaker | None = None,
+    dte_maker: DteMaker = field(default_factory=DteMaker)
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -407,8 +403,6 @@ def run_dte_rf(
         likely the SCF performed to get the WFK.
     dte_maker : Maker to create a job with a DTE ABINIT calculation.
     """
-    if dte_maker is None:
-        dte_maker = DteMaker()
 
     dte_jobs = []
     outputs: dict[str, list] = {"dirs": []}
