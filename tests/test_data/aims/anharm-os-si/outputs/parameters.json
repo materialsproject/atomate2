@@ -1,0 +1,1 @@
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "compute_forces": true, "k_grid": [2, 2, 2], "species_dir": "/home/purcellt/git/atomate2/tests/aims/species_dir/light", "rlsy_symmetry": null, "sc_accuracy_rho": 1e-06, "sc_accuracy_forces": 0.0001}

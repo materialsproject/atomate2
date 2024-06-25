@@ -1,10 +1,1 @@
-{
-  "xc": "pbe",
-  "relativistic": "atomic_zora scalar",
-  "k_grid": [
-    2,
-    2,
-    2
-  ],
-  "species_dir": "/home/tpurcell/git/fhi-aims-workflows/tests/species_dir"
-}
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "species_dir": "/home/purcellt/git/atomate2/tests/aims/species_dir/light", "rlsy_symmetry": null, "sc_accuracy_rho": 1e-06, "sc_accuracy_forces": 0.0001, "compute_forces": true, "k_grid": [2, 2, 2]}

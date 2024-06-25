@@ -153,9 +153,9 @@ def test_phonon_socket_flow(si, tmp_path, mock_aims, species_dir):
     )
 
     # run the flow or job and ensure that it finished running successfully
-    # os.chdir(tmp_path)
+    os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    # os.chdir(cwd)
+    os.chdir(cwd)
 
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
