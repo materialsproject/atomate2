@@ -1,7 +1,7 @@
 """Schemas for anharmonicity quantification."""
 
 import logging
-from typing import Optional, Self
+from typing import Optional
 
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
@@ -47,7 +47,7 @@ class AnharmonicityDoc(StructureMetadata):
         temp: float,
         n_samples: int,
         seed: int | None,
-    ) -> Self:
+    ) -> "AnharmonicityDoc":
         """
         Generate the collection of data for the anharmonicity workflow.
 
