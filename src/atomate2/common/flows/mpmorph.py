@@ -60,6 +60,7 @@ class EquilibriumVolumeMaker(Maker):
     postprocessor: EOSPostProcessor = field(default_factory=MPMorphPVPostProcess)
     min_strain: float = 0.5
     max_attempts: int | None = 20
+    energy_average_frames : int = 1
 
     @job
     def make(
@@ -87,18 +88,21 @@ class EquilibriumVolumeMaker(Maker):
         if working_outputs is None:
             linear_strain = np.linspace(-0.2, 0.2, self.postprocessor.min_data_points)
             working_outputs = {
-                "relax": {key: [] for key in ("energy", "volume", "stress", "pressure")}
+                "relax": {key: [] for key in ("energies", "volume", "stress", "pressure")}
             }
 
         else:
+
+            working_outputs["relax"]["energy"] = [
+                sum(frame[-self.energy_average_frames:])/self.energy_average_frames
+                for frame in working_outputs["relax"]["energies"]
+            ]
+
             self.postprocessor.fit(working_outputs)
-            # print("____EOS FIT PARAMS_____") #TODO: Remove after testings is complete
-            # print(self.postprocessor.results)
-            # print("_______________________")
             working_outputs = dict(self.postprocessor.results)
-            working_outputs["relax"].pop(
-                "pressure", None
-            )  # remove pressure from working_outputs
+            for k in ("pressure","energy",):
+                working_outputs["relax"].pop(k,None)
+
             if (
                 working_outputs.get("V0") is None
             ):  # breaks whole flow here if EOS is not fitted properly
@@ -144,10 +148,19 @@ class EquilibriumVolumeMaker(Maker):
                 prev_dir=None,
             )
             md_job.name = (
-                f"{self.name} {md_job.name} {len(working_outputs['relax']['energy'])+1}"
+                f"{self.name} {md_job.name} {len(working_outputs['relax']['volume'])+1}"
             )
 
-            working_outputs["relax"]["energy"].append(md_job.output.output.energy)
+            if self.energy_average_frames == 1:
+                energies = [md_job.output.output.energy]
+            else:
+                raise ValueError("Cannot perform energy averaging just yet!")
+                try:
+                    energies = [frame.energy for frame in md_job.output.output.ionic_steps]
+                except AttributeError:
+                    energies = [frame.e_0_energy for frame in md_job.output.vasp_objects["trajectory"].frame_properties]
+
+            working_outputs["relax"]["energies"].append(energies)
             working_outputs["relax"]["volume"].append(md_job.output.structure.volume)
             working_outputs["relax"]["stress"].append(md_job.output.output.stress)
             eos_jobs.append(md_job)
