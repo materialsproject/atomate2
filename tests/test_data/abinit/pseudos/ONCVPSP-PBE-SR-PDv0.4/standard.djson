@@ -1,0 +1,122 @@
+{
+ "dojo_info": {
+  "pp_type": "NC",
+  "description": "Standard table designed for GS applications (Small set of elements for testing purposes: Si, O, P, Al, Fe)",
+  "xc_name": "PBE",
+  "references": ["Dojo paper"],
+  "authors": ["M. J. van Setten", "M. Giantomassi"],
+  "dojo_dir": "ONCVPSP-PBE-PDv0.4"
+ }, 
+ "pseudos_metadata": {
+  "O": {
+   "basename": "O.psp8",
+   "Z_val": 6.0,
+   "l_max": 2,
+   "md5": "abbcf0645b4a6d69360cd16bcad3e730",
+   "dfact_meV": 2.0239038146491146,
+   "dfactprime_meV": 6.525523051760969,
+   "tags": [
+    "GW"
+   ],
+   "hints": {
+    "high": {
+     "ecut": 48.0
+    },
+    "low": {
+     "ecut": 36.0
+    },
+    "normal": {
+     "ecut": 42.0
+    }
+   }
+  },
+  "Al": {
+   "basename": "Al.psp8",
+   "Z_val": 3.0,
+   "l_max": 2,
+   "md5": "57224185a50eb565dff7432e4aa35376",
+   "dfact_meV": 0.5415764904603724,
+   "dfactprime_meV": 1.2693657960935043,
+   "tags": [
+    " "
+   ],
+   "hints": {
+    "high": {
+     "ecut": 26.0
+    },
+    "low": {
+     "ecut": 16.0
+    },
+    "normal": {
+     "ecut": 20.0
+    }
+   }
+  },
+  "Si": {
+   "basename": "Si.psp8",
+   "Z_val": 4.0,
+   "l_max": 2,
+   "md5": "45c393525680abc7b25445b8ec62bf83",
+   "dfact_meV": 0.14564468100850006,
+   "dfactprime_meV": 0.24230171913924484,
+   "tags": [
+    " "
+   ],
+   "hints": {
+    "high": {
+     "ecut": 24.0
+    },
+    "low": {
+     "ecut": 14.0
+    },
+    "normal": {
+     "ecut": 18.0
+    }
+   }
+  },
+  "P": {
+   "basename": "P.psp8",
+   "Z_val": 5.0,
+   "l_max": 2,
+   "md5": "35592df3bc13b6b759c1537803003316",
+   "dfact_meV": 0.14214001236980747,
+   "dfactprime_meV": 0.29291384117786673,
+   "tags": [
+    " "
+   ],
+   "hints": {
+    "high": {
+     "ecut": 28.0
+    },
+    "low": {
+     "ecut": 18.0
+    },
+    "normal": {
+     "ecut": 22.0
+    }
+   }
+  },
+  "Fe": {
+   "basename": "Fe-sp.psp8",
+   "Z_val": 16.0,
+   "l_max": 2,
+   "md5": "b1a6c6085aee6d23d80253cdcecbb587",
+   "dfact_meV": 5.599087963470159,
+   "dfactprime_meV": 9.21433064020024,
+   "tags": [
+    " GW"
+   ],
+   "hints": {
+    "high": {
+     "ecut": 53.0
+    },
+    "low": {
+     "ecut": 41.0
+    },
+    "normal": {
+     "ecut": 45.0
+    }
+   }
+  }
+ }
+}

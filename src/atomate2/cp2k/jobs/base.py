@@ -131,8 +131,7 @@ class BaseCp2kMaker(Maker):
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
-        """
-        Run a CP2K calculation.
+        """Run a CP2K calculation.
 
         Parameters
         ----------

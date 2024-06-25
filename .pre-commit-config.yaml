@@ -1,14 +1,15 @@
 default_language_version:
   python: python3
+exclude: ^(.github/|tests/test_data/abinit/)
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.3.0
+  rev: v0.4.10
   hooks:
   - id: ruff
     args: [--fix]
   - id: ruff-format
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v4.6.0
   hooks:
   - id: check-yaml
   - id: fix-encoding-pragma
@@ -29,7 +30,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.8.0
+  rev: v1.10.0
   hooks:
   - id: mypy
     files: ^src/
@@ -37,7 +38,7 @@ repos:
     - tokenize-rt==4.1.0
     - types-paramiko
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.2.6
+  rev: v2.3.0
   hooks:
   - id: codespell
     stages: [commit, commit-msg]

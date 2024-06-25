@@ -63,7 +63,7 @@ class ElasticBuilder(Builder):
     ) -> None:
         self.tasks = tasks
         self.elasticity = elasticity
-        self.query = query if query else {}
+        self.query = query or {}
         self.kwargs = kwargs
         self.symprec = symprec
         self.fitting_method = fitting_method
@@ -79,8 +79,7 @@ class ElasticBuilder(Builder):
         self.elasticity.ensure_index("last_updated")
 
     def get_items(self) -> Generator:
-        """
-        Get all items to process into elastic documents.
+        """Get all items to process into elastic documents.
 
         Yields
         ------

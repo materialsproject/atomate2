@@ -2,14 +2,14 @@
 
 ## Anatomy of an `atomate2` computational workflow (i.e., what do I need to write?)
 
-Every `atomate2` workflow is an instance of jobflow's `Flow ` class, which is a collection of Job and/or other `Flow` objects. So your end goal is to produce a `Flow `.
+Every `atomate2` workflow is an instance of jobflow's `Flow` class, which is a collection of Job and/or other `Flow` objects. So your end goal is to produce a `Flow`.
 
-In the context of computational materials science, `Flow ` objects are most easily created by a `Maker`, which contains a factory method make() that produces a `Flow `, given certain inputs. Typically, the input to `Maker`.make() includes atomic coordinate information in the form of a `pymatgen` `Structure` or `Molecule` object. So the basic signature looks like this:
+In the context of computational materials science, `Flow` objects are most easily created by a `Maker`, which contains a factory method make() that produces a `Flow`, given certain inputs. Typically, the input to `Maker`.make() includes atomic coordinate information in the form of a `pymatgen` `Structure` or `Molecule` object. So the basic signature looks like this:
 
 ```py
 class ExampleMaker(Maker):
     def make(self, coordinates: Structure) -> Flow:
-        # take the input coordinates and return a `Flow `
+        # take the input coordinates and return a `Flow`
         return Flow(...)
 ```
 
@@ -49,15 +49,16 @@ Finally, most `atomate2` workflows return structured output in the form of "Task
 **TODO - extend code block above to illustrate TaskDoc usage**
 
 In summary, a new `atomate2` workflow consists of the following components:
- - A `Maker` that actually generates the workflow
- - One or more `Job` and/or `Flow ` classes that define the discrete steps in the workflow
- - (optionally) an `InputGenerator` that produces a `pymatgen` `InputSet` for writing calculation input files
- - (optionally) a `TaskDocument` that defines a schema for storing the output data
+
+- A `Maker` that actually generates the workflow
+- One or more `Job` and/or `Flow` classes that define the discrete steps in the workflow
+- (optionally) an `InputGenerator` that produces a `pymatgen` `InputSet` for writing calculation input files
+- (optionally) a `TaskDocument` that defines a schema for storing the output data
 
 ## Where do I put my code?
 
 Because of the distributed design of the MP Software Ecosystem, writing a complete new workflow may involve making contributions to more than one GitHub repository. The following guidelines should help you understand where to put your contribution.
 
- - All workflow code (`Job`, `Flow `, `Maker`) belongs in `atomate2`
- - `InputSet` and `InputGenerator` code belongs in `pymatgen`. However, if you need to create these classes from scratch (i.e., you are working with a code that is not already supported in`pymatgen`), then it is recommended to include them in `atomate2` at first to facilitate rapid iteration. Once mature, they can be moved to `pymatgen` or to a `pymatgen` [addon package](https://pymatgen.org/addons).
- - `TaskDocument` schemas should generally be developed in `atomate2` alongside the workflow code. We recommend that you first check emmet to see if there is an existing schema that matches what you need. If so, you can import it. If not, check [`cclib`](https://cclib.github.io/). `cclib` output can be imported via [`atomate2.common.schemas.TaskDocument`](https://github.com/materialsproject/atomate2/blob/main/src/atomate2/common/schemas/cclib.py). If neither code has what you need, then new schemas should be developed within `atomate2` (or `cclib`).
+- All workflow code (`Job`, `Flow`, `Maker`) belongs in `atomate2`
+- `InputSet` and `InputGenerator` code belongs in `pymatgen`. However, if you need to create these classes from scratch (i.e., you are working with a code that is not already supported in`pymatgen`), then it is recommended to include them in `atomate2` at first to facilitate rapid iteration. Once mature, they can be moved to `pymatgen` or to a `pymatgen` [addon package](https://pymatgen.org/addons).
+- `TaskDocument` schemas should generally be developed in `atomate2` alongside the workflow code. We recommend that you first check emmet to see if there is an existing schema that matches what you need. If so, you can import it. If not, check [`cclib`](https://cclib.github.io/). `cclib` output can be imported via [`atomate2.common.schemas.TaskDocument`](https://github.com/materialsproject/atomate2/blob/main/src/atomate2/common/schemas/cclib.py). If neither code has what you need, then new schemas should be developed within `atomate2` (or `cclib`).

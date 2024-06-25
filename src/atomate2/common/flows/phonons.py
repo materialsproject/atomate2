@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
+SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
 @dataclass
@@ -157,8 +157,7 @@ class BasePhononMaker(Maker, ABC):
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
     ) -> Flow:
-        """
-        Make flow to calculate the phonon properties.
+        """Make flow to calculate the phonon properties.
 
         Parameters
         ----------
