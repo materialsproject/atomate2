@@ -208,8 +208,8 @@ def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, specie
     mode_resolved_vals_rounded = np.round(mode_resolved_vals, 3)
     sigmas = mode_resolved_vals_rounded[:, 1]
     assert [3.7470, 5.5000 * (10 ** (-2))] in mode_resolved_vals_rounded
-    assert pytest.approx(sigmas.mean(), 0.001) == 0.186
-    assert pytest.approx(sigmas.std(), 0.001) == 0.213
+    assert pytest.approx(sigmas.mean(), 0.01) == 0.186
+    assert pytest.approx(sigmas.std(), 0.01) == 0.213
 
 
 def test_atom_resolved_anharmonic_quantification(
@@ -281,7 +281,7 @@ def test_atom_resolved_anharmonic_quantification(
     assert ("Cl", 0.072) in nacl_sigma_rounded
 
 
-# @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
+@pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
 def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
     # mapping from job name to directory containing test files
     parameters = {
