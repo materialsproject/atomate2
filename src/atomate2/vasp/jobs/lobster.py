@@ -103,12 +103,12 @@ def get_basis_infos(
     """
     # this logic enables handling of a flow or a simple maker
     try:
-        potcar_symbols = vasp_maker.static_maker.input_set_generator._get_potcar(
+        potcar_symbols = vasp_maker.static_maker.input_set_generator._get_potcar(  # noqa: SLF001
             structure=structure, potcar_spec=True
         )
 
     except AttributeError:
-        potcar_symbols = vasp_maker.input_set_generator._get_potcar(
+        potcar_symbols = vasp_maker.input_set_generator._get_potcar(  # noqa: SLF001
             structure=structure, potcar_spec=True
         )
 
@@ -124,7 +124,7 @@ def get_basis_infos(
     for dict_for_basis in list_basis_dict:
         basis = [f"{key} {value}" for key, value in dict_for_basis.items()]
         lobsterin = Lobsterin(settingsdict={"basisfunctions": basis})
-        n_bands = lobsterin._get_nbands(structure=structure)
+        n_bands = lobsterin._get_nbands(structure=structure)  # noqa: SLF001
         n_band_list.append(n_bands)
 
     return {"nbands": max(n_band_list), "basis_dict": list_basis_dict}

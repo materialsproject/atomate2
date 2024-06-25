@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Union
 
@@ -236,7 +236,9 @@ class Calculation(BaseModel):
 
         abinit_gsr = GsrFile.from_file(abinit_gsr_file)
 
-        completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=timezone.utc)
+        )
 
         output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
 
@@ -255,7 +257,7 @@ class Calculation(BaseModel):
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
 
-        except Exception as exc:
+        except (ValueError, RuntimeError, Exception) as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 

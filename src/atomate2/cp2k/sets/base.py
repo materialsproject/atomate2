@@ -388,37 +388,37 @@ class Cp2kInputGenerator(InputGenerator):
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:
-            kconfig = deepcopy(self.user_kpoints_settings)
+            kpt_config = deepcopy(self.user_kpoints_settings)
         else:
             # apply updates to k-points config
-            kconfig = deepcopy(self.config_dict.get("KPOINTS", {}))
-            kconfig.update(kpoints_updates)
+            kpt_config = deepcopy(self.config_dict.get("KPOINTS", {}))
+            kpt_config.update(kpoints_updates)
 
-        if isinstance(kconfig, Kpoints):
-            return kconfig
+        if isinstance(kpt_config, Kpoints):
+            return kpt_config
 
         explicit = (
-            kconfig.get("explicit")
-            or len(kconfig.get("added_kpoints", [])) > 0
-            or "zero_weighted_reciprocal_density" in kconfig
-            or "zero_weighted_line_density" in kconfig
+            kpt_config.get("explicit")
+            or len(kpt_config.get("added_kpoints", [])) > 0
+            or "zero_weighted_reciprocal_density" in kpt_config
+            or "zero_weighted_line_density" in kpt_config
         )
         # handle length generation first as this doesn't support any additional options
-        if kconfig.get("length"):
+        if kpt_config.get("length"):
             if explicit:
                 raise ValueError(
                     "length option cannot be used with explicit k-point generation, "
                     "added_kpoints, or zero weighted k-points."
                 )
             # If length is in kpoints settings use Kpoints.automatic
-            return Kpoints.automatic(kconfig["length"])
+            return Kpoints.automatic(kpt_config["length"])
 
         base_kpoints = None
-        if kconfig.get("line_density"):
+        if kpt_config.get("line_density"):
             # handle line density generation
-            kpath = HighSymmKpath(structure, **kconfig.get("kpath_kwargs", {}))
+            kpath = HighSymmKpath(structure, **kpt_config.get("kpath_kwargs", {}))
             frac_k_points, k_points_labels = kpath.get_kpoints(
-                line_density=kconfig["line_density"], coords_are_cartesian=False
+                line_density=kpt_config["line_density"], coords_are_cartesian=False
             )
             base_kpoints = Kpoints(
                 comment="Non SCF run along symmetry lines",
@@ -428,15 +428,15 @@ class Cp2kInputGenerator(InputGenerator):
                 labels=k_points_labels,
                 kpts_weights=[1] * len(frac_k_points),
             )
-        elif kconfig.get("grid_density") or kconfig.get("reciprocal_density"):
+        elif kpt_config.get("grid_density") or kpt_config.get("reciprocal_density"):
             # handle regular weighted k-point grid generation
-            if kconfig.get("grid_density"):
+            if kpt_config.get("grid_density"):
                 base_kpoints = Kpoints.automatic_density(
-                    structure, int(kconfig["grid_density"]), self.force_gamma
+                    structure, int(kpt_config["grid_density"]), self.force_gamma
                 )
-            if kconfig.get("reciprocal_density"):
+            if kpt_config.get("reciprocal_density"):
                 base_kpoints = Kpoints.automatic_density_by_vol(
-                    structure, kconfig["reciprocal_density"], self.force_gamma
+                    structure, kpt_config["reciprocal_density"], self.force_gamma
                 )
             if explicit:
                 sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
@@ -454,11 +454,11 @@ class Cp2kInputGenerator(InputGenerator):
                 return base_kpoints
 
         zero_weighted_kpoints = None
-        if kconfig.get("zero_weighted_line_density"):
+        if kpt_config.get("zero_weighted_line_density"):
             # zero_weighted k-points along line mode path
             kpath = HighSymmKpath(structure)
             frac_k_points, k_points_labels = kpath.get_kpoints(
-                line_density=kconfig["zero_weighted_line_density"],
+                line_density=kpt_config["zero_weighted_line_density"],
                 coords_are_cartesian=False,
             )
             zero_weighted_kpoints = Kpoints(
@@ -469,9 +469,11 @@ class Cp2kInputGenerator(InputGenerator):
                 labels=k_points_labels,
                 kpts_weights=[0] * len(frac_k_points),
             )
-        elif kconfig.get("zero_weighted_reciprocal_density"):
+        elif kpt_config.get("zero_weighted_reciprocal_density"):
             zero_weighted_kpoints = Kpoints.automatic_density_by_vol(
-                structure, kconfig["zero_weighted_reciprocal_density"], self.force_gamma
+                structure,
+                kpt_config["zero_weighted_reciprocal_density"],
+                self.force_gamma,
             )
             sga = SpacegroupAnalyzer(structure, symprec=self.symprec)
             mesh = sga.get_ir_reciprocal_mesh(zero_weighted_kpoints.kpts[0])
@@ -484,14 +486,14 @@ class Cp2kInputGenerator(InputGenerator):
             )
 
         added_kpoints = None
-        if kconfig.get("added_kpoints"):
+        if kpt_config.get("added_kpoints"):
             added_kpoints = Kpoints(
                 comment="Specified k-points only",
                 style=Kpoints.supported_modes.Reciprocal,
-                num_kpts=len(kconfig.get("added_kpoints")),
-                kpts=kconfig.get("added_kpoints"),
-                labels=["user-defined"] * len(kconfig.get("added_kpoints")),
-                kpts_weights=[0] * len(kconfig.get("added_kpoints")),
+                num_kpts=len(kpt_config.get("added_kpoints")),
+                kpts=kpt_config.get("added_kpoints"),
+                labels=["user-defined"] * len(kpt_config.get("added_kpoints")),
+                kpts_weights=[0] * len(kpt_config.get("added_kpoints")),
             )
 
         if base_kpoints and not (added_kpoints or zero_weighted_kpoints):
@@ -500,7 +502,7 @@ class Cp2kInputGenerator(InputGenerator):
             return added_kpoints
 
         # do some sanity checking
-        if "line_density" in kconfig and zero_weighted_kpoints:
+        if "line_density" in kpt_config and zero_weighted_kpoints:
             raise ValueError(
                 "Cannot combined line_density and zero weighted k-points options"
             )
