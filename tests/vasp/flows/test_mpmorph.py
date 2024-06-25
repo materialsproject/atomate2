@@ -42,12 +42,7 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     end_temp: int = 300
     steps_convergence: int = 20
 
-    gamma_point = Kpoints(
-        comment="Gamma only",
-        num_kpts=1,
-        kpts=[[0, 0, 0]],
-        kpts_weights=[1.0],
-    )
+    gamma_point = Kpoints()
     incar_settings = {
         "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
         "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
@@ -155,12 +150,7 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
     end_temp: int = 300
     steps_convergence: int = 20
 
-    gamma_point = Kpoints(
-        comment="Gamma only",
-        num_kpts=1,
-        kpts=[[0, 0, 0]],
-        kpts_weights=[1.0],
-    )
+    gamma_point = Kpoints()
     incar_settings = {
         "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
         "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
@@ -268,12 +258,7 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
     steps_convergence: int = 20
     steps_production: int = 50
 
-    gamma_point = Kpoints(
-        comment="Gamma only",
-        num_kpts=1,
-        kpts=[[0, 0, 0]],
-        kpts_weights=[1.0],
-    )
+    gamma_point = Kpoints()
     incar_settings = {
         "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
         "LREAL": "Auto",  # Perform calculation in real space for AIMD due to large unit cell size
