@@ -14,6 +14,7 @@ from abipy.abio.input_tags import DDE, DTE
 from abipy.flowtk.utils import Directory, irdvars_for_ext
 from pymatgen.io.core import InputGenerator, InputSet
 
+from atomate2.abinit.sets.base import AbiBroadInputGenerator
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.utils.common import (
     INDATAFILE_PREFIX,
@@ -123,7 +124,7 @@ class MrgddbInputSet(InputSet):
 
 
 @dataclass
-class MrgddbInputGenerator(InputGenerator):
+class MrgddbInputGenerator(AbiBroadInputGenerator):
     """
     A class to generate Mrgddb input sets.
 
@@ -178,71 +179,6 @@ class MrgddbInputGenerator(InputGenerator):
             mrgddb_input=mrgddb_input,
             input_files=input_files,
         )
-
-    def check_format_prev_dirs(
-        self, prev_dirs: str | tuple | list | Path | None
-    ) -> list[str] | None:
-        """Check and format the prev_dirs (restart or dependency)."""
-        if prev_dirs is None:
-            return None
-        if isinstance(prev_dirs, (str, Path)):
-            return [str(prev_dirs)]
-        return [str(prev_dir) for prev_dir in prev_dirs]
-
-    def resolve_deps(
-        self, prev_dirs: list[str], deps: str | tuple, check_runlevel: bool = True
-    ) -> tuple[dict, list]:
-        """Resolve dependencies.
-
-        This method assumes that prev_dirs is in the correct format, i.e.
-        a list of directories as str or Path.
-        """
-        input_files = []
-        deps_irdvars = {}
-        for prev_dir in prev_dirs:
-            if check_runlevel:
-                abinit_input = load_abinit_input(prev_dir)
-            for dep in deps:
-                runlevel = set(dep.split(":")[0].split("|"))
-                exts = list(dep.split(":")[1].split("|"))
-                if not check_runlevel or runlevel.intersection(abinit_input.runlevel):
-                    irdvars, inp_files = self.resolve_dep_exts(
-                        prev_dir=prev_dir, exts=exts
-                    )
-                    input_files.extend(inp_files)
-                    deps_irdvars.update(irdvars)
-
-        return deps_irdvars, input_files
-
-    @staticmethod
-    def _get_in_file_name(out_filepath: str) -> str:
-        in_file = os.path.basename(out_filepath)
-        in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
-        return os.path.basename(in_file).replace("WFQ", "WFK", 1)
-
-    @staticmethod
-    def resolve_dep_exts(prev_dir: str, exts: list[str]) -> tuple:
-        """Return irdvars and corresponding file for a given dependency.
-
-        This method assumes that prev_dir is in the correct format,
-        i.e. a directory as a str or Path.
-        """
-        prev_outdir = Directory(os.path.join(prev_dir, OUTDIR_NAME))
-        inp_files = []
-
-        for ext in exts:
-            out_file = prev_outdir.has_abiext(ext)
-            irdvars = irdvars_for_ext(ext)
-            if out_file:
-                inp_files.append(
-                    (out_file, MrgddbInputGenerator._get_in_file_name(out_file))
-                )
-                break
-        else:
-            msg = f"Cannot find {' or '.join(exts)} file to restart from."
-            logger.error(msg)
-            raise InitializationError(msg)
-        return irdvars, inp_files
 
     def get_mrgddb_input(
         self,
