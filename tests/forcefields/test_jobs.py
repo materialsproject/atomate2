@@ -354,7 +354,7 @@ def test_nep_relax_maker(
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
