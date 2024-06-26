@@ -16,9 +16,7 @@ from atomate2.abinit.jobs.response import (
     generate_dde_perts,
     generate_ddk_perts,
     generate_dte_perts,
-    run_dde_rf,
-    run_ddk_rf,
-    run_dte_rf,
+    run_rf,
 )
 from atomate2.abinit.powerups import (
     update_factory_kwargs,
@@ -137,8 +135,9 @@ class DfptFlowMaker(Maker):
             jobs.append(ddk_perts)
 
             # perform the DDK calculations
-            ddk_calcs = run_ddk_rf(
+            ddk_calcs = run_rf(
                 perturbations=ddk_perts.output,
+                rf_maker=self.ddk_maker,
                 prev_outputs=static_job.output.dir_name,
             )
             jobs.append(ddk_calcs)
@@ -152,8 +151,9 @@ class DfptFlowMaker(Maker):
             jobs.append(dde_perts)
 
             # perform the DDE calculations
-            dde_calcs = run_dde_rf(
+            dde_calcs = run_rf(
                 perturbations=dde_perts.output,
+                rf_maker=self.dde_maker,
                 prev_outputs=[[static_job.output.dir_name], ddk_calcs.output["dirs"]],
             )
             jobs.append(dde_calcs)
@@ -169,8 +169,9 @@ class DfptFlowMaker(Maker):
             jobs.append(dte_perts)
 
             # perform the DTE calculations
-            dte_calcs = run_dte_rf(
+            dte_calcs = run_rf(
                 perturbations=dte_perts.output,
+                rf_maker=self.dte_maker,
                 prev_outputs=[
                     [static_job.output.dir_name],
                     # ddk_calcs.output["dirs"], #not sure this is needed

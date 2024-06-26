@@ -40,9 +40,7 @@ __all__ = [
     "generate_ddk_perts",
     "generate_dde_perts",
     "generate_dte_perts",
-    "run_ddk_rf",
-    "run_dde_rf",
-    "run_dte_rf",
+    "run_rf",
 ]
 
 
@@ -297,128 +295,43 @@ def generate_dte_perts(
 
 
 @job
-def run_ddk_rf(
+def run_rf(
     perturbations: list[dict],
-    ddk_maker: DdkMaker = field(default_factory=DdkMaker)
+    rf_maker: BaseAbinitMaker = field(default_factory=BaseAbinitMaker) # TODO: change to generic ResponseMaker
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
-    Run the DDK calculations.
+    Run the RF calculations.
 
     Parameters
     ----------
     perturbations : a list of dict with the direction of the perturbation
         under the Abipy format.
+    rf_maker : Maker to create a job with a Response Function ABINIT calculation.
     prev_outputs : a list of previous output directories
-    gsinput : an |AbinitInput| representing a ground state calculation,
-        likely the SCF performed to get the WFK.
-    ddk_maker : Maker to create a job with a DDK ABINIT calculation.
     """
 
-    ddk_jobs = []
+    rf_jobs = []
     outputs: dict[str, list] = {"dirs": []}
 
-    for ipert, pert in enumerate(perturbations):
-        ddk_job = ddk_maker.make(
-            perturbation=pert,
-            prev_outputs=prev_outputs,
-            # structure=structure, removed because of
-            #   factory_prev_inputs_kwargs already used
-        )
-        ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
-        #ddk_job = update_user_abinit_settings(
-        #    ddk_job, {"tolwfr": 1e-1}
-        #)  # VT TO REMOVE, ONLY FOR TESTING
-
-        ddk_jobs.append(ddk_job)
-        outputs["dirs"].append(ddk_job.output.dir_name)  # TODO: determine outputs
-
-    ddk_flow = Flow(ddk_jobs, outputs)
-    return Response(replace=ddk_flow)
-
-
-@job
-def run_dde_rf(
-    perturbations: list[dict],
-    dde_maker: DdeMaker = field(default_factory=DdeMaker)
-    prev_outputs: list[str] | None = None,
-) -> Flow:
-    """
-    Run the DDE calculations.
-
-    Parameters
-    ----------
-    perturbations : a list of dict with the direction of the perturbation
-        under the Abipy format.
-    prev_outputs : a list of previous output directories
-    gsinput : an |AbinitInput| representing a ground state calculation,
-        likely the SCF performed to get the WFK.
-    dde_maker : Maker to create a job with a DDE ABINIT calculation.
-    """
-
-    dde_jobs = []
-    outputs: dict[str, list] = {"dirs": []}
-
-    prev_outputs = [item for sublist in prev_outputs for item in sublist]
-    # Create symlink out_DDK pointing to out_1WF... to force the use of irdddk
-    # instead of ird1wf later on
-    # for ddk_dir_path in prev_outputs[1:]:
-    #    ddk_dir_out = Directory(os.path.join(ddk_dir_path, OUTDIR_NAME))
-    #    ddk_dir_out.symlink_abiext('1WF', 'DDK')
+    if isinstance(rf_maker, DdeMaker) or isinstance(rf_maker, DteMaker):
+        prev_outputs = [item for sublist in prev_outputs for item in sublist]
 
     for ipert, pert in enumerate(perturbations):
-        dde_job = dde_maker.make(
+        rf_job = rf_maker.make(
             perturbation=pert,
             prev_outputs=prev_outputs,
-            # structure=structure,
         )
-        dde_job.append_name(f"{ipert+1}/{len(perturbations)}")
-        dde_job = update_user_abinit_settings(dde_job, {'irdddk': 1, 'ird1wf': 0})
-        #dde_job = update_user_abinit_settings(
-        #    dde_job, {"irdddk": 1, "ird1wf": 0, "tolvrs": 1e-1}
-        #)  # VT TO REMOVE TOLVRS ONLY FOR TESTING
+        rf_job.append_name(f"{ipert+1}/{len(perturbations)}")
 
-        dde_jobs.append(dde_job)
-        outputs["dirs"].append(dde_job.output.dir_name)  # TODO: determine outputs
+        if isinstance(rf_maker, DdeMaker):
+            rf_job = update_user_abinit_settings(rf_job, {'irdddk': 1, 'ird1wf': 0})
+        #   rf_job = update_user_abinit_settings(
+        #       rf_job, {"irdddk": 1, "ird1wf": 0, "tolvrs": 1e-1}
+        #   )  # VT TO REMOVE TOLVRS ONLY FOR TESTING
 
-    dde_flow = Flow(dde_jobs, outputs)
-    return Response(replace=dde_flow)
+        rf_jobs.append(rf_job)
+        outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
 
-
-@job
-def run_dte_rf(
-    perturbations: list[dict],
-    dte_maker: DteMaker = field(default_factory=DteMaker)
-    prev_outputs: list[str] | None = None,
-) -> Flow:
-    """
-    Run the DTE calculations.
-
-    Parameters
-    ----------
-    perturbations : a list of dict with the direction of the perturbation
-        under the Abipy format.
-    prev_outputs : a list of previous output directories
-    gsinput : an |AbinitInput| representing a ground state calculation,
-        likely the SCF performed to get the WFK.
-    dte_maker : Maker to create a job with a DTE ABINIT calculation.
-    """
-
-    dte_jobs = []
-    outputs: dict[str, list] = {"dirs": []}
-
-    prev_outputs = [item for sublist in prev_outputs for item in sublist]
-
-    for ipert, pert in enumerate(perturbations):
-        dte_job = dte_maker.make(
-            perturbation=pert,
-            prev_outputs=prev_outputs,
-            # structure=structure,
-        )
-        dte_job.append_name(f"{ipert+1}/{len(perturbations)}")
-
-        dte_jobs.append(dte_job)
-        outputs["dirs"].append(dte_job.output.dir_name)  # TODO: determine outputs
-
-    dte_flow = Flow(dte_jobs, outputs)
-    return Response(replace=dte_flow)
+    rf_flow = Flow(rf_jobs, outputs)
+    return Response(replace=rf_flow)
