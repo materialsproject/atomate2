@@ -12,7 +12,7 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.eos import PostProcessEosEnergy, apply_strain_to_structure
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.flows.phonons import BasePhononMaker
-from atomate2.common.jobs.qha import get_phonon_jobs, analyze_free_energy
+from atomate2.common.jobs.qha import get_phonon_jobs, analyze_free_energy, get_qha_results
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -94,8 +94,9 @@ class CommonQhaMaker(Maker):
         # get free energy fits and perform qha
         analysis = analyze_free_energy(eos_job.output, phonon_jobs.output)
 
-        # use free energy fits to compute thermal expansion, gibb's free enery etc
 
+        # use free energy fits to compute thermal expansion, gibb's free enery etc
+        final_result=get_qha_results(analysis.output)
         # postprocess_data()
 
-        return Flow([eos_job, phonon_jobs, analysis])
+        return Flow([eos_job, phonon_jobs, analysis, final_result])

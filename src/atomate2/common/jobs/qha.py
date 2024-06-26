@@ -74,7 +74,7 @@ def analyze_free_energy(eos_outputs, phonon_outputs
     # tolerance has to be tested
     free_energies={}
     fit_jobs = []
-    fit_outputs=[]
+    fit_outputs={}
     for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         volume = []
         free_energies[temp]=[]
@@ -89,10 +89,10 @@ def analyze_free_energy(eos_outputs, phonon_outputs
                 volume.append(output.volume_per_formula_unit*output.formula_units)
                 stress.append(output.stress)
 
-            fit_dict={"relax":{"energy": free_energies[temp],"volume":volume, "stress":stress}}
-            fitjob = PostProcessEosEnergy().make(fit_dict)
-            fit_outputs.append(fitjob.output)
-            fit_jobs.append(fitjob)
+        fit_dict={"relax":{"energy": free_energies[temp],"volume":volume, "stress":stress}}
+        fitjob = PostProcessEosEnergy().make(fit_dict)
+        fit_outputs[temp]=fitjob.output
+        fit_jobs.append(fitjob)
 
 
     return Response(replace=fit_jobs, output=fit_outputs)
@@ -101,3 +101,30 @@ def analyze_free_energy(eos_outputs, phonon_outputs
     # TODO: should return some output doc
     # have to think about how it should look like
     # need to check
+
+@job
+def get_qha_results(fit_output):
+    qha_results={}
+    for temp, fit in fit_output.items():
+        temps = []
+        min_vol = []
+        min_free_energy = []
+        for eos, result in fit["relax"]["EOS"].items():
+            name=eos
+
+            # to check if the fit was fine
+            if "v0" in result:
+                temps.append(temp)
+                min_vol.append(result["v0"])
+                min_free_energy.append(result["e0"])
+
+        if len(temps) > 4:
+            # fit the temp - vol curve
+
+            pass
+
+        qha_results[name]={"temps":temps, "min_vol":min_vol, "min_free_energy":min_free_energy}
+
+    print(qha_results)
+    return qha_results
+
