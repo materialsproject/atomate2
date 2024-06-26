@@ -58,7 +58,7 @@ def get_phonon_jobs(phonon_maker, output: dict
 
 
 @job
-def analyze_free_energy(eos_outputs, phonon_outputs
+def analyze_free_energy(phonon_outputs
 ) -> Flow:
     """
     Job that analyzes the free energy from all phonon runs
@@ -90,8 +90,9 @@ def analyze_free_energy(eos_outputs, phonon_outputs
                 stress.append(output.stress)
 
         fit_dict={"relax":{"energy": free_energies[temp],"volume":volume, "stress":stress}}
+
         fitjob = PostProcessEosEnergy().make(fit_dict)
-        fit_outputs[temp]=fitjob.output
+        fit_outputs[temp]={"fit": fitjob.output, "raw": fit_dict}
         fit_jobs.append(fitjob)
 
 
@@ -109,7 +110,7 @@ def get_qha_results(fit_output):
         temps = []
         min_vol = []
         min_free_energy = []
-        for eos, result in fit["relax"]["EOS"].items():
+        for eos, result in fit["fit"]["relax"]["EOS"].items():
             name=eos
 
             # to check if the fit was fine
@@ -120,8 +121,12 @@ def get_qha_results(fit_output):
 
         if len(temps) > 4:
             # fit the temp - vol curve
-
             pass
+
+        # Todo: add a typical qha plot for the final folder
+        # needs all eos results here as well
+
+
 
         qha_results[name]={"temps":temps, "min_vol":min_vol, "min_free_energy":min_free_energy}
 

@@ -26,12 +26,17 @@ if TYPE_CHECKING:
 @dataclass
 class CommonQhaMaker(Maker):
     """
-    Perform quasi-harmonic approximation.
+    Use the quasi-harmonic approximation.
 
     First relax a structure using relax_maker.
-    Then perform a series of deformations on the relaxed structure, and
-    then compute harmonic phonons for each deformed structure.
-    Finally, compute Gibb's free energy.
+    Then we scale the relaxed structure, and
+    then compute harmonic phonons for each scaled
+    structure with Phonopy.
+    Finally, we compute the Gibb's free energy.
+
+    Note: We do not consider electronic free energies so far.
+    This might be problematic for metals (see e.g.,
+    Wolverton and Zunger, Phys. Rev. B, 52, 8813 (1994).)
 
     Parameters
     ----------
@@ -92,7 +97,7 @@ class CommonQhaMaker(Maker):
 
         # Todo: reuse postprocessor from equation of state to make fits of free energy curves
         # get free energy fits and perform qha
-        analysis = analyze_free_energy(eos_job.output, phonon_jobs.output)
+        analysis = analyze_free_energy(phonon_jobs.output)
 
 
         # use free energy fits to compute thermal expansion, gibb's free enery etc
