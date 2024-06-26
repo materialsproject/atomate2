@@ -141,8 +141,8 @@ class BaseHiphiveMaker(Maker, ABC):
     # If renormalization is performed,
     # T_RENORM overrides T_KLAT for lattice thermal conductivity
     T_KLAT: ClassVar[dict] = {"min":100,"max":1000,"step":100} #[i*100 for i in range(0,11)]
-    FIT_METHOD = "omp" #least-squares #omp #rfe #elasticnet
-    RENORM_METHOD = "least_squares" # pseudoinverse
+    FIT_METHOD = "least-squares" #least-squares #omp #rfe #elasticnet
+    RENORM_METHOD = "least_squares" # pseudoinverse refit least_squares
     RENORM_NCONFIG = 5  # Changed from 50
     RENORM_CONV_THRESH = 0.1  # meV/atom
     RENORM_MAX_ITER = 30  # Changed from 20
@@ -263,7 +263,7 @@ class BaseHiphiveMaker(Maker, ABC):
         # # then, perturbations will be generated based on the supercell size.
         # # STATIC calculations will then be run on the perturbed structures, and the
         # # forces and perturbed structures will be aggregated.
-        # from pymatgen.core.structure import IStructure
+        from pymatgen.core.structure import IStructure
         # file_path = "/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/block_2024-03-30-01-25-24-547097/launcher_2024-03-31-20-40-35-997684/launcher_2024-03-31-20-43-19-730610/CONTCAR"
         # prev_dir = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/bulk_relax_2_4622_96_VASP/launcher_2024-03-31-20-43-19-730610/CONTCAR"
         # structure = IStructure.from_file(file_path)
@@ -272,6 +272,12 @@ class BaseHiphiveMaker(Maker, ABC):
         # prev_dir = "/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/block_2024-04-10-16-08-15-920932/launcher_2024-04-14-01-38-32-712261/launcher_2024-04-14-02-09-48-767506"
         # prev_dir = "/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/block_2024-04-10-16-08-15-920932/launcher_2024-05-01-23-21-05-447819/launcher_2024-05-02-02-33-26-940509"
         # prev_dir = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/tight_relax_2_552098"
+        # prev_dir = "/pscratch/sd/h/hrushi99/atomate2/MgO_Zhuoying_LAC_NRC/block_2024-05-24-00-11-30-848645/launcher_2024-05-29-02-33-39-773991/launcher_2024-05-29-02-57-32-939209" # mp-23399, NaBrO3
+        # # file_path = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/tightRelax2_23339_VASP/launcher_2024-05-29-02-57-32-939209/CONTCAR.gz" # mp-23399, NaBrO3
+        # # file_path = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/tightRelax2_1479_VASP/launcher_2024-05-23-09-15-34-821868/CONTCAR.gz" # mp-1479, BP
+        # file_path = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/tightRelax2_6270_VASP/launcher_2024-05-16-07-37-33-440894/CONTCAR.gz" # mp-6270, Ba2LiReO6
+        # # file_path = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/tightRelax2_4622_VASP/launcher_2024-05-23-05-43-21-015805/CONTCAR.gz" # mp-4622, Li2BeF4
+        # structure = IStructure.from_file(file_path)
         static_calcs = hiphive_static_calcs(
                 structure=structure,
                 supercell_matrix=supercell_matrix,
@@ -332,26 +338,77 @@ class BaseHiphiveMaker(Maker, ABC):
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_30530_fixed_displ/3ConfigsPerDisp/launcher_2024-05-17-17-15-12-950067"
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_30530_fixed_displ/2ConfigsPerDisp/launcher_2024-05-17-17-15-12-950067"
         prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ/1ConfigsPerDisp/launcher_2024-05-18-04-26-03-314022"
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_mc_rattle/0,002_std_dev/modified_structure_file"
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_mc_rattle_max_disp_0,01/launcher_2024-05-19-09-01-41-194193"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-21-02-41-58-958977-44099"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-21-15-43-36-117945-61868"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_new_displ_sampling_fixed_displ/launcher_2024-05-22-08-12-18-202746"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-17-04-06-407141-16525"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_new_displ_sampling_fixed_displ_V2/launcher_2024-05-22-08-03-19-338222"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-21-14-36-631909-87559"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-21-37-04-484228-12098"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-23-49-02-538291-81754"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-02-43-21-051328-27029"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-03-11-21-132926-87658"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-03-41-28-678925-80078"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ_fixed_force_distribution/launcher_2024-05-23-05-42-33-120701"
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ_fixed_force_distribution/prefinal_chgnet/launcher_2024-05-23-05-37-57-125152"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_mc_rattle/0,002_std_dev/modified_structure_file"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_mc_rattle_max_disp_0,01/launcher_2024-05-19-09-01-41-194193"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-21-02-41-58-958977-44099"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-21-15-43-36-117945-61868"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_new_displ_sampling_fixed_displ/launcher_2024-05-22-08-12-18-202746"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-17-04-06-407141-16525"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_new_displ_sampling_fixed_displ_V2/launcher_2024-05-22-08-03-19-338222"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-21-14-36-631909-87559"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-21-37-04-484228-12098"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-22-23-49-02-538291-81754"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-02-43-21-051328-27029"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-03-11-21-132926-87658"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-03-41-28-678925-80078"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ_fixed_force_distribution/launcher_2024-05-23-05-42-33-120701"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ_fixed_force_distribution/prefinal_chgnet/launcher_2024-05-23-05-37-57-125152"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_fixed_displ_fixed_force_distribution/launcher_2024-05-23-07-50-44-015298"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_fixed_displ_fixed_force_distribution/prefinal_chgnet"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-20-13-18-146041-72144"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1479_fixed_displ_fixed_force_distribution/launcher_2024-05-23-18-22-12-087175"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-28-22-29-33-614395-68155"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-29-02-05-46-709196-55272"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_MD_sampling_VASP_V1/launcher_2024-05-29-05-25-54-455950"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-29-06-53-00-852534-60299"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_MD_sampling_VASP_V2/launcher_2024-05-29-17-51-22-131634"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-29-18-39-32-153161-15303"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-29-22-40-01-890176-28013"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-30-01-28-14-075193-12275"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_MD_sampling_VASP_V4/launcher_2024-05-30-03-27-01-426181"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_MD_sampling_VASP_V5/launcher_2024-05-30-11-42-59-652398"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-30-19-59-16-241970-67511"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1479_fixed_displ/1ConfigsPerDisp/launcher_2024-05-08-16-08-35-107058"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1265_fixed_disp/1ConfigsPerDisp/launcher_2024-05-08-19-35-08-006441"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1265_pes/launcher_2024-04-05-18-07-52-659698"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_2605_pes/launcher_2024-04-05-06-52-52-802018"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-01-03-26-47-519739-43172"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_independent_disp_Na_Br_O/launcher_2024-06-01-17-04-39-815942"
+        # # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_combined_disp_Na_Br_O/launcher_2024-06-01-20-19-06-449186"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_independent_and_combined_disp_Na_Br_O/launcher_2024-06-01-17-04-39-815942"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_disp_NaBr_NaO_BrO/launcher_2024-06-02-05-35-02-295108"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_disp_Br_O_BrO/launcher_2024-06-01-17-04-39-815942"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_6270_fixed_displ/1ConfigsPerDisp/launcher_2024-05-17-13-28-18-789745"
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_fixed_displ_fixed_force_distribution/launcher_2024-05-23-07-50-44-015298"
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_fixed_displ_fixed_force_distribution/prefinal_chgnet"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-23-20-13-18-146041-72144"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1479_fixed_displ_fixed_force_distribution/launcher_2024-05-23-18-22-12-087175"
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-28-22-29-33-614395-68155"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_independent_disp_Li_Be_F/launcher_2024-06-02-16-58-16-223883"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-05-21-11-17-368105-61652"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-02-20-00-878891-92096"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-02-54-34-667029-28910"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-03-38-17-623144-97984"
+        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-05-33-32-709354-68562"
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-06-03-23-407261-76514"
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-15-28-38-151415-35010"
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-17-37-21-617339-70742"
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-18-57-10-324984-67598"
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-19-24-01-974959-90232" # gamma spodulene -- 15**3 Å**3 
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-19-37-57-271775-61804" # beta spodulene -- 15**3 Å**3 
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-06-23-32-33-867752-84005" # beta spodulene -- 23**3 Å**3 
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-07-05-05-59-486940-63865" # beta spodulene -- 15**3 Å**3 
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-07-14-56-52-324049-76017" # beta spodulene -- 7**3 Å**3 
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-07-19-22-06-057575-73790" # Li2BeF4 -- 16.8**3 Å**3 
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-08-01-46-35-766599-12298 copy" # Li2BeF4 -- 16.8**3 Å**3  -- 3 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/hiphive_4622_7Å_6configPerDisp/launcher_2024-06-21-05-04-13-072444" # Li2BeF4 -- 7**3 Å**3  -- 6 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_7Å_3ConfigsPerDIsp_6displ_VASP/88_1682_1485-2,13_3,15_2,59" # Li2BeF4 -- 7**3 Å**3  -- 3 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_4622_7Å_2ConfigsPerDIsp_6displ_VASP/88_1682_1485-2,13_3,15_2,59" # Li2BeF4 -- 7**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-24-22-41-00-423479-75981" # LiAl(SiO3)2 -- 19**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-24-23-56-45-230442-16889" # Ba2LiReO6 -- 19**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-01-18-06-880736-84278" # Ba(CuO)2 -- 11**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-01-49-22-375642-69225" # K3BrO -- 19**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-02-10-51-714555-58229" # Rb2H6Pt -- 18**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-02-43-18-297292-33347" # LiTaO3 -- 20**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-03-13-53-289262-96330" # LiTaO3 -- 10**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-03-40-25-422391-12873" # KZnP -- 20**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-25-04-29-37-493027-76707" # Cs2TeCl6 -- 20**3 Å**3  -- 2 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
         # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Downloads/supporting_data/runtime_costs/GaP/3_pre_fc"
         # 3. Hiphive Fitting of FCPs upto 4th order
         if n_structures >= 10:
@@ -441,54 +498,57 @@ class BaseHiphiveMaker(Maker, ABC):
         # # # #     }
         # # # # )
 
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/hiphive_1479_displ_sampling"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-59-31-454856-98976" # fix 3
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-05-05-27-911205-37950" # fix 5
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-19-33-51-707117-99373"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-22-08-52-739207-65556"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-03-39-27-546384-72231"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-05-08-16-334659-40420"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-30-11-696345-68541"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-02-18-45-24-612532-70205"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-03-15-43-37-821524-48496"
-        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ/1ConfigsPerDisp/10_5_3,6/job_2024-05-18-07-29-03-325724-14004"
-        # 4. Perform phonon renormalization to obtain temperature-dependent
-        # force constants using hiPhive
-        outputs_renorm = []
-        if renormalize:
-            for temperature in renormalize_temperature:
-                nconfig = renormalize_nconfig * (1 + temperature // 100)
-                renormalization = run_hiphive_renormalization(
-                    temperature=temperature,
-                    renorm_method=renormalize_method,
-                    nconfig=nconfig,
-                    renorm_TE_iter=renormalize_thermal_expansion_iter,
-                    bulk_modulus=bulk_modulus,
-                    prev_dir_hiphive=fit_force_constant.output["current_dir"],
-                    # prev_dir_hiphive=prev_dir_hiphive,
-                    loop=loops,
-                )
-                renormalization.name += f" {temperature} {loops}"
-                renormalization.update_config({"manager_config": {"_fworker": "cpu_reg_fworker"}})
-                jobs.append(renormalization)
-                outputs_renorm.append(renormalization.output)
-                outputs.append(renormalization.output)
-                renormalization.metadata.update(
-                    {
-                        "tag": [
-                            f"mp_id={mpid}",
-                            f"bulk_modulus={bulk_modulus}",
-                            f"run_renormalization_{loops}",
-                            f"nConfigsPerStd={n_structures}",
-                            f"fixedDispls={fixed_displs}",
-                            f"dispCut={disp_cut}",
-                            f"supercell_matrix={supercell_matrix}",
-                            f"loop={loops}",
-                        ]
-                    }
-                )
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/hiphive_1479_displ_sampling"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-20-59-31-454856-98976" # fix 3
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-08-05-05-27-911205-37950" # fix 5
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-19-33-51-707117-99373"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-10-22-08-52-739207-65556"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-03-39-27-546384-72231"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-05-08-16-334659-40420"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-30-11-696345-68541"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-16-20-19-30-722449-33890"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-02-18-45-24-612532-70205"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-03-15-43-37-821524-48496"
+        # # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_23339_fixed_displ/1ConfigsPerDisp/10_5_3,6/job_2024-05-18-07-29-03-325724-14004"
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-07-16-41-12-801375-48911" # Li2BeF4 -- 16.9**3 Å**3 
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-07-17-58-00-504280-27299" # Li2BeF4 -- 16.9**3 Å**3 
+        # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-08-00-56-51-192381-69271" # Li2BeF4 -- 16.9**3 Å**3 -- 3 configs/displ -- 0.01, 0.03, 0.08, 0.1, 0.15, 0.16
+        # # 4. Perform phonon renormalization to obtain temperature-dependent
+        # # force constants using hiPhive
+        # outputs_renorm = []
+        # if renormalize:
+        #     for temperature in renormalize_temperature:
+        #         nconfig = renormalize_nconfig * (1 + temperature // 100)
+        #         renormalization = run_hiphive_renormalization(
+        #             temperature=temperature,
+        #             renorm_method=renormalize_method,
+        #             nconfig=nconfig,
+        #             renorm_TE_iter=renormalize_thermal_expansion_iter,
+        #             bulk_modulus=bulk_modulus,
+        #             # prev_dir_hiphive=fit_force_constant.output["current_dir"],
+        #             prev_dir_hiphive=prev_dir_hiphive,
+        #             loop=loops,
+        #         )
+        #         renormalization.name += f" {temperature} {loops}"
+        #         renormalization.update_config({"manager_config": {"_fworker": "cpu_reg_fworker"}})
+        #         jobs.append(renormalization)
+        #         outputs_renorm.append(renormalization.output)
+        #         outputs.append(renormalization.output)
+        #         renormalization.metadata.update(
+        #             {
+        #                 "tag": [
+        #                     f"mp_id={mpid}",
+        #                     f"bulk_modulus={bulk_modulus}",
+        #                     f"run_renormalization_{loops}",
+        #                     f"nConfigsPerStd={n_structures}",
+        #                     f"fixedDispls={fixed_displs}",
+        #                     f"dispCut={disp_cut}",
+        #                     f"supercell_matrix={supercell_matrix}",
+        #                     f"loop={loops}",
+        #                 ]
+        #             }
+        #         )
 
         # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-06-04-29-02-534935-41708"
         # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-07-16-14-51-625183-73398"
@@ -504,6 +564,7 @@ class BaseHiphiveMaker(Maker, ABC):
         # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-04-15-01-03-47-788448-49252"
         # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-01-23-02-39-742808-59642"
         # prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-05-28-19-03-30-410287-51438"
+        prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/job_2024-06-08-04-45-38-550248-35143"
         # 5. Extract Phonon Band structure & DOS from FC
         # for 0K
         fc_pdos_pb_to_db = run_fc_to_pdos(
@@ -532,35 +593,35 @@ class BaseHiphiveMaker(Maker, ABC):
                 ]
             }
         )
-        # for finite temperatures
-        if renormalize:
-            for i, temperature in enumerate(renormalize_temperature):
-                fc_pdos_pb_to_db = run_fc_to_pdos(
-                    renormalized=renormalize,
-                    mesh_density=mesh_density,
-                    prev_dir_json_saver=outputs_renorm[i][0],
-                    loop=loops,
-                )
-                fc_pdos_pb_to_db.name += f" {loops} {temperature}K"
-                jobs.append(fc_pdos_pb_to_db)
-                outputs.append(fc_pdos_pb_to_db.output)
-                fc_pdos_pb_to_db.metadata.update(
-                    {
-                        "tag": [
-                            f"mp_id={mpid}",
-                            f"bulk_modulus={bulk_modulus}",
-                            f"temperature={temperature}K"
-                            f"fc_pdos_pb_to_db_{loops}",
-                            f"nConfigsPerStd={n_structures}",
-                            f"fixedDispls={fixed_displs}",
-                            f"dispCut={disp_cut}",
-                            f"supercell_matrix={supercell_matrix}",
-                            f"loop={loops}",
-                        ]
-                    }
-                )
+        # # for finite temperatures
+        # if renormalize:
+        #     for i, temperature in enumerate(renormalize_temperature):
+        #         fc_pdos_pb_to_db = run_fc_to_pdos(
+        #             renormalized=renormalize,
+        #             mesh_density=mesh_density,
+        #             prev_dir_json_saver=outputs_renorm[i][0],
+        #             loop=loops,
+        #         )
+        #         fc_pdos_pb_to_db.name += f" {loops} {temperature}K"
+        #         jobs.append(fc_pdos_pb_to_db)
+        #         outputs.append(fc_pdos_pb_to_db.output)
+        #         fc_pdos_pb_to_db.metadata.update(
+        #             {
+        #                 "tag": [
+        #                     f"mp_id={mpid}",
+        #                     f"bulk_modulus={bulk_modulus}",
+        #                     f"temperature={temperature}K"
+        #                     f"fc_pdos_pb_to_db_{loops}",
+        #                     f"nConfigsPerStd={n_structures}",
+        #                     f"fixedDispls={fixed_displs}",
+        #                     f"dispCut={disp_cut}",
+        #                     f"supercell_matrix={supercell_matrix}",
+        #                     f"loop={loops}",
+        #                 ]
+        #             }
+        #         )
 
-
+        # prev_dir_hiphive= "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_2490_20Å_1ConfigsPerDIsp_100_300_300/job_2024-06-20-07-31-55-228458-21544"
         # # 6. Lattice thermal conductivity calculation using Sheng BTE
         # if calculate_lattice_thermal_conductivity:
         #     if renormalize:
@@ -578,7 +639,8 @@ class BaseHiphiveMaker(Maker, ABC):
         #             renormalized=renormalize,
         #             temperature=temperatures,
         #             loop=loops,
-        #             prev_dir_hiphive=fit_force_constant.output["current_dir"],
+        #             # prev_dir_hiphive=fit_force_constant.output["current_dir"],
+        #             prev_dir_hiphive=prev_dir_hiphive,
         #             therm_cond_solver= self.THERM_COND_SOLVER
         #         )
         #         lattice_thermal_conductivity.name += f" {temperatures} {loops}"
@@ -635,7 +697,7 @@ class BaseHiphiveMaker(Maker, ABC):
         return Flow(jobs=jobs, output=outputs, name=f"{mpid}_{self.THERM_COND_SOLVER}_"
                                                     f"{disp_cut}_"
                                                     f"{cutoffs}_"
-                                                    f"seperate_fit_24_harm_0.03_12_anharm_0.08"
+                                                    f"MD_disp_sampling"
                                                     f"{self.name}")
 
     @property

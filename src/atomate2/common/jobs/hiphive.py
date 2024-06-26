@@ -5,6 +5,7 @@
 # ASE packages
 from __future__ import annotations
 
+import contextlib
 import json
 import math
 import os
@@ -16,6 +17,7 @@ from itertools import product
 from os.path import expandvars
 from typing import TYPE_CHECKING, Any
 
+import matplotlib.pyplot as plt
 import numpy as np
 import phonopy as phpy
 import psutil
@@ -33,6 +35,7 @@ from hiphive import (
     StructureContainer,
     enforce_rotational_sum_rules,
 )
+from hiphive.calculators import ForceConstantCalculator
 from hiphive.cutoffs import estimate_maximum_cutoff, is_cutoff_allowed
 from hiphive.fitting import Optimizer
 from hiphive.renormalization import Renormalization
@@ -70,6 +73,9 @@ from pymatgen.io.phonopy import (
 from pymatgen.io.shengbte import Control
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.standard_transformations import SupercellTransformation
+from scipy.optimize import fsolve
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
 
 from atomate2.common.jobs.phonons import get_supercell_size, run_phonon_displacements
 from atomate2.forcefields.jobs import CHGNetStaticMaker, ForceFieldStaticMaker
@@ -133,7 +139,7 @@ def hiphive_static_calcs(
                 ff_displacement_maker: ForceFieldStaticMaker | None = None,
                 supercell_matrix_kwargs: dict[str, Any] | None = None,
                 bulk_modulus: float | None = None,
-                mpid: str | None = None
+                mpid: str | None = None,
         ) -> Response:
     """Run the static calculations for hiPhive fitting."""
     jobs = []
@@ -164,6 +170,7 @@ def hiphive_static_calcs(
         bulk_modulus=bulk_modulus,
         mpid=mpid,
         loop=loops,
+        nconfigs=n_structures
     )
     jobs.append(displacements_md)
 
@@ -219,6 +226,7 @@ def hiphive_static_calcs(
     # jobs.append(displacements_updater)
 
     vasp_displacement_calcs = run_phonon_displacements(
+            # displacements=displacements.output,
             # displacements=displacements_updater.output,
             displacements=displacements_md.output,
             structure=structure,
@@ -265,6 +273,7 @@ def force_field_md(
     bulk_modulus: float | None = None,
     mpid: str | None = None,
     loop: int | None = None,
+    nconfigs: int = 1,
 ) -> list[Structure]:
 
     logger.info(f"supercell_matrix = {supercell_matrix}")
@@ -281,38 +290,362 @@ def force_field_md(
 
     dumpfn(structure_data, f"structure_data_{loop}.json")
 
-    # structure = Structure.from_file("examples/mp-18767-LiMnO2.cif")
-    chgnet = CHGNet.load()
+    # # structure = Structure.from_file("examples/mp-18767-LiMnO2.cif")
+    # chgnet = CHGNet.load()
 
-    md = MolecularDynamics(
-        atoms=supercell_structure,
-        model=chgnet,
-        ensemble="nvt", #nvt
-        temperature=10,  # in K
-        timestep=2,  # in femto-seconds
-        trajectory=f"md_out_nvt_10_{mpid}.traj",
-        logfile=f"md_out_nvt_10_{mpid}.log",
-        loginterval=600,
-        bulk_modulus=bulk_modulus,
-    )
-    md.run(2400)  # run a 0.24 ps MD simulation
+    # md = MolecularDynamics(
+    #     atoms=supercell_structure,
+    #     model=chgnet,
+    #     ensemble="nvt", #nvt
+    #     temperature=1,  # in K
+    #     timestep=4,  # in femto-seconds
+    #     trajectory=f"md_out_nvt_10_{mpid}.traj",
+    #     logfile=f"md_out_nvt_10_{mpid}.log",
+    #     loginterval=10, # 600 #15 #200
+    #     bulk_modulus=bulk_modulus,
+    # )
+    # md.run(60)  # run a 0.24 ps MD simulation # 2400 #60 #800
 
-    traj = Trajectory(f'md_out_nvt_10_{mpid}.traj')
-    rattled_structures = []
-    forces = []
-    for atoms in traj:
-        # Analyze atoms
-        logger.info(atoms)
-        structure = AseAtomsAdaptor.get_structure(atoms)
-        force = atoms.get_forces()
-        forces.append(force)
-        # print(force)
-        rattled_structures.append(structure)
+    # traj = Trajectory(f'md_out_nvt_10_{mpid}.traj')
+    # rattled_structures = []
+    # forces = []
+    # iter = 0
+    # for i in range (3):
+    #     for atoms in traj:
+    #         # if iter != 0:
+    #         if iter != 0 and iter != 6 and iter != 12:
+    #             # Analyze atoms
+    #             logger.info(atoms)
+    #             structure = AseAtomsAdaptor.get_structure(atoms)
+    #             force = atoms.get_forces()
+    #             forces.append(force)
+    #             # print(force)
+    #             rattled_structures.append(structure)
+    #         iter += 1
 
-    dumpfn(rattled_structures, f"perturbed_structures_nvt_10_{mpid}.json")
-    dumpfn(forces, f"perturbed_forces_nvt_10_{mpid}.json")
+    # rattled_structures = [supercell_structure for _ in range(18)]
+    # rattled_structures = [supercell_structure for _ in range(24)]
+    # rattled_structures = [supercell_structure for _ in range(28)]
+    # rattled_structures = [supercell_structure for _ in range(40)]
+    # rattled_structures = [supercell_structure for _ in range(18)]
+    # rattled_structures = [supercell_structure for _ in range(36)]
+    # rattled_structures = [supercell_structure for _ in range(72)]
+    # rattled_structures = [supercell_structure for _ in range(144)]
+    # rattled_structures = [supercell_structure for _ in range(6)]
+    # rattled_structures = [supercell_structure for _ in range(12)]
+    rattled_structures = [supercell_structure for _ in range(nconfigs*6)]
 
-    return rattled_structures
+    # add random displacements to the snapshots obtained from MD to reduce
+    # correlations between successive snapshots
+    atoms_list = []
+    for _, structure in enumerate(rattled_structures):
+        logger.info(f"iter number = {_}")
+        atoms = AseAtomsAdaptor.get_atoms(structure)
+        atoms_tmp = atoms.copy()
+        # random choice of direction
+        N = len(atoms)
+        # directions = np.random.normal(size=(N, 3))
+        # normalizer = np.linalg.norm(directions, axis=1, keepdims=True)
+        # distance = 0.01 if _ <= 4 else 0.04
+        # if _ == 0 or _ == 1 or _ == 2 or _ == 3:
+        #     distance = 0.005
+        #     logger.info(f"distance_0_1_2_3 = {distance}")
+        # elif _ == 4 or _ == 5 or _ == 6 or _ == 7:
+        #     distance = 0.01
+        #     logger.info(f"distance_4_5_6_7 = {distance}")
+        # elif _ == 8 or _ == 9 or _ == 10 or _ == 11:
+        #     distance = 0.03
+        #     logger.info(f"distance_8_9_10_11 = {distance}")
+        # elif _ == 12 or _ == 13 or _ == 14 or _ == 15:
+        #     distance = 0.05
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 16 or _ == 17 or _ == 18 or _ == 19:
+        #     distance = 0.07
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 20 or _ == 21 or _ == 22 or _ == 23:
+        #     distance = 0.09
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 24 or _ == 25 or _ == 26 or _ == 27:
+        #     distance = 0.11
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 28 or _ == 29 or _ == 30 or _ == 31:
+        #     distance = 0.13
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 32 or _ == 33 or _ == 34 or _ == 35:
+        #     distance = 0.15
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 36 or _ == 37 or _ == 38 or _ == 39:
+        #     distance = 0.17
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 40 or _ == 41 or _ == 42 or _ == 43:
+        #     distance = 0.19
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 44 or _ == 45 or _ == 46 or _ == 47:
+        #     distance = 0.21
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 48 or _ == 49 or _ == 50 or _ == 51:
+        #     distance = 0.23
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 52 or _ == 53 or _ == 54 or _ == 55:
+        #     distance = 0.25
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 52 or _ == 53 or _ == 54 or _ == 55:
+        #     distance = 0.27
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 56 or _ == 57 or _ == 58 or _ == 59:
+        #     distance = 0.29
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+        # elif _ == 60 or _ == 61 or _ == 62 or _ == 63:
+        #     distance = 0.31
+        #     logger.info(f"distance_12_13_14_15 = {distance}")
+
+
+        # if _ == 0 or _ == 4 or _ == 8 or _ == 12 or _ == 16 or _ == 20 or _ == 24 or _ == 28 or _ == 32 or _ == 36:
+        #     distance = 0.01 # 0.005
+        #     logger.info(f"distance_0 = {distance}")
+        # # elif _ == 1 or _  == 7 or _ == 13:
+        # #     distance = 0.02 # 0.005
+        # #     logger.info(f"distance_0 = {distance}")
+        # elif _ == 1 or _ == 5 or _ == 9 or _ == 13 or _ == 17 or _ == 21 or _ == 25 or _ == 29 or _ == 33 or _ == 37:
+        #     distance = 0.03 # 0.01
+        #     logger.info(f"distance_1 = {distance}")
+        # elif _ == 2 or _ == 6 or _ == 10 or _ == 14 or _ == 18 or _ == 22 or _ == 26 or _ == 30 or _ == 34 or _ == 38:
+        #     distance = 0.08 # 0.08 # 0.03 # 0.07
+        #     logger.info(f"distance_2 = {distance}")
+        # # elif _ == 4 or _ == 10 or _ == 16:
+        # #     distance = 0.09 # 0.08 # 0.03 # 0.07
+        # #     logger.info(f"distance_2 = {distance}")
+        # elif _ == 3 or _ == 7 or _ == 11 or _ == 15 or _ == 19 or _ == 23 or _ == 27 or _ == 31 or _ == 35 or _ == 39:
+        #     distance = 0.1 # 0.1 # 0.04 # 0.08
+        #     logger.info(f"distance_3 = {distance}")
+
+
+        if _ == 0  or _ == 6 or _ == 12 or _ == 18 or _ == 24 or _ == 30:# or _ == 36 or _ == 42 or _ == 48 or _ == 54 or _ == 60 or _ == 66 or _ == 72 or _ == 78 or _ == 84 or _ == 90 or _ == 96 or _ == 102 or _ == 108 or _ == 114 or _ == 120 or _ == 126 or _ == 132 or _ == 138:
+            distance = 0.01 # 0.005
+            logger.info(f"distance_0 = {distance}")
+        elif _ == 1 or _ == 7 or _ == 13 or _ == 19 or _ == 25 or _ == 31:# or _ == 37 or _ == 43 or _ == 49 or _ == 55 or _ == 61 or _ == 67 or _ == 73 or _ == 79 or _ == 85 or _ == 91 or _ == 97 or _ == 103 or _ == 109 or _ == 115 or _ == 121 or _ == 127 or _ == 133 or _ == 139:
+            distance = 0.03 # 0.01
+            logger.info(f"distance_1 = {distance}")
+        elif _ == 2 or _ == 8 or _ == 14 or _ == 20 or _ == 26 or _ == 32:# or _ == 38 or _ == 44 or _ == 50 or _ == 56 or _ == 62 or _ == 68 or _ == 74 or _ == 80 or _ == 86 or _ == 92 or _ == 98 or _ == 104 or _ == 110 or _ == 116 or _ == 122 or _ == 128 or _ == 134 or _ == 140:
+            distance = 0.08 # 0.08 # 0.03
+            logger.info(f"distance_2 = {distance}")
+        elif _ == 3 or _ == 9 or _ == 15 or _ == 21 or _ == 27 or _ == 33:# or _ == 39 or _ == 45 or _ == 51 or _ == 57 or _ == 63 or _ == 69 or _ == 75 or _ == 81 or _ == 87 or _ == 93 or _ == 99 or _ == 105 or _ == 111 or _ == 117 or _ == 123 or _ == 129 or _ == 135 or _ == 141:
+            distance = 0.1 # 0.1 # 0.04
+            logger.info(f"distance_3 = {distance}")
+        elif _ == 4 or _ == 10 or _ == 16 or _ == 22 or _ == 28 or _ == 34:# or _ == 40 or _ == 46 or _ == 52 or _ == 58 or _ == 64 or _ == 70 or _ == 76 or _ == 82 or _ == 88 or _ == 94 or _ == 100 or _ == 106 or _ == 112 or _ == 118 or _ == 124 or _ == 130 or _ == 136 or _ == 142:
+            distance = 0.15
+            logger.info(f"distance_4 = {distance}")
+        elif _ == 5 or _ == 11 or _ == 17 or _ == 23 or _ == 29 or _ == 35:# or _ == 41 or _ == 47 or _ == 53 or _ == 59 or _ == 65 or _ == 71 or _ == 77 or _ == 83 or _ == 89 or _ == 95 or _ == 101 or _ == 107 or _ == 113 or _ == 119 or _ == 125 or _ == 131 or _ == 137 or _ == 143:
+            distance = 0.16
+            logger.info(f"distance_5 = {distance}")
+        # elif _ == 6:
+        #     distance = 0.12
+        #     logger.info(f"distance_6 = {distance}")
+        # elif _ == 7:
+        #     distance = 0.14
+        #     logger.info(f"distance_7 = {distance}")
+        # elif _ == 8:
+        #     distance = 0.15
+        #     logger.info(f"distance_8 = {distance}")
+        # elif _ == 9:
+        #     distance = 0.16
+        #     logger.info(f"distance_9 = {distance}")
+
+        # # distance = np.random.uniform(-distance, distance)
+        # distance = np.random.normal(distance, distance/4, size=(N, 3))
+        # # distance = 0.01
+
+        # displacements = distance * directions / normalizer
+        # atoms_tmp.positions += displacements
+        # atoms_list.append(atoms_tmp)
+        # logger.info(f"displacements.shape = {displacements.shape}")
+
+
+        # set the random seed for reproducibility to 2
+        if _ == 0 or _ == 1 or _ == 2 or _ == 3 or _ == 4 or _ == 5:
+            np.random.seed(3)
+        elif _ == 6 or _ == 7 or _ == 8 or _ == 9 or _ == 10 or _ == 11:
+            np.random.seed(4)
+        elif _ == 12 or _ == 13 or _ == 14 or _ == 15 or _ == 16 or _ == 17:
+            np.random.seed(5)
+        elif _ == 18 or _ == 19 or _ == 20 or _ == 21 or _ == 22 or _ == 23:
+            np.random.seed(6)
+        elif _ == 24 or _ == 25 or _ == 26 or _ == 27 or _ == 28 or _ == 29:
+            np.random.seed(7)
+        elif _ == 30 or _ == 31 or _ == 32 or _ == 33 or _ == 34 or _ == 35:
+            np.random.seed(8)
+        # elif _ == 36 or _ == 37 or _ == 38 or _ == 39 or _ == 40 or _ == 41:
+        #     np.random.seed(9)
+        # elif _ == 42 or _ == 43 or _ == 44 or _ == 45 or _ == 46 or _ == 47:
+        #     np.random.seed(10)
+        # elif _ == 48 or _ == 49 or _ == 50 or _ == 51 or _ == 52 or _ == 53:
+        #     np.random.seed(11)
+        # elif _ == 54 or _ == 55 or _ == 56 or _ == 57 or _ == 58 or _ == 59:
+        #     np.random.seed(12)
+        # elif _ == 60 or _ == 61 or _ == 62 or _ == 63 or _ == 64 or _ == 65:
+        #     np.random.seed(13)
+        # elif _ == 66 or _ == 67 or _ == 68 or _ == 69 or _ == 70 or _ == 71:
+        #     np.random.seed(14)
+        # elif _ == 72 or _ == 73 or _ == 74 or _ == 75 or _ == 76 or _ == 77:
+        #     np.random.seed(15)
+        # elif _ == 78 or _ == 79 or _ == 80 or _ == 81 or _ == 82 or _ == 83:
+        #     np.random.seed(16)
+        # elif _ == 84 or _ == 85 or _ == 86 or _ == 87 or _ == 88 or _ == 89:
+        #     np.random.seed(17)
+        # elif _ == 90 or _ == 91 or _ == 92 or _ == 93 or _ == 94 or _ == 95:
+        #     np.random.seed(18)
+        # elif _ == 96 or _ == 97 or _ == 98 or _ == 99 or _ == 100 or _ == 101:
+        #     np.random.seed(19)
+        # elif _ == 102 or _ == 103 or _ == 104 or _ == 105 or _ == 106 or _ == 107:
+        #     np.random.seed(20)
+        # elif _ == 108 or _ == 109 or _ == 110 or _ == 111 or _ == 112 or _ == 113:
+        #     np.random.seed(21)
+        # elif _ == 114 or _ == 115 or _ == 116 or _ == 117 or _ == 118 or _ == 119:
+        #     np.random.seed(22)
+        # elif _ == 120 or _ == 121 or _ == 122 or _ == 123 or _ == 124 or _ == 125:
+        #     np.random.seed(23)
+        # elif _ == 126 or _ == 127 or _ == 128 or _ == 129 or _ == 130 or _ == 131:
+        #     np.random.seed(24)
+        # elif _ == 132 or _ == 133 or _ == 134 or _ == 135 or _ == 136 or _ == 137:
+        #     np.random.seed(25)
+        # elif _ == 138 or _ == 139 or _ == 140 or _ == 141 or _ == 142 or _ == 143:
+        #     np.random.seed(26)
+
+        from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+        symmetrized_structure = SpacegroupAnalyzer(structure).get_symmetrized_structure()
+        equivalent_indices = symmetrized_structure.equivalent_indices
+        logger.info(f"equivalent_indices = {equivalent_indices}")
+        # get the number of elements in the equivalent_indices
+        num_equivalent_indices = len(equivalent_indices)
+        logger.info(f"num_equivalent_indices = {num_equivalent_indices}")
+
+        total_inds = [i for i, a in enumerate(atoms)]
+        # Na_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Na']
+        Li_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Li']
+        logger.info(f"Li_inds = {Li_inds}")
+        # Br_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Br']
+        Be_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Be']
+        logger.info(f"Be_inds = {Be_inds}")
+        # O_inds = [i for i, a in enumerate(atoms) if a.symbol == 'O']
+        F_inds = [i for i, a in enumerate(atoms) if a.symbol == 'F']
+        logger.info(f"F_inds = {F_inds}")
+        Li_Be_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Li' or a.symbol == 'Be']
+        logger.info(f"Li_Be_inds = {Li_Be_inds}")
+        Li_F_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Li' or a.symbol == 'F']
+        logger.info(f"Li_F_inds = {Li_F_inds}")
+        Be_F_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Be' or a.symbol == 'F']
+        logger.info(f"Be_F_inds = {Be_F_inds}")
+        # Na_Br_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Na' or a.symbol == 'Br']
+        # Na_O_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Na' or a.symbol == 'O']
+        # Br_O_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Br' or a.symbol == 'O']
+        # assert len(Li_inds) + len(Be_inds) + len(F_inds) == len(atoms)
+        # assert len(Na_inds) + len(Br_inds) + len(O_inds) == len(atoms)
+
+        def generate_normal_displacement(distance, N):
+            directions = np.random.normal(size=(N, 3))
+            normalizer = np.linalg.norm(directions, axis=1, keepdims=True)
+            distance_normal_distribution = np.random.normal(distance, distance/5, size=(N, 1))
+            # displacements = distance * directions / normalizer
+            displacements = distance_normal_distribution * directions / normalizer
+            return displacements
+
+        # Generate displacements
+        disp_normal = generate_normal_displacement(distance, len(total_inds))
+        # print(f"disp = {disp_normal}")
+        mean_displacements = np.linalg.norm(disp_normal, axis=1).mean()
+        logger.info(f"mean_displacements = {mean_displacements}")
+
+        atoms_tmp = atoms.copy()
+
+        # add the disp_normal to the all the atoms in the structrue
+        for i in total_inds:
+            atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 0, 1, 2, 3 -- then add the disp_normal to the Na atoms
+        # # if _ == 0 or _ == 1 or _ == 2 or _ == 3 or _ == 4 or _ == 5:
+        # if _ == 0 or _ == 1 or _ == 2 or _ == 3:
+        #     # similar to atoms_normal, but only for Na atoms, add the disp_normal to the Na atoms
+        #     # Note that the addition should be made only to the Na atoms -- use Na_inds
+        #     # for i in Na_inds:
+        #     # for i in Na_Br_inds:
+        #     # for i in Li_inds:
+        #     for i in equivalent_indices[0]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 4, 5, 6, 7 -- then add the disp_normal to the Br atoms
+        # # if _ == 6 or _ == 7 or _ == 8 or _ == 9 or _ == 10 or _ == 11:
+        # if _ == 4 or _ == 5 or _ == 6 or _ == 7:
+        #     # do the same for Br atoms
+        #     # for i in Br_inds:
+        #     # for i in Na_O_inds:
+        #     # for i in Be_inds:
+        #     for i in equivalent_indices[1]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 8, 9, 10, 11 -- then add the disp_normal to the O atoms
+        # # if _ == 12 or _ == 13 or _ == 14 or _ == 15 or _ == 16 or _ == 17:
+        # if _ == 8 or _ == 9 or _ == 10 or _ == 11:
+        #     # do the same for O atoms
+        #     # for i in O_inds:
+        #     # for i in Br_O_inds:
+        #     # for i in F_inds:
+        #     for i in equivalent_indices[2]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 12, 13, 14, 15 -- then add the disp_normal to the Na and Br atoms
+        # if _ == 12 or _ == 13 or _ == 14 or _ == 15:
+        #     # for i in Li_Be_inds:
+        #     for i in equivalent_indices[3]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 16, 17, 18, 19 -- then add the disp_normal to the Na and O atoms
+        # if _ == 16 or _ == 17 or _ == 18 or _ == 19:
+        #     # for i in Li_F_inds:
+        #     for i in equivalent_indices[4]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 20, 21, 22, 23 -- then add the disp_normal to the Br and O atoms
+        # if _ == 20 or _ == 21 or _ == 22 or _ == 23:
+        #     # for i in Be_F_inds:
+        #     for i in equivalent_indices[5]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 24, 25, 26, 27 -- then add the disp_normal to the Na and Br atoms
+        # if _ == 24 or _ == 25 or _ == 26 or _ == 27:
+        #     # for i in Li_Be_inds:
+        #     for i in equivalent_indices[6]:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 28, 29, 30, 31 -- then add the disp_normal to the Li atoms
+        # if _ == 28 or _ == 29 or _ == 30 or _ == 31:
+        #     for i in Li_inds:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 32, 33, 34, 35 -- then add the disp_normal to the Be atoms
+        # if _ == 32 or _ == 33 or _ == 34 or _ == 35:
+        #     for i in Be_inds:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        # # if displ_number is 36, 37, 38, 39 -- then add the disp_normal to the F atoms
+        # if _ == 36 or _ == 37 or _ == 38 or _ == 39:
+        #     for i in F_inds:
+        #         atoms_tmp.positions[i] += disp_normal[i]
+
+        atoms_list.append(atoms_tmp)
+
+    # Convert back to pymatgen structure
+    structures_pymatgen = []
+    for atoms_ase in range(len(atoms_list)):
+        logger.info(f"atoms: {atoms_ase}")
+        logger.info(f"structures_ase_all[atoms]: {atoms_list[atoms_ase]}")
+        structure_i = AseAtomsAdaptor.get_structure(atoms_list[atoms_ase])
+        structures_pymatgen.append(structure_i)
+
+    # dumpfn(rattled_structures, f"perturbed_structures_nvt_10_{mpid}.json")
+    dumpfn(structures_pymatgen, f"perturbed_structures_nvt_10_{mpid}.json")
+    # dumpfn(forces, f"perturbed_forces_nvt_10_{mpid}.json")
+
+    return structures_pymatgen #rattled_structures
 
 @job
 def generate_hiphive_displacements(
@@ -416,6 +749,7 @@ def generate_hiphive_displacements(
         fixed_displs = [0.01, 0.03, 0.08, 0.1] #TODO, this list is used in the paper
         fixed_displs = [0.01, 0.03, 0.4, 0.6] #TODO, this list is used in the paper
         fixed_displs = [0.2, 0.4, 0.6, 0.8] #TODO, this list is used in the paper
+        fixed_displs = [0.005, 0.01, 0.03, 0.04] #TODO, this list is used in the paper
         # fixed_displs = [0.1, 0.3, 0.5, 0.8] #TODO, for mp-23339 NaBrO3
         # fixed_displs = [0.1, 1] #TODO, for mp-23339 NaBrO3
         # fixed_displs = [1] #TODO, for mp-23339 NaBrO3
@@ -869,20 +1203,24 @@ def run_hiphive_individually(
     loop: int | None = None,
 ) -> None:
     """Run hiPhive with different cutoffs."""
+    logger.info("We are in run_hiphive_individually")
     copy_hiphive_outputs(prev_dir_json_saver)
 
     structure_data = loadfn(f"structure_data_{loop}.json")
-
+    parent_structure = structure_data["structure"]
     supercell_structure = structure_data["supercell_structure"]
+    supercell_matrix = np.array(structure_data["supercell_matrix"])
+
 
     if cutoffs is None:
-        # cutoffs = get_cutoffs(supercell_structure)
+        cutoffs = get_cutoffs(supercell_structure)
         # cutoffs = [[8.0]]
-        cutoffs = [[4, 3, 2.66]]
-        cutoffs = [[5, 3.5]]
-        cutoffs = [[3, 2.5]]
-        cutoffs = [[5, 2.5]]
+        # cutoffs = [[4, 3, 2.66]]
+        # cutoffs = [[5, 3.5]]
+        # cutoffs = [[3, 2.5]]
         # cutoffs = [[5, 2.5]]
+        # cutoffs = [[5, 2.5]]
+        # cutoffs = [[2, 2, 2], [2, 2.2, 2.2], [2, 2.3, 2.3]]
         logger.info(f"cutoffs is {cutoffs}")
     else:
         pass
@@ -930,7 +1268,10 @@ def run_hiphive_individually(
         fit_method=fit_method,
         disp_cut=disp_cut,
         imaginary_tol=imaginary_tol,
-        outputs=outputs_hiphive
+        outputs=outputs_hiphive,
+        parent_structure=parent_structure,
+        supercell_structure=supercell_structure,
+        supercell_matrix=supercell_matrix,
     )
     job_collect_hiphive_outputs.name += f" {loop} {i}"
     job_collect_hiphive_outputs.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
@@ -964,6 +1305,9 @@ def collect_hiphive_outputs(
     disp_cut: float | None = None,
     imaginary_tol: float | None = None,
     outputs: list[dict] | None = None,
+    parent_structure: Structure | None = None,
+    supercell_structure: Structure | None = None,
+    supercell_matrix: list[list[int]] | None = None,
 ) -> list :
     logger.info("We are in collect_hiphive_outputs")
 
@@ -971,29 +1315,66 @@ def collect_hiphive_outputs(
     fitting_data: dict[str, Any] = {
         "cutoffs": [],
         "rmse_test": [],
+        "imaginary": [],
+        "cs_dofs": [],
+        "n_imaginary": [],
+        "parent_structure": parent_structure,
+        "supercell_structure": supercell_structure,
+        "supercell_matrix": supercell_matrix,
         "fit_method": fit_method,
         "disp_cut": disp_cut,
         "imaginary_tol": imaginary_tol,
+        #        "max_n_imaginary": max_n_imaginary,
         "best_cutoff": None,
-        "best_rmse": np.inf,
-        "n_imaginary": None
+        "best_rmse": np.inf
     }
 
     best_fit = {
+        "n_imaginary": np.inf,
         "rmse_test": np.inf,
-        "directory": None,
+        "imaginary": None,
+        "cs_dofs": [None, None, None],
+        "cluster_space": None,
+        "force_constants": None,
+        "parameters": None,
+        "cutoffs": None,
+        "force_constants_potential": None,
     }
-    # Assuming outputs_hiphive is a list of dictionaries with the results
+
+    # # Assuming outputs_hiphive is a list of dictionaries with the results
+    # for result in outputs:
+    #     if result is None:
+    #         continue
+
+    #     # Assuming result is a dictionary with keys: 'cutoffs', 'rmse_test', etc.
+    #     fitting_data["cutoffs"].append(result["fitting_data"]["cutoffs"][0])
+    #     fitting_data["rmse_test"].append(result["fitting_data"]["rmse_test"][0])
+
+    #     # Update best_fit if the current result has a lower rmse_test
+    #     # Add additional conditions as needed
+    #     if (
+    #         result["fitting_data"]["rmse_test"][0] < best_fit["rmse_test"]
+    #     ):
+    #         best_fit["directory"] = result["current_dir"]
+    #         fitting_data["best_cutoff"] = result["fitting_data"]["cutoffs"][0]
+    #         fitting_data["best_rmse"] = result["fitting_data"]["rmse_test"][0]
+    #         best_fit["rmse_test"] = result["fitting_data"]["rmse_test"][0]
+    #         # following line is commented out only for testing purposes
+    #         fitting_data["n_imaginary"] = result["fitting_data"]["n_imaginary"]
+    #         # following line is commented out only for testing purposes ends
+
     for result in outputs:
         if result is None:
             continue
-
-        # Assuming result is a dictionary with keys: 'cutoffs', 'rmse_test', etc.
+        logger.info(f"result = {result}")
+        logger.info(f"fitted_data = {result['fitting_data']}")
         fitting_data["cutoffs"].append(result["fitting_data"]["cutoffs"][0])
         fitting_data["rmse_test"].append(result["fitting_data"]["rmse_test"][0])
+        fitting_data["n_imaginary"].append(result["fitting_data"]["n_imaginary"])
+        fitting_data["cs_dofs"].append(result["fitting_data"]["cs_dofs"][0])
+        fitting_data["imaginary"].append(result["fitting_data"]["imaginary"][0])
+        #        fitting_data["min_frequency"].append(result["min_frequency"])
 
-        # Update best_fit if the current result has a lower rmse_test
-        # Add additional conditions as needed
         if (
             result["fitting_data"]["rmse_test"][0] < best_fit["rmse_test"]
         ):
@@ -1001,9 +1382,6 @@ def collect_hiphive_outputs(
             fitting_data["best_cutoff"] = result["fitting_data"]["cutoffs"][0]
             fitting_data["best_rmse"] = result["fitting_data"]["rmse_test"][0]
             best_fit["rmse_test"] = result["fitting_data"]["rmse_test"][0]
-            # following line is commented out only for testing purposes
-            fitting_data["n_imaginary"] = result["fitting_data"]["n_imaginary"]
-            # following line is commented out only for testing purposes ends
 
     copy_hiphive_outputs(best_fit["directory"])
     # following line is commented out only for testing purposes
@@ -1050,6 +1428,8 @@ def run_hiphive(
     """
     logger.info(f"cutoffs = {cutoffs}")
     logger.info(f"disp_cut is {disp_cut}")
+    fit_method = "rfe"
+    logger.info(f"fit_method is {fit_method}")
     logger.info(f"prev_dir_json_saver is {prev_dir_json_saver} this is for def run_hiphive")
 
     copy_hiphive_outputs(prev_dir_json_saver)
@@ -1151,20 +1531,77 @@ def run_hiphive(
         # cutoffs = [[11, 6, 3.6]] # mp-6270 {2: 474, 3: 1786, 4: 427}
         # # cutoffs = [[11, 6, 3.9]] # mp-6270 {2: 474, 3: 1786, 4: 427}
         # # cutoffs = [[11, 7, 3.6]] # mp-6270 {2: 474, 3: 1786, 4: 427}
-        # # cutoffs = [[7, 6, 3.6]] # mp-6270 {2: 129, 3: 1786, 4: 427}
-        # # cutoffs = [[11, 5, 3.6]] # mp-6270 {2: 129, 3: 1786, 4: 427}
+        # cutoffs = [[7, 5, 3.6]] # mp-6270 {2: 129, 3: 1786, 4: 427}
+        # cutoffs = [[6.2, 3, 2.5]] # mp-6270 {2: 129, 3: 1786, 4: 427}
+        # cutoffs = [[6.2, 4.5, 3.6]] # mp-6270 {2: 129, 3: 1786, 4: 427}
+        # cutoffs = [[5.5, 4.5, 3.6]] # mp-6270 {2: 129, 3: 1786, 4: 427}
+        # cutoffs = [[5.5, 4.5, 3.6]] # mp-7374 {2: 475, 3: 3546, 4: 6492} eigentensors
+        # cutoffs = [[3.5, 3.5, 3]] # mp-7374 {2: 104, 3: 409, 4: 171}
+        # cutoffs = [[4, 3.5, 3]] # mp-7374 {2: 104, 3: 409, 4: 171}
+        # cutoffs = [[10, 6, 4.5]] # mp-28166 {2: 71, 3: 54, 4: 126}
+        # cutoffs = [[9, 6, 4.5]] # mp-643101 {2: 186, 3: 848, 4: 763}
+        # cutoffs = [[8, 5, 4]] # mp-643101 {2: 134, 3: 337, 4: 386}
+        # cutoffs = [[3.4, 3, 2.8]] # mp-3666 {2: 97, 3: 313, 4: 318}
+        # cutoffs = [[3, 3, 2.8]] # mp-3666 {2: 67, 3: 313, 4: 318}
+        # cutoffs = [[11, 5, 3.6]] # mp-6270 {2: 129, 3: 1786, 4: 427}
         # cutoffs = [[10, 5, 3.6]] # mp-23339 {2: 2143, 3: 4247, 4: 1419}
-        cutoffs = [[9, 4, 3]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[9, 4, 3]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[9, 6, 3.3]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[9, 4, 1]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[5.5, 4, 3.3]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[5.5, 4, 3.3, 3]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[9, 4]] # mp-23339 {2: 1513, 3: 787, 4: 210}
+        # cutoffs = [[6]] # mp-23339 {2: 1513}
         # cutoffs = [[9, 5, 4]] # mp-23339 {2: 1513, 3: 787, 4: 210}
         # cutoffs = [[7, 4.3, 3.3]] # mp-23339 {2: 745, 3: 1781, 4: 699}
         # cutoffs = [[9, 3, 2.5]] # mp-23339 {2: 1513, 3: 787, 4: 210}
         # cutoffs = [[10, 3]] # mp-23339
         # cutoffs = [[7, 3, 2]] # mp-23339
         # cutoffs = [[9, 3]] # mp-23339
-        # cutoffs = [[7, 2]] # mp-23339
+        # cutoffs = [[6, 2]] # mp-4622
         # cutoffs = [[10, 4]] # Michael's Bi2SeO2
         # cutoffs = [[6, 2.3]] # Keerthi's PbZrO3
         # cutoffs = [[10, 7, 5]] # mp-30530 {2: 218, 3: 3769, 4: 3331}
+        # cutoffs = [[5, 2.5]] # mp-557713
+        # cutoffs = [[9, 5, 3]] # mp-560037
+        # cutoffs = [[9, 3, 2]] # mp-3955
+        # cutoffs = [[6, 3, 2]] # mp-3955
+        # cutoffs = [[5, 3, 2]] # mp-3955
+        # cutoffs = [[10, 6, 4]] # mp-1265
+        # cutoffs = [[5, 2]] # mp-4622
+        # cutoffs = [[3, 3, 2]] # mp-4622 2, 4, 3
+        # cutoffs = [[6.5, 7, 4.3]] # mp-4622
+        # cutoffs = [[3.5, 5, 4]] # mp-23339
+        # cutoffs = [[2.5, 3.6, 2.9]] # mp-6340
+        # cutoffs = [[3, 5, 3.6]] # gamma spodulene
+        # cutoffs = [[2.9, 4.3, 3.2]] # beta spodulene 15*15*15
+        # cutoffs = [[2.5, 3.1, 2.6]] # beta spodulene 15*15*15
+        # cutoffs = [[1.8, 3, 2]] # beta spodulene 23*23*23
+        # cutoffs = [[2]] # mp-4622
+        # cutoffs = [[3, 2]] # mp-4622
+        # cutoffs = [[7, 2]] # mp-4622
+        # cutoffs = [[6, 3, 2]] # mp-4622
+        # cutoffs = [[6.5, 3.3, 2.3]] # mp-4622
+        # cutoffs = [[5]] # mp-4622
+        # cutoffs = [[5.4, 4.35, 4.35]] # Ba8Ga16Ge30 hiphive example
+        # cutoffs = [[2, 2, 2], [2, 2.2, 2.2], [2, 2.3, 2.3]]
+        # cutoffs = [[3.0147058823529407, 3.4449382716049395, 2.03125], [3.0147058823529407, 3.262962962962964, 2.03125]]
+        # cutoffs = [[2,3,2]]
+        # cutoffs = [[2.13, 3.15, 2.59]] # Li2BeF4
+        # cutoffs = [[2.13, 2.15, 1.59]] # Li2BeF4
+        # cutoffs = [[2, 2, 1.5]] # Li2BeF4
+        # # cutoffs = [[5, 3.15, 2.59]] # Li2BeF4
+        # cutoffs = [[8, 2.3, 1.7]] # Li2BeF4
+        # cutoffs = [[4, 2.3, 2]] # NaBrO3 [3.9, 4.3, 3.55]
+        # cutoffs = [[9, 2.3, 2]] # NaBrO3 [3.9, 4.3, 3.55]
+        # cutoffs = [[7, 3, 3]] # KZnP {2: 96, 3: 3, 4: 6}
+        # cutoffs = [[8, 4, 4]] # KZnP {2: 116, 3: 42, 4: 105}
+        # cutoffs = [[9, 4.5, 4.5]] # KZnP {2: 188, 3: 144, 4: 593}
+        # cutoffs = [[9, 4.5, 4.5]] # Cs2TeCl6 {2: 99, 3: 65, 4: 207}
+        # cutoffs = [[8, 8, 4.5]] # Cs2TeCl6 {2: 68, 3: 1343, 4: 207}
+        # cutoffs = [[10, 8, 4.5]] # Cs2TeCl6 {2: , 3: 1343, 4: 207}
+        # # cutoffs = [[3, 3, 3]]
+        # cutoffs = [[6.331249999999997, 5.930585683297184, 3.331250000000001], [5, 5, 3]]
         logger.info(f"cutoffs is {cutoffs}")
     else:
         pass
@@ -1256,7 +1693,7 @@ def run_hiphive(
 
     logger.info("Saving phonopy_params")
     phonopy.save("phonopy_params.yaml")
-    fitting_data["n_imaginary"] = thermal_data.pop("n_imaginary")
+    fitting_data["best_n_imaginary"] = thermal_data.pop("n_imaginary")
     thermal_data.update(anharmonic_data)
     logger.info("Saving fitting_data")
     dumpfn(fitting_data, "fitting_data.json")
@@ -1266,31 +1703,31 @@ def run_hiphive(
     logger.info("Writing cluster space and force_constants")
     logger.info(f"{type(fcs)}")
 
-    # # following code is commented only for testing puropose
-    # if fitting_data["n_imaginary"] == 0:
-    # # following code is commented only for testing puropose ends
-    # # if True: # change this back to above if statement
-    #     logger.info("No imaginary modes! Writing ShengBTE files")
-    #     atoms = AseAtomsAdaptor.get_atoms(parent_structure)
-    #     ### fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3)
-    #     fcs.write_to_phonopy("FORCE_CONSTANTS_2ND", format="text")
-    #     # following code is commented only for testing puropose
-    #     ForceConstants.write_to_phonopy(fcs, "fc2.hdf5", "hdf5")
-    #     ForceConstants.write_to_phono3py(fcs, "fc3.hdf5", "hdf5")
-    #     ### detour from hdf5
-    #     supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
-    #     FCS = ForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3)
-    #     FCS.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3, fc_tol=1e-4)
-    #     # following code is commented only for testing puropose ends
-    # else:
-    #     logger.info("ShengBTE files not written due to imaginary modes.")
-    #     logger.info("You may want to perform phonon renormalization.")
+    # following code is commented only for testing puropose
+    if fitting_data["best_n_imaginary"] == 0:
+    # following code is commented only for testing puropose ends
+    # if True: # change this back to above if statement
+        logger.info("No imaginary modes! Writing ShengBTE files")
+        atoms = AseAtomsAdaptor.get_atoms(parent_structure)
+        ### fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3)
+        fcs.write_to_phonopy("FORCE_CONSTANTS_2ND", format="text")
+        # following code is commented only for testing puropose
+        ForceConstants.write_to_phonopy(fcs, "fc2.hdf5", "hdf5")
+        ForceConstants.write_to_phono3py(fcs, "fc3.hdf5", "hdf5")
+        ### detour from hdf5
+        supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
+        FCS = ForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3)
+        FCS.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3, fc_tol=1e-4)
+        # following code is commented only for testing puropose ends
+    else:
+        logger.info("ShengBTE files not written due to imaginary modes.")
+        logger.info("You may want to perform phonon renormalization.")
 
     current_dir = os.getcwd()
 
     outputs: dict[str, list] = {
         "thermal_data": thermal_data, # replace with "thermal_data"
-        "anharmonic_data": thermal_data, # replace with "anharmonic_data"
+        "anharmonic_data": anharmonic_data, # replace with "anharmonic_data"
         "fitting_data": fitting_data,
         "param": param,
         "current_dir": current_dir
@@ -1301,115 +1738,221 @@ def run_hiphive(
 
 def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     """
-    Trial cutoffs based on supercell structure.
+    Determine the trial cutoffs based on a supercell structure.
 
-    Get a list of trial cutoffs based on a supercell structure for grid search.
-    An initial guess for the lower bound of the cutoffs is made based on the
-    average period (row) of the elements in the structure, according to:
-    ====== === === ===
-    .        Cutoff
-    ------ -----------
-    Period 2ND 3RD 4TH
-    ====== === === ===
-     1     5.0 3.0 2.5
-     2     6.0 3.5 3.0
-     3     7.0 4.5 3.5
-     4     8.0 5.5 4.0
-     5     9.0 6.0 4.5
-     6     10.0 6.5 5.0
-     7     11.0 7.0 5.5
-    ====== === === ===
-    The maximum cutoff for each order is determined by the minimum cutoff and
-    the following table. A full grid of all possible cutoff combinations is
-    generated based on the step size in the table below times a row factor
-    ====== ==== =====
-    Cutoff Max  Step
-    ====== ==== =====
-    2ND    +2.0 1.0
-    3RD    +1.5 0.75
-    4TH    +0.6 0.6
-    ====== ==== =====
-    Finally, the max cutoff size is determined by the supercell lattice dimensions.
-    Cutoffs which result in multiple of the same orbits being populated will be
-    discounted.
+    This function calculates and returns the best cutoffs for 2nd, 3rd, and 4th order
+    interactions for a given supercell structure. It performs linear interpolation to
+    find cutoffs for specific target degrees of freedom (DOFs), generates combinations
+    of cutoffs, and filters them to retain unique DOFs.
+
     Args:
         supercell_structure: A structure.
 
     Returns
     -------
-        A list of trial cutoffs.
+        list[list[float]]: A list of lists where each sublist contains the best cutoffs
+                           for 2nd, 3rd, and 4th order interactions.
     """
-    # # indexed as min_cutoffs[order][period]
-    # # DO NOT CHANGE unless you know what you are doing
-    # min_cutoffs = {
-    #     2: {1: 5.0, 2: 6.0, 3: 7.0, 4: 8.0, 5: 9.0, 6: 10.0, 7: 11.0},
-    #     3: {1: 3.0, 2: 3.5, 3: 4.5, 4: 5.5, 5: 6.0, 6: 6.5, 7: 7.0},
-    #     4: {1: 2.5, 2: 3.0, 3: 3.5, 4: 4.0, 5: 4.5, 6: 5.0, 7: 5.5},
-    # }
-    # inc = {2: 2, 3: 1.5, 4: 0.6}
-    # steps = {2: 1, 3: 0.75, 4: 0.6}
+    # Initialize lists and variables
+    cutoffs_2nd_list = []
+    cutoffs_3rd_list = []
+    cutoffs_4th_list = []
+    n_doffs_2nd_list = []
+    n_doffs_3rd_list = []
+    n_doffs_4th_list = []
+    # create a list of cutoffs to check starting from 2 to 11, with a step size of 0.1
+    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
+    max_cutoff = estimate_maximum_cutoff(supercell_atoms)
+    cutoffs_2nd_to_check = np.arange(3, max_cutoff, 0.3) # 10.1
+    cutoffs_3rd_to_check = np.arange(3, max_cutoff, 0.1) # 7
+    cutoffs_4th_to_check = np.arange(3, max_cutoff, 0.1) # 5
 
-    # row = int(
-    #     np.around(np.array([s.row for s in supercell_structure.species]).mean(), 0)
-    # )
-    # factor = row / 4
-    # mins = {2: min_cutoffs[2][row], 3: min_cutoffs[3][row], 4: min_cutoffs[4][row]}
+    # Assume that supercell_atoms is defined before
+    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
 
-    # range_two = np.arange(
-    #     mins[2], mins[2] + factor * (inc[2] + steps[2]), factor * steps[2]
-    # )
-    # range_three = np.arange(
-    #     mins[3], mins[3] + factor * (inc[3] + steps[3]), factor * steps[3]
-    # )
-    # range_four = np.arange(
-    #     mins[4], mins[4] + factor * (inc[4] + steps[4]), factor * steps[4]
-    # )
+    def get_best_cutoff(cutoffs_to_check: np.ndarray, target_n_doff: int, order: int) -> tuple[float, list[int], np.ndarray]:
+        """
+        Find the best cutoff value for a given order of interaction.
 
-    # cutoffs = np.array(list(map(list, product(range_two, range_three, range_four))))
-    # max_cutoff = estimate_maximum_cutoff(AseAtomsAdaptor.get_atoms(supercell_structure))
-    # cutoffs[cutoffs > max_cutoff] = max_cutoff
-    # logger.info(f"CUTOFFS \n {cutoffs}")
-    # logger.info(f"MAX_CUTOFF \n {max_cutoff}")
-    # good_cutoffs = np.all(cutoffs < max_cutoff - 0.1, axis=1)
-    # logger.info(f"GOOD CUTOFFS \n{good_cutoffs}")
+        This function iterates over a range of cutoff values, evaluates the DOFs, and
+        finds the best cutoff that meets the target number of DOFs. It performs
+        iterative refinement to narrow down the best cutoff.
 
+        Args:
+        cutoffs_to_check (numpy.ndarray): An array of cutoff values to check.
+        target_n_doff (int): The target number of degrees of freedom (DOFs).
+        order (int): The order of interaction (2 for 2nd order, 3 for 3rd order,
+                    4 for 4th order).
 
+        Returns
+        -------
+            tuple: A tuple containing:
+                - best_cutoff (float): The best cutoff value.
+                - n_doffs_list (list[int]): A list of DOFs corresponding to the cutoffs
+                                            checked.
+                - cutoffs_to_check (numpy.ndarray): The array of cutoff values checked.
 
-    min_cutoffs = {
-        2: {1: 7.0, 2: 8.0, 3: 9.0, 4: 10.0, 5: 11.0, 6: 12.0, 7: 13.0},
-        # 2: {1: 5.0, 2: 6.0, 3: 7.0, 4: 8.0, 5: 9.0, 6: 10.0, 7: 11.0},
-        # 2: {1: 6.0, 2: 7.0, 3: 8.0, 4: 9.0, 5: 10.0, 6: 11.0, 7: 12.0},
-        3: {1: 2.5, 2: 3.0, 3: 4.0, 4: 5.0, 5: 5.5, 6: 6.0, 7: 6.5},
-        # 3: {1: 3.0, 2: 3.5, 3: 4.5, 4: 5.5, 5: 6.0, 6: 6.5, 7: 7.0},
-        4: {1: 1.5, 2: 2.0, 3: 2.5, 4: 3.0, 5: 3.5, 6: 4.0, 7: 4.5},
-        # 4: {1: 2.5, 2: 3.0, 3: 3.5, 4: 4.0, 5: 4.5, 6: 5.0, 7: 5.5},
-    }
-    inc = {2: 2, 3: 2.0, 4: 1.2}
-    steps = {2: 1, 3: 0.75, 4: 0.6}
+        """
+        n_doffs_list = []
+        best_cutoff = np.inf
 
-    row = int(
-        np.around(np.array([s.row for s in supercell_structure.species]).mean(), 0)
-    )
-    logger.info(f"row = {row}")
-    factor = row / 4
-    logger.info(f"factor = {factor}")
+        if order == 2:
+            increment_size = 0.2
+        elif order == 3:
+            increment_size = 0.25
+        elif order == 4:
+            increment_size = 0.05
 
-    mins = {2: min_cutoffs[2][row], 3: min_cutoffs[3][row], 4: min_cutoffs[4][row]}
+        for cutoff in cutoffs_to_check:
+            # check if order == 2 and if no element in n_doffs_list is greater than 1000
+            if order == 2 and all(n_doff < 1000 for n_doff in n_doffs_list):
+                with contextlib.suppress(ValueError):
+                    cs = ClusterSpace(supercell_atoms, [cutoff], symprec=1e-3, acoustic_sum_rules=True)
+            elif order == 3 and all(n_doff < 1500 for n_doff in n_doffs_list):
+                with contextlib.suppress(ValueError):
+                    cs = ClusterSpace(supercell_atoms, [2, cutoff], symprec=1e-3, acoustic_sum_rules=True)
+            elif order == 4 and all(n_doff < 1000 for n_doff in n_doffs_list):
+                with contextlib.suppress(ValueError):
+                    cs = ClusterSpace(supercell_atoms, [2, 3, cutoff], symprec=1e-3, acoustic_sum_rules=True)
 
-    # create an NDArray of 2nd order cutofss with only one entry -> mins[2], and 3rd and 4th order cutoffs with a range
-    # range_two = np.array([mins[2]])
-    range_two = np.arange(
-        mins[2], mins[2] + factor * (inc[2] + steps[2]), factor * steps[2]
-    )
-    range_three = np.arange(
-        mins[3], mins[3] + factor * (inc[3] + steps[3]), factor * steps[3]
-    )
-    range_four = np.arange(
-        mins[4], mins[4] + factor * (inc[4] + steps[4]), factor * steps[4]
-    )
+            try:
+                n_doff = cs.get_n_dofs_by_order(order)
+                if (order == 2 and n_doff < 1000) or (order == 3 and n_doff < 1500) or (order == 4 and n_doff < 1000):
+                    n_doffs_list.append(n_doff)
+                elif (order == 2 and n_doff > 1000) or (order == 3 and n_doff > 1500) or (order == 4 and n_doff > 1000):
+                    # remove all the cutoffs from cutoffs_to_check from the current cutoff once we are inside this block
+                    cutoff_index = np.where(cutoffs_to_check == cutoff)[0][0]
+                    cutoffs_to_check = cutoffs_to_check[:cutoff_index]
+                    # do the same for n_doffs_list
+                    n_doffs_list = n_doffs_list[:cutoff_index + 1]
+                    break
+            except UnboundLocalError:
+                continue
 
-    cutoffs = np.array(list(map(list, product(range_two, range_three, range_four))))
+        # Find the closest cutoff to the target
+        closest_index = np.argmin(np.abs(np.array(n_doffs_list) - target_n_doff))
+        best_cutoff = cutoffs_to_check[closest_index]
+
+        while increment_size >= 0.01:
+            # cs = ClusterSpace(supercell_atoms, [best_cutoff], symprec=1e-3, acoustic_sum_rules=True)
+            if order == 2:
+                with contextlib.suppress(ValueError):
+                    cs = ClusterSpace(supercell_atoms, [best_cutoff], symprec=1e-3, acoustic_sum_rules=True)
+            elif order == 3:
+                with contextlib.suppress(ValueError):
+                    cs = ClusterSpace(supercell_atoms, [3, best_cutoff], symprec=1e-3, acoustic_sum_rules=True)
+            elif order == 4:
+                with contextlib.suppress(ValueError):
+                    cs = ClusterSpace(supercell_atoms, [3, 3, best_cutoff], symprec=1e-3, acoustic_sum_rules=True)
+
+            n_doff = cs.get_n_dofs_by_order(order)
+            # new_cutoffs_to_check.append(cutoff)
+
+            if n_doff > target_n_doff:
+                best_cutoff -= increment_size / 2
+            else:
+                best_cutoff += increment_size / 2
+
+            increment_size /= 4
+
+        return best_cutoff, n_doffs_list, cutoffs_to_check
+
+    # Get best cutoffs for 2nd, 3rd, and 4th order
+    logger.info("Getting best cutoffs for 2nd order")
+    logger.info(f"len(cutoffs_2nd_to_check) before = {len(cutoffs_2nd_to_check)}")
+    best_2nd_order_cutoff, n_doffs_2nd_list, cutoffs_2nd_to_check = get_best_cutoff(cutoffs_2nd_to_check, 100, 2)
+    logger.info(f"len(cutoffs_2nd_to_check) after = {len(cutoffs_2nd_to_check)}")
+    logger.info(f"len(n_doffs_2nd_list) after = {len(n_doffs_2nd_list)}")
+    logger.info("Getting best cutoffs for 3rd order")
+    best_3rd_order_cutoff, n_doffs_3rd_list, cutoffs_3rd_to_check = get_best_cutoff(cutoffs_3rd_to_check, 300, 3) # 1400
+    logger.info("Getting best cutoffs for 4th order")
+    best_4th_order_cutoff, n_doffs_4th_list, cutoffs_4th_to_check = get_best_cutoff(cutoffs_4th_to_check, 300, 4) # 1400
+
+    cutoffs_2nd_list.append(best_2nd_order_cutoff)
+    cutoffs_3rd_list.append(best_3rd_order_cutoff)
+    cutoffs_4th_list.append(best_4th_order_cutoff)
+
+    best_cutoff_list = [[best_2nd_order_cutoff, best_3rd_order_cutoff, best_4th_order_cutoff]]
+    logger.info(f"best_cutoff_list = {best_cutoff_list}")
+
+    # Linear interpolation to find cutoffs for targets
+    def interpolate_and_find_cutoffs(cutoffs_to_check, n_doffs_list, targets) -> np.ndarray:
+        """
+        Perform linear interpolation to find cutoff values for specific target DOFs.
+
+        This function interpolates the given cutoff values and their corresponding DOFs
+        to find the cutoff values that achieve the specified target DOFs.
+
+        Args:
+        cutoffs_to_check (numpy.ndarray): An array of cutoff values to check.
+        n_doffs_list (list[int]): A list of DOFs corresponding to the cutoffs checked.
+        targets (list[int]): A list of target DOFs for which to find the cutoff values.
+
+        Returns
+        -------
+            numpy.ndarray: An array of interpolated cutoff values corresponding to the
+            target DOFs.
+        """
+        logger.info(f"cutoffs_to_check = {cutoffs_to_check}")
+        logger.info(f"n_doffs_list = {n_doffs_list}")
+        logger.info(f"targets = {targets}")
+        logger.info(f"len(cutoffs_to_check) = {len(cutoffs_to_check)}")
+        logger.info(f"len(n_doffs_list) = {len(n_doffs_list)}")
+        cutoffs_for_targets = np.interp(targets, n_doffs_list, cutoffs_to_check)
+        logger.info(f"cutoffs_for_targets = {cutoffs_for_targets}")
+        return cutoffs_for_targets
+
+    logger.info("Fitting 5th order polynomial for 2nd order")
+    cutoffs_2nd_list.extend(interpolate_and_find_cutoffs(cutoffs_2nd_to_check, n_doffs_2nd_list, [50, 70, 150, 220]))
+    # logger.info("Fitting 5th order polynomial for 3rd order")
+    cutoffs_3rd_list.extend(interpolate_and_find_cutoffs(cutoffs_3rd_to_check, n_doffs_3rd_list, [500, 750, 1000]))
+    # logger.info("Fitting 5th order polynomial for 4th order")
+    cutoffs_4th_list.extend(interpolate_and_find_cutoffs(cutoffs_4th_to_check, n_doffs_4th_list, [500, 750]))
+
+    # Sort the lists
+    cutoffs_2nd_list = sorted(cutoffs_2nd_list)
+    cutoffs_3rd_list = sorted(cutoffs_3rd_list)
+    cutoffs_4th_list = sorted(cutoffs_4th_list)
+
+    # Generate combinations of cutoffs
+    # cutoffs = list(product(cutoffs_2nd_list, cutoffs_3rd_list, cutoffs_4th_list))
+    cutoffs = np.array(list(map(list, product(cutoffs_2nd_list, cutoffs_3rd_list, cutoffs_4th_list))))
     logger.info(f"cutoffs = {cutoffs}")
+    logger.info(f"len(cutoffs) = {len(cutoffs)}")
+    logger.info(f"cutoffs[0] = {cutoffs[0]}")
+    logger.info("The code may fail here !!!!!!")
+    dofs_list = []
+    for cutoff in cutoffs:
+        logger.info(f"cutoff inside the for loop = {cutoff}")
+        cutoff = cutoff.tolist()
+        logger.info(f"cutoff.tolist() = {cutoff}")
+        cs = ClusterSpace(supercell_atoms, cutoff, symprec=1e-3, acoustic_sum_rules=True)
+        n_doff_2 = cs.get_n_dofs_by_order(2)
+        n_doff_3 = cs.get_n_dofs_by_order(3)
+        n_doff_4 = cs.get_n_dofs_by_order(4)
+        dofs_list.append([n_doff_2, n_doff_3, n_doff_4])
+        logger.info(f"dofs_list = {dofs_list}")
+
+
+    # Save the plots for cutoffs vs n_doffs
+    def save_plot(cutoffs_to_check, n_doffs_list, order):
+        plt.figure()
+        plt.scatter(cutoffs_to_check, n_doffs_list, color='blue', label='Data Points')
+        plt.plot(cutoffs_to_check, n_doffs_list, color='red', label='Linear Interpolation')
+        plt.xlabel(f'Cutoffs {order} Order')
+        plt.ylabel(f'n_doffs_{order}')
+        plt.title(f'Linear Interpolation for n_doffs_{order} vs Cutoffs {order} Order')
+        plt.legend()
+        plt.savefig(f'cutoffs_{order}_vs_n_doffs_{order}.png')
+
+    save_plot(cutoffs_2nd_to_check, n_doffs_2nd_list, 2)
+    save_plot(cutoffs_3rd_to_check, n_doffs_3rd_list, 3)
+    save_plot(cutoffs_4th_to_check, n_doffs_4th_list, 4)
+
+
+    logger.info(f"We have completed the cutoffs calculation.")
+    logger.info(f"cutoffs = {cutoffs}")
+
 
     max_cutoff = estimate_maximum_cutoff(AseAtomsAdaptor.get_atoms(supercell_structure))
     cutoffs[cutoffs > max_cutoff] = max_cutoff
@@ -1418,10 +1961,38 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     good_cutoffs = np.all(cutoffs < max_cutoff - 0.1, axis=1)
     logger.info(f"GOOD CUTOFFS \n{good_cutoffs}")
 
-    cutoffs_used = cutoffs[good_cutoffs].tolist()
-    logger.info(f"cutoffs_used = {cutoffs_used}")
+    cutoffs = cutoffs[good_cutoffs].tolist()
+    logger.info(f"cutoffs_used = {cutoffs}")
+    # logger.info(f"[cuttoffs_used[20]] = {[cutoffs_used[20]]}")
 
-    return cutoffs[good_cutoffs].tolist()
+
+    def filter_cutoffs(cutoffs, dofs_list):
+        """..."""
+        # Step 1: Map cutoffs to dofs_list
+        cutoffs_to_dofs = {tuple(c): tuple(d) for c, d in zip(cutoffs, dofs_list)}
+        logger.info(f"Cutoffs to DOFs mapping: {cutoffs_to_dofs}")
+
+        # Step 2: Track seen dofs and keep only the first occurrence of each unique dofs
+        seen_dofs = set()
+        new_cutoffs = []
+
+        for c, d in zip(cutoffs, dofs_list):
+            d_tuple = tuple(d)
+            if d_tuple not in seen_dofs:
+                seen_dofs.add(d_tuple)
+                new_cutoffs.append(c)
+
+        logger.info(f"Unique DOFs: {seen_dofs}")
+        logger.info(f"New cutoffs: {new_cutoffs}")
+
+        return new_cutoffs
+
+    cutoffs = filter_cutoffs(cutoffs, dofs_list)
+    logger.info(f"Filtered cutoffs: {cutoffs}")
+
+    return cutoffs
+    # return [cutoffs_used[20]] #TODO: remove this line later
+    # return best_cutoff_list #TODO: remove this line later
 
 
 def fit_force_constants(
@@ -1486,6 +2057,12 @@ def fit_force_constants(
     fitting_data: dict[str, Any] = {
         "cutoffs": [],
         "rmse_test": [],
+        "imaginary": [],
+        "cs_dofs": [],
+        "n_imaginary": [],
+        "parent_structure": parent_structure,
+        "supercell_structure": supercell_structure,
+        "supercell_matrix": supercell_matrix,
         "fit_method": fit_method,
         "disp_cut": disp_cut,
         "imaginary_tol": imaginary_tol,
@@ -1497,6 +2074,8 @@ def fit_force_constants(
     best_fit = {
         "n_imaginary": np.inf,
         "rmse_test": np.inf,
+        "imaginary": None,
+        "cs_dofs": [None, None, None],
         "cluster_space": None,
         "force_constants": None,
         "parameters": None,
@@ -1522,31 +2101,53 @@ def fit_force_constants(
 
     logger.info("We are starting Joblib_s parallellized jobs")
 
-    cutoff_results = Parallel(n_jobs=min(os.cpu_count(),len(all_cutoffs)),
-                              backend="multiprocessing")(delayed(_run_cutoffs)(
-        i, cutoffs, n_cutoffs, parent_structure, supercell_structure, structures,
-        supercell_matrix, fit_method, disp_cut, fit_kwargs) for i, cutoffs in enumerate(all_cutoffs))
+    # cutoff_results = Parallel(n_jobs=min(os.cpu_count(),len(all_cutoffs)),
+    #                           backend="multiprocessing")(delayed(_run_cutoffs)(
+    #     i, cutoffs, n_cutoffs, parent_structure, supercell_structure, structures,
+    #     supercell_matrix, fit_method, disp_cut, imaginary_tol, fit_kwargs) for i, cutoffs in enumerate(all_cutoffs))
+
+    cutoff_results = []
+    for i, cutoffs in enumerate(all_cutoffs):
+        result = _run_cutoffs(i, cutoffs, n_cutoffs, parent_structure, supercell_structure, structures,
+                            supercell_matrix, fit_method, disp_cut, imaginary_tol, fit_kwargs)
+        cutoff_results.append(result)
 
     for result in cutoff_results:
         if result is None:
-            print("result is None")
+            logger.info("result is None")
             continue
-        print(f"result = {result}")
-        fitting_data["cutoffs"].append(result["cutoffs"])
-        fitting_data["rmse_test"].append(result["rmse_test"])
-        #        fitting_data["n_imaginary"].append(result["n_imaginary"])
-        #        fitting_data["min_frequency"].append(result["min_frequency"])
+        logger.info(f"result = {result}")
+        if result != {}:
+            if "cutoffs" in result:
+                fitting_data["cutoffs"].append(result["cutoffs"])
+            else:
+                logger.info("Key 'cutoffs' not found in result")
+                continue
+            if "rmse_test" in result:
+                fitting_data["rmse_test"].append(result["rmse_test"])
+            if "n_imaginary" in result:
+                fitting_data["n_imaginary"].append(result["n_imaginary"])
+            if "cs_dofs" in result:
+                fitting_data["cs_dofs"].append(result["cs_dofs"])
+            if "imaginary" in result:
+                fitting_data["imaginary"].append(result["imaginary"])
+            # if "min_frequency" in result:
+            #     fitting_data["min_frequency"].append(result["min_frequency"])
 
-        if (
-            result["rmse_test"]
-            < best_fit["rmse_test"]
-            #            and result["min_frequency"] > -np.abs(max_imaginary_freq)
-            #            and result["n_imaginary"] <= max_n_imaginary
-            #            and result["n_imaginary"] < best_fit["n_imaginary"]
-        ):
-            best_fit.update(result)
-            fitting_data["best_cutoff"] = result["cutoffs"]
-            fitting_data["best_rmse"] = result["rmse_test"]
+            if "rmse_test" in result and (
+                result["rmse_test"]
+                < best_fit["rmse_test"]
+                #            and result["min_frequency"] > -np.abs(max_imaginary_freq)
+                #            and result["n_imaginary"] <= max_n_imaginary
+                #            and result["n_imaginary"] < best_fit["n_imaginary"]
+            ):
+                best_fit.update(result)
+                fitting_data["best_cutoff"] = result["cutoffs"]
+                fitting_data["best_rmse"] = result["rmse_test"]
+        else:
+            logger.info("result is an empty dictionary")
+
+
 
     logger.info("Finished fitting force constants.")
 
@@ -1562,20 +2163,37 @@ def _run_cutoffs(
     supercell_matrix: np.ndarray, # shape=(3, 3), dtype='intc', order='C'.,
     fit_method: str,
     disp_cut: float,
+    imaginary_tol: float,
     fit_kwargs: dict[str, Any],
 ) -> dict[str, Any]:
+
+    # from hiphive.cutoffs import Cutoffs
+    # cutoff_matrix = [
+    #     # [5.4, 4.35, 4.35],  # 2-body
+    #     [2, 4, 4],  # 2-body
+    #     ]
+    # cutoffs = Cutoffs(cutoff_matrix)
     logger.info(f"Testing cutoffs {i+1} out of {n_cutoffs}: {cutoffs}")
-    supercell_atoms = structures[0] #TODO: only for testing purposes
-    # supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
+    logger.info(f"fit_method is {fit_method}")
+    # supercell_atoms = structures[0] #TODO: only for testing purposes
+    supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
     logger.info(f"supercell_atoms = {supercell_atoms}")
 
     if not is_cutoff_allowed(supercell_atoms, max(cutoffs)):
         logger.info("Skipping cutoff due as it is not commensurate with supercell size")
         return {}
-
+    # from hiphive.cutoffs import BeClusterFilter
+    # be_cf = BeClusterFilter()
+    # cs = ClusterSpace(supercell_atoms, cutoffs, cluster_filter=be_cf, symprec=1e-3, acoustic_sum_rules=True)
+    # logger.info(f"cs orbit data = {cs.orbit_data}")
     cs = ClusterSpace(supercell_atoms, cutoffs, symprec=1e-3, acoustic_sum_rules=True)
-    # cs = ClusterSpace(supercell_atoms, cutoffs, symprec=1e-1, acoustic_sum_rules=True)
     logger.debug(cs.__repr__())
+    logger.info(cs)
+    cs_2_dofs = cs.get_n_dofs_by_order(2)
+    cs_3_dofs = cs.get_n_dofs_by_order(3)
+    cs_4_dofs = cs.get_n_dofs_by_order(4)
+    cs_dofs = [cs_2_dofs, cs_3_dofs, cs_4_dofs]
+    logger.info(cs_dofs)
     n2nd = cs.get_n_dofs_by_order(2) # change it back to cs.get_n_dofs_by_order(2)
     nall = cs.n_dofs
 
@@ -1587,7 +2205,11 @@ def _run_cutoffs(
         cs, structures, separate_fit, disp_cut, ncut=n2nd, param2=None
     )
     opt = Optimizer(sc.get_fit_data(), fit_method, [0, n2nd], **fit_kwargs)
-    opt.train()
+    try:
+        opt.train()
+    except Exception as e:
+        logger.exception(f"Error {e} occured in opt.train() for cutoff: {i}, {cutoffs}")
+        return {}
     param_harmonic = opt.parameters  # harmonic force constant parameters
     param_tmp = np.concatenate(
         (param_harmonic, np.zeros(cs.n_dofs - len(param_harmonic)))
@@ -1602,10 +2224,14 @@ def _run_cutoffs(
     phonopy.primitive.get_number_of_atoms()
     mesh = supercell_matrix.diagonal() * 2
     phonopy.set_force_constants(fcs.get_fc_array(2))
+    # phonopy.set_mesh(
+    #     mesh, is_eigenvectors=False, is_mesh_symmetry=False
+    # )  # run_mesh(is_gamma_center=True)
     phonopy.set_mesh(
-        mesh, is_eigenvectors=False, is_mesh_symmetry=False
+        mesh, is_eigenvectors=True, is_mesh_symmetry=True
     )  # run_mesh(is_gamma_center=True)
-    phonopy.run_mesh(mesh, with_eigenvectors=False, is_mesh_symmetry=False)
+    # phonopy.run_mesh(mesh, with_eigenvectors=False, is_mesh_symmetry=False)
+    phonopy.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=True)
     omega = phonopy.mesh.frequencies  # THz
     omega = np.sort(omega.flatten())
     logger.info(f"omega_one_shot_fit = {omega}")
@@ -1622,8 +2248,10 @@ def _run_cutoffs(
     omega = mesh["frequencies"]
     omega = np.sort(omega.flatten())
     logger.info(f"omega_phonopy_one_shot_fitting = {omega}")
-    imaginary = np.any(omega < -1e-3)
+    # imaginary = np.any(omega < -1e-3)
+    imaginary = np.any(omega < -imaginary_tol)
     logger.info(f"imaginary_phonopy_one_shot_fitting = {imaginary}")
+    n_imaginary = int(np.sum(omega < -np.abs(imaginary_tol)))
 
     if imaginary:
     # if False:
@@ -1635,7 +2263,12 @@ def _run_cutoffs(
             cs, structures, separate_fit, disp_cut, ncut=n2nd, param2=param_harmonic
         )
         opt = Optimizer(sc.get_fit_data(), fit_method, [n2nd, nall], **fit_kwargs)
-        opt.train()
+        # if opt.train() raises an erorr then return None
+        try:
+            opt.train()
+        except Exception as e:
+            logger.exception(f"Error {e} occured in opt.train() for cutoff: {i}, {cutoffs}")
+            return {}
         param_anharmonic = opt.parameters  # anharmonic force constant parameters
 
         parameters = np.concatenate((param_harmonic, param_anharmonic))  # combine
@@ -1673,8 +2306,11 @@ def _run_cutoffs(
         omega = mesh["frequencies"]
         omega = np.sort(omega.flatten())
         logger.info(f"omega_phonopy_seperate_fit = {omega}")
-        imaginary = np.any(omega < -1e-3)
+        # imaginary = np.any(omega < -1e-3)
+        # logger.info(f"imaginary_phonopy_seperate_fit = {imaginary}")
+        imaginary = np.any(omega < -imaginary_tol)
         logger.info(f"imaginary_phonopy_seperate_fit = {imaginary}")
+        n_imaginary = int(np.sum(omega < -np.abs(imaginary_tol)))
 
     else:
     # if True:
@@ -1684,7 +2320,12 @@ def _run_cutoffs(
             cs, structures, separate_fit, disp_cut=None, ncut=None, param2=None
         )
         opt = Optimizer(sc.get_fit_data(), fit_method, [0, nall], **fit_kwargs)
-        opt.train()
+        # run opt.train() and if it raises an error then return None
+        try:
+            opt.train()
+        except Exception as e:
+            logger.exception(f"Error {e} occured in opt.train() for cutoff: {i}, {cutoffs}")
+            return {}
         parameters = opt.parameters
         logger.info(f"Training complete for cutoff: {i}, {cutoffs}")
 
@@ -1715,6 +2356,9 @@ def _run_cutoffs(
             "parameters": parameters,
             "force_constants": fcs,
             "force_constants_potential": fcp,
+            "imaginary": imaginary,
+            "cs_dofs": cs_dofs,
+            "n_imaginary": n_imaginary,
         }
     except Exception:
         return {}
@@ -1750,32 +2394,53 @@ def get_structure_container(
     logger.info(f"initial shape of fit matrix = {sc.data_shape}")
     saved_structures = []
     for _, structure in enumerate(structures):
+        # # if _ is amongst the following, then move onto the next iteration
+        # if _ == 1 or _ == 2 or _ == 3 or _ == 5 or _ == 6 or _ == 7 or _ == 9 or _ == 10 or _ == 11:
+        #     continue
         displacements = structure.get_array("displacements")
+        forces = structure.get_array("forces")
         # Calculate mean displacements
         mean_displacements = np.linalg.norm(displacements, axis=1).mean()
         logger.info(f"Mean displacements: {mean_displacements}")
+        # Calculate mean forces
+        mean_forces = np.linalg.norm(forces, axis=1).mean()
+        logger.info(f"Mean Forces: {mean_forces}")
         # Calculate standard deviation of displacements
         std_displacements = np.linalg.norm(displacements, axis=1).std()
         logger.info(f"Standard deviation of displacements: "
                     f"{std_displacements}")
+        # Calculate standard deviation of forces
+        std_forces = np.linalg.norm(forces, axis=1).std()
+        logger.info(f"Standard deviation of forces: "
+                    f"{std_forces}")
         if not separate_fit:  # fit all
             sc.add_structure(structure)
         else:  # fit separately
             if param2 is None:  # for harmonic fitting
                 if mean_displacements < disp_cut:
+                # if mean_forces < disp_cut:
+                # if _ == 0 or _ == 1 or _ == 2 or _ == 6 or _ == 7 or _ == 8 or _ == 12 or _ == 13 or _ == 14:
+                # if _ == 0 or _ == 1 or _ == 4 or _ == 5 or _ == 8 or _ == 9:
+                # if _ == 0 or _ == 1 or _ == 4 or _ == 5 or _ == 8 or _ == 9 or _ == 12 or _ == 13 or _ == 16 or _ == 17 or _ == 20 or _ == 21 or _ == 24 or _ == 25 or _ == 28 or _ == 29 or _ == 32 or _ == 33 or _ == 36 or _ == 37:
+                # if True:
                     logger.info("We are in harmonic fitting if statement")
-                    logger.info(f"mean_disp = {mean_displacements}")
+                    # logger.info(f"mean_disp = {mean_displacements}")
+                    logger.info(f"mean_forces = {mean_forces}")
                     sc.add_structure(structure)
             else:  # for anharmonic fitting
                 if mean_displacements >= disp_cut:
+                # if mean_forces >= disp_cut:
+                # if _ == 2 or _ == 3 or _ == 6 or _ == 7 or _ == 10 or _ == 11:
+                # if _ == 2 or _ == 3 or _ == 6 or _ == 7 or _ == 10 or _ == 11 or _ == 14 or _ == 15 or _ == 18 or _ == 19 or _ == 22 or _ == 23 or _ == 26 or _ == 27 or _ == 30 or _ == 31 or _ == 34 or _ == 35 or _ == 38 or _ == 39:
                     logger.info("We are in anharmonic fitting if statement")
-                    logger.info(f"mean_disp = {mean_displacements}")
+                    # logger.info(f"mean_disp = {mean_displacements}")
+                    logger.info(f"mean_forces = {mean_forces}")
                     sc.add_structure(structure)
                     saved_structures.append(structure)
 
     logger.info(f"final shape of fit matrix (total # of atoms in all added supercells, n_dofs) = (rows, columns) = {sc.data_shape}")
     logger.info("We have completed adding structures")
-    logger.info(sc.get_fit_data())
+    logger.info(f"sc.get_fit_data() = {sc.get_fit_data()}")
 
     if separate_fit and param2 is not None:  # do after anharmonic fitting
         a_mat = sc.get_fit_data()[0]  # displacement matrix
@@ -1800,7 +2465,8 @@ def harmonic_properties(
     supercell_matrix: np.ndarray,
     fcs: ForceConstants,
     temperature: list,
-    imaginary_tol: float = IMAGINARY_TOL
+    imaginary_tol: float = IMAGINARY_TOL,
+    mesh: list = None
 ) -> tuple[dict,Phonopy]:
     """
     Uses the force constants to extract phonon properties. Used for comparing
@@ -1822,8 +2488,9 @@ def harmonic_properties(
 
     logger.info('Evaluating harmonic properties...')
     fcs2 = fcs.get_fc_array(2)
-    fcs3 = fcs.get_fc_array(3)
+    # fcs3 = fcs.get_fc_array(3)
     logger.info('fcs2 & fcs3 read...')
+    logger.info(f'fcs2 = {fcs2}')
     parent_phonopy = get_phonopy_structure(structure)
     phonopy = Phonopy(parent_phonopy, supercell_matrix=supercell_matrix)
     natom = phonopy.primitive.get_number_of_atoms()
@@ -2482,6 +3149,7 @@ def run_renormalization(
         A tuple of the number of imaginary modes at Gamma, the minimum phonon
         frequency at Gamma, and the free energy, entropy, and heat capacity.
     """
+    logger.info(f"renorm_method = {renorm_method}")
     nconfig = int(nconfig)
     supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
     renorm = Renormalization(cs,supercell_atoms,param,fcs,T,renorm_method,fit_method,param_TD=param_TD,fcs_TD=fcs_TD)
@@ -2625,7 +3293,7 @@ def run_lattice_thermal_conductivity(
     # files needed to run ShengBTE
 
     logger.info("We are in Lattice Thermal Conductivity... 1")
-    logger.info(f"previ_dir_hiphive in def run_lattice_thermal_conductivity = {prev_dir_hiphive}")
+    logger.info(f"prev_dir_hiphive in def run_lattice_thermal_conductivity = {prev_dir_hiphive}")
 
 
     if renormalized:
