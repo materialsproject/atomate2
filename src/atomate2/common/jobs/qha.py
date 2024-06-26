@@ -106,29 +106,52 @@ def analyze_free_energy(phonon_outputs
 @job
 def get_qha_results(fit_output):
     qha_results={}
+    temps={}
+    min_vol = {}
+    min_free_energy = {}
     for temp, fit in fit_output.items():
-        temps = []
-        min_vol = []
-        min_free_energy = []
-        for eos, result in fit["fit"]["relax"]["EOS"].items():
-            name=eos
 
+
+        for eos, result in fit["fit"]["relax"]["EOS"].items():
+            if eos not in min_vol:
+                temps[eos]=[]
+                min_vol[eos] = []
+                min_free_energy[eos] = []
             # to check if the fit was fine
             if "v0" in result:
-                temps.append(temp)
-                min_vol.append(result["v0"])
-                min_free_energy.append(result["e0"])
+                temps[eos].append(float(temp))
+                min_vol[eos].append(result["v0"])
+                min_free_energy[eos].append(result["e0"])
 
-        if len(temps) > 4:
-            # fit the temp - vol curve
-            pass
+    print(temps)
+    print(min_vol)
+    print(min_free_energy)
+    alpha={}
+    for eos, ts in temps.items():
+        if len(ts) > 4:
+            # get thermal expansion
+            if eos not in alpha:
+                alpha[eos]=[0.0]
 
-        # Todo: add a typical qha plot for the final folder
-        # needs all eos results here as well
+                # check possible implementations
+                # here: finite differences
+                for i in range(1, len(ts) - 1):
+                    # compute by finite differences
+                    dt = ts[i + 1] - ts[i - 1]
+                    dv = min_vol[eos][i + 1] - min_vol[eos][i - 1]
+                    alpha[eos].append(dv / dt / min_vol[eos][i])
+            # get heat capacities
 
 
-
-        qha_results[name]={"temps":temps, "min_vol":min_vol, "min_free_energy":min_free_energy}
+    # Todo: add a typical qha plot for the final folder
+    # needs all eos results here as well
+    qha_results={}
+    for eos, ts in temps.items():
+        qha_results[eos]={}
+        qha_results[eos]["temps"]=ts
+        qha_results[eos]["alpha"]=alpha[eos]
+        qha_results[eos]["min_vol"]=min_vol[eos]
+        qha_results[eos]["min_free_energy"]=min_free_energy[eos]
 
     print(qha_results)
     return qha_results
